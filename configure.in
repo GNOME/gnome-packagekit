@@ -1,0 +1,194 @@
+AC_PREREQ(2.52)
+
+AC_INIT(packagekit-gnome, 0.0.1)
+AC_CONFIG_SRCDIR(src)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_CONFIG_HEADER(config.h)
+
+AC_PROG_CC
+AC_PROG_INSTALL
+AM_PROG_LIBTOOL
+IT_PROG_INTLTOOL([0.35.0])
+
+GNOME_COMPILE_WARNINGS
+GNOME_DOC_INIT
+
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+
+dnl ---------------------------------------------------------------------------
+dnl - Extra verbose warning switches
+dnl ---------------------------------------------------------------------------
+if test "$GCC" = "yes"; then
+    CPPFLAGS="$CPPFLAGS -Werror -Wcast-align -Wno-uninitialized"
+    CPPFLAGS="$CPPFLAGS -Wall"
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl - Debugging switches (uncomment this if you want to use gdb)
+dnl ---------------------------------------------------------------------------
+CPPFLAGS="$CPPFLAGS -g"
+CPPFLAGS="$CPPFLAGS -fexceptions"
+
+dnl ---------------------------------------------------------------------------
+dnl - GProf switches (do not use for normal building)
+dnl ---------------------------------------------------------------------------
+#CPPFLAGS="$CPPFLAGS -c -pg"
+#LDFLAGS="$LDFLAGS -pg"
+
+dnl ---------------------------------------------------------------------------
+dnl - gettext stuff
+dnl ---------------------------------------------------------------------------
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
+
+AM_GLIB_GNU_GETTEXT
+
+dnl ---------------------------------------------------------------------------
+dnl - Library dependencies
+dnl ---------------------------------------------------------------------------
+GLIB_REQUIRED=2.13.0
+GTK_REQUIRED=2.11.0
+GDK_REQUIRED=2.11.0
+GNOME_KEYRING_REQUIRED=0.6.0
+LIBGNOME_REQUIRED=2.14.0
+LIBGNOMEUI_REQUIRED=2.14.0
+HAL_REQUIRED=0.5.8
+DBUS_REQUIRED=0.70
+LIBGLADE_REQUIRED=2.5.0
+LIBNOTIFY_REQUIRED=0.4.3
+LIBWNCK_REQUIRED=2.10.0
+CAIRO_REQUIRED=1.0.0
+GTKUNIQUE_REQUIRED=0.9.1
+LIBPANEL_REQUIRED=2.0.0
+GSTREAMER_REQUIRED=0.10
+
+dnl ---------------------------------------------------------------------------
+dnl - Make above strings available for packaging files (e.g. rpm spec files)
+dnl ---------------------------------------------------------------------------
+AC_SUBST(GLIB_REQUIRED)
+AC_SUBST(GTK_REQUIRED)
+AC_SUBST(GDK_REQUIRED)
+AC_SUBST(LIBGNOME_REQUIRED)
+AC_SUBST(LIBGNOMEUI_REQUIRED)
+AC_SUBST(HAL_REQUIRED)
+AC_SUBST(DBUS_REQUIRED)
+AC_SUBST(LIBGLADE_REQUIRED)
+AC_SUBST(LIBNOTIFY_REQUIRED)
+AC_SUBST(LIBWNCK_REQUIRED)
+AC_SUBST(CAIRO_REQUIRED)
+AC_SUBST(GTKUNIQUE_REQUIRED)
+AC_SUBST(LIBPANEL_REQUIRED)
+AC_SUBST(GSTREAMER_REQUIRED)
+
+dnl ---------------------------------------------------------------------------
+dnl - Check library dependencies
+dnl ---------------------------------------------------------------------------
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(HAL, hal >= $HAL_REQUIRED)
+AC_SUBST(HAL_CFLAGS)
+AC_SUBST(HAL_LIBS)
+
+PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= $GSTREAMER_REQUIRED)
+AC_SUBST(GSTREAMER_CFLAGS)
+AC_SUBST(GSTREAMER_LIBS)
+
+PKG_CHECK_MODULES(DBUS, \
+ dbus-glib-1 >= $DBUS_REQUIRED \
+ dbus-1 >= $DBUS_REQUIRED \
+ gthread-2.0)
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+
+PKG_CHECK_MODULES(GNOME, \
+ libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED \
+ libglade-2.0 >= $LIBGLADE_REQUIRED \
+ libwnck-1.0 >= $LIBWNCK_REQUIRED \
+ gtk+-2.0 >= $GTK_REQUIRED \
+ gnome-keyring-1 >= $GNOME_KEYRING_REQUIRED \
+ libpanelapplet-2.0 >= $LIBPANEL_REQUIRED \
+ cairo >= $CAIRO_REQUIRED)
+AC_SUBST(GNOME_CFLAGS)
+AC_SUBST(GNOME_LIBS)
+
+PKG_CHECK_MODULES(GDK, \
+ gdk-2.0 >= $GDK_REQUIRED \
+ gdk-x11-2.0 >= $GDK_REQUIRED)
+AC_SUBST(GDK_CFLAGS)
+AC_SUBST(GDK_LIBS)
+
+AC_PATH_PROG(GCONFTOOL, gconftool-2)
+AM_GCONF_SOURCE_2
+
+AC_PATH_XTRA
+
+ALL_X_LIBS="$X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS"
+
+dnl ---------------------------------------------------------------------------
+dnl - Make paths available for source files
+dnl ---------------------------------------------------------------------------
+AC_SUBST(SYSCONFDIR, $sysconfdir)
+AC_SUBST(DATADIR, $datadir)
+AC_SUBST(BINDIR, $bindir)
+AC_SUBST(SBINDIR, $sbindir)
+
+dnl ---------------------------------------------------------------------------
+dnl - Where should we put documentation ?
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH(doc-dir,
+              [AC_HELP_STRING([--with-doc-dir=<dir>],
+              [directory to install documentation])])
+if ! test -z "$with_doc_dir"; then
+   DOCDIR="$with_doc_dir/packagekit-gnome-$VERSION"
+else
+   DOCDIR="$DATADIR/doc/packagekit-gnome-$VERSION"
+fi
+AC_SUBST(DOCDIR)
+
+dnl ---------------------------------------------------------------------------
+dnl - Makefiles, etc.
+dnl ---------------------------------------------------------------------------
+AC_OUTPUT([
+Makefile
+src/Makefile
+src/dbus/Makefile
+applets/Makefile
+applets/brightness/Makefile
+applets/inhibit/Makefile
+libhal-glib/Makefile
+libdbus-glib/Makefile
+libidletime/Makefile
+docs/Makefile
+man/Makefile
+help/Makefile
+po/Makefile.in
+tools/Makefile
+test/Makefile
+data/Makefile
+data/sounds/Makefile
+data/icons/Makefile
+])
+
+dnl ==========================================================================
+echo "
+                    PackageKit-gnome $VERSION
+                  =============================
+
+        prefix:                    ${prefix}
+        datadir:                   ${datadir}
+        compiler:                  ${CC}
+        cflags:                    ${CFLAGS}
+        libnotify support:         ${have_libnotify}
+        gtkunique support:         ${have_gtkunique}
+        Building extra applets:    ${enable_applets}
+        DPMS support:              ${have_dpms}
+        Docbook support:           ${enable_docbook_docs}
+        documentation dir:         $DOCDIR
+        dbus-1 system.d dir:       $DBUS_SYS_DIR
+        dbus-1 services dir:       $DBUS_SERVICES_DIR
+	gconf-schema dir:          $GCONF_SCHEMA_FILE_DIR
+"
+
