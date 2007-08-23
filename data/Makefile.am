@@ -1,6 +1,6 @@
 @INTLTOOL_SCHEMAS_RULE@
 schemadir = $(sysconfdir)/gconf/schemas
-schema_in_files = packagekit-gnome.schemas.in
+schema_in_files = gnome-packagekit.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
 @INTLTOOL_DESKTOP_RULE@
@@ -40,5 +40,5 @@ clean-local :
 DISTCLEANFILES =					\
 	pk-update-icon.desktop				\
 	pk-application.desktop				\
-	packagekit-gnome.schemas
+	gnome-packagekit.schemas
 
