@@ -1,12 +1,10 @@
 SUBDIRS =						\
 	src						\
 	po						\
-	docs						\
 	data						\
 	help
 
 EXTRA_DIST =						\
-	HACKING						\
 	MAINTAINERS					\
 	intltool-extract.in				\
 	intltool-merge.in				\

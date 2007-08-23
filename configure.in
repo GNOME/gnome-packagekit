@@ -154,22 +154,9 @@ dnl ---------------------------------------------------------------------------
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/dbus/Makefile
-applets/Makefile
-applets/brightness/Makefile
-applets/inhibit/Makefile
-libhal-glib/Makefile
-libdbus-glib/Makefile
-libidletime/Makefile
-docs/Makefile
-man/Makefile
 help/Makefile
 po/Makefile.in
-tools/Makefile
-test/Makefile
 data/Makefile
-data/sounds/Makefile
-data/icons/Makefile
 ])
 
 dnl ==========================================================================
@@ -181,14 +168,6 @@ echo "
         datadir:                   ${datadir}
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
-        libnotify support:         ${have_libnotify}
-        gtkunique support:         ${have_gtkunique}
-        Building extra applets:    ${enable_applets}
-        DPMS support:              ${have_dpms}
-        Docbook support:           ${enable_docbook_docs}
-        documentation dir:         $DOCDIR
-        dbus-1 system.d dir:       $DBUS_SYS_DIR
-        dbus-1 services dir:       $DBUS_SERVICES_DIR
 	gconf-schema dir:          $GCONF_SCHEMA_FILE_DIR
 "
 

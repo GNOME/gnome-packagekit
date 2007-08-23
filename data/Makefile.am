@@ -1,5 +1,3 @@
-SUBDIRS = icons sounds
-
 @INTLTOOL_SCHEMAS_RULE@
 schemadir = $(sysconfdir)/gconf/schemas
 schema_in_files = packagekit-gnome.schemas.in
@@ -15,22 +13,13 @@ autostartdir = $(datadir)/gnome/autostart
 autostart_in_files = pk-update-icon.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
-servicedir       = $(DBUS_SERVICES_DIR)
-service_in_files = pk-update-icon.service.in
-service_DATA     = $(service_in_files:.service.in=.service)
-
-$(service_DATA): $(service_in_files) Makefile
-	@sed -e "s|\@servicedir\@|$(bindir)|" $< > $@
-
 pkgdata_DATA =						\
 	pk-application.glade
 
 EXTRA_DIST =						\
-	pk-update-icon.schemas.in			\
 	$(schema_in_files)				\
 	$(desktop_in_files)				\
 	$(autostart_in_files)				\
-	$(service_in_files)				\
 	$(pkgdata_DATA)
 
 if GCONF_SCHEMAS_INSTALL
@@ -51,5 +40,5 @@ clean-local :
 DISTCLEANFILES =					\
 	pk-update-icon.desktop				\
 	pk-application.desktop				\
-	pk-update-icon.schemas				\
-	pk-update-icon.service
+	packagekit-gnome.schemas
+
