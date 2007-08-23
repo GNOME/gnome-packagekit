@@ -30,12 +30,6 @@ CPPFLAGS="$CPPFLAGS -g"
 CPPFLAGS="$CPPFLAGS -fexceptions"
 
 dnl ---------------------------------------------------------------------------
-dnl - GProf switches (do not use for normal building)
-dnl ---------------------------------------------------------------------------
-#CPPFLAGS="$CPPFLAGS -c -pg"
-#LDFLAGS="$LDFLAGS -pg"
-
-dnl ---------------------------------------------------------------------------
 dnl - gettext stuff
 dnl ---------------------------------------------------------------------------
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
@@ -47,78 +41,57 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-GLIB_REQUIRED=2.13.0
-GTK_REQUIRED=2.11.0
-GDK_REQUIRED=2.11.0
-GNOME_KEYRING_REQUIRED=0.6.0
-LIBGNOME_REQUIRED=2.14.0
-LIBGNOMEUI_REQUIRED=2.14.0
-HAL_REQUIRED=0.5.8
-DBUS_REQUIRED=0.70
+PACKAGEKIT_REQUIRED=0.0.1
+GLIB_REQUIRED=2.14.0
+GTK_REQUIRED=2.10.0
+DBUS_REQUIRED=1.1.2
+DBUS_GLIB_REQUIRED=0.74
 LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
-LIBWNCK_REQUIRED=2.10.0
-CAIRO_REQUIRED=1.0.0
-GTKUNIQUE_REQUIRED=0.9.1
-LIBPANEL_REQUIRED=2.0.0
-GSTREAMER_REQUIRED=0.10
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
 dnl ---------------------------------------------------------------------------
+AC_SUBST(PACKAGEKIT_REQUIRED)
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
-AC_SUBST(GDK_REQUIRED)
-AC_SUBST(LIBGNOME_REQUIRED)
-AC_SUBST(LIBGNOMEUI_REQUIRED)
-AC_SUBST(HAL_REQUIRED)
 AC_SUBST(DBUS_REQUIRED)
+AC_SUBST(DBUS_GLIB_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(LIBNOTIFY_REQUIRED)
-AC_SUBST(LIBWNCK_REQUIRED)
-AC_SUBST(CAIRO_REQUIRED)
-AC_SUBST(GTKUNIQUE_REQUIRED)
-AC_SUBST(LIBPANEL_REQUIRED)
-AC_SUBST(GSTREAMER_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit >= $PACKAGEKIT_REQUIRED)
+AC_SUBST(PACKAGEKIT_CFLAGS)
+AC_SUBST(PACKAGEKIT_LIBS)
+
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 
-PKG_CHECK_MODULES(HAL, hal >= $HAL_REQUIRED)
-AC_SUBST(HAL_CFLAGS)
-AC_SUBST(HAL_LIBS)
-
-PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= $GSTREAMER_REQUIRED)
-AC_SUBST(GSTREAMER_CFLAGS)
-AC_SUBST(GSTREAMER_LIBS)
-
 PKG_CHECK_MODULES(DBUS, \
- dbus-glib-1 >= $DBUS_REQUIRED \
+ dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
  dbus-1 >= $DBUS_REQUIRED \
  gthread-2.0)
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 
-PKG_CHECK_MODULES(GNOME, \
- libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED \
- libglade-2.0 >= $LIBGLADE_REQUIRED \
- libwnck-1.0 >= $LIBWNCK_REQUIRED \
- gtk+-2.0 >= $GTK_REQUIRED \
- gnome-keyring-1 >= $GNOME_KEYRING_REQUIRED \
- libpanelapplet-2.0 >= $LIBPANEL_REQUIRED \
- cairo >= $CAIRO_REQUIRED)
-AC_SUBST(GNOME_CFLAGS)
-AC_SUBST(GNOME_LIBS)
+PKG_CHECK_MODULES(GTK, \
+ gtk+-2.0 >= $GTK_REQUIRED)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
 
-PKG_CHECK_MODULES(GDK, \
- gdk-2.0 >= $GDK_REQUIRED \
- gdk-x11-2.0 >= $GDK_REQUIRED)
-AC_SUBST(GDK_CFLAGS)
-AC_SUBST(GDK_LIBS)
+PKG_CHECK_MODULES(LIBGLADE, \
+ libglade-2.0 >= $LIBGLADE_REQUIRED)
+AC_SUBST(LIBGLADE_CFLAGS)
+AC_SUBST(LIBGLADE_LIBS)
+
+PKG_CHECK_MODULES(LIBNOTIFY, \
+ libnotify >= $LIBNOTIFY_REQUIRED)
+AC_SUBST(LIBNOTIFY_CFLAGS)
+AC_SUBST(LIBNOTIFY_LIBS)
 
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
