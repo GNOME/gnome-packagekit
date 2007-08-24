@@ -474,14 +474,6 @@ pk_misc_add_columns (GtkTreeView *treeview)
 							   "text", COLUMN_DESCRIPTION, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_DESCRIPTION);
 	gtk_tree_view_append_column (treeview, column);
-
-	/* column for arch */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Data", renderer,
-							   "text", COLUMN_DATA, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_DATA);
-	gtk_tree_view_append_column (treeview, column);
-
 }
 
 /**
