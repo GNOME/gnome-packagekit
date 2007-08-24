@@ -434,7 +434,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
-static void pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, PkNotify *notify);
+static void pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify);
 
 /**
  * pk_notify_libnotify_reboot_now_cb:
@@ -449,7 +449,7 @@ pk_notify_libnotify_reboot_now_cb (NotifyNotification *dialog, gchar *action, Pk
  * pk_notify_update_system_finished_cb:
  **/
 static void
-pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, PkNotify *notify)
+pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify)
 {
 	PkTaskRestart restart;
 	restart = pk_task_client_get_require_restart (tclient);
@@ -652,7 +652,7 @@ pk_notify_libnotify_update_system_cb (NotifyNotification *dialog, gchar *action,
 }
 
 /**
- * pk_notify_query_updates_finished_cb:
+ * pk_notify_critical_updates_warning:
  **/
 static void
 pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboolean plural)
@@ -689,7 +689,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
  * pk_notify_query_updates_finished_cb:
  **/
 static void
-pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, PkNotify *notify)
+pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, guint runtime, PkNotify *notify)
 {
 	PkTaskClientPackageItem *item;
 	GPtrArray *packages;
@@ -699,13 +699,13 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, PkN
 	const gchar *icon;
 	GString *status_security;
 	GString *status_tooltip;
+	PkPackageIdent *ident;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
-	g_print ("exit: %i\n", exit);
 
 	/* find packages */
 	packages = pk_task_client_get_package_buffer (tclient);
@@ -720,17 +720,19 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, PkN
 	is_security = FALSE;
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (packages, i);
-		pk_debug ("%i, %s, %s", item->value, item->package, item->summary);
+		pk_debug ("%i, %s, %s", item->value, item->package_id, item->summary);
+		ident = pk_task_package_ident_from_string (item->package_id);
 		if (item->value == 1) {
 			is_security = TRUE;
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
-						item->package, item->summary);
+						ident->name, item->summary);
 			g_string_append_printf (status_tooltip, "%s - %s %s\n",
-						item->package, item->summary, _("(Security)"));
+						ident->name, item->summary, _("(Security)"));
 		} else {
 			g_string_append_printf (status_tooltip, "%s - %s\n",
-						item->package, item->summary);
+						ident->name, item->summary);
 		}
+		pk_task_package_ident_free (ident);
 	}
 	g_object_unref (tclient);
 
@@ -804,7 +806,7 @@ pk_notify_invalidate_cache_cb (PkNotify *notify)
  * pk_notify_refresh_cache_finished_cb:
  **/
 static void
-pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, PkNotify *notify)
+pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
