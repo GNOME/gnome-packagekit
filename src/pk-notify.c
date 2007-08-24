@@ -254,9 +254,9 @@ pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const g
 	pk_debug ("status=%i, package=%s", status, package);
 
 	if (status == PK_TASK_STATUS_REMOVE) {
-		message = g_strdup_printf ("Package '%s' has been removed", package);
+		message = g_strdup_printf (_("Package '%s' has been removed"), package);
 	} else if (status == PK_TASK_STATUS_INSTALL) {
-		message = g_strdup_printf ("Package '%s' has been installed", package);
+		message = g_strdup_printf (_("Package '%s' has been installed"), package);
 	} else if (status == PK_TASK_STATUS_UPDATE) {
 		message = g_strdup ("System has been updated");
 	}
@@ -265,7 +265,7 @@ pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const g
 	if (message == NULL) {
 		return;
 	}
-	title = "Task completed";
+	title = _("Task completed");
 	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
 							   notify->priv->status_icon);
 	notify_notification_set_timeout (dialog, 5000);
@@ -285,8 +285,8 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 	const gchar *message;
 
 	pk_debug ("show help");
-	title = "Functionality incomplete";
-	message = "No help yet, sorry...";
+	title = _("Functionality incomplete");
+	message = _("No help yet, sorry...");
 	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
 							   notify->priv->status_icon);
 	notify_notification_set_timeout (dialog, 5000);
@@ -305,8 +305,8 @@ pk_notify_show_preferences_cb (GtkMenuItem *item, PkNotify *notify)
 	const gchar *message;
 
 	pk_debug ("show preferences");
-	title = "Functionality incomplete";
-	message = "No preferences yet, sorry...";
+	title = _("Functionality incomplete");
+	message = _("No preferences yet, sorry...");
 	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
 							   notify->priv->status_icon);
 	notify_notification_set_timeout (dialog, 5000);
@@ -452,12 +452,12 @@ pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code
 
 		pk_debug ("Doing requires-restart notification");
 		message = pk_task_restart_to_localised_text (restart);
-		dialog = notify_notification_new_with_status_icon ("The update has completed", message,
+		dialog = notify_notification_new_with_status_icon (_("The system update has completed"), message,
 								   "software-update-available",
 								   notify->priv->status_icon);
 		notify_notification_set_timeout (dialog, 50000);
 		notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-		notify_notification_add_action (dialog, "reboot-now", "Restart computer now",
+		notify_notification_add_action (dialog, "reboot-now", _("Restart computer now"),
 						(NotifyActionCallback) pk_notify_libnotify_reboot_now_cb,
 						notify, NULL);
 		notify_notification_show (dialog, NULL);
@@ -476,8 +476,7 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 	const gchar *message;
 
 	pk_debug ("not_supported");
-	message = "The action could not be completed due to the backend refusing the command.\n"
-	          "Possible causes are an incomplete backend or other critical error.";
+	message = _("The action could not be completed due to the backend refusing the command");
 	dialog = notify_notification_new_with_status_icon (title, message, "process-stop",
 							   notify->priv->status_icon);
 	notify_notification_set_timeout (dialog, 5000);
@@ -503,7 +502,7 @@ pk_notify_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	if (ret == FALSE) {
 		g_object_unref (tclient);
 		pk_warning ("failed to refresh cache");
-		pk_notify_not_supported (notify, "Failed to refresh cache");
+		pk_notify_not_supported (notify, _("Failed to refresh cache"));
 	}
 }
 
@@ -524,7 +523,7 @@ pk_notify_update_system (PkNotify *notify)
 	if (ret == FALSE) {
 		g_object_unref (tclient);
 		pk_warning ("failed to update system");
-		pk_notify_not_supported (notify, "Failed to update system");
+		pk_notify_not_supported (notify, _("Failed to update system"));
 	}
 }
 
@@ -659,20 +658,20 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	if (plural == TRUE) {
-		title = "Security Updates Available";
-		message = g_strdup_printf ("The following important updates are available for your computer:\n\n%s", details);
+		title = _("Security updates available");
+		message = g_strdup_printf (_("The following important updates are available for your computer:\n\n%s"), details);
 	} else {
-		title = "Security Update Available";
-		message = g_strdup_printf ("The following important update is available for your computer:\n\n%s", details);
+		title = _("Security update available");
+		message = g_strdup_printf (_("The following important update is available for your computer:\n\n%s"), details);
 	}
 	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent",
 							   notify->priv->status_icon);
 	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
-	notify_notification_add_action (dialog, "update-system", "Update system now",
+	notify_notification_add_action (dialog, "update-system", _("Update system now"),
 					(NotifyActionCallback) pk_notify_libnotify_update_system_cb,
 					notify, NULL);
-	notify_notification_add_action (dialog, "update-system", "Don't warn me again",
+	notify_notification_add_action (dialog, "update-system", _("Don't warn me again"),
 					(NotifyActionCallback) pk_notify_libnotify_update_system_cb,
 					notify, NULL);
 	notify_notification_show (dialog, NULL);
@@ -717,10 +716,13 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, PkN
 		pk_debug ("%i, %s, %s", item->value, item->package, item->summary);
 		if (item->value == 1) {
 			is_security = TRUE;
-			g_string_append_printf (status_security, "<b>%s</b> - %s\n", item->package, item->summary);
-			g_string_append_printf (status_tooltip, "%s - %s (Security)\n", item->package, item->summary);
+			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
+						item->package, item->summary);
+			g_string_append_printf (status_tooltip, "%s - %s %s\n",
+						item->package, item->summary, _("(Security)"));
 		} else {
-			g_string_append_printf (status_tooltip, "%s - %s\n", item->package, item->summary);
+			g_string_append_printf (status_tooltip, "%s - %s\n",
+						item->package, item->summary);
 		}
 	}
 	g_object_unref (tclient);
@@ -742,7 +744,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, PkN
 
 	/* make tooltip */
 	if (status_tooltip->len != 0) {
-		g_string_prepend (status_tooltip, "Updates:\n");
+		g_string_prepend (status_tooltip, _("Updates:\n"));
 	}
 
 	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->update_icon), icon);
