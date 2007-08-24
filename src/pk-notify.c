@@ -246,13 +246,19 @@ pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
  * pk_notify_task_list_finished_cb:
  **/
 static void
-pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gchar *package, PkNotify *notify)
+pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gchar *package, guint runtime, PkNotify *notify)
 {
 	NotifyNotification *dialog;
 	const gchar *title;
 	gchar *message = NULL;
 
 	pk_debug ("status=%i, package=%s", status, package);
+
+	/* is it worth showing a UI? */
+	if (runtime < 3) {
+		pk_debug ("no libnotify, too quick");
+		return;
+	}
 
 	if (status == PK_TASK_STATUS_REMOVE) {
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);

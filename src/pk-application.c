@@ -156,7 +156,7 @@ pk_application_install_cb (GtkWidget      *widget,
 	if (ret == FALSE) {
 		pk_task_client_reset (application->priv->tclient);
 		pk_application_error_message (application,
-					      "The package could not be installed", NULL);
+					      _("The package could not be installed"), NULL);
 	}
 }
 
@@ -178,7 +178,7 @@ pk_application_remove_cb (GtkWidget      *widget,
 	if (ret == FALSE) {
 		pk_task_client_reset (application->priv->tclient);
 		pk_application_error_message (application,
-					      "The package could not be removed", NULL);
+					      _("The package could not be removed"), NULL);
 	}
 }
 
@@ -191,10 +191,16 @@ static void
 pk_application_deps_cb (GtkWidget *widget,
 		   PkApplication  *application)
 {
+	gboolean ret;
 	pk_debug ("deps %s", application->priv->package);
-	//TODO: at least try...
-	pk_application_error_message (application,
-				      "The package deps could not be found", NULL);
+	ret = pk_task_client_get_deps (application->priv->tclient,
+				       application->priv->package);
+	/* ick, we failed so pretend we didn't do the action */
+	if (ret == FALSE) {
+		pk_task_client_reset (application->priv->tclient);
+		pk_application_error_message (application,
+					      _("The package dependencies could not be found"), NULL);
+	}
 }
 
 /**
@@ -249,7 +255,7 @@ pk_console_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const gch
  * pk_console_finished_cb:
  **/
 static void
-pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, PkApplication *application)
+pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -269,7 +275,7 @@ pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, PkApplicatio
 	/* panic */
 	if (status == PK_TASK_EXIT_FAILED) {
 		pk_application_error_message (application,
-					      "The action did not complete",
+					      _("The action did not complete"),
 					      NULL);
 	}
 }
@@ -549,7 +555,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	pk_debug ("connected=%i", connected);
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
-		pk_console_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, application);
+		pk_console_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, 0, application);
 	}
 }
 
