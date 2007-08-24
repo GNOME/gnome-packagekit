@@ -50,6 +50,12 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 	case PK_TASK_ERROR_CODE_GPG_FAILURE:
 		text = _("A security trust relationship is not present");
 		break;
+	case PK_TASK_ERROR_CODE_PACKAGE_NOT_INSTALLED:
+		text = _("The package is not installed");
+		break;
+	case PK_TASK_ERROR_CODE_PACKAGE_ALREADY_INSTALLED:
+		text = _("The package is already installed");
+		break;
 	default:
 		text = _("Unknown error");
 	}
