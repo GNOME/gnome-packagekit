@@ -56,12 +56,17 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 	case PK_TASK_ERROR_CODE_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package is already installed");
 		break;
+	case PK_TASK_ERROR_CODE_PACKAGE_DOWNLOAD_FAILED:
+		text = _("The package download failed");
+		break;
+	case PK_TASK_ERROR_CODE_DEP_RESOLUTION_FAILED:
+		text = _("Dependency resolution failed");
+		break;
 	default:
 		text = _("Unknown error");
 	}
 	return text;
 }
-
 
 /**
  * pk_task_restart_to_localised_text:
