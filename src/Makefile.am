@@ -45,6 +45,8 @@ pk_application_SOURCES =				\
 	pk-application-main.c				\
 	pk-application.c				\
 	pk-application.h				\
+	pk-common.c					\
+	pk-common.h					\
 	$(NULL)
 
 pk_application_LDADD =					\

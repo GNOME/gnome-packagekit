@@ -45,6 +45,7 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 
+#include "pk-common.h"
 #include "pk-notify.h"
 
 static void     pk_notify_class_init	(PkNotifyClass *klass);

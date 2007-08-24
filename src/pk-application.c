@@ -33,6 +33,7 @@
 #include <pk-task-client.h>
 #include <pk-connection.h>
 
+#include "pk-common.h"
 #include "pk-application.h"
 
 static void     pk_application_class_init (PkApplicationClass *klass);
