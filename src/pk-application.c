@@ -200,6 +200,9 @@ pk_application_deps_cb (GtkWidget *widget,
 		pk_task_client_reset (application->priv->tclient);
 		pk_application_error_message (application,
 					      _("The package dependencies could not be found"), NULL);
+	} else {
+		/* clear existing list and wait for packages */
+		gtk_list_store_clear (application->priv->store);
 	}
 }
 
@@ -262,7 +265,7 @@ pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtim
 	application->priv->task_ended = TRUE;
 
 	/* hide widget */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
 	gtk_widget_hide (widget);
 
 	/* make find button sensitive again */
@@ -370,10 +373,13 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("find %s", package);
 	application->priv->task_ended = FALSE;
 
-	/* show widget */
+	/* show pane */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
+	gtk_widget_show (widget);
+
+	/* reset to 0 */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
-	gtk_widget_show (widget);
 
 	pk_task_client_find_packages (application->priv->tclient, package,
 				      application->priv->search_depth,
@@ -626,7 +632,10 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_deps_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
 	gtk_widget_hide (widget);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
