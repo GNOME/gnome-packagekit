@@ -62,6 +62,9 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 	case PK_TASK_ERROR_CODE_DEP_RESOLUTION_FAILED:
 		text = _("Dependency resolution failed");
 		break;
+	case PK_TASK_ERROR_CODE_FILTER_INVALID:
+		text = _("Search filter was invalid");
+		break;
 	default:
 		text = _("Unknown error");
 	}
