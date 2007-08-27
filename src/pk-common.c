@@ -126,3 +126,50 @@ pk_task_status_to_localised_text (PkTaskStatus status)
 	return text;
 }
 
+/**
+ * pk_task_group_to_localised_text:
+ **/
+const gchar *
+pk_task_group_to_localised_text (PkTaskGroup group)
+{
+	const gchar *text = NULL;
+	switch (group) {
+	case PK_TASK_GROUP_ACCESSIBILITY:
+		text = _("Accessibility");
+		break;
+	case PK_TASK_GROUP_ACCESSORIES:
+		text = _("Accessories");
+		break;
+	case PK_TASK_GROUP_EDUCATION:
+		text = _("Education");
+		break;
+	case PK_TASK_GROUP_GAMES:
+		text = _("Games");
+		break;
+	case PK_TASK_GROUP_GRAPHICS:
+		text = _("Graphics");
+		break;
+	case PK_TASK_GROUP_INTERNET:
+		text = _("Internet");
+		break;
+	case PK_TASK_GROUP_OFFICE:
+		text = _("Office");
+		break;
+	case PK_TASK_GROUP_OTHER:
+		text = _("Other");
+		break;
+	case PK_TASK_GROUP_PROGRAMMING:
+		text = _("Programming");
+		break;
+	case PK_TASK_GROUP_SOUND_VIDEO:
+		text = _("Sound/Video");
+		break;
+	case PK_TASK_GROUP_SYSTEM:
+		text = _("System");
+		break;
+	default:
+		pk_error ("group unrecognised: %i", status);
+	}
+	return text;
+}
+
