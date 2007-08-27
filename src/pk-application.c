@@ -363,6 +363,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 {
 	GtkWidget *widget;
 	const gchar *package;
+	const gchar *filter;
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
@@ -381,10 +382,20 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
 
-	pk_task_client_find_packages (application->priv->tclient, package,
-				      application->priv->search_depth,
-				      application->priv->find_installed,
-				      application->priv->find_available);
+	if (application->priv->find_installed == TRUE &&
+	    application->priv->find_available == TRUE) {
+		filter = "none";
+	} else if (application->priv->find_installed == TRUE) {
+		filter = "installed";
+	} else {
+		filter = "~installed";
+	}
+
+	if (application->priv->search_depth == 0) {
+		pk_task_client_search_name (application->priv->tclient, filter, package);
+	} else {
+		pk_task_client_search_details (application->priv->tclient, filter, package);
+	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	gtk_widget_set_sensitive (widget, FALSE);

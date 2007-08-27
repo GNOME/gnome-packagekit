@@ -168,7 +168,7 @@ pk_task_group_to_localised_text (PkTaskGroup group)
 		text = _("System");
 		break;
 	default:
-		pk_error ("group unrecognised: %i", status);
+		pk_error ("group unrecognised: %i", group);
 	}
 	return text;
 }
