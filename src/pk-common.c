@@ -65,6 +65,9 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 	case PK_TASK_ERROR_CODE_FILTER_INVALID:
 		text = _("Search filter was invalid");
 		break;
+	case PK_TASK_ERROR_CODE_PACKAGE_ID_INVALID:
+		text = _("The package ID was not well formed");
+		break;
 	default:
 		text = _("Unknown error");
 	}
