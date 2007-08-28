@@ -167,8 +167,8 @@ pk_task_group_to_localised_text (PkTaskGroup group)
 	case PK_TASK_GROUP_PROGRAMMING:
 		text = _("Programming");
 		break;
-	case PK_TASK_GROUP_SOUND_VIDEO:
-		text = _("Sound/Video");
+	case PK_TASK_GROUP_MULTIMEDIA:
+		text = _("Multimedia");
 		break;
 	case PK_TASK_GROUP_SYSTEM:
 		text = _("System");
