@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 const gchar	*pk_task_status_to_localised_text	(PkTaskStatus	 status);
 const gchar	*pk_task_error_code_to_localised_text	(PkTaskErrorCode code);
 const gchar	*pk_task_restart_to_localised_text	(PkTaskRestart	 restart);
+const gchar	*pk_task_group_to_localised_text	(PkTaskGroup	 group);
 
 G_END_DECLS
 

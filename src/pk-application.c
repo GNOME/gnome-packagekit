@@ -45,7 +45,8 @@ static void     pk_application_finalize   (GObject	    *object);
 struct PkApplicationPrivate
 {
 	GladeXML		*glade_xml;
-	GtkListStore		*store;
+	GtkListStore		*packages_store;
+	GtkListStore		*groups_store;
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
@@ -63,13 +64,21 @@ enum {
 
 enum
 {
-	COLUMN_INSTALLED,
-	COLUMN_NAME,
-	COLUMN_VERSION,
-	COLUMN_ARCH,
-	COLUMN_DESCRIPTION,
-	COLUMN_DATA,
-	NUM_COLUMNS
+	PACKAGES_COLUMN_INSTALLED,
+	PACKAGES_COLUMN_NAME,
+	PACKAGES_COLUMN_VERSION,
+	PACKAGES_COLUMN_ARCH,
+	PACKAGES_COLUMN_DESCRIPTION,
+	PACKAGES_COLUMN_DATA,
+	PACKAGES_COLUMN_LAST
+};
+
+enum
+{
+	GROUPS_COLUMN_ICON,
+	GROUPS_COLUMN_NAME,
+	GROUPS_COLUMN_ID,
+	GROUPS_COLUMN_LAST
 };
 
 static guint	     signals [LAST_SIGNAL] = { 0, };
@@ -202,7 +211,7 @@ pk_application_deps_cb (GtkWidget *widget,
 					      _("The package dependencies could not be found"), NULL);
 	} else {
 		/* clear existing list and wait for packages */
-		gtk_list_store_clear (application->priv->store);
+		gtk_list_store_clear (application->priv->packages_store);
 	}
 }
 
@@ -232,14 +241,14 @@ pk_console_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 	/* split by delimeter */
 	ident = pk_task_package_ident_from_string (package_id);
 
-	gtk_list_store_append (application->priv->store, &iter);
-	gtk_list_store_set (application->priv->store, &iter,
-			    COLUMN_INSTALLED, value,
-			    COLUMN_NAME, ident->name,
-			    COLUMN_VERSION, ident->version,
-			    COLUMN_ARCH, ident->arch,
-			    COLUMN_DATA, ident->data,
-			    COLUMN_DESCRIPTION, summary,
+	gtk_list_store_append (application->priv->packages_store, &iter);
+	gtk_list_store_set (application->priv->packages_store, &iter,
+			    PACKAGES_COLUMN_INSTALLED, value,
+			    PACKAGES_COLUMN_NAME, ident->name,
+			    PACKAGES_COLUMN_VERSION, ident->version,
+			    PACKAGES_COLUMN_ARCH, ident->arch,
+			    PACKAGES_COLUMN_DATA, ident->data,
+			    PACKAGES_COLUMN_DESCRIPTION, summary,
 			    -1);
 	pk_task_package_ident_free (ident);
 }
@@ -369,7 +378,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
 	/* clear existing list */
-	gtk_list_store_clear (application->priv->store);
+	gtk_list_store_clear (application->priv->packages_store);
 
 	pk_debug ("find %s", package);
 	application->priv->task_ended = FALSE;
@@ -421,9 +430,15 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 {
 	GtkWidget *widget;
 	const gchar *package;
+	GtkTreeSelection *selection;
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
+
+	/* clear group selection */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_unselect_all (selection);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	if (package == NULL || strlen (package) == 0) {
@@ -444,20 +459,20 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_model_get (model, &iter, COLUMN_INSTALLED, &installed, -1);
+	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_INSTALLED, &installed, -1);
 
 	/* do something with the value */
 //	installed ^= 1;
 
 	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_INSTALLED, installed, -1);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_INSTALLED, installed, -1);
 
 	/* clean up */
 	gtk_tree_path_free (path);
 }
 
 static void
-pk_misc_add_columns (GtkTreeView *treeview)
+pk_packages_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -468,36 +483,64 @@ pk_misc_add_columns (GtkTreeView *treeview)
 	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
 
 	column = gtk_tree_view_column_new_with_attributes ("Installed", renderer,
-							   "active", COLUMN_INSTALLED, NULL);
+							   "active", PACKAGES_COLUMN_INSTALLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes ("Name", renderer,
-							   "text", COLUMN_NAME, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
+							   "text", PACKAGES_COLUMN_NAME, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for version */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes ("Version", renderer,
-							   "text", COLUMN_VERSION, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_VERSION);
+							   "text", PACKAGES_COLUMN_VERSION, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_VERSION);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for arch */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes ("Arch", renderer,
-							   "text", COLUMN_ARCH, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_ARCH);
+							   "text", PACKAGES_COLUMN_ARCH, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_ARCH);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for description */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes ("Description", renderer,
-							   "text", COLUMN_DESCRIPTION, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_DESCRIPTION);
+							   "text", PACKAGES_COLUMN_DESCRIPTION, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_DESCRIPTION);
 	gtk_tree_view_append_column (treeview, column);
+}
+
+static void
+pk_groups_add_columns (GtkTreeView *treeview)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
+
+	/* column for installed toggles */
+	renderer = gtk_cell_renderer_toggle_new ();
+	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
+
+
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", GROUPS_COLUMN_ICON);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* column for name */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes ("Name", renderer,
+							   "text", GROUPS_COLUMN_NAME, NULL);
+	gtk_tree_view_column_add_attribute (column, renderer, "markup", GROUPS_COLUMN_NAME);
+	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
+	gtk_tree_view_append_column (treeview, column);
+
 }
 
 /**
@@ -511,10 +554,37 @@ pk_application_combobox_changed_cb (GtkComboBox *combobox, PkApplication *applic
 }
 
 /**
- * pk_application_treeview_clicked_cb:
+ * pk_groups_treeview_clicked_cb:
  **/
 static void
-pk_application_treeview_clicked_cb (GtkTreeSelection *selection,
+pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
+			       PkApplication *application)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean ret;
+	gchar *id;
+
+	/* This will only work in single or browse selection mode! */
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
+		g_print ("selected row is: %s\n", id);
+
+		ret = pk_task_client_search_group (application->priv->tclient, "none", id);
+		/* ick, we failed so pretend we didn't do the action */
+		if (ret == FALSE) {
+			pk_task_client_reset (application->priv->tclient);
+			pk_application_error_message (application,
+						      _("The group could not be queried"), NULL);
+		}
+	}
+}
+
+/**
+ * pk_packages_treeview_clicked_cb:
+ **/
+static void
+pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 				    PkApplication *application)
 {
 	GtkWidget *widget;
@@ -530,11 +600,11 @@ pk_application_treeview_clicked_cb (GtkTreeSelection *selection,
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (application->priv->package);
 		gtk_tree_model_get (model, &iter,
-				    COLUMN_INSTALLED, &installed,
-				    COLUMN_NAME, &name,
-				    COLUMN_VERSION, &version,
-				    COLUMN_ARCH, &arch,
-				    COLUMN_DATA, &data, -1);
+				    PACKAGES_COLUMN_INSTALLED, &installed,
+				    PACKAGES_COLUMN_NAME, &name,
+				    PACKAGES_COLUMN_VERSION, &version,
+				    PACKAGES_COLUMN_ARCH, &arch,
+				    PACKAGES_COLUMN_DATA, &data, -1);
 
 		/* make back into package ID */
 		application->priv->package = pk_task_package_ident_build (name, version, arch, data);
@@ -573,6 +643,35 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
 		pk_console_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, 0, application);
+	}
+}
+
+/**
+ * pk_group_add_data:
+ **/
+static void
+pk_group_add_data (PkApplication *application, const gchar *type, const gchar *icon_name)
+{
+	GtkTreeIter iter;
+	PkTaskGroup group;
+	GdkPixbuf *icon;
+
+	group = pk_task_group_from_text (type);
+	gtk_list_store_append (application->priv->groups_store, &iter);
+
+const gchar *text;
+//text = g_markup_printf_escaped ("<span size=\"larger\" weight=\"bold\">%s</span>\n%s", "hello", "world");
+text = pk_task_group_to_localised_text (group);
+
+	gtk_list_store_set (application->priv->groups_store, &iter,
+			    GROUPS_COLUMN_NAME, text,
+			    GROUPS_COLUMN_ID, type,
+			    -1);
+
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
+	if (icon) {
+		gtk_list_store_set (application->priv->groups_store, &iter, GROUPS_COLUMN_ICON, icon, -1);
+		gdk_pixbuf_unref (icon);
 	}
 }
 
@@ -682,30 +781,55 @@ pk_application_init (PkApplication *application)
 	gtk_widget_hide (GTK_WIDGET (widget));
 	gtk_widget_show (GTK_WIDGET (widget));
 
-	/* create list store */
-	application->priv->store = gtk_list_store_new (NUM_COLUMNS,
+	GtkTreeSelection *selection;
+
+	/* create list stores */
+	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
 						       G_TYPE_BOOLEAN,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
+	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
+						       GDK_TYPE_PIXBUF,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
 
-	/* create tree view */
+	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-//	g_signal_connect (widget, "select-cursor-row",
-//			  G_CALLBACK (pk_application_treeview_clicked_cb), application);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (application->priv->store));
+				 GTK_TREE_MODEL (application->priv->packages_store));
 
-	GtkTreeSelection *selection;
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_application_treeview_clicked_cb), application);
-
+			  G_CALLBACK (pk_packages_treeview_clicked_cb), application);
 
 	/* add columns to the tree view */
-	pk_misc_add_columns (GTK_TREE_VIEW (widget));
+	pk_packages_add_columns (GTK_TREE_VIEW (widget));
+
+	/* create group tree view */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (application->priv->groups_store));
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	g_signal_connect (selection, "changed",
+			  G_CALLBACK (pk_groups_treeview_clicked_cb), application);
+
+	/* add columns to the tree view */
+	pk_groups_add_columns (GTK_TREE_VIEW (widget));
+	pk_group_add_data (application, "accessibility", "preferences-desktop-accessibility");
+	pk_group_add_data (application, "accessories", "applications-accessories");
+	pk_group_add_data (application, "education", "utilities-system-monitor");
+	pk_group_add_data (application, "games", "applications-games");
+	pk_group_add_data (application, "graphics", "applications-graphics");
+	pk_group_add_data (application, "internet", "applications-internet");
+	pk_group_add_data (application, "office", "applications-office");
+	pk_group_add_data (application, "other", "applications-other");
+	pk_group_add_data (application, "programming", "applications-development");
+	pk_group_add_data (application, "sound-video", "applications-multimedia");
+	pk_group_add_data (application, "system", "applications-system");
 }
 
 /**
@@ -722,7 +846,7 @@ pk_application_finalize (GObject *object)
 	application = PK_APPLICATION (object);
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 
-	g_object_unref (application->priv->store);
+	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->tclient);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
