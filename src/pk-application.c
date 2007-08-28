@@ -50,6 +50,7 @@ struct PkApplicationPrivate
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
+	gchar			*actions;
 	gboolean		 task_ended;
 	gboolean		 find_installed;
 	gboolean		 find_available;
@@ -704,6 +705,9 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (application->priv->tclient, "percentage-changed",
 			  G_CALLBACK (pk_console_percentage_changed_cb), application);
 
+	/* get actions */
+	application->priv->actions = pk_task_client_get_actions (application->priv->tclient);
+
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), application);
@@ -850,6 +854,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->tclient);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
+	g_free (application->priv->actions);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
 }

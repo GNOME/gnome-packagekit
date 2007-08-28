@@ -282,6 +282,23 @@ pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const g
 }
 
 /**
+ * pk_notify_task_list_error_code_cb:
+ **/
+static void
+pk_notify_task_list_error_code_cb (PkTaskList *tlist, PkTaskErrorCode error_code, const gchar *details, PkNotify *notify)
+{
+	NotifyNotification *dialog;
+	const gchar *title;
+
+	title = pk_task_error_code_to_localised_text (error_code);
+	dialog = notify_notification_new_with_status_icon (title, details, "help-browser",
+							   notify->priv->status_icon);
+	notify_notification_set_timeout (dialog, 5000);
+	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
+	notify_notification_show (dialog, NULL);
+}
+
+/**
  * pk_notify_show_help_cb:
  **/
 static void
@@ -913,6 +930,8 @@ pk_notify_init (PkNotify *notify)
 			  G_CALLBACK (pk_notify_task_list_changed_cb), notify);
 	g_signal_connect (notify->priv->tlist, "task-list-finished",
 			  G_CALLBACK (pk_notify_task_list_finished_cb), notify);
+	g_signal_connect (notify->priv->tlist, "error-code",
+			  G_CALLBACK (pk_notify_task_list_error_code_cb), notify);
 
 	notify->priv->pconnection = pk_connection_new ();
 	g_signal_connect (notify->priv->pconnection, "connection-changed",
