@@ -941,6 +941,12 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
 	gtk_widget_hide (widget);
 
+	/* hide the group selector if we don't support search-groups */
+	if (pk_task_action_contains (application->priv->actions, PK_TASK_ACTION_SEARCH_GROUP) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
+		gtk_widget_hide (widget);
+	}
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
