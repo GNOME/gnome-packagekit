@@ -52,6 +52,7 @@ struct PkApplicationPrivate
 	gchar			*package;
 	gchar			*actions;
 	gboolean		 task_ended;
+	gboolean		 search_in_progress;
 	gboolean		 find_installed;
 	gboolean		 find_available;
 	gboolean		 find_devel;
@@ -305,9 +306,12 @@ pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtim
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
 	gtk_widget_hide (widget);
 
-	/* make find button sensitive again */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	gtk_widget_set_sensitive (widget, TRUE);
+	/* Correct text on button */
+	if (application->priv->search_in_progress == TRUE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
+		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
+		application->priv->search_in_progress = FALSE;
+	}
 
 	/* reset tclient */
 	pk_task_client_reset (application->priv->tclient);
@@ -472,8 +476,17 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	const gchar *package;
 	const gchar *filter;
 	gchar *filter_all;
+	gboolean ret;
 	GString *string;
 
+	if (application->priv->search_in_progress == TRUE) {
+		pk_debug ("trying to cancel task...");
+		ret = pk_task_client_cancel_job_try (application->priv->tclient);
+		pk_warning ("canceled? %i", ret);
+		return;
+	}
+
+	application->priv->search_in_progress = TRUE;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
@@ -562,8 +575,8 @@ pk_application_find_cb (GtkWidget	*button_widget,
 		pk_task_client_search_details (application->priv->tclient, filter_all, package);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
+	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
 	g_free (filter_all);
 }
 
@@ -854,6 +867,7 @@ pk_application_init (PkApplication *application)
 	application->priv->find_non_devel = TRUE;
 	application->priv->find_gui = TRUE;
 	application->priv->find_text = TRUE;
+	application->priv->search_in_progress = FALSE;
 
 	application->priv->search_depth = 0;
 
