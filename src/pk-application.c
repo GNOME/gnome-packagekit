@@ -707,7 +707,6 @@ pk_groups_add_columns (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "text", GROUPS_COLUMN_NAME, NULL);
-	gtk_tree_view_column_add_attribute (column, renderer, "markup", GROUPS_COLUMN_NAME);
 	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
@@ -828,19 +827,18 @@ pk_group_add_data (PkApplication *application, const gchar *type)
 	PkTaskGroup group;
 	GdkPixbuf *icon;
 	const gchar *icon_name;
+	const gchar *text;
 
 	group = pk_task_group_from_text (type);
 	gtk_list_store_append (application->priv->groups_store, &iter);
 
-const gchar *text;
-//text = g_markup_printf_escaped ("<span size=\"larger\" weight=\"bold\">%s</span>\n%s", "hello", "world");
-text = pk_task_group_to_localised_text (group);
-icon_name = pk_task_group_to_icon_name (group);
+	text = pk_task_group_to_localised_text (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, type,
 			    -1);
 
+	icon_name = pk_task_group_to_icon_name (group);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
 	if (icon) {
 		gtk_list_store_set (application->priv->groups_store, &iter, GROUPS_COLUMN_ICON, icon, -1);
