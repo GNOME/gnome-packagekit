@@ -652,7 +652,7 @@ pk_packages_add_columns (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_toggle_new ();
 	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
 
-	column = gtk_tree_view_column_new_with_attributes ("", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Installed"), renderer,
 							   "active", PACKAGES_COLUMN_INSTALLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
