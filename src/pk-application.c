@@ -639,34 +639,34 @@ pk_packages_add_columns (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_toggle_new ();
 	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
 
-	column = gtk_tree_view_column_new_with_attributes ("Installed", renderer,
+	column = gtk_tree_view_column_new_with_attributes ("", renderer,
 							   "active", PACKAGES_COLUMN_INSTALLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Name", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "text", PACKAGES_COLUMN_NAME, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for version */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Version", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Version"), renderer,
 							   "text", PACKAGES_COLUMN_VERSION, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_VERSION);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for arch */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Arch", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Arch"), renderer,
 							   "text", PACKAGES_COLUMN_ARCH, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_ARCH);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for description */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Description", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Summary"), renderer,
 							   "text", PACKAGES_COLUMN_DESCRIPTION, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_DESCRIPTION);
 	gtk_tree_view_append_column (treeview, column);
@@ -692,7 +692,7 @@ pk_groups_add_columns (GtkTreeView *treeview)
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Name", renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "text", GROUPS_COLUMN_NAME, NULL);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", GROUPS_COLUMN_NAME);
 	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
