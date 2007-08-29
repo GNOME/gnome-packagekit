@@ -994,6 +994,9 @@ pk_application_init (PkApplication *application)
 	gtk_widget_set_size_request (main_window, 800, 400);
 	gtk_widget_show (main_window);
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+
 	/* FIXME: There's got to be a better way than this */
 	gtk_widget_hide (GTK_WIDGET (widget));
 	gtk_widget_show (GTK_WIDGET (widget));
