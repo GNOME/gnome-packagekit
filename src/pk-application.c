@@ -123,7 +123,7 @@ pk_application_class_init (PkApplicationClass *klass)
 }
 
 /**
- * pk_console_error_code_cb:
+ * pk_application_error_code_cb:
  **/
 static void
 pk_application_error_message (PkApplication *application, const gchar *title, const gchar *details)
@@ -143,8 +143,6 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 
 /**
  * pk_application_help_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_help_cb (GtkWidget *widget,
@@ -156,8 +154,6 @@ pk_application_help_cb (GtkWidget *widget,
 
 /**
  * pk_application_install_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_install_cb (GtkWidget      *widget,
@@ -177,8 +173,6 @@ pk_application_install_cb (GtkWidget      *widget,
 
 /**
  * pk_application_remove_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_remove_cb (GtkWidget      *widget,
@@ -199,8 +193,6 @@ pk_application_remove_cb (GtkWidget      *widget,
 
 /**
  * pk_application_deps_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_deps_cb (GtkWidget *widget,
@@ -223,8 +215,6 @@ pk_application_deps_cb (GtkWidget *widget,
 
 /**
  * pk_application_close_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_close_cb (GtkWidget	*widget,
@@ -235,10 +225,10 @@ pk_application_close_cb (GtkWidget	*widget,
 }
 
 /**
- * pk_console_package_cb:
+ * pk_application_package_cb:
  **/
 static void
-pk_console_description_cb (PkTaskClient *tclient, const gchar *package_id, PkTaskGroup group,
+pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id, PkTaskGroup group,
 			   const gchar *detail, const gchar *url, PkApplication *application)
 {
 	GtkWidget *widget;
@@ -257,10 +247,10 @@ pk_console_description_cb (PkTaskClient *tclient, const gchar *package_id, PkTas
 }
 
 /**
- * pk_console_package_cb:
+ * pk_application_package_cb:
  **/
 static void
-pk_console_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
+pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
 			const gchar *summary, PkApplication *application)
 {
 	PkPackageIdent *ident;
@@ -283,20 +273,20 @@ pk_console_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 }
 
 /**
- * pk_console_error_code_cb:
+ * pk_application_error_code_cb:
  **/
 static void
-pk_console_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const gchar *details, PkApplication *application)
+pk_application_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const gchar *details, PkApplication *application)
 {
 	pk_application_error_message (application,
 				      pk_task_error_code_to_localised_text (code), details);
 }
 
 /**
- * pk_console_finished_cb:
+ * pk_application_finished_cb:
  **/
 static void
-pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkApplication *application)
+pk_application_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -325,10 +315,10 @@ pk_console_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtim
 }
 
 /**
- * pk_console_percentage_changed_cb:
+ * pk_application_percentage_changed_cb:
  **/
 static void
-pk_console_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
+pk_application_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
@@ -338,10 +328,10 @@ pk_console_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApp
 }
 
 /**
- * pk_console_sub_percentage_changed_cb:
+ * pk_application_sub_percentage_changed_cb:
  **/
 static void
-pk_console_sub_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
+pk_application_sub_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
@@ -351,10 +341,10 @@ pk_console_sub_percentage_changed_cb (PkTaskClient *tclient, guint percentage, P
 }
 
 /**
- * pk_console_no_percentage_updates_timeout:
+ * pk_application_no_percentage_updates_timeout:
  **/
 gboolean
-pk_console_no_percentage_updates_timeout (gpointer data)
+pk_application_no_percentage_updates_timeout (gpointer data)
 {
 	gfloat fraction;
 	GtkWidget *widget;
@@ -374,21 +364,19 @@ pk_console_no_percentage_updates_timeout (gpointer data)
 }
 
 /**
- * pk_console_no_percentage_updates_cb:
+ * pk_application_no_percentage_updates_cb:
  **/
 static void
-pk_console_no_percentage_updates_cb (PkTaskClient *tclient, PkApplication *application)
+pk_application_no_percentage_updates_cb (PkTaskClient *tclient, PkApplication *application)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
 	gtk_widget_show (widget);
-	g_timeout_add (100, pk_console_no_percentage_updates_timeout, application);
+	g_timeout_add (100, pk_application_no_percentage_updates_timeout, application);
 }
 
 /**
  * pk_application_find_options_available_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_available_cb (GtkToggleButton *togglebutton,
@@ -400,8 +388,6 @@ pk_application_find_options_available_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_options_installed_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_installed_cb (GtkToggleButton *togglebutton,
@@ -413,8 +399,6 @@ pk_application_find_options_installed_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_options_devel_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_devel_cb (GtkToggleButton *togglebutton,
@@ -426,8 +410,6 @@ pk_application_find_options_devel_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_options_non_devel_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_non_devel_cb (GtkToggleButton *togglebutton,
@@ -439,8 +421,6 @@ pk_application_find_options_non_devel_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_options_gui_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_gui_cb (GtkToggleButton *togglebutton,
@@ -452,8 +432,6 @@ pk_application_find_options_gui_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_options_text_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_options_text_cb (GtkToggleButton *togglebutton,
@@ -465,8 +443,6 @@ pk_application_find_options_text_cb (GtkToggleButton *togglebutton,
 
 /**
  * pk_application_find_cb:
- * @widget: The GtkWidget object
- * @graph: This graph class instance
  **/
 static void
 pk_application_find_cb (GtkWidget	*button_widget,
@@ -582,9 +558,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 /**
  * pk_application_delete_event_cb:
- * @widget: The GtkWidget object
  * @event: The event type, unused.
- * @graph: This graph class instance
  **/
 static gboolean
 pk_application_delete_event_cb (GtkWidget	*widget,
@@ -813,7 +787,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	pk_debug ("connected=%i", connected);
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
-		pk_console_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, 0, application);
 	}
 }
 
@@ -848,7 +822,6 @@ pk_group_add_data (PkApplication *application, const gchar *type)
 
 /**
  * pk_application_init:
- * @graph: This graph class instance
  **/
 static void
 pk_application_init (PkApplication *application)
@@ -871,19 +844,19 @@ pk_application_init (PkApplication *application)
 
 	application->priv->tclient = pk_task_client_new ();
 	g_signal_connect (application->priv->tclient, "package",
-			  G_CALLBACK (pk_console_package_cb), application);
+			  G_CALLBACK (pk_application_package_cb), application);
 	g_signal_connect (application->priv->tclient, "description",
-			  G_CALLBACK (pk_console_description_cb), application);
+			  G_CALLBACK (pk_application_description_cb), application);
 	g_signal_connect (application->priv->tclient, "error-code",
-			  G_CALLBACK (pk_console_error_code_cb), application);
+			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->tclient, "finished",
-			  G_CALLBACK (pk_console_finished_cb), application);
+			  G_CALLBACK (pk_application_finished_cb), application);
 	g_signal_connect (application->priv->tclient, "no-percentage-updates",
-			  G_CALLBACK (pk_console_no_percentage_updates_cb), application);
+			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
 	g_signal_connect (application->priv->tclient, "percentage-changed",
-			  G_CALLBACK (pk_console_percentage_changed_cb), application);
+			  G_CALLBACK (pk_application_percentage_changed_cb), application);
 	g_signal_connect (application->priv->tclient, "sub-percentage-changed",
-			  G_CALLBACK (pk_console_sub_percentage_changed_cb), application);
+			  G_CALLBACK (pk_application_sub_percentage_changed_cb), application);
 
 	/* get actions */
 	application->priv->actions = pk_task_client_get_actions (application->priv->tclient);
