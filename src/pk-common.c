@@ -179,3 +179,50 @@ pk_task_group_to_localised_text (PkTaskGroup group)
 	return text;
 }
 
+/**
+ * pk_task_group_to_icon_name:
+ **/
+const gchar *
+pk_task_group_to_icon_name (PkTaskGroup group)
+{
+	const gchar *text = NULL;
+	switch (group) {
+	case PK_TASK_GROUP_ACCESSIBILITY:
+		text = "preferences-desktop-accessibility";
+		break;
+	case PK_TASK_GROUP_ACCESSORIES:
+		text = "applications-accessories";
+		break;
+	case PK_TASK_GROUP_EDUCATION:
+		text = "utilities-system-monitor";
+		break;
+	case PK_TASK_GROUP_GAMES:
+		text = "applications-games";
+		break;
+	case PK_TASK_GROUP_GRAPHICS:
+		text = "applications-graphics";
+		break;
+	case PK_TASK_GROUP_INTERNET:
+		text = "applications-internet";
+		break;
+	case PK_TASK_GROUP_OFFICE:
+		text = "applications-office";
+		break;
+	case PK_TASK_GROUP_OTHER:
+		text = "applications-other";
+		break;
+	case PK_TASK_GROUP_PROGRAMMING:
+		text = "applications-development";
+		break;
+	case PK_TASK_GROUP_MULTIMEDIA:
+		text = "applications-multimedia";
+		break;
+	case PK_TASK_GROUP_SYSTEM:
+		text = "applications-system";
+		break;
+	default:
+		pk_error ("group unrecognised: %i", group);
+	}
+	return text;
+}
+

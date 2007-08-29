@@ -54,6 +54,10 @@ struct PkApplicationPrivate
 	gboolean		 task_ended;
 	gboolean		 find_installed;
 	gboolean		 find_available;
+	gboolean		 find_devel;
+	gboolean		 find_non_devel;
+	gboolean		 find_gui;
+	gboolean		 find_text;
 	guint			 search_depth;
 };
 
@@ -233,7 +237,30 @@ pk_application_close_cb (GtkWidget	*widget,
  * pk_console_package_cb:
  **/
 static void
-pk_console_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id, const gchar *summary, PkApplication *application)
+pk_console_description_cb (PkTaskClient *tclient, const gchar *package_id, PkTaskGroup group,
+			   const gchar *detail, const gchar *url, PkApplication *application)
+{
+	GtkWidget *widget;
+	const gchar *icon_name;
+
+	pk_debug ("description = %s:%i:%s:%s", package_id, group, detail, url);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	gtk_widget_show (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
+	icon_name = pk_task_group_to_icon_name (group);
+	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "label_description_text");
+	gtk_label_set_label (GTK_LABEL (widget), detail);
+}
+
+/**
+ * pk_console_package_cb:
+ **/
+static void
+pk_console_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
+			const gchar *summary, PkApplication *application)
 {
 	PkPackageIdent *ident;
 	GtkTreeIter iter;
@@ -300,7 +327,22 @@ static void
 pk_console_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+}
+
+/**
+ * pk_console_sub_percentage_changed_cb:
+ **/
+static void
+pk_console_sub_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 }
 
@@ -314,7 +356,7 @@ pk_console_no_percentage_updates_timeout (gpointer data)
 	GtkWidget *widget;
 	PkApplication *application = (PkApplication *) data;
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
 	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (widget));
 	fraction += 0.05;
 	if (fraction > 1.00) {
@@ -333,6 +375,9 @@ pk_console_no_percentage_updates_timeout (gpointer data)
 static void
 pk_console_no_percentage_updates_cb (PkTaskClient *tclient, PkApplication *application)
 {
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_widget_show (widget);
 	g_timeout_add (100, pk_console_no_percentage_updates_timeout, application);
 }
 
@@ -350,7 +395,7 @@ pk_application_find_options_available_cb (GtkToggleButton *togglebutton,
 }
 
 /**
- * pk_application_find_options_available_cb:
+ * pk_application_find_options_installed_cb:
  * @widget: The GtkWidget object
  * @graph: This graph class instance
  **/
@@ -360,6 +405,58 @@ pk_application_find_options_installed_cb (GtkToggleButton *togglebutton,
 {
 	application->priv->find_installed = gtk_toggle_button_get_active (togglebutton);
 	pk_debug ("installed %i", application->priv->find_installed);
+}
+
+/**
+ * pk_application_find_options_devel_cb:
+ * @widget: The GtkWidget object
+ * @graph: This graph class instance
+ **/
+static void
+pk_application_find_options_devel_cb (GtkToggleButton *togglebutton,
+		    			  PkApplication	*application)
+{
+	application->priv->find_devel = gtk_toggle_button_get_active (togglebutton);
+	pk_debug ("devel %i", application->priv->find_devel);
+}
+
+/**
+ * pk_application_find_options_non_devel_cb:
+ * @widget: The GtkWidget object
+ * @graph: This graph class instance
+ **/
+static void
+pk_application_find_options_non_devel_cb (GtkToggleButton *togglebutton,
+		    			  PkApplication	*application)
+{
+	application->priv->find_non_devel = gtk_toggle_button_get_active (togglebutton);
+	pk_debug ("non_devel %i", application->priv->find_non_devel);
+}
+
+/**
+ * pk_application_find_options_gui_cb:
+ * @widget: The GtkWidget object
+ * @graph: This graph class instance
+ **/
+static void
+pk_application_find_options_gui_cb (GtkToggleButton *togglebutton,
+		    			  PkApplication	*application)
+{
+	application->priv->find_gui = gtk_toggle_button_get_active (togglebutton);
+	pk_debug ("gui %i", application->priv->find_gui);
+}
+
+/**
+ * pk_application_find_options_text_cb:
+ * @widget: The GtkWidget object
+ * @graph: This graph class instance
+ **/
+static void
+pk_application_find_options_text_cb (GtkToggleButton *togglebutton,
+		    			  PkApplication	*application)
+{
+	application->priv->find_text = gtk_toggle_button_get_active (togglebutton);
+	pk_debug ("gui %i", application->priv->find_text);
 }
 
 /**
@@ -374,6 +471,8 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	GtkWidget *widget;
 	const gchar *package;
 	const gchar *filter;
+	gchar *filter_all;
+	GString *string;
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
@@ -388,27 +487,84 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
 	gtk_widget_show (widget);
 
+	/* hide details */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
+	gtk_widget_hide (widget);
+
 	/* reset to 0 */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_status");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
 
+	string = g_string_new ("");
+	/* add ~installed */
 	if (application->priv->find_installed == TRUE &&
 	    application->priv->find_available == TRUE) {
-		filter = "none";
+		filter = NULL;
 	} else if (application->priv->find_installed == TRUE) {
-		filter = "installed";
+		filter = "installed;";
 	} else {
-		filter = "~installed";
+		filter = "~installed;";
+	}
+	if (filter != NULL) {
+		g_string_append (string, filter);
 	}
 
-	if (application->priv->search_depth == 0) {
-		pk_task_client_search_name (application->priv->tclient, filter, package);
+	/* add ~devel */
+	if (application->priv->find_devel == TRUE &&
+	    application->priv->find_non_devel == TRUE) {
+		filter = NULL;
+	} else if (application->priv->find_devel == TRUE) {
+		filter = "devel;";
 	} else {
-		pk_task_client_search_details (application->priv->tclient, filter, package);
+		filter = "~devel;";
+	}
+	if (filter != NULL) {
+		g_string_append (string, filter);
+	}
+
+	/* add ~devel */
+	if (application->priv->find_gui == TRUE &&
+	    application->priv->find_text == TRUE) {
+		filter = NULL;
+	} else if (application->priv->find_gui == TRUE) {
+		filter = "gui;";
+	} else {
+		filter = "~gui;";
+	}
+	if (filter != NULL) {
+		g_string_append (string, filter);
+	}
+
+	/* remove last ";" if exists */
+	if (string->len == 0) {
+		g_string_append (string, "none");
+	} else {
+		g_string_set_size (string, string->len);
+	}
+
+	filter_all = g_string_free (string, FALSE);
+	pk_debug ("filter = %s", filter_all);
+
+	if (application->priv->search_depth == 0) {
+		pk_task_client_search_name (application->priv->tclient, filter_all, package);
+	} else {
+		pk_task_client_search_details (application->priv->tclient, filter_all, package);
 	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	gtk_widget_set_sensitive (widget, FALSE);
+	g_free (filter_all);
 }
 
 /**
@@ -615,6 +771,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_free (data);
 
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
+		/* get the decription */
+		pk_task_client_get_description (application->priv->tclient, application->priv->package);
 
 		/* make the button sensitivities correct */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
@@ -651,11 +809,12 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
  * pk_group_add_data:
  **/
 static void
-pk_group_add_data (PkApplication *application, const gchar *type, const gchar *icon_name)
+pk_group_add_data (PkApplication *application, const gchar *type)
 {
 	GtkTreeIter iter;
 	PkTaskGroup group;
 	GdkPixbuf *icon;
+	const gchar *icon_name;
 
 	group = pk_task_group_from_text (type);
 	gtk_list_store_append (application->priv->groups_store, &iter);
@@ -663,7 +822,7 @@ pk_group_add_data (PkApplication *application, const gchar *type, const gchar *i
 const gchar *text;
 //text = g_markup_printf_escaped ("<span size=\"larger\" weight=\"bold\">%s</span>\n%s", "hello", "world");
 text = pk_task_group_to_localised_text (group);
-
+icon_name = pk_task_group_to_icon_name (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, type,
@@ -691,11 +850,18 @@ pk_application_init (PkApplication *application)
 	application->priv->task_ended = TRUE;
 	application->priv->find_installed = TRUE;
 	application->priv->find_available = TRUE;
+	application->priv->find_devel = TRUE;
+	application->priv->find_non_devel = TRUE;
+	application->priv->find_gui = TRUE;
+	application->priv->find_text = TRUE;
+
 	application->priv->search_depth = 0;
 
 	application->priv->tclient = pk_task_client_new ();
 	g_signal_connect (application->priv->tclient, "package",
 			  G_CALLBACK (pk_console_package_cb), application);
+	g_signal_connect (application->priv->tclient, "description",
+			  G_CALLBACK (pk_console_description_cb), application);
 	g_signal_connect (application->priv->tclient, "error-code",
 			  G_CALLBACK (pk_console_error_code_cb), application);
 	g_signal_connect (application->priv->tclient, "finished",
@@ -704,6 +870,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_console_no_percentage_updates_cb), application);
 	g_signal_connect (application->priv->tclient, "percentage-changed",
 			  G_CALLBACK (pk_console_percentage_changed_cb), application);
+	g_signal_connect (application->priv->tclient, "sub-percentage-changed",
+			  G_CALLBACK (pk_console_sub_percentage_changed_cb), application);
 
 	/* get actions */
 	application->priv->actions = pk_task_client_get_actions (application->priv->tclient);
@@ -752,6 +920,13 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
 	gtk_widget_hide (widget);
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
+	gtk_widget_hide (widget);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
@@ -768,6 +943,22 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_available");
 	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
 			  G_CALLBACK (pk_application_find_options_available_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_devel");
+	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
+			  G_CALLBACK (pk_application_find_options_devel_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_non_devel");
+	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
+			  G_CALLBACK (pk_application_find_options_non_devel_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_gui");
+	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
+			  G_CALLBACK (pk_application_find_options_gui_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_text");
+	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
+			  G_CALLBACK (pk_application_find_options_text_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",
@@ -823,17 +1014,17 @@ pk_application_init (PkApplication *application)
 
 	/* add columns to the tree view */
 	pk_groups_add_columns (GTK_TREE_VIEW (widget));
-	pk_group_add_data (application, "accessibility", "preferences-desktop-accessibility");
-	pk_group_add_data (application, "accessories", "applications-accessories");
-	pk_group_add_data (application, "education", "utilities-system-monitor");
-	pk_group_add_data (application, "games", "applications-games");
-	pk_group_add_data (application, "graphics", "applications-graphics");
-	pk_group_add_data (application, "internet", "applications-internet");
-	pk_group_add_data (application, "office", "applications-office");
-	pk_group_add_data (application, "other", "applications-other");
-	pk_group_add_data (application, "programming", "applications-development");
-	pk_group_add_data (application, "sound-video", "applications-multimedia");
-	pk_group_add_data (application, "system", "applications-system");
+	pk_group_add_data (application, "accessibility");
+	pk_group_add_data (application, "accessories");
+	pk_group_add_data (application, "education");
+	pk_group_add_data (application, "games");
+	pk_group_add_data (application, "graphics");
+	pk_group_add_data (application, "internet");
+	pk_group_add_data (application, "office");
+	pk_group_add_data (application, "other");
+	pk_group_add_data (application, "programming");
+	pk_group_add_data (application, "sound-video");
+	pk_group_add_data (application, "system");
 }
 
 /**
