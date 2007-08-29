@@ -327,9 +327,9 @@ static void
 pk_console_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
-	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 }
 
