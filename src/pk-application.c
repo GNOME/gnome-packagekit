@@ -931,6 +931,10 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (pk_application_find_cb), application);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_depth");
 	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
 			  G_CALLBACK (pk_application_combobox_changed_cb), application);
