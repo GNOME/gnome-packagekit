@@ -151,6 +151,24 @@ pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkTaskStatus status, guint run
 }
 
 /**
+ * pk_progress_package_cb:
+ */
+static void
+pk_progress_package_cb (PkTaskMonitor *tmonitor,
+			guint          value,
+			const gchar   *package_id,
+			const gchar   *summary,
+			PkProgress    *progress)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+	gtk_label_set_label (GTK_LABEL (widget), summary);
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_status");
+	gtk_widget_show (widget);
+}
+
+/**
  * pk_progress_percentage_changed_cb:
  **/
 static void
@@ -161,6 +179,7 @@ pk_progress_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage, Pk
 	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+	gtk_widget_show (widget);
 }
 
 /**
@@ -174,6 +193,7 @@ pk_progress_sub_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage
 	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+	gtk_widget_show (widget);
 }
 
 /**
@@ -209,13 +229,32 @@ pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progr
 }
 
 /**
+ * pk_progress_job_status_changed_cb:
+ */
+static void
+pk_progress_job_status_changed_cb (PkTaskMonitor *tmonitor,
+				   PkTaskStatus   status,
+				   PkProgress    *progress)
+{
+	GtkWidget *widget;
+	const gchar *icon_name;
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
+	gtk_label_set_label (GTK_LABEL (widget), pk_task_status_to_localised_text (status));
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "image_status");
+	icon_name = pk_task_status_to_icon_name (status);
+	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
+}
+
+/**
  * pk_progress_delete_event_cb:
  * @event: The event type, unused.
  **/
 static gboolean
 pk_progress_delete_event_cb (GtkWidget	*widget,
-				GdkEvent	*event,
-				PkProgress	*progress)
+			     GdkEvent	*event,
+			     PkProgress	*progress)
 {
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 	return FALSE;
@@ -228,13 +267,23 @@ gboolean
 pk_progress_monitor_job (PkProgress *progress, guint job)
 {
 	GtkWidget *main_window;
-	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
-//	gtk_widget_set_size_request (main_window, 800, 400);
-	gtk_widget_show (main_window);
+	PkTaskStatus status;
+	gboolean ret;
 
-	/* FIXME: There's got to be a better way than this */
-//	gtk_widget_hide (GTK_WIDGET (widget));
-//	gtk_widget_show (GTK_WIDGET (widget));
+	pk_task_monitor_set_job (progress->priv->tmonitor, job);
+
+	/* coldplug */
+	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
+	pk_progress_job_status_changed_cb (progress->priv->tmonitor,status, progress);
+
+	/* no such job? */
+	if (ret == FALSE) {
+		g_signal_emit (progress, signals [ACTION_UNREF], 0);
+		return FALSE;
+	}
+
+	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
+	gtk_widget_show (main_window);
 	return TRUE;
 }
 
@@ -255,12 +304,16 @@ pk_progress_init (PkProgress *progress)
 			  G_CALLBACK (pk_progress_error_code_cb), progress);
 	g_signal_connect (progress->priv->tmonitor, "finished",
 			  G_CALLBACK (pk_progress_finished_cb), progress);
+	g_signal_connect (progress->priv->tmonitor, "package",
+			  G_CALLBACK (pk_progress_package_cb), progress);
 	g_signal_connect (progress->priv->tmonitor, "no-percentage-updates",
 			  G_CALLBACK (pk_progress_no_percentage_updates_cb), progress);
 	g_signal_connect (progress->priv->tmonitor, "percentage-changed",
 			  G_CALLBACK (pk_progress_percentage_changed_cb), progress);
 	g_signal_connect (progress->priv->tmonitor, "sub-percentage-changed",
 			  G_CALLBACK (pk_progress_sub_percentage_changed_cb), progress);
+	g_signal_connect (progress->priv->tmonitor, "job-status-changed",
+			  G_CALLBACK (pk_progress_job_status_changed_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");

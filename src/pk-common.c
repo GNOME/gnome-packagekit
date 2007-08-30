@@ -133,6 +133,41 @@ pk_task_status_to_localised_text (PkTaskStatus status)
 }
 
 /**
+ * pk_task_status_to_icon_name:
+ **/
+const gchar *
+pk_task_status_to_icon_name (PkTaskStatus status)
+{
+	const gchar *text = NULL;
+	switch (status) {
+	case PK_TASK_STATUS_SETUP:
+		text = "emblem-system";
+		break;
+	case PK_TASK_STATUS_QUERY:
+		text = "system-search";
+		break;
+	case PK_TASK_STATUS_REMOVE:
+		text = "edit-clear";
+		break;
+	case PK_TASK_STATUS_DOWNLOAD:
+		text = "mail-send-receive";
+		break;
+	case PK_TASK_STATUS_INSTALL:
+		text = "emblem-system";
+		break;
+	case PK_TASK_STATUS_REFRESH_CACHE:
+		text = "view-refresh";
+		break;
+	case PK_TASK_STATUS_UPDATE:
+		text = "system-software-update";
+		break;
+	default:
+		pk_error ("status unrecognised: %i", status);
+	}
+	return text;
+}
+
+/**
  * pk_task_group_to_localised_text:
  **/
 const gchar *

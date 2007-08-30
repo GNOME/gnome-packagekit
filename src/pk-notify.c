@@ -213,19 +213,19 @@ pk_notify_refresh_icon (PkNotify *notify)
 	}
 	/* in order of priority */
 	if (state_refresh_cache == TRUE) {
-		icon = "view-refresh";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REFRESH_CACHE);
 	} else if (state_install == TRUE) {
-		icon = "emblem-system";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_INSTALL);
 	} else if (state_remove == TRUE) {
-		icon = "edit-clear";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REMOVE);
 	} else if (state_setup == TRUE) {
-		icon = "emblem-system";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_SETUP);
 	} else if (state_update == TRUE) {
-		icon = "system-software-update";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_UPDATE);
 	} else if (state_download == TRUE) {
-		icon = "mail-send-receive";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_DOWNLOAD);
 	} else if (state_query == TRUE) {
-		icon = "system-search";
+		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_QUERY);
 	}
 	pk_notify_set_icon (notify, icon);
 

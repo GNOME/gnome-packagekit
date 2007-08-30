@@ -23,6 +23,24 @@ INCLUDES =						\
 bin_PROGRAMS =						\
 	pk-application					\
 	pk-update-icon					\
+	pk-monitor					\
+	$(NULL)
+
+pk_monitor_SOURCES =					\
+	pk-monitor.c					\
+	pk-progress.c					\
+	pk-progress.h					\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_monitor_LDADD =					\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBNOTIFY_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(LIBGLADE_LIBS)				\
 	$(NULL)
 
 pk_update_icon_SOURCES =				\
