@@ -65,7 +65,6 @@ enum
 {
 	PACKAGES_COLUMN_ICON,
 	PACKAGES_COLUMN_TEXT,
-	PACKAGES_COLUMN_SIZE,
 	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_LAST
 };
@@ -131,8 +130,12 @@ static void
 pk_updates_apply_cb (GtkWidget      *widget,
 		          PkUpdates  *updates)
 {
-	pk_debug ("emitting action-apply");
-	g_signal_emit (updates, signals [ACTION_HELP], 0);
+	pk_debug ("Doing the system update");
+	pk_task_client_reset (updates->priv->tclient);
+	pk_task_client_update_system (updates->priv->tclient);
+
+	pk_debug ("emitting action-close");
+	g_signal_emit (updates, signals [ACTION_CLOSE], 0);
 }
 
 /**
@@ -169,7 +172,6 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 	gtk_list_store_append (updates->priv->packages_store, &iter);
 	gtk_list_store_set (updates->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_SIZE, "0.4 Mb",
 			    PACKAGES_COLUMN_ID, package_id,
 			    -1);
 
@@ -218,13 +220,6 @@ pk_packages_add_columns (GtkTreeView *treeview)
 							   "markup", PACKAGES_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
 	gtk_tree_view_append_column (treeview, column);
-
-	/* column for size */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Size"), renderer,
-							   "text", PACKAGES_COLUMN_SIZE, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_SIZE);
-	gtk_tree_view_append_column (treeview, column);
 }
 
 /**
@@ -236,20 +231,18 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	gboolean installed;
 	gchar *package_id;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (updates->priv->package);
 		gtk_tree_model_get (model, &iter,
-				    PACKAGES_COLUMN_ICON, &installed,
 				    PACKAGES_COLUMN_ID, &package_id, -1);
 
 		/* make back into package ID */
 		updates->priv->package = g_strdup (package_id);
 		g_free (package_id);
-		g_print ("selected row is: %i %s\n", installed, updates->priv->package);
+		g_print ("selected row is: %s\n", updates->priv->package);
 		/* get the decription */
 		pk_task_client_get_description (updates->priv->tclient, updates->priv->package);
 	} else {
@@ -319,14 +312,13 @@ pk_updates_init (PkUpdates *updates)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_help_cb), updates);
 
-	gtk_widget_set_size_request (main_window, 600, 300);
+	gtk_widget_set_size_request (main_window, 500, 300);
 
 	GtkTreeSelection *selection;
 
 	/* create list stores */
 	updates->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
 						       GDK_TYPE_PIXBUF,
-						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 
