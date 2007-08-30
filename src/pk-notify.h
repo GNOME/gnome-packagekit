@@ -51,10 +51,6 @@ typedef struct
 GType		 pk_notify_get_type		  	(void);
 PkNotify	*pk_notify_new				(void);
 
-gboolean	 pk_notify_get_updates			(PkNotify	*notify,
-							 guint		*job,
-							 GError		**error);
-
 G_END_DECLS
 
 #endif /* __PK_NOTIFY_H */

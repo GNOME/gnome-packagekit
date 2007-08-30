@@ -73,17 +73,6 @@ struct PkNotifyPrivate
 G_DEFINE_TYPE (PkNotify, pk_notify, G_TYPE_OBJECT)
 
 /**
- * pk_notify_get_updates:
- **/
-gboolean
-pk_notify_get_updates (PkNotify *notify, guint *job, GError **error)
-{
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-	return TRUE;
-}
-
-/**
  * pk_notify_class_init:
  * @klass: The PkNotifyClass
  **/
