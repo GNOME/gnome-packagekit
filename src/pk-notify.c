@@ -458,10 +458,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 						ident->name, item->summary);
 			g_string_append_printf (status_tooltip, "%s - %s %s\n",
 						ident->name, item->summary, _("(Security)"));
-		} else {
-			g_string_append_printf (status_tooltip, "%s - %s\n",
-						ident->name, item->summary);
-		}
+                }
 		pk_task_package_ident_free (ident);
 	}
 	g_object_unref (tclient);
@@ -480,11 +477,12 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	if (status_tooltip->len != 0) {
 		g_string_set_size (status_tooltip, status_tooltip->len-1);
 	}
-
 	/* make tooltip */
-	if (status_tooltip->len != 0) {
-		g_string_prepend (status_tooltip, _("Updates:\n"));
-	}
+        if (packages->len == 0) {
+                g_string_append_printf (status_tooltip, _("There is an update available."));
+        } else {
+                g_string_append_printf (status_tooltip, _("There are %d updates available."), packages->len);
+        }
 
 	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->status_icon), icon);
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
