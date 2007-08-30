@@ -47,6 +47,7 @@
 
 #include "pk-common.h"
 #include "pk-watch.h"
+#include "pk-progress.h"
 
 static void     pk_watch_class_init	(PkWatchClass *klass);
 static void     pk_watch_init		(PkWatch      *watch);
@@ -55,10 +56,6 @@ static void     pk_watch_finalize	(GObject       *object);
 #define PK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_WATCH, PkWatchPrivate))
 
 #define PK_WATCH_ICON_STOCK	"system-installer"
-
-#define PK_WATCH_DELAY_REFRESH_CACHE_STARTUP	5	/* time till the first refresh */
-#define PK_WATCH_DELAY_REFRESH_CACHE_CHECK	60	/* if we failed the first refresh, check after this much time */
-#define PK_WATCH_DELAY_REFRESH_CACHE_PERIODIC	2*60*60	/* check for updates every this much time */
 
 struct PkWatchPrivate
 {
@@ -427,6 +424,79 @@ pk_watch_manage_packages_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
+ * pk_monitor_action_unref_cb:
+ **/
+static void
+pk_monitor_action_unref_cb (PkProgress *progress, PkWatch *watch)
+{
+	g_object_unref (progress);
+}
+
+/**
+ * pk_watch_menu_job_status_cb:
+ **/
+static void
+pk_watch_menu_job_status_cb (GtkMenuItem *item, PkWatch *watch)
+{
+	guint job;
+	PkProgress *progress = NULL;
+
+	/* find the job we should bind to */
+	job = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (item), "job"));
+
+	/* launch the UI */
+	progress = pk_progress_new ();
+	g_signal_connect (progress, "action-unref",
+			  G_CALLBACK (pk_monitor_action_unref_cb), watch);
+	pk_progress_monitor_job (progress, job);
+}
+
+/**
+ * pk_watch_populate_menu_with_jobs:
+ **/
+static void
+pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
+{
+	guint i;
+	PkTaskListItem *item;
+	GPtrArray *array;
+	GtkWidget *widget;
+	GtkWidget *image;
+	const gchar *localised_status;
+	const gchar *icon_name;
+	gchar *text;
+
+	array = pk_task_list_get_latest	(watch->priv->tlist);
+	if (array->len == 0) {
+		return;
+	}
+
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		localised_status = pk_task_status_to_localised_text (item->status);
+		icon_name = pk_task_status_to_icon_name (item->status);
+		text = g_strdup_printf ("%s (job:%i)", localised_status, item->job);
+
+		/* add a job */
+		widget = gtk_image_menu_item_new_with_mnemonic (text);
+
+		/* we need the job ID so we know what PkProgress to show */
+		g_object_set_data (G_OBJECT (widget), "job", GUINT_TO_POINTER (item->job));
+
+		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+		g_signal_connect (G_OBJECT (widget), "activate",
+				  G_CALLBACK (pk_watch_menu_job_status_cb), watch);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+		g_free (text);
+	}
+
+	/* Separator for HIG? */
+	widget = gtk_separator_menu_item_new ();
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+}
+
+/**
  * pk_watch_activate_status_cb:
  * @button: Which buttons are pressed
  *
@@ -434,29 +504,32 @@ pk_watch_manage_packages_cb (GtkMenuItem *item, gpointer data)
  **/
 static void
 pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
-			   PkWatch   *icon)
+			   PkWatch   *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
-	GtkWidget *item;
+	GtkWidget *widget;
 	GtkWidget *image;
 
 	pk_debug ("icon left clicked");
 
+	/* add jobs as drop down */
+	pk_watch_populate_menu_with_jobs (watch, menu);
+
 	/* force a refresh */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Refresh cache"));
+	widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh cache"));
 	image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_watch_refresh_cache_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+	g_signal_connect (G_OBJECT (widget), "activate",
+			  G_CALLBACK (pk_watch_refresh_cache_cb), watch);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* manage packages */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Manage packages"));
+	widget = gtk_image_menu_item_new_with_mnemonic (_("_Manage packages"));
 	image = gtk_image_new_from_icon_name ("system-installer", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_watch_manage_packages_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+	g_signal_connect (G_OBJECT (widget), "activate",
+			  G_CALLBACK (pk_watch_manage_packages_cb), watch);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* show the menu */
 	gtk_widget_show_all (GTK_WIDGET (menu));

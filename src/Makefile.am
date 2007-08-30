@@ -49,6 +49,8 @@ pk_update_icon_SOURCES =				\
 	pk-notify.h					\
 	pk-watch.c					\
 	pk-watch.h					\
+	pk-progress.c					\
+	pk-progress.h					\
 	pk-common.c					\
 	pk-common.h					\
 	$(NULL)
@@ -58,6 +60,7 @@ pk_update_icon_LDADD =					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(GTK_LIBS)					\
+	$(LIBGLADE_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)
 

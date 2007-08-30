@@ -136,8 +136,7 @@ pk_progress_hide_cb (GtkWidget   *widget,
 static void
 pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkTaskErrorCode code, const gchar *details, PkProgress *progress)
 {
-	pk_progress_error_message (progress,
-				      pk_task_error_code_to_localised_text (code), details);
+	pk_progress_error_message (progress, pk_task_error_code_to_localised_text (code), details);
 }
 
 /**
@@ -357,13 +356,19 @@ static void
 pk_progress_finalize (GObject *object)
 {
 	PkProgress *progress;
+	GtkWidget *widget;
+
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_PROGRESS (object));
 
 	progress = PK_PROGRESS (object);
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
 
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
+	gtk_widget_hide (widget);
+
 	g_object_unref (progress->priv->tmonitor);
+	g_object_unref (progress->priv->glade_xml);
 
 	G_OBJECT_CLASS (pk_progress_parent_class)->finalize (object);
 }
