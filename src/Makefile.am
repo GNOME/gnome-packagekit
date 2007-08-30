@@ -24,6 +24,7 @@ bin_PROGRAMS =						\
 	pk-application					\
 	pk-update-icon					\
 	pk-monitor					\
+	pk-updates					\
 	$(NULL)
 
 pk_monitor_SOURCES =					\
@@ -73,6 +74,22 @@ pk_application_SOURCES =				\
 	$(NULL)
 
 pk_application_LDADD =					\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_updates_SOURCES =					\
+	pk-updates-main.c				\
+	pk-updates.c					\
+	pk-updates.h					\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_updates_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\

@@ -5,7 +5,10 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
-desktop_in_files = pk-application.desktop.in
+desktop_in_files =					\
+	pk-application.desktop.in			\
+	pk-updates.desktop.in
+	
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
@@ -15,6 +18,7 @@ autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
 	pk-application.glade				\
+	pk-updates.glade				\
 	pk-progress.glade
 
 EXTRA_DIST =						\
