@@ -188,9 +188,9 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
  **/
 static void
 pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
-			     guint          button,
-			     guint32        timestamp,
-			     PkNotify   *icon)
+			 guint          button,
+			 guint32        timestamp,
+			 PkNotify      *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -456,9 +456,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 			is_security = TRUE;
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						ident->name, item->summary);
-			g_string_append_printf (status_tooltip, "%s - %s %s\n",
-						ident->name, item->summary, _("(Security)"));
-                }
+		}
 		pk_task_package_ident_free (ident);
 	}
 	g_object_unref (tclient);
@@ -474,15 +472,12 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	if (status_security->len != 0) {
 		g_string_set_size (status_security, status_security->len-1);
 	}
-	if (status_tooltip->len != 0) {
-		g_string_set_size (status_tooltip, status_tooltip->len-1);
-	}
 	/* make tooltip */
-        if (packages->len == 0) {
-                g_string_append_printf (status_tooltip, _("There is an update available."));
-        } else {
-                g_string_append_printf (status_tooltip, _("There are %d updates available."), packages->len);
-        }
+	if (packages->len == 0) {
+		g_string_append_printf (status_tooltip, _("There is an update available"));
+	} else {
+		g_string_append_printf (status_tooltip, _("There are %d updates available"), packages->len);
+	}
 
 	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->status_icon), icon);
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
