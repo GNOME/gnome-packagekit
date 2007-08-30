@@ -63,9 +63,7 @@ static void     pk_notify_finalize	(GObject       *object);
 struct PkNotifyPrivate
 {
 	GtkStatusIcon		*status_icon;
-	GtkStatusIcon		*update_icon;
 	PkConnection		*pconnection;
-	PkTaskList		*tlist;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
@@ -84,207 +82,6 @@ pk_notify_class_init (PkNotifyClass *klass)
 	object_class->finalize = pk_notify_finalize;
 
 	g_type_class_add_private (klass, sizeof (PkNotifyPrivate));
-}
-
-/**
- * pk_notify_set_icon:
- **/
-static gboolean
-pk_notify_set_icon (PkNotify *notify, const gchar *icon)
-{
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-
-	if (icon == NULL) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
-		return FALSE;
-	}
-	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->status_icon), icon);
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
-	return TRUE;
-}
-
-/**
- * pk_notify_refresh_tooltip:
- **/
-static gboolean
-pk_notify_refresh_tooltip (PkNotify *notify)
-{
-	guint i;
-	PkTaskListItem *item;
-	guint length;
-	GPtrArray *array;
-	GString *status;
-	const gchar *localised_status;
-
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-
-	array = pk_task_list_get_latest	(notify->priv->tlist);
-
-	length = array->len;
-	pk_debug ("refresh tooltip %i", length);
-	if (length == 0) {
-		gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->status_icon), "Doing nothing...");
-		return TRUE;
-	}
-	status = g_string_new ("");
-	for (i=0; i<length; i++) {
-		item = g_ptr_array_index (array, i);
-		localised_status = pk_task_status_to_localised_text (item->status);
-		if (item->package == NULL || strlen (item->package) == 0) {
-			g_string_append_printf (status, "%s\n", localised_status);
-		} else {
-			g_string_append_printf (status, "%s: %s\n", localised_status, item->package);
-		}
-	}
-	if (status->len == 0) {
-		g_string_append (status, "Doing something...");
-	} else {
-		g_string_set_size (status, status->len-1);
-	}
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->status_icon), status->str);
-	g_string_free (status, TRUE);
-	return TRUE;
-}
-
-/**
- * pk_notify_refresh_icon:
- **/
-static gboolean
-pk_notify_refresh_icon (PkNotify *notify)
-{
-	pk_debug ("rescan");
-	guint i;
-	PkTaskListItem *item;
-	PkTaskStatus state;
-	guint length;
-	GPtrArray *array;
-	gboolean state_install = FALSE;
-	gboolean state_remove = FALSE;
-	gboolean state_setup = FALSE;
-	gboolean state_update = FALSE;
-	gboolean state_download = FALSE;
-	gboolean state_query = FALSE;
-	gboolean state_refresh_cache = FALSE;
-	const gchar *icon = PK_NOTIFY_ICON_STOCK;
-
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-
-	array = pk_task_list_get_latest	(notify->priv->tlist);
-
-	length = array->len;
-	if (length == 0) {
-		pk_debug ("no activity");
-		pk_notify_set_icon (notify, PK_NOTIFY_ICON_STOCK);
-		return TRUE;
-	}
-	for (i=0; i<length; i++) {
-		item = g_ptr_array_index (array, i);
-		state = item->status;
-		pk_debug ("%i %s", item->job, pk_task_status_to_text (state));
-		if (state == PK_TASK_STATUS_SETUP) {
-			state_setup = TRUE;
-		} else if (state == PK_TASK_STATUS_REFRESH_CACHE) {
-			state_refresh_cache = TRUE;
-		} else if (state == PK_TASK_STATUS_QUERY) {
-			state_query = TRUE;
-		} else if (state == PK_TASK_STATUS_REMOVE) {
-			state_remove = TRUE;
-		} else if (state == PK_TASK_STATUS_DOWNLOAD) {
-			state_download = TRUE;
-		} else if (state == PK_TASK_STATUS_INSTALL) {
-			state_install = TRUE;
-		} else if (state == PK_TASK_STATUS_UPDATE) {
-			state_update = TRUE;
-		}
-	}
-	/* in order of priority */
-	if (state_refresh_cache == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REFRESH_CACHE);
-	} else if (state_install == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_INSTALL);
-	} else if (state_remove == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REMOVE);
-	} else if (state_setup == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_SETUP);
-	} else if (state_update == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_UPDATE);
-	} else if (state_download == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_DOWNLOAD);
-	} else if (state_query == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_QUERY);
-	}
-	pk_notify_set_icon (notify, icon);
-
-	return TRUE;
-}
-
-/**
- * pk_notify_task_list_changed_cb:
- **/
-static void
-pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
-{
-	pk_notify_refresh_icon (notify);
-	pk_notify_refresh_tooltip (notify);
-}
-
-/**
- * pk_notify_task_list_finished_cb:
- **/
-static void
-pk_notify_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gchar *package, guint runtime, PkNotify *notify)
-{
-	NotifyNotification *dialog;
-	const gchar *title;
-	gchar *message = NULL;
-
-	pk_debug ("status=%i, package=%s", status, package);
-
-	/* is it worth showing a UI? */
-	if (runtime < 3) {
-		pk_debug ("no libnotify, too quick");
-		return;
-	}
-
-	if (status == PK_TASK_STATUS_REMOVE) {
-		message = g_strdup_printf (_("Package '%s' has been removed"), package);
-	} else if (status == PK_TASK_STATUS_INSTALL) {
-		message = g_strdup_printf (_("Package '%s' has been installed"), package);
-	} else if (status == PK_TASK_STATUS_UPDATE) {
-		message = g_strdup ("System has been updated");
-	}
-
-	/* nothing of interest */
-	if (message == NULL) {
-		return;
-	}
-	title = _("Task completed");
-	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
-							   notify->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
-	g_free (message);
-}
-
-/**
- * pk_notify_task_list_error_code_cb:
- **/
-static void
-pk_notify_task_list_error_code_cb (PkTaskList *tlist, PkTaskErrorCode error_code, const gchar *details, PkNotify *notify)
-{
-	NotifyNotification *dialog;
-	const gchar *title;
-
-	title = pk_task_error_code_to_localised_text (error_code);
-	dialog = notify_notification_new_with_status_icon (title, details, "help-browser",
-							   notify->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
 }
 
 /**
@@ -498,28 +295,6 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 }
 
 /**
- * pk_notify_refresh_cache_cb:
- **/
-static void
-pk_notify_refresh_cache_cb (GtkMenuItem *item, gpointer data)
-{
-	gboolean ret;
-	PkTaskClient *tclient;
-	PkNotify *notify = PK_NOTIFY (data);
-	pk_debug ("refresh cache");
-
-	tclient = pk_task_client_new ();
-	g_signal_connect (tclient, "finished",
-			  G_CALLBACK (pk_notify_refresh_cache_finished_cb), notify);
-	ret = pk_task_client_refresh_cache (tclient, TRUE);
-	if (ret == FALSE) {
-		g_object_unref (tclient);
-		pk_warning ("failed to refresh cache");
-		pk_notify_not_supported (notify, _("Failed to refresh cache"));
-	}
-}
-
-/**
  * pk_notify_update_system:
  **/
 static void
@@ -548,57 +323,6 @@ pk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	PkNotify *notify = PK_NOTIFY (data);
 	pk_notify_update_system (notify);
-}
-
-/**
- * pk_notify_manage_packages_cb:
- **/
-static void
-pk_notify_manage_packages_cb (GtkMenuItem *item, gpointer data)
-{
-	const gchar *command = "pk-application";
-	if (g_spawn_command_line_async (command, NULL) == FALSE) {
-		pk_warning ("Couldn't execute command: %s", command);
-	}
-}
-
-/**
- * pk_notify_activate_status_cb:
- * @button: Which buttons are pressed
- *
- * Callback when the icon is clicked
- **/
-static void
-pk_notify_activate_status_cb (GtkStatusIcon *status_icon,
-			   PkNotify   *icon)
-{
-	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
-	GtkWidget *item;
-	GtkWidget *image;
-
-	pk_debug ("icon left clicked");
-
-	/* force a refresh */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Refresh cache"));
-	image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_refresh_cache_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-	/* manage packages */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Manage packages"));
-	image = gtk_image_new_from_icon_name ("system-installer", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_manage_packages_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-	/* show the menu */
-	gtk_widget_show_all (GTK_WIDGET (menu));
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			gtk_status_icon_position_menu, status_icon,
-			1, gtk_get_current_event_time());
 }
 
 /**
@@ -640,10 +364,10 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotif
 {
 	pk_debug ("connected=%i", connected);
 	if (connected == TRUE) {
-		pk_notify_refresh_icon (notify);
-		pk_notify_refresh_tooltip (notify);
+//		pk_notify_refresh_icon (notify);
+//		pk_notify_refresh_tooltip (notify);
 	} else {
-		pk_notify_set_icon (notify, NULL);
+//		pk_notify_set_icon (notify, NULL);
 	}
 }
 
@@ -719,7 +443,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->update_icon), FALSE);
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
 		return;
 	}
 
@@ -762,9 +486,9 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 		g_string_prepend (status_tooltip, _("Updates:\n"));
 	}
 
-	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->update_icon), icon);
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->update_icon), TRUE);
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->update_icon), status_tooltip->str);
+	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->status_icon), icon);
+	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
+	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->status_icon), status_tooltip->str);
 
 	/* do we warn the user? */
 	if (is_security == TRUE) {
@@ -891,36 +615,19 @@ pk_notify_init (PkNotify *notify)
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
 	notify->priv->status_icon = gtk_status_icon_new ();
-	notify->priv->update_icon = gtk_status_icon_new ();
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->update_icon), FALSE);
 
 	/* right click actions are common */
 	g_signal_connect_object (G_OBJECT (notify->priv->status_icon),
 				 "popup_menu",
 				 G_CALLBACK (pk_notify_popup_menu_cb),
 				 notify, 0);
-	g_signal_connect_object (G_OBJECT (notify->priv->update_icon),
-				 "popup_menu",
-				 G_CALLBACK (pk_notify_popup_menu_cb),
-				 notify, 0);
 	g_signal_connect_object (G_OBJECT (notify->priv->status_icon),
-				 "activate",
-				 G_CALLBACK (pk_notify_activate_status_cb),
-				 notify, 0);
-	g_signal_connect_object (G_OBJECT (notify->priv->update_icon),
 				 "activate",
 				 G_CALLBACK (pk_notify_activate_update_cb),
 				 notify, 0);
 
 	notify_init ("packagekit-update-applet");
-	notify->priv->tlist = pk_task_list_new ();
-	g_signal_connect (notify->priv->tlist, "task-list-changed",
-			  G_CALLBACK (pk_notify_task_list_changed_cb), notify);
-	g_signal_connect (notify->priv->tlist, "task-list-finished",
-			  G_CALLBACK (pk_notify_task_list_finished_cb), notify);
-	g_signal_connect (notify->priv->tlist, "error-code",
-			  G_CALLBACK (pk_notify_task_list_error_code_cb), notify);
 
 	notify->priv->pconnection = pk_connection_new ();
 	g_signal_connect (notify->priv->pconnection, "connection-changed",
@@ -955,8 +662,6 @@ pk_notify_finalize (GObject *object)
 
 	g_return_if_fail (notify->priv != NULL);
 	g_object_unref (notify->priv->status_icon);
-	g_object_unref (notify->priv->update_icon);
-	g_object_unref (notify->priv->tlist);
 	g_object_unref (notify->priv->pconnection);
 
 	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);

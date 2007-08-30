@@ -33,6 +33,7 @@
 #include <pk-debug.h>
 
 #include "pk-notify.h"
+#include "pk-watch.h"
 
 /**
  * main:
@@ -43,6 +44,7 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	PkNotify *notify = NULL;
+	PkWatch *watch = NULL;
 	GOptionContext *context;
 
 	const GOptionEntry options[] = {
@@ -67,10 +69,12 @@ main (int argc, char *argv[])
 
 	/* create a new notify object */
 	notify = pk_notify_new ();
+	watch = pk_watch_new ();
 	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 	g_object_unref (notify);
+	g_object_unref (watch);
 
 	return 0;
 }

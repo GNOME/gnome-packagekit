@@ -47,6 +47,8 @@ pk_update_icon_SOURCES =				\
 	pk-update-icon.c				\
 	pk-notify.c					\
 	pk-notify.h					\
+	pk-watch.c					\
+	pk-watch.h					\
 	pk-common.c					\
 	pk-common.h					\
 	$(NULL)
