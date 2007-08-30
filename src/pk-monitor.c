@@ -35,6 +35,17 @@
 #include "pk-progress.h"
 
 /**
+ * pk_monitor_action_unref_cb:
+ **/
+static void
+pk_monitor_action_unref_cb (PkProgress *progress, gboolean data)
+{
+	GMainLoop *loop = (GMainLoop *) data;
+	g_object_unref (progress);
+	g_main_loop_quit (loop);
+}
+
+/**
  * main:
  **/
 int
@@ -65,10 +76,13 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	loop = g_main_loop_new (NULL, FALSE);
+
 	/* create a new progress object */
 	progress = pk_progress_new ();
+	g_signal_connect (progress, "action-unref",
+			  G_CALLBACK (pk_monitor_action_unref_cb), loop);
 	pk_progress_monitor_job (progress, 1); /* TODO: not hardcoded */
-	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 	g_object_unref (progress);
