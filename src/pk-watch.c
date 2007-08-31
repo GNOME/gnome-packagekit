@@ -126,10 +126,10 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (array, i);
 		localised_status = pk_task_status_to_localised_text (item->status);
-		if (item->package == NULL || strlen (item->package) == 0) {
+		if (item->package_id == NULL || strlen (item->package_id) == 0) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
-			g_string_append_printf (status, "%s: %s\n", localised_status, item->package);
+			g_string_append_printf (status, "%s: %s\n", localised_status, item->package_id);
 		}
 	}
 	if (status->len == 0) {
@@ -463,7 +463,9 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 	GtkWidget *widget;
 	GtkWidget *image;
 	const gchar *localised_status;
+	const gchar *localised_role;
 	const gchar *icon_name;
+	gchar *package;
 	gchar *text;
 
 	array = pk_task_list_get_latest	(watch->priv->tlist);
@@ -473,9 +475,17 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
+		localised_role = pk_task_role_to_localised_text (item->role);
 		localised_status = pk_task_status_to_localised_text (item->status);
+
 		icon_name = pk_task_status_to_icon_name (item->status);
-		text = g_strdup_printf ("%s (job:%i)", localised_status, item->job);
+		if (item->package_id != NULL) {
+			package = g_strdup (item->package_id);
+			text = g_strdup_printf ("%s %s (%s) [%i]", localised_role, package, localised_status, item->job);
+			g_free (package);
+		} else {
+			text = g_strdup_printf ("%s (%s) [%i]", localised_role, localised_status, item->job);
+		}
 
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);

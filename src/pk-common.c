@@ -168,6 +168,38 @@ pk_task_status_to_icon_name (PkTaskStatus status)
 }
 
 /**
+ * pk_task_role_to_localised_text:
+ **/
+const gchar *
+pk_task_role_to_localised_text (PkTaskRole role)
+{
+	const gchar *text = NULL;
+	switch (role) {
+	case PK_TASK_ROLE_QUERY:
+		text = _("Querying");
+		break;
+	case PK_TASK_ROLE_PACKAGE_REMOVE:
+		text = _("Removing");
+		break;
+	case PK_TASK_ROLE_PACKAGE_INSTALL:
+		text = _("Installing");
+		break;
+	case PK_TASK_ROLE_REFRESH_CACHE:
+		text = _("Refreshing package cache");
+		break;
+	case PK_TASK_ROLE_PACKAGE_UPDATE:
+		text = _("Updating package");
+		break;
+	case PK_TASK_ROLE_SYSTEM_UPDATE:
+		text = _("Updating system");
+		break;
+	default:
+		pk_error ("role unrecognised: %i", role);
+	}
+	return text;
+}
+
+/**
  * pk_task_group_to_localised_text:
  **/
 const gchar *

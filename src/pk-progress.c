@@ -32,6 +32,7 @@
 #include <pk-debug.h>
 #include <pk-task-monitor.h>
 #include <pk-connection.h>
+#include <pk-package-id.h>
 
 #include "pk-common.h"
 #include "pk-progress.h"
@@ -260,16 +261,51 @@ pk_progress_delete_event_cb (GtkWidget	*widget,
 }
 
 /**
+ * pk_common_get_role_text:
+ **/
+static gchar *
+pk_common_get_role_text (PkTaskMonitor *tmonitor)
+{
+	const gchar *role_text;
+	gchar *package_id;
+	gchar *text;
+	PkTaskRole role;
+	PkPackageId *ident;
+
+	pk_task_monitor_get_role (tmonitor, &role, &package_id);
+	role_text = pk_task_role_to_localised_text (role);
+
+	/* check to see if we have a package_id or just a search term */
+	if (package_id == NULL || strlen (package_id) == 0) {
+		text = g_strdup (role_text);
+	} else if (pk_package_id_check (package_id) == FALSE) {
+		text = g_strdup_printf ("%s: %s", role_text, package_id);
+	} else {
+		ident = pk_package_id_new_from_string (package_id);
+		text = g_strdup_printf ("%s: %s", role_text, ident->name);
+		pk_package_id_free (ident);
+	}
+	return text;
+}
+
+/**
  * pk_progress_monitor_job:
  **/
 gboolean
 pk_progress_monitor_job (PkProgress *progress, guint job)
 {
-	GtkWidget *main_window;
+	GtkWidget *widget;
 	PkTaskStatus status;
 	gboolean ret;
+	gchar *text;
 
 	pk_task_monitor_set_job (progress->priv->tmonitor, job);
+
+	/* fill in role */
+	text = pk_common_get_role_text (progress->priv->tmonitor);
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_role");
+	gtk_label_set_label (GTK_LABEL (widget), text);
+	g_free (text);
 
 	/* coldplug */
 	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
@@ -281,8 +317,8 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 		return FALSE;
 	}
 
-	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
-	gtk_widget_show (main_window);
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
+	gtk_widget_show (widget);
 	return TRUE;
 }
 
