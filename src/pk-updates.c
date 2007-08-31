@@ -156,7 +156,7 @@ static void
 pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
 			const gchar *summary, PkUpdates *updates)
 {
-	PkPackageIdent *ident;
+	PkPackageId *ident;
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
 	gchar *text;
@@ -165,7 +165,7 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
 	/* split by delimeter */
-	ident = pk_task_package_ident_from_string (package_id);
+	ident = pk_task_package_id_from_string (package_id);
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
 
@@ -186,7 +186,7 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 		gdk_pixbuf_unref (icon);
 	}
 
-	pk_task_package_ident_free (ident);
+	pk_task_package_id_free (ident);
 }
 
 /**

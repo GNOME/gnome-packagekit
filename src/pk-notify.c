@@ -449,7 +449,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	const gchar *icon;
 	GString *status_security;
 	GString *status_tooltip;
-	PkPackageIdent *ident;
+	PkPackageId *ident;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
@@ -471,13 +471,13 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (packages, i);
 		pk_debug ("%i, %s, %s", item->value, item->package_id, item->summary);
-		ident = pk_task_package_ident_from_string (item->package_id);
+		ident = pk_task_package_id_from_string (item->package_id);
 		if (item->value == 1) {
 			is_security = TRUE;
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						ident->name, item->summary);
 		}
-		pk_task_package_ident_free (ident);
+		pk_task_package_id_free (ident);
 	}
 	g_object_unref (tclient);
 
