@@ -460,38 +460,10 @@ pk_application_find_cb (GtkWidget	*button_widget,
 		return;
 	}
 
-	application->priv->search_in_progress = TRUE;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
-
-	/* clear existing list */
-	gtk_list_store_clear (application->priv->packages_store);
-
 	pk_debug ("find %s", package);
-	application->priv->task_ended = FALSE;
 
-	/* show pane */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
-	gtk_widget_show (widget);
-
-	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
-	gtk_widget_hide (widget);
-
-	/* reset to 0 */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
 
 	string = g_string_new ("");
 	/* add ~installed */
@@ -544,10 +516,45 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_depth == 0) {
-		pk_task_client_search_name (application->priv->tclient, filter_all, package);
+		ret = pk_task_client_search_name (application->priv->tclient, filter_all, package);
 	} else {
-		pk_task_client_search_details (application->priv->tclient, filter_all, package);
+		ret = pk_task_client_search_details (application->priv->tclient, filter_all, package);
 	}
+
+	if (ret == FALSE) {
+		pk_application_error_message (application,
+					      _("The search could not be completed"), NULL);
+		return;
+	}
+
+	/* clear existing list */
+	gtk_list_store_clear (application->priv->packages_store);
+
+	application->priv->search_in_progress = TRUE;
+	application->priv->task_ended = FALSE;
+
+	/* show pane */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
+	gtk_widget_show (widget);
+
+	/* hide details */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
+	gtk_widget_hide (widget);
+
+	/* reset to 0 */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
