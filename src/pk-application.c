@@ -72,11 +72,8 @@ enum {
 enum
 {
 	PACKAGES_COLUMN_INSTALLED,
-	PACKAGES_COLUMN_NAME,
-	PACKAGES_COLUMN_VERSION,
-	PACKAGES_COLUMN_ARCH,
-	PACKAGES_COLUMN_DESCRIPTION,
-	PACKAGES_COLUMN_DATA,
+	PACKAGES_COLUMN_TEXT,
+	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_LAST
 };
 
@@ -256,21 +253,21 @@ pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *pack
 {
 	PkPackageId *ident;
 	GtkTreeIter iter;
+	gchar *text;
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
 
+	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
+
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_INSTALLED, value,
-			    PACKAGES_COLUMN_NAME, ident->name,
-			    PACKAGES_COLUMN_VERSION, ident->version,
-			    PACKAGES_COLUMN_ARCH, ident->arch,
-			    PACKAGES_COLUMN_DATA, ident->data,
-			    PACKAGES_COLUMN_DESCRIPTION, summary,
-			    -1);
+			    PACKAGES_COLUMN_TEXT, text,
+			    PACKAGES_COLUMN_ID, package_id, -1);
 	pk_package_id_free (ident);
+	g_free (text);
 }
 
 /**
@@ -634,29 +631,8 @@ pk_packages_add_columns (GtkTreeView *treeview)
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
-							   "text", PACKAGES_COLUMN_NAME, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_NAME);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for version */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Version"), renderer,
-							   "text", PACKAGES_COLUMN_VERSION, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_VERSION);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for arch */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Arch"), renderer,
-							   "text", PACKAGES_COLUMN_ARCH, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_ARCH);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for description */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Summary"), renderer,
-							   "text", PACKAGES_COLUMN_DESCRIPTION, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_DESCRIPTION);
+							   "markup", PACKAGES_COLUMN_TEXT, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
 	gtk_tree_view_append_column (treeview, column);
 }
 
@@ -735,28 +711,18 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean installed;
-	gchar *name;
-	gchar *version;
-	gchar *arch;
-	gchar *data;
+	gchar *package_id;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (application->priv->package);
 		gtk_tree_model_get (model, &iter,
 				    PACKAGES_COLUMN_INSTALLED, &installed,
-				    PACKAGES_COLUMN_NAME, &name,
-				    PACKAGES_COLUMN_VERSION, &version,
-				    PACKAGES_COLUMN_ARCH, &arch,
-				    PACKAGES_COLUMN_DATA, &data, -1);
+				    PACKAGES_COLUMN_ID, &package_id, -1);
 
 		/* make back into package ID */
-		application->priv->package = pk_package_id_build (name, version, arch, data);
-		g_free (name);
-		g_free (version);
-		g_free (arch);
-		g_free (data);
-
+		application->priv->package = g_strdup (package_id);
+		g_free (package_id);
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
 		/* get the decription */
 		pk_task_client_get_description (application->priv->tclient, application->priv->package);
@@ -980,9 +946,6 @@ pk_application_init (PkApplication *application)
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
 						       G_TYPE_BOOLEAN,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
