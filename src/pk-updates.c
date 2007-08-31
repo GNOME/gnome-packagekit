@@ -51,8 +51,7 @@ struct PkUpdatesPrivate
 	PkConnection		*pconnection;
 	gchar			*package;
 	gchar			*actions;
-	gboolean		 task_ended;
-	gboolean		 search_in_progress;
+	gboolean		 refresh_in_progress;
 	guint			 search_depth;
 };
 
@@ -128,8 +127,8 @@ pk_updates_help_cb (GtkWidget *widget,
  * pk_updates_apply_cb:
  **/
 static void
-pk_updates_apply_cb (GtkWidget      *widget,
-		          PkUpdates  *updates)
+pk_updates_apply_cb (GtkWidget *widget,
+		     PkUpdates *updates)
 {
 	pk_debug ("Doing the system update");
 	pk_task_client_reset (updates->priv->tclient);
@@ -137,6 +136,33 @@ pk_updates_apply_cb (GtkWidget      *widget,
 
 	pk_debug ("emitting action-close");
 	g_signal_emit (updates, signals [ACTION_CLOSE], 0);
+}
+
+/**
+ * pk_updates_refresh_cb:
+ **/
+static void
+pk_updates_refresh_cb (GtkWidget *widget,
+		       PkUpdates *updates)
+{
+	gboolean ret;
+
+	/* don't loop */	
+	updates->priv->refresh_in_progress = TRUE;
+
+	/* clear existing list */
+	gtk_list_store_clear (updates->priv->packages_store);
+
+	/* make the refresh button non-clickable */
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	/* we can't click this if we havn't finished */
+	pk_task_client_reset (updates->priv->tclient);
+	ret = pk_task_client_refresh_cache (updates->priv->tclient, TRUE);
+	if (ret == FALSE) {
+		g_object_unref (updates->priv->tclient);
+		pk_warning ("failed to refresh cache");
+	}
 }
 
 /**
@@ -164,6 +190,11 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 	const gchar *icon_name;
 
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
+
+	if (updates->priv->refresh_in_progress == TRUE) {
+		pk_debug ("ignoring progress reports");
+		return;
+	}
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
@@ -261,6 +292,31 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkUpdat
 }
 
 /**
+ * pk_updates_finished_cb:
+ **/
+static void
+pk_updates_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkUpdates *updates)
+{
+	GtkWidget *widget;
+
+	/* make the refresh button clickable until we get completion */
+	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+	gtk_widget_set_sensitive (widget, TRUE);
+
+	if (updates->priv->refresh_in_progress == FALSE) {
+		pk_debug ("just the GetUpdates finishing");
+		return;
+	}
+
+	/* don't do this again */
+	updates->priv->refresh_in_progress = FALSE;
+
+	/* get the update list */
+	pk_task_client_reset (updates->priv->tclient);
+	pk_task_client_get_updates (updates->priv->tclient);
+}
+
+/**
  * pk_updates_init:
  **/
 static void
@@ -271,15 +327,15 @@ pk_updates_init (PkUpdates *updates)
 
 	updates->priv = PK_UPDATES_GET_PRIVATE (updates);
 	updates->priv->package = NULL;
-	updates->priv->task_ended = TRUE;
-	updates->priv->search_in_progress = FALSE;
+	updates->priv->refresh_in_progress = FALSE;
 
 	updates->priv->search_depth = 0;
 
 	updates->priv->tclient = pk_task_client_new ();
 	g_signal_connect (updates->priv->tclient, "package",
 			  G_CALLBACK (pk_updates_package_cb), updates);
-	pk_task_client_get_updates (updates->priv->tclient);
+	g_signal_connect (updates->priv->tclient, "finished",
+			  G_CALLBACK (pk_updates_finished_cb), updates);
 
 	/* get actions */
 	updates->priv->actions = pk_task_client_get_actions (updates->priv->tclient);
@@ -312,6 +368,9 @@ pk_updates_init (PkUpdates *updates)
 	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_help_cb), updates);
+	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_updates_refresh_cb), updates);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
@@ -335,6 +394,14 @@ pk_updates_init (PkUpdates *updates)
 	/* add columns to the tree view */
 	pk_packages_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+
+	/* make the refresh button non-clickable until we get completion */
+	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	/* get the update list */
+	pk_task_client_get_updates (updates->priv->tclient);
+
 	gtk_widget_show (main_window);
 }
 
