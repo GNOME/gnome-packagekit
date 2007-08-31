@@ -46,6 +46,7 @@ static void     pk_updates_finalize   (GObject	    *object);
 struct PkUpdatesPrivate
 {
 	GladeXML		*glade_xml;
+	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
@@ -303,6 +304,10 @@ pk_updates_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtim
 	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
 
+	/* hide the progress bar */
+	gtk_widget_hide (updates->priv->progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), 0.0);
+
 	if (updates->priv->refresh_in_progress == FALSE) {
 		pk_debug ("just the GetUpdates finishing");
 		return;
@@ -314,6 +319,19 @@ pk_updates_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtim
 	/* get the update list */
 	pk_task_client_reset (updates->priv->tclient);
 	pk_task_client_get_updates (updates->priv->tclient);
+}
+
+/**
+ * pk_updates_percentage_changed_cb:
+ **/
+static void
+pk_updates_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkUpdates *updates)
+{
+	if (percentage == 0) {
+		return;
+	}
+	gtk_widget_show (updates->priv->progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), (gfloat) percentage / 100.0);
 }
 
 /**
@@ -336,6 +354,8 @@ pk_updates_init (PkUpdates *updates)
 			  G_CALLBACK (pk_updates_package_cb), updates);
 	g_signal_connect (updates->priv->tclient, "finished",
 			  G_CALLBACK (pk_updates_finished_cb), updates);
+	g_signal_connect (updates->priv->tclient, "percentage-changed",
+			  G_CALLBACK (pk_updates_percentage_changed_cb), updates);
 
 	/* get actions */
 	updates->priv->actions = pk_task_client_get_actions (updates->priv->tclient);
@@ -398,6 +418,11 @@ pk_updates_init (PkUpdates *updates)
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (updates->priv->glade_xml, "statusbar_status");
+	updates->priv->progress_bar = gtk_progress_bar_new ();
+	gtk_box_pack_end (GTK_BOX (widget), updates->priv->progress_bar, TRUE, TRUE, 0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), 0.0);
 
 	/* get the update list */
 	pk_task_client_get_updates (updates->priv->tclient);
