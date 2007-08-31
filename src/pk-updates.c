@@ -32,6 +32,7 @@
 #include <pk-debug.h>
 #include <pk-task-client.h>
 #include <pk-connection.h>
+#include <pk-package-id.h>
 
 #include "pk-common.h"
 #include "pk-updates.h"
@@ -165,7 +166,7 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
 	/* split by delimeter */
-	ident = pk_task_package_id_from_string (package_id);
+	ident = pk_package_id_new_from_string (package_id);
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
 
@@ -186,7 +187,7 @@ pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_
 		gdk_pixbuf_unref (icon);
 	}
 
-	pk_task_package_id_free (ident);
+	pk_package_id_free (ident);
 }
 
 /**

@@ -44,6 +44,7 @@
 #include <pk-task-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
+#include <pk-package-id.h>
 
 #include "pk-common.h"
 #include "pk-notify.h"
@@ -471,13 +472,13 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, gui
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (packages, i);
 		pk_debug ("%i, %s, %s", item->value, item->package_id, item->summary);
-		ident = pk_task_package_id_from_string (item->package_id);
+		ident = pk_package_id_new_from_string (item->package_id);
 		if (item->value == 1) {
 			is_security = TRUE;
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						ident->name, item->summary);
 		}
-		pk_task_package_id_free (ident);
+		pk_package_id_free (ident);
 	}
 	g_object_unref (tclient);
 

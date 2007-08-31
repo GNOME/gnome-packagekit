@@ -32,6 +32,7 @@
 #include <pk-debug.h>
 #include <pk-task-client.h>
 #include <pk-connection.h>
+#include <pk-package-id.h>
 
 #include "pk-common.h"
 #include "pk-application.h"
@@ -258,7 +259,7 @@ pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *pack
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
 	/* split by delimeter */
-	ident = pk_task_package_id_from_string (package_id);
+	ident = pk_package_id_new_from_string (package_id);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
@@ -269,7 +270,7 @@ pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *pack
 			    PACKAGES_COLUMN_DATA, ident->data,
 			    PACKAGES_COLUMN_DESCRIPTION, summary,
 			    -1);
-	pk_task_package_id_free (ident);
+	pk_package_id_free (ident);
 }
 
 /**
@@ -750,7 +751,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 				    PACKAGES_COLUMN_DATA, &data, -1);
 
 		/* make back into package ID */
-		application->priv->package = pk_task_package_id_build (name, version, arch, data);
+		application->priv->package = pk_package_id_build (name, version, arch, data);
 		g_free (name);
 		g_free (version);
 		g_free (arch);
