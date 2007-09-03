@@ -198,7 +198,7 @@ pk_application_deps_cb (GtkWidget *widget,
 {
 	gboolean ret;
 	pk_debug ("deps %s", application->priv->package);
-	ret = pk_task_client_get_deps (application->priv->tclient,
+	ret = pk_task_client_get_depends (application->priv->tclient,
 				       application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
