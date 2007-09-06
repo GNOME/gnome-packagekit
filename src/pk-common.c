@@ -41,6 +41,12 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 	case PK_TASK_ERROR_CODE_NO_NETWORK:
 		text = _("No network connection available");
 		break;
+	case PK_TASK_ERROR_CODE_OOM:
+		text = _("Out of memory");
+		break;
+	case PK_TASK_ERROR_CODE_CREATE_THREAD_FAILED:
+		text = _("Failed to create a thread");
+		break;
 	case PK_TASK_ERROR_CODE_NOT_SUPPORTED:
 		text = _("Not supported by this backend");
 		break;
@@ -67,6 +73,9 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 		break;
 	case PK_TASK_ERROR_CODE_PACKAGE_ID_INVALID:
 		text = _("The package ID was not well formed");
+		break;
+	case PK_TASK_ERROR_CODE_TRANSACTION_ERROR:
+		text = _("Transaction error");
 		break;
 	default:
 		text = _("Unknown error");
@@ -105,6 +114,9 @@ pk_task_status_to_localised_text (PkTaskStatus status)
 {
 	const gchar *text = NULL;
 	switch (status) {
+	case PK_TASK_STATUS_UNKNOWN:
+		text = _("Unknown");
+		break;
 	case PK_TASK_STATUS_SETUP:
 		text = _("Setting up");
 		break;
@@ -127,7 +139,7 @@ pk_task_status_to_localised_text (PkTaskStatus status)
 		text = _("Updating");
 		break;
 	default:
-		pk_error ("status unrecognised: %i", status);
+		pk_error ("status unrecognised: %s", pk_task_status_to_text (status));
 	}
 	return text;
 }
@@ -194,7 +206,7 @@ pk_task_role_to_localised_text (PkTaskRole role)
 		text = _("Updating system");
 		break;
 	default:
-		pk_error ("role unrecognised: %i", role);
+		pk_error ("role unrecognised: %s", pk_task_role_to_text (role));
 	}
 	return text;
 }
