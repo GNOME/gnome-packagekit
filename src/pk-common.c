@@ -152,6 +152,9 @@ pk_task_status_to_icon_name (PkTaskStatus status)
 {
 	const gchar *text = NULL;
 	switch (status) {
+	case PK_TASK_STATUS_UNKNOWN:
+		text = "help-browser";
+		break;
 	case PK_TASK_STATUS_SETUP:
 		text = "emblem-system";
 		break;
@@ -174,7 +177,7 @@ pk_task_status_to_icon_name (PkTaskStatus status)
 		text = "system-software-update";
 		break;
 	default:
-		pk_error ("status unrecognised: %i", status);
+		pk_error ("status unrecognised: %s", pk_task_status_to_text (status));
 	}
 	return text;
 }
