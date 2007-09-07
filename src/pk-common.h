@@ -23,17 +23,17 @@
 #define __PK_COMMON_H
 
 #include <glib-object.h>
-#include <pk-task-utils.h>
+#include <pk-enum.h>
 
 G_BEGIN_DECLS
 
-const gchar	*pk_task_role_to_localised_text		(PkTaskRole	 role);
-const gchar	*pk_task_status_to_localised_text	(PkTaskStatus	 status);
-const gchar	*pk_task_status_to_icon_name		(PkTaskStatus	 status);
-const gchar	*pk_task_error_code_to_localised_text	(PkTaskErrorCode code);
-const gchar	*pk_task_restart_to_localised_text	(PkTaskRestart	 restart);
-const gchar	*pk_task_group_to_localised_text	(PkTaskGroup	 group);
-const gchar	*pk_task_group_to_icon_name		(PkTaskGroup	 group);
+const gchar	*pk_role_enum_to_localised_text		(PkTaskRole	 role);
+const gchar	*pk_status_enum_to_localised_text	(PkTaskStatus	 status);
+const gchar	*pk_status_enum_to_icon_name		(PkTaskStatus	 status);
+const gchar	*pk_error_enum_to_localised_text	(PkTaskErrorCode code);
+const gchar	*pk_restart_enum_to_localised_text	(PkTaskRestart	 restart);
+const gchar	*pk_group_enum_to_localised_text	(PkTaskGroup	 group);
+const gchar	*pk_group_enum_to_icon_name		(PkTaskGroup	 group);
 
 G_END_DECLS
 

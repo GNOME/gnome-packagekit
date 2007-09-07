@@ -125,7 +125,7 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	status = g_string_new ("");
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (array, i);
-		localised_status = pk_task_status_to_localised_text (item->status);
+		localised_status = pk_status_enum_to_localised_text (item->status);
 		if (item->package_id == NULL || strlen (item->package_id) == 0) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
@@ -177,38 +177,38 @@ pk_watch_refresh_icon (PkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (array, i);
 		state = item->status;
-		pk_debug ("%i %s", item->job, pk_task_status_to_text (state));
-		if (state == PK_TASK_STATUS_SETUP) {
+		pk_debug ("%i %s", item->job, pk_status_enum_to_text (state));
+		if (state == PK_STATUS_ENUM_SETUP) {
 			state_setup = TRUE;
-		} else if (state == PK_TASK_STATUS_REFRESH_CACHE) {
+		} else if (state == PK_STATUS_ENUM_REFRESH_CACHE) {
 			state_refresh_cache = TRUE;
-		} else if (state == PK_TASK_STATUS_QUERY) {
+		} else if (state == PK_STATUS_ENUM_QUERY) {
 			state_query = TRUE;
-		} else if (state == PK_TASK_STATUS_REMOVE) {
+		} else if (state == PK_STATUS_ENUM_REMOVE) {
 			state_remove = TRUE;
-		} else if (state == PK_TASK_STATUS_DOWNLOAD) {
+		} else if (state == PK_STATUS_ENUM_DOWNLOAD) {
 			state_download = TRUE;
-		} else if (state == PK_TASK_STATUS_INSTALL) {
+		} else if (state == PK_STATUS_ENUM_INSTALL) {
 			state_install = TRUE;
-		} else if (state == PK_TASK_STATUS_UPDATE) {
+		} else if (state == PK_STATUS_ENUM_UPDATE) {
 			state_update = TRUE;
 		}
 	}
 	/* in order of priority */
 	if (state_refresh_cache == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REFRESH_CACHE);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_REFRESH_CACHE);
 	} else if (state_install == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_INSTALL);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_INSTALL);
 	} else if (state_remove == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_REMOVE);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_REMOVE);
 	} else if (state_setup == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_SETUP);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_SETUP);
 	} else if (state_update == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_UPDATE);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_UPDATE);
 	} else if (state_download == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_DOWNLOAD);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_DOWNLOAD);
 	} else if (state_query == TRUE) {
-		icon = pk_task_status_to_icon_name (PK_TASK_STATUS_QUERY);
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_QUERY);
 	}
 	pk_watch_set_icon (watch, icon);
 
@@ -243,11 +243,11 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gc
 		return;
 	}
 
-	if (status == PK_TASK_STATUS_REMOVE) {
+	if (status == PK_STATUS_ENUM_REMOVE) {
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);
-	} else if (status == PK_TASK_STATUS_INSTALL) {
+	} else if (status == PK_STATUS_ENUM_INSTALL) {
 		message = g_strdup_printf (_("Package '%s' has been installed"), package);
-	} else if (status == PK_TASK_STATUS_UPDATE) {
+	} else if (status == PK_STATUS_ENUM_UPDATE) {
 		message = g_strdup ("System has been updated");
 	}
 
@@ -273,7 +273,7 @@ pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkTaskErrorCode error_code,
 	NotifyNotification *dialog;
 	const gchar *title;
 
-	title = pk_task_error_code_to_localised_text (error_code);
+	title = pk_error_enum_to_localised_text (error_code);
 	dialog = notify_notification_new_with_status_icon (title, details, "help-browser",
 							   watch->priv->status_icon);
 	notify_notification_set_timeout (dialog, 5000);
@@ -475,10 +475,10 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		localised_role = pk_task_role_to_localised_text (item->role);
-		localised_status = pk_task_status_to_localised_text (item->status);
+		localised_role = pk_role_enum_to_localised_text (item->role);
+		localised_status = pk_status_enum_to_localised_text (item->status);
 
-		icon_name = pk_task_status_to_icon_name (item->status);
+		icon_name = pk_status_enum_to_icon_name (item->status);
 		if (item->package_id != NULL) {
 			package = g_strdup (item->package_id);
 			text = g_strdup_printf ("%s %s (%s) [%i]", localised_role, package, localised_status, item->job);

@@ -257,12 +257,12 @@ pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code
 {
 	PkTaskRestart restart;
 	restart = pk_task_client_get_require_restart (tclient);
-	if (restart != PK_TASK_RESTART_NONE) {
+	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
 		const gchar *message;
 
 		pk_debug ("Doing requires-restart notification");
-		message = pk_task_restart_to_localised_text (restart);
+		message = pk_restart_enum_to_localised_text (restart);
 		dialog = notify_notification_new_with_status_icon (_("The system update has completed"), message,
 								   "software-update-available",
 								   notify->priv->status_icon);
@@ -555,8 +555,8 @@ pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
-	pk_debug ("finished refreshing cache :%s", pk_task_exit_to_text (exit_code));
-	if (exit_code != PK_TASK_EXIT_SUCCESS) {
+	pk_debug ("finished refreshing cache :%s", pk_exit_enum_to_text (exit_code));
+	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
 		/* we failed to get the cache */
 		notify->priv->cache_okay = FALSE;
 	} else {

@@ -33,6 +33,7 @@
 #include <pk-task-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-action-list.h>
 
 #include "pk-common.h"
 #include "pk-application.h"
@@ -51,7 +52,7 @@ struct PkApplicationPrivate
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
-	gchar			*actions;
+	PkActionList		*action_list;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
 	gboolean		 find_installed;
@@ -237,7 +238,7 @@ pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id, P
 	gtk_widget_show (widget);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
-	icon_name = pk_task_group_to_icon_name (group);
+	icon_name = pk_group_enum_to_icon_name (group);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "label_description_text");
@@ -277,7 +278,7 @@ static void
 pk_application_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const gchar *details, PkApplication *application)
 {
 	pk_application_error_message (application,
-				      pk_task_error_code_to_localised_text (code), details);
+				      pk_error_enum_to_localised_text (code), details);
 }
 
 /**
@@ -305,7 +306,7 @@ pk_application_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint ru
 	pk_task_client_reset (application->priv->tclient);
 
 	/* panic */
-	if (status == PK_TASK_EXIT_FAILED) {
+	if (status == PK_EXIT_ENUM_FAILED) {
 		pk_application_error_message (application,
 					      _("The action did not complete"),
 					      NULL);
@@ -761,7 +762,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	pk_debug ("connected=%i", connected);
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
-		pk_application_finished_cb (application->priv->tclient, PK_TASK_EXIT_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->tclient, PK_EXIT_ENUM_FAILED, 0, application);
 	}
 }
 
@@ -777,16 +778,16 @@ pk_group_add_data (PkApplication *application, const gchar *type)
 	const gchar *icon_name;
 	const gchar *text;
 
-	group = pk_task_group_from_text (type);
+	group = pk_group_enum_from_text (type);
 	gtk_list_store_append (application->priv->groups_store, &iter);
 
-	text = pk_task_group_to_localised_text (group);
+	text = pk_group_enum_to_localised_text (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, type,
 			    -1);
 
-	icon_name = pk_task_group_to_icon_name (group);
+	icon_name = pk_group_enum_to_icon_name (group);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
 	if (icon) {
 		gtk_list_store_set (application->priv->groups_store, &iter, GROUPS_COLUMN_ICON, icon, -1);
@@ -833,7 +834,10 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_sub_percentage_changed_cb), application);
 
 	/* get actions */
-	application->priv->actions = pk_task_client_get_actions (application->priv->tclient);
+	gchar *actions;
+	actions = pk_task_client_get_actions (application->priv->tclient);
+	application->priv->action_list = pk_action_list_new_from_string (actions);
+	g_free (actions);
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
@@ -887,7 +891,7 @@ pk_application_init (PkApplication *application)
 	gtk_widget_hide (widget);
 
 	/* hide the group selector if we don't support search-groups */
-	if (pk_task_action_contains (application->priv->actions, PK_TASK_ACTION_SEARCH_GROUP) == FALSE) {
+	if (pk_action_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
 		gtk_widget_hide (widget);
 	}
@@ -1014,7 +1018,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->tclient);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
-	g_free (application->priv->actions);
+	pk_action_list_free (application->priv->action_list);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
 }

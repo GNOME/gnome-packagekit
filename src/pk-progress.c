@@ -137,7 +137,7 @@ pk_progress_hide_cb (GtkWidget   *widget,
 static void
 pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkTaskErrorCode code, const gchar *details, PkProgress *progress)
 {
-	pk_progress_error_message (progress, pk_task_error_code_to_localised_text (code), details);
+	pk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
 }
 
 /**
@@ -240,10 +240,10 @@ pk_progress_job_status_changed_cb (PkTaskMonitor *tmonitor,
 	const gchar *icon_name;
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
-	gtk_label_set_label (GTK_LABEL (widget), pk_task_status_to_localised_text (status));
+	gtk_label_set_label (GTK_LABEL (widget), pk_status_enum_to_localised_text (status));
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "image_status");
-	icon_name = pk_task_status_to_icon_name (status);
+	icon_name = pk_status_enum_to_icon_name (status);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 }
 
@@ -273,7 +273,7 @@ pk_common_get_role_text (PkTaskMonitor *tmonitor)
 	PkPackageId *ident;
 
 	pk_task_monitor_get_role (tmonitor, &role, &package_id);
-	role_text = pk_task_role_to_localised_text (role);
+	role_text = pk_role_enum_to_localised_text (role);
 
 	/* check to see if we have a package_id or just a search term */
 	if (package_id == NULL || strlen (package_id) == 0) {

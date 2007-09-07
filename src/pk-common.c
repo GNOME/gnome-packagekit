@@ -27,54 +27,54 @@
 #include <string.h>
 
 #include <pk-debug.h>
-#include <pk-task-utils.h>
+#include <pk-enum.h>
 #include "pk-common.h"
 
 /**
- * pk_task_error_code_to_localised_text:
+ * pk_error_enum_to_localised_text:
  **/
 const gchar *
-pk_task_error_code_to_localised_text (PkTaskErrorCode code)
+pk_error_enum_to_localised_text (PkTaskErrorCode code)
 {
 	const gchar *text = NULL;
 	switch (code) {
-	case PK_TASK_ERROR_CODE_NO_NETWORK:
+	case PK_ERROR_ENUM_NO_NETWORK:
 		text = _("No network connection available");
 		break;
-	case PK_TASK_ERROR_CODE_OOM:
+	case PK_ERROR_ENUM_OOM:
 		text = _("Out of memory");
 		break;
-	case PK_TASK_ERROR_CODE_CREATE_THREAD_FAILED:
+	case PK_ERROR_ENUM_CREATE_THREAD_FAILED:
 		text = _("Failed to create a thread");
 		break;
-	case PK_TASK_ERROR_CODE_NOT_SUPPORTED:
+	case PK_ERROR_ENUM_NOT_SUPPORTED:
 		text = _("Not supported by this backend");
 		break;
-	case PK_TASK_ERROR_CODE_INTERNAL_ERROR:
+	case PK_ERROR_ENUM_INTERNAL_ERROR:
 		text = _("An internal system error has occurred");
 		break;
-	case PK_TASK_ERROR_CODE_GPG_FAILURE:
+	case PK_ERROR_ENUM_GPG_FAILURE:
 		text = _("A security trust relationship is not present");
 		break;
-	case PK_TASK_ERROR_CODE_PACKAGE_NOT_INSTALLED:
+	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package is not installed");
 		break;
-	case PK_TASK_ERROR_CODE_PACKAGE_ALREADY_INSTALLED:
+	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package is already installed");
 		break;
-	case PK_TASK_ERROR_CODE_PACKAGE_DOWNLOAD_FAILED:
+	case PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED:
 		text = _("The package download failed");
 		break;
-	case PK_TASK_ERROR_CODE_DEP_RESOLUTION_FAILED:
+	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
 		text = _("Dependency resolution failed");
 		break;
-	case PK_TASK_ERROR_CODE_FILTER_INVALID:
+	case PK_ERROR_ENUM_FILTER_INVALID:
 		text = _("Search filter was invalid");
 		break;
-	case PK_TASK_ERROR_CODE_PACKAGE_ID_INVALID:
+	case PK_ERROR_ENUM_PACKAGE_ID_INVALID:
 		text = _("The package ID was not well formed");
 		break;
-	case PK_TASK_ERROR_CODE_TRANSACTION_ERROR:
+	case PK_ERROR_ENUM_TRANSACTION_ERROR:
 		text = _("Transaction error");
 		break;
 	default:
@@ -84,20 +84,20 @@ pk_task_error_code_to_localised_text (PkTaskErrorCode code)
 }
 
 /**
- * pk_task_restart_to_localised_text:
+ * pk_restart_enum_to_localised_text:
  **/
 const gchar *
-pk_task_restart_to_localised_text (PkTaskRestart restart)
+pk_restart_enum_to_localised_text (PkTaskRestart restart)
 {
 	const gchar *text = NULL;
 	switch (restart) {
-	case PK_TASK_RESTART_SYSTEM:
+	case PK_RESTART_ENUM_SYSTEM:
 		text = _("A system restart is required");
 		break;
-	case PK_TASK_RESTART_SESSION:
+	case PK_RESTART_ENUM_SESSION:
 		text = _("You will need to log off and log back on");
 		break;
-	case PK_TASK_RESTART_APPLICATION:
+	case PK_RESTART_ENUM_APPLICATION:
 		text = _("You need to restart the application");
 		break;
 	default:
@@ -107,152 +107,152 @@ pk_task_restart_to_localised_text (PkTaskRestart restart)
 }
 
 /**
- * pk_task_status_to_localised_text:
+ * pk_status_enum_to_localised_text:
  **/
 const gchar *
-pk_task_status_to_localised_text (PkTaskStatus status)
+pk_status_enum_to_localised_text (PkTaskStatus status)
 {
 	const gchar *text = NULL;
 	switch (status) {
-	case PK_TASK_STATUS_UNKNOWN:
+	case PK_STATUS_ENUM_UNKNOWN:
 		text = _("Unknown");
 		break;
-	case PK_TASK_STATUS_SETUP:
+	case PK_STATUS_ENUM_SETUP:
 		text = _("Setting up");
 		break;
-	case PK_TASK_STATUS_QUERY:
+	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
 		break;
-	case PK_TASK_STATUS_REMOVE:
+	case PK_STATUS_ENUM_REMOVE:
 		text = _("Removing");
 		break;
-	case PK_TASK_STATUS_DOWNLOAD:
+	case PK_STATUS_ENUM_DOWNLOAD:
 		text = _("Downloading");
 		break;
-	case PK_TASK_STATUS_INSTALL:
+	case PK_STATUS_ENUM_INSTALL:
 		text = _("Installing");
 		break;
-	case PK_TASK_STATUS_REFRESH_CACHE:
+	case PK_STATUS_ENUM_REFRESH_CACHE:
 		text = _("Refreshing package cache");
 		break;
-	case PK_TASK_STATUS_UPDATE:
+	case PK_STATUS_ENUM_UPDATE:
 		text = _("Updating");
 		break;
 	default:
-		pk_error ("status unrecognised: %s", pk_task_status_to_text (status));
+		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
 }
 
 /**
- * pk_task_status_to_icon_name:
+ * pk_status_enum_to_icon_name:
  **/
 const gchar *
-pk_task_status_to_icon_name (PkTaskStatus status)
+pk_status_enum_to_icon_name (PkTaskStatus status)
 {
 	const gchar *text = NULL;
 	switch (status) {
-	case PK_TASK_STATUS_UNKNOWN:
+	case PK_STATUS_ENUM_UNKNOWN:
 		text = "help-browser";
 		break;
-	case PK_TASK_STATUS_SETUP:
+	case PK_STATUS_ENUM_SETUP:
 		text = "emblem-system";
 		break;
-	case PK_TASK_STATUS_QUERY:
+	case PK_STATUS_ENUM_QUERY:
 		text = "system-search";
 		break;
-	case PK_TASK_STATUS_REMOVE:
+	case PK_STATUS_ENUM_REMOVE:
 		text = "edit-clear";
 		break;
-	case PK_TASK_STATUS_DOWNLOAD:
+	case PK_STATUS_ENUM_DOWNLOAD:
 		text = "mail-send-receive";
 		break;
-	case PK_TASK_STATUS_INSTALL:
+	case PK_STATUS_ENUM_INSTALL:
 		text = "emblem-system";
 		break;
-	case PK_TASK_STATUS_REFRESH_CACHE:
+	case PK_STATUS_ENUM_REFRESH_CACHE:
 		text = "view-refresh";
 		break;
-	case PK_TASK_STATUS_UPDATE:
+	case PK_STATUS_ENUM_UPDATE:
 		text = "system-software-update";
 		break;
 	default:
-		pk_error ("status unrecognised: %s", pk_task_status_to_text (status));
+		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
 }
 
 /**
- * pk_task_role_to_localised_text:
+ * pk_role_enum_to_localised_text:
  **/
 const gchar *
-pk_task_role_to_localised_text (PkTaskRole role)
+pk_role_enum_to_localised_text (PkTaskRole role)
 {
 	const gchar *text = NULL;
 	switch (role) {
-	case PK_TASK_ROLE_QUERY:
+	case PK_ROLE_ENUM_QUERY:
 		text = _("Querying");
 		break;
-	case PK_TASK_ROLE_PACKAGE_REMOVE:
+	case PK_ROLE_ENUM_PACKAGE_REMOVE:
 		text = _("Removing");
 		break;
-	case PK_TASK_ROLE_PACKAGE_INSTALL:
+	case PK_ROLE_ENUM_PACKAGE_INSTALL:
 		text = _("Installing");
 		break;
-	case PK_TASK_ROLE_REFRESH_CACHE:
+	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshing package cache");
 		break;
-	case PK_TASK_ROLE_PACKAGE_UPDATE:
+	case PK_ROLE_ENUM_PACKAGE_UPDATE:
 		text = _("Updating package");
 		break;
-	case PK_TASK_ROLE_SYSTEM_UPDATE:
+	case PK_ROLE_ENUM_SYSTEM_UPDATE:
 		text = _("Updating system");
 		break;
 	default:
-		pk_error ("role unrecognised: %s", pk_task_role_to_text (role));
+		pk_error ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
 
 /**
- * pk_task_group_to_localised_text:
+ * pk_group_enum_to_localised_text:
  **/
 const gchar *
-pk_task_group_to_localised_text (PkTaskGroup group)
+pk_group_enum_to_localised_text (PkTaskGroup group)
 {
 	const gchar *text = NULL;
 	switch (group) {
-	case PK_TASK_GROUP_ACCESSIBILITY:
+	case PK_GROUP_ENUM_ACCESSIBILITY:
 		text = _("Accessibility");
 		break;
-	case PK_TASK_GROUP_ACCESSORIES:
+	case PK_GROUP_ENUM_ACCESSORIES:
 		text = _("Accessories");
 		break;
-	case PK_TASK_GROUP_EDUCATION:
+	case PK_GROUP_ENUM_EDUCATION:
 		text = _("Education");
 		break;
-	case PK_TASK_GROUP_GAMES:
+	case PK_GROUP_ENUM_GAMES:
 		text = _("Games");
 		break;
-	case PK_TASK_GROUP_GRAPHICS:
+	case PK_GROUP_ENUM_GRAPHICS:
 		text = _("Graphics");
 		break;
-	case PK_TASK_GROUP_INTERNET:
+	case PK_GROUP_ENUM_INTERNET:
 		text = _("Internet");
 		break;
-	case PK_TASK_GROUP_OFFICE:
+	case PK_GROUP_ENUM_OFFICE:
 		text = _("Office");
 		break;
-	case PK_TASK_GROUP_OTHER:
+	case PK_GROUP_ENUM_OTHER:
 		text = _("Other");
 		break;
-	case PK_TASK_GROUP_PROGRAMMING:
+	case PK_GROUP_ENUM_PROGRAMMING:
 		text = _("Programming");
 		break;
-	case PK_TASK_GROUP_MULTIMEDIA:
+	case PK_GROUP_ENUM_MULTIMEDIA:
 		text = _("Multimedia");
 		break;
-	case PK_TASK_GROUP_SYSTEM:
+	case PK_GROUP_ENUM_SYSTEM:
 		text = _("System");
 		break;
 	default:
@@ -262,44 +262,44 @@ pk_task_group_to_localised_text (PkTaskGroup group)
 }
 
 /**
- * pk_task_group_to_icon_name:
+ * pk_group_enum_to_icon_name:
  **/
 const gchar *
-pk_task_group_to_icon_name (PkTaskGroup group)
+pk_group_enum_to_icon_name (PkTaskGroup group)
 {
 	const gchar *text = NULL;
 	switch (group) {
-	case PK_TASK_GROUP_ACCESSIBILITY:
+	case PK_GROUP_ENUM_ACCESSIBILITY:
 		text = "preferences-desktop-accessibility";
 		break;
-	case PK_TASK_GROUP_ACCESSORIES:
+	case PK_GROUP_ENUM_ACCESSORIES:
 		text = "applications-accessories";
 		break;
-	case PK_TASK_GROUP_EDUCATION:
+	case PK_GROUP_ENUM_EDUCATION:
 		text = "utilities-system-monitor";
 		break;
-	case PK_TASK_GROUP_GAMES:
+	case PK_GROUP_ENUM_GAMES:
 		text = "applications-games";
 		break;
-	case PK_TASK_GROUP_GRAPHICS:
+	case PK_GROUP_ENUM_GRAPHICS:
 		text = "applications-graphics";
 		break;
-	case PK_TASK_GROUP_INTERNET:
+	case PK_GROUP_ENUM_INTERNET:
 		text = "applications-internet";
 		break;
-	case PK_TASK_GROUP_OFFICE:
+	case PK_GROUP_ENUM_OFFICE:
 		text = "applications-office";
 		break;
-	case PK_TASK_GROUP_OTHER:
+	case PK_GROUP_ENUM_OTHER:
 		text = "applications-other";
 		break;
-	case PK_TASK_GROUP_PROGRAMMING:
+	case PK_GROUP_ENUM_PROGRAMMING:
 		text = "applications-development";
 		break;
-	case PK_TASK_GROUP_MULTIMEDIA:
+	case PK_GROUP_ENUM_MULTIMEDIA:
 		text = "applications-multimedia";
 		break;
-	case PK_TASK_GROUP_SYSTEM:
+	case PK_GROUP_ENUM_SYSTEM:
 		text = "applications-system";
 		break;
 	default:
