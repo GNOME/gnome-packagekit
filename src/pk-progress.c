@@ -298,6 +298,7 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 	PkStatusEnum status;
 	gboolean ret;
 	gchar *text;
+	guint percentage;
 
 	pk_task_monitor_set_job (progress->priv->tmonitor, job);
 
@@ -308,8 +309,17 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 	g_free (text);
 
 	/* coldplug */
-	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
-	pk_progress_job_status_changed_cb (progress->priv->tmonitor,status, progress);
+	pk_task_monitor_get_status (progress->priv->tmonitor, &status);
+	pk_progress_job_status_changed_cb (progress->priv->tmonitor, status, progress);
+
+	pk_task_monitor_get_percentage (progress->priv->tmonitor, &percentage);
+	pk_progress_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+
+	pk_task_monitor_get_sub_percentage (progress->priv->tmonitor, &percentage);
+	pk_progress_sub_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+
+	ret = pk_task_monitor_get_package (progress->priv->tmonitor, &text);
+	pk_progress_package_cb (progress->priv->tmonitor, 0, text, NULL, progress);
 
 	/* no such job? */
 	if (ret == FALSE) {
