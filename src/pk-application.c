@@ -510,7 +510,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	if (string->len == 0) {
 		g_string_append (string, "none");
 	} else {
-		g_string_set_size (string, string->len);
+		g_string_set_size (string, string->len - 1);
 	}
 
 	filter_all = g_string_free (string, FALSE);
