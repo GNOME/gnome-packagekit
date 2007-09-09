@@ -836,6 +836,7 @@ pk_application_init (PkApplication *application)
 	/* get actions */
 	gchar *actions;
 	actions = pk_task_client_get_actions (application->priv->tclient);
+	pk_debug ("actions=%s", actions);
 	application->priv->action_list = pk_action_list_new_from_string (actions);
 	g_free (actions);
 
