@@ -227,7 +227,7 @@ pk_application_close_cb (GtkWidget	*widget,
  * pk_application_package_cb:
  **/
 static void
-pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id, PkTaskGroup group,
+pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id, PkGroupEnum group,
 			   const gchar *detail, const gchar *url, PkApplication *application)
 {
 	GtkWidget *widget;
@@ -275,7 +275,7 @@ pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *pack
  * pk_application_error_code_cb:
  **/
 static void
-pk_application_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const gchar *details, PkApplication *application)
+pk_application_error_code_cb (PkTaskClient *tclient, PkErrorCodeEnum code, const gchar *details, PkApplication *application)
 {
 	pk_application_error_message (application,
 				      pk_error_enum_to_localised_text (code), details);
@@ -285,7 +285,7 @@ pk_application_error_code_cb (PkTaskClient *tclient, PkTaskErrorCode code, const
  * pk_application_finished_cb:
  **/
 static void
-pk_application_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkApplication *application)
+pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -773,7 +773,7 @@ static void
 pk_group_add_data (PkApplication *application, const gchar *type)
 {
 	GtkTreeIter iter;
-	PkTaskGroup group;
+	PkGroupEnum group;
 	GdkPixbuf *icon;
 	const gchar *icon_name;
 	const gchar *text;

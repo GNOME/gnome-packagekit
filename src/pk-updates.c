@@ -297,7 +297,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkUpdat
  * pk_updates_finished_cb:
  **/
 static void
-pk_updates_finished_cb (PkTaskClient *tclient, PkTaskStatus status, guint runtime, PkUpdates *updates)
+pk_updates_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint runtime, PkUpdates *updates)
 {
 	GtkWidget *widget;
 

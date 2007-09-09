@@ -151,7 +151,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	pk_debug ("rescan");
 	guint i;
 	PkTaskListItem *item;
-	PkTaskStatus state;
+	PkStatusEnum state;
 	guint length;
 	GPtrArray *array;
 	gboolean state_install = FALSE;
@@ -229,7 +229,7 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
  * pk_watch_task_list_finished_cb:
  **/
 static void
-pk_watch_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gchar *package, guint runtime, PkWatch *watch)
+pk_watch_task_list_finished_cb (PkTaskList *tlist, PkStatusEnum status, const gchar *package, guint runtime, PkWatch *watch)
 {
 	NotifyNotification *dialog;
 	const gchar *title;
@@ -268,7 +268,7 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkTaskStatus status, const gc
  * pk_watch_task_list_error_code_cb:
  **/
 static void
-pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkTaskErrorCode error_code, const gchar *details, PkWatch *watch)
+pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
 	NotifyNotification *dialog;
 	const gchar *title;

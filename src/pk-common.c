@@ -34,7 +34,7 @@
  * pk_error_enum_to_localised_text:
  **/
 const gchar *
-pk_error_enum_to_localised_text (PkTaskErrorCode code)
+pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
@@ -87,7 +87,7 @@ pk_error_enum_to_localised_text (PkTaskErrorCode code)
  * pk_restart_enum_to_localised_text:
  **/
 const gchar *
-pk_restart_enum_to_localised_text (PkTaskRestart restart)
+pk_restart_enum_to_localised_text (PkRestartEnum restart)
 {
 	const gchar *text = NULL;
 	switch (restart) {
@@ -110,7 +110,7 @@ pk_restart_enum_to_localised_text (PkTaskRestart restart)
  * pk_status_enum_to_localised_text:
  **/
 const gchar *
-pk_status_enum_to_localised_text (PkTaskStatus status)
+pk_status_enum_to_localised_text (PkStatusEnum status)
 {
 	const gchar *text = NULL;
 	switch (status) {
@@ -148,7 +148,7 @@ pk_status_enum_to_localised_text (PkTaskStatus status)
  * pk_status_enum_to_icon_name:
  **/
 const gchar *
-pk_status_enum_to_icon_name (PkTaskStatus status)
+pk_status_enum_to_icon_name (PkStatusEnum status)
 {
 	const gchar *text = NULL;
 	switch (status) {
@@ -186,7 +186,7 @@ pk_status_enum_to_icon_name (PkTaskStatus status)
  * pk_role_enum_to_localised_text:
  **/
 const gchar *
-pk_role_enum_to_localised_text (PkTaskRole role)
+pk_role_enum_to_localised_text (PkRoleEnum role)
 {
 	const gchar *text = NULL;
 	switch (role) {
@@ -218,7 +218,7 @@ pk_role_enum_to_localised_text (PkTaskRole role)
  * pk_group_enum_to_localised_text:
  **/
 const gchar *
-pk_group_enum_to_localised_text (PkTaskGroup group)
+pk_group_enum_to_localised_text (PkGroupEnum group)
 {
 	const gchar *text = NULL;
 	switch (group) {
@@ -265,7 +265,7 @@ pk_group_enum_to_localised_text (PkTaskGroup group)
  * pk_group_enum_to_icon_name:
  **/
 const gchar *
-pk_group_enum_to_icon_name (PkTaskGroup group)
+pk_group_enum_to_icon_name (PkGroupEnum group)
 {
 	const gchar *text = NULL;
 	switch (group) {

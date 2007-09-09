@@ -238,7 +238,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
-static void pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify);
+static void pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify);
 
 /**
  * pk_notify_libnotify_reboot_now_cb:
@@ -253,9 +253,9 @@ pk_notify_libnotify_reboot_now_cb (NotifyNotification *dialog, gchar *action, Pk
  * pk_notify_update_system_finished_cb:
  **/
 static void
-pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify)
+pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
-	PkTaskRestart restart;
+	PkRestartEnum restart;
 	restart = pk_task_client_get_require_restart (tclient);
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
@@ -440,7 +440,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
  * pk_notify_query_updates_finished_cb:
  **/
 static void
-pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkTaskExit exit, guint runtime, PkNotify *notify)
+pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkExitEnum exit, guint runtime, PkNotify *notify)
 {
 	PkTaskClientPackageItem *item;
 	GPtrArray *packages;
@@ -550,7 +550,7 @@ pk_notify_invalidate_cache_cb (PkNotify *notify)
  * pk_notify_refresh_cache_finished_cb:
  **/
 static void
-pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkTaskExit exit_code, guint runtime, PkNotify *notify)
+pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));

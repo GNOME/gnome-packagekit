@@ -135,7 +135,7 @@ pk_progress_hide_cb (GtkWidget   *widget,
  * pk_progress_error_code_cb:
  **/
 static void
-pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkTaskErrorCode code, const gchar *details, PkProgress *progress)
+pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
 {
 	pk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
 }
@@ -144,7 +144,7 @@ pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkTaskErrorCode code, const 
  * pk_progress_finished_cb:
  **/
 static void
-pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkTaskStatus status, guint runtime, PkProgress *progress)
+pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint runtime, PkProgress *progress)
 {
 	pk_debug ("finished");
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
@@ -233,7 +233,7 @@ pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progr
  */
 static void
 pk_progress_job_status_changed_cb (PkTaskMonitor *tmonitor,
-				   PkTaskStatus   status,
+				   PkStatusEnum   status,
 				   PkProgress    *progress)
 {
 	GtkWidget *widget;
@@ -269,7 +269,7 @@ pk_common_get_role_text (PkTaskMonitor *tmonitor)
 	const gchar *role_text;
 	gchar *package_id;
 	gchar *text;
-	PkTaskRole role;
+	PkRoleEnum role;
 	PkPackageId *ident;
 
 	pk_task_monitor_get_role (tmonitor, &role, &package_id);
@@ -295,7 +295,7 @@ gboolean
 pk_progress_monitor_job (PkProgress *progress, guint job)
 {
 	GtkWidget *widget;
-	PkTaskStatus status;
+	PkStatusEnum status;
 	gboolean ret;
 	gchar *text;
 
