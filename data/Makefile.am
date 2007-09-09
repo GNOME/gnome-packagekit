@@ -43,6 +43,7 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
+	pk-updates.desktop				\
 	pk-update-icon.desktop				\
 	pk-application.desktop				\
 	gnome-packagekit.schemas
