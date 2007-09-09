@@ -33,7 +33,7 @@
 #include <pk-task-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
-#include <pk-action-list.h>
+#include <pk-enum-list.h>
 
 #include "pk-common.h"
 #include "pk-application.h"
@@ -52,7 +52,7 @@ struct PkApplicationPrivate
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
-	PkActionList		*action_list;
+	PkEnumList		*action_list;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
 	gboolean		 find_installed;
@@ -834,11 +834,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_sub_percentage_changed_cb), application);
 
 	/* get actions */
-	gchar *actions;
-	actions = pk_task_client_get_actions (application->priv->tclient);
-	pk_debug ("actions=%s", actions);
-	application->priv->action_list = pk_action_list_new_from_string (actions);
-	g_free (actions);
+	application->priv->action_list = pk_task_client_get_actions (application->priv->tclient);
+	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->action_list));
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
@@ -892,7 +889,7 @@ pk_application_init (PkApplication *application)
 	gtk_widget_hide (widget);
 
 	/* hide the group selector if we don't support search-groups */
-	if (pk_action_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_GROUP) == FALSE) {
+	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
 		gtk_widget_hide (widget);
 	}
@@ -1019,7 +1016,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->tclient);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
-	pk_action_list_free (application->priv->action_list);
+	g_object_unref (application->priv->action_list);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
 }
