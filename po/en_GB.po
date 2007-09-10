@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-24 13:27+0100\n"
+"POT-Creation-Date: 2007-09-10 10:18+0100\n"
 "PO-Revision-Date: 2007-05-15 22:49-0000\n"
 "Last-Translator: Richard Hugehs <richard@hughsie.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -26,76 +26,168 @@ msgid ""
 "light sensors."
 msgstr ""
 
+#: ../data/pk-progress.glade.h:1
+msgid "PackageKit Progress"
+msgstr ""
+
+#: ../data/pk-progress.glade.h:2 ../data/pk-application.glade.h:17
+msgid "Status:"
+msgstr ""
+
+#: ../data/pk-progress.glade.h:3
+msgid "Task Description:"
+msgstr ""
+
+#: ../data/pk-progress.glade.h:4
+msgid "Total Progress:"
+msgstr ""
+
+#: ../data/pk-progress.glade.h:5 ../data/pk-application.glade.h:19
+msgid "Transaction Progress:"
+msgstr ""
+
+#: ../data/pk-progress.glade.h:6 ../data/pk-application.glade.h:20
+#: ../src/pk-common.c:118
+msgid "Unknown"
+msgstr ""
+
+#: ../data/pk-updates.glade.h:1
+msgid "<b>More details</b>"
+msgstr ""
+
+#: ../data/pk-updates.glade.h:2
+msgid "Package Update Viewer"
+msgstr ""
+
 #: ../data/pk-update-icon.desktop.in.h:1
 msgid "PackageKit Update Applet"
 msgstr ""
 
 #: ../data/pk-application.glade.h:1
-msgid "Available"
+msgid "<b>Details</b>"
 msgstr ""
 
 #: ../data/pk-application.glade.h:2
+msgid "<b>Progress</b>"
+msgstr ""
+
+#: ../data/pk-application.glade.h:3
+msgid "Available"
+msgstr ""
+
+#: ../data/pk-application.glade.h:4
 msgid ""
 "By package name\n"
 "By summary\n"
 "By description"
 msgstr ""
 
-#: ../data/pk-application.glade.h:5
-msgid "Dependancies"
-msgstr ""
-
-#: ../data/pk-application.glade.h:6
-msgid "Install"
-msgstr ""
-
 #: ../data/pk-application.glade.h:7
-msgid "Installed"
+msgid "Dependencies"
 msgstr ""
 
 #: ../data/pk-application.glade.h:8
-msgid "Package:"
+msgid "Development"
 msgstr ""
 
-#: ../data/pk-application.glade.h:9 ../src/pk-application-main.c:84
-msgid "PackageKit Manager"
+#: ../data/pk-application.glade.h:9
+msgid "Graphical"
 msgstr ""
 
 #: ../data/pk-application.glade.h:10
+msgid "Install"
+msgstr ""
+
+#: ../data/pk-application.glade.h:11 ../src/pk-application.c:635
+msgid "Installed"
+msgstr ""
+
+#: ../data/pk-application.glade.h:12
+msgid "Job Progress:"
+msgstr ""
+
+#: ../data/pk-application.glade.h:13
+msgid "Lots of boring text, yadda, yadda, yadda."
+msgstr ""
+
+#: ../data/pk-application.glade.h:14
+msgid "Normal"
+msgstr ""
+
+#: ../data/pk-application.glade.h:15 ../src/pk-application-main.c:84
+#: ../src/pk-updates-main.c:84
+msgid "PackageKit Manager"
+msgstr ""
+
+#: ../data/pk-application.glade.h:16
+msgid "Project _Homepage"
+msgstr ""
+
+#: ../data/pk-application.glade.h:18
+msgid "Text"
+msgstr ""
+
+#: ../data/pk-application.glade.h:21
+msgid "_File list"
+msgstr ""
+
+#: ../data/pk-application.glade.h:22
 msgid "_Remove"
 msgstr ""
 
-#: ../src/pk-notify.c:257
-#, c-format
-msgid "Package '%s' has been removed"
+#: ../src/pk-application.c:169
+msgid "The package could not be installed"
 msgstr ""
 
-#: ../src/pk-notify.c:259
-#, c-format
-msgid "Package '%s' has been installed"
+#: ../src/pk-application.c:189
+msgid "The package could not be removed"
 msgstr ""
 
-#: ../src/pk-notify.c:268
-msgid "Task completed"
+#: ../src/pk-application.c:208
+msgid "The package dependencies could not be found"
 msgstr ""
 
-#: ../src/pk-notify.c:288 ../src/pk-notify.c:308
+#: ../src/pk-application.c:301
+msgid "Find"
+msgstr ""
+
+#: ../src/pk-application.c:311
+msgid "The action did not complete"
+msgstr ""
+
+#: ../src/pk-application.c:527
+msgid "The search could not be completed"
+msgstr ""
+
+#: ../src/pk-application.c:561
+msgid "Cancel"
+msgstr ""
+
+#: ../src/pk-application.c:641 ../src/pk-application.c:667
+msgid "Name"
+msgstr ""
+
+#: ../src/pk-application.c:706
+msgid "The group could not be queried"
+msgstr ""
+
+#: ../src/pk-notify.c:99 ../src/pk-notify.c:119
 msgid "Functionality incomplete"
 msgstr ""
 
-#: ../src/pk-notify.c:289
+#: ../src/pk-notify.c:100
 msgid "No help yet, sorry..."
 msgstr ""
 
-#: ../src/pk-notify.c:309
+#: ../src/pk-notify.c:120
 msgid "No preferences yet, sorry..."
 msgstr ""
 
-#: ../src/pk-notify.c:332
+#: ../src/pk-notify.c:143 ../src/pk-watch.c:299
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licensed under the GNU General Public License Version 2"
 
-#: ../src/pk-notify.c:333
+#: ../src/pk-notify.c:144 ../src/pk-watch.c:300
 #, fuzzy
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
@@ -108,7 +200,7 @@ msgstr ""
 "as published by the Free Software Foundation; either version 2\n"
 "of the License, or (at your option) any later version."
 
-#: ../src/pk-notify.c:337
+#: ../src/pk-notify.c:148 ../src/pk-watch.c:304
 #, fuzzy
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
@@ -121,7 +213,7 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details."
 
-#: ../src/pk-notify.c:341
+#: ../src/pk-notify.c:152 ../src/pk-watch.c:308
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -133,70 +225,61 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 "02110-1301, USA."
 
-#: ../src/pk-notify.c:346
+#: ../src/pk-notify.c:157 ../src/pk-watch.c:313
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/pk-notify.c:362
+#: ../src/pk-notify.c:173 ../src/pk-watch.c:329
 msgid "PackageKit Website"
 msgstr ""
 
 #. Preferences
-#: ../src/pk-notify.c:392
+#: ../src/pk-notify.c:203
 msgid "_Preferences"
 msgstr ""
 
 #. Help
-#: ../src/pk-notify.c:404
+#: ../src/pk-notify.c:215
 msgid "_Help"
 msgstr ""
 
 #. About
-#: ../src/pk-notify.c:412
+#: ../src/pk-notify.c:223 ../src/pk-watch.c:359
 msgid "_About"
 msgstr ""
 
-#: ../src/pk-notify.c:455
+#: ../src/pk-notify.c:266
 msgid "The system update has completed"
 msgstr ""
 
-#: ../src/pk-notify.c:460
+#: ../src/pk-notify.c:271
 msgid "Restart computer now"
 msgstr ""
 
-#: ../src/pk-notify.c:479
+#: ../src/pk-notify.c:290 ../src/pk-watch.c:386
 msgid ""
 "The action could not be completed due to the backend refusing the command"
 msgstr ""
 
-#: ../src/pk-notify.c:505
-msgid "Failed to refresh cache"
-msgstr ""
-
-#: ../src/pk-notify.c:526
+#: ../src/pk-notify.c:315
 msgid "Failed to update system"
 msgstr ""
 
-#. force a refresh
-#: ../src/pk-notify.c:569
-msgid "_Refresh cache"
-msgstr ""
-
-#. manage packages
-#: ../src/pk-notify.c:577
-msgid "_Manage packages"
+#. show updates
+#: ../src/pk-notify.c:358
+msgid "_Show updates"
 msgstr ""
 
 #. update system
-#: ../src/pk-notify.c:608
+#: ../src/pk-notify.c:366
 msgid "_Update system"
 msgstr ""
 
-#: ../src/pk-notify.c:661
+#: ../src/pk-notify.c:419
 msgid "Security updates available"
 msgstr ""
 
-#: ../src/pk-notify.c:662
+#: ../src/pk-notify.c:420
 #, c-format
 msgid ""
 "The following important updates are available for your computer:\n"
@@ -204,11 +287,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/pk-notify.c:664
+#: ../src/pk-notify.c:422
 msgid "Security update available"
 msgstr ""
 
-#: ../src/pk-notify.c:665
+#: ../src/pk-notify.c:423
 #, c-format
 msgid ""
 "The following important update is available for your computer:\n"
@@ -216,28 +299,25 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/pk-notify.c:671
+#: ../src/pk-notify.c:429
 msgid "Update system now"
 msgstr ""
 
-#: ../src/pk-notify.c:674
+#: ../src/pk-notify.c:432
 msgid "Don't warn me again"
 msgstr ""
 
-#: ../src/pk-notify.c:722
-msgid "(Security)"
+#: ../src/pk-notify.c:498
+msgid "There is an update available"
 msgstr ""
 
-#: ../src/pk-notify.c:747
-msgid "Updates:\n"
+#: ../src/pk-notify.c:500
+#, c-format
+msgid "There are %d updates available"
 msgstr ""
 
-#: ../src/pk-update-icon.c:60
-msgid "Package Update Icon"
-msgstr ""
-
-#: ../src/pk-update-icon.c:61
-msgid "PackageKit update icon"
+#: ../src/pk-update-icon.c:62 ../src/pk-update-icon.c:63
+msgid "PackageKit Update Icon"
 msgstr ""
 
 #: ../src/pk-common.c:42
@@ -245,57 +325,185 @@ msgid "No network connection available"
 msgstr ""
 
 #: ../src/pk-common.c:45
-msgid "Not supported by this backend"
+msgid "Out of memory"
 msgstr ""
 
 #: ../src/pk-common.c:48
-msgid "An internal system error has occurred"
+msgid "Failed to create a thread"
 msgstr ""
 
 #: ../src/pk-common.c:51
-msgid "A security trust relationship is not present"
+msgid "Not supported by this backend"
 msgstr ""
 
 #: ../src/pk-common.c:54
-msgid "Unknown error"
+msgid "An internal system error has occurred"
+msgstr ""
+
+#: ../src/pk-common.c:57
+msgid "A security trust relationship is not present"
+msgstr ""
+
+#: ../src/pk-common.c:60
+msgid "The package is not installed"
+msgstr ""
+
+#: ../src/pk-common.c:63
+msgid "The package is already installed"
+msgstr ""
+
+#: ../src/pk-common.c:66
+msgid "The package download failed"
 msgstr ""
 
 #: ../src/pk-common.c:69
-msgid "A system restart is required"
+msgid "Dependency resolution failed"
 msgstr ""
 
 #: ../src/pk-common.c:72
-msgid "You will need to log off and log back on"
+msgid "Search filter was invalid"
 msgstr ""
 
 #: ../src/pk-common.c:75
-msgid "You need to restart the application"
+msgid "The package ID was not well formed"
 msgstr ""
 
-#: ../src/pk-common.c:92
-msgid "Setting up"
+#: ../src/pk-common.c:78
+msgid "Transaction error"
+msgstr ""
+
+#: ../src/pk-common.c:81
+msgid "Unknown error"
 msgstr ""
 
 #: ../src/pk-common.c:95
-msgid "Querying"
+msgid "A system restart is required"
 msgstr ""
 
 #: ../src/pk-common.c:98
-msgid "Removing"
+msgid "You will need to log off and log back on"
 msgstr ""
 
 #: ../src/pk-common.c:101
+msgid "You need to restart the application"
+msgstr ""
+
+#: ../src/pk-common.c:121
+msgid "Setting up"
+msgstr ""
+
+#: ../src/pk-common.c:124 ../src/pk-common.c:194
+msgid "Querying"
+msgstr ""
+
+#: ../src/pk-common.c:127 ../src/pk-common.c:197
+msgid "Removing"
+msgstr ""
+
+#: ../src/pk-common.c:130
 msgid "Downloading"
 msgstr ""
 
-#: ../src/pk-common.c:104
+#: ../src/pk-common.c:133 ../src/pk-common.c:200
 msgid "Installing"
 msgstr ""
 
-#: ../src/pk-common.c:107
+#: ../src/pk-common.c:136 ../src/pk-common.c:203
 msgid "Refreshing package cache"
 msgstr ""
 
-#: ../src/pk-common.c:110
+#: ../src/pk-common.c:139
 msgid "Updating"
+msgstr ""
+
+#: ../src/pk-common.c:206
+msgid "Updating package"
+msgstr ""
+
+#: ../src/pk-common.c:209
+msgid "Updating system"
+msgstr ""
+
+#: ../src/pk-common.c:226
+msgid "Accessibility"
+msgstr ""
+
+#: ../src/pk-common.c:229
+msgid "Accessories"
+msgstr ""
+
+#: ../src/pk-common.c:232
+msgid "Education"
+msgstr ""
+
+#: ../src/pk-common.c:235
+msgid "Games"
+msgstr ""
+
+#: ../src/pk-common.c:238
+msgid "Graphics"
+msgstr ""
+
+#: ../src/pk-common.c:241
+msgid "Internet"
+msgstr ""
+
+#: ../src/pk-common.c:244
+msgid "Office"
+msgstr ""
+
+#: ../src/pk-common.c:247
+msgid "Other"
+msgstr ""
+
+#: ../src/pk-common.c:250
+msgid "Programming"
+msgstr ""
+
+#: ../src/pk-common.c:253
+msgid "Multimedia"
+msgstr ""
+
+#: ../src/pk-common.c:256
+msgid "System"
+msgstr ""
+
+#: ../src/pk-monitor.c:71 ../src/pk-monitor.c:72
+msgid "PackageKit Job Monitor"
+msgstr ""
+
+#: ../src/pk-watch.c:247
+#, c-format
+msgid "Package '%s' has been removed"
+msgstr ""
+
+#: ../src/pk-watch.c:249
+#, c-format
+msgid "Package '%s' has been installed"
+msgstr ""
+
+#: ../src/pk-watch.c:258
+msgid "Task completed"
+msgstr ""
+
+#: ../src/pk-watch.c:410
+msgid "Failed to refresh cache"
+msgstr ""
+
+#. force a refresh
+#: ../src/pk-watch.c:529
+msgid "_Refresh cache"
+msgstr ""
+
+#. manage packages
+#: ../src/pk-watch.c:537
+msgid "_Manage packages"
+msgstr ""
+
+#: ../src/pk-updates.c:247
+msgid "Severity"
+msgstr ""
+
+#: ../src/pk-updates.c:253
+msgid "Package"
 msgstr ""
