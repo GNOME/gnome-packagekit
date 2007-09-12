@@ -227,8 +227,10 @@ pk_application_close_cb (GtkWidget	*widget,
  * pk_application_package_cb:
  **/
 static void
-pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id, PkGroupEnum group,
-			   const gchar *detail, const gchar *url, PkApplication *application)
+pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id,
+			       const gchar *licence, PkGroupEnum group,
+			       const gchar *detail, const gchar *url,
+			       PkApplication *application)
 {
 	GtkWidget *widget;
 	const gchar *icon_name;
