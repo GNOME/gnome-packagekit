@@ -44,6 +44,7 @@
 #include <pk-task-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
+#include <pk-package-id.h>
 
 #include "pk-common.h"
 #include "pk-watch.h"
@@ -129,7 +130,11 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 		if (item->package_id == NULL || strlen (item->package_id) == 0) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
-			g_string_append_printf (status, "%s: %s\n", localised_status, item->package_id);
+			PkPackageId *ident;
+			/* display the package name, not the package_id */
+			ident = pk_package_id_new_from_string (item->package_id);
+			g_string_append_printf (status, "%s: %s\n", localised_status, ident->name);
+			pk_package_id_free (ident);
 		}
 	}
 	if (status->len == 0) {
