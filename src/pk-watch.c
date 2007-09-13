@@ -133,7 +133,11 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 			PkPackageId *ident;
 			/* display the package name, not the package_id */
 			ident = pk_package_id_new_from_string (item->package_id);
-			g_string_append_printf (status, "%s: %s\n", localised_status, ident->name);
+			if (ident != NULL) {
+				g_string_append_printf (status, "%s: %s\n", localised_status, ident->name);
+			} else {
+				g_string_append_printf (status, "%s: %s\n", localised_status, item->package_id);
+			}
 			pk_package_id_free (ident);
 		}
 	}
