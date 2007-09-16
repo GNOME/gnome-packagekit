@@ -53,6 +53,7 @@ struct PkApplicationPrivate
 	PkConnection		*pconnection;
 	gchar			*package;
 	PkEnumList		*action_list;
+	PkEnumList		*filter_list;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
 	gboolean		 find_installed;
@@ -839,6 +840,10 @@ pk_application_init (PkApplication *application)
 	application->priv->action_list = pk_task_client_get_actions (application->priv->tclient);
 	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->action_list));
 
+	/* get filters supported */
+	application->priv->filter_list = pk_task_client_get_filters (application->priv->tclient);
+	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
+
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), application);
@@ -893,6 +898,20 @@ pk_application_init (PkApplication *application)
 	/* hide the group selector if we don't support search-groups */
 	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
+		gtk_widget_hide (widget);
+	}
+
+	/* hide the filters we can't support */
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_install");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_devel");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_GUI) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_gui");
 		gtk_widget_hide (widget);
 	}
 
@@ -1018,6 +1037,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->tclient);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
+	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->action_list);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
