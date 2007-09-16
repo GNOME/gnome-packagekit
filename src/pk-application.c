@@ -521,8 +521,10 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_depth == 0) {
 		ret = pk_task_client_search_name (application->priv->tclient, filter_all, package);
-	} else {
+	} else if (application->priv->search_depth == 1) {
 		ret = pk_task_client_search_details (application->priv->tclient, filter_all, package);
+	} else {
+		ret = pk_task_client_search_file (application->priv->tclient, filter_all, package);
 	}
 
 	if (ret == FALSE) {
@@ -924,6 +926,15 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_find_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_depth");
+	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_NAME) == TRUE) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By package name");
+	}
+	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_DETAILS) == TRUE) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By description");
+	}
+	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_FILE) == TRUE) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By file");
+	}
 	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
 			  G_CALLBACK (pk_application_combobox_changed_cb), application);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
