@@ -256,6 +256,12 @@ static void
 pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
 	PkRestartEnum restart;
+
+	/* we failed, show the icon */
+	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
+	}
+
 	restart = pk_task_client_get_require_restart (tclient);
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
@@ -309,7 +315,9 @@ pk_notify_update_system (PkNotify *notify)
 	g_signal_connect (tclient, "finished",
 			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
 	ret = pk_task_client_update_system (tclient);
-	if (ret == FALSE) {
+	if (ret == TRUE) {
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+	} else {
 		g_object_unref (tclient);
 		pk_warning ("failed to update system");
 		pk_notify_not_supported (notify, _("Failed to update system"));
