@@ -238,13 +238,15 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
  * pk_watch_task_list_finished_cb:
  **/
 static void
-pk_watch_task_list_finished_cb (PkTaskList *tlist, PkStatusEnum status, const gchar *package, guint runtime, PkWatch *watch)
+pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar *package_id, guint runtime, PkWatch *watch)
 {
+	PkPackageId *ident;
 	NotifyNotification *dialog;
 	const gchar *title;
 	gchar *message = NULL;
+	gchar *package = NULL;
 
-	pk_debug ("status=%i, package=%s", status, package);
+	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package);
 
 	/* is it worth showing a UI? */
 	if (runtime < 3) {
@@ -252,14 +254,24 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkStatusEnum status, const gc
 		return;
 	}
 
-	if (status == PK_STATUS_ENUM_REMOVE) {
+	/* display the package name, not the package_id */
+	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		package = g_strdup (package_id);
+	} else {
+		package = g_strdup (ident->name);
+	}
+	pk_package_id_free (ident);
+
+	if (role == PK_ROLE_ENUM_PACKAGE_REMOVE) {
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);
-	} else if (status == PK_STATUS_ENUM_INSTALL) {
+	} else if (role == PK_ROLE_ENUM_PACKAGE_INSTALL) {
 		message = g_strdup_printf (_("Package '%s' has been installed"), package);
-	} else if (status == PK_STATUS_ENUM_UPDATE) {
+	} else if (role == PK_ROLE_ENUM_SYSTEM_UPDATE) {
 		message = g_strdup ("System has been updated");
 	}
 
+	g_free (package);
 	/* nothing of interest */
 	if (message == NULL) {
 		return;
