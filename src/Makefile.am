@@ -20,11 +20,14 @@ INCLUDES =						\
 	-I$(top_srcdir)/libpackagekit			\
 	$(NULL)
 
+noinst_PROGRAMS =					\
+	pk-monitor					\
+	$(NULL)
+
 bin_PROGRAMS =						\
 	pk-application					\
 	pk-update-icon					\
-	pk-monitor					\
-	pk-updates					\
+	pk-update-viewer				\
 	$(NULL)
 
 pk_monitor_SOURCES =					\
@@ -81,15 +84,15 @@ pk_application_LDADD =					\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)
 
-pk_updates_SOURCES =					\
-	pk-updates-main.c				\
-	pk-updates.c					\
-	pk-updates.h					\
+pk_update_viewer_SOURCES =				\
+	pk-update-viewer-main.c				\
+	pk-update-viewer.c				\
+	pk-update-viewer.h				\
 	pk-common.c					\
 	pk-common.h					\
 	$(NULL)
 
-pk_updates_LDADD =					\
+pk_update_viewer_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\

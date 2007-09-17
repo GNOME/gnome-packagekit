@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 
 #include <pk-debug.h>
-#include "pk-updates.h"
+#include "pk-update-viewer.h"
 
 /**
  * pk_updates_help_cb

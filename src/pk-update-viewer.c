@@ -36,7 +36,7 @@
 #include <pk-enum-list.h>
 
 #include "pk-common.h"
-#include "pk-updates.h"
+#include "pk-update-viewer.h"
 
 static void     pk_updates_class_init (PkUpdatesClass *klass);
 static void     pk_updates_init       (PkUpdates      *updates);
@@ -365,7 +365,7 @@ pk_updates_init (PkUpdates *updates)
 	g_signal_connect (updates->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), updates);
 
-	updates->priv->glade_xml = glade_xml_new (PK_DATA "/pk-updates.glade", NULL, NULL);
+	updates->priv->glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (updates->priv->glade_xml, "window_updates");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
