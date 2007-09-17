@@ -49,6 +49,7 @@ struct PkProgressPrivate
 	PkTaskMonitor		*tmonitor;
 	guint			 job;
 	gboolean		 task_ended;
+	guint			 no_percentage_evt;
 };
 
 enum {
@@ -108,6 +109,10 @@ pk_progress_help_cb (GtkWidget  *widget,
 		     PkProgress *progress)
 {
 	pk_debug ("emitting help");
+
+	/* remove the back and forth progress bar update */
+	g_source_remove (progress->priv->no_percentage_evt);
+
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 }
 
@@ -129,6 +134,8 @@ pk_progress_hide_cb (GtkWidget   *widget,
 		     PkProgress  *progress)
 {
 	pk_debug ("hide");
+	/* remove the back and forth progress bar update */
+	g_source_remove (progress->priv->no_percentage_evt);
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 }
 
@@ -149,6 +156,8 @@ pk_progress_finished_timeout (gpointer data)
 {
 	PkProgress *progress = PK_PROGRESS (data);
 	pk_debug ("emit unref");
+	/* remove the back and forth progress bar update */
+	g_source_remove (progress->priv->no_percentage_evt);
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 	return FALSE;
 }
@@ -162,7 +171,7 @@ pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint run
 	pk_debug ("finished");
 	progress->priv->task_ended = TRUE;
 	/* wait 5 seconds */
-	g_timeout_add (5000, pk_progress_finished_timeout, progress);
+	progress->priv->no_percentage_evt = g_timeout_add (5000, pk_progress_finished_timeout, progress);
 }
 
 /**
@@ -248,6 +257,8 @@ pk_progress_delete_event_cb (GtkWidget	*widget,
 			     GdkEvent	*event,
 			     PkProgress	*progress)
 {
+	/* remove the back and forth progress bar update */
+	g_source_remove (progress->priv->no_percentage_evt);
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 	return FALSE;
 }
