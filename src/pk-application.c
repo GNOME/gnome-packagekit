@@ -459,7 +459,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_in_progress == TRUE) {
 		pk_debug ("trying to cancel task...");
-		ret = pk_task_client_cancel_job_try (application->priv->tclient);
+		ret = pk_task_client_cancel (application->priv->tclient);
 		pk_warning ("canceled? %i", ret);
 		return;
 	}
