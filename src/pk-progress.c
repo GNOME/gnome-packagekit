@@ -102,6 +102,20 @@ pk_progress_error_message (PkProgress *progress, const gchar *title, const gchar
 }
 
 /**
+ * pk_progress_clean_exit:
+ **/
+static void
+pk_progress_clean_exit (PkProgress *progress)
+{
+	/* remove the back and forth progress bar update */
+	if (progress->priv->no_percentage_evt != 0) {
+		g_source_remove (progress->priv->no_percentage_evt);
+		progress->priv->no_percentage_evt = 0;
+	}
+	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+}
+
+/**
  * pk_progress_help_cb:
  **/
 static void
@@ -109,11 +123,7 @@ pk_progress_help_cb (GtkWidget  *widget,
 		     PkProgress *progress)
 {
 	pk_debug ("emitting help");
-
-	/* remove the back and forth progress bar update */
-	g_source_remove (progress->priv->no_percentage_evt);
-
-	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	pk_progress_clean_exit (progress);
 }
 
 /**
@@ -124,6 +134,7 @@ pk_progress_cancel_cb (GtkWidget  *widget,
 		       PkProgress *progress)
 {
 	pk_debug ("emitting cancel");
+	pk_task_monitor_cancel (progress->priv->tmonitor);
 }
 
 /**
@@ -134,9 +145,7 @@ pk_progress_hide_cb (GtkWidget   *widget,
 		     PkProgress  *progress)
 {
 	pk_debug ("hide");
-	/* remove the back and forth progress bar update */
-	g_source_remove (progress->priv->no_percentage_evt);
-	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	pk_progress_clean_exit (progress);
 }
 
 /**
@@ -149,16 +158,14 @@ pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkErrorCodeEnum code, const 
 }
 
 /**
- * pk_progress_spin_timeout:
+ * pk_progress_finished_timeout:
  **/
 gboolean
 pk_progress_finished_timeout (gpointer data)
 {
 	PkProgress *progress = PK_PROGRESS (data);
 	pk_debug ("emit unref");
-	/* remove the back and forth progress bar update */
-	g_source_remove (progress->priv->no_percentage_evt);
-	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	pk_progress_clean_exit (progress);
 	return FALSE;
 }
 
@@ -257,9 +264,7 @@ pk_progress_delete_event_cb (GtkWidget	*widget,
 			     GdkEvent	*event,
 			     PkProgress	*progress)
 {
-	/* remove the back and forth progress bar update */
-	g_source_remove (progress->priv->no_percentage_evt);
-	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	pk_progress_clean_exit (progress);
 	return FALSE;
 }
 
@@ -369,7 +374,7 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 		pk_progress_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
 	} else {
 		/* We have to spin */
-		g_timeout_add (50, pk_progress_spin_timeout, progress);
+		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
 	}
 
 	/* no need to spin */
@@ -401,6 +406,7 @@ pk_progress_init (PkProgress *progress)
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->job = 0;
 	progress->priv->task_ended = FALSE;
+	progress->priv->no_percentage_evt = 0;
 
 	progress->priv->tmonitor = pk_task_monitor_new ();
 	g_signal_connect (progress->priv->tmonitor, "error-code",
