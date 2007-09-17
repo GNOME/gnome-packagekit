@@ -48,6 +48,7 @@ struct PkProgressPrivate
 	GladeXML		*glade_xml;
 	PkTaskMonitor		*tmonitor;
 	guint			 job;
+	gboolean		 task_ended;
 };
 
 enum {
@@ -147,6 +148,7 @@ static void
 pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint runtime, PkProgress *progress)
 {
 	pk_debug ("finished");
+	progress->priv->task_ended = TRUE;
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 }
 
@@ -162,7 +164,16 @@ pk_progress_package_cb (PkTaskMonitor *tmonitor,
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
-	gtk_label_set_label (GTK_LABEL (widget), summary);
+
+	/* prefer the proper description, but fall back to the package_id name */
+	if (summary != NULL) {
+		gtk_label_set_label (GTK_LABEL (widget), summary);
+	} else {
+		PkPackageId *ident;
+		ident = pk_package_id_new_from_string (package_id);
+		gtk_label_set_label (GTK_LABEL (widget), ident->name);
+		pk_package_id_free (ident);
+	}
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_status");
 	gtk_widget_show (widget);
@@ -289,6 +300,29 @@ pk_common_get_role_text (PkTaskMonitor *tmonitor)
 }
 
 /**
+ * pk_progress_spin_timeout:
+ **/
+gboolean
+pk_progress_spin_timeout (gpointer data)
+{
+	gfloat fraction;
+	GtkWidget *widget;
+	PkProgress *progress = PK_PROGRESS (data);
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
+	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (widget));
+	fraction += 0.05;
+	if (fraction > 1.00) {
+		fraction = 0.0;
+	}
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), fraction);
+	if (progress->priv->task_ended == TRUE) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
  * pk_progress_monitor_job:
  **/
 gboolean
@@ -309,22 +343,33 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 	g_free (text);
 
 	/* coldplug */
-	pk_task_monitor_get_status (progress->priv->tmonitor, &status);
-	pk_progress_job_status_changed_cb (progress->priv->tmonitor, status, progress);
-
-	pk_task_monitor_get_percentage (progress->priv->tmonitor, &percentage);
-	pk_progress_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
-
-	pk_task_monitor_get_sub_percentage (progress->priv->tmonitor, &percentage);
-	pk_progress_sub_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
-
-	ret = pk_task_monitor_get_package (progress->priv->tmonitor, &text);
-	pk_progress_package_cb (progress->priv->tmonitor, 0, text, NULL, progress);
-
+	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
 	/* no such job? */
 	if (ret == FALSE) {
 		g_signal_emit (progress, signals [ACTION_UNREF], 0);
 		return FALSE;
+	}
+
+	pk_progress_job_status_changed_cb (progress->priv->tmonitor, status, progress);
+
+	ret = pk_task_monitor_get_percentage (progress->priv->tmonitor, &percentage);
+	if (ret == TRUE) {
+		pk_progress_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+	} else {
+		/* We have to spin */
+		g_timeout_add (50, pk_progress_spin_timeout, progress);
+	}
+
+	/* no need to spin */
+	ret = pk_task_monitor_get_sub_percentage (progress->priv->tmonitor, &percentage);
+	if (ret == TRUE) {
+		pk_progress_sub_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+	}
+
+	/* do the best we can */
+	ret = pk_task_monitor_get_package (progress->priv->tmonitor, &text);
+	if (ret == TRUE) {
+		pk_progress_package_cb (progress->priv->tmonitor, 0, text, NULL, progress);
 	}
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
@@ -343,6 +388,7 @@ pk_progress_init (PkProgress *progress)
 
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->job = 0;
+	progress->priv->task_ended = FALSE;
 
 	progress->priv->tmonitor = pk_task_monitor_new ();
 	g_signal_connect (progress->priv->tmonitor, "error-code",

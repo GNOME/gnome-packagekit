@@ -250,7 +250,7 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 
 	/* is it worth showing a UI? */
 	if (runtime < 3) {
-		pk_debug ("no libwatch, too quick");
+		pk_debug ("no notification, too quick");
 		return;
 	}
 
