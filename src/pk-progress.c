@@ -142,6 +142,18 @@ pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkErrorCodeEnum code, const 
 }
 
 /**
+ * pk_progress_spin_timeout:
+ **/
+gboolean
+pk_progress_finished_timeout (gpointer data)
+{
+	PkProgress *progress = PK_PROGRESS (data);
+	pk_debug ("emit unref");
+	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	return FALSE;
+}
+
+/**
  * pk_progress_finished_cb:
  **/
 static void
@@ -149,7 +161,8 @@ pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint run
 {
 	pk_debug ("finished");
 	progress->priv->task_ended = TRUE;
-	g_signal_emit (progress, signals [ACTION_UNREF], 0);
+	/* wait 5 seconds */
+	g_timeout_add (5000, pk_progress_finished_timeout, progress);
 }
 
 /**
@@ -205,38 +218,6 @@ pk_progress_sub_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 	gtk_widget_show (widget);
-}
-
-/**
- * pk_progress_no_percentage_updates_timeout:
- **/
-gboolean
-pk_progress_no_percentage_updates_timeout (gpointer data)
-{
-	gfloat fraction;
-	GtkWidget *widget;
-	PkProgress *progress = (PkProgress *) data;
-
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
-	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (widget));
-	fraction += 0.05;
-	if (fraction > 1.00) {
-		fraction = 0.0;
-	}
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), fraction);
-	return TRUE;
-}
-
-/**
- * pk_progress_no_percentage_updates_cb:
- **/
-static void
-pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progress)
-{
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
-	gtk_widget_show (widget);
-	g_timeout_add (100, pk_progress_no_percentage_updates_timeout, progress);
 }
 
 /**
@@ -316,10 +297,30 @@ pk_progress_spin_timeout (gpointer data)
 		fraction = 0.0;
 	}
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), fraction);
+
+	/* show the box */
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+	gtk_widget_show (widget);
+
 	if (progress->priv->task_ended == TRUE) {
+		/* hide the box */
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+		gtk_widget_hide (widget);
 		return FALSE;
 	}
 	return TRUE;
+}
+
+/**
+ * pk_progress_no_percentage_updates_cb:
+ **/
+static void
+pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progress)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+	gtk_widget_show (widget);
+	//g_timeout_add (100, pk_progress_spin_timeout, progress);
 }
 
 /**

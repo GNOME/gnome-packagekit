@@ -190,6 +190,9 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 {
 	const gchar *text = NULL;
 	switch (role) {
+	case PK_ROLE_ENUM_UNKNOWN:
+		text = _("Unknown");
+		break;
 	case PK_ROLE_ENUM_QUERY:
 		text = _("Querying");
 		break;
@@ -209,7 +212,7 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 		text = _("Updating system");
 		break;
 	default:
-		pk_error ("role unrecognised: %s", pk_role_enum_to_text (role));
+		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
