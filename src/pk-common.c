@@ -199,8 +199,32 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 	case PK_ROLE_ENUM_UNKNOWN:
 		text = _("Unknown");
 		break;
-	case PK_ROLE_ENUM_QUERY:
-		text = _("Querying");
+	case PK_ROLE_ENUM_GET_DEPENDS:
+		text = _("Getting dependencies");
+		break;
+	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
+		text = _("Getting update detail");
+		break;
+	case PK_ROLE_ENUM_GET_DESCRIPTION:
+		text = _("Getting description");
+		break;
+	case PK_ROLE_ENUM_GET_REQUIRES:
+		text = _("Getting requires");
+		break;
+	case PK_ROLE_ENUM_GET_UPDATES:
+		text = _("Getting updates");
+		break;
+	case PK_ROLE_ENUM_SEARCH_DETAILS:
+		text = _("Searching details");
+		break;
+	case PK_ROLE_ENUM_SEARCH_FILE:
+		text = _("Searching for file");
+		break;
+	case PK_ROLE_ENUM_SEARCH_GROUP:
+		text = _("Searching groups");
+		break;
+	case PK_ROLE_ENUM_SEARCH_NAME:
+		text = _("Searching for package name");
 		break;
 	case PK_ROLE_ENUM_PACKAGE_REMOVE:
 		text = _("Removing");
