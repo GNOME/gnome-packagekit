@@ -120,6 +120,9 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 	case PK_STATUS_ENUM_SETUP:
 		text = _("Setting up");
 		break;
+	case PK_STATUS_ENUM_WAIT:
+		text = _("Waiting");
+		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
 		break;
@@ -157,6 +160,9 @@ pk_status_enum_to_icon_name (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_SETUP:
 		text = "emblem-system";
+		break;
+	case PK_STATUS_ENUM_WAIT:
+		text = "media-playback-pause";
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = "system-search";
