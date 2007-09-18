@@ -186,7 +186,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (array, i);
 		state = item->status;
-		pk_debug ("%i %s", item->job, pk_status_enum_to_text (state));
+		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (state));
 		if (state == PK_STATUS_ENUM_SETUP) {
 			state_setup = TRUE;
 		} else if (state == PK_STATUS_ENUM_REFRESH_CACHE) {
@@ -459,17 +459,17 @@ pk_monitor_action_unref_cb (PkProgress *progress, PkWatch *watch)
 static void
 pk_watch_menu_job_status_cb (GtkMenuItem *item, PkWatch *watch)
 {
-	guint job;
+	gchar *tid;
 	PkProgress *progress = NULL;
 
 	/* find the job we should bind to */
-	job = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (item), "job"));
+	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
 
 	/* launch the UI */
 	progress = pk_progress_new ();
 	g_signal_connect (progress, "action-unref",
 			  G_CALLBACK (pk_monitor_action_unref_cb), watch);
-	pk_progress_monitor_job (progress, job);
+	pk_progress_monitor_tid (progress, tid);
 }
 
 /**
@@ -502,17 +502,17 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 		icon_name = pk_status_enum_to_icon_name (item->status);
 		if (item->package_id != NULL) {
 			package = g_strdup (item->package_id);
-			text = g_strdup_printf ("%s %s (%s) [%i]", localised_role, package, localised_status, item->job);
+			text = g_strdup_printf ("%s %s (%s)", localised_role, package, localised_status);
 			g_free (package);
 		} else {
-			text = g_strdup_printf ("%s (%s) [%i]", localised_role, localised_status, item->job);
+			text = g_strdup_printf ("%s (%s)", localised_role, localised_status);
 		}
 
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);
 
 		/* we need the job ID so we know what PkProgress to show */
-		g_object_set_data (G_OBJECT (widget), "job", GUINT_TO_POINTER (item->job));
+		g_object_set_data (G_OBJECT (widget), "tid", (gpointer) item->tid);
 
 		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);

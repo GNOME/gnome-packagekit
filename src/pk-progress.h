@@ -48,8 +48,8 @@ typedef struct
 
 GType		 pk_progress_get_type			(void);
 PkProgress	*pk_progress_new			(void);
-gboolean	 pk_progress_monitor_job		(PkProgress	*progress,
-							 guint		 job);
+gboolean	 pk_progress_monitor_tid		(PkProgress	*progress,
+							 const gchar	*tid);
 
 G_END_DECLS
 

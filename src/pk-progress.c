@@ -340,10 +340,10 @@ pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progr
 }
 
 /**
- * pk_progress_monitor_job:
+ * pk_progress_monitor_tid:
  **/
 gboolean
-pk_progress_monitor_job (PkProgress *progress, guint job)
+pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 {
 	GtkWidget *widget;
 	PkStatusEnum status;
@@ -351,7 +351,7 @@ pk_progress_monitor_job (PkProgress *progress, guint job)
 	gchar *text;
 	guint percentage;
 
-	pk_task_monitor_set_job (progress->priv->tmonitor, job);
+	pk_task_monitor_set_tid (progress->priv->tmonitor, tid);
 
 	/* fill in role */
 	text = pk_common_get_role_text (progress->priv->tmonitor);
