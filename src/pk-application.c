@@ -47,6 +47,7 @@ static void     pk_application_finalize   (GObject	    *object);
 struct PkApplicationPrivate
 {
 	GladeXML		*glade_xml;
+	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
 	PkTaskClient		*tclient;
@@ -295,8 +296,7 @@ pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint ru
 	application->priv->task_ended = TRUE;
 
 	/* hide widget */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
-	gtk_widget_hide (widget);
+	gtk_widget_hide (application->priv->progress_bar);
 
 	/* Correct text on button */
 	if (application->priv->search_in_progress == TRUE) {
@@ -322,24 +322,8 @@ pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint ru
 static void
 pk_application_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
 {
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
-	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-}
-
-/**
- * pk_application_sub_percentage_changed_cb:
- **/
-static void
-pk_application_sub_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
-{
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
-	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+	gtk_widget_show (application->priv->progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), (gfloat) percentage / 100.0);
 }
 
 /**
@@ -349,16 +333,14 @@ gboolean
 pk_application_no_percentage_updates_timeout (gpointer data)
 {
 	gfloat fraction;
-	GtkWidget *widget;
 	PkApplication *application = (PkApplication *) data;
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
-	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (widget));
+	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar));
 	fraction += 0.05;
 	if (fraction > 1.00) {
 		fraction = 0.0;
 	}
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), fraction);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), fraction);
 	if (application->priv->task_ended == TRUE) {
 		return FALSE;
 	}
@@ -371,9 +353,6 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 static void
 pk_application_no_percentage_updates_cb (PkTaskClient *tclient, PkApplication *application)
 {
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
-	gtk_widget_show (widget);
 	g_timeout_add (100, pk_application_no_percentage_updates_timeout, application);
 }
 
@@ -547,20 +526,9 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
 	gtk_widget_hide (widget);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
-	gtk_widget_hide (widget);
-
 	/* reset to 0 */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_percentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "progressbar_subpercentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 0.0);
+	gtk_widget_show (application->priv->progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.0);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
@@ -835,8 +803,6 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
 	g_signal_connect (application->priv->tclient, "percentage-changed",
 			  G_CALLBACK (pk_application_percentage_changed_cb), application);
-	g_signal_connect (application->priv->tclient, "sub-percentage-changed",
-			  G_CALLBACK (pk_application_sub_percentage_changed_cb), application);
 
 	/* get actions */
 	application->priv->action_list = pk_task_client_get_actions (application->priv->tclient);
@@ -884,17 +850,7 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_deps_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
-	gtk_widget_hide (widget);
-
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_percentage");
-	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_subpercentage");
-	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_progress_status");
 	gtk_widget_hide (widget);
 
 	/* hide the group selector if we don't support search-groups */
@@ -983,6 +939,12 @@ pk_application_init (PkApplication *application)
 	gtk_widget_show (GTK_WIDGET (widget));
 
 	GtkTreeSelection *selection;
+
+	/* use the in-statusbar for progress */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "statusbar_status");
+	application->priv->progress_bar = gtk_progress_bar_new ();
+	gtk_box_pack_end (GTK_BOX (widget), application->priv->progress_bar, TRUE, TRUE, 0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.5);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
