@@ -53,7 +53,7 @@ struct PkApplicationPrivate
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
-	PkEnumList		*action_list;
+	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
@@ -805,8 +805,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_percentage_changed_cb), application);
 
 	/* get actions */
-	application->priv->action_list = pk_task_client_get_actions (application->priv->tclient);
-	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->action_list));
+	application->priv->role_list = pk_task_client_get_actions (application->priv->tclient);
+	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
 
 	/* get filters supported */
 	application->priv->filter_list = pk_task_client_get_filters (application->priv->tclient);
@@ -854,7 +854,7 @@ pk_application_init (PkApplication *application)
 	gtk_widget_hide (widget);
 
 	/* hide the group selector if we don't support search-groups */
-	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_GROUP) == FALSE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
 		gtk_widget_hide (widget);
 	}
@@ -882,13 +882,13 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_find_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_depth");
-	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_NAME) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME) == TRUE) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By package name");
 	}
-	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_DETAILS) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS) == TRUE) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By description");
 	}
-	if (pk_enum_list_contains (application->priv->action_list, PK_ACTION_ENUM_SEARCH_FILE) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE) == TRUE) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By file");
 	}
 	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
@@ -1011,7 +1011,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
 	g_object_unref (application->priv->filter_list);
-	g_object_unref (application->priv->action_list);
+	g_object_unref (application->priv->role_list);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
 }

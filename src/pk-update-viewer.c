@@ -52,7 +52,7 @@ struct PkUpdatesPrivate
 	PkTaskClient		*tclient;
 	PkConnection		*pconnection;
 	gchar			*package;
-	PkEnumList		*action_list;
+	PkEnumList		*role_list;
 	gboolean		 refresh_in_progress;
 	guint			 search_depth;
 };
@@ -359,7 +359,7 @@ pk_updates_init (PkUpdates *updates)
 			  G_CALLBACK (pk_updates_percentage_changed_cb), updates);
 
 	/* get actions */
-	updates->priv->action_list = pk_task_client_get_actions (updates->priv->tclient);
+	updates->priv->role_list = pk_task_client_get_actions (updates->priv->tclient);
 
 	updates->priv->pconnection = pk_connection_new ();
 	g_signal_connect (updates->priv->pconnection, "connection-changed",
@@ -448,7 +448,7 @@ pk_updates_finalize (GObject *object)
 	g_object_unref (updates->priv->packages_store);
 	g_object_unref (updates->priv->tclient);
 	g_object_unref (updates->priv->pconnection);
-	g_object_unref (updates->priv->action_list);
+	g_object_unref (updates->priv->role_list);
 	g_free (updates->priv->package);
 
 	G_OBJECT_CLASS (pk_updates_parent_class)->finalize (object);
