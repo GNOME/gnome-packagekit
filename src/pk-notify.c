@@ -363,16 +363,16 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 	pk_debug ("icon left clicked");
 
 	/* show updates */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Show updates"));
-	image = gtk_image_new_from_icon_name ("software-update-available", GTK_ICON_SIZE_MENU);
+	item = gtk_image_menu_item_new_with_mnemonic (_("_Software Update Viewer"));
+	image = gtk_image_new_from_icon_name ("system-software-update", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (pk_notify_menuitem_show_updates_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* update system */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Update system"));
-	image = gtk_image_new_from_icon_name ("system-software-update", GTK_ICON_SIZE_MENU);
+	item = gtk_image_menu_item_new_with_mnemonic (_("_Update System Now"));
+	image = gtk_image_new_from_icon_name ("software-update-available", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (pk_notify_menuitem_update_system_cb), icon);

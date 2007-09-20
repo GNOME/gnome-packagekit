@@ -81,7 +81,7 @@ main (int argc, char *argv[])
 	dbus_g_thread_init ();
 	g_type_init ();
 
-	context = g_option_context_new (_("PackageKit Manager"));
+	context = g_option_context_new (_("Add/Remove Software"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

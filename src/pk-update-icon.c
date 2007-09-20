@@ -59,7 +59,7 @@ main (int argc, char *argv[])
 	dbus_g_thread_init ();
 	g_type_init ();
 
-	g_set_application_name (_("PackageKit Update Icon"));
+	g_set_application_name (_("PackageKit Update Applet"));
 	context = g_option_context_new (_("PackageKit Update Icon"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
