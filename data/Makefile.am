@@ -19,7 +19,8 @@ autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 pkgdata_DATA =						\
 	pk-application.glade				\
 	pk-update-viewer.glade				\
-	pk-progress.glade
+	pk-progress.glade				\
+	pk-backend-status.glade
 
 EXTRA_DIST =						\
 	$(schema_in_files)				\

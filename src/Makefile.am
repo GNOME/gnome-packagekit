@@ -28,6 +28,7 @@ bin_PROGRAMS =						\
 	pk-application					\
 	pk-update-icon					\
 	pk-update-viewer				\
+	pk-backend-status				\
 	$(NULL)
 
 pk_monitor_SOURCES =					\
@@ -93,6 +94,18 @@ pk_update_viewer_SOURCES =				\
 	$(NULL)
 
 pk_update_viewer_LDADD =				\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_backend_status_SOURCES =				\
+	pk-backend-status.c				\
+	$(NULL)
+
+pk_backend_status_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
