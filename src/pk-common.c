@@ -136,7 +136,7 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Installing");
 		break;
 	case PK_STATUS_ENUM_REFRESH_CACHE:
-		text = _("Refreshing package cache");
+		text = _("Refreshing software list");
 		break;
 	case PK_STATUS_ENUM_UPDATE:
 		text = _("Updating");

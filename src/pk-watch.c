@@ -547,7 +547,7 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	pk_watch_populate_menu_with_jobs (watch, menu);
 
 	/* force a refresh */
-	widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh cache"));
+	widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh Software List"));
 	image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 	g_signal_connect (G_OBJECT (widget), "activate",
