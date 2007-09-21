@@ -102,12 +102,27 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_delete_event_cb), loop);
 	gtk_widget_show (GTK_WIDGET (widget));
 
+	gchar *name;
+	gchar *author;
+	gchar *version;
 	PkEnumList *role_list;
 	PkEnumList *filter_list;
 	PkTaskClient *tclient;
 	tclient = pk_task_client_new ();
 	role_list = pk_task_client_get_actions (tclient);
 	filter_list = pk_task_client_get_filters (tclient);
+
+	/* general stuff */
+	pk_task_client_get_backend_detail (tclient, &name, &author, &version);
+	widget = glade_xml_get_widget (glade_xml, "label_name");
+	gtk_label_set_label (GTK_LABEL (widget), name);
+	widget = glade_xml_get_widget (glade_xml, "label_author");
+	gtk_label_set_label (GTK_LABEL (widget), author);
+	widget = glade_xml_get_widget (glade_xml, "label_version");
+	gtk_label_set_label (GTK_LABEL (widget), version);
+	g_free (name);
+	g_free (author);
+	g_free (version);
 
 	/* actions */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == TRUE) {
