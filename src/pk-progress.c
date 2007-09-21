@@ -47,7 +47,6 @@ struct PkProgressPrivate
 {
 	GladeXML		*glade_xml;
 	PkTaskMonitor		*tmonitor;
-	guint			 job;
 	gboolean		 task_ended;
 	guint			 no_percentage_evt;
 };
@@ -237,10 +236,10 @@ pk_progress_sub_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage
 }
 
 /**
- * pk_progress_job_status_changed_cb:
+ * pk_progress_transaction_status_changed_cb:
  */
 static void
-pk_progress_job_status_changed_cb (PkTaskMonitor *tmonitor,
+pk_progress_transaction_status_changed_cb (PkTaskMonitor *tmonitor,
 				   PkStatusEnum   status,
 				   PkProgress    *progress)
 {
@@ -361,13 +360,13 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 
 	/* coldplug */
 	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
-	/* no such job? */
+	/* no such transaction? */
 	if (ret == FALSE) {
 		g_signal_emit (progress, signals [ACTION_UNREF], 0);
 		return FALSE;
 	}
 
-	pk_progress_job_status_changed_cb (progress->priv->tmonitor, status, progress);
+	pk_progress_transaction_status_changed_cb (progress->priv->tmonitor, status, progress);
 
 	ret = pk_task_monitor_get_percentage (progress->priv->tmonitor, &percentage);
 	if (ret == TRUE) {
@@ -404,7 +403,6 @@ pk_progress_init (PkProgress *progress)
 	GtkWidget *widget;
 
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
-	progress->priv->job = 0;
 	progress->priv->task_ended = FALSE;
 	progress->priv->no_percentage_evt = 0;
 
@@ -421,8 +419,8 @@ pk_progress_init (PkProgress *progress)
 			  G_CALLBACK (pk_progress_percentage_changed_cb), progress);
 	g_signal_connect (progress->priv->tmonitor, "sub-percentage-changed",
 			  G_CALLBACK (pk_progress_sub_percentage_changed_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "job-status-changed",
-			  G_CALLBACK (pk_progress_job_status_changed_cb), progress);
+	g_signal_connect (progress->priv->tmonitor, "transaction-status-changed",
+			  G_CALLBACK (pk_progress_transaction_status_changed_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
