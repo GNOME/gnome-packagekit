@@ -154,23 +154,23 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_refresh_cache");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_PACKAGE_REMOVE) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REMOVE_PACKAGE) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_remove");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_PACKAGE_INSTALL) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_INSTALL_PACKAGE) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_FILE_INSTALL) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_INSTALL_FILE) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_file_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_PACKAGE_UPDATE) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_PACKAGE) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_update");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_SYSTEM_UPDATE) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_system_update");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}

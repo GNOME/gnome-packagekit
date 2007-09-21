@@ -263,11 +263,11 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	}
 	pk_package_id_free (ident);
 
-	if (role == PK_ROLE_ENUM_PACKAGE_REMOVE) {
+	if (role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);
-	} else if (role == PK_ROLE_ENUM_PACKAGE_INSTALL) {
+	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGE) {
 		message = g_strdup_printf (_("Package '%s' has been installed"), package);
-	} else if (role == PK_ROLE_ENUM_SYSTEM_UPDATE) {
+	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		message = g_strdup ("System has been updated");
 	}
 

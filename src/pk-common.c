@@ -226,19 +226,19 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 	case PK_ROLE_ENUM_SEARCH_NAME:
 		text = _("Searching for package name");
 		break;
-	case PK_ROLE_ENUM_PACKAGE_REMOVE:
+	case PK_ROLE_ENUM_REMOVE_PACKAGE:
 		text = _("Removing");
 		break;
-	case PK_ROLE_ENUM_PACKAGE_INSTALL:
+	case PK_ROLE_ENUM_INSTALL_PACKAGE:
 		text = _("Installing");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshing package cache");
 		break;
-	case PK_ROLE_ENUM_PACKAGE_UPDATE:
+	case PK_ROLE_ENUM_UPDATE_PACKAGE:
 		text = _("Updating package");
 		break;
-	case PK_ROLE_ENUM_SYSTEM_UPDATE:
+	case PK_ROLE_ENUM_UPDATE_SYSTEM:
 		text = _("Updating system");
 		break;
 	default:
