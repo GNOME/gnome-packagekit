@@ -40,7 +40,7 @@
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
-#include <pk-task-client.h>
+#include <pk-client.h>
 #include <pk-task-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -238,7 +238,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
-static void pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify);
+static void pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify);
 
 /**
  * pk_notify_libnotify_reboot_now_cb:
@@ -253,7 +253,7 @@ pk_notify_libnotify_reboot_now_cb (NotifyNotification *dialog, gchar *action, Pk
  * pk_notify_update_system_finished_cb:
  **/
 static void
-pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify)
+pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
 	PkRestartEnum restart;
 
@@ -262,7 +262,7 @@ pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code
 		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
 	}
 
-	restart = pk_task_client_get_require_restart (tclient);
+	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
 		const gchar *message;
@@ -279,8 +279,8 @@ pk_notify_update_system_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code
 						notify, NULL);
 		notify_notification_show (dialog, NULL);
 	}
-	pk_debug ("unref'ing %p", tclient);
-	g_object_unref (tclient);
+	pk_debug ("unref'ing %p", client);
+	g_object_unref (client);
 }
 
 /**
@@ -308,17 +308,17 @@ static void
 pk_notify_update_system (PkNotify *notify)
 {
 	gboolean ret;
-	PkTaskClient *tclient;
+	PkClient *client;
 	pk_debug ("install updates");
 
-	tclient = pk_task_client_new ();
-	g_signal_connect (tclient, "finished",
+	client = pk_client_new ();
+	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
-	ret = pk_task_client_update_system (tclient);
+	ret = pk_client_update_system (client);
 	if (ret == TRUE) {
 		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
 	} else {
-		g_object_unref (tclient);
+		g_object_unref (client);
 		pk_warning ("failed to update system");
 		pk_notify_not_supported (notify, _("Failed to update system"));
 	}
@@ -448,9 +448,9 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
  * pk_notify_query_updates_finished_cb:
  **/
 static void
-pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkExitEnum exit, guint runtime, PkNotify *notify)
+pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
 {
-	PkTaskClientPackageItem *item;
+	PkClientPackageItem *item;
 	GPtrArray *packages;
 	guint length;
 	guint i;
@@ -467,7 +467,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkExitEnum exit, gui
 	status_tooltip = g_string_new ("");
 
 	/* find packages */
-	packages = pk_task_client_get_package_buffer (tclient);
+	packages = pk_client_get_package_buffer (client);
 	length = packages->len;
 	pk_debug ("length=%i", length);
 	if (length == 0) {
@@ -488,7 +488,7 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkExitEnum exit, gui
 		}
 		pk_package_id_free (ident);
 	}
-	g_object_unref (tclient);
+	g_object_unref (client);
 
 	/* work out icon */
 	if (is_security == TRUE) {
@@ -527,16 +527,16 @@ pk_notify_query_updates_finished_cb (PkTaskClient *tclient, PkExitEnum exit, gui
 static gboolean
 pk_notify_query_updates (PkNotify *notify)
 {
-	PkTaskClient *tclient;
+	PkClient *client;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
-	tclient = pk_task_client_new ();
-	g_signal_connect (tclient, "finished",
+	client = pk_client_new ();
+	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_query_updates_finished_cb), notify);
-	pk_task_client_set_use_buffer (tclient, TRUE);
-	pk_task_client_get_updates (tclient);
+	pk_client_set_use_buffer (client, TRUE);
+	pk_client_get_updates (client);
 	return TRUE;
 }
 
@@ -558,7 +558,7 @@ pk_notify_invalidate_cache_cb (PkNotify *notify)
  * pk_notify_refresh_cache_finished_cb:
  **/
 static void
-pk_notify_refresh_cache_finished_cb (PkTaskClient *tclient, PkExitEnum exit_code, guint runtime, PkNotify *notify)
+pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
@@ -589,7 +589,7 @@ static gboolean
 pk_notify_check_for_updates_cb (PkNotify *notify)
 {
 	gboolean ret;
-	PkTaskClient *tclient;
+	PkClient *client;
 	pk_debug ("refresh cache");
 
 	/* got a cache, no need to poll */
@@ -604,12 +604,12 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 
 	notify->priv->cache_update_in_progress = TRUE;
 	notify->priv->cache_okay = TRUE;
-	tclient = pk_task_client_new ();
-	g_signal_connect (tclient, "finished",
+	client = pk_client_new ();
+	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_refresh_cache_finished_cb), notify);
-	ret = pk_task_client_refresh_cache (tclient, TRUE);
+	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (tclient);
+		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 		/* try again in a few minutes */
 	}

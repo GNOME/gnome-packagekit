@@ -30,7 +30,7 @@
 #include <string.h>
 
 #include <pk-debug.h>
-#include <pk-task-client.h>
+#include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
@@ -49,7 +49,7 @@ struct PkUpdatesPrivate
 	GladeXML		*glade_xml;
 	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
-	PkTaskClient		*tclient;
+	PkClient		*client;
 	PkConnection		*pconnection;
 	gchar			*package;
 	PkEnumList		*role_list;
@@ -133,8 +133,8 @@ pk_updates_apply_cb (GtkWidget *widget,
 		     PkUpdates *updates)
 {
 	pk_debug ("Doing the system update");
-	pk_task_client_reset (updates->priv->tclient);
-	pk_task_client_update_system (updates->priv->tclient);
+	pk_client_reset (updates->priv->client);
+	pk_client_update_system (updates->priv->client);
 
 	pk_debug ("emitting action-close");
 	g_signal_emit (updates, signals [ACTION_CLOSE], 0);
@@ -159,10 +159,10 @@ pk_updates_refresh_cb (GtkWidget *widget,
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* we can't click this if we havn't finished */
-	pk_task_client_reset (updates->priv->tclient);
-	ret = pk_task_client_refresh_cache (updates->priv->tclient, TRUE);
+	pk_client_reset (updates->priv->client);
+	ret = pk_client_refresh_cache (updates->priv->client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (updates->priv->tclient);
+		g_object_unref (updates->priv->client);
 		pk_warning ("failed to refresh cache");
 	}
 }
@@ -182,7 +182,7 @@ pk_updates_close_cb (GtkWidget	*widget,
  * pk_updates_package_cb:
  **/
 static void
-pk_updates_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
+pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 			const gchar *summary, PkUpdates *updates)
 {
 	PkPackageId *ident;
@@ -278,7 +278,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_free (package_id);
 		g_print ("selected row is: %s\n", updates->priv->package);
 		/* get the decription */
-		pk_task_client_get_description (updates->priv->tclient, updates->priv->package);
+		pk_client_get_description (updates->priv->client, updates->priv->package);
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -297,7 +297,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkUpdat
  * pk_updates_finished_cb:
  **/
 static void
-pk_updates_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint runtime, PkUpdates *updates)
+pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkUpdates *updates)
 {
 	GtkWidget *widget;
 
@@ -318,15 +318,15 @@ pk_updates_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint runtim
 	updates->priv->refresh_in_progress = FALSE;
 
 	/* get the update list */
-	pk_task_client_reset (updates->priv->tclient);
-	pk_task_client_get_updates (updates->priv->tclient);
+	pk_client_reset (updates->priv->client);
+	pk_client_get_updates (updates->priv->client);
 }
 
 /**
  * pk_updates_percentage_changed_cb:
  **/
 static void
-pk_updates_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkUpdates *updates)
+pk_updates_percentage_changed_cb (PkClient *client, guint percentage, PkUpdates *updates)
 {
 	if (percentage == 0) {
 		return;
@@ -350,16 +350,16 @@ pk_updates_init (PkUpdates *updates)
 
 	updates->priv->search_depth = 0;
 
-	updates->priv->tclient = pk_task_client_new ();
-	g_signal_connect (updates->priv->tclient, "package",
+	updates->priv->client = pk_client_new ();
+	g_signal_connect (updates->priv->client, "package",
 			  G_CALLBACK (pk_updates_package_cb), updates);
-	g_signal_connect (updates->priv->tclient, "finished",
+	g_signal_connect (updates->priv->client, "finished",
 			  G_CALLBACK (pk_updates_finished_cb), updates);
-	g_signal_connect (updates->priv->tclient, "percentage-changed",
+	g_signal_connect (updates->priv->client, "percentage-changed",
 			  G_CALLBACK (pk_updates_percentage_changed_cb), updates);
 
 	/* get actions */
-	updates->priv->role_list = pk_task_client_get_actions (updates->priv->tclient);
+	updates->priv->role_list = pk_client_get_actions (updates->priv->client);
 
 	updates->priv->pconnection = pk_connection_new ();
 	g_signal_connect (updates->priv->pconnection, "connection-changed",
@@ -426,7 +426,7 @@ pk_updates_init (PkUpdates *updates)
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), 0.0);
 
 	/* get the update list */
-	pk_task_client_get_updates (updates->priv->tclient);
+	pk_client_get_updates (updates->priv->client);
 
 	gtk_widget_show (main_window);
 }
@@ -446,7 +446,7 @@ pk_updates_finalize (GObject *object)
 	updates->priv = PK_UPDATES_GET_PRIVATE (updates);
 
 	g_object_unref (updates->priv->packages_store);
-	g_object_unref (updates->priv->tclient);
+	g_object_unref (updates->priv->client);
 	g_object_unref (updates->priv->pconnection);
 	g_object_unref (updates->priv->role_list);
 	g_free (updates->priv->package);

@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <pk-enum-list.h>
-#include <pk-task-client.h>
+#include <pk-client.h>
 
 #include <pk-debug.h>
 
@@ -107,13 +107,13 @@ main (int argc, char *argv[])
 	gchar *version;
 	PkEnumList *role_list;
 	PkEnumList *filter_list;
-	PkTaskClient *tclient;
-	tclient = pk_task_client_new ();
-	role_list = pk_task_client_get_actions (tclient);
-	filter_list = pk_task_client_get_filters (tclient);
+	PkClient *client;
+	client = pk_client_new ();
+	role_list = pk_client_get_actions (client);
+	filter_list = pk_client_get_filters (client);
 
 	/* general stuff */
-	pk_task_client_get_backend_detail (tclient, &name, &author, &version);
+	pk_client_get_backend_detail (client, &name, &author, &version);
 	widget = glade_xml_get_widget (glade_xml, "label_name");
 	gtk_label_set_label (GTK_LABEL (widget), name);
 	widget = glade_xml_get_widget (glade_xml, "label_author");
@@ -208,7 +208,7 @@ main (int argc, char *argv[])
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
-	g_object_unref (tclient);
+	g_object_unref (client);
 	g_object_unref (role_list);
 	g_object_unref (filter_list);
 

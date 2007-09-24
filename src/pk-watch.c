@@ -40,7 +40,7 @@
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
-#include <pk-task-client.h>
+#include <pk-client.h>
 #include <pk-task-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -419,14 +419,14 @@ static void
 pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 {
 	gboolean ret;
-	PkTaskClient *tclient;
+	PkClient *client;
 	PkWatch *watch = PK_WATCH (data);
 	pk_debug ("refresh cache");
 
-	tclient = pk_task_client_new ();
-	ret = pk_task_client_refresh_cache (tclient, TRUE);
+	client = pk_client_new ();
+	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (tclient);
+		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 		pk_watch_not_supported (watch, _("Failed to refresh cache"));
 	}

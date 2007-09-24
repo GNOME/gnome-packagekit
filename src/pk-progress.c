@@ -30,7 +30,7 @@
 #include <string.h>
 
 #include <pk-debug.h>
-#include <pk-task-monitor.h>
+#include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 
@@ -46,7 +46,7 @@ static void     pk_progress_finalize   (GObject	    *object);
 struct PkProgressPrivate
 {
 	GladeXML		*glade_xml;
-	PkTaskMonitor		*tmonitor;
+	PkClient		*client;
 	gboolean		 task_ended;
 	guint			 no_percentage_evt;
 };
@@ -133,7 +133,7 @@ pk_progress_cancel_cb (GtkWidget  *widget,
 		       PkProgress *progress)
 {
 	pk_debug ("emitting cancel");
-	pk_task_monitor_cancel (progress->priv->tmonitor);
+	pk_client_cancel (progress->priv->client);
 }
 
 /**
@@ -151,7 +151,7 @@ pk_progress_hide_cb (GtkWidget   *widget,
  * pk_progress_error_code_cb:
  **/
 static void
-pk_progress_error_code_cb (PkTaskMonitor *tmonitor, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
+pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
 {
 	pk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
 }
@@ -172,7 +172,7 @@ pk_progress_finished_timeout (gpointer data)
  * pk_progress_finished_cb:
  **/
 static void
-pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint runtime, PkProgress *progress)
+pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkProgress *progress)
 {
 	pk_debug ("finished");
 	progress->priv->task_ended = TRUE;
@@ -184,7 +184,7 @@ pk_progress_finished_cb (PkTaskMonitor *tmonitor, PkStatusEnum status, guint run
  * pk_progress_package_cb:
  */
 static void
-pk_progress_package_cb (PkTaskMonitor *tmonitor,
+pk_progress_package_cb (PkClient *client,
 			guint          value,
 			const gchar   *package_id,
 			const gchar   *summary,
@@ -211,7 +211,7 @@ pk_progress_package_cb (PkTaskMonitor *tmonitor,
  * pk_progress_percentage_changed_cb:
  **/
 static void
-pk_progress_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage, PkProgress *progress)
+pk_progress_percentage_changed_cb (PkClient *client, guint percentage, PkProgress *progress)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
@@ -225,7 +225,7 @@ pk_progress_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage, Pk
  * pk_progress_sub_percentage_changed_cb:
  **/
 static void
-pk_progress_sub_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage, PkProgress *progress)
+pk_progress_sub_percentage_changed_cb (PkClient *client, guint percentage, PkProgress *progress)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
@@ -239,7 +239,7 @@ pk_progress_sub_percentage_changed_cb (PkTaskMonitor *tmonitor, guint percentage
  * pk_progress_transaction_status_changed_cb:
  */
 static void
-pk_progress_transaction_status_changed_cb (PkTaskMonitor *tmonitor,
+pk_progress_transaction_status_changed_cb (PkClient *client,
 				   PkStatusEnum   status,
 				   PkProgress    *progress)
 {
@@ -271,7 +271,7 @@ pk_progress_delete_event_cb (GtkWidget	*widget,
  * pk_common_get_role_text:
  **/
 static gchar *
-pk_common_get_role_text (PkTaskMonitor *tmonitor)
+pk_common_get_role_text (PkClient *client)
 {
 	const gchar *role_text;
 	gchar *package_id;
@@ -279,7 +279,7 @@ pk_common_get_role_text (PkTaskMonitor *tmonitor)
 	PkRoleEnum role;
 	PkPackageId *ident;
 
-	pk_task_monitor_get_role (tmonitor, &role, &package_id);
+	pk_client_get_role (client, &role, &package_id);
 	role_text = pk_role_enum_to_localised_text (role);
 
 	/* check to see if we have a package_id or just a search term */
@@ -330,7 +330,7 @@ pk_progress_spin_timeout (gpointer data)
  * pk_progress_no_percentage_updates_cb:
  **/
 static void
-pk_progress_no_percentage_updates_cb (PkTaskMonitor *tmonitor, PkProgress *progress)
+pk_progress_no_percentage_updates_cb (PkClient *client, PkProgress *progress)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
@@ -350,42 +350,42 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	gchar *text;
 	guint percentage;
 
-	pk_task_monitor_set_tid (progress->priv->tmonitor, tid);
+	pk_client_set_tid (progress->priv->client, tid);
 
 	/* fill in role */
-	text = pk_common_get_role_text (progress->priv->tmonitor);
+	text = pk_common_get_role_text (progress->priv->client);
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_role");
 	gtk_label_set_label (GTK_LABEL (widget), text);
 	g_free (text);
 
 	/* coldplug */
-	ret = pk_task_monitor_get_status (progress->priv->tmonitor, &status);
+	ret = pk_client_get_status (progress->priv->client, &status);
 	/* no such transaction? */
 	if (ret == FALSE) {
 		g_signal_emit (progress, signals [ACTION_UNREF], 0);
 		return FALSE;
 	}
 
-	pk_progress_transaction_status_changed_cb (progress->priv->tmonitor, status, progress);
+	pk_progress_transaction_status_changed_cb (progress->priv->client, status, progress);
 
-	ret = pk_task_monitor_get_percentage (progress->priv->tmonitor, &percentage);
+	ret = pk_client_get_percentage (progress->priv->client, &percentage);
 	if (ret == TRUE) {
-		pk_progress_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+		pk_progress_percentage_changed_cb (progress->priv->client, percentage, progress);
 	} else {
 		/* We have to spin */
 		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
 	}
 
 	/* no need to spin */
-	ret = pk_task_monitor_get_sub_percentage (progress->priv->tmonitor, &percentage);
+	ret = pk_client_get_sub_percentage (progress->priv->client, &percentage);
 	if (ret == TRUE) {
-		pk_progress_sub_percentage_changed_cb (progress->priv->tmonitor, percentage, progress);
+		pk_progress_sub_percentage_changed_cb (progress->priv->client, percentage, progress);
 	}
 
 	/* do the best we can */
-	ret = pk_task_monitor_get_package (progress->priv->tmonitor, &text);
+	ret = pk_client_get_package (progress->priv->client, &text);
 	if (ret == TRUE) {
-		pk_progress_package_cb (progress->priv->tmonitor, 0, text, NULL, progress);
+		pk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
 	}
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
@@ -406,20 +406,20 @@ pk_progress_init (PkProgress *progress)
 	progress->priv->task_ended = FALSE;
 	progress->priv->no_percentage_evt = 0;
 
-	progress->priv->tmonitor = pk_task_monitor_new ();
-	g_signal_connect (progress->priv->tmonitor, "error-code",
+	progress->priv->client = pk_client_new ();
+	g_signal_connect (progress->priv->client, "error-code",
 			  G_CALLBACK (pk_progress_error_code_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "finished",
+	g_signal_connect (progress->priv->client, "finished",
 			  G_CALLBACK (pk_progress_finished_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "package",
+	g_signal_connect (progress->priv->client, "package",
 			  G_CALLBACK (pk_progress_package_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "no-percentage-updates",
+	g_signal_connect (progress->priv->client, "no-percentage-updates",
 			  G_CALLBACK (pk_progress_no_percentage_updates_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "percentage-changed",
+	g_signal_connect (progress->priv->client, "percentage-changed",
 			  G_CALLBACK (pk_progress_percentage_changed_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "sub-percentage-changed",
+	g_signal_connect (progress->priv->client, "sub-percentage-changed",
 			  G_CALLBACK (pk_progress_sub_percentage_changed_cb), progress);
-	g_signal_connect (progress->priv->tmonitor, "transaction-status-changed",
+	g_signal_connect (progress->priv->client, "transaction-status-changed",
 			  G_CALLBACK (pk_progress_transaction_status_changed_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
@@ -475,7 +475,7 @@ pk_progress_finalize (GObject *object)
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
 	gtk_widget_hide (widget);
 
-	g_object_unref (progress->priv->tmonitor);
+	g_object_unref (progress->priv->client);
 	g_object_unref (progress->priv->glade_xml);
 
 	G_OBJECT_CLASS (pk_progress_parent_class)->finalize (object);

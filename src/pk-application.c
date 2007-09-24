@@ -30,7 +30,7 @@
 #include <string.h>
 
 #include <pk-debug.h>
-#include <pk-task-client.h>
+#include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
@@ -50,7 +50,7 @@ struct PkApplicationPrivate
 	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
-	PkTaskClient		*tclient;
+	PkClient		*client;
 	PkConnection		*pconnection;
 	gchar			*package;
 	PkEnumList		*role_list;
@@ -162,11 +162,11 @@ pk_application_install_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("install %s", application->priv->package);
-	ret = pk_task_client_install_package (application->priv->tclient,
+	ret = pk_client_install_package (application->priv->client,
 					      application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_task_client_reset (application->priv->tclient);
+		pk_client_reset (application->priv->client);
 		pk_application_error_message (application,
 					      _("The package could not be installed"), NULL);
 	}
@@ -181,12 +181,12 @@ pk_application_remove_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("remove %s", application->priv->package);
-	ret = pk_task_client_remove_package (application->priv->tclient,
+	ret = pk_client_remove_package (application->priv->client,
 				             application->priv->package,
 				             FALSE);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_task_client_reset (application->priv->tclient);
+		pk_client_reset (application->priv->client);
 		pk_application_error_message (application,
 					      _("The package could not be removed"), NULL);
 	}
@@ -201,11 +201,11 @@ pk_application_deps_cb (GtkWidget *widget,
 {
 	gboolean ret;
 	pk_debug ("deps %s", application->priv->package);
-	ret = pk_task_client_get_depends (application->priv->tclient,
+	ret = pk_client_get_depends (application->priv->client,
 				       application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_task_client_reset (application->priv->tclient);
+		pk_client_reset (application->priv->client);
 		pk_application_error_message (application,
 					      _("The package dependencies could not be found"), NULL);
 	} else {
@@ -229,7 +229,7 @@ pk_application_close_cb (GtkWidget	*widget,
  * pk_application_package_cb:
  **/
 static void
-pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id,
+pk_application_description_cb (PkClient *client, const gchar *package_id,
 			       const gchar *licence, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
 			       PkApplication *application)
@@ -253,7 +253,7 @@ pk_application_description_cb (PkTaskClient *tclient, const gchar *package_id,
  * pk_application_package_cb:
  **/
 static void
-pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *package_id,
+pk_application_package_cb (PkClient *client, guint value, const gchar *package_id,
 			const gchar *summary, PkApplication *application)
 {
 	PkPackageId *ident;
@@ -279,7 +279,7 @@ pk_application_package_cb (PkTaskClient *tclient, guint value, const gchar *pack
  * pk_application_error_code_cb:
  **/
 static void
-pk_application_error_code_cb (PkTaskClient *tclient, PkErrorCodeEnum code, const gchar *details, PkApplication *application)
+pk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkApplication *application)
 {
 	pk_application_error_message (application,
 				      pk_error_enum_to_localised_text (code), details);
@@ -289,7 +289,7 @@ pk_application_error_code_cb (PkTaskClient *tclient, PkErrorCodeEnum code, const
  * pk_application_finished_cb:
  **/
 static void
-pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint runtime, PkApplication *application)
+pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -305,8 +305,8 @@ pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint ru
 		application->priv->search_in_progress = FALSE;
 	}
 
-	/* reset tclient */
-	pk_task_client_reset (application->priv->tclient);
+	/* reset client */
+	pk_client_reset (application->priv->client);
 
 	/* panic */
 	if (status == PK_EXIT_ENUM_FAILED) {
@@ -320,7 +320,7 @@ pk_application_finished_cb (PkTaskClient *tclient, PkStatusEnum status, guint ru
  * pk_application_percentage_changed_cb:
  **/
 static void
-pk_application_percentage_changed_cb (PkTaskClient *tclient, guint percentage, PkApplication *application)
+pk_application_percentage_changed_cb (PkClient *client, guint percentage, PkApplication *application)
 {
 	gtk_widget_show (application->priv->progress_bar);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), (gfloat) percentage / 100.0);
@@ -351,7 +351,7 @@ pk_application_no_percentage_updates_timeout (gpointer data)
  * pk_application_no_percentage_updates_cb:
  **/
 static void
-pk_application_no_percentage_updates_cb (PkTaskClient *tclient, PkApplication *application)
+pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *application)
 {
 	g_timeout_add (100, pk_application_no_percentage_updates_timeout, application);
 }
@@ -438,7 +438,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_in_progress == TRUE) {
 		pk_debug ("trying to cancel task...");
-		ret = pk_task_client_cancel (application->priv->tclient);
+		ret = pk_client_cancel (application->priv->client);
 		pk_warning ("canceled? %i", ret);
 		return;
 	}
@@ -499,11 +499,11 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_depth == 0) {
-		ret = pk_task_client_search_name (application->priv->tclient, filter_all, package);
+		ret = pk_client_search_name (application->priv->client, filter_all, package);
 	} else if (application->priv->search_depth == 1) {
-		ret = pk_task_client_search_details (application->priv->tclient, filter_all, package);
+		ret = pk_client_search_details (application->priv->client, filter_all, package);
 	} else {
-		ret = pk_task_client_search_file (application->priv->tclient, filter_all, package);
+		ret = pk_client_search_file (application->priv->client, filter_all, package);
 	}
 
 	if (ret == FALSE) {
@@ -671,10 +671,10 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
 		g_print ("selected row is: %s\n", id);
 
-		ret = pk_task_client_search_group (application->priv->tclient, "none", id);
+		ret = pk_client_search_group (application->priv->client, "none", id);
 		/* ick, we failed so pretend we didn't do the action */
 		if (ret == FALSE) {
-			pk_task_client_reset (application->priv->tclient);
+			pk_client_reset (application->priv->client);
 			pk_application_error_message (application,
 						      _("The group could not be queried"), NULL);
 		}
@@ -706,7 +706,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_free (package_id);
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
 		/* get the decription */
-		pk_task_client_get_description (application->priv->tclient, application->priv->package);
+		pk_client_get_description (application->priv->client, application->priv->package);
 
 		/* make the button sensitivities correct */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
@@ -735,7 +735,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	pk_debug ("connected=%i", connected);
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
-		pk_application_finished_cb (application->priv->tclient, PK_EXIT_ENUM_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->client, PK_EXIT_ENUM_FAILED, 0, application);
 	}
 }
 
@@ -790,26 +790,26 @@ pk_application_init (PkApplication *application)
 
 	application->priv->search_depth = 0;
 
-	application->priv->tclient = pk_task_client_new ();
-	g_signal_connect (application->priv->tclient, "package",
+	application->priv->client = pk_client_new ();
+	g_signal_connect (application->priv->client, "package",
 			  G_CALLBACK (pk_application_package_cb), application);
-	g_signal_connect (application->priv->tclient, "description",
+	g_signal_connect (application->priv->client, "description",
 			  G_CALLBACK (pk_application_description_cb), application);
-	g_signal_connect (application->priv->tclient, "error-code",
+	g_signal_connect (application->priv->client, "error-code",
 			  G_CALLBACK (pk_application_error_code_cb), application);
-	g_signal_connect (application->priv->tclient, "finished",
+	g_signal_connect (application->priv->client, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
-	g_signal_connect (application->priv->tclient, "no-percentage-updates",
+	g_signal_connect (application->priv->client, "no-percentage-updates",
 			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
-	g_signal_connect (application->priv->tclient, "percentage-changed",
+	g_signal_connect (application->priv->client, "percentage-changed",
 			  G_CALLBACK (pk_application_percentage_changed_cb), application);
 
 	/* get actions */
-	application->priv->role_list = pk_task_client_get_actions (application->priv->tclient);
+	application->priv->role_list = pk_client_get_actions (application->priv->client);
 	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
 
 	/* get filters supported */
-	application->priv->filter_list = pk_task_client_get_filters (application->priv->tclient);
+	application->priv->filter_list = pk_client_get_filters (application->priv->client);
 	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
 
 	application->priv->pconnection = pk_connection_new ();
@@ -1007,7 +1007,7 @@ pk_application_finalize (GObject *object)
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 
 	g_object_unref (application->priv->packages_store);
-	g_object_unref (application->priv->tclient);
+	g_object_unref (application->priv->client);
 	g_object_unref (application->priv->pconnection);
 	g_free (application->priv->package);
 	g_object_unref (application->priv->filter_list);
