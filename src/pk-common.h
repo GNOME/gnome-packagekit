@@ -28,6 +28,7 @@
 G_BEGIN_DECLS
 
 const gchar	*pk_role_enum_to_localised_text		(PkRoleEnum	 role);
+const gchar	*pk_role_enum_to_icon_name		(PkRoleEnum	 role);
 const gchar	*pk_status_enum_to_localised_text	(PkStatusEnum	 status);
 const gchar	*pk_status_enum_to_icon_name		(PkStatusEnum	 status);
 const gchar	*pk_error_enum_to_localised_text	(PkErrorCodeEnum code);

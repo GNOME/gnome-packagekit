@@ -247,6 +247,50 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 	return text;
 }
 
+
+/**
+ * pk_role_enum_to_icon_name:
+ **/
+const gchar *
+pk_role_enum_to_icon_name (PkRoleEnum role)
+{
+	const gchar *text = NULL;
+	switch (role) {
+	case PK_ROLE_ENUM_UNKNOWN:
+		text = "help-browser";
+		break;
+	case PK_ROLE_ENUM_GET_DESCRIPTION:
+	case PK_ROLE_ENUM_GET_REQUIRES:
+	case PK_ROLE_ENUM_GET_UPDATES:
+	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
+	case PK_ROLE_ENUM_GET_DEPENDS:
+	case PK_ROLE_ENUM_SEARCH_DETAILS:
+	case PK_ROLE_ENUM_SEARCH_FILE:
+	case PK_ROLE_ENUM_SEARCH_GROUP:
+	case PK_ROLE_ENUM_SEARCH_NAME:
+		text = "system-search";
+		break;
+	case PK_ROLE_ENUM_REMOVE_PACKAGE:
+		text = "edit-clear";
+		break;
+	case PK_ROLE_ENUM_INSTALL_PACKAGE:
+		text = "emblem-system";
+		break;
+	case PK_ROLE_ENUM_REFRESH_CACHE:
+		text = "view-refresh";
+		break;
+	case PK_ROLE_ENUM_UPDATE_PACKAGE:
+		text = "emblem-system";
+		break;
+	case PK_ROLE_ENUM_UPDATE_SYSTEM:
+		text = "system-software-update";
+		break;
+	default:
+		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+	}
+	return text;
+}
+
 /**
  * pk_group_enum_to_localised_text:
  **/
