@@ -39,7 +39,7 @@
 
 static GladeXML *glade_xml = NULL;
 static GtkWidget *progress_bar = NULL;
-static GtkListStore *packages_store = NULL;
+static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *package = NULL;
 static gboolean refresh_in_progress = FALSE;
@@ -53,10 +53,10 @@ enum
 };
 
 /**
- * pk_updates_help_cb:
+ * pk_button_help_cb:
  **/
 static void
-pk_updates_help_cb (GtkWidget *widget,
+pk_button_help_cb (GtkWidget *widget,
 		   gboolean  data)
 {
 	pk_debug ("emitting action-help");
@@ -89,7 +89,7 @@ pk_updates_refresh_cb (GtkWidget *widget,
 	refresh_in_progress = TRUE;
 
 	/* clear existing list */
-	gtk_list_store_clear (packages_store);
+	gtk_list_store_clear (list_store);
 
 	/* make the refresh button non-clickable */
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -104,10 +104,10 @@ pk_updates_refresh_cb (GtkWidget *widget,
 }
 
 /**
- * pk_updates_close_cb:
+ * pk_button_close_cb:
  **/
 static void
-pk_updates_close_cb (GtkWidget	*widget,
+pk_button_close_cb (GtkWidget	*widget,
 		     gboolean	data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
@@ -140,8 +140,8 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
 
-	gtk_list_store_append (packages_store, &iter);
-	gtk_list_store_set (packages_store, &iter,
+	gtk_list_store_append (list_store, &iter);
+	gtk_list_store_set (list_store, &iter,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
 			    -1);
@@ -153,7 +153,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 	}
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon) {
-		gtk_list_store_set (packages_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
+		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
 
@@ -161,11 +161,11 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 }
 
 /**
- * pk_updates_delete_event_cb:
+ * pk_window_delete_event_cb:
  * @event: The event type, unused.
  **/
 static gboolean
-pk_updates_delete_event_cb (GtkWidget	*widget,
+pk_window_delete_event_cb (GtkWidget	*widget,
 			    GdkEvent	*event,
 			    gboolean	 data)
 {
@@ -174,8 +174,11 @@ pk_updates_delete_event_cb (GtkWidget	*widget,
 	return FALSE;
 }
 
+/**
+ * pk_treeview_add_columns:
+ **/
 static void
-pk_packages_add_columns (GtkTreeView *treeview)
+pk_treeview_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -337,17 +340,17 @@ main (int argc, char *argv[])
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_updates_delete_event_cb), loop);
+			  G_CALLBACK (pk_window_delete_event_cb), loop);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_close_cb), loop);
+			  G_CALLBACK (pk_button_close_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_help_cb), NULL);
+			  G_CALLBACK (pk_button_help_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_refresh_cb), NULL);
@@ -355,20 +358,20 @@ main (int argc, char *argv[])
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
-	packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
+	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
 					     G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (packages_store));
+				 GTK_TREE_MODEL (list_store));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
 	/* add columns to the tree view */
-	pk_packages_add_columns (GTK_TREE_VIEW (widget));
+	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* make the refresh button non-clickable until we get completion */
@@ -387,7 +390,7 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
-	g_object_unref (packages_store);
+	g_object_unref (list_store);
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
