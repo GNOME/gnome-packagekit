@@ -46,6 +46,7 @@ enum
 {
 	PACKAGES_COLUMN_ICON,
 	PACKAGES_COLUMN_TEXT,
+	PACKAGES_COLUMN_SUCCEEDED,
 	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_LAST
 };
@@ -135,6 +136,17 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
+
+	if (succeeded == TRUE) {
+		icon_name = "document-new";
+	} else {
+		icon_name = "dialog-error";
+	}
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 24, 0, NULL);
+	if (icon) {
+		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_SUCCEEDED, icon, -1);
+		gdk_pixbuf_unref (icon);
+	}
 }
 
 /**
@@ -162,7 +174,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Task"), renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Role"), renderer,
 							   "pixbuf", PACKAGES_COLUMN_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
@@ -171,6 +183,13 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 	column = gtk_tree_view_column_new_with_attributes (_("Transaction"), renderer,
 							   "markup", PACKAGES_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
+	gtk_tree_view_append_column (treeview, column);
+	gtk_tree_view_column_set_expand (column, TRUE);
+
+	/* image */
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Succeeded"), renderer,
+							   "pixbuf", PACKAGES_COLUMN_SUCCEEDED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 }
 
@@ -286,7 +305,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
-					     G_TYPE_STRING, G_TYPE_STRING);
+					 G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
 	/* create transaction_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_transactions");
