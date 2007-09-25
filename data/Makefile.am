@@ -10,6 +10,7 @@ desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	pk-application.desktop.in			\
 	pk-update-viewer.desktop.in			\
+	pk-transaction-viewer.desktop.in		\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -51,6 +52,7 @@ clean-local :
 
 DISTCLEANFILES =					\
 	pk-update-viewer.desktop			\
+	pk-transaction-viewer.desktop			\
 	pk-update-icon.desktop				\
 	pk-application.desktop				\
 	gnome-packagekit.schemas			\
