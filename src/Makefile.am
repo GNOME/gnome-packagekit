@@ -28,6 +28,7 @@ bin_PROGRAMS =						\
 	pk-application					\
 	pk-update-icon					\
 	pk-update-viewer				\
+	pk-transaction-viewer				\
 	pk-backend-status				\
 	$(NULL)
 
@@ -92,6 +93,20 @@ pk_update_viewer_SOURCES =				\
 	$(NULL)
 
 pk_update_viewer_LDADD =				\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_transaction_viewer_SOURCES =				\
+	pk-transaction-viewer.c				\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_transaction_viewer_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
