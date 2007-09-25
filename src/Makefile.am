@@ -86,9 +86,7 @@ pk_application_LDADD =					\
 	$(NULL)
 
 pk_update_viewer_SOURCES =				\
-	pk-update-viewer-main.c				\
 	pk-update-viewer.c				\
-	pk-update-viewer.h				\
 	pk-common.c					\
 	pk-common.h					\
 	$(NULL)

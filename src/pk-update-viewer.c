@@ -28,40 +28,21 @@
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
+#include <dbus/dbus-glib.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
-
 #include "pk-common.h"
-#include "pk-update-viewer.h"
 
-static void     pk_updates_class_init (PkUpdatesClass *klass);
-static void     pk_updates_init       (PkUpdates      *updates);
-static void     pk_updates_finalize   (GObject	    *object);
-
-#define PK_UPDATES_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_UPDATES, PkUpdatesPrivate))
-
-struct PkUpdatesPrivate
-{
-	GladeXML		*glade_xml;
-	GtkWidget		*progress_bar;
-	GtkListStore		*packages_store;
-	PkClient		*client;
-	PkConnection		*pconnection;
-	gchar			*package;
-	PkEnumList		*role_list;
-	gboolean		 refresh_in_progress;
-	guint			 search_depth;
-};
-
-enum {
-	ACTION_HELP,
-	ACTION_CLOSE,
-	LAST_SIGNAL
-};
+static GladeXML *glade_xml = NULL;
+static GtkWidget *progress_bar = NULL;
+static GtkListStore *packages_store = NULL;
+static PkClient *client = NULL;
+static gchar *package = NULL;
+static gboolean refresh_in_progress = FALSE;
 
 enum
 {
@@ -71,58 +52,14 @@ enum
 	PACKAGES_COLUMN_LAST
 };
 
-enum
-{
-	GROUPS_COLUMN_ICON,
-	GROUPS_COLUMN_NAME,
-	GROUPS_COLUMN_ID,
-	GROUPS_COLUMN_LAST
-};
-
-static guint	     signals [LAST_SIGNAL] = { 0, };
-
-G_DEFINE_TYPE (PkUpdates, pk_updates, G_TYPE_OBJECT)
-
-/**
- * pk_updates_class_init:
- * @klass: This graph class instance
- **/
-static void
-pk_updates_class_init (PkUpdatesClass *klass)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_updates_finalize;
-	g_type_class_add_private (klass, sizeof (PkUpdatesPrivate));
-
-	signals [ACTION_HELP] =
-		g_signal_new ("action-help",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (PkUpdatesClass, action_help),
-			      NULL,
-			      NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
-	signals [ACTION_CLOSE] =
-		g_signal_new ("action-close",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (PkUpdatesClass, action_close),
-			      NULL,
-			      NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
-}
-
 /**
  * pk_updates_help_cb:
  **/
 static void
 pk_updates_help_cb (GtkWidget *widget,
-		   PkUpdates  *updates)
+		   gboolean  data)
 {
 	pk_debug ("emitting action-help");
-	g_signal_emit (updates, signals [ACTION_HELP], 0);
 }
 
 /**
@@ -130,14 +67,13 @@ pk_updates_help_cb (GtkWidget *widget,
  **/
 static void
 pk_updates_apply_cb (GtkWidget *widget,
-		     PkUpdates *updates)
+		     gboolean data)
 {
+	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
-	pk_client_reset (updates->priv->client);
-	pk_client_update_system (updates->priv->client);
-
-	pk_debug ("emitting action-close");
-	g_signal_emit (updates, signals [ACTION_CLOSE], 0);
+	pk_client_reset (client);
+	pk_client_update_system (client);
+	g_main_loop_quit (loop);
 }
 
 /**
@@ -145,24 +81,24 @@ pk_updates_apply_cb (GtkWidget *widget,
  **/
 static void
 pk_updates_refresh_cb (GtkWidget *widget,
-		       PkUpdates *updates)
+		       gboolean data)
 {
 	gboolean ret;
 
 	/* don't loop */	
-	updates->priv->refresh_in_progress = TRUE;
+	refresh_in_progress = TRUE;
 
 	/* clear existing list */
-	gtk_list_store_clear (updates->priv->packages_store);
+	gtk_list_store_clear (packages_store);
 
 	/* make the refresh button non-clickable */
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* we can't click this if we havn't finished */
-	pk_client_reset (updates->priv->client);
-	ret = pk_client_refresh_cache (updates->priv->client, TRUE);
+	pk_client_reset (client);
+	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (updates->priv->client);
+		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 	}
 }
@@ -172,10 +108,11 @@ pk_updates_refresh_cb (GtkWidget *widget,
  **/
 static void
 pk_updates_close_cb (GtkWidget	*widget,
-		    PkUpdates	*updates)
+		     gboolean	data)
 {
+	GMainLoop *loop = (GMainLoop *) data;
+	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
-	g_signal_emit (updates, signals [ACTION_CLOSE], 0);
 }
 
 /**
@@ -183,7 +120,7 @@ pk_updates_close_cb (GtkWidget	*widget,
  **/
 static void
 pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
-			const gchar *summary, PkUpdates *updates)
+			const gchar *summary, gboolean data)
 {
 	PkPackageId *ident;
 	GtkTreeIter iter;
@@ -193,7 +130,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
-	if (updates->priv->refresh_in_progress == TRUE) {
+	if (refresh_in_progress == TRUE) {
 		pk_debug ("ignoring progress reports");
 		return;
 	}
@@ -203,8 +140,8 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
 
-	gtk_list_store_append (updates->priv->packages_store, &iter);
-	gtk_list_store_set (updates->priv->packages_store, &iter,
+	gtk_list_store_append (packages_store, &iter);
+	gtk_list_store_set (packages_store, &iter,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
 			    -1);
@@ -216,7 +153,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 	}
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon) {
-		gtk_list_store_set (updates->priv->packages_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
+		gtk_list_store_set (packages_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
 
@@ -229,10 +166,11 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
  **/
 static gboolean
 pk_updates_delete_event_cb (GtkWidget	*widget,
-				GdkEvent	*event,
-				PkUpdates	*updates)
+			    GdkEvent	*event,
+			    gboolean	 data)
 {
-	pk_updates_close_cb (widget, updates);
+	GMainLoop *loop = (GMainLoop *) data;
+	g_main_loop_quit (loop);
 	return FALSE;
 }
 
@@ -261,7 +199,7 @@ pk_packages_add_columns (GtkTreeView *treeview)
  **/
 static void
 pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
-				    PkUpdates *updates)
+				    gboolean data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -269,16 +207,16 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (updates->priv->package);
+		g_free (package);
 		gtk_tree_model_get (model, &iter,
 				    PACKAGES_COLUMN_ID, &package_id, -1);
 
 		/* make back into package ID */
-		updates->priv->package = g_strdup (package_id);
+		package = g_strdup (package_id);
 		g_free (package_id);
-		g_print ("selected row is: %s\n", updates->priv->package);
+		g_print ("selected row is: %s\n", package);
 		/* get the decription */
-		pk_client_get_description (updates->priv->client, updates->priv->package);
+		pk_client_get_description (client, package);
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -288,7 +226,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
  * pk_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkUpdates *updates)
+pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gboolean data)
 {
 	pk_debug ("connected=%i", connected);
 }
@@ -297,172 +235,163 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkUpdat
  * pk_updates_finished_cb:
  **/
 static void
-pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkUpdates *updates)
+pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gboolean data)
 {
 	GtkWidget *widget;
 
 	/* make the refresh button clickable until we get completion */
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* hide the progress bar */
-	gtk_widget_hide (updates->priv->progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), 0.0);
+	gtk_widget_hide (progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
 
-	if (updates->priv->refresh_in_progress == FALSE) {
+	if (refresh_in_progress == FALSE) {
 		pk_debug ("just the GetUpdates finishing");
 		return;
 	}
 
 	/* don't do this again */
-	updates->priv->refresh_in_progress = FALSE;
+	refresh_in_progress = FALSE;
 
 	/* get the update list */
-	pk_client_reset (updates->priv->client);
-	pk_client_get_updates (updates->priv->client);
+	pk_client_reset (client);
+	pk_client_get_updates (client);
 }
 
 /**
  * pk_updates_percentage_changed_cb:
  **/
 static void
-pk_updates_percentage_changed_cb (PkClient *client, guint percentage, PkUpdates *updates)
+pk_updates_percentage_changed_cb (PkClient *client, guint percentage, gboolean data)
 {
 	if (percentage == 0) {
 		return;
 	}
-	gtk_widget_show (updates->priv->progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), (gfloat) percentage / 100.0);
+	gtk_widget_show (progress_bar);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), (gfloat) percentage / 100.0);
 }
 
 /**
- * pk_updates_init:
+ * main:
  **/
-static void
-pk_updates_init (PkUpdates *updates)
+int
+main (int argc, char *argv[])
 {
+	GMainLoop *loop;
+	gboolean verbose = FALSE;
+	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	GtkTreeSelection *selection;
+	PkConnection *pconnection;
+	PkEnumList *role_list;
 
-	updates->priv = PK_UPDATES_GET_PRIVATE (updates);
-	updates->priv->package = NULL;
-	updates->priv->refresh_in_progress = FALSE;
+	const GOptionEntry options[] = {
+		{ "verbose", '\0', 0, G_OPTION_ARG_NONE, &verbose,
+		  "Show extra debugging information", NULL },
+		{ NULL}
+	};
 
-	updates->priv->search_depth = 0;
+	if (! g_thread_supported ()) {
+		g_thread_init (NULL);
+	}
+	dbus_g_thread_init ();
+	g_type_init ();
 
-	updates->priv->client = pk_client_new ();
-	g_signal_connect (updates->priv->client, "package",
-			  G_CALLBACK (pk_updates_package_cb), updates);
-	g_signal_connect (updates->priv->client, "finished",
-			  G_CALLBACK (pk_updates_finished_cb), updates);
-	g_signal_connect (updates->priv->client, "percentage-changed",
-			  G_CALLBACK (pk_updates_percentage_changed_cb), updates);
+	context = g_option_context_new (_("Software Update Viewer"));
+	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_parse (context, &argc, &argv, NULL);
+	g_option_context_free (context);
+	pk_debug_init (verbose);
+	gtk_init (&argc, &argv);
+
+	loop = g_main_loop_new (NULL, FALSE);
+
+	client = pk_client_new ();
+	g_signal_connect (client, "package",
+			  G_CALLBACK (pk_updates_package_cb), NULL);
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_updates_finished_cb), NULL);
+	g_signal_connect (client, "percentage-changed",
+			  G_CALLBACK (pk_updates_percentage_changed_cb), NULL);
 
 	/* get actions */
-	updates->priv->role_list = pk_client_get_actions (updates->priv->client);
+	role_list = pk_client_get_actions (client);
 
-	updates->priv->pconnection = pk_connection_new ();
-	g_signal_connect (updates->priv->pconnection, "connection-changed",
-			  G_CALLBACK (pk_connection_changed_cb), updates);
+	pconnection = pk_connection_new ();
+	g_signal_connect (pconnection, "connection-changed",
+			  G_CALLBACK (pk_connection_changed_cb), NULL);
 
-	updates->priv->glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (updates->priv->glade_xml, "window_updates");
+	glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
+	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
 
 	/* hide the details for now */
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "frame_details");
+	widget = glade_xml_get_widget (glade_xml, "frame_details");
 	gtk_widget_hide (widget);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_updates_delete_event_cb), updates);
+			  G_CALLBACK (pk_updates_delete_event_cb), loop);
 
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_close");
+	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_close_cb), updates);
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_apply");
+			  G_CALLBACK (pk_updates_close_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_apply_cb), updates);
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_help");
+			  G_CALLBACK (pk_updates_apply_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_help_cb), updates);
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+			  G_CALLBACK (pk_updates_help_cb), NULL);
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_refresh_cb), updates);
+			  G_CALLBACK (pk_updates_refresh_cb), NULL);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
-	GtkTreeSelection *selection;
-
 	/* create list stores */
-	updates->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
-						       GDK_TYPE_PIXBUF,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING);
+	packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
+					     G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package tree view */
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "treeview_updates");
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (updates->priv->packages_store));
+				 GTK_TREE_MODEL (packages_store));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_packages_treeview_clicked_cb), updates);
+			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
 	/* add columns to the tree view */
 	pk_packages_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* make the refresh button non-clickable until we get completion */
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "button_refresh");
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (updates->priv->glade_xml, "statusbar_status");
-	updates->priv->progress_bar = gtk_progress_bar_new ();
-	gtk_box_pack_end (GTK_BOX (widget), updates->priv->progress_bar, TRUE, TRUE, 0);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (updates->priv->progress_bar), 0.0);
+	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
+	progress_bar = gtk_progress_bar_new ();
+	gtk_box_pack_end (GTK_BOX (widget), progress_bar, TRUE, TRUE, 0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
 
 	/* get the update list */
-	pk_client_get_updates (updates->priv->client);
-
+	pk_client_get_updates (client);
 	gtk_widget_show (main_window);
+
+	g_main_loop_run (loop);
+	g_main_loop_unref (loop);
+
+	g_object_unref (packages_store);
+	g_object_unref (client);
+	g_object_unref (pconnection);
+	g_object_unref (role_list);
+	g_free (package);
+
+	return 0;
 }
-
-/**
- * pk_updates_finalize:
- * @object: This graph class instance
- **/
-static void
-pk_updates_finalize (GObject *object)
-{
-	PkUpdates *updates;
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (PK_IS_UPDATES (object));
-
-	updates = PK_UPDATES (object);
-	updates->priv = PK_UPDATES_GET_PRIVATE (updates);
-
-	g_object_unref (updates->priv->packages_store);
-	g_object_unref (updates->priv->client);
-	g_object_unref (updates->priv->pconnection);
-	g_object_unref (updates->priv->role_list);
-	g_free (updates->priv->package);
-
-	G_OBJECT_CLASS (pk_updates_parent_class)->finalize (object);
-}
-
-/**
- * pk_updates_new:
- * Return value: new PkUpdates instance.
- **/
-PkUpdates *
-pk_updates_new (void)
-{
-	PkUpdates *updates;
-	updates = g_object_new (PK_TYPE_UPDATES, NULL);
-	return PK_UPDATES (updates);
-}
-
