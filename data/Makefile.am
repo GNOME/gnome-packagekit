@@ -1,3 +1,5 @@
+NULL =
+
 @INTLTOOL_SCHEMAS_RULE@
 schemadir = $(sysconfdir)/gconf/schemas
 schema_in_files = gnome-packagekit.schemas.in
@@ -7,7 +9,8 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	pk-application.desktop.in			\
-	pk-update-viewer.desktop.in
+	pk-update-viewer.desktop.in			\
+	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
@@ -20,13 +23,16 @@ pkgdata_DATA =						\
 	pk-application.glade				\
 	pk-update-viewer.glade				\
 	pk-progress.glade				\
-	pk-backend-status.glade
+	pk-transactions.glade				\
+	pk-backend-status.glade				\
+	$(NULL)
 
 EXTRA_DIST =						\
 	$(schema_in_files)				\
 	$(desktop_in_files)				\
 	$(autostart_in_files)				\
-	$(pkgdata_DATA)
+	$(pkgdata_DATA)					\
+	$(NULL)
 
 if GCONF_SCHEMAS_INSTALL
 install-data-local:
@@ -47,5 +53,6 @@ DISTCLEANFILES =					\
 	pk-update-viewer.desktop			\
 	pk-update-icon.desktop				\
 	pk-application.desktop				\
-	gnome-packagekit.schemas
+	gnome-packagekit.schemas			\
+	$(NULL)
 
