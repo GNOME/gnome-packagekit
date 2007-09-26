@@ -496,7 +496,7 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		localised_role = pk_role_enum_to_localised_text (item->role);
+		localised_role = pk_role_enum_to_localised_present (item->role);
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
 		icon_name = pk_status_enum_to_icon_name (item->status);

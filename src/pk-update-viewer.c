@@ -83,6 +83,10 @@ pk_button_close_cb (GtkWidget	*widget,
 		     gboolean	data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
+
+	/* we might have a transaction running */
+	pk_client_cancel (client);
+
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
 }
@@ -114,9 +118,9 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 			    -1);
 
 	if (value == 1) {
-		icon_name = "software-update-urgent";
+		icon_name = "security-high";
 	} else {
-		icon_name = "software-update-available";
+		icon_name = "security-low";
 	}
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon) {
@@ -137,6 +141,10 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 			    gboolean	 data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
+
+	/* we might have a transaction running */
+	pk_client_cancel (client);
+
 	g_main_loop_quit (loop);
 	return FALSE;
 }
@@ -210,10 +218,6 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gb
 	/* hide the progress bar */
 	gtk_widget_hide (progress_bar);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
-
-	/* get the update list */
-	pk_client_reset (client);
-	pk_client_get_updates (client);
 }
 
 /**

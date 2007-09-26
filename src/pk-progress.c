@@ -1,7 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
  * Copyright (C) 2007 Richard Hughes <richard@hughsie.com>
- *
+ *\
  * Licensed under the GNU General Public License Version 2
  *
  * This program is free software; you can redistribute it and/or modify
@@ -280,7 +280,7 @@ pk_common_get_role_text (PkClient *client)
 	PkPackageId *ident;
 
 	pk_client_get_role (client, &role, &package_id);
-	role_text = pk_role_enum_to_localised_text (role);
+	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
 	if (package_id == NULL || strlen (package_id) == 0) {

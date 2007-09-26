@@ -189,10 +189,10 @@ pk_status_enum_to_icon_name (PkStatusEnum status)
 }
 
 /**
- * pk_role_enum_to_localised_text:
+ * pk_role_enum_to_localised_present:
  **/
 const gchar *
-pk_role_enum_to_localised_text (PkRoleEnum role)
+pk_role_enum_to_localised_present (PkRoleEnum role)
 {
 	const gchar *text = NULL;
 	switch (role) {
@@ -247,6 +247,64 @@ pk_role_enum_to_localised_text (PkRoleEnum role)
 	return text;
 }
 
+/**
+ * pk_role_enum_to_localised_past:
+ **/
+const gchar *
+pk_role_enum_to_localised_past (PkRoleEnum role)
+{
+	const gchar *text = NULL;
+	switch (role) {
+	case PK_ROLE_ENUM_UNKNOWN:
+		text = _("Unknown");
+		break;
+	case PK_ROLE_ENUM_GET_DEPENDS:
+		text = _("Got dependencies");
+		break;
+	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
+		text = _("Got update detail");
+		break;
+	case PK_ROLE_ENUM_GET_DESCRIPTION:
+		text = _("Got description");
+		break;
+	case PK_ROLE_ENUM_GET_REQUIRES:
+		text = _("Got requires");
+		break;
+	case PK_ROLE_ENUM_GET_UPDATES:
+		text = _("Got updates");
+		break;
+	case PK_ROLE_ENUM_SEARCH_DETAILS:
+		text = _("Got details");
+		break;
+	case PK_ROLE_ENUM_SEARCH_FILE:
+		text = _("Searched for file");
+		break;
+	case PK_ROLE_ENUM_SEARCH_GROUP:
+		text = _("Searched groups");
+		break;
+	case PK_ROLE_ENUM_SEARCH_NAME:
+		text = _("Searched for package name");
+		break;
+	case PK_ROLE_ENUM_REMOVE_PACKAGE:
+		text = _("Removed");
+		break;
+	case PK_ROLE_ENUM_INSTALL_PACKAGE:
+		text = _("Installed");
+		break;
+	case PK_ROLE_ENUM_REFRESH_CACHE:
+		text = _("Refreshed package cache");
+		break;
+	case PK_ROLE_ENUM_UPDATE_PACKAGE:
+		text = _("Updated package");
+		break;
+	case PK_ROLE_ENUM_UPDATE_SYSTEM:
+		text = _("Updated system");
+		break;
+	default:
+		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+	}
+	return text;
+}
 
 /**
  * pk_role_enum_to_icon_name:

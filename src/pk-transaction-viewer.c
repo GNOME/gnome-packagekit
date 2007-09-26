@@ -120,7 +120,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 
 	pretty = pk_transaction_db_get_pretty_date (timespec);
 	pk_debug ("pretty=%s", pretty);
-	role_text = pk_role_enum_to_localised_text (role);
+	role_text = pk_role_enum_to_localised_past (role);
 	text = g_markup_printf_escaped ("<b>%s</b>\n%s", role_text, pretty);
 	g_free (pretty);
 
