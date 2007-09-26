@@ -518,10 +518,6 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	application->priv->search_in_progress = TRUE;
 	application->priv->task_ended = FALSE;
 
-	/* show pane */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_progress");
-	gtk_widget_show (widget);
-
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
 	gtk_widget_hide (widget);
