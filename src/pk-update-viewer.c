@@ -42,7 +42,6 @@ static GtkWidget *progress_bar = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *package = NULL;
-static gboolean refresh_in_progress = FALSE;
 
 enum
 {
@@ -77,33 +76,6 @@ pk_updates_apply_cb (GtkWidget *widget,
 }
 
 /**
- * pk_updates_refresh_cb:
- **/
-static void
-pk_updates_refresh_cb (GtkWidget *widget,
-		       gboolean data)
-{
-	gboolean ret;
-
-	/* don't loop */	
-	refresh_in_progress = TRUE;
-
-	/* clear existing list */
-	gtk_list_store_clear (list_store);
-
-	/* make the refresh button non-clickable */
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* we can't click this if we havn't finished */
-	pk_client_reset (client);
-	ret = pk_client_refresh_cache (client, TRUE);
-	if (ret == FALSE) {
-		g_object_unref (client);
-		pk_warning ("failed to refresh cache");
-	}
-}
-
-/**
  * pk_button_close_cb:
  **/
 static void
@@ -129,11 +101,6 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 	const gchar *icon_name;
 
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
-
-	if (refresh_in_progress == TRUE) {
-		pk_debug ("ignoring progress reports");
-		return;
-	}
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
@@ -240,23 +207,9 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gboolea
 static void
 pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gboolean data)
 {
-	GtkWidget *widget;
-
-	/* make the refresh button clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	gtk_widget_set_sensitive (widget, TRUE);
-
 	/* hide the progress bar */
 	gtk_widget_hide (progress_bar);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
-
-	if (refresh_in_progress == FALSE) {
-		pk_debug ("just the GetUpdates finishing");
-		return;
-	}
-
-	/* don't do this again */
-	refresh_in_progress = FALSE;
 
 	/* get the update list */
 	pk_client_reset (client);
@@ -351,9 +304,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_refresh_cb), NULL);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
@@ -373,10 +323,6 @@ main (int argc, char *argv[])
 	/* add columns to the tree view */
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
-
-	/* make the refresh button non-clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
 	progress_bar = gtk_progress_bar_new ();
