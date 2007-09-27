@@ -29,6 +29,7 @@
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
@@ -42,14 +43,14 @@
 #define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
 
-#define DELAY_HOURLY_TEXT		_("Hourly")
-#define DELAY_DAILY_TEXT		_("Daily")
-#define DELAY_WEEKLY_TEXT		_("Weekly")
-#define DELAY_NEVER_TEXT		_("Never")
+#define PK_FREQ_HOURLY_TEXT		_("Hourly")
+#define PK_FREQ_DAILY_TEXT		_("Daily")
+#define PK_FREQ_WEEKLY_TEXT		_("Weekly")
+#define PK_FREQ_NEVER_TEXT		_("Never")
 
-#define UPDATE_ALL_TEXT			_("All updates")
-#define UPDATE_SECURITY_TEXT		_("Only security updates")
-#define UPDATE_NONE_TEXT		_("Nothing")
+#define PK_UPDATE_ALL_TEXT		_("All updates")
+#define PK_UPDATE_SECURITY_TEXT		_("Only security updates")
+#define PK_UPDATE_NONE_TEXT		_("Nothing")
 
 static GladeXML *glade_xml = NULL;
 
@@ -87,6 +88,139 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
 	return FALSE;
+}
+
+/**
+ * pk_prefs_freq_combo_changed:
+ **/
+static void
+pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
+{
+	gchar *value;
+	const gchar *action;
+	PkFreqEnum freq;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_HOURLY;
+	} else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_DAILY;
+	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_WEEKLY;
+	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_NEVER;
+	} else {
+		g_assert (FALSE);
+	}
+
+	action = pk_freq_enum_to_text (freq);
+	pk_debug ("Changing %s to %s", PK_CONF_UPDATE_CHECK, action);
+	gconf_client_set_string (client, PK_CONF_UPDATE_CHECK, action, NULL);
+	g_free (value);
+	g_object_unref (client);
+}
+
+/**
+ * pk_prefs_update_combo_changed:
+ **/
+static void
+pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
+{
+	gchar *value;
+	const gchar *action;
+	PkUpdateEnum update;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
+		update = PK_UPDATE_ENUM_ALL;
+	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
+		update = PK_UPDATE_ENUM_SECURITY;
+	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
+		update = PK_UPDATE_ENUM_NONE;
+	} else {
+		g_assert (FALSE);
+	}
+
+	action = pk_update_enum_to_text (update);
+	pk_debug ("Changing %s to %s", PK_CONF_AUTO_UPDATE, action);
+	gconf_client_set_string (client, PK_CONF_AUTO_UPDATE, action, NULL);
+	g_free (value);
+	g_object_unref (client);
+}
+
+/**
+ * pk_prefs_freq_combo_setup:
+ **/
+static void
+pk_prefs_freq_combo_setup (void)
+{
+	gchar *value;
+	gboolean is_writable;
+	GtkWidget *widget;
+	PkFreqEnum freq;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	widget = glade_xml_get_widget (glade_xml, "combobox_check");
+	is_writable = gconf_client_key_is_writable (client, PK_CONF_UPDATE_CHECK, NULL);
+	value = gconf_client_get_string (client, PK_CONF_UPDATE_CHECK, NULL);
+	if (value == NULL) {
+		pk_error ("invalid schema, please re-install");
+	}
+	pk_debug ("value from gconf %s", value);
+	freq = pk_freq_enum_from_text (value);
+	g_free (value);
+	g_object_unref (client);
+
+	gtk_widget_set_sensitive (widget, is_writable);
+	g_signal_connect (G_OBJECT (widget), "changed",
+			  G_CALLBACK (pk_prefs_freq_combo_changed), NULL);
+
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_HOURLY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
+	/* we can do this as it's the same order */
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), freq);
+}
+
+/**
+ * pk_prefs_update_combo_setup:
+ **/
+static void
+pk_prefs_update_combo_setup (void)
+{
+	gchar *value;
+	gboolean is_writable;
+	GtkWidget *widget;
+	PkUpdateEnum update;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	widget = glade_xml_get_widget (glade_xml, "combobox_install");
+	is_writable = gconf_client_key_is_writable (client, PK_CONF_UPDATE_CHECK, NULL);
+	value = gconf_client_get_string (client, PK_CONF_UPDATE_CHECK, NULL);
+	if (value == NULL) {
+		pk_error ("invalid schema, please re-install");
+	}
+	pk_debug ("value from gconf %s", value);
+	update = pk_update_enum_from_text (value);
+	g_free (value);
+	g_object_unref (client);
+
+	gtk_widget_set_sensitive (widget, is_writable);
+	g_signal_connect (G_OBJECT (widget), "changed",
+			  G_CALLBACK (pk_prefs_update_combo_changed), NULL);
+
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_ALL_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_SECURITY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_NONE_TEXT);
+	/* we can do this as it's the same order */
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), update);
 }
 
 /**
@@ -146,6 +280,10 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
+
+	/* update the combo boxes */
+	pk_prefs_freq_combo_setup ();
+	pk_prefs_update_combo_setup ();
 
 	gtk_widget_show (main_window);
 

@@ -6,6 +6,7 @@ NULL =
 INCLUDES =						\
 	$(GLIB_CFLAGS)					\
 	$(DBUS_CFLAGS)					\
+	$(GCONF_CFLAGS)					\
 	$(LIBGLADE_CFLAGS)				\
 	$(LIBNOTIFY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
@@ -97,6 +98,7 @@ pk_prefs_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
+	$(GCONF_LIBS)					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)
