@@ -35,6 +35,22 @@
 #include <pk-enum-list.h>
 #include "pk-common.h"
 
+#define PK_CONF_NOTIFY_COMPLETE		"/apps/gnome-packagekit/notify_complete"
+#define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"
+#define PK_CONF_FIND_AS_TYPE		"/apps/gnome-packagekit/find_as_you_type"
+#define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
+#define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
+#define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
+
+#define DELAY_HOURLY_TEXT		_("Hourly")
+#define DELAY_DAILY_TEXT		_("Daily")
+#define DELAY_WEEKLY_TEXT		_("Weekly")
+#define DELAY_NEVER_TEXT		_("Never")
+
+#define UPDATE_ALL_TEXT			_("All updates")
+#define UPDATE_SECURITY_TEXT		_("Only security updates")
+#define UPDATE_NONE_TEXT		_("Nothing")
+
 static GladeXML *glade_xml = NULL;
 
 /**
