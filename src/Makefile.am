@@ -26,6 +26,7 @@ noinst_PROGRAMS =					\
 
 bin_PROGRAMS =						\
 	pk-application					\
+	pk-prefs					\
 	pk-update-icon					\
 	pk-update-viewer				\
 	pk-transaction-viewer				\
@@ -79,6 +80,20 @@ pk_application_SOURCES =				\
 	$(NULL)
 
 pk_application_LDADD =					\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_prefs_SOURCES =					\
+	pk-prefs.c					\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_prefs_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
