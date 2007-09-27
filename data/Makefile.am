@@ -8,6 +8,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
+	pk-prefs.desktop.in				\
 	pk-application.desktop.in			\
 	pk-update-viewer.desktop.in			\
 	pk-transaction-viewer.desktop.in		\
@@ -52,6 +53,7 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
+	pk-prefs.desktop				\
 	pk-update-viewer.desktop			\
 	pk-transaction-viewer.desktop			\
 	pk-update-icon.desktop				\
