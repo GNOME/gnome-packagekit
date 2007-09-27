@@ -111,18 +111,10 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 static void
 pk_notify_show_preferences_cb (GtkMenuItem *item, PkNotify *notify)
 {
-	NotifyNotification *dialog;
-	const gchar *title;
-	const gchar *message;
-
-	pk_debug ("show preferences");
-	title = _("Functionality incomplete");
-	message = _("No preferences yet, sorry...");
-	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
-							   notify->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+	const gchar *command = "pk-prefs";
+	if (g_spawn_command_line_async (command, NULL) == FALSE) {
+		pk_warning ("Couldn't execute command: %s", command);
+	}
 }
 
 /**
