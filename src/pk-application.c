@@ -215,17 +215,6 @@ pk_application_deps_cb (GtkWidget *widget,
 }
 
 /**
- * pk_application_close_cb:
- **/
-static void
-pk_application_close_cb (GtkWidget	*widget,
-		    PkApplication	*application)
-{
-	pk_debug ("emitting action-close");
-	g_signal_emit (application, signals [ACTION_CLOSE], 0);
-}
-
-/**
  * pk_application_package_cb:
  **/
 static void
@@ -235,18 +224,21 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 			       PkApplication *application)
 {
 	GtkWidget *widget;
+	GtkTextBuffer *buffer;
 	const gchar *icon_name;
 
 	pk_debug ("description = %s:%i:%s:%s", package_id, group, detail, url);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_show (widget);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
 	icon_name = pk_group_enum_to_icon_name (group);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "label_description_text");
-	gtk_label_set_label (GTK_LABEL (widget), detail);
+	buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_set_text (buffer, detail, -1);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 }
 
 /**
@@ -519,7 +511,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	application->priv->task_ended = FALSE;
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
 
 	/* reset to 0 */
@@ -540,7 +532,8 @@ pk_application_delete_event_cb (GtkWidget	*widget,
 				GdkEvent	*event,
 				PkApplication	*application)
 {
-	pk_application_close_cb (widget, application);
+	pk_debug ("emitting action-close");
+	g_signal_emit (application, signals [ACTION_CLOSE], 0);
 	return FALSE;
 }
 
@@ -705,19 +698,19 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		pk_client_get_description (application->priv->client, application->priv->package);
 
 		/* make the button sensitivities correct */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
 		gtk_widget_set_sensitive (widget, TRUE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		gtk_widget_set_sensitive (widget, !installed);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 		gtk_widget_set_sensitive (widget, installed);
 	} else {
 		g_print ("no row selected.\n");
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 }
@@ -823,30 +816,35 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_application_delete_event_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_close_cb), application);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_help");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_help_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_deps_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "frame_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_requires");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_files");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
 
 	/* hide the group selector if we don't support search-groups */
