@@ -123,7 +123,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 		icon_name = "security-low";
 	}
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
-	if (icon) {
+	if (icon != NULL) {
 		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
@@ -166,7 +166,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Package"), renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
 							   "markup", PACKAGES_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
 	gtk_tree_view_append_column (treeview, column);
@@ -176,8 +176,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
  * pk_packages_treeview_clicked_cb:
  **/
 static void
-pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
-				    gboolean data)
+pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -215,9 +214,34 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gboolea
 static void
 pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gboolean data)
 {
+	GtkWidget *widget;
+	GPtrArray *packages;
+
 	/* hide the progress bar */
 	gtk_widget_hide (progress_bar);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
+
+	packages = pk_client_get_package_buffer (client);
+	if (packages->len == 0) {
+		GtkTreeIter iter;
+		GdkPixbuf *icon;
+
+		/* if no updates then hide apply and add this to the box */
+		widget = glade_xml_get_widget (glade_xml, "button_apply");
+		gtk_widget_hide (widget);
+
+		gtk_list_store_append (list_store, &iter);
+		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_TEXT, _("<b>There are no updates available!</b>"), -1);
+		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "dialog-information", 48, 0, NULL);
+		if (icon != NULL) {
+			gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
+			gdk_pixbuf_unref (icon);
+		}
+	} else {
+		/* set sensitive */
+		widget = glade_xml_get_widget (glade_xml, "button_apply");
+		gtk_widget_set_sensitive (widget, TRUE);
+	}
 }
 
 /**
@@ -270,6 +294,7 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE);
 	g_signal_connect (client, "package",
 			  G_CALLBACK (pk_updates_package_cb), NULL);
 	g_signal_connect (client, "finished",
@@ -290,6 +315,10 @@ main (int argc, char *argv[])
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
+
+	/* set apply insensitive until we finished*/
+	widget = glade_xml_get_widget (glade_xml, "button_apply");
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* hide the details for now */
 	widget = glade_xml_get_widget (glade_xml, "frame_details");
