@@ -21,28 +21,43 @@ INCLUDES =						\
 	-I$(top_srcdir)/libpackagekit			\
 	$(NULL)
 
-noinst_PROGRAMS =					\
-	pk-monitor					\
-	$(NULL)
-
 bin_PROGRAMS =						\
 	pk-application					\
 	pk-prefs					\
+	pk-install-file					\
+	pk-install-package				\
 	pk-update-icon					\
 	pk-update-viewer				\
 	pk-transaction-viewer				\
 	pk-backend-status				\
 	$(NULL)
 
-pk_monitor_SOURCES =					\
-	pk-monitor.c					\
+pk_install_file_SOURCES =				\
+	pk-install-file.c				\
 	pk-progress.c					\
 	pk-progress.h					\
 	pk-common.c					\
 	pk-common.h					\
 	$(NULL)
 
-pk_monitor_LDADD =					\
+pk_install_file_LDADD =					\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBNOTIFY_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(LIBGLADE_LIBS)				\
+	$(NULL)
+
+pk_install_package_SOURCES =				\
+	pk-install-package.c				\
+	pk-progress.c					\
+	pk-progress.h					\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_install_package_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
