@@ -38,17 +38,26 @@
 #include "pk-common.h"
 
 static GladeXML *glade_xml = NULL;
-static GtkListStore *list_store = NULL;
+static GtkListStore *list_store_general = NULL;
+static GtkListStore *list_store_details = NULL;
 static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
+static gchar *transaction_data = NULL;
 
 enum
 {
-	PACKAGES_COLUMN_ICON,
-	PACKAGES_COLUMN_TEXT,
-	PACKAGES_COLUMN_SUCCEEDED,
-	PACKAGES_COLUMN_ID,
-	PACKAGES_COLUMN_LAST
+	PACKAGES_COLUMN_GENERAL_ICON,
+	PACKAGES_COLUMN_GENERAL_TEXT,
+	PACKAGES_COLUMN_GENERAL_SUCCEEDED,
+	PACKAGES_COLUMN_GENERAL_ID,
+	PACKAGES_COLUMN_GENERAL_LAST
+};
+
+enum
+{
+	PACKAGES_COLUMN_DETAILS_ICON,
+	PACKAGES_COLUMN_DETAILS_TEXT,
+	PACKAGES_COLUMN_DETAILS_LAST
 };
 
 /**
@@ -103,13 +112,12 @@ pk_transaction_db_get_pretty_date (const gchar *timespec)
 	return g_strdup (buffer);
 }
 
-
 /**
  * pk_transaction_cb:
  **/
 static void
 pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
-		   gboolean succeeded, PkRoleEnum role, guint duration, gpointer data)
+		   gboolean succeeded, PkRoleEnum role, guint duration, const gchar *data, gpointer user_data)
 {
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
@@ -118,22 +126,25 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 	const gchar *icon_name;
 	const gchar *role_text;
 
+	/* we save this */
+	transaction_data = g_strdup (data);
+
 	pretty = pk_transaction_db_get_pretty_date (timespec);
 	pk_debug ("pretty=%s", pretty);
 	role_text = pk_role_enum_to_localised_past (role);
 	text = g_markup_printf_escaped ("<b>%s</b>\n%s", role_text, pretty);
 	g_free (pretty);
 
-	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter,
-			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_ID, tid,
+	gtk_list_store_append (list_store_general, &iter);
+	gtk_list_store_set (list_store_general, &iter,
+			    PACKAGES_COLUMN_GENERAL_TEXT, text,
+			    PACKAGES_COLUMN_GENERAL_ID, tid,
 			    -1);
 
 	icon_name = pk_role_enum_to_icon_name (role);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon) {
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
+		gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
 
@@ -144,7 +155,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 	}
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 24, 0, NULL);
 	if (icon) {
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_SUCCEEDED, icon, -1);
+		gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_SUCCEEDED, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
 }
@@ -164,10 +175,10 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 }
 
 /**
- * pk_treeview_add_columns:
+ * pk_treeview_add_general_columns:
  **/
 static void
-pk_treeview_add_columns (GtkTreeView *treeview)
+pk_treeview_add_general_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -175,22 +186,108 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Role"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_ICON, NULL);
+							   "pixbuf", PACKAGES_COLUMN_GENERAL_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Transaction"), renderer,
-							   "markup", PACKAGES_COLUMN_TEXT, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
+							   "markup", PACKAGES_COLUMN_GENERAL_TEXT, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_GENERAL_TEXT);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Succeeded"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_SUCCEEDED, NULL);
+							   "pixbuf", PACKAGES_COLUMN_GENERAL_SUCCEEDED, NULL);
 	gtk_tree_view_append_column (treeview, column);
+}
+
+/**
+ * pk_treeview_add_details_columns:
+ **/
+static void
+pk_treeview_add_details_columns (GtkTreeView *treeview)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+
+	/* image */
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Type"), renderer,
+							   "pixbuf", PACKAGES_COLUMN_DETAILS_ICON, NULL);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* column for text */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
+							   "markup", PACKAGES_COLUMN_DETAILS_TEXT, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_DETAILS_TEXT);
+	gtk_tree_view_append_column (treeview, column);
+	gtk_tree_view_column_set_expand (column, TRUE);
+}
+
+
+/**
+ * pk_details_item_add:
+ **/
+static void
+pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *package_id, const gchar *summary)
+{
+	GtkTreeIter iter;
+	GdkPixbuf *icon;
+	gchar *text;
+	const gchar *icon_name;
+	const gchar *info_text;
+
+	info_text = pk_info_enum_to_localised_text (info);
+	text = pk_package_id_pretty (package_id, summary);
+	icon_name = pk_info_enum_to_icon_name (info);
+
+	gtk_list_store_append (list_store_details, &iter);
+	gtk_list_store_set (list_store_details, &iter,
+			    PACKAGES_COLUMN_DETAILS_TEXT, text, -1);
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 24, 0, NULL);
+	if (icon) {
+		gtk_list_store_set (list_store_details, &iter, PACKAGES_COLUMN_DETAILS_ICON, icon, -1);
+		gdk_pixbuf_unref (icon);
+	}
+	g_free (text);
+}
+
+/**
+ * pk_treeview_clicked_cb:
+ **/
+static void
+pk_treeview_details_populate (void)
+{
+	GtkWidget *widget;
+	gchar **array;
+	gchar **sections;
+	guint i;
+	guint size;
+	PkInfoEnum info;
+
+	if (transaction_data == NULL || strlen (transaction_data) == 0) {
+		return;
+	}
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_details");
+	gtk_list_store_clear (list_store_details);
+
+	array = g_strsplit (transaction_data, "\n", 0);
+	size = g_strv_length (array);
+	for (i=0; i<size; i++) {
+		sections = g_strsplit (array[i], "\t", 0);
+		info = pk_info_enum_from_text (sections[0]);
+		pk_details_item_add (list_store_details, info, sections[1], sections[2]);
+		g_strfreev (sections);
+	}
+	g_strfreev (array);
+
+	widget = glade_xml_get_widget (glade_xml, "frame_details");
+	gtk_widget_show (widget);
 }
 
 /**
@@ -207,14 +304,16 @@ pk_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (transaction_id);
 		gtk_tree_model_get (model, &iter,
-				    PACKAGES_COLUMN_ID, &id, -1);
+				    PACKAGES_COLUMN_GENERAL_ID, &id, -1);
 
 		/* make back into transaction_id */
 		transaction_id = g_strdup (id);
 		g_free (id);
-		g_print ("selected row is: %s\n", id);
+		g_print ("selected row is: %s\n", transaction_id);
+
 		/* get the decription */
-		pk_client_get_description (client, id);
+		pk_debug ("transaction_data=%s", transaction_data);
+		pk_treeview_details_populate ();
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -304,20 +403,28 @@ main (int argc, char *argv[])
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
-	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
-					 G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	list_store_general = gtk_list_store_new (PACKAGES_COLUMN_GENERAL_LAST, GDK_TYPE_PIXBUF,
+						 G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_DETAILS_LAST, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
 	/* create transaction_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_transactions");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store));
+				 GTK_TREE_MODEL (list_store_general));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_treeview_clicked_cb), NULL);
 
 	/* add columns to the tree view */
-	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+
+	/* create transaction_id tree view */
+	widget = glade_xml_get_widget (glade_xml, "treeview_details");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (list_store_details));
+	pk_treeview_add_details_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* make the refresh button non-clickable until we get completion */
@@ -331,11 +438,13 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
-	g_object_unref (list_store);
+	g_object_unref (list_store_general);
+	g_object_unref (list_store_details);
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (transaction_id);
+	g_free (transaction_data);
 
 	return 0;
 }

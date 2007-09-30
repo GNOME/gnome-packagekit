@@ -27,9 +27,13 @@
 
 G_BEGIN_DECLS
 
+gchar *		 pk_package_id_pretty			(const gchar	*package_id,
+							 const gchar	*summary);
 const gchar	*pk_role_enum_to_localised_past		(PkRoleEnum	 role);
 const gchar	*pk_role_enum_to_localised_present	(PkRoleEnum	 role);
 const gchar	*pk_role_enum_to_icon_name		(PkRoleEnum	 role);
+const gchar	*pk_info_enum_to_localised_text		(PkInfoEnum	 info);
+const gchar	*pk_info_enum_to_icon_name		(PkInfoEnum	 info);
 const gchar	*pk_status_enum_to_localised_text	(PkStatusEnum	 status);
 const gchar	*pk_status_enum_to_icon_name		(PkStatusEnum	 status);
 const gchar	*pk_error_enum_to_localised_text	(PkErrorCodeEnum code);

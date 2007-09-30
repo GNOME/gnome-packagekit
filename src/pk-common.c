@@ -27,8 +27,30 @@
 #include <string.h>
 
 #include <pk-debug.h>
+#include <pk-package-id.h>
 #include <pk-enum.h>
 #include "pk-common.h"
+
+/**
+ * pk_package_id_pretty:
+ **/
+gchar *
+pk_package_id_pretty (const gchar *package_id, const gchar *summary)
+{
+	PkPackageId *ident;
+	gchar *text;
+
+	/* split by delimeter */
+	ident = pk_package_id_new_from_string (package_id);
+
+	if (summary == NULL || strlen (summary) == 0) {
+		text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>", ident->name, ident->version, ident->arch);
+	} else {
+		text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
+	}
+	pk_package_id_free (ident);
+	return text;
+}
 
 /**
  * pk_error_enum_to_localised_text:
@@ -143,6 +165,58 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	default:
 		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
+	}
+	return text;
+}
+
+/**
+ * pk_info_enum_to_localised_text:
+ **/
+const gchar *
+pk_info_enum_to_localised_text (PkInfoEnum info)
+{
+	const gchar *text = NULL;
+	switch (info) {
+	case PK_INFO_ENUM_DOWNLOADING:
+		text = _("Downloading");
+		break;
+	case PK_INFO_ENUM_UPDATING:
+		text = _("Updating");
+		break;
+	case PK_INFO_ENUM_INSTALLING:
+		text = _("Installing");
+		break;
+	case PK_INFO_ENUM_REMOVING:
+		text = _("Removing");
+		break;
+	default:
+		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
+	}
+	return text;
+}
+
+/**
+ * pk_info_enum_to_icon_name:
+ **/
+const gchar *
+pk_info_enum_to_icon_name (PkInfoEnum info)
+{
+	const gchar *text = NULL;
+	switch (info) {
+	case PK_INFO_ENUM_REMOVING:
+		text = "edit-clear";
+		break;
+	case PK_INFO_ENUM_DOWNLOADING:
+		text = "mail-send-receive";
+		break;
+	case PK_INFO_ENUM_INSTALLING:
+		text = "emblem-system";
+		break;
+	case PK_INFO_ENUM_UPDATING:
+		text = "system-software-update";
+		break;
+	default:
+		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }

@@ -98,7 +98,6 @@ static void
 pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 			const gchar *summary, gboolean data)
 {
-	PkPackageId *ident;
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
 	gchar *text;
@@ -106,11 +105,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 
 	pk_debug ("package = %i:%s:%s", value, package_id, summary);
 
-	/* split by delimeter */
-	ident = pk_package_id_new_from_string (package_id);
-
-	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
-
+	text = pk_package_id_pretty (package_id, summary);
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
 			    PACKAGES_COLUMN_TEXT, text,
@@ -127,8 +122,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
 		gdk_pixbuf_unref (icon);
 	}
-
-	pk_package_id_free (ident);
+	g_free (text);
 }
 
 /**
