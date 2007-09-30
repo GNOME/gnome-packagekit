@@ -65,6 +65,7 @@ struct PkNotifyPrivate
 {
 	GtkStatusIcon		*status_icon;
 	PkConnection		*pconnection;
+	PkClient		*client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
@@ -384,12 +385,6 @@ static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotify *notify)
 {
 	pk_debug ("connected=%i", connected);
-	if (connected == TRUE) {
-//		pk_notify_refresh_icon (notify);
-//		pk_notify_refresh_tooltip (notify);
-	} else {
-//		pk_notify_set_icon (notify, NULL);
-	}
 }
 
 /**
@@ -471,9 +466,10 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	is_security = FALSE;
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (packages, i);
-		pk_debug ("%i, %s, %s", item->value, item->package_id, item->summary);
+		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
+			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
-		if (item->value == 1) {
+		if (item->info == PK_INFO_ENUM_SECURITY) {
 			is_security = TRUE;
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						ident->name, item->summary);
@@ -620,6 +616,17 @@ pk_notify_check_for_updates_early_cb (PkNotify *notify)
 }
 
 /**
+ * pk_notify_updates_changed_cb:
+ **/
+static void
+pk_notify_updates_changed_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
+{
+	/* now try to get newest update list */
+	pk_debug ("get updates");
+	pk_notify_query_updates (notify);
+}
+
+/**
  * pk_notify_init:
  * @notify: This class instance
  **/
@@ -650,6 +657,11 @@ pk_notify_init (PkNotify *notify)
 		pk_connection_changed_cb (notify->priv->pconnection, TRUE, notify);
 	}
 
+	/* use a client to get the updates-changed signal */
+	notify->priv->client = pk_client_new ();
+	g_signal_connect (notify->priv->client, "updates-changed",
+			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
+
 	/* refresh the cache, and poll until we get a good refresh */
 	notify->priv->cache_okay = FALSE;
 	notify->priv->cache_update_in_progress = FALSE;
@@ -677,6 +689,7 @@ pk_notify_finalize (GObject *object)
 	g_return_if_fail (notify->priv != NULL);
 	g_object_unref (notify->priv->status_icon);
 	g_object_unref (notify->priv->pconnection);
+	g_object_unref (notify->priv->client);
 
 	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);
 }
