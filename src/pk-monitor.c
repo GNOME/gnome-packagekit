@@ -31,8 +31,13 @@
 #include <gtk/gtk.h>
 
 #include <pk-debug.h>
+#include <pk-client.h>
 
 #include "pk-progress.h"
+
+static PkProgress *progress = NULL;
+static gchar *package = NULL;
+static GMainLoop *loop = NULL;
 
 /**
  * pk_monitor_action_unref_cb:
@@ -46,21 +51,55 @@ pk_monitor_action_unref_cb (PkProgress *progress, gboolean data)
 }
 
 /**
+ * pk_monitor_resolve_finished_cb:
+ **/
+static void
+pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
+{
+	gchar *tid;
+	gboolean ret;
+
+	pk_debug ("unref'ing %p", client);
+	g_object_unref (client);
+
+	/* create a new instance */
+	client = pk_client_new ();
+//	g_signal_connect (client, "finished",
+//			  G_CALLBACK (pk_monitor_install_finished_cb), NULL);
+	ret = pk_client_install_package (client, package);
+	if (ret == FALSE) {
+		pk_debug ("Install not supported!");
+		g_main_loop_quit (loop);
+	}
+
+	tid = pk_client_get_tid (client);
+	/* create a new progress object */
+	progress = pk_progress_new ();
+	g_signal_connect (progress, "action-unref",
+			  G_CALLBACK (pk_monitor_action_unref_cb), loop);
+	pk_progress_monitor_tid (progress, tid);
+	g_free (tid);
+}
+
+/**
+ * pk_monitor_resolve_package_cb:
+ **/
+static void
+pk_monitor_resolve_package_cb (PkClient *client, guint value, const gchar *package_id,
+			       const gchar *summary, gboolean data)
+{
+	/* save */
+	package = g_strdup (package_id);
+}
+
+/**
  * main:
  **/
 int
 main (int argc, char *argv[])
 {
-	GMainLoop *loop;
-	gboolean verbose = FALSE;
-	PkProgress *progress = NULL;
 	GOptionContext *context;
-
-	const GOptionEntry options[] = {
-		{ "verbose", '\0', 0, G_OPTION_ARG_NONE, &verbose,
-		  "Show extra debugging information", NULL },
-		{ NULL}
-	};
+	gboolean ret;
 
 	if (! g_thread_supported ()) {
 		g_thread_init (NULL);
@@ -70,22 +109,33 @@ main (int argc, char *argv[])
 
 	g_set_application_name (_("PackageKit Job Monitor"));
 	context = g_option_context_new (_("PackageKit Job Monitor"));
-	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-	pk_debug_init (verbose);
+	pk_debug_init (TRUE);
 	gtk_init (&argc, &argv);
 
+	if (argc < 2) {
+		pk_error ("You need to specify a package to install");
+	}
 	loop = g_main_loop_new (NULL, FALSE);
 
-	/* create a new progress object */
-	progress = pk_progress_new ();
-	g_signal_connect (progress, "action-unref",
-			  G_CALLBACK (pk_monitor_action_unref_cb), loop);
-	pk_progress_monitor_tid (progress, "0;abcdef;data"); /* TODO: not hardcoded */
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
-	g_object_unref (progress);
+	PkClient *client;
+	client = pk_client_new ();
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_monitor_resolve_finished_cb), NULL);
+	g_signal_connect (client, "package",
+			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
+	ret = pk_client_resolve (client, argv[1]);
+	if (ret == FALSE) {
+		pk_debug ("Resolve not supported!");
+	} else {
+		g_main_loop_run (loop);
+	}
+
+	g_free (package);
+	if (progress != NULL) {
+		g_object_unref (progress);
+	}
 
 	return 0;
 }
