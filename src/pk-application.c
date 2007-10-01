@@ -852,6 +852,10 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
 
+	/* until we get the mugshot stuff, disable this */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
+	gtk_widget_hide (widget);
+
 	/* hide the group selector if we don't support search-groups */
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
