@@ -245,13 +245,13 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
  * pk_application_package_cb:
  **/
 static void
-pk_application_package_cb (PkClient *client, guint value, const gchar *package_id,
+pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			const gchar *summary, PkApplication *application)
 {
 	PkPackageId *ident;
 	GtkTreeIter iter;
 	gchar *text;
-	pk_debug ("package = %i:%s:%s", value, package_id, summary);
+	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
@@ -260,7 +260,7 @@ pk_application_package_cb (PkClient *client, guint value, const gchar *package_i
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
-			    PACKAGES_COLUMN_INSTALLED, value,
+			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id, -1);
 	pk_package_id_free (ident);
