@@ -269,6 +269,11 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	gtk_text_buffer_set_text (buffer, detail, -1);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+
+	buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_set_text (buffer, "/usr/lib/libgnomedb-3.0.so.4", -1);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 }
 
 /**
@@ -878,9 +883,6 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_files");
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
