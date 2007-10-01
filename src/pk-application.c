@@ -675,13 +675,18 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
  **/
 static void
 pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
-				    PkApplication *application)
+				 PkApplication *application)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean installed;
 	gchar *package_id;
+
+	/* don't do anything if we don't support the action */
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
+		return;
+	}
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
