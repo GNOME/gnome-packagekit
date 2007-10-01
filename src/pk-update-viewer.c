@@ -95,15 +95,20 @@ pk_button_close_cb (GtkWidget	*widget,
  * pk_updates_package_cb:
  **/
 static void
-pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
-			const gchar *summary, gboolean data)
+pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+		       const gchar *summary, gboolean data)
 {
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
 	gchar *text;
 	const gchar *icon_name;
 
-	pk_debug ("package = %i:%s:%s", value, package_id, summary);
+	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
+
+	/* ignore metadata updates */
+	if (info == PK_INFO_ENUM_DOWNLOADING) {
+		return;
+	}
 
 	text = pk_package_id_pretty (package_id, summary);
 	gtk_list_store_append (list_store, &iter);
@@ -112,11 +117,7 @@ pk_updates_package_cb (PkClient *client, guint value, const gchar *package_id,
 			    PACKAGES_COLUMN_ID, package_id,
 			    -1);
 
-	if (value == 1) {
-		icon_name = "security-high";
-	} else {
-		icon_name = "security-low";
-	}
+	icon_name = pk_info_enum_to_localised_text (info);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon != NULL) {
 		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);

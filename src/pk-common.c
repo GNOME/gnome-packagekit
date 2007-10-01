@@ -177,6 +177,18 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 {
 	const gchar *text = NULL;
 	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		text = _("software-update-available");
+		break;
+	case PK_INFO_ENUM_NORMAL:
+		text = _("software-update-available");
+		break;
+	case PK_INFO_ENUM_IMPORTANT:
+		text = _("software-update-urgent");
+		break;
+	case PK_INFO_ENUM_SECURITY:
+		text = _("software-update-urgent");
+		break;
 	case PK_INFO_ENUM_DOWNLOADING:
 		text = _("Downloading");
 		break;
