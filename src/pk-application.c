@@ -53,6 +53,7 @@ struct PkApplicationPrivate
 	PkClient		*client;
 	PkConnection		*pconnection;
 	gchar			*package;
+	gchar			*url;
 	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
 	gboolean		 task_ended;
@@ -173,6 +174,24 @@ pk_application_install_cb (GtkWidget      *widget,
 }
 
 /**
+ * pk_application_homepage_cb:
+ **/
+static void
+pk_application_homepage_cb (GtkWidget      *widget,
+		            PkApplication  *application)
+{
+	gchar *data;
+	gboolean ret;
+
+	data = g_strconcat ("gnome-open ", application->priv->url, NULL);
+	ret = g_spawn_command_line_async (data, NULL);
+	if (ret == FALSE) {
+		pk_warning ("spawn of '%s' failed", data);
+	}
+	g_free (data);
+}
+
+/**
  * pk_application_remove_cb:
  **/
 static void
@@ -230,6 +249,17 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	pk_debug ("description = %s:%i:%s:%s", package_id, group, detail, url);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_show (widget);
+
+	/* save the url for the button */
+	if (url != NULL && strlen (url) > 0) {
+		g_free (application->priv->url);
+		application->priv->url = g_strdup (url);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		gtk_widget_set_sensitive (widget, TRUE);
+	} else {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
 	icon_name = pk_group_enum_to_icon_name (group);
@@ -773,6 +803,7 @@ pk_application_init (PkApplication *application)
 
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
+	application->priv->url = NULL;
 	application->priv->task_ended = TRUE;
 	application->priv->find_installed = TRUE;
 	application->priv->find_available = TRUE;
@@ -844,6 +875,8 @@ pk_application_init (PkApplication *application)
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_application_homepage_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_files");
@@ -1012,9 +1045,10 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->client);
 	g_object_unref (application->priv->pconnection);
-	g_free (application->priv->package);
 	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->role_list);
+	g_free (application->priv->url);
+	g_free (application->priv->package);
 
 	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
 }
