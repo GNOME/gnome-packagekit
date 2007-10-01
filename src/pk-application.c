@@ -234,7 +234,7 @@ pk_application_deps_cb (GtkWidget *widget,
 }
 
 /**
- * pk_application_package_cb:
+ * pk_application_description_cb:
  **/
 static void
 pk_application_description_cb (PkClient *client, const gchar *package_id,
@@ -713,11 +713,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 	gboolean installed;
 	gchar *package_id;
 
-	/* don't do anything if we don't support the action */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
-		return;
-	}
-
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (application->priv->package);
@@ -729,8 +724,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		application->priv->package = g_strdup (package_id);
 		g_free (package_id);
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
-		/* get the decription */
-		pk_client_get_description (application->priv->client, application->priv->package);
 
 		/* make the button sensitivities correct */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
@@ -739,6 +732,14 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_widget_set_sensitive (widget, !installed);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 		gtk_widget_set_sensitive (widget, installed);
+
+		/* don't do the description if we don't support the action */
+		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
+			return;
+		}
+
+		/* get the description */
+		pk_client_get_description (application->priv->client, application->priv->package);
 	} else {
 		g_print ("no row selected.\n");
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
