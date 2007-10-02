@@ -45,6 +45,7 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-package-list.h>
 
 #include "pk-common.h"
 #include "pk-notify.h"
@@ -437,7 +438,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 static void
 pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
 {
-	PkClientPackageItem *item;
+	PkPackageListItem *item;
 	GPtrArray *packages;
 	guint length;
 	guint i;
