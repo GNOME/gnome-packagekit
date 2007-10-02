@@ -32,6 +32,41 @@
 #include "pk-common.h"
 
 /**
+ * pk_size_to_si_size_text:
+ **/
+gchar *
+pk_size_to_si_size_text (guint64 size)
+{
+	gdouble frac;
+
+	/* double cast, not sure why, but it works */
+	frac = (gdouble) (long int) size;
+
+	/* first chunk */
+	if (frac < 1024) {
+		return g_strdup_printf ("%li bytes", (long int) size);
+	}
+	/* next chunk */
+	frac /= 1024.0;
+	if (frac < 1024) {
+		return g_strdup_printf ("%.1lf kB", frac);
+	}
+	/* next chunk */
+	frac /= 1024.0;
+	if (frac < 1024) {
+		return g_strdup_printf ("%.1lf MB", frac);
+	}
+	/* next chunk */
+	frac /= 1024.0;
+	if (frac < 1024) {
+		return g_strdup_printf ("%.1lf GB", frac);
+	}
+	/* no way.... */
+	pk_error ("cannot have a file this large!");
+	return NULL;
+}
+
+/**
  * pk_package_id_pretty:
  **/
 gchar *

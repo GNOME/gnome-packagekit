@@ -40,6 +40,7 @@ const gchar	*pk_error_enum_to_localised_text	(PkErrorCodeEnum code);
 const gchar	*pk_restart_enum_to_localised_text	(PkRestartEnum	 restart);
 const gchar	*pk_group_enum_to_localised_text	(PkGroupEnum	 group);
 const gchar	*pk_group_enum_to_icon_name		(PkGroupEnum	 group);
+gchar		*pk_size_to_si_size_text		(guint64	 size);
 
 G_END_DECLS
 

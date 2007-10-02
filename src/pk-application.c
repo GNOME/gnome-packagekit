@@ -240,6 +240,7 @@ static void
 pk_application_description_cb (PkClient *client, const gchar *package_id,
 			       const gchar *licence, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
+			       guint64 size, const gchar *filelist,
 			       PkApplication *application)
 {
 	GtkWidget *widget;
@@ -270,8 +271,36 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 
+	/* if non-zero, set the size */
+	if (size > 0) {
+		gchar *value;
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
+		value = pk_size_to_si_size_text (size);
+		gtk_label_set_label (GTK_LABEL (widget), value);
+		g_free (value);
+	} else {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		gtk_widget_hide (widget);
+	}
+
 	buffer = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_set_text (buffer, "/usr/lib/libgnomedb-3.0.so.4", -1);
+	if (filelist != NULL && strlen (filelist) > 0) {
+		gchar *list;
+		gchar **array;
+		/* replace the ; with a newline */
+		array = g_strsplit (filelist, ";", 0);
+		list = g_strjoinv ("\n", array);
+
+		/* apply the list */
+		gtk_text_buffer_set_text (buffer, list, -1);
+		g_strfreev (array);
+		g_free (list);
+	} else {
+		/* no information */
+		gtk_text_buffer_set_text (buffer, _("No files"), -1);
+	}
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 }
@@ -886,6 +915,9 @@ pk_application_init (PkApplication *application)
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 	gtk_widget_hide (widget);
 
 	/* until we get the mugshot stuff, disable this */
