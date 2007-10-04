@@ -74,15 +74,26 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
 	gchar *text;
+	GString *string;
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
 
-	if (summary == NULL || strlen (summary) == 0) {
-		text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>", ident->name, ident->version, ident->arch);
-	} else {
-		text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
+	string = g_string_new (ident->name);
+	if (ident->version != NULL) {
+		g_string_append_printf (string, "-%s", ident->version);
 	}
+	if (ident->arch != NULL) {
+		g_string_append_printf (string, " (%s)", ident->arch);
+	}
+	g_string_prepend (string, "<b>");
+	g_string_append (string, "</b>");
+
+	if (summary != NULL && strlen (summary) > 0) {
+		g_string_append_printf (string, "\n%s", summary);
+	}
+	text = g_string_free (string, FALSE);
+
 	pk_package_id_free (ident);
 	return text;
 }
