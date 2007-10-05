@@ -357,7 +357,7 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 	pk_debug ("icon left clicked");
 
 	/* show updates */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Software Update Viewer"));
+	item = gtk_image_menu_item_new_with_mnemonic (_("_Show Updates"));
 	image = gtk_image_new_from_icon_name ("system-software-update", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
