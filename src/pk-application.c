@@ -310,12 +310,17 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
  **/
 static void
 pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			const gchar *summary, PkApplication *application)
+			   const gchar *summary, PkApplication *application)
 {
 	PkPackageId *ident;
 	GtkTreeIter iter;
 	gchar *text;
 	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
+
+	/* ignore progress */
+	if (info != PK_INFO_ENUM_INSTALLED && info != PK_INFO_ENUM_AVAILABLE) {
+		return;
+	}
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
