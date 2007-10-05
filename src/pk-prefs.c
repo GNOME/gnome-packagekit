@@ -36,7 +36,7 @@
 #include <pk-enum-list.h>
 #include "pk-common.h"
 
-#define PK_CONF_NOTIFY_COMPLETE		"/apps/gnome-packagekit/notify_complete"
+#define PK_CONF_NOTIFY_COMPLETED	"/apps/gnome-packagekit/notify_complete"
 #define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"
 #define PK_CONF_FIND_AS_TYPE		"/apps/gnome-packagekit/find_as_you_type"
 #define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
@@ -68,12 +68,31 @@ pk_button_help_cb (GtkWidget *widget,
  * pk_button_close_cb:
  **/
 static void
-pk_button_close_cb (GtkWidget	*widget,
-		     gboolean	data)
+pk_button_close_cb (GtkWidget *widget, gboolean data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
+}
+
+/**
+ * pk_button_checkbutton_clicked_cb:
+ **/
+static void
+pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
+{
+	gboolean checked;
+	GConfClient *client;
+	const gchar *gconf_key;
+
+	client = gconf_client_get_default ();
+	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+
+	gconf_key = (const char *) g_object_get_data (G_OBJECT (widget), "gconf_key");
+	pk_debug ("Changing %s to %i", gconf_key, checked);
+	gconf_client_set_bool (client, gconf_key, checked, NULL);
+
+	g_object_unref (client);
 }
 
 /**
@@ -224,6 +243,25 @@ pk_prefs_update_combo_setup (void)
 }
 
 /**
+ * pk_prefs_notify_checkbutton_setup:
+ **/
+static void
+pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
+{
+	GConfClient *client;
+	gboolean value;
+
+	client = gconf_client_get_default ();
+	value = gconf_client_get_bool (client, gconf_key, NULL);
+	pk_debug ("value from gconf %i for %s", value, gconf_key);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), value);
+
+	g_object_set_data (G_OBJECT (widget), "gconf_key", (gpointer) gconf_key);
+	g_signal_connect (widget, "clicked", G_CALLBACK (pk_button_checkbutton_clicked_cb), NULL);
+	g_object_unref (client);
+}
+
+/**
  * main:
  **/
 int
@@ -273,6 +311,12 @@ main (int argc, char *argv[])
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_window_delete_event_cb), loop);
+
+	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
+	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_NOTIFY_AVAILABLE);
+
+	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_completed");
+	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_NOTIFY_COMPLETED);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
