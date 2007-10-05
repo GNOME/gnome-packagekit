@@ -42,7 +42,7 @@ static GtkListStore *list_store_general = NULL;
 static GtkListStore *list_store_details = NULL;
 static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
-static gchar *transaction_data = NULL;
+static GHashTable *hash = NULL;
 
 enum
 {
@@ -127,7 +127,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 	const gchar *role_text;
 
 	/* we save this */
-	transaction_data = g_strdup (data);
+	g_hash_table_insert (hash, g_strdup (tid), g_strdup (data));
 
 	pretty = pk_transaction_db_get_pretty_date (timespec);
 	pk_debug ("pretty=%s", pretty);
@@ -257,10 +257,10 @@ pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *pac
 }
 
 /**
- * pk_treeview_clicked_cb:
+ * pk_treeview_details_populate:
  **/
 static void
-pk_treeview_details_populate (void)
+pk_treeview_details_populate (const gchar *tid)
 {
 	GtkWidget *widget;
 	gchar **array;
@@ -268,8 +268,13 @@ pk_treeview_details_populate (void)
 	guint i;
 	guint size;
 	PkInfoEnum info;
+	gchar *transaction_data;
 
+	/* get from hash */
+	transaction_data = (gchar *) g_hash_table_lookup (hash, tid);
 	if (transaction_data == NULL || strlen (transaction_data) == 0) {
+		widget = glade_xml_get_widget (glade_xml, "frame_details");
+		gtk_widget_hide (widget);
 		return;
 	}
 
@@ -312,8 +317,7 @@ pk_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 		g_print ("selected row is: %s\n", transaction_id);
 
 		/* get the decription */
-		pk_debug ("transaction_data=%s", transaction_data);
-		pk_treeview_details_populate ();
+		pk_treeview_details_populate (transaction_id);
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -370,6 +374,9 @@ main (int argc, char *argv[])
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
+
+	/* save the description in a hash */
+	hash = g_hash_table_new (g_str_hash, g_str_equal);
 
 	pconnection = pk_connection_new ();
 	g_signal_connect (pconnection, "connection-changed",
@@ -432,7 +439,7 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* get the update list */
-	pk_client_get_old_transactions (client, 50);
+	pk_client_get_old_transactions (client, 0);
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);
@@ -444,7 +451,7 @@ main (int argc, char *argv[])
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (transaction_id);
-	g_free (transaction_data);
+	g_hash_table_unref (hash);
 
 	return 0;
 }
