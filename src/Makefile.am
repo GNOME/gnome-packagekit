@@ -83,6 +83,7 @@ pk_update_icon_LDADD =					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(GTK_LIBS)					\
+	$(GCONF_LIBS)					\
 	$(LIBGLADE_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)

@@ -37,6 +37,7 @@
 #include <gtk/gtk.h>
 #include <libnotify/notify.h>
 #include <gtk/gtkstatusicon.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
@@ -61,6 +62,7 @@ struct PkWatchPrivate
 	GtkStatusIcon		*status_icon;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
+	GConfClient		*gconf_client;
 };
 
 G_DEFINE_TYPE (PkWatch, pk_watch, G_TYPE_OBJECT)
@@ -241,6 +243,7 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	PkPackageId *ident;
 	NotifyNotification *dialog;
 	const gchar *title;
+	gboolean value;
 	gchar *message = NULL;
 	gchar *package = NULL;
 
@@ -249,6 +252,13 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	/* is it worth showing a UI? */
 	if (runtime < 3) {
 		pk_debug ("no notification, too quick");
+		return;
+	}
+
+	/* are we accepting notifications */
+	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
+	if (value == FALSE) {
+		pk_debug ("not showing notification as prevented in gconf");
 		return;
 	}
 
@@ -591,6 +601,7 @@ pk_watch_init (PkWatch *watch)
 {
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
+	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->status_icon = gtk_status_icon_new ();
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (watch->priv->status_icon), FALSE);
 
@@ -639,6 +650,7 @@ pk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->status_icon);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->pconnection);
+	g_object_unref (watch->priv->gconf_client);
 
 	G_OBJECT_CLASS (pk_watch_parent_class)->finalize (object);
 }
