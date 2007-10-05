@@ -393,15 +393,8 @@ pk_application_percentage_changed_cb (PkClient *client, guint percentage, PkAppl
 gboolean
 pk_application_no_percentage_updates_timeout (gpointer data)
 {
-	gfloat fraction;
 	PkApplication *application = (PkApplication *) data;
-
-	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar));
-	fraction += 0.05;
-	if (fraction > 1.00) {
-		fraction = 0.0;
-	}
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), fraction);
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (application->priv->progress_bar));
 	if (application->priv->task_ended == TRUE) {
 		return FALSE;
 	}
@@ -414,7 +407,7 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 static void
 pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *application)
 {
-	g_timeout_add (100, pk_application_no_percentage_updates_timeout, application);
+	g_timeout_add (40, pk_application_no_percentage_updates_timeout, application);
 }
 
 /**
@@ -1021,6 +1014,7 @@ pk_application_init (PkApplication *application)
 	application->priv->progress_bar = gtk_progress_bar_new ();
 	gtk_box_pack_end (GTK_BOX (widget), application->priv->progress_bar, TRUE, TRUE, 0);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.5);
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.025);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,

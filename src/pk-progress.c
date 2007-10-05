@@ -301,17 +301,11 @@ pk_common_get_role_text (PkClient *client)
 gboolean
 pk_progress_spin_timeout (gpointer data)
 {
-	gfloat fraction;
 	GtkWidget *widget;
 	PkProgress *progress = PK_PROGRESS (data);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
-	fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (widget));
-	fraction += 0.05;
-	if (fraction > 1.00) {
-		fraction = 0.0;
-	}
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), fraction);
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
 
 	/* show the box */
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
@@ -424,6 +418,9 @@ pk_progress_init (PkProgress *progress)
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget), 0.025);
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
