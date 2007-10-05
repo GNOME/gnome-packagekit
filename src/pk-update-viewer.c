@@ -117,7 +117,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 			    PACKAGES_COLUMN_ID, package_id,
 			    -1);
 
-	icon_name = pk_info_enum_to_localised_text (info);
+	icon_name = pk_info_enum_to_icon_name (info);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
 	if (icon != NULL) {
 		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);

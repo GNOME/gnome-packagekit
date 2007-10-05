@@ -224,16 +224,16 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 	const gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_LOW:
-		text = _("software-update-available");
+		text = _("Low priority update");
 		break;
 	case PK_INFO_ENUM_NORMAL:
-		text = _("software-update-available");
+		text = _("Normal update");
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
-		text = _("software-update-urgent");
+		text = _("Important update");
 		break;
 	case PK_INFO_ENUM_SECURITY:
-		text = _("software-update-urgent");
+		text = _("Security update");
 		break;
 	case PK_INFO_ENUM_DOWNLOADING:
 		text = _("Downloading");
@@ -261,6 +261,18 @@ pk_info_enum_to_icon_name (PkInfoEnum info)
 {
 	const gchar *text = NULL;
 	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		text = "software-update-available";
+		break;
+	case PK_INFO_ENUM_NORMAL:
+		text = "software-update-available";
+		break;
+	case PK_INFO_ENUM_IMPORTANT:
+		text = "software-update-urgent";
+		break;
+	case PK_INFO_ENUM_SECURITY:
+		text = "software-update-urgent";
+		break;
 	case PK_INFO_ENUM_REMOVING:
 		text = "edit-clear";
 		break;
