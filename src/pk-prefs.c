@@ -36,13 +36,6 @@
 #include <pk-enum-list.h>
 #include "pk-common.h"
 
-#define PK_CONF_NOTIFY_COMPLETED	"/apps/gnome-packagekit/notify_complete"
-#define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"
-#define PK_CONF_FIND_AS_TYPE		"/apps/gnome-packagekit/find_as_you_type"
-#define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
-#define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
-#define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
-
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
 #define PK_FREQ_DAILY_TEXT		_("Daily")
 #define PK_FREQ_WEEKLY_TEXT		_("Weekly")

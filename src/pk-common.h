@@ -27,6 +27,13 @@
 
 G_BEGIN_DECLS
 
+#define PK_CONF_NOTIFY_COMPLETED	"/apps/gnome-packagekit/notify_complete"
+#define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"
+#define PK_CONF_FIND_AS_TYPE		"/apps/gnome-packagekit/find_as_you_type"
+#define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
+#define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
+#define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
+
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
 							 const gchar	*summary);
 const gchar	*pk_role_enum_to_localised_past		(PkRoleEnum	 role);
