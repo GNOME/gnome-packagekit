@@ -56,8 +56,6 @@ static void     pk_watch_finalize	(GObject       *object);
 
 #define PK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_WATCH, PkWatchPrivate))
 
-#define PK_WATCH_ICON_STOCK	"system-installer"
-
 struct PkWatchPrivate
 {
 	GtkStatusIcon		*status_icon;
@@ -170,7 +168,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	gboolean state_download = FALSE;
 	gboolean state_query = FALSE;
 	gboolean state_refresh_cache = FALSE;
-	const gchar *icon = PK_WATCH_ICON_STOCK;
+	const gchar *icon = NULL;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
@@ -180,7 +178,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	length = array->len;
 	if (length == 0) {
 		pk_debug ("no activity");
-		pk_watch_set_icon (watch, PK_WATCH_ICON_STOCK);
+		pk_watch_set_icon (watch, NULL);
 		return TRUE;
 	}
 	for (i=0; i<length; i++) {
