@@ -35,8 +35,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
-#include <gtk/gtkstatusicon.h>
 #include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
@@ -50,6 +48,7 @@
 #include "pk-common.h"
 #include "pk-watch.h"
 #include "pk-progress.h"
+#include "pk-smart-icon.h"
 
 static void     pk_watch_class_init	(PkWatchClass *klass);
 static void     pk_watch_init		(PkWatch      *watch);
@@ -59,7 +58,7 @@ static void     pk_watch_finalize	(GObject       *object);
 
 struct PkWatchPrivate
 {
-	GtkStatusIcon		*status_icon;
+	PkSmartIcon		*sicon;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
@@ -75,28 +74,8 @@ static void
 pk_watch_class_init (PkWatchClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
 	object_class->finalize = pk_watch_finalize;
-
 	g_type_class_add_private (klass, sizeof (PkWatchPrivate));
-}
-
-/**
- * pk_watch_set_icon:
- **/
-static gboolean
-pk_watch_set_icon (PkWatch *watch, const gchar *icon)
-{
-	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
-
-	if (icon == NULL) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (watch->priv->status_icon), FALSE);
-		return FALSE;
-	}
-	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (watch->priv->status_icon), icon);
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (watch->priv->status_icon), TRUE);
-	return TRUE;
 }
 
 /**
@@ -120,7 +99,7 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	length = array->len;
 	pk_debug ("refresh tooltip %i", length);
 	if (length == 0) {
-		gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->status_icon), "Doing nothing...");
+		pk_smart_icon_set_tooltip (watch->priv->sicon, "Doing nothing...");
 		return TRUE;
 	}
 	status = g_string_new ("");
@@ -146,7 +125,7 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	} else {
 		g_string_set_size (status, status->len-1);
 	}
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->status_icon), status->str);
+	pk_smart_icon_set_tooltip (watch->priv->sicon, status->str);
 	g_string_free (status, TRUE);
 	return TRUE;
 }
@@ -180,7 +159,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	length = array->len;
 	if (length == 0) {
 		pk_debug ("no activity");
-		pk_watch_set_icon (watch, NULL);
+		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 		return TRUE;
 	}
 	for (i=0; i<length; i++) {
@@ -219,7 +198,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	} else if (state_query == TRUE) {
 		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_QUERY);
 	}
-	pk_watch_set_icon (watch, icon);
+	pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 
 	return TRUE;
 }
@@ -241,8 +220,6 @@ static void
 pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar *package_id, guint runtime, PkWatch *watch)
 {
 	PkPackageId *ident;
-	NotifyNotification *dialog;
-	const gchar *title;
 	gboolean value;
 	gchar *message = NULL;
 	gchar *package = NULL;
@@ -284,12 +261,10 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	if (message == NULL) {
 		return;
 	}
-	title = _("Task completed");
-	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
-							   watch->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+
+	/* libnotify dialog */
+	pk_smart_icon_notify (watch->priv->sicon, _("Task completed"), message,
+			      "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 	g_free (message);
 }
 
@@ -299,15 +274,9 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 static void
 pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
-	NotifyNotification *dialog;
 	const gchar *title;
-
 	title = pk_error_enum_to_localised_text (error_code);
-	dialog = notify_notification_new_with_status_icon (title, details, "help-browser",
-							   watch->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+	pk_smart_icon_notify (watch->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 }
 
 /**
@@ -374,9 +343,9 @@ pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
  **/
 static void
 pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
-			     guint          button,
-			     guint32        timestamp,
-			     PkWatch   *icon)
+			guint          button,
+			guint32        timestamp,
+			PkWatch       *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -408,16 +377,10 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 static void
 pk_watch_not_supported (PkWatch *watch, const gchar *title)
 {
-	NotifyNotification *dialog;
-	const gchar *message;
-
 	pk_debug ("not_supported");
-	message = _("The action could not be completed due to the backend refusing the command");
-	dialog = notify_notification_new_with_status_icon (title, message, "process-stop",
-							   watch->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+	pk_smart_icon_notify (watch->priv->sicon, title,
+			      _("The action could not be completed (the backend refusing the command)"),
+			      "process-stop", PK_NOTIFY_URGENCY_LOW, 5000);
 }
 
 /**
@@ -543,7 +506,7 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
  **/
 static void
 pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
-			   PkWatch   *watch)
+			     PkWatch       *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *widget;
@@ -588,7 +551,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch
 		pk_watch_refresh_icon (watch);
 		pk_watch_refresh_tooltip (watch);
 	} else {
-		pk_watch_set_icon (watch, NULL);
+		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 	}
 }
 
@@ -599,23 +562,23 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch
 static void
 pk_watch_init (PkWatch *watch)
 {
+	GtkStatusIcon *status_icon;
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
 	watch->priv->gconf_client = gconf_client_get_default ();
-	watch->priv->status_icon = gtk_status_icon_new ();
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (watch->priv->status_icon), FALSE);
+	watch->priv->sicon = pk_smart_icon_new ();
 
 	/* right click actions are common */
-	g_signal_connect_object (G_OBJECT (watch->priv->status_icon),
+	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon);
+	g_signal_connect_object (G_OBJECT (status_icon),
 				 "popup_menu",
 				 G_CALLBACK (pk_watch_popup_menu_cb),
 				 watch, 0);
-	g_signal_connect_object (G_OBJECT (watch->priv->status_icon),
+	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate",
 				 G_CALLBACK (pk_watch_activate_status_cb),
 				 watch, 0);
 
-	notify_init ("packagekit-update-applet");
 	watch->priv->tlist = pk_task_list_new ();
 	g_signal_connect (watch->priv->tlist, "task-list-changed",
 			  G_CALLBACK (pk_watch_task_list_changed_cb), watch);
@@ -647,7 +610,7 @@ pk_watch_finalize (GObject *object)
 	watch = PK_WATCH (object);
 
 	g_return_if_fail (watch->priv != NULL);
-	g_object_unref (watch->priv->status_icon);
+	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);

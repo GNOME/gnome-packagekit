@@ -36,7 +36,6 @@
 
 #include <gtk/gtk.h>
 #include <libnotify/notify.h>
-#include <gtk/gtkstatusicon.h>
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
@@ -47,6 +46,7 @@
 #include <pk-package-id.h>
 #include <pk-package-list.h>
 
+#include "pk-smart-icon.h"
 #include "pk-common.h"
 #include "pk-notify.h"
 
@@ -64,7 +64,7 @@ static void     pk_notify_finalize	(GObject       *object);
 
 struct PkNotifyPrivate
 {
-	GtkStatusIcon		*status_icon;
+	PkSmartIcon		*sicon;
 	PkConnection		*pconnection;
 	PkClient		*client;
 	PkTaskList		*tlist;
@@ -94,18 +94,11 @@ pk_notify_class_init (PkNotifyClass *klass)
 static void
 pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 {
-	NotifyNotification *dialog;
-	const gchar *title;
-	const gchar *message;
-
 	pk_debug ("show help");
-	title = _("Functionality incomplete");
-	message = _("No help yet, sorry...");
-	dialog = notify_notification_new_with_status_icon (title, message, "help-browser",
-							   notify->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+	pk_smart_icon_notify (notify->priv->sicon,
+			      _("Functionality incomplete"),
+			      _("No help yet, sorry..."), "help-browser",
+			      PK_NOTIFY_URGENCY_LOW, 5000);
 }
 
 /**
@@ -254,19 +247,20 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 
 	/* we failed, show the icon */
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
+		pk_smart_icon_set_icon_name (notify->priv->sicon, FALSE);
 	}
 
 	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
 		const gchar *message;
+		GtkStatusIcon *status_icon;
 
 		pk_debug ("Doing requires-restart notification");
+		status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
 		message = pk_restart_enum_to_localised_text (restart);
 		dialog = notify_notification_new_with_status_icon (_("The system update has completed"), message,
-								   "software-update-available",
-								   notify->priv->status_icon);
+								   "software-update-available", status_icon);
 		notify_notification_set_timeout (dialog, 50000);
 		notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
 		notify_notification_add_action (dialog, "reboot-now", _("Restart computer now"),
@@ -284,16 +278,10 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 static void
 pk_notify_not_supported (PkNotify *notify, const gchar *title)
 {
-	NotifyNotification *dialog;
-	const gchar *message;
-
 	pk_debug ("not_supported");
-	message = _("The action could not be completed due to the backend refusing the command");
-	dialog = notify_notification_new_with_status_icon (title, message, "process-stop",
-							   notify->priv->status_icon);
-	notify_notification_set_timeout (dialog, 5000);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-	notify_notification_show (dialog, NULL);
+	pk_smart_icon_notify (notify->priv->sicon, title,
+			      _("The action could not be completed due to the backend refusing the command"),
+			      "process-stop", PK_NOTIFY_URGENCY_LOW, 5000);
 }
 
 /**
@@ -311,7 +299,7 @@ pk_notify_update_system (PkNotify *notify)
 			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
 	ret = pk_client_update_system (client);
 	if (ret == TRUE) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
 		g_object_unref (client);
 		pk_warning ("failed to update system");
@@ -349,7 +337,7 @@ pk_notify_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
  **/
 static void
 pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
-			      PkNotify   *icon)
+			      PkNotify      *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -406,6 +394,7 @@ static void
 pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboolean plural)
 {
 	NotifyNotification *dialog;
+	GtkStatusIcon *status_icon;
 	const gchar *title;
 	gchar *message;
 
@@ -419,8 +408,9 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 		title = _("Security update available");
 		message = g_strdup_printf (_("The following important update is available for your computer:\n\n%s"), details);
 	}
-	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent",
-							   notify->priv->status_icon);
+
+	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
+	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent", status_icon);
 	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (dialog, "update-system", _("Update system now"),
@@ -461,7 +451,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 		return;
 	}
 
@@ -498,9 +488,8 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		g_string_append_printf (status_tooltip, _("There are %d updates available"), packages->len);
 	}
 
-	gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (notify->priv->status_icon), icon);
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), TRUE);
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->status_icon), status_tooltip->str);
+	pk_smart_icon_set_icon_name (notify->priv->sicon, icon);
+	pk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
 
 	/* do we warn the user? */
 	if (is_security == TRUE) {
@@ -640,7 +629,7 @@ pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
 {
 	/* hide icon if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	}
 }
 
@@ -651,17 +640,18 @@ pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
 static void
 pk_notify_init (PkNotify *notify)
 {
+	GtkStatusIcon *status_icon;
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
-	notify->priv->status_icon = gtk_status_icon_new ();
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+	notify->priv->sicon = pk_smart_icon_new ();
 
 	/* right click actions are common */
-	g_signal_connect_object (G_OBJECT (notify->priv->status_icon),
+	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
+	g_signal_connect_object (G_OBJECT (status_icon),
 				 "popup_menu",
 				 G_CALLBACK (pk_notify_popup_menu_cb),
 				 notify, 0);
-	g_signal_connect_object (G_OBJECT (notify->priv->status_icon),
+	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate",
 				 G_CALLBACK (pk_notify_activate_update_cb),
 				 notify, 0);
@@ -710,7 +700,7 @@ pk_notify_finalize (GObject *object)
 	notify = PK_NOTIFY (object);
 
 	g_return_if_fail (notify->priv != NULL);
-	g_object_unref (notify->priv->status_icon);
+	g_object_unref (notify->priv->sicon);
 	g_object_unref (notify->priv->pconnection);
 	g_object_unref (notify->priv->client);
 	g_object_unref (notify->priv->tlist);

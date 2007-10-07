@@ -72,6 +72,8 @@ pk_update_icon_SOURCES =				\
 	pk-notify.h					\
 	pk-watch.c					\
 	pk-watch.h					\
+	pk-smart-icon.c					\
+	pk-smart-icon.h					\
 	pk-progress.c					\
 	pk-progress.h					\
 	pk-common.c					\
