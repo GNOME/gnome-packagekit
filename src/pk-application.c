@@ -50,7 +50,9 @@ struct PkApplicationPrivate
 	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
-	PkClient		*client;
+	PkClient		*client_search;
+	PkClient		*client_action;
+	PkClient		*client_description;
 	PkConnection		*pconnection;
 	gchar			*package;
 	gchar			*url;
@@ -163,13 +165,12 @@ pk_application_install_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("install %s", application->priv->package);
-	ret = pk_client_install_package (application->priv->client,
-					      application->priv->package);
+	ret = pk_client_install_package (application->priv->client_action,
+					 application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client);
-		pk_application_error_message (application,
-					      _("The package could not be installed"), NULL);
+		pk_client_reset (application->priv->client_action);
+		pk_application_error_message (application, _("The package could not be installed"), NULL);
 	}
 }
 
@@ -200,12 +201,11 @@ pk_application_remove_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("remove %s", application->priv->package);
-	ret = pk_client_remove_package (application->priv->client,
-				             application->priv->package,
-				             FALSE);
+	ret = pk_client_remove_package (application->priv->client_action,
+				        application->priv->package, FALSE);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client);
+		pk_client_reset (application->priv->client_action);
 		pk_application_error_message (application,
 					      _("The package could not be removed"), NULL);
 	}
@@ -215,16 +215,16 @@ pk_application_remove_cb (GtkWidget      *widget,
  * pk_application_deps_cb:
  **/
 static void
-pk_application_deps_cb (GtkWidget *widget,
-		   PkApplication  *application)
+pk_application_deps_cb (GtkWidget      *widget,
+		        PkApplication  *application)
 {
 	gboolean ret;
 	pk_debug ("deps %s", application->priv->package);
-	ret = pk_client_get_depends (application->priv->client,
-				       application->priv->package);
+	ret = pk_client_get_depends (application->priv->client_action,
+				     application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client);
+		pk_client_reset (application->priv->client_action);
 		pk_application_error_message (application,
 					      _("The package dependencies could not be found"), NULL);
 	} else {
@@ -367,13 +367,11 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	}
 
 	/* reset client */
-	pk_client_reset (application->priv->client);
+	pk_client_reset (client);
 
 	/* panic */
 	if (status == PK_EXIT_ENUM_FAILED) {
-		pk_application_error_message (application,
-					      _("The action did not complete"),
-					      NULL);
+		pk_application_error_message (application, _("The action did not complete"), NULL);
 	}
 }
 
@@ -492,7 +490,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_in_progress == TRUE) {
 		pk_debug ("trying to cancel task...");
-		ret = pk_client_cancel (application->priv->client);
+		ret = pk_client_cancel (application->priv->client_search);
 		pk_warning ("canceled? %i", ret);
 		return;
 	}
@@ -553,11 +551,11 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_depth == 0) {
-		ret = pk_client_search_name (application->priv->client, filter_all, package);
+		ret = pk_client_search_name (application->priv->client_search, filter_all, package);
 	} else if (application->priv->search_depth == 1) {
-		ret = pk_client_search_details (application->priv->client, filter_all, package);
+		ret = pk_client_search_details (application->priv->client_search, filter_all, package);
 	} else {
-		ret = pk_client_search_file (application->priv->client, filter_all, package);
+		ret = pk_client_search_file (application->priv->client_search, filter_all, package);
 	}
 
 	if (ret == FALSE) {
@@ -722,10 +720,10 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
 		g_print ("selected row is: %s\n", id);
 
-		ret = pk_client_search_group (application->priv->client, "none", id);
+		ret = pk_client_search_group (application->priv->client_search, "none", id);
 		/* ick, we failed so pretend we didn't do the action */
 		if (ret == FALSE) {
-			pk_client_reset (application->priv->client);
+			pk_client_reset (application->priv->client_search);
 			pk_application_error_message (application,
 						      _("The group could not be queried"), NULL);
 		}
@@ -771,7 +769,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		}
 
 		/* get the description */
-		pk_client_get_description (application->priv->client, application->priv->package);
+		pk_client_get_description (application->priv->client_description, application->priv->package);
 	} else {
 		g_print ("no row selected.\n");
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
@@ -792,7 +790,9 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 	pk_debug ("connected=%i", connected);
 	if (connected == FALSE && application->priv->task_ended == FALSE) {
 		/* forcibly end the transaction */
-		pk_application_finished_cb (application->priv->client, PK_EXIT_ENUM_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->client_search, PK_EXIT_ENUM_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->client_action, PK_EXIT_ENUM_FAILED, 0, application);
+		pk_application_finished_cb (application->priv->client_description, PK_EXIT_ENUM_FAILED, 0, application);
 	}
 }
 
@@ -848,26 +848,44 @@ pk_application_init (PkApplication *application)
 
 	application->priv->search_depth = 0;
 
-	application->priv->client = pk_client_new ();
-	g_signal_connect (application->priv->client, "package",
+	application->priv->client_search = pk_client_new ();
+	g_signal_connect (application->priv->client_search, "package",
 			  G_CALLBACK (pk_application_package_cb), application);
-	g_signal_connect (application->priv->client, "description",
-			  G_CALLBACK (pk_application_description_cb), application);
-	g_signal_connect (application->priv->client, "error-code",
+	g_signal_connect (application->priv->client_search, "error-code",
 			  G_CALLBACK (pk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client, "finished",
+	g_signal_connect (application->priv->client_search, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
-	g_signal_connect (application->priv->client, "no-percentage-updates",
+	g_signal_connect (application->priv->client_search, "no-percentage-updates",
 			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
-	g_signal_connect (application->priv->client, "percentage-changed",
+	g_signal_connect (application->priv->client_search, "percentage-changed",
 			  G_CALLBACK (pk_application_percentage_changed_cb), application);
 
+	application->priv->client_action = pk_client_new ();
+	g_signal_connect (application->priv->client_action, "package",
+			  G_CALLBACK (pk_application_package_cb), application);
+	g_signal_connect (application->priv->client_action, "error-code",
+			  G_CALLBACK (pk_application_error_code_cb), application);
+	g_signal_connect (application->priv->client_action, "finished",
+			  G_CALLBACK (pk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_action, "no-percentage-updates",
+			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
+	g_signal_connect (application->priv->client_action, "percentage-changed",
+			  G_CALLBACK (pk_application_percentage_changed_cb), application);
+
+	application->priv->client_description = pk_client_new ();
+	g_signal_connect (application->priv->client_description, "description",
+			  G_CALLBACK (pk_application_description_cb), application);
+	g_signal_connect (application->priv->client_description, "error-code",
+			  G_CALLBACK (pk_application_error_code_cb), application);
+	g_signal_connect (application->priv->client_description, "finished",
+			  G_CALLBACK (pk_application_finished_cb), application);
+
 	/* get actions */
-	application->priv->role_list = pk_client_get_actions (application->priv->client);
+	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
 	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
 
 	/* get filters supported */
-	application->priv->filter_list = pk_client_get_filters (application->priv->client);
+	application->priv->filter_list = pk_client_get_filters (application->priv->client_action);
 	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
 
 	application->priv->pconnection = pk_connection_new ();
@@ -1077,7 +1095,9 @@ pk_application_finalize (GObject *object)
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 
 	g_object_unref (application->priv->packages_store);
-	g_object_unref (application->priv->client);
+	g_object_unref (application->priv->client_search);
+	g_object_unref (application->priv->client_action);
+	g_object_unref (application->priv->client_description);
 	g_object_unref (application->priv->pconnection);
 	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->role_list);
