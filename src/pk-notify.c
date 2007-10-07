@@ -94,6 +94,8 @@ pk_notify_class_init (PkNotifyClass *klass)
 static void
 pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
 	pk_debug ("show help");
 	pk_smart_icon_notify (notify->priv->sicon,
 			      _("Functionality incomplete"),
@@ -234,6 +236,8 @@ static void pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum ex
 static void
 pk_notify_libnotify_reboot_now_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
 	pk_warning ("reboot now");
 }
 
@@ -245,6 +249,9 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 {
 	PkRestartEnum restart;
 
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
 	/* we failed, show the icon */
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, FALSE);
@@ -254,13 +261,11 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
 		const gchar *message;
-		GtkStatusIcon *status_icon;
 
 		pk_debug ("Doing requires-restart notification");
-		status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
 		message = pk_restart_enum_to_localised_text (restart);
-		dialog = notify_notification_new_with_status_icon (_("The system update has completed"), message,
-								   "software-update-available", status_icon);
+		dialog = notify_notification_new (_("The system update has completed"), message,
+						  "software-update-available", NULL);
 		notify_notification_set_timeout (dialog, 50000);
 		notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
 		notify_notification_add_action (dialog, "reboot-now", _("Restart computer now"),
@@ -278,6 +283,9 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 static void
 pk_notify_not_supported (PkNotify *notify, const gchar *title)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
 	pk_debug ("not_supported");
 	pk_smart_icon_notify (notify->priv->sicon, title,
 			      _("The action could not be completed due to the backend refusing the command"),
@@ -292,8 +300,11 @@ pk_notify_update_system (PkNotify *notify)
 {
 	gboolean ret;
 	PkClient *client;
-	pk_debug ("install updates");
 
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	pk_debug ("install updates");
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
@@ -314,6 +325,8 @@ static void
 pk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	PkNotify *notify = PK_NOTIFY (data);
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
 	pk_notify_update_system (notify);
 }
 
@@ -374,6 +387,8 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
 	pk_debug ("connected=%i", connected);
 }
 
@@ -383,6 +398,9 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotif
 static void
 pk_notify_libnotify_update_system_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
 	pk_debug ("update something");
 	pk_notify_update_system (notify);
 }
@@ -576,6 +594,9 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 	PkClient *client;
 	pk_debug ("refresh cache");
 
+	g_return_val_if_fail (notify != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+
 	/* got a cache, no need to poll */
 	if (notify->priv->cache_okay == TRUE) {
 		return FALSE;
@@ -606,6 +627,9 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 static gboolean
 pk_notify_check_for_updates_early_cb (PkNotify *notify)
 {
+	g_return_val_if_fail (notify != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+
 	pk_notify_check_for_updates_cb (notify);
 	/* we don't want to do this quick timer again */
 	return FALSE;
@@ -615,8 +639,11 @@ pk_notify_check_for_updates_early_cb (PkNotify *notify)
  * pk_notify_updates_changed_cb:
  **/
 static void
-pk_notify_updates_changed_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
+pk_notify_updates_changed_cb (PkClient *client, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
 	/* now try to get newest update list */
 	pk_debug ("get updates");
 	pk_notify_query_updates (notify);
@@ -628,6 +655,8 @@ pk_notify_updates_changed_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 static void
 pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
 {
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
 	/* hide icon if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
