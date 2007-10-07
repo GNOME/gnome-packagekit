@@ -67,6 +67,7 @@ struct PkNotifyPrivate
 	GtkStatusIcon		*status_icon;
 	PkConnection		*pconnection;
 	PkClient		*client;
+	PkTaskList		*tlist;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
@@ -521,6 +522,10 @@ pk_notify_query_updates (PkNotify *notify)
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
+	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+		pk_debug ("Not checking for updates as already in progress");
+	}
+
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_query_updates_finished_cb), notify);
@@ -628,6 +633,18 @@ pk_notify_updates_changed_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 }
 
 /**
+ * pk_notify_task_list_changed_cb:
+ **/
+static void
+pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
+{
+	/* hide icon if we are updating */
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (notify->priv->status_icon), FALSE);
+	}
+}
+
+/**
  * pk_notify_init:
  * @notify: This class instance
  **/
@@ -663,6 +680,11 @@ pk_notify_init (PkNotify *notify)
 	g_signal_connect (notify->priv->client, "updates-changed",
 			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
 
+	/* we need the task list so we can hide the update icon when we are doing the update */
+	notify->priv->tlist = pk_task_list_new ();
+	g_signal_connect (notify->priv->tlist, "task-list-changed",
+			  G_CALLBACK (pk_notify_task_list_changed_cb), notify);
+
 	/* refresh the cache, and poll until we get a good refresh */
 	notify->priv->cache_okay = FALSE;
 	notify->priv->cache_update_in_progress = FALSE;
@@ -691,6 +713,7 @@ pk_notify_finalize (GObject *object)
 	g_object_unref (notify->priv->status_icon);
 	g_object_unref (notify->priv->pconnection);
 	g_object_unref (notify->priv->client);
+	g_object_unref (notify->priv->tlist);
 
 	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);
 }
