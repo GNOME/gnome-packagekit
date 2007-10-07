@@ -126,6 +126,31 @@ pk_smart_icon_set_icon_name (PkSmartIcon *sicon, const gchar *icon_name)
 }
 
 /**
+ * pk_smart_icon_sync:
+ **/
+gboolean
+pk_smart_icon_sync (PkSmartIcon *sicon)
+{
+	g_return_val_if_fail (sicon != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	/* if we have a request pending, then cancel it in preference to this one */
+	if (sicon->priv->event_source != 0) {
+		g_source_remove (sicon->priv->event_source);
+		sicon->priv->event_source = 0;
+	}
+
+	/* sync the icon now */
+	pk_smart_icon_set_icon_name_cb (sicon);
+
+	/* wait until we are in the panel.
+	 * We should probably use gtk_status_icon_is_embedded if it worked... */
+	g_usleep (50000);
+
+	return TRUE;
+}
+
+/**
  * pk_smart_icon_get_status_icon:
  **/
 GtkStatusIcon *

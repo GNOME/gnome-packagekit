@@ -59,6 +59,7 @@ typedef enum
 GType		 pk_smart_icon_get_type		  	(void);
 PkSmartIcon	*pk_smart_icon_new			(void);
 GtkStatusIcon	*pk_smart_icon_get_status_icon		(PkSmartIcon	*sicon);
+gboolean	 pk_smart_icon_sync			(PkSmartIcon	*sicon);
 gboolean	 pk_smart_icon_set_icon_name		(PkSmartIcon	*sicon,
 							 const gchar	*icon_name);
 gboolean	 pk_smart_icon_set_tooltip		(PkSmartIcon	*sicon,

@@ -409,6 +409,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 		message = g_strdup_printf (_("The following important update is available for your computer:\n\n%s"), details);
 	}
 
+	pk_smart_icon_sync (notify->priv->sicon);
 	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
 	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent", status_icon);
 	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
