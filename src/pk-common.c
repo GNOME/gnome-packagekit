@@ -247,6 +247,12 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 	case PK_INFO_ENUM_REMOVING:
 		text = _("Removing");
 		break;
+	case PK_INFO_ENUM_INSTALLED:
+		text = _("Installed");
+		break;
+	case PK_INFO_ENUM_AVAILABLE:
+		text = _("Available");
+		break;
 	default:
 		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
