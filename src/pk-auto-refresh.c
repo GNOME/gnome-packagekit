@@ -55,6 +55,10 @@ static void     pk_auto_refresh_init		(PkAutoRefresh      *arefresh);
 static void     pk_auto_refresh_finalize	(GObject            *object);
 
 #define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
+#define PK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
+#define PK_AUTO_REFRESH_STARTUP_DELAY		120	/* seconds utill the first refresh,
+							 * and if we failed the first refresh,
+							 * check after this much time also */
 
 struct PkAutoRefreshPrivate
 {
@@ -188,10 +192,34 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_auto_refresh_change_state (arefresh);
+	//FIXME: need to get the client state for this to work, for now, bodge
+	//pk_auto_refresh_change_state (arefresh);
+	pk_auto_refresh_do_action (arefresh); //FIXME: remove!
 
 	/* always return */
 	return TRUE;
+}
+
+/**
+ * pk_auto_refresh_check_delay_cb:
+ **/
+static gboolean
+pk_auto_refresh_check_delay_cb (gpointer user_data)
+{
+	gboolean ret;
+	PkAutoRefresh *arefresh = PK_AUTO_REFRESH (user_data);
+
+	g_return_val_if_fail (arefresh != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	ret = pk_auto_refresh_change_state (arefresh);
+	/* we failed to do the refresh cache at first boot. Keep trying... */
+	if (ret == FALSE) {
+		return TRUE;
+	}
+
+	/* we don't want to do this timer again as we sent the signal */
+	return FALSE;
 }
 
 /**
@@ -249,10 +277,10 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	}
 
 	/* we check this in case we miss one of the async signals */
-	g_timeout_add_seconds (60*60, pk_auto_refresh_timeout_cb, arefresh);
+	g_timeout_add_seconds (PK_AUTO_REFRESH_PERIODIC_CHECK, pk_auto_refresh_timeout_cb, arefresh);
 
-	/* do we do it now? */
-	pk_auto_refresh_change_state (arefresh);
+	/* wait a little bit for login to quiece, even if everything is okay */
+	g_timeout_add_seconds (PK_AUTO_REFRESH_STARTUP_DELAY, pk_auto_refresh_check_delay_cb, arefresh);
 }
 
 /**

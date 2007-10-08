@@ -59,10 +59,6 @@ static void     pk_notify_finalize	(GObject       *object);
 
 #define PK_NOTIFY_ICON_STOCK	"system-installer"
 
-#define PK_NOTIFY_DELAY_REFRESH_CACHE_STARTUP	5	/* time till the first refresh */
-#define PK_NOTIFY_DELAY_REFRESH_CACHE_CHECK	60	/* if we failed the first refresh, check after this much time */
-#define PK_NOTIFY_DELAY_REFRESH_CACHE_PERIODIC	2*60*60	/* check for updates every this much time */
-
 struct PkNotifyPrivate
 {
 	PkSmartIcon		*sicon;
@@ -545,20 +541,6 @@ pk_notify_query_updates (PkNotify *notify)
 }
 
 /**
- * pk_notify_check_for_updates_cb:
- **/
-static gboolean
-pk_notify_invalidate_cache_cb (PkNotify *notify)
-{
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-
-	notify->priv->cache_okay = FALSE;
-	g_timeout_add_seconds (5, (GSourceFunc) pk_notify_check_for_updates_cb, notify);
-	return FALSE;
-}
-
-/**
  * pk_notify_refresh_cache_finished_cb:
  **/
 static void
@@ -574,10 +556,6 @@ pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	} else {
 		/* stop the polling */
 		notify->priv->cache_okay = TRUE;
-
-		/* schedule the next cache reload in a few hours */
-		g_timeout_add_seconds (PK_NOTIFY_DELAY_REFRESH_CACHE_PERIODIC,
-				       (GSourceFunc) pk_notify_invalidate_cache_cb, notify);
 
 		/* now try to get updates */
 		pk_debug ("get updates");
@@ -624,20 +602,6 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 }
 
 /**
- * pk_notify_check_for_updates_early_cb:
- **/
-static gboolean
-pk_notify_check_for_updates_early_cb (PkNotify *notify)
-{
-	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
-
-	pk_notify_check_for_updates_cb (notify);
-	/* we don't want to do this quick timer again */
-	return FALSE;
-}
-
-/**
  * pk_notify_updates_changed_cb:
  **/
 static void
@@ -673,7 +637,9 @@ pk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, PkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
-	pk_debug ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+	/* schedule another update */
+	pk_notify_check_for_updates_cb (notify);
 }
 
 /**
@@ -724,11 +690,6 @@ pk_notify_init (PkNotify *notify)
 	/* refresh the cache, and poll until we get a good refresh */
 	notify->priv->cache_okay = FALSE;
 	notify->priv->cache_update_in_progress = FALSE;
-	/* set up one quick (start of session) timer and one long (wait for changes timer) */
-	g_timeout_add_seconds (PK_NOTIFY_DELAY_REFRESH_CACHE_STARTUP,
-			       (GSourceFunc) pk_notify_check_for_updates_early_cb, notify);
-	g_timeout_add_seconds (PK_NOTIFY_DELAY_REFRESH_CACHE_CHECK,
-			       (GSourceFunc) pk_notify_check_for_updates_cb, notify);
 }
 
 /**
