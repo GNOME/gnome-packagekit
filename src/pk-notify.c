@@ -47,6 +47,7 @@
 #include <pk-package-list.h>
 
 #include "pk-smart-icon.h"
+#include "pk-auto-refresh.h"
 #include "pk-common.h"
 #include "pk-notify.h"
 
@@ -68,6 +69,7 @@ struct PkNotifyPrivate
 	PkConnection		*pconnection;
 	PkClient		*client;
 	PkTaskList		*tlist;
+	PkAutoRefresh		*arefresh;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
@@ -664,6 +666,17 @@ pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
 }
 
 /**
+ * pk_notify_auto_refresh_cache_cb:
+ **/
+static void
+pk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, PkNotify *notify)
+{
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+	pk_debug ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+}
+
+/**
  * pk_notify_init:
  * @notify: This class instance
  **/
@@ -674,6 +687,9 @@ pk_notify_init (PkNotify *notify)
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
 	notify->priv->sicon = pk_smart_icon_new ();
+	notify->priv->arefresh = pk_auto_refresh_new ();
+	g_signal_connect (notify->priv->arefresh, "refresh-cache",
+			  G_CALLBACK (pk_notify_auto_refresh_cache_cb), notify);
 
 	/* right click actions are common */
 	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
@@ -734,6 +750,7 @@ pk_notify_finalize (GObject *object)
 	g_object_unref (notify->priv->pconnection);
 	g_object_unref (notify->priv->client);
 	g_object_unref (notify->priv->tlist);
+	g_object_unref (notify->priv->arefresh);
 
 	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);
 }

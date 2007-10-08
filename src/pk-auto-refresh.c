@@ -52,7 +52,7 @@
 
 static void     pk_auto_refresh_class_init	(PkAutoRefreshClass *klass);
 static void     pk_auto_refresh_init		(PkAutoRefresh      *arefresh);
-static void     pk_auto_refresh_finalize		(GObject       *object);
+static void     pk_auto_refresh_finalize	(GObject            *object);
 
 #define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
 
@@ -100,7 +100,7 @@ pk_auto_refresh_do_action (PkAutoRefresh *arefresh)
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_debug ("probably should refresh");
+	pk_debug ("emitting refresh-cache");
 	g_signal_emit (arefresh, signals [REFRESH_CACHE], 0);
 	return TRUE;
 }
@@ -208,7 +208,11 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->connection_active = FALSE;
-	arefresh->priv->thresh = 60;
+
+	/* need to get from gconf */
+	arefresh->priv->thresh = 15*60;
+
+	/* we need to query the last cache refresh time */
 	arefresh->priv->client = pk_client_new ();
 
 	/* connect to system manager */
@@ -218,6 +222,8 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 		g_error_free (error);
 		return;
 	}
+
+	/* use gnome-screensaver for the idle detection */
 	proxy = dbus_g_proxy_new_for_name_owner (connection,
 				  GS_LISTENER_SERVICE, GS_LISTENER_PATH,
 				  GS_LISTENER_INTERFACE, &error);
