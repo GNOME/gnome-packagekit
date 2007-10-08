@@ -70,6 +70,8 @@ pk_update_icon_SOURCES =				\
 	pk-update-icon.c				\
 	pk-notify.c					\
 	pk-notify.h					\
+	pk-auto-refresh.c				\
+	pk-auto-refresh.h				\
 	pk-watch.c					\
 	pk-watch.h					\
 	pk-smart-icon.c					\
