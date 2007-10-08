@@ -757,7 +757,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 		/* make the button sensitivities correct */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
-		gtk_widget_set_sensitive (widget, TRUE);
+		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
+			gtk_widget_set_sensitive (widget, FALSE);
+		}
+		else {
+			gtk_widget_set_sensitive (widget, TRUE);
+		}
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		gtk_widget_set_sensitive (widget, !installed);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
