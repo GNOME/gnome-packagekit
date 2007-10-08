@@ -759,8 +759,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
 		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
 			gtk_widget_set_sensitive (widget, FALSE);
-		}
-		else {
+		} else {
 			gtk_widget_set_sensitive (widget, TRUE);
 		}
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
