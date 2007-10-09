@@ -147,6 +147,10 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	if (value == NULL) {
+		pk_warning ("value NULL");
+		return;
+	}
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_ALL;
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
@@ -214,8 +218,8 @@ pk_prefs_update_combo_setup (void)
 
 	client = gconf_client_get_default ();
 	widget = glade_xml_get_widget (glade_xml, "combobox_install");
-	is_writable = gconf_client_key_is_writable (client, PK_CONF_UPDATE_CHECK, NULL);
-	value = gconf_client_get_string (client, PK_CONF_UPDATE_CHECK, NULL);
+	is_writable = gconf_client_key_is_writable (client, PK_CONF_AUTO_UPDATE, NULL);
+	value = gconf_client_get_string (client, PK_CONF_AUTO_UPDATE, NULL);
 	if (value == NULL) {
 		pk_error ("invalid schema, please re-install");
 	}
