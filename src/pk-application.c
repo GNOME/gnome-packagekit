@@ -58,6 +58,7 @@ struct PkApplicationPrivate
 	gchar			*url;
 	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
+	PkEnumList		*group_list;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
 	gboolean		 find_installed;
@@ -804,21 +805,19 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
  * pk_group_add_data:
  **/
 static void
-pk_group_add_data (PkApplication *application, const gchar *type)
+pk_group_add_data (PkApplication *application, PkGroupEnum group)
 {
 	GtkTreeIter iter;
-	PkGroupEnum group;
 	GdkPixbuf *icon;
 	const gchar *icon_name;
 	const gchar *text;
 
-	group = pk_group_enum_from_text (type);
 	gtk_list_store_append (application->priv->groups_store, &iter);
 
 	text = pk_group_enum_to_localised_text (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
-			    GROUPS_COLUMN_ID, type,
+			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
 			    -1);
 
 	icon_name = pk_group_enum_to_icon_name (group);
@@ -837,6 +836,9 @@ pk_application_init (PkApplication *application)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	PkGroupEnum group;
+	guint length;
+	guint i;
 
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -891,6 +893,10 @@ pk_application_init (PkApplication *application)
 	/* get filters supported */
 	application->priv->filter_list = pk_client_get_filters (application->priv->client_action);
 	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
+
+	/* get groups supported */
+	application->priv->group_list = pk_client_get_groups (application->priv->client_action);
+	pk_debug ("groups=%s", pk_enum_list_to_string (application->priv->group_list));
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
@@ -1086,17 +1092,13 @@ pk_application_init (PkApplication *application)
 
 	/* add columns to the tree view */
 	pk_groups_add_columns (GTK_TREE_VIEW (widget));
-	pk_group_add_data (application, "accessibility");
-	pk_group_add_data (application, "accessories");
-	pk_group_add_data (application, "education");
-	pk_group_add_data (application, "games");
-	pk_group_add_data (application, "graphics");
-	pk_group_add_data (application, "internet");
-	pk_group_add_data (application, "office");
-	pk_group_add_data (application, "other");
-	pk_group_add_data (application, "programming");
-	pk_group_add_data (application, "sound-video");
-	pk_group_add_data (application, "system");
+
+	/* add all the groups supported */
+	length = pk_enum_list_size (application->priv->group_list);
+	for (i=0; i<length; i++) {
+		group = pk_enum_list_get_item (application->priv->group_list, i);
+		pk_group_add_data (application, group);
+	}
 }
 
 /**
@@ -1119,6 +1121,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->client_description);
 	g_object_unref (application->priv->pconnection);
 	g_object_unref (application->priv->filter_list);
+	g_object_unref (application->priv->group_list);
 	g_object_unref (application->priv->role_list);
 	g_free (application->priv->url);
 	g_free (application->priv->package);
