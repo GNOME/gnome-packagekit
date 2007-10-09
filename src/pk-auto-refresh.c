@@ -164,6 +164,7 @@ pk_auto_refresh_gnome_screensaver_idle_cb (DBusGProxy *proxy, gboolean is_idle, 
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
+	pk_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
 	pk_auto_refresh_change_state (arefresh);
 }
@@ -177,6 +178,7 @@ pk_auto_refresh_network_changed_cb (PkNetwork *network, gboolean online, PkAutoR
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
+	pk_debug ("setting online %i", online);
 	arefresh->priv->network_active = online;
 	pk_auto_refresh_change_state (arefresh);
 }
@@ -192,6 +194,7 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
+	pk_debug ("timeout");
 	//FIXME: need to get the client state for this to work, for now, bodge
 	//pk_auto_refresh_change_state (arefresh);
 	pk_auto_refresh_do_action (arefresh); //FIXME: remove!

@@ -36,6 +36,7 @@
 
 #include <gtk/gtk.h>
 #include <libnotify/notify.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
@@ -66,6 +67,7 @@ struct PkNotifyPrivate
 	PkClient		*client;
 	PkTaskList		*tlist;
 	PkAutoRefresh		*arefresh;
+	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
@@ -441,6 +443,39 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 }
 
 /**
+ * pk_notify_libnotify_cancel_cb:
+ **/
+static void
+pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
+{
+}
+
+/**
+ * pk_notify_auto_update_message:
+ **/
+static void
+pk_notify_auto_update_message (PkNotify *notify)
+{
+	NotifyNotification *dialog;
+
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	dialog = notify_notification_new (_("Updates are being installed"),
+		_("Updates are being automatically installed on your computer"),
+		"software-update-urgent", NULL);
+	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
+	notify_notification_add_action (dialog, "update-system", _("Cancel update"),
+					(NotifyActionCallback) pk_notify_libnotify_cancel_cb,
+					notify, NULL);
+	notify_notification_add_action (dialog, "update-system", _("Don't notify me again"),
+					(NotifyActionCallback) pk_notify_libnotify_cancel_cb,
+					notify, NULL);
+	notify_notification_show (dialog, NULL);
+}
+
+/**
  * pk_notify_query_updates_finished_cb:
  **/
 static void
@@ -452,8 +487,10 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	guint i;
 	gboolean is_security;
 	const gchar *icon;
+	gchar *updates;
 	GString *status_security;
 	GString *status_tooltip;
+	PkUpdateEnum update;
 	PkPackageId *ident;
 
 	g_return_if_fail (notify != NULL);
@@ -486,6 +523,20 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		pk_package_id_free (ident);
 	}
 	g_object_unref (client);
+
+	/* do we do the automatic updates? */
+	updates = gconf_client_get_string (notify->priv->gconf_client, PK_CONF_AUTO_UPDATE, NULL);
+	if (updates == NULL) {
+		pk_warning ("'%s' gconf key is null!", PK_CONF_AUTO_UPDATE);
+	}
+	update = pk_update_enum_from_text (updates);
+	g_free (updates);
+	if ((update == PK_UPDATE_ENUM_SECURITY && is_security == TRUE) || update == PK_UPDATE_ENUM_ALL) {
+		pk_debug ("we should do the update automatically!");
+		pk_notify_update_system (notify);
+		pk_notify_auto_update_message (notify);
+		return;
+	}
 
 	/* work out icon */
 	if (is_security == TRUE) {
@@ -653,6 +704,7 @@ pk_notify_init (PkNotify *notify)
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
 	notify->priv->sicon = pk_smart_icon_new ();
+	notify->priv->gconf_client = gconf_client_get_default ();
 	notify->priv->arefresh = pk_auto_refresh_new ();
 	g_signal_connect (notify->priv->arefresh, "refresh-cache",
 			  G_CALLBACK (pk_notify_auto_refresh_cache_cb), notify);
@@ -712,6 +764,7 @@ pk_notify_finalize (GObject *object)
 	g_object_unref (notify->priv->client);
 	g_object_unref (notify->priv->tlist);
 	g_object_unref (notify->priv->arefresh);
+	g_object_unref (notify->priv->gconf_client);
 
 	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);
 }
