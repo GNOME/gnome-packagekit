@@ -37,7 +37,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
-#include <pk-connection.h>
+#include <pk-network.h>
 #include "pk-common.h"
 #include "pk-auto-refresh.h"
 
@@ -46,7 +46,7 @@
 #define GS_LISTENER_INTERFACE	"org.gnome.ScreenSaver"
 
 //Monitor:
-//* online (PkConnection)
+//* online (PkNetwork)
 //* idleness (GnomeScreensaver)
 //* last update time (PkClient, pk_client_get_time_since_refresh)
 
@@ -63,10 +63,10 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
 struct PkAutoRefreshPrivate
 {
 	gboolean		 session_idle;
-	gboolean		 connection_active;
+	gboolean		 network_active;
 	guint			 thresh;
 	PkClient		*client;
-	PkConnection		*connection;
+	PkNetwork		*network;
 };
 
 enum {
@@ -121,7 +121,7 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* no point continuing if we have no network */
-	if (arefresh->priv->connection_active == FALSE) {
+	if (arefresh->priv->network_active == FALSE) {
 		pk_debug ("not when no network");
 		return FALSE;
 	}
@@ -169,15 +169,15 @@ pk_auto_refresh_gnome_screensaver_idle_cb (DBusGProxy *proxy, gboolean is_idle, 
 }
 
 /**
- * pk_auto_refresh_connection_changed_cb:
+ * pk_auto_refresh_network_changed_cb:
  **/
 static void
-pk_auto_refresh_connection_changed_cb (PkConnection *connection, gboolean connected, PkAutoRefresh *arefresh)
+pk_auto_refresh_network_changed_cb (PkNetwork *network, gboolean online, PkAutoRefresh *arefresh)
 {
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
-	arefresh->priv->connection_active = connected;
+	arefresh->priv->network_active = online;
 	pk_auto_refresh_change_state (arefresh);
 }
 
@@ -230,12 +230,12 @@ static void
 pk_auto_refresh_init (PkAutoRefresh *arefresh)
 {
 	GError *error = NULL;
-	DBusGConnection *connection;
+	DBusGConnection *network;
 	DBusGProxy *proxy;
 
 	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->session_idle = FALSE;
-	arefresh->priv->connection_active = FALSE;
+	arefresh->priv->network_active = FALSE;
 
 	/* need to get from gconf */
 	arefresh->priv->thresh = 15*60;
@@ -244,7 +244,7 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv->client = pk_client_new ();
 
 	/* connect to system manager */
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	network = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
 		pk_warning ("Cannot connect to system bus: %s", error->message);
 		g_error_free (error);
@@ -252,7 +252,7 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	}
 
 	/* use gnome-screensaver for the idle detection */
-	proxy = dbus_g_proxy_new_for_name_owner (connection,
+	proxy = dbus_g_proxy_new_for_name_owner (network,
 				  GS_LISTENER_SERVICE, GS_LISTENER_PATH,
 				  GS_LISTENER_INTERFACE, &error);
 	if (error != NULL) {
@@ -269,11 +269,11 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 
 	/* we don't start the daemon for this, it's just a wrapper for
 	 * NetworkManager or alternative */
-	arefresh->priv->connection = pk_connection_new ();
-	g_signal_connect (arefresh->priv->connection, "connection-changed",
-			  G_CALLBACK (pk_auto_refresh_connection_changed_cb), arefresh);
-	if (pk_connection_valid (arefresh->priv->connection) == TRUE) {
-		arefresh->priv->connection_active = TRUE;
+	arefresh->priv->network = pk_network_new ();
+	g_signal_connect (arefresh->priv->network, "online",
+			  G_CALLBACK (pk_auto_refresh_network_changed_cb), arefresh);
+	if (pk_network_is_online (arefresh->priv->network) == TRUE) {
+		arefresh->priv->network_active = TRUE;
 	}
 
 	/* we check this in case we miss one of the async signals */
@@ -299,7 +299,7 @@ pk_auto_refresh_finalize (GObject *object)
 	g_return_if_fail (arefresh->priv != NULL);
 
 	g_object_unref (arefresh->priv->client);
-	g_object_unref (arefresh->priv->connection);
+	g_object_unref (arefresh->priv->network);
 
 	G_OBJECT_CLASS (pk_auto_refresh_parent_class)->finalize (object);
 }
