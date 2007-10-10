@@ -61,7 +61,7 @@ pk_button_help_cb (GtkWidget *widget,
  * pk_button_close_cb:
  **/
 static void
-pk_button_close_cb (GtkWidget *widget, gboolean data)
+pk_button_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
@@ -94,8 +94,8 @@ pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
  **/
 static gboolean
 pk_window_delete_event_cb (GtkWidget	*widget,
-			    GdkEvent	*event,
-			    gboolean	 data)
+			   GdkEvent	*event,
+			   gpointer	 data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
