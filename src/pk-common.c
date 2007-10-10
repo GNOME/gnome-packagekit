@@ -587,6 +587,9 @@ pk_group_enum_to_icon_name (PkGroupEnum group)
 	case PK_GROUP_ENUM_SYSTEM:
 		text = "applications-system";
 		break;
+	case PK_GROUP_ENUM_UNKNOWN:
+		text = "applications-other";
+		break;
 	default:
 		pk_error ("group unrecognised: %i", group);
 	}
