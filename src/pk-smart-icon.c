@@ -186,7 +186,11 @@ pk_smart_icon_notify (PkSmartIcon *sicon, const gchar *title, const gchar *messa
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
-	dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
+	if (gtk_status_icon_get_visible (sicon->priv->status_icon) == TRUE) {
+		dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
+	} else {
+		dialog = notify_notification_new (title, message, icon, NULL);
+	}
 	notify_notification_set_timeout (dialog, timeout);
 	notify_notification_set_urgency (dialog, urgency);
 	notify_notification_show (dialog, &error);
