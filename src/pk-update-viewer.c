@@ -66,7 +66,7 @@ pk_button_help_cb (GtkWidget *widget,
  **/
 static void
 pk_updates_apply_cb (GtkWidget *widget,
-		     gboolean data)
+		     gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
@@ -80,7 +80,7 @@ pk_updates_apply_cb (GtkWidget *widget,
  **/
 static void
 pk_button_close_cb (GtkWidget	*widget,
-		     gboolean	data)
+		     gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 
@@ -133,7 +133,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 static gboolean
 pk_window_delete_event_cb (GtkWidget	*widget,
 			    GdkEvent	*event,
-			    gboolean	 data)
+			    gpointer    data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 

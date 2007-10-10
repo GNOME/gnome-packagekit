@@ -43,7 +43,7 @@ static GMainLoop *loop = NULL;
  * pk_monitor_action_unref_cb:
  **/
 static void
-pk_monitor_action_unref_cb (PkProgress *progress, gboolean data)
+pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_object_unref (progress);

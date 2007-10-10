@@ -84,7 +84,7 @@ pk_button_rollback_cb (GtkWidget *widget, gboolean data)
  **/
 static void
 pk_button_close_cb (GtkWidget	*widget,
-		     gboolean	data)
+		     gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
@@ -167,7 +167,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 static gboolean
 pk_window_delete_event_cb (GtkWidget	*widget,
 			    GdkEvent	*event,
-			    gboolean	 data)
+			    gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
