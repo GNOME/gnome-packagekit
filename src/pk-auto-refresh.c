@@ -56,7 +56,7 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
 
 #define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
 #define PK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
-#define PK_AUTO_REFRESH_STARTUP_DELAY		120	/* seconds utill the first refresh,
+#define PK_AUTO_REFRESH_STARTUP_DELAY		60*2	/* seconds utill the first refresh,
 							 * and if we failed the first refresh,
 							 * check after this much time also */
 
@@ -65,6 +65,7 @@ struct PkAutoRefreshPrivate
 	gboolean		 session_idle;
 	gboolean		 network_active;
 	gboolean		 session_delay;
+	gboolean		 sent_get_updates;
 	guint			 thresh;
 	PkClient		*client;
 	PkNetwork		*network;
@@ -72,6 +73,7 @@ struct PkAutoRefreshPrivate
 
 enum {
 	REFRESH_CACHE,
+	GET_UPDATES,
 	LAST_SIGNAL
 };
 
@@ -91,6 +93,11 @@ pk_auto_refresh_class_init (PkAutoRefreshClass *klass)
 	g_type_class_add_private (klass, sizeof (PkAutoRefreshPrivate));
 	signals [REFRESH_CACHE] =
 		g_signal_new ("refresh-cache",
+			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
+			      0, NULL, NULL, g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	signals [GET_UPDATES] =
+		g_signal_new ("get-updates",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
 			      0, NULL, NULL, g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -131,6 +138,14 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 	if (arefresh->priv->network_active == FALSE) {
 		pk_debug ("not when no network");
 		return FALSE;
+	}
+
+	/* we do this to get an icon at startup */
+	if (arefresh->priv->sent_get_updates == FALSE) {
+		pk_debug ("emitting get-updates");
+		g_signal_emit (arefresh, signals [GET_UPDATES], 0);
+		arefresh->priv->sent_get_updates = TRUE;
+		return TRUE;
 	}
 
 	/* get the time since the last refresh */
@@ -201,8 +216,6 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_debug ("timeout");
-	arefresh->priv->session_delay = TRUE;
 	//FIXME: need to get the client state for this to work, for now, bodge
 	//pk_auto_refresh_change_state (arefresh);
 	pk_auto_refresh_do_action (arefresh); //FIXME: remove!
@@ -222,6 +235,12 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
 
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* we have waited enough */
+	if (arefresh->priv->session_delay == FALSE) {
+		pk_debug ("setting session delay TRUE");
+		arefresh->priv->session_delay = TRUE;
+	}
 
 	ret = pk_auto_refresh_change_state (arefresh);
 	/* we failed to do the refresh cache at first boot. Keep trying... */
@@ -248,6 +267,7 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->session_delay = FALSE;
+	arefresh->priv->sent_get_updates = FALSE;
 
 	/* need to get from gconf */
 	arefresh->priv->thresh = 15*60;
