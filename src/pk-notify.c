@@ -70,6 +70,8 @@ struct PkNotifyPrivate
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
+	NotifyNotification	*notify_auto_update;
+	NotifyNotification	*notify_updates_available;
 };
 
 G_DEFINE_TYPE (PkNotify, pk_notify, G_TYPE_OBJECT)
@@ -257,6 +259,12 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 		pk_smart_icon_set_icon_name (notify->priv->sicon, FALSE);
 	}
 
+	/* close the libnotify bubble if it exists */
+	if (notify->priv->notify_auto_update != NULL) {
+		notify_notification_close (notify->priv->notify_auto_update, NULL);
+		notify->priv->notify_auto_update = NULL;
+	}
+
 	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
 		NotifyNotification *dialog;
@@ -430,6 +438,8 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 	pk_smart_icon_sync (notify->priv->sicon);
 	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
 	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent", status_icon);
+	notify->priv->notify_updates_available = dialog;
+
 	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (dialog, "update-system", _("Update system now"),
@@ -448,6 +458,8 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 static void
 pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
 {
+	//FIXME!
+	return;
 }
 
 /**
@@ -464,6 +476,7 @@ pk_notify_auto_update_message (PkNotify *notify)
 	dialog = notify_notification_new (_("Updates are being installed"),
 		_("Updates are being automatically installed on your computer"),
 		"software-update-urgent", NULL);
+	notify->priv->notify_auto_update = dialog;
 	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (dialog, "update-system", _("Cancel update"),
@@ -581,6 +594,7 @@ pk_notify_query_updates (PkNotify *notify)
 
 	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		pk_debug ("Not checking for updates as already in progress");
+		return FALSE;
 	}
 
 	client = pk_client_new ();
@@ -613,6 +627,7 @@ pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 		pk_notify_query_updates (notify);
 	}
 	notify->priv->cache_update_in_progress = FALSE;
+	g_object_unref (client);
 }
 
 /**
@@ -694,6 +709,21 @@ pk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, PkNotify *notify)
 }
 
 /**
+ * pk_notify_auto_get_updates_cb:
+ **/
+static void
+pk_notify_auto_get_updates_cb (PkAutoRefresh *arefresh, PkNotify *notify)
+{
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	/* show the icon at login time
+	 * hopefully it just needs a quick network access, else we may have to
+	 * make it a gconf variable */
+	pk_notify_query_updates (notify);
+}
+
+/**
  * pk_notify_init:
  * @notify: This class instance
  **/
@@ -703,11 +733,15 @@ pk_notify_init (PkNotify *notify)
 	GtkStatusIcon *status_icon;
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
+	notify->priv->notify_auto_update = NULL;
+	notify->priv->notify_updates_available = NULL;
 	notify->priv->sicon = pk_smart_icon_new ();
 	notify->priv->gconf_client = gconf_client_get_default ();
 	notify->priv->arefresh = pk_auto_refresh_new ();
 	g_signal_connect (notify->priv->arefresh, "refresh-cache",
 			  G_CALLBACK (pk_notify_auto_refresh_cache_cb), notify);
+	g_signal_connect (notify->priv->arefresh, "get-updates",
+			  G_CALLBACK (pk_notify_auto_get_updates_cb), notify);
 
 	/* right click actions are common */
 	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
@@ -759,6 +793,15 @@ pk_notify_finalize (GObject *object)
 	notify = PK_NOTIFY (object);
 
 	g_return_if_fail (notify->priv != NULL);
+
+	/* close the libnotify bubbles if they exists */
+	if (notify->priv->notify_auto_update != NULL) {
+		notify_notification_close (notify->priv->notify_updates_available, NULL);
+	}
+	if (notify->priv->notify_updates_available != NULL) {
+		notify_notification_close (notify->priv->notify_updates_available, NULL);
+	}
+
 	g_object_unref (notify->priv->sicon);
 	g_object_unref (notify->priv->pconnection);
 	g_object_unref (notify->priv->client);
