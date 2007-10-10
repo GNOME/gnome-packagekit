@@ -64,6 +64,7 @@ struct PkAutoRefreshPrivate
 {
 	gboolean		 session_idle;
 	gboolean		 network_active;
+	gboolean		 session_delay;
 	guint			 thresh;
 	PkClient		*client;
 	PkNetwork		*network;
@@ -119,6 +120,12 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* we shouldn't do this early in the session startup */
+	if (arefresh->priv->session_delay == FALSE) {
+		pk_debug ("not when this early in the session");
+		return FALSE;
+	}
 
 	/* no point continuing if we have no network */
 	if (arefresh->priv->network_active == FALSE) {
@@ -195,6 +202,7 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	pk_debug ("timeout");
+	arefresh->priv->session_delay = TRUE;
 	//FIXME: need to get the client state for this to work, for now, bodge
 	//pk_auto_refresh_change_state (arefresh);
 	pk_auto_refresh_do_action (arefresh); //FIXME: remove!
@@ -239,6 +247,7 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
+	arefresh->priv->session_delay = FALSE;
 
 	/* need to get from gconf */
 	arefresh->priv->thresh = 15*60;
