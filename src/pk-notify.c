@@ -64,7 +64,7 @@ struct PkNotifyPrivate
 {
 	PkSmartIcon		*sicon;
 	PkConnection		*pconnection;
-	PkClient		*client;
+	PkClient		*client_update_system;
 	PkTaskList		*tlist;
 	PkAutoRefresh		*arefresh;
 	GConfClient		*gconf_client;
@@ -281,8 +281,8 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 						notify, NULL);
 		notify_notification_show (dialog, NULL);
 	}
-	pk_debug ("unref'ing %p", client);
-	g_object_unref (client);
+	pk_debug ("resetting client %p", client);
+	pk_client_reset (client);
 }
 
 /**
@@ -307,20 +307,15 @@ static void
 pk_notify_update_system (PkNotify *notify)
 {
 	gboolean ret;
-	PkClient *client;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	pk_debug ("install updates");
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
-	ret = pk_client_update_system (client);
+	ret = pk_client_update_system (notify->priv->client_update_system);
 	if (ret == TRUE) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
-		g_object_unref (client);
 		pk_warning ("failed to update system");
 		pk_notify_not_supported (notify, _("Failed to update system"));
 	}
@@ -458,7 +453,15 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 static void
 pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
 {
-	//FIXME!
+	gboolean ret;
+	ret = pk_client_cancel (notify->priv->client_update_system);
+	if (ret == FALSE) {
+		pk_warning ("cancelling updates failed");
+		pk_smart_icon_notify (notify->priv->sicon,
+				      _("Could not stop"),
+				      _("Could not cancel the system update"), "process-stop",
+				      PK_NOTIFY_URGENCY_LOW, 5000);
+	}
 	return;
 }
 
@@ -764,9 +767,11 @@ pk_notify_init (PkNotify *notify)
 	}
 
 	/* use a client to get the updates-changed signal */
-	notify->priv->client = pk_client_new ();
-	g_signal_connect (notify->priv->client, "updates-changed",
+	notify->priv->client_update_system = pk_client_new ();
+	g_signal_connect (notify->priv->client_update_system, "updates-changed",
 			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
+	g_signal_connect (notify->priv->client_update_system, "finished",
+			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	notify->priv->tlist = pk_task_list_new ();
@@ -804,7 +809,7 @@ pk_notify_finalize (GObject *object)
 
 	g_object_unref (notify->priv->sicon);
 	g_object_unref (notify->priv->pconnection);
-	g_object_unref (notify->priv->client);
+	g_object_unref (notify->priv->client_update_system);
 	g_object_unref (notify->priv->tlist);
 	g_object_unref (notify->priv->arefresh);
 	g_object_unref (notify->priv->gconf_client);
