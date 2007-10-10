@@ -98,6 +98,31 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	return text;
 }
 
+
+/**
+ * pk_package_id_get_name:
+ **/
+gchar *
+pk_package_get_name (const gchar *package_id)
+{
+	gchar *package = NULL;
+	PkPackageId *ident;
+
+	if (package_id == NULL || strlen (package_id) == 0) {
+		pk_warning ("package_id blank, returning 'unknown'");
+		return g_strdup ("unknown");
+	}
+
+	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		package = g_strdup (package_id);
+	} else {
+		package = g_strdup (ident->name);
+	}
+	pk_package_id_free (ident);
+	return package;
+}
+
 /**
  * pk_error_enum_to_localised_text:
  **/

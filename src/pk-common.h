@@ -34,6 +34,7 @@ G_BEGIN_DECLS
 #define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
 
+gchar *		 pk_package_get_name			(const gchar	*package_id);
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
 							 const gchar	*summary);
 const gchar	*pk_role_enum_to_localised_past		(PkRoleEnum	 role);
