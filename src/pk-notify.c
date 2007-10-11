@@ -549,8 +549,10 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	g_free (updates);
 	if ((update == PK_UPDATE_ENUM_SECURITY && is_security == TRUE) || update == PK_UPDATE_ENUM_ALL) {
 		gboolean on_battery;
+		gboolean conf_update_battery;
 		on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
-		if (on_battery == TRUE) {
+		conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
+		if (conf_update_battery == FALSE && on_battery == TRUE) {
 			pk_warning ("on battery so not doing update");
 			pk_smart_icon_notify (notify->priv->sicon,
 					      _("Will not install updates"),
