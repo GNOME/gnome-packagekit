@@ -557,7 +557,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 			pk_smart_icon_notify (notify->priv->sicon,
 					      _("Will not install updates"),
 					      _("Automatic updates are not being installed as the computer is on battery power"),
-					      "process-stop", PK_NOTIFY_URGENCY_LOW, 5000);
+					      "dialog-warning", PK_NOTIFY_URGENCY_LOW, 5000);
 			return;
 		}
 
