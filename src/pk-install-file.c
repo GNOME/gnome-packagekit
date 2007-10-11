@@ -60,8 +60,8 @@ main (int argc, char *argv[])
 	dbus_g_thread_init ();
 	g_type_init ();
 
-	g_set_application_name (_("PackageKit Job Monitor"));
-	context = g_option_context_new (_("PackageKit Job Monitor"));
+	g_set_application_name (_("PackageKit File Installer"));
+	context = g_option_context_new (_("PackageKit File Installer"));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 	pk_debug_init (TRUE);
