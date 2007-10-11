@@ -144,6 +144,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	const gchar *action;
 	PkUpdateEnum update;
 	GConfClient *client;
+	GtkWidget *check_widget;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
@@ -151,12 +152,16 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 		pk_warning ("value NULL");
 		return;
 	}
+	check_widget = glade_xml_get_widget (glade_xml, "checkbutton_update_battery");
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_ALL;
+		gtk_widget_set_sensitive (check_widget, TRUE);
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_SECURITY;
+		gtk_widget_set_sensitive (check_widget, TRUE);
 	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_NONE;
+		gtk_widget_set_sensitive (check_widget, FALSE);
 	} else {
 		g_assert (FALSE);
 	}
@@ -323,6 +328,9 @@ main (int argc, char *argv[])
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_completed");
 	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_NOTIFY_COMPLETED);
+
+	widget = glade_xml_get_widget (glade_xml, "checkbutton_update_battery");
+	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_UPDATE_BATTERY);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",

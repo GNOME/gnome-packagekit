@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
 #define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
+#define PK_CONF_UPDATE_BATTERY		"/apps/gnome-packagekit/update_battery"
 
 gchar *		 pk_package_get_name			(const gchar	*package_id);
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
