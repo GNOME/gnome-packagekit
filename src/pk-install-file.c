@@ -53,6 +53,16 @@ main (int argc, char *argv[])
 {
 	GOptionContext *context;
 	gboolean ret;
+	gboolean verbose = FALSE;
+	gboolean program_version = FALSE;
+
+	const GOptionEntry options[] = {
+		{ "verbose", '\0', 0, G_OPTION_ARG_NONE, &verbose,
+		  "Show extra debugging information", NULL },
+		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
+		  "Show the program version and exit", NULL },
+		{ NULL}
+	};
 
 	if (! g_thread_supported ()) {
 		g_thread_init (NULL);
@@ -62,9 +72,16 @@ main (int argc, char *argv[])
 
 	g_set_application_name (_("PackageKit File Installer"));
 	context = g_option_context_new (_("PackageKit File Installer"));
+	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-	pk_debug_init (TRUE);
+
+	if (program_version == TRUE) {
+		g_print (VERSION "\n");
+		return 0;
+	}
+
+	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	if (argc < 2) {

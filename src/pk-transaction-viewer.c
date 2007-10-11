@@ -340,6 +340,7 @@ main (int argc, char *argv[])
 {
 	GMainLoop *loop;
 	gboolean verbose = FALSE;
+	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
@@ -350,6 +351,8 @@ main (int argc, char *argv[])
 	const GOptionEntry options[] = {
 		{ "verbose", '\0', 0, G_OPTION_ARG_NONE, &verbose,
 		  "Show extra debugging information", NULL },
+		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
+		  "Show the program version and exit", NULL },
 		{ NULL}
 	};
 
@@ -363,6 +366,12 @@ main (int argc, char *argv[])
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
+
+	if (program_version == TRUE) {
+		g_print (VERSION "\n");
+		return 0;
+	}
+
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
