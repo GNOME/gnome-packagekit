@@ -548,6 +548,17 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	update = pk_update_enum_from_text (updates);
 	g_free (updates);
 	if ((update == PK_UPDATE_ENUM_SECURITY && is_security == TRUE) || update == PK_UPDATE_ENUM_ALL) {
+		gboolean on_battery;
+		on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
+		if (on_battery == TRUE) {
+			pk_warning ("on battery so not doing update");
+			pk_smart_icon_notify (notify->priv->sicon,
+					      _("Will not install updates"),
+					      _("Automatic updates are not being installed as the computer is on battery power"),
+					      "process-stop", PK_NOTIFY_URGENCY_LOW, 5000);
+			return;
+		}
+
 		pk_debug ("we should do the update automatically!");
 		pk_notify_update_system (notify);
 		pk_notify_auto_update_message (notify);

@@ -45,6 +45,10 @@
 #define GS_LISTENER_PATH	"/org/gnome/ScreenSaver"
 #define GS_LISTENER_INTERFACE	"org.gnome.ScreenSaver"
 
+#define GPM_LISTENER_SERVICE	"org.freedesktop.PowerManagement"
+#define GPM_LISTENER_PATH	"/org/freedesktop/PowerManagement"
+#define GPM_LISTENER_INTERFACE	"org.freedesktop.PowerManagement"
+
 //Monitor:
 //* online (PkNetwork)
 //* idleness (GnomeScreensaver)
@@ -63,10 +67,13 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
 struct PkAutoRefreshPrivate
 {
 	gboolean		 session_idle;
+	gboolean		 on_battery;
 	gboolean		 network_active;
 	gboolean		 session_delay;
 	gboolean		 sent_get_updates;
 	guint			 thresh;
+	DBusGProxy		*proxy_gs;
+	DBusGProxy		*proxy_gpm;
 	PkClient		*client;
 	PkNetwork		*network;
 };
@@ -148,6 +155,12 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 		return TRUE;
 	}
 
+	/* no point continuing if we are on battery */
+	if (arefresh->priv->on_battery == TRUE) {
+		pk_debug ("not when on battery");
+		return FALSE;
+	}
+
 	/* get the time since the last refresh */
 //	time = pk_client_get_time_since_refresh (arefresh->priv->client);
 	time = 60*60;
@@ -178,10 +191,10 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 }
 
 /**
- * pk_auto_refresh_gnome_screensaver_idle_cb:
+ * pk_auto_refresh_idle_cb:
  **/
 static void
-pk_auto_refresh_gnome_screensaver_idle_cb (DBusGProxy *proxy, gboolean is_idle, PkAutoRefresh *arefresh)
+pk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, PkAutoRefresh *arefresh)
 {
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
@@ -189,6 +202,31 @@ pk_auto_refresh_gnome_screensaver_idle_cb (DBusGProxy *proxy, gboolean is_idle, 
 	pk_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
 	pk_auto_refresh_change_state (arefresh);
+}
+
+/**
+ * pk_auto_refresh_on_battery_cb:
+ **/
+static void
+pk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, PkAutoRefresh *arefresh)
+{
+	g_return_if_fail (arefresh != NULL);
+	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+
+	pk_debug ("setting on_battery %i", on_battery);
+	arefresh->priv->on_battery = on_battery;
+	pk_auto_refresh_change_state (arefresh);
+}
+
+/**
+ * pk_auto_refresh_get_on_battery:
+ **/
+gboolean
+pk_auto_refresh_get_on_battery (PkAutoRefresh *arefresh)
+{
+	g_return_val_if_fail (arefresh != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	return arefresh->priv->on_battery;
 }
 
 /**
@@ -259,11 +297,13 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
 static void
 pk_auto_refresh_init (PkAutoRefresh *arefresh)
 {
-	GError *error = NULL;
 	DBusGConnection *network;
-	DBusGProxy *proxy;
+	GError *error = NULL;
+	gboolean on_battery;
+	gboolean ret;
 
 	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
+	arefresh->priv->on_battery = FALSE;
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->session_delay = FALSE;
@@ -284,20 +324,50 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	}
 
 	/* use gnome-screensaver for the idle detection */
-	proxy = dbus_g_proxy_new_for_name_owner (network,
+	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (network,
 				  GS_LISTENER_SERVICE, GS_LISTENER_PATH,
 				  GS_LISTENER_INTERFACE, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to system manager: %s", error->message);
+		pk_warning ("Cannot connect to gnome-screensaver: %s", error->message);
 		g_error_free (error);
 		return;
 	}
-
 	/* get SessionIdleChanged */
-	dbus_g_proxy_add_signal (proxy, "SessionIdleChanged", G_TYPE_BOOLEAN, G_TYPE_INVALID);
-	dbus_g_proxy_connect_signal (proxy, "SessionIdleChanged",
-				     G_CALLBACK (pk_auto_refresh_gnome_screensaver_idle_cb),
+	dbus_g_proxy_add_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
+				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
+				     G_CALLBACK (pk_auto_refresh_idle_cb),
 				     arefresh, NULL);
+
+	/* use gnome-power-manager for the battery detection */
+	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (network,
+				  GPM_LISTENER_SERVICE, GPM_LISTENER_PATH,
+				  GPM_LISTENER_INTERFACE, &error);
+	if (error != NULL) {
+		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+	/* get GetOnBattery */
+	dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+				     G_CALLBACK (pk_auto_refresh_on_battery_cb),
+				     arefresh, NULL);
+
+	/* coldplug the battery state */
+	ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
+				 G_TYPE_INVALID,
+				 G_TYPE_BOOLEAN, &on_battery,
+				 G_TYPE_INVALID);
+	if (error != NULL) {
+		printf ("DEBUG: ERROR: %s\n", error->message);
+		g_error_free (error);
+	}
+	if (ret == TRUE) {
+		arefresh->priv->on_battery = on_battery;
+		pk_debug ("setting on battery %i", on_battery);
+	}
 
 	/* we don't start the daemon for this, it's just a wrapper for
 	 * NetworkManager or alternative */
@@ -332,6 +402,8 @@ pk_auto_refresh_finalize (GObject *object)
 
 	g_object_unref (arefresh->priv->client);
 	g_object_unref (arefresh->priv->network);
+	g_object_unref (arefresh->priv->proxy_gs);
+	g_object_unref (arefresh->priv->proxy_gpm);
 
 	G_OBJECT_CLASS (pk_auto_refresh_parent_class)->finalize (object);
 }
