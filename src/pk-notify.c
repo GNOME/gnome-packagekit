@@ -163,7 +163,7 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
 			       "license", license_trans,
 			       "website-label", _("PackageKit Website"),
-			       "website", "www.hughsie.com",
+			       "website", "www.packagekit.org",
 			       "comments", "PackageKit",
 			       "authors", authors,
 			       "documenters", documenters,
