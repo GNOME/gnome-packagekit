@@ -354,6 +354,8 @@ static void
 pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
+	gboolean ret;
+	PkRoleEnum role;
 
 	application->priv->task_ended = TRUE;
 
@@ -365,6 +367,22 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
 		application->priv->search_in_progress = FALSE;
+	} else {
+		/* get role */
+		pk_client_get_role (client, &role, NULL);
+
+		/* do we need to update the search? */
+		if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
+		    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
+			/* refresh the search as the items may have changed */
+			gtk_list_store_clear (application->priv->packages_store);
+			application->priv->search_in_progress = TRUE;
+			ret = pk_client_requeue (application->priv->client_search);
+			if (ret == FALSE) {
+				application->priv->search_in_progress = FALSE;
+				pk_warning ("failed to requeue the search");
+			}
+		}
 	}
 
 	/* reset client */
