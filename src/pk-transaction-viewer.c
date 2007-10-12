@@ -74,17 +74,18 @@ pk_button_help_cb (GtkWidget *widget,
  * pk_button_rollback_cb:
  **/
 static void
-pk_button_rollback_cb (GtkWidget *widget, gboolean data)
+pk_button_rollback_cb (GtkWidget *widget, gpointer data)
 {
-	pk_debug ("moo");
+	GMainLoop *loop = (GMainLoop *) data;
+	pk_client_rollback (client, transaction_id);
+	g_main_loop_quit (loop);
 }
 
 /**
  * pk_button_close_cb:
  **/
 static void
-pk_button_close_cb (GtkWidget	*widget,
-		     gpointer data)
+pk_button_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_main_loop_quit (loop);
@@ -414,7 +415,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_help_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_rollback");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_rollback_cb), NULL);
+			  G_CALLBACK (pk_button_rollback_cb), loop);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
