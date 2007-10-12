@@ -27,6 +27,7 @@ pkgdata_DATA =						\
 	pk-update-viewer.glade				\
 	pk-progress.glade				\
 	pk-prefs.glade					\
+	pk-signature.glade				\
 	pk-transactions.glade				\
 	pk-backend-status.glade				\
 	$(NULL)
