@@ -59,14 +59,9 @@ struct PkApplicationPrivate
 	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
 	PkEnumList		*group_list;
+	PkEnumList		*current_filter;
 	gboolean		 task_ended;
 	gboolean		 search_in_progress;
-	gboolean		 find_installed;
-	gboolean		 find_available;
-	gboolean		 find_devel;
-	gboolean		 find_non_devel;
-	gboolean		 find_gui;
-	gboolean		 find_text;
 	guint			 search_depth;
 };
 
@@ -256,10 +251,10 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	if (url != NULL && strlen (url) > 0) {
 		g_free (application->priv->url);
 		application->priv->url = g_strdup (url);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
 		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
@@ -428,72 +423,6 @@ pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *applic
 }
 
 /**
- * pk_application_find_options_available_cb:
- **/
-static void
-pk_application_find_options_available_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_available = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("available %i", application->priv->find_available);
-}
-
-/**
- * pk_application_find_options_installed_cb:
- **/
-static void
-pk_application_find_options_installed_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_installed = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("installed %i", application->priv->find_installed);
-}
-
-/**
- * pk_application_find_options_devel_cb:
- **/
-static void
-pk_application_find_options_devel_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_devel = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("devel %i", application->priv->find_devel);
-}
-
-/**
- * pk_application_find_options_non_devel_cb:
- **/
-static void
-pk_application_find_options_non_devel_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_non_devel = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("non_devel %i", application->priv->find_non_devel);
-}
-
-/**
- * pk_application_find_options_gui_cb:
- **/
-static void
-pk_application_find_options_gui_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_gui = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("gui %i", application->priv->find_gui);
-}
-
-/**
- * pk_application_find_options_text_cb:
- **/
-static void
-pk_application_find_options_text_cb (GtkToggleButton *togglebutton,
-		    			  PkApplication	*application)
-{
-	application->priv->find_text = gtk_toggle_button_get_active (togglebutton);
-	pk_debug ("gui %i", application->priv->find_text);
-}
-
-/**
  * pk_application_find_cb:
  **/
 static void
@@ -502,10 +431,8 @@ pk_application_find_cb (GtkWidget	*button_widget,
 {
 	GtkWidget *widget;
 	const gchar *package;
-	const gchar *filter;
 	gchar *filter_all;
 	gboolean ret;
-	GString *string;
 
 	if (application->priv->search_in_progress == TRUE) {
 		pk_debug ("trying to cancel task...");
@@ -518,55 +445,8 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 	pk_debug ("find %s", package);
 
-
-	string = g_string_new ("");
-	/* add ~installed */
-	if (application->priv->find_installed == TRUE &&
-	    application->priv->find_available == TRUE) {
-		filter = NULL;
-	} else if (application->priv->find_installed == TRUE) {
-		filter = "installed;";
-	} else {
-		filter = "~installed;";
-	}
-	if (filter != NULL) {
-		g_string_append (string, filter);
-	}
-
-	/* add ~devel */
-	if (application->priv->find_devel == TRUE &&
-	    application->priv->find_non_devel == TRUE) {
-		filter = NULL;
-	} else if (application->priv->find_devel == TRUE) {
-		filter = "devel;";
-	} else {
-		filter = "~devel;";
-	}
-	if (filter != NULL) {
-		g_string_append (string, filter);
-	}
-
-	/* add ~devel */
-	if (application->priv->find_gui == TRUE &&
-	    application->priv->find_text == TRUE) {
-		filter = NULL;
-	} else if (application->priv->find_gui == TRUE) {
-		filter = "gui;";
-	} else {
-		filter = "~gui;";
-	}
-	if (filter != NULL) {
-		g_string_append (string, filter);
-	}
-
-	/* remove last ";" if exists */
-	if (string->len == 0) {
-		g_string_append (string, "none");
-	} else {
-		g_string_set_size (string, string->len - 1);
-	}
-
-	filter_all = g_string_free (string, FALSE);
+	/* make a valid filter string */
+	filter_all = pk_enum_list_to_string (application->priv->current_filter);
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_depth == 0) {
@@ -713,13 +593,73 @@ pk_groups_add_columns (GtkTreeView *treeview)
 }
 
 /**
- * pk_application_combobox_changed_cb:
+ * pk_application_depth_combobox_changed_cb:
  **/
 static void
-pk_application_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
+pk_application_depth_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
 {
 	application->priv->search_depth = gtk_combo_box_get_active (combobox);
 	pk_debug ("search depth: %i", application->priv->search_depth);
+}
+
+/**
+ * pk_application_filter_installed_combobox_changed_cb:
+ **/
+static void
+pk_application_filter_installed_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
+{
+	guint value;
+	value = gtk_combo_box_get_active (combobox);
+	if (value == 0) {
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+	} else if (value == 1) {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+	} else {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+	}
+}
+
+/**
+ * pk_application_filter_devel_combobox_changed_cb:
+ **/
+static void
+pk_application_filter_devel_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
+{
+	guint value;
+	value = gtk_combo_box_get_active (combobox);
+	if (value == 0) {
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+	} else if (value == 1) {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+	} else {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+	}
+}
+
+/**
+ * pk_application_filter_gui_combobox_changed_cb:
+ **/
+static void
+pk_application_filter_gui_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
+{
+	guint value;
+	value = gtk_combo_box_get_active (combobox);
+	if (value == 0) {
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_GUI);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+	} else if (value == 1) {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+	} else {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+	}
 }
 
 /**
@@ -775,15 +715,15 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
 
 		/* make the button sensitivities correct */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
 		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
 			gtk_widget_set_sensitive (widget, FALSE);
 		} else {
 			gtk_widget_set_sensitive (widget, TRUE);
 		}
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
 		gtk_widget_set_sensitive (widget, !installed);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
 		gtk_widget_set_sensitive (widget, installed);
 
 		/* don't do the description if we don't support the action */
@@ -795,11 +735,11 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		pk_client_get_description (application->priv->client_description, application->priv->package);
 	} else {
 		g_print ("no row selected.\n");
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 }
@@ -862,15 +802,11 @@ pk_application_init (PkApplication *application)
 	application->priv->package = NULL;
 	application->priv->url = NULL;
 	application->priv->task_ended = TRUE;
-	application->priv->find_installed = TRUE;
-	application->priv->find_available = TRUE;
-	application->priv->find_devel = TRUE;
-	application->priv->find_non_devel = TRUE;
-	application->priv->find_gui = TRUE;
-	application->priv->find_text = TRUE;
 	application->priv->search_in_progress = FALSE;
 
 	application->priv->search_depth = 0;
+	application->priv->current_filter = pk_enum_list_new ();
+	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
 
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
@@ -931,11 +867,11 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_application_delete_event_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_help");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_help_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -943,7 +879,7 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -951,7 +887,7 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_deps");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
 	g_signal_connect (widget, "clicked",
 			G_CALLBACK (pk_application_deps_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -959,13 +895,13 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_requires");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
 	gtk_widget_set_sensitive (widget, FALSE);
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -989,20 +925,6 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	/* hide the filters we can't support */
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_install");
-		gtk_widget_hide (widget);
-	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_devel");
-		gtk_widget_hide (widget);
-	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_GUI) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filter_gui");
-		gtk_widget_hide (widget);
-	}
-
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
@@ -1011,43 +933,67 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (pk_application_find_cb), application);
 
+	/* search */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_depth");
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By package name");
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By package name"));
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By description");
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By description"));
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "By file");
+		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By file"));
 	}
 	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
-			  G_CALLBACK (pk_application_combobox_changed_cb), application);
+			  G_CALLBACK (pk_application_depth_combobox_changed_cb), application);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_installed");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_installed_cb), application);
+	/* filter installed */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_installed");
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Installed"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Available"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("All packages"));
+	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
+			  G_CALLBACK (pk_application_filter_installed_combobox_changed_cb), application);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_available");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_available_cb), application);
+	/* filter devel */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_gui");
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Only graphical"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Only text"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("All packages"));
+	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
+			  G_CALLBACK (pk_application_filter_gui_combobox_changed_cb), application);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_devel");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_devel_cb), application);
+	/* filter gui */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_devel");
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Only development"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Non-development"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("All packages"));
+	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
+			  G_CALLBACK (pk_application_filter_devel_combobox_changed_cb), application);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_non_devel");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_non_devel_cb), application);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_gui");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_gui_cb), application);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "checkbutton_text");
-	g_signal_connect (GTK_TOGGLE_BUTTON (widget), "toggled",
-			  G_CALLBACK (pk_application_find_options_text_cb), application);
+	/* hide the filters we can't support */
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_installed");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filter_installed");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_devel");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filter_devel");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_GUI) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_gui");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filter_gui");
+		gtk_widget_hide (widget);
+	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",
@@ -1141,6 +1087,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->group_list);
 	g_object_unref (application->priv->role_list);
+	g_object_unref (application->priv->current_filter);
 	g_free (application->priv->url);
 	g_free (application->priv->package);
 
