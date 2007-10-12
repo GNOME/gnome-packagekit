@@ -308,6 +308,8 @@ static void
 pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			   const gchar *summary, PkApplication *application)
 {
+	GdkPixbuf *icon;
+	const gchar *icon_name;
 	PkPackageId *ident;
 	GtkTreeIter iter;
 	gchar *text;
@@ -325,11 +327,22 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
-			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id, -1);
 	pk_package_id_free (ident);
 	g_free (text);
+
+	if (info == PK_INFO_ENUM_INSTALLED) {
+		icon_name = "package-x-generic";
+	} else {
+		icon_name = "network-workgroup";
+	}
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
+	if (icon) {
+		gtk_list_store_set (application->priv->packages_store, &iter, PACKAGES_COLUMN_INSTALLED, icon, -1);
+		gdk_pixbuf_unref (icon);
+	}
+
 }
 
 /**
@@ -521,40 +534,16 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 }
 
 static void
-pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
-{
-	GtkTreeModel *model = (GtkTreeModel *)data;
-	GtkTreeIter iter;
-	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
-	gboolean installed;
-
-	/* get toggled iter */
-	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_INSTALLED, &installed, -1);
-
-	/* do something with the value */
-//	installed ^= 1;
-
-	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_INSTALLED, installed, -1);
-
-	/* clean up */
-	gtk_tree_path_free (path);
-}
-
-static void
 pk_packages_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
-	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* column for installed toggles */
-	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
-
-	column = gtk_tree_view_column_new_with_attributes (_("Installed"), renderer,
-							   "active", PACKAGES_COLUMN_INSTALLED, NULL);
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", PACKAGES_COLUMN_INSTALLED);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for name */
@@ -570,12 +559,6 @@ pk_groups_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
-	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
-
-	/* column for installed toggles */
-	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
-
 
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_pixbuf_new ();
@@ -1025,7 +1008,7 @@ pk_application_init (PkApplication *application)
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
-						       G_TYPE_BOOLEAN,
+						       GDK_TYPE_PIXBUF,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
