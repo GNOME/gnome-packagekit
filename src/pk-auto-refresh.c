@@ -41,14 +41,6 @@
 #include "pk-common.h"
 #include "pk-auto-refresh.h"
 
-#define GS_LISTENER_SERVICE	"org.gnome.ScreenSaver"
-#define GS_LISTENER_PATH	"/org/gnome/ScreenSaver"
-#define GS_LISTENER_INTERFACE	"org.gnome.ScreenSaver"
-
-#define GPM_LISTENER_SERVICE	"org.freedesktop.PowerManagement"
-#define GPM_LISTENER_PATH	"/org/freedesktop/PowerManagement"
-#define GPM_LISTENER_INTERFACE	"org.freedesktop.PowerManagement"
-
 //Monitor:
 //* online (PkNetwork)
 //* idleness (GnomeScreensaver)
@@ -325,8 +317,8 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 
 	/* use gnome-screensaver for the idle detection */
 	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (network,
-				  GS_LISTENER_SERVICE, GS_LISTENER_PATH,
-				  GS_LISTENER_INTERFACE, &error);
+				  GS_DBUS_SERVICE, GS_DBUS_PATH,
+				  GS_DBUS_INTERFACE, &error);
 	if (error != NULL) {
 		pk_warning ("Cannot connect to gnome-screensaver: %s", error->message);
 		g_error_free (error);
@@ -341,8 +333,8 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 
 	/* use gnome-power-manager for the battery detection */
 	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (network,
-				  GPM_LISTENER_SERVICE, GPM_LISTENER_PATH,
-				  GPM_LISTENER_INTERFACE, &error);
+				  GPM_DBUS_SERVICE, GPM_DBUS_PATH,
+				  GPM_DBUS_INTERFACE, &error);
 	if (error != NULL) {
 		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
 		g_error_free (error);

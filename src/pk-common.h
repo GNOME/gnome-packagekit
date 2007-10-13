@@ -35,6 +35,14 @@ G_BEGIN_DECLS
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
 #define PK_CONF_UPDATE_BATTERY		"/apps/gnome-packagekit/update_battery"
 
+#define GS_DBUS_SERVICE			"org.gnome.ScreenSaver"
+#define GS_DBUS_PATH			"/org/gnome/ScreenSaver"
+#define GS_DBUS_INTERFACE		"org.gnome.ScreenSaver"
+
+#define GPM_DBUS_SERVICE		"org.freedesktop.PowerManagement"
+#define GPM_DBUS_PATH			"/org/freedesktop/PowerManagement"
+#define GPM_DBUS_INTERFACE		"org.freedesktop.PowerManagement"
+
 gchar *		 pk_package_get_name			(const gchar	*package_id);
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
 							 const gchar	*summary);
