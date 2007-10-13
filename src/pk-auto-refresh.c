@@ -338,27 +338,28 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	if (error != NULL) {
 		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
 		g_error_free (error);
-		return;
 	}
-	/* get GetOnBattery */
-	dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
-	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-				     G_CALLBACK (pk_auto_refresh_on_battery_cb),
-				     arefresh, NULL);
 
-	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
-				 G_TYPE_INVALID,
-				 G_TYPE_BOOLEAN, &on_battery,
-				 G_TYPE_INVALID);
-	if (error != NULL) {
-		printf ("DEBUG: ERROR: %s\n", error->message);
-		g_error_free (error);
-	}
-	if (ret == TRUE) {
-		arefresh->priv->on_battery = on_battery;
-		pk_debug ("setting on battery %i", on_battery);
+	/* setup callbacks and get GetOnBattery if we could connect to g-p-m */
+	if (arefresh->priv->proxy_gpm != NULL) {
+		dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+					 G_TYPE_BOOLEAN, G_TYPE_INVALID);
+		dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+					     G_CALLBACK (pk_auto_refresh_on_battery_cb),
+					     arefresh, NULL);
+		/* coldplug the battery state */
+		ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
+					 G_TYPE_INVALID,
+					 G_TYPE_BOOLEAN, &on_battery,
+					 G_TYPE_INVALID);
+		if (error != NULL) {
+			printf ("DEBUG: ERROR: %s\n", error->message);
+			g_error_free (error);
+		}
+		if (ret == TRUE) {
+			arefresh->priv->on_battery = on_battery;
+			pk_debug ("setting on battery %i", on_battery);
+		}
 	}
 
 	/* we don't start the daemon for this, it's just a wrapper for
