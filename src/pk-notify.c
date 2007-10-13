@@ -41,7 +41,7 @@
 #include <pk-debug.h>
 #include <pk-job-list.h>
 #include <pk-client.h>
-#include <pk-task-common.h>
+#include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
