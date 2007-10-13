@@ -96,7 +96,7 @@ pk_button_close_cb (GtkWidget	*widget,
  **/
 static void
 pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-		       const gchar *summary, gboolean data)
+		       const gchar *summary, gpointer data)
 {
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
@@ -171,7 +171,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
  * pk_packages_treeview_clicked_cb:
  **/
 static void
-pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
+pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -198,7 +198,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
  * pk_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gboolean data)
+pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointer data)
 {
 	pk_debug ("connected=%i", connected);
 }
@@ -207,7 +207,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gboolea
  * pk_updates_finished_cb:
  **/
 static void
-pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gboolean data)
+pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpointer data)
 {
 	GtkWidget *widget;
 	GPtrArray *packages;
@@ -243,7 +243,7 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gb
  * pk_updates_percentage_changed_cb:
  **/
 static void
-pk_updates_percentage_changed_cb (PkClient *client, guint percentage, gboolean data)
+pk_updates_percentage_changed_cb (PkClient *client, guint percentage, gpointer data)
 {
 	if (percentage == 0) {
 		return;
