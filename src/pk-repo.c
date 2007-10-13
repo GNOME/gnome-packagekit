@@ -43,7 +43,7 @@ static gchar *repo = NULL;
 
 enum
 {
-	REPO_COLUMN_ICON,
+	REPO_COLUMN_ENABLED,
 	REPO_COLUMN_TEXT,
 	REPO_COLUMN_ID,
 	REPO_COLUMN_LAST
@@ -68,18 +68,37 @@ pk_button_close_cb (GtkWidget	*widget,
 {
 	GMainLoop *loop = (GMainLoop *) data;
 
-	/* we might have a transaction running */
-	pk_client_cancel (client);
-
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
 }
 
+static void
+pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
+{
+	GtkTreeModel *model = (GtkTreeModel *)data;
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	gboolean installed;
+
+	/* get toggled iter */
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_model_get (model, &iter, REPO_COLUMN_ENABLED, &installed, -1);
+
+	/* do something with the value */
+	installed ^= 1;
+
+	/* set new value */
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
+
+	/* clean up */
+	gtk_tree_path_free (path);
+}
+
 /**
- * pk_repo_repo_cb:
+ * pk_repo_detail_cb:
  **/
 static void
-pk_repo_repo_cb (PkClient *client, const gchar *repo_id, const gchar *details, gboolean enabled, gpointer data)
+pk_repo_detail_cb (PkClient *client, const gchar *repo_id, const gchar *details, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
 
@@ -87,6 +106,7 @@ pk_repo_repo_cb (PkClient *client, const gchar *repo_id, const gchar *details, g
 
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
+			    REPO_COLUMN_ENABLED, enabled,
 			    REPO_COLUMN_TEXT, details,
 			    REPO_COLUMN_ID, repo_id,
 			    -1);
@@ -115,12 +135,16 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
-	/* image */
-	renderer = gtk_cell_renderer_pixbuf_new ();
+	/* column for installed toggles */
+	renderer = gtk_cell_renderer_toggle_new ();
+	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
+
 	column = gtk_tree_view_column_new_with_attributes (_("Enabled"), renderer,
-							   "pixbuf", REPO_COLUMN_ICON, NULL);
+							   "active", REPO_COLUMN_ENABLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
+
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
@@ -150,8 +174,6 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		repo = g_strdup (repo_id);
 		g_free (repo_id);
 		g_print ("selected row is: %s\n", repo);
-		/* get the decription */
-		pk_client_get_description (client, repo);
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -222,9 +244,8 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE);
 	g_signal_connect (client, "repo",
-			  G_CALLBACK (pk_repo_repo_cb), NULL);
+			  G_CALLBACK (pk_repo_detail_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
 
@@ -256,7 +277,7 @@ main (int argc, char *argv[])
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
-	list_store = gtk_list_store_new (REPO_COLUMN_LAST, GDK_TYPE_PIXBUF,
+	list_store = gtk_list_store_new (REPO_COLUMN_LAST, G_TYPE_BOOLEAN,
 					 G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create repo tree view */
@@ -274,6 +295,14 @@ main (int argc, char *argv[])
 
 	/* get the update list */
 //	pk_client_get_repo_list (client);
+
+	pk_repo_detail_cb (client, "development", "Fedora - Development", TRUE, NULL);
+	pk_repo_detail_cb (client, "development-debuginfo", "Fedora - Development - Debug", TRUE, NULL);
+	pk_repo_detail_cb (client, "development-source", "Fedora - Development - Source", FALSE, NULL);
+	pk_repo_detail_cb (client, "livna-development", "Livna for Fedora Core 8 - i386 - Development Tree", TRUE, NULL);
+	pk_repo_detail_cb (client, "livna-development-debuginfo", "Livna for Fedora Core 8 - i386 - Development Tree - Debug", TRUE, NULL);
+	pk_repo_detail_cb (client, "livna-development-source", "Livna for Fedora Core 8 - i386 - Development Tree - Source", FALSE, NULL);
+
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);
