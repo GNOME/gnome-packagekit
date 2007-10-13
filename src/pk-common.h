@@ -41,7 +41,9 @@ G_BEGIN_DECLS
 
 #define GPM_DBUS_SERVICE		"org.freedesktop.PowerManagement"
 #define GPM_DBUS_PATH			"/org/freedesktop/PowerManagement"
+#define GPM_DBUS_PATH_INHIBIT		"/org/freedesktop/PowerManagement/Inhibit"
 #define GPM_DBUS_INTERFACE		"org.freedesktop.PowerManagement"
+#define GPM_DBUS_INTERFACE_INHIBIT	"org.freedesktop.PowerManagement.Inhibit"
 
 gchar *		 pk_package_get_name			(const gchar	*package_id);
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
