@@ -36,6 +36,7 @@
 
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
+#include <dbus/dbus-glib.h>
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
@@ -58,10 +59,13 @@ static void     pk_watch_finalize	(GObject       *object);
 
 struct PkWatchPrivate
 {
+	PkClient		*client;
 	PkSmartIcon		*sicon;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
+	DBusGProxy		*proxy_gpm;
+	guint			 cookie;
 };
 
 G_DEFINE_TYPE (PkWatch, pk_watch, G_TYPE_OBJECT)
@@ -209,6 +213,9 @@ pk_watch_refresh_icon (PkWatch *watch)
 static void
 pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
 {
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
 	pk_watch_refresh_icon (watch);
 	pk_watch_refresh_tooltip (watch);
 }
@@ -222,6 +229,9 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	gboolean value;
 	gchar *message = NULL;
 	gchar *package;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 
 	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
 
@@ -268,6 +278,10 @@ static void
 pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
 	const gchar *title;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
 	title = pk_error_enum_to_localised_text (error_code);
 	pk_smart_icon_notify (watch->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 }
@@ -338,12 +352,14 @@ static void
 pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 			guint          button,
 			guint32        timestamp,
-			PkWatch       *icon)
+			PkWatch       *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
 	GtkWidget *image;
 
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 	pk_debug ("icon right clicked");
 
 	/* About */
@@ -351,7 +367,7 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_watch_show_about_cb), icon);
+			  G_CALLBACK (pk_watch_show_about_cb), watch);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* show the menu */
@@ -370,6 +386,8 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 static void
 pk_watch_not_supported (PkWatch *watch, const gchar *title)
 {
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 	pk_debug ("not_supported");
 	pk_smart_icon_notify (watch->priv->sicon, title,
 			      _("The action could not be completed (the backend refusing the command)"),
@@ -383,14 +401,14 @@ static void
 pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 {
 	gboolean ret;
-	PkClient *client;
 	PkWatch *watch = PK_WATCH (data);
-	pk_debug ("refresh cache");
 
-	client = pk_client_new ();
-	ret = pk_client_refresh_cache (client, TRUE);
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	pk_debug ("refresh cache");
+	ret = pk_client_refresh_cache (watch->priv->client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 		pk_watch_not_supported (watch, _("Failed to refresh cache"));
 	}
@@ -414,6 +432,9 @@ pk_watch_manage_packages_cb (GtkMenuItem *item, gpointer data)
 static void
 pk_monitor_action_unref_cb (PkProgress *progress, PkWatch *watch)
 {
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
 	g_object_unref (progress);
 }
 
@@ -425,6 +446,9 @@ pk_watch_menu_job_status_cb (GtkMenuItem *item, PkWatch *watch)
 {
 	gchar *tid;
 	PkProgress *progress = NULL;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 
 	/* find the job we should bind to */
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
@@ -452,6 +476,9 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 	const gchar *icon_name;
 	gchar *package;
 	gchar *text;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 
 	array = pk_task_list_get_latest	(watch->priv->tlist);
 	if (array->len == 0) {
@@ -505,6 +532,9 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	GtkWidget *widget;
 	GtkWidget *image;
 
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
 	pk_debug ("icon left clicked");
 
 	/* add jobs as drop down */
@@ -539,6 +569,8 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch *watch)
 {
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
 	pk_debug ("connected=%i", connected);
 	if (connected == TRUE) {
 		pk_watch_refresh_icon (watch);
@@ -549,17 +581,132 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch
 }
 
 /**
+ * pk_watch_inhibit:
+ **/
+static gboolean
+pk_watch_inhibit (PkWatch *watch)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_val_if_fail (watch != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+
+	if (watch->priv->proxy_gpm == NULL) {
+		pk_debug ("no connection to g-p-m");
+		return FALSE;
+	}
+
+	/* check we are not trying to do this twice... */
+	if (watch->priv->cookie != 0) {
+		pk_debug ("cookie already set as %i", watch->priv->cookie);
+		return FALSE;
+	}
+
+	/* coldplug the battery state */
+	ret = dbus_g_proxy_call (watch->priv->proxy_gpm, "Inhibit", &error,
+				 G_TYPE_STRING, _("Software Update Applet"),
+				 G_TYPE_STRING, _("A transaction that cannot be interrupted is running"),
+				 G_TYPE_INVALID,
+				 G_TYPE_UINT, &watch->priv->cookie,
+				 G_TYPE_INVALID);
+	if (error != NULL) {
+		printf ("DEBUG: ERROR: %s\n", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
+ * pk_watch_uninhibit:
+ **/
+static gboolean
+pk_watch_uninhibit (PkWatch *watch)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_val_if_fail (watch != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+
+	if (watch->priv->proxy_gpm == NULL) {
+		pk_debug ("no connection to g-p-m");
+		return FALSE;
+	}
+
+	/* check we are not trying to do this twice... */
+	if (watch->priv->cookie == 0) {
+		pk_debug ("cookie not already set");
+		return FALSE;
+	}
+
+	/* coldplug the battery state */
+	ret = dbus_g_proxy_call (watch->priv->proxy_gpm, "UnInhibit", &error,
+				 G_TYPE_UINT, watch->priv->cookie,
+				 G_TYPE_INVALID,
+				 G_TYPE_INVALID);
+	if (error != NULL) {
+		printf ("DEBUG: ERROR: %s\n", error->message);
+		g_error_free (error);
+	}
+	watch->priv->cookie = 0;
+	return ret;
+}
+
+/**
+ * pk_watch_locked_cb:
+ **/
+static void
+pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
+{
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	pk_warning ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
+	if (is_locked == TRUE) {
+		pk_watch_inhibit (watch);
+	} else {
+		pk_watch_uninhibit (watch);
+	}
+}
+
+/**
  * pk_watch_init:
  * @watch: This class instance
  **/
 static void
 pk_watch_init (PkWatch *watch)
 {
+	DBusGConnection *connection;
+	GError *error = NULL;
 	GtkStatusIcon *status_icon;
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
+	watch->priv->cookie = 0;
 	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->sicon = pk_smart_icon_new ();
+
+	/* we need to get ::locked */
+	watch->priv->client = pk_client_new ();
+	g_signal_connect (watch->priv->client, "locked",
+			  G_CALLBACK (pk_watch_locked_cb), watch);
+
+	/* connect to session bus */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (error != NULL) {
+		pk_warning ("Cannot connect to session bus: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* use gnome-power-manager for the session inhibit stuff */
+	watch->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (connection,
+				  GPM_DBUS_SERVICE, GPM_DBUS_PATH_INHIBIT,
+				  GPM_DBUS_INTERFACE_INHIBIT, &error);
+	if (error != NULL) {
+		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		g_error_free (error);
+	}
 
 	/* right click actions are common */
 	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon);
@@ -605,8 +752,10 @@ pk_watch_finalize (GObject *object)
 	g_return_if_fail (watch->priv != NULL);
 	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->tlist);
+	g_object_unref (watch->priv->client);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
+	g_object_unref (watch->priv->proxy_gpm);
 
 	G_OBJECT_CLASS (pk_watch_parent_class)->finalize (object);
 }
