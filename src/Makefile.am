@@ -23,6 +23,7 @@ INCLUDES =						\
 
 bin_PROGRAMS =						\
 	pk-application					\
+	pk-repo						\
 	pk-prefs					\
 	pk-install-file					\
 	pk-install-package				\
@@ -130,6 +131,20 @@ pk_update_viewer_SOURCES =				\
 	$(NULL)
 
 pk_update_viewer_LDADD =				\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_repo_SOURCES =					\
+	pk-repo.c					\
+	pk-common.c					\
+	pk-common.h					\
+	$(NULL)
+
+pk_repo_LDADD =						\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
