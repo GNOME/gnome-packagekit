@@ -852,6 +852,15 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_application_delete_event_cb), application);
 
+	/*
+	 * FIXME: We don't want to set a style for the toolbar, so the gconf
+	 * setting is used. You can leave this value out of the glade xml file
+	 * and libglade will honour it. However, glade-2 will just drop in a value
+	 * any time the glade file is saved. So work around it for now.
+	 */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbar1");
+	gtk_toolbar_unset_style (GTK_TOOLBAR (widget));
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_help_cb), application);
