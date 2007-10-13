@@ -11,5 +11,5 @@ DOC_FIGURES = \
 	figures/pk-require-restart.png		\
 	figures/pk-updates-warning.png
 
-DOC_LINGUAS =
+DOC_LINGUAS = sv
 
