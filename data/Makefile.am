@@ -23,6 +23,7 @@ autostart_in_files = pk-update-icon.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
+	pk-repo.glade					\
 	pk-application.glade				\
 	pk-update-viewer.glade				\
 	pk-progress.glade				\
