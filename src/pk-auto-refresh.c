@@ -315,10 +315,10 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	/* we need to query the last cache refresh time */
 	arefresh->priv->client = pk_client_new ();
 
-	/* connect to system manager */
+	/* connect to session bus */
 	network = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to system bus: %s", error->message);
+		pk_warning ("Cannot connect to session bus: %s", error->message);
 		g_error_free (error);
 		return;
 	}
