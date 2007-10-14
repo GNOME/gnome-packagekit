@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 19:34+0100\n"
-"PO-Revision-Date: 2007-10-14 16:04-0500\n"
+"POT-Creation-Date: 2007-10-14 17:53-0400\n"
+"PO-Revision-Date: 2007-10-14 18:01-0500\n"
 "Last-Translator: Og Maciel <ogmaciel@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-l10n-br@listas.cipsga.org.br>\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid "How often we should check for updates"
 msgstr "Com que freqüência devemos verificar por atualizações"
 
 #: ../data/gnome-packagekit.schemas.in.h:4
-msgid "How often we should check for updates. Options are \"hourly\", \"daily\", \"weekly\", never\""
+msgid "How often we should check for updates. Options are \"hourly\", \"daily\", \"weekly\", \"never\""
 msgstr "Com que freqüência devemos verificar por atualizações. Opções são \"hourly\", \"daily\", \"weekly\", \"nunca\""
 
 #: ../data/gnome-packagekit.schemas.in.h:5
@@ -98,7 +98,7 @@ msgid "Install"
 msgstr "Instalar"
 
 #: ../data/pk-application.glade.h:11
-#: ../data/pk-backend-status.glade.h:20
+#: ../data/pk-backend-status.glade.h:21
 msgid "Installed:"
 msgstr "Instalado:"
 
@@ -171,62 +171,74 @@ msgid "Get Description:"
 msgstr "Obter Descrição:"
 
 #: ../data/pk-backend-status.glade.h:15
+msgid "Get Repo List:"
+msgstr "Obter Lista de Repositórios:"
+
+#: ../data/pk-backend-status.glade.h:16
 msgid "Get Requires:"
 msgstr "Obter Requerimentos:"
 
-#: ../data/pk-backend-status.glade.h:16
+#: ../data/pk-backend-status.glade.h:17
 msgid "Get Update Detail:"
 msgstr "Obter Detalhe de Atualização:"
 
-#: ../data/pk-backend-status.glade.h:17
+#: ../data/pk-backend-status.glade.h:18
 msgid "Get Updates:"
 msgstr "Obter Atualizações:"
 
-#: ../data/pk-backend-status.glade.h:18
+#: ../data/pk-backend-status.glade.h:19
 msgid "Install File:"
 msgstr "Instalar Arquivo:"
 
-#: ../data/pk-backend-status.glade.h:19
+#: ../data/pk-backend-status.glade.h:20
 msgid "Install Package:"
 msgstr "Instalar Pacote:"
 
-#: ../data/pk-backend-status.glade.h:21
+#: ../data/pk-backend-status.glade.h:22
 msgid "Refresh Cache:"
 msgstr "Recarregar Cache:"
 
-#: ../data/pk-backend-status.glade.h:22
+#: ../data/pk-backend-status.glade.h:23
 msgid "Remove Package:"
 msgstr "Remover Pacote:"
 
-#: ../data/pk-backend-status.glade.h:23
+#: ../data/pk-backend-status.glade.h:24
+msgid "Repo Enable:"
+msgstr "Habilitar Repositório:"
+
+#: ../data/pk-backend-status.glade.h:25
+msgid "Repo Set Data:"
+msgstr "Definir Dados do Repositório:"
+
+#: ../data/pk-backend-status.glade.h:26
 msgid "Resolve:"
 msgstr "Resolver:"
 
-#: ../data/pk-backend-status.glade.h:24
+#: ../data/pk-backend-status.glade.h:27
 msgid "Richard Hughes"
 msgstr "Richard Hughes"
 
-#: ../data/pk-backend-status.glade.h:25
+#: ../data/pk-backend-status.glade.h:28
 msgid "Search Details:"
 msgstr "Pesquisar Detalhes:"
 
-#: ../data/pk-backend-status.glade.h:26
+#: ../data/pk-backend-status.glade.h:29
 msgid "Search File:"
 msgstr "Pesquisar Arquivo:"
 
-#: ../data/pk-backend-status.glade.h:27
+#: ../data/pk-backend-status.glade.h:30
 msgid "Search Group:"
 msgstr "Pesquisar Grupo:"
 
-#: ../data/pk-backend-status.glade.h:28
+#: ../data/pk-backend-status.glade.h:31
 msgid "Search Name:"
 msgstr "Pesquisar Nome:"
 
-#: ../data/pk-backend-status.glade.h:29
+#: ../data/pk-backend-status.glade.h:32
 msgid "Update Package:"
 msgstr "Atualizar Pacote:"
 
-#: ../data/pk-backend-status.glade.h:30
+#: ../data/pk-backend-status.glade.h:33
 msgid "Update System:"
 msgstr "Atualizar Sistema:"
 
@@ -237,6 +249,10 @@ msgstr "Instalar programa selecionado no sistema"
 #: ../data/pk-install-file.desktop.in.h:2
 msgid "Package Installer"
 msgstr "Instalador de Pacote"
+
+#: ../data/pk-repo.glade.h:1
+msgid "Repository Viewer"
+msgstr "Visualizador de Repositório"
 
 #: ../data/pk-prefs.glade.h:1
 msgid "<b>Display Notification</b>"
@@ -259,7 +275,7 @@ msgid "Install updates automatically when on battery power"
 msgstr "Instalar atualizações automaticamente quando usando a bateria"
 
 #: ../data/pk-prefs.glade.h:6
-#: ../src/pk-prefs.c:296
+#: ../src/pk-prefs.c:301
 msgid "Software Update Preferences"
 msgstr "Preferências de Atualização de Programa"
 
@@ -292,9 +308,9 @@ msgid "Transaction Progress:"
 msgstr "Progresso da Transação:"
 
 #: ../data/pk-progress.glade.h:6
-#: ../src/pk-common.c:211
-#: ../src/pk-common.c:375
-#: ../src/pk-common.c:434
+#: ../src/pk-common.c:243
+#: ../src/pk-common.c:407
+#: ../src/pk-common.c:466
 msgid "Unknown"
 msgstr "Desconhecido"
 
@@ -314,7 +330,8 @@ msgid "PackageKit Update Applet"
 msgstr "Miniaplicativo de Atualização do PackageKit"
 
 #: ../data/pk-update-viewer.glade.h:2
-#: ../src/pk-update-viewer.c:286
+#: ../src/pk-repo.c:233
+#: ../src/pk-update-viewer.c:330
 msgid "Software Update Viewer"
 msgstr "Visualizador de Atualização de Programa"
 
@@ -420,47 +437,47 @@ msgstr "Nome"
 msgid "The group could not be queried"
 msgstr "Não foi possível consultar o grupo"
 
-#: ../src/pk-application.c:924
+#: ../src/pk-application.c:933
 msgid "By package name"
 msgstr "Por nome de pacote"
 
-#: ../src/pk-application.c:927
+#: ../src/pk-application.c:936
 msgid "By description"
 msgstr "Por descrição"
 
-#: ../src/pk-application.c:930
+#: ../src/pk-application.c:939
 msgid "By file"
 msgstr "Por arquivo"
 
-#: ../src/pk-application.c:938
-#: ../src/pk-common.c:276
+#: ../src/pk-application.c:947
+#: ../src/pk-common.c:308
 msgid "Installed"
 msgstr "Instalado"
 
-#: ../src/pk-application.c:939
-#: ../src/pk-common.c:279
+#: ../src/pk-application.c:948
+#: ../src/pk-common.c:311
 msgid "Available"
 msgstr "Disponível"
 
-#: ../src/pk-application.c:940
 #: ../src/pk-application.c:949
 #: ../src/pk-application.c:958
+#: ../src/pk-application.c:967
 msgid "All packages"
 msgstr "Todos pacotes"
 
-#: ../src/pk-application.c:947
+#: ../src/pk-application.c:956
 msgid "Only graphical"
 msgstr "Somente gráfico"
 
-#: ../src/pk-application.c:948
+#: ../src/pk-application.c:957
 msgid "Only text"
 msgstr "Somente texto"
 
-#: ../src/pk-application.c:956
+#: ../src/pk-application.c:965
 msgid "Only development"
 msgstr "Somente desenvolvimento"
 
-#: ../src/pk-application.c:957
+#: ../src/pk-application.c:966
 msgid "Non-development"
 msgstr "Não desenvolvimento"
 
@@ -468,293 +485,319 @@ msgstr "Não desenvolvimento"
 msgid "PackageKit Backend Details Viewer"
 msgstr "Visualizador de Detalhes do Backend do PackageKit"
 
-#: ../src/pk-common.c:135
+#: ../src/pk-common.c:167
 msgid "No network connection available"
 msgstr "Nenhuma conexão de rede disponível"
 
-#: ../src/pk-common.c:138
+#: ../src/pk-common.c:170
 msgid "Out of memory"
 msgstr "Memória insuficiente"
 
-#: ../src/pk-common.c:141
+#: ../src/pk-common.c:173
 msgid "Failed to create a thread"
 msgstr "Falha ao criar um encadeamento"
 
-#: ../src/pk-common.c:144
+#: ../src/pk-common.c:176
 msgid "Not supported by this backend"
 msgstr "Não há suporte por este backend"
 
-#: ../src/pk-common.c:147
+#: ../src/pk-common.c:179
 msgid "An internal system error has occurred"
 msgstr "Ocorreu um erro no sistema interno"
 
-#: ../src/pk-common.c:150
+#: ../src/pk-common.c:182
 msgid "A security trust relationship is not present"
 msgstr "Não está presente uma relação confiável de segurança"
 
-#: ../src/pk-common.c:153
+#: ../src/pk-common.c:185
 msgid "The package is not installed"
 msgstr "O pacote não está instalado"
 
-#: ../src/pk-common.c:156
+#: ../src/pk-common.c:188
 msgid "The package is already installed"
 msgstr "O pacote já está instalado"
 
-#: ../src/pk-common.c:159
+#: ../src/pk-common.c:191
 msgid "The package download failed"
 msgstr "O download do pacote falhou"
 
-#: ../src/pk-common.c:162
+#: ../src/pk-common.c:194
 msgid "Dependency resolution failed"
 msgstr "A resolução de dependências falhou"
 
-#: ../src/pk-common.c:165
+#: ../src/pk-common.c:197
 msgid "Search filter was invalid"
 msgstr "O filtro de pesquisa estava inválido"
 
-#: ../src/pk-common.c:168
+#: ../src/pk-common.c:200
 msgid "The package ID was not well formed"
 msgstr "A identifucação do pacote foi mal formada"
 
-#: ../src/pk-common.c:171
+#: ../src/pk-common.c:203
 msgid "Transaction error"
 msgstr "Erro de transação"
 
-#: ../src/pk-common.c:174
+#: ../src/pk-common.c:206
 msgid "Unknown error"
 msgstr "Erro desconhecido"
 
-#: ../src/pk-common.c:188
+#: ../src/pk-common.c:220
 msgid "A system restart is required"
 msgstr "É necessário reiníciar o sistema"
 
-#: ../src/pk-common.c:191
+#: ../src/pk-common.c:223
 msgid "You will need to log off and log back on"
 msgstr "Você precisará sair e efetuar novo login"
 
-#: ../src/pk-common.c:194
+#: ../src/pk-common.c:226
 msgid "You need to restart the application"
 msgstr "Você precisa reiniciar a aplicação"
 
-#: ../src/pk-common.c:214
+#: ../src/pk-common.c:246
 msgid "Setting up"
 msgstr "Configurando"
 
-#: ../src/pk-common.c:217
+#: ../src/pk-common.c:249
 msgid "Waiting"
 msgstr "Aguardando"
 
-#: ../src/pk-common.c:220
+#: ../src/pk-common.c:252
 msgid "Querying"
 msgstr "Consultando"
 
-#: ../src/pk-common.c:223
-#: ../src/pk-common.c:273
-#: ../src/pk-common.c:405
+#: ../src/pk-common.c:255
+#: ../src/pk-common.c:305
+#: ../src/pk-common.c:437
 msgid "Removing"
 msgstr "Removendo"
 
-#: ../src/pk-common.c:226
-#: ../src/pk-common.c:264
+#: ../src/pk-common.c:258
+#: ../src/pk-common.c:296
 msgid "Downloading"
 msgstr "Baixando"
 
-#: ../src/pk-common.c:229
-#: ../src/pk-common.c:270
-#: ../src/pk-common.c:408
+#: ../src/pk-common.c:261
+#: ../src/pk-common.c:302
+#: ../src/pk-common.c:440
 msgid "Installing"
 msgstr "Instalando"
 
-#: ../src/pk-common.c:232
+#: ../src/pk-common.c:264
 msgid "Refreshing software list"
 msgstr "Recarregando lista de programas"
 
-#: ../src/pk-common.c:235
 #: ../src/pk-common.c:267
+#: ../src/pk-common.c:299
 msgid "Updating"
 msgstr "Atualizando"
 
-#: ../src/pk-common.c:252
+#: ../src/pk-common.c:284
 msgid "Low priority update"
 msgstr "Atualização de prioridade baixa"
 
-#: ../src/pk-common.c:255
+#: ../src/pk-common.c:287
 msgid "Normal update"
 msgstr "Atualização normal"
 
-#: ../src/pk-common.c:258
+#: ../src/pk-common.c:290
 msgid "Important update"
 msgstr "Atualização importante"
 
-#: ../src/pk-common.c:261
+#: ../src/pk-common.c:293
 msgid "Security update"
 msgstr "Atualização de segurança"
 
-#: ../src/pk-common.c:378
+#: ../src/pk-common.c:410
 msgid "Getting dependencies"
 msgstr "Obtendo dependências"
 
-#: ../src/pk-common.c:381
+#: ../src/pk-common.c:413
 msgid "Getting update detail"
 msgstr "Obtendo detalhe da atualização"
 
-#: ../src/pk-common.c:384
+#: ../src/pk-common.c:416
 msgid "Getting description"
 msgstr "Obtendo descrição"
 
-#: ../src/pk-common.c:387
+#: ../src/pk-common.c:419
 msgid "Getting requires"
 msgstr "Obtendo requerimentos"
 
-#: ../src/pk-common.c:390
+#: ../src/pk-common.c:422
 msgid "Getting updates"
 msgstr "Obtendo atualizações"
 
-#: ../src/pk-common.c:393
+#: ../src/pk-common.c:425
 msgid "Searching details"
 msgstr "Pesquisando detalhes"
 
-#: ../src/pk-common.c:396
+#: ../src/pk-common.c:428
 msgid "Searching for file"
 msgstr "Pesquisando por arquivo"
 
-#: ../src/pk-common.c:399
+#: ../src/pk-common.c:431
 msgid "Searching groups"
 msgstr "Pesquisando grupos"
 
-#: ../src/pk-common.c:402
+#: ../src/pk-common.c:434
 msgid "Searching for package name"
 msgstr "Pesquisando nome de pacote"
 
-#: ../src/pk-common.c:411
+#: ../src/pk-common.c:443
 msgid "Refreshing package cache"
 msgstr "Recarregando cache de pacote"
 
-#: ../src/pk-common.c:414
+#: ../src/pk-common.c:446
 msgid "Updating package"
 msgstr "Atualizando pacote"
 
-#: ../src/pk-common.c:417
+#: ../src/pk-common.c:449
 msgid "Updating system"
 msgstr "Atualizando sistema"
 
-#: ../src/pk-common.c:437
+#: ../src/pk-common.c:469
 msgid "Got dependencies"
 msgstr "Dependências obtidas"
 
-#: ../src/pk-common.c:440
+#: ../src/pk-common.c:472
 msgid "Got update detail"
 msgstr "Detalhe de atualização obtido"
 
-#: ../src/pk-common.c:443
+#: ../src/pk-common.c:475
 msgid "Got description"
 msgstr "Descrição obtida"
 
-#: ../src/pk-common.c:446
+#: ../src/pk-common.c:478
 msgid "Got requires"
 msgstr "Requerimentos obtidos"
 
-#: ../src/pk-common.c:449
+#: ../src/pk-common.c:481
 msgid "Got updates"
 msgstr "Atualizações obtidas"
 
-#: ../src/pk-common.c:452
+#: ../src/pk-common.c:484
 msgid "Got details"
 msgstr "Detalhes obtidos"
 
-#: ../src/pk-common.c:455
+#: ../src/pk-common.c:487
 msgid "Searched for file"
 msgstr "Pesquisou por arquivo"
 
-#: ../src/pk-common.c:458
+#: ../src/pk-common.c:490
 msgid "Searched groups"
 msgstr "Pesquisou grupos"
 
-#: ../src/pk-common.c:461
+#: ../src/pk-common.c:493
 msgid "Searched for package name"
 msgstr "Pesquisou por nome de pacote"
 
-#: ../src/pk-common.c:464
+#: ../src/pk-common.c:496
 msgid "Removed package"
 msgstr "Pacote removido"
 
-#: ../src/pk-common.c:467
+#: ../src/pk-common.c:499
 msgid "Installed package"
 msgstr "Pacote instalado"
 
-#: ../src/pk-common.c:470
+#: ../src/pk-common.c:502
 msgid "Refreshed package cache"
 msgstr "Cache de pacote recarregado"
 
-#: ../src/pk-common.c:473
+#: ../src/pk-common.c:505
 msgid "Updated package"
 msgstr "Pacote atualizado"
 
-#: ../src/pk-common.c:476
+#: ../src/pk-common.c:508
 msgid "Updated system"
 msgstr "Sistema atualizado"
 
-#: ../src/pk-common.c:536
+#: ../src/pk-common.c:568
 msgid "Accessibility"
 msgstr "Acessibilidade"
 
-#: ../src/pk-common.c:539
+#: ../src/pk-common.c:571
 msgid "Accessories"
 msgstr "Acessórios"
 
-#: ../src/pk-common.c:542
+#: ../src/pk-common.c:574
 msgid "Education"
 msgstr "Educação"
 
-#: ../src/pk-common.c:545
+#: ../src/pk-common.c:577
 msgid "Games"
 msgstr "Jogos"
 
-#: ../src/pk-common.c:548
+#: ../src/pk-common.c:580
 msgid "Graphics"
 msgstr "Gráficos"
 
-#: ../src/pk-common.c:551
+#: ../src/pk-common.c:583
 msgid "Internet"
 msgstr "Internet"
 
-#: ../src/pk-common.c:554
+#: ../src/pk-common.c:586
 msgid "Office"
 msgstr "Escritório"
 
-#: ../src/pk-common.c:557
+#: ../src/pk-common.c:589
 msgid "Other"
 msgstr "Outros"
 
-#: ../src/pk-common.c:560
+#: ../src/pk-common.c:592
 msgid "Programming"
 msgstr "Programação"
 
-#: ../src/pk-common.c:563
+#: ../src/pk-common.c:595
 msgid "Multimedia"
 msgstr "Multimídia"
 
-#: ../src/pk-common.c:566
+#: ../src/pk-common.c:598
 msgid "System"
 msgstr "Sistema"
 
-#: ../src/pk-install-file.c:73
-#: ../src/pk-install-file.c:75
+#: ../src/pk-install-file.c:80
+#: ../src/pk-install-file.c:82
 msgid "PackageKit File Installer"
 msgstr "Instalador de Arquivo PackageKit"
 
-#: ../src/pk-install-file.c:74
+#: ../src/pk-install-file.c:81
 msgid "FILE"
 msgstr "ARQUIVO"
 
-#: ../src/pk-install-package.c:120
-#: ../src/pk-install-package.c:122
+#: ../src/pk-install-file.c:102
+#: ../src/pk-install-package.c:90
+#: ../src/pk-install-package.c:171
+msgid "Method not supported"
+msgstr "Método não suportado"
+
+#: ../src/pk-install-file.c:103
+msgid "Installing local files is not supported"
+msgstr "A instalação de arquivos locais não é suportado"
+
+#: ../src/pk-install-package.c:76
+msgid "Failed to resolve"
+msgstr "Falha ao solucionar"
+
+#: ../src/pk-install-package.c:77
+msgid "The package could not be found on the system"
+msgstr "Não foi possível encontrar o pacote no sistema"
+
+#: ../src/pk-install-package.c:91
+msgid "Installing packages is not supported"
+msgstr "A instalação de pacotes não é suportado"
+
+#: ../src/pk-install-package.c:144
+#: ../src/pk-install-package.c:146
 msgid "PackageKit Package Installer"
 msgstr "Instalador de Pacote PackageKit"
 
-#: ../src/pk-install-package.c:121
+#: ../src/pk-install-package.c:145
 msgid "PACKAGE_ID"
 msgstr "IDENTIFICAÇÃO DO PACOTE"
+
+#: ../src/pk-install-package.c:172
+msgid "Resolving names to packages is not supported"
+msgstr "A combinação de nomes e pacotes não é suportado"
 
 #: ../src/pk-notify.c:103
 msgid "Functionality incomplete"
@@ -811,7 +854,8 @@ msgstr ""
 #: ../src/pk-notify.c:149
 #: ../src/pk-watch.c:318
 msgid "translator-credits"
-msgstr "Vladimir Melo <vladimirmelo@foresightlinux.org>\n"
+msgstr ""
+"Vladimir Melo <vladimirmelo@foresightlinux.org>\n"
 "Og Maciel <ogmaciel@gnome.org>"
 
 #: ../src/pk-notify.c:165
@@ -932,6 +976,7 @@ msgid "Automatic updates are not being installed as the computer is on battery p
 msgstr "Atualizações automáticas não estão sendo instaladas porque o computador está usando a bateria"
 
 #: ../src/pk-notify.c:583
+#, c-format
 msgid "There is an update available"
 msgstr "Existe uma atualização disponível"
 
@@ -939,6 +984,14 @@ msgstr "Existe uma atualização disponível"
 #, c-format
 msgid "There are %d updates available"
 msgstr "Existem %d atualizações disponíveis"
+
+#: ../src/pk-repo.c:157
+msgid "Enabled"
+msgstr "Habilitado"
+
+#: ../src/pk-repo.c:164
+msgid "Repository"
+msgstr "Repositório"
 
 #: ../src/pk-prefs.c:39
 msgid "Hourly"
@@ -992,15 +1045,15 @@ msgstr "Detalhes"
 msgid "PackageKit Update Icon"
 msgstr "Ícone de Atualização do PackageKit"
 
-#: ../src/pk-update-viewer.c:158
+#: ../src/pk-update-viewer.c:185
 msgid "Severity"
 msgstr "Relevância"
 
-#: ../src/pk-update-viewer.c:164
+#: ../src/pk-update-viewer.c:191
 msgid "Software"
 msgstr "Programa"
 
-#: ../src/pk-update-viewer.c:229
+#: ../src/pk-update-viewer.c:273
 msgid "<b>There are no updates available!</b>"
 msgstr "<b>Não há atualizações disponíveis!</b>"
 
