@@ -40,6 +40,7 @@ static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *repo = NULL;
+static PkEnumList *role_list;
 
 enum
 {
@@ -80,6 +81,12 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean installed;
 
+	/* do we have the capability? */
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
+		pk_debug ("can't change state");
+		return;
+	}
+
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
 	gtk_tree_model_get (model, &iter, REPO_COLUMN_ENABLED, &installed, -1);
@@ -90,6 +97,11 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
 
+	/* do this to the repo */
+	pk_debug ("setting %s to %i", repo, installed);
+	pk_client_reset (client);
+	pk_client_repo_enable (client, repo, installed);
+
 	/* clean up */
 	gtk_tree_path_free (path);
 }
@@ -98,16 +110,17 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
  * pk_repo_detail_cb:
  **/
 static void
-pk_repo_detail_cb (PkClient *client, const gchar *repo_id, const gchar *details, gboolean enabled, gpointer data)
+pk_repo_detail_cb (PkClient *client, const gchar *repo_id,
+		   const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
 
-	pk_debug ("repo = %s:%s:%i", repo_id, details, enabled);
+	pk_debug ("repo = %s:%s:%i", repo_id, description, enabled);
 
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
 			    REPO_COLUMN_ENABLED, enabled,
-			    REPO_COLUMN_TEXT, details,
+			    REPO_COLUMN_TEXT, description,
 			    REPO_COLUMN_ID, repo_id,
 			    -1);
 }
@@ -180,15 +193,6 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * pk_connection_changed_cb:
- **/
-static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointer data)
-{
-	pk_debug ("connected=%i", connected);
-}
-
-/**
  * pk_repo_finished_cb:
  **/
 static void
@@ -210,8 +214,6 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	PkConnection *pconnection;
-	PkEnumList *role_list;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -244,17 +246,13 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
-	g_signal_connect (client, "repo",
+	g_signal_connect (client, "repo-detail",
 			  G_CALLBACK (pk_repo_detail_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
-
-	pconnection = pk_connection_new ();
-	g_signal_connect (pconnection, "connection-changed",
-			  G_CALLBACK (pk_connection_changed_cb), NULL);
 
 	glade_xml = glade_xml_new (PK_DATA "/pk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
@@ -293,15 +291,14 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* get the update list */
-//	pk_client_get_repo_list (client);
-
-	pk_repo_detail_cb (client, "development", "Fedora - Development", TRUE, NULL);
-	pk_repo_detail_cb (client, "development-debuginfo", "Fedora - Development - Debug", TRUE, NULL);
-	pk_repo_detail_cb (client, "development-source", "Fedora - Development - Source", FALSE, NULL);
-	pk_repo_detail_cb (client, "livna-development", "Livna for Fedora Core 8 - i386 - Development Tree", TRUE, NULL);
-	pk_repo_detail_cb (client, "livna-development-debuginfo", "Livna for Fedora Core 8 - i386 - Development Tree - Debug", TRUE, NULL);
-	pk_repo_detail_cb (client, "livna-development-source", "Livna for Fedora Core 8 - i386 - Development Tree - Source", FALSE, NULL);
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST) == TRUE) {
+		/* get the update list */
+		pk_client_get_repo_list (client);
+	} else {
+		pk_repo_detail_cb (client, "default", "Getting repository list not supported by backend", FALSE, NULL);
+		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
 
 	gtk_widget_show (main_window);
 
@@ -310,7 +307,6 @@ main (int argc, char *argv[])
 
 	g_object_unref (list_store);
 	g_object_unref (client);
-	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (repo);
 
