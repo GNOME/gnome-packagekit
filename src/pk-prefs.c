@@ -279,7 +279,7 @@ main (int argc, char *argv[])
 	PkClient *client;
 
 	const GOptionEntry options[] = {
-		{ "verbose", '\0', 0, G_OPTION_ARG_NONE, &verbose,
+		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  "Show extra debugging information", NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
 		  "Show the program version and exit", NULL },
