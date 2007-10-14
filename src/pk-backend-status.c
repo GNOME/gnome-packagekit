@@ -204,6 +204,20 @@ main (int argc, char *argv[])
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
+	/* repos */
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST) == TRUE) {
+		widget = glade_xml_get_widget (glade_xml, "image_get_repo_list");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE) == TRUE) {
+		widget = glade_xml_get_widget (glade_xml, "image_repo_enable");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_SET_DATA) == TRUE) {
+		widget = glade_xml_get_widget (glade_xml, "image_repo_set_data");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
+
 	/* filters */
 	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_INSTALLED) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_installed");
