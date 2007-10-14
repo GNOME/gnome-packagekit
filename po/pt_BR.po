@@ -1,15 +1,16 @@
 # # Brazilian Portuguese translation of packagekit.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C)2007
+# This file is distributed under the same license as the packagekit package.
 # Vladimir Melo <vladimirmelo@foresightlinux.org>, 2007.
+# Og Maciel <ogmaciel@gnome.org>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-11 12:12-0400\n"
-"PO-Revision-Date: 2007-10-11 22:00-0300\n"
-"Last-Translator: Vladimir Melo <vladimirmelo@foresightlinux.org>\n"
+"POT-Creation-Date: 2007-10-13 19:34+0100\n"
+"PO-Revision-Date: 2007-10-14 16:04-0500\n"
+"Last-Translator: Og Maciel <ogmaciel@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-l10n-br@listas.cipsga.org.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -23,29 +24,33 @@ msgstr "Atualizar automaticamente estes tipos de atualizações"
 
 #: ../data/gnome-packagekit.schemas.in.h:2
 msgid "Auto update these types of updates. Options are \"all\", \"security\", or \"none\""
-msgstr "Atualizar automaticamente estes tipos de atualizações. Opções são \"todos\", \"segurança\", ou \"nenhum\""
+msgstr "Atualizar automaticamente estes tipos de atualizações. Opções são \"all\", \"security\", ou \"none\""
 
 #: ../data/gnome-packagekit.schemas.in.h:3
 msgid "How often we should check for updates"
-msgstr "Com que freqüência devemos verificar atualizações"
+msgstr "Com que freqüência devemos verificar por atualizações"
 
 #: ../data/gnome-packagekit.schemas.in.h:4
 msgid "How often we should check for updates. Options are \"hourly\", \"daily\", \"weekly\", never\""
-msgstr "Com que freqüência devemos verificar atualizações. Opções são \"a cada hora\", \"diariamente\", \"semanalmente\", \"nunca\""
+msgstr "Com que freqüência devemos verificar por atualizações. Opções são \"hourly\", \"daily\", \"weekly\", \"nunca\""
 
 #: ../data/gnome-packagekit.schemas.in.h:5
 msgid "If searches should be done for each letter"
 msgstr "Se devem ser feitas pesquisas para cada letra"
 
 #: ../data/gnome-packagekit.schemas.in.h:6
+msgid "If we should install updates automatically when on battery power"
+msgstr "Se instalar atualizações automaticamente quando usando a bateria"
+
+#: ../data/gnome-packagekit.schemas.in.h:7
 msgid "Notify the user when the transaction is complete"
 msgstr "Notificar o usuário quando a transação estiver completa"
 
-#: ../data/gnome-packagekit.schemas.in.h:7
+#: ../data/gnome-packagekit.schemas.in.h:8
 msgid "Notify the user when updates are available"
 msgstr "Notificar o usuário quando atualizações estiverem disponíveis"
 
-#: ../data/gnome-packagekit.schemas.in.h:8
+#: ../data/gnome-packagekit.schemas.in.h:9
 msgid "The number of seconds idle to wait to check for updates"
 msgstr "O número de segundos ociosos a aguardar para verificar atualizações"
 
@@ -54,76 +59,72 @@ msgid "1024kb"
 msgstr "1024kb"
 
 #: ../data/pk-application.glade.h:2
-#: ../src/pk-application-main.c:84
+#: ../data/pk-backend-status.glade.h:2
+msgid "<b>Filters</b>"
+msgstr "<b>Filtros</b>"
+
+#: ../data/pk-application.glade.h:3
+msgid "<b>Groups</b>"
+msgstr "<b>Grupos</b>"
+
+#: ../data/pk-application.glade.h:4
+msgid "<b>Search</b>"
+msgstr "<b>Pesquisa</b>"
+
+#: ../data/pk-application.glade.h:5
+#: ../src/pk-application-main.c:88
 msgid "Add/Remove Software"
 msgstr "Adicionar/Remover Programas"
 
-#: ../data/pk-application.glade.h:3
-#: ../src/pk-common.c:279
-msgid "Available"
-msgstr "Disponível"
-
-#: ../data/pk-application.glade.h:4
+#: ../data/pk-application.glade.h:6
 msgid "Description"
 msgstr "Descrição"
 
-#: ../data/pk-application.glade.h:5
-msgid "Development"
-msgstr "Desenvolvimento"
+#: ../data/pk-application.glade.h:7
+#: ../data/pk-backend-status.glade.h:10
+msgid "Development:"
+msgstr "Desenvolvimento:"
 
-#: ../data/pk-application.glade.h:6
+#: ../data/pk-application.glade.h:8
 msgid "File List"
 msgstr "Lista de Arquivos"
 
-#: ../data/pk-application.glade.h:7
-msgid "Graphical"
-msgstr "Gráfico"
-
-#: ../data/pk-application.glade.h:8
-#: ../src/pk-application.c:658
-#: ../src/pk-common.c:276
-msgid "Installed"
-msgstr "Instalado"
-
 #: ../data/pk-application.glade.h:9
-msgid "Normal"
-msgstr "Normal"
+msgid "Graphical:"
+msgstr "Gráfico:"
 
 #: ../data/pk-application.glade.h:10
-msgid "Package size:"
-msgstr "Tamanho do pacote:"
-
-#: ../data/pk-application.glade.h:11
-msgid "Text"
-msgstr "Texto"
-
-#: ../data/pk-application.glade.h:12
-msgid "Depends"
-msgstr "Dependências"
-
-#: ../data/pk-application.glade.h:13
-msgid "Homepage"
-msgstr "Página Inicial"
-
-#: ../data/pk-application.glade.h:14
 msgid "Install"
 msgstr "Instalar"
 
-#: ../data/pk-application.glade.h:15
+#: ../data/pk-application.glade.h:11
+#: ../data/pk-backend-status.glade.h:20
+msgid "Installed:"
+msgstr "Instalado:"
+
+#: ../data/pk-application.glade.h:12
+msgid "Package size:"
+msgstr "Tamanho do pacote:"
+
+#: ../data/pk-application.glade.h:13
 msgid "Remove"
 msgstr "Remover"
 
+#: ../data/pk-application.glade.h:14
+msgid "_Depends"
+msgstr "_Dependências"
+
+#: ../data/pk-application.glade.h:15
+msgid "_Homepage"
+msgstr "Página Inicial"
+
 #: ../data/pk-application.glade.h:16
-msgid "Requires"
-msgstr "Requerimentos"
+msgid "_Requires"
+msgstr "_Requerimentos"
 
 #: ../data/pk-backend-status.glade.h:1
 msgid "0.0.1"
 msgstr "0.0.1"
-
-#: ../data/pk-backend-status.glade.h:2
-msgid "<b>Filters</b>"
-msgstr "<b>Filtros</b>"
 
 #: ../data/pk-backend-status.glade.h:3
 msgid "<b>General</b>"
@@ -138,32 +139,28 @@ msgid "Backend Author:"
 msgstr "Autor do Backend:"
 
 #: ../data/pk-backend-status.glade.h:6
+msgid "Backend Name:"
+msgstr "Nome do Backend:"
+
+#: ../data/pk-backend-status.glade.h:7
 msgid "Backend Status"
 msgstr "Status do Backend:"
 
-#: ../data/pk-backend-status.glade.h:7
+#: ../data/pk-backend-status.glade.h:8
 msgid "Backend Version:"
 msgstr "Versão do Backend:"
-
-#: ../data/pk-backend-status.glade.h:8
-msgid "Backend Name:"
-msgstr "Nome do Backend:"
 
 #: ../data/pk-backend-status.glade.h:9
 msgid "Cancel Transaction:"
 msgstr "Cancelar Transação:"
 
-#: ../data/pk-backend-status.glade.h:10
-msgid "Development:"
-msgstr "Desenvolvimento:"
-
 #: ../data/pk-backend-status.glade.h:11
 msgid "Dummy"
-msgstr "Dummy"
+msgstr "Fictício"
 
 #: ../data/pk-backend-status.glade.h:12
 msgid "GUI:"
-msgstr "GUI:"
+msgstr "Interface Gráfica:"
 
 #: ../data/pk-backend-status.glade.h:13
 msgid "Get Depends:"
@@ -192,10 +189,6 @@ msgstr "Instalar Arquivo:"
 #: ../data/pk-backend-status.glade.h:19
 msgid "Install Package:"
 msgstr "Instalar Pacote:"
-
-#: ../data/pk-backend-status.glade.h:20
-msgid "Installed:"
-msgstr "Instalado:"
 
 #: ../data/pk-backend-status.glade.h:21
 msgid "Refresh Cache:"
@@ -251,7 +244,7 @@ msgstr "<b>Exibir Notificação</b>"
 
 #: ../data/pk-prefs.glade.h:2
 msgid "<b>Update Settings</b>"
-msgstr "<b>Atualizar Configurações</b>"
+msgstr "<b>Configurações de Atualizações</b>"
 
 #: ../data/pk-prefs.glade.h:3
 msgid "Automatically install:"
@@ -259,18 +252,22 @@ msgstr "Instalar automaticamente:"
 
 #: ../data/pk-prefs.glade.h:4
 msgid "Check for updates:"
-msgstr "Verificar atualizações:"
+msgstr "Verificar por atualizações:"
 
 #: ../data/pk-prefs.glade.h:5
-#: ../src/pk-prefs.c:287
+msgid "Install updates automatically when on battery power"
+msgstr "Instalar atualizações automaticamente quando usando a bateria"
+
+#: ../data/pk-prefs.glade.h:6
+#: ../src/pk-prefs.c:296
 msgid "Software Update Preferences"
 msgstr "Preferências de Atualização de Programa"
 
-#: ../data/pk-prefs.glade.h:6
+#: ../data/pk-prefs.glade.h:7
 msgid "When long tasks have completed"
 msgstr "Quando tarefas extensas forem completadas"
 
-#: ../data/pk-prefs.glade.h:7
+#: ../data/pk-prefs.glade.h:8
 msgid "When updates are available"
 msgstr "Quando atualizações estiverem disponíveis"
 
@@ -280,7 +277,7 @@ msgstr "Progresso do PackageKit"
 
 #: ../data/pk-progress.glade.h:2
 msgid "Part Progress:"
-msgstr "Progresso da Parte:"
+msgstr "Progresso Parcial:"
 
 #: ../data/pk-progress.glade.h:3
 msgid "Status:"
@@ -307,63 +304,167 @@ msgid "<b>More details</b>"
 msgstr "<b>Mais detalhes</b>"
 
 #: ../data/pk-transactions.glade.h:2
-#: ../src/pk-transaction-viewer.c:362
+#: ../src/pk-transaction-viewer.c:367
 msgid "Transaction Viewer"
 msgstr "Visualizador de Transação"
 
 #: ../data/pk-update-icon.desktop.in.h:1
-#: ../src/pk-update-icon.c:62
+#: ../src/pk-update-icon.c:65
 msgid "PackageKit Update Applet"
 msgstr "Miniaplicativo de Atualização do PackageKit"
 
 #: ../data/pk-update-viewer.glade.h:2
-#: ../src/pk-update-viewer.c:282
+#: ../src/pk-update-viewer.c:286
 msgid "Software Update Viewer"
 msgstr "Visualizador de Atualização de Programa"
 
-#: ../src/pk-application.c:174
+#: ../data/pk-signature.glade.h:1
+msgid "2007-10-04"
+msgstr "2007-04-10"
+
+#: ../data/pk-signature.glade.h:2
+msgid "BB7576AC"
+msgstr "BB7576AC"
+
+#: ../data/pk-signature.glade.h:3
+msgid "Do you recognise the user and trust this key?"
+msgstr "Você reconhece o usuário e confia nesta chave?"
+
+#: ../data/pk-signature.glade.h:4
+msgid "Livna.org <rpm@livna.org>"
+msgstr "Livna.org <rpm@livna.org>"
+
+#: ../data/pk-signature.glade.h:5
+msgid "Livna.org Freeworld Repo"
+msgstr "Repositório Livna.org Freeworld"
+
+#: ../data/pk-signature.glade.h:6
+msgid "Repository name:"
+msgstr "Nome do repositório:"
+
+#: ../data/pk-signature.glade.h:7
+msgid "Signature URL:"
+msgstr "Assinatura URL:"
+
+#: ../data/pk-signature.glade.h:8
+msgid "Signature identifier:"
+msgstr "Identificador da assinatura:"
+
+#: ../data/pk-signature.glade.h:9
+msgid "Signature time stamp:"
+msgstr "Horário da assinatura:"
+
+#: ../data/pk-signature.glade.h:10
+msgid "Signature user identifier:"
+msgstr "Identificador da assinatura do usuário:"
+
+#: ../data/pk-signature.glade.h:11
+msgid "Software signature is required"
+msgstr "É requerido a assinatura do software"
+
+#: ../data/pk-signature.glade.h:12
+msgid ""
+"This signature is intended to ensure that software installed\n"
+"on your system is from a trusted source, and has not been tampered with.\n"
+"Before this software can be installed, you must indicate that you trust\n"
+"the source of the packages."
+msgstr ""
+"Esta assinatura tem a intenção de confirmar que software instalado\n"
+"no seu sistema é de uma fonte confiável, e não foi modificado.\n"
+"Antes que este software possa ser instalado, você deve indicar que\n"
+"você confia na fonte dos pacotes."
+
+#: ../data/pk-signature.glade.h:16
+msgid "http://rpm.livna.org/"
+msgstr "http://rpm.livna.org/"
+
+#: ../src/pk-application.c:170
 msgid "The package could not be installed"
 msgstr "Não foi possível instalar o pacote"
 
-#: ../src/pk-application.c:211
+#: ../src/pk-application.c:207
 msgid "The package could not be removed"
 msgstr "Não foi possível remover o pacote"
 
-#: ../src/pk-application.c:230
+#: ../src/pk-application.c:226
 msgid "The package dependencies could not be found"
 msgstr "Não foi possível localizar as dependências do pacote"
 
 #. no information
-#: ../src/pk-application.c:303
+#: ../src/pk-application.c:299
 msgid "No files"
 msgstr "Nenhum arquivo"
 
-#: ../src/pk-application.c:366
+#: ../src/pk-application.c:378
 msgid "Find"
 msgstr "Localizar"
 
-#: ../src/pk-application.c:375
+#: ../src/pk-application.c:403
 msgid "The action did not complete"
 msgstr "A ação não está completa"
 
-#: ../src/pk-application.c:564
+#: ../src/pk-application.c:477
 msgid "The search could not be completed"
 msgstr "Não foi possível completar a pesquisa"
 
-#: ../src/pk-application.c:583
+#: ../src/pk-application.c:496
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../src/pk-application.c:664
-#: ../src/pk-application.c:690
+#: ../src/pk-application.c:553
+#: ../src/pk-application.c:573
 msgid "Name"
 msgstr "Nome"
 
-#: ../src/pk-application.c:729
+#: ../src/pk-application.c:672
 msgid "The group could not be queried"
 msgstr "Não foi possível consultar o grupo"
 
-#: ../src/pk-backend-status.c:85
+#: ../src/pk-application.c:924
+msgid "By package name"
+msgstr "Por nome de pacote"
+
+#: ../src/pk-application.c:927
+msgid "By description"
+msgstr "Por descrição"
+
+#: ../src/pk-application.c:930
+msgid "By file"
+msgstr "Por arquivo"
+
+#: ../src/pk-application.c:938
+#: ../src/pk-common.c:276
+msgid "Installed"
+msgstr "Instalado"
+
+#: ../src/pk-application.c:939
+#: ../src/pk-common.c:279
+msgid "Available"
+msgstr "Disponível"
+
+#: ../src/pk-application.c:940
+#: ../src/pk-application.c:949
+#: ../src/pk-application.c:958
+msgid "All packages"
+msgstr "Todos pacotes"
+
+#: ../src/pk-application.c:947
+msgid "Only graphical"
+msgstr "Somente gráfico"
+
+#: ../src/pk-application.c:948
+msgid "Only text"
+msgstr "Somente texto"
+
+#: ../src/pk-application.c:956
+msgid "Only development"
+msgstr "Somente desenvolvimento"
+
+#: ../src/pk-application.c:957
+msgid "Non-development"
+msgstr "Não desenvolvimento"
+
+#: ../src/pk-backend-status.c:89
 msgid "PackageKit Backend Details Viewer"
 msgstr "Visualizador de Detalhes do Backend do PackageKit"
 
@@ -405,15 +506,15 @@ msgstr "O download do pacote falhou"
 
 #: ../src/pk-common.c:162
 msgid "Dependency resolution failed"
-msgstr "Resolução de dependência falhou"
+msgstr "A resolução de dependências falhou"
 
 #: ../src/pk-common.c:165
 msgid "Search filter was invalid"
-msgstr "Filtro de pesquisa foi inválido"
+msgstr "O filtro de pesquisa estava inválido"
 
 #: ../src/pk-common.c:168
 msgid "The package ID was not well formed"
-msgstr "O ID do pacote foi mal formado"
+msgstr "A identifucação do pacote foi mal formada"
 
 #: ../src/pk-common.c:171
 msgid "Transaction error"
@@ -425,7 +526,7 @@ msgstr "Erro desconhecido"
 
 #: ../src/pk-common.c:188
 msgid "A system restart is required"
-msgstr "É requerido reinício do sistema"
+msgstr "É necessário reiníciar o sistema"
 
 #: ../src/pk-common.c:191
 msgid "You will need to log off and log back on"
@@ -495,7 +596,7 @@ msgstr "Obtendo dependências"
 
 #: ../src/pk-common.c:381
 msgid "Getting update detail"
-msgstr "Obtendo detalhe de atualização"
+msgstr "Obtendo detalhe da atualização"
 
 #: ../src/pk-common.c:384
 msgid "Getting description"
@@ -515,7 +616,7 @@ msgstr "Pesquisando detalhes"
 
 #: ../src/pk-common.c:396
 msgid "Searching for file"
-msgstr "Pesquisando arquivo"
+msgstr "Pesquisando por arquivo"
 
 #: ../src/pk-common.c:399
 msgid "Searching groups"
@@ -563,15 +664,15 @@ msgstr "Detalhes obtidos"
 
 #: ../src/pk-common.c:455
 msgid "Searched for file"
-msgstr "Arquivo pesquisado"
+msgstr "Pesquisou por arquivo"
 
 #: ../src/pk-common.c:458
 msgid "Searched groups"
-msgstr "Grupos pesquisados"
+msgstr "Pesquisou grupos"
 
 #: ../src/pk-common.c:461
 msgid "Searched for package name"
-msgstr "Nome de pacote pesquisado"
+msgstr "Pesquisou por nome de pacote"
 
 #: ../src/pk-common.c:464
 msgid "Removed package"
@@ -637,15 +738,23 @@ msgstr "Multimídia"
 msgid "System"
 msgstr "Sistema"
 
-#: ../src/pk-install-file.c:63
-#: ../src/pk-install-file.c:64
+#: ../src/pk-install-file.c:73
+#: ../src/pk-install-file.c:75
 msgid "PackageKit File Installer"
 msgstr "Instalador de Arquivo PackageKit"
 
-#: ../src/pk-install-package.c:110
-#: ../src/pk-install-package.c:111
+#: ../src/pk-install-file.c:74
+msgid "FILE"
+msgstr "ARQUIVO"
+
+#: ../src/pk-install-package.c:120
+#: ../src/pk-install-package.c:122
 msgid "PackageKit Package Installer"
 msgstr "Instalador de Pacote PackageKit"
+
+#: ../src/pk-install-package.c:121
+msgid "PACKAGE_ID"
+msgstr "IDENTIFICAÇÃO DO PACOTE"
 
 #: ../src/pk-notify.c:103
 msgid "Functionality incomplete"
@@ -656,12 +765,12 @@ msgid "No help yet, sorry..."
 msgstr "Sem ajuda ainda, desculpe..."
 
 #: ../src/pk-notify.c:135
-#: ../src/pk-watch.c:290
+#: ../src/pk-watch.c:304
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licenciado sob a versão 2 da Licença Pública Geral GNU"
 
 #: ../src/pk-notify.c:136
-#: ../src/pk-watch.c:291
+#: ../src/pk-watch.c:305
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -670,11 +779,11 @@ msgid ""
 msgstr ""
 "PackageKit é software livre; você pode redistribuí-lo e/ou\n"
 " modificá-lo sob os termos da Licença Pública Geral GNU\n"
-"como publicado pela Fundação do Software Livre; tanto na versão 2\n"
+"como publicado pela Free Software Foundation; tanto na versão 2\n"
 "da Licença, ou (à sua escolha) qualquer versão posterior."
 
 #: ../src/pk-notify.c:140
-#: ../src/pk-watch.c:295
+#: ../src/pk-watch.c:309
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -687,25 +796,26 @@ msgstr ""
 "Licença Pública Geral GNU para obter mais detalhes."
 
 #: ../src/pk-notify.c:144
-#: ../src/pk-watch.c:299
+#: ../src/pk-watch.c:313
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 "02110-1301, USA."
 msgstr ""
-"Você deve ter recebido uma cópia da Licença Pública Geral da GNU\n"
+"Você deve ter recebido uma cópia da Licença Pública Geral GNU\n"
 "junto com este programa; caso contrário, escreva para Free Software\n"
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 "02110-1301, USA."
 
 #: ../src/pk-notify.c:149
-#: ../src/pk-watch.c:304
+#: ../src/pk-watch.c:318
 msgid "translator-credits"
-msgstr "Vladimir Melo <vladimirmelo@foresightlinux.org>, 2007."
+msgstr "Vladimir Melo <vladimirmelo@foresightlinux.org>\n"
+"Og Maciel <ogmaciel@gnome.org>"
 
 #: ../src/pk-notify.c:165
-#: ../src/pk-watch.c:320
+#: ../src/pk-watch.c:334
 msgid "PackageKit Website"
 msgstr "Site do PackageKit"
 
@@ -721,7 +831,7 @@ msgstr "Aj_uda"
 
 #. About
 #: ../src/pk-notify.c:215
-#: ../src/pk-watch.c:350
+#: ../src/pk-watch.c:366
 msgid "_About"
 msgstr "_Sobre"
 
@@ -739,7 +849,7 @@ msgstr "Não foi possível completar a ação devido ao backend recusar o comand
 
 #: ../src/pk-notify.c:320
 msgid "Failed to update system"
-msgstr "Falha ao atualizar sistema"
+msgstr "Falha ao atualizar o sistema"
 
 #. show updates
 #: ../src/pk-notify.c:365
@@ -803,7 +913,7 @@ msgstr "Atualizações estão sendo instaladas"
 
 #: ../src/pk-notify.c:480
 msgid "Updates are being automatically installed on your computer"
-msgstr "Atualização estão sendo automaticamente instaladas em seu computador"
+msgstr "Atualizações estão sendo automaticamente instaladas em seu computador"
 
 #: ../src/pk-notify.c:485
 msgid "Cancel update"
@@ -813,12 +923,19 @@ msgstr "Cancelar atualização"
 msgid "Don't notify me again"
 msgstr "Não me notifique novamente"
 
-#: ../src/pk-notify.c:570
-#, c-format
+#: ../src/pk-notify.c:558
+msgid "Will not install updates"
+msgstr "Não instalará atualizações"
+
+#: ../src/pk-notify.c:559
+msgid "Automatic updates are not being installed as the computer is on battery power"
+msgstr "Atualizações automáticas não estão sendo instaladas porque o computador está usando a bateria"
+
+#: ../src/pk-notify.c:583
 msgid "There is an update available"
 msgstr "Existe uma atualização disponível"
 
-#: ../src/pk-notify.c:572
+#: ../src/pk-notify.c:585
 #, c-format
 msgid "There are %d updates available"
 msgstr "Existem %d atualizações disponíveis"
@@ -851,27 +968,27 @@ msgstr "Apenas atualizações de segurança"
 msgid "Nothing"
 msgstr "Nenhuma"
 
-#: ../src/pk-transaction-viewer.c:188
+#: ../src/pk-transaction-viewer.c:189
 msgid "Role"
 msgstr "Função"
 
-#: ../src/pk-transaction-viewer.c:194
+#: ../src/pk-transaction-viewer.c:195
 msgid "Transaction"
 msgstr "Transação"
 
-#: ../src/pk-transaction-viewer.c:202
+#: ../src/pk-transaction-viewer.c:203
 msgid "Succeeded"
-msgstr "Bem-sucedido"
+msgstr "Bem sucedido"
 
-#: ../src/pk-transaction-viewer.c:218
+#: ../src/pk-transaction-viewer.c:219
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/pk-transaction-viewer.c:224
+#: ../src/pk-transaction-viewer.c:225
 msgid "Details"
 msgstr "Detalhes"
 
-#: ../src/pk-update-icon.c:63
+#: ../src/pk-update-icon.c:67
 msgid "PackageKit Update Icon"
 msgstr "Ícone de Atualização do PackageKit"
 
@@ -887,36 +1004,49 @@ msgstr "Programa"
 msgid "<b>There are no updates available!</b>"
 msgstr "<b>Não há atualizações disponíveis!</b>"
 
-#: ../src/pk-watch.c:243
+#: ../src/pk-watch.c:253
 #, c-format
 msgid "Package '%s' has been removed"
-msgstr "Pacote '%s' foi removido"
+msgstr "Pacote \"%s\" foi removido"
 
-#: ../src/pk-watch.c:247
+#: ../src/pk-watch.c:257
 #, c-format
 msgid "Package '%s' has been installed"
-msgstr "Pacote '%s' foi instalado"
+msgstr "Pacote \"%s\" foi instalado"
 
 #. libnotify dialog
-#: ../src/pk-watch.c:259
+#: ../src/pk-watch.c:269
 msgid "Task completed"
 msgstr "Tarefa completa"
 
-#: ../src/pk-watch.c:375
+#: ../src/pk-watch.c:393
 msgid "The action could not be completed (the backend refusing the command)"
 msgstr "Não foi possível completar a ação (o backend recusa o comando)"
 
-#: ../src/pk-watch.c:395
+#: ../src/pk-watch.c:413
 msgid "Failed to refresh cache"
 msgstr "Falha ao recarregar cache"
 
 #. force a refresh
-#: ../src/pk-watch.c:514
+#: ../src/pk-watch.c:544
 msgid "_Refresh Software List"
 msgstr "_Recarregar Lista de Programas"
 
 #. manage packages
-#: ../src/pk-watch.c:522
+#: ../src/pk-watch.c:552
 msgid "_Manage packages"
 msgstr "_Gerenciar pacotes"
+
+#: ../src/pk-watch.c:608
+msgid "Software Update Applet"
+msgstr "Miniaplicativo  de Atualização de Programas"
+
+#: ../src/pk-watch.c:609
+msgid "A transaction that cannot be interrupted is running"
+msgstr "Uma transação que não pode ser interrompida está em execução"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+#~ msgid "Text"
+#~ msgstr "Texto"
 
