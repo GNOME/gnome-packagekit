@@ -33,16 +33,21 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 
+#include "pk-progress.h"
+#include "pk-common.h"
+
+static PkProgress *progress = NULL;
 static GMainLoop *loop = NULL;
 
 /**
- * pk_monitor_local_install_finished_cb:
+ * pk_monitor_action_unref_cb:
  **/
 static void
-pk_monitor_local_install_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
+pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
 {
-	pk_debug ("unref'ing %p", client);
-	g_object_unref (client);
+	GMainLoop *loop = (GMainLoop *) data;
+	g_object_unref (progress);
+	g_main_loop_quit (loop);
 }
 
 /**
@@ -51,10 +56,12 @@ pk_monitor_local_install_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 int
 main (int argc, char *argv[])
 {
+	PkClient *client;
 	GOptionContext *context;
 	gboolean ret;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
+	gchar *tid;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -88,17 +95,24 @@ main (int argc, char *argv[])
 	if (argc < 2) {
 		pk_error ("You need to specify a file to install");
 	}
-	loop = g_main_loop_new (NULL, FALSE);
 
-	PkClient *client;
 	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_monitor_local_install_finished_cb), NULL);
 	ret = pk_client_install_file (client, argv[1]);
 	if (ret == FALSE) {
-		pk_debug ("InstallFile not supported!");
+		pk_error_modal_dialog (_("Method not supported"),
+				       _("Installing local files is not supported"));
 	} else {
+		loop = g_main_loop_new (NULL, FALSE);
+		tid = pk_client_get_tid (client);
+		/* create a new progress object */
+		progress = pk_progress_new ();
+		g_signal_connect (progress, "action-unref",
+				  G_CALLBACK (pk_monitor_action_unref_cb), loop);
+		pk_progress_monitor_tid (progress, tid);
+		g_free (tid);
 		g_main_loop_run (loop);
 	}
+
+	g_object_unref (client);
 	return 0;
 }

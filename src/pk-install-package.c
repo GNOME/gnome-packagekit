@@ -34,6 +34,7 @@
 #include <pk-client.h>
 
 #include "pk-progress.h"
+#include "pk-common.h"
 
 static PkProgress *progress = NULL;
 static gchar *package = NULL;
@@ -51,6 +52,15 @@ pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
 }
 
 /**
+ * pk_monitor_install_finished_cb:
+ **/
+static void
+pk_monitor_install_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
+{
+	g_object_unref (client);
+}
+
+/**
  * pk_monitor_resolve_finished_cb:
  **/
 static void
@@ -62,14 +72,26 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 	pk_debug ("unref'ing %p", client);
 	g_object_unref (client);
 
+	if (package == NULL || strlen (package) == 0) {
+		pk_error_modal_dialog (_("Failed to resolve"),
+				       _("The package could not be found on the system"));
+		g_main_loop_quit (loop);
+		return;
+	}
+
 	/* create a new instance */
 	client = pk_client_new ();
-//	g_signal_connect (client, "finished",
-//			  G_CALLBACK (pk_monitor_install_finished_cb), NULL);
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_monitor_install_finished_cb), NULL);
+
+	pk_warning ("Installing '%s'", package);
 	ret = pk_client_install_package (client, package);
 	if (ret == FALSE) {
-		pk_debug ("Install not supported!");
+		pk_error_modal_dialog (_("Method not supported"),
+				       _("Installing packages is not supported"));
+		g_object_unref (client);
 		g_main_loop_quit (loop);
+		return;
 	}
 
 	tid = pk_client_get_tid (client);
@@ -89,6 +111,7 @@ pk_monitor_resolve_package_cb (PkClient *client, guint value, const gchar *packa
 			       const gchar *summary, gboolean data)
 {
 	/* save */
+	pk_error ("package '%s' resolved!", package_id);
 	package = g_strdup (package_id);
 }
 
@@ -98,6 +121,7 @@ pk_monitor_resolve_package_cb (PkClient *client, guint value, const gchar *packa
 int
 main (int argc, char *argv[])
 {
+	PkClient *client;
 	GOptionContext *context;
 	gboolean ret;
 	gboolean verbose = FALSE;
@@ -137,7 +161,6 @@ main (int argc, char *argv[])
 	}
 	loop = g_main_loop_new (NULL, FALSE);
 
-	PkClient *client;
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_monitor_resolve_finished_cb), NULL);
@@ -145,7 +168,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
 	ret = pk_client_resolve (client, argv[1]);
 	if (ret == FALSE) {
-		pk_debug ("Resolve not supported!");
+		pk_error_modal_dialog (_("Method not supported"),
+				       _("Resolving names to packages is not supported"));
 	} else {
 		g_main_loop_run (loop);
 	}

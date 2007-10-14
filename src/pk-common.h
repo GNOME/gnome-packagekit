@@ -48,6 +48,8 @@ G_BEGIN_DECLS
 gchar *		 pk_package_get_name			(const gchar	*package_id);
 gchar *		 pk_package_id_pretty			(const gchar	*package_id,
 							 const gchar	*summary);
+gboolean	 pk_error_modal_dialog			(const gchar	*title,
+							 const gchar	*message);
 const gchar	*pk_role_enum_to_localised_past		(PkRoleEnum	 role);
 const gchar	*pk_role_enum_to_localised_present	(PkRoleEnum	 role);
 const gchar	*pk_role_enum_to_icon_name		(PkRoleEnum	 role);
