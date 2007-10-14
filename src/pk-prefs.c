@@ -145,6 +145,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	PkUpdateEnum update;
 	GConfClient *client;
 	GtkWidget *check_widget;
+	GtkWidget *notify_widget;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
@@ -153,15 +154,19 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 		return;
 	}
 	check_widget = glade_xml_get_widget (glade_xml, "checkbutton_update_battery");
+	notify_widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_ALL;
 		gtk_widget_set_sensitive (check_widget, TRUE);
+		gtk_widget_set_sensitive (notify_widget, FALSE);
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_SECURITY;
 		gtk_widget_set_sensitive (check_widget, TRUE);
+		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
 		update = PK_UPDATE_ENUM_NONE;
 		gtk_widget_set_sensitive (check_widget, FALSE);
+		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else {
 		g_assert (FALSE);
 	}
