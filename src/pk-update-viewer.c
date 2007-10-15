@@ -278,9 +278,10 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 			gdk_pixbuf_unref (icon);
 		}
 	} else {
-		/* set sensitive */
+		/* set visible and sensitive */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
 		gtk_widget_set_sensitive (widget, TRUE);
+		gtk_widget_show (widget);
 	}
 }
 
