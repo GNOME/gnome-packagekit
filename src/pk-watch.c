@@ -110,7 +110,9 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = g_ptr_array_index (array, i);
 		localised_status = pk_status_enum_to_localised_text (item->status);
-		if (item->package_id == NULL || strlen (item->package_id) == 0) {
+
+		/* ITS4: ignore, not used for allocation */
+		if (strlen (item->package_id) == 0) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			PkPackageId *ident;

@@ -248,9 +248,10 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_show (widget);
 
-	/* save the url for the button */
-	if (url != NULL && strlen (url) > 0) {
+	/* ITS4: ignore, not used for allocation */
+	if (strlen (url) > 0) {
 		g_free (application->priv->url);
+		/* save the url for the button */
 		application->priv->url = g_strdup (url);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -283,7 +284,9 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	}
 
 	buffer = gtk_text_buffer_new (NULL);
-	if (filelist != NULL && strlen (filelist) > 0) {
+
+	/* ITS4: ignore, not used for allocation */
+	if (strlen (filelist) > 0) {
 		gchar *list;
 		gchar **array;
 		/* replace the ; with a newline */
@@ -527,7 +530,8 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	gtk_tree_selection_unselect_all (selection);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	if (package == NULL || strlen (package) == 0) {
+	/* ITS4: ignore, not used for allocation */
+	if (strlen (package) == 0) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);

@@ -283,7 +283,8 @@ pk_common_get_role_text (PkClient *client)
 	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
-	if (package_id == NULL || strlen (package_id) == 0) {
+	/* ITS4: ignore, not used for allocation */
+	if (strlen (package_id) == 0) {
 		text = g_strdup (role_text);
 	} else if (pk_package_id_check (package_id) == FALSE) {
 		text = g_strdup_printf ("%s: %s", role_text, package_id);
