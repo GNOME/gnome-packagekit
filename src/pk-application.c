@@ -162,11 +162,11 @@ pk_application_install_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("install %s", application->priv->package);
+	pk_client_reset (application->priv->client_action);
 	ret = pk_client_install_package (application->priv->client_action,
 					 application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client_action);
 		pk_application_error_message (application, _("The package could not be installed"), NULL);
 	}
 }
@@ -198,11 +198,11 @@ pk_application_remove_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("remove %s", application->priv->package);
+	pk_client_reset (application->priv->client_action);
 	ret = pk_client_remove_package (application->priv->client_action,
 				        application->priv->package, FALSE);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client_action);
 		pk_application_error_message (application,
 					      _("The package could not be removed"), NULL);
 	}
@@ -217,11 +217,11 @@ pk_application_deps_cb (GtkWidget      *widget,
 {
 	gboolean ret;
 	pk_debug ("deps %s", application->priv->package);
+	pk_client_reset (application->priv->client_action);
 	ret = pk_client_get_depends (application->priv->client_action,
 				     application->priv->package);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
-		pk_client_reset (application->priv->client_action);
 		pk_application_error_message (application,
 					      _("The package dependencies could not be found"), NULL);
 	} else {
@@ -395,9 +395,6 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 		}
 	}
 
-	/* reset client */
-	pk_client_reset (client);
-
 	/* panic */
 	if (status == PK_EXIT_ENUM_FAILED) {
 		pk_application_error_message (application, _("The action did not complete"), NULL);
@@ -465,10 +462,13 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_depth == 0) {
+		pk_client_reset (application->priv->client_search);
 		ret = pk_client_search_name (application->priv->client_search, filter_all, package);
 	} else if (application->priv->search_depth == 1) {
+		pk_client_reset (application->priv->client_search);
 		ret = pk_client_search_details (application->priv->client_search, filter_all, package);
 	} else {
+		pk_client_reset (application->priv->client_search);
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package);
 	}
 
@@ -664,10 +664,10 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
 		g_print ("selected row is: %s\n", id);
 
+		pk_client_reset (application->priv->client_search);
 		ret = pk_client_search_group (application->priv->client_search, "none", id);
 		/* ick, we failed so pretend we didn't do the action */
 		if (ret == FALSE) {
-			pk_client_reset (application->priv->client_search);
 			pk_application_error_message (application,
 						      _("The group could not be queried"), NULL);
 		}
@@ -717,6 +717,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		}
 
 		/* get the description */
+		pk_client_reset (application->priv->client_description);
 		pk_client_get_description (application->priv->client_description, application->priv->package);
 	} else {
 		g_print ("no row selected.\n");
