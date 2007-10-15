@@ -254,6 +254,11 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 		return;
 	}
 
+	/* we don't need to do anything here */
+	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
+		return;
+	}
+
 	/* make the refresh button clickable now we have completed */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, TRUE);
@@ -262,6 +267,10 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	gtk_widget_set_sensitive (widget, TRUE);
 
 	packages = pk_client_get_package_buffer (client);
+	if (packages == NULL) {
+		pk_debug ("package buffer invalid");
+		return;
+	}
 	if (packages->len == 0) {
 		GtkTreeIter iter;
 		GdkPixbuf *icon;
