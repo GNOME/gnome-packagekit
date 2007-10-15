@@ -215,7 +215,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		g_free (package_id);
 		g_print ("selected row is: %s\n", package);
 		/* get the decription */
-		pk_client_get_description (client, package);
+		pk_client_reset (client);
+		pk_client_get_update_detail (client, package);
 	} else {
 		g_print ("no row selected.\n");
 	}
