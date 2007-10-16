@@ -91,16 +91,13 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	guint i;
 	PkTaskListItem *item;
 	guint length;
-	GPtrArray *array;
 	GString *status;
 	const gchar *localised_status;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
 
-	array = pk_task_list_get_latest	(watch->priv->tlist);
-
-	length = array->len;
+	length = pk_task_list_get_size (watch->priv->tlist);
 	pk_debug ("refresh tooltip %i", length);
 	if (length == 0) {
 		pk_smart_icon_set_tooltip (watch->priv->sicon, "Doing nothing...");
@@ -108,7 +105,11 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	}
 	status = g_string_new ("");
 	for (i=0; i<length; i++) {
-		item = g_ptr_array_index (array, i);
+		item = pk_task_list_get_item (watch->priv->tlist, i);
+		if (item == NULL) {
+			pk_warning ("not found item %i", i);
+			break;
+		}
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
 		/* ITS4: ignore, not used for allocation */
@@ -147,7 +148,6 @@ pk_watch_refresh_icon (PkWatch *watch)
 	PkTaskListItem *item;
 	PkStatusEnum state;
 	guint length;
-	GPtrArray *array;
 	gboolean state_install = FALSE;
 	gboolean state_remove = FALSE;
 	gboolean state_setup = FALSE;
@@ -160,16 +160,18 @@ pk_watch_refresh_icon (PkWatch *watch)
 	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
 
-	array = pk_task_list_get_latest	(watch->priv->tlist);
-
-	length = array->len;
+	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0) {
 		pk_debug ("no activity");
 		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 		return TRUE;
 	}
 	for (i=0; i<length; i++) {
-		item = g_ptr_array_index (array, i);
+		item = pk_task_list_get_item (watch->priv->tlist, i);
+		if (item == NULL) {
+			pk_warning ("not found item %i", i);
+			break;
+		}
 		state = item->status;
 		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (state));
 		if (state == PK_STATUS_ENUM_SETUP) {
@@ -470,7 +472,6 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 {
 	guint i;
 	PkTaskListItem *item;
-	GPtrArray *array;
 	GtkWidget *widget;
 	GtkWidget *image;
 	const gchar *localised_status;
@@ -478,17 +479,23 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 	const gchar *icon_name;
 	gchar *package;
 	gchar *text;
+	guint length;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
-	array = pk_task_list_get_latest	(watch->priv->tlist);
-	if (array->len == 0) {
+	length = pk_task_list_get_size (watch->priv->tlist);
+	if (length == 0) {
 		return;
 	}
 
-	for (i=0; i<array->len; i++) {
-		item = g_ptr_array_index (array, i);
+	/* do a menu item for each job */
+	for (i=0; i<length; i++) {
+		item = pk_task_list_get_item (watch->priv->tlist, i);
+		if (item == NULL) {
+			pk_warning ("not found item %i", i);
+			break;
+		}
 		localised_role = pk_role_enum_to_localised_present (item->role);
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
