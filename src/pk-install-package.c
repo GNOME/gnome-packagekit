@@ -34,7 +34,7 @@
 #include <pk-client.h>
 
 #include "pk-progress.h"
-#include "pk-common.h"
+#include "pk-common-gui.h"
 
 static PkProgress *progress = NULL;
 static gchar *package = NULL;

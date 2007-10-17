@@ -38,7 +38,7 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-network.h>
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-auto-refresh.h"
 
 //Monitor:

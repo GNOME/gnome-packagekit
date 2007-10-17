@@ -31,11 +31,12 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-common.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
 
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-application.h"
 
 static void     pk_application_class_init (PkApplicationClass *klass);
@@ -458,6 +459,14 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
+	ret = pk_validate_input (package);
+	if (ret == FALSE) {
+		pk_debug ("invalid input text, will fail");
+		/* todo - make the dialog turn red... */
+		pk_application_error_message (application, _("Invalid search text"),
+					      _("The search text contains invalid characters"));
+		return;
+	}
 	pk_debug ("find %s", package);
 
 	/* make a valid filter string */

@@ -34,7 +34,7 @@
 #include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-enum-list.h>
-#include "pk-common.h"
+#include "pk-common-gui.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;

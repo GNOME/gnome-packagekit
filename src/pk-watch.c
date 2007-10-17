@@ -46,7 +46,7 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-watch.h"
 #include "pk-progress.h"
 #include "pk-smart-icon.h"

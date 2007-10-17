@@ -49,7 +49,7 @@
 
 #include "pk-smart-icon.h"
 #include "pk-auto-refresh.h"
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-notify.h"
 
 static void     pk_notify_class_init	(PkNotifyClass *klass);

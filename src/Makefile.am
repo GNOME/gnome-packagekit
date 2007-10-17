@@ -37,8 +37,8 @@ pk_install_file_SOURCES =				\
 	pk-install-file.c				\
 	pk-progress.c					\
 	pk-progress.h					\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_install_file_LDADD =					\
@@ -54,8 +54,8 @@ pk_install_package_SOURCES =				\
 	pk-install-package.c				\
 	pk-progress.c					\
 	pk-progress.h					\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_install_package_LDADD =				\
@@ -79,8 +79,8 @@ pk_update_icon_SOURCES =				\
 	pk-smart-icon.h					\
 	pk-progress.c					\
 	pk-progress.h					\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_update_icon_LDADD =					\
@@ -97,8 +97,8 @@ pk_application_SOURCES =				\
 	pk-application-main.c				\
 	pk-application.c				\
 	pk-application.h				\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_application_LDADD =					\
@@ -111,8 +111,8 @@ pk_application_LDADD =					\
 
 pk_prefs_SOURCES =					\
 	pk-prefs.c					\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_prefs_LDADD =					\
@@ -126,8 +126,8 @@ pk_prefs_LDADD =					\
 
 pk_update_viewer_SOURCES =				\
 	pk-update-viewer.c				\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_update_viewer_LDADD =				\
@@ -140,8 +140,8 @@ pk_update_viewer_LDADD =				\
 
 pk_repo_SOURCES =					\
 	pk-repo.c					\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_repo_LDADD =						\
@@ -154,8 +154,8 @@ pk_repo_LDADD =						\
 
 pk_transaction_viewer_SOURCES =				\
 	pk-transaction-viewer.c				\
-	pk-common.c					\
-	pk-common.h					\
+	pk-common-gui.c					\
+	pk-common-gui.h					\
 	$(NULL)
 
 pk_transaction_viewer_LDADD =				\

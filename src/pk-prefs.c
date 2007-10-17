@@ -34,7 +34,7 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-enum-list.h>
-#include "pk-common.h"
+#include "pk-common-gui.h"
 
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
 #define PK_FREQ_DAILY_TEXT		_("Daily")

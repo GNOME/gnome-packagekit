@@ -40,7 +40,7 @@
 #include <libnotify/notify.h>
 
 #include <pk-debug.h>
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-smart-icon.h"
 
 static void     pk_smart_icon_class_init	(PkSmartIconClass *klass);

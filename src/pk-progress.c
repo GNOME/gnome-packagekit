@@ -34,7 +34,7 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 
-#include "pk-common.h"
+#include "pk-common-gui.h"
 #include "pk-progress.h"
 
 static void     pk_progress_class_init (PkProgressClass *klass);

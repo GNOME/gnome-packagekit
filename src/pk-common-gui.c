@@ -30,7 +30,7 @@
 #include <pk-debug.h>
 #include <pk-package-id.h>
 #include <pk-enum.h>
-#include "pk-common.h"
+#include "pk-common-gui.h"
 
 /**
  * pk_size_to_si_size_text:
