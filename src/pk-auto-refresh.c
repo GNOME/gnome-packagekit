@@ -52,7 +52,7 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
 
 #define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
 #define PK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
-#define PK_AUTO_REFRESH_STARTUP_DELAY		60*2	/* seconds until the first refresh,
+#define PK_AUTO_REFRESH_STARTUP_DELAY		30	/* seconds until the first refresh,
 							 * and if we failed the first refresh,
 							 * check after this much time also */
 
