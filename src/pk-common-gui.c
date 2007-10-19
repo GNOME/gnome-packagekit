@@ -168,6 +168,9 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NO_NETWORK:
 		text = _("No network connection available");
 		break;
+	case PK_ERROR_ENUM_NO_CACHE:
+		text = _("No package cache is available.");
+		break;
 	case PK_ERROR_ENUM_OOM:
 		text = _("Out of memory");
 		break;
