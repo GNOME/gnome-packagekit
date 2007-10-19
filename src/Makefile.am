@@ -18,7 +18,6 @@ INCLUDES =						\
 	-DLIBDIR=\""$(libdir)"\" 			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
-	-I$(top_srcdir)/libpackagekit			\
 	$(NULL)
 
 bin_PROGRAMS =						\

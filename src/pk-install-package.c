@@ -124,6 +124,7 @@ main (int argc, char *argv[])
 {
 	PkClient *client;
 	GOptionContext *context;
+	const gchar *filter;
 	gboolean ret;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
@@ -167,7 +168,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_monitor_resolve_finished_cb), NULL);
 	g_signal_connect (client, "package",
 			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
-	ret = pk_client_resolve (client, argv[1]);
+	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_AVAILABLE);
+	ret = pk_client_resolve (client, filter, argv[1]);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Method not supported"),
 				       _("Resolving names to packages is not supported"));

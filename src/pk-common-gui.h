@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __PK_COMMON_H
-#define __PK_COMMON_H
+#ifndef __PK_COMMON_GUI_H
+#define __PK_COMMON_GUI_H
 
 #include <glib-object.h>
 #include <pk-enum.h>
@@ -65,4 +65,4 @@ gchar		*pk_size_to_si_size_text		(guint64	 size);
 
 G_END_DECLS
 
-#endif	/* __PK_COMMON_H */
+#endif	/* __PK_COMMON_GUI_H */
