@@ -497,8 +497,7 @@ pk_notify_auto_update_message (PkNotify *notify)
 static void
 pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
 {
-	PkPackageListItem *item;
-	GPtrArray *packages;
+	PkPackageItem *item;
 	guint length;
 	guint i;
 	gboolean is_security;
@@ -516,8 +515,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	status_tooltip = g_string_new ("");
 
 	/* find packages */
-	packages = pk_client_get_package_buffer (client);
-	length = packages->len;
+	length = pk_client_package_buffer_get_size (client);
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
@@ -527,7 +525,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 
 	is_security = FALSE;
 	for (i=0; i<length; i++) {
-		item = g_ptr_array_index (packages, i);
+		item = pk_client_package_buffer_get_item (client, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
 			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
@@ -579,10 +577,10 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		g_string_set_size (status_security, status_security->len-1);
 	}
 	/* make tooltip */
-	if (packages->len == 0) {
+	if (length == 0) {
 		g_string_append_printf (status_tooltip, _("There is an update available"));
 	} else {
-		g_string_append_printf (status_tooltip, _("There are %d updates available"), packages->len);
+		g_string_append_printf (status_tooltip, _("There are %d updates available"), length);
 	}
 
 	pk_smart_icon_set_icon_name (notify->priv->sicon, icon);

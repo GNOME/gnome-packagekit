@@ -238,8 +238,8 @@ static void
 pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpointer data)
 {
 	GtkWidget *widget;
-	GPtrArray *packages;
 	PkRoleEnum role;
+	guint length;
 
 	pk_client_get_role (client, &role, NULL);
 
@@ -266,12 +266,8 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
 
-	packages = pk_client_get_package_buffer (client);
-	if (packages == NULL) {
-		pk_debug ("package buffer invalid");
-		return;
-	}
-	if (packages->len == 0) {
+	length = pk_client_package_buffer_get_size (client);
+	if (length == 0) {
 		GtkTreeIter iter;
 		GdkPixbuf *icon;
 
