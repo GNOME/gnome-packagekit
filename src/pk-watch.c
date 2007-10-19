@@ -155,6 +155,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	gboolean state_download = FALSE;
 	gboolean state_query = FALSE;
 	gboolean state_refresh_cache = FALSE;
+	gboolean state_wait = FALSE;
 	const gchar *icon = NULL;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
@@ -188,6 +189,8 @@ pk_watch_refresh_icon (PkWatch *watch)
 			state_install = TRUE;
 		} else if (state == PK_STATUS_ENUM_UPDATE) {
 			state_update = TRUE;
+		} else if (state == PK_STATUS_ENUM_WAIT) {
+			state_wait = TRUE;
 		}
 	}
 	/* in order of priority */
@@ -205,6 +208,8 @@ pk_watch_refresh_icon (PkWatch *watch)
 		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_DOWNLOAD);
 	} else if (state_query == TRUE) {
 		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_QUERY);
+	} else if (state_wait == TRUE) {
+		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_WAIT);
 	}
 	pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 
