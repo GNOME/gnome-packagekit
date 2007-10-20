@@ -232,6 +232,28 @@ pk_application_deps_cb (GtkWidget      *widget,
 }
 
 /**
+ * pk_application_requires_cb:
+ **/
+static void
+pk_application_requires_cb (GtkWidget      *widget,
+		        PkApplication  *application)
+{
+	gboolean ret;
+	pk_debug ("requires %s", application->priv->package);
+	pk_client_reset (application->priv->client_action);
+	ret = pk_client_get_requires (application->priv->client_action,
+				     application->priv->package);
+	/* ick, we failed so pretend we didn't do the action */
+	if (ret == FALSE) {
+		pk_application_error_message (application,
+					      _("The package requires could not be found"), NULL);
+	} else {
+		/* clear existing list and wait for packages */
+		gtk_list_store_clear (application->priv->packages_store);
+	}
+}
+
+/**
  * pk_application_description_cb:
  **/
 static void
@@ -714,11 +736,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 		/* make the button sensitivities correct */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
-		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-			gtk_widget_set_sensitive (widget, FALSE);
-		} else {
-			gtk_widget_set_sensitive (widget, TRUE);
-		}
+		gtk_widget_set_sensitive (widget, pk_enum_list_contains (application->priv->role_list,
+						PK_ROLE_ENUM_GET_DEPENDS));
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
+		gtk_widget_set_sensitive (widget, pk_enum_list_contains (application->priv->role_list,
+						PK_ROLE_ENUM_GET_REQUIRES));
+
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
 		gtk_widget_set_sensitive (widget, !installed);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
@@ -735,6 +758,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 	} else {
 		g_print ("no row selected.\n");
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
 		gtk_widget_set_sensitive (widget, FALSE);
@@ -904,6 +929,8 @@ pk_application_init (PkApplication *application)
 	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
+	g_signal_connect (widget, "clicked",
+			G_CALLBACK (pk_application_requires_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
 		gtk_widget_hide (widget);
