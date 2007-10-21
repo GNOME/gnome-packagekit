@@ -424,18 +424,6 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_watch_manage_packages_cb:
- **/
-static void
-pk_watch_manage_packages_cb (GtkMenuItem *item, gpointer data)
-{
-	const gchar *command = "pk-application";
-	if (g_spawn_command_line_async (command, NULL) == FALSE) {
-		pk_warning ("Couldn't execute command: %s", command);
-	}
-}
-
-/**
  * pk_monitor_action_unref_cb:
  **/
 static void
@@ -560,14 +548,6 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 	g_signal_connect (G_OBJECT (widget), "activate",
 			  G_CALLBACK (pk_watch_refresh_cache_cb), watch);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
-
-	/* manage packages */
-	widget = gtk_image_menu_item_new_with_mnemonic (_("_Manage packages"));
-	image = gtk_image_new_from_icon_name ("system-installer", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
-	g_signal_connect (G_OBJECT (widget), "activate",
-			  G_CALLBACK (pk_watch_manage_packages_cb), watch);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* show the menu */
