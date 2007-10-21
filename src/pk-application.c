@@ -61,9 +61,9 @@ struct PkApplicationPrivate
 	PkEnumList		*filter_list;
 	PkEnumList		*group_list;
 	PkEnumList		*current_filter;
-	gboolean		 task_ended;
 	gboolean		 search_in_progress;
 	guint			 search_depth;
+	guint			 timer_id;
 };
 
 enum {
@@ -393,8 +393,6 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	gboolean ret;
 	PkRoleEnum role;
 
-	application->priv->task_ended = TRUE;
-
 	/* hide widget */
 	gtk_widget_hide (application->priv->progress_bar);
 
@@ -445,9 +443,6 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 {
 	PkApplication *application = (PkApplication *) data;
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (application->priv->progress_bar));
-	if (application->priv->task_ended == TRUE) {
-		return FALSE;
-	}
 	return TRUE;
 }
 
@@ -457,7 +452,7 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 static void
 pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *application)
 {
-	g_timeout_add (40, pk_application_no_percentage_updates_timeout, application);
+	application->priv->timer_id = g_timeout_add (40, pk_application_no_percentage_updates_timeout, application);
 }
 
 /**
@@ -516,7 +511,6 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	gtk_list_store_clear (application->priv->packages_store);
 
 	application->priv->search_in_progress = TRUE;
-	application->priv->task_ended = FALSE;
 
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
@@ -775,12 +769,6 @@ static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkApplication *application)
 {
 	pk_debug ("connected=%i", connected);
-	if (connected == FALSE && application->priv->task_ended == FALSE) {
-		/* forcibly end the transaction */
-		pk_application_finished_cb (application->priv->client_search, PK_EXIT_ENUM_FAILED, 0, application);
-		pk_application_finished_cb (application->priv->client_action, PK_EXIT_ENUM_FAILED, 0, application);
-		pk_application_finished_cb (application->priv->client_description, PK_EXIT_ENUM_FAILED, 0, application);
-	}
 }
 
 /**
@@ -825,8 +813,8 @@ pk_application_init (PkApplication *application)
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
 	application->priv->url = NULL;
-	application->priv->task_ended = TRUE;
 	application->priv->search_in_progress = FALSE;
+	application->priv->timer_id = 0;
 
 	application->priv->search_depth = 0;
 	application->priv->current_filter = pk_enum_list_new ();
@@ -1114,6 +1102,11 @@ pk_application_finalize (GObject *object)
 
 	application = PK_APPLICATION (object);
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
+
+	/* don't spin anymore */
+	if (application->priv->timer_id != 0) {
+		g_source_remove (application->priv->timer_id);
+	}
 
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->client_search);
