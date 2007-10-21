@@ -393,6 +393,12 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	gboolean ret;
 	PkRoleEnum role;
 
+	/* don't spin anymore */
+	if (application->priv->timer_id != 0) {
+		g_source_remove (application->priv->timer_id);
+		application->priv->timer_id = 0;
+	}
+
 	/* hide widget */
 	gtk_widget_hide (application->priv->progress_bar);
 
@@ -452,7 +458,13 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 static void
 pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *application)
 {
-	application->priv->timer_id = g_timeout_add (40, pk_application_no_percentage_updates_timeout, application);
+	/* don't spin twice as fast if more than one signal */
+	if (application->priv->timer_id != 0) {
+		return;
+	}
+	application->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
+						     pk_application_no_percentage_updates_timeout,
+						     application);
 }
 
 /**
@@ -1043,8 +1055,8 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "statusbar_status");
 	application->priv->progress_bar = gtk_progress_bar_new ();
 	gtk_box_pack_end (GTK_BOX (widget), application->priv->progress_bar, TRUE, TRUE, 0);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.5);
-	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.025);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.0);
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (application->priv->progress_bar), PK_PROGRESS_BAR_PULSE_STEP);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,

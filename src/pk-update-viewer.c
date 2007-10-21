@@ -255,6 +255,12 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	pk_client_get_role (client, &role, NULL);
 
+	/* don't spin anymore */
+	if (timer_id != 0) {
+		g_source_remove (timer_id);
+		timer_id = 0;
+	}
+
 	/* hide the progress bar */
 	gtk_widget_hide (progress_bar);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
@@ -332,7 +338,11 @@ static void
 pk_updates_no_percentage_updates_cb (PkClient *client, gpointer data)
 {
 	gtk_widget_show (progress_bar);
-	timer_id = g_timeout_add (40, pk_updates_no_percentage_updates_timeout, data);
+	/* don't spin twice as fast if more than one signal */
+	if (timer_id != 0) {
+		return;
+	}
+	timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY, pk_updates_no_percentage_updates_timeout, data);
 }
 
 /**
@@ -454,6 +464,7 @@ main (int argc, char *argv[])
 	progress_bar = gtk_progress_bar_new ();
 	gtk_box_pack_end (GTK_BOX (widget), progress_bar, TRUE, TRUE, 0);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (progress_bar), PK_PROGRESS_BAR_PULSE_STEP);
 
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
