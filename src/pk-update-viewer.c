@@ -331,6 +331,7 @@ pk_updates_no_percentage_updates_timeout (gpointer data)
 static void
 pk_updates_no_percentage_updates_cb (PkClient *client, gpointer data)
 {
+	gtk_widget_show (progress_bar);
 	timer_id = g_timeout_add (40, pk_updates_no_percentage_updates_timeout, data);
 }
 
