@@ -42,6 +42,7 @@ static GtkWidget *progress_bar = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *package = NULL;
+static guint timer_id = 0;
 
 enum
 {
@@ -70,6 +71,12 @@ pk_updates_apply_cb (GtkWidget *widget,
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
+
+	/* don't spin anymore */
+	if (timer_id != 0) {
+		g_source_remove (timer_id);
+	}
+
 	pk_client_reset (client);
 	pk_client_update_system (client);
 	g_main_loop_quit (loop);
@@ -113,6 +120,11 @@ pk_button_close_cb (GtkWidget	*widget,
 
 	/* we might have a transaction running */
 	pk_client_cancel (client);
+
+	/* don't spin anymore */
+	if (timer_id != 0) {
+		g_source_remove (timer_id);
+	}
 
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
@@ -304,6 +316,25 @@ pk_updates_percentage_changed_cb (PkClient *client, guint percentage, gpointer d
 }
 
 /**
+ * pk_updates_no_percentage_updates_timeout:
+ **/
+gboolean
+pk_updates_no_percentage_updates_timeout (gpointer data)
+{
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (progress_bar));
+	return TRUE;
+}
+
+/**
+ * pk_application_no_percentage_updates_cb:
+ **/
+static void
+pk_updates_no_percentage_updates_cb (PkClient *client, gpointer data)
+{
+	timer_id = g_timeout_add (40, pk_updates_no_percentage_updates_timeout, data);
+}
+
+/**
  * main:
  **/
 int
@@ -357,6 +388,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_finished_cb), NULL);
 	g_signal_connect (client, "percentage-changed",
 			  G_CALLBACK (pk_updates_percentage_changed_cb), NULL);
+	g_signal_connect (client, "no-percentage-updates",
+			  G_CALLBACK (pk_updates_no_percentage_updates_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
