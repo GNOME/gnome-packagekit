@@ -965,6 +965,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_find_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	/* set focus on entry text */
+	gtk_widget_grab_focus (widget);
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (pk_application_find_cb), application);
 
