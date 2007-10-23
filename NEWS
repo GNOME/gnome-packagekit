@@ -1,26 +1,47 @@
 =============
+Version 0.1.1
+=============
+
+* Translations:
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Add Polish translation (Piotr Drąg)
+
+* New features:
+ - Show an icon when we are waiting, to give feedback when yum is waiting for a
+   command line tool to release the lock (Richard Hughes)
+ - Connect up the Requires button in the toolbar (Grzegorz Dabrowski)
+ - Add a desktop icon for pk-repo (Richard Hughes)
+
+* Bugfixes
+ - Use the new API in PackageKit to get the cached data (Richard Hughes)
+ - Use a local copy of libgbus to stop the startup race of gnome-power-manager,
+   gnome-screensaver and pk-update-icon from preventing the update icon to show
+   on first login (Richard Hughes)
+ - Spin the progress bar at the same speed between applications (Richard Hughes)
+
+=============
 Version 0.1.0
 =============
 
-- The first public release of gnome-packagekit!
-- Current applications and tools:
- * pk-application: A more advanced package browser where you can install,
+* The first public release of gnome-packagekit!
+* Current applications and tools:
+ - pk-application: A more advanced package browser where you can install,
    remove and get details about installed and available packages.
- * pk-update-icon: A session process that checks for updates using PackageKit
+ - pk-update-icon: A session process that checks for updates using PackageKit
    and optionally applies them automatically.
- * pk-install-file: A helper to allow rpms and debs to be double clicked and
+ - pk-install-file: A helper to allow rpms and debs to be double clicked and
    installed with dependencies automatically.
- * pk-install-package: A helper to allow packages to be installed with a
+ - pk-install-package: A helper to allow packages to be installed with a
    progress UI, for instance openoffice-clipart.
- * pk-prefs: The preferences tool that sets update checking frequency and other
+ - pk-prefs: The preferences tool that sets update checking frequency and other
    package session preferences.
- * pk-update-viewer: A simple application to show the updates available, and
+ - pk-update-viewer: A simple application to show the updates available, and
    more information about each update.
- * pk-backend-status: A development tool to see what capabilities the backend
+ - pk-backend-status: A development tool to see what capabilities the backend
    author have provided.
- * pk-transaction-viewer: A tool that lets you see what was updated, installed
+ - pk-transaction-viewer: A tool that lets you see what was updated, installed
    or removed and optionally rollback to an old checkpoint.
- * pk-repo: A tool that lets you enable and disable installed repositories.
-- Some initial translations
-- A simple help file.
+ - pk-repo: A tool that lets you enable and disable installed repositories.
+* Some initial translations
+* A simple help file.
 
