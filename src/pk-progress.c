@@ -240,6 +240,7 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 				 guint elapsed, guint remaining, PkProgress *progress)
 {
 	GtkWidget *widget;
+	gchar *time;
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 	gtk_widget_show (widget);
@@ -249,6 +250,7 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 
 	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
 		/* We have to spin */
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), NULL);
 		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
 		return;
 	}
@@ -261,6 +263,15 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 
 	/* just set the value */
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+
+	/* set some localised text if we have time */
+	if (remaining == 0) {
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), NULL);
+	} else {
+		time = pk_time_to_localised_string (remaining);
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), time);
+		g_free (time);
+	}
 }
 
 /**
