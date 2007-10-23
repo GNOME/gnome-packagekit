@@ -39,7 +39,6 @@
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
-static gchar *repo = NULL;
 static PkEnumList *role_list;
 
 enum
@@ -80,6 +79,7 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	GtkTreeIter iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean installed;
+	gchar *repo_id;
 
 	/* do we have the capability? */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
@@ -89,7 +89,9 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_model_get (model, &iter, REPO_COLUMN_ENABLED, &installed, -1);
+	gtk_tree_model_get (model, &iter,
+			    REPO_COLUMN_ENABLED, &installed,
+			    REPO_COLUMN_ID, &repo_id, -1);
 
 	/* do something with the value */
 	installed ^= 1;
@@ -98,11 +100,12 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
 
 	/* do this to the repo */
-	pk_debug ("setting %s to %i", repo, installed);
+	pk_debug ("setting %s to %i", repo_id, installed);
 	pk_client_reset (client);
-	pk_client_repo_enable (client, repo, installed);
+	pk_client_repo_enable (client, repo_id, installed);
 
 	/* clean up */
+	g_free (repo_id);
 	gtk_tree_path_free (path);
 }
 
@@ -179,14 +182,10 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (repo);
 		gtk_tree_model_get (model, &iter,
 				    REPO_COLUMN_ID, &repo_id, -1);
-
-		/* make back into repo ID */
-		repo = g_strdup (repo_id);
+		g_print ("selected row is: %s\n", repo_id);
 		g_free (repo_id);
-		g_print ("selected row is: %s\n", repo);
 	} else {
 		g_print ("no row selected.\n");
 	}
@@ -308,7 +307,6 @@ main (int argc, char *argv[])
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_object_unref (role_list);
-	g_free (repo);
 
 	return 0;
 }
