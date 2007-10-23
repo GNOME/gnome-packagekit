@@ -210,6 +210,9 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
 		text = _("Repository name was not found");
 		break;
+	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
+		text = _("Could not remove a protected system package");
+		break;
 	default:
 		text = _("Unknown error");
 	}
