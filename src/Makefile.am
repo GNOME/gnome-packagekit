@@ -18,6 +18,11 @@ INCLUDES =						\
 	-DLIBDIR=\""$(libdir)"\" 			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
+	-I$(top_srcdir)/libgbus				\
+	$(NULL)
+
+GBUS_LIBS =						\
+	$(top_builddir)/libgbus/libgbus.la		\
 	$(NULL)
 
 bin_PROGRAMS =						\
@@ -42,6 +47,7 @@ pk_install_file_SOURCES =				\
 
 pk_install_file_LDADD =					\
 	$(GLIB_LIBS)					\
+	$(GBUS_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(GTK_LIBS)					\

@@ -34,17 +34,13 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
+#include <libgbus.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-network.h>
 #include "pk-common-gui.h"
 #include "pk-auto-refresh.h"
-
-//Monitor:
-//* online (PkNetwork)
-//* idleness (GnomeScreensaver)
-//* last update time (PkClient, pk_client_get_time_since_refresh)
 
 static void     pk_auto_refresh_class_init	(PkAutoRefreshClass *klass);
 static void     pk_auto_refresh_init		(PkAutoRefresh      *arefresh);
@@ -64,8 +60,11 @@ struct PkAutoRefreshPrivate
 	gboolean		 session_delay;
 	gboolean		 sent_get_updates;
 	guint			 thresh;
+	LibGBus			*gbus_gs;
+	LibGBus			*gbus_gpm;
 	DBusGProxy		*proxy_gs;
 	DBusGProxy		*proxy_gpm;
+	DBusGConnection		*connection;
 	PkClient		*client;
 	PkNetwork		*network;
 };
@@ -283,42 +282,84 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
 }
 
 /**
- * pk_auto_refresh_init:
- * @auto_refresh: This class instance
+ * pk_connection_gpm_changed_cb:
  **/
 static void
-pk_auto_refresh_init (PkAutoRefresh *arefresh)
+pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh *arefresh)
 {
-	DBusGConnection *network;
 	GError *error = NULL;
 	gboolean on_battery;
 	gboolean ret;
 
-	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
-	arefresh->priv->on_battery = FALSE;
-	arefresh->priv->session_idle = FALSE;
-	arefresh->priv->network_active = FALSE;
-	arefresh->priv->session_delay = FALSE;
-	arefresh->priv->sent_get_updates = FALSE;
+	g_return_if_fail (arefresh != NULL);
+	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
-	/* need to get from gconf */
-	arefresh->priv->thresh = 15*60;
+	pk_debug ("gnome-power-manager connection-changed: %i", connected);
 
-	/* we need to query the last cache refresh time */
-	arefresh->priv->client = pk_client_new ();
+	/* is this valid? */
+	if (connected == FALSE) {
+		if (arefresh->priv->proxy_gpm != NULL) {
+			g_object_unref (arefresh->priv->proxy_gpm);
+			arefresh->priv->proxy_gpm = NULL;
+		}
+		return;
+	}
 
-	/* connect to session bus */
-	network = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	/* use gnome-power-manager for the battery detection */
+	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
+					  GPM_DBUS_SERVICE, GPM_DBUS_PATH, GPM_DBUS_INTERFACE, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to session bus: %s", error->message);
+		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
 		g_error_free (error);
 		return;
 	}
 
+	/* setup callbacks and get GetOnBattery if we could connect to g-p-m */
+	dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
+				     G_CALLBACK (pk_auto_refresh_on_battery_cb),
+				     arefresh, NULL);
+	/* coldplug the battery state */
+	ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
+				 G_TYPE_INVALID,
+				 G_TYPE_BOOLEAN, &on_battery,
+				 G_TYPE_INVALID);
+	if (error != NULL) {
+		printf ("DEBUG: ERROR: %s\n", error->message);
+		g_error_free (error);
+	}
+	if (ret == TRUE) {
+		arefresh->priv->on_battery = on_battery;
+		pk_debug ("setting on battery %i", on_battery);
+	}
+}
+
+/**
+ * pk_connection_gs_changed_cb:
+ **/
+static void
+pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh *arefresh)
+{
+	GError *error = NULL;
+
+	g_return_if_fail (arefresh != NULL);
+	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+
+	pk_debug ("gnome-screensaver connection-changed: %i", connected);
+
+	/* is this valid? */
+	if (connected == FALSE) {
+		if (arefresh->priv->proxy_gs != NULL) {
+			g_object_unref (arefresh->priv->proxy_gs);
+			arefresh->priv->proxy_gs = NULL;
+		}
+		return;
+	}
+
 	/* use gnome-screensaver for the idle detection */
-	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (network,
-				  GS_DBUS_SERVICE, GS_DBUS_PATH,
-				  GS_DBUS_INTERFACE, &error);
+	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
+					  GS_DBUS_SERVICE, GS_DBUS_PATH, GS_DBUS_INTERFACE, &error);
 	if (error != NULL) {
 		pk_warning ("Cannot connect to gnome-screensaver: %s", error->message);
 		g_error_free (error);
@@ -331,36 +372,52 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 				     G_CALLBACK (pk_auto_refresh_idle_cb),
 				     arefresh, NULL);
 
-	/* use gnome-power-manager for the battery detection */
-	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (network,
-				  GPM_DBUS_SERVICE, GPM_DBUS_PATH,
-				  GPM_DBUS_INTERFACE, &error);
+}
+
+/**
+ * pk_auto_refresh_init:
+ * @auto_refresh: This class instance
+ **/
+static void
+pk_auto_refresh_init (PkAutoRefresh *arefresh)
+{
+	GError *error = NULL;
+
+	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
+	arefresh->priv->on_battery = FALSE;
+	arefresh->priv->session_idle = FALSE;
+	arefresh->priv->network_active = FALSE;
+	arefresh->priv->session_delay = FALSE;
+	arefresh->priv->sent_get_updates = FALSE;
+
+	arefresh->priv->proxy_gs = NULL;
+	arefresh->priv->proxy_gpm = NULL;
+
+	/* need to get from gconf */
+	arefresh->priv->thresh = 15*60;
+
+	/* we need to query the last cache refresh time */
+	arefresh->priv->client = pk_client_new ();
+
+	/* connect to session bus */
+	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		pk_warning ("Cannot connect to session bus: %s", error->message);
 		g_error_free (error);
+		return;
 	}
 
-	/* setup callbacks and get GetOnBattery if we could connect to g-p-m */
-	if (arefresh->priv->proxy_gpm != NULL) {
-		dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-					 G_TYPE_BOOLEAN, G_TYPE_INVALID);
-		dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-					     G_CALLBACK (pk_auto_refresh_on_battery_cb),
-					     arefresh, NULL);
-		/* coldplug the battery state */
-		ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
-					 G_TYPE_INVALID,
-					 G_TYPE_BOOLEAN, &on_battery,
-					 G_TYPE_INVALID);
-		if (error != NULL) {
-			printf ("DEBUG: ERROR: %s\n", error->message);
-			g_error_free (error);
-		}
-		if (ret == TRUE) {
-			arefresh->priv->on_battery = on_battery;
-			pk_debug ("setting on battery %i", on_battery);
-		}
-	}
+	/* watch gnome-screensaver */
+	arefresh->priv->gbus_gs = libgbus_new ();
+	g_signal_connect (arefresh->priv->gbus_gs, "connection-changed",
+			  G_CALLBACK (pk_connection_gs_changed_cb), arefresh);
+	libgbus_assign (arefresh->priv->gbus_gs, LIBGBUS_SESSION, GS_DBUS_SERVICE);
+
+	/* watch gnome-power-manager */
+	arefresh->priv->gbus_gpm = libgbus_new ();
+	g_signal_connect (arefresh->priv->gbus_gpm, "connection-changed",
+			  G_CALLBACK (pk_connection_gpm_changed_cb), arefresh);
+	libgbus_assign (arefresh->priv->gbus_gpm, LIBGBUS_SESSION, GPM_DBUS_SERVICE);
 
 	/* we don't start the daemon for this, it's just a wrapper for
 	 * NetworkManager or alternative */
@@ -395,8 +452,16 @@ pk_auto_refresh_finalize (GObject *object)
 
 	g_object_unref (arefresh->priv->client);
 	g_object_unref (arefresh->priv->network);
-	g_object_unref (arefresh->priv->proxy_gs);
-	g_object_unref (arefresh->priv->proxy_gpm);
+	g_object_unref (arefresh->priv->gbus_gs);
+	g_object_unref (arefresh->priv->gbus_gpm);
+
+	/* only unref the proxies if they were ever set */
+	if (arefresh->priv->proxy_gs != NULL) {
+		g_object_unref (arefresh->priv->proxy_gs);
+	}
+	if (arefresh->priv->proxy_gpm != NULL) {
+		g_object_unref (arefresh->priv->proxy_gpm);
+	}
 
 	G_OBJECT_CLASS (pk_auto_refresh_parent_class)->finalize (object);
 }

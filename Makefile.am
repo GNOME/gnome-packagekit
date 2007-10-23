@@ -1,4 +1,5 @@
 SUBDIRS =						\
+	libgbus						\
 	src						\
 	po						\
 	data						\
