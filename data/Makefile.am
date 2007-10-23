@@ -12,6 +12,7 @@ desktop_in_files =					\
 	pk-prefs.desktop.in				\
 	pk-application.desktop.in			\
 	pk-update-viewer.desktop.in			\
+	pk-repo.desktop.in				\
 	pk-transaction-viewer.desktop.in		\
 	$(NULL)
 
@@ -56,6 +57,7 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
+	pk-repo.desktop					\
 	pk-prefs.desktop				\
 	pk-update-viewer.desktop			\
 	pk-install-file.desktop				\
