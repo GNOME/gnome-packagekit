@@ -344,10 +344,8 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 	pk_progress_action_percentage (progress, percentage);
 	pk_progress_action_subpercentage (progress, subpercentage);
 
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
-	gtk_widget_show (widget);
-
 	/* set some localised text if we have time */
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
 	if (remaining == 0) {
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), NULL);
 	} else {
