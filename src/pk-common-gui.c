@@ -207,6 +207,9 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_TRANSACTION_ERROR:
 		text = _("Transaction error");
 		break;
+	case PK_ERROR_ENUM_REPO_NOT_FOUND:
+		text = _("Repository name was not found");
+		break;
 	default:
 		text = _("Unknown error");
 	}
