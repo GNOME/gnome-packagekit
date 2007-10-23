@@ -309,19 +309,6 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 }
 
 /**
- * pk_updates_percentage_changed_cb:
- **/
-static void
-pk_updates_percentage_changed_cb (PkClient *client, guint percentage, gpointer data)
-{
-	if (percentage == 0) {
-		return;
-	}
-	gtk_widget_show (progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), (gfloat) percentage / 100.0);
-}
-
-/**
  * pk_updates_no_percentage_updates_timeout:
  **/
 gboolean
@@ -332,17 +319,27 @@ pk_updates_no_percentage_updates_timeout (gpointer data)
 }
 
 /**
- * pk_application_no_percentage_updates_cb:
+ * pk_updates_progress_changed_cb:
  **/
 static void
-pk_updates_no_percentage_updates_cb (PkClient *client, gpointer data)
+pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				guint elapsed, guint remaining, gpointer data)
 {
-	gtk_widget_show (progress_bar);
-	/* don't spin twice as fast if more than one signal */
-	if (timer_id != 0) {
-		return;
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		/* don't spin twice as fast if more than one signal */
+		if (timer_id != 0) {
+			return;
+		}
+		gtk_widget_show (progress_bar);
+		timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY, pk_updates_no_percentage_updates_timeout, data);
+	} else {
+		/* we've gone from unknown -> actual value - cancel the polling */
+		if (timer_id != 0) {
+			g_source_remove (timer_id);
+		}
+		gtk_widget_show (progress_bar);
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), (gfloat) percentage / 100.0);
 	}
-	timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY, pk_updates_no_percentage_updates_timeout, data);
 }
 
 /**
@@ -397,10 +394,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_package_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_updates_finished_cb), NULL);
-	g_signal_connect (client, "percentage-changed",
-			  G_CALLBACK (pk_updates_percentage_changed_cb), NULL);
-	g_signal_connect (client, "no-percentage-updates",
-			  G_CALLBACK (pk_updates_no_percentage_updates_cb), NULL);
+	g_signal_connect (client, "progress-changed",
+			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);

@@ -432,16 +432,6 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 }
 
 /**
- * pk_application_percentage_changed_cb:
- **/
-static void
-pk_application_percentage_changed_cb (PkClient *client, guint percentage, PkApplication *application)
-{
-	gtk_widget_show (application->priv->progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), (gfloat) percentage / 100.0);
-}
-
-/**
  * pk_application_no_percentage_updates_timeout:
  **/
 gboolean
@@ -453,18 +443,32 @@ pk_application_no_percentage_updates_timeout (gpointer data)
 }
 
 /**
- * pk_application_no_percentage_updates_cb:
+ * pk_application_progress_changed_cb:
  **/
 static void
-pk_application_no_percentage_updates_cb (PkClient *client, PkApplication *application)
+pk_application_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				    guint elapsed, guint remaining, PkApplication *application)
 {
-	/* don't spin twice as fast if more than one signal */
-	if (application->priv->timer_id != 0) {
+	gtk_widget_show (application->priv->progress_bar);
+
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		/* don't spin twice as fast if more than one signal */
+		if (application->priv->timer_id != 0) {
+			return;
+		}
+		application->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
+							     pk_application_no_percentage_updates_timeout,
+							     application);
 		return;
 	}
-	application->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
-						     pk_application_no_percentage_updates_timeout,
-						     application);
+
+	/* we've gone from unknown -> actual value - cancel the polling */
+	if (application->priv->timer_id != 0) {
+		g_source_remove (application->priv->timer_id);
+		application->priv->timer_id = 0;
+	}
+
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), (gfloat) percentage / 100.0);
 }
 
 /**
@@ -839,10 +843,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_search, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_search, "no-percentage-updates",
-			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
-	g_signal_connect (application->priv->client_search, "percentage-changed",
-			  G_CALLBACK (pk_application_percentage_changed_cb), application);
+	g_signal_connect (application->priv->client_search, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	application->priv->client_action = pk_client_new ();
 	g_signal_connect (application->priv->client_action, "package",
@@ -851,10 +853,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_action, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_action, "no-percentage-updates",
-			  G_CALLBACK (pk_application_no_percentage_updates_cb), application);
-	g_signal_connect (application->priv->client_action, "percentage-changed",
-			  G_CALLBACK (pk_application_percentage_changed_cb), application);
+	g_signal_connect (application->priv->client_action, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	application->priv->client_description = pk_client_new ();
 	g_signal_connect (application->priv->client_description, "description",
