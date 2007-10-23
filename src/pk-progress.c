@@ -208,31 +208,59 @@ pk_progress_package_cb (PkClient *client,
 }
 
 /**
- * pk_progress_percentage_changed_cb:
+ * pk_progress_spin_timeout:
  **/
-static void
-pk_progress_percentage_changed_cb (PkClient *client, guint percentage, PkProgress *progress)
+gboolean
+pk_progress_spin_timeout (gpointer data)
 {
 	GtkWidget *widget;
+	PkProgress *progress = PK_PROGRESS (data);
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
+
+	/* show the box */
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-	gtk_widget_show (widget);
+
+	if (progress->priv->task_ended == TRUE) {
+		/* hide the box */
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+		gtk_widget_hide (widget);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
- * pk_progress_sub_percentage_changed_cb:
+ * pk_progress_progress_changed_cb:
  **/
 static void
-pk_progress_sub_percentage_changed_cb (PkClient *client, guint percentage, PkProgress *progress)
+pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				 guint elapsed, guint remaining, PkProgress *progress)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
+	gtk_widget_show (widget);
+
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		/* We have to spin */
+		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
+		return;
+	}
+
+	/* we've gone from unknown -> actual value - cancel the polling */
+	if (progress->priv->no_percentage_evt != 0) {
+		g_source_remove (progress->priv->no_percentage_evt);
+		progress->priv->no_percentage_evt = 0;
+	}
+
+	/* just set the value */
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-	gtk_widget_show (widget);
 }
 
 /**
@@ -297,43 +325,6 @@ pk_common_get_role_text (PkClient *client)
 }
 
 /**
- * pk_progress_spin_timeout:
- **/
-gboolean
-pk_progress_spin_timeout (gpointer data)
-{
-	GtkWidget *widget;
-	PkProgress *progress = PK_PROGRESS (data);
-
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
-	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
-
-	/* show the box */
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
-	gtk_widget_show (widget);
-
-	if (progress->priv->task_ended == TRUE) {
-		/* hide the box */
-		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
-		gtk_widget_hide (widget);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * pk_progress_no_percentage_updates_cb:
- **/
-static void
-pk_progress_no_percentage_updates_cb (PkClient *client, PkProgress *progress)
-{
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
-	gtk_widget_show (widget);
-	//g_timeout_add (100, pk_progress_spin_timeout, progress);
-}
-
-/**
  * pk_progress_monitor_tid:
  **/
 gboolean
@@ -344,6 +335,9 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	gboolean ret;
 	gchar *text;
 	guint percentage;
+	guint subpercentage;
+	guint elapsed;
+	guint remaining;
 
 	pk_client_set_tid (progress->priv->client, tid);
 
@@ -363,18 +357,10 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 
 	pk_progress_transaction_status_changed_cb (progress->priv->client, status, progress);
 
-	ret = pk_client_get_percentage (progress->priv->client, &percentage);
+	/* coldplug */
+	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining);
 	if (ret == TRUE) {
-		pk_progress_percentage_changed_cb (progress->priv->client, percentage, progress);
-	} else {
-		/* We have to spin */
-		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
-	}
-
-	/* no need to spin */
-	ret = pk_client_get_sub_percentage (progress->priv->client, &percentage);
-	if (ret == TRUE) {
-		pk_progress_sub_percentage_changed_cb (progress->priv->client, percentage, progress);
+		pk_progress_progress_changed_cb (progress->priv->client, percentage, subpercentage, elapsed, remaining, progress);
 	}
 
 	/* do the best we can */
@@ -408,12 +394,8 @@ pk_progress_init (PkProgress *progress)
 			  G_CALLBACK (pk_progress_finished_cb), progress);
 	g_signal_connect (progress->priv->client, "package",
 			  G_CALLBACK (pk_progress_package_cb), progress);
-	g_signal_connect (progress->priv->client, "no-percentage-updates",
-			  G_CALLBACK (pk_progress_no_percentage_updates_cb), progress);
-	g_signal_connect (progress->priv->client, "percentage-changed",
-			  G_CALLBACK (pk_progress_percentage_changed_cb), progress);
-	g_signal_connect (progress->priv->client, "sub-percentage-changed",
-			  G_CALLBACK (pk_progress_sub_percentage_changed_cb), progress);
+	g_signal_connect (progress->priv->client, "progress-changed",
+			  G_CALLBACK (pk_progress_progress_changed_cb), progress);
 	g_signal_connect (progress->priv->client, "transaction-status-changed",
 			  G_CALLBACK (pk_progress_transaction_status_changed_cb), progress);
 
