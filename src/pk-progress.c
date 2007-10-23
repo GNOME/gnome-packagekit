@@ -49,6 +49,7 @@ struct PkProgressPrivate
 	PkClient		*client;
 	gboolean		 task_ended;
 	guint			 no_percentage_evt;
+	guint			 no_subpercentage_evt;
 };
 
 enum {
@@ -110,6 +111,10 @@ pk_progress_clean_exit (PkProgress *progress)
 	if (progress->priv->no_percentage_evt != 0) {
 		g_source_remove (progress->priv->no_percentage_evt);
 		progress->priv->no_percentage_evt = 0;
+	}
+	if (progress->priv->no_subpercentage_evt != 0) {
+		g_source_remove (progress->priv->no_subpercentage_evt);
+		progress->priv->no_subpercentage_evt = 0;
 	}
 	g_signal_emit (progress, signals [ACTION_UNREF], 0);
 }
@@ -233,6 +238,100 @@ pk_progress_spin_timeout (gpointer data)
 }
 
 /**
+ * pk_progress_action_percentage:
+ **/
+static void
+pk_progress_action_percentage (PkProgress *progress, guint percentage)
+{
+	GtkWidget *widget_hbox;
+	GtkWidget *widget_percentage;
+
+	widget_hbox = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+	widget_percentage = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
+
+	/* hide */
+	if (percentage == 0) {
+		/* we've gone from unknown -> hidden - cancel the polling */
+		if (progress->priv->no_percentage_evt != 0) {
+			g_source_remove (progress->priv->no_percentage_evt);
+			progress->priv->no_percentage_evt = 0;
+		}
+		gtk_widget_hide (widget_hbox);
+		return;
+	}
+
+	/* spin */
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		/* We have to spin */
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
+		/* don't queue duplicate events */
+		if (progress->priv->no_percentage_evt == 0) {
+			progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
+		}
+		return;
+	}
+
+	gtk_widget_show (widget_hbox);
+	gtk_widget_show (widget_percentage);
+
+	/* we've gone from unknown -> actual value - cancel the polling */
+	if (progress->priv->no_percentage_evt != 0) {
+		g_source_remove (progress->priv->no_percentage_evt);
+		progress->priv->no_percentage_evt = 0;
+	}
+
+	/* just set the value */
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget_percentage), (gfloat) percentage / 100.0);
+}
+
+/**
+ * pk_progress_action_subpercentage:
+ **/
+static void
+pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
+{
+	GtkWidget *widget_hbox;
+	GtkWidget *widget_percentage;
+
+	widget_hbox = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
+	widget_percentage = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
+
+	/* hide */
+	if (percentage == 0) {
+		/* we've gone from unknown -> hidden - cancel the polling */
+		if (progress->priv->no_subpercentage_evt != 0) {
+			g_source_remove (progress->priv->no_subpercentage_evt);
+			progress->priv->no_subpercentage_evt = 0;
+		}
+		gtk_widget_hide (widget_hbox);
+		return;
+	}
+
+	gtk_widget_show (widget_hbox);
+	gtk_widget_show (widget_percentage);
+
+	/* spin */
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		/* We have to spin */
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
+		/* don't queue duplicate events */
+		if (progress->priv->no_subpercentage_evt == 0) {
+			progress->priv->no_subpercentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
+		}
+		return;
+	}
+
+	/* we've gone from unknown -> actual value - cancel the polling */
+	if (progress->priv->no_subpercentage_evt != 0) {
+		g_source_remove (progress->priv->no_subpercentage_evt);
+		progress->priv->no_subpercentage_evt = 0;
+	}
+
+	/* just set the value */
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget_percentage), (gfloat) percentage / 100.0);
+}
+
+/**
  * pk_progress_progress_changed_cb:
  **/
 static void
@@ -242,27 +341,11 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 	GtkWidget *widget;
 	gchar *time;
 
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
-	gtk_widget_show (widget);
+	pk_progress_action_percentage (progress, percentage);
+	pk_progress_action_subpercentage (progress, subpercentage);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
 	gtk_widget_show (widget);
-
-	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
-		/* We have to spin */
-		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), NULL);
-		progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
-		return;
-	}
-
-	/* we've gone from unknown -> actual value - cancel the polling */
-	if (progress->priv->no_percentage_evt != 0) {
-		g_source_remove (progress->priv->no_percentage_evt);
-		progress->priv->no_percentage_evt = 0;
-	}
-
-	/* just set the value */
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 
 	/* set some localised text if we have time */
 	if (remaining == 0) {
@@ -397,6 +480,7 @@ pk_progress_init (PkProgress *progress)
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->task_ended = FALSE;
 	progress->priv->no_percentage_evt = 0;
+	progress->priv->no_subpercentage_evt = 0;
 
 	progress->priv->client = pk_client_new ();
 	g_signal_connect (progress->priv->client, "error-code",
