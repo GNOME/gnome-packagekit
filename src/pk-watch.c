@@ -66,6 +66,7 @@ struct PkWatchPrivate
 	GConfClient		*gconf_client;
 	DBusGProxy		*proxy_gpm;
 	guint			 cookie;
+	gboolean		 show_refresh_in_menu;
 };
 
 G_DEFINE_TYPE (PkWatch, pk_watch, G_TYPE_OBJECT)
@@ -224,6 +225,13 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
+
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) == TRUE ||
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+		watch->priv->show_refresh_in_menu = FALSE;
+	} else {
+		watch->priv->show_refresh_in_menu = TRUE;
+	}
 
 	pk_watch_refresh_icon (watch);
 	pk_watch_refresh_tooltip (watch);
@@ -532,10 +540,6 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 		g_free (text);
 	}
-
-	/* Separator for HIG? */
-	widget = gtk_separator_menu_item_new ();
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 }
 
 /**
@@ -560,13 +564,21 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	/* add jobs as drop down */
 	pk_watch_populate_menu_with_jobs (watch, menu);
 
-	/* force a refresh */
-	widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh Software List"));
-	image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
-	g_signal_connect (G_OBJECT (widget), "activate",
-			  G_CALLBACK (pk_watch_refresh_cache_cb), watch);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+	/* force a refresh if we are not updating or refreshing */
+	if (watch->priv->show_refresh_in_menu == TRUE) {
+
+		/* Separator for HIG? */
+		widget = gtk_separator_menu_item_new ();
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+
+		/* don't know if we want this */
+		widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh Software List"));
+		image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+		g_signal_connect (G_OBJECT (widget), "activate",
+				  G_CALLBACK (pk_watch_refresh_cache_cb), watch);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+	}
 
 	/* show the menu */
 	gtk_widget_show_all (GTK_WIDGET (menu));
@@ -695,6 +707,7 @@ pk_watch_init (PkWatch *watch)
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
 	watch->priv->cookie = 0;
+	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->sicon = pk_smart_icon_new ();
 
