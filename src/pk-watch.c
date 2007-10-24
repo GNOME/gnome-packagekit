@@ -238,25 +238,40 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
 }
 
 /**
- * pk_watch_task_list_finished_cb:
+ * pk_watch_finished_cb:
  **/
 static void
-pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar *package_id, guint runtime, PkWatch *watch)
+pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch *watch)
 {
+	gboolean ret;
 	gboolean value;
+	PkRoleEnum role;
+	gchar *package_id;
 	gchar *message = NULL;
 	gchar *package;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
-	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
-
 	/* is it worth showing a UI? */
-	if (runtime < 3) {
+	if (runtime < 3000) {
 		pk_debug ("no notification, too quick");
 		return;
 	}
+
+	/* is it worth showing a UI? */
+	if (exit != PK_EXIT_ENUM_SUCCESS) {
+		pk_debug ("not notifying, as didn't complete okay");
+		return;
+	}
+
+	/* get the role */
+	ret = pk_client_get_role (client, &role, &package_id);
+	if (ret == FALSE) {
+		pk_warning ("cannot get role");
+		return;
+	}
+	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
 
 	/* are we accepting notifications */
 	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
@@ -286,13 +301,14 @@ pk_watch_task_list_finished_cb (PkTaskList *tlist, PkRoleEnum role, const gchar 
 	pk_smart_icon_notify (watch->priv->sicon, _("Task completed"), message,
 			      "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 	g_free (message);
+	g_free (package_id);
 }
 
 /**
- * pk_watch_task_list_error_code_cb:
+ * pk_watch_error_code_cb:
  **/
 static void
-pk_watch_task_list_error_code_cb (PkTaskList *tlist, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
+pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
 	const gchar *title;
 
@@ -713,8 +729,13 @@ pk_watch_init (PkWatch *watch)
 
 	/* we need to get ::locked */
 	watch->priv->client = pk_client_new ();
+	pk_client_set_promiscuous (watch->priv->client, TRUE);
 	g_signal_connect (watch->priv->client, "locked",
 			  G_CALLBACK (pk_watch_locked_cb), watch);
+	g_signal_connect (watch->priv->client, "finished",
+			  G_CALLBACK (pk_watch_finished_cb), watch);
+	g_signal_connect (watch->priv->client, "error-code",
+			  G_CALLBACK (pk_watch_error_code_cb), watch);
 
 	/* connect to session bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
@@ -747,10 +768,6 @@ pk_watch_init (PkWatch *watch)
 	watch->priv->tlist = pk_task_list_new ();
 	g_signal_connect (watch->priv->tlist, "task-list-changed",
 			  G_CALLBACK (pk_watch_task_list_changed_cb), watch);
-	g_signal_connect (watch->priv->tlist, "task-list-finished",
-			  G_CALLBACK (pk_watch_task_list_finished_cb), watch);
-	g_signal_connect (watch->priv->tlist, "error-code",
-			  G_CALLBACK (pk_watch_task_list_error_code_cb), watch);
 
 	watch->priv->pconnection = pk_connection_new ();
 	g_signal_connect (watch->priv->pconnection, "connection-changed",
