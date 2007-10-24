@@ -404,6 +404,18 @@ pk_watch_not_supported (PkWatch *watch, const gchar *title)
 }
 
 /**
+ * pk_watch_refresh_cache_finished_cb:
+ **/
+static void
+pk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkWatch *watch)
+{
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+	pk_debug ("unreffing client %p", client);
+	g_object_unref (client);
+}
+
+/**
  * pk_watch_refresh_cache_cb:
  **/
 static void
@@ -411,13 +423,19 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 {
 	gboolean ret;
 	PkWatch *watch = PK_WATCH (data);
+	PkClient *client;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
 	pk_debug ("refresh cache");
-	ret = pk_client_refresh_cache (watch->priv->client, TRUE);
+	client = pk_client_new ();
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_watch_refresh_cache_finished_cb), watch);
+
+	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
+		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 		pk_watch_not_supported (watch, _("Failed to refresh cache"));
 	}
