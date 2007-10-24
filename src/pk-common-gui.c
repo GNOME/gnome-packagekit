@@ -213,6 +213,12 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
 		text = _("Could not remove a protected system package");
 		break;
+	case PK_ERROR_ENUM_PROCESS_QUIT:
+		text = _("The transaction was cancelled");
+		break;
+	case PK_ERROR_ENUM_PROCESS_KILL:
+		text = _("The transaction was forcibly cancelled");
+		break;
 	default:
 		text = _("Unknown error");
 	}
