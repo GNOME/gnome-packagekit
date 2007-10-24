@@ -32,6 +32,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
@@ -41,6 +42,7 @@ static GladeXML *glade_xml = NULL;
 static GtkWidget *progress_bar = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
+static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
 static guint timer_id = 0;
 
@@ -244,6 +246,24 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointe
 }
 
 /**
+ * pk_updates_set_aux_status:
+ **/
+static void
+pk_updates_set_aux_status (PkClient *client, const gchar *message)
+{
+	GtkTreeIter iter;
+	GdkPixbuf *icon;
+
+	gtk_list_store_append (list_store, &iter);
+	gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_TEXT, message, -1);
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "dialog-information", 48, 0, NULL);
+	if (icon != NULL) {
+		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
+		gdk_pixbuf_unref (icon);
+	}
+}
+
+/**
  * pk_updates_finished_cb:
  **/
 static void
@@ -286,20 +306,12 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
-		GtkTreeIter iter;
-		GdkPixbuf *icon;
+		/* put a message in the listbox */
+		pk_updates_set_aux_status (client, _("<b>There are no updates available!</b>"));
 
-		/* if no updates then hide apply and add this to the box */
+		/* if no updates then hide apply */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
 		gtk_widget_hide (widget);
-
-		gtk_list_store_append (list_store, &iter);
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_TEXT, _("<b>There are no updates available!</b>"), -1);
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "dialog-information", 48, 0, NULL);
-		if (icon != NULL) {
-			gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
-			gdk_pixbuf_unref (icon);
-		}
 	} else {
 		/* set visible and sensitive */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
@@ -339,6 +351,30 @@ pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subper
 		}
 		gtk_widget_show (progress_bar);
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), (gfloat) percentage / 100.0);
+	}
+}
+
+/**
+ * pk_updates_task_list_changed_cb:
+ **/
+static void
+pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
+{
+	GtkWidget *widget;
+
+	/* hide buttons if we are updating */
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+		/* clear existing list */
+		gtk_list_store_clear (list_store);
+
+		/* put a message in the listbox */
+		pk_updates_set_aux_status (client, _("<b>There is an update already in progress!</b>"));
+
+		/* if doing it then hide apply and refresh */
+		widget = glade_xml_get_widget (glade_xml, "button_apply");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "button_refresh");
+		gtk_widget_hide (widget);
 	}
 }
 
@@ -403,6 +439,12 @@ main (int argc, char *argv[])
 	pconnection = pk_connection_new ();
 	g_signal_connect (pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), NULL);
+
+	/* we need to grey out all the buttons if we are in progress */
+	tlist = pk_task_list_new ();
+	g_signal_connect (tlist, "task-list-changed",
+			  G_CALLBACK (pk_updates_task_list_changed_cb), NULL);
+	pk_updates_task_list_changed_cb (tlist, NULL);
 
 	glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
