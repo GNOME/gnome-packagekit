@@ -465,6 +465,21 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
 		text = _("Updating system");
 		break;
+	case PK_ROLE_ENUM_CANCEL:
+		text = _("Canceling");
+		break;
+	case PK_ROLE_ENUM_ROLLBACK:
+		text = _("Rolling back");
+		break;
+	case PK_ROLE_ENUM_GET_REPO_LIST:
+		text = _("Getting list of repositories");
+		break;
+	case PK_ROLE_ENUM_REPO_ENABLE:
+		text = _("Enabling repository");
+		break;
+	case PK_ROLE_ENUM_REPO_SET_DATA:
+		text = _("Setting repository data");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -513,6 +528,7 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Removed package");
 		break;
 	case PK_ROLE_ENUM_INSTALL_PACKAGE:
+	case PK_ROLE_ENUM_INSTALL_FILE:
 		text = _("Installed package");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
@@ -523,6 +539,21 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
 		text = _("Updated system");
+		break;
+	case PK_ROLE_ENUM_CANCEL:
+		text = _("Canceled");
+		break;
+	case PK_ROLE_ENUM_ROLLBACK:
+		text = _("Rolled back");
+		break;
+	case PK_ROLE_ENUM_GET_REPO_LIST:
+		text = _("Got list of repositories");
+		break;
+	case PK_ROLE_ENUM_REPO_ENABLE:
+		text = _("Enabled repository");
+		break;
+	case PK_ROLE_ENUM_REPO_SET_DATA:
+		text = _("Set repository data");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
