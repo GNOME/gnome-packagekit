@@ -730,6 +730,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean installed;
+	gboolean ret;
 	gchar *package_id;
 
 	/* This will only work in single or browse selection mode! */
@@ -762,6 +763,11 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 			return;
 		}
 
+		/* cancel any previous request */
+		ret = pk_client_cancel (application->priv->client_description);
+		if (ret == FALSE) {
+			pk_debug ("failed to cancel, and adding to queue");
+		}
 		/* get the description */
 		pk_client_reset (application->priv->client_description);
 		pk_client_get_description (application->priv->client_description, application->priv->package);
