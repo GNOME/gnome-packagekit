@@ -311,6 +311,7 @@ pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subper
 				guint elapsed, guint remaining, gpointer data)
 {
 	pk_statusbar_set_percentage (statusbar, percentage);
+	pk_statusbar_set_remaining (application->priv->statusbar, remaining);
 }
 
 /**

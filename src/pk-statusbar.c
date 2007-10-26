@@ -73,12 +73,36 @@ pk_statusbar_class_init (PkStatusbarClass *klass)
 gboolean
 pk_statusbar_set_widget (PkStatusbar *sbar, GtkWidget *widget)
 {
+	GtkWidget *hbox;
+	GtkWidget *icon_container;
+
 	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar == NULL, FALSE);
+
+	/* save this */
 	sbar->priv->statusbar = GTK_STATUSBAR (widget);
 
-	gtk_box_pack_end (GTK_BOX (sbar->priv->statusbar), GTK_WIDGET (sbar->priv->progressbar), TRUE, TRUE, 0);
+	/* we need to put the new objects in an hbox */
+	hbox = gtk_hbox_new (FALSE, 4);
+
+	icon_container = gtk_hbox_new (FALSE, 4);
+	gtk_box_pack_start (GTK_BOX (hbox), icon_container, FALSE, FALSE, 0);
+	gtk_widget_show (icon_container);
+
+	/* Put the label in the hbox, and substitute the hbox into the frame */
+	g_object_ref (sbar->priv->statusbar->label);
+	gtk_container_remove (GTK_CONTAINER (sbar->priv->statusbar->frame), sbar->priv->statusbar->label);
+	gtk_box_pack_start (GTK_BOX (hbox), sbar->priv->statusbar->label, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (sbar->priv->progressbar), FALSE, TRUE, 0);
+	g_object_unref (sbar->priv->statusbar->label);
+	gtk_container_add (GTK_CONTAINER (sbar->priv->statusbar->frame), hbox);
+	gtk_widget_show (hbox);
+
+	/* We need to set the vertical size request to a small value here,
+	 * because the progressbar's default size request is taller than the whole
+	 * statusbar. */
+	gtk_widget_set_size_request (GTK_WIDGET (sbar->priv->progressbar), -1, 10);
 
 	return TRUE;
 }
@@ -113,8 +137,7 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 			return TRUE;
 		}
 		sbar->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
-							     pk_statusbar_pulse_timeout,
-							     sbar);
+						      pk_statusbar_pulse_timeout, sbar);
 		return TRUE;
 	}
 
@@ -134,9 +157,29 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 gboolean
 pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
 {
+	gchar *time;
+	gchar *text;
+
 	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
+
+	/* don't hide, else the status bar will collapse */
+	if (remaining == 0) {
+		gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), "");
+		return TRUE;
+	}
+
+	/* show */
+	gtk_widget_show (GTK_WIDGET (sbar->priv->statusbar->label));
+
+	/* print remaining time */
+	time = pk_time_to_localised_string (remaining);
+	text = g_strdup_printf (_("Remaining time: %s"), time);
+	gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), text);
+	g_free (time);
+	g_free (text);
+
 	return TRUE;
 }
 

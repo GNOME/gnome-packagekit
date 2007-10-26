@@ -433,6 +433,7 @@ pk_application_progress_changed_cb (PkClient *client, guint percentage, guint su
 				    guint elapsed, guint remaining, PkApplication *application)
 {
 	pk_statusbar_set_percentage (application->priv->statusbar, percentage);
+	pk_statusbar_set_remaining (application->priv->statusbar, remaining);
 }
 
 /**
