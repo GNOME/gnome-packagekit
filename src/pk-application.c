@@ -558,6 +558,7 @@ pk_application_delete_event_cb (GtkWidget	*widget,
 static gboolean
 pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplication *application)
 {
+	gboolean valid;
 	GtkWidget *widget;
 	const gchar *package;
 	GtkTreeSelection *selection;
@@ -570,9 +571,12 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	gtk_tree_selection_unselect_all (selection);
 
+	/* check for invalid chars */
+	valid = pk_validate_input (package);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	/* ITS4: ignore, not used for allocation */
-	if (strlen (package) == 0) {
+	if (valid == FALSE || strlen (package) == 0) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);
