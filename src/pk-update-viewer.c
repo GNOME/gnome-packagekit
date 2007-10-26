@@ -37,14 +37,14 @@
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
 #include "pk-common-gui.h"
+#include "pk-statusbar.h"
 
 static GladeXML *glade_xml = NULL;
-static GtkWidget *progress_bar = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
-static guint timer_id = 0;
+static PkStatusbar *statusbar = NULL;
 
 enum
 {
@@ -73,11 +73,6 @@ pk_updates_apply_cb (GtkWidget *widget,
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
-
-	/* don't spin anymore */
-	if (timer_id != 0) {
-		g_source_remove (timer_id);
-	}
 
 	pk_client_reset (client);
 	pk_client_update_system (client);
@@ -122,11 +117,6 @@ pk_button_close_cb (GtkWidget	*widget,
 
 	/* we might have a transaction running */
 	pk_client_cancel (client);
-
-	/* don't spin anymore */
-	if (timer_id != 0) {
-		g_source_remove (timer_id);
-	}
 
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
@@ -275,15 +265,8 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	pk_client_get_role (client, &role, NULL);
 
-	/* don't spin anymore */
-	if (timer_id != 0) {
-		g_source_remove (timer_id);
-		timer_id = 0;
-	}
-
-	/* hide the progress bar */
-	gtk_widget_hide (progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
+	/* hide widget */
+	pk_statusbar_hide (statusbar);
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		pk_client_reset (client);
@@ -321,37 +304,13 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 }
 
 /**
- * pk_updates_no_percentage_updates_timeout:
- **/
-gboolean
-pk_updates_no_percentage_updates_timeout (gpointer data)
-{
-	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (progress_bar));
-	return TRUE;
-}
-
-/**
  * pk_updates_progress_changed_cb:
  **/
 static void
 pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
 				guint elapsed, guint remaining, gpointer data)
 {
-	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
-		/* don't spin twice as fast if more than one signal */
-		if (timer_id != 0) {
-			return;
-		}
-		gtk_widget_show (progress_bar);
-		timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY, pk_updates_no_percentage_updates_timeout, data);
-	} else {
-		/* we've gone from unknown -> actual value - cancel the polling */
-		if (timer_id != 0) {
-			g_source_remove (timer_id);
-		}
-		gtk_widget_show (progress_bar);
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), (gfloat) percentage / 100.0);
-	}
+	pk_statusbar_set_percentage (statusbar, percentage);
 }
 
 /**
@@ -497,11 +456,10 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
+	/* use the in-statusbar for progress */
+	statusbar = pk_statusbar_new ();
 	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
-	progress_bar = gtk_progress_bar_new ();
-	gtk_box_pack_end (GTK_BOX (widget), progress_bar, TRUE, TRUE, 0);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0.0);
-	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (progress_bar), PK_PROGRESS_BAR_PULSE_STEP);
+	pk_statusbar_set_widget (statusbar, widget);
 
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
@@ -522,6 +480,7 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
+	g_object_unref (statusbar);
 	g_free (package);
 
 	return 0;

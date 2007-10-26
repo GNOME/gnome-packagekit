@@ -36,6 +36,7 @@
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
 
+#include "pk-statusbar.h"
 #include "pk-common-gui.h"
 #include "pk-application.h"
 
@@ -48,13 +49,13 @@ static void     pk_application_finalize   (GObject	    *object);
 struct PkApplicationPrivate
 {
 	GladeXML		*glade_xml;
-	GtkWidget		*progress_bar;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
 	PkClient		*client_search;
 	PkClient		*client_action;
 	PkClient		*client_description;
 	PkConnection		*pconnection;
+	PkStatusbar		*statusbar;
 	gchar			*package;
 	gchar			*url;
 	PkEnumList		*role_list;
@@ -63,7 +64,6 @@ struct PkApplicationPrivate
 	PkEnumList		*current_filter;
 	gboolean		 search_in_progress;
 	guint			 search_depth;
-	guint			 timer_id;
 };
 
 enum {
@@ -393,14 +393,8 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	gboolean ret;
 	PkRoleEnum role;
 
-	/* don't spin anymore */
-	if (application->priv->timer_id != 0) {
-		g_source_remove (application->priv->timer_id);
-		application->priv->timer_id = 0;
-	}
-
 	/* hide widget */
-	gtk_widget_hide (application->priv->progress_bar);
+	pk_statusbar_hide (application->priv->statusbar);
 
 	/* Correct text on button */
 	if (application->priv->search_in_progress == TRUE) {
@@ -432,43 +426,13 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 }
 
 /**
- * pk_application_no_percentage_updates_timeout:
- **/
-gboolean
-pk_application_no_percentage_updates_timeout (gpointer data)
-{
-	PkApplication *application = (PkApplication *) data;
-	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (application->priv->progress_bar));
-	return TRUE;
-}
-
-/**
  * pk_application_progress_changed_cb:
  **/
 static void
 pk_application_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
 				    guint elapsed, guint remaining, PkApplication *application)
 {
-	gtk_widget_show (application->priv->progress_bar);
-
-	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
-		/* don't spin twice as fast if more than one signal */
-		if (application->priv->timer_id != 0) {
-			return;
-		}
-		application->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
-							     pk_application_no_percentage_updates_timeout,
-							     application);
-		return;
-	}
-
-	/* we've gone from unknown -> actual value - cancel the polling */
-	if (application->priv->timer_id != 0) {
-		g_source_remove (application->priv->timer_id);
-		application->priv->timer_id = 0;
-	}
-
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), (gfloat) percentage / 100.0);
+	pk_statusbar_set_percentage (application->priv->statusbar, percentage);
 }
 
 /**
@@ -531,10 +495,6 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
-
-	/* reset to 0 */
-	gtk_widget_show (application->priv->progress_bar);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.0);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
@@ -840,7 +800,6 @@ pk_application_init (PkApplication *application)
 	application->priv->package = NULL;
 	application->priv->url = NULL;
 	application->priv->search_in_progress = FALSE;
-	application->priv->timer_id = 0;
 
 	application->priv->search_depth = 0;
 	application->priv->current_filter = pk_enum_list_new ();
@@ -1064,11 +1023,9 @@ pk_application_init (PkApplication *application)
 	GtkTreeSelection *selection;
 
 	/* use the in-statusbar for progress */
+	application->priv->statusbar = pk_statusbar_new ();
 	widget = glade_xml_get_widget (application->priv->glade_xml, "statusbar_status");
-	application->priv->progress_bar = gtk_progress_bar_new ();
-	gtk_box_pack_end (GTK_BOX (widget), application->priv->progress_bar, TRUE, TRUE, 0);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (application->priv->progress_bar), 0.0);
-	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (application->priv->progress_bar), PK_PROGRESS_BAR_PULSE_STEP);
+	pk_statusbar_set_widget (application->priv->statusbar, widget);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
@@ -1127,11 +1084,6 @@ pk_application_finalize (GObject *object)
 	application = PK_APPLICATION (object);
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 
-	/* don't spin anymore */
-	if (application->priv->timer_id != 0) {
-		g_source_remove (application->priv->timer_id);
-	}
-
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
@@ -1141,6 +1093,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->group_list);
 	g_object_unref (application->priv->role_list);
 	g_object_unref (application->priv->current_filter);
+	g_object_unref (application->priv->statusbar);
 	g_free (application->priv->url);
 	g_free (application->priv->package);
 

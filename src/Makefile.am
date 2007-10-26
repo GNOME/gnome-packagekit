@@ -102,6 +102,8 @@ pk_application_SOURCES =				\
 	pk-application-main.c				\
 	pk-application.c				\
 	pk-application.h				\
+	pk-statusbar.c					\
+	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
 	$(NULL)
@@ -131,6 +133,8 @@ pk_prefs_LDADD =					\
 
 pk_update_viewer_SOURCES =				\
 	pk-update-viewer.c				\
+	pk-statusbar.c					\
+	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
 	$(NULL)
