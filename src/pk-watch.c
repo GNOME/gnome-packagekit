@@ -315,6 +315,13 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
+	/* ignore some errors */
+	if (error_code == PK_ERROR_ENUM_NOT_SUPPORTED ||
+	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
+	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+		return;
+	}
+
 	title = pk_error_enum_to_localised_text (error_code);
 	pk_smart_icon_notify (watch->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 }
