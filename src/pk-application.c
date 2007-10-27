@@ -54,6 +54,7 @@ struct PkApplicationPrivate
 	PkClient		*client_search;
 	PkClient		*client_action;
 	PkClient		*client_description;
+	PkClient		*client_files;
 	PkConnection		*pconnection;
 	PkStatusbar		*statusbar;
 	gchar			*package;
@@ -305,6 +306,22 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_hide (widget);
 	}
+}
+
+/**
+ * pk_application_files_cb:
+ **/
+static void
+pk_application_files_cb (PkClient *client, const gchar *package_id,
+			 const gchar *filelist, PkApplication *application)
+{
+	GtkWidget *widget;
+	GtkTextBuffer *buffer;
+
+	pk_debug ("files = %s", filelist);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
+	gtk_widget_show (widget);
 
 	buffer = gtk_text_buffer_new (NULL);
 
@@ -327,7 +344,6 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 }
-
 /**
  * pk_application_package_cb:
  **/
@@ -724,18 +740,33 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_widget_set_sensitive (widget, installed);
 
 		/* don't do the description if we don't support the action */
-		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
-			return;
+		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == TRUE) {
+
+			/* cancel any previous request */
+			ret = pk_client_cancel (application->priv->client_description);
+			if (ret == FALSE) {
+				pk_debug ("failed to cancel, and adding to queue");
+			}
+			/* get the description */
+			pk_client_reset (application->priv->client_description);
+			pk_client_get_description (application->priv->client_description,
+						   application->priv->package);
 		}
 
-		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_description);
-		if (ret == FALSE) {
-			pk_debug ("failed to cancel, and adding to queue");
+		/* don't get the filelist if we don't support the action */
+		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == TRUE) {
+
+			/* cancel any previous request */
+			ret = pk_client_cancel (application->priv->client_files);
+			if (ret == FALSE) {
+				pk_debug ("failed to cancel, and adding to queue");
+			}
+			/* get the filelist */
+			pk_client_reset (application->priv->client_files);
+			pk_client_get_files (application->priv->client_files,
+					     application->priv->package);
+
 		}
-		/* get the description */
-		pk_client_reset (application->priv->client_description);
-		pk_client_get_description (application->priv->client_description, application->priv->package);
 	} else {
 		g_print ("no row selected.\n");
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
@@ -834,6 +865,14 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (application->priv->client_description, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
 
+	application->priv->client_files = pk_client_new ();
+	g_signal_connect (application->priv->client_files, "files",
+			  G_CALLBACK (pk_application_files_cb), application);
+	g_signal_connect (application->priv->client_files, "error-code",
+			  G_CALLBACK (pk_application_error_code_cb), application);
+	g_signal_connect (application->priv->client_files, "finished",
+			  G_CALLBACK (pk_application_finished_cb), application);
+
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
 	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
@@ -919,6 +958,15 @@ pk_application_init (PkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 	gtk_widget_hide (widget);
+
+	/* Remove description/file list if needed. */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 0);
+	}
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == FALSE) {
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 1);
+	}
 
 	/* until we get the mugshot stuff, disable this */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
@@ -1089,6 +1137,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
 	g_object_unref (application->priv->client_description);
+	g_object_unref (application->priv->client_files);
 	g_object_unref (application->priv->pconnection);
 	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->group_list);
