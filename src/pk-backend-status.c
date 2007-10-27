@@ -151,6 +151,10 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_get_description");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_FILES) == TRUE) {
+		widget = glade_xml_get_widget (glade_xml, "image_get_files");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REQUIRES) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_requires");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
