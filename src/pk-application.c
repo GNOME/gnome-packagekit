@@ -360,11 +360,7 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 	pk_package_id_free (ident);
 	g_free (text);
 
-	if (info == PK_INFO_ENUM_INSTALLED) {
-		icon_name = "package-x-generic";
-	} else {
-		icon_name = "network-workgroup";
-	}
+	icon_name = pk_info_enum_to_icon_name (info);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
 	if (icon) {
 		gtk_list_store_set (application->priv->packages_store, &iter, PACKAGES_COLUMN_IMAGE, icon, -1);

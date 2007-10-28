@@ -32,6 +32,77 @@
 #include <pk-enum.h>
 #include "pk-common-gui.h"
 
+/* icon names */
+static PkEnumMatch enum_info_icon_name[] = {
+	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
+	{PK_INFO_ENUM_INSTALLED,		"package-x-generic"},
+	{PK_INFO_ENUM_AVAILABLE,		"network-workgroup"},
+	{PK_INFO_ENUM_LOW,			"software-update-available"},
+	{PK_INFO_ENUM_NORMAL,			"software-update-available"},
+	{PK_INFO_ENUM_IMPORTANT,		"software-update-urgent"},
+	{PK_INFO_ENUM_SECURITY,			"software-update-urgent"},
+	{PK_INFO_ENUM_DOWNLOADING,		"mail-send-receive"},
+	{PK_INFO_ENUM_UPDATING,			"system-software-update"},
+	{PK_INFO_ENUM_INSTALLING,		"emblem-system"},
+	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
+	{0, NULL},
+};
+
+static PkEnumMatch enum_status_icon_name[] = {
+	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
+	{PK_STATUS_ENUM_WAIT,			"media-playback-pause"},
+	{PK_STATUS_ENUM_SETUP,			"emblem-system"},
+	{PK_STATUS_ENUM_QUERY,			"system-search"},
+	{PK_STATUS_ENUM_REFRESH_CACHE,		"view-refresh"},
+	{PK_STATUS_ENUM_REMOVE,			"edit-clear"},
+	{PK_STATUS_ENUM_DOWNLOAD,		"mail-send-receive"},
+	{PK_STATUS_ENUM_INSTALL,		"emblem-system"},
+	{PK_STATUS_ENUM_UPDATE,			"system-software-update"},
+	{0, NULL},
+};
+
+static PkEnumMatch enum_role_icon_name[] = {
+	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
+	{PK_ROLE_ENUM_CANCEL,			"view-refresh"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_RESOLVE,			"system-search"},
+	{PK_ROLE_ENUM_ROLLBACK,			"view-refresh"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_GET_DEPENDS,		"system-search"},
+	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"system-search"},
+	{PK_ROLE_ENUM_GET_DESCRIPTION,		"system-search"},
+	{PK_ROLE_ENUM_GET_REQUIRES,		"system-search"},
+	{PK_ROLE_ENUM_GET_UPDATES,		"system-search"},
+	{PK_ROLE_ENUM_SEARCH_DETAILS,		"system-search"},
+	{PK_ROLE_ENUM_SEARCH_FILE,		"system-search"},
+	{PK_ROLE_ENUM_SEARCH_GROUP,		"system-search"},
+	{PK_ROLE_ENUM_SEARCH_NAME,		"system-search"},
+	{PK_ROLE_ENUM_REFRESH_CACHE,		"view-refresh"},
+	{PK_ROLE_ENUM_REMOVE_PACKAGE,		"edit-clear"},
+	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"emblem-system"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_INSTALL_FILE,		"emblem-system"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_UPDATE_PACKAGE,		"emblem-system"},
+	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
+	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
+	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
+	{PK_ROLE_ENUM_REPO_SET_DATA,		"emblem-system"},
+	{0, NULL},
+};
+
+static PkEnumMatch enum_group_icon_name[] = {
+	{PK_GROUP_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
+	{PK_GROUP_ENUM_ACCESSIBILITY,		"preferences-desktop-accessibility"},
+	{PK_GROUP_ENUM_ACCESSORIES,		"applications-accessories"},
+	{PK_GROUP_ENUM_EDUCATION,		"utilities-system-monitor"},
+	{PK_GROUP_ENUM_GAMES,			"applications-games"},
+	{PK_GROUP_ENUM_GRAPHICS,		"applications-graphics"},
+	{PK_GROUP_ENUM_INTERNET,		"applications-internet"},
+	{PK_GROUP_ENUM_OFFICE,			"applications-office"},
+	{PK_GROUP_ENUM_OTHER,			"applications-other"},
+	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
+	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
+	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
+	{0, NULL},
+};
+
 /**
  * pk_size_to_si_size_text:
  **/
@@ -99,7 +170,6 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	pk_package_id_free (ident);
 	return text;
 }
-
 
 /**
  * pk_package_id_get_name:
@@ -334,85 +404,6 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 }
 
 /**
- * pk_info_enum_to_icon_name:
- **/
-const gchar *
-pk_info_enum_to_icon_name (PkInfoEnum info)
-{
-	const gchar *text = NULL;
-	switch (info) {
-	case PK_INFO_ENUM_LOW:
-		text = "software-update-available";
-		break;
-	case PK_INFO_ENUM_NORMAL:
-		text = "software-update-available";
-		break;
-	case PK_INFO_ENUM_IMPORTANT:
-		text = "software-update-urgent";
-		break;
-	case PK_INFO_ENUM_SECURITY:
-		text = "software-update-urgent";
-		break;
-	case PK_INFO_ENUM_REMOVING:
-		text = "edit-clear";
-		break;
-	case PK_INFO_ENUM_DOWNLOADING:
-		text = "mail-send-receive";
-		break;
-	case PK_INFO_ENUM_INSTALLING:
-		text = "emblem-system";
-		break;
-	case PK_INFO_ENUM_UPDATING:
-		text = "system-software-update";
-		break;
-	default:
-		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
-	}
-	return text;
-}
-
-/**
- * pk_status_enum_to_icon_name:
- **/
-const gchar *
-pk_status_enum_to_icon_name (PkStatusEnum status)
-{
-	const gchar *text = NULL;
-	switch (status) {
-	case PK_STATUS_ENUM_UNKNOWN:
-		text = "help-browser";
-		break;
-	case PK_STATUS_ENUM_SETUP:
-		text = "emblem-system";
-		break;
-	case PK_STATUS_ENUM_WAIT:
-		text = "media-playback-pause";
-		break;
-	case PK_STATUS_ENUM_QUERY:
-		text = "system-search";
-		break;
-	case PK_STATUS_ENUM_REMOVE:
-		text = "edit-clear";
-		break;
-	case PK_STATUS_ENUM_DOWNLOAD:
-		text = "mail-send-receive";
-		break;
-	case PK_STATUS_ENUM_INSTALL:
-		text = "emblem-system";
-		break;
-	case PK_STATUS_ENUM_REFRESH_CACHE:
-		text = "view-refresh";
-		break;
-	case PK_STATUS_ENUM_UPDATE:
-		text = "system-software-update";
-		break;
-	default:
-		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
-	}
-	return text;
-}
-
-/**
  * pk_role_enum_to_localised_present:
  **/
 const gchar *
@@ -562,49 +553,6 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 }
 
 /**
- * pk_role_enum_to_icon_name:
- **/
-const gchar *
-pk_role_enum_to_icon_name (PkRoleEnum role)
-{
-	const gchar *text = NULL;
-	switch (role) {
-	case PK_ROLE_ENUM_UNKNOWN:
-		text = "help-browser";
-		break;
-	case PK_ROLE_ENUM_GET_DESCRIPTION:
-	case PK_ROLE_ENUM_GET_REQUIRES:
-	case PK_ROLE_ENUM_GET_UPDATES:
-	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
-	case PK_ROLE_ENUM_GET_DEPENDS:
-	case PK_ROLE_ENUM_SEARCH_DETAILS:
-	case PK_ROLE_ENUM_SEARCH_FILE:
-	case PK_ROLE_ENUM_SEARCH_GROUP:
-	case PK_ROLE_ENUM_SEARCH_NAME:
-		text = "system-search";
-		break;
-	case PK_ROLE_ENUM_REMOVE_PACKAGE:
-		text = "edit-clear";
-		break;
-	case PK_ROLE_ENUM_INSTALL_PACKAGE:
-		text = "emblem-system";
-		break;
-	case PK_ROLE_ENUM_REFRESH_CACHE:
-		text = "view-refresh";
-		break;
-	case PK_ROLE_ENUM_UPDATE_PACKAGE:
-		text = "emblem-system";
-		break;
-	case PK_ROLE_ENUM_UPDATE_SYSTEM:
-		text = "system-software-update";
-		break;
-	default:
-		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
-	}
-	return text;
-}
-
-/**
  * pk_group_enum_to_localised_text:
  **/
 const gchar *
@@ -652,53 +600,39 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 }
 
 /**
+ * pk_info_enum_to_icon_name:
+ **/
+const gchar *
+pk_info_enum_to_icon_name (PkInfoEnum info)
+{
+	return pk_enum_find_string (enum_info_icon_name, info);
+}
+
+/**
+ * pk_status_enum_to_icon_name:
+ **/
+const gchar *
+pk_status_enum_to_icon_name (PkStatusEnum status)
+{
+	return pk_enum_find_string (enum_status_icon_name, status);
+}
+
+/**
+ * pk_role_enum_to_icon_name:
+ **/
+const gchar *
+pk_role_enum_to_icon_name (PkRoleEnum role)
+{
+	return pk_enum_find_string (enum_role_icon_name, role);
+}
+
+/**
  * pk_group_enum_to_icon_name:
  **/
 const gchar *
 pk_group_enum_to_icon_name (PkGroupEnum group)
 {
-	const gchar *text = NULL;
-	switch (group) {
-	case PK_GROUP_ENUM_ACCESSIBILITY:
-		text = "preferences-desktop-accessibility";
-		break;
-	case PK_GROUP_ENUM_ACCESSORIES:
-		text = "applications-accessories";
-		break;
-	case PK_GROUP_ENUM_EDUCATION:
-		text = "utilities-system-monitor";
-		break;
-	case PK_GROUP_ENUM_GAMES:
-		text = "applications-games";
-		break;
-	case PK_GROUP_ENUM_GRAPHICS:
-		text = "applications-graphics";
-		break;
-	case PK_GROUP_ENUM_INTERNET:
-		text = "applications-internet";
-		break;
-	case PK_GROUP_ENUM_OFFICE:
-		text = "applications-office";
-		break;
-	case PK_GROUP_ENUM_OTHER:
-		text = "applications-other";
-		break;
-	case PK_GROUP_ENUM_PROGRAMMING:
-		text = "applications-development";
-		break;
-	case PK_GROUP_ENUM_MULTIMEDIA:
-		text = "applications-multimedia";
-		break;
-	case PK_GROUP_ENUM_SYSTEM:
-		text = "applications-system";
-		break;
-	case PK_GROUP_ENUM_UNKNOWN:
-		text = "applications-other";
-		break;
-	default:
-		pk_error ("group unrecognised: %i", group);
-	}
-	return text;
+	return pk_enum_find_string (enum_group_icon_name, group);
 }
 
 /**
