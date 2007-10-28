@@ -1,7 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
  * Copyright (C) 2007 Richard Hughes <richard@hughsie.com>
- *\
+ *
  * Licensed under the GNU General Public License Version 2
  *
  * This program is free software; you can redistribute it and/or modify
@@ -189,24 +189,21 @@ pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, P
  * pk_progress_package_cb:
  */
 static void
-pk_progress_package_cb (PkClient *client,
-			guint          value,
-			const gchar   *package_id,
-			const gchar   *summary,
-			PkProgress    *progress)
+pk_progress_package_cb (PkClient    *client,
+			guint        value,
+			const gchar *package_id,
+			const gchar *summary,
+			PkProgress  *progress)
 {
 	GtkWidget *widget;
+	PkPackageId *ident;
+
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
 
-	/* prefer the proper description, but fall back to the package_id name */
-	if (summary != NULL) {
-		gtk_label_set_label (GTK_LABEL (widget), summary);
-	} else {
-		PkPackageId *ident;
-		ident = pk_package_id_new_from_string (package_id);
-		gtk_label_set_label (GTK_LABEL (widget), ident->name);
-		pk_package_id_free (ident);
-	}
+	/* just use the package name, not the description */
+	ident = pk_package_id_new_from_string (package_id);
+	gtk_label_set_label (GTK_LABEL (widget), ident->name);
+	pk_package_id_free (ident);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_status");
 	gtk_widget_show (widget);
