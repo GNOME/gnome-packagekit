@@ -453,6 +453,8 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining);
 	if (ret == TRUE) {
 		pk_progress_progress_changed_cb (progress->priv->client, percentage, subpercentage, elapsed, remaining, progress);
+	} else {
+		pk_progress_progress_changed_cb (progress->priv->client, 0, 0, 0, 0, progress);
 	}
 
 	/* do the best we can */
