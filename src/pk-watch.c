@@ -36,7 +36,6 @@
 
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
-#include <dbus/dbus-glib.h>
 
 #include <pk-debug.h>
 #include <pk-job-list.h>
@@ -49,6 +48,7 @@
 #include "pk-common-gui.h"
 #include "pk-watch.h"
 #include "pk-progress.h"
+#include "pk-inhibit.h"
 #include "pk-smart-icon.h"
 
 static void     pk_watch_class_init	(PkWatchClass *klass);
@@ -61,11 +61,10 @@ struct PkWatchPrivate
 {
 	PkClient		*client;
 	PkSmartIcon		*sicon;
+	PkInhibit		*inhibit;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
-	DBusGProxy		*proxy_gpm;
-	guint			 cookie;
 	gboolean		 show_refresh_in_menu;
 };
 
@@ -628,79 +627,6 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch
 }
 
 /**
- * pk_watch_inhibit:
- **/
-static gboolean
-pk_watch_inhibit (PkWatch *watch)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
-
-	if (watch->priv->proxy_gpm == NULL) {
-		pk_debug ("no connection to g-p-m");
-		return FALSE;
-	}
-
-	/* check we are not trying to do this twice... */
-	if (watch->priv->cookie != 0) {
-		pk_debug ("cookie already set as %i", watch->priv->cookie);
-		return FALSE;
-	}
-
-	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (watch->priv->proxy_gpm, "Inhibit", &error,
-				 G_TYPE_STRING, _("Software Update Applet"),
-				 G_TYPE_STRING, _("A transaction that cannot be interrupted is running"),
-				 G_TYPE_INVALID,
-				 G_TYPE_UINT, &watch->priv->cookie,
-				 G_TYPE_INVALID);
-	if (error != NULL) {
-		printf ("DEBUG: ERROR: %s\n", error->message);
-		g_error_free (error);
-	}
-	return ret;
-}
-
-/**
- * pk_watch_uninhibit:
- **/
-static gboolean
-pk_watch_uninhibit (PkWatch *watch)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
-
-	if (watch->priv->proxy_gpm == NULL) {
-		pk_debug ("no connection to g-p-m");
-		return FALSE;
-	}
-
-	/* check we are not trying to do this twice... */
-	if (watch->priv->cookie == 0) {
-		pk_debug ("cookie not already set");
-		return FALSE;
-	}
-
-	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (watch->priv->proxy_gpm, "UnInhibit", &error,
-				 G_TYPE_UINT, watch->priv->cookie,
-				 G_TYPE_INVALID,
-				 G_TYPE_INVALID);
-	if (error != NULL) {
-		printf ("DEBUG: ERROR: %s\n", error->message);
-		g_error_free (error);
-	}
-	watch->priv->cookie = 0;
-	return ret;
-}
-
-/**
  * pk_watch_locked_cb:
  **/
 static void
@@ -711,9 +637,9 @@ pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
 
 	pk_warning ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
 	if (is_locked == TRUE) {
-		pk_watch_inhibit (watch);
+		pk_inhibit_create (watch->priv->inhibit);
 	} else {
-		pk_watch_uninhibit (watch);
+		pk_inhibit_remove (watch->priv->inhibit);
 	}
 }
 
@@ -724,12 +650,9 @@ pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
 static void
 pk_watch_init (PkWatch *watch)
 {
-	DBusGConnection *connection;
-	GError *error = NULL;
 	GtkStatusIcon *status_icon;
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
-	watch->priv->cookie = 0;
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->sicon = pk_smart_icon_new ();
@@ -744,22 +667,8 @@ pk_watch_init (PkWatch *watch)
 	g_signal_connect (watch->priv->client, "error-code",
 			  G_CALLBACK (pk_watch_error_code_cb), watch);
 
-	/* connect to session bus */
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
-	if (error != NULL) {
-		pk_warning ("Cannot connect to session bus: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-
-	/* use gnome-power-manager for the session inhibit stuff */
-	watch->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (connection,
-				  GPM_DBUS_SERVICE, GPM_DBUS_PATH_INHIBIT,
-				  GPM_DBUS_INTERFACE_INHIBIT, &error);
-	if (error != NULL) {
-		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
-		g_error_free (error);
-	}
+	/* do session inhibit */
+	watch->priv->inhibit = pk_inhibit_new ();
 
 	/* right click actions are common */
 	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon);
@@ -800,11 +709,11 @@ pk_watch_finalize (GObject *object)
 
 	g_return_if_fail (watch->priv != NULL);
 	g_object_unref (watch->priv->sicon);
+	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->client);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
-	g_object_unref (watch->priv->proxy_gpm);
 
 	G_OBJECT_CLASS (pk_watch_parent_class)->finalize (object);
 }

@@ -80,6 +80,8 @@ pk_update_icon_SOURCES =				\
 	pk-auto-refresh.h				\
 	pk-watch.c					\
 	pk-watch.h					\
+	pk-inhibit.c					\
+	pk-inhibit.h					\
 	pk-smart-icon.c					\
 	pk-smart-icon.h					\
 	pk-progress.c					\
