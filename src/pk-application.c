@@ -261,8 +261,7 @@ static void
 pk_application_description_cb (PkClient *client, const gchar *package_id,
 			       const gchar *licence, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
-			       guint64 size, const gchar *filelist,
-			       PkApplication *application)
+			       guint64 size, PkApplication *application)
 {
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
