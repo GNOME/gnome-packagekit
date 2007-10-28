@@ -1,4 +1,5 @@
 SUBDIRS =						\
+	libselftest					\
 	libgbus						\
 	src						\
 	po						\
