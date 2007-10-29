@@ -92,6 +92,7 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	PkTaskListItem *item;
 	guint length;
 	GString *status;
+	gchar *text;
 	const gchar *localised_status;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
@@ -116,15 +117,10 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 		if (strlen (item->package_id) == 0) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
-			PkPackageId *ident;
 			/* display the package name, not the package_id */
-			ident = pk_package_id_new_from_string (item->package_id);
-			if (ident != NULL) {
-				g_string_append_printf (status, "%s: %s\n", localised_status, ident->name);
-			} else {
-				g_string_append_printf (status, "%s: %s\n", localised_status, item->package_id);
-			}
-			pk_package_id_free (ident);
+			text = pk_package_get_name (item->package_id);
+			g_string_append_printf (status, "%s: %s\n", localised_status, text);
+			g_free (text);
 		}
 	}
 	if (status->len == 0) {
