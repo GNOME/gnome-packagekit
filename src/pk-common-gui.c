@@ -152,6 +152,10 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	gchar *text;
 	GString *string;
 
+	if (package_id == NULL) {
+		return g_strdup (_("unknown"));
+	}
+
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
 
@@ -166,7 +170,7 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	g_string_append (string, "</b>");
 
 	/* ITS4: ignore, we generated this */
-	if (strlen (summary) > 0) {
+	if (summary != NULL && strlen (summary) > 0) {
 		g_string_append_printf (string, "\n%s", summary);
 	}
 	text = g_string_free (string, FALSE);
@@ -185,7 +189,7 @@ pk_package_get_name (const gchar *package_id)
 	PkPackageId *ident;
 
 	/* ITS4: ignore, not used for allocation */
-	if (strlen (package_id) == 0) {
+	if (package_id == NULL || strlen (package_id) == 0) {
 		pk_warning ("package_id blank, returning 'unknown'");
 		return g_strdup ("unknown");
 	}
@@ -670,7 +674,7 @@ pk_time_to_localised_string (guint time_secs)
 
 	/* is valid? */
 	if (time_secs == 0) {
-		timestring = g_strdup_printf (_("Unknown time"));
+		timestring = g_strdup_printf (_("Zero time"));
 		return timestring;
 	}
 
@@ -722,4 +726,221 @@ pk_time_to_localised_string (guint time_secs)
 	}
 	return timestring;
 }
+
+/***************************************************************************
+ ***                          MAKE CHECK TESTS                           ***
+ ***************************************************************************/
+#ifdef PK_BUILD_TESTS
+#include <libselftest.h>
+
+void
+libst_common_gui (LibSelfTest *test)
+{
+	gchar *text;
+
+	if (libst_start (test, "PkCommonGui", CLASS_AUTO) == FALSE) {
+		return;
+	}
+
+	/************************************************************
+	 ****************        time text             **************
+	 ************************************************************/
+	libst_title (test, "time zero");
+	text = pk_time_to_localised_string (0);
+	if (text != NULL && strcmp (text, _("Zero time")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 1s");
+	text = pk_time_to_localised_string (1);
+	if (text != NULL && strcmp (text, _("1 second")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 1m");
+	text = pk_time_to_localised_string (1*60);
+	if (text != NULL && strcmp (text, _("1 minute")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 1h");
+	text = pk_time_to_localised_string (1*60*60);
+	if (text != NULL && strcmp (text, _("1 hour")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 30s");
+	text = pk_time_to_localised_string (30);
+	if (text != NULL && strcmp (text, _("30 seconds")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 30m");
+	text = pk_time_to_localised_string (30*60);
+	if (text != NULL && strcmp (text, _("30 minutes")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 30m1s");
+	text = pk_time_to_localised_string (30*60+1);
+	if (text != NULL && strcmp (text, _("30 minutes 1 second")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "time 30m10s");
+	text = pk_time_to_localised_string (30*60+10);
+	if (text != NULL && strcmp (text, _("30 minutes 10 seconds")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************
+	 ****************        size text             **************
+	 ************************************************************/
+	libst_title (test, "size zero");
+	text = pk_size_to_si_size_text (0);
+	if (text != NULL && strcmp (text, _("0 bytes")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "size 512 bytes");
+	text = pk_size_to_si_size_text (512);
+	if (text != NULL && strcmp (text, _("512 bytes")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "size 256.2 MB");
+	text = pk_size_to_si_size_text (256*1025*1024);
+	if (text != NULL && strcmp (text, _("256.2 MB")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************
+	 ****************     package name text        **************
+	 ************************************************************/
+	libst_title (test, "get name null");
+	text = pk_package_get_name (NULL);
+	if (text != NULL && strcmp (text, _("unknown")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "get name not id");
+	text = pk_package_get_name ("ania");
+	if (text != NULL && strcmp (text, "ania") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "get name just id");
+	text = pk_package_get_name ("simon;1.0.0;i386;moo");
+	if (text != NULL && strcmp (text, "simon") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************
+	 ****************     package name text        **************
+	 ************************************************************/
+	libst_title (test, "package id pretty null");
+	text = pk_package_id_pretty (NULL, NULL);
+	if (text != NULL && strcmp (text, _("unknown")) == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "package id pretty valid package id, no summary");
+	text = pk_package_id_pretty ("simon;0.0.1;i386;data", NULL);
+	if (text != NULL && strcmp (text, "<b>simon-0.0.1 (i386)</b>") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "package id pretty valid package id, no summary 2");
+	text = pk_package_id_pretty ("simon;0.0.1;;data", NULL);
+	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "package id pretty valid package id, no summary 3");
+	text = pk_package_id_pretty ("simon;;;data", NULL);
+	if (text != NULL && strcmp (text, "<b>simon</b>") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	/************************************************************/
+	libst_title (test, "package id pretty valid package id, no summary 4");
+	text = pk_package_id_pretty ("simon;0.0.1;;data", "dude");
+	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>\ndude") == 0) {
+		libst_success (test, NULL);
+	} else {
+		libst_failed (test, "failed, got %s", text);
+	}
+	g_free (text);
+
+	libst_end (test);
+}
+#endif
 

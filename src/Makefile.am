@@ -19,10 +19,15 @@ INCLUDES =						\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-I$(top_srcdir)/libgbus				\
+	-I$(top_srcdir)/libselftest			\
 	$(NULL)
 
 GBUS_LIBS =						\
 	$(top_builddir)/libgbus/libgbus.la		\
+	$(NULL)
+
+SELFTEST_LIBS =						\
+	$(top_builddir)/libselftest/libselftest.la	\
 	$(NULL)
 
 bin_PROGRAMS =						\
@@ -189,6 +194,30 @@ pk_backend_status_LDADD =				\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)
 
+check_PROGRAMS =					\
+	pk-self-test
+
+noinst_PROGRAMS =					\
+	pk-self-test
+
+pk_self_test_SOURCES =					\
+	pk-common-gui.h					\
+	pk-common-gui.c					\
+	pk-self-test.c					\
+	$(NULL)
+
+pk_self_test_LDADD =					\
+	$(GLIB_LIBS)					\
+	$(GTK_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(SELFTEST_LIBS)				\
+	$(PK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(NULL)
+
+pk_self_test_CPPFLAGS=	\
+	-DPK_BUILD_TESTS
+
 clean-local:
 	rm -f *~
 
@@ -196,4 +225,6 @@ MAINTAINERCLEANFILES =					\
 	*~			      			\
 	Makefile.in					\
 	$(NULL)
+
+TESTS = pk-self-test
 
