@@ -45,6 +45,8 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UPDATING,			"system-software-update"},
 	{PK_INFO_ENUM_INSTALLING,		"emblem-system"},
 	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
+	{PK_INFO_ENUM_OBSOLETING,		"edit-clear"},
+	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
 	{0, NULL},
 };
 
@@ -58,6 +60,8 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_DOWNLOAD,		"mail-send-receive"},
 	{PK_STATUS_ENUM_INSTALL,		"emblem-system"},
 	{PK_STATUS_ENUM_UPDATE,			"system-software-update"},
+	{PK_STATUS_ENUM_CLEANUP,		"edit-clear"},
+	{PK_STATUS_ENUM_OBSOLETE,		"edit-clear"},
 	{0, NULL},
 };
 
@@ -353,6 +357,12 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 	case PK_STATUS_ENUM_UPDATE:
 		text = _("Updating");
 		break;
+	case PK_STATUS_ENUM_CLEANUP:
+		text = _("Cleaned up");
+		break;
+	case PK_STATUS_ENUM_OBSOLETE:
+		text = _("Obsoleting");
+		break;
 	default:
 		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
@@ -396,6 +406,12 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 		break;
 	case PK_INFO_ENUM_AVAILABLE:
 		text = _("Available");
+		break;
+	case PK_INFO_ENUM_CLEANUP:
+		text = _("Cleaned up");
+		break;
+	case PK_INFO_ENUM_OBSOLETING:
+		text = _("Obsoleting");
 		break;
 	default:
 		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
