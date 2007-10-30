@@ -187,6 +187,32 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 }
 
 /**
+ * pk_package_id_name_version:
+ **/
+gchar *
+pk_package_id_name_version (const gchar *package_id)
+{
+	PkPackageId *ident;
+	gchar *text;
+	GString *string;
+
+	if (package_id == NULL) {
+		return g_strdup (_("unknown"));
+	}
+
+	/* split by delimeter */
+	ident = pk_package_id_new_from_string (package_id);
+	string = g_string_new (ident->name);
+	if (ident->version != NULL) {
+		g_string_append_printf (string, "-%s", ident->version);
+	}
+	text = g_string_free (string, FALSE);
+
+	pk_package_id_free (ident);
+	return text;
+}
+
+/**
  * pk_package_id_get_name:
  **/
 gchar *
