@@ -108,8 +108,8 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_PUBLISHING,		"internet-news-reader"},
 	{PK_GROUP_ENUM_SERVERS,			"network-server"},
 	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
-	{PK_GROUP_ENUM_ADMIN_TOOLS,		"utilities-system-monitor"},
-	{PK_GROUP_ENUM_LEGACY,			"media-floppy.png"},
+	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
+	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
 	{0, NULL},
 };
