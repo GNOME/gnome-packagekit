@@ -685,6 +685,9 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
 		g_print ("selected row is: %s\n", id);
 
+		/* refresh the search as the items may have changed */
+		gtk_list_store_clear (application->priv->packages_store);
+
 		pk_client_reset (application->priv->client_search);
 		ret = pk_client_search_group (application->priv->client_search, "none", id);
 		/* ick, we failed so pretend we didn't do the action */
