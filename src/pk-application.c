@@ -456,6 +456,33 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	/* get role */
+	pk_client_get_role (client, &role, NULL);
+	/* do we need to fill in the tab box? */
+	if (role == PK_ROLE_ENUM_GET_DEPENDS ||
+	    role == PK_ROLE_ENUM_GET_REQUIRES) {
+	    	guint i;
+	    	PkPackageItem *item;
+	    	gchar *text;
+	    	gchar *text_pretty;
+		guint length = pk_client_package_buffer_get_size (client);
+		g_warning ("length=%i", length);
+		GString *string;
+		string = g_string_new ("");
+		for (i=0; i<length; i++) {
+			item = pk_client_package_buffer_get_item (client, i);
+			/* just use the name */
+			text_pretty = pk_package_id_name_version (item->package_id);
+			g_string_append_printf (string, "%s\n", text_pretty);
+			g_free (text_pretty);
+		}
+		text = g_string_free (string, FALSE);
+		g_warning ("text=%s", text);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
+		pk_application_set_text_buffer (widget, text);
+		g_free (text);
+	}
+
 	/* hide widget */
 	pk_statusbar_hide (application->priv->statusbar);
 
@@ -465,9 +492,6 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
 		application->priv->search_in_progress = FALSE;
 	} else {
-		/* get role */
-		pk_client_get_role (client, &role, NULL);
-
 		/* do we need to update the search? */
 		if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
 		    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
@@ -842,6 +866,52 @@ pk_notebook_populate (PkApplication *application, gint page)
 
 		return TRUE;
 	}
+
+	/* are we depends? */
+	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
+	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
+	pk_debug ("potential=%i", potential);
+	if (potential == page) {
+		/* clear the old text */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
+		pk_application_set_text_buffer (widget, NULL);
+
+		/* cancel any previous request */
+		ret = pk_client_cancel (application->priv->client_files);
+		if (ret == FALSE) {
+			pk_debug ("failed to cancel, and adding to queue");
+		}
+		/* get the filelist */
+		pk_client_reset (application->priv->client_files);
+		pk_client_set_use_buffer (application->priv->client_files, TRUE);
+		pk_client_get_depends (application->priv->client_files,
+				       application->priv->package);
+
+		return TRUE;
+	}
+
+	/* are we requires? */
+	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
+	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
+	pk_debug ("potential=%i", potential);
+	if (potential == page) {
+		/* clear the old text */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
+		pk_application_set_text_buffer (widget, NULL);
+
+		/* cancel any previous request */
+		ret = pk_client_cancel (application->priv->client_files);
+		if (ret == FALSE) {
+			pk_debug ("failed to cancel, and adding to queue");
+		}
+		/* get the filelist */
+		pk_client_reset (application->priv->client_files);
+		pk_client_set_use_buffer (application->priv->client_files, TRUE);
+		pk_client_get_requires (application->priv->client_files,
+				        application->priv->package);
+
+		return TRUE;
+	}
 	pk_warning ("unknown tab %i!", page);
 	return FALSE;
 }
@@ -1006,6 +1076,7 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_finished_cb), application);
 
 	application->priv->client_files = pk_client_new ();
+	pk_client_set_use_buffer (application->priv->client_files, TRUE);
 	g_signal_connect (application->priv->client_files, "files",
 			  G_CALLBACK (pk_application_files_cb), application);
 	g_signal_connect (application->priv->client_files, "error-code",
@@ -1108,6 +1179,12 @@ pk_application_init (PkApplication *application)
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == FALSE) {
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 1);
+	}
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 2);
+	}
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 3);
 	}
 
 	/* until we get the mugshot stuff, disable this */
