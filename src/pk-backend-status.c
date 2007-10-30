@@ -114,7 +114,6 @@ main (int argc, char *argv[])
 
 	gchar *name;
 	gchar *author;
-	gchar *version;
 	PkEnumList *role_list;
 	PkEnumList *filter_list;
 	PkClient *client;
@@ -123,16 +122,13 @@ main (int argc, char *argv[])
 	filter_list = pk_client_get_filters (client);
 
 	/* general stuff */
-	pk_client_get_backend_detail (client, &name, &author, &version);
+	pk_client_get_backend_detail (client, &name, &author);
 	widget = glade_xml_get_widget (glade_xml, "label_name");
 	gtk_label_set_label (GTK_LABEL (widget), name);
 	widget = glade_xml_get_widget (glade_xml, "label_author");
 	gtk_label_set_label (GTK_LABEL (widget), author);
-	widget = glade_xml_get_widget (glade_xml, "label_version");
-	gtk_label_set_label (GTK_LABEL (widget), version);
 	g_free (name);
 	g_free (author);
-	g_free (version);
 
 	/* actions */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == TRUE) {
