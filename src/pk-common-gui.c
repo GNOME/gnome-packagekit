@@ -104,6 +104,13 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
 	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
 	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
+	{PK_GROUP_ENUM_DESKTOPS,		"help-browser"},
+	{PK_GROUP_ENUM_PUBLISHING,		"help-browser"},
+	{PK_GROUP_ENUM_SERVERS,			"help-browser"},
+	{PK_GROUP_ENUM_FONTS,			"help-browser"},
+	{PK_GROUP_ENUM_ADMIN_TOOLS,		"help-browser"},
+	{PK_GROUP_ENUM_LEGACY,			"help-browser"},
+	{PK_GROUP_ENUM_LOCALIZATION,		"help-browser"},
 	{0, NULL},
 };
 
@@ -612,6 +619,27 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_SYSTEM:
 		text = _("System");
+		break;
+	case PK_GROUP_ENUM_DESKTOPS:
+		text = _("Desktops");
+		break;
+	case PK_GROUP_ENUM_PUBLISHING:
+		text = _("Publishing");
+		break;
+	case PK_GROUP_ENUM_SERVERS:
+		text = _("Servers");
+		break;
+	case PK_GROUP_ENUM_FONTS:
+		text = _("Fonts");
+		break;
+	case PK_GROUP_ENUM_ADMIN_TOOLS:
+		text = _("Admin tools");
+		break;
+	case PK_GROUP_ENUM_LEGACY:
+		text = _("Legacy");
+		break;
+	case PK_GROUP_ENUM_LOCALIZATION:
+		text = _("Localization");
 		break;
 	default:
 		pk_error ("group unrecognised: %i", group);
