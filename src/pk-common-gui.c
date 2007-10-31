@@ -112,8 +112,8 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
 	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
-	{PK_GROUP_ENUM_VIRTUALIZATION,		"preferences-desktop-locale"},
-	{PK_GROUP_ENUM_SECURITY,		"preferences-desktop-locale"},
+	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
+	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
 	{0, NULL},
 };
 
