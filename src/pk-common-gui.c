@@ -30,6 +30,7 @@
 #include <pk-debug.h>
 #include <pk-package-id.h>
 #include <pk-enum.h>
+#include <pk-common.h>
 #include "pk-common-gui.h"
 
 /* icon names */
@@ -177,7 +178,7 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	g_string_append (string, "</b>");
 
 	/* ITS4: ignore, we generated this */
-	if (summary != NULL && strlen (summary) > 0) {
+	if (pk_strzero (summary) == FALSE) {
 		g_string_append_printf (string, "\n%s", summary);
 	}
 	text = g_string_free (string, FALSE);
@@ -221,8 +222,8 @@ pk_package_get_name (const gchar *package_id)
 	gchar *package = NULL;
 	PkPackageId *ident;
 
-	/* ITS4: ignore, not used for allocation */
-	if (package_id == NULL || strlen (package_id) == 0) {
+	/* not set! */
+	if (pk_strzero (package_id) == TRUE) {
 		pk_warning ("package_id blank, returning 'unknown'");
 		return g_strdup ("unknown");
 	}

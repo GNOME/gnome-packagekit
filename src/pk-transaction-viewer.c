@@ -35,6 +35,8 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
+#include <pk-common.h>
+
 #include "pk-common-gui.h"
 
 static GladeXML *glade_xml = NULL;
@@ -274,8 +276,8 @@ pk_treeview_details_populate (const gchar *tid)
 	/* get from hash */
 	transaction_data = (gchar *) g_hash_table_lookup (hash, tid);
 
-	/* ITS4: ignore, not used for allocation */
-	if (strlen (transaction_data) == 0) {
+	/* no details? */
+	if (pk_strzero (transaction_data) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "frame_details");
 		gtk_widget_hide (widget);
 		return;

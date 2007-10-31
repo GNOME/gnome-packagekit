@@ -33,6 +33,7 @@
 #include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-common.h>
 
 #include "pk-common-gui.h"
 #include "pk-progress.h"
@@ -400,8 +401,7 @@ pk_common_get_role_text (PkClient *client)
 	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
-	/* ITS4: ignore, not used for allocation */
-	if (strlen (package_id) == 0) {
+	if (pk_strzero (package_id) == TRUE) {
 		text = g_strdup (role_text);
 	} else if (pk_package_id_check (package_id) == FALSE) {
 		text = g_strdup_printf ("%s: %s", role_text, package_id);

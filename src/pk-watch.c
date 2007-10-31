@@ -113,8 +113,8 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 		}
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
-		/* ITS4: ignore, not used for allocation */
-		if (strlen (item->package_id) == 0) {
+		/* we have text? */
+		if (pk_strzero (item->package_id) == TRUE) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */

@@ -288,7 +288,7 @@ pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_buffer_new (NULL);
 	/* ITS4: ignore, not used for allocation */
-	if (text != NULL && strlen (text) > 0) {
+	if (pk_strzero (text) == FALSE) {
 		gtk_text_buffer_set_text (buffer, text, -1);
 	} else {
 		/* no information */
@@ -316,8 +316,8 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_show (widget);
 
-	/* ITS4: ignore, not used for allocation */
-	if (strlen (url) > 0) {
+	/* homepage button? */
+	if (pk_strzero (url) == FALSE) {
 		g_free (application->priv->url);
 		/* save the url for the button */
 		application->priv->url = g_strdup (url);
@@ -369,7 +369,7 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
 	/* set the text box */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
 	/* ITS4: ignore, not used for allocation */
-	if (strlen (filelist) > 0) {
+	if (pk_strzero (filelist) == FALSE) {
 		gchar *list;
 		gchar **array;
 		/* replace the ; with a newline */
@@ -611,8 +611,7 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	/* ITS4: ignore, not used for allocation */
-	if (valid == FALSE || strlen (package) == 0) {
+	if (valid == FALSE || pk_strzero (package) == TRUE) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);
