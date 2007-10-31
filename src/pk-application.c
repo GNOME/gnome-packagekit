@@ -526,7 +526,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
-	ret = pk_validate_input (package);
+	ret = pk_strvalidate (package);
 	if (ret == FALSE) {
 		pk_debug ("invalid input text, will fail");
 		/* todo - make the dialog turn red... */
@@ -608,7 +608,7 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	gtk_tree_selection_unselect_all (selection);
 
 	/* check for invalid chars */
-	valid = pk_validate_input (package);
+	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	/* ITS4: ignore, not used for allocation */
