@@ -112,6 +112,8 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
 	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
+	{PK_GROUP_ENUM_VIRTUALIZATION,		"preferences-desktop-locale"},
+	{PK_GROUP_ENUM_SECURITY,		"preferences-desktop-locale"},
 	{0, NULL},
 };
 
@@ -667,6 +669,12 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_LOCALIZATION:
 		text = _("Localization");
+		break;
+	case PK_GROUP_ENUM_VIRTUALIZATION:
+		text = _("Virtualization");
+		break;
+	case PK_GROUP_ENUM_SECURITY:
+		text = _("Security");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown");
