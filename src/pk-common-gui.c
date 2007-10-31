@@ -668,6 +668,9 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_LOCALIZATION:
 		text = _("Localization");
 		break;
+	case PK_GROUP_ENUM_UNKNOWN:
+		text = _("Unknown");
+		break;
 	default:
 		pk_error ("group unrecognised: %i", group);
 	}
