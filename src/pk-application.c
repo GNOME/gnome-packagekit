@@ -1003,6 +1003,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_description, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_description, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	application->priv->client_files = pk_client_new ();
 	g_signal_connect (application->priv->client_files, "files",
@@ -1011,6 +1013,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_files, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_files, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
