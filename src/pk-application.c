@@ -1260,7 +1260,9 @@ pk_application_init (PkApplication *application)
 	length = pk_enum_list_size (application->priv->group_list);
 	for (i=0; i<length; i++) {
 		group = pk_enum_list_get_item (application->priv->group_list, i);
-		pk_group_add_data (application, group);
+		if (group != PK_GROUP_ENUM_UNKNOWN) {
+			pk_group_add_data (application, group);
+		}
 	}
 }
 
