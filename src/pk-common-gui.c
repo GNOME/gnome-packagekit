@@ -114,6 +114,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
 	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
 	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
+	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
 	{0, NULL},
 };
 
@@ -675,6 +676,9 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_SECURITY:
 		text = _("Security");
+		break;
+	case PK_GROUP_ENUM_POWER_MANAGEMENT:
+		text = _("Power management");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown");
