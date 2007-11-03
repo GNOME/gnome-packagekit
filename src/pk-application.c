@@ -976,6 +976,10 @@ pk_application_init (PkApplication *application)
 	application->priv->current_filter = pk_enum_list_new ();
 	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
 
+	/* add application specific icons to search path */
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
 			  G_CALLBACK (pk_application_package_cb), application);
