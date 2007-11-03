@@ -105,7 +105,10 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
 	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
 	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
-	{PK_GROUP_ENUM_DESKTOPS,		"user-desktop"},
+	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
+	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
+	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
+	{PK_GROUP_ENUM_DESKTOP_OTHER,		"user-desktop"},
 	{PK_GROUP_ENUM_PUBLISHING,		"internet-news-reader"},
 	{PK_GROUP_ENUM_SERVERS,			"network-server"},
 	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
@@ -650,8 +653,17 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_SYSTEM:
 		text = _("System");
 		break;
-	case PK_GROUP_ENUM_DESKTOPS:
-		text = _("Desktops");
+	case PK_GROUP_ENUM_DESKTOP_GNOME:
+		text = _("GNOME desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_KDE:
+		text = _("KDE desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_XFCE:
+		text = _("XFCE desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_OTHER:
+		text = _("Other desktops");
 		break;
 	case PK_GROUP_ENUM_PUBLISHING:
 		text = _("Publishing");
