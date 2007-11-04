@@ -307,11 +307,17 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package is not installed");
 		break;
+	case PK_ERROR_ENUM_PACKAGE_NOT_FOUND:
+		text = _("The package was not found");
+		break;
 	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package is already installed");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED:
 		text = _("The package download failed");
+		break;
+	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
+		text = _("The group was not found");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
 		text = _("Dependency resolution failed");
@@ -336,6 +342,15 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
 		text = _("The transaction was forcibly cancelled");
+		break;
+	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
+		text = _("Initialization of the package manager failed");
+		break;
+	case PK_ERROR_ENUM_FAILED_FINALISE:
+		text = _("Unloading of the package manager failed");
+		break;
+	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
+		text = _("Reading the config file failed");
 		break;
 	default:
 		text = _("Unknown error");
