@@ -1,4 +1,38 @@
 ~~~~~~~~~~~~~
+Version 0.1.2
+~~~~~~~~~~~~~
+
+* Translations:
+ - Add nl translation (Reinout van Schouwen)
+ - Add ja translation (aaron andersen)
+ - Add en translation (Jorge Gonzalez)
+ - Update de_DE translation (Thilo Pfennig)
+ - Update nb translation (Espen Stefansen)
+
+* New features:
+ - Use a promiscuous client to get the finished and error-code from PkClient
+   rather than PkTaskList (Richard Hughes)
+ - Only show the refresh cache icon in the pk-update-icon menu when we are not
+   already updating (Richard Hughes)
+ - Display a help notice in pk-update-viewer informing the user if an update
+   is already in progress (Richard Hughes)
+ - Set the time in the progressbar when we have a good estimate (Richard Hughes)
+
+* Bugfixes
+ - Set focus on entry text at startup in pk-application (Grzegorz Dabrowski)
+ - Add a ton of unit test code in PkCommonGui to fix several potential crasher
+   bugs (Richard Hughes)
+ - Only do the Descriptions and GetFiles when we click the tab, not both
+   unconditionally. Should increase speed, and stop them getting out of sync in
+   the UI (Richard Hughes)
+ - Just use the package name, not the description in PkProgress (Richard Hughes)
+ - Fix the progressbar to be in the statusbar, and add the remaining time
+   statusbar code when we have an ETA available (Richard Hughes)
+ - Hide the search button if we have an invalid search (Richard Hughes)
+ - Cancel any previous GetDescription calls to quicken up browsing of packages
+   in pk-application and to avoid a queue building up (Richard Hughes)
+
+~~~~~~~~~~~~~
 Version 0.1.1
 ~~~~~~~~~~~~~
 

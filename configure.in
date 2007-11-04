@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(gnome-packagekit, 0.1.2)
+AC_INIT(gnome-packagekit, 0.1.3)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -41,7 +41,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.1.1
+PACKAGEKIT_REQUIRED=0.1.2
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.10.0
 DBUS_REQUIRED=1.1.2
@@ -138,6 +138,17 @@ src/Makefile
 help/Makefile
 po/Makefile.in
 data/Makefile
+data/icons/Makefile
+data/icons/16x16/Makefile
+data/icons/22x22/Makefile
+data/icons/24x24/Makefile
+data/icons/48x48/Makefile
+data/icons/scalable/Makefile
+data/icons/16x16/categories/Makefile
+data/icons/22x22/categories/Makefile
+data/icons/24x24/categories/Makefile
+data/icons/48x48/categories/Makefile
+data/icons/scalable/categories/Makefile
 ])
 
 dnl ==========================================================================

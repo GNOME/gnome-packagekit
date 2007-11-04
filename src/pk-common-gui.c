@@ -30,6 +30,7 @@
 #include <pk-debug.h>
 #include <pk-package-id.h>
 #include <pk-enum.h>
+#include <pk-common.h>
 #include "pk-common-gui.h"
 
 /* icon names */
@@ -104,13 +105,19 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
 	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
 	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
-	{PK_GROUP_ENUM_DESKTOPS,		"user-desktop"},
+	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
+	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
+	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
+	{PK_GROUP_ENUM_DESKTOP_OTHER,		"user-desktop"},
 	{PK_GROUP_ENUM_PUBLISHING,		"internet-news-reader"},
 	{PK_GROUP_ENUM_SERVERS,			"network-server"},
 	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
 	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
 	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
+	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
+	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
+	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
 	{0, NULL},
 };
 
@@ -177,7 +184,7 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	g_string_append (string, "</b>");
 
 	/* ITS4: ignore, we generated this */
-	if (summary != NULL && strlen (summary) > 0) {
+	if (pk_strzero (summary) == FALSE) {
 		g_string_append_printf (string, "\n%s", summary);
 	}
 	text = g_string_free (string, FALSE);
@@ -221,8 +228,8 @@ pk_package_get_name (const gchar *package_id)
 	gchar *package = NULL;
 	PkPackageId *ident;
 
-	/* ITS4: ignore, not used for allocation */
-	if (package_id == NULL || strlen (package_id) == 0) {
+	/* not set! */
+	if (pk_strzero (package_id) == TRUE) {
 		pk_warning ("package_id blank, returning 'unknown'");
 		return g_strdup ("unknown");
 	}
@@ -300,11 +307,17 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package is not installed");
 		break;
+	case PK_ERROR_ENUM_PACKAGE_NOT_FOUND:
+		text = _("The package was not found");
+		break;
 	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package is already installed");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED:
 		text = _("The package download failed");
+		break;
+	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
+		text = _("The group was not found");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
 		text = _("Dependency resolution failed");
@@ -329,6 +342,15 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
 		text = _("The transaction was forcibly cancelled");
+		break;
+	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
+		text = _("Initialization of the package manager failed");
+		break;
+	case PK_ERROR_ENUM_FAILED_FINALISE:
+		text = _("Unloading of the package manager failed");
+		break;
+	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
+		text = _("Reading the config file failed");
 		break;
 	default:
 		text = _("Unknown error");
@@ -646,8 +668,17 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_SYSTEM:
 		text = _("System");
 		break;
-	case PK_GROUP_ENUM_DESKTOPS:
-		text = _("Desktops");
+	case PK_GROUP_ENUM_DESKTOP_GNOME:
+		text = _("GNOME desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_KDE:
+		text = _("KDE desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_XFCE:
+		text = _("XFCE desktop");
+		break;
+	case PK_GROUP_ENUM_DESKTOP_OTHER:
+		text = _("Other desktops");
 		break;
 	case PK_GROUP_ENUM_PUBLISHING:
 		text = _("Publishing");
@@ -666,6 +697,18 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_LOCALIZATION:
 		text = _("Localization");
+		break;
+	case PK_GROUP_ENUM_VIRTUALIZATION:
+		text = _("Virtualization");
+		break;
+	case PK_GROUP_ENUM_SECURITY:
+		text = _("Security");
+		break;
+	case PK_GROUP_ENUM_POWER_MANAGEMENT:
+		text = _("Power management");
+		break;
+	case PK_GROUP_ENUM_UNKNOWN:
+		text = _("Unknown");
 		break;
 	default:
 		pk_error ("group unrecognised: %i", group);

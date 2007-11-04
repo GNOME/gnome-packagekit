@@ -288,7 +288,7 @@ pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_buffer_new (NULL);
 	/* ITS4: ignore, not used for allocation */
-	if (text != NULL && strlen (text) > 0) {
+	if (pk_strzero (text) == FALSE) {
 		gtk_text_buffer_set_text (buffer, text, -1);
 	} else {
 		/* no information */
@@ -316,8 +316,8 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_show (widget);
 
-	/* ITS4: ignore, not used for allocation */
-	if (strlen (url) > 0) {
+	/* homepage button? */
+	if (pk_strzero (url) == FALSE) {
 		g_free (application->priv->url);
 		/* save the url for the button */
 		application->priv->url = g_strdup (url);
@@ -369,7 +369,7 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
 	/* set the text box */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
 	/* ITS4: ignore, not used for allocation */
-	if (strlen (filelist) > 0) {
+	if (pk_strzero (filelist) == FALSE) {
 		gchar *list;
 		gchar **array;
 		/* replace the ; with a newline */
@@ -550,7 +550,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
-	ret = pk_validate_input (package);
+	ret = pk_strvalidate (package);
 	if (ret == FALSE) {
 		pk_debug ("invalid input text, will fail");
 		/* todo - make the dialog turn red... */
@@ -626,17 +626,18 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
-	/* clear group selection */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-	gtk_tree_selection_unselect_all (selection);
+	/* clear group selection if we have the tab */
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == TRUE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+		gtk_tree_selection_unselect_all (selection);
+	}
 
 	/* check for invalid chars */
-	valid = pk_validate_input (package);
+	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	/* ITS4: ignore, not used for allocation */
-	if (valid == FALSE || strlen (package) == 0) {
+	if (valid == FALSE || pk_strzero (package) == TRUE) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -1047,6 +1048,10 @@ pk_application_init (PkApplication *application)
 	application->priv->current_filter = pk_enum_list_new ();
 	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
 
+	/* add application specific icons to search path */
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
 			  G_CALLBACK (pk_application_package_cb), application);
@@ -1074,6 +1079,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_description, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_description, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	application->priv->client_files = pk_client_new ();
 	pk_client_set_use_buffer (application->priv->client_files, TRUE);
@@ -1083,6 +1090,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_files, "finished",
 			  G_CALLBACK (pk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_files, "progress-changed",
+			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
@@ -1193,8 +1202,8 @@ pk_application_init (PkApplication *application)
 
 	/* hide the group selector if we don't support search-groups */
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "frame_groups");
-		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_type");
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 1);
 	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
@@ -1318,23 +1327,27 @@ pk_application_init (PkApplication *application)
 	/* add columns to the tree view */
 	pk_packages_add_columns (GTK_TREE_VIEW (widget));
 
-	/* create group tree view */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (application->priv->groups_store));
+	/* create group tree view if we can search by group */
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == TRUE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+		gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+					 GTK_TREE_MODEL (application->priv->groups_store));
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_groups_treeview_clicked_cb), application);
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+		g_signal_connect (selection, "changed",
+				  G_CALLBACK (pk_groups_treeview_clicked_cb), application);
 
-	/* add columns to the tree view */
-	pk_groups_add_columns (GTK_TREE_VIEW (widget));
+		/* add columns to the tree view */
+		pk_groups_add_columns (GTK_TREE_VIEW (widget));
 
-	/* add all the groups supported */
-	length = pk_enum_list_size (application->priv->group_list);
-	for (i=0; i<length; i++) {
-		group = pk_enum_list_get_item (application->priv->group_list, i);
-		pk_group_add_data (application, group);
+		/* add all the groups supported */
+		length = pk_enum_list_size (application->priv->group_list);
+		for (i=0; i<length; i++) {
+			group = pk_enum_list_get_item (application->priv->group_list, i);
+			if (group != PK_GROUP_ENUM_UNKNOWN) {
+				pk_group_add_data (application, group);
+			}
+		}
 	}
 }
 

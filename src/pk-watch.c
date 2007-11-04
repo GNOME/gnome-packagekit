@@ -113,8 +113,8 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 		}
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
-		/* ITS4: ignore, not used for allocation */
-		if (strlen (item->package_id) == 0) {
+		/* we have text? */
+		if (pk_strzero (item->package_id) == TRUE) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
@@ -134,81 +134,94 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 }
 
 /**
- * pk_watch_refresh_icon:
+ * pk_watch_task_list_to_state_enum_list:
  **/
-static gboolean
-pk_watch_refresh_icon (PkWatch *watch)
+static PkEnumList *
+pk_watch_task_list_to_state_enum_list (PkWatch *watch)
 {
-	pk_debug ("rescan");
 	guint i;
-	PkTaskListItem *item;
-	PkStatusEnum state;
 	guint length;
-	gboolean state_install = FALSE;
-	gboolean state_remove = FALSE;
-	gboolean state_setup = FALSE;
-	gboolean state_update = FALSE;
-	gboolean state_download = FALSE;
-	gboolean state_query = FALSE;
-	gboolean state_refresh_cache = FALSE;
-	gboolean state_wait = FALSE;
-	const gchar *icon = NULL;
+	PkEnumList *elist;
+	PkTaskListItem *item;
 
-	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+	g_return_val_if_fail (watch != NULL, NULL);
+	g_return_val_if_fail (PK_IS_WATCH (watch), NULL);
 
+	/* shortcut */
 	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0) {
-		pk_debug ("no activity");
-		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
-		return TRUE;
+		return NULL;
 	}
+
+	/* we can use an uncommited list */
+	elist = pk_enum_list_new ();
+
+	/* add each status to a list */
 	for (i=0; i<length; i++) {
 		item = pk_task_list_get_item (watch->priv->tlist, i);
 		if (item == NULL) {
 			pk_warning ("not found item %i", i);
 			break;
 		}
-		state = item->status;
-		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (state));
-		if (state == PK_STATUS_ENUM_SETUP) {
-			state_setup = TRUE;
-		} else if (state == PK_STATUS_ENUM_REFRESH_CACHE) {
-			state_refresh_cache = TRUE;
-		} else if (state == PK_STATUS_ENUM_QUERY) {
-			state_query = TRUE;
-		} else if (state == PK_STATUS_ENUM_REMOVE) {
-			state_remove = TRUE;
-		} else if (state == PK_STATUS_ENUM_DOWNLOAD) {
-			state_download = TRUE;
-		} else if (state == PK_STATUS_ENUM_INSTALL) {
-			state_install = TRUE;
-		} else if (state == PK_STATUS_ENUM_UPDATE) {
-			state_update = TRUE;
-		} else if (state == PK_STATUS_ENUM_WAIT) {
-			state_wait = TRUE;
-		}
+		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
+		pk_enum_list_append (elist, item->status);
 	}
-	/* in order of priority */
-	if (state_refresh_cache == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_REFRESH_CACHE);
-	} else if (state_install == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_INSTALL);
-	} else if (state_remove == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_REMOVE);
-	} else if (state_setup == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_SETUP);
-	} else if (state_update == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_UPDATE);
-	} else if (state_download == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_DOWNLOAD);
-	} else if (state_query == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_QUERY);
-	} else if (state_wait == TRUE) {
-		icon = pk_status_enum_to_icon_name (PK_STATUS_ENUM_WAIT);
-	}
-	pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
+	return elist;
+}
 
+/**
+ * pk_watch_refresh_icon:
+ **/
+static gboolean
+pk_watch_refresh_icon (PkWatch *watch)
+{
+	PkStatusEnum state = PK_STATUS_ENUM_UNKNOWN;
+	const gchar *icon;
+	PkEnumList *elist;
+
+	g_return_val_if_fail (watch != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+
+	pk_debug ("rescan");
+	elist = pk_watch_task_list_to_state_enum_list (watch);
+
+	/* nothing in the list */
+	if (elist == NULL) {
+		pk_debug ("no activity");
+		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
+		return TRUE;
+	}
+
+	/* in order of priority */
+	if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REFRESH_CACHE) == TRUE) {
+		state = PK_STATUS_ENUM_REFRESH_CACHE;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_INSTALL) == TRUE) {
+		state = PK_STATUS_ENUM_INSTALL;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REMOVE) == TRUE) {
+		state = PK_STATUS_ENUM_REMOVE;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_CLEANUP) == TRUE) {
+		state = PK_STATUS_ENUM_CLEANUP;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_OBSOLETE) == TRUE) {
+		state = PK_STATUS_ENUM_OBSOLETE;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_SETUP) == TRUE) {
+		state = PK_STATUS_ENUM_SETUP;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_UPDATE) == TRUE) {
+		state = PK_STATUS_ENUM_UPDATE;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_DOWNLOAD) == TRUE) {
+		state = PK_STATUS_ENUM_DOWNLOAD;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_QUERY) == TRUE) {
+		state = PK_STATUS_ENUM_QUERY;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_WAIT) == TRUE) {
+		state = PK_STATUS_ENUM_WAIT;
+	}
+
+	/* only set if in the list */
+	if (state != PK_STATUS_ENUM_UNKNOWN) {
+		icon = pk_status_enum_to_icon_name (state);
+		pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
+	}
+
+	g_object_unref (elist);
 	return TRUE;
 }
 

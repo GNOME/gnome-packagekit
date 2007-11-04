@@ -32,6 +32,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-common.h>
 
 #include "pk-progress.h"
 #include "pk-common-gui.h"
@@ -72,8 +73,8 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 	pk_debug ("unref'ing %p", client);
 	g_object_unref (client);
 
-	/* ITS4: ignore, not used for allocation */
-	if (strlen (package) == 0) {
+	/* did we resolve? */
+	if (pk_strzero (package) == TRUE) {
 		pk_error_modal_dialog (_("Failed to resolve"),
 				       _("The package could not be found on the system"));
 		g_main_loop_quit (loop);

@@ -1,5 +1,7 @@
 NULL =
 
+SUBDIRS = icons
+
 @INTLTOOL_SCHEMAS_RULE@
 schemadir = $(sysconfdir)/gconf/schemas
 schema_in_files = gnome-packagekit.schemas.in
