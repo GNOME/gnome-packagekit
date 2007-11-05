@@ -200,20 +200,18 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	gchar *updates_pretty = NULL;
 	gchar *obsoletes_pretty = NULL;
 
-	/* set icon */
-	widget = glade_xml_get_widget (glade_xml, "image_restart");
+	/* set restart */
+	widget = glade_xml_get_widget (glade_xml, "label_restart");
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
 		gtk_widget_show (widget);
-		text = pk_restart_enum_to_icon_name (restart);
-		gtk_image_set_from_icon_name (GTK_IMAGE (widget), text, GTK_ICON_SIZE_DIALOG);
-		widget = glade_xml_get_widget (glade_xml, "label_restart");
-		gtk_widget_show (widget);
 		text = pk_restart_enum_to_localised_text_future (restart);
 		gtk_label_set_label (GTK_LABEL (widget), text);
+		widget = glade_xml_get_widget (glade_xml, "label_restart_left");
+		gtk_widget_show (widget);
 	} else {
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_restart");
+		widget = glade_xml_get_widget (glade_xml, "label_restart_left");
 		gtk_widget_hide (widget);
 	}
 

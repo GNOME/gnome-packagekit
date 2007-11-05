@@ -405,7 +405,7 @@ pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("You will be required to log off and back on after this update");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("An system restart is required after this update");
+		text = _("A system restart is required after this update");
 		break;
 	default:
 		pk_error ("restart unrecognised: %i", restart);
