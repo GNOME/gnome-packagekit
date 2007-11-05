@@ -366,6 +366,35 @@ pk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gcha
 }
 
 /**
+ * pk_application_package_buffer_to_name_version:
+ **/
+static gchar *
+pk_application_package_buffer_to_name_version (PkClient *client)
+{
+	guint i;
+	PkPackageItem *item;
+	gchar *text_pretty;
+	guint length;
+	GString *string;
+
+	length = pk_client_package_buffer_get_size (client);
+	if (length == 0) {
+		return g_strdup ("No packages");
+	}
+
+	string = g_string_new ("");
+	for (i=0; i<length; i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		/* just use the name */
+		text_pretty = pk_package_id_name_version (item->package_id);
+		g_string_append_printf (string, "%s\n", text_pretty);
+		g_free (text_pretty);
+	}
+	g_string_set_size (string, string->len - 1);
+	return g_string_free (string, FALSE);
+}
+
+/**
  * pk_application_finished_cb:
  **/
 static void
@@ -374,6 +403,7 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	GtkWidget *widget;
 	gboolean ret;
 	PkRoleEnum role;
+	gchar *text;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -381,27 +411,14 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	/* get role */
 	pk_client_get_role (client, &role, NULL);
 	/* do we need to fill in the tab box? */
-	if (role == PK_ROLE_ENUM_GET_DEPENDS ||
-	    role == PK_ROLE_ENUM_GET_REQUIRES) {
-	    	guint i;
-	    	PkPackageItem *item;
-	    	gchar *text;
-	    	gchar *text_pretty;
-		guint length = pk_client_package_buffer_get_size (client);
-//xxx
-		g_warning ("length=%i", length);
-		GString *string;
-		string = g_string_new ("");
-		for (i=0; i<length; i++) {
-			item = pk_client_package_buffer_get_item (client, i);
-			/* just use the name */
-			text_pretty = pk_package_id_name_version (item->package_id);
-			g_string_append_printf (string, "%s\n", text_pretty);
-			g_free (text_pretty);
-		}
-		text = g_string_free (string, FALSE);
-		g_warning ("text=%s", text);
+	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
+		text = pk_application_package_buffer_to_name_version (client);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
+		pk_application_set_text_buffer (widget, text);
+		g_free (text);
+	} else if (role == PK_ROLE_ENUM_GET_REQUIRES) {
+		text = pk_application_package_buffer_to_name_version (client);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
 		pk_application_set_text_buffer (widget, text);
 		g_free (text);
 	}
@@ -703,11 +720,16 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	GtkWidget *widget;
 	gboolean ret;
 	gchar *id;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* hide the details */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
+	gtk_widget_hide (widget);
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
