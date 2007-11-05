@@ -148,20 +148,6 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 }
 
 /**
- * pk_application_help_cb:
- **/
-static void
-pk_application_help_cb (GtkWidget *widget,
-		   PkApplication  *application)
-{
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	pk_debug ("emitting action-help");
-	g_signal_emit (application, signals [ACTION_HELP], 0);
-}
-
-/**
  * pk_application_install_cb:
  **/
 static void
@@ -217,58 +203,6 @@ pk_application_remove_cb (GtkWidget      *widget,
 }
 
 /**
- * pk_application_deps_cb:
- **/
-static void
-pk_application_deps_cb (GtkWidget      *widget,
-		        PkApplication  *application)
-{
-	gboolean ret;
-
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	pk_debug ("deps %s", application->priv->package);
-	pk_client_reset (application->priv->client_action);
-	ret = pk_client_get_depends (application->priv->client_action,
-				     application->priv->package);
-	/* ick, we failed so pretend we didn't do the action */
-	if (ret == FALSE) {
-		pk_application_error_message (application,
-					      _("The package dependencies could not be found"), NULL);
-	} else {
-		/* clear existing list and wait for packages */
-		gtk_list_store_clear (application->priv->packages_store);
-	}
-}
-
-/**
- * pk_application_requires_cb:
- **/
-static void
-pk_application_requires_cb (GtkWidget      *widget,
-		            PkApplication  *application)
-{
-	gboolean ret;
-
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	pk_debug ("requires %s", application->priv->package);
-	pk_client_reset (application->priv->client_action);
-	ret = pk_client_get_requires (application->priv->client_action,
-				     application->priv->package);
-	/* ick, we failed so pretend we didn't do the action */
-	if (ret == FALSE) {
-		pk_application_error_message (application,
-					      _("The package requires could not be found"), NULL);
-	} else {
-		/* clear existing list and wait for packages */
-		gtk_list_store_clear (application->priv->packages_store);
-	}
-}
-
-/**
  * pk_application_set_text_buffer:
  **/
 static void
@@ -306,15 +240,14 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	gtk_widget_show (widget);
 
 	/* homepage button? */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	if (pk_strzero (url) == FALSE) {
+		gtk_widget_show (widget);
 		g_free (application->priv->url);
 		/* save the url for the button */
 		application->priv->url = g_strdup (url);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
-		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
-		gtk_widget_set_sensitive (widget, FALSE);
+		gtk_widget_hide (widget);
 	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_description");
@@ -455,6 +388,7 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	    	gchar *text;
 	    	gchar *text_pretty;
 		guint length = pk_client_package_buffer_get_size (client);
+//xxx
 		g_warning ("length=%i", length);
 		GString *string;
 		string = g_string_new ("");
@@ -947,18 +881,18 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_free (package_id);
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
 
-		/* make the button sensitivities correct */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
-		gtk_widget_set_sensitive (widget, pk_enum_list_contains (application->priv->role_list,
-						PK_ROLE_ENUM_GET_DEPENDS));
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
-		gtk_widget_set_sensitive (widget, pk_enum_list_contains (application->priv->role_list,
-						PK_ROLE_ENUM_GET_REQUIRES));
-
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
-		gtk_widget_set_sensitive (widget, !installed);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
-		gtk_widget_set_sensitive (widget, installed);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
+		if (installed == FALSE) {
+			gtk_widget_show (widget);
+		} else {
+			gtk_widget_hide (widget);
+		}
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
+		if (installed == TRUE) {
+			gtk_widget_show (widget);
+		} else {
+			gtk_widget_hide (widget);
+		}
 
 		/* refresh */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
@@ -967,14 +901,10 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 	} else {
 		g_print ("no row selected.\n");
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
-		gtk_widget_set_sensitive (widget, FALSE);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
+		gtk_widget_hide (widget);
 	}
 }
 
@@ -1118,11 +1048,7 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbar1");
 	gtk_toolbar_unset_style (GTK_TOOLBAR (widget));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_help");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_help_cb), application);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -1130,7 +1056,7 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -1138,23 +1064,7 @@ pk_application_init (PkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_deps");
-	g_signal_connect (widget, "clicked",
-			G_CALLBACK (pk_application_deps_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		gtk_widget_hide (widget);
-	}
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_requires");
-	g_signal_connect (widget, "clicked",
-			G_CALLBACK (pk_application_requires_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		gtk_widget_hide (widget);
-	}
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_homepage");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
 	gtk_widget_set_sensitive (widget, FALSE);
