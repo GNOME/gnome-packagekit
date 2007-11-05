@@ -32,6 +32,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
@@ -155,6 +156,34 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		gdk_pixbuf_unref (icon);
 	}
 	g_free (text);
+}
+
+/**
+ * pk_updates_update_detail_cb:
+ **/
+static void
+pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
+			     const gchar *updates, const gchar *obsoletes,
+			     const gchar *url, const gchar *restart,
+			     const gchar *update_text, gpointer data)
+{
+	g_print ("Update detail\n");
+	g_print ("  package:    '%s'\n", package_id);
+	if (pk_strzero (updates) == FALSE) {
+		g_print ("  updates:    '%s'\n", updates);
+	}
+	if (pk_strzero (obsoletes) == FALSE) {
+		g_print ("  obsoletes:  '%s'\n", obsoletes);
+	}
+	if (pk_strzero (url) == FALSE) {
+		g_print ("  url:        '%s'\n", url);
+	}
+	if (pk_strzero (restart) == FALSE) {
+		g_print ("  restart:    '%s'\n", restart);
+	}
+	if (pk_strzero (update_text) == FALSE) {
+		g_print ("  update_text:'%s'\n", update_text);
+	}
 }
 
 /**
@@ -392,6 +421,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_finished_cb), NULL);
 	g_signal_connect (client, "progress-changed",
 			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
+	g_signal_connect (client, "update-detail",
+			  G_CALLBACK (pk_updates_update_detail_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
