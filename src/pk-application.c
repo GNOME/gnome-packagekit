@@ -904,13 +904,15 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_print ("selected row is: %i %s\n", installed, application->priv->package);
 
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
-		if (installed == FALSE) {
+		if (installed == FALSE &&
+		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE) == TRUE) {
 			gtk_widget_show (widget);
 		} else {
 			gtk_widget_hide (widget);
 		}
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-		if (installed == TRUE) {
+		if (installed == TRUE &&
+		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE) == TRUE) {
 			gtk_widget_show (widget);
 		} else {
 			gtk_widget_hide (widget);
@@ -1073,26 +1075,14 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE) == FALSE) {
-		gtk_widget_hide (widget);
-	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE) == FALSE) {
-		gtk_widget_hide (widget);
-	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
-	gtk_widget_set_sensitive (widget, FALSE);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
-		gtk_widget_hide (widget);
-	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
