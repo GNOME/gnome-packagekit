@@ -46,6 +46,7 @@ static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
 static PkStatusbar *statusbar = NULL;
+static gchar *update_url = NULL;
 
 enum
 {
@@ -59,18 +60,25 @@ enum
  * pk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget,
-		   gboolean  data)
+pk_button_help_cb (GtkWidget *widget, gboolean data)
 {
 	pk_debug ("emitting action-help");
+}
+
+/**
+ * pk_button_url_cb:
+ **/
+static void
+pk_button_url_cb (GtkWidget *widget, gboolean data)
+{
+	pk_execute_url (update_url);
 }
 
 /**
  * pk_updates_apply_cb:
  **/
 static void
-pk_updates_apply_cb (GtkWidget *widget,
-		     gpointer data)
+pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
@@ -159,6 +167,24 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 }
 
 /**
+ * pk_updates_set_text_buffer:
+ **/
+static void
+pk_updates_set_text_buffer (GtkWidget *widget, const gchar *text)
+{
+	GtkTextBuffer *buffer;
+	buffer = gtk_text_buffer_new (NULL);
+	/* ITS4: ignore, not used for allocation */
+	if (pk_strzero (text) == FALSE) {
+		gtk_text_buffer_set_text (buffer, text, -1);
+	} else {
+		/* no information */
+		gtk_text_buffer_set_text (buffer, "", -1);
+	}
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+}
+
+/**
  * pk_updates_update_detail_cb:
  **/
 static void
@@ -167,23 +193,92 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 			     const gchar *url, const gchar *restart,
 			     const gchar *update_text, gpointer data)
 {
-	g_print ("Update detail\n");
-	g_print ("  package:    '%s'\n", package_id);
-	if (pk_strzero (updates) == FALSE) {
-		g_print ("  updates:    '%s'\n", updates);
-	}
-	if (pk_strzero (obsoletes) == FALSE) {
-		g_print ("  obsoletes:  '%s'\n", obsoletes);
-	}
-	if (pk_strzero (url) == FALSE) {
-		g_print ("  url:        '%s'\n", url);
-	}
+	GtkWidget *widget;
+	PkPackageId *ident;
+	gchar *package_pretty = NULL;
+	gchar *updates_pretty = NULL;
+	gchar *obsoletes_pretty = NULL;
+
+	//TODO: set icon
 	if (pk_strzero (restart) == FALSE) {
 		g_print ("  restart:    '%s'\n", restart);
 	}
-	if (pk_strzero (update_text) == FALSE) {
-		g_print ("  update_text:'%s'\n", update_text);
+
+	/* set updates */
+	widget = glade_xml_get_widget (glade_xml, "label_version");
+	package_pretty = pk_package_id_name_version (package_id);
+	gtk_label_set_label (GTK_LABEL (widget), package_pretty);
+
+	/* hide the restart stuff */
+	widget = glade_xml_get_widget (glade_xml, "image_restart");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "label_restart");
+	gtk_widget_hide (widget);
+
+	/* set updates */
+	widget = glade_xml_get_widget (glade_xml, "label_updates");
+	if (pk_strzero (updates) == TRUE) {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_updates_left");
+		gtk_widget_hide (widget);
+	} else {
+		gtk_widget_show (widget);
+		updates_pretty = pk_package_id_name_version (updates);
+		gtk_label_set_label (GTK_LABEL (widget), updates_pretty);
 	}
+
+	/* set updates */
+	widget = glade_xml_get_widget (glade_xml, "label_obsoletes");
+	if (pk_strzero (obsoletes) == TRUE) {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_obsoletes_left");
+		gtk_widget_hide (widget);
+	} else {
+		gtk_widget_show (widget);
+		obsoletes_pretty = pk_package_id_name_version (obsoletes);
+		gtk_label_set_label (GTK_LABEL (widget), obsoletes_pretty);
+	}
+
+	/* set url */
+	widget = glade_xml_get_widget (glade_xml, "button_url");
+	if (pk_strzero (url) == FALSE) {
+		gtk_widget_show (widget);
+		g_free (update_url);
+		update_url = g_strdup (url);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* set repo */
+	widget = glade_xml_get_widget (glade_xml, "label_repo");
+	ident = pk_package_id_new_from_string (package_id);
+	if (pk_strzero (ident->data) == TRUE) {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_repo_left");
+		gtk_widget_hide (widget);
+	} else {
+		gtk_widget_show (widget);
+		gtk_label_set_label (GTK_LABEL (widget), ident->data);
+	}
+	pk_package_id_free (ident);
+
+	/* set text buffer */
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
+	if (pk_strzero (update_text) == TRUE) {
+		gtk_widget_hide (widget);
+	} else {
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (glade_xml, "textview_details");
+		pk_updates_set_text_buffer (widget, update_text);
+	}
+
+	/* show the notebook */
+	widget = glade_xml_get_widget (glade_xml, "frame_details");
+	gtk_widget_show (widget);
+
+	g_free (package_pretty);
+	g_free (updates_pretty);
+	g_free (obsoletes_pretty);
 }
 
 /**
@@ -468,6 +563,10 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_url");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_url_cb), NULL);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
