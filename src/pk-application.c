@@ -190,18 +190,7 @@ static void
 pk_application_homepage_cb (GtkWidget      *widget,
 		            PkApplication  *application)
 {
-	gchar *data;
-	gboolean ret;
-
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	data = g_strconcat ("gnome-open ", application->priv->url, NULL);
-	ret = g_spawn_command_line_async (data, NULL);
-	if (ret == FALSE) {
-		pk_warning ("spawn of '%s' failed", data);
-	}
-	g_free (data);
+	pk_execute_url (application->priv->url);
 }
 
 /**

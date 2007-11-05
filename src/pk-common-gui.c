@@ -122,6 +122,26 @@ static PkEnumMatch enum_group_icon_name[] = {
 };
 
 /**
+ * pk_execute_url:
+ **/
+gboolean
+pk_execute_url (const gchar *url)
+{
+	gchar *data;
+	gboolean ret;
+
+	g_return_val_if_fail (url != NULL, FALSE);
+
+	data = g_strconcat ("gnome-open ", url, NULL);
+	ret = g_spawn_command_line_async (data, NULL);
+	if (ret == FALSE) {
+		pk_warning ("spawn of '%s' failed", data);
+	}
+	g_free (data);
+	return ret;
+}
+
+/**
  * pk_size_to_si_size_text:
  **/
 gchar *
