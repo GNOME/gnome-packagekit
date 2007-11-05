@@ -190,30 +190,37 @@ pk_updates_set_text_buffer (GtkWidget *widget, const gchar *text)
 static void
 pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 			     const gchar *updates, const gchar *obsoletes,
-			     const gchar *url, const gchar *restart,
+			     const gchar *url, PkRestartEnum restart,
 			     const gchar *update_text, gpointer data)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
+	const gchar *text;
 	gchar *package_pretty = NULL;
 	gchar *updates_pretty = NULL;
 	gchar *obsoletes_pretty = NULL;
 
-	//TODO: set icon
-	if (pk_strzero (restart) == FALSE) {
-		g_print ("  restart:    '%s'\n", restart);
+	/* set icon */
+	widget = glade_xml_get_widget (glade_xml, "image_restart");
+	if (restart == PK_RESTART_ENUM_SESSION ||
+	    restart == PK_RESTART_ENUM_SYSTEM) {
+		gtk_widget_show (widget);
+		text = pk_restart_enum_to_icon_name (restart);
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), text, GTK_ICON_SIZE_DIALOG);
+		widget = glade_xml_get_widget (glade_xml, "label_restart");
+		gtk_widget_show (widget);
+		text = pk_restart_enum_to_localised_text_future (restart);
+		gtk_label_set_label (GTK_LABEL (widget), text);
+	} else {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_restart");
+		gtk_widget_hide (widget);
 	}
 
 	/* set updates */
 	widget = glade_xml_get_widget (glade_xml, "label_version");
 	package_pretty = pk_package_id_name_version (package_id);
 	gtk_label_set_label (GTK_LABEL (widget), package_pretty);
-
-	/* hide the restart stuff */
-	widget = glade_xml_get_widget (glade_xml, "image_restart");
-	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (glade_xml, "label_restart");
-	gtk_widget_hide (widget);
 
 	/* set updates */
 	widget = glade_xml_get_widget (glade_xml, "label_updates");

@@ -121,6 +121,15 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{0, NULL},
 };
 
+static PkEnumMatch enum_restart_icon_name[] = {
+	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
+	{PK_RESTART_ENUM_NONE,			"dialog-information"},
+	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
+	{PK_RESTART_ENUM_SESSION,		"dialog-warning"},
+	{PK_RESTART_ENUM_APPLICATION,		"dialog-warning"},
+	{0, NULL},
+};
+
 /**
  * pk_execute_url:
  **/
@@ -379,6 +388,32 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 }
 
 /**
+ * pk_restart_enum_to_localised_text_future:
+ **/
+const gchar *
+pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
+{
+	const gchar *text = NULL;
+	switch (restart) {
+	case PK_RESTART_ENUM_NONE:
+		text = _("No restart is necessary for this update");
+		break;
+	case PK_RESTART_ENUM_APPLICATION:
+		text = _("An application restart is required after this update");
+		break;
+	case PK_RESTART_ENUM_SESSION:
+		text = _("You will be required to log off and back on after this update");
+		break;
+	case PK_RESTART_ENUM_SYSTEM:
+		text = _("An system restart is required after this update");
+		break;
+	default:
+		pk_error ("restart unrecognised: %i", restart);
+	}
+	return text;
+}
+
+/**
  * pk_restart_enum_to_localised_text:
  **/
 const gchar *
@@ -386,6 +421,9 @@ pk_restart_enum_to_localised_text (PkRestartEnum restart)
 {
 	const gchar *text = NULL;
 	switch (restart) {
+	case PK_RESTART_ENUM_NONE:
+		text = _("No restart is required");
+		break;
 	case PK_RESTART_ENUM_SYSTEM:
 		text = _("A system restart is required");
 		break;
@@ -770,6 +808,15 @@ const gchar *
 pk_group_enum_to_icon_name (PkGroupEnum group)
 {
 	return pk_enum_find_string (enum_group_icon_name, group);
+}
+
+/**
+ * pk_restart_enum_to_icon_name:
+ **/
+const gchar *
+pk_restart_enum_to_icon_name (PkRestartEnum restart)
+{
+	return pk_enum_find_string (enum_restart_icon_name, restart);
 }
 
 /**
