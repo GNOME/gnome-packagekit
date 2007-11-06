@@ -653,13 +653,13 @@ pk_application_filter_installed_combobox_changed_cb (GtkComboBox *combobox, PkAp
 	value = gtk_combo_box_get_active (combobox);
 	if (value == 0) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else if (value == 1) {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_AVAILABLE);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
 	}
 }
 
@@ -677,13 +677,13 @@ pk_application_filter_devel_combobox_changed_cb (GtkComboBox *combobox, PkApplic
 	value = gtk_combo_box_get_active (combobox);
 	if (value == 0) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else if (value == 1) {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NORMAL);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	}
 }
 
@@ -701,13 +701,13 @@ pk_application_filter_gui_combobox_changed_cb (GtkComboBox *combobox, PkApplicat
 	value = gtk_combo_box_get_active (combobox);
 	if (value == 0) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
 	} else if (value == 1) {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_TEXT);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
 	}
 }
 

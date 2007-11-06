@@ -169,7 +169,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_monitor_resolve_finished_cb), NULL);
 	g_signal_connect (client, "package",
 			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
-	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_AVAILABLE);
+	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_INSTALLED);
 	ret = pk_client_resolve (client, filter, argv[1]);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Method not supported"),
