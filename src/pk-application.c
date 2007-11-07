@@ -180,26 +180,126 @@ pk_application_homepage_cb (GtkWidget      *widget,
 }
 
 /**
+ * pk_application_remove_only:
+ **/
+static gboolean
+pk_application_remove_only (PkApplication *application, gboolean force)
+{
+	gboolean ret;
+
+	g_return_val_if_fail (application != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+
+	pk_debug ("remove %s", application->priv->package);
+	pk_client_reset (application->priv->client_action);
+	ret = pk_client_remove_package (application->priv->client_action,
+				        application->priv->package, force);
+	/* ick, we failed so pretend we didn't do the action */
+	if (ret == FALSE) {
+		pk_application_error_message (application,
+					      _("The package could not be removed"), NULL);
+	}
+	return ret;
+}
+
+/**
+ * pk_application_requires_dialog_cb:
+ **/
+static void
+pk_application_requires_dialog_cb (GtkDialog *dialog, gint id, PkApplication *application)
+{
+	if (id == -9) {
+		pk_debug ("the user clicked no");
+	} else if (id == -8) {
+		pk_debug ("the user clicked yes, remove with deps");
+		pk_application_remove_only (application, TRUE);
+	} else {
+		pk_warning ("id unknown=%i", id);
+	}
+}
+
+/**
+ * pk_application_requires_finished_cb:
+ **/
+static void
+pk_application_requires_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkApplication *application)
+{
+	guint length;
+	gchar *title;
+	gchar *message;
+	gchar *package_name;
+	GString *text;
+	PkPackageItem *item;
+	GtkWidget *main_window;
+	GtkWidget *dialog;
+	guint i;
+
+	/* see how many packages there are */
+	length = pk_client_package_buffer_get_size (client);
+
+	/* if there are no required packages, just do the remove */
+	if (length == 0) {
+		pk_debug ("no requires");
+		pk_application_remove_only (application, FALSE);
+		g_object_unref (client);
+		return;
+	}
+
+	/* present this to the user */
+	text = g_string_new (_("<b>Remove these additional packages?</b>\n\n"));
+	for (i=0; i<length; i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		message = pk_package_id_name_version (item->package_id);
+		g_string_append_printf (text, "%s\n", message);
+		g_free (message);
+	}
+
+	/* remove last \n */
+	g_string_set_size (text, text->len - 1);
+
+	/* display messagebox  */
+	message = g_string_free (text, FALSE);
+	package_name = pk_package_get_name (application->priv->package);
+	title = g_strdup_printf (_("Other software depends on %s"), package_name);
+	g_free (package_name);
+
+	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_ERROR, GTK_BUTTONS_YES_NO, title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), message);
+	g_signal_connect (dialog, "response", G_CALLBACK (pk_application_requires_dialog_cb), application);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (message);
+	g_object_unref (client);
+}
+
+/**
  * pk_application_remove_cb:
  **/
 static void
 pk_application_remove_cb (GtkWidget      *widget,
 		          PkApplication  *application)
 {
-	gboolean ret;
+	PkClient *client;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("remove %s", application->priv->package);
-	pk_client_reset (application->priv->client_action);
-	ret = pk_client_remove_package (application->priv->client_action,
-				        application->priv->package, FALSE);
-	/* ick, we failed so pretend we didn't do the action */
-	if (ret == FALSE) {
-		pk_application_error_message (application,
-					      _("The package could not be removed"), NULL);
+	/* are we dumb and can't check for requires? */
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
+		/* no, just try to remove it without deps */
+		pk_application_remove_only (application, FALSE);
+		return;
 	}
+
+	/* see if any packages require this one */
+	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE);
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_application_requires_finished_cb), application);
+	pk_debug ("getting requires for %s", application->priv->package);
+	pk_client_get_requires (client, application->priv->package, TRUE);
 }
 
 /**
