@@ -831,7 +831,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_client_reset (application->priv->client_files);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE);
 		pk_client_get_depends (application->priv->client_files,
-				       application->priv->package);
+				       application->priv->package, FALSE);
 
 		return TRUE;
 	}
@@ -854,7 +854,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_client_reset (application->priv->client_files);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE);
 		pk_client_get_requires (application->priv->client_files,
-				        application->priv->package);
+				        application->priv->package, TRUE);
 
 		return TRUE;
 	}
