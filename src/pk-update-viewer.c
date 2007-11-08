@@ -418,6 +418,9 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
+		/* clear existing list */
+		gtk_list_store_clear (list_store);
+
 		/* put a message in the listbox */
 		pk_updates_set_aux_status (client, _("<b>There are no updates available!</b>"));
 
