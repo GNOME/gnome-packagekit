@@ -223,6 +223,32 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 }
 
 /**
+ * pk_package_id_pretty_oneline:
+ **/
+gchar *
+pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
+{
+	PkPackageId *ident;
+	gchar *text;
+
+	if (package_id == NULL) {
+		return g_strdup (_("unknown"));
+	}
+
+	/* split by delimeter */
+	ident = pk_package_id_new_from_string (package_id);
+	if (pk_strzero (summary) == TRUE) {
+		/* just have name */
+		text = g_strdup (ident->name);
+	} else {
+		text = g_strdup_printf ("<b>%s</b> (%s)", summary, ident->name);
+	}
+
+	pk_package_id_free (ident);
+	return text;
+}
+
+/**
  * pk_package_id_name_version:
  **/
 gchar *

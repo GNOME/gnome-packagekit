@@ -48,10 +48,12 @@ G_BEGIN_DECLS
 #define GPM_DBUS_INTERFACE		"org.freedesktop.PowerManagement"
 #define GPM_DBUS_INTERFACE_INHIBIT	"org.freedesktop.PowerManagement.Inhibit"
 
-gchar *		 pk_package_get_name			(const gchar	*package_id);
-gchar *		 pk_package_id_pretty			(const gchar	*package_id,
+gchar		*pk_package_get_name			(const gchar	*package_id);
+gchar		*pk_package_id_pretty			(const gchar	*package_id,
 							 const gchar	*summary);
-gchar *		 pk_package_id_name_version		(const gchar	*package_id);
+gchar		*pk_package_id_pretty_oneline		(const gchar	*package_id,
+							 const gchar	*summary);
+gchar		*pk_package_id_name_version		(const gchar	*package_id);
 gboolean	 pk_error_modal_dialog			(const gchar	*title,
 							 const gchar	*message);
 gboolean	 pk_execute_url				(const gchar	*url);

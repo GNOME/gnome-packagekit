@@ -246,10 +246,10 @@ pk_application_requires_finished_cb (PkClient *client, PkStatusEnum status, guin
 	}
 
 	/* present this to the user */
-	text = g_string_new (_("<b>Remove these additional packages?</b>\n\n"));
+	text = g_string_new (_("The following packages have to be removed:\n\n"));
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
-		message = pk_package_id_name_version (item->package_id);
+		message = pk_package_id_pretty_oneline (item->package_id, item->summary);
 		g_string_append_printf (text, "%s\n", message);
 		g_free (message);
 	}
@@ -265,7 +265,8 @@ pk_application_requires_finished_cb (PkClient *client, PkStatusEnum status, guin
 
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR, GTK_BUTTONS_YES_NO, title);
+					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, title);
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("Remove all packages"), -8, NULL);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), message);
 	g_signal_connect (dialog, "response", G_CALLBACK (pk_application_requires_dialog_cb), application);
 	gtk_dialog_run (GTK_DIALOG (dialog));
