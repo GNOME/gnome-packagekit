@@ -211,10 +211,10 @@ pk_progress_package_cb (PkClient    *client,
 }
 
 /**
- * pk_progress_spin_timeout:
+ * pk_progress_spin_timeout_percentage:
  **/
 gboolean
-pk_progress_spin_timeout (gpointer data)
+pk_progress_spin_timeout_percentage (gpointer data)
 {
 	GtkWidget *widget;
 	PkProgress *progress = PK_PROGRESS (data);
@@ -229,6 +229,31 @@ pk_progress_spin_timeout (gpointer data)
 	if (progress->priv->task_ended == TRUE) {
 		/* hide the box */
 		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
+		gtk_widget_hide (widget);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * pk_progress_spin_timeout_subpercentage:
+ **/
+gboolean
+pk_progress_spin_timeout_subpercentage (gpointer data)
+{
+	GtkWidget *widget;
+	PkProgress *progress = PK_PROGRESS (data);
+
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
+
+	/* show the box */
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
+	gtk_widget_show (widget);
+
+	if (progress->priv->task_ended == TRUE) {
+		/* hide the box */
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
 		gtk_widget_hide (widget);
 		return FALSE;
 	}
@@ -264,7 +289,8 @@ pk_progress_action_percentage (PkProgress *progress, guint percentage)
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
 		/* don't queue duplicate events */
 		if (progress->priv->no_percentage_evt == 0) {
-			progress->priv->no_percentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
+			progress->priv->no_percentage_evt = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
+									   pk_progress_spin_timeout_percentage, progress);
 		}
 		return;
 	}
@@ -314,7 +340,8 @@ pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
 		/* don't queue duplicate events */
 		if (progress->priv->no_subpercentage_evt == 0) {
-			progress->priv->no_subpercentage_evt = g_timeout_add (50, pk_progress_spin_timeout, progress);
+			progress->priv->no_subpercentage_evt = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
+									      pk_progress_spin_timeout_subpercentage, progress);
 		}
 		return;
 	}
@@ -451,7 +478,8 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	if (ret == TRUE) {
 		pk_progress_progress_changed_cb (progress->priv->client, percentage, subpercentage, elapsed, remaining, progress);
 	} else {
-		pk_progress_progress_changed_cb (progress->priv->client, 0, 0, 0, 0, progress);
+		pk_warning ("GetProgress failed");
+		pk_progress_progress_changed_cb (progress->priv->client, PK_CLIENT_PERCENTAGE_INVALID, PK_CLIENT_PERCENTAGE_INVALID, 0, 0, progress);
 	}
 
 	/* do the best we can */
