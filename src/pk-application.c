@@ -1081,6 +1081,7 @@ pk_application_init (PkApplication *application)
 	GtkWidget *widget;
 	PkGroupEnum group;
 	guint length;
+	guint page;
 	guint i;
 
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
@@ -1187,16 +1188,24 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "switch-page",
 			  G_CALLBACK (pk_application_notebook_changed_cb), application);
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 0);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == FALSE) {
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 1);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 2);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 3);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 
 	/* until we get the mugshot stuff, disable this */
