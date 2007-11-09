@@ -514,6 +514,10 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* add application specific icons to search path */
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
