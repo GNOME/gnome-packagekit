@@ -47,7 +47,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_INSTALLING,		"emblem-system"},
 	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
 	{PK_INFO_ENUM_OBSOLETING,		"edit-clear"},
-	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
+	{PK_INFO_ENUM_CLEANUP,			"edit-clear"},
 	{0, NULL},
 };
 
