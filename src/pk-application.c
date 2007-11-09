@@ -1078,6 +1078,7 @@ static void
 pk_application_init (PkApplication *application)
 {
 	GtkWidget *main_window;
+	GtkWidget *vbox;
 	GtkWidget *widget;
 	PkGroupEnum group;
 	guint length;
@@ -1188,23 +1189,23 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "switch-page",
 			  G_CALLBACK (pk_application_notebook_changed_cb), application);
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), widget);
+		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
+		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 
