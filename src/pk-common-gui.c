@@ -37,54 +37,54 @@
 static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_INFO_ENUM_INSTALLED,		"package-x-generic"},
-	{PK_INFO_ENUM_AVAILABLE,		"network-workgroup"},
+	{PK_INFO_ENUM_AVAILABLE,		"network-workgroup"}, /* TODO: need better icon */
 	{PK_INFO_ENUM_LOW,			"software-update-available"},
 	{PK_INFO_ENUM_NORMAL,			"software-update-available"},
 	{PK_INFO_ENUM_IMPORTANT,		"software-update-urgent"},
 	{PK_INFO_ENUM_SECURITY,			"software-update-urgent"},
-	{PK_INFO_ENUM_DOWNLOADING,		"mail-send-receive"},
-	{PK_INFO_ENUM_UPDATING,			"system-software-update"},
-	{PK_INFO_ENUM_INSTALLING,		"emblem-system"},
-	{PK_INFO_ENUM_REMOVING,			"edit-clear"},
-	{PK_INFO_ENUM_OBSOLETING,		"edit-clear"},
-	{PK_INFO_ENUM_CLEANUP,			"edit-clear"},
+	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
+	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},
+	{PK_INFO_ENUM_INSTALLING,		"pk-package-add"},
+	{PK_INFO_ENUM_REMOVING,			"pk-package-delete"},
+	{PK_INFO_ENUM_OBSOLETING,		"pk-package-cleanup"},
+	{PK_INFO_ENUM_CLEANUP,			"pk-package-cleanup"},
 	{0, NULL},
 };
 
 static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_STATUS_ENUM_WAIT,			"media-playback-pause"},
-	{PK_STATUS_ENUM_SETUP,			"emblem-system"},
-	{PK_STATUS_ENUM_QUERY,			"system-search"},
-	{PK_STATUS_ENUM_REFRESH_CACHE,		"view-refresh"},
-	{PK_STATUS_ENUM_REMOVE,			"edit-clear"},
-	{PK_STATUS_ENUM_DOWNLOAD,		"mail-send-receive"},
-	{PK_STATUS_ENUM_INSTALL,		"emblem-system"},
-	{PK_STATUS_ENUM_UPDATE,			"system-software-update"},
-	{PK_STATUS_ENUM_CLEANUP,		"edit-clear"},
-	{PK_STATUS_ENUM_OBSOLETE,		"edit-clear"},
+	{PK_STATUS_ENUM_WAIT,			"media-playback-pause"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_SETUP,			"emblem-system"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
+	{PK_STATUS_ENUM_REFRESH_CACHE,		"view-refresh"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
+	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
+	{PK_STATUS_ENUM_INSTALL,		"pk-package-add"},
+	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
+	{PK_STATUS_ENUM_CLEANUP,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
 	{0, NULL},
 };
 
 static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_CANCEL,			"view-refresh"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_RESOLVE,			"system-search"},
+	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
 	{PK_ROLE_ENUM_ROLLBACK,			"view-refresh"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_GET_DEPENDS,		"system-search"},
+	{PK_ROLE_ENUM_GET_DEPENDS,		"system-search"}, /* TODO: need better icon */
 	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"system-search"},
 	{PK_ROLE_ENUM_GET_DESCRIPTION,		"system-search"},
 	{PK_ROLE_ENUM_GET_REQUIRES,		"system-search"},
 	{PK_ROLE_ENUM_GET_UPDATES,		"system-search"},
-	{PK_ROLE_ENUM_SEARCH_DETAILS,		"system-search"},
-	{PK_ROLE_ENUM_SEARCH_FILE,		"system-search"},
-	{PK_ROLE_ENUM_SEARCH_GROUP,		"system-search"},
-	{PK_ROLE_ENUM_SEARCH_NAME,		"system-search"},
-	{PK_ROLE_ENUM_REFRESH_CACHE,		"view-refresh"},
-	{PK_ROLE_ENUM_REMOVE_PACKAGE,		"edit-clear"},
-	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"emblem-system"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_INSTALL_FILE,		"emblem-system"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_UPDATE_PACKAGE,		"emblem-system"},
+	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
+	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
+	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
+	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
+	{PK_ROLE_ENUM_REFRESH_CACHE,		"view-refresh"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_REMOVE_PACKAGE,		"pk-package-delete"},
+	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"pk-package-add"},
+	{PK_ROLE_ENUM_INSTALL_FILE,		"pk-package-add"},
+	{PK_ROLE_ENUM_UPDATE_PACKAGE,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
