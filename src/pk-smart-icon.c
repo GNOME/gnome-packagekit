@@ -48,6 +48,7 @@ static void     pk_smart_icon_init		(PkSmartIcon      *sicon);
 static void     pk_smart_icon_finalize		(GObject       *object);
 
 #define PK_SMART_ICON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_SMART_ICON, PkSmartIconPrivate))
+#define PK_SMART_ICON_PERSIST_TIMEOUT	100
 
 struct PkSmartIconPrivate
 {
@@ -115,13 +116,13 @@ pk_smart_icon_set_icon_name (PkSmartIcon *sicon, const gchar *icon_name)
 		g_source_remove (sicon->priv->event_source);
 		sicon->priv->event_source = 0;
 	}
-
 	/* tell us what we -want- */
 	g_free (sicon->priv->new);
+	pk_debug ("setting icon name %s", icon_name);
 	sicon->priv->new = g_strdup (icon_name);
 
 	/* wait a little while to see if it's worth displaying the icon */
-	sicon->priv->event_source = g_timeout_add (100, pk_smart_icon_set_icon_name_cb, sicon);
+	sicon->priv->event_source = g_timeout_add (PK_SMART_ICON_PERSIST_TIMEOUT, pk_smart_icon_set_icon_name_cb, sicon);
 	return TRUE;
 }
 

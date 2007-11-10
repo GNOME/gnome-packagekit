@@ -153,8 +153,9 @@ pk_watch_task_list_to_state_enum_list (PkWatch *watch)
 		return NULL;
 	}
 
-	/* we can use an uncommited list */
+	/* we can use an enumerated list */
 	elist = pk_enum_list_new ();
+	pk_enum_list_set_type (elist, PK_ENUM_LIST_TYPE_STATUS);
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
