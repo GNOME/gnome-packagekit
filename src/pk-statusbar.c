@@ -49,6 +49,8 @@ static void     pk_statusbar_finalize	(GObject          *object);
 struct PkStatusbarPrivate
 {
 	guint			 timer_id;
+	guint			 last_remaining;
+	guint			 last_percentage;
 	GtkStatusbar		*statusbar;
 	GtkProgressBar		*progressbar;
 };
@@ -138,6 +140,7 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 		}
 		sbar->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
 						      pk_statusbar_pulse_timeout, sbar);
+		sbar->priv->last_percentage = percentage;
 		return TRUE;
 	}
 
@@ -147,6 +150,13 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 		sbar->priv->timer_id = 0;
 	}
 
+	/* check if we just set this -  there's no point trying again */
+	if (percentage == sbar->priv->last_percentage) {
+		return TRUE;
+	}
+	sbar->priv->last_percentage = percentage;
+
+	pk_debug ("setting fraction %f", (gfloat) percentage / 100.0);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (sbar->priv->progressbar), (gfloat) percentage / 100.0);
 	return TRUE;
 }
@@ -163,6 +173,12 @@ pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
 	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
+
+	/* check if we just set this -  there's no point trying again */
+	if (sbar->priv->last_remaining == remaining) {
+		return TRUE;
+	}
+	sbar->priv->last_remaining = remaining;
 
 	/* don't hide, else the status bar will collapse */
 	if (remaining == 0) {
@@ -211,6 +227,8 @@ pk_statusbar_init (PkStatusbar *sbar)
 {
 	sbar->priv = PK_STATUSBAR_GET_PRIVATE (sbar);
 	sbar->priv->timer_id = 0;
+	sbar->priv->last_percentage = PK_CLIENT_PERCENTAGE_INVALID;
+	sbar->priv->last_remaining = 0;
 
 	sbar->priv->progressbar = GTK_PROGRESS_BAR (gtk_progress_bar_new ());
 	gtk_progress_bar_set_fraction (sbar->priv->progressbar, 0.0);
