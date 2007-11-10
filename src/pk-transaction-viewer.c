@@ -453,12 +453,12 @@ main (int argc, char *argv[])
 	pk_treeview_add_details_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* make the refresh button non-clickable if we can't do the action */
+	/* hide the rollback button if we can't do the action */
 	widget = glade_xml_get_widget (glade_xml, "button_rollback");
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK) == TRUE) {
-		gtk_widget_set_sensitive (widget, TRUE);
+		gtk_widget_show (widget);
 	} else {
-		gtk_widget_set_sensitive (widget, FALSE);
+		gtk_widget_hide (widget);
 	}
 
 	/* get the update list */
