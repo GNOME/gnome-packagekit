@@ -10,7 +10,12 @@ icons_DATA = 				\
 	pk-package-delete.png		\
 	pk-package-download.png		\
 	pk-package-search.png		\
-	pk-package-update.png
+	pk-package-update.png		\
+	pk-package-info.png		\
+	pk-refresh-cache.png		\
+	pk-rollback.png			\
+	pk-setup.png			\
+	pk-wait.png
 
 noinst_DATA = 
 

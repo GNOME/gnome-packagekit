@@ -53,10 +53,10 @@ static PkEnumMatch enum_info_icon_name[] = {
 
 static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_STATUS_ENUM_WAIT,			"media-playback-pause"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_SETUP,			"emblem-system"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
+	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
 	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
-	{PK_STATUS_ENUM_REFRESH_CACHE,		"view-refresh"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
 	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
 	{PK_STATUS_ENUM_INSTALL,		"pk-package-add"},
@@ -68,19 +68,19 @@ static PkEnumMatch enum_status_icon_name[] = {
 
 static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
-	{PK_ROLE_ENUM_CANCEL,			"view-refresh"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_CANCEL,			"process-stop.svg"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
-	{PK_ROLE_ENUM_ROLLBACK,			"view-refresh"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_GET_DEPENDS,		"system-search"}, /* TODO: need better icon */
-	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"system-search"},
-	{PK_ROLE_ENUM_GET_DESCRIPTION,		"system-search"},
-	{PK_ROLE_ENUM_GET_REQUIRES,		"system-search"},
-	{PK_ROLE_ENUM_GET_UPDATES,		"system-search"},
+	{PK_ROLE_ENUM_ROLLBACK,			"pk-rollback"},
+	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DESCRIPTION,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_UPDATES,		"pk-package-info"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
-	{PK_ROLE_ENUM_REFRESH_CACHE,		"view-refresh"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
 	{PK_ROLE_ENUM_REMOVE_PACKAGE,		"pk-package-delete"},
 	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"pk-package-add"},
 	{PK_ROLE_ENUM_INSTALL_FILE,		"pk-package-add"},

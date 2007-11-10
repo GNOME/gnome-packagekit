@@ -10,7 +10,12 @@ icons_DATA = 				\
 	pk-package-delete.svg		\
 	pk-package-download.svg		\
 	pk-package-search.svg		\
-	pk-package-update.svg
+	pk-package-update.svg		\
+	pk-package-info.svg		\
+	pk-refresh-cache.svg		\
+	pk-rollback.svg			\
+	pk-setup.svg			\
+	pk-wait.svg
 
 noinst_DATA = 
 
