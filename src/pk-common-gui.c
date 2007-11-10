@@ -678,8 +678,10 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Removed package");
 		break;
 	case PK_ROLE_ENUM_INSTALL_PACKAGE:
-	case PK_ROLE_ENUM_INSTALL_FILE:
 		text = _("Installed package");
+		break;
+	case PK_ROLE_ENUM_INSTALL_FILE:
+		text = _("Installed local file");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshed package cache");
