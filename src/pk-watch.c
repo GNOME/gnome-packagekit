@@ -212,6 +212,8 @@ pk_watch_refresh_icon (PkWatch *watch)
 		state = PK_STATUS_ENUM_DOWNLOAD;
 	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_QUERY) == TRUE) {
 		state = PK_STATUS_ENUM_QUERY;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_INFO) == TRUE) {
+		state = PK_STATUS_ENUM_INFO;
 	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_WAIT) == TRUE) {
 		state = PK_STATUS_ENUM_WAIT;
 	}

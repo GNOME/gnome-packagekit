@@ -56,6 +56,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
 	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
 	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
+	{PK_STATUS_ENUM_INFO,			"pk-package-info"},
 	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
 	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
@@ -484,6 +485,9 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
+		break;
+	case PK_STATUS_ENUM_INFO:
+		text = _("Getting information");
 		break;
 	case PK_STATUS_ENUM_REMOVE:
 		text = _("Removing");
