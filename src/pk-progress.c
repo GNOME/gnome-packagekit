@@ -327,7 +327,6 @@ pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
 			g_source_remove (progress->priv->no_subpercentage_evt);
 			progress->priv->no_subpercentage_evt = 0;
 		}
-		gtk_widget_hide (widget_hbox);
 		return;
 	}
 
