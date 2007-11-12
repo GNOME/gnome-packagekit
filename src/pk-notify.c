@@ -303,13 +303,13 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 /**
  * pk_notify_update_system:
  **/
-static void
+static gboolean
 pk_notify_update_system (PkNotify *notify)
 {
 	gboolean ret;
 
-	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_val_if_fail (notify != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
 	ret = pk_client_update_system (notify->priv->client_update_system);
@@ -319,6 +319,7 @@ pk_notify_update_system (PkNotify *notify)
 		pk_warning ("failed to update system");
 		pk_notify_not_supported (notify, _("Failed to update system"));
 	}
+	return ret;
 }
 
 /**
@@ -501,6 +502,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	guint length;
 	guint i;
 	gboolean is_security;
+	gboolean ret;
 	const gchar *icon;
 	gchar *updates;
 	GString *status_security;
@@ -560,8 +562,12 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		}
 
 		pk_debug ("we should do the update automatically!");
-		pk_notify_update_system (notify);
-		pk_notify_auto_update_message (notify);
+		ret = pk_notify_update_system (notify);
+		if (ret == TRUE) {
+			pk_notify_auto_update_message (notify);
+		} else {
+			pk_warning ("update failed");
+		}
 		return;
 	}
 
