@@ -75,6 +75,16 @@ pk_button_url_cb (GtkWidget *widget, gboolean data)
 }
 
 /**
+ * pk_button_update_cb:
+ **/
+static void
+pk_button_update_cb (GtkWidget *widget, gboolean data)
+{
+	pk_client_reset (client);
+	pk_client_update_package (client, package);
+}
+
+/**
  * pk_updates_apply_cb:
  **/
 static void
@@ -579,6 +589,10 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_url");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_url_cb), NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_update");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_update_cb), NULL);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
