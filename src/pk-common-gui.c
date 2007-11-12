@@ -42,6 +42,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_NORMAL,			"software-update-available"},
 	{PK_INFO_ENUM_IMPORTANT,		"software-update-urgent"},
 	{PK_INFO_ENUM_SECURITY,			"software-update-urgent"},
+	{PK_INFO_ENUM_BLOCKED,			"help-browser"}, /* TODO: need better icon */
 	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
 	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},
 	{PK_INFO_ENUM_INSTALLING,		"pk-package-add"},
@@ -535,6 +536,9 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 		break;
 	case PK_INFO_ENUM_SECURITY:
 		text = _("Security update");
+		break;
+	case PK_INFO_ENUM_BLOCKED:
+		text = _("Blocked update");
 		break;
 	case PK_INFO_ENUM_DOWNLOADING:
 		text = _("Downloading");
