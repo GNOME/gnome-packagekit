@@ -80,8 +80,17 @@ pk_button_url_cb (GtkWidget *widget, gboolean data)
 static void
 pk_button_update_cb (GtkWidget *widget, gboolean data)
 {
+	gboolean ret;
 	pk_client_reset (client);
-	pk_client_update_package (client, package);
+	ret = pk_client_update_package (client, package);
+	if (ret == TRUE) {
+		/* make the refresh button non-clickable until we have completed */
+		widget = glade_xml_get_widget (glade_xml, "button_apply");
+		gtk_widget_set_sensitive (widget, FALSE);
+
+		widget = glade_xml_get_widget (glade_xml, "button_refresh");
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
 }
 
 /**
@@ -151,14 +160,17 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	GtkTreeIter iter;
 	GdkPixbuf *icon;
 	gchar *text;
+	PkRoleEnum role;
 	const gchar *icon_name;
 
-	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
+	pk_client_get_role (client, &role, NULL);
 
-	/* ignore metadata updates */
-	if (info == PK_INFO_ENUM_DOWNLOADING) {
+	if (role != PK_ROLE_ENUM_GET_UPDATES) {
+		pk_debug ("not in get_updates");
 		return;
 	}
+
+	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
 
 	text = pk_package_id_pretty (package_id, summary);
 	gtk_list_store_append (list_store, &iter);
@@ -425,6 +437,18 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
+
+	/* we don't need to do anything here */
+	if (role == PK_ROLE_ENUM_UPDATE_PACKAGE) {
+		/* clear existing list */
+		gtk_list_store_clear (list_store);
+
+		/* get the new update list */
+		pk_client_reset (client);
+		pk_client_set_use_buffer (client, TRUE);
+		pk_client_get_updates (client);
+		return;
+	}
 
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
