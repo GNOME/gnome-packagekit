@@ -322,18 +322,34 @@ static void
 pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
 	const gchar *title;
+	gboolean is_active;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
-	/* ignore some errors */
-	if (error_code == PK_ERROR_ENUM_NOT_SUPPORTED ||
-	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
-	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+	title = pk_error_enum_to_localised_text (error_code);
+
+	/* if the client dbus connection is still active */
+	pk_client_is_caller_active (client, &is_active);
+
+	/* TODO: remove me when the client gives us the proper information */
+	is_active = FALSE;
+
+	/* do we ignore this error? */
+	if (is_active == TRUE) {
+		pk_debug ("client active so leaving error %s\n%s", title, details);
 		return;
 	}
 
-	title = pk_error_enum_to_localised_text (error_code);
+	/* ignore some errors */
+	if (error_code == PK_ERROR_ENUM_NOT_SUPPORTED ||
+	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
+	    error_code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+		pk_debug ("error ignored %s\n%s", title, details);
+		return;
+	}
+
 	pk_smart_icon_notify (watch->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
 }
 
