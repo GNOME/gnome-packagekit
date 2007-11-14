@@ -880,6 +880,10 @@ pk_notebook_populate (PkApplication *application, gint page)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 		pk_application_set_text_buffer (widget, NULL);
 
+		/* hide the homepage button until we get data */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		gtk_widget_hide (widget);
+
 		/* cancel any previous request */
 		ret = pk_client_cancel (application->priv->client_description);
 		if (ret == FALSE) {
