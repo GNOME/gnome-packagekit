@@ -216,6 +216,14 @@ pk_watch_refresh_icon (PkWatch *watch)
 		state = PK_STATUS_ENUM_INFO;
 	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_WAIT) == TRUE) {
 		state = PK_STATUS_ENUM_WAIT;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_DEP_RESOLVE) == TRUE) {
+		state = PK_STATUS_ENUM_DEP_RESOLVE;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_ROLLBACK) == TRUE) {
+		state = PK_STATUS_ENUM_ROLLBACK;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_COMMIT) == TRUE) {
+		state = PK_STATUS_ENUM_COMMIT;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REQUEST) == TRUE) {
+		state = PK_STATUS_ENUM_REQUEST;
 	}
 
 	/* only set if in the list */
