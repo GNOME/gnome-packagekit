@@ -65,6 +65,10 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
 	{PK_STATUS_ENUM_CLEANUP,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_COMMIT,			"pk-setup"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
 	{0, NULL},
 };
 
@@ -510,6 +514,18 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_OBSOLETE:
 		text = _("Obsoleting");
+		break;
+	case PK_STATUS_ENUM_DEP_RESOLVE:
+		text = _("Resolving dependencies");
+		break;
+	case PK_STATUS_ENUM_ROLLBACK:
+		text = _("Rolling back");
+		break;
+	case PK_STATUS_ENUM_COMMIT:
+		text = _("Committing");
+		break;
+	case PK_STATUS_ENUM_REQUEST:
+		text = _("Requesting data");
 		break;
 	default:
 		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
