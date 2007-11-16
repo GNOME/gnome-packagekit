@@ -340,9 +340,6 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	/* if the client dbus connection is still active */
 	pk_client_is_caller_active (client, &is_active);
 
-	/* TODO: remove me when the client gives us the proper information */
-	is_active = FALSE;
-
 	/* do we ignore this error? */
 	if (is_active == TRUE) {
 		pk_debug ("client active so leaving error %s\n%s", title, details);

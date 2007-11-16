@@ -602,6 +602,29 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 }
 
 /**
+ * pk_notify_error_code_cb:
+ **/
+static void
+pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkNotify *notify)
+{
+	const gchar *title;
+
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	title = pk_error_enum_to_localised_text (error_code);
+
+	/* ignore some errors */
+	if (error_code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+		pk_debug ("error ignored %s\n%s", title, details);
+		return;
+	}
+
+	pk_smart_icon_notify (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
+}
+
+/**
  * pk_notify_query_updates:
  **/
 static gboolean
@@ -620,6 +643,8 @@ pk_notify_query_updates (PkNotify *notify)
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_query_updates_finished_cb), notify);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (pk_notify_error_code_cb), notify);
 	pk_client_set_use_buffer (client, TRUE);
 	pk_client_get_updates (client);
 	return TRUE;
@@ -678,6 +703,8 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_notify_refresh_cache_finished_cb), notify);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (pk_notify_error_code_cb), notify);
 	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
 		g_object_unref (client);
@@ -789,6 +816,8 @@ pk_notify_init (PkNotify *notify)
 			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
 	g_signal_connect (notify->priv->client_update_system, "finished",
 			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
+	g_signal_connect (notify->priv->client_update_system, "error-code",
+			  G_CALLBACK (pk_notify_error_code_cb), notify);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	notify->priv->tlist = pk_task_list_new ();
