@@ -201,8 +201,8 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	gchar *text;
 	GString *string;
 
-	if (package_id == NULL) {
-		return g_strdup (_("unknown"));
+	if (pk_strzero (package_id) == TRUE) {
+		return g_strdup (_("PackageID not valid"));
 	}
 
 	/* split by delimeter */
@@ -237,8 +237,8 @@ pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 	PkPackageId *ident;
 	gchar *text;
 
-	if (package_id == NULL) {
-		return g_strdup (_("unknown"));
+	if (pk_strzero (package_id) == TRUE) {
+		return g_strdup (_("PackageID not valid"));
 	}
 
 	/* split by delimeter */
@@ -264,8 +264,8 @@ pk_package_id_name_version (const gchar *package_id)
 	gchar *text;
 	GString *string;
 
-	if (package_id == NULL) {
-		return g_strdup (_("unknown"));
+	if (pk_strzero (package_id) == TRUE) {
+		return g_strdup (_("PackageID not valid"));
 	}
 
 	/* split by delimeter */
@@ -292,7 +292,7 @@ pk_package_get_name (const gchar *package_id)
 	/* not set! */
 	if (pk_strzero (package_id) == TRUE) {
 		pk_warning ("package_id blank, returning 'unknown'");
-		return g_strdup ("unknown");
+		return g_strdup ("PackageID not valid");
 	}
 
 	ident = pk_package_id_new_from_string (package_id);
@@ -399,10 +399,10 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Could not remove a protected system package");
 		break;
 	case PK_ERROR_ENUM_PROCESS_QUIT:
-		text = _("The transaction was cancelled");
+		text = _("The transaction was canceled");
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
-		text = _("The transaction was forcibly cancelled");
+		text = _("The transaction was forcibly canceled");
 		break;
 	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
 		text = _("Initialization of the package manager failed");
@@ -480,7 +480,7 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 	const gchar *text = NULL;
 	switch (status) {
 	case PK_STATUS_ENUM_UNKNOWN:
-		text = _("Unknown");
+		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
 		text = _("Setting up");
@@ -595,7 +595,7 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
-		text = _("Unknown");
+		text = _("Unknown role");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
 		text = _("Getting dependencies");
@@ -669,7 +669,7 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
-		text = _("Unknown");
+		text = _("Unknown role");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
 		text = _("Got dependencies");
@@ -818,7 +818,7 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Power management");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
-		text = _("Unknown");
+		text = _("Unknown group");
 		break;
 	default:
 		pk_error ("group unrecognised: %i", group);
@@ -1077,7 +1077,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "get name null");
 	text = pk_package_get_name (NULL);
-	if (text != NULL && strcmp (text, _("unknown")) == 0) {
+	if (text != NULL && strcmp (text, _("PackageID not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
@@ -1109,7 +1109,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "package id pretty null");
 	text = pk_package_id_pretty (NULL, NULL);
-	if (text != NULL && strcmp (text, _("unknown")) == 0) {
+	if (text != NULL && strcmp (text, _("PackageID not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
