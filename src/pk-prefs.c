@@ -195,7 +195,8 @@ pk_prefs_freq_combo_setup (void)
 	is_writable = gconf_client_key_is_writable (client, PK_CONF_UPDATE_CHECK, NULL);
 	value = gconf_client_get_string (client, PK_CONF_UPDATE_CHECK, NULL);
 	if (value == NULL) {
-		pk_error ("invalid schema, please re-install");
+		pk_warning ("invalid schema, please re-install");
+		return;
 	}
 	pk_debug ("value from gconf %s", value);
 	freq = pk_freq_enum_from_text (value);
@@ -231,7 +232,8 @@ pk_prefs_update_combo_setup (void)
 	is_writable = gconf_client_key_is_writable (client, PK_CONF_AUTO_UPDATE, NULL);
 	value = gconf_client_get_string (client, PK_CONF_AUTO_UPDATE, NULL);
 	if (value == NULL) {
-		pk_error ("invalid schema, please re-install");
+		pk_warning ("invalid schema, please re-install");
+		return;
 	}
 	pk_debug ("value from gconf %s", value);
 	update = pk_update_enum_from_text (value);

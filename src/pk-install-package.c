@@ -113,7 +113,7 @@ pk_monitor_resolve_package_cb (PkClient *client, guint value, const gchar *packa
 			       const gchar *summary, gboolean data)
 {
 	/* save */
-	pk_error ("package '%s' resolved!", package_id);
+	pk_debug ("package '%s' resolved!", package_id);
 	package = g_strdup (package_id);
 }
 
@@ -160,7 +160,8 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	if (argc < 2) {
-		pk_error ("You need to specify a package to install");
+		g_print ("You need to specify a package to install\n");
+		return 1;
 	}
 	loop = g_main_loop_new (NULL, FALSE);
 

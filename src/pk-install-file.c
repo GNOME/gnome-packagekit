@@ -93,7 +93,8 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	if (argc < 2) {
-		pk_error ("You need to specify a file to install");
+		g_print ("You need to specify a file to install\n");
+		return 1;
 	}
 
 	client = pk_client_new ();

@@ -187,7 +187,7 @@ pk_size_to_si_size_text (guint64 size)
 		return g_strdup_printf ("%.1lf GB", frac);
 	}
 	/* no way.... */
-	pk_error ("cannot have a file this large!");
+	pk_warning ("cannot have a file this large!");
 	return NULL;
 }
 
@@ -440,7 +440,8 @@ pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("A system restart is required after this update");
 		break;
 	default:
-		pk_error ("restart unrecognised: %i", restart);
+		text = _("A restart of unknown type is required after this update");
+		pk_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -466,7 +467,8 @@ pk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("You need to restart the application");
 		break;
 	default:
-		pk_error ("restart unrecognised: %i", restart);
+		text = _("A restart of unknown type is required after this update");
+		pk_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -528,7 +530,8 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Requesting data");
 		break;
 	default:
-		pk_error ("status unrecognised: %s", pk_status_enum_to_text (status));
+		text = _("Status unknown");
+		pk_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
 }
@@ -581,7 +584,8 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Obsoleting");
 		break;
 	default:
-		pk_error ("info unrecognised: %s", pk_info_enum_to_text (info));
+		text = _("Info unknown");
+		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -655,6 +659,7 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Setting repository data");
 		break;
 	default:
+		text = _("Role unknown");
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
@@ -732,6 +737,7 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Set repository data");
 		break;
 	default:
+		text = _("Role unknown");
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
@@ -821,7 +827,8 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Unknown group");
 		break;
 	default:
-		pk_error ("group unrecognised: %i", group);
+		text = _("Invalid group");
+		pk_warning ("group unrecognised: %i", group);
 	}
 	return text;
 }
