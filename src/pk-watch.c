@@ -359,6 +359,24 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 }
 
 /**
+ * pk_watch_message_cb:
+ **/
+static void
+pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *details, PkWatch *watch)
+{
+	const gchar *title;
+	const gchar *filename;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	title = pk_message_enum_to_localised_text (message);
+	filename = pk_message_enum_to_icon_name (message);
+
+	pk_smart_icon_notify (watch->priv->sicon, title, details, filename, PK_NOTIFY_URGENCY_LOW, 15000);
+}
+
+/**
  * pk_watch_show_about_cb:
  **/
 static void
@@ -699,6 +717,8 @@ pk_watch_init (PkWatch *watch)
 			  G_CALLBACK (pk_watch_finished_cb), watch);
 	g_signal_connect (watch->priv->client, "error-code",
 			  G_CALLBACK (pk_watch_error_code_cb), watch);
+	g_signal_connect (watch->priv->client, "message",
+			  G_CALLBACK (pk_watch_message_cb), watch);
 
 	/* do session inhibit */
 	watch->priv->inhibit = pk_inhibit_new ();
