@@ -136,6 +136,14 @@ static PkEnumMatch enum_restart_icon_name[] = {
 	{0, NULL},
 };
 
+static PkEnumMatch enum_message_icon_name[] = {
+	{PK_MESSAGE_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
+	{PK_MESSAGE_ENUM_NOTICE,		"dialog-information"},
+	{PK_MESSAGE_ENUM_WARNING,		"dialog-warning"},
+	{PK_MESSAGE_ENUM_DAEMON,		"dialog-error"},
+	{0, NULL},
+};
+
 /**
  * pk_execute_url:
  **/
@@ -469,6 +477,30 @@ pk_restart_enum_to_localised_text (PkRestartEnum restart)
 	default:
 		text = _("A restart of unknown type is required after this update");
 		pk_warning ("restart unrecognised: %i", restart);
+	}
+	return text;
+}
+
+/**
+ * pk_message_enum_to_localised_text:
+ **/
+const gchar *
+pk_message_enum_to_localised_text (PkMessageEnum message)
+{
+	const gchar *text = NULL;
+	switch (message) {
+	case PK_MESSAGE_ENUM_NOTICE:
+		text = _("Transaction notice");
+		break;
+	case PK_MESSAGE_ENUM_WARNING:
+		text = _("Transaction warning");
+		break;
+	case PK_MESSAGE_ENUM_DAEMON:
+		text = _("Daemon state is invalid");
+		break;
+	default:
+		text = _("A message of unknown type was called");
+		pk_warning ("message unrecognised: %i", message);
 	}
 	return text;
 }
@@ -876,6 +908,15 @@ const gchar *
 pk_restart_enum_to_icon_name (PkRestartEnum restart)
 {
 	return pk_enum_find_string (enum_restart_icon_name, restart);
+}
+
+/**
+ * pk_message_enum_to_icon_name:
+ **/
+const gchar *
+pk_message_enum_to_icon_name (PkMessageEnum message)
+{
+	return pk_enum_find_string (enum_message_icon_name, message);
 }
 
 /**
