@@ -686,7 +686,7 @@ pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
-	pk_warning ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
+	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
 	if (is_locked == TRUE) {
 		pk_inhibit_create (watch->priv->inhibit);
 	} else {
