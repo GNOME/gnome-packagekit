@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-12 19:27+0000\n"
-"PO-Revision-Date: 2007-11-14 19:34+0100\n"
+"POT-Creation-Date: 2007-11-21 20:19+0000\n"
+"PO-Revision-Date: 2007-11-21 21:40+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +75,7 @@ msgid "<b>Filters</b>"
 msgstr "<b>Filtros</b>"
 
 #: ../data/pk-application.glade.h:4
-msgid "Depends"
+msgid "Depends on"
 msgstr ""
 
 #: ../data/pk-application.glade.h:5
@@ -111,7 +111,7 @@ msgid "Package size:"
 msgstr ""
 
 #: ../data/pk-application.glade.h:13
-msgid "Requires"
+msgid "Required by"
 msgstr ""
 
 #: ../data/pk-application.glade.h:14
@@ -290,7 +290,7 @@ msgstr ""
 msgid "Install updates automatically when on battery power"
 msgstr ""
 
-#: ../data/pk-prefs.glade.h:6 ../src/pk-prefs.c:301
+#: ../data/pk-prefs.glade.h:6 ../src/pk-prefs.c:303
 msgid "Software Update Preferences"
 msgstr ""
 
@@ -322,9 +322,7 @@ msgstr ""
 msgid "Transaction Progress:"
 msgstr ""
 
-#: ../data/pk-progress.glade.h:6 ../src/pk-common-gui.c:478
-#: ../src/pk-common-gui.c:578 ../src/pk-common-gui.c:652
-#: ../src/pk-common-gui.c:801
+#: ../data/pk-progress.glade.h:6
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -353,7 +351,7 @@ msgid "Show details for software updates"
 msgstr ""
 
 #: ../data/pk-update-viewer.desktop.in.h:2 ../data/pk-update-viewer.glade.h:7
-#: ../src/pk-repo.c:232 ../src/pk-update-viewer.c:514
+#: ../src/pk-repo.c:232 ../src/pk-update-viewer.c:538
 msgid "Software Update Viewer"
 msgstr ""
 
@@ -361,7 +359,7 @@ msgstr ""
 msgid "<b>Details</b>"
 msgstr "<b>Detalles</b>"
 
-#: ../data/pk-update-viewer.glade.h:2 ../src/pk-common-gui.c:455
+#: ../data/pk-update-viewer.glade.h:2 ../src/pk-common-gui.c:461
 msgid "A system restart is required"
 msgstr ""
 
@@ -515,44 +513,44 @@ msgstr "Nombre"
 msgid "The group could not be queried"
 msgstr ""
 
-#: ../src/pk-application.c:1235
+#: ../src/pk-application.c:1239
 msgid "By package name"
 msgstr ""
 
-#: ../src/pk-application.c:1238
+#: ../src/pk-application.c:1242
 msgid "By description"
 msgstr ""
 
-#: ../src/pk-application.c:1241
+#: ../src/pk-application.c:1245
 msgid "By file"
 msgstr ""
 
-#: ../src/pk-application.c:1249 ../src/pk-common-gui.c:552
+#: ../src/pk-application.c:1253 ../src/pk-common-gui.c:575
 msgid "Installed"
 msgstr ""
 
-#: ../src/pk-application.c:1250 ../src/pk-common-gui.c:555
+#: ../src/pk-application.c:1254 ../src/pk-common-gui.c:578
 msgid "Available"
 msgstr "Disponible"
 
-#: ../src/pk-application.c:1251 ../src/pk-application.c:1260
-#: ../src/pk-application.c:1269
+#: ../src/pk-application.c:1255 ../src/pk-application.c:1264
+#: ../src/pk-application.c:1273
 msgid "All packages"
 msgstr ""
 
-#: ../src/pk-application.c:1258
+#: ../src/pk-application.c:1262
 msgid "Only graphical"
 msgstr ""
 
-#: ../src/pk-application.c:1259
+#: ../src/pk-application.c:1263
 msgid "Only text"
 msgstr ""
 
-#: ../src/pk-application.c:1267
+#: ../src/pk-application.c:1271
 msgid "Only development"
 msgstr ""
 
-#: ../src/pk-application.c:1268
+#: ../src/pk-application.c:1272
 msgid "Non-development"
 msgstr ""
 
@@ -560,454 +558,502 @@ msgstr ""
 msgid "PackageKit Backend Details Viewer"
 msgstr ""
 
-#: ../src/pk-common-gui.c:200 ../src/pk-common-gui.c:236
-#: ../src/pk-common-gui.c:263 ../src/pk-common-gui.c:1060
-#: ../src/pk-common-gui.c:1092
-msgid "unknown"
-msgstr "desconocido"
+#: ../src/pk-common-gui.c:205 ../src/pk-common-gui.c:241
+#: ../src/pk-common-gui.c:268 ../src/pk-common-gui.c:1087
+#: ../src/pk-common-gui.c:1119
+msgid "PackageID not valid"
+msgstr ""
 
-#: ../src/pk-common-gui.c:343
+#: ../src/pk-common-gui.c:348
 msgid "No network connection available"
 msgstr ""
 
-#: ../src/pk-common-gui.c:346
+#: ../src/pk-common-gui.c:351
 msgid "No package cache is available."
 msgstr ""
 
-#: ../src/pk-common-gui.c:349
+#: ../src/pk-common-gui.c:354
 msgid "Out of memory"
 msgstr "Memoria agotada"
 
-#: ../src/pk-common-gui.c:352
+#: ../src/pk-common-gui.c:357
 msgid "Failed to create a thread"
 msgstr ""
 
-#: ../src/pk-common-gui.c:355
+#: ../src/pk-common-gui.c:360
 msgid "Not supported by this backend"
 msgstr ""
 
-#: ../src/pk-common-gui.c:358
+#: ../src/pk-common-gui.c:363
 msgid "An internal system error has occurred"
 msgstr ""
 
-#: ../src/pk-common-gui.c:361
+#: ../src/pk-common-gui.c:366
 msgid "A security trust relationship is not present"
 msgstr ""
 
-#: ../src/pk-common-gui.c:364
+#: ../src/pk-common-gui.c:369
 msgid "The package is not installed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:367
+#: ../src/pk-common-gui.c:372
 msgid "The package was not found"
 msgstr ""
 
-#: ../src/pk-common-gui.c:370
+#: ../src/pk-common-gui.c:375
 msgid "The package is already installed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:373
+#: ../src/pk-common-gui.c:378
 msgid "The package download failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:376
+#: ../src/pk-common-gui.c:381
 msgid "The group was not found"
 msgstr ""
 
-#: ../src/pk-common-gui.c:379
+#: ../src/pk-common-gui.c:384
 msgid "Dependency resolution failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:382
+#: ../src/pk-common-gui.c:387
 msgid "Search filter was invalid"
 msgstr ""
 
-#: ../src/pk-common-gui.c:385
+#: ../src/pk-common-gui.c:390
 msgid "The package ID was not well formed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:388
+#: ../src/pk-common-gui.c:393
 msgid "Transaction error"
 msgstr ""
 
-#: ../src/pk-common-gui.c:391
+#: ../src/pk-common-gui.c:396
 msgid "Repository name was not found"
 msgstr ""
 
-#: ../src/pk-common-gui.c:394
+#: ../src/pk-common-gui.c:399
 msgid "Could not remove a protected system package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:397
-msgid "The transaction was cancelled"
+#: ../src/pk-common-gui.c:402
+msgid "The transaction was canceled"
 msgstr ""
 
-#: ../src/pk-common-gui.c:400
-msgid "The transaction was forcibly cancelled"
+#: ../src/pk-common-gui.c:405
+msgid "The transaction was forcibly canceled"
 msgstr ""
 
-#: ../src/pk-common-gui.c:403
+#: ../src/pk-common-gui.c:408
 msgid "Initialization of the package manager failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:406
+#: ../src/pk-common-gui.c:411
 msgid "Unloading of the package manager failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:409
+#: ../src/pk-common-gui.c:414
 msgid "Reading the config file failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:412
+#: ../src/pk-common-gui.c:417
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: ../src/pk-common-gui.c:426
+#: ../src/pk-common-gui.c:431
 msgid "No restart is necessary for this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:429
+#: ../src/pk-common-gui.c:434
 msgid "An application restart is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:432
+#: ../src/pk-common-gui.c:437
 msgid "You will be required to log off and back on after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:435
+#: ../src/pk-common-gui.c:440
 msgid "A system restart is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:452
-msgid "No restart is required"
+#: ../src/pk-common-gui.c:443 ../src/pk-common-gui.c:470
+msgid "A restart of unknown type is required after this update"
 msgstr ""
 
 #: ../src/pk-common-gui.c:458
+msgid "No restart is required"
+msgstr ""
+
+#: ../src/pk-common-gui.c:464
 msgid "You will need to log off and log back on"
 msgstr ""
 
-#: ../src/pk-common-gui.c:461
+#: ../src/pk-common-gui.c:467
 msgid "You need to restart the application"
 msgstr ""
 
-#: ../src/pk-common-gui.c:481
+#: ../src/pk-common-gui.c:485
+msgid "Unknown state"
+msgstr "Estado desconocido"
+
+#: ../src/pk-common-gui.c:488
 msgid "Setting up"
 msgstr ""
 
-#: ../src/pk-common-gui.c:484
+#: ../src/pk-common-gui.c:491
 msgid "Waiting"
 msgstr "Esperando"
 
-#: ../src/pk-common-gui.c:487
+#: ../src/pk-common-gui.c:494
 msgid "Querying"
 msgstr ""
 
-#: ../src/pk-common-gui.c:490
+#: ../src/pk-common-gui.c:497
 msgid "Getting information"
 msgstr "Obteniendo información"
 
-#: ../src/pk-common-gui.c:493 ../src/pk-common-gui.c:549
-#: ../src/pk-common-gui.c:608
+#: ../src/pk-common-gui.c:500 ../src/pk-common-gui.c:572
+#: ../src/pk-common-gui.c:632
 msgid "Removing"
 msgstr "Eliminando"
 
-#: ../src/pk-common-gui.c:496 ../src/pk-common-gui.c:540
+#: ../src/pk-common-gui.c:503 ../src/pk-common-gui.c:563
 msgid "Downloading"
 msgstr "Descargando"
 
-#: ../src/pk-common-gui.c:499 ../src/pk-common-gui.c:546
-#: ../src/pk-common-gui.c:611
+#: ../src/pk-common-gui.c:506 ../src/pk-common-gui.c:569
+#: ../src/pk-common-gui.c:635
 msgid "Installing"
 msgstr ""
 
-#: ../src/pk-common-gui.c:502
+#: ../src/pk-common-gui.c:509
 msgid "Refreshing software list"
 msgstr ""
 
-#: ../src/pk-common-gui.c:505 ../src/pk-common-gui.c:543
+#: ../src/pk-common-gui.c:512 ../src/pk-common-gui.c:566
 msgid "Updating"
 msgstr "Actualizando"
 
-#: ../src/pk-common-gui.c:508 ../src/pk-common-gui.c:558
+#: ../src/pk-common-gui.c:515 ../src/pk-common-gui.c:581
 msgid "Cleaned up"
 msgstr ""
 
-#: ../src/pk-common-gui.c:511 ../src/pk-common-gui.c:561
+#: ../src/pk-common-gui.c:518 ../src/pk-common-gui.c:584
 msgid "Obsoleting"
 msgstr ""
 
-#: ../src/pk-common-gui.c:528
-msgid "Low priority update"
+#: ../src/pk-common-gui.c:521
+msgid "Resolving dependencies"
 msgstr ""
 
-#: ../src/pk-common-gui.c:531
-msgid "Normal update"
-msgstr ""
-
-#: ../src/pk-common-gui.c:534
-msgid "Important update"
-msgstr ""
-
-#: ../src/pk-common-gui.c:537
-msgid "Security update"
-msgstr ""
-
-#: ../src/pk-common-gui.c:581
-msgid "Getting dependencies"
-msgstr ""
-
-#: ../src/pk-common-gui.c:584
-msgid "Getting update detail"
-msgstr ""
-
-#: ../src/pk-common-gui.c:587
-msgid "Getting description"
-msgstr "Obteniendo descripción"
-
-#: ../src/pk-common-gui.c:590
-msgid "Getting requires"
-msgstr ""
-
-#: ../src/pk-common-gui.c:593
-msgid "Getting updates"
-msgstr "Obteniendo actualizaciones"
-
-#: ../src/pk-common-gui.c:596
-msgid "Searching details"
-msgstr ""
-
-#: ../src/pk-common-gui.c:599
-msgid "Searching for file"
-msgstr ""
-
-#: ../src/pk-common-gui.c:602
-msgid "Searching groups"
-msgstr ""
-
-#: ../src/pk-common-gui.c:605
-msgid "Searching for package name"
-msgstr ""
-
-#: ../src/pk-common-gui.c:614
-msgid "Refreshing package cache"
-msgstr "Actualizando la caché de paquetes"
-
-#: ../src/pk-common-gui.c:617
-msgid "Updating package"
-msgstr "Actualizando el paquete"
-
-#: ../src/pk-common-gui.c:620
-msgid "Updating system"
-msgstr "Actualizando el sistema"
-
-#: ../src/pk-common-gui.c:623
-msgid "Canceling"
-msgstr "Cancelando"
-
-#: ../src/pk-common-gui.c:626
+#: ../src/pk-common-gui.c:524 ../src/pk-common-gui.c:650
 msgid "Rolling back"
 msgstr ""
 
+#: ../src/pk-common-gui.c:527
+msgid "Committing"
+msgstr ""
+
+#: ../src/pk-common-gui.c:530
+msgid "Requesting data"
+msgstr ""
+
+#: ../src/pk-common-gui.c:533
+msgid "Status unknown"
+msgstr ""
+
+#: ../src/pk-common-gui.c:548
+msgid "Low priority update"
+msgstr ""
+
+#: ../src/pk-common-gui.c:551
+msgid "Normal update"
+msgstr ""
+
+#: ../src/pk-common-gui.c:554
+msgid "Important update"
+msgstr ""
+
+#: ../src/pk-common-gui.c:557
+msgid "Security update"
+msgstr ""
+
+#: ../src/pk-common-gui.c:560
+msgid "Blocked update"
+msgstr "Actualización bloqueada"
+
+#: ../src/pk-common-gui.c:587
+msgid "Info unknown"
+msgstr "Información desconocida"
+
+#: ../src/pk-common-gui.c:602 ../src/pk-common-gui.c:677
+msgid "Unknown role"
+msgstr "Rol desconocido"
+
+#: ../src/pk-common-gui.c:605
+msgid "Getting dependencies"
+msgstr ""
+
+#: ../src/pk-common-gui.c:608
+msgid "Getting update detail"
+msgstr ""
+
+#: ../src/pk-common-gui.c:611
+msgid "Getting description"
+msgstr "Obteniendo descripción"
+
+#: ../src/pk-common-gui.c:614
+msgid "Getting requires"
+msgstr ""
+
+#: ../src/pk-common-gui.c:617
+msgid "Getting updates"
+msgstr "Obteniendo actualizaciones"
+
+#: ../src/pk-common-gui.c:620
+msgid "Searching details"
+msgstr ""
+
+#: ../src/pk-common-gui.c:623
+msgid "Searching for file"
+msgstr "Buscando un archivo"
+
+#: ../src/pk-common-gui.c:626
+msgid "Searching groups"
+msgstr "Buscando grupos"
+
 #: ../src/pk-common-gui.c:629
+msgid "Searching for package name"
+msgstr "Buscando por el nombre del paquete"
+
+#: ../src/pk-common-gui.c:638
+msgid "Refreshing package cache"
+msgstr "Actualizando la caché de paquetes"
+
+#: ../src/pk-common-gui.c:641
+msgid "Updating package"
+msgstr "Actualizando el paquete"
+
+#: ../src/pk-common-gui.c:644
+msgid "Updating system"
+msgstr "Actualizando el sistema"
+
+#: ../src/pk-common-gui.c:647
+msgid "Canceling"
+msgstr "Cancelando"
+
+#: ../src/pk-common-gui.c:653
 msgid "Getting list of repositories"
 msgstr "Obteniendo lista de repositorios"
 
-#: ../src/pk-common-gui.c:632
+#: ../src/pk-common-gui.c:656
 msgid "Enabling repository"
 msgstr "Activando repositorio"
 
-#: ../src/pk-common-gui.c:635
+#: ../src/pk-common-gui.c:659
 msgid "Setting repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:655
+#: ../src/pk-common-gui.c:662 ../src/pk-common-gui.c:740
+msgid "Role unknown"
+msgstr "Rol desconocido"
+
+#: ../src/pk-common-gui.c:680
 msgid "Got dependencies"
 msgstr ""
 
-#: ../src/pk-common-gui.c:658
+#: ../src/pk-common-gui.c:683
 msgid "Got update detail"
 msgstr ""
 
-#: ../src/pk-common-gui.c:661
+#: ../src/pk-common-gui.c:686
 msgid "Got description"
 msgstr ""
 
-#: ../src/pk-common-gui.c:664
+#: ../src/pk-common-gui.c:689
 msgid "Got requires"
 msgstr ""
 
-#: ../src/pk-common-gui.c:667
+#: ../src/pk-common-gui.c:692
 msgid "Got updates"
 msgstr ""
 
-#: ../src/pk-common-gui.c:670
+#: ../src/pk-common-gui.c:695
 msgid "Got details"
 msgstr ""
 
-#: ../src/pk-common-gui.c:673
+#: ../src/pk-common-gui.c:698
 msgid "Searched for file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:676
+#: ../src/pk-common-gui.c:701
 msgid "Searched groups"
 msgstr ""
 
-#: ../src/pk-common-gui.c:679
+#: ../src/pk-common-gui.c:704
 msgid "Searched for package name"
 msgstr ""
 
-#: ../src/pk-common-gui.c:682
+#: ../src/pk-common-gui.c:707
 msgid "Removed package"
 msgstr "Paquete eliminado"
 
-#: ../src/pk-common-gui.c:685
+#: ../src/pk-common-gui.c:710
 msgid "Installed package"
 msgstr "Paquete instalado"
 
-#: ../src/pk-common-gui.c:688
+#: ../src/pk-common-gui.c:713
 msgid "Installed local file"
 msgstr "Archivo local instalado"
 
-#: ../src/pk-common-gui.c:691
+#: ../src/pk-common-gui.c:716
 msgid "Refreshed package cache"
 msgstr "Actualizar la caché de paquetes"
 
-#: ../src/pk-common-gui.c:694
+#: ../src/pk-common-gui.c:719
 msgid "Updated package"
 msgstr "Paquete actualizado"
 
-#: ../src/pk-common-gui.c:697
+#: ../src/pk-common-gui.c:722
 msgid "Updated system"
 msgstr "Sistema actualizado"
 
-#: ../src/pk-common-gui.c:700
+#: ../src/pk-common-gui.c:725
 msgid "Canceled"
 msgstr "Cancelado"
 
-#: ../src/pk-common-gui.c:703
+#: ../src/pk-common-gui.c:728
 msgid "Rolled back"
 msgstr ""
 
-#: ../src/pk-common-gui.c:706
+#: ../src/pk-common-gui.c:731
 msgid "Got list of repositories"
 msgstr ""
 
-#: ../src/pk-common-gui.c:709
+#: ../src/pk-common-gui.c:734
 msgid "Enabled repository"
 msgstr "Repositorio activado"
 
-#: ../src/pk-common-gui.c:712
+#: ../src/pk-common-gui.c:737
 msgid "Set repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:729
+#: ../src/pk-common-gui.c:755
 msgid "Accessibility"
 msgstr "Accesibilidad"
 
-#: ../src/pk-common-gui.c:732
+#: ../src/pk-common-gui.c:758
 msgid "Accessories"
 msgstr "Accesorios"
 
-#: ../src/pk-common-gui.c:735
+#: ../src/pk-common-gui.c:761
 msgid "Education"
 msgstr "Educación"
 
-#: ../src/pk-common-gui.c:738
+#: ../src/pk-common-gui.c:764
 msgid "Games"
 msgstr "Juegos"
 
-#: ../src/pk-common-gui.c:741
+#: ../src/pk-common-gui.c:767
 msgid "Graphics"
 msgstr "Gráficos"
 
-#: ../src/pk-common-gui.c:744
+#: ../src/pk-common-gui.c:770
 msgid "Internet"
 msgstr "Internet"
 
-#: ../src/pk-common-gui.c:747
+#: ../src/pk-common-gui.c:773
 msgid "Office"
 msgstr "Oficina"
 
-#: ../src/pk-common-gui.c:750
+#: ../src/pk-common-gui.c:776
 msgid "Other"
 msgstr "Otras"
 
-#: ../src/pk-common-gui.c:753
+#: ../src/pk-common-gui.c:779
 msgid "Programming"
 msgstr "Programación"
 
-#: ../src/pk-common-gui.c:756
+#: ../src/pk-common-gui.c:782
 msgid "Multimedia"
 msgstr "Multimedia"
 
-#: ../src/pk-common-gui.c:759
+#: ../src/pk-common-gui.c:785
 msgid "System"
 msgstr "Sistema"
 
-#: ../src/pk-common-gui.c:762
+#: ../src/pk-common-gui.c:788
 msgid "GNOME desktop"
 msgstr "Escritorio GNOME"
 
-#: ../src/pk-common-gui.c:765
+#: ../src/pk-common-gui.c:791
 msgid "KDE desktop"
 msgstr "Escritorio KDE"
 
-#: ../src/pk-common-gui.c:768
+#: ../src/pk-common-gui.c:794
 msgid "XFCE desktop"
-msgstr ""
+msgstr "Escritorio XFCE"
 
-#: ../src/pk-common-gui.c:771
+#: ../src/pk-common-gui.c:797
 msgid "Other desktops"
 msgstr "Otros escritorios"
 
-#: ../src/pk-common-gui.c:774
+#: ../src/pk-common-gui.c:800
 msgid "Publishing"
 msgstr "Publicaciones"
 
-#: ../src/pk-common-gui.c:777
+#: ../src/pk-common-gui.c:803
 msgid "Servers"
 msgstr "Servidores"
 
-#: ../src/pk-common-gui.c:780
+#: ../src/pk-common-gui.c:806
 msgid "Fonts"
 msgstr "Tipografías"
 
-#: ../src/pk-common-gui.c:783
+#: ../src/pk-common-gui.c:809
 msgid "Admin tools"
 msgstr "Herramientas de administración"
 
-#: ../src/pk-common-gui.c:786
+#: ../src/pk-common-gui.c:812
 msgid "Legacy"
 msgstr ""
 
-#: ../src/pk-common-gui.c:789
+#: ../src/pk-common-gui.c:815
 msgid "Localization"
 msgstr "Localización"
 
-#: ../src/pk-common-gui.c:792
+#: ../src/pk-common-gui.c:818
 msgid "Virtualization"
 msgstr "Virtualización"
 
-#: ../src/pk-common-gui.c:795
+#: ../src/pk-common-gui.c:821
 msgid "Security"
 msgstr "Seguridad"
 
-#: ../src/pk-common-gui.c:798
+#: ../src/pk-common-gui.c:824
 msgid "Power management"
 msgstr "Gestión de energía"
 
-#: ../src/pk-common-gui.c:873 ../src/pk-common-gui.c:946
+#: ../src/pk-common-gui.c:827
+msgid "Unknown group"
+msgstr "Grupo desconocido"
+
+#: ../src/pk-common-gui.c:830
+msgid "Invalid group"
+msgstr ""
+
+#: ../src/pk-common-gui.c:900 ../src/pk-common-gui.c:973
 msgid "Zero time"
 msgstr ""
 
-#: ../src/pk-common-gui.c:882
+#: ../src/pk-common-gui.c:909
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
 msgstr[0] "%i segundo"
 msgstr[1] "%i segundos"
 
-#: ../src/pk-common-gui.c:895
+#: ../src/pk-common-gui.c:922
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -1018,73 +1064,73 @@ msgstr[1] "%i minutos"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/pk-common-gui.c:901 ../src/pk-common-gui.c:919
+#: ../src/pk-common-gui.c:928 ../src/pk-common-gui.c:946
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/pk-common-gui.c:902 ../src/pk-common-gui.c:921
+#: ../src/pk-common-gui.c:929 ../src/pk-common-gui.c:948
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minuto"
 msgstr[1] "minutos"
 
-#: ../src/pk-common-gui.c:903
+#: ../src/pk-common-gui.c:930
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "segundo"
 msgstr[1] "segundos"
 
-#: ../src/pk-common-gui.c:913
+#: ../src/pk-common-gui.c:940
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
 msgstr[0] "%i hora"
 msgstr[1] "%i horas"
 
-#: ../src/pk-common-gui.c:920
+#: ../src/pk-common-gui.c:947
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hora"
 msgstr[1] "horas"
 
-#: ../src/pk-common-gui.c:956
+#: ../src/pk-common-gui.c:983
 msgid "1 second"
 msgstr "1 segundo"
 
-#: ../src/pk-common-gui.c:966
+#: ../src/pk-common-gui.c:993
 msgid "1 minute"
 msgstr "1 minuto"
 
-#: ../src/pk-common-gui.c:976
+#: ../src/pk-common-gui.c:1003
 msgid "1 hour"
 msgstr "1 hora"
 
-#: ../src/pk-common-gui.c:986
+#: ../src/pk-common-gui.c:1013
 msgid "30 seconds"
 msgstr "30 segundos"
 
-#: ../src/pk-common-gui.c:996
+#: ../src/pk-common-gui.c:1023
 msgid "30 minutes"
 msgstr "30 minutos"
 
-#: ../src/pk-common-gui.c:1006
+#: ../src/pk-common-gui.c:1033
 msgid "30 minutes 1 second"
 msgstr "30 minutos 1 segundo"
 
-#: ../src/pk-common-gui.c:1016
+#: ../src/pk-common-gui.c:1043
 msgid "30 minutes 10 seconds"
 msgstr "30 minutos 10 segundos"
 
-#: ../src/pk-common-gui.c:1028
+#: ../src/pk-common-gui.c:1055
 msgid "0 bytes"
 msgstr "0 bytes"
 
-#: ../src/pk-common-gui.c:1038
+#: ../src/pk-common-gui.c:1065
 msgid "512 bytes"
 msgstr "512 bytes"
 
-#: ../src/pk-common-gui.c:1048
+#: ../src/pk-common-gui.c:1075
 msgid "256.2 MB"
 msgstr "256.2 MiB"
 
@@ -1096,22 +1142,22 @@ msgstr "Instalador de archivos PackageKit"
 msgid "FILE"
 msgstr "ARCHIVO"
 
-#: ../src/pk-install-file.c:102 ../src/pk-install-package.c:92
-#: ../src/pk-install-package.c:175
+#: ../src/pk-install-file.c:103 ../src/pk-install-package.c:92
+#: ../src/pk-install-package.c:176
 msgid "Method not supported"
 msgstr "Método no soportado"
 
-#: ../src/pk-install-file.c:103
+#: ../src/pk-install-file.c:104
 msgid "Installing local files is not supported"
 msgstr "No está soportada la instalación de archivos locales"
 
 #: ../src/pk-install-package.c:78
 msgid "Failed to resolve"
-msgstr ""
+msgstr "Falló al resolver"
 
 #: ../src/pk-install-package.c:79
 msgid "The package could not be found on the system"
-msgstr ""
+msgstr "El paquete no se pudo encontrar en el sistema"
 
 #: ../src/pk-install-package.c:93
 msgid "Installing packages is not supported"
@@ -1123,9 +1169,9 @@ msgstr "Instalador de paquetes PackageKit"
 
 #: ../src/pk-install-package.c:148
 msgid "PACKAGE_ID"
-msgstr ""
+msgstr "ID_DEL_PAQUETE"
 
-#: ../src/pk-install-package.c:176
+#: ../src/pk-install-package.c:177
 msgid "Resolving names to packages is not supported"
 msgstr ""
 
@@ -1137,11 +1183,11 @@ msgstr "Funcionalidad incompleta"
 msgid "No help yet, sorry..."
 msgstr ""
 
-#: ../src/pk-notify.c:135 ../src/pk-watch.c:355
+#: ../src/pk-notify.c:135 ../src/pk-watch.c:376
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licenciado bajo la Licencia Pública General GNU Versión 2"
 
-#: ../src/pk-notify.c:136 ../src/pk-watch.c:356
+#: ../src/pk-notify.c:136 ../src/pk-watch.c:377
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -1149,7 +1195,7 @@ msgid ""
 "of the License, or (at your option) any later version."
 msgstr ""
 
-#: ../src/pk-notify.c:140 ../src/pk-watch.c:360
+#: ../src/pk-notify.c:140 ../src/pk-watch.c:381
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1157,7 +1203,7 @@ msgid ""
 "GNU General Public License for more details."
 msgstr ""
 
-#: ../src/pk-notify.c:144 ../src/pk-watch.c:364
+#: ../src/pk-notify.c:144 ../src/pk-watch.c:385
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -1168,11 +1214,11 @@ msgstr ""
 "junto con este programa; si no, escriba a la Free Software Foundation,\n"
 "Inc., 51 Franklin Street, Fifth Floor, Boston,MA, 02110-1301, USA"
 
-#: ../src/pk-notify.c:149 ../src/pk-watch.c:369
+#: ../src/pk-notify.c:149 ../src/pk-watch.c:390
 msgid "translator-credits"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007"
 
-#: ../src/pk-notify.c:165 ../src/pk-watch.c:385
+#: ../src/pk-notify.c:165 ../src/pk-watch.c:406
 msgid "PackageKit Website"
 msgstr "Página web de PackageKit"
 
@@ -1187,7 +1233,7 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #. About
-#: ../src/pk-notify.c:215 ../src/pk-watch.c:417
+#: ../src/pk-notify.c:215 ../src/pk-watch.c:438
 msgid "_About"
 msgstr "_Acerca de"
 
@@ -1350,49 +1396,49 @@ msgstr "Detalles"
 msgid "PackageKit Update Icon"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:328
+#: ../src/pk-update-viewer.c:340
 msgid "Severity"
 msgstr "Severidad"
 
-#: ../src/pk-update-viewer.c:334
+#: ../src/pk-update-viewer.c:346
 msgid "Software"
 msgstr "Software"
 
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:435
+#: ../src/pk-update-viewer.c:459
 msgid "<b>There are no updates available!</b>"
 msgstr ""
 
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:473
+#: ../src/pk-update-viewer.c:497
 msgid "<b>There is an update already in progress!</b>"
 msgstr ""
 
-#: ../src/pk-watch.c:296
+#: ../src/pk-watch.c:304
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr ""
 
-#: ../src/pk-watch.c:300
+#: ../src/pk-watch.c:308
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr ""
 
 #. libnotify dialog
-#: ../src/pk-watch.c:312
+#: ../src/pk-watch.c:320
 msgid "Task completed"
 msgstr "Tarea completada"
 
-#: ../src/pk-watch.c:444
+#: ../src/pk-watch.c:465
 msgid "The action could not be completed (the backend refusing the command)"
 msgstr ""
 
-#: ../src/pk-watch.c:482
+#: ../src/pk-watch.c:503
 msgid "Failed to refresh cache"
 msgstr ""
 
 #. don't know if we want this
-#: ../src/pk-watch.c:609
+#: ../src/pk-watch.c:630
 msgid "_Refresh Software List"
 msgstr ""
 
