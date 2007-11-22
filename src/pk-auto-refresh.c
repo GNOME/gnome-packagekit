@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <libgbus.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
@@ -48,9 +49,13 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
 
 #define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
 #define PK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
-#define PK_AUTO_REFRESH_STARTUP_DELAY		30	/* seconds until the first refresh,
-							 * and if we failed the first refresh,
-							 * check after this much time also */
+
+/*
+ * at startup, after a small delay, force a GetUpdates call
+ * every hour (or any event) check:
+   - if we are online, idle and on AC power, it's been more than a day since we refreshed then RefreshCache
+   - if we are online and it's been longer than the timeout since getting the updates period then GetUpdates
+*/
 
 struct PkAutoRefreshPrivate
 {
@@ -59,9 +64,9 @@ struct PkAutoRefreshPrivate
 	gboolean		 network_active;
 	gboolean		 session_delay;
 	gboolean		 sent_get_updates;
-	guint			 thresh;
 	LibGBus			*gbus_gs;
 	LibGBus			*gbus_gpm;
+	GConfClient		*gconf_client;
 	DBusGProxy		*proxy_gs;
 	DBusGProxy		*proxy_gpm;
 	DBusGConnection		*connection;
@@ -102,10 +107,10 @@ pk_auto_refresh_class_init (PkAutoRefreshClass *klass)
 }
 
 /**
- * pk_auto_refresh_do_action:
+ * pk_auto_refresh_signal_refresh_cache:
  **/
 static gboolean
-pk_auto_refresh_do_action (PkAutoRefresh *arefresh)
+pk_auto_refresh_signal_refresh_cache (PkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -116,13 +121,155 @@ pk_auto_refresh_do_action (PkAutoRefresh *arefresh)
 }
 
 /**
+ * pk_auto_refresh_signal_get_updates:
+ **/
+static gboolean
+pk_auto_refresh_signal_get_updates (PkAutoRefresh *arefresh)
+{
+	g_return_val_if_fail (arefresh != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	pk_debug ("emitting get-updates");
+	g_signal_emit (arefresh, signals [GET_UPDATES], 0);
+	return TRUE;
+}
+
+/**
+ * pk_auto_refresh_convert_frequency:
+ *
+ * Return value: The number of seconds for the frequency period
+ **/
+static guint
+pk_auto_refresh_convert_frequency (PkFreqEnum freq)
+{
+	if (freq == PK_FREQ_ENUM_UNKNOWN) {
+		pk_warning ("no schema");
+		return 0;
+	}
+	if (freq == PK_FREQ_ENUM_NEVER) {
+		return 0;
+	}
+	if (freq == PK_FREQ_ENUM_HOURLY) {
+		return 60*60;
+	}
+	if (freq == PK_FREQ_ENUM_DAILY) {
+		return 60*60*24;
+	}
+	if (freq == PK_FREQ_ENUM_WEEKLY) {
+		return 60*60*24*7;
+	}
+	pk_warning ("unknown frequency enum");
+	return 0;
+}
+
+/**
+ * pk_auto_refresh_convert_frequency_text:
+ **/
+static guint
+pk_auto_refresh_convert_frequency_text (PkAutoRefresh *arefresh, const gchar *key)
+{
+	const gchar *freq_text;
+	PkFreqEnum freq;
+
+	g_return_val_if_fail (arefresh != NULL, 0);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), 0);
+
+	/* get from gconf */
+	freq_text = gconf_client_get_string (arefresh->priv->gconf_client, key, NULL);
+	if (freq_text == NULL) {
+		pk_warning ("no schema");
+		return 0;
+	}
+
+	/* convert to enum and get seconds */
+	freq = pk_freq_enum_from_text (freq_text);
+	return pk_auto_refresh_convert_frequency (freq);
+}
+
+/**
+ * pk_auto_refresh_maybe_refresh_cache:
+ **/
+static gboolean
+pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
+{
+	guint time;
+	guint thresh;
+	gboolean ret;
+
+	g_return_val_if_fail (arefresh != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* not on battery */
+	if (arefresh->priv->on_battery == TRUE) {
+		pk_debug ("not when on battery");
+		return FALSE;
+	}
+
+	/* only do the refresh cache when the user is idle */
+	if (arefresh->priv->session_idle == FALSE) {
+		pk_debug ("not when session active");
+		return FALSE;
+	}
+
+	/* get the time since the last refresh */
+	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_REFRESH_CACHE, &time);
+	if (ret == FALSE) {
+		pk_warning ("failed to get last time");
+		return FALSE;
+	}
+
+	/* get this each time, as it may have changed behind out back */
+	thresh = pk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_REFRESH_CACHE);
+
+	/* have we passed the timout? */
+	if (time < thresh) {
+		pk_debug ("not before timeout, thresh=%i, now=%i", thresh, time);
+		return FALSE;
+	}
+
+	pk_auto_refresh_signal_refresh_cache (arefresh);
+	return TRUE;
+}
+
+/**
+ * pk_auto_refresh_maybe_get_updates:
+ **/
+static gboolean
+pk_auto_refresh_maybe_get_updates (PkAutoRefresh *arefresh)
+{
+	guint time;
+	guint thresh;
+	gboolean ret;
+
+	g_return_val_if_fail (arefresh != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* get the time since the last refresh */
+	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_GET_UPDATES, &time);
+	if (ret == FALSE) {
+		pk_warning ("failed to get last time");
+		return FALSE;
+	}
+
+	/* get this each time, as it may have changed behind out back */
+	thresh = pk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_GET_UPDATES);
+
+	/* have we passed the timout? */
+	if (time < thresh) {
+		pk_debug ("not before timeout, thresh=%i, now=%i", thresh, time);
+		return FALSE;
+	}
+
+	pk_auto_refresh_signal_get_updates (arefresh);
+	return TRUE;
+}
+
+/**
  * pk_auto_refresh_change_state:
  **/
 static gboolean
 pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 {
-	guint time;
-
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
@@ -140,44 +287,15 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 
 	/* we do this to get an icon at startup */
 	if (arefresh->priv->sent_get_updates == FALSE) {
-		pk_debug ("emitting get-updates");
-		g_signal_emit (arefresh, signals [GET_UPDATES], 0);
+		pk_auto_refresh_signal_get_updates (arefresh);
 		arefresh->priv->sent_get_updates = TRUE;
 		return TRUE;
 	}
 
-	/* no point continuing if we are on battery */
-	if (arefresh->priv->on_battery == TRUE) {
-		pk_debug ("not when on battery");
-		return FALSE;
-	}
+	/* try to do both */
+	pk_auto_refresh_maybe_refresh_cache (arefresh);
+	pk_auto_refresh_maybe_get_updates (arefresh);
 
-	/* get the time since the last refresh */
-//	time = pk_client_get_time_since_refresh (arefresh->priv->client);
-	time = 60*60;
-
-	/* if we've waited a whole day to become idle then just force it
-	 * we don't want a machine running at 100% to never get updates... */
-	if (time > 60*60*24) {
-		pk_debug ("been a long time since we refreshed");
-		pk_auto_refresh_do_action (arefresh);
-		return TRUE;
-	}
-
-	/* only do the refresh cache when the user is idle */
-	if (arefresh->priv->session_idle == FALSE) {
-		pk_debug ("not when session active");
-		return FALSE;
-	}
-
-	/* if the user is bandwidth poor, we may want to wait longer */
-	if (time < arefresh->priv->thresh) {
-		pk_debug ("not when time less than refresh (%i<%i)", time, arefresh->priv->thresh);
-		return FALSE;
-	}
-
-	/* we have satisfied all preconditions */
-	pk_auto_refresh_do_action (arefresh);
 	return TRUE;
 }
 
@@ -245,9 +363,8 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	//FIXME: need to get the client state for this to work, for now, bodge
-	//pk_auto_refresh_change_state (arefresh);
-	pk_auto_refresh_do_action (arefresh); //FIXME: remove!
+	/* triggered once an hour */
+	pk_auto_refresh_change_state (arefresh);
 
 	/* always return */
 	return TRUE;
@@ -259,7 +376,6 @@ pk_auto_refresh_timeout_cb (gpointer user_data)
 static gboolean
 pk_auto_refresh_check_delay_cb (gpointer user_data)
 {
-	gboolean ret;
 	PkAutoRefresh *arefresh = PK_AUTO_REFRESH (user_data);
 
 	g_return_val_if_fail (arefresh != NULL, FALSE);
@@ -271,11 +387,8 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
 		arefresh->priv->session_delay = TRUE;
 	}
 
-	ret = pk_auto_refresh_change_state (arefresh);
-	/* we failed to do the refresh cache at first boot. Keep trying... */
-	if (ret == FALSE) {
-		return TRUE;
-	}
+	/* if we failed to do the refresh cache at first boot, we'll pick up an event */
+	pk_auto_refresh_change_state (arefresh);
 
 	/* we don't want to do this timer again as we sent the signal */
 	return FALSE;
@@ -381,6 +494,7 @@ pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh
 static void
 pk_auto_refresh_init (PkAutoRefresh *arefresh)
 {
+	guint value;
 	GError *error = NULL;
 
 	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
@@ -393,8 +507,8 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv->proxy_gs = NULL;
 	arefresh->priv->proxy_gpm = NULL;
 
-	/* need to get from gconf */
-	arefresh->priv->thresh = 15*60;
+	/* we need to know the updates frequency */
+	arefresh->priv->gconf_client = gconf_client_get_default ();
 
 	/* we need to query the last cache refresh time */
 	arefresh->priv->client = pk_client_new ();
@@ -432,7 +546,8 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	g_timeout_add_seconds (PK_AUTO_REFRESH_PERIODIC_CHECK, pk_auto_refresh_timeout_cb, arefresh);
 
 	/* wait a little bit for login to quiece, even if everything is okay */
-	g_timeout_add_seconds (PK_AUTO_REFRESH_STARTUP_DELAY, pk_auto_refresh_check_delay_cb, arefresh);
+	value = gconf_client_get_int (arefresh->priv->gconf_client, PK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
+	g_timeout_add_seconds (value, pk_auto_refresh_check_delay_cb, arefresh);
 }
 
 /**
@@ -454,6 +569,7 @@ pk_auto_refresh_finalize (GObject *object)
 	g_object_unref (arefresh->priv->network);
 	g_object_unref (arefresh->priv->gbus_gs);
 	g_object_unref (arefresh->priv->gbus_gpm);
+	g_object_unref (arefresh->priv->gconf_client);
 
 	/* only unref the proxies if they were ever set */
 	if (arefresh->priv->proxy_gs != NULL) {

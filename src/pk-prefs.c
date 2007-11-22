@@ -128,8 +128,8 @@ pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_freq_enum_to_text (freq);
-	pk_debug ("Changing %s to %s", PK_CONF_UPDATE_CHECK, action);
-	gconf_client_set_string (client, PK_CONF_UPDATE_CHECK, action, NULL);
+	pk_debug ("Changing %s to %s", PK_CONF_FREQUENCY_GET_UPDATES, action);
+	gconf_client_set_string (client, PK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -192,8 +192,8 @@ pk_prefs_freq_combo_setup (void)
 
 	client = gconf_client_get_default ();
 	widget = glade_xml_get_widget (glade_xml, "combobox_check");
-	is_writable = gconf_client_key_is_writable (client, PK_CONF_UPDATE_CHECK, NULL);
-	value = gconf_client_get_string (client, PK_CONF_UPDATE_CHECK, NULL);
+	is_writable = gconf_client_key_is_writable (client, PK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	value = gconf_client_get_string (client, PK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (value == NULL) {
 		pk_warning ("invalid schema, please re-install");
 		return;

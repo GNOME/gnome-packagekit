@@ -33,8 +33,9 @@ G_BEGIN_DECLS
 #define PK_CONF_NOTIFY_COMPLETED	"/apps/gnome-packagekit/notify_complete"
 #define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"
 #define PK_CONF_FIND_AS_TYPE		"/apps/gnome-packagekit/find_as_you_type"
-#define PK_CONF_UPDATE_TIMEOUT		"/apps/gnome-packagekit/update_timeout"
-#define PK_CONF_UPDATE_CHECK		"/apps/gnome-packagekit/update_check"
+#define PK_CONF_SESSION_STARTUP_TIMEOUT	"/apps/gnome-packagekit/session_startup_timeout"
+#define PK_CONF_FREQUENCY_GET_UPDATES	"/apps/gnome-packagekit/frequency_get_updates"
+#define PK_CONF_FREQUENCY_REFRESH_CACHE	"/apps/gnome-packagekit/frequency_refresh_cache"
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
 #define PK_CONF_UPDATE_BATTERY		"/apps/gnome-packagekit/update_battery"
 
