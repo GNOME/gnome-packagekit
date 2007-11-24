@@ -36,8 +36,8 @@
 /* icon names */
 static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
-	{PK_INFO_ENUM_INSTALLED,		"package-x-generic"},
-	{PK_INFO_ENUM_AVAILABLE,		"network-workgroup"}, /* TODO: need better icon */
+	{PK_INFO_ENUM_INSTALLED,		"pk-package-installed"},
+	{PK_INFO_ENUM_AVAILABLE,		"pk-package-available"},
 	{PK_INFO_ENUM_LOW,			"software-update-available"},
 	{PK_INFO_ENUM_NORMAL,			"software-update-available"},
 	{PK_INFO_ENUM_IMPORTANT,		"software-update-urgent"},
