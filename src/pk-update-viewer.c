@@ -420,6 +420,10 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	pk_statusbar_hide (statusbar);
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
+		/* hide the details for now */
+		widget = glade_xml_get_widget (glade_xml, "frame_details");
+		gtk_widget_hide (widget);
+
 		pk_client_reset (client);
 		pk_client_set_use_buffer (client, TRUE);
 		pk_client_get_updates (client);
@@ -442,6 +446,10 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGE) {
 		/* clear existing list */
 		gtk_list_store_clear (list_store);
+
+		/* hide the details for now */
+		widget = glade_xml_get_widget (glade_xml, "frame_details");
+		gtk_widget_hide (widget);
 
 		/* get the new update list */
 		pk_client_reset (client);
