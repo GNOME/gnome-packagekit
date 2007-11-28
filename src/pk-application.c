@@ -1173,14 +1173,17 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
+	gtk_widget_set_tooltip_text(widget, _("Install selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
+	gtk_widget_set_tooltip_text(widget, _("Remove selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
+	gtk_widget_set_tooltip_text(widget, _("Visit homepage for selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
@@ -1226,6 +1229,7 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
+	gtk_widget_set_tooltip_text(widget, _("Find packages"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	/* set focus on entry text */
