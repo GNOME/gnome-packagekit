@@ -611,9 +611,11 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
+	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_refresh_cb), NULL);
+	gtk_widget_set_tooltip_text(widget, _("Refresh package list"));
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
@@ -621,10 +623,12 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_url");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_url_cb), NULL);
+	gtk_widget_set_tooltip_text(widget, _("Visit homepage for selected package"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_update");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_update_cb), NULL);
+	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
