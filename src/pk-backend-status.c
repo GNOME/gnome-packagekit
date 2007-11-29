@@ -117,12 +117,17 @@ main (int argc, char *argv[])
 	PkEnumList *role_list;
 	PkEnumList *filter_list;
 	PkClient *client;
+	gboolean retval;
 	client = pk_client_new ();
 	role_list = pk_client_get_actions (client);
 	filter_list = pk_client_get_filters (client);
 
 	/* general stuff */
-	pk_client_get_backend_detail (client, &name, &author);
+	retval = pk_client_get_backend_detail (client, &name, &author);
+	if (FALSE == retval) {
+		pk_warning (_("Exiting on failure\n"));
+		return 1;
+	}
 	widget = glade_xml_get_widget (glade_xml, "label_name");
 	gtk_label_set_label (GTK_LABEL (widget), name);
 	widget = glade_xml_get_widget (glade_xml, "label_author");
