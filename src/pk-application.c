@@ -789,6 +789,30 @@ pk_application_filter_devel_combobox_changed_cb (GtkComboBox *combobox, PkApplic
 }
 
 /**
+ * pk_application_filter_free_combobox_changed_cb:
+ **/
+static void
+pk_application_filter_free_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
+{
+	guint value;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	value = gtk_combo_box_get_active (combobox);
+	if (value == 0) {
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_FREE);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+	} else if (value == 1) {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_FREE);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+	} else {
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_FREE);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+	}
+}
+
+/**
  * pk_application_filter_gui_combobox_changed_cb:
  **/
 static void
@@ -1279,6 +1303,15 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_filter_devel_combobox_changed_cb), application);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
 
+	/* filter free */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_free");
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Only free"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("Non-free"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("All packages"));
+	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
+			  G_CALLBACK (pk_application_filter_free_combobox_changed_cb), application);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
+
 	/* hide the filters we can't support */
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_installed");
@@ -1296,6 +1329,12 @@ pk_application_init (PkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_gui");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filter_gui");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_FREE) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_free");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filter_free");
 		gtk_widget_hide (widget);
 	}
 

@@ -236,6 +236,10 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_gui");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
+	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_FREE) == TRUE) {
+		widget = glade_xml_get_widget (glade_xml, "image_free");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
 
 	g_object_unref (client);
 	g_object_unref (role_list);
