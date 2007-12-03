@@ -326,7 +326,7 @@ pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
  **/
 static void
 pk_application_description_cb (PkClient *client, const gchar *package_id,
-			       const gchar *licence, PkGroupEnum group,
+			       const gchar *license, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
 			       guint64 size, PkApplication *application)
 {
