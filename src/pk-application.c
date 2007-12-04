@@ -326,7 +326,7 @@ pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
  **/
 static void
 pk_application_description_cb (PkClient *client, const gchar *package_id,
-			       const gchar *licence, PkGroupEnum group,
+			       const gchar *license, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
 			       guint64 size, PkApplication *application)
 {
@@ -531,6 +531,10 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	if (application->priv->search_in_progress == TRUE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
+
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+		gtk_widget_set_tooltip_text(widget, _("Find packages"));
+
 		application->priv->search_in_progress = FALSE;
 	} else {
 		/* do we need to update the search? */
@@ -633,6 +637,10 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
 	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+	gtk_widget_set_tooltip_text(widget, _("Cancel search"));
+
 	g_free (filter_all);
 }
 
