@@ -583,7 +583,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		g_string_set_size (status_security, status_security->len-1);
 	}
 	/* make tooltip */
-	if (length == 0) {
+	if (length == 1) {
 		g_string_append_printf (status_tooltip, _("There is an update available"));
 	} else {
 		g_string_append_printf (status_tooltip, _("There are %d updates available"), length);
