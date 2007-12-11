@@ -158,7 +158,6 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		       const gchar *summary, gpointer data)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
 	gchar *text;
 	PkRoleEnum role;
 	const gchar *icon_name;
@@ -173,18 +172,13 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
 
 	text = pk_package_id_pretty (package_id, summary);
+	icon_name = pk_info_enum_to_icon_name (info);
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
+			    PACKAGES_COLUMN_ICON, icon_name,
 			    -1);
-
-	icon_name = pk_info_enum_to_icon_name (info);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
-	if (icon != NULL) {
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
 	g_free (text);
 }
 
@@ -337,8 +331,9 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Severity"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_ICON, NULL);
+							   "icon-name", PACKAGES_COLUMN_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
@@ -633,7 +628,7 @@ main (int argc, char *argv[])
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
-	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, GDK_TYPE_PIXBUF,
+	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 					     G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package tree view */

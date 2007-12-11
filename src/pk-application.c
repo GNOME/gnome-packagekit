@@ -415,7 +415,6 @@ static void
 pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			   const gchar *summary, PkApplication *application)
 {
-	GdkPixbuf *icon;
 	const gchar *icon_name;
 	PkPackageId *ident;
 	GtkTreeIter iter;
@@ -435,22 +434,17 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 	ident = pk_package_id_new_from_string (package_id);
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
+	icon_name = pk_info_enum_to_icon_name (info);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_ID, package_id, -1);
+			    PACKAGES_COLUMN_ID, package_id,
+			    PACKAGES_COLUMN_IMAGE, icon_name,
+			    -1);
 	pk_package_id_free (ident);
 	g_free (text);
-
-	icon_name = pk_info_enum_to_icon_name (info);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
-	if (icon) {
-		gtk_list_store_set (application->priv->packages_store, &iter, PACKAGES_COLUMN_IMAGE, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
-
 }
 
 /**
@@ -703,8 +697,9 @@ pk_packages_add_columns (GtkTreeView *treeview)
 	/* column for installed toggles */
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", PACKAGES_COLUMN_IMAGE);
+	gtk_tree_view_column_add_attribute (column, renderer, "icon-name", PACKAGES_COLUMN_IMAGE);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for name */
@@ -723,8 +718,9 @@ pk_groups_add_columns (GtkTreeView *treeview)
 
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", GROUPS_COLUMN_ICON);
+	gtk_tree_view_column_add_attribute (column, renderer, "icon-name", GROUPS_COLUMN_ICON);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for name */
@@ -1087,24 +1083,18 @@ static void
 pk_group_add_data (PkApplication *application, PkGroupEnum group)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
 	const gchar *icon_name;
 	const gchar *text;
 
 	gtk_list_store_append (application->priv->groups_store, &iter);
 
 	text = pk_group_enum_to_localised_text (group);
+	icon_name = pk_group_enum_to_icon_name (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
+			    GROUPS_COLUMN_ICON, icon_name,
 			    -1);
-
-	icon_name = pk_group_enum_to_icon_name (group);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 22, 0, NULL);
-	if (icon) {
-		gtk_list_store_set (application->priv->groups_store, &iter, GROUPS_COLUMN_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
 }
 
 /**
@@ -1374,12 +1364,12 @@ pk_application_init (PkApplication *application)
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
-						       GDK_TYPE_PIXBUF,
+						       G_TYPE_STRING,
 						       G_TYPE_BOOLEAN,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
-						       GDK_TYPE_PIXBUF,
+						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 
