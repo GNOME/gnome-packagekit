@@ -329,6 +329,7 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 static void
 pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
 {
+	gchar *escaped_details;
 	const gchar *title;
 	gboolean is_active;
 
@@ -355,7 +356,11 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 		return;
 	}
 
-	pk_smart_icon_notify (watch->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
+	/* we need to format this */
+	escaped_details = pk_error_format_details (details);
+
+	pk_smart_icon_notify (watch->priv->sicon, title, escaped_details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
+	g_free (escaped_details);
 }
 
 /**
