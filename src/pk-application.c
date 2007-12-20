@@ -133,7 +133,7 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 {
 	GtkWidget *main_window;
 	GtkWidget *dialog;
-	gchar *escaped_details = NULL;
+	gchar *escaped_details;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
