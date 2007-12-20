@@ -371,6 +371,7 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 {
 	const gchar *title;
 	const gchar *filename;
+	gchar *escaped_details;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
@@ -378,7 +379,11 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	title = pk_message_enum_to_localised_text (message);
 	filename = pk_message_enum_to_icon_name (message);
 
-	pk_smart_icon_notify (watch->priv->sicon, title, details, filename, PK_NOTIFY_URGENCY_LOW, 15000);
+	/* we need to format this */
+	escaped_details = pk_error_format_details (details);
+
+	pk_smart_icon_notify (watch->priv->sicon, title, escaped_details, filename, PK_NOTIFY_URGENCY_LOW, 15000);
+	g_free (escaped_details);
 }
 
 /**
