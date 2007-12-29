@@ -203,9 +203,8 @@ pk_prefs_freq_combo_setup (void)
 	g_free (value);
 	g_object_unref (client);
 
+	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
-	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_freq_combo_changed), NULL);
 
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_HOURLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
@@ -213,6 +212,10 @@ pk_prefs_freq_combo_setup (void)
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
 	/* we can do this as it's the same order */
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), freq);
+
+	/* only do this after else we redraw the window */
+	g_signal_connect (G_OBJECT (widget), "changed",
+			  G_CALLBACK (pk_prefs_freq_combo_changed), NULL);
 }
 
 /**
@@ -240,15 +243,18 @@ pk_prefs_update_combo_setup (void)
 	g_free (value);
 	g_object_unref (client);
 
+	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
-	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_update_combo_changed), NULL);
 
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_ALL_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_SECURITY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_NONE_TEXT);
 	/* we can do this as it's the same order */
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), update);
+
+	/* only do this after else we redraw the window */
+	g_signal_connect (G_OBJECT (widget), "changed",
+			  G_CALLBACK (pk_prefs_update_combo_changed), NULL);
 }
 
 /**
