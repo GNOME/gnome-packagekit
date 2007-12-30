@@ -110,7 +110,7 @@ pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
-	PkFreqEnum freq;
+	PkFreqEnum freq = PK_FREQ_ENUM_UNKNOWN;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
@@ -142,7 +142,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
-	PkUpdateEnum update;
+	PkUpdateEnum update = PK_UPDATE_ENUM_UNKNOWN;
 	GConfClient *client;
 	GtkWidget *check_widget;
 	GtkWidget *notify_widget;
