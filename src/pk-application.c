@@ -1067,6 +1067,10 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		gtk_widget_hide (widget);
 	}
 }
 
