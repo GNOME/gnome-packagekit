@@ -397,15 +397,12 @@ static void
 pk_updates_set_aux_status (PkClient *client, const gchar *message)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
 
 	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_TEXT, message, -1);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "dialog-information", 48, 0, NULL);
-	if (icon != NULL) {
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
+	gtk_list_store_set (list_store, &iter, 
+                            PACKAGES_COLUMN_TEXT, message, 
+                            PACKAGES_COLUMN_ICON, "dialog-information",
+                            -1);
 }
 
 /**
