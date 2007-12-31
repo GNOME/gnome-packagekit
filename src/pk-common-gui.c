@@ -69,6 +69,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_COMMIT,			"pk-setup"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
+	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
 	{0, NULL},
 };
 
@@ -590,6 +591,9 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_REQUEST:
 		text = _("Requesting data");
+		break;
+	case PK_STATUS_ENUM_FINISHED:
+		text = _("Finished");
 		break;
 	default:
 		text = _("Status unknown");

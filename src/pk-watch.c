@@ -224,6 +224,8 @@ pk_watch_refresh_icon (PkWatch *watch)
 		state = PK_STATUS_ENUM_COMMIT;
 	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REQUEST) == TRUE) {
 		state = PK_STATUS_ENUM_REQUEST;
+	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_FINISHED) == TRUE) {
+		state = PK_STATUS_ENUM_FINISHED;
 	}
 
 	/* only set if in the list */
