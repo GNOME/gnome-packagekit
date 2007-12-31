@@ -87,6 +87,8 @@ pk_notify_class_init (PkNotifyClass *klass)
 	g_type_class_add_private (klass, sizeof (PkNotifyPrivate));
 }
 
+#if 0
+/* No help yet */
 /**
  * pk_notify_show_help_cb:
  **/
@@ -103,6 +105,7 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
+#endif
 
 /**
  * pk_notify_show_preferences_cb:
@@ -202,13 +205,15 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	item = gtk_separator_menu_item_new ();
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-	/* Help */
+#if 0
+	/* No help yet */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Help"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (pk_notify_show_help_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+#endif
 
 	/* About */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_About"));
