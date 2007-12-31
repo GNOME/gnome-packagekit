@@ -41,6 +41,7 @@
 
 #include <pk-debug.h>
 #include <pk-enum.h>
+#include "pk-marshal.h"
 #include "pk-common-gui.h"
 #include "pk-smart-icon.h"
 
@@ -61,7 +62,20 @@ struct PkSmartIconPrivate
 	guint			 event_source;
 };
 
+enum {
+	NOTIFICATION_BUTTON,
+	LAST_SIGNAL
+};
+
 G_DEFINE_TYPE (PkSmartIcon, pk_smart_icon, G_TYPE_OBJECT)
+
+static guint signals [LAST_SIGNAL] = { 0, };
+
+static PkEnumMatch enum_button_ids[] = {
+	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
+	{PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
+	{0, NULL},
+};
 
 /**
  * pk_smart_icon_class_init:
@@ -73,13 +87,12 @@ pk_smart_icon_class_init (PkSmartIconClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = pk_smart_icon_finalize;
 	g_type_class_add_private (klass, sizeof (PkSmartIconPrivate));
+	signals [NOTIFICATION_BUTTON] =
+		g_signal_new ("notification-button",
+			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
+			      0, NULL, NULL, pk_marshal_VOID__UINT_STRING,
+			      G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_STRING);
 }
-
-static PkEnumMatch enum_button_ids[] = {
-	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
-	{PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
-	{0, NULL},
-};
 
 static gboolean
 pk_smart_icon_set_icon_name_cb (gpointer data)
@@ -226,7 +239,9 @@ pk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, PkSmartIc
 	/* get the value */
 	button = pk_enum_find_value (enum_button_ids, action);
 
-	pk_warning ("do action %s with data %s (%i)", action, sicon->priv->notify_data, button);
+	/* send a signal with the type and data */
+	pk_debug ("emit: %s with data %s", action, sicon->priv->notify_data);
+	g_signal_emit (sicon, signals [NOTIFICATION_BUTTON], 0, button, sicon->priv->notify_data);
 }
 
 /**

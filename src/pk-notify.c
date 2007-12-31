@@ -777,6 +777,19 @@ pk_notify_auto_get_updates_cb (PkAutoRefresh *arefresh, PkNotify *notify)
 }
 
 /**
+ * pk_notify_smart_icon_notify_button:
+ **/
+static void
+pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
+				    const gchar *data, PkNotify *notify)
+{
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	pk_debug ("got: %i with data %s", button, data);
+}
+
+/**
  * pk_notify_init:
  * @notify: This class instance
  **/
@@ -789,6 +802,9 @@ pk_notify_init (PkNotify *notify)
 	notify->priv->notify_auto_update = NULL;
 	notify->priv->notify_updates_available = NULL;
 	notify->priv->sicon = pk_smart_icon_new ();
+	g_signal_connect (notify->priv->sicon, "notification-button",
+			  G_CALLBACK (pk_notify_smart_icon_notify_button), notify);
+
 	notify->priv->gconf_client = gconf_client_get_default ();
 	notify->priv->arefresh = pk_auto_refresh_new ();
 	g_signal_connect (notify->priv->arefresh, "refresh-cache",

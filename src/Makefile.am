@@ -218,8 +218,26 @@ pk_self_test_LDADD =					\
 pk_self_test_CPPFLAGS=	\
 	-DPK_BUILD_TESTS
 
+BUILT_SOURCES = 					\
+	pk-marshal.c					\
+	pk-marshal.h					\
+	$(NULL)
+
+pk-marshal.c: pk-marshal.list
+	echo "#include \"pk-marshal.h\"" > $@ && \
+	glib-genmarshal $< --prefix=pk_marshal --body >> $@
+
+pk-marshal.h: pk-marshal.list
+	glib-genmarshal $< --prefix=pk_marshal --header > $@
+
+
+EXTRA_DIST =						\
+	pk-marshal.list					\
+	$(NULL)
+
 clean-local:
 	rm -f *~
+	rm -f pk-marshal.c pk-marshal.h
 
 MAINTAINERCLEANFILES =					\
 	*~			      			\
