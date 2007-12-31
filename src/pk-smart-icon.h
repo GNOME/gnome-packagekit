@@ -52,9 +52,15 @@ typedef enum
 {
 	PK_NOTIFY_URGENCY_LOW,
 	PK_NOTIFY_URGENCY_NORMAL,
-	PK_NOTIFY_URGENCY_CRITICAL,
-
+	PK_NOTIFY_URGENCY_CRITICAL
 } PkNotifyUrgency;
+
+typedef enum
+{
+	PK_NOTIFY_TIMEOUT_SHORT,
+	PK_NOTIFY_TIMEOUT_LONG,
+	PK_NOTIFY_TIMEOUT_NEVER
+} PkNotifyTimeout;
 
 GType		 pk_smart_icon_get_type		  	(void);
 PkSmartIcon	*pk_smart_icon_new			(void);
@@ -69,7 +75,7 @@ gboolean	 pk_smart_icon_notify			(PkSmartIcon	*sicon,
 							 const gchar	*message,
 							 const gchar	*icon,
 							 PkNotifyUrgency urgency,
-							 guint		 timeout);
+							 PkNotifyTimeout timeout);
 
 
 G_END_DECLS

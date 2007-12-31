@@ -102,7 +102,7 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 	pk_smart_icon_notify (notify->priv->sicon,
 			      _("Functionality incomplete"),
 			      _("No help yet, sorry..."), "help-browser",
-			      PK_NOTIFY_URGENCY_LOW, 5000);
+			      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
 }
 
 /**
@@ -297,7 +297,7 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 	pk_debug ("not_supported");
 	pk_smart_icon_notify (notify->priv->sicon, title,
 			      _("The action could not be completed due to the backend refusing the command"),
-			      "process-stop", PK_NOTIFY_URGENCY_LOW, 5000);
+			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
 }
 
 /**
@@ -461,7 +461,7 @@ pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNoti
 		pk_smart_icon_notify (notify->priv->sicon,
 				      _("Could not stop"),
 				      _("Could not cancel the system update"), "process-stop",
-				      PK_NOTIFY_URGENCY_LOW, 5000);
+				      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
 	}
 	return;
 }
@@ -557,7 +557,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 			pk_smart_icon_notify (notify->priv->sicon,
 					      _("Will not install updates"),
 					      _("Automatic updates are not being installed as the computer is on battery power"),
-					      "dialog-information", PK_NOTIFY_URGENCY_LOW, 5000);
+					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
 			return;
 		}
 
@@ -621,7 +621,7 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 		return;
 	}
 
-	pk_smart_icon_notify (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, 5000);
+	pk_smart_icon_notify (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
 }
 
 /**

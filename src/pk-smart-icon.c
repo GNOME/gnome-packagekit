@@ -179,20 +179,28 @@ pk_smart_icon_set_tooltip (PkSmartIcon *sicon, const gchar *tooltip)
  **/
 gboolean
 pk_smart_icon_notify (PkSmartIcon *sicon, const gchar *title, const gchar *message,
-		      const gchar *icon, PkNotifyUrgency urgency, guint timeout)
+		      const gchar *icon, PkNotifyUrgency urgency, PkNotifyTimeout timeout)
 {
 	NotifyNotification *dialog;
 	GError *error = NULL;
+	guint timeout_val = 0;
 
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	/* default values */
+	if (timeout == PK_NOTIFY_TIMEOUT_SHORT) {
+		timeout_val = 5000;
+	} else if (timeout == PK_NOTIFY_TIMEOUT_LONG) {
+		timeout_val = 15000;
+	}
 
 	if (gtk_status_icon_get_visible (sicon->priv->status_icon) == TRUE) {
 		dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
 	} else {
 		dialog = notify_notification_new (title, message, icon, NULL);
 	}
-	notify_notification_set_timeout (dialog, timeout);
+	notify_notification_set_timeout (dialog, timeout_val);
 	notify_notification_set_urgency (dialog, urgency);
 	notify_notification_show (dialog, &error);
 	if (error != NULL) {
