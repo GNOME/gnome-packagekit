@@ -74,6 +74,10 @@ static guint signals [LAST_SIGNAL] = { 0, };
 static PkEnumMatch enum_button_ids[] = {
 	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
 	{PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
+	{PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,	"do-not-warn-again"},
+	{PK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
+	{PK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
+	{PK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
 	{0, NULL},
 };
 
@@ -262,6 +266,14 @@ pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gc
 	/* find the localised text */
 	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
 		text = _("Do not show this notification again");
+	} else if (button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+		text = _("Don not warn me again");
+	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
+		text = _("Cancel system update");
+	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
+		text = _("Update computer now");
+	} else if (button == PK_NOTIFY_BUTTON_RESTART_COMPUTER) {
+		text = _("Restart computer now");
 	}
 
 	/* save data privately, TODO: this really needs to be in a hashtable */
