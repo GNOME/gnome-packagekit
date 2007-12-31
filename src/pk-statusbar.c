@@ -162,6 +162,25 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 }
 
 /**
+ * pk_statusbar_set_status:
+ **/
+gboolean
+pk_statusbar_set_status (PkStatusbar *sbar, PkStatusEnum status)
+{
+	const gchar *text;
+
+	g_return_val_if_fail (sbar != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
+	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
+
+	/* set the status */
+	text = pk_status_enum_to_localised_text (status);
+	gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), text);
+
+	return TRUE;
+}
+
+/**
  * pk_statusbar_set_remaining:
  **/
 gboolean

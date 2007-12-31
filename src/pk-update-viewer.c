@@ -303,6 +303,15 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 }
 
 /**
+ * pk_updates_transaction_status_changed_cb:
+ **/
+static void
+pk_updates_transaction_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+{
+	pk_statusbar_set_status (statusbar, status);
+}
+
+/**
  * pk_window_delete_event_cb:
  * @event: The event type, unused.
  **/
@@ -567,6 +576,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
 	g_signal_connect (client, "update-detail",
 			  G_CALLBACK (pk_updates_update_detail_cb), NULL);
+	g_signal_connect (client, "transaction-status-changed",
+			  G_CALLBACK (pk_updates_transaction_status_changed_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);

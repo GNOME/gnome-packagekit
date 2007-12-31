@@ -55,6 +55,8 @@ gboolean	 pk_statusbar_set_widget		(PkStatusbar	*arefresh,
 							 GtkWidget	*widget);
 gboolean	 pk_statusbar_set_percentage		(PkStatusbar	*arefresh,
 							 guint		 percentage);
+gboolean	 pk_statusbar_set_status		(PkStatusbar	*arefresh,
+							 PkStatusEnum	 status);
 gboolean	 pk_statusbar_hide			(PkStatusbar	*arefresh);
 gboolean	 pk_statusbar_set_remaining		(PkStatusbar	*arefresh,
 							 guint		 remaining);
