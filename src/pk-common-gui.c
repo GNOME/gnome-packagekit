@@ -520,16 +520,16 @@ pk_message_enum_to_localised_text (PkMessageEnum message)
 	const gchar *text = NULL;
 	switch (message) {
 	case PK_MESSAGE_ENUM_NOTICE:
-		text = _("Transaction notice");
+		text = _("PackageKit transaction notice");
 		break;
 	case PK_MESSAGE_ENUM_WARNING:
-		text = _("Transaction warning");
+		text = _("PackageKit transaction warning");
 		break;
 	case PK_MESSAGE_ENUM_DAEMON:
-		text = _("Daemon state is invalid");
+		text = _("PackageKit daemon");
 		break;
 	default:
-		text = _("A message of unknown type was called");
+		text = _("PackageKit message of unknown type");
 		pk_warning ("message unrecognised: %i", message);
 	}
 	return text;
