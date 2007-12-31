@@ -40,6 +40,7 @@
 #include <libnotify/notify.h>
 
 #include <pk-debug.h>
+#include <pk-enum.h>
 #include "pk-common-gui.h"
 #include "pk-smart-icon.h"
 
@@ -56,6 +57,7 @@ struct PkSmartIconPrivate
 	NotifyNotification	*dialog;
 	gchar			*current;
 	gchar			*new;
+	gchar			*notify_data;
 	guint			 event_source;
 };
 
@@ -72,6 +74,12 @@ pk_smart_icon_class_init (PkSmartIconClass *klass)
 	object_class->finalize = pk_smart_icon_finalize;
 	g_type_class_add_private (klass, sizeof (PkSmartIconPrivate));
 }
+
+static PkEnumMatch enum_button_ids[] = {
+	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
+	{PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
+	{0, NULL},
+};
 
 static gboolean
 pk_smart_icon_set_icon_name_cb (gpointer data)
@@ -205,12 +213,47 @@ pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *m
 }
 
 /**
+ * pk_smart_icon_libnotify_cb:
+ **/
+static void
+pk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, PkSmartIcon *sicon)
+{
+	PkNotifyButton button;
+
+	g_return_if_fail (sicon != NULL);
+	g_return_if_fail (PK_IS_SMART_ICON (sicon));
+
+	/* get the value */
+	button = pk_enum_find_value (enum_button_ids, action);
+
+	pk_warning ("do action %s with data %s (%i)", action, sicon->priv->notify_data, button);
+}
+
+/**
  * pk_smart_icon_notify_button:
  **/
 gboolean
 pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gchar *data)
 {
-	/* do nothing for now */
+	const gchar *text = NULL;
+	const gchar *id = NULL;
+
+	g_return_val_if_fail (sicon != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	/* get the id */
+	id = pk_enum_find_string (enum_button_ids, button);
+
+	/* find the localised text */
+	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
+		text = _("Do not show this notification again");
+	}
+
+	/* save data privately, TODO: this really needs to be in a hashtable */
+	sicon->priv->notify_data = g_strdup (data);
+
+	/* add a button to the UI */
+	notify_notification_add_action (sicon->priv->dialog, id, text, (NotifyActionCallback) pk_smart_icon_libnotify_cb, sicon, NULL);
 	return FALSE;
 }
 
@@ -246,6 +289,7 @@ pk_smart_icon_init (PkSmartIcon *sicon)
 	sicon->priv->new = NULL;
 	sicon->priv->current = NULL;
 	sicon->priv->dialog = NULL;
+	sicon->priv->notify_data = NULL;
 	sicon->priv->event_source = 0;
 
 	/* signal we are here... */
@@ -273,6 +317,9 @@ pk_smart_icon_finalize (GObject *object)
 	g_object_unref (sicon->priv->current);
 	if (sicon->priv->dialog != NULL) {
 		g_object_unref (sicon->priv->dialog);
+	}
+	if (sicon->priv->notify_data != NULL) {
+		g_free (sicon->priv->notify_data);
 	}
 
 	G_OBJECT_CLASS (pk_smart_icon_parent_class)->finalize (object);

@@ -103,6 +103,7 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 			      _("Functionality incomplete"),
 			      _("No help yet, sorry..."), "help-browser",
 			      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 

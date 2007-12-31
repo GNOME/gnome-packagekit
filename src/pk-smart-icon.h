@@ -64,7 +64,8 @@ typedef enum
 
 typedef enum
 {
-	PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN
+	PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+	PK_NOTIFY_BUTTON_UNKNOWN
 } PkNotifyButton;
 
 GType		 pk_smart_icon_get_type		  	(void);
