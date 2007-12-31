@@ -280,6 +280,7 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 	pk_smart_icon_notify_new (notify->priv->sicon, title,
 			      _("The action could not be completed due to the backend refusing the command"),
 			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
@@ -493,6 +494,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 					      _("Will not install updates"),
 					      _("Automatic updates are not being installed as the computer is on battery power"),
 					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+			pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 			pk_smart_icon_notify_show (notify->priv->sicon);
 			return;
 		}
@@ -558,6 +560,7 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 	}
 
 	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
