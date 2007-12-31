@@ -610,8 +610,8 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
 		icon_name = pk_status_enum_to_icon_name (item->status);
-		if (item->package_id != NULL) {
-			package = g_strdup (item->package_id);
+		if (pk_strzero (item->package_id) == FALSE) {
+			package = pk_package_get_name (item->package_id);
 			text = g_strdup_printf ("%s %s (%s)", localised_role, package, localised_status);
 			g_free (package);
 		} else {
