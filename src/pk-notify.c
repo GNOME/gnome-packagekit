@@ -99,10 +99,11 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 	pk_debug ("show help");
-	pk_smart_icon_notify (notify->priv->sicon,
+	pk_smart_icon_notify_new (notify->priv->sicon,
 			      _("Functionality incomplete"),
 			      _("No help yet, sorry..."), "help-browser",
 			      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**
@@ -295,9 +296,10 @@ pk_notify_not_supported (PkNotify *notify, const gchar *title)
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	pk_debug ("not_supported");
-	pk_smart_icon_notify (notify->priv->sicon, title,
+	pk_smart_icon_notify_new (notify->priv->sicon, title,
 			      _("The action could not be completed due to the backend refusing the command"),
 			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**
@@ -458,10 +460,11 @@ pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNoti
 	ret = pk_client_cancel (notify->priv->client_update_system);
 	if (ret == FALSE) {
 		pk_warning ("cancelling updates failed");
-		pk_smart_icon_notify (notify->priv->sicon,
+		pk_smart_icon_notify_new (notify->priv->sicon,
 				      _("Could not stop"),
 				      _("Could not cancel the system update"), "process-stop",
 				      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	return;
 }
@@ -554,10 +557,11 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
 		if (conf_update_battery == FALSE && on_battery == TRUE) {
 			pk_warning ("on battery so not doing update");
-			pk_smart_icon_notify (notify->priv->sicon,
+			pk_smart_icon_notify_new (notify->priv->sicon,
 					      _("Will not install updates"),
 					      _("Automatic updates are not being installed as the computer is on battery power"),
 					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+			pk_smart_icon_notify_show (notify->priv->sicon);
 			return;
 		}
 
@@ -621,7 +625,8 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 		return;
 	}
 
-	pk_smart_icon_notify (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**

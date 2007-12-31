@@ -53,6 +53,7 @@ static void     pk_smart_icon_finalize		(GObject       *object);
 struct PkSmartIconPrivate
 {
 	GtkStatusIcon		*status_icon;
+	NotifyNotification	*dialog;
 	gchar			*current;
 	gchar			*new;
 	guint			 event_source;
@@ -178,11 +179,9 @@ pk_smart_icon_set_tooltip (PkSmartIcon *sicon, const gchar *tooltip)
  * pk_smart_icon_notify:
  **/
 gboolean
-pk_smart_icon_notify (PkSmartIcon *sicon, const gchar *title, const gchar *message,
+pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *message,
 		      const gchar *icon, PkNotifyUrgency urgency, PkNotifyTimeout timeout)
 {
-	NotifyNotification *dialog;
-	GError *error = NULL;
 	guint timeout_val = 0;
 
 	g_return_val_if_fail (sicon != NULL, FALSE);
@@ -196,13 +195,37 @@ pk_smart_icon_notify (PkSmartIcon *sicon, const gchar *title, const gchar *messa
 	}
 
 	if (gtk_status_icon_get_visible (sicon->priv->status_icon) == TRUE) {
-		dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
+		sicon->priv->dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
 	} else {
-		dialog = notify_notification_new (title, message, icon, NULL);
+		sicon->priv->dialog = notify_notification_new (title, message, icon, NULL);
 	}
-	notify_notification_set_timeout (dialog, timeout_val);
-	notify_notification_set_urgency (dialog, urgency);
-	notify_notification_show (dialog, &error);
+	notify_notification_set_timeout (sicon->priv->dialog, timeout_val);
+	notify_notification_set_urgency (sicon->priv->dialog, urgency);
+	return TRUE;
+}
+
+/**
+ * pk_smart_icon_notify_button:
+ **/
+gboolean
+pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gchar *data)
+{
+	/* do nothing for now */
+	return FALSE;
+}
+
+/**
+ * pk_smart_icon_notify_show:
+ **/
+gboolean
+pk_smart_icon_notify_show (PkSmartIcon *sicon)
+{
+	GError *error = NULL;
+
+	g_return_val_if_fail (sicon != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	notify_notification_show (sicon->priv->dialog, &error);
 	if (error != NULL) {
 		pk_warning ("error: %s", error->message);
 		g_error_free (error);
@@ -222,6 +245,7 @@ pk_smart_icon_init (PkSmartIcon *sicon)
 	sicon->priv->status_icon = gtk_status_icon_new ();
 	sicon->priv->new = NULL;
 	sicon->priv->current = NULL;
+	sicon->priv->dialog = NULL;
 	sicon->priv->event_source = 0;
 
 	/* signal we are here... */
@@ -247,6 +271,9 @@ pk_smart_icon_finalize (GObject *object)
 	g_object_unref (sicon->priv->status_icon);
 	g_object_unref (sicon->priv->new);
 	g_object_unref (sicon->priv->current);
+	if (sicon->priv->dialog != NULL) {
+		g_object_unref (sicon->priv->dialog);
+	}
 
 	G_OBJECT_CLASS (pk_smart_icon_parent_class)->finalize (object);
 }

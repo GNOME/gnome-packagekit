@@ -317,8 +317,9 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	}
 
 	/* libnotify dialog */
-	pk_smart_icon_notify (watch->priv->sicon, _("Task completed"), message,
+	pk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
 			      "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (message);
 	g_free (package_id);
 }
@@ -359,7 +360,8 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	/* we need to format this */
 	escaped_details = pk_error_format_details (details);
 
-	pk_smart_icon_notify (watch->priv->sicon, title, escaped_details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
 
@@ -382,7 +384,8 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	/* we need to format this */
 	escaped_details = pk_error_format_details (details);
 
-	pk_smart_icon_notify (watch->priv->sicon, title, escaped_details, filename, PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
+	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename, PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
+	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
 
@@ -489,9 +492,10 @@ pk_watch_not_supported (PkWatch *watch, const gchar *title)
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 	pk_debug ("not_supported");
-	pk_smart_icon_notify (watch->priv->sicon, title,
+	pk_smart_icon_notify_new (watch->priv->sicon, title,
 			      _("The action could not be completed (the backend refusing the command)"),
 			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_show (watch->priv->sicon);
 }
 
 /**

@@ -62,6 +62,11 @@ typedef enum
 	PK_NOTIFY_TIMEOUT_NEVER
 } PkNotifyTimeout;
 
+typedef enum
+{
+	PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN
+} PkNotifyButton;
+
 GType		 pk_smart_icon_get_type		  	(void);
 PkSmartIcon	*pk_smart_icon_new			(void);
 GtkStatusIcon	*pk_smart_icon_get_status_icon		(PkSmartIcon	*sicon);
@@ -70,12 +75,16 @@ gboolean	 pk_smart_icon_set_icon_name		(PkSmartIcon	*sicon,
 							 const gchar	*icon_name);
 gboolean	 pk_smart_icon_set_tooltip		(PkSmartIcon	*sicon,
 							 const gchar	*tooltip);
-gboolean	 pk_smart_icon_notify			(PkSmartIcon	*sicon,
+gboolean	 pk_smart_icon_notify_new		(PkSmartIcon	*sicon,
 							 const gchar	*title,
 							 const gchar	*message,
 							 const gchar	*icon,
 							 PkNotifyUrgency urgency,
 							 PkNotifyTimeout timeout);
+gboolean	 pk_smart_icon_notify_button		(PkSmartIcon	*sicon,
+							 PkNotifyButton	 button,
+							 const gchar	*data);
+gboolean	 pk_smart_icon_notify_show		(PkSmartIcon	*sicon);
 
 
 G_END_DECLS
