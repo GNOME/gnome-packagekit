@@ -159,6 +159,12 @@ pk_progress_hide_cb (GtkWidget   *widget,
 static void
 pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
 {
+	/* ignore some errors */
+	if (code == PK_ERROR_ENUM_PROCESS_QUIT ||
+	    code == PK_ERROR_ENUM_PROCESS_KILL) {
+		pk_debug ("ignoring cancel error");
+		return;
+	}
 	pk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
 }
 
