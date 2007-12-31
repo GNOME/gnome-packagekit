@@ -458,8 +458,8 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 
 	/* fill in role */
 	text = pk_common_get_role_text (progress->priv->client);
-	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_role");
-	gtk_label_set_label (GTK_LABEL (widget), text);
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
+	gtk_window_set_title (GTK_WINDOW (widget), text);
 	g_free (text);
 
 	/* coldplug */
