@@ -305,6 +305,18 @@ pk_smart_icon_notify_show (PkSmartIcon *sicon)
 }
 
 /**
+ * pk_smart_icon_notify_close:
+ **/
+gboolean
+pk_smart_icon_notify_close (PkSmartIcon *sicon)
+{
+	g_return_val_if_fail (sicon != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+	notify_notification_close (sicon->priv->dialog, NULL);
+	return TRUE;
+}
+
+/**
  * pk_smart_icon_init:
  * @smart_icon: This class instance
  **/
@@ -343,6 +355,7 @@ pk_smart_icon_finalize (GObject *object)
 	g_object_unref (sicon->priv->new);
 	g_object_unref (sicon->priv->current);
 	if (sicon->priv->dialog != NULL) {
+		notify_notification_close (sicon->priv->dialog, NULL);
 		g_object_unref (sicon->priv->dialog);
 	}
 	if (sicon->priv->notify_data != NULL) {

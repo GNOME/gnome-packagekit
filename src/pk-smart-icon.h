@@ -90,6 +90,7 @@ gboolean	 pk_smart_icon_notify_button		(PkSmartIcon	*sicon,
 							 PkNotifyButton	 button,
 							 const gchar	*data);
 gboolean	 pk_smart_icon_notify_show		(PkSmartIcon	*sicon);
+gboolean	 pk_smart_icon_notify_close		(PkSmartIcon	*sicon);
 
 
 G_END_DECLS

@@ -35,7 +35,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
 #include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
@@ -70,8 +69,6 @@ struct PkNotifyPrivate
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
-	NotifyNotification	*notify_auto_update;
-	NotifyNotification	*notify_updates_available;
 };
 
 G_DEFINE_TYPE (PkNotify, pk_notify, G_TYPE_OBJECT)
@@ -235,17 +232,6 @@ static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
 static void pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify);
 
 /**
- * pk_notify_libnotify_reboot_now_cb:
- **/
-static void
-pk_notify_libnotify_reboot_now_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
-{
-	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
-	pk_warning ("reboot now");
-}
-
-/**
  * pk_notify_update_system_finished_cb:
  **/
 static void
@@ -262,26 +248,20 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	}
 
 	/* close the libnotify bubble if it exists */
-	if (notify->priv->notify_auto_update != NULL) {
-		notify_notification_close (notify->priv->notify_auto_update, NULL);
-		notify->priv->notify_auto_update = NULL;
-	}
+	pk_smart_icon_notify_close (notify->priv->sicon);
 
 	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
-		NotifyNotification *dialog;
 		const gchar *message;
+		message = pk_restart_enum_to_localised_text (restart);
 
 		pk_debug ("Doing requires-restart notification");
-		message = pk_restart_enum_to_localised_text (restart);
-		dialog = notify_notification_new (_("The system update has completed"), message,
-						  "software-update-available", NULL);
-		notify_notification_set_timeout (dialog, 50000);
-		notify_notification_set_urgency (dialog, NOTIFY_URGENCY_LOW);
-		notify_notification_add_action (dialog, "reboot-now", _("Restart computer now"),
-						(NotifyActionCallback) pk_notify_libnotify_reboot_now_cb,
-						notify, NULL);
-		notify_notification_show (dialog, NULL);
+		pk_smart_icon_notify_new (notify->priv->sicon,
+					  _("The system update has completed"), message, "software-update-available",
+					  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	pk_debug ("resetting client %p", client);
 	pk_client_reset (client);
@@ -400,26 +380,11 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotif
 }
 
 /**
- * pk_notify_libnotify_update_system_cb:
- **/
-static void
-pk_notify_libnotify_update_system_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
-{
-	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
-
-	pk_debug ("update something");
-	pk_notify_update_system (notify);
-}
-
-/**
  * pk_notify_critical_updates_warning:
  **/
 static void
 pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboolean plural)
 {
-	NotifyNotification *dialog;
-	GtkStatusIcon *status_icon;
 	const gchar *title;
 	gchar *message;
 
@@ -434,40 +399,14 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 		message = g_strdup_printf (_("The following important update is available for your computer:\n\n%s"), details);
 	}
 
-	pk_smart_icon_sync (notify->priv->sicon);
-	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
-	dialog = notify_notification_new_with_status_icon (title, message, "software-update-urgent", status_icon);
-	notify->priv->notify_updates_available = dialog;
+	pk_debug ("Doing requires-restart notification");
+	pk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
+				  PK_NOTIFY_URGENCY_CRITICAL, PK_NOTIFY_TIMEOUT_NEVER);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, NULL);
+	pk_smart_icon_notify_show (notify->priv->sicon);
 
-	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
-	notify_notification_add_action (dialog, "update-system", _("Update system now"),
-					(NotifyActionCallback) pk_notify_libnotify_update_system_cb,
-					notify, NULL);
-	notify_notification_add_action (dialog, "update-system", _("Don't warn me again"),
-					(NotifyActionCallback) pk_notify_libnotify_update_system_cb,
-					notify, NULL);
-	notify_notification_show (dialog, NULL);
 	g_free (message);
-}
-
-/**
- * pk_notify_libnotify_cancel_cb:
- **/
-static void
-pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNotify *notify)
-{
-	gboolean ret;
-	ret = pk_client_cancel (notify->priv->client_update_system);
-	if (ret == FALSE) {
-		pk_warning ("cancelling updates failed");
-		pk_smart_icon_notify_new (notify->priv->sicon,
-				      _("Could not stop"),
-				      _("Could not cancel the system update"), "process-stop",
-				      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-		pk_smart_icon_notify_show (notify->priv->sicon);
-	}
-	return;
 }
 
 /**
@@ -476,24 +415,16 @@ pk_notify_libnotify_cancel_cb (NotifyNotification *dialog, gchar *action, PkNoti
 static void
 pk_notify_auto_update_message (PkNotify *notify)
 {
-	NotifyNotification *dialog;
-
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
-	dialog = notify_notification_new (_("Updates are being installed"),
-		_("Updates are being automatically installed on your computer"),
-		"software-update-urgent", NULL);
-	notify->priv->notify_auto_update = dialog;
-	notify_notification_set_timeout (dialog, NOTIFY_EXPIRES_NEVER);
-	notify_notification_set_urgency (dialog, NOTIFY_URGENCY_CRITICAL);
-	notify_notification_add_action (dialog, "update-system", _("Cancel update"),
-					(NotifyActionCallback) pk_notify_libnotify_cancel_cb,
-					notify, NULL);
-	notify_notification_add_action (dialog, "update-system", _("Don't notify me again"),
-					(NotifyActionCallback) pk_notify_libnotify_cancel_cb,
-					notify, NULL);
-	notify_notification_show (dialog, NULL);
+	pk_smart_icon_notify_new (notify->priv->sicon,
+				  _("Updates are being installed"),
+				  _("Updates are being automatically installed on your computer"), "software-update-urgent",
+				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**
@@ -787,6 +718,27 @@ pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	pk_debug ("got: %i with data %s", button, data);
+	/* find the localised text */
+	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
+		pk_warning ("moo");
+	} else if (button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+		pk_warning ("moo");
+	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
+		gboolean ret;
+		ret = pk_client_cancel (notify->priv->client_update_system);
+		if (ret == FALSE) {
+			pk_warning ("cancelling updates failed");
+			pk_smart_icon_notify_new (notify->priv->sicon,
+					      _("Could not stop"),
+					      _("Could not cancel the system update"), "process-stop",
+					      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+			pk_smart_icon_notify_show (notify->priv->sicon);
+		}
+	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
+		pk_notify_update_system (notify);
+	} else if (button == PK_NOTIFY_BUTTON_RESTART_COMPUTER) {
+		pk_warning ("reboot now");
+	}
 }
 
 /**
@@ -799,8 +751,6 @@ pk_notify_init (PkNotify *notify)
 	GtkStatusIcon *status_icon;
 	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
 
-	notify->priv->notify_auto_update = NULL;
-	notify->priv->notify_updates_available = NULL;
 	notify->priv->sicon = pk_smart_icon_new ();
 	g_signal_connect (notify->priv->sicon, "notification-button",
 			  G_CALLBACK (pk_notify_smart_icon_notify_button), notify);
@@ -822,8 +772,6 @@ pk_notify_init (PkNotify *notify)
 				 "activate",
 				 G_CALLBACK (pk_notify_activate_update_cb),
 				 notify, 0);
-
-	notify_init ("packagekit-update-applet");
 
 	notify->priv->pconnection = pk_connection_new ();
 	g_signal_connect (notify->priv->pconnection, "connection-changed",
@@ -866,14 +814,6 @@ pk_notify_finalize (GObject *object)
 	notify = PK_NOTIFY (object);
 
 	g_return_if_fail (notify->priv != NULL);
-
-	/* close the libnotify bubbles if they exists */
-	if (notify->priv->notify_auto_update != NULL) {
-		notify_notification_close (notify->priv->notify_updates_available, NULL);
-	}
-	if (notify->priv->notify_updates_available != NULL) {
-		notify_notification_close (notify->priv->notify_updates_available, NULL);
-	}
 
 	g_object_unref (notify->priv->sicon);
 	g_object_unref (notify->priv->pconnection);
