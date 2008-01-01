@@ -241,6 +241,7 @@ main (int argc, char *argv[])
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
+	g_object_unref (glade_xml);
 	g_object_unref (client);
 	g_object_unref (role_list);
 	g_object_unref (filter_list);

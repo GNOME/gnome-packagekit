@@ -457,6 +457,7 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
+	g_object_unref (glade_xml);
 	g_object_unref (list_store_general);
 	g_object_unref (list_store_details);
 	g_object_unref (client);

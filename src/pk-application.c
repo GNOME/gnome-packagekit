@@ -1432,6 +1432,7 @@ pk_application_finalize (GObject *object)
 	application = PK_APPLICATION (object);
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 
+	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
