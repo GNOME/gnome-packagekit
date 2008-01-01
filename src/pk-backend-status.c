@@ -35,8 +35,6 @@
 
 #include <pk-debug.h>
 
-static GladeXML	*glade_xml;
-
 /**
  * pk_updates_close_cb:
  **/
@@ -70,6 +68,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *widget;
+	GladeXML *glade_xml;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -101,17 +100,6 @@ main (int argc, char *argv[])
 
 	loop = g_main_loop_new (NULL, FALSE);
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-backend-status.glade", NULL, NULL);
-
-	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_close_cb), loop);
-
-	widget = glade_xml_get_widget (glade_xml, "window_backend");
-	g_signal_connect (widget, "delete_event",
-			  G_CALLBACK (pk_updates_delete_event_cb), loop);
-	gtk_widget_show (GTK_WIDGET (widget));
-
 	gchar *name;
 	gchar *author;
 	PkEnumList *role_list;
@@ -128,6 +116,18 @@ main (int argc, char *argv[])
 		pk_warning (_("Exiting on failure\n"));
 		return 1;
 	}
+
+	glade_xml = glade_xml_new (PK_DATA "/pk-backend-status.glade", NULL, NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_close");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_updates_close_cb), loop);
+
+	widget = glade_xml_get_widget (glade_xml, "window_backend");
+	g_signal_connect (widget, "delete_event",
+			  G_CALLBACK (pk_updates_delete_event_cb), loop);
+	gtk_widget_show (GTK_WIDGET (widget));
+
 	widget = glade_xml_get_widget (glade_xml, "label_name");
 	gtk_label_set_label (GTK_LABEL (widget), name);
 	widget = glade_xml_get_widget (glade_xml, "label_author");
