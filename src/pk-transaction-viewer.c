@@ -123,7 +123,6 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 		   gboolean succeeded, PkRoleEnum role, guint duration, const gchar *data, gpointer user_data)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
 	gchar *text;
 	gchar *pretty;
 	const gchar *icon_name;
@@ -145,22 +144,14 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 			    -1);
 
 	icon_name = pk_role_enum_to_icon_name (role);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 48, 0, NULL);
-	if (icon) {
-		gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
+	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon_name, -1);
 
 	if (succeeded == TRUE) {
 		icon_name = "document-new";
 	} else {
 		icon_name = "dialog-error";
 	}
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 24, 0, NULL);
-	if (icon) {
-		gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_SUCCEEDED, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
+	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_SUCCEEDED, icon_name, -1);
 }
 
 /**
@@ -188,8 +179,9 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Role"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_GENERAL_ICON, NULL);
+							   "icon-name", PACKAGES_COLUMN_GENERAL_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
@@ -202,8 +194,9 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_MENU, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Succeeded"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_GENERAL_SUCCEEDED, NULL);
+							   "icon-name", PACKAGES_COLUMN_GENERAL_SUCCEEDED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 }
 
@@ -218,8 +211,9 @@ pk_treeview_add_details_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_MENU, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Type"), renderer,
-							   "pixbuf", PACKAGES_COLUMN_DETAILS_ICON, NULL);
+							   "icon-name", PACKAGES_COLUMN_DETAILS_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
@@ -239,7 +233,6 @@ static void
 pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *package_id, const gchar *summary)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
 	gchar *text;
 	const gchar *icon_name;
 	const gchar *info_text;
@@ -250,12 +243,8 @@ pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *pac
 
 	gtk_list_store_append (list_store_details, &iter);
 	gtk_list_store_set (list_store_details, &iter,
-			    PACKAGES_COLUMN_DETAILS_TEXT, text, -1);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), icon_name, 24, 0, NULL);
-	if (icon) {
-		gtk_list_store_set (list_store_details, &iter, PACKAGES_COLUMN_DETAILS_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
+			    PACKAGES_COLUMN_DETAILS_TEXT, text, 
+			    PACKAGES_COLUMN_DETAILS_ICON, icon_name, -1);
 	g_free (text);
 }
 
@@ -429,9 +418,9 @@ main (int argc, char *argv[])
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
-	list_store_general = gtk_list_store_new (PACKAGES_COLUMN_GENERAL_LAST, GDK_TYPE_PIXBUF,
-						 G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_STRING);
-	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_DETAILS_LAST, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	list_store_general = gtk_list_store_new (PACKAGES_COLUMN_GENERAL_LAST, G_TYPE_STRING,
+						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_DETAILS_LAST, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create transaction_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_transactions");
@@ -468,6 +457,7 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
+	g_object_unref (glade_xml);
 	g_object_unref (list_store_general);
 	g_object_unref (list_store_details);
 	g_object_unref (client);

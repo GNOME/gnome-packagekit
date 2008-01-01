@@ -304,6 +304,7 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
+	g_object_unref (glade_xml);
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_object_unref (role_list);

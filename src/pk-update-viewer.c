@@ -397,15 +397,15 @@ static void
 pk_updates_set_aux_status (PkClient *client, const gchar *message)
 {
 	GtkTreeIter iter;
-	GdkPixbuf *icon;
+	gchar *markup;
 
+	markup = g_strdup_printf ("<b>%s</b>", message);
 	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_TEXT, message, -1);
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "dialog-information", 48, 0, NULL);
-	if (icon != NULL) {
-		gtk_list_store_set (list_store, &iter, PACKAGES_COLUMN_ICON, icon, -1);
-		gdk_pixbuf_unref (icon);
-	}
+	gtk_list_store_set (list_store, &iter, 
+			    PACKAGES_COLUMN_TEXT, markup, 
+			    PACKAGES_COLUMN_ICON, "dialog-information",
+			    -1);
+	g_free (markup); 
 }
 
 /**
@@ -468,7 +468,7 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 		gtk_list_store_clear (list_store);
 
 		/* put a message in the listbox */
-		pk_updates_set_aux_status (client, _("<b>There are no updates available!</b>"));
+		pk_updates_set_aux_status (client, _("There are no updates available!"));
 
 		/* if no updates then hide apply */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
@@ -506,7 +506,7 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		gtk_list_store_clear (list_store);
 
 		/* put a message in the listbox */
-		pk_updates_set_aux_status (client, _("<b>There is an update already in progress!</b>"));
+		pk_updates_set_aux_status (client, _("There is an update already in progress!"));
 
 		/* if doing it then hide apply and refresh */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
@@ -676,6 +676,7 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
+	g_object_unref (glade_xml);
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_object_unref (pconnection);
