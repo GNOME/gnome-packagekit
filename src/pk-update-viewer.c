@@ -181,7 +181,8 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 static void
 pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 			     const gchar *updates, const gchar *obsoletes,
-			     const gchar *url, PkRestartEnum restart,
+			     const gchar *vendor_url, const gchar *bugzilla_url,
+			     const gchar *cve_url, PkRestartEnum restart,
 			     const gchar *update_text, gpointer data)
 {
 	GtkWidget *widget;
@@ -232,7 +233,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 #define ADD_LINE(title,line,end) 					\
 	text = g_strdup_printf ("%12s ", title); 			\
 	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,  	\
-					  title_tag, NULL); 		\
+					  title_tag, NULL);		\
 	g_free (text);							\
 	text = g_strdup_printf (" %s%s", line, end);			\
 	gtk_text_buffer_insert (buffer, &iter, text, -1);		\
@@ -282,7 +283,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	/* The yum backend used to report a serialized list of 
          * dictionaries as url. Filter that out.
          */ 
-	if (!pk_strzero (url) && !g_str_has_prefix (url, "[{")) {
+	if (!pk_strzero (vendor_url) && !g_str_has_prefix (vendor_url, "[{")) {
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		text = g_strdup_printf ("%12s ", _("References"));
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
@@ -292,8 +293,8 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 						  "foreground", "blue", 
 						  "underline", PANGO_UNDERLINE_SINGLE, 
 						  NULL);
-		g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (url), g_free);
-		text = g_strdup_printf (" %s\n", url);
+		g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (vendor_url), g_free);
+		text = g_strdup_printf (" %s\n", vendor_url);
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
 						  tag, NULL);
 		g_free (text);
