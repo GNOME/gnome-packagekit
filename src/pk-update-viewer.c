@@ -191,7 +191,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	gchar *package_pretty = NULL;
 	gchar *updates_pretty = NULL;
 	gchar *obsoletes_pretty = NULL;
-	gchar *info_text = NULL;
+	const gchar *info_text = NULL;
 	GtkTextView *tv;
 	GtkTextBuffer *buffer;
 	GtkTextTag *bold_tag, *title_tag, *space_tag, *tag;
@@ -207,8 +207,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	if (gtk_tree_selection_get_selected (selection, &model, &treeiter)) {
 		gtk_tree_model_get (model, &treeiter,
 				    PACKAGES_COLUMN_INFO, &info, -1);
-	}
-	else {
+	} else {
 		info = PK_INFO_ENUM_NORMAL;
 	}
 
@@ -216,16 +215,16 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	widget = glade_xml_get_widget (glade_xml, "details_textview");
 	tv = GTK_TEXT_VIEW (widget);
 	buffer = gtk_text_buffer_new (NULL);
-	bold_tag = gtk_text_buffer_create_tag (buffer, "bold", 
-					       "weight", PANGO_WEIGHT_BOLD, 
+	bold_tag = gtk_text_buffer_create_tag (buffer, "bold",
+					       "weight", PANGO_WEIGHT_BOLD,
 					       NULL);
-	title_tag = gtk_text_buffer_create_tag (buffer, "title", 
+	title_tag = gtk_text_buffer_create_tag (buffer, "title",
 						"font", "DejaVu LGC Sans Mono Bold",
 						"foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
 						"background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
 						NULL);
-	space_tag = gtk_text_buffer_create_tag (buffer, "space", 
-						"font", "DejaVu LGC Sans Mono Bold", 
+	space_tag = gtk_text_buffer_create_tag (buffer, "space",
+						"font", "DejaVu LGC Sans Mono Bold",
 						NULL);
 
 	gtk_text_buffer_get_start_iter (buffer, &iter);
@@ -238,36 +237,21 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	text = g_strdup_printf (" %s%s", line, end);			\
 	gtk_text_buffer_insert (buffer, &iter, text, -1);		\
 	g_free (text);
-	
+
 	package_pretty = pk_package_id_name_version (package_id);
 	ADD_LINE(_("Version"), package_pretty, "\n");
 	g_free (package_pretty);
 
-	switch (info) {
-	case PK_INFO_ENUM_LOW:
-		info_text = _("Bugfix");
-		break;
-	case PK_INFO_ENUM_IMPORTANT:
-		info_text = _("Important Update");
-		break;
-	case PK_INFO_ENUM_SECURITY:
-		info_text = _("Security");
-		break;
-	case PK_INFO_ENUM_NORMAL:
-	default:
-		info_text = _("Update");
-		break;
-	}
-	
+	info_text = pk_info_enum_to_localised_text (info);
 	ADD_LINE(_("Type"), info_text, "\n");
 
-	if (!pk_strzero (updates)) {
+	if (pk_strzero (updates) == FALSE) {
 		updates_pretty = pk_package_id_name_version (updates);
 		ADD_LINE(_("Updates"), updates_pretty, "\n");
 		g_free (updates_pretty);
 	}
 
-	if (!pk_strzero (obsoletes)) {
+	if (pk_strzero (obsoletes) == FALSE) {
 		obsoletes_pretty = pk_package_id_name_version (obsoletes);
 		ADD_LINE(_("Obsoletes"), obsoletes_pretty, "\n");
 		g_free (obsoletes_pretty);
@@ -280,22 +264,22 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		ADD_LINE(_("Description"), update_text, "");
 	}
-	/* The yum backend used to report a serialized list of 
-         * dictionaries as url. Filter that out.
-         */ 
+
+	/* The yum backend used to report a serialized list of
+         * dictionaries as url. Filter that out. */
 	if (!pk_strzero (vendor_url) && !g_str_has_prefix (vendor_url, "[{")) {
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		text = g_strdup_printf ("%12s ", _("References"));
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
 						  title_tag, NULL);
 		g_free (text);
 		tag = gtk_text_buffer_create_tag (buffer, NULL,
-						  "foreground", "blue", 
-						  "underline", PANGO_UNDERLINE_SINGLE, 
+						  "foreground", "blue",
+						  "underline", PANGO_UNDERLINE_SINGLE,
 						  NULL);
 		g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (vendor_url), g_free);
 		text = g_strdup_printf (" %s\n", vendor_url);
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
 						  tag, NULL);
 		g_free (text);
 	}
@@ -304,8 +288,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	    restart == PK_RESTART_ENUM_SYSTEM) {
 		gtk_text_buffer_insert (buffer, &iter, "\n\n", -1);
 		text = g_strdup_printf ("%12s ", "");
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
-						  space_tag, NULL);
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, space_tag, NULL);
 		g_free (text);
 		gtk_text_buffer_insert (buffer, &iter, " ", -1);
 		gtk_text_buffer_insert_with_tags (buffer, &iter,
@@ -344,10 +327,10 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 	GtkTextBuffer *buffer;
 
 	switch (event->keyval) {
-	case GDK_Return: 
+	case GDK_Return:
 	case GDK_KP_Enter:
 		buffer = gtk_text_view_get_buffer (tv);
-		gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
+		gtk_text_buffer_get_iter_at_mark (buffer, &iter,
                                           	  gtk_text_buffer_get_insert (buffer));
 		follow_if_link (widget, &iter);
 	break;
@@ -396,7 +379,7 @@ static gboolean hovering_over_link = FALSE;
 static GdkCursor *hand_cursor = NULL;
 static GdkCursor *regular_cursor = NULL;
 
-/* Looks at all tags covering the position (x, y) in the text view, 
+/* Looks at all tags covering the position (x, y) in the text view,
  * and if one of them is a link, change the cursor to the "hands" cursor
  * typically used by web browsers.
  */
@@ -409,7 +392,7 @@ set_cursor_if_appropriate (GtkTextView *tv, gint x, gint y)
 	gboolean hovering = FALSE;
 
 	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
-  
+
 	tags = gtk_text_iter_get_tags (&iter);
 	for (t = tags;  t != NULL;  t = t->next) {
 		GtkTextTag *tag = t->data;
@@ -432,7 +415,7 @@ set_cursor_if_appropriate (GtkTextView *tv, gint x, gint y)
 	g_slist_free (tags);
 }
 
-/* Update the cursor image if the pointer moved. 
+/* Update the cursor image if the pointer moved.
  */
 static gboolean
 motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
@@ -473,13 +456,13 @@ setup_link_support (GtkWidget *widget)
 	hand_cursor = gdk_cursor_new (GDK_HAND2);
 		regular_cursor = gdk_cursor_new (GDK_XTERM);
 
-	g_signal_connect (widget, "key-press-event", 
+	g_signal_connect (widget, "key-press-event",
 			  G_CALLBACK (key_press_event), NULL);
-	g_signal_connect (widget, "event-after", 
+	g_signal_connect (widget, "event-after",
 			  G_CALLBACK (event_after), NULL);
-	g_signal_connect (widget, "motion-notify-event", 
+	g_signal_connect (widget, "motion-notify-event",
 			  G_CALLBACK (motion_notify_event), NULL);
-	g_signal_connect (widget, "visibility-notify-event", 
+	g_signal_connect (widget, "visibility-notify-event",
 			  G_CALLBACK (visibility_notify_event), NULL);
 }
 
@@ -492,7 +475,7 @@ update_tag (GtkTextTag *tag, gpointer data)
 	g_object_get (tag, "name", &name, NULL);
 
 	if (strcmp (name, "title") == 0) {
-		g_object_set (tag, 
+		g_object_set (tag,
 			      "foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
 			      "background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
 			      NULL);
@@ -624,11 +607,11 @@ pk_updates_set_aux_status (PkClient *client, const gchar *message)
 
 	markup = g_strdup_printf ("<b>%s</b>", message);
 	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter, 
-			    PACKAGES_COLUMN_TEXT, markup, 
+	gtk_list_store_set (list_store, &iter,
+			    PACKAGES_COLUMN_TEXT, markup,
 			    PACKAGES_COLUMN_ICON, "dialog-information",
 			    -1);
-	g_free (markup); 
+	g_free (markup);
 }
 
 /**
@@ -740,7 +723,7 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 }
 
 static void
-expander_toggled (GtkWidget  *widget, 
+expander_toggled (GtkWidget  *widget,
 		  GParamSpec *pspec,
 		  gpointer    data)
 {

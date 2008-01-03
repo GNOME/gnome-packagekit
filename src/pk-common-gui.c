@@ -611,10 +611,10 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 	const gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_LOW:
-		text = _("Low priority update");
+		text = _("Bugfix update");
 		break;
 	case PK_INFO_ENUM_NORMAL:
-		text = _("Normal update");
+		text = _("Update");
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
 		text = _("Important update");
