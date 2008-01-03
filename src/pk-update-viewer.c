@@ -296,6 +296,35 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	gtk_text_view_set_buffer (tv, buffer);
 }
 
+static void
+update_tag (GtkTextTag *tag, gpointer data)
+{
+	GtkWidget *widget = data;
+	gchar *name;
+
+	g_object_get (tag, "name", &name, NULL);
+
+	if (strcmp (name, "title") == 0) {
+		g_object_set (tag, 
+			      "foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
+			      "background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
+			      NULL);
+	}
+}
+
+static void
+update_tags (GtkWidget *widget,
+	     GtkStyle  *previous_style,
+	     gpointer   user_data)
+{
+	GtkTextBuffer *buffer;
+	GtkTextTagTable *tags;
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
+	tags = gtk_text_buffer_get_tag_table (buffer);
+	gtk_text_tag_table_foreach (tags, update_tag, widget);
+}
+
 /**
  * pk_updates_transaction_status_changed_cb:
  **/
@@ -629,6 +658,10 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_help_cb), NULL);
 	/* we have no yelp file yet */
 	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (glade_xml, "details_textview");
+	g_signal_connect (widget, "style-set",
+			  G_CALLBACK (update_tags), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_update");
 	g_signal_connect (widget, "clicked",
