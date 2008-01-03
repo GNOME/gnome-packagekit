@@ -26,6 +26,7 @@
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
@@ -192,7 +193,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	gchar *info_text = NULL;
 	GtkTextView *tv;
 	GtkTextBuffer *buffer;
-	GtkTextTag *bold_tag, *title_tag, *space_tag;
+	GtkTextTag *bold_tag, *title_tag, *space_tag, *tag;
 	GtkTextIter iter;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -278,6 +279,22 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		ADD_LINE(_("Description"), update_text, "");
 	}
+	if (!pk_strzero (url)) {
+		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+		text = g_strdup_printf ("%12s ", _("References"));
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
+						  title_tag, NULL);
+		g_free (text);
+		tag = gtk_text_buffer_create_tag (buffer, NULL,
+						  "foreground", "blue", 
+						  "underline", PANGO_UNDERLINE_SINGLE, 
+						  NULL);
+		g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (url), g_free);
+		text = g_strdup_printf (" %s\n", url);
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
+						  tag, NULL);
+		g_free (text);
+	}
 
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
@@ -294,6 +311,172 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	}
 
 	gtk_text_view_set_buffer (tv, buffer);
+}
+
+static void
+follow_if_link (GtkWidget *widget, GtkTextIter *iter)
+{
+	GSList *tags = NULL, *t = NULL;
+
+	tags = gtk_text_iter_get_tags (iter);
+	for (t = tags;  t != NULL;  t = t->next) {
+		GtkTextTag *tag = t->data;
+		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
+		if (url) {
+			pk_execute_url (url);
+	  		break;
+		}
+	}
+	g_slist_free (tags);
+}
+
+/* Links can be activated by pressing Enter.
+ */
+static gboolean
+key_press_event (GtkWidget *widget, GdkEventKey *event)
+{
+	GtkTextView *tv = GTK_TEXT_VIEW (widget);
+	GtkTextIter iter;
+	GtkTextBuffer *buffer;
+
+	switch (event->keyval) {
+	case GDK_Return: 
+	case GDK_KP_Enter:
+		buffer = gtk_text_view_get_buffer (tv);
+		gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
+                                          	  gtk_text_buffer_get_insert (buffer));
+		follow_if_link (widget, &iter);
+	break;
+
+	default:
+	break;
+	}
+
+	return FALSE;
+}
+
+static gboolean
+event_after (GtkWidget *widget, GdkEvent *ev)
+{
+	GtkTextView *tv = GTK_TEXT_VIEW (widget);
+	GtkTextIter start, end, iter;
+	GtkTextBuffer *buffer;
+	GdkEventButton *event;
+	gint x, y;
+
+	if (ev->type != GDK_BUTTON_RELEASE)
+		return FALSE;
+
+	event = (GdkEventButton *)ev;
+
+	if (event->button != 1)
+		return FALSE;
+
+	buffer = gtk_text_view_get_buffer (tv);
+
+	/* we shouldn't follow a link if the user has selected something */
+	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
+		return FALSE;
+
+	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
+                                               event->x, event->y, &x, &y);
+	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
+
+	follow_if_link (widget, &iter);
+
+	return FALSE;
+}
+
+static gboolean hovering_over_link = FALSE;
+static GdkCursor *hand_cursor = NULL;
+static GdkCursor *regular_cursor = NULL;
+
+/* Looks at all tags covering the position (x, y) in the text view, 
+ * and if one of them is a link, change the cursor to the "hands" cursor
+ * typically used by web browsers.
+ */
+static void
+set_cursor_if_appropriate (GtkTextView *tv, gint x, gint y)
+{
+	GSList *tags = NULL, *t = NULL;
+	GtkTextIter iter;
+	GdkWindow *window;
+	gboolean hovering = FALSE;
+
+	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
+  
+	tags = gtk_text_iter_get_tags (&iter);
+	for (t = tags;  t != NULL;  t = t->next) {
+		GtkTextTag *tag = t->data;
+		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
+      		if (url) {
+          		hovering = TRUE;
+          		break;
+		}
+	}
+
+	if (hovering != hovering_over_link) {
+		hovering_over_link = hovering;
+		window = gtk_text_view_get_window (tv, GTK_TEXT_WINDOW_TEXT);
+		if (hovering_over_link)
+			gdk_window_set_cursor (window, hand_cursor);
+		else
+			gdk_window_set_cursor (window, regular_cursor);
+	}
+
+	g_slist_free (tags);
+}
+
+/* Update the cursor image if the pointer moved. 
+ */
+static gboolean
+motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
+{
+	GtkTextView *tv = GTK_TEXT_VIEW (widget);
+	gint x, y;
+
+	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
+					       event->x, event->y, &x, &y);
+	set_cursor_if_appropriate (tv, x, y);
+
+	gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
+
+	return FALSE;
+}
+
+/* Also update the cursor image if the window becomes visible
+ *  * (e.g. when a window covering it got iconified).
+ *   */
+static gboolean
+visibility_notify_event (GtkWidget *widget, GdkEventVisibility *event)
+{
+	GtkTextView *tv = GTK_TEXT_VIEW (widget);
+	gint wx, wy, bx, by;
+
+	gdk_window_get_pointer (widget->window, &wx, &wy, NULL);
+
+	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
+					       wx, wy, &bx, &by);
+	set_cursor_if_appropriate (tv, bx, by);
+
+	return FALSE;
+}
+
+static void
+setup_link_support (GtkWidget *widget)
+{
+	hand_cursor = gdk_cursor_new (GDK_HAND2);
+		regular_cursor = gdk_cursor_new (GDK_XTERM);
+
+	g_signal_connect (widget, "key-press-event", 
+			  G_CALLBACK (key_press_event), NULL);
+	g_signal_connect (widget, "event-after", 
+			  G_CALLBACK (event_after), NULL);
+	g_signal_connect (widget, "motion-notify-event", 
+			  G_CALLBACK (motion_notify_event), NULL);
+	g_signal_connect (widget, "visibility-notify-event", 
+			  G_CALLBACK (visibility_notify_event), NULL);
 }
 
 static void
@@ -690,6 +873,7 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "details_textview");
 	g_signal_connect (widget, "style-set",
 			  G_CALLBACK (update_tags), NULL);
+	setup_link_support (widget);
 
 	widget = glade_xml_get_widget (glade_xml, "button_update");
 	g_signal_connect (widget, "clicked",
