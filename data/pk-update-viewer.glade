@@ -220,36 +220,6 @@
                                 <property name="position">1</property>
                               </packing>
                             </child>
-                            <child>
-                              <widget class="GtkHButtonBox" id="hbuttonbox2">
-                                <property name="visible">True</property>
-                                <property name="spacing">5</property>
-                                <property name="layout_style">GTK_BUTTONBOX_START</property>
-                                <child>
-                                  <widget class="GtkButton" id="button_update">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="can_default">True</property>
-                                    <property name="response_id">0</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="label25">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Update _Package</property>
-                                        <property name="use_underline">True</property>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
                           </widget>
                         </child>
                       </widget>
@@ -317,16 +287,34 @@
                   </packing>
                 </child>
                 <child>
+                  <widget class="GtkButton" id="button_update">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="response_id">0</property>
+                    <child>
+                      <widget class="GtkLabel" id="label25">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Update _Package</property>
+                        <property name="use_underline">True</property>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
                   <widget class="GtkButton" id="button_apply">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
-                    <property name="label">_Update System</property>
+                    <property name="label" translatable="yes">_Update System</property>
                     <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                   </widget>
                   <packing>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
               </widget>

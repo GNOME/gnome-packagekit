@@ -342,6 +342,9 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gchar *package_id;
+	GtkWidget *button;
+
+	button = glade_xml_get_widget (glade_xml, "button_update");
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -356,8 +359,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		/* get the decription */
 		pk_client_reset (client);
 		pk_client_get_update_detail (client, package);
+
+                gtk_widget_set_sensitive (button, TRUE);
 	} else {
 		g_print ("no row selected.\n");
+
+                gtk_widget_set_sensitive (button, FALSE);
 	}
 }
 
