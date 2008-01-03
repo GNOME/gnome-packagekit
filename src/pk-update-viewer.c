@@ -279,7 +279,10 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		ADD_LINE(_("Description"), update_text, "");
 	}
-	if (!pk_strzero (url)) {
+	/* The yum backend used to report a serialized list of 
+         * dictionaries as url. Filter that out.
+         */ 
+	if (!pk_strzero (url) && !g_str_has_prefix (url, "[{")) {
 		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		text = g_strdup_printf ("%12s ", _("References"));
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
