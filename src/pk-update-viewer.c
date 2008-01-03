@@ -552,6 +552,34 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 	}
 }
 
+static void
+expander_toggled (GtkWidget  *widget, 
+		  GParamSpec *pspec,
+		  gpointer    data)
+{
+	GtkWidget *dialog;
+	GtkWidget *child, *tv;
+	gboolean expanded;
+	GtkRequisition req, req2;
+	gint width, height;
+
+	dialog = gtk_widget_get_toplevel (widget);
+	child = gtk_bin_get_child (GTK_BIN (widget));
+	tv = glade_xml_get_widget (glade_xml, "details_textview");
+
+	g_object_get (widget, "expanded", &expanded, NULL);
+	if (GTK_WIDGET_DRAWABLE (widget)) {
+		gtk_window_get_size (GTK_WINDOW (dialog), &width, &height);
+		gtk_widget_size_request (child, &req);
+		gtk_widget_size_request (tv, &req2);
+	}
+
+	if (expanded)
+		gtk_window_resize (GTK_WINDOW (dialog), width, height - req.height);
+	else
+		gtk_window_resize (GTK_WINDOW (dialog), width, height + req.height);
+}
+
 /**
  * main:
  **/
@@ -668,6 +696,9 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_update_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
 
+	widget = glade_xml_get_widget (glade_xml, "details_expander");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (expander_toggled), NULL);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
