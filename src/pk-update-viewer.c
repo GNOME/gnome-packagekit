@@ -52,6 +52,7 @@ enum
 	PACKAGES_COLUMN_ICON,
 	PACKAGES_COLUMN_TEXT,
 	PACKAGES_COLUMN_ID,
+	PACKAGES_COLUMN_INFO,
 	PACKAGES_COLUMN_LAST
 };
 
@@ -168,6 +169,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_ICON, icon_name,
+			    PACKAGES_COLUMN_INFO, info,
 			    -1);
 	g_free (text);
 }
@@ -621,7 +623,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
-					     G_TYPE_STRING, G_TYPE_STRING);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
