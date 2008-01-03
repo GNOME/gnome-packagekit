@@ -584,9 +584,8 @@ main (int argc, char *argv[])
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
 
-	/* set apply insensitive until we finished*/
+	/* set apply insensitive until we finished */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, FALSE);
 
@@ -619,8 +618,6 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_update_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
-
-	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
