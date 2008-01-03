@@ -175,24 +175,6 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 }
 
 /**
- * pk_updates_set_text_buffer:
- **/
-static void
-pk_updates_set_text_buffer (GtkWidget *widget, const gchar *text)
-{
-	GtkTextBuffer *buffer;
-	buffer = gtk_text_buffer_new (NULL);
-	/* ITS4: ignore, not used for allocation */
-	if (pk_strzero (text) == FALSE) {
-		gtk_text_buffer_set_text (buffer, text, -1);
-	} else {
-		/* no information */
-		gtk_text_buffer_set_text (buffer, "", -1);
-	}
-	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
-}
-
-/**
  * pk_updates_update_detail_cb:
  **/
 static void
@@ -203,85 +185,115 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
-	const gchar *text;
+	gchar *text;
 	gchar *package_pretty = NULL;
 	gchar *updates_pretty = NULL;
 	gchar *obsoletes_pretty = NULL;
+	gchar *info_text = NULL;
+	GtkTextView *tv;
+	GtkTextBuffer *buffer;
+	GtkTextTag *bold_tag, *title_tag, *space_tag;
+	GtkTextIter iter;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter treeiter;
+	gint info;
+
+	/* Grr, need to look up the info from the packages list */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	if (gtk_tree_selection_get_selected (selection, &model, &treeiter)) {
+		gtk_tree_model_get (model, &treeiter,
+				    PACKAGES_COLUMN_INFO, &info, -1);
+	}
+	else {
+		info = PK_INFO_ENUM_NORMAL;
+	}
 
 	/* set restart */
-	widget = glade_xml_get_widget (glade_xml, "label_restart");
+	widget = glade_xml_get_widget (glade_xml, "details_textview");
+	tv = GTK_TEXT_VIEW (widget);
+	buffer = gtk_text_buffer_new (NULL);
+	bold_tag = gtk_text_buffer_create_tag (buffer, "bold", 
+					       "weight", PANGO_WEIGHT_BOLD, 
+					       NULL);
+	title_tag = gtk_text_buffer_create_tag (buffer, "title", 
+						"font", "DejaVu LGC Sans Mono Bold",
+						"foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
+						"background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
+						NULL);
+	space_tag = gtk_text_buffer_create_tag (buffer, "space", 
+						"font", "DejaVu LGC Sans Mono Bold", 
+						NULL);
+
+	gtk_text_buffer_get_start_iter (buffer, &iter);
+
+#define ADD_LINE(title,line,end) 					\
+	text = g_strdup_printf ("%12s ", title); 			\
+	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,  	\
+					  title_tag, NULL); 		\
+	g_free (text);							\
+	text = g_strdup_printf (" %s%s", line, end);			\
+	gtk_text_buffer_insert (buffer, &iter, text, -1);		\
+	g_free (text);
+	
+	package_pretty = pk_package_id_name_version (package_id);
+	ADD_LINE(_("Version"), package_pretty, "\n");
+	g_free (package_pretty);
+
+	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		info_text = _("Bugfix");
+		break;
+	case PK_INFO_ENUM_IMPORTANT:
+		info_text = _("Important Update");
+		break;
+	case PK_INFO_ENUM_SECURITY:
+		info_text = _("Security");
+		break;
+	case PK_INFO_ENUM_NORMAL:
+	default:
+		info_text = _("Update");
+		break;
+	}
+	
+	ADD_LINE(_("Type"), info_text, "\n");
+
+	if (!pk_strzero (updates)) {
+		updates_pretty = pk_package_id_name_version (updates);
+		ADD_LINE(_("Updates"), updates_pretty, "\n");
+		g_free (updates_pretty);
+	}
+
+	if (!pk_strzero (obsoletes)) {
+		obsoletes_pretty = pk_package_id_name_version (obsoletes);
+		ADD_LINE(_("Obsoletes"), obsoletes_pretty, "\n");
+		g_free (obsoletes_pretty);
+	}
+
+        ident = pk_package_id_new_from_string (package_id);
+	ADD_LINE(_("Repository"), ident->data, "");
+
+	if (!pk_strzero (update_text)) {
+		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+		ADD_LINE(_("Description"), update_text, "");
+	}
+
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
-		gtk_widget_show (widget);
-		text = pk_restart_enum_to_localised_text_future (restart);
-		gtk_label_set_label (GTK_LABEL (widget), text);
-		widget = glade_xml_get_widget (glade_xml, "label_restart_left");
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_restart_left");
-		gtk_widget_hide (widget);
+		gtk_text_buffer_insert (buffer, &iter, "\n\n", -1);
+		text = g_strdup_printf ("%12s ", "");
+		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, 
+						  space_tag, NULL);
+		g_free (text);
+		gtk_text_buffer_insert (buffer, &iter, " ", -1);
+		gtk_text_buffer_insert_with_tags (buffer, &iter,
+						  _("This update will require a reboot."), -1,
+						  bold_tag, NULL);
+		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 	}
 
-	/* set updates */
-	widget = glade_xml_get_widget (glade_xml, "label_version");
-	package_pretty = pk_package_id_name_version (package_id);
-	gtk_label_set_label (GTK_LABEL (widget), package_pretty);
-
-	/* set updates */
-	widget = glade_xml_get_widget (glade_xml, "label_updates");
-	if (pk_strzero (updates) == TRUE) {
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_updates_left");
-		gtk_widget_hide (widget);
-	} else {
-		gtk_widget_show (widget);
-		updates_pretty = pk_package_id_name_version (updates);
-		gtk_label_set_label (GTK_LABEL (widget), updates_pretty);
-	}
-
-	/* set updates */
-	widget = glade_xml_get_widget (glade_xml, "label_obsoletes");
-	if (pk_strzero (obsoletes) == TRUE) {
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_obsoletes_left");
-		gtk_widget_hide (widget);
-	} else {
-		gtk_widget_show (widget);
-		obsoletes_pretty = pk_package_id_name_version (obsoletes);
-		gtk_label_set_label (GTK_LABEL (widget), obsoletes_pretty);
-	}
-
-	/* set repo */
-	widget = glade_xml_get_widget (glade_xml, "label_repo");
-	ident = pk_package_id_new_from_string (package_id);
-	if (pk_strzero (ident->data) == TRUE) {
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_repo_left");
-		gtk_widget_hide (widget);
-	} else {
-		gtk_widget_show (widget);
-		gtk_label_set_label (GTK_LABEL (widget), ident->data);
-	}
-	pk_package_id_free (ident);
-
-	/* set text buffer */
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
-	if (pk_strzero (update_text) == TRUE) {
-		gtk_widget_hide (widget);
-	} else {
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (glade_xml, "textview_details");
-		pk_updates_set_text_buffer (widget, update_text);
-	}
-
-	/* show the notebook */
-	widget = glade_xml_get_widget (glade_xml, "frame_details");
-	gtk_widget_show (widget);
-
-	g_free (package_pretty);
-	g_free (updates_pretty);
-	g_free (obsoletes_pretty);
+	gtk_text_view_set_buffer (tv, buffer);
 }
 
 /**
@@ -345,6 +357,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeIter iter;
 	gchar *package_id;
 	GtkWidget *button;
+	GtkWidget *widget;
+	GtkTextBuffer *buffer;
+
+	widget = glade_xml_get_widget (glade_xml, "details_textview");
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
+	gtk_text_buffer_set_text (buffer, "", -1);
 
 	button = glade_xml_get_widget (glade_xml, "button_update");
 
@@ -414,8 +432,8 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		/* hide the details for now */
-		widget = glade_xml_get_widget (glade_xml, "frame_details");
-		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "details_expander");
+		gtk_expander_set_expanded (GTK_EXPANDER (widget), FALSE);
 
 		pk_client_reset (client);
 		pk_client_set_use_buffer (client, TRUE);
@@ -441,8 +459,8 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 		gtk_list_store_clear (list_store);
 
 		/* hide the details for now */
-		widget = glade_xml_get_widget (glade_xml, "frame_details");
-		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "details_expander");
+		gtk_expander_set_expanded (GTK_EXPANDER (widget), FALSE);
 
 		/* get the new update list */
 		pk_client_reset (client);
@@ -591,10 +609,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	/* hide the details for now */
-	widget = glade_xml_get_widget (glade_xml, "frame_details");
-	gtk_widget_hide (widget);
-
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_window_delete_event_cb), loop);
@@ -620,6 +634,7 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_update_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
+
 
 	/* create list stores */
 	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
