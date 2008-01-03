@@ -229,46 +229,44 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	gtk_text_buffer_get_start_iter (buffer, &iter);
 
-#define ADD_LINE(title,line,end) 					\
+#define ADD_LINE(title,line) 						\
 	text = g_strdup_printf ("%12s ", title); 			\
 	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,  	\
 					  title_tag, NULL);		\
 	g_free (text);							\
-	text = g_strdup_printf (" %s%s", line, end);			\
+	text = g_strdup_printf (" %s\n", line);				\
 	gtk_text_buffer_insert (buffer, &iter, text, -1);		\
 	g_free (text);
 
 	package_pretty = pk_package_id_name_version (package_id);
-	ADD_LINE(_("Version"), package_pretty, "\n");
+	ADD_LINE(_("Version"), package_pretty);
 	g_free (package_pretty);
 
 	info_text = pk_info_enum_to_localised_text (info);
-	ADD_LINE(_("Type"), info_text, "\n");
+	ADD_LINE(_("Type"), info_text);
 
 	if (pk_strzero (updates) == FALSE) {
 		updates_pretty = pk_package_id_name_version (updates);
-		ADD_LINE(_("Updates"), updates_pretty, "\n");
+		ADD_LINE(_("Updates"), updates_pretty);
 		g_free (updates_pretty);
 	}
 
 	if (pk_strzero (obsoletes) == FALSE) {
 		obsoletes_pretty = pk_package_id_name_version (obsoletes);
-		ADD_LINE(_("Obsoletes"), obsoletes_pretty, "\n");
+		ADD_LINE(_("Obsoletes"), obsoletes_pretty);
 		g_free (obsoletes_pretty);
 	}
 
         ident = pk_package_id_new_from_string (package_id);
-	ADD_LINE(_("Repository"), ident->data, "");
+	ADD_LINE(_("Repository"), ident->data);
 
 	if (!pk_strzero (update_text)) {
-		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
-		ADD_LINE(_("Description"), update_text, "");
+		ADD_LINE(_("Description"), update_text);
 	}
 
 	/* The yum backend used to report a serialized list of
          * dictionaries as url. Filter that out. */
-	if (!pk_strzero (vendor_url) && !g_str_has_prefix (vendor_url, "[{")) {
-		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+	if (pk_strzero (vendor_url) == FALSE && !g_str_has_prefix (vendor_url, "[{")) {
 		text = g_strdup_printf ("%12s ", _("References"));
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
 						  title_tag, NULL);
@@ -286,7 +284,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
-		gtk_text_buffer_insert (buffer, &iter, "\n\n", -1);
+		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
 		text = g_strdup_printf ("%12s ", "");
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, space_tag, NULL);
 		g_free (text);
