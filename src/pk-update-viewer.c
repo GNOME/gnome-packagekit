@@ -46,7 +46,6 @@ static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
 static PkStatusbar *statusbar = NULL;
-static gchar *update_url = NULL;
 
 enum
 {
@@ -63,15 +62,6 @@ static void
 pk_button_help_cb (GtkWidget *widget, gboolean data)
 {
 	pk_debug ("emitting action-help");
-}
-
-/**
- * pk_button_url_cb:
- **/
-static void
-pk_button_url_cb (GtkWidget *widget, gboolean data)
-{
-	pk_execute_url (update_url);
 }
 
 /**
@@ -258,16 +248,6 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		gtk_widget_show (widget);
 		obsoletes_pretty = pk_package_id_name_version (obsoletes);
 		gtk_label_set_label (GTK_LABEL (widget), obsoletes_pretty);
-	}
-
-	/* set url */
-	widget = glade_xml_get_widget (glade_xml, "button_url");
-	if (pk_strzero (url) == FALSE) {
-		gtk_widget_show (widget);
-		g_free (update_url);
-		update_url = g_strdup (url);
-	} else {
-		gtk_widget_hide (widget);
 	}
 
 	/* set repo */
@@ -627,11 +607,6 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_help_cb), NULL);
 	/* we have no yelp file yet */
 	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "button_url");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_url_cb), NULL);
-	gtk_widget_set_tooltip_text(widget, _("Visit homepage for selected package"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_update");
 	g_signal_connect (widget, "clicked",
