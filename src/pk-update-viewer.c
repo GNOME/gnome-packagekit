@@ -851,6 +851,8 @@ main (int argc, char *argv[])
 	/* set apply insensitive until we finished */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_update");
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
