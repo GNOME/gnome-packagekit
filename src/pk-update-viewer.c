@@ -187,7 +187,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
-	gchar *text;
+	gchar *text, *href;
 	gchar *package_pretty = NULL;
 	gchar *updates_pretty = NULL;
 	gchar *obsoletes_pretty = NULL;
@@ -199,7 +199,10 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
-	gint info;
+	gint info, i, j;
+	const gchar *urls;
+	gchar **u;
+	gboolean has_title;
 
 	/* Grr, need to look up the info from the packages list */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -264,27 +267,55 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		ADD_LINE(_("Description"), update_text);
 	}
 
-	/* The yum backend used to report a serialized list of
-         * dictionaries as url. Filter that out. */
-	if (pk_strzero (vendor_url) == FALSE && !g_str_has_prefix (vendor_url, "[{")) {
-		text = g_strdup_printf ("%12s ", _("References"));
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
-						  title_tag, NULL);
-		g_free (text);
-		tag = gtk_text_buffer_create_tag (buffer, NULL,
-						  "foreground", "blue",
-						  "underline", PANGO_UNDERLINE_SINGLE,
-						  NULL);
-		g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (vendor_url), g_free);
-		text = g_strdup_printf (" %s\n", vendor_url);
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
-						  tag, NULL);
-		g_free (text);
+	has_title = FALSE;
+	for (i = 0; i < 3; i++) {
+		switch (i) {
+		case 0:
+			urls = vendor_url;
+			break;
+		case 1:
+			urls = bugzilla_url;
+			break;
+		case 2:
+			urls = cve_url;
+			break;
+		default:
+			urls = NULL;
+			g_assert_not_reached ();
+		}
+		if (strcmp (urls, "none") == 0) {
+			urls = "";
+		}
+		if (pk_strzero (urls) == FALSE && !has_title) {
+			has_title = TRUE;
+			text = g_strdup_printf ("%12s ", _("References"));
+			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
+							  title_tag, NULL);
+			g_free (text);
+		}
+
+		u = g_strsplit (urls, ";", 0);
+		for (j = 0; u[j]; j += 2) {
+			href = u[j];
+			text = u[j+1];
+			if (pk_strzero (text)) {
+				text = href;
+			}
+			gtk_text_buffer_insert (buffer, &iter, " ", -1);
+			tag = gtk_text_buffer_create_tag (buffer, NULL,
+				  	 		  "foreground", "blue",
+				  			  "underline", PANGO_UNDERLINE_SINGLE,
+				  			  NULL);
+			g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (href), g_free);
+			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
+							  tag, NULL);
+		}
+		g_strfreev (u);
 	}
 
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
-		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+		gtk_text_buffer_insert (buffer, &iter, "\n\n", -1);
 		text = g_strdup_printf ("%12s ", "");
 		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, space_tag, NULL);
 		g_free (text);
