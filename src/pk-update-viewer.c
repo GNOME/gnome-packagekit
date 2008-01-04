@@ -232,9 +232,9 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	gtk_text_buffer_get_start_iter (buffer, &iter);
 
-#define ADD_LINE(title,line) 						\
-	text = g_strdup_printf ("%12s ", title); 			\
-	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,  	\
+#define ADD_LINE(title,line)						\
+	text = g_strdup_printf ("%12s ", title);			\
+	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,	\
 					  title_tag, NULL);		\
 	g_free (text);							\
 	text = g_strdup_printf (" %s\n", line);				\
@@ -283,10 +283,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 			urls = NULL;
 			g_assert_not_reached ();
 		}
-		if (strcmp (urls, "none") == 0) {
-			urls = "";
-		}
-		if (pk_strzero (urls) == FALSE && !has_title) {
+		if (pk_strzero (urls) == FALSE && has_title == FALSE) {
 			has_title = TRUE;
 			text = g_strdup_printf ("%12s ", _("References"));
 			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
@@ -303,9 +300,9 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 			}
 			gtk_text_buffer_insert (buffer, &iter, " ", -1);
 			tag = gtk_text_buffer_create_tag (buffer, NULL,
-				  	 		  "foreground", "blue",
-				  			  "underline", PANGO_UNDERLINE_SINGLE,
-				  			  NULL);
+							  "foreground", "blue",
+							  "underline", PANGO_UNDERLINE_SINGLE,
+							  NULL);
 			g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (href), g_free);
 			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
 							  tag, NULL);
@@ -340,7 +337,7 @@ follow_if_link (GtkWidget *widget, GtkTextIter *iter)
 		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
 		if (url) {
 			pk_execute_url (url);
-	  		break;
+			break;
 		}
 	}
 	g_slist_free (tags);
@@ -360,12 +357,11 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 	case GDK_KP_Enter:
 		buffer = gtk_text_view_get_buffer (tv);
 		gtk_text_buffer_get_iter_at_mark (buffer, &iter,
-                                          	  gtk_text_buffer_get_insert (buffer));
+						  gtk_text_buffer_get_insert (buffer));
 		follow_if_link (widget, &iter);
-	break;
-
+		break;
 	default:
-	break;
+		break;
 	}
 
 	return FALSE;
@@ -426,9 +422,9 @@ set_cursor_if_appropriate (GtkTextView *tv, gint x, gint y)
 	for (t = tags;  t != NULL;  t = t->next) {
 		GtkTextTag *tag = t->data;
 		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
-      		if (url) {
-          		hovering = TRUE;
-          		break;
+		if (url) {
+			hovering = TRUE;
+			break;
 		}
 	}
 
