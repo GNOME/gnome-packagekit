@@ -489,22 +489,6 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 /**
- * pk_watch_not_supported:
- **/
-static void
-pk_watch_not_supported (PkWatch *watch, const gchar *title)
-{
-	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
-	pk_debug ("not_supported");
-	pk_smart_icon_notify_new (watch->priv->sicon, title,
-			      _("The action could not be completed (the backend refusing the command)"),
-			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
-	pk_smart_icon_notify_show (watch->priv->sicon);
-}
-
-/**
  * pk_watch_refresh_cache_finished_cb:
  **/
 static void
@@ -538,7 +522,10 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	if (ret == FALSE) {
 		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
-		pk_watch_not_supported (watch, _("Failed to refresh cache"));
+		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), "",
+				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+		pk_smart_icon_notify_show (watch->priv->sicon);
 	}
 }
 
