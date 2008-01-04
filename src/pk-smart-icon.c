@@ -267,7 +267,7 @@ pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gc
 	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
 		text = _("Do not show this notification again");
 	} else if (button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
-		text = _("Don not warn me again");
+		text = _("Do not warn me again");
 	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		text = _("Cancel system update");
 	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
