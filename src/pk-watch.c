@@ -320,8 +320,8 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 
 	/* libnotify dialog */
 	pk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
-			      "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+				  "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_COMPLETED);
 	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (message);
 	g_free (package_id);
@@ -363,8 +363,9 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	/* we need to format this */
 	escaped_details = pk_error_format_details (details);
 
-	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
+				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
 	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
@@ -388,8 +389,9 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	/* we need to format this */
 	escaped_details = pk_error_format_details (details);
 
-	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename, PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
+				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
+	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_MESSAGE);
 	pk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
@@ -524,7 +526,6 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 		pk_warning ("failed to refresh cache");
 		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), _("Client action was refused"),
 				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-		pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 		pk_smart_icon_notify_show (watch->priv->sicon);
 	}
 }

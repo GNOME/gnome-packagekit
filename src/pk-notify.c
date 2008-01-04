@@ -102,7 +102,7 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 			      _("Functionality incomplete"),
 			      _("No help yet, sorry..."), "help-browser",
 			      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 #endif
@@ -265,7 +265,7 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 					  _("The system update has completed"), message, "software-update-available",
 					  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
 		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
 		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	pk_debug ("resetting client %p", client);
@@ -291,7 +291,7 @@ pk_notify_update_system (PkNotify *notify)
 		pk_warning ("failed to update system");
 		pk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), _("Client action was refused"),
 				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
 		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	return ret;
@@ -415,7 +415,7 @@ pk_notify_auto_update_message (PkNotify *notify)
 				  _("Updates are being automatically installed on your computer"), "software-update-urgent",
 				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
 	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_STARTED);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
@@ -485,7 +485,9 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 					      _("Will not install updates"),
 					      _("Automatic updates are not being installed as the computer is on battery power"),
 					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-			pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+			pk_smart_icon_notify_button (notify->priv->sicon,
+						     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+						     PK_CONF_NOTIFY_BATTERY_UPDATE);
 			pk_smart_icon_notify_show (notify->priv->sicon);
 			return;
 		}
@@ -550,8 +552,9 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 		return;
 	}
 
-	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
+				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 }
 
@@ -713,10 +716,14 @@ pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 
 	pk_debug ("got: %i with data %s", button, data);
 	/* find the localised text */
-	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
-		pk_warning ("moo");
-	} else if (button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
-		pk_warning ("moo");
+	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
+	    button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+		if (data == NULL) {
+			pk_warning ("data NULL");
+		} else {
+			pk_debug ("setting %s to FALSE", data);
+			gconf_client_set_bool (notify->priv->gconf_client, data, FALSE, NULL);
+		}
 	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		gboolean ret;
 		ret = pk_client_cancel (notify->priv->client_update_system);
