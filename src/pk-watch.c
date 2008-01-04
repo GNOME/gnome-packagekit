@@ -522,7 +522,7 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	if (ret == FALSE) {
 		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
-		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), "",
+		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), _("Client action was refused"),
 				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
 		pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
 		pk_smart_icon_notify_show (watch->priv->sicon);

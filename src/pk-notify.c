@@ -273,23 +273,6 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 }
 
 /**
- * pk_notify_not_supported:
- **/
-static void
-pk_notify_not_supported (PkNotify *notify, const gchar *title)
-{
-	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
-
-	pk_debug ("not_supported");
-	pk_smart_icon_notify_new (notify->priv->sicon, title,
-			      _("The action could not be completed due to the backend refusing the command"),
-			      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
-	pk_smart_icon_notify_show (notify->priv->sicon);
-}
-
-/**
  * pk_notify_update_system:
  **/
 static gboolean
@@ -306,7 +289,10 @@ pk_notify_update_system (PkNotify *notify)
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
 		pk_warning ("failed to update system");
-		pk_notify_not_supported (notify, _("Failed to update system"));
+		pk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), _("Client action was refused"),
+				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, NULL);
+		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	return ret;
 }
