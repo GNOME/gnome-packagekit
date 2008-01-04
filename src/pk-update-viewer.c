@@ -565,6 +565,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Severity"), renderer,
 							   "icon-name", PACKAGES_COLUMN_ICON, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_INFO);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
