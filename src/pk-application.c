@@ -126,7 +126,7 @@ pk_application_class_init (PkApplicationClass *klass)
 }
 
 /**
- * pk_application_error_code_cb:
+ * pk_application_error_message:
  **/
 static void
 pk_application_error_message (PkApplication *application, const gchar *title, const gchar *details)

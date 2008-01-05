@@ -777,6 +777,39 @@ expander_toggled (GtkWidget  *widget,
 }
 
 /**
+ * pk_updates_error_message:
+ **/
+static void
+pk_updates_error_message (const gchar *title, const gchar *details)
+{
+	GtkWidget *main_window;
+	GtkWidget *dialog;
+	gchar *escaped_details;
+
+	pk_warning ("error %s:%s", title, details);
+	main_window = glade_xml_get_widget (glade_xml, "window_updates");
+
+	/* we need to format this */
+	escaped_details = pk_error_format_details (details);
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), escaped_details);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (escaped_details);
+}
+
+/**
+ * pk_updates_error_code_cb:
+ **/
+static void
+pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
+{
+	pk_updates_error_message (pk_error_enum_to_localised_text (code), details);
+}
+
+/**
  * main:
  **/
 int
@@ -838,6 +871,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_update_detail_cb), NULL);
 	g_signal_connect (client, "transaction-status-changed",
 			  G_CALLBACK (pk_updates_transaction_status_changed_cb), NULL);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (pk_updates_error_code_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
