@@ -397,6 +397,51 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 }
 
 /**
+ * pk_watch_about_dialog_url_cb:
+ **/
+static void 
+pk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
+{
+	GError *error = NULL;
+	gboolean ret;
+	char *cmdline;
+	GdkScreen *gscreen;
+	GtkWidget *error_dialog;
+	gchar *url;
+	gchar *protocol = (gchar*) data;
+
+	if (protocol != NULL)
+		url = g_strconcat (protocol, address, NULL);
+	else
+		url = g_strdup (address);
+
+	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
+
+	cmdline = g_strconcat ("xdg-open ", url, NULL);
+	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
+	g_free (cmdline);
+
+	if (ret == TRUE)
+		goto out;
+
+	g_error_free (error);
+	error = NULL;
+
+	cmdline = g_strconcat ("gnome-open ", url, NULL);
+	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
+	g_free (cmdline);
+        
+	if (ret == FALSE) {
+		error_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Failed to show url %s", error->message); 
+		gtk_dialog_run (GTK_DIALOG (error_dialog));
+		g_error_free (error);
+	}
+
+out:
+	g_free (url);
+}
+
+/**
  * pk_watch_show_about_cb:
  **/
 static void
@@ -435,6 +480,14 @@ pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
+
+	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
+	static gboolean been_here = FALSE;
+	if (!been_here) {
+		been_here = TRUE;
+		gtk_about_dialog_set_url_hook (pk_watch_about_dialog_url_cb, NULL, NULL);
+		gtk_about_dialog_set_email_hook (pk_watch_about_dialog_url_cb, "mailto:", NULL);
+	}
 
 	gtk_window_set_default_icon_name ("system-installer");
 	gtk_show_about_dialog (NULL,
