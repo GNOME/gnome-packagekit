@@ -42,14 +42,27 @@
 #include "pk-statusbar.h"
 
 static GladeXML *glade_xml = NULL;
-static GtkListStore *list_store = NULL;
+static GtkListStore *list_store_preview = NULL;
+static GtkListStore *list_store_history = NULL;
+static GtkListStore *list_store_details = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
 static PkStatusbar *statusbar = NULL;
 
-enum
-{
+enum {
+	PREVIEW_COLUMN_ICON,
+	PREVIEW_COLUMN_TEXT,
+	PREVIEW_COLUMN_LAST
+};
+
+enum {
+	HISTORY_COLUMN_ICON,
+	HISTORY_COLUMN_TEXT,
+	HISTORY_COLUMN_LAST
+};
+
+enum {
 	PACKAGES_COLUMN_ICON,
 	PACKAGES_COLUMN_TEXT,
 	PACKAGES_COLUMN_ID,
@@ -79,7 +92,8 @@ pk_button_update_cb (GtkWidget *widget, gboolean data)
 		/* make the refresh button non-clickable until we have completed */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
 		gtk_widget_set_sensitive (widget, FALSE);
-
+		widget = glade_xml_get_widget (glade_xml, "button_apply2");
+		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (glade_xml, "button_refresh");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
@@ -91,12 +105,14 @@ pk_button_update_cb (GtkWidget *widget, gboolean data)
 static void
 pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 {
-	GMainLoop *loop = (GMainLoop *) data;
+//	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
 
 	pk_client_reset (client);
 	pk_client_update_system (client);
-	g_main_loop_quit (loop);
+
+	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 2);
 }
 
 /**
@@ -108,13 +124,17 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 	gboolean ret;
 
 	/* clear existing list */
-	gtk_list_store_clear (list_store);
+	gtk_list_store_clear (list_store_details);
 
 	/* make the refresh button non-clickable */
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* make the apply button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_apply2");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* we can't click this if we havn't finished */
@@ -130,8 +150,7 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
  * pk_button_close_cb:
  **/
 static void
-pk_button_close_cb (GtkWidget	*widget,
-		     gpointer data)
+pk_button_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 
@@ -140,6 +159,16 @@ pk_button_close_cb (GtkWidget	*widget,
 
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
+}
+
+/**
+ * pk_button_review_cb:
+ **/
+static void
+pk_button_review_cb (GtkWidget *widget, gpointer data)
+{
+	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
 }
 
 /**
@@ -155,24 +184,33 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	const gchar *icon_name;
 
 	pk_client_get_role (client, &role, NULL);
+	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
 
-	if (role != PK_ROLE_ENUM_GET_UPDATES) {
-		pk_debug ("not in get_updates");
+	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+		text = pk_package_id_pretty (package_id, summary);
+		icon_name = pk_info_enum_to_icon_name (info);
+		gtk_list_store_append (list_store_details, &iter);
+		gtk_list_store_set (list_store_details, &iter,
+				    PACKAGES_COLUMN_TEXT, text,
+				    PACKAGES_COLUMN_ID, package_id,
+				    PACKAGES_COLUMN_ICON, icon_name,
+				    PACKAGES_COLUMN_INFO, info,
+				    -1);
+		g_free (text);
 		return;
 	}
 
-	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
-
-	text = pk_package_id_pretty (package_id, summary);
-	icon_name = pk_info_enum_to_icon_name (info);
-	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter,
-			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_ID, package_id,
-			    PACKAGES_COLUMN_ICON, icon_name,
-			    PACKAGES_COLUMN_INFO, info,
-			    -1);
-	g_free (text);
+	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		text = pk_package_id_pretty (package_id, summary);
+		icon_name = pk_info_enum_to_icon_name (info);
+		gtk_list_store_append (list_store_history, &iter);
+		gtk_list_store_set (list_store_history, &iter,
+				    HISTORY_COLUMN_TEXT, text,
+				    HISTORY_COLUMN_ICON, icon_name,
+				    -1);
+		g_free (text);
+		return;
+	}
 }
 
 /**
@@ -204,8 +242,14 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	gchar **u;
 	gboolean has_title;
 
+	/* initially we are hidden */
+	widget = glade_xml_get_widget (glade_xml, "details_scrolledwindow");
+	gtk_widget_show (widget);
+
 	/* Grr, need to look up the info from the packages list */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	if (gtk_tree_selection_get_selected (selection, &model, &treeiter)) {
 		gtk_tree_model_get (model, &treeiter,
@@ -260,7 +304,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		g_free (obsoletes_pretty);
 	}
 
-        ident = pk_package_id_new_from_string (package_id);
+	ident = pk_package_id_new_from_string (package_id);
 	ADD_LINE(_("Repository"), ident->data);
 
 	if (!pk_strzero (update_text)) {
@@ -312,15 +356,11 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
-		gtk_text_buffer_insert (buffer, &iter, "\n\n", -1);
-		text = g_strdup_printf ("%12s ", "");
-		gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1, space_tag, NULL);
-		g_free (text);
-		gtk_text_buffer_insert (buffer, &iter, " ", -1);
-		gtk_text_buffer_insert_with_tags (buffer, &iter,
-						  _("This update will require a reboot."), -1,
-						  bold_tag, NULL);
-		gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
+		gtk_widget_show (widget);
+	} else {
+		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
+		gtk_widget_hide (widget);
 	}
 
 	gtk_text_view_set_buffer (tv, buffer);
@@ -392,7 +432,7 @@ event_after (GtkWidget *widget, GdkEvent *ev)
 		return FALSE;
 
 	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
-                                               event->x, event->y, &x, &y);
+					       event->x, event->y, &x, &y);
 	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
 
 	follow_if_link (widget, &iter);
@@ -581,15 +621,11 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gchar *package_id;
-	GtkWidget *button;
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
 
-	widget = glade_xml_get_widget (glade_xml, "details_textview");
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
-	gtk_text_buffer_set_text (buffer, "", -1);
-
-	button = glade_xml_get_widget (glade_xml, "button_update");
+	/* hide the widget until we have data */
+	widget = glade_xml_get_widget (glade_xml, "details_scrolledwindow");
+	gtk_widget_hide (widget);
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -605,11 +641,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		pk_client_reset (client);
 		pk_client_get_update_detail (client, package);
 
-                gtk_widget_set_sensitive (button, TRUE);
+		widget = glade_xml_get_widget (glade_xml, "button_update");
+		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
 		g_print ("no row selected.\n");
-
-                gtk_widget_set_sensitive (button, FALSE);
+		widget = glade_xml_get_widget (glade_xml, "button_update");
+		gtk_widget_set_sensitive (widget, FALSE);
 	}
 }
 
@@ -626,16 +663,16 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointe
  * pk_updates_set_aux_status:
  **/
 static void
-pk_updates_set_aux_status (PkClient *client, const gchar *message)
+pk_updates_set_aux_status (PkClient *client, const gchar *icon, const gchar *message)
 {
 	GtkTreeIter iter;
 	gchar *markup;
 
 	markup = g_strdup_printf ("<b>%s</b>", message);
-	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter,
+	gtk_list_store_append (list_store_preview, &iter);
+	gtk_list_store_set (list_store_preview, &iter,
 			    PACKAGES_COLUMN_TEXT, markup,
-			    PACKAGES_COLUMN_ICON, "dialog-information",
+			    PACKAGES_COLUMN_ICON, icon,
 			    -1);
 	g_free (markup);
 }
@@ -656,10 +693,6 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	pk_statusbar_hide (statusbar);
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		/* hide the details for now */
-		widget = glade_xml_get_widget (glade_xml, "details_expander");
-		gtk_expander_set_expanded (GTK_EXPANDER (widget), FALSE);
-
 		pk_client_reset (client);
 		pk_client_set_use_buffer (client, TRUE);
 		pk_client_get_updates (client);
@@ -674,18 +707,23 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	/* make the refresh button clickable now we have completed */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, TRUE);
-
+	widget = glade_xml_get_widget (glade_xml, "button_apply2");
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = glade_xml_get_widget (glade_xml, "button_review");
+	gtk_widget_set_sensitive (widget, TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
+
+	/* hide the cancel */
+	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		widget = glade_xml_get_widget (glade_xml, "button_cancel");
+		gtk_widget_hide (widget);
+	}
 
 	/* we don't need to do anything here */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGE) {
 		/* clear existing list */
-		gtk_list_store_clear (list_store);
-
-		/* hide the details for now */
-		widget = glade_xml_get_widget (glade_xml, "details_expander");
-		gtk_expander_set_expanded (GTK_EXPANDER (widget), FALSE);
+		gtk_list_store_clear (list_store_details);
 
 		/* get the new update list */
 		pk_client_reset (client);
@@ -694,21 +732,91 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 		return;
 	}
 
+	/* clear existing lists */
+	gtk_list_store_clear (list_store_preview);
+
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
-		/* clear existing list */
-		gtk_list_store_clear (list_store);
-
 		/* put a message in the listbox */
-		pk_updates_set_aux_status (client, _("There are no updates available!"));
+		pk_updates_set_aux_status (client, "dialog-information", _("There are no updates available!"));
 
 		/* if no updates then hide apply */
-		widget = glade_xml_get_widget (glade_xml, "button_apply");
+		widget = glade_xml_get_widget (glade_xml, "button_review");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "button_apply2");
 		gtk_widget_hide (widget);
 	} else {
+
+		PkPackageItem *item;
+		guint i;
+		guint num_low = 0;
+		guint num_normal = 0;
+		guint num_important = 0;
+		guint num_security = 0;
+		guint num_bugfix = 0;
+		guint num_enhancement = 0;
+		const gchar *icon;
+		gchar *text;
+
+		for (i=0;i<length;i++) {
+			item = pk_client_package_buffer_get_item (client, i);
+			if (item->info == PK_INFO_ENUM_LOW) {
+				num_low++;
+			} else if (item->info == PK_INFO_ENUM_IMPORTANT) {
+				num_important++;
+			} else if (item->info == PK_INFO_ENUM_SECURITY) {
+				num_security++;
+			} else if (item->info == PK_INFO_ENUM_BUGFIX) {
+				num_bugfix++;
+			} else if (item->info == PK_INFO_ENUM_ENHANCEMENT) {
+				num_enhancement++;
+			} else {
+				num_normal++;
+			}
+		}
+
+		/* add to preview box in order of priority */
+		if (num_security > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_SECURITY), num_security);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+		if (num_important > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT), num_important);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+		if (num_bugfix > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_BUGFIX), num_bugfix);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+		if (num_enhancement > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT), num_enhancement);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+		if (num_low > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_LOW), num_low);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+		if (num_normal > 0) {
+			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
+			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_NORMAL), num_normal);
+			pk_updates_set_aux_status (client, icon, text);
+			g_free (text);
+		}
+
 		/* set visible and sensitive */
-		widget = glade_xml_get_widget (glade_xml, "button_apply");
-		gtk_widget_set_sensitive (widget, TRUE);
+		widget = glade_xml_get_widget (glade_xml, "button_review");
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (glade_xml, "button_apply2");
 		gtk_widget_show (widget);
 	}
 }
@@ -720,6 +828,16 @@ static void
 pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
 				guint elapsed, guint remaining, gpointer data)
 {
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
+
+	if (subpercentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		gtk_widget_hide (widget);
+	} else {
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) subpercentage / 100.0);
+		gtk_widget_show (widget);
+	}
+
 	pk_statusbar_set_percentage (statusbar, percentage);
 	pk_statusbar_set_remaining (statusbar, remaining);
 }
@@ -735,10 +853,10 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 	/* hide buttons if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		/* clear existing list */
-		gtk_list_store_clear (list_store);
+		gtk_list_store_clear (list_store_details);
 
 		/* put a message in the listbox */
-		pk_updates_set_aux_status (client, _("There is an update already in progress!"));
+		pk_updates_set_aux_status (client, "dialog-information", _("There is an update already in progress!"));
 
 		/* if doing it then hide apply and refresh */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
@@ -746,34 +864,6 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		widget = glade_xml_get_widget (glade_xml, "button_refresh");
 		gtk_widget_hide (widget);
 	}
-}
-
-static void
-expander_toggled (GtkWidget  *widget,
-		  GParamSpec *pspec,
-		  gpointer    data)
-{
-	GtkWidget *dialog;
-	GtkWidget *child, *tv;
-	gboolean expanded;
-	GtkRequisition req, req2;
-	gint width, height;
-
-	dialog = gtk_widget_get_toplevel (widget);
-	child = gtk_bin_get_child (GTK_BIN (widget));
-	tv = glade_xml_get_widget (glade_xml, "details_textview");
-
-	g_object_get (widget, "expanded", &expanded, NULL);
-	if (GTK_WIDGET_DRAWABLE (widget)) {
-		gtk_window_get_size (GTK_WINDOW (dialog), &width, &height);
-		gtk_widget_size_request (child, &req);
-		gtk_widget_size_request (tv, &req2);
-	}
-
-	if (expanded)
-		gtk_window_resize (GTK_WINDOW (dialog), width, height - req.height);
-	else
-		gtk_window_resize (GTK_WINDOW (dialog), width, height + req.height);
 }
 
 /**
@@ -855,7 +945,7 @@ main (int argc, char *argv[])
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+					   PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	loop = g_main_loop_new (NULL, FALSE);
 
@@ -893,11 +983,18 @@ main (int argc, char *argv[])
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 
-	/* set apply insensitive until we finished */
-	widget = glade_xml_get_widget (glade_xml, "button_apply");
-	gtk_widget_set_sensitive (widget, FALSE);
-	widget = glade_xml_get_widget (glade_xml, "button_update");
-	gtk_widget_set_sensitive (widget, FALSE);
+	/* hide the tabs */
+	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (widget), FALSE);
+	gtk_notebook_set_show_border (GTK_NOTEBOOK (widget), FALSE);
+
+	/* hide until we have updates */
+	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
+	gtk_widget_hide (widget);
+
+	/* hide until we have reboot notifier */
+	widget = glade_xml_get_widget (glade_xml, "button_review");
+	gtk_widget_hide (widget);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
@@ -906,14 +1003,35 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
+	gtk_widget_set_tooltip_text(widget, _("Close without updating"));
+	widget = glade_xml_get_widget (glade_xml, "button_close2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_close3");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), loop);
+
+	widget = glade_xml_get_widget (glade_xml, "button_review");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_review_cb), loop);
+	gtk_widget_set_tooltip_text(widget, _("Review the update list"));
+
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (glade_xml, "button_apply2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_updates_apply_cb), loop);
+	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
+	gtk_widget_set_sensitive (widget, FALSE);
+
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_refresh_cb), NULL);
-	gtk_widget_set_tooltip_text(widget, _("Refresh package list"));
+	gtk_widget_set_tooltip_text(widget, _("Refreshing is not normally required but will retrieve the latest application and update lists"));
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
@@ -930,18 +1048,34 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_update_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
 
-	widget = glade_xml_get_widget (glade_xml, "details_expander");
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (expander_toggled), NULL);
-
 	/* create list stores */
-	list_store = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
+	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
+						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
+	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_history = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
+
+	/* create preview tree view */
+	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (list_store_preview));
+
+	/* add columns to the tree view */
+	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+
+	/* create history tree view */
+	widget = glade_xml_get_widget (glade_xml, "treeview_history");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (list_store_history));
+
+	/* add columns to the tree view */
+	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store));
+				 GTK_TREE_MODEL (list_store_details));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
@@ -960,9 +1094,12 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	/* make the apply button non-clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_apply");
+	widget = glade_xml_get_widget (glade_xml, "button_update");
 	gtk_widget_set_sensitive (widget, FALSE);
+
+	/* assume we don't get this yet */
+	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
+	gtk_widget_hide (widget);
 
 	/* get the update list */
 	pk_client_get_updates (client);
@@ -972,7 +1109,9 @@ main (int argc, char *argv[])
 	g_main_loop_unref (loop);
 
 	g_object_unref (glade_xml);
-	g_object_unref (list_store);
+	g_object_unref (list_store_preview);
+	g_object_unref (list_store_history);
+	g_object_unref (list_store_details);
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
