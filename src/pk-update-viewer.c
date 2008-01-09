@@ -677,6 +677,8 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointe
 static void
 pk_updates_set_aux_status (PkClient *client, const gchar *icon, const gchar *message)
 {
+	GtkWidget *tree_view;
+	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	gchar *markup;
 
@@ -687,6 +689,10 @@ pk_updates_set_aux_status (PkClient *client, const gchar *icon, const gchar *mes
 			    PACKAGES_COLUMN_ICON, icon,
 			    -1);
 	g_free (markup);
+
+	tree_view = glade_xml_get_widget (glade_xml, "treeview_preview");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
 }
 
 /**
