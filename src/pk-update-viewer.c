@@ -172,6 +172,16 @@ pk_button_review_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * pk_button_overview_cb:
+ **/
+static void
+pk_button_overview_cb (GtkWidget *widget, gpointer data)
+{
+	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
+}
+
+/**
  * pk_updates_package_cb:
  **/
 static void
@@ -1017,6 +1027,11 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_review_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Review the update list"));
+
+	widget = glade_xml_get_widget (glade_xml, "button_overview");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_overview_cb), loop);
+	gtk_widget_set_tooltip_text(widget, _("Back to overview"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
