@@ -623,8 +623,10 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	gchar *package_id;
 	GtkWidget *widget;
 
-	/* hide the widget until we have data */
+	/* hide the widgets until we have data */
 	widget = glade_xml_get_widget (glade_xml, "details_scrolledwindow");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
 
 	/* This will only work in single or browse selection mode! */
