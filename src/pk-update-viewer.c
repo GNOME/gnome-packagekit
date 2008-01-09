@@ -778,37 +778,37 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 		/* add to preview box in order of priority */
 		if (num_security > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_SECURITY), num_security);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}
 		if (num_important > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT), num_important);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}
 		if (num_bugfix > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_BUGFIX), num_bugfix);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}
 		if (num_enhancement > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT), num_enhancement);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}
 		if (num_low > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_LOW), num_low);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}
 		if (num_normal > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
-			text = g_strdup_printf ("%s (%i)", pk_info_enum_to_localised_text (PK_INFO_ENUM_NORMAL), num_normal);
+			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
 			pk_updates_set_aux_status (client, icon, text);
 			g_free (text);
 		}

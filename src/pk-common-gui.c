@@ -605,6 +605,39 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 }
 
 /**
+ * pk_update_enum_to_localised_text:
+ **/
+gchar *
+pk_update_enum_to_localised_text (PkInfoEnum info, guint number)
+{
+	gchar *text = NULL;
+	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		text = g_strdup_printf (ngettext ("%i trivial update", "%i trivial updates", number), number);
+		break;
+	case PK_INFO_ENUM_NORMAL:
+		text = g_strdup_printf (ngettext ("%i normal update", "%i normal updates", number), number);
+		break;
+	case PK_INFO_ENUM_IMPORTANT:
+		text = g_strdup_printf (ngettext ("%i important update", "%i important updates", number), number);
+		break;
+	case PK_INFO_ENUM_SECURITY:
+		text = g_strdup_printf (ngettext ("%i security update", "%i security updates", number), number);
+		break;
+	case PK_INFO_ENUM_BUGFIX:
+		text = g_strdup_printf (ngettext ("%i bug fix update", "%i bug fix updates", number), number);
+		break;
+	case PK_INFO_ENUM_ENHANCEMENT:
+		text = g_strdup_printf (ngettext ("%i enhancement update", "%i enhancement updates", number), number);
+		break;
+	default:
+		text = g_strdup_printf (ngettext ("%i unknown update", "%i unknown updates", number), number);
+		pk_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
+	}
+	return text;
+}
+
+/**
  * pk_info_enum_to_localised_text:
  **/
 const gchar *
