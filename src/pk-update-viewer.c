@@ -99,6 +99,62 @@ pk_button_update_cb (GtkWidget *widget, gboolean data)
 	}
 }
 
+typedef enum {
+	PAGE_PREVIEW,
+	PAGE_DETAILS,
+	PAGE_PROGRESS,
+	PAGE_CONFIRM,
+	PAGE_LAST
+} PkPageEnum;
+
+/**
+ * pk_updates_apply_cb:
+ **/
+static void
+pk_updates_set_page (PkPageEnum page)
+{
+	GtkWidget *notebook;
+	GtkWidget *widget;
+
+	notebook = glade_xml_get_widget (glade_xml, "notebook_hidden");
+
+	/* preview */
+	widget = glade_xml_get_widget (glade_xml, "vbox_preview");
+	if (page == PAGE_PREVIEW) {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
+		gtk_widget_show (widget);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* details */
+	widget = glade_xml_get_widget (glade_xml, "vbox_details");
+	if (page == PAGE_DETAILS) {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 1);
+		gtk_widget_show (widget);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* progress */
+	widget = glade_xml_get_widget (glade_xml, "vbox_progress");
+	if (page == PAGE_PROGRESS) {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 2);
+		gtk_widget_show (widget);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* confirm */
+	widget = glade_xml_get_widget (glade_xml, "vbox_confirm");
+	if (page == PAGE_CONFIRM) {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);
+		gtk_widget_show (widget);
+	} else {
+		gtk_widget_hide (widget);
+	}
+}
+
 /**
  * pk_updates_apply_cb:
  **/
@@ -111,8 +167,8 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 	pk_client_reset (client);
 	pk_client_update_system (client);
 
-	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 2);
+	/* set correct view */
+	pk_updates_set_page (PAGE_PROGRESS);
 }
 
 /**
@@ -167,8 +223,8 @@ pk_button_close_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_review_cb (GtkWidget *widget, gpointer data)
 {
-	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
+	/* set correct view */
+	pk_updates_set_page (PAGE_DETAILS);
 }
 
 /**
@@ -177,8 +233,8 @@ pk_button_review_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_overview_cb (GtkWidget *widget, gpointer data)
 {
-	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
+	/* set correct view */
+	pk_updates_set_page (PAGE_PREVIEW);
 }
 
 /**
@@ -752,8 +808,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 				gtk_widget_show (widget);
 			}
 
-			widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-			gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 3);
+			/* set correct view */
+			pk_updates_set_page (PAGE_CONFIRM);
 		}
 	}
 
