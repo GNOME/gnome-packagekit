@@ -227,7 +227,7 @@ pk_application_requires_dialog_cb (GtkDialog *dialog, gint id, PkApplication *ap
  * pk_application_requires_finished_cb:
  **/
 static void
-pk_application_requires_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkApplication *application)
+pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkApplication *application)
 {
 	guint length;
 	gchar *title;

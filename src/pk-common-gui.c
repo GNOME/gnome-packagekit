@@ -377,6 +377,7 @@ pk_error_format_details (const gchar *details)
 
 	return escaped;
 }
+
 /**
  * pk_error_enum_to_localised_text:
  **/

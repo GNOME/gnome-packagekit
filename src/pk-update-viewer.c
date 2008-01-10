@@ -699,7 +699,7 @@ pk_updates_set_aux_status (PkClient *client, const gchar *icon, const gchar *mes
  * pk_updates_finished_cb:
  **/
 static void
-pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpointer data)
+pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	GtkWidget *widget;
 	PkRoleEnum role;
@@ -736,6 +736,12 @@ pk_updates_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gp
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		widget = glade_xml_get_widget (glade_xml, "button_cancel");
 		gtk_widget_hide (widget);
+
+		/* go onto the success page */
+		if (exit == PK_EXIT_ENUM_SUCCESS) {
+			widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+			gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 3);
+		}
 	}
 
 	/* we don't need to do anything here */
@@ -1010,6 +1016,12 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
 
+	/* hide from finished page until we have updates */
+	widget = glade_xml_get_widget (glade_xml, "hbox_restart");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "button_restart");
+	gtk_widget_hide (widget);
+
 	/* hide until we have reboot notifier */
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_hide (widget);
@@ -1026,6 +1038,9 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_close3");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_close4");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
 
