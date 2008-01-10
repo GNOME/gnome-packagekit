@@ -704,6 +704,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	GtkWidget *widget;
 	PkRoleEnum role;
 	guint length;
+	PkRestartEnum restart;
 
 	pk_client_get_role (client, &role, NULL);
 
@@ -739,6 +740,18 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 
 		/* go onto the success page */
 		if (exit == PK_EXIT_ENUM_SUCCESS) {
+
+			/* do we have to show any widgets? */
+			restart = pk_client_get_require_restart (client);
+			if (restart == PK_RESTART_ENUM_SYSTEM ||
+			    restart == PK_RESTART_ENUM_SESSION) {
+				pk_debug ("showing reboot widgets");
+				widget = glade_xml_get_widget (glade_xml, "hbox_restart");
+				gtk_widget_show (widget);
+				widget = glade_xml_get_widget (glade_xml, "button_restart");
+				gtk_widget_show (widget);
+			}
+
 			widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
 			gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 3);
 		}
