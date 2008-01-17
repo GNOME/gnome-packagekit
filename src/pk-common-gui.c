@@ -127,6 +127,10 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
 	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
 	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
+	{PK_GROUP_ENUM_COMMUNICATION,		"folder-remote"},
+	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
+	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
+	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
 	{0, NULL},
 };
 
@@ -930,6 +934,18 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_POWER_MANAGEMENT:
 		text = _("Power management");
+		break;
+	case PK_GROUP_ENUM_COMMUNICATION:
+		text = _("Communication");
+		break;
+	case PK_GROUP_ENUM_NETWORK:
+		text = _("Network");
+		break;
+	case PK_GROUP_ENUM_MAPS:
+		text = _("Maps");
+		break;
+	case PK_GROUP_ENUM_REPOS:
+		text = _("Software sources");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");
