@@ -386,10 +386,10 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 }
 
 /**
- * pk_progress_transaction_status_changed_cb:
+ * pk_progress_status_changed_cb:
  */
 static void
-pk_progress_transaction_status_changed_cb (PkClient *client,
+pk_progress_status_changed_cb (PkClient *client,
 				   PkStatusEnum   status,
 				   PkProgress    *progress)
 {
@@ -476,7 +476,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 		return FALSE;
 	}
 
-	pk_progress_transaction_status_changed_cb (progress->priv->client, status, progress);
+	pk_progress_status_changed_cb (progress->priv->client, status, progress);
 
 	/* coldplug */
 	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining);
@@ -521,8 +521,8 @@ pk_progress_init (PkProgress *progress)
 			  G_CALLBACK (pk_progress_package_cb), progress);
 	g_signal_connect (progress->priv->client, "progress-changed",
 			  G_CALLBACK (pk_progress_progress_changed_cb), progress);
-	g_signal_connect (progress->priv->client, "transaction-status-changed",
-			  G_CALLBACK (pk_progress_transaction_status_changed_cb), progress);
+	g_signal_connect (progress->priv->client, "status-changed",
+			  G_CALLBACK (pk_progress_status_changed_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");

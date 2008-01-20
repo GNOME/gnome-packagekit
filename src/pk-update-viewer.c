@@ -627,10 +627,10 @@ update_tags (GtkWidget *widget,
 }
 
 /**
- * pk_updates_transaction_status_changed_cb:
+ * pk_updates_status_changed_cb:
  **/
 static void
-pk_updates_transaction_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+pk_updates_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	pk_statusbar_set_status (statusbar, status);
 }
@@ -1052,8 +1052,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
 	g_signal_connect (client, "update-detail",
 			  G_CALLBACK (pk_updates_update_detail_cb), NULL);
-	g_signal_connect (client, "transaction-status-changed",
-			  G_CALLBACK (pk_updates_transaction_status_changed_cb), NULL);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (pk_updates_status_changed_cb), NULL);
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_updates_error_code_cb), NULL);
 
