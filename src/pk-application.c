@@ -337,6 +337,7 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	const gchar *icon_name;
+	gchar *text;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -361,8 +362,10 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 
 	/* set the description */
+	text = pk_error_format_details (detail);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-	pk_application_set_text_buffer (widget, detail);
+	pk_application_set_text_buffer (widget, text);
+	g_free (text);
 
 	/* if non-zero, set the size */
 	if (size > 0) {
