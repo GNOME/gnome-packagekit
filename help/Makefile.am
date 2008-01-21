@@ -6,5 +6,5 @@ DOC_ENTITIES = legal.xml
 DOC_INCLUDES = 
 DOC_FIGURES =
 
-DOC_LINGUAS = oc sv
+DOC_LINGUAS = es oc sv
 
