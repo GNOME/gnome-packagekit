@@ -16,6 +16,7 @@ INCLUDES =						\
 	-DPREFIX=\""$(prefix)"\" 			\
 	-DSYSCONFDIR=\""$(sysconfdir)"\" 		\
 	-DLIBDIR=\""$(libdir)"\" 			\
+	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-I$(top_srcdir)/libgbus				\
