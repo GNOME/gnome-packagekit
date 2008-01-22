@@ -216,11 +216,17 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  "Show extra debugging information", NULL },
+		  N_("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  "Show the program version and exit", NULL },
+		  N_("Show the program version and exit"), NULL },
 		{ NULL}
 	};
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 
 	if (! g_thread_supported ()) {
 		g_thread_init (NULL);
@@ -294,7 +300,7 @@ main (int argc, char *argv[])
 		/* get the update list */
 		pk_client_get_repo_list (client);
 	} else {
-		pk_repo_detail_cb (client, "default", "Getting repository list not supported by backend", FALSE, NULL);
+		pk_repo_detail_cb (client, "default", _("Getting repository list not supported by backend"), FALSE, NULL);
 		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}

@@ -36,14 +36,14 @@
 #include <pk-enum-list.h>
 #include "pk-common-gui.h"
 
-#define PK_FREQ_HOURLY_TEXT		_("Hourly")
-#define PK_FREQ_DAILY_TEXT		_("Daily")
-#define PK_FREQ_WEEKLY_TEXT		_("Weekly")
-#define PK_FREQ_NEVER_TEXT		_("Never")
+#define PK_FREQ_HOURLY_TEXT		N_("Hourly")
+#define PK_FREQ_DAILY_TEXT		N_("Daily")
+#define PK_FREQ_WEEKLY_TEXT		N_("Weekly")
+#define PK_FREQ_NEVER_TEXT		N_("Never")
 
-#define PK_UPDATE_ALL_TEXT		_("All updates")
-#define PK_UPDATE_SECURITY_TEXT		_("Only security updates")
-#define PK_UPDATE_NONE_TEXT		_("Nothing")
+#define PK_UPDATE_ALL_TEXT		N_("All updates")
+#define PK_UPDATE_SECURITY_TEXT		N_("Only security updates")
+#define PK_UPDATE_NONE_TEXT		N_("Nothing")
 
 static GladeXML *glade_xml = NULL;
 
@@ -293,11 +293,17 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  "Show extra debugging information", NULL },
+		  N_("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  "Show the program version and exit", NULL },
+		  N_("Show the program version and exit"), NULL },
 		{ NULL}
 	};
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 
 	if (! g_thread_supported ()) {
 		g_thread_init (NULL);
