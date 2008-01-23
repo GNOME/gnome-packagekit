@@ -14,6 +14,12 @@ icons_DATA = 				\
 	pk-package-search.png		\
 	pk-package-update.png		\
 	pk-package-info.png		\
+	pk-update-bugfix.png		\
+	pk-update-enhancement.png	\
+	pk-update-high.png		\
+	pk-update-low.png		\
+	pk-update-normal.png		\
+	pk-update-security.png		\
 	pk-refresh-cache.png		\
 	pk-rollback.png			\
 	pk-setup.png			\

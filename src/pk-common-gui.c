@@ -38,12 +38,12 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_INFO_ENUM_INSTALLED,		"pk-package-installed"},
 	{PK_INFO_ENUM_AVAILABLE,		"pk-package-available"},
-	{PK_INFO_ENUM_LOW,			"software-update-available"},
-	{PK_INFO_ENUM_NORMAL,			"software-update-available"},
-	{PK_INFO_ENUM_IMPORTANT,		"software-update-urgent"},
-	{PK_INFO_ENUM_SECURITY,			"software-update-urgent"},
-	{PK_INFO_ENUM_BUGFIX,			"software-update-urgent"},
-	{PK_INFO_ENUM_ENHANCEMENT,		"software-update-urgent"},
+	{PK_INFO_ENUM_LOW,			"pk-update-low"},
+	{PK_INFO_ENUM_NORMAL,			"pk-update-normal"},
+	{PK_INFO_ENUM_IMPORTANT,		"pk-update-high"},
+	{PK_INFO_ENUM_SECURITY,			"pk-update-security"},
+	{PK_INFO_ENUM_BUGFIX,			"pk-update-bugfix"},
+	{PK_INFO_ENUM_ENHANCEMENT,		"pk-update-enhancement"},
 	{PK_INFO_ENUM_BLOCKED,			"help-browser"}, /* TODO: need better icon */
 	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
 	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},

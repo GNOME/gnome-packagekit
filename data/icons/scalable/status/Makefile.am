@@ -14,6 +14,12 @@ icons_DATA = 				\
 	pk-package-search.svg		\
 	pk-package-update.svg		\
 	pk-package-info.svg		\
+	pk-update-bugfix.svg		\
+	pk-update-enhancement.svg	\
+	pk-update-high.svg		\
+	pk-update-low.svg		\
+	pk-update-normal.svg		\
+	pk-update-security.svg		\
 	pk-refresh-cache.svg		\
 	pk-rollback.svg			\
 	pk-setup.svg			\
