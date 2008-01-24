@@ -126,6 +126,8 @@ pk_repo_detail_cb (PkClient *client, const gchar *repo_id,
 			    REPO_COLUMN_TEXT, description,
 			    REPO_COLUMN_ID, repo_id,
 			    -1);
+	/* sort after each entry, which is okay as there shouldn't be many */
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
 }
 
 /**
