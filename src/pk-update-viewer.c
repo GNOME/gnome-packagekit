@@ -108,51 +108,14 @@ typedef enum {
 } PkPageEnum;
 
 /**
- * pk_updates_apply_cb:
+ * pk_updates_set_page:
  **/
 static void
 pk_updates_set_page (PkPageEnum page)
 {
 	GtkWidget *notebook;
-	GtkWidget *widget;
-
 	notebook = glade_xml_get_widget (glade_xml, "notebook_hidden");
-
-	/* preview */
-	widget = glade_xml_get_widget (glade_xml, "vbox_preview");
-	if (page == PAGE_PREVIEW) {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* details */
-	widget = glade_xml_get_widget (glade_xml, "vbox_details");
-	if (page == PAGE_DETAILS) {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 1);
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* progress */
-	widget = glade_xml_get_widget (glade_xml, "vbox_progress");
-	if (page == PAGE_PROGRESS) {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 2);
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* confirm */
-	widget = glade_xml_get_widget (glade_xml, "vbox_confirm");
-	if (page == PAGE_CONFIRM) {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-	}
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
 }
 
 /**
@@ -161,7 +124,6 @@ pk_updates_set_page (PkPageEnum page)
 static void
 pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 {
-//	GMainLoop *loop = (GMainLoop *) data;
 	pk_debug ("Doing the system update");
 
 	pk_client_reset (client);
@@ -197,7 +159,6 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 	pk_client_reset (client);
 	ret = pk_client_refresh_cache (client, TRUE);
 	if (ret == FALSE) {
-		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
 	}
 }
