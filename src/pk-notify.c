@@ -431,7 +431,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotif
  * pk_notify_critical_updates_warning:
  **/
 static void
-pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboolean plural)
+pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guint number)
 {
 	const gchar *title;
 	gchar *message;
@@ -439,13 +439,9 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, gboo
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
-	if (plural == TRUE) {
-		title = _("Security updates available");
-		message = g_strdup_printf (_("The following important updates are available for your computer:\n\n%s"), details);
-	} else {
-		title = _("Security update available");
-		message = g_strdup_printf (_("The following important update is available for your computer:\n\n%s"), details);
-	}
+	title = ngettext ("Security update available", "Security updates available", number);
+	message = g_strdup_printf (ngettext ("The following important update is available for your computer:\n\n%s",
+					     "The following important updates are available for your computer:\n\n%s", number), details);
 
 	pk_debug ("Doing requires-restart notification");
 	pk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
@@ -637,19 +633,17 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	if (status_security->len != 0) {
 		g_string_set_size (status_security, status_security->len-1);
 	}
+
 	/* make tooltip */
-	if (length == 1) {
-		g_string_append_printf (status_tooltip, _("There is an update available"));
-	} else {
-		g_string_append_printf (status_tooltip, _("There are %d updates available"), length);
-	}
+	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
+							  "There are %d updates pending", length), length);
 
 	pk_smart_icon_set_icon_name (notify->priv->sicon, icon);
 	pk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
 
 	/* do we warn the user? */
 	if (is_security == TRUE) {
-		pk_notify_critical_updates_warning (notify, status_security->str, (length > 1));
+		pk_notify_critical_updates_warning (notify, status_security->str, length);
 	}
 
 	g_string_free (status_security, TRUE);

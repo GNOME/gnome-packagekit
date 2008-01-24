@@ -779,6 +779,8 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 
 /**
  * pk_role_enum_to_localised_past:
+ *
+ * These are past tense versions of the action
  **/
 const gchar *
 pk_role_enum_to_localised_past (PkRoleEnum role)
