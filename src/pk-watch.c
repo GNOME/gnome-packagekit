@@ -176,9 +176,9 @@ pk_watch_task_list_to_state_enum_list (PkWatch *watch)
 static gboolean
 pk_watch_refresh_icon (PkWatch *watch)
 {
-	PkStatusEnum state = PK_STATUS_ENUM_UNKNOWN;
 	const gchar *icon;
 	PkEnumList *elist;
+	gint value;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
@@ -193,44 +193,28 @@ pk_watch_refresh_icon (PkWatch *watch)
 		return TRUE;
 	}
 
-	/* in order of priority */
-	if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REFRESH_CACHE) == TRUE) {
-		state = PK_STATUS_ENUM_REFRESH_CACHE;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_INSTALL) == TRUE) {
-		state = PK_STATUS_ENUM_INSTALL;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REMOVE) == TRUE) {
-		state = PK_STATUS_ENUM_REMOVE;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_CLEANUP) == TRUE) {
-		state = PK_STATUS_ENUM_CLEANUP;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_OBSOLETE) == TRUE) {
-		state = PK_STATUS_ENUM_OBSOLETE;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_SETUP) == TRUE) {
-		state = PK_STATUS_ENUM_SETUP;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_UPDATE) == TRUE) {
-		state = PK_STATUS_ENUM_UPDATE;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_DOWNLOAD) == TRUE) {
-		state = PK_STATUS_ENUM_DOWNLOAD;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_QUERY) == TRUE) {
-		state = PK_STATUS_ENUM_QUERY;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_INFO) == TRUE) {
-		state = PK_STATUS_ENUM_INFO;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_WAIT) == TRUE) {
-		state = PK_STATUS_ENUM_WAIT;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_DEP_RESOLVE) == TRUE) {
-		state = PK_STATUS_ENUM_DEP_RESOLVE;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_ROLLBACK) == TRUE) {
-		state = PK_STATUS_ENUM_ROLLBACK;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_COMMIT) == TRUE) {
-		state = PK_STATUS_ENUM_COMMIT;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_REQUEST) == TRUE) {
-		state = PK_STATUS_ENUM_REQUEST;
-	} else if (pk_enum_list_contains (elist, PK_STATUS_ENUM_FINISHED) == TRUE) {
-		state = PK_STATUS_ENUM_FINISHED;
-	}
+	/* get the most important icon */
+	value = pk_enum_list_contains_priority (elist,
+						PK_STATUS_ENUM_REFRESH_CACHE,
+						PK_STATUS_ENUM_INSTALL,
+						PK_STATUS_ENUM_REMOVE,
+						PK_STATUS_ENUM_CLEANUP,
+						PK_STATUS_ENUM_OBSOLETE,
+						PK_STATUS_ENUM_SETUP,
+						PK_STATUS_ENUM_UPDATE,
+						PK_STATUS_ENUM_DOWNLOAD,
+						PK_STATUS_ENUM_QUERY,
+						PK_STATUS_ENUM_INFO,
+						PK_STATUS_ENUM_WAIT,
+						PK_STATUS_ENUM_DEP_RESOLVE,
+						PK_STATUS_ENUM_ROLLBACK,
+						PK_STATUS_ENUM_COMMIT,
+						PK_STATUS_ENUM_REQUEST,
+						PK_STATUS_ENUM_FINISHED, -1);
 
-	/* only set if in the list */
-	if (state != PK_STATUS_ENUM_UNKNOWN) {
-		icon = pk_status_enum_to_icon_name (state);
+	/* only set if in the list and not unknown */
+	if (value != PK_STATUS_ENUM_UNKNOWN && value != -1) {
+		icon = pk_status_enum_to_icon_name (value);
 		pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 	}
 
