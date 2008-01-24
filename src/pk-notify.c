@@ -288,6 +288,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 
 static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
 static void pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify);
+static gboolean pk_notify_query_updates (PkNotify *notify);
 
 /**
  * pk_notify_update_system_finished_cb:
@@ -303,6 +304,8 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	/* we failed, show the icon */
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, FALSE);
+		/* we failed, so re-get the update list */
+		pk_notify_query_updates (notify);
 	}
 
 	/* close the libnotify bubble if it exists */
@@ -473,6 +476,78 @@ pk_notify_auto_update_message (PkNotify *notify)
 }
 
 /**
+ * pk_notify_client_packages_to_enum_list:
+ **/
+static PkEnumList *
+pk_notify_client_packages_to_enum_list (PkNotify *notify, PkClient *client)
+{
+	guint i;
+	guint length;
+	PkEnumList *elist;
+	PkPackageItem *item;
+
+	g_return_val_if_fail (notify != NULL, NULL);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), NULL);
+
+	/* shortcut */
+	length = pk_client_package_buffer_get_size (client);
+	if (length == 0) {
+		return NULL;
+	}
+
+	/* we can use an enumerated list */
+	elist = pk_enum_list_new ();
+
+	/* add each status to a list */
+	for (i=0; i<length; i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		if (item == NULL) {
+			pk_warning ("not found item %i", i);
+			break;
+		}
+		pk_debug ("%s %s", item->package_id, pk_info_enum_to_text (item->info));
+		pk_enum_list_append (elist, item->info);
+	}
+	return elist;
+}
+
+/**
+ * pk_notify_get_best_update_icon:
+ **/
+static const gchar *
+pk_notify_get_best_update_icon (PkNotify *notify, PkClient *client)
+{
+	gint value;
+	PkEnumList *elist;
+	const gchar *icon;
+
+	g_return_val_if_fail (notify != NULL, NULL);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), NULL);
+
+	/* get an enumerated list with all the update types */
+	elist = pk_notify_client_packages_to_enum_list (notify, client);
+
+	/* get the most important icon */
+	value = pk_enum_list_contains_priority (elist,
+						PK_INFO_ENUM_SECURITY,
+						PK_INFO_ENUM_IMPORTANT,
+						PK_INFO_ENUM_BUGFIX,
+						PK_INFO_ENUM_NORMAL,
+						PK_INFO_ENUM_ENHANCEMENT,
+						PK_INFO_ENUM_LOW, -1);
+	if (value == -1) {
+		pk_warning ("should not be possible!");
+		value = PK_INFO_ENUM_LOW;
+	}
+
+	/* get the icon */
+	icon = pk_info_enum_to_icon_name (value);
+
+	g_object_unref (elist);
+	return icon;
+}
+
+/**
  * pk_notify_query_updates_finished_cb:
  **/
 static void
@@ -556,11 +631,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	}
 
 	/* work out icon */
-	if (is_security == TRUE) {
-		icon = "software-update-urgent";
-	} else {
-		icon = "software-update-available";
-	}
+	icon = pk_notify_get_best_update_icon (notify, client);
 
 	/* trim off extra newlines */
 	if (status_security->len != 0) {
