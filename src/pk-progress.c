@@ -386,12 +386,21 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 }
 
 /**
+ * pk_progress_allow_cancel_cb:
+ **/
+static void
+pk_progress_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkProgress *progress)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
+}
+
+/**
  * pk_progress_status_changed_cb:
  */
 static void
-pk_progress_status_changed_cb (PkClient *client,
-				   PkStatusEnum   status,
-				   PkProgress    *progress)
+pk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, PkProgress *progress)
 {
 	GtkWidget *widget;
 	const gchar *icon_name;
@@ -454,6 +463,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	GtkWidget *widget;
 	PkStatusEnum status;
 	gboolean ret;
+	gboolean allow_cancel;
 	gchar *text;
 	guint percentage;
 	guint subpercentage;
@@ -475,6 +485,11 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 		g_signal_emit (progress, signals [ACTION_UNREF], 0);
 		return FALSE;
 	}
+
+	/* are we cancellable? */
+	allow_cancel = pk_client_get_allow_cancel (progress->priv->client);
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
 
 	pk_progress_status_changed_cb (progress->priv->client, status, progress);
 
@@ -523,6 +538,8 @@ pk_progress_init (PkProgress *progress)
 			  G_CALLBACK (pk_progress_progress_changed_cb), progress);
 	g_signal_connect (progress->priv->client, "status-changed",
 			  G_CALLBACK (pk_progress_status_changed_cb), progress);
+	g_signal_connect (progress->priv->client, "allow-cancel",
+			  G_CALLBACK (pk_progress_allow_cancel_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");

@@ -169,10 +169,6 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 static void
 pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 {
-	/* can't do this twice */
-	widget = glade_xml_get_widget (glade_xml, "button_cancel");
-	gtk_widget_set_sensitive (widget, FALSE);
-
 	/* we might have a transaction running */
 	pk_client_cancel (client);
 }
@@ -911,6 +907,17 @@ pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subper
 }
 
 /**
+ * pk_updates_allow_cancel_cb:
+ **/
+static void
+pk_updates_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
+}
+
+/**
  * pk_updates_task_list_changed_cb:
  **/
 static void
@@ -1037,6 +1044,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_status_changed_cb), NULL);
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_updates_error_code_cb), NULL);
+	g_signal_connect (client, "allow-cancel",
+			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
@@ -1096,6 +1105,7 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_cancel_cb), loop);
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	g_signal_connect (widget, "clicked",
