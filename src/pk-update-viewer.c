@@ -164,6 +164,20 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 }
 
 /**
+ * pk_button_cancel_cb:
+ **/
+static void
+pk_button_cancel_cb (GtkWidget *widget, gpointer data)
+{
+	/* can't do this twice */
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	/* we might have a transaction running */
+	pk_client_cancel (client);
+}
+
+/**
  * pk_button_close_cb:
  **/
 static void
@@ -1079,6 +1093,9 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_cancel_cb), loop);
 
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	g_signal_connect (widget, "clicked",
