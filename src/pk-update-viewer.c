@@ -1107,6 +1107,11 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_cancel_cb), loop);
 	gtk_widget_set_sensitive (widget, FALSE);
 
+	/* can we ever do the action? */
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == FALSE) {
+		gtk_widget_hide (widget);
+	}
+
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_review_cb), loop);

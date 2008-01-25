@@ -521,6 +521,7 @@ pk_progress_init (PkProgress *progress)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	PkEnumList *role_list;
 
 	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->task_ended = FALSE;
@@ -569,6 +570,16 @@ pk_progress_init (PkProgress *progress)
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_progress_cancel_cb), progress);
+
+	/* get actions */
+	role_list = pk_client_get_actions (progress->priv->client);
+
+	/* can we ever do the action? */
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == FALSE) {
+		gtk_widget_hide (widget);
+	}
+
+	g_object_unref (role_list);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_hide");
 	g_signal_connect (widget, "clicked",
