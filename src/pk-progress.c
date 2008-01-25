@@ -160,7 +160,7 @@ static void
 pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
 {
 	/* ignore some errors */
-	if (code == PK_ERROR_ENUM_PROCESS_QUIT ||
+	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED ||
 	    code == PK_ERROR_ENUM_PROCESS_KILL) {
 		pk_debug ("ignoring cancel error");
 		return;

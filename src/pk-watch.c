@@ -339,7 +339,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	if (error_code == PK_ERROR_ENUM_NOT_SUPPORTED ||
 	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
 	    error_code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+	    error_code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 		pk_debug ("error ignored %s\n%s", title, details);
 		return;
 	}

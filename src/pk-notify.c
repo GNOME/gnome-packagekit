@@ -665,7 +665,7 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 
 	/* ignore some errors */
 	if (error_code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    error_code == PK_ERROR_ENUM_PROCESS_QUIT) {
+	    error_code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 		pk_debug ("error ignored %s\n%s", title, details);
 		return;
 	}

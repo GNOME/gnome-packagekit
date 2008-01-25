@@ -104,6 +104,7 @@ typedef enum {
 	PAGE_DETAILS,
 	PAGE_PROGRESS,
 	PAGE_CONFIRM,
+	PAGE_ERROR,
 	PAGE_LAST
 } PkPageEnum;
 
@@ -113,9 +114,17 @@ typedef enum {
 static void
 pk_updates_set_page (PkPageEnum page)
 {
-	GtkWidget *notebook;
-	notebook = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), page);
+
+	/* some pages are resizeable */
+	widget = glade_xml_get_widget (glade_xml, "window_updates");
+	if (page == PAGE_DETAILS) {
+		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
+	} else {
+		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
+	}
 }
 
 /**
@@ -942,36 +951,31 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 }
 
 /**
- * pk_updates_error_message:
- **/
-static void
-pk_updates_error_message (const gchar *title, const gchar *details)
-{
-	GtkWidget *main_window;
-	GtkWidget *dialog;
-	gchar *escaped_details;
-
-	pk_warning ("error %s:%s", title, details);
-	main_window = glade_xml_get_widget (glade_xml, "window_updates");
-
-	/* we need to format this */
-	escaped_details = pk_error_format_details (details);
-
-	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), escaped_details);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (escaped_details);
-}
-
-/**
  * pk_updates_error_code_cb:
  **/
 static void
 pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	pk_updates_error_message (pk_error_enum_to_localised_text (code), details);
+	GtkWidget *widget;
+	const gchar *title;
+	gchar *title_bold;
+
+	/* set correct view */
+	pk_updates_set_page (PAGE_ERROR);
+
+	/* set bold title */
+	widget = glade_xml_get_widget (glade_xml, "label_error_title");
+	title = pk_error_enum_to_localised_text (code);
+	title_bold = g_strdup_printf ("<b>%s</b>", title);
+	gtk_label_set_label (GTK_LABEL (widget), title_bold);
+	g_free (title_bold);
+
+	widget = glade_xml_get_widget (glade_xml, "label_error_message");
+//	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (glade_xml, "label_error_details");
+	gtk_label_set_label (GTK_LABEL (widget), details);
 }
 
 /**
@@ -1100,6 +1104,9 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_close5");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
