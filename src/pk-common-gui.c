@@ -466,6 +466,102 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 }
 
 /**
+ * pk_error_enum_to_localised_message:
+ **/
+const gchar *
+pk_error_enum_to_localised_message (PkErrorCodeEnum code)
+{
+	const gchar *text = NULL;
+	switch (code) {
+	case PK_ERROR_ENUM_NO_NETWORK:
+		text = _("There is no network connection available.\n"
+			 "Please check your connection settings and try again");
+		break;
+	case PK_ERROR_ENUM_NO_CACHE:
+		text = _("The package list needs to be rebuilt\nTODO:how?.");
+		break;
+	case PK_ERROR_ENUM_OOM:
+		text = _("The service that is responsible for handling user requests is out of memory.\nPlease restart your computer.");
+		break;
+	case PK_ERROR_ENUM_CREATE_THREAD_FAILED:
+		text = _("A thread could not be created to service the user request.");
+		break;
+	case PK_ERROR_ENUM_NOT_SUPPORTED:
+		text = _("The action is not supported by this backend\n"
+			 "Please report a bug as this shouldn't have happened.");
+		break;
+	case PK_ERROR_ENUM_INTERNAL_ERROR:
+		text = _("A problem that we were not expecting has occurred.\n"
+			 "Please report this bug with the error description.");
+		break;
+	case PK_ERROR_ENUM_GPG_FAILURE:
+		text = _("A security trust relationship could not be made with the remote software source\n"
+			 "Please check your security settings.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
+		text = _("The package that is trying to be removed or updated is not already installed, and hence nothing can be done.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_NOT_FOUND:
+		text = _("The package that is being modified was not found on your system or in any remote software source.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
+		text = _("The package that is trying to be installed is already installed.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED:
+		text = _("The package download failed\nPlease check your network connectivity.");
+		break;
+	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
+		text = _("The group type was not found\nPlease check your group list and try again.");
+		break;
+	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
+		text = _("A package could not be found on your system or in a remote software source that allows the transaction to complete\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_FILTER_INVALID:
+		text = _("The search filter was not correctly formed.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_ID_INVALID:
+		text = _("The package ID was not well formed when sent to the server.\n"
+			 "This normally indicates an internal error and should be reported.");
+		break;
+	case PK_ERROR_ENUM_TRANSACTION_ERROR:
+		text = _("An unspecified transaction error has occurred.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_REPO_NOT_FOUND:
+		text = _("The remote software source name was not found\n"
+			 "You may need to disable an item in Software Sources");
+		break;
+	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
+		text = _("Removing a protected system package was denied, and thus the whole transaction failed.");
+		break;
+	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
+		text = _("The transaction was canceled successfully and no packages were changed.");
+		break;
+	case PK_ERROR_ENUM_PROCESS_KILL:
+		text = _("The transaction was canceled successfully and no packages were changed.\n"
+			 "The backend did not exit cleanly.");
+		break;
+	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
+		text = _("The native package backend could not be initialised.\n"
+			 "Please make sure no other tools are accessing package information.");
+		break;
+	case PK_ERROR_ENUM_FAILED_FINALISE:
+		text = _("The native package backend could not be closed.\n"
+			 "Please make sure no other tools are accessing package information.");
+		break;
+	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
+		text = _("The native package configuration file could not be opened.\n"
+			 "Please make sure configuration is valid.");
+		break;
+	default:
+		text = _("Unknown error, please report a bug.\n"
+			 "More information is available in the detailed report.");
+	}
+	return text;
+}
+
+/**
  * pk_restart_enum_to_localised_text_future:
  **/
 const gchar *

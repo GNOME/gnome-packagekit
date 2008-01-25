@@ -971,8 +971,7 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	g_free (title_bold);
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_message");
-//	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
-	gtk_widget_hide (widget);
+	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_details");
 	gtk_label_set_label (GTK_LABEL (widget), details);

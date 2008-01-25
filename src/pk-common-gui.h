@@ -73,6 +73,7 @@ const gchar	*pk_status_enum_to_localised_text	(PkStatusEnum	 status);
 const gchar	*pk_status_enum_to_icon_name		(PkStatusEnum	 status);
 const gchar	*pk_restart_enum_to_icon_name		(PkRestartEnum	 restart);
 const gchar	*pk_error_enum_to_localised_text	(PkErrorCodeEnum code);
+const gchar	*pk_error_enum_to_localised_message	(PkErrorCodeEnum code);
 const gchar	*pk_restart_enum_to_localised_text	(PkRestartEnum	 restart);
 const gchar	*pk_message_enum_to_icon_name		(PkMessageEnum	 message);
 const gchar	*pk_message_enum_to_localised_text	(PkMessageEnum	 message);
