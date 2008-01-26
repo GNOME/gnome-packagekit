@@ -443,7 +443,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guin
 	message = g_strdup_printf (ngettext ("The following important update is available for your computer:\n\n%s",
 					     "The following important updates are available for your computer:\n\n%s", number), details);
 
-	pk_debug ("Doing requires-restart notification");
+	pk_debug ("Doing critical updates warning: %s", message);
 	pk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
 				  PK_NOTIFY_URGENCY_CRITICAL, PK_NOTIFY_TIMEOUT_NEVER);
 	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
