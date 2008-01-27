@@ -196,6 +196,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	/* get the most important icon */
 	value = pk_enum_list_contains_priority (elist,
 						PK_STATUS_ENUM_REFRESH_CACHE,
+						PK_STATUS_ENUM_CANCEL,
 						PK_STATUS_ENUM_INSTALL,
 						PK_STATUS_ENUM_REMOVE,
 						PK_STATUS_ENUM_CLEANUP,
