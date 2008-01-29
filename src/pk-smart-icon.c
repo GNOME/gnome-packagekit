@@ -294,7 +294,9 @@ pk_smart_icon_notify_show (PkSmartIcon *sicon)
 
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+	g_return_val_if_fail (sicon->priv->dialog != NULL, FALSE);
 
+	notify_notification_close (sicon->priv->dialog, NULL);
 	notify_notification_show (sicon->priv->dialog, &error);
 	if (error != NULL) {
 		pk_warning ("error: %s", error->message);

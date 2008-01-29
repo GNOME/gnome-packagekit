@@ -1132,7 +1132,7 @@ pk_time_to_localised_string (guint time_secs)
 
 	/* is valid? */
 	if (time_secs == 0) {
-		timestring = g_strdup_printf (_("Zero time"));
+		timestring = g_strdup_printf (_("Now"));
 		return timestring;
 	}
 
@@ -1205,7 +1205,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "time zero");
 	text = pk_time_to_localised_string (0);
-	if (text != NULL && strcmp (text, _("Zero time")) == 0) {
+	if (text != NULL && strcmp (text, _("Now")) == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
