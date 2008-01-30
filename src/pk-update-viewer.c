@@ -718,6 +718,9 @@ pk_updates_set_aux_status (PkClient *client, const gchar *icon, const gchar *mes
 	GtkTreeIter iter;
 	gchar *markup;
 
+	/* clear existing list */
+	gtk_list_store_clear (list_store_preview);
+
 	markup = g_strdup_printf ("<b>%s</b>", message);
 	gtk_list_store_append (list_store_preview, &iter);
 	gtk_list_store_set (list_store_preview, &iter,
