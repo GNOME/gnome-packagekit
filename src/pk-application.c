@@ -35,6 +35,7 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
+#include <pk-extra.h>
 
 #include "pk-statusbar.h"
 #include "pk-common-gui.h"
@@ -57,6 +58,7 @@ struct PkApplicationPrivate
 	PkClient		*client_files;
 	PkConnection		*pconnection;
 	PkStatusbar		*statusbar;
+	PkExtra			*extra;
 	gchar			*package;
 	gchar			*url;
 	PkEnumList		*role_list;
@@ -423,9 +425,11 @@ static void
 pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			   const gchar *summary, PkApplication *application)
 {
-	const gchar *icon_name;
 	PkPackageId *ident;
 	GtkTreeIter iter;
+	PkPackageId *pid;
+	gchar *icon = NULL;
+	gchar *comment = NULL;
 	gchar *text;
 
 	g_return_if_fail (application != NULL);
@@ -441,18 +445,43 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
 
-	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, summary);
-	icon_name = pk_info_enum_to_icon_name (info);
+	/* get the package name */
+	pid = pk_package_id_new_from_string (package_id);
+	if (pid == NULL) {
+		pk_error ("cannot allocate package id");
+		return;
+	}
+
+	/* get from extra database */
+	pk_debug ("getting localised for %s", pid->name);
+	pk_extra_get_localised_detail (application->priv->extra, pid->name, NULL, NULL, &comment);
+	pk_extra_get_package_detail (application->priv->extra, pid->name, &icon, NULL);
+
+	pk_package_id_free (pid);
+
+	/* nothing in the localised database */
+	if (comment == NULL) {
+		comment = g_strdup (summary);
+	}
+
+	/* nothing in the detail database */
+	if (icon == NULL) {
+		icon = g_strdup (pk_info_enum_to_icon_name (info));
+	}
+
+	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, comment);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
-			    PACKAGES_COLUMN_IMAGE, icon_name,
+			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
 	pk_package_id_free (ident);
 	g_free (text);
+	g_free (icon);
+	g_free (comment);
 }
 
 /**
@@ -705,7 +734,7 @@ pk_packages_add_columns (GtkTreeView *treeview)
 	/* column for installed toggles */
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_pixbuf_new ();
-	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute (column, renderer, "icon-name", PACKAGES_COLUMN_IMAGE);
 	gtk_tree_view_append_column (treeview, column);
@@ -1193,6 +1222,10 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (application->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), application);
 
+	application->priv->extra = pk_extra_new ();
+	pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
+	pk_extra_set_locale (application->priv->extra, "en_GB");
+
 	application->priv->glade_xml = glade_xml_new (PK_DATA "/pk-application.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
@@ -1447,6 +1480,8 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->role_list);
 	g_object_unref (application->priv->current_filter);
 	g_object_unref (application->priv->statusbar);
+	g_object_unref (application->priv->extra);
+
 	g_free (application->priv->url);
 	g_free (application->priv->package);
 
