@@ -494,10 +494,13 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 	}
 
 	/* check icon actually exists and is valid in this theme */
-	valid = pk_application_icon_valid (application, icon);
+	valid = FALSE;
+	if (icon != NULL) {
+		valid = pk_application_icon_valid (application, icon);
+	}
 
 	/* nothing in the detail database or invalid */
-	if (valid == FALSE || icon == NULL) {
+	if (valid == FALSE) {
 		icon = g_strdup (pk_info_enum_to_icon_name (info));
 	}
 
