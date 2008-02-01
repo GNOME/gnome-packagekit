@@ -418,6 +418,34 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
 		pk_application_set_text_buffer (widget, _("No files"));
 	}
 }
+
+/**
+ * pk_application_icon_valid:
+ *
+ * Check icon actually exists and is valid in this theme
+ **/
+static gboolean
+pk_application_icon_valid (PkApplication *application, const gchar *icon)
+{
+	GtkIconInfo *icon_info;
+	GtkIconTheme *icon_theme;
+	gboolean ret = TRUE;
+
+	/* no unref */
+	icon_theme = gtk_icon_theme_get_default ();
+
+	/* default to 32x32 */
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
+	if (icon_info == NULL) {
+		pk_debug ("ignoring broken icon %s", icon);
+		ret = FALSE;
+	} else {
+		/* we only used this to see if it was valid */
+		gtk_icon_info_free (icon_info);
+	}
+	return ret;
+}
+
 /**
  * pk_application_package_cb:
  **/
@@ -431,6 +459,7 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 	gchar *icon = NULL;
 	gchar *comment = NULL;
 	gchar *text;
+	gboolean valid;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -464,8 +493,11 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 		comment = g_strdup (summary);
 	}
 
-	/* nothing in the detail database */
-	if (icon == NULL) {
+	/* check icon actually exists and is valid in this theme */
+	valid = pk_application_icon_valid (application, icon);
+
+	/* nothing in the detail database or invalid */
+	if (valid == FALSE || icon == NULL) {
 		icon = g_strdup (pk_info_enum_to_icon_name (info));
 	}
 
