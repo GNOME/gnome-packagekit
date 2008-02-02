@@ -677,12 +677,15 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_depth == 0) {
 		pk_client_reset (application->priv->client_search);
+		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_name (application->priv->client_search, filter_all, package);
 	} else if (application->priv->search_depth == 1) {
 		pk_client_reset (application->priv->client_search);
+		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_details (application->priv->client_search, filter_all, package);
 	} else {
 		pk_client_reset (application->priv->client_search);
+		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package);
 	}
 
