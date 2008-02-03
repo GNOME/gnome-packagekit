@@ -322,6 +322,38 @@ pk_package_get_name (const gchar *package_id)
 }
 
 /**
+ * pk_icon_valid:
+ *
+ * Check icon actually exists and is valid in this theme
+ **/
+gboolean
+pk_icon_valid (const gchar *icon)
+{
+	GtkIconInfo *icon_info;
+	GtkIconTheme *icon_theme;
+	gboolean ret = TRUE;
+
+	/* trivial case */
+	if (pk_strzero (icon) == TRUE) {
+		return FALSE;
+	}
+
+	/* no unref */
+	icon_theme = gtk_icon_theme_get_default ();
+
+	/* default to 32x32 */
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
+	if (icon_info == NULL) {
+		pk_debug ("ignoring broken icon %s", icon);
+		ret = FALSE;
+	} else {
+		/* we only used this to see if it was valid */
+		gtk_icon_info_free (icon_info);
+	}
+	return ret;
+}
+
+/**
  * pk_error_modal_dialog_cb:
  **/
 static void

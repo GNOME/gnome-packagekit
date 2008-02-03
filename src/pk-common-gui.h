@@ -60,6 +60,7 @@ gchar		*pk_package_id_pretty			(const gchar	*package_id,
 gchar		*pk_package_id_pretty_oneline		(const gchar	*package_id,
 							 const gchar	*summary);
 gchar		*pk_package_id_name_version		(const gchar	*package_id);
+gboolean	 pk_icon_valid				(const gchar	*icon);
 gboolean	 pk_error_modal_dialog			(const gchar	*title,
 							 const gchar	*message);
 gchar		*pk_error_format_details		(const gchar	*details);
