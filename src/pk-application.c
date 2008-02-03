@@ -36,6 +36,7 @@
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
 #include <pk-extra.h>
+#include <pk-extra-obj.h>
 
 #include "pk-statusbar.h"
 #include "pk-common-gui.h"
@@ -420,46 +421,16 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
 }
 
 /**
- * pk_application_icon_valid:
- *
- * Check icon actually exists and is valid in this theme
- **/
-static gboolean
-pk_application_icon_valid (PkApplication *application, const gchar *icon)
-{
-	GtkIconInfo *icon_info;
-	GtkIconTheme *icon_theme;
-	gboolean ret = TRUE;
-
-	/* no unref */
-	icon_theme = gtk_icon_theme_get_default ();
-
-	/* default to 32x32 */
-	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
-	if (icon_info == NULL) {
-		pk_debug ("ignoring broken icon %s", icon);
-		ret = FALSE;
-	} else {
-		/* we only used this to see if it was valid */
-		gtk_icon_info_free (icon_info);
-	}
-	return ret;
-}
-
-/**
  * pk_application_package_cb:
  **/
 static void
 pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			   const gchar *summary, PkApplication *application)
 {
-	PkPackageId *ident;
 	GtkTreeIter iter;
-	PkPackageId *pid;
-	gchar *icon = NULL;
-	gchar *comment = NULL;
+	PkExtraObj *eobj;
+	gboolean valid = FALSE;
 	gchar *text;
-	gboolean valid;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -471,52 +442,31 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 		return;
 	}
 
-	/* split by delimeter */
-	ident = pk_package_id_new_from_string (package_id);
-
-	/* get the package name */
-	pid = pk_package_id_new_from_string (package_id);
-	if (pid == NULL) {
-		pk_error ("cannot allocate package id");
-		return;
-	}
-
-	/* get from extra database */
-	pk_debug ("getting localised for %s", pid->name);
-	pk_extra_get_localised_detail (application->priv->extra, pid->name, NULL, NULL, &comment);
-	pk_extra_get_package_detail (application->priv->extra, pid->name, &icon, NULL);
-
-	pk_package_id_free (pid);
-
-	/* nothing in the localised database */
-	if (comment == NULL) {
-		comment = g_strdup (summary);
-	}
+	/* get convenience object */
+	eobj = pk_extra_obj_new_from_package_id_summary (package_id, summary);
 
 	/* check icon actually exists and is valid in this theme */
-	valid = FALSE;
-	if (icon != NULL) {
-		valid = pk_application_icon_valid (application, icon);
-	}
+	valid = pk_icon_valid (eobj->icon);
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
-		icon = g_strdup (pk_info_enum_to_icon_name (info));
+		g_free (eobj->icon);
+		eobj->icon = g_strdup (pk_info_enum_to_icon_name (info));
 	}
 
-	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", ident->name, ident->version, ident->arch, comment);
+	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", eobj->id->name,
+					eobj->id->version, eobj->id->arch, eobj->summary);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
-			    PACKAGES_COLUMN_IMAGE, icon,
+			    PACKAGES_COLUMN_IMAGE, eobj->icon,
 			    -1);
-	pk_package_id_free (ident);
+
+	pk_extra_obj_free (eobj);
 	g_free (text);
-	g_free (icon);
-	g_free (comment);
 }
 
 /**
@@ -1260,6 +1210,7 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (application->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), application);
 
+	/* single instance, so this is valid */
 	application->priv->extra = pk_extra_new ();
 	pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
 	pk_extra_set_locale (application->priv->extra, "en_GB");
