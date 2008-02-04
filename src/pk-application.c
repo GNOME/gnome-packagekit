@@ -1136,6 +1136,7 @@ pk_application_init (PkApplication *application)
 	GtkWidget *vbox;
 	GtkWidget *widget;
 	PkGroupEnum group;
+	gchar *locale; /* does not need to be freed */
 	guint length;
 	guint page;
 	guint i;
@@ -1213,7 +1214,10 @@ pk_application_init (PkApplication *application)
 	/* single instance, so this is valid */
 	application->priv->extra = pk_extra_new ();
 	pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
-	pk_extra_set_locale (application->priv->extra, "en_GB");
+
+	/* set the locale */
+	locale = setlocale (LC_ALL, NULL);
+	pk_extra_set_locale (application->priv->extra, locale);
 
 	application->priv->glade_xml = glade_xml_new (PK_DATA "/pk-application.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
