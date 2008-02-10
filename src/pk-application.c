@@ -26,6 +26,7 @@
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
+#include <libsexy/sexy-icon-entry.h>
 #include <math.h>
 #include <string.h>
 
@@ -48,6 +49,13 @@ static void     pk_application_finalize   (GObject	    *object);
 
 #define PK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_APPLICATION, PkApplicationPrivate))
 
+typedef enum {
+	PK_SEARCH_NAME,
+	PK_SEARCH_DETAILS,
+	PK_SEARCH_FILE,
+	PK_SEARCH_UNKNOWN
+} PkSearchType;
+
 struct PkApplicationPrivate
 {
 	GladeXML		*glade_xml;
@@ -67,7 +75,7 @@ struct PkApplicationPrivate
 	PkEnumList		*group_list;
 	PkEnumList		*current_filter;
 	gboolean		 search_in_progress;
-	guint			 search_depth;
+	PkSearchType		 search_type;
 };
 
 enum {
@@ -549,7 +557,7 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
 
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-		gtk_widget_set_tooltip_text(widget, _("Find packages"));
+		gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 		application->priv->search_in_progress = FALSE;
 	} else {
@@ -625,18 +633,21 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	filter_all = pk_enum_list_to_string (application->priv->current_filter);
 	pk_debug ("filter = %s", filter_all);
 
-	if (application->priv->search_depth == 0) {
+	if (application->priv->search_type == PK_SEARCH_NAME) {
 		pk_client_reset (application->priv->client_search);
 		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_name (application->priv->client_search, filter_all, package);
-	} else if (application->priv->search_depth == 1) {
+	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
 		pk_client_reset (application->priv->client_search);
 		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_details (application->priv->client_search, filter_all, package);
-	} else {
+	} else if (application->priv->search_type == PK_SEARCH_FILE) {
 		pk_client_reset (application->priv->client_search);
 		pk_client_set_name_filter (application->priv->client_search, TRUE);
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package);
+	} else {
+		pk_warning ("invalid search type");
+		return;
 	}
 
 	if (ret == FALSE) {
@@ -658,7 +669,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	gtk_widget_set_tooltip_text(widget, _("Cancel search"));
+	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 
 	g_free (filter_all);
 }
@@ -755,18 +766,6 @@ pk_groups_add_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
-}
-
-/**
- * pk_application_depth_combobox_changed_cb:
- **/
-static void
-pk_application_depth_combobox_changed_cb (GtkComboBox *combobox, PkApplication *application)
-{
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
-	application->priv->search_depth = gtk_combo_box_get_active (combobox);
-	pk_debug ("search depth: %i", application->priv->search_depth);
 }
 
 /**
@@ -1127,6 +1126,159 @@ pk_group_add_data (PkApplication *application, PkGroupEnum group)
 }
 
 /**
+ * pk_application_create_custom_widget:
+ **/
+GtkWidget *
+pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
+				     gchar *string1, gchar *string2,
+				     gint int1, gint int2, gpointer user_data)
+{
+	//PkApplication *application
+	if (pk_strequal (name, "entry_text") == TRUE) {
+		pk_warning ("creating sexy icon=%s", name);
+		return sexy_icon_entry_new ();
+	}
+	pk_warning ("name unknown=%s", name);
+	return NULL;
+}
+
+/**
+ * pk_application_popup_position_menu:
+ **/
+static void
+pk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
+{
+	GtkWidget     *widget;
+	GtkRequisition requisition;
+	gint menu_xpos = 0;
+	gint menu_ypos = 0;
+
+	widget = GTK_WIDGET (user_data);
+
+	/* find the location */
+	gdk_window_get_origin (widget->window, &menu_xpos, &menu_ypos);
+	gtk_widget_size_request (GTK_WIDGET (widget), &requisition);
+
+	/* set the position */
+	*x = menu_xpos;
+	*y = menu_ypos + requisition.height - 1;
+	*push_in = TRUE;
+}
+
+/**
+ * pk_application_menu_search_by_name:
+ **/
+static void
+pk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
+{
+	GtkWidget *icon;
+	GtkWidget *widget;
+	PkApplication *application = PK_APPLICATION (data);
+
+	/* change type */
+	application->priv->search_type = PK_SEARCH_NAME;
+	pk_debug ("set search type=%i", application->priv->search_type);
+
+	/* set the new icon */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
+	icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
+	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+}
+
+/**
+ * pk_application_menu_search_by_description:
+ **/
+static void
+pk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
+{
+	GtkWidget *icon;
+	GtkWidget *widget;
+	PkApplication *application = PK_APPLICATION (data);
+
+	/* set type */
+	application->priv->search_type = PK_SEARCH_DETAILS;
+	pk_debug ("set search type=%i", application->priv->search_type);
+
+	/* set the new icon */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
+	icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+}
+
+/**
+ * pk_application_menu_search_by_file:
+ **/
+static void
+pk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
+{
+	GtkWidget *icon;
+	GtkWidget *widget;
+	PkApplication *application = PK_APPLICATION (data);
+
+	/* set type */
+	application->priv->search_type = PK_SEARCH_FILE;
+	pk_debug ("set search type=%i", application->priv->search_type);
+
+	/* set the new icon */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
+	icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
+	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+}
+
+/**
+ * pk_application_entry_text_icon_pressed_cb:
+ **/
+static void
+pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, gint button, gpointer data)
+{
+	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
+	GtkWidget *item;
+	GtkWidget *image;
+	PkApplication *application = PK_APPLICATION (data);
+
+	/* only respond to left button */
+	if (button != 1) {
+		return;
+	}
+	pk_debug ("icon_pos=%i", icon_pos);
+
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME) == TRUE) {
+		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
+		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		g_signal_connect (G_OBJECT (item), "activate",
+				  G_CALLBACK (pk_application_menu_search_by_name), application);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	}
+
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS) == TRUE) {
+		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
+		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		g_signal_connect (G_OBJECT (item), "activate",
+				  G_CALLBACK (pk_application_menu_search_by_description), application);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	}
+
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE) == TRUE) {
+		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file"));
+		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		g_signal_connect (G_OBJECT (item), "activate",
+				  G_CALLBACK (pk_application_menu_search_by_file), application);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	}
+
+	gtk_widget_show_all (GTK_WIDGET (menu));
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+			pk_application_popup_position_menu, entry,
+			1, gtk_get_current_event_time());
+}
+
+/**
  * pk_application_init:
  **/
 static void
@@ -1146,13 +1298,16 @@ pk_application_init (PkApplication *application)
 	application->priv->url = NULL;
 	application->priv->search_in_progress = FALSE;
 
-	application->priv->search_depth = 0;
+	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->current_filter = pk_enum_list_new ();
 	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
+
+	/* use a sexy widget */
+	glade_set_custom_handler (pk_application_create_custom_widget, application);
 
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
@@ -1233,17 +1388,17 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_install_cb), application);
-	gtk_widget_set_tooltip_text(widget, _("Install selected package"));
+	gtk_widget_set_tooltip_text (widget, _("Install selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_remove_cb), application);
-	gtk_widget_set_tooltip_text(widget, _("Remove selected package"));
+	gtk_widget_set_tooltip_text (widget, _("Remove selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_homepage_cb), application);
-	gtk_widget_set_tooltip_text(widget, _("Visit homepage for selected package"));
+	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_description");
 	gtk_widget_hide (widget);
@@ -1289,28 +1444,20 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
-	gtk_widget_set_tooltip_text(widget, _("Find packages"));
+	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	/* set focus on entry text */
 	gtk_widget_grab_focus (widget);
+	gtk_widget_show (widget);
+	sexy_icon_entry_set_icon_highlight (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, TRUE);
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (pk_application_find_cb), application);
+	g_signal_connect (widget, "icon-pressed",
+			  G_CALLBACK (pk_application_entry_text_icon_pressed_cb), application);
 
-	/* search */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_depth");
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By package name"));
-	}
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By description"));
-	}
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE) == TRUE) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (widget), _("By file"));
-	}
-	g_signal_connect (GTK_COMBO_BOX (widget), "changed",
-			  G_CALLBACK (pk_application_depth_combobox_changed_cb), application);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
+	/* coldplug icon to default to search by name*/
+	pk_application_menu_search_by_name (NULL, application);
 
 	/* filter installed */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "combobox_filter_installed");
