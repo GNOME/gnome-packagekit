@@ -684,10 +684,10 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
-		text = _("Setting up");
+		text = _("Setting up transaction");
 		break;
 	case PK_STATUS_ENUM_WAIT:
-		text = _("Waiting");
+		text = _("Waiting for transaction lock");
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
@@ -711,7 +711,7 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Updating");
 		break;
 	case PK_STATUS_ENUM_CLEANUP:
-		text = _("Cleaned up");
+		text = _("Cleaning up");
 		break;
 	case PK_STATUS_ENUM_OBSOLETE:
 		text = _("Obsoleting");
@@ -723,7 +723,7 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Rolling back");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
-		text = _("Committing");
+		text = _("Committing transaction");
 		break;
 	case PK_STATUS_ENUM_REQUEST:
 		text = _("Requesting data");
