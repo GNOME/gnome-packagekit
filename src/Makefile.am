@@ -9,6 +9,7 @@ INCLUDES =						\
 	$(GCONF_CFLAGS)					\
 	$(LIBGLADE_CFLAGS)				\
 	$(LIBNOTIFY_CFLAGS)				\
+	$(LIBSEXY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	-DBINDIR=\"$(bindir)\"			 	\
@@ -120,6 +121,7 @@ pk_application_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
+	$(LIBSEXY_LIBS)					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(NULL)

@@ -49,6 +49,7 @@ GCONF_REQUIRED=0.22
 DBUS_GLIB_REQUIRED=0.73
 LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
+LIBSEXY_REQUIRED=0.1.10
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -60,6 +61,7 @@ AC_SUBST(DBUS_REQUIRED)
 AC_SUBST(DBUS_GLIB_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(LIBNOTIFY_REQUIRED)
+AC_SUBST(LIBSEXY_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
@@ -83,6 +85,11 @@ PKG_CHECK_MODULES(GTK, \
  gtk+-2.0 >= $GTK_REQUIRED)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+
+PKG_CHECK_MODULES(LIBSEXY, \
+ libsexy >= $LIBSEXY_REQUIRED)
+AC_SUBST(LIBSEXY_CFLAGS)
+AC_SUBST(LIBSEXY_LIBS)
 
 PKG_CHECK_MODULES(LIBGLADE, \
  libglade-2.0 >= $LIBGLADE_REQUIRED)
