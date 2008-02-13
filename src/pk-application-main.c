@@ -29,6 +29,7 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
+#include <locale.h>
 
 #include <pk-debug.h>
 #include "pk-application.h"

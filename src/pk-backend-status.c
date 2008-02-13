@@ -32,6 +32,7 @@
 #include <glade/glade.h>
 #include <pk-enum-list.h>
 #include <pk-client.h>
+#include <locale.h>
 
 #include <pk-debug.h>
 

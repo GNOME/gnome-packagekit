@@ -29,6 +29,7 @@
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
+#include <locale.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>

@@ -38,6 +38,7 @@
 #include <pk-enum-list.h>
 #include <pk-extra.h>
 #include <pk-extra-obj.h>
+#include <locale.h>
 
 #include "pk-statusbar.h"
 #include "pk-common-gui.h"
