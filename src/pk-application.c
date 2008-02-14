@@ -26,6 +26,7 @@
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
+#include <gconf/gconf-client.h>
 #include <libsexy/sexy-icon-entry.h>
 #include <math.h>
 #include <string.h>
@@ -60,6 +61,7 @@ typedef enum {
 struct PkApplicationPrivate
 {
 	GladeXML		*glade_xml;
+	GConfClient		*gconf_client;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
 	PkClient		*client_search;
@@ -1280,6 +1282,34 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 }
 
 /**
+ * pk_application_create_completion_model:
+ *
+ * Creates a tree model containing the completions
+ **/
+GtkTreeModel *
+pk_application_create_completion_model (void)
+{
+	GtkListStore *store;
+	GtkTreeIter iter;
+
+	store = gtk_list_store_new (1, G_TYPE_STRING);
+
+	/* append one word */
+	gtk_list_store_append (store, &iter);
+	gtk_list_store_set (store, &iter, 0, "gnome-power-manager", -1);
+
+	/* append another word */
+	gtk_list_store_append (store, &iter);
+	gtk_list_store_set (store, &iter, 0, "gnome-screensaver", -1);
+
+	/* and another word */
+	gtk_list_store_append (store, &iter);
+	gtk_list_store_set (store, &iter, 0, "hal", -1);
+
+	return GTK_TREE_MODEL (store);
+}
+
+/**
  * pk_application_init:
  **/
 static void
@@ -1298,6 +1328,7 @@ pk_application_init (PkApplication *application)
 	application->priv->package = NULL;
 	application->priv->url = NULL;
 	application->priv->search_in_progress = FALSE;
+	application->priv->gconf_client = gconf_client_get_default ();
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->current_filter = pk_enum_list_new ();
@@ -1442,12 +1473,38 @@ pk_application_init (PkApplication *application)
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 1);
 	}
 
+	/* simple find button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
+	/* the fancy text entry widget */
+	GtkEntryCompletion *completion;
+	GtkTreeModel *completion_model;
+	gboolean autocomplete;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+
+	/* autocompletion can be turned off as it's slow */
+	autocomplete = gconf_client_get_bool (application->priv->gconf_client, PK_CONF_AUTOCOMPLETE, NULL);
+	if (autocomplete == TRUE) {
+		/* create the completion object */
+		completion = gtk_entry_completion_new ();
+
+		/* assign the completion to the entry */
+		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
+		g_object_unref (completion);
+
+		/* create a tree model and use it as the completion model */
+		completion_model = pk_application_create_completion_model ();
+		gtk_entry_completion_set_model (completion, completion_model);
+		g_object_unref (completion_model);
+
+		/* use model column 0 as the text column */
+		gtk_entry_completion_set_text_column (completion, 0);
+		gtk_entry_completion_set_inline_completion (completion, TRUE);
+	}
+
 	/* set focus on entry text */
 	gtk_widget_grab_focus (widget);
 	gtk_widget_show (widget);
@@ -1622,6 +1679,7 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->current_filter);
 	g_object_unref (application->priv->statusbar);
 	g_object_unref (application->priv->extra);
+	g_object_unref (application->priv->gconf_client);
 
 	g_free (application->priv->url);
 	g_free (application->priv->package);

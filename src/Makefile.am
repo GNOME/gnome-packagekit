@@ -120,6 +120,7 @@ pk_application_SOURCES =				\
 pk_application_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
+	$(GCONF_LIBS)					\
 	$(LIBGLADE_LIBS)				\
 	$(LIBSEXY_LIBS)					\
 	$(GTK_LIBS)					\
