@@ -250,6 +250,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		text = pk_package_id_pretty (package_id, summary);
 		icon_name = pk_info_enum_to_icon_name (info);
+		gtk_list_store_clear (list_store_history);
 		gtk_list_store_append (list_store_history, &iter);
 		gtk_list_store_set (list_store_history, &iter,
 				    HISTORY_COLUMN_TEXT, text,
