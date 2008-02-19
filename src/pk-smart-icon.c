@@ -183,8 +183,8 @@ pk_smart_icon_sync (PkSmartIcon *sicon)
 GtkStatusIcon *
 pk_smart_icon_get_status_icon (PkSmartIcon *sicon)
 {
-	g_return_val_if_fail (sicon != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+	g_return_val_if_fail (sicon != NULL, NULL);
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), NULL);
 	return sicon->priv->status_icon;
 }
 
