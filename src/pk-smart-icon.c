@@ -69,7 +69,7 @@ enum {
 
 G_DEFINE_TYPE (PkSmartIcon, pk_smart_icon, G_TYPE_OBJECT)
 
-static guint signals [LAST_SIGNAL] = { 0, };
+static guint signals [LAST_SIGNAL] = { 0 };
 
 static PkEnumMatch enum_button_ids[] = {
 	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
@@ -78,7 +78,7 @@ static PkEnumMatch enum_button_ids[] = {
 	{PK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
 	{PK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
 	{PK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
-	{0, NULL},
+	{0, NULL}
 };
 
 /**

@@ -104,7 +104,7 @@ enum
 	GROUPS_COLUMN_LAST
 };
 
-static guint	     signals [LAST_SIGNAL] = { 0, };
+static guint	     signals [LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (PkApplication, pk_application, G_TYPE_OBJECT)
 

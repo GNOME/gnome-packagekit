@@ -51,7 +51,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_REMOVING,			"pk-package-delete"},
 	{PK_INFO_ENUM_OBSOLETING,		"pk-package-cleanup"},
 	{PK_INFO_ENUM_CLEANUP,			"pk-package-cleanup"},
-	{0, NULL},
+	{0, NULL}
 };
 
 static PkEnumMatch enum_status_icon_name[] = {
@@ -73,7 +73,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
 	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_CANCEL,			"pk-package-cleanup"}, /* TODO: need better icon */
-	{0, NULL},
+	{0, NULL}
 };
 
 static PkEnumMatch enum_role_icon_name[] = {
@@ -100,7 +100,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"emblem-system"},
-	{0, NULL},
+	{0, NULL}
 };
 
 static PkEnumMatch enum_group_icon_name[] = {
@@ -133,7 +133,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
 	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
 	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
-	{0, NULL},
+	{0, NULL}
 };
 
 static PkEnumMatch enum_restart_icon_name[] = {
@@ -142,7 +142,7 @@ static PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
 	{PK_RESTART_ENUM_SESSION,		"dialog-warning"},
 	{PK_RESTART_ENUM_APPLICATION,		"dialog-warning"},
-	{0, NULL},
+	{0, NULL}
 };
 
 static PkEnumMatch enum_message_icon_name[] = {
@@ -150,7 +150,7 @@ static PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_NOTICE,		"dialog-information"},
 	{PK_MESSAGE_ENUM_WARNING,		"dialog-warning"},
 	{PK_MESSAGE_ENUM_DAEMON,		"dialog-error"},
-	{0, NULL},
+	{0, NULL}
 };
 
 /**
