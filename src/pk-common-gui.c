@@ -95,6 +95,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"pk-package-add"},
 	{PK_ROLE_ENUM_INSTALL_FILE,		"pk-package-add"},
 	{PK_ROLE_ENUM_UPDATE_PACKAGE,		"pk-package-update"},
+	{PK_ROLE_ENUM_SERVICE_PACK,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
@@ -957,6 +958,9 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_INSTALL_FILE:
 		text = _("Installed local file");
+		break;
+	case PK_ROLE_ENUM_SERVICE_PACK:
+		text = _("Updating from service pack");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshed package cache");
