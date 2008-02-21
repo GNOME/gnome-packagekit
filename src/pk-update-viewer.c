@@ -967,6 +967,7 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	GtkWidget *widget;
 	const gchar *title;
 	gchar *title_bold;
+	gchar *details_safe;
 
 	/* set correct view */
 	pk_updates_set_page (PAGE_ERROR);
@@ -982,7 +983,8 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_details");
-	gtk_label_set_label (GTK_LABEL (widget), details);
+	details_safe = pk_error_format_details (details);
+	gtk_label_set_label (GTK_LABEL (widget), details_safe);
 }
 
 /**
