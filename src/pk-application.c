@@ -689,6 +689,11 @@ pk_application_delete_event_cb (GtkWidget	*widget,
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
+	/* we might have visual stuff running, close them down */
+	pk_client_cancel (application->priv->client_search);
+	pk_client_cancel (application->priv->client_description);
+	pk_client_cancel (application->priv->client_files);
+
 	pk_debug ("emitting action-close");
 	g_signal_emit (application, signals [ACTION_CLOSE], 0);
 	return FALSE;

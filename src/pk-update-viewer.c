@@ -1002,6 +1002,7 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkConnection *pconnection;
 	PkEnumList *role_list;
+	PkRoleEnum role;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1229,6 +1230,13 @@ main (int argc, char *argv[])
 
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
+
+	/* we might have visual stuff running, close it down */
+	pk_client_get_role (client, &role, NULL);
+	if (role == PK_ROLE_ENUM_GET_UPDATES ||
+	    role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
+		pk_client_cancel (client);
+	}
 
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_preview);
