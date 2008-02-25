@@ -179,9 +179,9 @@ pk_application_install_cb (GtkWidget      *widget,
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	pk_debug ("install %s", application->priv->package);
-	pk_client_reset (application->priv->client_action);
+	pk_client_reset (application->priv->client_action, NULL);
 	ret = pk_client_install_package (application->priv->client_action,
-					 application->priv->package);
+					 application->priv->package, NULL);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
 		pk_application_error_message (application, _("The package could not be installed"), NULL);
@@ -210,9 +210,9 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	pk_debug ("remove %s", application->priv->package);
-	pk_client_reset (application->priv->client_action);
+	pk_client_reset (application->priv->client_action, NULL);
 	ret = pk_client_remove_package (application->priv->client_action,
-				        application->priv->package, force);
+				        application->priv->package, force, NULL);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
 		pk_application_error_message (application,
@@ -315,11 +315,11 @@ pk_application_remove_cb (GtkWidget      *widget,
 
 	/* see if any packages require this one */
 	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE);
+	pk_client_set_use_buffer (client, TRUE, NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_application_requires_finished_cb), application);
 	pk_debug ("getting requires for %s", application->priv->package);
-	pk_client_get_requires (client, application->priv->package, TRUE);
+	pk_client_get_requires (client, application->priv->package, TRUE, NULL);
 }
 
 /**
@@ -537,7 +537,7 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* get role */
-	pk_client_get_role (client, &role, NULL);
+	pk_client_get_role (client, &role, NULL, NULL);
 	/* do we need to fill in the tab box? */
 	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
 		text = pk_application_package_buffer_to_name_version (client);
@@ -570,7 +570,7 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 			/* refresh the search as the items may have changed */
 			gtk_list_store_clear (application->priv->packages_store);
 			application->priv->search_in_progress = TRUE;
-			ret = pk_client_requeue (application->priv->client_search);
+			ret = pk_client_requeue (application->priv->client_search, NULL);
 			if (ret == FALSE) {
 				application->priv->search_in_progress = FALSE;
 				pk_warning ("failed to requeue the search");
@@ -615,7 +615,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (application->priv->search_in_progress == TRUE) {
 		pk_debug ("trying to cancel task...");
-		ret = pk_client_cancel (application->priv->client_search);
+		ret = pk_client_cancel (application->priv->client_search, NULL);
 		pk_warning ("canceled? %i", ret);
 		return;
 	}
@@ -637,17 +637,17 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	pk_debug ("filter = %s", filter_all);
 
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		pk_client_reset (application->priv->client_search);
-		pk_client_set_name_filter (application->priv->client_search, TRUE);
-		ret = pk_client_search_name (application->priv->client_search, filter_all, package);
+		pk_client_reset (application->priv->client_search, NULL);
+		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
+		ret = pk_client_search_name (application->priv->client_search, filter_all, package, NULL);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		pk_client_reset (application->priv->client_search);
-		pk_client_set_name_filter (application->priv->client_search, TRUE);
-		ret = pk_client_search_details (application->priv->client_search, filter_all, package);
+		pk_client_reset (application->priv->client_search, NULL);
+		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
+		ret = pk_client_search_details (application->priv->client_search, filter_all, package, NULL);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		pk_client_reset (application->priv->client_search);
-		pk_client_set_name_filter (application->priv->client_search, TRUE);
-		ret = pk_client_search_file (application->priv->client_search, filter_all, package);
+		pk_client_reset (application->priv->client_search, NULL);
+		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
+		ret = pk_client_search_file (application->priv->client_search, filter_all, package, NULL);
 	} else {
 		pk_warning ("invalid search type");
 		return;
@@ -690,9 +690,9 @@ pk_application_delete_event_cb (GtkWidget	*widget,
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	/* we might have visual stuff running, close them down */
-	pk_client_cancel (application->priv->client_search);
-	pk_client_cancel (application->priv->client_description);
-	pk_client_cancel (application->priv->client_files);
+	pk_client_cancel (application->priv->client_search, NULL);
+	pk_client_cancel (application->priv->client_description, NULL);
+	pk_client_cancel (application->priv->client_files, NULL);
 
 	pk_debug ("emitting action-close");
 	g_signal_emit (application, signals [ACTION_CLOSE], 0);
@@ -900,8 +900,8 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* refresh the search as the items may have changed */
 		gtk_list_store_clear (application->priv->packages_store);
 
-		pk_client_reset (application->priv->client_search);
-		ret = pk_client_search_group (application->priv->client_search, "none", id);
+		pk_client_reset (application->priv->client_search, NULL);
+		ret = pk_client_search_group (application->priv->client_search, "none", id, NULL);
 		/* ick, we failed so pretend we didn't do the action */
 		if (ret == FALSE) {
 			pk_application_error_message (application,
@@ -945,14 +945,14 @@ pk_notebook_populate (PkApplication *application, gint page)
 		gtk_widget_hide (widget);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_description);
+		ret = pk_client_cancel (application->priv->client_description, NULL);
 		if (ret == FALSE) {
 			pk_debug ("failed to cancel, and adding to queue");
 		}
 		/* get the description */
-		pk_client_reset (application->priv->client_description);
+		pk_client_reset (application->priv->client_description, NULL);
 		pk_client_get_description (application->priv->client_description,
-					   application->priv->package);
+					   application->priv->package, NULL);
 		return TRUE;
 	}
 
@@ -966,14 +966,14 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files);
+		ret = pk_client_cancel (application->priv->client_files, NULL);
 		if (ret == FALSE) {
 			pk_debug ("failed to cancel, and adding to queue");
 		}
 		/* get the filelist */
-		pk_client_reset (application->priv->client_files);
+		pk_client_reset (application->priv->client_files, NULL);
 		pk_client_get_files (application->priv->client_files,
-				     application->priv->package);
+				     application->priv->package, NULL);
 
 		return TRUE;
 	}
@@ -988,15 +988,15 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files);
+		ret = pk_client_cancel (application->priv->client_files, NULL);
 		if (ret == FALSE) {
 			pk_debug ("failed to cancel, and adding to queue");
 		}
 		/* get the filelist */
-		pk_client_reset (application->priv->client_files);
-		pk_client_set_use_buffer (application->priv->client_files, TRUE);
+		pk_client_reset (application->priv->client_files, NULL);
+		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
 		pk_client_get_depends (application->priv->client_files,
-				       application->priv->package, FALSE);
+				       application->priv->package, FALSE, NULL);
 
 		return TRUE;
 	}
@@ -1011,15 +1011,15 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files);
+		ret = pk_client_cancel (application->priv->client_files, NULL);
 		if (ret == FALSE) {
 			pk_debug ("failed to cancel, and adding to queue");
 		}
 		/* get the filelist */
-		pk_client_reset (application->priv->client_files);
-		pk_client_set_use_buffer (application->priv->client_files, TRUE);
+		pk_client_reset (application->priv->client_files, NULL);
+		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
 		pk_client_get_requires (application->priv->client_files,
-				        application->priv->package, TRUE);
+				        application->priv->package, TRUE, NULL);
 
 		return TRUE;
 	}
@@ -1377,7 +1377,7 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
 
 	application->priv->client_files = pk_client_new ();
-	pk_client_set_use_buffer (application->priv->client_files, TRUE);
+	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
 	g_signal_connect (application->priv->client_files, "files",
 			  G_CALLBACK (pk_application_files_cb), application);
 	g_signal_connect (application->priv->client_files, "error-code",

@@ -80,7 +80,7 @@ static void
 pk_button_rollback_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
-	pk_client_rollback (client, transaction_id);
+	pk_client_rollback (client, transaction_id, NULL);
 	g_main_loop_quit (loop);
 }
 
@@ -458,7 +458,7 @@ main (int argc, char *argv[])
 	}
 
 	/* get the update list */
-	pk_client_get_old_transactions (client, 0);
+	pk_client_get_old_transactions (client, 0, NULL);
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);

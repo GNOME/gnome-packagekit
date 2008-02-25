@@ -102,8 +102,8 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 
 	/* do this to the repo */
 	pk_debug ("setting %s to %i", repo_id, installed);
-	pk_client_reset (client);
-	pk_client_repo_enable (client, repo_id, installed);
+	pk_client_reset (client, NULL);
+	pk_client_repo_enable (client, repo_id, installed, NULL);
 
 	/* clean up */
 	g_free (repo_id);
@@ -301,9 +301,10 @@ main (int argc, char *argv[])
 
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST) == TRUE) {
 		/* get the update list */
-		pk_client_get_repo_list (client);
+		pk_client_get_repo_list (client, NULL);
 	} else {
-		pk_repo_detail_cb (client, "default", _("Getting repository list not supported by backend"), FALSE, NULL);
+		pk_repo_detail_cb (client, "default",
+				   _("Getting repository list not supported by backend"), FALSE, NULL);
 		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}

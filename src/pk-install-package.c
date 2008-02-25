@@ -88,7 +88,7 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 			  G_CALLBACK (pk_monitor_install_finished_cb), NULL);
 
 	pk_warning ("Installing '%s'", package);
-	ret = pk_client_install_package (client, package);
+	ret = pk_client_install_package (client, package, NULL);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Method not supported"),
 				       _("Installing packages is not supported"));
@@ -178,7 +178,7 @@ main (int argc, char *argv[])
 	g_signal_connect (client, "package",
 			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
 	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_INSTALLED);
-	ret = pk_client_resolve (client, filter, argv[1]);
+	ret = pk_client_resolve (client, filter, argv[1], NULL);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Method not supported"),
 				       _("Resolving names to packages is not supported"));

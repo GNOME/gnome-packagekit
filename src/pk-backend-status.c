@@ -118,7 +118,7 @@ main (int argc, char *argv[])
 	filter_list = pk_client_get_filters (client);
 
 	/* general stuff */
-	retval = pk_client_get_backend_detail (client, &name, &author);
+	retval = pk_client_get_backend_detail (client, &name, &author, NULL);
 	if (FALSE == retval) {
 		pk_warning (_("Exiting on failure\n"));
 		return 1;

@@ -212,7 +212,7 @@ pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
 	}
 
 	/* get the time since the last refresh */
-	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_REFRESH_CACHE, &time);
+	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to get last time");
 		return FALSE;
@@ -245,7 +245,7 @@ pk_auto_refresh_maybe_get_updates (PkAutoRefresh *arefresh)
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* get the time since the last refresh */
-	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_GET_UPDATES, &time);
+	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to get last time");
 		return FALSE;

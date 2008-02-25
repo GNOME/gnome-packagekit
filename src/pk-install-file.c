@@ -105,7 +105,7 @@ main (int argc, char *argv[])
 	}
 
 	client = pk_client_new ();
-	ret = pk_client_install_file (client, argv[1]);
+	ret = pk_client_install_file (client, argv[1], NULL);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Method not supported"),
 				       _("Installing local files is not supported"));

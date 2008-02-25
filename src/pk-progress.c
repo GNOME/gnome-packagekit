@@ -139,7 +139,7 @@ pk_progress_cancel_cb (GtkWidget  *widget,
 		       PkProgress *progress)
 {
 	pk_debug ("emitting cancel");
-	pk_client_cancel (progress->priv->client);
+	pk_client_cancel (progress->priv->client, NULL);
 }
 
 /**
@@ -438,7 +438,7 @@ pk_common_get_role_text (PkClient *client)
 	PkRoleEnum role;
 	PkPackageId *ident;
 
-	pk_client_get_role (client, &role, &package_id);
+	pk_client_get_role (client, &role, &package_id, NULL);
 	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
@@ -470,7 +470,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	guint elapsed;
 	guint remaining;
 
-	pk_client_set_tid (progress->priv->client, tid);
+	pk_client_set_tid (progress->priv->client, tid, NULL);
 
 	/* fill in role */
 	text = pk_common_get_role_text (progress->priv->client);
@@ -479,7 +479,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	g_free (text);
 
 	/* coldplug */
-	ret = pk_client_get_status (progress->priv->client, &status);
+	ret = pk_client_get_status (progress->priv->client, &status, NULL);
 	/* no such transaction? */
 	if (ret == FALSE) {
 		g_signal_emit (progress, signals [ACTION_UNREF], 0);
@@ -487,23 +487,26 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	}
 
 	/* are we cancellable? */
-	allow_cancel = pk_client_get_allow_cancel (progress->priv->client);
+	pk_client_get_allow_cancel (progress->priv->client, &allow_cancel, NULL);
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
 
 	pk_progress_status_changed_cb (progress->priv->client, status, progress);
 
 	/* coldplug */
-	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining);
+	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining, NULL);
 	if (ret == TRUE) {
-		pk_progress_progress_changed_cb (progress->priv->client, percentage, subpercentage, elapsed, remaining, progress);
+		pk_progress_progress_changed_cb (progress->priv->client, percentage,
+						 subpercentage, elapsed, remaining, progress);
 	} else {
 		pk_warning ("GetProgress failed");
-		pk_progress_progress_changed_cb (progress->priv->client, PK_CLIENT_PERCENTAGE_INVALID, PK_CLIENT_PERCENTAGE_INVALID, 0, 0, progress);
+		pk_progress_progress_changed_cb (progress->priv->client,
+						 PK_CLIENT_PERCENTAGE_INVALID,
+						 PK_CLIENT_PERCENTAGE_INVALID, 0, 0, progress);
 	}
 
 	/* do the best we can */
-	ret = pk_client_get_package (progress->priv->client, &text);
+	ret = pk_client_get_package (progress->priv->client, &text, NULL);
 	if (ret == TRUE) {
 		pk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
 	}

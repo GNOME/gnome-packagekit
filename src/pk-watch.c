@@ -272,7 +272,7 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	}
 
 	/* get the role */
-	ret = pk_client_get_role (client, &role, &package_id);
+	ret = pk_client_get_role (client, &role, &package_id, NULL);
 	if (ret == FALSE) {
 		pk_warning ("cannot get role");
 		return;
@@ -328,7 +328,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	title = pk_error_enum_to_localised_text (error_code);
 
 	/* if the client dbus connection is still active */
-	pk_client_is_caller_active (client, &is_active);
+	pk_client_is_caller_active (client, &is_active, NULL);
 
 	/* do we ignore this error? */
 	if (is_active == TRUE) {
@@ -558,7 +558,7 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_watch_refresh_cache_finished_cb), watch);
 
-	ret = pk_client_refresh_cache (client, TRUE);
+	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
@@ -756,7 +756,7 @@ pk_watch_init (PkWatch *watch)
 
 	/* we need to get ::locked */
 	watch->priv->client = pk_client_new ();
-	pk_client_set_promiscuous (watch->priv->client, TRUE);
+	pk_client_set_promiscuous (watch->priv->client, TRUE, NULL);
 	g_signal_connect (watch->priv->client, "locked",
 			  G_CALLBACK (pk_watch_locked_cb), watch);
 	g_signal_connect (watch->priv->client, "finished",

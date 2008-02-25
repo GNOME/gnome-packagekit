@@ -87,8 +87,8 @@ static void
 pk_button_update_cb (GtkWidget *widget, gboolean data)
 {
 	gboolean ret;
-	pk_client_reset (client);
-	ret = pk_client_update_package (client, package);
+	pk_client_reset (client, NULL);
+	ret = pk_client_update_package (client, package, NULL);
 	if (ret == TRUE) {
 		/* make the refresh button non-clickable until we have completed */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
@@ -136,8 +136,8 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 {
 	pk_debug ("Doing the system update");
 
-	pk_client_reset (client);
-	pk_client_update_system (client);
+	pk_client_reset (client, NULL);
+	pk_client_update_system (client, NULL);
 
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
@@ -166,8 +166,8 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* we can't click this if we havn't finished */
-	pk_client_reset (client);
-	ret = pk_client_refresh_cache (client, TRUE);
+	pk_client_reset (client, NULL);
+	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to refresh cache");
 	}
@@ -180,7 +180,7 @@ static void
 pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 {
 	/* we might have a transaction running */
-	pk_client_cancel (client);
+	pk_client_cancel (client, NULL);
 }
 
 /**
@@ -192,7 +192,7 @@ pk_button_close_cb (GtkWidget *widget, gpointer data)
 	GMainLoop *loop = (GMainLoop *) data;
 
 	/* we might have a transaction running */
-	pk_client_cancel (client);
+	pk_client_cancel (client, NULL);
 
 	g_main_loop_quit (loop);
 	pk_debug ("emitting action-close");
@@ -230,7 +230,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	PkRoleEnum role;
 	const gchar *icon_name;
 
-	pk_client_get_role (client, &role, NULL);
+	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
@@ -629,7 +629,7 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 	GMainLoop *loop = (GMainLoop *) data;
 
 	/* we might have a transaction running */
-	pk_client_cancel (client);
+	pk_client_cancel (client, NULL);
 
 	g_main_loop_quit (loop);
 	return FALSE;
@@ -688,8 +688,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		g_free (package_id);
 		g_print ("selected row is: %s\n", package);
 		/* get the decription */
-		pk_client_reset (client);
-		pk_client_get_update_detail (client, package);
+		pk_client_reset (client, NULL);
+		pk_client_get_update_detail (client, package, NULL);
 
 		widget = glade_xml_get_widget (glade_xml, "button_update");
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -744,15 +744,15 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	guint length;
 	PkRestartEnum restart;
 
-	pk_client_get_role (client, &role, NULL);
+	pk_client_get_role (client, &role, NULL, NULL);
 
 	/* hide widget */
 	pk_statusbar_hide (statusbar);
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_client_reset (client);
-		pk_client_set_use_buffer (client, TRUE);
-		pk_client_get_updates (client);
+		pk_client_reset (client, NULL);
+		pk_client_set_use_buffer (client, TRUE, NULL);
+		pk_client_get_updates (client, NULL);
 		return;
 	}
 
@@ -801,9 +801,9 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		gtk_list_store_clear (list_store_details);
 
 		/* get the new update list */
-		pk_client_reset (client);
-		pk_client_set_use_buffer (client, TRUE);
-		pk_client_get_updates (client);
+		pk_client_reset (client, NULL);
+		pk_client_set_use_buffer (client, TRUE, NULL);
+		pk_client_get_updates (client, NULL);
 		return;
 	}
 
@@ -1045,7 +1045,7 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE);
+	pk_client_set_use_buffer (client, TRUE, NULL);
 	g_signal_connect (client, "package",
 			  G_CALLBACK (pk_updates_package_cb), NULL);
 	g_signal_connect (client, "finished",
@@ -1225,17 +1225,17 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* get the update list */
-	pk_client_get_updates (client);
+	pk_client_get_updates (client, NULL);
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
 	/* we might have visual stuff running, close it down */
-	pk_client_get_role (client, &role, NULL);
+	pk_client_get_role (client, &role, NULL, NULL);
 	if (role == PK_ROLE_ENUM_GET_UPDATES ||
 	    role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
-		pk_client_cancel (client);
+		pk_client_cancel (client, NULL);
 	}
 
 	g_object_unref (glade_xml);

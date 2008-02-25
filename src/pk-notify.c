@@ -325,7 +325,7 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	pk_debug ("resetting client %p", client);
-	pk_client_reset (client);
+	pk_client_reset (client, NULL);
 }
 
 /**
@@ -340,7 +340,7 @@ pk_notify_update_system (PkNotify *notify)
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
-	ret = pk_client_update_system (notify->priv->client_update_system);
+	ret = pk_client_update_system (notify->priv->client_update_system, NULL);
 	if (ret == TRUE) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
@@ -697,8 +697,8 @@ pk_notify_query_updates (PkNotify *notify)
 			  G_CALLBACK (pk_notify_query_updates_finished_cb), notify);
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_notify_error_code_cb), notify);
-	pk_client_set_use_buffer (client, TRUE);
-	pk_client_get_updates (client);
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_get_updates (client, NULL);
 	return TRUE;
 }
 
@@ -757,7 +757,7 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 			  G_CALLBACK (pk_notify_refresh_cache_finished_cb), notify);
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_notify_error_code_cb), notify);
-	ret = pk_client_refresh_cache (client, TRUE);
+	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		g_object_unref (client);
 		pk_warning ("failed to refresh cache");
@@ -844,7 +844,7 @@ pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 		}
 	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		gboolean ret;
-		ret = pk_client_cancel (notify->priv->client_update_system);
+		ret = pk_client_cancel (notify->priv->client_update_system, NULL);
 		if (ret == FALSE) {
 			pk_warning ("cancelling updates failed");
 			pk_smart_icon_notify_new (notify->priv->sicon,
