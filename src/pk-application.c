@@ -156,7 +156,7 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	/* we need to format this */
-	escaped_details = pk_error_format_details (details);
+	escaped_details = g_markup_escape_text (details, -1);
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
@@ -376,7 +376,7 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 
 	/* set the description */
-	text = pk_error_format_details (detail);
+	text = g_markup_escape_text (detail, -1);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	pk_application_set_text_buffer (widget, text);
 	g_free (text);

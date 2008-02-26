@@ -386,37 +386,6 @@ pk_error_modal_dialog (const gchar *title, const gchar *message)
 }
 
 /**
- * pk_error_format_details:
- *
- * Turns the ; into \n and escapes the string ready for printing
- **/
-gchar *
-pk_error_format_details (const gchar *details)
-{
-	gchar *escaped;
-	gchar *valid;
-	gchar **array;
-
-	if (details == NULL) {
-		return NULL;
-	}
-
-	/* split the string into sections */
-	array = g_strsplit (details, ";", -1);
-
-	/* put back together */
-	valid = g_strjoinv ("\n", array);
-
-	/* we need to escape this as it may contain markup */
-	escaped = g_markup_escape_text (valid, -1);
-
-	g_free (valid);
-	g_strfreev (array);
-
-	return escaped;
-}
-
-/**
  * pk_error_enum_to_localised_text:
  **/
 const gchar *

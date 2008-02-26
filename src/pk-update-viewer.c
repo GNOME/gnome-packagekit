@@ -983,7 +983,7 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_details");
-	details_safe = pk_error_format_details (details);
+	details_safe = g_markup_escape_text (details, -1);
 	gtk_label_set_label (GTK_LABEL (widget), details_safe);
 }
 

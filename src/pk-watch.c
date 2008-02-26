@@ -346,7 +346,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	}
 
 	/* we need to format this */
-	escaped_details = pk_error_format_details (details);
+	escaped_details = g_markup_escape_text (details, -1);
 
 	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
 				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
@@ -372,7 +372,7 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	filename = pk_message_enum_to_icon_name (message);
 
 	/* we need to format this */
-	escaped_details = pk_error_format_details (details);
+	escaped_details = g_markup_escape_text (details, -1);
 
 	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
 				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
