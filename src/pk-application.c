@@ -212,7 +212,7 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 	pk_debug ("remove %s", application->priv->package);
 	pk_client_reset (application->priv->client_action, NULL);
 	ret = pk_client_remove_package (application->priv->client_action,
-				        application->priv->package, force, NULL);
+				        application->priv->package, force, FALSE, NULL);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret == FALSE) {
 		pk_application_error_message (application,
