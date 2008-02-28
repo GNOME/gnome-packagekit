@@ -752,7 +752,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		pk_client_reset (client, NULL);
 		pk_client_set_use_buffer (client, TRUE, NULL);
-		pk_client_get_updates (client, NULL);
+		pk_client_get_updates (client, "basename", NULL);
 		return;
 	}
 
@@ -803,7 +803,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		/* get the new update list */
 		pk_client_reset (client, NULL);
 		pk_client_set_use_buffer (client, TRUE, NULL);
-		pk_client_get_updates (client, NULL);
+		pk_client_get_updates (client, "basename", NULL);
 		return;
 	}
 
@@ -1225,7 +1225,7 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* get the update list */
-	pk_client_get_updates (client, NULL);
+	pk_client_get_updates (client, "basename", NULL);
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);

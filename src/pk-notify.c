@@ -698,7 +698,7 @@ pk_notify_query_updates (PkNotify *notify)
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_notify_error_code_cb), notify);
 	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_get_updates (client, NULL);
+	pk_client_get_updates (client, "none", NULL);
 	return TRUE;
 }
 
