@@ -229,6 +229,8 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	gchar *text;
 	PkRoleEnum role;
 	const gchar *icon_name;
+	GtkWidget *widget;
+	GtkTreePath *path;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
@@ -250,12 +252,17 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		text = pk_package_id_pretty (package_id, summary);
 		icon_name = pk_info_enum_to_icon_name (info);
-		gtk_list_store_clear (list_store_history);
-		gtk_list_store_append (list_store_history, &iter);
+		gtk_list_store_prepend (list_store_history, &iter);
 		gtk_list_store_set (list_store_history, &iter,
 				    HISTORY_COLUMN_TEXT, text,
 				    HISTORY_COLUMN_ICON, icon_name,
 				    -1);
+
+		/* move focus to top entry */
+		widget = glade_xml_get_widget (glade_xml, "treeview_history");
+		path = gtk_tree_path_new_from_indices (0, -1);
+		gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (widget), path, NULL, FALSE, 0.0, 0.0);
+
 		g_free (text);
 		return;
 	}
