@@ -68,6 +68,7 @@ enum {
 	PACKAGES_COLUMN_TEXT,
 	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_INFO,
+	PACKAGES_COLUMN_SELECT,
 	PACKAGES_COLUMN_LAST
 };
 
@@ -244,6 +245,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 				    PACKAGES_COLUMN_ID, package_id,
 				    PACKAGES_COLUMN_ICON, icon_name,
 				    PACKAGES_COLUMN_INFO, info,
+				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
 		g_free (text);
 		return;
@@ -643,6 +645,36 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 }
 
 /**
+ * pk_treeview_update_toggled:
+ **/
+static void
+pk_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
+{
+	GtkTreeModel *model = (GtkTreeModel *) data;
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	gboolean update;
+	gchar *package_id;
+
+	/* get toggled iter */
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update,
+			    PACKAGES_COLUMN_ID, &package_id, -1);
+
+	/* unstage */
+//	update ^= 1;
+
+	pk_debug ("update %s[%i]", package_id, update);
+	g_free (package_id);
+
+	/* set new value */
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_SELECT, update, -1);
+
+	/* clean up */
+	gtk_tree_path_free (path);
+}
+
+/**
  * pk_treeview_add_columns:
  **/
 static void
@@ -665,6 +697,31 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 							   "markup", PACKAGES_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
 	gtk_tree_view_append_column (treeview, column);
+}
+
+/**
+ * pk_treeview_add_columns_update:
+ **/
+static void
+pk_treeview_add_columns_update (GtkTreeView *treeview)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeModel *model;
+
+	/* column for select toggle */
+	renderer = gtk_cell_renderer_toggle_new ();
+	model = gtk_tree_view_get_model (treeview);
+	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_treeview_update_toggled), model);
+	column = gtk_tree_view_column_new_with_attributes ("Update", renderer, "active", PACKAGES_COLUMN_SELECT, NULL);
+
+	/* set this column to a fixed sizing (of 50 pixels) */
+	gtk_tree_view_column_set_sizing (GTK_TREE_VIEW_COLUMN (column), GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_set_fixed_width (GTK_TREE_VIEW_COLUMN (column), 20);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* usual suspects */
+	pk_treeview_add_columns (treeview);
 }
 
 /**
@@ -1182,7 +1239,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
-						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
+						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 	list_store_history = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 
@@ -1214,7 +1271,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
 	/* add columns to the tree view */
-	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	pk_treeview_add_columns_update (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* use the in-statusbar for progress */
