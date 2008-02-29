@@ -713,12 +713,17 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointe
  * pk_updates_add_preview_item:
  **/
 static void
-pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message)
+pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear)
 {
 	GtkWidget *tree_view;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	gchar *markup;
+
+	/* clear existing list */
+	if (clear == TRUE) {
+		gtk_list_store_clear (list_store_preview);
+	}
 
 	markup = g_strdup_printf ("<b>%s</b>", message);
 	gtk_list_store_append (list_store_preview, &iter);
@@ -812,11 +817,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
-		/* clear existing list */
-		gtk_list_store_clear (list_store_preview);
-
 		/* put a message in the listbox */
-		pk_updates_add_preview_item (client, "dialog-information", _("There are no updates available!"));
+		pk_updates_add_preview_item (client, "dialog-information", _("There are no updates available!"), TRUE);
 
 		/* if no updates then hide apply */
 		widget = glade_xml_get_widget (glade_xml, "button_review");
@@ -860,37 +862,37 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		if (num_security > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_important > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_bugfix > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_enhancement > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_low > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_normal > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
-			pk_updates_add_preview_item (client, icon, text);
+			pk_updates_add_preview_item (client, icon, text, FALSE);
 			g_free (text);
 		}
 
@@ -945,10 +947,10 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 	/* hide buttons if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		/* clear existing list */
-		gtk_list_store_clear (list_store_details);
+		gtk_list_store_clear (list_store_preview);
 
 		/* put a message in the listbox */
-		pk_updates_add_preview_item (client, "dialog-information", _("There is an update already in progress!"));
+		pk_updates_add_preview_item (client, "dialog-information", _("There is an update already in progress!"), TRUE);
 
 		/* if doing it then hide apply and refresh */
 		widget = glade_xml_get_widget (glade_xml, "button_apply");
