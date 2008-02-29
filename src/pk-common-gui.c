@@ -462,6 +462,9 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("Reading the config file failed");
 		break;
+	case PK_ERROR_ENUM_CANNOT_CANCEL:
+		text = _("The transaction cannot be cancelled");
+		break;
 	default:
 		text = _("Unknown error");
 	}
@@ -556,6 +559,9 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("The native package configuration file could not be opened.\n"
 			 "Please make sure configuration is valid.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_CANCEL:
+		text = _("The transaction is not safe to be cancelled at this time.");
 		break;
 	default:
 		text = _("Unknown error, please report a bug.\n"
