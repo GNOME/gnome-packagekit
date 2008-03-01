@@ -148,6 +148,8 @@ pk_update_viewer_SOURCES =				\
 	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
+	pk-cell-renderer-uri.c				\
+	pk-cell-renderer-uri.h				\
 	$(NULL)
 
 pk_update_viewer_LDADD =				\

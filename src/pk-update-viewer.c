@@ -41,11 +41,13 @@
 #include <pk-enum-list.h>
 #include "pk-common-gui.h"
 #include "pk-statusbar.h"
+#include "pk-cell-renderer-uri.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
 static GtkListStore *list_store_history = NULL;
 static GtkListStore *list_store_details = NULL;
+static GtkListStore *list_store_description = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
@@ -55,6 +57,13 @@ enum {
 	PREVIEW_COLUMN_ICON,
 	PREVIEW_COLUMN_TEXT,
 	PREVIEW_COLUMN_LAST
+};
+
+enum {
+	DESC_COLUMN_TITLE,
+	DESC_COLUMN_TEXT,
+	DESC_COLUMN_URI,
+	DESC_COLUMN_LAST
 };
 
 enum {
@@ -71,6 +80,15 @@ enum {
 	PACKAGES_COLUMN_SELECT,
 	PACKAGES_COLUMN_LAST
 };
+
+typedef enum {
+	PAGE_PREVIEW,
+	PAGE_DETAILS,
+	PAGE_PROGRESS,
+	PAGE_CONFIRM,
+	PAGE_ERROR,
+	PAGE_LAST
+} PkPageEnum;
 
 /**
  * pk_button_help_cb:
@@ -100,15 +118,6 @@ pk_button_update_cb (GtkWidget *widget, gboolean data)
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 }
-
-typedef enum {
-	PAGE_PREVIEW,
-	PAGE_DETAILS,
-	PAGE_PROGRESS,
-	PAGE_CONFIRM,
-	PAGE_ERROR,
-	PAGE_LAST
-} PkPageEnum;
 
 /**
  * pk_updates_set_page:
@@ -271,6 +280,68 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 }
 
 /**
+ * pk_updates_add_description_item:
+ **/
+static void
+pk_updates_add_description_item (const gchar *title, const gchar *text, const gchar *uri)
+{
+	gchar *markup;
+	GtkTreeIter iter;
+
+	/* format */
+	markup = g_strdup_printf ("<b>%s:</b>", title);
+
+	pk_debug ("%s %s %s", markup, text, uri);
+	gtk_list_store_append (list_store_description, &iter);
+	gtk_list_store_set (list_store_description, &iter,
+			    DESC_COLUMN_TITLE, markup,
+			    DESC_COLUMN_TEXT, text,
+			    DESC_COLUMN_URI, uri,
+			    -1);
+
+	g_free (markup);
+
+	GtkWidget *tree_view;
+	GtkTreeSelection *selection;
+	tree_view = glade_xml_get_widget (glade_xml, "treeview_description");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
+}
+
+/**
+ * pk_updates_add_description_link_item:
+ **/
+static void
+pk_updates_add_description_link_item (const gchar *title, const gchar *url_string)
+{
+	const gchar *text;
+	const gchar *uri;
+	gchar *title_num;
+	gchar **urls;
+	guint length;
+	gint i;
+
+	urls = g_strsplit (url_string, ";", 0);
+	length = g_strv_length (urls);
+	for (i = 0; urls[i]; i += 2) {
+		uri = urls[i];
+		text = urls[i+1];
+		if (pk_strzero (text)) {
+			text = uri;
+		}
+		/* no suffix needed */
+		if (length == 2) {
+			pk_updates_add_description_item (title, text, uri);
+		} else {
+			title_num = g_strdup_printf ("%s (%i)", title, (i/2) + 1);
+			pk_updates_add_description_item (title_num, text, uri);
+			g_free (title_num);
+		}
+	}
+	g_strfreev (urls);
+}
+
+/**
  * pk_updates_update_detail_cb:
  **/
 static void
@@ -282,31 +353,30 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
-	gchar *text, *href;
-	gchar *package_pretty = NULL;
-	gchar *updates_pretty = NULL;
-	gchar *obsoletes_pretty = NULL;
-	const gchar *info_text = NULL;
-	GtkTextView *tv;
-	GtkTextBuffer *buffer;
-	GtkTextTag *bold_tag, *title_tag, *space_tag, *tag;
-	GtkTextIter iter;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
-	gint info, i, j;
-	const gchar *urls;
-	gchar **u;
-	gboolean has_title;
+	gchar *package_pretty;
+	gchar *updates_pretty;
+	gchar *obsoletes_pretty;
+	const gchar *info_text;
+	PkInfoEnum info;
+
+	/* clear existing list */
+	gtk_list_store_clear (list_store_description);
 
 	/* initially we are hidden */
-	widget = glade_xml_get_widget (glade_xml, "details_scrolledwindow");
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 	gtk_widget_show (widget);
 
-	/* Grr, need to look up the info from the packages list */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
 
+	widget = glade_xml_get_widget (glade_xml, "treeview_description");
+	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
+
+	/* get info  */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	if (gtk_tree_selection_get_selected (selection, &model, &treeiter)) {
 		gtk_tree_model_get (model, &treeiter,
@@ -315,102 +385,44 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		info = PK_INFO_ENUM_NORMAL;
 	}
 
-	/* set restart */
-	widget = glade_xml_get_widget (glade_xml, "details_textview");
-	tv = GTK_TEXT_VIEW (widget);
-	buffer = gtk_text_buffer_new (NULL);
-	bold_tag = gtk_text_buffer_create_tag (buffer, "bold",
-					       "weight", PANGO_WEIGHT_BOLD,
-					       NULL);
-	title_tag = gtk_text_buffer_create_tag (buffer, "title",
-						"font", "DejaVu LGC Sans Mono Bold",
-						"foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
-						"background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
-						NULL);
-	space_tag = gtk_text_buffer_create_tag (buffer, "space",
-						"font", "DejaVu LGC Sans Mono Bold",
-						NULL);
-
-	gtk_text_buffer_get_start_iter (buffer, &iter);
-
-#define ADD_LINE(title,line)						\
-	text = g_strdup_printf ("%12s ", title);			\
-	gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,	\
-					  title_tag, NULL);		\
-	g_free (text);							\
-	text = g_strdup_printf (" %s\n", line);				\
-	gtk_text_buffer_insert (buffer, &iter, text, -1);		\
-	g_free (text);
+	info_text = pk_info_enum_to_localised_text (info);
+	pk_updates_add_description_item (_("Type"), info_text, NULL);
 
 	package_pretty = pk_package_id_name_version (package_id);
-	ADD_LINE(_("Version"), package_pretty);
+	pk_updates_add_description_item (_("Version"), package_pretty, NULL);
 	g_free (package_pretty);
 
-	info_text = pk_info_enum_to_localised_text (info);
-	ADD_LINE(_("Type"), info_text);
-
-	if (pk_strzero (updates) == FALSE) {
+	if (!pk_strzero (updates)) {
 		updates_pretty = pk_package_id_name_version (updates);
-		ADD_LINE(_("Updates"), updates_pretty);
+		pk_updates_add_description_item (_("Updates"), updates_pretty, NULL);
 		g_free (updates_pretty);
 	}
 
-	if (pk_strzero (obsoletes) == FALSE) {
+	if (!pk_strzero (obsoletes)) {
 		obsoletes_pretty = pk_package_id_name_version (obsoletes);
-		ADD_LINE(_("Obsoletes"), obsoletes_pretty);
+		pk_updates_add_description_item (_("Obsoletes"), obsoletes_pretty, NULL);
 		g_free (obsoletes_pretty);
 	}
 
 	ident = pk_package_id_new_from_string (package_id);
-	ADD_LINE(_("Repository"), ident->data);
+	pk_updates_add_description_item (_("Repository"), ident->data, NULL);
 
 	if (!pk_strzero (update_text)) {
-		ADD_LINE(_("Description"), update_text);
+		pk_updates_add_description_item (_("Description"), update_text, NULL);
 	}
 
-	has_title = FALSE;
-	for (i = 0; i < 3; i++) {
-		switch (i) {
-		case 0:
-			urls = vendor_url;
-			break;
-		case 1:
-			urls = bugzilla_url;
-			break;
-		case 2:
-			urls = cve_url;
-			break;
-		default:
-			urls = NULL;
-			g_assert_not_reached ();
-		}
-		if (pk_strzero (urls) == FALSE && has_title == FALSE) {
-			has_title = TRUE;
-			text = g_strdup_printf ("%12s ", _("References"));
-			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
-							  title_tag, NULL);
-			g_free (text);
-		}
-
-		u = g_strsplit (urls, ";", 0);
-		for (j = 0; u[j]; j += 2) {
-			href = u[j];
-			text = u[j+1];
-			if (pk_strzero (text)) {
-				text = href;
-			}
-			gtk_text_buffer_insert (buffer, &iter, " ", -1);
-			tag = gtk_text_buffer_create_tag (buffer, NULL,
-							  "foreground", "blue",
-							  "underline", PANGO_UNDERLINE_SINGLE,
-							  NULL);
-			g_object_set_data_full (G_OBJECT (tag), "url", g_strdup (href), g_free);
-			gtk_text_buffer_insert_with_tags (buffer, &iter, text, -1,
-							  tag, NULL);
-		}
-		g_strfreev (u);
+	/* add all the links */
+	if (!pk_strzero (vendor_url)) {
+		pk_updates_add_description_link_item (_("Vendor link"), vendor_url);
+	}
+	if (!pk_strzero (bugzilla_url)) {
+		pk_updates_add_description_link_item (_("Bugzilla link"), bugzilla_url);
+	}
+	if (!pk_strzero (cve_url)) {
+		pk_updates_add_description_link_item (_("CVE link"), cve_url);
 	}
 
+	/* reboot */
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
 		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
@@ -419,202 +431,6 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 		gtk_widget_hide (widget);
 	}
-
-	gtk_text_view_set_buffer (tv, buffer);
-}
-
-static void
-follow_if_link (GtkWidget *widget, GtkTextIter *iter)
-{
-	GSList *tags = NULL, *t = NULL;
-
-	tags = gtk_text_iter_get_tags (iter);
-	for (t = tags;  t != NULL;  t = t->next) {
-		GtkTextTag *tag = t->data;
-		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
-		if (url) {
-			pk_execute_url (url);
-			break;
-		}
-	}
-	g_slist_free (tags);
-}
-
-/* Links can be activated by pressing Enter.
- */
-static gboolean
-key_press_event (GtkWidget *widget, GdkEventKey *event)
-{
-	GtkTextView *tv = GTK_TEXT_VIEW (widget);
-	GtkTextIter iter;
-	GtkTextBuffer *buffer;
-
-	switch (event->keyval) {
-	case GDK_Return:
-	case GDK_KP_Enter:
-		buffer = gtk_text_view_get_buffer (tv);
-		gtk_text_buffer_get_iter_at_mark (buffer, &iter,
-						  gtk_text_buffer_get_insert (buffer));
-		follow_if_link (widget, &iter);
-		break;
-	default:
-		break;
-	}
-
-	return FALSE;
-}
-
-static gboolean
-event_after (GtkWidget *widget, GdkEvent *ev)
-{
-	GtkTextView *tv = GTK_TEXT_VIEW (widget);
-	GtkTextIter start, end, iter;
-	GtkTextBuffer *buffer;
-	GdkEventButton *event;
-	gint x, y;
-
-	if (ev->type != GDK_BUTTON_RELEASE)
-		return FALSE;
-
-	event = (GdkEventButton *)ev;
-
-	if (event->button != 1)
-		return FALSE;
-
-	buffer = gtk_text_view_get_buffer (tv);
-
-	/* we shouldn't follow a link if the user has selected something */
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
-		return FALSE;
-
-	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
-					       event->x, event->y, &x, &y);
-	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
-
-	follow_if_link (widget, &iter);
-
-	return FALSE;
-}
-
-static gboolean hovering_over_link = FALSE;
-static GdkCursor *hand_cursor = NULL;
-static GdkCursor *regular_cursor = NULL;
-
-/* Looks at all tags covering the position (x, y) in the text view,
- * and if one of them is a link, change the cursor to the "hands" cursor
- * typically used by web browsers.
- */
-static void
-set_cursor_if_appropriate (GtkTextView *tv, gint x, gint y)
-{
-	GSList *tags = NULL, *t = NULL;
-	GtkTextIter iter;
-	GdkWindow *window;
-	gboolean hovering = FALSE;
-
-	gtk_text_view_get_iter_at_location (tv, &iter, x, y);
-
-	tags = gtk_text_iter_get_tags (&iter);
-	for (t = tags;  t != NULL;  t = t->next) {
-		GtkTextTag *tag = t->data;
-		gchar *url = (gchar*) g_object_get_data (G_OBJECT (tag), "url");
-		if (url) {
-			hovering = TRUE;
-			break;
-		}
-	}
-
-	if (hovering != hovering_over_link) {
-		hovering_over_link = hovering;
-		window = gtk_text_view_get_window (tv, GTK_TEXT_WINDOW_TEXT);
-		if (hovering_over_link)
-			gdk_window_set_cursor (window, hand_cursor);
-		else
-			gdk_window_set_cursor (window, regular_cursor);
-	}
-
-	g_slist_free (tags);
-}
-
-/* Update the cursor image if the pointer moved.
- */
-static gboolean
-motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
-{
-	GtkTextView *tv = GTK_TEXT_VIEW (widget);
-	gint x, y;
-
-	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
-					       event->x, event->y, &x, &y);
-	set_cursor_if_appropriate (tv, x, y);
-
-	gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
-
-	return FALSE;
-}
-
-/* Also update the cursor image if the window becomes visible
- *  * (e.g. when a window covering it got iconified).
- *   */
-static gboolean
-visibility_notify_event (GtkWidget *widget, GdkEventVisibility *event)
-{
-	GtkTextView *tv = GTK_TEXT_VIEW (widget);
-	gint wx, wy, bx, by;
-
-	gdk_window_get_pointer (widget->window, &wx, &wy, NULL);
-
-	gtk_text_view_window_to_buffer_coords (tv, GTK_TEXT_WINDOW_WIDGET,
-					       wx, wy, &bx, &by);
-	set_cursor_if_appropriate (tv, bx, by);
-
-	return FALSE;
-}
-
-static void
-setup_link_support (GtkWidget *widget)
-{
-	hand_cursor = gdk_cursor_new (GDK_HAND2);
-		regular_cursor = gdk_cursor_new (GDK_XTERM);
-
-	g_signal_connect (widget, "key-press-event",
-			  G_CALLBACK (key_press_event), NULL);
-	g_signal_connect (widget, "event-after",
-			  G_CALLBACK (event_after), NULL);
-	g_signal_connect (widget, "motion-notify-event",
-			  G_CALLBACK (motion_notify_event), NULL);
-	g_signal_connect (widget, "visibility-notify-event",
-			  G_CALLBACK (visibility_notify_event), NULL);
-}
-
-static void
-update_tag (GtkTextTag *tag, gpointer data)
-{
-	GtkWidget *widget = data;
-	gchar *name;
-
-	g_object_get (tag, "name", &name, NULL);
-
-	if (strcmp (name, "title") == 0) {
-		g_object_set (tag,
-			      "foreground-gdk", &widget->style->base[GTK_STATE_NORMAL],
-			      "background-gdk", &widget->style->text_aa[GTK_STATE_NORMAL],
-			      NULL);
-	}
-}
-
-static void
-update_tags (GtkWidget *widget,
-	     GtkStyle  *previous_style,
-	     gpointer   user_data)
-{
-	GtkTextBuffer *buffer;
-	GtkTextTagTable *tags;
-
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget));
-	tags = gtk_text_buffer_get_tag_table (buffer);
-	gtk_text_tag_table_foreach (tags, update_tag, widget);
 }
 
 /**
@@ -700,6 +516,40 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 }
 
 /**
+ * pk_treeview_renderer_clicked:
+ **/
+static void
+pk_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer data)
+{
+	pk_debug ("clicked %s", uri);
+	pk_execute_url (uri);
+}
+
+/**
+ * pk_treeview_add_columns_description:
+ **/
+static void
+pk_treeview_add_columns_description (GtkTreeView *treeview)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+
+	/* image */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Title"), renderer,
+							   "markup", DESC_COLUMN_TITLE, NULL);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* column for uris */
+	renderer = pk_cell_renderer_uri_new ();
+	g_signal_connect (renderer, "clicked", G_CALLBACK (pk_treeview_renderer_clicked), NULL);
+	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
+							   "text", DESC_COLUMN_TEXT,
+							   "uri", DESC_COLUMN_URI, NULL);
+	gtk_tree_view_append_column (treeview, column);
+}
+
+/**
  * pk_treeview_add_columns_update:
  **/
 static void
@@ -736,7 +586,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkWidget *widget;
 
 	/* hide the widgets until we have data */
-	widget = glade_xml_get_widget (glade_xml, "details_scrolledwindow");
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 	gtk_widget_hide (widget);
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
@@ -1227,11 +1077,6 @@ main (int argc, char *argv[])
 	/* we have no yelp file yet */
 	gtk_widget_hide (widget);
 
-	widget = glade_xml_get_widget (glade_xml, "details_textview");
-	g_signal_connect (widget, "style-set",
-			  G_CALLBACK (update_tags), NULL);
-	setup_link_support (widget);
-
 	widget = glade_xml_get_widget (glade_xml, "button_update");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_update_cb), NULL);
@@ -1242,6 +1087,7 @@ main (int argc, char *argv[])
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 	list_store_history = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create preview tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
@@ -1257,8 +1103,13 @@ main (int argc, char *argv[])
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_history));
 
+	/* create history tree view */
+	widget = glade_xml_get_widget (glade_xml, "treeview_description");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (list_store_description));
+
 	/* add columns to the tree view */
-	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	pk_treeview_add_columns_description (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* create package tree view */
@@ -1307,6 +1158,7 @@ main (int argc, char *argv[])
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_preview);
 	g_object_unref (list_store_history);
+	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
 	g_object_unref (client);
 	g_object_unref (pconnection);
