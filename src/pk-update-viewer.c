@@ -413,13 +413,13 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	/* add all the links */
 	if (!pk_strzero (vendor_url)) {
-		pk_updates_add_description_link_item (_("Vendor link"), vendor_url);
+		pk_updates_add_description_link_item (_("Vendor"), vendor_url);
 	}
 	if (!pk_strzero (bugzilla_url)) {
-		pk_updates_add_description_link_item (_("Bugzilla link"), bugzilla_url);
+		pk_updates_add_description_link_item (_("Bugzilla"), bugzilla_url);
 	}
 	if (!pk_strzero (cve_url)) {
-		pk_updates_add_description_link_item (_("CVE link"), cve_url);
+		pk_updates_add_description_link_item (_("CVE"), cve_url);
 	}
 
 	/* reboot */
