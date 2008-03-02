@@ -91,13 +91,20 @@ pk_progress_error_message (PkProgress *progress, const gchar *title, const gchar
 {
 	GtkWidget *main_window;
 	GtkWidget *dialog;
+	gchar *escaped_details = NULL;
 
 	pk_warning ("error %s:%s", title, details);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), details);
+
+	if (details != NULL) {
+		escaped_details = g_markup_escape_text (details, -1);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", escaped_details);
+		g_free (escaped_details);
+	}
+
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
