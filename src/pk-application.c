@@ -147,7 +147,7 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 {
 	GtkWidget *main_window;
 	GtkWidget *dialog;
-	gchar *escaped_details;
+	gchar *escaped_details = NULL;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -155,15 +155,17 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 	pk_warning ("error %s:%s", title, details);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
-	/* we need to format this */
-	escaped_details = g_markup_escape_text (details, -1);
-
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), escaped_details);
+
+	/* we need to be careful of markup */
+	if (details != NULL) {
+		escaped_details = g_markup_escape_text (details, -1);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", escaped_details);
+		g_free (escaped_details);
+	}
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (escaped_details);
 }
 
 /**
@@ -576,11 +578,6 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 				pk_warning ("failed to requeue the search");
 			}
 		}
-	}
-
-	/* panic */
-	if (status == PK_EXIT_ENUM_FAILED) {
-		pk_application_error_message (application, _("The action did not complete"), NULL);
 	}
 }
 
