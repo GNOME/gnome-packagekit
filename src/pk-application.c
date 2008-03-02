@@ -897,6 +897,8 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* refresh the search as the items may have changed */
 		gtk_list_store_clear (application->priv->packages_store);
 
+		/* cancel this, we don't care about old results that are pending */
+		pk_client_cancel (application->priv->client_search, NULL);
 		pk_client_reset (application->priv->client_search, NULL);
 		ret = pk_client_search_group (application->priv->client_search, "none", id, NULL);
 		/* ick, we failed so pretend we didn't do the action */
