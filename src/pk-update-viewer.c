@@ -232,7 +232,7 @@ pk_button_overview_cb (GtkWidget *widget, gpointer data)
  * pk_updates_package_cb:
  **/
 static void
-pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+pk_updates_package_cb (PkClient *client, PkInfoEnum info, PkTypeEnum type, const gchar *package_id,
 		       const gchar *summary, gpointer data)
 {
 	GtkTreeIter iter;

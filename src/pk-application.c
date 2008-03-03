@@ -437,7 +437,7 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
  * pk_application_package_cb:
  **/
 static void
-pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+pk_application_package_cb (PkClient *client, PkInfoEnum info, PkTypeEnum type, const gchar *package_id,
 			   const gchar *summary, PkApplication *application)
 {
 	GtkTreeIter iter;
