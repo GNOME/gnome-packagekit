@@ -600,7 +600,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		/* make back into package ID */
 		package = g_strdup (package_id);
 		g_free (package_id);
-		g_print ("selected row is: %s\n", package);
+		pk_debug ("selected row is: %s", package);
 		/* get the decription */
 		pk_client_reset (client, NULL);
 		pk_client_get_update_detail (client, package, NULL);
@@ -608,7 +608,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		widget = glade_xml_get_widget (glade_xml, "button_update");
 		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
-		g_print ("no row selected.\n");
+		pk_debug ("no row selected");
 		widget = glade_xml_get_widget (glade_xml, "button_update");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}

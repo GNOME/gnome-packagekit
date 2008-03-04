@@ -309,12 +309,12 @@ pk_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 		/* make back into transaction_id */
 		transaction_id = g_strdup (id);
 		g_free (id);
-		g_print ("selected row is: %s\n", transaction_id);
+		pk_debug ("selected row is: %s", transaction_id);
 
 		/* get the decription */
 		pk_treeview_details_populate (transaction_id);
 	} else {
-		g_print ("no row selected.\n");
+		pk_debug ("no row selected");
 	}
 }
 

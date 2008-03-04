@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <pk-debug.h>
 
 #include "pk-cell-renderer-uri.h"
 
@@ -57,7 +58,7 @@ pk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 	}
 
 	cru->clicked = TRUE;
-	g_debug ("emit: %s", cru->uri);
+	pk_debug ("emit: %s", cru->uri);
 	g_signal_emit (cell, signals [CLICKED], 0, cru->uri);
 	return TRUE;
 }

@@ -43,7 +43,7 @@
 static void
 pk_application_help_cb (PkApplication *application)
 {
-	g_warning ("help application");
+	pk_warning ("help application");
 }
 
 /**

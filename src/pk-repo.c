@@ -187,10 +187,10 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter,
 				    REPO_COLUMN_ID, &repo_id, -1);
-		g_print ("selected row is: %s\n", repo_id);
+		pk_debug ("selected row is: %s", repo_id);
 		g_free (repo_id);
 	} else {
-		g_print ("no row selected.\n");
+		pk_debug ("no row selected");
 	}
 }
 

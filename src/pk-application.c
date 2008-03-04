@@ -892,7 +892,7 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
-		g_print ("selected row is: %s\n", id);
+		pk_debug ("selected row is: %s", id);
 
 		/* refresh the search as the items may have changed */
 		gtk_list_store_clear (application->priv->packages_store);
@@ -1065,7 +1065,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* make back into package ID */
 		application->priv->package = g_strdup (package_id);
 		g_free (package_id);
-		g_print ("selected row is: %i %s\n", installed, application->priv->package);
+		pk_debug ("selected row is: %i %s", installed, application->priv->package);
 
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		if (installed == FALSE &&
@@ -1088,7 +1088,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		pk_notebook_populate (application, page);
 
 	} else {
-		g_print ("no row selected.\n");
+		pk_debug ("no row selected");
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
