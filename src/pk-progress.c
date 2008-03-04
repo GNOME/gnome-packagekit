@@ -203,8 +203,11 @@ pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, P
  * pk_progress_package_cb:
  */
 static void
-pk_progress_package_cb (PkClient *client, PkInfoEnum info, PkTypeEnum type,
-			const gchar *package_id, const gchar *summary, PkProgress  *progress)
+pk_progress_package_cb (PkClient    *client,
+			guint        value,
+			const gchar *package_id,
+			const gchar *summary,
+			PkProgress  *progress)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
@@ -512,7 +515,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	/* do the best we can */
 	ret = pk_client_get_package (progress->priv->client, &text, NULL);
 	if (ret == TRUE) {
-		pk_progress_package_cb (progress->priv->client, PK_INFO_ENUM_UNKNOWN, PK_TYPE_ENUM_UNKNOWN, text, NULL, progress);
+		pk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
 	}
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
