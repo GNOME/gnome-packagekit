@@ -1140,9 +1140,8 @@ pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *nam
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
 {
-	//PkApplication *application
 	if (pk_strequal (name, "entry_text") == TRUE) {
-		pk_warning ("creating sexy icon=%s", name);
+		pk_debug ("creating sexy icon=%s", name);
 		return sexy_icon_entry_new ();
 	}
 	pk_warning ("name unknown=%s", name);
