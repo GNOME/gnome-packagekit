@@ -37,14 +37,22 @@
                         <property name="row_spacing">5</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <widget class="GtkLabel" id="label_author">
+                          <widget class="GtkLabel" id="label19">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label">Richard Hughes</property>
+                            <property name="label" translatable="yes">Backend Name:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label20">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Backend Author:</property>
+                          </widget>
+                          <packing>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                             <property name="x_options">GTK_FILL</property>
@@ -65,25 +73,17 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label20">
+                          <widget class="GtkLabel" id="label_author">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Backend Author:</property>
+                            <property name="label">Richard Hughes</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                             <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label19">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Backend Name:</property>
-                          </widget>
-                          <packing>
                             <property name="y_options"></property>
                           </packing>
                         </child>
@@ -126,109 +126,115 @@
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkLabel" id="label45">
+                              <widget class="GtkLabel" id="label15">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Resolve:</property>
+                                <property name="label" translatable="yes">Get Updates:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_resolve">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
-                                <property name="x_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label37">
+                              <widget class="GtkLabel" id="label16">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Cancel Transaction:</property>
+                                <property name="label" translatable="yes">Refresh Cache:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_cancel">
+                              <widget class="GtkLabel" id="label17">
                                 <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Update System:</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_search_file">
+                              <widget class="GtkLabel" id="label25">
                                 <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Search Name:</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_search_group">
+                              <widget class="GtkLabel" id="label26">
                                 <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Search Details:</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_search_details">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_search_name">
+                              <widget class="GtkLabel" id="label27">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Search Group:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label28">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Search File:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_get_updates">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_refresh_cache">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -248,115 +254,109 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_refresh_cache">
+                              <widget class="GtkImage" id="image_search_name">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_get_updates">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label28">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Search File:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label27">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Search Group:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label26">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Search Details:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label25">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Search Name:</property>
-                              </widget>
-                              <packing>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label17">
+                              <widget class="GtkImage" id="image_search_details">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Update System:</property>
+                                <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label16">
+                              <widget class="GtkImage" id="image_search_group">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Refresh Cache:</property>
+                                <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
                                 <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_search_file">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_cancel">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label37">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Cancel Transaction:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label15">
+                              <widget class="GtkImage" id="image_resolve">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Updates:</property>
+                                <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
+                                <property name="x_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label45">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Resolve:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
@@ -371,123 +371,102 @@
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkImage" id="image_get_files">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label49">
+                              <widget class="GtkLabel" id="label34">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Files:</property>
+                                <property name="label" translatable="yes">Update Package:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_file_install">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label44">
+                              <widget class="GtkLabel" id="label33">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Install File:</property>
+                                <property name="label" translatable="yes">Install Package:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label38">
+                              <widget class="GtkLabel" id="label32">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Description:</property>
+                                <property name="label" translatable="yes">Remove Package:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_get_description">
+                              <widget class="GtkLabel" id="label29">
                                 <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Depends:</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_get_update_detail">
+                              <widget class="GtkLabel" id="label30">
                                 <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Requires:</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_get_requires">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_get_depends">
+                              <widget class="GtkLabel" id="label31">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Update Detail:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_package_update">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_package_install">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -507,104 +486,125 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_package_install">
+                              <widget class="GtkImage" id="image_get_depends">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_package_update">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label31">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Update Detail:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label30">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Requires:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label29">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Depends:</property>
-                              </widget>
-                              <packing>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_get_requires">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_get_update_detail">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_get_description">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label38">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Description:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label32">
+                              <widget class="GtkLabel" id="label44">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Remove Package:</property>
+                                <property name="label" translatable="yes">Install File:</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label33">
+                              <widget class="GtkImage" id="image_file_install">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Install Package:</property>
+                                <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label49">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Files:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label34">
+                              <widget class="GtkImage" id="image_get_files">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Update Package:</property>
+                                <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                           </widget>
@@ -620,13 +620,52 @@
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkImage" id="image_get_repo_list">
+                              <widget class="GtkLabel" id="label46">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Get Repository List:</property>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label47">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Repository Enable:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label48">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Repository Set Data:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_repo_enable">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -646,54 +685,15 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_repo_enable">
+                              <widget class="GtkImage" id="image_get_repo_list">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label48">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Repo Set Data:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label47">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Repo Enable:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label46">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Get Repo List:</property>
-                              </widget>
-                              <packing>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
                               </packing>
                             </child>
                           </widget>
@@ -742,16 +742,75 @@
                             <property name="column_spacing">5</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkImage" id="image_free">
+                              <widget class="GtkLabel" id="label14">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">GUI:</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_gui">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label12">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Installed:</property>
+                              </widget>
+                              <packing>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_installed">
+                                <property name="visible">True</property>
+                                <property name="icon_name">gtk-dialog-error</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label13">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Development:</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkImage" id="image_devel">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">3</property>
                                 <property name="right_attach">4</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
@@ -771,76 +830,17 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkImage" id="image_devel">
+                              <widget class="GtkImage" id="image_free">
                                 <property name="visible">True</property>
                                 <property name="icon_name">gtk-dialog-error</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">3</property>
                                 <property name="right_attach">4</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label13">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Development:</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_installed">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label12">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Installed:</property>
-                              </widget>
-                              <packing>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkImage" id="image_gui">
-                                <property name="visible">True</property>
-                                <property name="icon_name">gtk-dialog-error</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label14">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">GUI:</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
                               </packing>
                             </child>
                           </widget>

@@ -386,39 +386,48 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	}
 
 	info_text = pk_info_enum_to_localised_text (info);
+	/* translators: this is the update type, e.g. security */
 	pk_updates_add_description_item (_("Type"), info_text, NULL);
 
 	package_pretty = pk_package_id_name_version (package_id);
+	/* translators: this is the package version */
 	pk_updates_add_description_item (_("Version"), package_pretty, NULL);
 	g_free (package_pretty);
 
 	if (!pk_strzero (updates)) {
 		updates_pretty = pk_package_id_name_version (updates);
+		/* translators: this is a list of packages that are updated */
 		pk_updates_add_description_item (_("Updates"), updates_pretty, NULL);
 		g_free (updates_pretty);
 	}
 
 	if (!pk_strzero (obsoletes)) {
 		obsoletes_pretty = pk_package_id_name_version (obsoletes);
+		/* translators: this is a list of packages that are obsoleted */
 		pk_updates_add_description_item (_("Obsoletes"), obsoletes_pretty, NULL);
 		g_free (obsoletes_pretty);
 	}
 
 	ident = pk_package_id_new_from_string (package_id);
+	/* translators: this is the repository the package has come from */
 	pk_updates_add_description_item (_("Repository"), ident->data, NULL);
 
 	if (!pk_strzero (update_text)) {
+		/* translators: this is the package description */
 		pk_updates_add_description_item (_("Description"), update_text, NULL);
 	}
 
 	/* add all the links */
 	if (!pk_strzero (vendor_url)) {
+		/* translators: this is a list of vendor URLs */
 		pk_updates_add_description_link_item (_("Vendor"), vendor_url);
 	}
 	if (!pk_strzero (bugzilla_url)) {
+		/* translators: this is a list of bugzilla URLs */
 		pk_updates_add_description_link_item (_("Bugzilla"), bugzilla_url);
 	}
 	if (!pk_strzero (cve_url)) {
+		/* translators: this is a list of CVE (security) URLs */
 		pk_updates_add_description_link_item (_("CVE"), cve_url);
 	}
 

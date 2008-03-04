@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-27 13:45+0000\n"
+"POT-Creation-Date: 2008-03-04 20:31+0000\n"
 "PO-Revision-Date: 2007-09-10 10:12+0100\n"
 "Last-Translator: Iestyn Pryce <dylunio@gmail.com>\n"
 "Language-Team: Welsh <gnome-cy@lists.linux.org.uk>\n"
@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:7
-msgid "If searches should be done for each letter"
+msgid "If autocompletion should be used when searching"
 msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:8
@@ -94,7 +94,7 @@ msgid ""
 msgstr ""
 
 #: ../data/pk-application.desktop.in.h:1 ../data/pk-application.glade.h:2
-#: ../src/pk-application-main.c:94
+#: ../src/pk-application-main.c:95
 msgid "Add/Remove Software"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr "<b>Manylion</b>"
 msgid "Depends on"
 msgstr "Dibyniaethau"
 
-#: ../data/pk-application.glade.h:4 ../src/pk-update-viewer.c:357
+#: ../data/pk-application.glade.h:4 ../src/pk-update-viewer.c:411
 #, fuzzy
 msgid "Description"
 msgstr "Disgrifiad Tasg:"
@@ -350,7 +350,7 @@ msgstr "Dango_s diweddariadau"
 msgid "Install updates automatically when on _battery power"
 msgstr ""
 
-#: ../data/pk-prefs.glade.h:6 ../src/pk-prefs.c:315
+#: ../data/pk-prefs.glade.h:6 ../src/pk-prefs.c:316
 msgid "Software Update Preferences"
 msgstr ""
 
@@ -392,7 +392,7 @@ msgstr "Anhysbys"
 msgid "<b>More details</b>"
 msgstr "<b>Mwy o fanylion</b>"
 
-#: ../data/pk-transactions.glade.h:2 ../src/pk-transaction-viewer.c:366
+#: ../data/pk-transactions.glade.h:2 ../src/pk-transaction-viewer.c:367
 #, fuzzy
 msgid "Transaction Viewer"
 msgstr "Gwall trosglwyddiad"
@@ -406,12 +406,12 @@ msgstr ""
 msgid "Software Transaction Viewer"
 msgstr "Gwall trosglwyddiad"
 
-#: ../data/pk-update-icon.desktop.in.h:1 ../src/pk-update-icon.c:71
+#: ../data/pk-update-icon.desktop.in.h:1 ../src/pk-update-icon.c:72
 msgid "PackageKit Update Applet"
 msgstr "Rhaglennig Diweddaru PackageKit"
 
-#: ../data/pk-update-viewer.desktop.in.h:1 ../src/pk-repo.c:240
-#: ../src/pk-update-viewer.c:1017
+#: ../data/pk-update-viewer.desktop.in.h:1 ../src/pk-repo.c:241
+#: ../src/pk-update-viewer.c:944
 #, fuzzy
 msgid "Software Update Viewer"
 msgstr "Gwelydd Diweddariad Pecynnau"
@@ -428,22 +428,22 @@ msgstr "Pecyn '%s' wedi'i sefydlu"
 
 #: ../data/pk-update-viewer.glade.h:1
 #, fuzzy
+msgid "<b>A system restart is recommended</b>"
+msgstr "Mae angen ailgychwyn y system"
+
+#: ../data/pk-update-viewer.glade.h:2
+#, fuzzy
 msgid "<b>More details:</b>"
 msgstr "<b>Mwy o fanylion</b>"
 
-#: ../data/pk-update-viewer.glade.h:2
+#: ../data/pk-update-viewer.glade.h:3
 #, fuzzy
 msgid "<b>System Update Completed!</b>"
 msgstr "Mae diweddaru'r system wedi'i gyflawni"
 
-#: ../data/pk-update-viewer.glade.h:3
+#: ../data/pk-update-viewer.glade.h:4
 msgid "<b>This update will require a reboot</b>"
 msgstr ""
-
-#: ../data/pk-update-viewer.glade.h:4
-#, fuzzy
-msgid "A system restart is recommended"
-msgstr "Mae angen ailgychwyn y system"
 
 #: ../data/pk-update-viewer.glade.h:5
 msgid "All selected updates have been successfully installed"
@@ -453,7 +453,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../data/pk-update-viewer.glade.h:7 ../src/pk-transaction-viewer.c:221
+#: ../data/pk-update-viewer.glade.h:7 ../src/pk-transaction-viewer.c:222
 #, fuzzy
 msgid "Details"
 msgstr "<b>Manylion</b>"
@@ -542,964 +542,998 @@ msgid ""
 "the source of the packages."
 msgstr ""
 
-#: ../src/pk-application.c:173
+#: ../src/pk-application.c:189
 msgid "The package could not be installed"
 msgstr "Dydy'r pecyn methu cael ei sefydlu"
 
-#: ../src/pk-application.c:205
+#: ../src/pk-application.c:221
 msgid "The package could not be removed"
 msgstr "Dydy'r pecyn methu cael ei waredu"
 
 #. present this to the user
-#: ../src/pk-application.c:254
+#: ../src/pk-application.c:270
 #, fuzzy
 msgid ""
 "The following packages have to be removed:\n"
 "\n"
 msgstr "Dydy'r pecyn methu cael ei waredu"
 
-#: ../src/pk-application.c:268
+#: ../src/pk-application.c:284
 #, c-format
 msgid "Other software depends on %s"
 msgstr ""
 
-#: ../src/pk-application.c:274
+#: ../src/pk-application.c:290
 #, fuzzy
 msgid "Remove all packages"
 msgstr "Pecyn"
 
 #. no information
-#: ../src/pk-application.c:416
+#: ../src/pk-application.c:432
 msgid "No files"
 msgstr ""
 
-#: ../src/pk-application.c:535
+#: ../src/pk-application.c:562
 msgid "Find"
 msgstr "Canfod"
 
-#: ../src/pk-application.c:538 ../src/pk-application.c:1266
+#: ../src/pk-application.c:565 ../src/pk-application.c:1483
 #, fuzzy
 msgid "Find packages"
 msgstr "Rh_eoli pecynnau"
 
-#: ../src/pk-application.c:558
-msgid "The action did not complete"
-msgstr "Ni chafodd y weithred ei gyflawni"
-
 #. todo - make the dialog turn red...
-#: ../src/pk-application.c:604
+#: ../src/pk-application.c:626
 msgid "Invalid search text"
 msgstr ""
 
-#: ../src/pk-application.c:605
+#: ../src/pk-application.c:627
 msgid "The search text contains invalid characters"
 msgstr ""
 
-#: ../src/pk-application.c:627
+#: ../src/pk-application.c:655
 msgid "The search could not be completed"
 msgstr "Ni chafodd y chwiliad ei gyflawni"
 
-#: ../src/pk-application.c:641
+#: ../src/pk-application.c:669
 msgid "Cancel"
 msgstr "Diddymu"
 
-#: ../src/pk-application.c:644
+#: ../src/pk-application.c:672
 #, fuzzy
 msgid "Cancel search"
 msgstr "Diddymu"
 
-#: ../src/pk-application.c:715 ../src/pk-application.c:736
+#: ../src/pk-application.c:748 ../src/pk-application.c:769
 msgid "Name"
 msgstr "Enw"
 
-#: ../src/pk-application.c:884
+#: ../src/pk-application.c:907
 msgid "The group could not be queried"
 msgstr "Doedd y grŵp methu cael ei holi"
 
-#: ../src/pk-application.c:1210
+#: ../src/pk-application.c:1190
+#, fuzzy
+msgid "Searching by name"
+msgstr "Adnewyddu clec pecynnau"
+
+#: ../src/pk-application.c:1211
+#, fuzzy
+msgid "Searching by description"
+msgstr "Disgrifiad Tasg:"
+
+#: ../src/pk-application.c:1232
+#, fuzzy
+msgid "Searching by file"
+msgstr "Chwilio:"
+
+#: ../src/pk-application.c:1255
+#, fuzzy
+msgid "Search by name"
+msgstr "Chwilio:"
+
+#: ../src/pk-application.c:1264
+#, fuzzy
+msgid "Search by description"
+msgstr "Disgrifiad Tasg:"
+
+#: ../src/pk-application.c:1273
+#, fuzzy
+msgid "Search by file"
+msgstr "Chwilio:"
+
+#: ../src/pk-application.c:1426
 #, fuzzy
 msgid "Install selected package"
 msgstr "Wedi'i sefydlu"
 
-#: ../src/pk-application.c:1215
+#: ../src/pk-application.c:1431
 #, fuzzy
 msgid "Remove selected package"
 msgstr "Pecyn"
 
-#: ../src/pk-application.c:1220
+#: ../src/pk-application.c:1436
 msgid "Visit homepage for selected package"
 msgstr ""
 
-#: ../src/pk-application.c:1277
-#, fuzzy
-msgid "By package name"
-msgstr "Rheolwr PackageKit"
-
-#: ../src/pk-application.c:1280
-#, fuzzy
-msgid "By description"
-msgstr "Disgrifiad Tasg:"
-
-#: ../src/pk-application.c:1283
-msgid "By file"
-msgstr ""
-
-#: ../src/pk-application.c:1291 ../src/pk-common-gui.c:787
+#: ../src/pk-application.c:1525 ../src/pk-common-gui.c:795
 msgid "Installed"
 msgstr "Wedi'i sefydlu"
 
-#: ../src/pk-application.c:1292 ../src/pk-common-gui.c:790
+#: ../src/pk-application.c:1526 ../src/pk-common-gui.c:798
 msgid "Available"
 msgstr "Ar gael"
 
-#: ../src/pk-application.c:1293 ../src/pk-application.c:1302
-#: ../src/pk-application.c:1311 ../src/pk-application.c:1320
+#: ../src/pk-application.c:1527 ../src/pk-application.c:1536
+#: ../src/pk-application.c:1545 ../src/pk-application.c:1554
 #, fuzzy
 msgid "All packages"
 msgstr "Rh_eoli pecynnau"
 
-#: ../src/pk-application.c:1300
+#: ../src/pk-application.c:1534
 #, fuzzy
 msgid "Only graphical"
 msgstr "Graffegol"
 
-#: ../src/pk-application.c:1301
+#: ../src/pk-application.c:1535
 msgid "Only text"
 msgstr ""
 
-#: ../src/pk-application.c:1309
+#: ../src/pk-application.c:1543
 #, fuzzy
 msgid "Only development"
 msgstr "Ddim i ddatblygu"
 
-#: ../src/pk-application.c:1310
+#: ../src/pk-application.c:1544
 #, fuzzy
 msgid "Non-development"
 msgstr "Ddim i ddatblygu"
 
-#: ../src/pk-application.c:1318
+#: ../src/pk-application.c:1552
 msgid "Only free"
 msgstr ""
 
-#: ../src/pk-application.c:1319
+#: ../src/pk-application.c:1553
 msgid "Non-free"
 msgstr ""
 
-#: ../src/pk-application-main.c:75 ../src/pk-backend-status.c:75
-#: ../src/pk-install-file.c:68 ../src/pk-install-package.c:135
-#: ../src/pk-repo.c:221 ../src/pk-prefs.c:296
-#: ../src/pk-transaction-viewer.c:347 ../src/pk-update-icon.c:53
-#: ../src/pk-update-viewer.c:998
+#: ../src/pk-application-main.c:76 ../src/pk-backend-status.c:76
+#: ../src/pk-install-file.c:69 ../src/pk-install-package.c:136
+#: ../src/pk-repo.c:222 ../src/pk-prefs.c:297
+#: ../src/pk-transaction-viewer.c:348 ../src/pk-update-icon.c:54
+#: ../src/pk-update-viewer.c:925
 msgid "Show extra debugging information"
 msgstr ""
 
-#: ../src/pk-application-main.c:77 ../src/pk-backend-status.c:77
-#: ../src/pk-install-file.c:70 ../src/pk-install-package.c:137
-#: ../src/pk-repo.c:223 ../src/pk-prefs.c:298
-#: ../src/pk-transaction-viewer.c:349 ../src/pk-update-icon.c:55
-#: ../src/pk-update-viewer.c:1000
+#: ../src/pk-application-main.c:78 ../src/pk-backend-status.c:78
+#: ../src/pk-install-file.c:71 ../src/pk-install-package.c:138
+#: ../src/pk-repo.c:224 ../src/pk-prefs.c:299
+#: ../src/pk-transaction-viewer.c:350 ../src/pk-update-icon.c:56
+#: ../src/pk-update-viewer.c:927
 msgid "Show the program version and exit"
 msgstr ""
 
-#: ../src/pk-backend-status.c:94
+#: ../src/pk-backend-status.c:95
 #, fuzzy
 msgid "PackageKit Backend Details Viewer"
 msgstr "Gwelydd Diweddariad Pecynnau"
 
-#: ../src/pk-backend-status.c:122
+#: ../src/pk-backend-status.c:123
 msgid "Exiting on failure\n"
 msgstr ""
 
-#: ../src/pk-common-gui.c:221 ../src/pk-common-gui.c:257
-#: ../src/pk-common-gui.c:284 ../src/pk-common-gui.c:1322
-#: ../src/pk-common-gui.c:1354
+#: ../src/pk-common-gui.c:222 ../src/pk-common-gui.c:258
+#: ../src/pk-common-gui.c:285 ../src/pk-common-gui.c:1333
+#: ../src/pk-common-gui.c:1365
 #, fuzzy
 msgid "PackageID not valid"
 msgstr "Rheolwr PackageKit"
 
-#: ../src/pk-common-gui.c:395
+#: ../src/pk-common-gui.c:397
 msgid "No network connection available"
 msgstr "Dim cysylltiad rhwydwaith ar gael"
 
-#: ../src/pk-common-gui.c:398
+#: ../src/pk-common-gui.c:400
 #, fuzzy
 msgid "No package cache is available."
 msgstr "Mae yna diweddariad ar gael"
 
-#: ../src/pk-common-gui.c:401
+#: ../src/pk-common-gui.c:403
 msgid "Out of memory"
 msgstr "Allan o gof"
 
-#: ../src/pk-common-gui.c:404
+#: ../src/pk-common-gui.c:406
 msgid "Failed to create a thread"
 msgstr "Wedi methu creu edefyn"
 
-#: ../src/pk-common-gui.c:407
+#: ../src/pk-common-gui.c:409
 msgid "Not supported by this backend"
 msgstr "Heb ei gynnal gan yr ôl-wyneb yma"
 
-#: ../src/pk-common-gui.c:410
+#: ../src/pk-common-gui.c:412
 msgid "An internal system error has occurred"
 msgstr "Mae gwall system mewnol wedi digwydd"
 
-#: ../src/pk-common-gui.c:413
+#: ../src/pk-common-gui.c:415
 msgid "A security trust relationship is not present"
 msgstr "Does ddim perthynas ymddiriaeth diogelwch yn bresenol"
 
-#: ../src/pk-common-gui.c:416
+#: ../src/pk-common-gui.c:418
 msgid "The package is not installed"
 msgstr "Dydy'r pecyn heb ei sefydlu"
 
-#: ../src/pk-common-gui.c:419
+#: ../src/pk-common-gui.c:421
 #, fuzzy
 msgid "The package was not found"
 msgstr "Dydy ID'r pecyn heb ei ffurfio'n dda"
 
-#: ../src/pk-common-gui.c:422
+#: ../src/pk-common-gui.c:424
 msgid "The package is already installed"
 msgstr "Mae'r pecyn wedi'i sefydlu yn barod"
 
-#: ../src/pk-common-gui.c:425
+#: ../src/pk-common-gui.c:427
 msgid "The package download failed"
 msgstr "Lawrlwytho'r pecyn wedi methu"
 
-#: ../src/pk-common-gui.c:428
+#: ../src/pk-common-gui.c:430
 #, fuzzy
 msgid "The group was not found"
 msgstr "Doedd y grŵp methu cael ei holi"
 
-#: ../src/pk-common-gui.c:431
+#: ../src/pk-common-gui.c:433
 msgid "Dependency resolution failed"
 msgstr "Methiant datrus dybyniaeth"
 
-#: ../src/pk-common-gui.c:434
+#: ../src/pk-common-gui.c:436
 msgid "Search filter was invalid"
 msgstr "Hidlydd chwilio'n annilys"
 
-#: ../src/pk-common-gui.c:437
+#: ../src/pk-common-gui.c:439
 msgid "The package ID was not well formed"
 msgstr "Dydy ID'r pecyn heb ei ffurfio'n dda"
 
-#: ../src/pk-common-gui.c:440
+#: ../src/pk-common-gui.c:442
 msgid "Transaction error"
 msgstr "Gwall trosglwyddiad"
 
-#: ../src/pk-common-gui.c:443
+#: ../src/pk-common-gui.c:445
 msgid "Repository name was not found"
 msgstr ""
 
-#: ../src/pk-common-gui.c:446
+#: ../src/pk-common-gui.c:448
 msgid "Could not remove a protected system package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:449
+#: ../src/pk-common-gui.c:451
 #, fuzzy
 msgid "The transaction was canceled"
 msgstr "Gwall trosglwyddiad"
 
-#: ../src/pk-common-gui.c:452
+#: ../src/pk-common-gui.c:454
 msgid "The transaction was forcibly canceled"
 msgstr ""
 
-#: ../src/pk-common-gui.c:455
+#: ../src/pk-common-gui.c:457
 msgid "Initialization of the package manager failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:458
+#: ../src/pk-common-gui.c:460
 #, fuzzy
 msgid "Unloading of the package manager failed"
 msgstr "Lawrlwytho'r pecyn wedi methu"
 
-#: ../src/pk-common-gui.c:461
+#: ../src/pk-common-gui.c:463
 msgid "Reading the config file failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:464
+#: ../src/pk-common-gui.c:466
+#, fuzzy
+msgid "The transaction cannot be cancelled"
+msgstr "Gwall trosglwyddiad"
+
+#: ../src/pk-common-gui.c:469
 msgid "Unknown error"
 msgstr "Gwall anhysbys"
 
-#: ../src/pk-common-gui.c:478
+#: ../src/pk-common-gui.c:483
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
 msgstr ""
 
-#: ../src/pk-common-gui.c:482
+#: ../src/pk-common-gui.c:487
 msgid ""
 "The package list needs to be rebuilt\n"
 "TODO:how?."
 msgstr ""
 
-#: ../src/pk-common-gui.c:485
+#: ../src/pk-common-gui.c:490
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
 "Please restart your computer."
 msgstr ""
 
-#: ../src/pk-common-gui.c:488
+#: ../src/pk-common-gui.c:493
 msgid "A thread could not be created to service the user request."
 msgstr ""
 
-#: ../src/pk-common-gui.c:491
+#: ../src/pk-common-gui.c:496
 msgid ""
 "The action is not supported by this backend\n"
 "Please report a bug as this shouldn't have happened."
 msgstr ""
 
-#: ../src/pk-common-gui.c:495
+#: ../src/pk-common-gui.c:500
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug with the error description."
 msgstr ""
 
-#: ../src/pk-common-gui.c:499
+#: ../src/pk-common-gui.c:504
 msgid ""
 "A security trust relationship could not be made with the remote software "
 "source\n"
 "Please check your security settings."
 msgstr ""
 
-#: ../src/pk-common-gui.c:503
+#: ../src/pk-common-gui.c:508
 msgid ""
 "The package that is trying to be removed or updated is not already "
 "installed, and hence nothing can be done."
 msgstr ""
 
-#: ../src/pk-common-gui.c:506
+#: ../src/pk-common-gui.c:511
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "remote software source."
 msgstr ""
 
-#: ../src/pk-common-gui.c:509
+#: ../src/pk-common-gui.c:514
 #, fuzzy
 msgid "The package that is trying to be installed is already installed."
 msgstr "Mae'r pecyn wedi'i sefydlu yn barod"
 
-#: ../src/pk-common-gui.c:512
+#: ../src/pk-common-gui.c:517
 msgid ""
 "The package download failed\n"
 "Please check your network connectivity."
 msgstr ""
 
-#: ../src/pk-common-gui.c:515
+#: ../src/pk-common-gui.c:520
 msgid ""
 "The group type was not found\n"
 "Please check your group list and try again."
 msgstr ""
 
-#: ../src/pk-common-gui.c:518
+#: ../src/pk-common-gui.c:523
 msgid ""
 "A package could not be found on your system or in a remote software source "
 "that allows the transaction to complete\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:522
+#: ../src/pk-common-gui.c:527
 #, fuzzy
 msgid "The search filter was not correctly formed."
 msgstr "Dydy ID'r pecyn heb ei ffurfio'n dda"
 
-#: ../src/pk-common-gui.c:525
+#: ../src/pk-common-gui.c:530
 msgid ""
 "The package ID was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
 msgstr ""
 
-#: ../src/pk-common-gui.c:529
+#: ../src/pk-common-gui.c:534
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:533
+#: ../src/pk-common-gui.c:538
 msgid ""
 "The remote software source name was not found\n"
 "You may need to disable an item in Software Sources"
 msgstr ""
 
-#: ../src/pk-common-gui.c:537
+#: ../src/pk-common-gui.c:542
 msgid ""
 "Removing a protected system package was denied, and thus the whole "
 "transaction failed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:540
+#: ../src/pk-common-gui.c:545
 msgid "The transaction was canceled successfully and no packages were changed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:543
+#: ../src/pk-common-gui.c:548
 msgid ""
 "The transaction was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
 
-#: ../src/pk-common-gui.c:547
+#: ../src/pk-common-gui.c:552
 msgid ""
 "The native package backend could not be initialised.\n"
 "Please make sure no other tools are accessing package information."
 msgstr ""
 
-#: ../src/pk-common-gui.c:551
+#: ../src/pk-common-gui.c:556
 msgid ""
 "The native package backend could not be closed.\n"
 "Please make sure no other tools are accessing package information."
 msgstr ""
 
-#: ../src/pk-common-gui.c:555
+#: ../src/pk-common-gui.c:560
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
 msgstr ""
 
-#: ../src/pk-common-gui.c:559
+#: ../src/pk-common-gui.c:564
+#, fuzzy
+msgid "The transaction is not safe to be cancelled at this time."
+msgstr "Gwall trosglwyddiad"
+
+#: ../src/pk-common-gui.c:567
 msgid ""
 "Unknown error, please report a bug.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:574
+#: ../src/pk-common-gui.c:582
 msgid "No restart is necessary for this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:577
+#: ../src/pk-common-gui.c:585
 msgid "An application restart is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:580
+#: ../src/pk-common-gui.c:588
 #, fuzzy
 msgid "You will be required to log off and back on after this update"
 msgstr "Mi fydd angen i chi logio allan ac logio yn ôl i fewn"
 
-#: ../src/pk-common-gui.c:583
+#: ../src/pk-common-gui.c:591
 #, fuzzy
 msgid "A system restart is required after this update"
 msgstr "Mae angen ailgychwyn y system"
 
-#: ../src/pk-common-gui.c:586 ../src/pk-common-gui.c:613
+#: ../src/pk-common-gui.c:594 ../src/pk-common-gui.c:621
 msgid "A restart of unknown type is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:601
+#: ../src/pk-common-gui.c:609
 #, fuzzy
 msgid "No restart is required"
 msgstr "Mae angen ailgychwyn y system"
 
-#: ../src/pk-common-gui.c:604
+#: ../src/pk-common-gui.c:612
 msgid "A system restart is required"
 msgstr "Mae angen ailgychwyn y system"
 
-#: ../src/pk-common-gui.c:607
+#: ../src/pk-common-gui.c:615
 msgid "You will need to log off and log back on"
 msgstr "Mi fydd angen i chi logio allan ac logio yn ôl i fewn"
 
-#: ../src/pk-common-gui.c:610
+#: ../src/pk-common-gui.c:618
 msgid "You need to restart the application"
 msgstr "Mae angen i chi ail-ddechrau'r rhaglen"
 
-#: ../src/pk-common-gui.c:628
+#: ../src/pk-common-gui.c:636
 #, fuzzy
 msgid "PackageKit transaction notice"
 msgstr "Wefan PackageKit"
 
-#: ../src/pk-common-gui.c:631
+#: ../src/pk-common-gui.c:639
 msgid "PackageKit transaction warning"
 msgstr ""
 
-#: ../src/pk-common-gui.c:634
+#: ../src/pk-common-gui.c:642
 #, fuzzy
 msgid "PackageKit daemon"
 msgstr "Eicon Diweddaru PackageKit"
 
-#: ../src/pk-common-gui.c:637
+#: ../src/pk-common-gui.c:645
 msgid "PackageKit message of unknown type"
 msgstr ""
 
-#: ../src/pk-common-gui.c:652
+#: ../src/pk-common-gui.c:660
 #, fuzzy
 msgid "Unknown state"
 msgstr "Anhysbys"
 
-#: ../src/pk-common-gui.c:655
-msgid "Setting up"
-msgstr "Gosod i fyny"
-
-#: ../src/pk-common-gui.c:658
+#: ../src/pk-common-gui.c:663
 #, fuzzy
-msgid "Waiting"
-msgstr "Diweddaru"
+msgid "Setting up transaction"
+msgstr "Disgrifiad Tasg:"
 
-#: ../src/pk-common-gui.c:661
+#: ../src/pk-common-gui.c:666
+#, fuzzy
+msgid "Waiting for transaction lock"
+msgstr "Wefan PackageKit"
+
+#: ../src/pk-common-gui.c:669
 msgid "Querying"
 msgstr "Ymholi"
 
-#: ../src/pk-common-gui.c:664
+#: ../src/pk-common-gui.c:672
 #, fuzzy
 msgid "Getting information"
 msgstr "Disgrifiad Tasg:"
 
-#: ../src/pk-common-gui.c:667 ../src/pk-common-gui.c:784
-#: ../src/pk-common-gui.c:844
+#: ../src/pk-common-gui.c:675 ../src/pk-common-gui.c:792
+#: ../src/pk-common-gui.c:852
 msgid "Removing"
 msgstr "Gwaredu"
 
-#: ../src/pk-common-gui.c:670 ../src/pk-common-gui.c:775
+#: ../src/pk-common-gui.c:678 ../src/pk-common-gui.c:783
 msgid "Downloading"
 msgstr "Lawrlwytho"
 
-#: ../src/pk-common-gui.c:673 ../src/pk-common-gui.c:781
-#: ../src/pk-common-gui.c:847
+#: ../src/pk-common-gui.c:681 ../src/pk-common-gui.c:789
+#: ../src/pk-common-gui.c:855
 msgid "Installing"
 msgstr "Sefydlu"
 
-#: ../src/pk-common-gui.c:676
+#: ../src/pk-common-gui.c:684
 msgid "Refreshing software list"
 msgstr ""
 
-#: ../src/pk-common-gui.c:679 ../src/pk-common-gui.c:778
+#: ../src/pk-common-gui.c:687 ../src/pk-common-gui.c:786
 msgid "Updating"
 msgstr "Diweddaru"
 
-#: ../src/pk-common-gui.c:682 ../src/pk-common-gui.c:793
+#: ../src/pk-common-gui.c:690
 #, fuzzy
-msgid "Cleaned up"
+msgid "Cleaning up"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:685 ../src/pk-common-gui.c:796
+#: ../src/pk-common-gui.c:693 ../src/pk-common-gui.c:804
 msgid "Obsoleting"
 msgstr ""
 
-#: ../src/pk-common-gui.c:688
+#: ../src/pk-common-gui.c:696
 #, fuzzy
 msgid "Resolving dependencies"
 msgstr "Dibyniaethau"
 
-#: ../src/pk-common-gui.c:691 ../src/pk-common-gui.c:862
+#: ../src/pk-common-gui.c:699 ../src/pk-common-gui.c:870
 msgid "Rolling back"
 msgstr ""
 
-#: ../src/pk-common-gui.c:694
-msgid "Committing"
-msgstr ""
+#: ../src/pk-common-gui.c:702
+#, fuzzy
+msgid "Committing transaction"
+msgstr "Gwall trosglwyddiad"
 
-#: ../src/pk-common-gui.c:697
+#: ../src/pk-common-gui.c:705
 #, fuzzy
 msgid "Requesting data"
 msgstr "Gosod i fyny"
 
-#: ../src/pk-common-gui.c:700
+#: ../src/pk-common-gui.c:708
 #, fuzzy
 msgid "Finished"
 msgstr "Canfod"
 
-#: ../src/pk-common-gui.c:703
+#: ../src/pk-common-gui.c:711
 #, fuzzy
 msgid "Cancelling"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:706
+#: ../src/pk-common-gui.c:714
 msgid "Status unknown"
 msgstr ""
 
-#: ../src/pk-common-gui.c:721
+#: ../src/pk-common-gui.c:729
 #, fuzzy, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
 msgstr[0] "Arferol"
 msgstr[1] "Arferol"
 
-#: ../src/pk-common-gui.c:724
+#: ../src/pk-common-gui.c:732
 #, fuzzy, c-format
 msgid "%i normal update"
 msgid_plural "%i normal updates"
 msgstr[0] "Arferol"
 msgstr[1] "Arferol"
 
-#: ../src/pk-common-gui.c:727
+#: ../src/pk-common-gui.c:735
 #, fuzzy, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
 msgstr[0] "Arferol"
 msgstr[1] "Arferol"
 
-#: ../src/pk-common-gui.c:730
+#: ../src/pk-common-gui.c:738
 #, fuzzy, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
 msgstr[0] "Diweddariad diogelwch ar gael"
 msgstr[1] "Diweddariad diogelwch ar gael"
 
-#: ../src/pk-common-gui.c:733
+#: ../src/pk-common-gui.c:741
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:736
+#: ../src/pk-common-gui.c:744
 #, fuzzy, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
 msgstr[0] "Diddymu"
 msgstr[1] "Diddymu"
 
-#: ../src/pk-common-gui.c:739
+#: ../src/pk-common-gui.c:747
 #, c-format
 msgid "%i unknown update"
 msgid_plural "%i unknown updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:754
+#: ../src/pk-common-gui.c:762
 #, fuzzy
 msgid "Trivial update"
 msgstr "Arferol"
 
-#: ../src/pk-common-gui.c:757
+#: ../src/pk-common-gui.c:765
 #, fuzzy
 msgid "Normal update"
 msgstr "Arferol"
 
-#: ../src/pk-common-gui.c:760
+#: ../src/pk-common-gui.c:768
 msgid "Important update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:763
+#: ../src/pk-common-gui.c:771
 #, fuzzy
 msgid "Security update"
 msgstr "Diweddariad diogelwch ar gael"
 
-#: ../src/pk-common-gui.c:766
+#: ../src/pk-common-gui.c:774
 #, fuzzy
 msgid "Bug fix update"
 msgstr "Diweddariad diogelwch ar gael"
 
-#: ../src/pk-common-gui.c:769
+#: ../src/pk-common-gui.c:777
 #, fuzzy
 msgid "Enhancement update"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:772
+#: ../src/pk-common-gui.c:780
 #, fuzzy
 msgid "Blocked update"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:799
+#: ../src/pk-common-gui.c:801
+#, fuzzy
+msgid "Cleaned up"
+msgstr "Diddymu"
+
+#: ../src/pk-common-gui.c:807
 #, fuzzy
 msgid "Info unknown"
 msgstr "Anhysbys"
 
-#: ../src/pk-common-gui.c:814 ../src/pk-common-gui.c:891
+#: ../src/pk-common-gui.c:822 ../src/pk-common-gui.c:899
 #, fuzzy
 msgid "Unknown role"
 msgstr "Gwall anhysbys"
 
-#: ../src/pk-common-gui.c:817
+#: ../src/pk-common-gui.c:825
 #, fuzzy
 msgid "Getting dependencies"
 msgstr "Dibyniaethau"
 
-#: ../src/pk-common-gui.c:820
+#: ../src/pk-common-gui.c:828
 msgid "Getting update detail"
 msgstr ""
 
-#: ../src/pk-common-gui.c:823
+#: ../src/pk-common-gui.c:831
 #, fuzzy
 msgid "Getting description"
 msgstr "Disgrifiad Tasg:"
 
-#: ../src/pk-common-gui.c:826
+#: ../src/pk-common-gui.c:834
 #, fuzzy
 msgid "Getting requires"
 msgstr "Gosod i fyny"
 
-#: ../src/pk-common-gui.c:829
+#: ../src/pk-common-gui.c:837
 #, fuzzy
 msgid "Getting updates"
 msgstr "Gosod i fyny"
 
-#: ../src/pk-common-gui.c:832
+#: ../src/pk-common-gui.c:840
 msgid "Searching details"
 msgstr ""
 
-#: ../src/pk-common-gui.c:835
+#: ../src/pk-common-gui.c:843
 msgid "Searching for file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:838
+#: ../src/pk-common-gui.c:846
 #, fuzzy
 msgid "Searching groups"
 msgstr "Gosod i fyny"
 
-#: ../src/pk-common-gui.c:841
+#: ../src/pk-common-gui.c:849
 #, fuzzy
 msgid "Searching for package name"
 msgstr "Adnewyddu clec pecynnau"
 
-#: ../src/pk-common-gui.c:850
+#: ../src/pk-common-gui.c:858
 msgid "Refreshing package cache"
 msgstr "Adnewyddu clec pecynnau"
 
-#: ../src/pk-common-gui.c:853
+#: ../src/pk-common-gui.c:861
 msgid "Updating package"
 msgstr "Diweddaru pecyn"
 
-#: ../src/pk-common-gui.c:856
+#: ../src/pk-common-gui.c:864
 msgid "Updating system"
 msgstr "Diweddaru'r system"
 
-#: ../src/pk-common-gui.c:859
+#: ../src/pk-common-gui.c:867
 #, fuzzy
 msgid "Canceling"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:865
+#: ../src/pk-common-gui.c:873
 #, fuzzy
 msgid "Getting list of repositories"
 msgstr "Gosod i fyny"
 
-#: ../src/pk-common-gui.c:868
+#: ../src/pk-common-gui.c:876
 msgid "Enabling repository"
 msgstr ""
 
-#: ../src/pk-common-gui.c:871
+#: ../src/pk-common-gui.c:879
 msgid "Setting repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:874 ../src/pk-common-gui.c:954
+#: ../src/pk-common-gui.c:882 ../src/pk-common-gui.c:965
 #, fuzzy
 msgid "Role unknown"
 msgstr "Anhysbys"
 
-#: ../src/pk-common-gui.c:894
+#: ../src/pk-common-gui.c:902
 #, fuzzy
 msgid "Got dependencies"
 msgstr "Dibyniaethau"
 
-#: ../src/pk-common-gui.c:897
+#: ../src/pk-common-gui.c:905
 msgid "Got update detail"
 msgstr ""
 
-#: ../src/pk-common-gui.c:900
+#: ../src/pk-common-gui.c:908
 #, fuzzy
 msgid "Got description"
 msgstr "Disgrifiad Tasg:"
 
-#: ../src/pk-common-gui.c:903
+#: ../src/pk-common-gui.c:911
 msgid "Got requires"
 msgstr ""
 
-#: ../src/pk-common-gui.c:906
+#: ../src/pk-common-gui.c:914
 #, fuzzy
 msgid "Got updates"
 msgstr "Dango_s diweddariadau"
 
-#: ../src/pk-common-gui.c:909
+#: ../src/pk-common-gui.c:917
 #, fuzzy
 msgid "Got details"
 msgstr "<b>Mwy o fanylion</b>"
 
-#: ../src/pk-common-gui.c:912
+#: ../src/pk-common-gui.c:920
 msgid "Searched for file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:915
+#: ../src/pk-common-gui.c:923
 msgid "Searched groups"
 msgstr ""
 
-#: ../src/pk-common-gui.c:918
+#: ../src/pk-common-gui.c:926
 msgid "Searched for package name"
 msgstr ""
 
-#: ../src/pk-common-gui.c:921
+#: ../src/pk-common-gui.c:929
 msgid "Removed package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:924
+#: ../src/pk-common-gui.c:932
 #, fuzzy
 msgid "Installed package"
 msgstr "Wedi'i sefydlu"
 
-#: ../src/pk-common-gui.c:927
+#: ../src/pk-common-gui.c:935
 #, fuzzy
 msgid "Installed local file"
 msgstr "Wedi'i sefydlu"
 
-#: ../src/pk-common-gui.c:930
+#: ../src/pk-common-gui.c:938
+#, fuzzy
+msgid "Updating from service pack"
+msgstr "Diweddaru pecyn"
+
+#: ../src/pk-common-gui.c:941
 #, fuzzy
 msgid "Refreshed package cache"
 msgstr "Adnewyddu clec pecynnau"
 
-#: ../src/pk-common-gui.c:933
+#: ../src/pk-common-gui.c:944
 #, fuzzy
 msgid "Updated package"
 msgstr "Diweddaru pecyn"
 
-#: ../src/pk-common-gui.c:936
+#: ../src/pk-common-gui.c:947
 #, fuzzy
 msgid "Updated system"
 msgstr "Diweddar_u'r system"
 
-#: ../src/pk-common-gui.c:939
+#: ../src/pk-common-gui.c:950
 #, fuzzy
 msgid "Canceled"
 msgstr "Diddymu"
 
-#: ../src/pk-common-gui.c:942
+#: ../src/pk-common-gui.c:953
 msgid "Rolled back"
 msgstr ""
 
-#: ../src/pk-common-gui.c:945
+#: ../src/pk-common-gui.c:956
 msgid "Got list of repositories"
 msgstr ""
 
-#: ../src/pk-common-gui.c:948
+#: ../src/pk-common-gui.c:959
 msgid "Enabled repository"
 msgstr ""
 
-#: ../src/pk-common-gui.c:951
+#: ../src/pk-common-gui.c:962
 msgid "Set repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:969
+#: ../src/pk-common-gui.c:980
 msgid "Accessibility"
 msgstr "Hygyrchedd"
 
-#: ../src/pk-common-gui.c:972
+#: ../src/pk-common-gui.c:983
 msgid "Accessories"
 msgstr "Ategion"
 
-#: ../src/pk-common-gui.c:975
+#: ../src/pk-common-gui.c:986
 msgid "Education"
 msgstr "Addysg"
 
-#: ../src/pk-common-gui.c:978
+#: ../src/pk-common-gui.c:989
 msgid "Games"
 msgstr "Gêmau"
 
-#: ../src/pk-common-gui.c:981
+#: ../src/pk-common-gui.c:992
 msgid "Graphics"
 msgstr "Graffeg"
 
-#: ../src/pk-common-gui.c:984
+#: ../src/pk-common-gui.c:995
 msgid "Internet"
 msgstr "Rhyngrwyd"
 
-#: ../src/pk-common-gui.c:987
+#: ../src/pk-common-gui.c:998
 msgid "Office"
 msgstr "Swyddfa"
 
-#: ../src/pk-common-gui.c:990
+#: ../src/pk-common-gui.c:1001
 msgid "Other"
 msgstr "Eraill"
 
-#: ../src/pk-common-gui.c:993
+#: ../src/pk-common-gui.c:1004
 msgid "Programming"
 msgstr "Rhaglenni"
 
-#: ../src/pk-common-gui.c:996
+#: ../src/pk-common-gui.c:1007
 msgid "Multimedia"
 msgstr "Sain a Fideo"
 
-#: ../src/pk-common-gui.c:999
+#: ../src/pk-common-gui.c:1010
 msgid "System"
 msgstr "System"
 
-#: ../src/pk-common-gui.c:1002
+#: ../src/pk-common-gui.c:1013
 msgid "GNOME desktop"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1005
+#: ../src/pk-common-gui.c:1016
 msgid "KDE desktop"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1008
+#: ../src/pk-common-gui.c:1019
 msgid "XFCE desktop"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1011
+#: ../src/pk-common-gui.c:1022
 msgid "Other desktops"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1014
+#: ../src/pk-common-gui.c:1025
 msgid "Publishing"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1017
+#: ../src/pk-common-gui.c:1028
 #, fuzzy
 msgid "Servers"
 msgstr "Difrifwch"
 
-#: ../src/pk-common-gui.c:1020
+#: ../src/pk-common-gui.c:1031
 msgid "Fonts"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1023
+#: ../src/pk-common-gui.c:1034
 msgid "Admin tools"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1026
+#: ../src/pk-common-gui.c:1037
 msgid "Legacy"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1029
+#: ../src/pk-common-gui.c:1040
 msgid "Localization"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1032
+#: ../src/pk-common-gui.c:1043
 msgid "Virtualization"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1035
+#: ../src/pk-common-gui.c:1046
 #, fuzzy
 msgid "Security"
 msgstr "Difrifwch"
 
-#: ../src/pk-common-gui.c:1038
+#: ../src/pk-common-gui.c:1049
 msgid "Power management"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1041
+#: ../src/pk-common-gui.c:1052
 #, fuzzy
 msgid "Communication"
 msgstr "Addysg"
 
-#: ../src/pk-common-gui.c:1044
+#: ../src/pk-common-gui.c:1055
 msgid "Network"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1047
+#: ../src/pk-common-gui.c:1058
 msgid "Maps"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1050
+#: ../src/pk-common-gui.c:1061
 #, fuzzy
 msgid "Software sources"
 msgstr "Mae angen ailgychwyn y system"
 
-#: ../src/pk-common-gui.c:1053
+#: ../src/pk-common-gui.c:1064
 #, fuzzy
 msgid "Unknown group"
 msgstr "Gwall anhysbys"
 
-#: ../src/pk-common-gui.c:1056
+#: ../src/pk-common-gui.c:1067
 msgid "Invalid group"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1135 ../src/pk-common-gui.c:1208
+#: ../src/pk-common-gui.c:1146 ../src/pk-common-gui.c:1219
 #, c-format
-msgid "Zero time"
+msgid "Now"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1144
+#: ../src/pk-common-gui.c:1155
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1157
+#: ../src/pk-common-gui.c:1168
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -1510,125 +1544,125 @@ msgstr[1] ""
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/pk-common-gui.c:1163 ../src/pk-common-gui.c:1181
+#: ../src/pk-common-gui.c:1174 ../src/pk-common-gui.c:1192
 #, c-format
 msgid "%i %s %i %s"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1164 ../src/pk-common-gui.c:1183
+#: ../src/pk-common-gui.c:1175 ../src/pk-common-gui.c:1194
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1165
+#: ../src/pk-common-gui.c:1176
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1175
+#: ../src/pk-common-gui.c:1186
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1182
+#: ../src/pk-common-gui.c:1193
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1218
+#: ../src/pk-common-gui.c:1229
 msgid "1 second"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1228
+#: ../src/pk-common-gui.c:1239
 msgid "1 minute"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1238
+#: ../src/pk-common-gui.c:1249
 msgid "1 hour"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1248
+#: ../src/pk-common-gui.c:1259
 msgid "30 seconds"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1258
+#: ../src/pk-common-gui.c:1269
 msgid "30 minutes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1268
+#: ../src/pk-common-gui.c:1279
 msgid "30 minutes 1 second"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1278
+#: ../src/pk-common-gui.c:1289
 msgid "30 minutes 10 seconds"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1290
+#: ../src/pk-common-gui.c:1301
 msgid "0 bytes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1300
+#: ../src/pk-common-gui.c:1311
 msgid "512 bytes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1310
+#: ../src/pk-common-gui.c:1321
 msgid "256.2 MB"
 msgstr ""
 
-#: ../src/pk-install-file.c:86 ../src/pk-install-file.c:88
+#: ../src/pk-install-file.c:87 ../src/pk-install-file.c:89
 #, fuzzy
 msgid "PackageKit File Installer"
 msgstr "Rheolwr PackageKit"
 
-#: ../src/pk-install-file.c:87
+#: ../src/pk-install-file.c:88
 msgid "FILE"
 msgstr ""
 
-#: ../src/pk-install-file.c:102
+#: ../src/pk-install-file.c:103
 #, c-format
 msgid "You need to specify a file to install\n"
 msgstr ""
 
-#: ../src/pk-install-file.c:109 ../src/pk-install-package.c:92
-#: ../src/pk-install-package.c:182
+#: ../src/pk-install-file.c:110 ../src/pk-install-package.c:93
+#: ../src/pk-install-package.c:183
 msgid "Method not supported"
 msgstr ""
 
-#: ../src/pk-install-file.c:110
+#: ../src/pk-install-file.c:111
 msgid "Installing local files is not supported"
 msgstr ""
 
-#: ../src/pk-install-package.c:78
+#: ../src/pk-install-package.c:79
 #, fuzzy
 msgid "Failed to resolve"
 msgstr "Wedi methu adnewyddu clec"
 
-#: ../src/pk-install-package.c:79
+#: ../src/pk-install-package.c:80
 #, fuzzy
 msgid "The package could not be found on the system"
 msgstr "Dydy'r pecyn methu cael ei sefydlu"
 
-#: ../src/pk-install-package.c:93
+#: ../src/pk-install-package.c:94
 #, fuzzy
 msgid "Installing packages is not supported"
 msgstr "Dydy'r pecyn heb ei sefydlu"
 
-#: ../src/pk-install-package.c:153 ../src/pk-install-package.c:155
+#: ../src/pk-install-package.c:154 ../src/pk-install-package.c:156
 #, fuzzy
 msgid "PackageKit Package Installer"
 msgstr "Rheolwr PackageKit"
 
-#: ../src/pk-install-package.c:169
+#: ../src/pk-install-package.c:170
 #, c-format
 msgid "You need to specify a package to install\n"
 msgstr ""
 
-#: ../src/pk-install-package.c:183
+#: ../src/pk-install-package.c:184
 msgid "Resolving names to packages is not supported"
 msgstr ""
 
@@ -1787,138 +1821,153 @@ msgstr ""
 msgid "Could not cancel the system update"
 msgstr ""
 
-#: ../src/pk-repo.c:162
+#: ../src/pk-repo.c:163
 #, fuzzy
 msgid "Enabled"
 msgstr "Wedi'i sefydlu"
 
-#: ../src/pk-repo.c:169 ../src/pk-update-viewer.c:354
+#: ../src/pk-repo.c:170 ../src/pk-update-viewer.c:408
 msgid "Repository"
 msgstr ""
 
-#: ../src/pk-repo.c:305
+#: ../src/pk-repo.c:307
 msgid "Getting repository list not supported by backend"
 msgstr ""
 
-#: ../src/pk-prefs.c:39
+#: ../src/pk-prefs.c:40
 msgid "Hourly"
 msgstr ""
 
-#: ../src/pk-prefs.c:40
+#: ../src/pk-prefs.c:41
 msgid "Daily"
 msgstr ""
 
-#: ../src/pk-prefs.c:41
+#: ../src/pk-prefs.c:42
 msgid "Weekly"
 msgstr ""
 
-#: ../src/pk-prefs.c:42
+#: ../src/pk-prefs.c:43
 #, fuzzy
 msgid "Never"
 msgstr "Difrifwch"
 
-#: ../src/pk-prefs.c:44
+#: ../src/pk-prefs.c:45
 #, fuzzy
 msgid "All updates"
 msgstr "Dango_s diweddariadau"
 
-#: ../src/pk-prefs.c:45
+#: ../src/pk-prefs.c:46
 #, fuzzy
 msgid "Only security updates"
 msgstr "Diweddariadau diogelwch ar gael"
 
-#: ../src/pk-prefs.c:46
+#: ../src/pk-prefs.c:47
 msgid "Nothing"
 msgstr ""
 
-#: ../src/pk-transaction-viewer.c:113
+#: ../src/pk-transaction-viewer.c:114
 msgid "%A, %d %B %Y"
 msgstr ""
 
-#: ../src/pk-transaction-viewer.c:183
+#: ../src/pk-transaction-viewer.c:184
 msgid "Role"
 msgstr ""
 
-#: ../src/pk-transaction-viewer.c:189
+#: ../src/pk-transaction-viewer.c:190
 #, fuzzy
 msgid "Transaction"
 msgstr "Gwall trosglwyddiad"
 
-#: ../src/pk-transaction-viewer.c:198
+#: ../src/pk-transaction-viewer.c:199
 msgid "Succeeded"
 msgstr ""
 
-#: ../src/pk-transaction-viewer.c:215 ../src/pk-update-viewer.c:339
+#: ../src/pk-transaction-viewer.c:216 ../src/pk-update-viewer.c:389
 msgid "Type"
 msgstr ""
 
-#: ../src/pk-update-icon.c:73
+#: ../src/pk-update-icon.c:74
 msgid "PackageKit Update Icon"
 msgstr "Eicon Diweddaru PackageKit"
 
-#: ../src/pk-update-viewer.c:335
+#: ../src/pk-update-viewer.c:392
 msgid "Version"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:343
+#: ../src/pk-update-viewer.c:397
 #, fuzzy
 msgid "Updates"
 msgstr "Diweddariadau:\n"
 
-#: ../src/pk-update-viewer.c:349
+#: ../src/pk-update-viewer.c:403
 msgid "Obsoletes"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:378
-#, fuzzy
-msgid "References"
-msgstr "_Hofterau"
+#: ../src/pk-update-viewer.c:416
+msgid "Vendor"
+msgstr ""
 
-#: ../src/pk-update-viewer.c:648
+#: ../src/pk-update-viewer.c:419
+msgid "Bugzilla"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:422
+msgid "CVE"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:505
 msgid "Severity"
 msgstr "Difrifwch"
 
-#: ../src/pk-update-viewer.c:655
+#: ../src/pk-update-viewer.c:512
 msgid "Software"
 msgstr ""
 
+#: ../src/pk-update-viewer.c:539
+msgid "Title"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:546
+msgid "Text"
+msgstr "Testyn"
+
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:814
+#: ../src/pk-update-viewer.c:735
 #, fuzzy
 msgid "There are no updates available!"
 msgstr "Mae yna %d diweddariadau ar gael"
 
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:943
+#: ../src/pk-update-viewer.c:867
 #, fuzzy
 msgid "There is an update already in progress!"
 msgstr "Mae yna diweddariad ar gael"
 
-#: ../src/pk-update-viewer.c:1098
+#: ../src/pk-update-viewer.c:1025
 msgid "Close without updating"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1124
+#: ../src/pk-update-viewer.c:1051
 #, fuzzy
 msgid "Review the update list"
 msgstr "Wedi methu diweddaru'r system"
 
-#: ../src/pk-update-viewer.c:1129
+#: ../src/pk-update-viewer.c:1056
 msgid "Back to overview"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1134 ../src/pk-update-viewer.c:1140
+#: ../src/pk-update-viewer.c:1061 ../src/pk-update-viewer.c:1067
 #, fuzzy
 msgid "Apply all updates"
 msgstr "Dango_s diweddariadau"
 
-#: ../src/pk-update-viewer.c:1146
+#: ../src/pk-update-viewer.c:1073
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1161
+#: ../src/pk-update-viewer.c:1083
 #, fuzzy
 msgid "Update selected package"
 msgstr "Diweddaru pecyn"
@@ -1984,6 +2033,24 @@ msgstr "Ailgychwyn y cyfrifiadur yn syth"
 #: ../src/pk-smart-icon.c:276
 msgid "Restart computer now"
 msgstr "Ailgychwyn y cyfrifiadur yn syth"
+
+#~ msgid "The action did not complete"
+#~ msgstr "Ni chafodd y weithred ei gyflawni"
+
+#, fuzzy
+#~ msgid "By package name"
+#~ msgstr "Rheolwr PackageKit"
+
+#~ msgid "Setting up"
+#~ msgstr "Gosod i fyny"
+
+#, fuzzy
+#~ msgid "Waiting"
+#~ msgstr "Diweddaru"
+
+#, fuzzy
+#~ msgid "References"
+#~ msgstr "_Hofterau"
 
 #, fuzzy
 #~ msgid "<b>Search</b>"
@@ -2056,9 +2123,6 @@ msgstr "Ailgychwyn y cyfrifiadur yn syth"
 
 #~ msgid "Lots of boring text, yadda, yadda, yadda."
 #~ msgstr "Llawer o destyn sych, yadda, yadda, yadda."
-
-#~ msgid "Text"
-#~ msgstr "Testyn"
 
 #~ msgid "No preferences yet, sorry..."
 #~ msgstr "Dim hoffterau eto, mae ddrwg gen i..."

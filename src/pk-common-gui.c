@@ -219,7 +219,7 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	GString *string;
 
 	if (pk_strzero (package_id) == TRUE) {
-		return g_strdup (_("PackageID not valid"));
+		return g_strdup (_("Package identifier not valid"));
 	}
 
 	/* split by delimeter */
@@ -255,7 +255,7 @@ pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 	gchar *text;
 
 	if (pk_strzero (package_id) == TRUE) {
-		return g_strdup (_("PackageID not valid"));
+		return g_strdup (_("Package identifier not valid"));
 	}
 
 	/* split by delimeter */
@@ -282,7 +282,7 @@ pk_package_id_name_version (const gchar *package_id)
 	GString *string;
 
 	if (pk_strzero (package_id) == TRUE) {
-		return g_strdup (_("PackageID not valid"));
+		return g_strdup (_("Package identifier not valid"));
 	}
 
 	/* split by delimeter */
@@ -309,7 +309,7 @@ pk_package_get_name (const gchar *package_id)
 	/* not set! */
 	if (pk_strzero (package_id) == TRUE) {
 		pk_warning ("package_id blank, returning 'unknown'");
-		return g_strdup ("PackageID not valid");
+		return g_strdup ("Package identifier not valid");
 	}
 
 	ident = pk_package_id_new_from_string (package_id);
@@ -436,7 +436,7 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Search filter was invalid");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_ID_INVALID:
-		text = _("The package ID was not well formed");
+		text = _("The package identifier was not well formed");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_ERROR:
 		text = _("Transaction error");
@@ -484,7 +484,7 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please check your connection settings and try again");
 		break;
 	case PK_ERROR_ENUM_NO_CACHE:
-		text = _("The package list needs to be rebuilt\nTODO:how?.");
+		text = _("The package list needs to be rebuilt\nThis should have been done by the backend automatically.");
 		break;
 	case PK_ERROR_ENUM_OOM:
 		text = _("The service that is responsible for handling user requests is out of memory.\nPlease restart your computer.");
@@ -527,7 +527,7 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("The search filter was not correctly formed.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_ID_INVALID:
-		text = _("The package ID was not well formed when sent to the server.\n"
+		text = _("The package identifier was not well formed when sent to the server.\n"
 			 "This normally indicates an internal error and should be reported.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_ERROR:
@@ -819,7 +819,7 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
-		text = _("Unknown role");
+		text = _("Unknown role type");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
 		text = _("Getting dependencies");
@@ -896,7 +896,7 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
-		text = _("Unknown role");
+		text = _("Unknown role type");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
 		text = _("Got dependencies");
@@ -1330,7 +1330,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "get name null");
 	text = pk_package_get_name (NULL);
-	if (text != NULL && strcmp (text, _("PackageID not valid")) == 0) {
+	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
@@ -1362,7 +1362,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "package id pretty null");
 	text = pk_package_id_pretty (NULL, NULL);
-	if (text != NULL && strcmp (text, _("PackageID not valid")) == 0) {
+	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);

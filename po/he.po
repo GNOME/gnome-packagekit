@@ -2,12 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-15 04:04+0000\n"
+"POT-Creation-Date: 2008-03-04 20:31+0000\n"
 "PO-Revision-Date: 2008-02-16 16:52+0200\n"
 "Last-Translator: Mark Krapivner <mark125@gmail.com>\n"
 "Language-Team: \n"
@@ -53,8 +52,8 @@ msgstr ""
 "\"weekly\", \"never\""
 
 #: ../data/gnome-packagekit.schemas.in.h:7
-msgid "If searches should be done for each letter"
-msgstr "If searches should be done for each letter"
+msgid "If autocompletion should be used when searching"
+msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:8
 msgid "If we should install updates automatically when on battery power"
@@ -111,7 +110,7 @@ msgstr ""
 msgid "Depends on"
 msgstr "תלוי ב"
 
-#: ../data/pk-application.glade.h:4 ../src/pk-update-viewer.c:358
+#: ../data/pk-application.glade.h:4 ../src/pk-update-viewer.c:411
 msgid "Description"
 msgstr "תיאור"
 
@@ -373,7 +372,7 @@ msgid "PackageKit Update Applet"
 msgstr "יישומון העדכונים של PackageKit"
 
 #: ../data/pk-update-viewer.desktop.in.h:1 ../src/pk-repo.c:241
-#: ../src/pk-update-viewer.c:1024
+#: ../src/pk-update-viewer.c:944
 msgid "Software Update Viewer"
 msgstr ""
 
@@ -386,19 +385,20 @@ msgid "Update software installed on the system"
 msgstr ""
 
 #: ../data/pk-update-viewer.glade.h:1
+#, fuzzy
+msgid "<b>A system restart is recommended</b>"
+msgstr "<b>עדכון מערכת הושלם!</b>"
+
+#: ../data/pk-update-viewer.glade.h:2
 msgid "<b>More details:</b>"
 msgstr "<b>פרטים נוספים:</b>"
 
-#: ../data/pk-update-viewer.glade.h:2
+#: ../data/pk-update-viewer.glade.h:3
 msgid "<b>System Update Completed!</b>"
 msgstr "<b>עדכון מערכת הושלם!</b>"
 
-#: ../data/pk-update-viewer.glade.h:3
-msgid "<b>This update will require a reboot</b>"
-msgstr ""
-
 #: ../data/pk-update-viewer.glade.h:4
-msgid "A system restart is recommended"
+msgid "<b>This update will require a reboot</b>"
 msgstr ""
 
 #: ../data/pk-update-viewer.glade.h:5
@@ -489,146 +489,142 @@ msgid ""
 "the source of the packages."
 msgstr ""
 
-#: ../src/pk-application.c:185
+#: ../src/pk-application.c:189
 msgid "The package could not be installed"
 msgstr ""
 
-#: ../src/pk-application.c:217
+#: ../src/pk-application.c:221
 msgid "The package could not be removed"
 msgstr ""
 
 #. present this to the user
-#: ../src/pk-application.c:266
+#: ../src/pk-application.c:270
 msgid ""
 "The following packages have to be removed:\n"
 "\n"
 msgstr ""
 
-#: ../src/pk-application.c:280
+#: ../src/pk-application.c:284
 #, c-format
 msgid "Other software depends on %s"
 msgstr ""
 
-#: ../src/pk-application.c:286
+#: ../src/pk-application.c:290
 msgid "Remove all packages"
 msgstr "הסרת כל החבילות"
 
 #. no information
-#: ../src/pk-application.c:428
+#: ../src/pk-application.c:432
 msgid "No files"
 msgstr "אין קבצים"
 
-#: ../src/pk-application.c:558
+#: ../src/pk-application.c:562
 msgid "Find"
 msgstr "חפש"
 
-#: ../src/pk-application.c:561 ../src/pk-application.c:1448
+#: ../src/pk-application.c:565 ../src/pk-application.c:1483
 msgid "Find packages"
 msgstr "חפש חבילות"
 
-#: ../src/pk-application.c:581
-msgid "The action did not complete"
-msgstr ""
-
 #. todo - make the dialog turn red...
-#: ../src/pk-application.c:627
+#: ../src/pk-application.c:626
 msgid "Invalid search text"
 msgstr ""
 
-#: ../src/pk-application.c:628
+#: ../src/pk-application.c:627
 msgid "The search text contains invalid characters"
 msgstr ""
 
-#: ../src/pk-application.c:656
+#: ../src/pk-application.c:655
 msgid "The search could not be completed"
 msgstr ""
 
-#: ../src/pk-application.c:670
+#: ../src/pk-application.c:669
 msgid "Cancel"
 msgstr "ביטול"
 
-#: ../src/pk-application.c:673
+#: ../src/pk-application.c:672
 msgid "Cancel search"
 msgstr "ביטול חיפוש"
 
-#: ../src/pk-application.c:744 ../src/pk-application.c:765
+#: ../src/pk-application.c:748 ../src/pk-application.c:769
 msgid "Name"
 msgstr "שם"
 
-#: ../src/pk-application.c:901
+#: ../src/pk-application.c:907
 msgid "The group could not be queried"
 msgstr ""
 
-#: ../src/pk-application.c:1185
+#: ../src/pk-application.c:1190
 msgid "Searching by name"
 msgstr "מחפש לפי שם"
 
-#: ../src/pk-application.c:1206
+#: ../src/pk-application.c:1211
 msgid "Searching by description"
 msgstr ""
 
-#: ../src/pk-application.c:1227
+#: ../src/pk-application.c:1232
 msgid "Searching by file"
 msgstr ""
 
-#: ../src/pk-application.c:1250
+#: ../src/pk-application.c:1255
 msgid "Search by name"
 msgstr ""
 
-#: ../src/pk-application.c:1259
+#: ../src/pk-application.c:1264
 msgid "Search by description"
 msgstr ""
 
-#: ../src/pk-application.c:1268
+#: ../src/pk-application.c:1273
 msgid "Search by file"
 msgstr ""
 
-#: ../src/pk-application.c:1392
+#: ../src/pk-application.c:1426
 msgid "Install selected package"
 msgstr "התקן חבילה מסומנת"
 
-#: ../src/pk-application.c:1397
+#: ../src/pk-application.c:1431
 msgid "Remove selected package"
 msgstr "הסר חבילה מסומנת"
 
-#: ../src/pk-application.c:1402
+#: ../src/pk-application.c:1436
 msgid "Visit homepage for selected package"
 msgstr "ביקור בדף הבית של החבילה המסומנת"
 
-#: ../src/pk-application.c:1465 ../src/pk-common-gui.c:819
+#: ../src/pk-application.c:1525 ../src/pk-common-gui.c:795
 msgid "Installed"
 msgstr "מותקן"
 
-#: ../src/pk-application.c:1466 ../src/pk-common-gui.c:822
+#: ../src/pk-application.c:1526 ../src/pk-common-gui.c:798
 msgid "Available"
 msgstr "זמין"
 
-#: ../src/pk-application.c:1467 ../src/pk-application.c:1476
-#: ../src/pk-application.c:1485 ../src/pk-application.c:1494
+#: ../src/pk-application.c:1527 ../src/pk-application.c:1536
+#: ../src/pk-application.c:1545 ../src/pk-application.c:1554
 msgid "All packages"
 msgstr "כל החבילות"
 
-#: ../src/pk-application.c:1474
+#: ../src/pk-application.c:1534
 msgid "Only graphical"
 msgstr "רק גרפי"
 
-#: ../src/pk-application.c:1475
+#: ../src/pk-application.c:1535
 msgid "Only text"
 msgstr ""
 
-#: ../src/pk-application.c:1483
+#: ../src/pk-application.c:1543
 msgid "Only development"
 msgstr "רק פיתוח"
 
-#: ../src/pk-application.c:1484
+#: ../src/pk-application.c:1544
 msgid "Non-development"
 msgstr "לא פיתוח"
 
-#: ../src/pk-application.c:1492
+#: ../src/pk-application.c:1552
 msgid "Only free"
 msgstr ""
 
-#: ../src/pk-application.c:1493
+#: ../src/pk-application.c:1553
 msgid "Non-free"
 msgstr ""
 
@@ -636,7 +632,7 @@ msgstr ""
 #: ../src/pk-install-file.c:69 ../src/pk-install-package.c:136
 #: ../src/pk-repo.c:222 ../src/pk-prefs.c:297
 #: ../src/pk-transaction-viewer.c:348 ../src/pk-update-icon.c:54
-#: ../src/pk-update-viewer.c:1005
+#: ../src/pk-update-viewer.c:925
 msgid "Show extra debugging information"
 msgstr ""
 
@@ -644,7 +640,7 @@ msgstr ""
 #: ../src/pk-install-file.c:71 ../src/pk-install-package.c:138
 #: ../src/pk-repo.c:224 ../src/pk-prefs.c:299
 #: ../src/pk-transaction-viewer.c:350 ../src/pk-update-icon.c:56
-#: ../src/pk-update-viewer.c:1007
+#: ../src/pk-update-viewer.c:927
 msgid "Show the program version and exit"
 msgstr ""
 
@@ -656,746 +652,760 @@ msgstr ""
 msgid "Exiting on failure\n"
 msgstr ""
 
-#: ../src/pk-common-gui.c:221 ../src/pk-common-gui.c:257
-#: ../src/pk-common-gui.c:284 ../src/pk-common-gui.c:1354
-#: ../src/pk-common-gui.c:1386
+#: ../src/pk-common-gui.c:222 ../src/pk-common-gui.c:258
+#: ../src/pk-common-gui.c:285 ../src/pk-common-gui.c:1333
+#: ../src/pk-common-gui.c:1365
 msgid "PackageID not valid"
 msgstr ""
 
-#: ../src/pk-common-gui.c:427
+#: ../src/pk-common-gui.c:397
 msgid "No network connection available"
 msgstr ""
 
-#: ../src/pk-common-gui.c:430
+#: ../src/pk-common-gui.c:400
 msgid "No package cache is available."
 msgstr ""
 
-#: ../src/pk-common-gui.c:433
+#: ../src/pk-common-gui.c:403
 msgid "Out of memory"
 msgstr ""
 
-#: ../src/pk-common-gui.c:436
+#: ../src/pk-common-gui.c:406
 msgid "Failed to create a thread"
 msgstr ""
 
-#: ../src/pk-common-gui.c:439
+#: ../src/pk-common-gui.c:409
 msgid "Not supported by this backend"
 msgstr ""
 
-#: ../src/pk-common-gui.c:442
+#: ../src/pk-common-gui.c:412
 msgid "An internal system error has occurred"
 msgstr ""
 
-#: ../src/pk-common-gui.c:445
+#: ../src/pk-common-gui.c:415
 msgid "A security trust relationship is not present"
 msgstr ""
 
-#: ../src/pk-common-gui.c:448
+#: ../src/pk-common-gui.c:418
 msgid "The package is not installed"
 msgstr "החבילה לא מותקנת"
 
-#: ../src/pk-common-gui.c:451
+#: ../src/pk-common-gui.c:421
 msgid "The package was not found"
 msgstr "החבילה לא נמצא"
 
-#: ../src/pk-common-gui.c:454
+#: ../src/pk-common-gui.c:424
 msgid "The package is already installed"
 msgstr "החבילה כבר מותקנת"
 
-#: ../src/pk-common-gui.c:457
+#: ../src/pk-common-gui.c:427
 msgid "The package download failed"
 msgstr "הורדת החבילה נכשלה"
 
-#: ../src/pk-common-gui.c:460
+#: ../src/pk-common-gui.c:430
 msgid "The group was not found"
 msgstr "הקבוצה לא נמצאה"
 
-#: ../src/pk-common-gui.c:463
+#: ../src/pk-common-gui.c:433
 msgid "Dependency resolution failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:466
+#: ../src/pk-common-gui.c:436
 msgid "Search filter was invalid"
 msgstr ""
 
-#: ../src/pk-common-gui.c:469
+#: ../src/pk-common-gui.c:439
 msgid "The package ID was not well formed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:472
+#: ../src/pk-common-gui.c:442
 msgid "Transaction error"
 msgstr ""
 
-#: ../src/pk-common-gui.c:475
+#: ../src/pk-common-gui.c:445
 msgid "Repository name was not found"
 msgstr ""
 
-#: ../src/pk-common-gui.c:478
+#: ../src/pk-common-gui.c:448
 msgid "Could not remove a protected system package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:481
+#: ../src/pk-common-gui.c:451
 msgid "The transaction was canceled"
 msgstr ""
 
-#: ../src/pk-common-gui.c:484
+#: ../src/pk-common-gui.c:454
 msgid "The transaction was forcibly canceled"
 msgstr ""
 
-#: ../src/pk-common-gui.c:487
+#: ../src/pk-common-gui.c:457
 msgid "Initialization of the package manager failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:490
+#: ../src/pk-common-gui.c:460
 msgid "Unloading of the package manager failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:493
+#: ../src/pk-common-gui.c:463
 msgid "Reading the config file failed"
 msgstr ""
 
-#: ../src/pk-common-gui.c:496
+#: ../src/pk-common-gui.c:466
+msgid "The transaction cannot be cancelled"
+msgstr ""
+
+#: ../src/pk-common-gui.c:469
 msgid "Unknown error"
 msgstr ""
 
-#: ../src/pk-common-gui.c:510
+#: ../src/pk-common-gui.c:483
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
 msgstr ""
 
-#: ../src/pk-common-gui.c:514
+#: ../src/pk-common-gui.c:487
 msgid ""
 "The package list needs to be rebuilt\n"
 "TODO:how?."
 msgstr ""
 
-#: ../src/pk-common-gui.c:517
+#: ../src/pk-common-gui.c:490
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
 "Please restart your computer."
 msgstr ""
 
-#: ../src/pk-common-gui.c:520
+#: ../src/pk-common-gui.c:493
 msgid "A thread could not be created to service the user request."
 msgstr ""
 
-#: ../src/pk-common-gui.c:523
+#: ../src/pk-common-gui.c:496
 msgid ""
 "The action is not supported by this backend\n"
 "Please report a bug as this shouldn't have happened."
 msgstr ""
 
-#: ../src/pk-common-gui.c:527
+#: ../src/pk-common-gui.c:500
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug with the error description."
 msgstr ""
 
-#: ../src/pk-common-gui.c:531
+#: ../src/pk-common-gui.c:504
 msgid ""
 "A security trust relationship could not be made with the remote software "
 "source\n"
 "Please check your security settings."
 msgstr ""
 
-#: ../src/pk-common-gui.c:535
+#: ../src/pk-common-gui.c:508
 msgid ""
 "The package that is trying to be removed or updated is not already "
 "installed, and hence nothing can be done."
 msgstr ""
 
-#: ../src/pk-common-gui.c:538
+#: ../src/pk-common-gui.c:511
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "remote software source."
 msgstr ""
 
-#: ../src/pk-common-gui.c:541
+#: ../src/pk-common-gui.c:514
 msgid "The package that is trying to be installed is already installed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:544
+#: ../src/pk-common-gui.c:517
 msgid ""
 "The package download failed\n"
 "Please check your network connectivity."
 msgstr ""
 
-#: ../src/pk-common-gui.c:547
+#: ../src/pk-common-gui.c:520
 msgid ""
 "The group type was not found\n"
 "Please check your group list and try again."
 msgstr ""
 
-#: ../src/pk-common-gui.c:550
+#: ../src/pk-common-gui.c:523
 msgid ""
 "A package could not be found on your system or in a remote software source "
 "that allows the transaction to complete\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:554
+#: ../src/pk-common-gui.c:527
 msgid "The search filter was not correctly formed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:557
+#: ../src/pk-common-gui.c:530
 msgid ""
 "The package ID was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
 msgstr ""
 
-#: ../src/pk-common-gui.c:561
+#: ../src/pk-common-gui.c:534
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:565
+#: ../src/pk-common-gui.c:538
 msgid ""
 "The remote software source name was not found\n"
 "You may need to disable an item in Software Sources"
 msgstr ""
 
-#: ../src/pk-common-gui.c:569
+#: ../src/pk-common-gui.c:542
 msgid ""
 "Removing a protected system package was denied, and thus the whole "
 "transaction failed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:572
+#: ../src/pk-common-gui.c:545
 msgid "The transaction was canceled successfully and no packages were changed."
 msgstr ""
 
-#: ../src/pk-common-gui.c:575
+#: ../src/pk-common-gui.c:548
 msgid ""
 "The transaction was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
 
-#: ../src/pk-common-gui.c:579
+#: ../src/pk-common-gui.c:552
 msgid ""
 "The native package backend could not be initialised.\n"
 "Please make sure no other tools are accessing package information."
 msgstr ""
 
-#: ../src/pk-common-gui.c:583
+#: ../src/pk-common-gui.c:556
 msgid ""
 "The native package backend could not be closed.\n"
 "Please make sure no other tools are accessing package information."
 msgstr ""
 
-#: ../src/pk-common-gui.c:587
+#: ../src/pk-common-gui.c:560
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
 msgstr ""
 
-#: ../src/pk-common-gui.c:591
+#: ../src/pk-common-gui.c:564
+msgid "The transaction is not safe to be cancelled at this time."
+msgstr ""
+
+#: ../src/pk-common-gui.c:567
 msgid ""
 "Unknown error, please report a bug.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/pk-common-gui.c:606
+#: ../src/pk-common-gui.c:582
 msgid "No restart is necessary for this update"
 msgstr "לא נדרש אתחול עבור העדכון"
 
-#: ../src/pk-common-gui.c:609
+#: ../src/pk-common-gui.c:585
 msgid "An application restart is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:612
+#: ../src/pk-common-gui.c:588
 msgid "You will be required to log off and back on after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:615
+#: ../src/pk-common-gui.c:591
 msgid "A system restart is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:618 ../src/pk-common-gui.c:645
+#: ../src/pk-common-gui.c:594 ../src/pk-common-gui.c:621
 msgid "A restart of unknown type is required after this update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:633
+#: ../src/pk-common-gui.c:609
 msgid "No restart is required"
 msgstr ""
 
-#: ../src/pk-common-gui.c:636
+#: ../src/pk-common-gui.c:612
 msgid "A system restart is required"
 msgstr ""
 
-#: ../src/pk-common-gui.c:639
+#: ../src/pk-common-gui.c:615
 msgid "You will need to log off and log back on"
 msgstr ""
 
-#: ../src/pk-common-gui.c:642
+#: ../src/pk-common-gui.c:618
 msgid "You need to restart the application"
 msgstr ""
 
-#: ../src/pk-common-gui.c:660
+#: ../src/pk-common-gui.c:636
 msgid "PackageKit transaction notice"
 msgstr ""
 
-#: ../src/pk-common-gui.c:663
+#: ../src/pk-common-gui.c:639
 msgid "PackageKit transaction warning"
 msgstr ""
 
-#: ../src/pk-common-gui.c:666
+#: ../src/pk-common-gui.c:642
 msgid "PackageKit daemon"
 msgstr ""
 
-#: ../src/pk-common-gui.c:669
+#: ../src/pk-common-gui.c:645
 msgid "PackageKit message of unknown type"
 msgstr ""
 
-#: ../src/pk-common-gui.c:684
+#: ../src/pk-common-gui.c:660
 msgid "Unknown state"
 msgstr ""
 
-#: ../src/pk-common-gui.c:687
+#: ../src/pk-common-gui.c:663
 msgid "Setting up transaction"
 msgstr ""
 
-#: ../src/pk-common-gui.c:690
+#: ../src/pk-common-gui.c:666
 msgid "Waiting for transaction lock"
 msgstr ""
 
-#: ../src/pk-common-gui.c:693
+#: ../src/pk-common-gui.c:669
 msgid "Querying"
 msgstr ""
 
-#: ../src/pk-common-gui.c:696
+#: ../src/pk-common-gui.c:672
 msgid "Getting information"
 msgstr ""
 
-#: ../src/pk-common-gui.c:699 ../src/pk-common-gui.c:816
-#: ../src/pk-common-gui.c:876
+#: ../src/pk-common-gui.c:675 ../src/pk-common-gui.c:792
+#: ../src/pk-common-gui.c:852
 msgid "Removing"
 msgstr "מסיר"
 
-#: ../src/pk-common-gui.c:702 ../src/pk-common-gui.c:807
+#: ../src/pk-common-gui.c:678 ../src/pk-common-gui.c:783
 msgid "Downloading"
 msgstr "מוריד"
 
-#: ../src/pk-common-gui.c:705 ../src/pk-common-gui.c:813
-#: ../src/pk-common-gui.c:879
+#: ../src/pk-common-gui.c:681 ../src/pk-common-gui.c:789
+#: ../src/pk-common-gui.c:855
 msgid "Installing"
 msgstr "מתקין"
 
-#: ../src/pk-common-gui.c:708
+#: ../src/pk-common-gui.c:684
 msgid "Refreshing software list"
 msgstr "מרענן רשימת תוכנה"
 
-#: ../src/pk-common-gui.c:711 ../src/pk-common-gui.c:810
+#: ../src/pk-common-gui.c:687 ../src/pk-common-gui.c:786
 msgid "Updating"
 msgstr "מעדכן"
 
-#: ../src/pk-common-gui.c:714
+#: ../src/pk-common-gui.c:690
 msgid "Cleaning up"
 msgstr "מנקה"
 
-#: ../src/pk-common-gui.c:717 ../src/pk-common-gui.c:828
+#: ../src/pk-common-gui.c:693 ../src/pk-common-gui.c:804
 msgid "Obsoleting"
 msgstr ""
 
-#: ../src/pk-common-gui.c:720
+#: ../src/pk-common-gui.c:696
 msgid "Resolving dependencies"
 msgstr ""
 
-#: ../src/pk-common-gui.c:723 ../src/pk-common-gui.c:894
+#: ../src/pk-common-gui.c:699 ../src/pk-common-gui.c:870
 msgid "Rolling back"
 msgstr ""
 
-#: ../src/pk-common-gui.c:726
+#: ../src/pk-common-gui.c:702
 msgid "Committing transaction"
 msgstr ""
 
-#: ../src/pk-common-gui.c:729
+#: ../src/pk-common-gui.c:705
 msgid "Requesting data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:732
+#: ../src/pk-common-gui.c:708
 msgid "Finished"
 msgstr ""
 
-#: ../src/pk-common-gui.c:735
+#: ../src/pk-common-gui.c:711
 msgid "Cancelling"
 msgstr "מבטל"
 
-#: ../src/pk-common-gui.c:738
+#: ../src/pk-common-gui.c:714
 msgid "Status unknown"
 msgstr ""
 
-#: ../src/pk-common-gui.c:753
+#: ../src/pk-common-gui.c:729
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:756
+#: ../src/pk-common-gui.c:732
 #, c-format
 msgid "%i normal update"
 msgid_plural "%i normal updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:759
+#: ../src/pk-common-gui.c:735
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
 msgstr[0] "עדכון חשוב אחד"
 msgstr[1] "%i עדכונים חשובים"
 
-#: ../src/pk-common-gui.c:762
+#: ../src/pk-common-gui.c:738
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
 msgstr[0] "עדכון אבטחה אחד"
 msgstr[1] "%i עדכוני אבטחה"
 
-#: ../src/pk-common-gui.c:765
+#: ../src/pk-common-gui.c:741
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
 msgstr[0] "תיקון באג אחד"
 msgstr[1] "%i תיקוני באגים"
 
-#: ../src/pk-common-gui.c:768
+#: ../src/pk-common-gui.c:744
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:771
+#: ../src/pk-common-gui.c:747
 #, c-format
 msgid "%i unknown update"
 msgid_plural "%i unknown updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:786
+#: ../src/pk-common-gui.c:762
 msgid "Trivial update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:789
+#: ../src/pk-common-gui.c:765
 msgid "Normal update"
 msgstr "עדכון רגיל"
 
-#: ../src/pk-common-gui.c:792
+#: ../src/pk-common-gui.c:768
 msgid "Important update"
 msgstr "עדכון חשוב"
 
-#: ../src/pk-common-gui.c:795
+#: ../src/pk-common-gui.c:771
 msgid "Security update"
 msgstr "עדכון אבטחה"
 
-#: ../src/pk-common-gui.c:798
+#: ../src/pk-common-gui.c:774
 msgid "Bug fix update"
 msgstr "תיקון באג"
 
-#: ../src/pk-common-gui.c:801
+#: ../src/pk-common-gui.c:777
 msgid "Enhancement update"
 msgstr ""
 
-#: ../src/pk-common-gui.c:804
+#: ../src/pk-common-gui.c:780
 msgid "Blocked update"
 msgstr "עדכון חסום"
 
-#: ../src/pk-common-gui.c:825
+#: ../src/pk-common-gui.c:801
 msgid "Cleaned up"
 msgstr ""
 
-#: ../src/pk-common-gui.c:831
+#: ../src/pk-common-gui.c:807
 msgid "Info unknown"
 msgstr ""
 
-#: ../src/pk-common-gui.c:846 ../src/pk-common-gui.c:923
+#: ../src/pk-common-gui.c:822 ../src/pk-common-gui.c:899
 msgid "Unknown role"
 msgstr ""
 
-#: ../src/pk-common-gui.c:849
+#: ../src/pk-common-gui.c:825
 msgid "Getting dependencies"
 msgstr ""
 
-#: ../src/pk-common-gui.c:852
+#: ../src/pk-common-gui.c:828
 msgid "Getting update detail"
 msgstr ""
 
-#: ../src/pk-common-gui.c:855
+#: ../src/pk-common-gui.c:831
 msgid "Getting description"
 msgstr ""
 
-#: ../src/pk-common-gui.c:858
+#: ../src/pk-common-gui.c:834
 msgid "Getting requires"
 msgstr ""
 
-#: ../src/pk-common-gui.c:861
+#: ../src/pk-common-gui.c:837
 msgid "Getting updates"
 msgstr ""
 
-#: ../src/pk-common-gui.c:864
+#: ../src/pk-common-gui.c:840
 msgid "Searching details"
 msgstr ""
 
-#: ../src/pk-common-gui.c:867
+#: ../src/pk-common-gui.c:843
 msgid "Searching for file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:870
+#: ../src/pk-common-gui.c:846
 msgid "Searching groups"
 msgstr ""
 
-#: ../src/pk-common-gui.c:873
+#: ../src/pk-common-gui.c:849
 msgid "Searching for package name"
 msgstr ""
 
-#: ../src/pk-common-gui.c:882
+#: ../src/pk-common-gui.c:858
 msgid "Refreshing package cache"
 msgstr ""
 
-#: ../src/pk-common-gui.c:885
+#: ../src/pk-common-gui.c:861
 msgid "Updating package"
 msgstr "מעדכן חבילה"
 
-#: ../src/pk-common-gui.c:888
+#: ../src/pk-common-gui.c:864
 msgid "Updating system"
 msgstr ""
 
-#: ../src/pk-common-gui.c:891
+#: ../src/pk-common-gui.c:867
 msgid "Canceling"
 msgstr "מבטל"
 
-#: ../src/pk-common-gui.c:897
+#: ../src/pk-common-gui.c:873
 msgid "Getting list of repositories"
 msgstr ""
 
-#: ../src/pk-common-gui.c:900
+#: ../src/pk-common-gui.c:876
 msgid "Enabling repository"
 msgstr ""
 
-#: ../src/pk-common-gui.c:903
+#: ../src/pk-common-gui.c:879
 msgid "Setting repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:906 ../src/pk-common-gui.c:986
+#: ../src/pk-common-gui.c:882 ../src/pk-common-gui.c:965
 msgid "Role unknown"
 msgstr ""
 
-#: ../src/pk-common-gui.c:926
+#: ../src/pk-common-gui.c:902
 msgid "Got dependencies"
 msgstr ""
 
-#: ../src/pk-common-gui.c:929
+#: ../src/pk-common-gui.c:905
 msgid "Got update detail"
 msgstr ""
 
-#: ../src/pk-common-gui.c:932
+#: ../src/pk-common-gui.c:908
 msgid "Got description"
 msgstr ""
 
-#: ../src/pk-common-gui.c:935
+#: ../src/pk-common-gui.c:911
 msgid "Got requires"
 msgstr ""
 
-#: ../src/pk-common-gui.c:938
+#: ../src/pk-common-gui.c:914
 msgid "Got updates"
 msgstr ""
 
-#: ../src/pk-common-gui.c:941
+#: ../src/pk-common-gui.c:917
 msgid "Got details"
 msgstr ""
 
-#: ../src/pk-common-gui.c:944
+#: ../src/pk-common-gui.c:920
 msgid "Searched for file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:947
+#: ../src/pk-common-gui.c:923
 msgid "Searched groups"
 msgstr ""
 
-#: ../src/pk-common-gui.c:950
+#: ../src/pk-common-gui.c:926
 msgid "Searched for package name"
 msgstr ""
 
-#: ../src/pk-common-gui.c:953
+#: ../src/pk-common-gui.c:929
 msgid "Removed package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:956
+#: ../src/pk-common-gui.c:932
 msgid "Installed package"
 msgstr "חבילות מותקנות"
 
-#: ../src/pk-common-gui.c:959
+#: ../src/pk-common-gui.c:935
 msgid "Installed local file"
 msgstr ""
 
-#: ../src/pk-common-gui.c:962
+#: ../src/pk-common-gui.c:938
+#, fuzzy
+msgid "Updating from service pack"
+msgstr "מעדכן חבילה"
+
+#: ../src/pk-common-gui.c:941
 msgid "Refreshed package cache"
 msgstr ""
 
-#: ../src/pk-common-gui.c:965
+#: ../src/pk-common-gui.c:944
 msgid "Updated package"
 msgstr ""
 
-#: ../src/pk-common-gui.c:968
+#: ../src/pk-common-gui.c:947
 msgid "Updated system"
 msgstr ""
 
-#: ../src/pk-common-gui.c:971
+#: ../src/pk-common-gui.c:950
 msgid "Canceled"
 msgstr "בוטל"
 
-#: ../src/pk-common-gui.c:974
+#: ../src/pk-common-gui.c:953
 msgid "Rolled back"
 msgstr ""
 
-#: ../src/pk-common-gui.c:977
+#: ../src/pk-common-gui.c:956
 msgid "Got list of repositories"
 msgstr ""
 
-#: ../src/pk-common-gui.c:980
+#: ../src/pk-common-gui.c:959
 msgid "Enabled repository"
 msgstr ""
 
-#: ../src/pk-common-gui.c:983
+#: ../src/pk-common-gui.c:962
 msgid "Set repository data"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1001
+#: ../src/pk-common-gui.c:980
 msgid "Accessibility"
 msgstr "נגישות"
 
-#: ../src/pk-common-gui.c:1004
+#: ../src/pk-common-gui.c:983
 msgid "Accessories"
 msgstr "עזרים"
 
-#: ../src/pk-common-gui.c:1007
+#: ../src/pk-common-gui.c:986
 msgid "Education"
 msgstr "חינוך"
 
-#: ../src/pk-common-gui.c:1010
+#: ../src/pk-common-gui.c:989
 msgid "Games"
 msgstr "משחקים"
 
-#: ../src/pk-common-gui.c:1013
+#: ../src/pk-common-gui.c:992
 msgid "Graphics"
 msgstr "גרפיקה"
 
-#: ../src/pk-common-gui.c:1016
+#: ../src/pk-common-gui.c:995
 msgid "Internet"
 msgstr "אינטרנט"
 
-#: ../src/pk-common-gui.c:1019
+#: ../src/pk-common-gui.c:998
 msgid "Office"
 msgstr "משרד"
 
-#: ../src/pk-common-gui.c:1022
+#: ../src/pk-common-gui.c:1001
 msgid "Other"
 msgstr "אחר"
 
-#: ../src/pk-common-gui.c:1025
+#: ../src/pk-common-gui.c:1004
 msgid "Programming"
 msgstr "תכנות"
 
-#: ../src/pk-common-gui.c:1028
+#: ../src/pk-common-gui.c:1007
 msgid "Multimedia"
 msgstr "מולטימדיה"
 
-#: ../src/pk-common-gui.c:1031
+#: ../src/pk-common-gui.c:1010
 msgid "System"
 msgstr "מערכת"
 
-#: ../src/pk-common-gui.c:1034
+#: ../src/pk-common-gui.c:1013
 msgid "GNOME desktop"
 msgstr "שולחן העבודה GNOME"
 
-#: ../src/pk-common-gui.c:1037
+#: ../src/pk-common-gui.c:1016
 msgid "KDE desktop"
 msgstr "שולחן העבודה KDE"
 
-#: ../src/pk-common-gui.c:1040
+#: ../src/pk-common-gui.c:1019
 msgid "XFCE desktop"
 msgstr "שולחן העבודה XFCE"
 
-#: ../src/pk-common-gui.c:1043
+#: ../src/pk-common-gui.c:1022
 msgid "Other desktops"
 msgstr "שולחנות עבודה אחרים"
 
-#: ../src/pk-common-gui.c:1046
+#: ../src/pk-common-gui.c:1025
 msgid "Publishing"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1049
+#: ../src/pk-common-gui.c:1028
 msgid "Servers"
 msgstr "שרתים"
 
-#: ../src/pk-common-gui.c:1052
+#: ../src/pk-common-gui.c:1031
 msgid "Fonts"
 msgstr "גופנים"
 
-#: ../src/pk-common-gui.c:1055
+#: ../src/pk-common-gui.c:1034
 msgid "Admin tools"
 msgstr "כלי ניהול"
 
-#: ../src/pk-common-gui.c:1058
+#: ../src/pk-common-gui.c:1037
 msgid "Legacy"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1061
+#: ../src/pk-common-gui.c:1040
 msgid "Localization"
 msgstr "לוקליזציה"
 
-#: ../src/pk-common-gui.c:1064
+#: ../src/pk-common-gui.c:1043
 msgid "Virtualization"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1067
+#: ../src/pk-common-gui.c:1046
 msgid "Security"
 msgstr "אבטחה"
 
-#: ../src/pk-common-gui.c:1070
+#: ../src/pk-common-gui.c:1049
 msgid "Power management"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1073
+#: ../src/pk-common-gui.c:1052
 msgid "Communication"
 msgstr "תקשורת"
 
-#: ../src/pk-common-gui.c:1076
+#: ../src/pk-common-gui.c:1055
 msgid "Network"
 msgstr "רשת"
 
-#: ../src/pk-common-gui.c:1079
+#: ../src/pk-common-gui.c:1058
 msgid "Maps"
 msgstr "מפות"
 
-#: ../src/pk-common-gui.c:1082
+#: ../src/pk-common-gui.c:1061
 msgid "Software sources"
 msgstr "מקורות תוכנה"
 
-#: ../src/pk-common-gui.c:1085
+#: ../src/pk-common-gui.c:1064
 msgid "Unknown group"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1088
+#: ../src/pk-common-gui.c:1067
 msgid "Invalid group"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1167 ../src/pk-common-gui.c:1240
+#: ../src/pk-common-gui.c:1146 ../src/pk-common-gui.c:1219
+#, c-format
 msgid "Now"
 msgstr "עכשיו"
 
-#: ../src/pk-common-gui.c:1176
+#: ../src/pk-common-gui.c:1155
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1189
+#: ../src/pk-common-gui.c:1168
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -1406,73 +1416,73 @@ msgstr[1] ""
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/pk-common-gui.c:1195 ../src/pk-common-gui.c:1213
+#: ../src/pk-common-gui.c:1174 ../src/pk-common-gui.c:1192
 #, c-format
 msgid "%i %s %i %s"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1196 ../src/pk-common-gui.c:1215
+#: ../src/pk-common-gui.c:1175 ../src/pk-common-gui.c:1194
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1197
+#: ../src/pk-common-gui.c:1176
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1207
+#: ../src/pk-common-gui.c:1186
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1214
+#: ../src/pk-common-gui.c:1193
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pk-common-gui.c:1250
+#: ../src/pk-common-gui.c:1229
 msgid "1 second"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1260
+#: ../src/pk-common-gui.c:1239
 msgid "1 minute"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1270
+#: ../src/pk-common-gui.c:1249
 msgid "1 hour"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1280
+#: ../src/pk-common-gui.c:1259
 msgid "30 seconds"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1290
+#: ../src/pk-common-gui.c:1269
 msgid "30 minutes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1300
+#: ../src/pk-common-gui.c:1279
 msgid "30 minutes 1 second"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1310
+#: ../src/pk-common-gui.c:1289
 msgid "30 minutes 10 seconds"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1322
+#: ../src/pk-common-gui.c:1301
 msgid "0 bytes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1332
+#: ../src/pk-common-gui.c:1311
 msgid "512 bytes"
 msgstr ""
 
-#: ../src/pk-common-gui.c:1342
+#: ../src/pk-common-gui.c:1321
 msgid "256.2 MB"
 msgstr ""
 
@@ -1485,6 +1495,7 @@ msgid "FILE"
 msgstr "FILE"
 
 #: ../src/pk-install-file.c:103
+#, c-format
 msgid "You need to specify a file to install\n"
 msgstr ""
 
@@ -1514,6 +1525,7 @@ msgid "PackageKit Package Installer"
 msgstr ""
 
 #: ../src/pk-install-package.c:170
+#, c-format
 msgid "You need to specify a package to install\n"
 msgstr ""
 
@@ -1674,11 +1686,11 @@ msgstr ""
 msgid "Enabled"
 msgstr "מופעל"
 
-#: ../src/pk-repo.c:170 ../src/pk-update-viewer.c:355
+#: ../src/pk-repo.c:170 ../src/pk-update-viewer.c:408
 msgid "Repository"
 msgstr "מאגר"
 
-#: ../src/pk-repo.c:306
+#: ../src/pk-repo.c:307
 msgid "Getting repository list not supported by backend"
 msgstr ""
 
@@ -1726,7 +1738,7 @@ msgstr ""
 msgid "Succeeded"
 msgstr ""
 
-#: ../src/pk-transaction-viewer.c:216 ../src/pk-update-viewer.c:340
+#: ../src/pk-transaction-viewer.c:216 ../src/pk-update-viewer.c:389
 msgid "Type"
 msgstr "סוג"
 
@@ -1734,63 +1746,79 @@ msgstr "סוג"
 msgid "PackageKit Update Icon"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:336
+#: ../src/pk-update-viewer.c:392
 msgid "Version"
 msgstr "גרסה"
 
-#: ../src/pk-update-viewer.c:344
+#: ../src/pk-update-viewer.c:397
 msgid "Updates"
 msgstr "עדכונים"
 
-#: ../src/pk-update-viewer.c:350
+#: ../src/pk-update-viewer.c:403
 msgid "Obsoletes"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:379
-msgid "References"
+#: ../src/pk-update-viewer.c:416
+msgid "Vendor"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:649
+#: ../src/pk-update-viewer.c:419
+msgid "Bugzilla"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:422
+msgid "CVE"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:505
 msgid "Severity"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:656
+#: ../src/pk-update-viewer.c:512
 msgid "Software"
 msgstr "תוכנה"
 
+#: ../src/pk-update-viewer.c:539
+msgid "Title"
+msgstr ""
+
+#: ../src/pk-update-viewer.c:546
+msgid "Text"
+msgstr ""
+
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:818
+#: ../src/pk-update-viewer.c:735
 msgid "There are no updates available!"
 msgstr ""
 
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:950
+#: ../src/pk-update-viewer.c:867
 msgid "There is an update already in progress!"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1105
+#: ../src/pk-update-viewer.c:1025
 msgid "Close without updating"
 msgstr "סגור בלי לעדכן"
 
-#: ../src/pk-update-viewer.c:1131
+#: ../src/pk-update-viewer.c:1051
 msgid "Review the update list"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1136
+#: ../src/pk-update-viewer.c:1056
 msgid "Back to overview"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1141 ../src/pk-update-viewer.c:1147
+#: ../src/pk-update-viewer.c:1061 ../src/pk-update-viewer.c:1067
 msgid "Apply all updates"
 msgstr "החל את כל הכדכונים"
 
-#: ../src/pk-update-viewer.c:1153
+#: ../src/pk-update-viewer.c:1073
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:1168
+#: ../src/pk-update-viewer.c:1083
 msgid "Update selected package"
 msgstr ""
 
@@ -1850,3 +1878,6 @@ msgstr "עדכון המחשב עכשיו"
 #: ../src/pk-smart-icon.c:276
 msgid "Restart computer now"
 msgstr "אתחול המחשב עכשיו"
+
+#~ msgid "If searches should be done for each letter"
+#~ msgstr "If searches should be done for each letter"
