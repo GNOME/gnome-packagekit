@@ -1322,7 +1322,6 @@ pk_application_init (PkApplication *application)
 	GtkWidget *vbox;
 	GtkWidget *widget;
 	PkGroupEnum group;
-	gboolean ret;
 	gchar *locale; /* does not need to be freed */
 	guint length;
 	guint page;
