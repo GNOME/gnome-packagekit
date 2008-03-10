@@ -1322,6 +1322,7 @@ pk_application_init (PkApplication *application)
 	GtkWidget *vbox;
 	GtkWidget *widget;
 	PkGroupEnum group;
+	gboolean ret;
 	gchar *locale; /* does not need to be freed */
 	guint length;
 	guint page;
@@ -1403,7 +1404,10 @@ pk_application_init (PkApplication *application)
 
 	/* single instance, so this is valid */
 	application->priv->extra = pk_extra_new ();
-	pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
+	ret = pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
+	if (!ret) {
+		pk_warning ("could not connect to extra database");
+	}
 
 	/* set the locale */
 	locale = setlocale (LC_ALL, NULL);
