@@ -1327,6 +1327,7 @@ pk_application_init (PkApplication *application)
 	guint length;
 	guint page;
 	guint i;
+	gboolean ret;
 
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -1406,7 +1407,7 @@ pk_application_init (PkApplication *application)
 	application->priv->extra = pk_extra_new ();
 	ret = pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
 	if (!ret) {
-		pk_warning ("could not connect to extra database");
+		pk_warning ("Failure setting database");
 	}
 
 	/* set the locale */
