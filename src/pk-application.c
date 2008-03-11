@@ -321,7 +321,7 @@ pk_application_remove_cb (GtkWidget      *widget,
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_application_requires_finished_cb), application);
 	pk_debug ("getting requires for %s", application->priv->package);
-	pk_client_get_requires (client, application->priv->package, TRUE, NULL);
+	pk_client_get_requires (client, "installed", application->priv->package, TRUE, NULL);
 }
 
 /**
@@ -994,7 +994,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 		/* get the filelist */
 		pk_client_reset (application->priv->client_files, NULL);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-		pk_client_get_depends (application->priv->client_files,
+		pk_client_get_depends (application->priv->client_files, "none",
 				       application->priv->package, FALSE, NULL);
 
 		return TRUE;
@@ -1017,7 +1017,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 		/* get the filelist */
 		pk_client_reset (application->priv->client_files, NULL);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-		pk_client_get_requires (application->priv->client_files,
+		pk_client_get_requires (application->priv->client_files, "none",
 				        application->priv->package, TRUE, NULL);
 
 		return TRUE;
