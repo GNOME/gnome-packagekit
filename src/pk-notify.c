@@ -170,6 +170,7 @@ out:
 static void
 pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 {
+	static gboolean been_here = FALSE;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
 		NULL};
@@ -205,7 +206,6 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
 	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
-	static gboolean been_here = FALSE;
 	if (!been_here) {
 		been_here = TRUE;
 		gtk_about_dialog_set_url_hook (pk_notify_about_dialog_url_cb, NULL, NULL);
@@ -303,7 +303,7 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 
 	/* we failed, show the icon */
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
-		pk_smart_icon_set_icon_name (notify->priv->sicon, FALSE);
+		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 		/* we failed, so re-get the update list */
 		pk_notify_query_updates (notify);
 	}

@@ -178,7 +178,7 @@ pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *
 /**
  * pk_progress_finished_timeout:
  **/
-gboolean
+static gboolean
 pk_progress_finished_timeout (gpointer data)
 {
 	PkProgress *progress = PK_PROGRESS (data);
@@ -226,7 +226,7 @@ pk_progress_package_cb (PkClient    *client,
 /**
  * pk_progress_spin_timeout_percentage:
  **/
-gboolean
+static gboolean
 pk_progress_spin_timeout_percentage (gpointer data)
 {
 	GtkWidget *widget;
@@ -251,7 +251,7 @@ pk_progress_spin_timeout_percentage (gpointer data)
 /**
  * pk_progress_spin_timeout_subpercentage:
  **/
-gboolean
+static gboolean
 pk_progress_spin_timeout_subpercentage (gpointer data)
 {
 	GtkWidget *widget;

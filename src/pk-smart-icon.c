@@ -225,7 +225,7 @@ pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *m
 		sicon->priv->dialog = notify_notification_new (title, message, icon, NULL);
 	}
 	notify_notification_set_timeout (sicon->priv->dialog, timeout_val);
-	notify_notification_set_urgency (sicon->priv->dialog, urgency);
+	notify_notification_set_urgency (sicon->priv->dialog, (NotifyUrgency) urgency);
 	return TRUE;
 }
 

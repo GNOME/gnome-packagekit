@@ -286,7 +286,9 @@ static void
 pk_updates_add_description_item (const gchar *title, const gchar *text, const gchar *uri)
 {
 	gchar *markup;
+	GtkWidget *tree_view;
 	GtkTreeIter iter;
+	GtkTreeSelection *selection;
 
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
@@ -301,8 +303,6 @@ pk_updates_add_description_item (const gchar *title, const gchar *text, const gc
 
 	g_free (markup);
 
-	GtkWidget *tree_view;
-	GtkTreeSelection *selection;
 	tree_view = glade_xml_get_widget (glade_xml, "treeview_description");
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);

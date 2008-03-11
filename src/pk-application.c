@@ -1135,7 +1135,7 @@ pk_group_add_data (PkApplication *application, PkGroupEnum group)
 /**
  * pk_application_create_custom_widget:
  **/
-GtkWidget *
+static GtkWidget *
 pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
@@ -1289,7 +1289,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
  *
  * Creates a tree model containing the completions
  **/
-GtkTreeModel *
+static GtkTreeModel *
 pk_application_create_completion_model (void)
 {
 	GtkListStore *store;
@@ -1321,6 +1321,10 @@ pk_application_init (PkApplication *application)
 	GtkWidget *main_window;
 	GtkWidget *vbox;
 	GtkWidget *widget;
+	GtkEntryCompletion *completion;
+	GtkTreeModel *completion_model;
+	GtkTreeSelection *selection;
+	gboolean autocomplete;
 	PkGroupEnum group;
 	gchar *locale; /* does not need to be freed */
 	guint length;
@@ -1487,9 +1491,6 @@ pk_application_init (PkApplication *application)
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	/* the fancy text entry widget */
-	GtkEntryCompletion *completion;
-	GtkTreeModel *completion_model;
-	gboolean autocomplete;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 
 	/* autocompletion can be turned off as it's slow */
@@ -1604,8 +1605,6 @@ pk_application_init (PkApplication *application)
 	/* FIXME: There's got to be a better way than this */
 	gtk_widget_hide (GTK_WIDGET (widget));
 	gtk_widget_show (GTK_WIDGET (widget));
-
-	GtkTreeSelection *selection;
 
 	/* use the in-statusbar for progress */
 	application->priv->statusbar = pk_statusbar_new ();

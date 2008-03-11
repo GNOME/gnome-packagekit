@@ -112,7 +112,7 @@ pk_statusbar_set_widget (PkStatusbar *sbar, GtkWidget *widget)
 /**
  * pk_statusbar_pulse_timeout:
  **/
-gboolean
+static gboolean
 pk_statusbar_pulse_timeout (gpointer data)
 {
 	PkStatusbar *sbar = (PkStatusbar *) data;

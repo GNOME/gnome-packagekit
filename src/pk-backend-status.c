@@ -70,6 +70,12 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GtkWidget *widget;
 	GladeXML *glade_xml;
+	gchar *name;
+	gchar *author;
+	PkEnumList *role_list;
+	PkEnumList *filter_list;
+	PkClient *client;
+	gboolean retval;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -107,12 +113,6 @@ main (int argc, char *argv[])
 
 	loop = g_main_loop_new (NULL, FALSE);
 
-	gchar *name;
-	gchar *author;
-	PkEnumList *role_list;
-	PkEnumList *filter_list;
-	PkClient *client;
-	gboolean retval;
 	client = pk_client_new ();
 	role_list = pk_client_get_actions (client);
 	filter_list = pk_client_get_filters (client);

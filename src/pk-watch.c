@@ -432,6 +432,7 @@ out:
 static void
 pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 {
+	static gboolean been_here = FALSE;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
 		NULL};
@@ -467,7 +468,6 @@ pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
 	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
-	static gboolean been_here = FALSE;
 	if (!been_here) {
 		been_here = TRUE;
 		gtk_about_dialog_set_url_hook (pk_watch_about_dialog_url_cb, NULL, NULL);
