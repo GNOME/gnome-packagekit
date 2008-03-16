@@ -560,7 +560,17 @@ pk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guin
 static void
 pk_watch_restart_cb (GtkMenuItem *item, gpointer data)
 {
-	pk_warning ("TODO: use gnome-power-manager to restart");
+	gboolean ret;
+	PkWatch *watch = PK_WATCH (data);
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	/* restart using gnome-power-manager */
+	ret = pk_restart_system ();
+	if (!ret) {
+		pk_warning ("failed to reboot");
+	}
 }
 
 /**

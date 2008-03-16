@@ -883,6 +883,8 @@ static void
 pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 				    const gchar *data, PkNotify *notify)
 {
+	gboolean ret;
+
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
@@ -910,7 +912,11 @@ pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
 		pk_notify_update_system (notify);
 	} else if (button == PK_NOTIFY_BUTTON_RESTART_COMPUTER) {
-		pk_warning ("reboot now");
+		/* restart using gnome-power-manager */
+		ret = pk_restart_system ();
+		if (!ret) {
+			pk_warning ("failed to reboot");
+		}
 	}
 }
 

@@ -26,6 +26,7 @@
 #include <math.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <dbus/dbus-glib.h>
 
 #include <pk-debug.h>
 #include <pk-package-id.h>
@@ -152,6 +153,42 @@ static PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_DAEMON,		"dialog-error"},
 	{0, NULL}
 };
+
+/**
+ * pk_restart_system:
+ **/
+gboolean
+pk_restart_system (void)
+{
+	DBusGProxy *proxy;
+	DBusGConnection	*connection;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* check dbus connections, exit if not valid */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (error != NULL) {
+		pk_warning ("cannot acccess the session bus: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* get a connection */
+	proxy = dbus_g_proxy_new_for_name (connection, GPM_DBUS_SERVICE, GPM_DBUS_PATH, GPM_DBUS_INTERFACE);
+	if (proxy == NULL) {
+		pk_warning ("Cannot connect to gnome-power-manager");
+		return FALSE;
+	}
+
+	/* do the method */
+	ret = dbus_g_proxy_call (proxy, "Reboot", &error, G_TYPE_INVALID, G_TYPE_INVALID);
+	if (!ret) {
+		pk_warning ("cannot reboot: %s", error->message);
+		g_error_free (error);
+	}
+	g_object_unref (G_OBJECT (proxy));
+	return ret;
+}
 
 /**
  * pk_execute_url:
