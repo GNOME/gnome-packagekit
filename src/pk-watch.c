@@ -61,6 +61,7 @@ struct PkWatchPrivate
 {
 	PkClient		*client;
 	PkSmartIcon		*sicon;
+	PkSmartIcon		*sicon_restart;
 	PkInhibit		*inhibit;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
@@ -252,12 +253,25 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	gboolean ret;
 	gboolean value;
 	PkRoleEnum role;
+	PkRestartEnum restart;
 	gchar *package_id;
 	gchar *message = NULL;
 	gchar *package;
+	const gchar *restart_message;
+	const gchar *icon_name;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
+
+	/* show an icon if the user needs to reboot */
+	restart = pk_client_get_require_restart (client);
+	if (restart == PK_RESTART_ENUM_SYSTEM ||
+	    restart == PK_RESTART_ENUM_SESSION) {
+		restart_message = pk_restart_enum_to_localised_text (restart);
+		icon_name = pk_restart_enum_to_icon_name (restart);
+		pk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
+		pk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
+	}
 
 	/* is it worth showing a UI? */
 	if (runtime < 3000) {
@@ -541,6 +555,15 @@ pk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guin
 }
 
 /**
+ * pk_watch_restart_cb:
+ **/
+static void
+pk_watch_restart_cb (GtkMenuItem *item, gpointer data)
+{
+	pk_warning ("TODO: use gnome-power-manager to restart");
+}
+
+/**
  * pk_watch_refresh_cache_cb:
  **/
 static void
@@ -707,6 +730,39 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 }
 
 /**
+ * pk_watch_activate_status_restart_cb:
+ * @button: Which buttons are pressed
+ *
+ * Callback when the icon is clicked
+ **/
+static void
+pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
+{
+	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
+	GtkWidget *widget;
+	GtkWidget *image;
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	pk_debug ("icon left clicked");
+
+	/* restart computer */
+	widget = gtk_image_menu_item_new_with_mnemonic (_("_Restart computer"));
+	image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+	g_signal_connect (G_OBJECT (widget), "activate",
+			  G_CALLBACK (pk_watch_restart_cb), watch);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+
+	/* show the menu */
+	gtk_widget_show_all (GTK_WIDGET (menu));
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+			gtk_status_icon_position_menu, status_icon,
+			1, gtk_get_current_event_time());
+}
+
+/**
  * pk_connection_changed_cb:
  **/
 static void
@@ -753,6 +809,7 @@ pk_watch_init (PkWatch *watch)
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->sicon = pk_smart_icon_new ();
+	watch->priv->sicon_restart = pk_smart_icon_new ();
 
 	/* we need to get ::locked */
 	watch->priv->client = pk_client_new ();
@@ -772,13 +829,14 @@ pk_watch_init (PkWatch *watch)
 	/* right click actions are common */
 	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon);
 	g_signal_connect_object (G_OBJECT (status_icon),
-				 "popup_menu",
-				 G_CALLBACK (pk_watch_popup_menu_cb),
-				 watch, 0);
+				 "popup_menu", G_CALLBACK (pk_watch_popup_menu_cb), watch, 0);
 	g_signal_connect_object (G_OBJECT (status_icon),
-				 "activate",
-				 G_CALLBACK (pk_watch_activate_status_cb),
-				 watch, 0);
+				 "activate", G_CALLBACK (pk_watch_activate_status_cb), watch, 0);
+
+	/* provide the user with a way to restart */
+	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon_restart);
+	g_signal_connect_object (G_OBJECT (status_icon),
+				 "activate", G_CALLBACK (pk_watch_activate_status_restart_cb), watch, 0);
 
 	watch->priv->tlist = pk_task_list_new ();
 	g_signal_connect (watch->priv->tlist, "task-list-changed",
