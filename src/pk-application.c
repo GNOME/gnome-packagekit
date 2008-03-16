@@ -1622,6 +1622,10 @@ pk_application_init (PkApplication *application)
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 
+	/* sorted */
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
+					      PACKAGES_COLUMN_TEXT, GTK_SORT_ASCENDING);
+
 	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
