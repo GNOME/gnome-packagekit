@@ -297,6 +297,13 @@ static void
 pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify)
 {
 	PkRestartEnum restart;
+	guint i;
+	guint length;
+	PkPackageId *ident;
+	PkPackageItem *item;
+	GString *message_text;
+	guint skipped_number = 0;
+	const gchar *message;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
@@ -308,23 +315,70 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 		pk_notify_query_updates (notify);
 	}
 
-	/* close the libnotify bubble if it exists */
-	pk_smart_icon_notify_close (notify->priv->sicon);
+	/* check we got some packages */
+	length = pk_client_package_buffer_get_size (client);
+	pk_debug ("length=%i", length);
+	if (length == 0) {
+		pk_debug ("no updates");
+		return;
+	}
 
+	message_text = g_string_new ("");
+
+	/* find any we skipped */
+	for (i=0; i<length; i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
+			  item->package_id, item->summary);
+		ident = pk_package_id_new_from_string (item->package_id);
+		if (item->info == PK_INFO_ENUM_BLOCKED) {
+			skipped_number++;
+			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
+						ident->name, item->summary);
+		}
+		pk_package_id_free (ident);
+	}
+
+	/* notify the user if there were skipped entries */
+	if (skipped_number > 0) {
+		message = ngettext (_("One package was skipped:\n"),
+				    _("Some packages were skipped:\n"), skipped_number);
+		g_string_prepend (message_text, message);
+	}
+
+	/* add a message that we need to restart */
 	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
-		const gchar *message;
 		message = pk_restart_enum_to_localised_text (restart);
 
-		pk_debug ("Doing requires-restart notification");
-		pk_smart_icon_notify_new (notify->priv->sicon,
-					  _("The system update has completed"), message, "software-update-available",
-					  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
-		pk_smart_icon_notify_show (notify->priv->sicon);
+		/* add a gap if we are putting both */
+		if (skipped_number > 0) {
+			g_string_append (message_text, "\n");
+		}
+
+		g_string_append (message_text, message);
+		g_string_append (message_text, "\n");
 	}
+
+	/* trim off extra newlines */
+	if (message_text->len != 0) {
+		g_string_set_size (message_text, message_text->len-1);
+	}
+
+	/* do the notify, and show the right buttons */
+	pk_debug ("Doing notification");
+	pk_smart_icon_notify_new (notify->priv->sicon,
+				  _("The system update has completed"), message_text->str,
+				  "software-update-available",
+				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+	}
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
+	pk_smart_icon_notify_show (notify->priv->sicon);
+
 	pk_debug ("resetting client %p", client);
+	g_string_free (message_text, TRUE);
 	pk_client_reset (client, NULL);
 }
 
@@ -901,6 +955,7 @@ pk_notify_init (PkNotify *notify)
 
 	/* use a client to get the updates-changed signal */
 	notify->priv->client_update_system = pk_client_new ();
+	pk_client_set_use_buffer (notify->priv->client_update_system, TRUE, NULL);
 	g_signal_connect (notify->priv->client_update_system, "updates-changed",
 			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
 	g_signal_connect (notify->priv->client_update_system, "finished",
