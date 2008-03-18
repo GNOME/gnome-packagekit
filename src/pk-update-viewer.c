@@ -156,7 +156,7 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 
 		/* do something with the data */
 		if (update) {
-			g_print ("(%s)\n", package_id);
+			pk_debug ("%s", package_id);
 			g_ptr_array_add (array, package_id);
 		} else {
 			/* need to free the one in the array later */
@@ -171,27 +171,33 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 		return;
 	}
 
+	/* set correct view */
+	pk_updates_set_page (PAGE_PROGRESS);
+
 	/* send an singular list */
 	if (!selected_all) {
 		gchar **package_ids;
+		gboolean ret;
+		GError *error = NULL;
+
 		package_ids = pk_package_ids_from_array (array);
-		//pk_client_update_packages_array (client, package_ids, NULL);
+		pk_client_reset (client, NULL);
+		ret = pk_client_update_packages_strv (client, package_ids, &error);
+		if (!ret) {
+			pk_error_modal_dialog ("Individual updates failed", error->message);
+			g_error_free (error);
+		}
 		g_strfreev (package_ids);
-		pk_error_modal_dialog ("Not supported yet", "This isn't suported yet. Wait a few days!");
-		return;
 	}
 
 	/* get rid of the array, and free the contents */
-	g_ptr_array_free (data, TRUE);
+	g_ptr_array_free (array, TRUE);
 
 	/* the trivial case */
 	if (selected_all) {
 		pk_client_reset (client, NULL);
 		pk_client_update_system (client, NULL);
 	}
-
-	/* set correct view */
-	pk_updates_set_page (PAGE_PROGRESS);
 }
 
 /**
@@ -284,7 +290,8 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	GtkTreePath *path;
 
 	pk_client_get_role (client, &role, NULL, NULL);
-	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
+	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
+		  pk_info_enum_to_text (info), package_id, summary);
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
 		text = pk_package_id_pretty (package_id, summary);
@@ -301,9 +308,11 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		return;
 	}
 
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		text = pk_package_id_pretty (package_id, summary);
 		icon_name = pk_info_enum_to_icon_name (info);
+		pk_debug ("text=%s", text);
 		gtk_list_store_prepend (list_store_history, &iter);
 		gtk_list_store_set (list_store_history, &iter,
 				    HISTORY_COLUMN_TEXT, text,
@@ -760,7 +769,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	}
 
 	/* we don't need to do anything here */
-	if (role == PK_ROLE_ENUM_UPDATE_PACKAGE) {
+	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		/* clear existing list */
 		gtk_list_store_clear (list_store_details);
 

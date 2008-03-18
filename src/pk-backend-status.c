@@ -203,7 +203,7 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_file_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_PACKAGE) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_PACKAGES) == TRUE) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_update");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
