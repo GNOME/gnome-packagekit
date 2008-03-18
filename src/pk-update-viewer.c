@@ -38,6 +38,7 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-package-ids.h>
 #include <pk-enum-list.h>
 #include "pk-common-gui.h"
 #include "pk-statusbar.h"
@@ -100,26 +101,6 @@ pk_button_help_cb (GtkWidget *widget, gboolean data)
 }
 
 /**
- * pk_button_update_cb:
- **/
-static void
-pk_button_update_cb (GtkWidget *widget, gboolean data)
-{
-	gboolean ret;
-	pk_client_reset (client, NULL);
-	ret = pk_client_update_package (client, package, NULL);
-	if (ret == TRUE) {
-		/* make the refresh button non-clickable until we have completed */
-		widget = glade_xml_get_widget (glade_xml, "button_apply");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (glade_xml, "button_apply2");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (glade_xml, "button_refresh");
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
-}
-
-/**
  * pk_updates_set_page:
  **/
 static void
@@ -144,10 +125,70 @@ pk_updates_set_page (PkPageEnum page)
 static void
 pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 {
-	pk_debug ("Doing the system update");
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean valid;
+	gboolean update;
+	gboolean selected_all = TRUE;
+	gboolean selected_any = FALSE;
+	gchar *package_id;
+	GPtrArray *array;
 
-	pk_client_reset (client, NULL);
-	pk_client_update_system (client, NULL);
+	pk_debug ("Doing the system update");
+	array = g_ptr_array_new ();
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+
+	/* get the first iter in the list */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+
+	/* find out how many we should update */
+	while (valid) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update,
+				    PACKAGES_COLUMN_ID, &package_id, -1);
+
+		if (!update) {
+			selected_all = FALSE;
+		} else {
+			selected_any = TRUE;
+		}
+
+		/* do something with the data */
+		if (update) {
+			g_print ("(%s)\n", package_id);
+			g_ptr_array_add (array, package_id);
+		} else {
+			/* need to free the one in the array later */
+			g_free (package_id);
+		}
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+
+	/* we have no checkboxes selected */
+	if (!selected_any) {
+		pk_error_modal_dialog (_("No updates selected"), _("No updates are selected"));
+		return;
+	}
+
+	/* send an singular list */
+	if (!selected_all) {
+		gchar **package_ids;
+		package_ids = pk_package_ids_from_array (array);
+		//pk_client_update_packages_array (client, package_ids, NULL);
+		g_strfreev (package_ids);
+		pk_error_modal_dialog ("Not supported yet", "This isn't suported yet. Wait a few days!");
+		return;
+	}
+
+	/* get rid of the array, and free the contents */
+	g_ptr_array_free (data, TRUE);
+
+	/* the trivial case */
+	if (selected_all) {
+		pk_client_reset (client, NULL);
+		pk_client_update_system (client, NULL);
+	}
 
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
@@ -487,7 +528,7 @@ pk_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpoint
 			    PACKAGES_COLUMN_ID, &package_id, -1);
 
 	/* unstage */
-//	update ^= 1;
+	update ^= 1;
 
 	pk_debug ("update %s[%i]", package_id, update);
 	g_free (package_id);
@@ -613,13 +654,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		/* get the decription */
 		pk_client_reset (client, NULL);
 		pk_client_get_update_detail (client, package, NULL);
-
-		widget = glade_xml_get_widget (glade_xml, "button_update");
-		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
 		pk_debug ("no row selected");
-		widget = glade_xml_get_widget (glade_xml, "button_update");
-		gtk_widget_set_sensitive (widget, FALSE);
 	}
 }
 
@@ -1086,11 +1122,6 @@ main (int argc, char *argv[])
 	/* we have no yelp file yet */
 	gtk_widget_hide (widget);
 
-	widget = glade_xml_get_widget (glade_xml, "button_update");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_update_cb), NULL);
-	gtk_widget_set_tooltip_text(widget, _("Update selected package"));
-
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
@@ -1145,9 +1176,6 @@ main (int argc, char *argv[])
 
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	widget = glade_xml_get_widget (glade_xml, "button_update");
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* assume we don't get this yet */
