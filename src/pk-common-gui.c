@@ -392,15 +392,6 @@ pk_icon_valid (const gchar *icon)
 }
 
 /**
- * pk_error_modal_dialog_cb:
- **/
-static void
-pk_error_modal_dialog_cb (GtkWidget *dialog, gint arg1, GMainLoop *loop)
-{
-	g_main_loop_quit (loop);
-}
-
-/**
  * pk_error_modal_dialog:
  *
  * Shows a modal error, and blocks until the user clicks close
@@ -409,16 +400,11 @@ gboolean
 pk_error_modal_dialog (const gchar *title, const gchar *message)
 {
 	GtkWidget *dialog;
-	GMainLoop *loop;
-
-	loop = g_main_loop_new (NULL, FALSE);
-	dialog = gtk_message_dialog_new_with_markup (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 	     GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
-						     "<span size='larger'><b>%s</b></span>", title);
+	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, title);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), message);
-	g_signal_connect (dialog, "response", G_CALLBACK (pk_error_modal_dialog_cb), loop);
-	gtk_window_present (GTK_WINDOW (dialog));
-	g_main_loop_run (loop);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
 	return TRUE;
 }
 
