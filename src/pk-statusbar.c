@@ -201,7 +201,7 @@ pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
 
 	/* don't hide, else the status bar will collapse */
 	if (remaining == 0) {
-		gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), "");
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (sbar->priv->statusbar->label), "");
 		return TRUE;
 	}
 
@@ -211,7 +211,7 @@ pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
 	/* print remaining time */
 	time = pk_time_to_localised_string (remaining);
 	text = g_strdup_printf (_("Remaining time: %s"), time);
-	gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), text);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (sbar->priv->statusbar->label), text);
 	g_free (time);
 	g_free (text);
 
