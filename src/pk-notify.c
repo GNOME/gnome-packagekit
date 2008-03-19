@@ -44,6 +44,7 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-package-ids.h>
 #include <pk-package-list.h>
 
 #include "pk-smart-icon.h"
@@ -598,6 +599,56 @@ pk_notify_get_best_update_icon (PkNotify *notify, PkClient *client)
 }
 
 /**
+ * pk_notify_check_on_battery:
+ **/
+static gboolean
+pk_notify_check_on_battery (PkNotify *notify)
+{
+	gboolean on_battery;
+	gboolean conf_update_battery;
+
+	g_return_val_if_fail (notify != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+
+	on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
+	conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
+	if (!conf_update_battery && on_battery) {
+		pk_smart_icon_notify_new (notify->priv->sicon,
+				      _("Will not install updates"),
+				      _("Automatic updates are not being installed as the computer is on battery power"),
+				      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+		pk_smart_icon_notify_button (notify->priv->sicon,
+					     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					     PK_CONF_NOTIFY_BATTERY_UPDATE);
+		pk_smart_icon_notify_show (notify->priv->sicon);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * pk_notify_get_update_policy:
+ **/
+static PkUpdateEnum
+pk_notify_get_update_policy (PkNotify *notify)
+{
+	PkUpdateEnum update;
+	gchar *updates;
+
+	g_return_val_if_fail (notify != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+
+	updates = gconf_client_get_string (notify->priv->gconf_client, PK_CONF_AUTO_UPDATE, NULL);
+	if (updates == NULL) {
+		pk_warning ("'%s' gconf key is null!", PK_CONF_AUTO_UPDATE);
+		return PK_UPDATE_ENUM_UNKNOWN;
+	}
+	update = pk_update_enum_from_text (updates);
+	g_free (updates);
+	return update;
+}
+
+/**
  * pk_notify_query_updates_finished_cb:
  **/
 static void
@@ -606,70 +657,109 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	PkPackageItem *item;
 	guint length;
 	guint i;
-	gboolean is_security;
 	gboolean ret;
-	const gchar *icon;
-	gchar *updates;
 	GString *status_security;
 	GString *status_tooltip;
 	PkUpdateEnum update;
 	PkPackageId *ident;
+	GPtrArray *security_array;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
+	security_array = g_ptr_array_new ();
 
 	/* find packages */
 	length = pk_client_package_buffer_get_size (client);
 	pk_debug ("length=%i", length);
+
+	/* we have no updates */
 	if (length == 0) {
 		pk_debug ("no updates");
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
-		return;
+		goto out;
 	}
 
-	is_security = FALSE;
+	/* find the security updates */
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
 			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
 		if (item->info == PK_INFO_ENUM_SECURITY) {
-			is_security = TRUE;
+			/* add to array */
+			g_ptr_array_add (security_array, g_strdup (item->package_id));
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						ident->name, item->summary);
 		}
 		pk_package_id_free (ident);
 	}
+
+	/* we are done querying this */
 	g_object_unref (client);
 
 	/* do we do the automatic updates? */
-	updates = gconf_client_get_string (notify->priv->gconf_client, PK_CONF_AUTO_UPDATE, NULL);
-	if (updates == NULL) {
-		pk_warning ("'%s' gconf key is null!", PK_CONF_AUTO_UPDATE);
+	update = pk_notify_get_update_policy (notify);
+	if (update == PK_UPDATE_ENUM_UNKNOWN) {
+		pk_warning ("policy unknown");
+		goto out;
 	}
-	update = pk_update_enum_from_text (updates);
-	g_free (updates);
-	if ((update == PK_UPDATE_ENUM_SECURITY && is_security == TRUE) || update == PK_UPDATE_ENUM_ALL) {
-		gboolean on_battery;
-		gboolean conf_update_battery;
-		on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
-		conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
-		if (conf_update_battery == FALSE && on_battery == TRUE) {
-			pk_warning ("on battery so not doing update");
-			pk_smart_icon_notify_new (notify->priv->sicon,
-					      _("Will not install updates"),
-					      _("Automatic updates are not being installed as the computer is on battery power"),
-					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-			pk_smart_icon_notify_button (notify->priv->sicon,
-						     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-						     PK_CONF_NOTIFY_BATTERY_UPDATE);
-			pk_smart_icon_notify_show (notify->priv->sicon);
-			return;
+
+	/* is policy none? */
+	if (update == PK_UPDATE_ENUM_NONE) {
+		const gchar *icon;
+		pk_debug ("not updating as policy NONE");
+
+		/* work out icon */
+		icon = pk_notify_get_best_update_icon (notify, client);
+
+		/* trim off extra newlines */
+		if (status_security->len != 0) {
+			g_string_set_size (status_security, status_security->len-1);
 		}
 
+		/* make tooltip */
+		g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
+								  "There are %d updates pending", length), length);
+
+		pk_smart_icon_set_icon_name (notify->priv->sicon, icon);
+		pk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
+
+		/* do we warn the user? */
+		if (security_array->len > 0) {
+			pk_notify_critical_updates_warning (notify, status_security->str, length);
+		}
+		goto out;
+	}
+
+	/* are we on battery and configured to skip the action */
+	ret = pk_notify_check_on_battery (notify);
+	if (!ret) {
+		pk_debug ("on battery so not doing update");
+		goto out;
+	}
+
+	/* just do security updates */
+	if (update == PK_UPDATE_ENUM_SECURITY && security_array->len > 0) {
+		gchar **package_ids;
+		gboolean ret;
+		GError *error = NULL;
+
+		pk_debug ("just process security updates");
+		package_ids = pk_package_ids_from_array (security_array);
+		ret = pk_client_update_packages_strv (notify->priv->client_update_system, package_ids, &error);
+		if (!ret) {
+			pk_warning ("Individual updates failed: %s", error->message);
+			g_error_free (error);
+		}
+		g_strfreev (package_ids);
+		goto out;
+	}
+
+	/* just do everything */
+	if (update == PK_UPDATE_ENUM_ALL) {
 		pk_debug ("we should do the update automatically!");
 		ret = pk_notify_update_system (notify);
 		if (ret == TRUE) {
@@ -677,31 +767,17 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		} else {
 			pk_warning ("update failed");
 		}
-		return;
+		goto out;
 	}
 
-	/* work out icon */
-	icon = pk_notify_get_best_update_icon (notify, client);
-
-	/* trim off extra newlines */
-	if (status_security->len != 0) {
-		g_string_set_size (status_security, status_security->len-1);
-	}
-
-	/* make tooltip */
-	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
-							  "There are %d updates pending", length), length);
-
-	pk_smart_icon_set_icon_name (notify->priv->sicon, icon);
-	pk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
-
-	/* do we warn the user? */
-	if (is_security == TRUE) {
-		pk_notify_critical_updates_warning (notify, status_security->str, length);
-	}
-
+	/* shouldn't happen */
+	pk_warning ("unknown update mode");
+out:
 	g_string_free (status_security, TRUE);
 	g_string_free (status_tooltip, TRUE);
+
+	/* get rid of the array, and free the contents */
+	g_ptr_array_free (security_array, TRUE);
 }
 
 /**
