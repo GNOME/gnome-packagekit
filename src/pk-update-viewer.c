@@ -707,6 +707,40 @@ pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *m
 }
 
 /**
+ * pk_update_get_approx_time:
+ **/
+static const gchar *
+pk_update_get_approx_time (guint time)
+{
+	if (time < 60) {
+		return _("Less than a minute");
+	} else if (time < 60*60) {
+		return _("Less than an hour");
+	} else if (time < 24*60*60) {
+		return _("A few hours");
+	} else if (time < 7*24*60*60) {
+		return _("A few days");
+	}
+	return _("Over a week");
+}
+
+/**
+ * pk_update_update_last_refreshed_time:
+ **/
+static gboolean
+pk_update_update_last_refreshed_time (PkClient *client)
+{
+	GtkWidget *widget;
+	guint time;
+	const gchar *time_text;
+	pk_client_get_time_since_action (client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+	time_text = pk_update_get_approx_time (time);
+	widget = glade_xml_get_widget (glade_xml, "label_last_updated");
+	gtk_label_set_label (GTK_LABEL (widget), time_text);
+	return TRUE;
+}
+
+/**
  * pk_updates_finished_cb:
  **/
 static void
@@ -724,6 +758,10 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		pk_client_reset (client, NULL);
+
+		/* update last time in the UI */
+		pk_update_update_last_refreshed_time (client);
+
 		pk_client_set_use_buffer (client, TRUE, NULL);
 		pk_client_get_updates (client, "basename", NULL);
 		return;
@@ -1190,6 +1228,9 @@ main (int argc, char *argv[])
 	/* assume we don't get this yet */
 	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
 	gtk_widget_hide (widget);
+
+	/* set the last updated text */
+	pk_update_update_last_refreshed_time (client);
 
 	/* get the update list */
 	pk_client_get_updates (client, "basename", NULL);
