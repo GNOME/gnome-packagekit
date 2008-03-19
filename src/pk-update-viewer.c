@@ -585,6 +585,29 @@ pk_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer 
 }
 
 /**
+ * pk_treeview_add_columns_history:
+ **/
+static void
+pk_treeview_add_columns_history (GtkTreeView *treeview)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+
+	/* image */
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer,
+							   "icon-name", HISTORY_COLUMN_ICON, NULL);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* text */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
+							   "markup", HISTORY_COLUMN_TEXT,
+							   NULL);
+	gtk_tree_view_append_column (treeview, column);
+}
+
+/**
  * pk_treeview_add_columns_description:
  **/
 static void
@@ -1194,7 +1217,11 @@ main (int argc, char *argv[])
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_history));
 
-	/* create history tree view */
+	/* add columns to the tree view */
+	pk_treeview_add_columns_history (GTK_TREE_VIEW (widget));
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+
+	/* create description tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_description");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_description));
