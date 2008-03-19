@@ -740,6 +740,21 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 }
 
 /**
+ * pk_watch_hide_restart_cb:
+ **/
+static void
+pk_watch_hide_restart_cb (GtkMenuItem *item, gpointer data)
+{
+	PkWatch *watch = PK_WATCH (data);
+
+	g_return_if_fail (watch != NULL);
+	g_return_if_fail (PK_IS_WATCH (watch));
+
+	/* just hide it */
+	pk_smart_icon_set_icon_name (watch->priv->sicon_restart, NULL);
+}
+
+/**
  * pk_watch_activate_status_restart_cb:
  * @button: Which buttons are pressed
  *
@@ -763,6 +778,14 @@ pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 	g_signal_connect (G_OBJECT (widget), "activate",
 			  G_CALLBACK (pk_watch_restart_cb), watch);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+
+	/* hide this option */
+	widget = gtk_image_menu_item_new_with_mnemonic (_("_Hide this icon"));
+	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_MENU);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+	g_signal_connect (G_OBJECT (widget), "activate",
+			  G_CALLBACK (pk_watch_hide_restart_cb), watch);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* show the menu */
