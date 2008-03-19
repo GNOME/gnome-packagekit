@@ -752,7 +752,7 @@ pk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i trivial update", "%i trivial updates", number), number);
 		break;
 	case PK_INFO_ENUM_NORMAL:
-		text = g_strdup_printf (ngettext ("%i normal update", "%i normal updates", number), number);
+		text = g_strdup_printf (ngettext ("%i update", "%i updates", number), number);
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
 		text = g_strdup_printf (ngettext ("%i important update", "%i important updates", number), number);
@@ -785,7 +785,7 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Trivial update");
 		break;
 	case PK_INFO_ENUM_NORMAL:
-		text = _("Normal update");
+		text = _("Update");
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
 		text = _("Important update");
