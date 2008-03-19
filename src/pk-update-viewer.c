@@ -756,7 +756,34 @@ pk_update_update_last_refreshed_time (PkClient *client)
 	GtkWidget *widget;
 	guint time;
 	const gchar *time_text;
+
+	/* get times from the daemon */
 	pk_client_get_time_since_action (client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+	time_text = pk_update_get_approx_time (time);
+	widget = glade_xml_get_widget (glade_xml, "label_last_refreshed");
+	gtk_label_set_label (GTK_LABEL (widget), time_text);
+	return TRUE;
+}
+
+/**
+ * pk_update_update_last_updated_time:
+ **/
+static gboolean
+pk_update_update_last_updated_time (PkClient *client)
+{
+	GtkWidget *widget;
+	guint time;
+	guint time_new;
+	const gchar *time_text;
+
+	/* get times from the daemon */
+	pk_client_get_time_since_action (client, PK_ROLE_ENUM_UPDATE_SYSTEM, &time, NULL);
+	pk_client_get_time_since_action (client, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
+
+	/* always use the shortest time */
+	if (time_new < time) {
+		time = time_new;
+	}
 	time_text = pk_update_get_approx_time (time);
 	widget = glade_xml_get_widget (glade_xml, "label_last_updated");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
@@ -779,12 +806,16 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	/* hide widget */
 	pk_statusbar_hide (statusbar);
 
+	/* just update the preview page */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_client_reset (client, NULL);
-
 		/* update last time in the UI */
 		pk_update_update_last_refreshed_time (client);
+	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM || role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		pk_update_update_last_updated_time (client);
+	}
 
+	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
+		pk_client_reset (client, NULL);
 		pk_client_set_use_buffer (client, TRUE, NULL);
 		pk_client_get_updates (client, "basename", NULL);
 		return;
@@ -1256,8 +1287,9 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
 	gtk_widget_hide (widget);
 
-	/* set the last updated text */
+	/* set the last refreshed and updated text */
 	pk_update_update_last_refreshed_time (client);
+	pk_update_update_last_updated_time (client);
 
 	/* get the update list */
 	pk_client_get_updates (client, "basename", NULL);
