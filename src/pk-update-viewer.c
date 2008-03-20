@@ -52,9 +52,17 @@ static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
 
+/* for the preview throbber */
+static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
+static int animation_timeout = 0;
+static int frame_counter = 0;
+static int n_frames = 0;
+static GdkPixbuf **frames = NULL;
+
 enum {
 	PREVIEW_COLUMN_ICON,
 	PREVIEW_COLUMN_TEXT,
+	PREVIEW_COLUMN_PROGRESS,
 	PREVIEW_COLUMN_LAST
 };
 
@@ -209,6 +217,111 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * pk_updates_preview_animation_update:
+ **/
+static gboolean
+pk_updates_preview_animation_update (gpointer data)
+{
+	GtkTreeModel *model = data;
+	GtkTreeIter iter;
+
+	gtk_tree_model_get_iter_first (model, &iter);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			    PREVIEW_COLUMN_PROGRESS, frames[frame_counter],
+			    -1);
+
+	frame_counter = (frame_counter + 1) % n_frames;
+
+	return TRUE;
+}
+
+/**
+ * pk_updates_preview_animation_start:
+ **/
+static void
+pk_updates_preview_animation_start (void)
+{
+	GtkWidget *widget;
+	GdkPixbuf *pixbuf;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeModel *model;
+	GList *list;
+	gint w, h;
+	gint rows, cols;
+	gint r, c, i;
+
+	pk_updates_add_preview_item (client,  NULL, _("Getting information..."), TRUE);
+
+	if (frames == NULL) {
+		/* get the process-working animation from the icon theme
+		 * and split it into frames.
+		 * FIXME reset frames on theme changes
+		 */
+		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		gtk_icon_size_lookup (GTK_ICON_SIZE_DIALOG, &w, &h);
+		pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+						   "process-working",
+						   w, 0, NULL);
+
+		cols = gdk_pixbuf_get_width (pixbuf) / w;
+		rows = gdk_pixbuf_get_height (pixbuf) / h;
+
+		n_frames = rows * cols;
+		frames = g_new (GdkPixbuf*, n_frames);
+
+		for (i = 0, r = 0; r < rows; r++)
+			for (c = 0; c < cols; c++, i++) {
+			frames[i] = gdk_pixbuf_new_subpixbuf (pixbuf, c * w, r * h, w, h);
+		}
+
+		g_object_unref (pixbuf);
+	}
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
+	list = gtk_tree_view_column_get_cell_renderers (column);
+	renderer = list->data;
+	g_list_free (list);
+	gtk_tree_view_column_clear_attributes (column, renderer);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "pixbuf", PREVIEW_COLUMN_PROGRESS, NULL);
+
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	frame_counter = 0;
+
+	animation_timeout = g_timeout_add (50, pk_updates_preview_animation_update, model);
+	pk_updates_preview_animation_update (model);
+}
+
+/**
+ * pk_updates_preview_animation_stop:
+ **/
+static void
+pk_updates_preview_animation_stop (void)
+{
+	GtkWidget *widget;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GList *list;
+
+	if (animation_timeout == 0)
+		return;
+
+	g_source_remove (animation_timeout);
+	animation_timeout = 0;
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
+	list = gtk_tree_view_column_get_cell_renderers (column);
+	renderer = list->data;
+	g_list_free (list);
+	gtk_tree_view_column_clear_attributes (column, renderer);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "icon-name", PREVIEW_COLUMN_ICON, NULL);
+}
+
+/**
  * pk_updates_refresh_cb:
  **/
 static void
@@ -218,6 +331,7 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
+	pk_updates_preview_animation_start ();
 
 	/* make the refresh button non-clickable */
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -814,6 +928,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		return;
 	}
 
+	pk_updates_preview_animation_stop ();
+
 	/* make the refresh button clickable now we have completed */
 	widget = glade_xml_get_widget (glade_xml, "button_apply");
 	gtk_widget_set_sensitive (widget, TRUE);
@@ -1203,7 +1319,7 @@ main (int argc, char *argv[])
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
-	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* sorted */
@@ -1245,6 +1361,8 @@ main (int argc, char *argv[])
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
+
+	pk_updates_preview_animation_start ();
 
 	/* set the last updated text */
 	pk_update_update_last_refreshed_time (client);
