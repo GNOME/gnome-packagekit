@@ -776,7 +776,7 @@ pk_update_update_last_updated_time (PkClient *client)
 		time = time_new;
 	}
 	time_text = pk_update_get_approx_time (time);
-	widget = glade_xml_get_widget (glade_xml, "label_last_updated");
+	widget = glade_xml_get_widget (glade_xml, "label_last_update");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
 	return TRUE;
 }
