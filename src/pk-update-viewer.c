@@ -261,6 +261,17 @@ pk_button_close_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_review_cb (GtkWidget *widget, gpointer data)
 {
+	GtkWidget *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+
+	treeview = glade_xml_get_widget (glade_xml, "treeview_updates");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
+	if (!gtk_tree_selection_get_selected (selection, NULL, NULL)) {
+		if (gtk_tree_model_get_iter_first (gtk_tree_view_get_model (GTK_TREE_VIEW (treeview)),
+						   &iter))
+			gtk_tree_selection_select_iter (selection, &iter);
+	}
 	/* set correct view */
 	pk_updates_set_page (PAGE_DETAILS);
 }
@@ -305,6 +316,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
 		g_free (text);
+
 		return;
 	}
 
@@ -1267,6 +1279,7 @@ main (int argc, char *argv[])
 				 GTK_TREE_MODEL (list_store_details));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
