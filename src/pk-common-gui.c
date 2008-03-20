@@ -614,7 +614,6 @@ pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("A system restart is required after this update");
 		break;
 	default:
-		text = _("A restart of unknown type is required after this update");
 		pk_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
@@ -641,7 +640,6 @@ pk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("You need to restart the application");
 		break;
 	default:
-		text = _("A restart of unknown type is required after this update");
 		pk_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
@@ -665,7 +663,6 @@ pk_message_enum_to_localised_text (PkMessageEnum message)
 		text = _("PackageKit daemon");
 		break;
 	default:
-		text = _("PackageKit message of unknown type");
 		pk_warning ("message unrecognised: %i", message);
 	}
 	return text;
@@ -734,7 +731,6 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Cancelling");
 		break;
 	default:
-		text = _("Status unknown");
 		pk_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
@@ -767,7 +763,6 @@ pk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i enhancement update", "%i enhancement updates", number), number);
 		break;
 	default:
-		text = g_strdup_printf (ngettext ("%i unknown update", "%i unknown updates", number), number);
 		pk_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
@@ -827,7 +822,6 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Obsoleting");
 		break;
 	default:
-		text = _("Info unknown");
 		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
@@ -877,6 +871,9 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_INSTALL_PACKAGE:
 		text = _("Installing");
 		break;
+	case PK_ROLE_ENUM_INSTALL_FILE:
+		text = _("Installing file");
+		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshing package cache");
 		break;
@@ -901,8 +898,19 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_REPO_SET_DATA:
 		text = _("Setting repository data");
 		break;
+	case PK_ROLE_ENUM_RESOLVE:
+		text = _("Resolved");
+		break;
+	case PK_ROLE_ENUM_GET_FILES:
+		text = _("Got file list");
+		break;
+	case PK_ROLE_ENUM_WHAT_PROVIDES:
+		text = _("Got what provides");
+		break;
+	case PK_ROLE_ENUM_SERVICE_PACK:
+		text = _("Service pack");
+		break;
 	default:
-		text = _("Role unknown");
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
@@ -984,8 +992,16 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_REPO_SET_DATA:
 		text = _("Set repository data");
 		break;
+	case PK_ROLE_ENUM_RESOLVE:
+		text = _("Resolved");
+		break;
+	case PK_ROLE_ENUM_GET_FILES:
+		text = _("Got file list");
+		break;
+	case PK_ROLE_ENUM_WHAT_PROVIDES:
+		text = _("Got what provides");
+		break;
 	default:
-		text = _("Role unknown");
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
@@ -1087,7 +1103,6 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Unknown group");
 		break;
 	default:
-		text = _("Invalid group");
 		pk_warning ("group unrecognised: %i", group);
 	}
 	return text;
@@ -1229,6 +1244,8 @@ void
 libst_common_gui (LibSelfTest *test)
 {
 	gchar *text;
+	guint i;
+	const gchar *string;
 
 	if (libst_start (test, "PkCommonGui", CLASS_AUTO) == FALSE) {
 		return;
@@ -1431,6 +1448,184 @@ libst_common_gui (LibSelfTest *test)
 		libst_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
+
+	/************************************************************
+	 ****************     localised enums          **************
+	 ************************************************************/
+	libst_title (test, "check we convert all the localised past role enums");
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+		string = pk_role_enum_to_localised_past (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised present role enums");
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+		string = pk_role_enum_to_localised_present (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the role icon name enums");
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+		string = pk_role_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised info enums");
+	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
+		string = pk_info_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the info icon names enums");
+	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
+		string = pk_info_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised status enums");
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
+		string = pk_status_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the status icon names enums");
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
+		string = pk_status_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the restart icon names enums");
+	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+		string = pk_restart_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised error enums");
+	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
+		string = pk_error_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised error enums");
+	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
+		string = pk_error_enum_to_localised_message (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised restart enums");
+	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+		string = pk_restart_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the message icon name enums");
+	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
+		string = pk_message_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised message enums");
+	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
+		string = pk_message_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised restart future enums");
+	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+		string = pk_restart_enum_to_localised_text_future (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the localised group enums");
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
+		string = pk_group_enum_to_localised_text (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
+
+	/************************************************************/
+	libst_title (test, "check we convert all the group icon name enums");
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
+		string = pk_group_enum_to_icon_name (i);
+		if (string == NULL) {
+			libst_failed (test, "failed to get %i", i);
+			break;
+		}
+	}
+	libst_success (test, NULL);
 
 	libst_end (test);
 }
