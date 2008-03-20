@@ -50,7 +50,7 @@ static GtkListStore *list_store_details = NULL;
 static GtkListStore *list_store_description = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
-static gchar *package = NULL;
+static gchar *cached_package_id = NULL;
 
 /* for the preview throbber */
 static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
@@ -686,6 +686,7 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	ident = pk_package_id_new_from_string (package_id);
 	/* translators: this is the repository the package has come from */
 	pk_updates_add_description_item (_("Repository"), ident->data, NULL);
+	pk_package_id_free (ident);
 
 	if (!pk_strzero (update_text)) {
 		/* translators: this is the package description */
@@ -892,17 +893,17 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (package);
+		g_free (cached_package_id);
 		gtk_tree_model_get (model, &iter,
 				    PACKAGES_COLUMN_ID, &package_id, -1);
 
 		/* make back into package ID */
-		package = g_strdup (package_id);
+		cached_package_id = g_strdup (package_id);
 		g_free (package_id);
-		pk_debug ("selected row is: %s", package);
+		pk_debug ("selected row is: %s", cached_package_id);
 		/* get the decription */
 		pk_client_reset (client, NULL);
-		pk_client_get_update_detail (client, package, NULL);
+		pk_client_get_update_detail (client, cached_package_id, NULL);
 	} else {
 		pk_debug ("no row selected");
 	}
@@ -1523,7 +1524,7 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
-	g_free (package);
+	g_free (cached_package_id);
 
 	return 0;
 }
