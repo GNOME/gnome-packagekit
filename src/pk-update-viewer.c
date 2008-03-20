@@ -290,6 +290,12 @@ pk_updates_preview_animation_start (void)
 	GtkTreeModel *model;
 	GList *list;
 
+	/* don't double queue */
+	if (animation_timeout != 0) {
+		pk_debug ("don't double start");
+		return;
+	}
+
 	pk_updates_animation_load_frames ();
 
 	pk_updates_add_preview_item (client, NULL, _("Getting information..."), TRUE);
@@ -352,6 +358,12 @@ pk_updates_description_animation_start (void)
 	GtkCellRenderer *renderer;
 	GtkTreeIter iter;
 	gchar *text;
+
+	/* don't double queue */
+	if (animation_timeout != 0) {
+		pk_debug ("don't double start");
+		return;
+	}
 
 	pk_updates_animation_load_frames ();
 
@@ -1016,18 +1028,13 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		pk_update_update_last_updated_time (client);
 	}
 
-	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_client_reset (client, NULL);
-		pk_client_set_use_buffer (client, TRUE, NULL);
-		pk_client_get_updates (client, "basename", NULL);
-		return;
-	}
-
 	/* we don't need to do anything here */
-	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
+	if (role == PK_ROLE_ENUM_REFRESH_CACHE ||
+	    role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
 		return;
 	}
 
+	/* stop the throbber */
 	pk_updates_preview_animation_stop ();
 
 	/* make the refresh button clickable now we have completed */
@@ -1248,6 +1255,28 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 }
 
 /**
+ * pk_updates_changed_cb:
+ **/
+static void
+pk_updates_changed_cb (PkClient *client, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* get the update list */
+	pk_client_reset (client, NULL);
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	ret = pk_client_get_updates (client, "basename", &error);
+	if (!ret) {
+		pk_warning ("failed to get new list: %s", error->message);
+		g_error_free (error);
+	} else {
+		/* only show this if we succeeded */
+		pk_updates_preview_animation_start ();
+	}
+}
+
+/**
  * main:
  **/
 int
@@ -1263,6 +1292,7 @@ main (int argc, char *argv[])
 	PkConnection *pconnection;
 	PkEnumList *role_list;
 	PkRoleEnum role;
+	gboolean ret;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1320,6 +1350,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_error_code_cb), NULL);
 	g_signal_connect (client, "allow-cancel",
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
+	g_signal_connect (client, "updates-changed",
+			  G_CALLBACK (pk_updates_changed_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
@@ -1462,14 +1494,16 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	pk_updates_preview_animation_start ();
-
 	/* set the last updated text */
 	pk_update_update_last_refreshed_time (client);
 	pk_update_update_last_updated_time (client);
 
 	/* get the update list */
-	pk_client_get_updates (client, "basename", NULL);
+	ret = pk_client_get_updates (client, "basename", NULL);
+	if (ret) {
+		/* only show this if we succeeded */
+		pk_updates_preview_animation_start ();
+	}
 	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);
