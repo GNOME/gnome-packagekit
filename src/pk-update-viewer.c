@@ -46,13 +46,11 @@
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
-static GtkListStore *list_store_history = NULL;
 static GtkListStore *list_store_details = NULL;
 static GtkListStore *list_store_description = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *package = NULL;
-static PkStatusbar *statusbar = NULL;
 
 enum {
 	PREVIEW_COLUMN_ICON,
@@ -106,9 +104,19 @@ pk_button_help_cb (GtkWidget *widget, gboolean data)
 static void
 pk_updates_set_page (PkPageEnum page)
 {
+	GList *list, *l;
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), page);
+	guint i;
+
+	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
+	list = gtk_container_get_children (GTK_CONTAINER (widget));
+	for (l=list, i=0; l; l=l->next, i++) {
+		if (i == page) {
+			gtk_widget_show (l->data);
+		} else {
+			gtk_widget_hide (l->data);
+		}
+	}
 
 	/* some pages are resizeable */
 	widget = glade_xml_get_widget (glade_xml, "window_updates");
@@ -298,7 +306,6 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	PkRoleEnum role;
 	const gchar *icon_name;
 	GtkWidget *widget;
-	GtkTreePath *path;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
@@ -316,25 +323,14 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
 		g_free (text);
-
 		return;
 	}
 
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		text = pk_package_id_pretty (package_id, summary);
-		icon_name = pk_info_enum_to_icon_name (info);
-		pk_debug ("text=%s", text);
-		gtk_list_store_prepend (list_store_history, &iter);
-		gtk_list_store_set (list_store_history, &iter,
-				    HISTORY_COLUMN_TEXT, text,
-				    HISTORY_COLUMN_ICON, icon_name,
-				    -1);
-
-		/* move focus to top entry */
-		widget = glade_xml_get_widget (glade_xml, "treeview_history");
-		path = gtk_tree_path_new_from_indices (0, -1);
-		gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (widget), path, NULL, FALSE, 0.0, 0.0);
+		text = pk_package_id_pretty_oneline (package_id, summary);
+		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
+		gtk_label_set_markup (GTK_LABEL (widget), text);
 
 		g_free (text);
 		return;
@@ -510,7 +506,13 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 static void
 pk_updates_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
-	pk_statusbar_set_status (statusbar, status);
+	GtkWidget *widget;
+	gchar *text;
+
+	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
+	text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
+	gtk_label_set_markup (GTK_LABEL (widget), text);
+	g_free (text);
 }
 
 /**
@@ -594,29 +596,6 @@ pk_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer 
 {
 	pk_debug ("clicked %s", uri);
 	pk_execute_url (uri);
-}
-
-/**
- * pk_treeview_add_columns_history:
- **/
-static void
-pk_treeview_add_columns_history (GtkTreeView *treeview)
-{
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-
-	/* image */
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer,
-							   "icon-name", HISTORY_COLUMN_ICON, NULL);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* text */
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "markup", HISTORY_COLUMN_TEXT,
-							   NULL);
-	gtk_tree_view_append_column (treeview, column);
 }
 
 /**
@@ -772,7 +751,7 @@ pk_update_update_last_refreshed_time (PkClient *client)
 	/* get times from the daemon */
 	pk_client_get_time_since_action (client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
 	time_text = pk_update_get_approx_time (time);
-	widget = glade_xml_get_widget (glade_xml, "label_last_refreshed");
+	widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
 	return TRUE;
 }
@@ -814,9 +793,6 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	PkRestartEnum restart;
 
 	pk_client_get_role (client, &role, NULL, NULL);
-
-	/* hide widget */
-	pk_statusbar_hide (statusbar);
 
 	/* just update the preview page */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
@@ -984,17 +960,11 @@ pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subper
 				guint elapsed, guint remaining, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
+	widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
 
-	if (subpercentage == PK_CLIENT_PERCENTAGE_INVALID) {
-		gtk_widget_hide (widget);
-	} else {
+	if (subpercentage != PK_CLIENT_PERCENTAGE_INVALID) {
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) subpercentage / 100.0);
-		gtk_widget_show (widget);
 	}
-
-	pk_statusbar_set_percentage (statusbar, percentage);
-	pk_statusbar_set_remaining (statusbar, remaining);
 }
 
 /**
@@ -1154,11 +1124,6 @@ main (int argc, char *argv[])
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 
-	/* hide the tabs */
-	widget = glade_xml_get_widget (glade_xml, "notebook_hidden");
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (widget), FALSE);
-	gtk_notebook_set_show_border (GTK_NOTEBOOK (widget), FALSE);
-
 	/* hide until we have updates */
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
@@ -1239,7 +1204,6 @@ main (int argc, char *argv[])
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
-	list_store_history = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* sorted */
@@ -1253,15 +1217,6 @@ main (int argc, char *argv[])
 
 	/* add columns to the tree view */
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
-
-	/* create history tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_history");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store_history));
-
-	/* add columns to the tree view */
-	pk_treeview_add_columns_history (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* create description tree view */
@@ -1287,20 +1242,11 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns_update (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* use the in-statusbar for progress */
-	statusbar = pk_statusbar_new ();
-	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
-	pk_statusbar_set_widget (statusbar, widget);
-
 	/* make the refresh button non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	/* assume we don't get this yet */
-	widget = glade_xml_get_widget (glade_xml, "progressbar_subpercent");
-	gtk_widget_hide (widget);
-
-	/* set the last refreshed and updated text */
+	/* set the last updated text */
 	pk_update_update_last_refreshed_time (client);
 	pk_update_update_last_updated_time (client);
 
@@ -1320,13 +1266,11 @@ main (int argc, char *argv[])
 
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_preview);
-	g_object_unref (list_store_history);
 	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
 	g_object_unref (client);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
-	g_object_unref (statusbar);
 	g_free (package);
 
 	return 0;
