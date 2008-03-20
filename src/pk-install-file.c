@@ -99,6 +99,10 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+        /* add application specific icons to search path */
+        gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+
 	if (argc < 2) {
 		g_print (_("You need to specify a file to install\n"));
 		return 1;
