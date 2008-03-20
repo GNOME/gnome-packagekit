@@ -54,6 +54,7 @@ static gchar *package = NULL;
 
 /* for the preview throbber */
 static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
+static void pk_updates_description_animation_stop (void);
 static int animation_timeout = 0;
 static int frame_counter = 0;
 static int n_frames = 0;
@@ -70,6 +71,7 @@ enum {
 	DESC_COLUMN_TITLE,
 	DESC_COLUMN_TEXT,
 	DESC_COLUMN_URI,
+	DESC_COLUMN_PROGRESS,
 	DESC_COLUMN_LAST
 };
 
@@ -217,41 +219,16 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_updates_preview_animation_update:
- **/
-static gboolean
-pk_updates_preview_animation_update (gpointer data)
-{
-	GtkTreeModel *model = data;
-	GtkTreeIter iter;
-
-	gtk_tree_model_get_iter_first (model, &iter);
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			    PREVIEW_COLUMN_PROGRESS, frames[frame_counter],
-			    -1);
-
-	frame_counter = (frame_counter + 1) % n_frames;
-
-	return TRUE;
-}
-
-/**
- * pk_updates_preview_animation_start:
+ * pk_updates_animation_load_frames:
  **/
 static void
-pk_updates_preview_animation_start (void)
+pk_updates_animation_load_frames (void)
 {
 	GtkWidget *widget;
 	GdkPixbuf *pixbuf;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeModel *model;
-	GList *list;
 	gint w, h;
 	gint rows, cols;
 	gint r, c, i;
-
-	pk_updates_add_preview_item (client,  NULL, _("Getting information..."), TRUE);
 
 	if (frames == NULL) {
 		/* get the process-working animation from the icon theme
@@ -277,6 +254,45 @@ pk_updates_preview_animation_start (void)
 
 		g_object_unref (pixbuf);
 	}
+}
+
+/**
+ * pk_updates_animation_update:
+ **/
+static gboolean
+pk_updates_animation_update (gpointer data)
+{
+	GtkTreeModel *model = data;
+	GtkTreeIter iter;
+	gint column;
+
+	column = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (model), "progress-column"));
+
+	gtk_tree_model_get_iter_first (model, &iter);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			    column, frames[frame_counter],
+			    -1);
+
+	frame_counter = (frame_counter + 1) % n_frames;
+
+	return TRUE;
+}
+
+/**
+ * pk_updates_preview_animation_start:
+ **/
+static void
+pk_updates_preview_animation_start (void)
+{
+	GtkWidget *widget;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeModel *model;
+	GList *list;
+
+	pk_updates_animation_load_frames ();
+
+	pk_updates_add_preview_item (client, NULL, _("Getting information..."), TRUE);
 
 	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
 	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
@@ -290,8 +306,11 @@ pk_updates_preview_animation_start (void)
 	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 	frame_counter = 0;
 
-	animation_timeout = g_timeout_add (50, pk_updates_preview_animation_update, model);
-	pk_updates_preview_animation_update (model);
+	g_object_set_data (G_OBJECT (model), "progress-column",
+			   GINT_TO_POINTER (PREVIEW_COLUMN_PROGRESS));
+
+	animation_timeout = g_timeout_add (50, pk_updates_animation_update, model);
+	pk_updates_animation_update (model);
 }
 
 /**
@@ -319,6 +338,76 @@ pk_updates_preview_animation_stop (void)
 	gtk_tree_view_column_clear_attributes (column, renderer);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "icon-name", PREVIEW_COLUMN_ICON, NULL);
+}
+
+/**
+ * pk_updates_description_animation_start:
+ **/
+static void
+pk_updates_description_animation_start (void)
+{
+	GtkWidget *widget;
+	GtkTreeViewColumn *column;
+	GList *list, *l;
+	GtkCellRenderer *renderer;
+	GtkTreeIter iter;
+	gchar *text;
+
+	pk_updates_animation_load_frames ();
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_description");
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
+	list = gtk_tree_view_column_get_cell_renderers (column);
+	for (l = list; l; l = l->next) {
+		renderer = l->data;
+		if (GTK_IS_CELL_RENDERER_PIXBUF (renderer)) {
+			g_object_set (renderer, "visible", TRUE, NULL);
+		}
+	}
+	g_list_free (list);
+
+	text = g_strdup_printf ("<b>%s</b>", _("Getting Information..."));
+	gtk_list_store_append (list_store_description, &iter);
+	gtk_list_store_set (list_store_description, &iter,
+			    DESC_COLUMN_TITLE, text,
+			    -1);
+	g_free (text);
+
+	frame_counter = 0;
+
+	g_object_set_data (G_OBJECT (list_store_description), "progress-column",
+		           GINT_TO_POINTER (DESC_COLUMN_PROGRESS));
+	animation_timeout = g_timeout_add (50, pk_updates_animation_update, list_store_description);
+	pk_updates_animation_update (list_store_description);
+}
+
+/**
+ * pk_updates_description_animation_stop:
+ **/
+static void
+pk_updates_description_animation_stop (void)
+{
+	GtkWidget *widget;
+	GtkTreeViewColumn *column;
+	GList *list, *l;
+	GtkCellRenderer *renderer;
+
+	if (animation_timeout == 0)
+		return;
+
+	g_source_remove (animation_timeout);
+	animation_timeout = 0;
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_description");
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
+	list = gtk_tree_view_column_get_cell_renderers (column);
+	for (l = list; l; l = l->next) {
+		renderer = list->data;
+		if (GTK_IS_CELL_RENDERER_PIXBUF (renderer)) {
+			g_object_set (renderer, "visible", FALSE, NULL);
+		}
+	}
+	g_list_free (list);
 }
 
 /**
@@ -394,6 +483,13 @@ pk_button_review_cb (GtkWidget *widget, gpointer data)
 						   &iter))
 			gtk_tree_selection_select_iter (selection, &iter);
 	}
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_description");
+	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
+
 	/* set correct view */
 	pk_updates_set_page (PAGE_DETAILS);
 }
@@ -535,17 +631,12 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 	PkInfoEnum info;
 
 	/* clear existing list */
+	pk_updates_description_animation_stop ();
 	gtk_list_store_clear (list_store_description);
 
 	/* initially we are hidden */
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 	gtk_widget_show (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
-
-	widget = glade_xml_get_widget (glade_xml, "treeview_description");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
 
 	/* get info  */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -722,9 +813,15 @@ pk_treeview_add_columns_description (GtkTreeView *treeview)
 	GtkTreeViewColumn *column;
 
 	/* image */
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set (renderer, "visible", FALSE, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", DESC_COLUMN_PROGRESS);
+
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Title"), renderer,
-							   "markup", DESC_COLUMN_TITLE, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "markup", DESC_COLUMN_TITLE);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for uris */
@@ -774,7 +871,10 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 	/* hide the widgets until we have data */
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
-	gtk_widget_hide (widget);
+
+	gtk_list_store_clear (list_store_description);
+	pk_updates_description_animation_start ();
+
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
 
@@ -1320,7 +1420,7 @@ main (int argc, char *argv[])
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
-	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 
 	/* sorted */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store_details),
