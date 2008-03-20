@@ -416,6 +416,7 @@ pk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, PkProgress
 	gtk_label_set_label (GTK_LABEL (widget), pk_status_enum_to_localised_text (status));
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "image_status");
+	gtk_widget_show (widget);
 	icon_name = pk_status_enum_to_icon_name (status);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 }
@@ -561,6 +562,10 @@ pk_progress_init (PkProgress *progress)
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
+
+	/* hide icon until we have a status */
+	widget = glade_xml_get_widget (progress->priv->glade_xml, "image_status");
+	gtk_widget_hide (widget);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
