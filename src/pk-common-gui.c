@@ -868,7 +868,6 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_REMOVE_PACKAGE:
 		text = _("Removing");
 		break;
-	case PK_ROLE_ENUM_INSTALL_FILE:
 	case PK_ROLE_ENUM_INSTALL_PACKAGE:
 		text = _("Installing");
 		break;
