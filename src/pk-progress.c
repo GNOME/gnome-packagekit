@@ -196,7 +196,7 @@ pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, P
 	pk_debug ("finished");
 	progress->priv->task_ended = TRUE;
 	/* wait 5 seconds */
-	progress->priv->no_percentage_evt = g_timeout_add (5000, pk_progress_finished_timeout, progress);
+	progress->priv->no_percentage_evt = g_timeout_add_seconds (30, pk_progress_finished_timeout, progress);
 }
 
 /**
