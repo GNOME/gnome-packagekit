@@ -121,7 +121,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
 	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
 	{PK_GROUP_ENUM_DESKTOP_OTHER,		"user-desktop"},
-	{PK_GROUP_ENUM_PUBLISHING,		"internet-news-reader"},
+	{PK_GROUP_ENUM_PUBLISHING,		"accessories-dictionary"},
 	{PK_GROUP_ENUM_SERVERS,			"network-server"},
 	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
 	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
