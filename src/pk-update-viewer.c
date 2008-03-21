@@ -882,24 +882,30 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	gchar *package_id;
 	GtkWidget *widget;
 
-	/* hide the widgets until we have data */
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
-
-	gtk_list_store_clear (list_store_description);
-	pk_updates_description_animation_start ();
-
-	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
-	gtk_widget_hide (widget);
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (cached_package_id);
 		gtk_tree_model_get (model, &iter,
 				    PACKAGES_COLUMN_ID, &package_id, -1);
 
+		if (cached_package_id && package_id &&
+		    strcmp (cached_package_id, package_id) == 0) {
+			g_free (package_id);
+			return;
+		}
+		g_free (cached_package_id);
 		/* make back into package ID */
 		cached_package_id = g_strdup (package_id);
 		g_free (package_id);
+
+		/* clear and display animation until new details come in */
+		gtk_list_store_clear (list_store_description);
+		pk_updates_description_animation_start ();
+
+		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
+		gtk_widget_hide (widget);
+
 		pk_debug ("selected row is: %s", cached_package_id);
 		/* get the decription */
 		pk_client_reset (client, NULL);
