@@ -1192,8 +1192,8 @@ pk_updates_progress_changed_cb (PkClient *client, guint percentage, guint subper
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
 
-	if (subpercentage != PK_CLIENT_PERCENTAGE_INVALID) {
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) subpercentage / 100.0);
+	if (percentage != PK_CLIENT_PERCENTAGE_INVALID) {
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 	}
 }
 
