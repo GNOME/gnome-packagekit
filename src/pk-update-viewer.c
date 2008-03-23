@@ -1014,6 +1014,12 @@ pk_update_update_last_updated_time (PkClient *client)
 	return TRUE;
 }
 
+static void 
+pk_updates_restart_cb (GtkWidget *widget, gpointer data)
+{
+	pk_restart_system ();
+}
+
 /**
  * pk_updates_finished_cb:
  **/
@@ -1071,6 +1077,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 				gtk_widget_show (widget);
 				widget = glade_xml_get_widget (glade_xml, "button_restart");
 				gtk_widget_show (widget);
+				g_signal_connect (widget, "clicked",
+						  G_CALLBACK (pk_updates_restart_cb), NULL);
 			}
 
 			/* set correct view */
