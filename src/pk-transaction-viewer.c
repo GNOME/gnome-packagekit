@@ -31,6 +31,8 @@
 #include <dbus/dbus-glib.h>
 #include <locale.h>
 
+#include <polkit-gnome/polkit-gnome.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-connection.h>
@@ -46,6 +48,7 @@ static GtkListStore *list_store_details = NULL;
 static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static GHashTable *hash = NULL;
+static PolKitGnomeAction *rollback_action = NULL;
 
 enum
 {
@@ -77,7 +80,7 @@ pk_button_help_cb (GtkWidget *widget,
  * pk_button_rollback_cb:
  **/
 static void
-pk_button_rollback_cb (GtkWidget *widget, gpointer data)
+pk_button_rollback_cb (PolKitGnomeAction *action, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	pk_client_rollback (client, transaction_id, NULL);
@@ -342,6 +345,8 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkConnection *pconnection;
 	PkEnumList *role_list;
+	PolKitAction *pk_action;
+	GtkWidget *button;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -418,9 +423,34 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_rollback");
-	g_signal_connect (widget, "clicked",
+	/* no help yet */
+	gtk_widget_hide (widget);
+
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.rollback");
+	rollback_action = polkit_gnome_action_new_default ("rollback",
+							   pk_action,
+							   _("_Rollback"),
+							   NULL);
+	g_object_set (rollback_action,
+		      "no-icon-name", "gtk-go-back-ltr",
+		      "auth-icon-name", "gtk-go-back-ltr",
+		      "yes-icon-name", "gtk-go-back-ltr",
+		      "self-blocked-icon-name", "gtk-go-back-ltr",
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (rollback_action, "activate",
 			  G_CALLBACK (pk_button_rollback_cb), loop);
+	button = polkit_gnome_action_create_button (rollback_action);
+	widget = glade_xml_get_widget (glade_xml, "buttonbox");
+        gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+        gtk_box_reorder_child (GTK_BOX (widget), button, 1);
+	/* hide the rollback button if we can't do the action */
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK) == TRUE) {
+		polkit_gnome_action_set_visible (rollback_action, TRUE);
+	} else {
+		polkit_gnome_action_set_visible (rollback_action, FALSE);
+	}
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
@@ -448,18 +478,6 @@ main (int argc, char *argv[])
 				 GTK_TREE_MODEL (list_store_details));
 	pk_treeview_add_details_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
-
-	/* hide the rollback button if we can't do the action */
-	widget = glade_xml_get_widget (glade_xml, "button_rollback");
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK) == TRUE) {
-		gtk_widget_show (widget);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* no help yet */
-	widget = glade_xml_get_widget (glade_xml, "button_help");
-	gtk_widget_hide (widget);
 
 	/* get the update list */
 	pk_client_get_old_transactions (client, 0, NULL);
