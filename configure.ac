@@ -66,7 +66,7 @@ AC_SUBST(LIBSEXY_REQUIRED)
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(PACKAGEKIT, packagekit >= $PACKAGEKIT_REQUIRED)
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit >= $PACKAGEKIT_REQUIRED polkit-gnome)
 AC_SUBST(PACKAGEKIT_CFLAGS)
 AC_SUBST(PACKAGEKIT_LIBS)
 

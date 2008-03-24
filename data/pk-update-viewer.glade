@@ -69,6 +69,69 @@
                     <property name="column_spacing">6</property>
                     <property name="row_spacing">6</property>
                     <child>
+                      <widget class="GtkLabel" id="label_last_update">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Unknown....</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_last_refresh">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Unknown....</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Last update:</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Last refresh:</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkAlignment" id="alignment_refresh">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="xscale">0</property>
+                        <property name="yscale">0</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
                       <widget class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
@@ -91,75 +154,6 @@
                         <property name="bottom_attach">2</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment3">
-                        <property name="visible">True</property>
-                        <property name="xalign">1</property>
-                        <property name="xscale">0</property>
-                        <property name="yscale">0</property>
-                        <child>
-                          <widget class="GtkButton" id="button_refresh">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="label" translatable="yes">Refresh</property>
-                            <property name="response_id">0</property>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">2</property>
-                        <property name="right_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label5">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Last refresh:</property>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_FILL</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label5">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Last update:</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_FILL</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_last_refresh">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Unknown....</property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="x_options">GTK_FILL</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_last_update">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Unknown....</property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_FILL</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -168,7 +162,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHButtonBox" id="hbuttonbox1">
+                  <widget class="GtkHButtonBox" id="buttonbox_overview">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <property name="layout_style">GTK_BUTTONBOX_END</property>
@@ -185,50 +179,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button_apply2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="can_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <widget class="GtkAlignment" id="alignment8">
-                            <property name="visible">True</property>
-                            <property name="xscale">0</property>
-                            <property name="yscale">0</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox11">
-                                <property name="visible">True</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <widget class="GtkImage" id="image10">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-apply</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label19">
-                                    <property name="visible">True</property>
-                                    <property name="label">_Update System</property>
-                                    <property name="use_underline">True</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <widget class="GtkButton" id="button_review">
@@ -383,7 +334,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHButtonBox" id="hbuttonbox3">
+                  <widget class="GtkHButtonBox" id="buttonbox_review">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <property name="layout_style">GTK_BUTTONBOX_END</property>
@@ -446,50 +397,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button_apply">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="can_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <widget class="GtkAlignment" id="alignment4">
-                            <property name="visible">True</property>
-                            <property name="xscale">0</property>
-                            <property name="yscale">0</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox6">
-                                <property name="visible">True</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <widget class="GtkImage" id="image5">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-apply</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label13">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">_Apply Updates</property>
-                                    <property name="use_underline">True</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <widget class="GtkButton" id="button_close2">

@@ -32,6 +32,8 @@
 #include <dbus/dbus-glib.h>
 #include <locale.h>
 
+#include <polkit-gnome/polkit-gnome.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-common.h>
@@ -51,6 +53,10 @@ static GtkListStore *list_store_description = NULL;
 static PkClient *client = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
+
+static PolKitGnomeAction *refresh_action = NULL;
+static PolKitGnomeAction *update_system_action = NULL;
+static PolKitGnomeAction *update_package_action = NULL;
 
 /* for the preview throbber */
 static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
@@ -429,30 +435,34 @@ pk_updates_description_animation_stop (void)
  * pk_updates_refresh_cb:
  **/
 static void
-pk_updates_refresh_cb (GtkWidget *widget, gpointer data)
+pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 {
 	gboolean ret;
+	GError *error;
+	GtkWidget *widget;
+
+	/* we can't click this if we havn't finished */
+	pk_client_reset (client, NULL);
+	error = NULL;
+	ret = pk_client_refresh_cache (client, TRUE, &error);
+	if (ret == FALSE) {
+		pk_error_modal_dialog (_("Failed to refresh"), error->message);
+		g_error_free (error);
+		return;
+	}
 
 	/* clear existing list */
 	pk_updates_preview_animation_start ();
 
 	/* make the refresh button non-clickable */
-	gtk_widget_set_sensitive (widget, FALSE);
+	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
+	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 
 	/* make the buttons non-clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_apply2");
-	gtk_widget_set_sensitive (widget, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_set_sensitive (widget, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_history");
 	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* we can't click this if we havn't finished */
-	pk_client_reset (client, NULL);
-	ret = pk_client_refresh_cache (client, TRUE, NULL);
-	if (ret == FALSE) {
-		pk_warning ("failed to refresh cache");
-	}
 }
 
 static void
@@ -1065,14 +1075,12 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	pk_updates_preview_animation_stop ();
 
 	/* make the buttons clickable again now we have completed */
-	widget = glade_xml_get_widget (glade_xml, "button_apply2");
-	gtk_widget_set_sensitive (widget, TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
-	gtk_widget_set_sensitive (widget, TRUE);
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_history");
 	gtk_widget_set_sensitive (widget, TRUE);
+	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
+	polkit_gnome_action_set_sensitive (update_system_action, TRUE);
 
 	/* hide the cancel */
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
@@ -1123,8 +1131,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		/* if no updates then hide apply */
 		widget = glade_xml_get_widget (glade_xml, "button_review");
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "button_apply2");
-		gtk_widget_hide (widget);
+		polkit_gnome_action_set_visible (update_system_action, FALSE);
 	} else {
 
 		PkPackageItem *item;
@@ -1199,8 +1206,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 		/* set visible and sensitive */
 		widget = glade_xml_get_widget (glade_xml, "button_review");
 		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (glade_xml, "button_apply2");
-		gtk_widget_show (widget);
+		polkit_gnome_action_set_visible (update_system_action, TRUE);
 	}
 }
 
@@ -1236,8 +1242,6 @@ pk_updates_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer da
 static void
 pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 {
-	GtkWidget *widget;
-
 	/* hide buttons if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
 		/* clear existing list */
@@ -1247,10 +1251,8 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		pk_updates_add_preview_item (client, "dialog-information", _("There is an update already in progress!"), TRUE);
 
 		/* if doing it then hide apply and refresh */
-		widget = glade_xml_get_widget (glade_xml, "button_apply");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "button_refresh");
-		gtk_widget_hide (widget);
+		polkit_gnome_action_set_visible (update_system_action, FALSE);
+		polkit_gnome_action_set_visible (refresh_action, FALSE);
 	}
 }
 
@@ -1323,6 +1325,8 @@ main (int argc, char *argv[])
 	PkRoleEnum role;
 	gboolean ret;
 	GtkSizeGroup *size_group;
+	GtkWidget *button;
+	PolKitAction *pk_action;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1452,23 +1456,64 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_overview_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Back to overview"));
 
-	widget = glade_xml_get_widget (glade_xml, "button_apply");
-	g_signal_connect (widget, "clicked",
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-package");
+	update_package_action = polkit_gnome_action_new_default ("update-package",
+								pk_action,
+								_("_Apply Updates"),
+								_("Apply the selected updates"));
+	g_object_set (update_package_action,
+		      "no-icon-name", GTK_STOCK_APPLY,
+		      "auth-icon-name", GTK_STOCK_APPLY,
+		      "yes-icon-name", GTK_STOCK_APPLY,
+		      "self-blocked-icon-name", GTK_STOCK_APPLY,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (update_package_action, "activate",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
-	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
+	button = polkit_gnome_action_create_button (update_package_action);
+	widget = glade_xml_get_widget (glade_xml, "buttonbox_review");
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 2);
 
-	widget = glade_xml_get_widget (glade_xml, "button_apply2");
-	g_signal_connect (widget, "clicked",
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-system");
+	update_system_action = polkit_gnome_action_new_default ("update-system",
+								pk_action,
+								_("_Update System"),
+								_("Apply all updates"));
+	g_object_set (update_system_action,
+		      "no-icon-name", GTK_STOCK_APPLY,
+		      "auth-icon-name", GTK_STOCK_APPLY,
+		      "yes-icon-name", GTK_STOCK_APPLY,
+		      "self-blocked-icon-name", GTK_STOCK_APPLY,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (update_system_action, "activate",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
-	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
+	button = polkit_gnome_action_create_button (update_system_action);
+	widget = glade_xml_get_widget (glade_xml, "buttonbox_overview");
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 1);
 
 	size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
 
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	g_signal_connect (widget, "clicked",
+	widget = glade_xml_get_widget (glade_xml, "alignment_refresh");
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
+	refresh_action = polkit_gnome_action_new_default ("refresh",
+						          pk_action,
+							  _("Refresh"),
+							  _("Refreshing is not normally required but will retrieve the latest application and update lists"));
+	g_object_set (refresh_action, "auth-icon-name", NULL, NULL);
+	polkit_action_unref (pk_action);
+
+	g_signal_connect (refresh_action, "activate",
 			  G_CALLBACK (pk_updates_refresh_cb), NULL);
-	gtk_widget_set_tooltip_text(widget, _("Refreshing is not normally required but will retrieve the latest application and update lists"));
-	gtk_size_group_add_widget (size_group, widget);
+
+	button = polkit_gnome_action_create_button (refresh_action);
+	gtk_container_add (GTK_CONTAINER (widget), button);
+	gtk_size_group_add_widget (size_group, button);
 
 	widget = glade_xml_get_widget (glade_xml, "button_history");
 	g_signal_connect (widget, "clicked",
@@ -1524,10 +1569,8 @@ main (int argc, char *argv[])
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* make the buttons non-clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	gtk_widget_set_sensitive (widget, FALSE);
-	widget = glade_xml_get_widget (glade_xml, "button_apply2");
-	gtk_widget_set_sensitive (widget, FALSE);
+	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
+	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_set_sensitive (widget, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_history");
