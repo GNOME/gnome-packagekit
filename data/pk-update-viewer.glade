@@ -62,76 +62,108 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="vbox1">
+                  <widget class="GtkTable" id="time_table">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="spacing">6</property>
+                    <property name="n_rows">2</property>
+                    <property name="n_columns">3</property>
+                    <property name="column_spacing">6</property>
+                    <property name="row_spacing">6</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox3">
+                      <widget class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
-                        <property name="spacing">6</property>
+                        <property name="xalign">1</property>
+                        <property name="xscale">0</property>
+                        <property name="yscale">0</property>
                         <child>
-                          <widget class="GtkLabel" id="label5">
+                          <widget class="GtkButton" id="button_history">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Time since last refresh:</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="label" translatable="yes">View History</property>
+                            <property name="response_id">0</property>
                           </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label_last_refresh">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Unknown....</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </widget>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkHBox" id="hbox3">
+                      <widget class="GtkAlignment" id="alignment3">
                         <property name="visible">True</property>
-                        <property name="spacing">6</property>
+                        <property name="xalign">1</property>
+                        <property name="xscale">0</property>
+                        <property name="yscale">0</property>
                         <child>
-                          <widget class="GtkLabel" id="label5">
+                          <widget class="GtkButton" id="button_refresh">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Time since last updated:</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="label" translatable="yes">Refresh</property>
+                            <property name="response_id">0</property>
                           </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label_last_update">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Unknown....</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </widget>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Last refresh:</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Last update:</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_last_refresh">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Unknown....</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_last_update">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Unknown....</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="padding">12</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -150,52 +182,6 @@
                       </widget>
                       <packing>
                         <property name="secondary">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="button_refresh">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="can_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <widget class="GtkAlignment" id="alignment1">
-                            <property name="visible">True</property>
-                            <property name="xscale">0</property>
-                            <property name="yscale">0</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox1">
-                                <property name="visible">True</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <widget class="GtkImage" id="image1">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-refresh</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label10">
-                                    <property name="visible">True</property>
-                                    <property name="label">Force _Refresh</property>
-                                    <property name="use_underline">True</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -241,7 +227,7 @@
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -272,7 +258,7 @@
                                 <child>
                                   <widget class="GtkLabel" id="label11">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">_Review Updates</property>
+                                    <property name="label" translatable="yes">_Review</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>
@@ -287,7 +273,7 @@
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -300,7 +286,7 @@
                         <property name="response_id">0</property>
                       </widget>
                       <packing>
-                        <property name="position">4</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </widget>
@@ -584,6 +570,9 @@
                         <property name="use_stock">True</property>
                         <property name="response_id">0</property>
                       </widget>
+                      <packing>
+                        <property name="secondary">True</property>
+                      </packing>
                     </child>
                     <child>
                       <widget class="GtkButton" id="button_cancel">
@@ -986,6 +975,9 @@
                         <property name="use_stock">True</property>
                         <property name="response_id">0</property>
                       </widget>
+                      <packing>
+                        <property name="secondary">True</property>
+                      </packing>
                     </child>
                     <child>
                       <widget class="GtkButton" id="button_close5">
@@ -1003,7 +995,6 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>

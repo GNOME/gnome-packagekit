@@ -426,7 +426,7 @@ pk_updates_description_animation_stop (void)
  * pk_updates_refresh_cb:
  **/
 static void
-pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
+pk_updates_refresh_cb (GtkWidget *widget, gpointer data)
 {
 	gboolean ret;
 
@@ -437,12 +437,12 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 	/* make the refresh button non-clickable */
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	/* make the apply button non-clickable until we get completion */
-	widget = glade_xml_get_widget (glade_xml, "button_apply");
-	gtk_widget_set_sensitive (widget, FALSE);
+	/* make the buttons non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_apply2");
 	gtk_widget_set_sensitive (widget, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_history");
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* we can't click this if we havn't finished */
@@ -450,6 +450,19 @@ pk_updates_refresh_cb (GtkWidget *widget, gboolean data)
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to refresh cache");
+	}
+}
+
+static void
+pk_updates_history_cb (GtkWidget *widget, gpointer data)
+{
+	GError *error = NULL;
+
+	/* FIXME: do this in process */
+	if (!g_spawn_command_line_async ("pk-transaction-viewer", &error)) {
+		pk_error_modal_dialog (_("Failed to launch transaction viewer"),
+				       error->message);
+		g_error_free (error);			
 	}
 }
 
@@ -1050,14 +1063,14 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	/* stop the throbber */
 	pk_updates_preview_animation_stop ();
 
-	/* make the refresh button clickable now we have completed */
-	widget = glade_xml_get_widget (glade_xml, "button_apply");
-	gtk_widget_set_sensitive (widget, TRUE);
+	/* make the buttons clickable again now we have completed */
 	widget = glade_xml_get_widget (glade_xml, "button_apply2");
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = glade_xml_get_widget (glade_xml, "button_history");
 	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* hide the cancel */
@@ -1308,6 +1321,7 @@ main (int argc, char *argv[])
 	PkEnumList *role_list;
 	PkRoleEnum role;
 	gboolean ret;
+	GtkSizeGroup *size_group;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1397,10 +1411,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_restart");
 	gtk_widget_hide (widget);
 
-	/* hide until we have reboot notifier */
-	widget = glade_xml_get_widget (glade_xml, "button_review");
-	gtk_widget_hide (widget);
-
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_window_delete_event_cb), loop);
@@ -1445,18 +1455,25 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	widget = glade_xml_get_widget (glade_xml, "button_apply2");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_apply_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Apply all updates"));
-	gtk_widget_set_sensitive (widget, FALSE);
+
+	size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
 
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_refresh_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Refreshing is not normally required but will retrieve the latest application and update lists"));
+	gtk_size_group_add_widget (size_group, widget);
+
+	widget = glade_xml_get_widget (glade_xml, "button_history");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_updates_history_cb), NULL);
+	gtk_size_group_add_widget (size_group, widget);
+
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
@@ -1505,8 +1522,14 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns_update (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* make the refresh button non-clickable until we get completion */
+	/* make the buttons non-clickable until we get completion */
 	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_apply2");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_review");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "button_history");
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set the last updated text */
