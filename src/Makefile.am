@@ -95,8 +95,6 @@ pk_update_icon_SOURCES =				\
 	pk-progress.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
-	pk-consolekit.c					\
-	pk-consolekit.h					\
 	$(NULL)
 
 pk_update_icon_LDADD =					\
@@ -117,8 +115,6 @@ pk_application_SOURCES =				\
 	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
-	pk-consolekit.c					\
-	pk-consolekit.h					\
 	$(NULL)
 
 pk_application_LDADD =					\
@@ -152,8 +148,6 @@ pk_update_viewer_SOURCES =				\
 	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
-	pk-consolekit.c					\
-	pk-consolekit.h					\
 	pk-cell-renderer-uri.c				\
 	pk-cell-renderer-uri.h				\
 	$(NULL)
@@ -215,8 +209,6 @@ noinst_PROGRAMS =					\
 pk_self_test_SOURCES =					\
 	pk-common-gui.h					\
 	pk-common-gui.c					\
-	pk-consolekit.c					\
-	pk-consolekit.h					\
 	pk-self-test.c					\
 	$(NULL)
 
