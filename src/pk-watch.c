@@ -52,7 +52,6 @@
 #include "pk-progress.h"
 #include "pk-inhibit.h"
 #include "pk-smart-icon.h"
-#include "pk-consolekit.h"
 
 static void     pk_watch_class_init	(PkWatchClass *klass);
 static void     pk_watch_init		(PkWatch      *watch);
