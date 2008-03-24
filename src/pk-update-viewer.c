@@ -611,6 +611,7 @@ pk_updates_add_description_item (const gchar *title, const gchar *text, const gc
 	tree_view = glade_xml_get_widget (glade_xml, "treeview_description");
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
 }
 
 /**
