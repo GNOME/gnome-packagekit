@@ -1631,35 +1631,35 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_menu_filter_installed_cb), application);
 
 	/* devel filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_yes");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_no");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_no");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_both");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_both");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
 
 	/* gui filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_yes");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_no");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_no");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_both");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_both");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
 
 	/* free filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_yes");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_no");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_no");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_both");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_both");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
 
