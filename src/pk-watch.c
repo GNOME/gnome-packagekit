@@ -575,6 +575,8 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	gboolean ret;
 	PkWatch *watch = PK_WATCH (data);
 	PkClient *client;
+	GError *error = NULL;
+	gchar *message;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
@@ -587,9 +589,12 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		g_object_unref (client);
-		pk_warning ("failed to refresh cache");
-		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), _("Client action was refused"),
+		pk_warning ("failed to refresh cache: %s", error->message);
+		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
+		g_error_free (error);
+		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), message,
 				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		g_free (message);
 		pk_smart_icon_notify_show (watch->priv->sicon);
 	}
 }

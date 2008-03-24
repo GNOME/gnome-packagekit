@@ -390,18 +390,23 @@ static gboolean
 pk_notify_update_system (PkNotify *notify)
 {
 	gboolean ret;
+	GError *error = NULL;
+	gchar *message;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
-	ret = pk_client_update_system (notify->priv->client_update_system, NULL);
+	ret = pk_client_update_system (notify->priv->client_update_system, &error);
 	if (ret) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
-		pk_warning ("failed to update system");
-		pk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), _("Client action was refused"),
+		pk_warning ("failed to update system: %s", error->message);
+		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
+		g_error_free (error);
+		pk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
 				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		g_free (message);
 		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
 		pk_smart_icon_notify_show (notify->priv->sicon);
 	}
