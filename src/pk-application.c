@@ -79,6 +79,7 @@ struct PkApplicationPrivate
 	PkEnumList		*group_list;
 	PkEnumList		*current_filter;
 	gboolean		 search_in_progress;
+	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
 };
 
@@ -451,6 +452,9 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 		return;
 	}
 
+	/* mark as got so we don't warn */
+	application->priv->has_package = TRUE;
+
 	/* get convenience object */
 	eobj = pk_extra_obj_new_from_package_id_summary (package_id, summary);
 
@@ -524,7 +528,7 @@ pk_application_package_buffer_to_name_version (PkClient *client)
  * pk_application_finished_cb:
  **/
 static void
-pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkApplication *application)
+pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
 	gboolean ret;
@@ -560,6 +564,16 @@ pk_application_finished_cb (PkClient *client, PkStatusEnum status, guint runtime
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 		gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
+		/* were there no entries found? */
+		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
+			GtkTreeIter iter;
+			gtk_list_store_append (application->priv->packages_store, &iter);
+			gtk_list_store_set (application->priv->packages_store, &iter,
+					    PACKAGES_COLUMN_INSTALLED, FALSE,
+					    PACKAGES_COLUMN_TEXT, _("No results were found"),
+					    PACKAGES_COLUMN_IMAGE, "search",
+					    -1);
+		}
 		application->priv->search_in_progress = FALSE;
 	} else {
 		/* do we need to update the search? */
@@ -656,6 +670,7 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	gtk_list_store_clear (application->priv->packages_store);
 
 	application->priv->search_in_progress = TRUE;
+	application->priv->has_package = FALSE;
 
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
@@ -1496,6 +1511,7 @@ pk_application_init (PkApplication *application)
 	application->priv->package = NULL;
 	application->priv->url = NULL;
 	application->priv->search_in_progress = FALSE;
+	application->priv->has_package = FALSE;
 	application->priv->gconf_client = gconf_client_get_default ();
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
