@@ -880,6 +880,7 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 	GtkTreeIter iter;
 	GtkWidget *widget;
 	gboolean ret;
+	gchar *filter;
 	gchar *id;
 
 	g_return_if_fail (application != NULL);
@@ -897,10 +898,15 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* refresh the search as the items may have changed */
 		gtk_list_store_clear (application->priv->packages_store);
 
+		/* make a valid filter string */
+		filter = pk_enum_list_to_string (application->priv->current_filter);
+		pk_debug ("filter = %s", filter);
+
 		/* cancel this, we don't care about old results that are pending */
 		pk_client_cancel (application->priv->client_search, NULL);
 		pk_client_reset (application->priv->client_search, NULL);
-		ret = pk_client_search_group (application->priv->client_search, "none", id, NULL);
+		ret = pk_client_search_group (application->priv->client_search, filter, id, NULL);
+		g_free (filter);
 		/* ick, we failed so pretend we didn't do the action */
 		if (ret == FALSE) {
 			pk_application_error_message (application,
