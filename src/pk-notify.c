@@ -178,8 +178,6 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 	const char *documenters[] = {
 		"Richard Hughes <richard@hughsie.com>",
 		NULL};
-	const char *artists[] = {
-		NULL};
 	const char *license[] = {
 		N_("Licensed under the GNU General Public License Version 2"),
 		N_("PackageKit is free software; you can redistribute it and/or\n"
@@ -213,7 +211,7 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 		gtk_about_dialog_set_email_hook (pk_notify_about_dialog_url_cb, "mailto:", NULL);
 	}
 
-	gtk_window_set_default_icon_name ("system-installer");
+	gtk_window_set_default_icon_name ("system-software-installer");
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
@@ -223,9 +221,8 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "comments", "PackageKit",
 			       "authors", authors,
 			       "documenters", documenters,
-			       "artists", artists,
 			       "translator-credits", translators,
-			       "logo-icon-name", "system-installer",
+			       "logo-icon-name", "system-software-installer",
 			       NULL);
 	g_free (license_trans);
 }
