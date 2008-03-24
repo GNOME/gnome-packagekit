@@ -457,6 +457,10 @@ main (int argc, char *argv[])
 		gtk_widget_hide (widget);
 	}
 
+	/* no help yet */
+	widget = glade_xml_get_widget (glade_xml, "button_help");
+	gtk_widget_hide (widget);
+
 	/* get the update list */
 	pk_client_get_old_transactions (client, 0, NULL);
 	gtk_widget_show (main_window);
