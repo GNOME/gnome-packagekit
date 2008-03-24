@@ -295,6 +295,7 @@ pk_updates_preview_animation_start (void)
 		pk_debug ("don't double start");
 		return;
 	}
+	gtk_list_store_clear (list_store_details);
 
 	pk_updates_animation_load_frames ();
 
@@ -365,6 +366,8 @@ pk_updates_description_animation_start (void)
 		return;
 	}
 
+	gtk_list_store_clear (list_store_description);
+
 	pk_updates_animation_load_frames ();
 
 	widget = glade_xml_get_widget (glade_xml, "treeview_description");
@@ -431,7 +434,6 @@ pk_updates_refresh_cb (GtkWidget *widget, gpointer data)
 	gboolean ret;
 
 	/* clear existing list */
-	gtk_list_store_clear (list_store_details);
 	pk_updates_preview_animation_start ();
 
 	/* make the refresh button non-clickable */
@@ -913,7 +915,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		g_free (package_id);
 
 		/* clear and display animation until new details come in */
-		gtk_list_store_clear (list_store_description);
 		pk_updates_description_animation_start ();
 
 		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
