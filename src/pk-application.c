@@ -1903,10 +1903,6 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* FIXME: There's got to be a better way than this */
-	gtk_widget_hide (GTK_WIDGET (widget));
-	gtk_widget_show (GTK_WIDGET (widget));
-
 	/* use the in-statusbar for progress */
 	application->priv->statusbar = pk_statusbar_new ();
 	widget = glade_xml_get_widget (application->priv->glade_xml, "statusbar_status");
