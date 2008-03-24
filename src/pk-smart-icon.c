@@ -219,7 +219,7 @@ pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *m
 		timeout_val = 15000;
 	}
 
-	if (gtk_status_icon_get_visible (sicon->priv->status_icon) == TRUE) {
+	if (gtk_status_icon_get_visible (sicon->priv->status_icon)) {
 		sicon->priv->dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
 	} else {
 		sicon->priv->dialog = notify_notification_new (title, message, icon, NULL);

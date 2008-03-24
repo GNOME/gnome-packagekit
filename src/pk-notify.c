@@ -145,7 +145,7 @@ pk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
 
-	if (ret == TRUE)
+	if (ret)
 		goto out;
 
 	g_error_free (error);
@@ -396,7 +396,7 @@ pk_notify_update_system (PkNotify *notify)
 
 	pk_debug ("install updates");
 	ret = pk_client_update_system (notify->priv->client_update_system, NULL);
-	if (ret == TRUE) {
+	if (ret) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
 		pk_warning ("failed to update system");
@@ -762,7 +762,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	if (update == PK_UPDATE_ENUM_ALL) {
 		pk_debug ("we should do the update automatically!");
 		ret = pk_notify_update_system (notify);
-		if (ret == TRUE) {
+		if (ret) {
 			pk_notify_auto_update_message (notify);
 		} else {
 			pk_warning ("update failed");
@@ -817,7 +817,7 @@ pk_notify_query_updates (PkNotify *notify)
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
-	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		pk_debug ("Not checking for updates as already in progress");
 		return FALSE;
 	}
@@ -871,12 +871,12 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
 
 	/* got a cache, no need to poll */
-	if (notify->priv->cache_okay == TRUE) {
+	if (notify->priv->cache_okay) {
 		return FALSE;
 	}
 
 	/* already in progress, but not yet certified okay */
-	if (notify->priv->cache_update_in_progress == TRUE) {
+	if (notify->priv->cache_update_in_progress) {
 		return TRUE;
 	}
 
@@ -919,7 +919,7 @@ pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
 	/* hide icon if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	}
 }

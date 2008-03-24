@@ -961,7 +961,7 @@ pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *m
 	gchar *markup;
 
 	/* clear existing list */
-	if (clear == TRUE) {
+	if (clear) {
 		gtk_list_store_clear (list_store_preview);
 	}
 
@@ -1244,7 +1244,7 @@ static void
 pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 {
 	/* hide buttons if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		/* clear existing list */
 		gtk_list_store_clear (list_store_preview);
 
@@ -1355,7 +1355,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version == TRUE) {
+	if (program_version) {
 		g_print (VERSION "\n");
 		return 0;
 	}

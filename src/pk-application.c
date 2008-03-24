@@ -619,7 +619,7 @@ pk_application_cancel_cb (GtkWidget *button_widget, PkApplication *application)
 	pk_debug ("canceled? %i", ret);
 
 	/* switch buttons around */
-	if (ret == TRUE) {
+	if (ret) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
@@ -752,7 +752,7 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
 	/* clear group selection if we have the tab */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 		gtk_tree_selection_unselect_all (selection);
@@ -762,7 +762,7 @@ pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplicati
 	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	if (valid == FALSE || pk_strzero (package) == TRUE) {
+	if (valid == FALSE || pk_strzero (package)) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -1035,14 +1035,14 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		if (installed == FALSE &&
-		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE) == TRUE) {
+		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
 			gtk_widget_show (widget);
 		} else {
 			gtk_widget_hide (widget);
 		}
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-		if (installed == TRUE &&
-		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE) == TRUE) {
+		if (installed &&
+		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
 			gtk_widget_show (widget);
 		} else {
 			gtk_widget_hide (widget);
@@ -1106,7 +1106,7 @@ pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *nam
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "entry_text") == TRUE) {
+	if (pk_strequal (name, "entry_text")) {
 		pk_debug ("creating sexy icon=%s", name);
 		return sexy_icon_entry_new ();
 	}
@@ -1217,7 +1217,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 	}
 	pk_debug ("icon_pos=%i", icon_pos);
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1226,7 +1226,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1235,7 +1235,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file"));
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1781,7 +1781,7 @@ pk_application_init (PkApplication *application)
 
 	/* autocompletion can be turned off as it's slow */
 	autocomplete = gconf_client_get_bool (application->priv->gconf_client, PK_CONF_AUTOCOMPLETE, NULL);
-	if (autocomplete == TRUE) {
+	if (autocomplete) {
 		/* create the completion object */
 		completion = gtk_entry_completion_new ();
 
@@ -1889,7 +1889,7 @@ pk_application_init (PkApplication *application)
 	pk_packages_add_columns (GTK_TREE_VIEW (widget));
 
 	/* create group tree view if we can search by group */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == TRUE) {
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 					 GTK_TREE_MODEL (application->priv->groups_store));
