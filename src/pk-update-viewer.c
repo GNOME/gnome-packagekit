@@ -1564,12 +1564,6 @@ main (int argc, char *argv[])
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
-	/* set the labels blank until we get a package */
-	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-	widget = glade_xml_get_widget (glade_xml, "progress_package_label");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-
 	/* add columns to the tree view */
 	pk_treeview_add_columns_update (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
@@ -1585,6 +1579,12 @@ main (int argc, char *argv[])
 	/* set the last updated text */
 	pk_update_update_last_refreshed_time (client);
 	pk_update_update_last_updated_time (client);
+
+	/* set the labels blank until we get a package */
+	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+	widget = glade_xml_get_widget (glade_xml, "progress_package_label");
+	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	/* get the update list */
 	ret = pk_client_get_updates (client, "basename", NULL);
