@@ -973,15 +973,15 @@ static const gchar *
 pk_update_get_approx_time (guint time)
 {
 	if (time < 60) {
-		return _("Less than a minute");
+		return _("Less than a minute ago");
 	} else if (time < 60*60) {
-		return _("Less than an hour");
+		return _("Less than an hour ago");
 	} else if (time < 24*60*60) {
-		return _("A few hours");
+		return _("A few hours ago");
 	} else if (time < 7*24*60*60) {
-		return _("A few days");
+		return _("A few days ago");
 	}
-	return _("Over a week");
+	return _("Over a week ago");
 }
 
 /**
