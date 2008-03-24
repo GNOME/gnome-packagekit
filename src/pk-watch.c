@@ -37,6 +37,8 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 
+#include <polkit-gnome/polkit-gnome.h>
+
 #include <pk-debug.h>
 #include <pk-job-list.h>
 #include <pk-client.h>
@@ -68,6 +70,7 @@ struct PkWatchPrivate
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
 	gboolean		 show_refresh_in_menu;
+	PolKitGnomeAction	*restart_action;
 };
 
 G_DEFINE_TYPE (PkWatch, pk_watch, G_TYPE_OBJECT)
@@ -559,7 +562,7 @@ pk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guin
  * pk_watch_restart_cb:
  **/
 static void
-pk_watch_restart_cb (GtkMenuItem *item, gpointer data)
+pk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
 {
 	pk_restart_system ();
 }
@@ -764,11 +767,7 @@ pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
 	pk_debug ("icon left clicked");
 
 	/* restart computer */
-	widget = gtk_image_menu_item_new_with_mnemonic (_("_Restart computer"));
-	image = gtk_image_new_from_icon_name ("gnome-shutdown", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
-	g_signal_connect (G_OBJECT (widget), "activate",
-			  G_CALLBACK (pk_watch_restart_cb), watch);
+	widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* hide this option */
@@ -828,6 +827,9 @@ static void
 pk_watch_init (PkWatch *watch)
 {
 	GtkStatusIcon *status_icon;
+	PolKitAction *pk_action;
+	PolKitGnomeAction *restart_action;
+
 	watch->priv = PK_WATCH_GET_PRIVATE (watch);
 
 	watch->priv->show_refresh_in_menu = TRUE;
@@ -872,6 +874,24 @@ pk_watch_init (PkWatch *watch)
 	if (pk_connection_valid (watch->priv->pconnection)) {
 		pk_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
 	}
+
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
+
+	restart_action = polkit_gnome_action_new_default ("restart-system",
+							  pk_action,
+							  _("_Restart computer"),
+							  NULL);
+	g_object_set (restart_action,
+		      "no-icon-name", "gnome-shutdown",
+		      "auth-icon-name", "gnome-shutdown",
+		      "yes-icon-name","gnome-shutdown",
+		      "self-blocked-icon-name", "gnome-shutdown",
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (restart_action, "activate",
+			  G_CALLBACK (pk_watch_restart_cb), NULL);
+	watch->priv->restart_action = restart_action;
 }
 
 /**
@@ -895,6 +915,7 @@ pk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->client);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
+	g_object_unref (watch->priv->restart_action);
 
 	G_OBJECT_CLASS (pk_watch_parent_class)->finalize (object);
 }
