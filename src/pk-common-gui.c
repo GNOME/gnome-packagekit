@@ -25,8 +25,11 @@
 #include <glib/gi18n.h>
 #include <math.h>
 #include <string.h>
+#include <unistd.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
+
+#include <polkit-gnome/polkit-gnome.h>
 
 #include <pk-debug.h>
 #include <pk-package-id.h>
@@ -154,39 +157,124 @@ static PkEnumMatch enum_message_icon_name[] = {
 	{0, NULL}
 };
 
-/**
- * pk_restart_system:
- **/
+static gboolean
+try_system_restart (DBusGProxy  *proxy,
+		    GError     **error)
+{
+	return dbus_g_proxy_call_with_timeout (proxy,
+					      "Restart",
+					      INT_MAX,
+					      error,
+					      /* parameters: */
+					      G_TYPE_INVALID,
+					      /* return values: */
+					      G_TYPE_INVALID);
+}
+
+static PolKitAction *
+get_action_from_error (GError *error)
+{
+	PolKitAction *action;
+	const char   *paction;
+
+	action = polkit_action_new ();
+
+	paction = NULL;
+	if (g_str_has_prefix (error->message, "Not privileged for action: ")) {
+		paction = error->message + strlen ("Not privileged for action: ");
+	}
+	polkit_action_set_action_id (action, paction);
+
+	return action;
+}
+
+static void
+system_restart_auth_cb (PolKitAction *action,
+			gboolean      gained_privilege,
+			GError       *error,
+			DBusGProxy   *proxy)
+{
+	GError          *local_error;
+	gboolean         res;
+
+	if (! gained_privilege) {
+		if (error != NULL) {
+			pk_warning ("Not privileged to restart system: %s", error->message);
+		}
+		return;
+	}
+
+        local_error = NULL;
+        res = try_system_restart (proxy, &local_error);
+        if (! res) {
+                pk_warning ("Unable to restart system: %s", local_error->message);
+                g_error_free (local_error);
+        }
+}
+
+static gboolean
+request_restart_priv (DBusGProxy    *proxy,
+		      PolKitAction  *action,
+                      GError       **error)
+{
+        guint         xid;
+        pid_t         pid;
+
+        xid = 0;
+        pid = getpid ();
+
+	return polkit_gnome_auth_obtain (action,
+					 xid,
+					 pid,
+					 (PolKitGnomeAuthCB) system_restart_auth_cb,
+					 proxy,
+					 error);
+}
+
 gboolean
 pk_restart_system (void)
 {
 	DBusGProxy *proxy;
-	DBusGConnection	*connection;
+	DBusGConnection *connection;
 	GError *error = NULL;
 	gboolean ret;
+	PolKitAction *action;
 
 	/* check dbus connections, exit if not valid */
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 	if (error != NULL) {
-		pk_warning ("cannot acccess the session bus: %s", error->message);
+		pk_warning ("cannot acccess the system bus: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
 
 	/* get a connection */
-	proxy = dbus_g_proxy_new_for_name (connection, GPM_DBUS_SERVICE, GPM_DBUS_PATH, GPM_DBUS_INTERFACE);
+	proxy = dbus_g_proxy_new_for_name (connection,
+					   "org.freedesktop.ConsoleKit",
+					   "/org/freedesktop/ConsoleKit/Manager",
+					   "org.freedesktop.ConsoleKit.Manager");
 	if (proxy == NULL) {
-		pk_warning ("Cannot connect to gnome-power-manager");
+		pk_warning ("Cannot connect to ConsoleKit");
 		return FALSE;
 	}
 
 	/* do the method */
-	ret = dbus_g_proxy_call (proxy, "Reboot", &error, G_TYPE_INVALID, G_TYPE_INVALID);
+	ret = try_system_restart (proxy, &error);
 	if (!ret) {
-		pk_warning ("cannot reboot: %s", error->message);
-		g_error_free (error);
+		if (dbus_g_error_has_name (error, "org.freedesktop.ConsoleKit.Manager.NotPrivileged")) {
+			action = get_action_from_error (error);
+			g_clear_error (&error);
+			ret = request_restart_priv (proxy, action, &error);
+			polkit_action_unref (action);
+		}
+		if (!ret) {
+			pk_warning ("Unable to restart system: %s", error->message);
+			g_error_free (error);
+		}
 	}
+
 	g_object_unref (G_OBJECT (proxy));
+
 	return ret;
 }
 

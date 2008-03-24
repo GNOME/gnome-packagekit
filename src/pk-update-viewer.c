@@ -57,6 +57,7 @@ static gchar *cached_package_id = NULL;
 static PolKitGnomeAction *refresh_action = NULL;
 static PolKitGnomeAction *update_system_action = NULL;
 static PolKitGnomeAction *update_package_action = NULL;
+static PolKitGnomeAction *restart_action = NULL;
 
 /* for the preview throbber */
 static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
@@ -1098,10 +1099,7 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 				pk_debug ("showing reboot widgets");
 				widget = glade_xml_get_widget (glade_xml, "hbox_restart");
 				gtk_widget_show (widget);
-				widget = glade_xml_get_widget (glade_xml, "button_restart");
-				gtk_widget_show (widget);
-				g_signal_connect (widget, "clicked",
-						  G_CALLBACK (pk_updates_restart_cb), NULL);
+				polkit_gnome_action_set_visible (restart_action, TRUE);
 			}
 
 			/* set correct view */
@@ -1414,8 +1412,28 @@ main (int argc, char *argv[])
 	/* hide from finished page until we have updates */
 	widget = glade_xml_get_widget (glade_xml, "hbox_restart");
 	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (glade_xml, "button_restart");
-	gtk_widget_hide (widget);
+
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
+	restart_action = polkit_gnome_action_new_default ("restart-system",
+							  pk_action,
+							  _("_Restart computer now"),
+							  NULL);
+	g_object_set (restart_action,
+		      "no-icon-name", GTK_STOCK_REFRESH,
+		      "auth-icon-name", GTK_STOCK_REFRESH,
+		      "yes-icon-name", GTK_STOCK_REFRESH,
+		      "self-blocked-icon-name", GTK_STOCK_REFRESH,
+		      "no-visible", FALSE,
+		      "master-visible", FALSE,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (restart_action, "activate",
+			  G_CALLBACK (pk_updates_restart_cb), loop);
+	button = polkit_gnome_action_create_button (restart_action);
+	widget = glade_xml_get_widget (glade_xml, "buttonbox_confirm");
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 1);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
