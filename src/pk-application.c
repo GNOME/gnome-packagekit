@@ -78,7 +78,6 @@ struct PkApplicationPrivate
 	PkEnumList		*filter_list;
 	PkEnumList		*group_list;
 	PkEnumList		*current_filter;
-	gboolean		 search_in_progress;
 	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
 };
@@ -553,16 +552,15 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 		g_free (text);
 	}
 
-	/* hide widget */
-	pk_statusbar_hide (application->priv->statusbar);
+	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
+	    role == PK_ROLE_ENUM_SEARCH_GROUP) {
 
-	/* Correct text on button */
-	if (application->priv->search_in_progress == TRUE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
-		gtk_label_set_label (GTK_LABEL (widget), _("Find"));
-
+		/* switch round buttons */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-		gtk_widget_set_tooltip_text (widget, _("Find packages"));
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+		gtk_widget_hide (widget);
 
 		/* were there no entries found? */
 		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
@@ -574,19 +572,19 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 					    PACKAGES_COLUMN_IMAGE, "search",
 					    -1);
 		}
-		application->priv->search_in_progress = FALSE;
-	} else {
-		/* do we need to update the search? */
-		if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
-		    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
-			/* refresh the search as the items may have changed */
-			gtk_list_store_clear (application->priv->packages_store);
-			application->priv->search_in_progress = TRUE;
-			ret = pk_client_requeue (application->priv->client_search, NULL);
-			if (ret == FALSE) {
-				application->priv->search_in_progress = FALSE;
-				pk_warning ("failed to requeue the search");
-			}
+	}
+
+	/* hide widget */
+	pk_statusbar_hide (application->priv->statusbar);
+
+	/* do we need to update the search? */
+	if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
+	    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
+		/* refresh the search as the items may have changed */
+		gtk_list_store_clear (application->priv->packages_store);
+		ret = pk_client_requeue (application->priv->client_search, NULL);
+		if (ret == FALSE) {
+			pk_warning ("failed to requeue the search");
 		}
 	}
 }
@@ -606,26 +604,43 @@ pk_application_progress_changed_cb (PkClient *client, guint percentage, guint su
 }
 
 /**
- * pk_application_find_cb:
+ * pk_application_cancel_cb:
  **/
 static void
-pk_application_find_cb (GtkWidget	*button_widget,
-		        PkApplication	*application)
+pk_application_cancel_cb (GtkWidget *button_widget, PkApplication *application)
 {
 	GtkWidget *widget;
-	const gchar *package;
-	gchar *filter_all;
 	gboolean ret;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	if (application->priv->search_in_progress == TRUE) {
-		pk_debug ("trying to cancel task...");
-		ret = pk_client_cancel (application->priv->client_search, NULL);
-		pk_warning ("canceled? %i", ret);
-		return;
+	ret = pk_client_cancel (application->priv->client_search, NULL);
+	pk_debug ("canceled? %i", ret);
+
+	/* switch buttons around */
+	if (ret == TRUE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+		gtk_widget_hide (widget);
 	}
+}
+
+/**
+ * pk_application_find_cb:
+ **/
+static void
+pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
+{
+	GtkWidget *widget;
+	const gchar *package;
+	gchar *filter_all;
+	GError *error = NULL;
+	gboolean ret;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
@@ -646,15 +661,15 @@ pk_application_find_cb (GtkWidget	*button_widget,
 	if (application->priv->search_type == PK_SEARCH_NAME) {
 		pk_client_reset (application->priv->client_search, NULL);
 		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
-		ret = pk_client_search_name (application->priv->client_search, filter_all, package, NULL);
+		ret = pk_client_search_name (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
 		pk_client_reset (application->priv->client_search, NULL);
 		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
-		ret = pk_client_search_details (application->priv->client_search, filter_all, package, NULL);
+		ret = pk_client_search_details (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
 		pk_client_reset (application->priv->client_search, NULL);
 		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
-		ret = pk_client_search_file (application->priv->client_search, filter_all, package, NULL);
+		ret = pk_client_search_file (application->priv->client_search, filter_all, package, &error);
 	} else {
 		pk_warning ("invalid search type");
 		return;
@@ -662,25 +677,26 @@ pk_application_find_cb (GtkWidget	*button_widget,
 
 	if (ret == FALSE) {
 		pk_application_error_message (application,
-					      _("The search could not be completed"), NULL);
+					      _("The search could not be completed"), error->message);
+		g_error_free (error);
 		return;
 	}
 
 	/* clear existing list */
 	gtk_list_store_clear (application->priv->packages_store);
-
-	application->priv->search_in_progress = TRUE;
 	application->priv->has_package = FALSE;
 
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
 	gtk_widget_hide (widget);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "label_button_find");
-	gtk_label_set_label (GTK_LABEL (widget), _("Cancel"));
-
+	/* switch around buttons */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
+	gtk_widget_hide (widget);
+	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+		gtk_widget_show (widget);
+	}
 
 	g_free (filter_all);
 }
@@ -811,6 +827,7 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 	gboolean ret;
 	gchar *filter;
 	gchar *id;
+	GError *error = NULL;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -834,12 +851,21 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* cancel this, we don't care about old results that are pending */
 		pk_client_cancel (application->priv->client_search, NULL);
 		pk_client_reset (application->priv->client_search, NULL);
-		ret = pk_client_search_group (application->priv->client_search, filter, id, NULL);
+		ret = pk_client_search_group (application->priv->client_search, filter, id, &error);
 		g_free (filter);
 		/* ick, we failed so pretend we didn't do the action */
-		if (ret == FALSE) {
+		if (ret) {
+			/* switch around buttons */
+			widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+			gtk_widget_hide (widget);
+			if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
+				widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+				gtk_widget_show (widget);
+			}
+		} else {
 			pk_application_error_message (application,
-						      _("The group could not be queried"), NULL);
+						      _("The group could not be queried"), error->message);
+			g_error_free (error);
 		}
 	}
 }
@@ -1510,7 +1536,6 @@ pk_application_init (PkApplication *application)
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
 	application->priv->url = NULL;
-	application->priv->search_in_progress = FALSE;
 	application->priv->has_package = FALSE;
 	application->priv->gconf_client = gconf_client_get_default ();
 
@@ -1743,6 +1768,13 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_find_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
+
+	/* cancel button */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_application_cancel_cb), application);
+	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
+	gtk_widget_hide (widget);
 
 	/* the fancy text entry widget */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
