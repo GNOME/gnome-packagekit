@@ -116,7 +116,7 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 		localised_status = pk_status_enum_to_localised_text (item->status);
 
 		/* we have text? */
-		if (pk_strzero (item->package_id) == TRUE) {
+		if (pk_strzero (item->package_id)) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
@@ -234,8 +234,8 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) == TRUE ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) == TRUE) {
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		watch->priv->show_refresh_in_menu = FALSE;
 	} else {
 		watch->priv->show_refresh_in_menu = TRUE;
@@ -346,7 +346,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	pk_client_is_caller_active (client, &is_active, NULL);
 
 	/* do we ignore this error? */
-	if (is_active == TRUE) {
+	if (is_active) {
 		pk_debug ("client active so leaving error %s\n%s", title, details);
 		return;
 	}
@@ -421,7 +421,7 @@ pk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoint
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
 
-	if (ret == TRUE)
+	if (ret)
 		goto out;
 
 	g_error_free (error);
@@ -708,7 +708,7 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	pk_watch_populate_menu_with_jobs (watch, menu);
 
 	/* force a refresh if we are not updating or refreshing */
-	if (watch->priv->show_refresh_in_menu == TRUE) {
+	if (watch->priv->show_refresh_in_menu) {
 
 		/* Separator for HIG? */
 		widget = gtk_separator_menu_item_new ();
@@ -795,7 +795,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 	pk_debug ("connected=%i", connected);
-	if (connected == TRUE) {
+	if (connected) {
 		pk_watch_refresh_icon (watch);
 		pk_watch_refresh_tooltip (watch);
 	} else {
@@ -813,7 +813,7 @@ pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
 	g_return_if_fail (PK_IS_WATCH (watch));
 
 	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
-	if (is_locked == TRUE) {
+	if (is_locked) {
 		pk_inhibit_create (watch->priv->inhibit);
 	} else {
 		pk_inhibit_remove (watch->priv->inhibit);

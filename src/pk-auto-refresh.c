@@ -200,7 +200,7 @@ pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* not on battery */
-	if (arefresh->priv->on_battery == TRUE) {
+	if (arefresh->priv->on_battery) {
 		pk_debug ("not when on battery");
 		return FALSE;
 	}
@@ -442,7 +442,7 @@ pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefres
 		printf ("DEBUG: ERROR: %s\n", error->message);
 		g_error_free (error);
 	}
-	if (ret == TRUE) {
+	if (ret) {
 		arefresh->priv->on_battery = on_battery;
 		pk_debug ("setting on battery %i", on_battery);
 	}
@@ -538,7 +538,7 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	arefresh->priv->network = pk_network_new ();
 	g_signal_connect (arefresh->priv->network, "online",
 			  G_CALLBACK (pk_auto_refresh_network_changed_cb), arefresh);
-	if (pk_network_is_online (arefresh->priv->network) == TRUE) {
+	if (pk_network_is_online (arefresh->priv->network)) {
 		arefresh->priv->network_active = TRUE;
 	}
 

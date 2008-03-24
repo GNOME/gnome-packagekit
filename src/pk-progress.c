@@ -239,7 +239,7 @@ pk_progress_spin_timeout_percentage (gpointer data)
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 	gtk_widget_show (widget);
 
-	if (progress->priv->task_ended == TRUE) {
+	if (progress->priv->task_ended) {
 		/* hide the box */
 		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 		gtk_widget_hide (widget);
@@ -264,7 +264,7 @@ pk_progress_spin_timeout_subpercentage (gpointer data)
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
 	gtk_widget_show (widget);
 
-	if (progress->priv->task_ended == TRUE) {
+	if (progress->priv->task_ended) {
 		/* hide the box */
 		widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_subpercentage");
 		gtk_widget_hide (widget);
@@ -451,7 +451,7 @@ pk_common_get_role_text (PkClient *client)
 	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
-	if (pk_strzero (package_id) == TRUE) {
+	if (pk_strzero (package_id)) {
 		text = g_strdup (role_text);
 	} else if (pk_package_id_check (package_id) == FALSE) {
 		text = g_strdup_printf ("%s: %s", role_text, package_id);
@@ -504,7 +504,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 
 	/* coldplug */
 	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining, NULL);
-	if (ret == TRUE) {
+	if (ret) {
 		pk_progress_progress_changed_cb (progress->priv->client, percentage,
 						 subpercentage, elapsed, remaining, progress);
 	} else {
@@ -516,7 +516,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 
 	/* do the best we can */
 	ret = pk_client_get_package (progress->priv->client, &text, NULL);
-	if (ret == TRUE) {
+	if (ret) {
 		pk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
 	}
 

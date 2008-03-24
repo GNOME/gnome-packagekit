@@ -133,7 +133,7 @@ pk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	if (cru->uri == NULL) {
 		g_object_set (G_OBJECT (cell), "foreground", "#000000", NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
-	} else if (cru->clicked == TRUE) {
+	} else if (cru->clicked) {
 		g_object_set (G_OBJECT (cell), "foreground", "#840084", NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {

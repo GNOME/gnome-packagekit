@@ -75,7 +75,7 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 	g_object_unref (client);
 
 	/* did we resolve? */
-	if (pk_strzero (package) == TRUE) {
+	if (pk_strzero (package)) {
 		pk_error_modal_dialog (_("Failed to resolve"),
 				       _("The package could not be found on the system"));
 		g_main_loop_quit (loop);
@@ -158,7 +158,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version == TRUE) {
+	if (program_version) {
 		g_print (VERSION "\n");
 		return 0;
 	}

@@ -243,7 +243,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version == TRUE) {
+	if (program_version) {
 		g_print (VERSION "\n");
 		return 0;
 	}
@@ -299,7 +299,7 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
 		pk_client_get_repo_list (client, NULL);
 	} else {

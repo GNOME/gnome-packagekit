@@ -343,7 +343,7 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	gchar *text;
 	GString *string;
 
-	if (pk_strzero (package_id) == TRUE) {
+	if (pk_strzero (package_id)) {
 		return g_strdup (_("Package identifier not valid"));
 	}
 
@@ -379,13 +379,13 @@ pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 	PkPackageId *ident;
 	gchar *text;
 
-	if (pk_strzero (package_id) == TRUE) {
+	if (pk_strzero (package_id)) {
 		return g_strdup (_("Package identifier not valid"));
 	}
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
-	if (pk_strzero (summary) == TRUE) {
+	if (pk_strzero (summary)) {
 		/* just have name */
 		text = g_strdup (ident->name);
 	} else {
@@ -406,7 +406,7 @@ pk_package_id_name_version (const gchar *package_id)
 	gchar *text;
 	GString *string;
 
-	if (pk_strzero (package_id) == TRUE) {
+	if (pk_strzero (package_id)) {
 		return g_strdup (_("Package identifier not valid"));
 	}
 
@@ -432,7 +432,7 @@ pk_package_get_name (const gchar *package_id)
 	PkPackageId *ident;
 
 	/* not set! */
-	if (pk_strzero (package_id) == TRUE) {
+	if (pk_strzero (package_id)) {
 		pk_warning ("package_id blank, returning 'unknown'");
 		return g_strdup ("Package identifier not valid");
 	}
@@ -460,7 +460,7 @@ pk_icon_valid (const gchar *icon)
 	gboolean ret = TRUE;
 
 	/* trivial case */
-	if (pk_strzero (icon) == TRUE) {
+	if (pk_strzero (icon)) {
 		return FALSE;
 	}
 
