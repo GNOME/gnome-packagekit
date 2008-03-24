@@ -31,6 +31,8 @@
 #include <math.h>
 #include <string.h>
 
+#include <polkit-gnome/polkit-gnome.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-common.h>
@@ -80,6 +82,9 @@ struct PkApplicationPrivate
 	PkEnumList		*current_filter;
 	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
+	PolKitGnomeAction	*install_action;
+	PolKitGnomeAction	*remove_action;
+	PolKitGnomeAction	*refresh_action;
 };
 
 enum {
@@ -173,8 +178,8 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
  * pk_application_install_cb:
  **/
 static void
-pk_application_install_cb (GtkWidget      *widget,
-		           PkApplication  *application)
+pk_application_install_cb (PolKitGnomeAction *action,
+		           PkApplication     *application)
 {
 	gboolean ret;
 
@@ -301,8 +306,8 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
  * pk_application_remove_cb:
  **/
 static void
-pk_application_remove_cb (GtkWidget      *widget,
-		          PkApplication  *application)
+pk_application_remove_cb (PolKitGnomeAction *action,
+		          PkApplication     *application)
 {
 	PkClient *client;
 
@@ -1033,19 +1038,17 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		g_free (package_id);
 		pk_debug ("selected row is: %i %s", installed, application->priv->package);
 
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
 		if (installed == FALSE &&
 		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
-			gtk_widget_show (widget);
+			polkit_gnome_action_set_visible (application->priv->install_action, TRUE);
 		} else {
-			gtk_widget_hide (widget);
+			polkit_gnome_action_set_visible (application->priv->install_action, FALSE);
 		}
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
 		if (installed &&
 		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
-			gtk_widget_show (widget);
+			polkit_gnome_action_set_visible (application->priv->remove_action, TRUE);
 		} else {
-			gtk_widget_hide (widget);
+			polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);
 		}
 
 		/* refresh */
@@ -1055,10 +1058,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 
 	} else {
 		pk_debug ("no row selected");
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-		gtk_widget_hide (widget);
+		polkit_gnome_action_set_visible (application->priv->install_action, FALSE);
+		polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
@@ -1532,6 +1533,9 @@ pk_application_init (PkApplication *application)
 	guint page;
 	guint i;
 	gboolean ret;
+	PolKitAction *pk_action;
+	GtkWidget *button;
+	GtkWidget *item;
 
 	application->priv = PK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -1629,15 +1633,46 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_application_delete_event_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
-	g_signal_connect (widget, "clicked",
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_package");
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.install");
+	application->priv->install_action = polkit_gnome_action_new_default ("install",
+									     pk_action,
+									     _("_Install"),
+									     _("Install selected package"));
+	g_object_set (application->priv->install_action,
+		      "no-icon-name", GTK_STOCK_FLOPPY,
+		      "auth-icon-name", GTK_STOCK_FLOPPY,
+		      "yes-icon-name", GTK_STOCK_FLOPPY,
+		      "self-blocked-icon-name", GTK_STOCK_FLOPPY,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (application->priv->install_action, "activate",
 			  G_CALLBACK (pk_application_install_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Install selected package"));
+        button = polkit_gnome_action_create_button (application->priv->install_action);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-	g_signal_connect (widget, "clicked",
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 0);
+
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.remove");
+	application->priv->remove_action = polkit_gnome_action_new_default ("remove",
+									    pk_action,
+									    _("_Remove"),
+									    _("Remove selected package"));
+	g_object_set (application->priv->remove_action,
+		      "no-icon-name", GTK_STOCK_DIALOG_ERROR,
+		      "auth-icon-name", GTK_STOCK_DIALOG_ERROR,
+		      "yes-icon-name", GTK_STOCK_DIALOG_ERROR,
+		      "self-blocked-icon-name", GTK_STOCK_DIALOG_ERROR,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (application->priv->remove_action, "activate",
 			  G_CALLBACK (pk_application_remove_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Remove selected package"));
+        button = polkit_gnome_action_create_button (application->priv->remove_action);
+
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 1);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
@@ -1648,9 +1683,25 @@ pk_application_init (PkApplication *application)
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (pk_application_menu_about_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_refresh");
-	g_signal_connect (widget, "activate",
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
+	application->priv->refresh_action = polkit_gnome_action_new_default ("refresh",
+									     pk_action,
+									     _("_Refresh application lists"),
+									     NULL);
+	g_object_set (application->priv->refresh_action,
+		      "no-icon-name", "gtk-redo-ltr",
+		      "auth-icon-name", "gtk-redo-ltr",
+		      "yes-icon-name", "gtk-redo-ltr",
+		      "self-blocked-icon-name", "gtk-redo-ltr",
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (application->priv->refresh_action, "activate",
 			  G_CALLBACK (pk_application_menu_refresh_cb), application);
+	item = gtk_action_create_menu_item (GTK_ACTION (application->priv->refresh_action));
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menu_system");
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (widget), item);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
 	g_signal_connect (widget, "activate",
@@ -1940,6 +1991,9 @@ pk_application_finalize (GObject *object)
 	g_object_unref (application->priv->statusbar);
 	g_object_unref (application->priv->extra);
 	g_object_unref (application->priv->gconf_client);
+	g_object_unref (application->priv->install_action);
+	g_object_unref (application->priv->remove_action);
+	g_object_unref (application->priv->refresh_action);
 
 	g_free (application->priv->url);
 	g_free (application->priv->package);
