@@ -60,7 +60,7 @@ static PolKitGnomeAction *update_package_action = NULL;
 static PolKitGnomeAction *restart_action = NULL;
 
 /* for the preview throbber */
-static void pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear);
+static void pk_updates_add_preview_item (const gchar *icon, const gchar *message, gboolean clear);
 static void pk_updates_description_animation_stop (void);
 static int animation_timeout = 0;
 static int frame_counter = 0;
@@ -322,7 +322,7 @@ pk_updates_preview_animation_start (void)
 
 	pk_updates_animation_load_frames ();
 
-	pk_updates_add_preview_item (client, NULL, _("Getting information..."), TRUE);
+	pk_updates_add_preview_item (NULL, _("Getting information..."), TRUE);
 
 	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
 	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
@@ -770,6 +770,10 @@ pk_updates_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer da
 	GtkWidget *widget;
 	gchar *text;
 
+	if (status == PK_STATUS_ENUM_WAIT) {
+		pk_updates_add_preview_item ("dialog-information", _("Waiting for previous tasks to complete!"), TRUE);
+	}
+
 	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
 	text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
 	gtk_label_set_markup (GTK_LABEL (widget), text);
@@ -970,7 +974,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, gpointe
  * pk_updates_add_preview_item:
  **/
 static void
-pk_updates_add_preview_item (PkClient *client, const gchar *icon, const gchar *message, gboolean clear)
+pk_updates_add_preview_item (const gchar *icon, const gchar *message, gboolean clear)
 {
 	GtkWidget *tree_view;
 	GtkTreeSelection *selection;
@@ -1165,7 +1169,7 @@ populate_preview (void)
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
 		/* put a message in the listbox */
-		pk_updates_add_preview_item (client, "dialog-information", _("There are no updates available!"), TRUE);
+		pk_updates_add_preview_item ("dialog-information", _("There are no updates available!"), TRUE);
 
 		/* if no updates then hide apply */
 		widget = glade_xml_get_widget (glade_xml, "button_review");
@@ -1208,37 +1212,37 @@ populate_preview (void)
 		if (num_security > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_important > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_bugfix > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_enhancement > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_low > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_normal > 0) {
 			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
 			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
-			pk_updates_add_preview_item (client, icon, text, FALSE);
+			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 
@@ -1287,7 +1291,7 @@ pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		gtk_list_store_clear (list_store_preview);
 
 		/* put a message in the listbox */
-		pk_updates_add_preview_item (client, "dialog-information", _("There is an update already in progress!"), TRUE);
+		pk_updates_add_preview_item ("dialog-information", _("There is an update already in progress!"), TRUE);
 
 		/* if doing it then hide apply and refresh */
 		polkit_gnome_action_set_visible (update_system_action, FALSE);

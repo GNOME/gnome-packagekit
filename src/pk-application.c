@@ -1416,7 +1416,28 @@ pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
 static void
 pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 {
-	pk_warning ("do a refresh-cache");
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* can we cancel what we are doing? */
+	ret = pk_client_reset (application->priv->client_action, &error);
+	if (ret == FALSE) {
+		pk_application_error_message (application, _("Package list could not be refreshed"), error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* try to refresh the cache */
+	ret = pk_client_refresh_cache (application->priv->client_action, FALSE, &error);
+	if (ret == FALSE) {
+		pk_application_error_message (application, _("The package could not be installed"), error->message);
+		g_error_free (error);
+		return;
+	}
+	pk_debug ("should be refreshing...");
 }
 
 /**

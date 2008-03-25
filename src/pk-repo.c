@@ -204,6 +204,35 @@ pk_repo_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpoin
 }
 
 /**
+ * pk_repo_status_changed_cb:
+ **/
+static void
+pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+{
+	GtkTreeIter iter;
+	if (status == PK_STATUS_ENUM_WAIT) {
+		gtk_list_store_clear (list_store);
+		gtk_list_store_append (list_store, &iter);
+		gtk_list_store_set (list_store, &iter,
+				    REPO_COLUMN_TEXT, _("Waiting for other tasks to complete!"),
+				    -1);
+		return;
+	}
+	if (status == PK_STATUS_ENUM_SETUP) {
+		gtk_list_store_clear (list_store);
+		gtk_list_store_append (list_store, &iter);
+		gtk_list_store_set (list_store, &iter,
+				    REPO_COLUMN_TEXT, _("Waiting for package tool to be unlocked!"),
+				    -1);
+		return;
+	}
+	if (status == PK_STATUS_ENUM_RUNNING) {
+		/* we should get results now */
+		gtk_list_store_clear (list_store);
+	}
+}
+
+/**
  * main:
  **/
 int
@@ -256,6 +285,8 @@ main (int argc, char *argv[])
 	client = pk_client_new ();
 	g_signal_connect (client, "repo-detail",
 			  G_CALLBACK (pk_repo_detail_cb), NULL);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (pk_repo_status_changed_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
 
