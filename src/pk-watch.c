@@ -266,14 +266,26 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
 
+	/* get the role */
+	ret = pk_client_get_role (client, &role, &package_id, NULL);
+	if (ret == FALSE) {
+		pk_warning ("cannot get role");
+		return;
+	}
+	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
+
 	/* show an icon if the user needs to reboot */
-	restart = pk_client_get_require_restart (client);
-	if (restart == PK_RESTART_ENUM_SYSTEM ||
-	    restart == PK_RESTART_ENUM_SESSION) {
-		restart_message = pk_restart_enum_to_localised_text (restart);
-		icon_name = pk_restart_enum_to_icon_name (restart);
-		pk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
-		pk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
+	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+	    role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
+	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		restart = pk_client_get_require_restart (client);
+		if (restart == PK_RESTART_ENUM_SYSTEM ||
+		    restart == PK_RESTART_ENUM_SESSION) {
+			restart_message = pk_restart_enum_to_localised_text (restart);
+			icon_name = pk_restart_enum_to_icon_name (restart);
+			pk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
+			pk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
+		}
 	}
 
 	/* is it worth showing a UI? */
@@ -287,14 +299,6 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 		pk_debug ("not notifying, as didn't complete okay");
 		return;
 	}
-
-	/* get the role */
-	ret = pk_client_get_role (client, &role, &package_id, NULL);
-	if (ret == FALSE) {
-		pk_warning ("cannot get role");
-		return;
-	}
-	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
 
 	/* are we accepting notifications */
 	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
