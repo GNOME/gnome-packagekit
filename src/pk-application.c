@@ -596,6 +596,10 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 		if (ret == FALSE) {
 			pk_warning ("failed to requeue the search");
 		}
+
+		/* hide details */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
+		gtk_widget_hide (widget);
 	}
 }
 
