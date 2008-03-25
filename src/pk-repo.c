@@ -81,6 +81,8 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean installed;
 	gchar *repo_id;
+	gboolean ret;
+	GError *error = NULL;
 
 	/* do we have the capability? */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
@@ -94,17 +96,27 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 			    REPO_COLUMN_ENABLED, &installed,
 			    REPO_COLUMN_ID, &repo_id, -1);
 
+	/* do this to the repo */
+	pk_debug ("setting %s to %i", repo_id, installed);
+	pk_client_reset (client, NULL);
+	ret = pk_client_repo_enable (client, repo_id, installed, &error);
+	if (!ret) {
+		pk_warning ("could not set repo enabled state: %s", error->message);
+		g_error_free (error);
+
+		/* refresh the list */
+		pk_client_reset (client, NULL);
+		pk_client_get_repo_list (client, NULL);
+		goto out;
+	}
+
 	/* do something with the value */
 	installed ^= 1;
 
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
 
-	/* do this to the repo */
-	pk_debug ("setting %s to %i", repo_id, installed);
-	pk_client_reset (client, NULL);
-	pk_client_repo_enable (client, repo_id, installed, NULL);
-
+out:
 	/* clean up */
 	g_free (repo_id);
 	gtk_tree_path_free (path);
