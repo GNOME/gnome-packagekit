@@ -436,6 +436,7 @@ pk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoint
 	if (ret == FALSE) {
 		error_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Failed to show url %s", error->message); 
 		gtk_dialog_run (GTK_DIALOG (error_dialog));
+		gtk_widget_destroy (error_dialog);
 		g_error_free (error);
 	}
 

@@ -1279,12 +1279,66 @@ pk_application_create_completion_model (void)
 	return GTK_TREE_MODEL (store);
 }
 
+
+/**
+ *  * pk_application_about_dialog_url_cb:
+ *   **/
+static void
+pk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
+{
+	GError *error = NULL;
+	gboolean ret;
+
+	char *cmdline;
+	GdkScreen *gscreen;
+	GtkWidget *error_dialog;
+	gchar *url;
+	gchar *protocol = (gchar*) data;
+
+	if (protocol != NULL)
+		url = g_strconcat (protocol, address, NULL);
+	else
+		url = g_strdup (address);
+
+	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
+
+	cmdline = g_strconcat ("xdg-open ", url, NULL);
+	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
+	g_free (cmdline);
+
+	if (ret)
+		goto out;
+
+	g_error_free (error);
+	error = NULL;
+	cmdline = g_strconcat ("gnome-open ", url, NULL);
+	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
+	g_free (cmdline);
+
+	if (ret == FALSE) {
+		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
+						       GTK_DIALOG_MODAL,
+						       GTK_MESSAGE_INFO,
+						       GTK_BUTTONS_OK,
+						       _("Failed to show url"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
+							  "%s", error->message);
+		gtk_dialog_run (GTK_DIALOG (error_dialog));
+		gtk_widget_destroy (error_dialog);
+		g_error_free (error);
+	}
+
+out:
+	g_free (url);
+}
+
 /**
  * pk_application_menu_about_cb:
  **/
 static void
 pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
 {
+	static gboolean been_here = FALSE;
 	GtkWidget *main_window;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
@@ -1321,11 +1375,17 @@ pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
+	if (!been_here) {
+		been_here = TRUE;
+		gtk_about_dialog_set_url_hook (pk_application_about_dialog_url_cb, NULL, NULL);
+		gtk_about_dialog_set_email_hook (pk_application_about_dialog_url_cb, "mailto:", NULL);
+	}
+
 	/* use parent */
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	gtk_window_set_default_icon_name (PK_STOCK_APP_ICON);
-	gtk_show_about_dialog (NULL,
+	gtk_show_about_dialog (GTK_WINDOW (main_window),
 			       "version", PACKAGE_VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
 			       "license", license_trans,
