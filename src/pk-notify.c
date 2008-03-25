@@ -58,8 +58,6 @@ static void     pk_notify_finalize	(GObject       *object);
 
 #define PK_NOTIFY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_NOTIFY, PkNotifyPrivate))
 
-#define PK_NOTIFY_ICON_STOCK	"system-installer"
-
 struct PkNotifyPrivate
 {
 	PkSmartIcon		*sicon;
@@ -507,9 +505,17 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guin
 {
 	const gchar *title;
 	gchar *message;
+	gboolean value;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+        /* are we accepting notifications */
+        value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_CRITICAL, NULL);
+        if (value == FALSE) {
+                pk_debug ("not showing notification as prevented in gconf");
+                return;
+        }
 
 	title = ngettext ("Security update available", "Security updates available", number);
 	message = g_strdup_printf (ngettext ("The following important update is available for your computer:\n\n%s",
@@ -519,7 +525,7 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guin
 	pk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
 				  PK_NOTIFY_URGENCY_CRITICAL, PK_NOTIFY_TIMEOUT_NEVER);
 	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, NULL);
+	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, PK_CONF_NOTIFY_CRITICAL);
 	pk_smart_icon_notify_show (notify->priv->sicon);
 
 	g_free (message);
