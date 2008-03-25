@@ -63,6 +63,7 @@ main (int argc, char *argv[])
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	gchar *tid;
+	GError *error;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -109,10 +110,18 @@ main (int argc, char *argv[])
 	}
 
 	client = pk_client_new ();
-	ret = pk_client_install_file (client, argv[1], NULL);
+	error = NULL;
+	ret = pk_client_install_file (client, argv[1], &error);
 	if (ret == FALSE) {
-		pk_error_modal_dialog (_("Method not supported"),
-				       _("Installing local files is not supported"));
+		/* check if we got a permission denied */
+		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.localinstall")) {
+			pk_error_modal_dialog (_("Failed to install"),
+					       _("You don't have the necessary privileges to install local packages"));
+		}
+		else {
+			pk_error_modal_dialog (_("Failed to install"),
+					       error->message);
+		}
 	} else {
 		loop = g_main_loop_new (NULL, FALSE);
 		tid = pk_client_get_tid (client);
