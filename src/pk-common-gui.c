@@ -564,12 +564,6 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PROCESS_KILL:
 		text = _("The transaction was forcibly canceled");
 		break;
-	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
-		text = _("Initialization of the package manager failed");
-		break;
-	case PK_ERROR_ENUM_FAILED_FINALISE:
-		text = _("Unloading of the package manager failed");
-		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("Reading the config file failed");
 		break;
@@ -658,14 +652,6 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PROCESS_KILL:
 		text = _("The transaction was canceled successfully and no packages were changed.\n"
 			 "The backend did not exit cleanly.");
-		break;
-	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
-		text = _("The native package backend could not be initialised.\n"
-			 "Please make sure no other tools are accessing package information.");
-		break;
-	case PK_ERROR_ENUM_FAILED_FINALISE:
-		text = _("The native package backend could not be closed.\n"
-			 "Please make sure no other tools are accessing package information.");
 		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("The native package configuration file could not be opened.\n"
