@@ -495,6 +495,11 @@ pk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gcha
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	/* obvious message, don't tell the user */
+	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		return;
+	}
+
 	pk_application_error_message (application,
 				      pk_error_enum_to_localised_text (code), details);
 }
