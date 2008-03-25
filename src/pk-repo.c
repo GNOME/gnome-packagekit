@@ -35,12 +35,15 @@
 #include <pk-connection.h>
 #include <pk-enum-list.h>
 #include "pk-common-gui.h"
+#include "pk-statusbar.h"
+
 #include <locale.h>
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkEnumList *role_list;
+static PkStatusbar *statusbar;
 
 enum
 {
@@ -217,30 +220,7 @@ pk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer 
 static void
 pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
-	GtkTreeIter iter;
-	/* we are queued in the active-queue */
-	if (status == PK_STATUS_ENUM_WAIT) {
-		gtk_list_store_clear (list_store);
-		gtk_list_store_append (list_store, &iter);
-		gtk_list_store_set (list_store, &iter,
-				    REPO_COLUMN_TEXT, _("Waiting for other tasks to complete!"),
-				    -1);
-		return;
-	}
-	/* we have started to run the transaction; assume is locked */
-	if (status == PK_STATUS_ENUM_SETUP) {
-		gtk_list_store_clear (list_store);
-		gtk_list_store_append (list_store, &iter);
-		gtk_list_store_set (list_store, &iter,
-				    REPO_COLUMN_TEXT, _("Waiting for PackageKit service!"),
-				    -1);
-		return;
-	}
-	/* we have started processing the transaction */
-	if (status == PK_STATUS_ENUM_RUNNING) {
-		/* we should get results now */
-		gtk_list_store_clear (list_store);
-	}
+	pk_statusbar_set_status (statusbar, status);
 }
 
 /**
@@ -306,9 +286,6 @@ main (int argc, char *argv[])
 
 	glade_xml = glade_xml_new (PK_DATA "/pk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
-
-	/* Hide window first so that the dialogue resizes itself without redrawing */
-	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
 
 	/* Get the main window quit */
@@ -343,6 +320,11 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
+	/* use the in-statusbar for progress */
+	statusbar = pk_statusbar_new ();
+	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
+	pk_statusbar_set_widget (statusbar, widget);
+
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
 		pk_client_get_repo_list (client, NULL);
@@ -353,8 +335,6 @@ main (int argc, char *argv[])
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
-	gtk_widget_show (main_window);
-
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 
@@ -362,6 +342,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_object_unref (role_list);
+	g_object_unref (statusbar);
 
 	return 0;
 }
