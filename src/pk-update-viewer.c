@@ -1446,9 +1446,6 @@ main (int argc, char *argv[])
 	glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
-	/* Hide window first so that the dialogue resizes itself without redrawing */
-	gtk_widget_hide (main_window);
-
 	/* hide until we have updates */
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);
@@ -1660,7 +1657,6 @@ main (int argc, char *argv[])
 		/* only show this if we succeeded */
 		pk_updates_preview_animation_start ();
 	}
-	gtk_widget_show (main_window);
 
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
