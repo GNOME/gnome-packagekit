@@ -846,6 +846,10 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
 	gtk_widget_hide (widget);
 
+	/* clear the search text if we clicked the group list */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	gtk_entry_set_text (GTK_ENTRY (widget), "");
+
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
