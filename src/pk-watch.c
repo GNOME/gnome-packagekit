@@ -342,6 +342,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	gchar *escaped_details;
 	const gchar *title;
 	gboolean is_active;
+	gboolean value;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
@@ -366,6 +367,13 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 		return;
 	}
 
+        /* are we accepting notifications */
+        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_ERROR, NULL);
+        if (value == FALSE) {
+                pk_debug ("not showing notification as prevented in gconf");
+                return;
+        }
+
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
@@ -385,9 +393,17 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	const gchar *title;
 	const gchar *filename;
 	gchar *escaped_details;
+	gboolean value;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (PK_IS_WATCH (watch));
+
+        /* are we accepting notifications */
+        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
+        if (value == FALSE) {
+                pk_debug ("not showing notification as prevented in gconf");
+                return;
+        }
 
 	title = pk_message_enum_to_localised_text (message);
 	filename = pk_message_enum_to_icon_name (message);

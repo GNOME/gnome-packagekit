@@ -309,6 +309,7 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	GString *message_text;
 	guint skipped_number = 0;
 	const gchar *message;
+	gboolean value;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
@@ -325,6 +326,13 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
+		return;
+	}
+
+	/* are we accepting notifications */
+	value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
+	if (value == FALSE) {
+		pk_debug ("not showing notification as prevented in gconf");
 		return;
 	}
 
@@ -523,8 +531,17 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guin
 static void
 pk_notify_auto_update_message (PkNotify *notify)
 {
+	gboolean value;
+
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
+
+	/* are we accepting notifications */
+        value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
+        if (value == FALSE) {
+                pk_debug ("not showing notification as prevented in gconf");
+                return;
+        }
 
 	pk_smart_icon_notify_new (notify->priv->sicon,
 				  _("Updates are being installed"),
@@ -615,6 +632,7 @@ pk_notify_check_on_battery (PkNotify *notify)
 {
 	gboolean on_battery;
 	gboolean conf_update_battery;
+	gboolean value;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
@@ -622,14 +640,18 @@ pk_notify_check_on_battery (PkNotify *notify)
 	on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
 	conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
 	if (!conf_update_battery && on_battery) {
-		pk_smart_icon_notify_new (notify->priv->sicon,
-				      _("Will not install updates"),
-				      _("Automatic updates are not being installed as the computer is on battery power"),
-				      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-		pk_smart_icon_notify_button (notify->priv->sicon,
-					     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-					     PK_CONF_NOTIFY_BATTERY_UPDATE);
-		pk_smart_icon_notify_show (notify->priv->sicon);
+		/* are we accepting notifications */
+		value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_BATTERY_UPDATE, NULL);
+		if (value) {
+			pk_smart_icon_notify_new (notify->priv->sicon,
+						  _("Will not install updates"),
+						  _("Automatic updates are not being installed as the computer is on battery power"),
+					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+			pk_smart_icon_notify_button (notify->priv->sicon,
+						     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+						     PK_CONF_NOTIFY_BATTERY_UPDATE);
+			pk_smart_icon_notify_show (notify->priv->sicon);
+		}
 		return FALSE;
 	}
 	return TRUE;
@@ -796,6 +818,7 @@ static void
 pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkNotify *notify)
 {
 	const gchar *title;
+	gboolean value;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (PK_IS_NOTIFY (notify));
@@ -808,6 +831,13 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 		pk_debug ("error ignored %s\n%s", title, details);
 		return;
 	}
+
+        /* are we accepting notifications */
+        value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_ERROR, NULL);
+        if (value == FALSE) {
+                pk_debug ("not showing notification as prevented in gconf");
+                return;
+        }
 
 	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
 				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
