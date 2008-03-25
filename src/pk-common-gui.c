@@ -62,6 +62,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
 	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
+	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
 	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
 	{PK_STATUS_ENUM_INFO,			"pk-package-info"},
 	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
@@ -754,10 +755,13 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
-		text = _("Setting up transaction");
+		text = _("Waiting for PackageKit service");
 		break;
 	case PK_STATUS_ENUM_WAIT:
-		text = _("Waiting for transaction lock");
+		text = _("Waiting for other tasks to complete");
+		break;
+	case PK_STATUS_ENUM_RUNNING:
+		text = _("Running transaction");
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
