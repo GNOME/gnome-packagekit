@@ -1601,6 +1601,15 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 }
 
 /**
+ * pk_application_status_changed_cb:
+ **/
+static void
+pk_application_status_changed_cb (PkClient *client, PkStatusEnum status, PkApplication *application)
+{
+	pk_statusbar_set_status (application->priv->statusbar, status);
+}
+
+/**
  * pk_application_init:
  **/
 static void
@@ -1649,6 +1658,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_search, "progress-changed",
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
+	g_signal_connect (application->priv->client_search, "status-changed",
+			  G_CALLBACK (pk_application_status_changed_cb), application);
 
 	application->priv->client_action = pk_client_new ();
 	g_signal_connect (application->priv->client_action, "package",
@@ -1659,6 +1670,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_action, "progress-changed",
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
+	g_signal_connect (application->priv->client_action, "status-changed",
+			  G_CALLBACK (pk_application_status_changed_cb), application);
 
 	application->priv->client_description = pk_client_new ();
 	g_signal_connect (application->priv->client_description, "description",
@@ -1669,6 +1682,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_description, "progress-changed",
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
+	g_signal_connect (application->priv->client_description, "status-changed",
+			  G_CALLBACK (pk_application_status_changed_cb), application);
 
 	application->priv->client_files = pk_client_new ();
 	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
@@ -1680,6 +1695,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_files, "progress-changed",
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
+	g_signal_connect (application->priv->client_files, "status-changed",
+			  G_CALLBACK (pk_application_status_changed_cb), application);
 
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);

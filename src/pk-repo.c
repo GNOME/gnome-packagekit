@@ -210,6 +210,7 @@ static void
 pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	GtkTreeIter iter;
+	/* we are queued in the active-queue */
 	if (status == PK_STATUS_ENUM_WAIT) {
 		gtk_list_store_clear (list_store);
 		gtk_list_store_append (list_store, &iter);
@@ -218,14 +219,16 @@ pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 				    -1);
 		return;
 	}
+	/* we have started to run the transaction; assume is locked */
 	if (status == PK_STATUS_ENUM_SETUP) {
 		gtk_list_store_clear (list_store);
 		gtk_list_store_append (list_store, &iter);
 		gtk_list_store_set (list_store, &iter,
-				    REPO_COLUMN_TEXT, _("Waiting for package tool to be unlocked!"),
+				    REPO_COLUMN_TEXT, _("Waiting for PackageKit service!"),
 				    -1);
 		return;
 	}
+	/* we have started processing the transaction */
 	if (status == PK_STATUS_ENUM_RUNNING) {
 		/* we should get results now */
 		gtk_list_store_clear (list_store);
