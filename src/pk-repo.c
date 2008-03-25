@@ -209,7 +209,6 @@ pk_repo_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpoin
 static void
 pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
-#if 0
 	GtkTreeIter iter;
 	if (status == PK_STATUS_ENUM_WAIT) {
 		gtk_list_store_clear (list_store);
@@ -228,9 +227,9 @@ pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 		return;
 	}
 	if (status == PK_STATUS_ENUM_RUNNING) {
+		/* we should get results now */
 		gtk_list_store_clear (list_store);
 	}
-#endif
 }
 
 /**
