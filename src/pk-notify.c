@@ -164,7 +164,7 @@ pk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
 							  "%s", error->message);
 		gtk_dialog_run (GTK_DIALOG (error_dialog));
-		gtk_widget_destro (error_dialog);
+		gtk_widget_destroy (error_dialog);
 		g_error_free (error);
 	}
 
