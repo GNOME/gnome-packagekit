@@ -198,7 +198,7 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
  * pk_repo_finished_cb:
  **/
 static void
-pk_repo_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, gpointer data)
+pk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	/* nothing? */
 }
