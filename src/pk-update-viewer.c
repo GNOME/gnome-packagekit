@@ -144,12 +144,30 @@ pk_updates_set_page (PkPageEnum page)
 	}
 }
 
+static void
+pk_updates_update_system_cb (PolKitGnomeAction *action, gpointer data)
+{
+	GtkWidget *widget;
+
+	pk_debug ("Doing the system update");
+
+	widget = glade_xml_get_widget (glade_xml, "button_overview2");
+	gtk_widget_hide (widget);
+
+	/* set correct view */
+	pk_updates_set_page (PAGE_PROGRESS);
+
+	pk_client_reset (client, NULL);
+	pk_client_update_system (client, NULL);
+}
+
 /**
  * pk_updates_apply_cb:
  **/
 static void
-pk_updates_apply_cb (GtkWidget *widget, gpointer data)
+pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 {
+	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean valid;
@@ -158,8 +176,11 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 	gboolean selected_any = FALSE;
 	gchar *package_id;
 	GPtrArray *array;
+	gchar **package_ids;
+	gboolean ret;
+	GError *error = NULL;
 
-	pk_debug ("Doing the system update");
+	pk_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
 
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -196,33 +217,28 @@ pk_updates_apply_cb (GtkWidget *widget, gpointer data)
 		return;
 	}
 
+	widget = glade_xml_get_widget (glade_xml, "button_overview2");
+	if (selected_all) {
+		gtk_widget_hide (widget);
+	}
+	else {
+		gtk_widget_show (widget);
+	}
+
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
 
-	/* send an singular list */
-	if (!selected_all) {
-		gchar **package_ids;
-		gboolean ret;
-		GError *error = NULL;
-
-		package_ids = pk_package_ids_from_array (array);
-		pk_client_reset (client, NULL);
-		ret = pk_client_update_packages_strv (client, package_ids, &error);
-		if (!ret) {
-			pk_error_modal_dialog ("Individual updates failed", error->message);
-			g_error_free (error);
-		}
-		g_strfreev (package_ids);
+	package_ids = pk_package_ids_from_array (array);
+	pk_client_reset (client, NULL);
+	ret = pk_client_update_packages_strv (client, package_ids, &error);
+	if (!ret) {
+		pk_error_modal_dialog ("Individual updates failed", error->message);
+		g_error_free (error);
 	}
+	g_strfreev (package_ids);
 
 	/* get rid of the array, and free the contents */
 	g_ptr_array_free (array, TRUE);
-
-	/* the trivial case */
-	if (selected_all) {
-		pk_client_reset (client, NULL);
-		pk_client_update_system (client, NULL);
-	}
 }
 
 /**
@@ -1046,6 +1062,8 @@ pk_updates_restart_cb (GtkWidget *widget, gpointer data)
 	pk_restart_system ();
 }
 
+static void populate_preview (void);
+
 /**
  * pk_updates_finished_cb:
  **/
@@ -1054,7 +1072,6 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 {
 	GtkWidget *widget;
 	PkRoleEnum role;
-	guint length;
 	PkRestartEnum restart;
 
 	pk_client_get_role (client, &role, NULL, NULL);
@@ -1109,15 +1126,38 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 
 	/* we don't need to do anything here */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		/* clear existing list */
-		gtk_list_store_clear (list_store_details);
 
-		/* get the new update list */
-		pk_client_reset (client, NULL);
-		pk_client_set_use_buffer (client, TRUE, NULL);
-		pk_client_get_updates (client, "basename", NULL);
+		/* set correct view */
+		pk_updates_set_page (PAGE_CONFIRM);
+
 		return;
 	}
+
+	populate_preview ();
+}
+
+static void
+pk_button_more_installs_cb (GtkWidget *button, gpointer data)
+{
+	/* clear existing list */
+	gtk_list_store_clear (list_store_details);
+
+	/* set correct view */
+	pk_updates_set_page (PAGE_PREVIEW);
+
+	/* get the new update list */
+	pk_client_reset (client, NULL);
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_get_updates (client, "basename", NULL);
+
+	populate_preview ();
+}
+
+static void
+populate_preview (void)
+{
+	GtkWidget *widget;
+	guint length;
 
 	/* clear existing lists */
 	gtk_list_store_clear (list_store_preview);
@@ -1475,6 +1515,11 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_overview_cb), loop);
 	gtk_widget_set_tooltip_text(widget, _("Back to overview"));
 
+	widget = glade_xml_get_widget (glade_xml, "button_overview2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_more_installs_cb), loop);
+	gtk_widget_set_tooltip_text (widget, _("Back to overview"));
+
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-package");
 	update_package_action = polkit_gnome_action_new_default ("update-package",
@@ -1509,7 +1554,7 @@ main (int argc, char *argv[])
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (update_system_action, "activate",
-			  G_CALLBACK (pk_updates_apply_cb), loop);
+			  G_CALLBACK (pk_updates_update_system_cb), loop);
 	button = polkit_gnome_action_create_button (update_system_action);
 	widget = glade_xml_get_widget (glade_xml, "buttonbox_overview");
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
