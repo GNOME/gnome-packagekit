@@ -103,10 +103,6 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	if (!ret) {
 		pk_warning ("could not set repo enabled state: %s", error->message);
 		g_error_free (error);
-
-		/* refresh the list */
-		pk_client_reset (client, NULL);
-		pk_client_get_repo_list (client, NULL);
 		goto out;
 	}
 
