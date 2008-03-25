@@ -224,6 +224,15 @@ pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 }
 
 /**
+ * pk_repo_error_code_cb:
+ **/
+static void
+pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
+{
+	pk_error_modal_dialog (pk_error_enum_to_localised_text (code), details);
+}
+
+/**
  * main:
  **/
 int
@@ -280,6 +289,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_repo_status_changed_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (pk_repo_error_code_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
