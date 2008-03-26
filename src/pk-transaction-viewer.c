@@ -150,7 +150,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 	icon_name = pk_role_enum_to_icon_name (role);
 	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon_name, -1);
 
-	if (succeeded == TRUE) {
+	if (succeeded) {
 		icon_name = "document-new";
 	} else {
 		icon_name = "dialog-error";
@@ -270,7 +270,7 @@ pk_treeview_details_populate (const gchar *tid)
 	transaction_data = (gchar *) g_hash_table_lookup (hash, tid);
 
 	/* no details? */
-	if (pk_strzero (transaction_data) == TRUE) {
+	if (pk_strzero (transaction_data)) {
 		widget = glade_xml_get_widget (glade_xml, "frame_details");
 		gtk_widget_hide (widget);
 		return;
@@ -374,7 +374,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version == TRUE) {
+	if (program_version) {
 		g_print (VERSION "\n");
 		return 0;
 	}
@@ -446,7 +446,7 @@ main (int argc, char *argv[])
         gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
         gtk_box_reorder_child (GTK_BOX (widget), button, 1);
 	/* hide the rollback button if we can't do the action */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK) == TRUE) {
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK)) {
 		polkit_gnome_action_set_visible (rollback_action, TRUE);
 	} else {
 		polkit_gnome_action_set_visible (rollback_action, FALSE);
