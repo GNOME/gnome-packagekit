@@ -800,8 +800,14 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 	case PK_STATUS_ENUM_DEP_RESOLVE:
 		text = _("Resolving dependencies");
 		break;
+	case PK_STATUS_ENUM_SIG_CHECK:
+		text = _("Checking signatures");
+		break;
 	case PK_STATUS_ENUM_ROLLBACK:
 		text = _("Rolling back");
+		break;
+	case PK_STATUS_ENUM_TEST_COMMIT:
+		text = _("Trying transaction");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
 		text = _("Committing transaction");
