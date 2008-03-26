@@ -534,13 +534,44 @@ pk_application_package_buffer_to_name_version (PkClient *client)
 }
 
 /**
+ * pk_application_refresh_search_results:
+ **/
+static gboolean
+pk_application_refresh_search_results (PkApplication *application)
+{
+	GtkWidget *widget;
+	gboolean ret;
+	GError *error = NULL;
+	PkRoleEnum role;
+
+	/* get role -- do we actually need to do anything */
+	pk_client_get_role (application->priv->client_search, &role, NULL, NULL);
+	if (role == PK_ROLE_ENUM_UNKNOWN) {
+		pk_debug ("no defined role, no not requeuing");
+		return FALSE;
+	}
+
+	gtk_list_store_clear (application->priv->packages_store);
+	ret = pk_client_requeue (application->priv->client_search, &error);
+	if (ret == FALSE) {
+		pk_warning ("failed to requeue the search: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* hide details */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
+	gtk_widget_hide (widget);
+	return TRUE;
+}
+
+/**
  * pk_application_finished_cb:
  **/
 static void
 pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkApplication *application)
 {
 	GtkWidget *widget;
-	gboolean ret;
 	PkRoleEnum role;
 	gchar *text;
 
@@ -590,16 +621,8 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 	/* do we need to update the search? */
 	if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
 	    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
-		/* refresh the search as the items may have changed */
-		gtk_list_store_clear (application->priv->packages_store);
-		ret = pk_client_requeue (application->priv->client_search, NULL);
-		if (ret == FALSE) {
-			pk_warning ("failed to requeue the search");
-		}
-
-		/* hide details */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
-		gtk_widget_hide (widget);
+		/* refresh the search as the items may have changed and the filter has not changed */
+		pk_application_refresh_search_results (application);
 	}
 }
 
@@ -642,10 +665,10 @@ pk_application_cancel_cb (GtkWidget *button_widget, PkApplication *application)
 }
 
 /**
- * pk_application_find_cb:
+ * pk_application_perform_search:
  **/
-static void
-pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
+static gboolean
+pk_application_perform_search (PkApplication *application)
 {
 	GtkWidget *widget;
 	const gchar *package;
@@ -653,18 +676,25 @@ pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
 	GError *error = NULL;
 	gboolean ret;
 
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	/* do we need to cancel a running search? */
+	pk_client_cancel (application->priv->client_search, NULL);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
+
+	/* have we got input? */
+	if (pk_strzero (package)) {
+		pk_debug ("no input");
+		return FALSE;
+	}
+
 	ret = pk_strvalidate (package);
 	if (ret == FALSE) {
 		pk_debug ("invalid input text, will fail");
-		/* todo - make the dialog turn red... */
+		/* TODO - make the dialog turn red... */
 		pk_application_error_message (application, _("Invalid search text"),
 					      _("The search text contains invalid characters"));
-		return;
+		return FALSE;
 	}
 	pk_debug ("find %s", package);
 
@@ -686,14 +716,14 @@ pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package, &error);
 	} else {
 		pk_warning ("invalid search type");
-		return;
+		return FALSE;
 	}
 
 	if (ret == FALSE) {
 		pk_application_error_message (application,
 					      _("The search could not be completed"), error->message);
 		g_error_free (error);
-		return;
+		return FALSE;
 	}
 
 	/* clear existing list */
@@ -713,6 +743,19 @@ pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
 	}
 
 	g_free (filter_all);
+	return TRUE;
+}
+
+/**
+ * pk_application_find_cb:
+ **/
+static void
+pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
+{
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1492,6 +1535,9 @@ pk_application_menu_filter_installed_cb (GtkWidget *widget, PkApplication *appli
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1520,6 +1566,9 @@ pk_application_menu_filter_devel_cb (GtkWidget *widget, PkApplication *applicati
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1548,6 +1597,9 @@ pk_application_menu_filter_gui_cb (GtkWidget *widget, PkApplication *application
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1576,6 +1628,9 @@ pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *applicatio
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_FREE);
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1591,6 +1646,9 @@ pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *applic
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
@@ -1606,6 +1664,9 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 	} else {
 //		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
 	}
+
+	/* refresh the search results */
+	pk_application_perform_search (application);
 }
 
 /**
