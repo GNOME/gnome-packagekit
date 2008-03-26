@@ -215,6 +215,10 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_resolve");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
+	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_WHAT_PROVIDES)) {
+		widget = glade_xml_get_widget (glade_xml, "image_what_provides");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
 
 	/* repos */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
@@ -245,6 +249,14 @@ main (int argc, char *argv[])
 	}
 	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_FREE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_free");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
+	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_VISIBLE)) {
+		widget = glade_xml_get_widget (glade_xml, "image_visible");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
+	}
+	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_SUPPORTED)) {
+		widget = glade_xml_get_widget (glade_xml, "image_supported");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
