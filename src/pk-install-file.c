@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <glade/glade.h>
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
@@ -37,18 +38,163 @@
 #include "pk-progress.h"
 #include "pk-common-gui.h"
 
-static PkProgress *progress = NULL;
-static GMainLoop *loop = NULL;
+static GladeXML *glade_xml = NULL;
+static PkClient *client = NULL;
 
-/**
- * pk_monitor_action_unref_cb:
- **/
+typedef enum {
+        PAGE_PROGRESS,
+        PAGE_CONFIRM,
+        PAGE_ERROR,
+        PAGE_LAST
+} PkPageEnum;
+
 static void
-pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
+pk_updates_set_page (PkPageEnum page)
 {
-	GMainLoop *loop = (GMainLoop *) data;
-	g_object_unref (progress);
-	g_main_loop_quit (loop);
+        GList *list, *l;
+        GtkWidget *widget;
+        guint i;
+
+        widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
+        list = gtk_container_get_children (GTK_CONTAINER (widget));
+        for (l=list, i=0; l; l=l->next, i++) {
+                if (i == page) {
+                        gtk_widget_show (l->data);
+                } else {
+                        gtk_widget_hide (l->data);
+                }
+        }
+}
+
+static gboolean
+finished_timeout (gpointer data)
+{
+	gtk_main_quit ();
+
+	return FALSE;
+}
+
+static void
+pk_install_file_finished_cb (PkClient   *client,
+			     PkExitEnum  exit,
+			     guint       runtime,
+			     gpointer    data)
+{
+	if (exit == PK_EXIT_ENUM_SUCCESS) {
+                pk_updates_set_page (PAGE_CONFIRM);
+
+		g_timeout_add_seconds (30, finished_timeout, NULL);
+	}
+
+}
+
+static gint pulse_timeout = 0;
+
+static void
+pk_install_file_progress_changed_cb (PkClient *client,
+				     guint     percentage,
+				     guint     subpercentage,
+				     guint     elapsed,
+				     guint     remaining,
+				     gpointer  data)
+{
+        GtkWidget *widget;
+
+        widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
+
+	if (pulse_timeout != 0) {
+		g_source_remove (pulse_timeout);
+		pulse_timeout = 0;
+	}
+
+        if (percentage != PK_CLIENT_PERCENTAGE_INVALID) {
+                gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+        }
+}
+
+static gboolean
+pulse_progress (gpointer data)
+{
+        GtkWidget *widget;
+
+        widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
+
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
+
+	return TRUE;
+}
+
+static void
+pk_install_file_status_changed_cb (PkClient     *client,
+				   PkStatusEnum  status,
+				   gpointer      data)
+{
+        GtkWidget *widget;
+        gchar *text;
+
+        widget = glade_xml_get_widget (glade_xml, "progress_part_label");
+        text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
+        gtk_label_set_markup (GTK_LABEL (widget), text);
+        g_free (text);
+
+	if (status == PK_STATUS_ENUM_WAIT) {
+		if (pulse_timeout == 0) {
+			widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
+
+			gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
+			pulse_timeout = g_timeout_add (75, pulse_progress, NULL);
+		}
+	}
+}
+
+static void
+pk_install_file_error_code_cb (PkClient        *client,
+			       PkErrorCodeEnum  code,
+			       const gchar     *details,
+			       gpointer         data)
+{
+        GtkWidget *widget;
+        const gchar *title;
+        gchar *title_bold;
+        gchar *details_safe;
+
+        pk_updates_set_page (PAGE_ERROR);
+
+        /* set bold title */
+        widget = glade_xml_get_widget (glade_xml, "label_error_title");
+        title = pk_error_enum_to_localised_text (code);
+        title_bold = g_strdup_printf ("<b>%s</b>", title);
+        gtk_label_set_label (GTK_LABEL (widget), title_bold);
+        g_free (title_bold);
+
+        widget = glade_xml_get_widget (glade_xml, "label_error_message");
+        gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
+
+        widget = glade_xml_get_widget (glade_xml, "label_error_details");
+        details_safe = g_markup_escape_text (details, -1);
+        gtk_label_set_label (GTK_LABEL (widget), details_safe);
+}
+
+static gboolean
+pk_window_delete_event_cb (GtkWidget    *widget,
+                            GdkEvent    *event,
+                            gpointer    data)
+{
+        /* we might have a transaction running */
+        pk_client_cancel (client, NULL);
+
+        gtk_main_quit ();
+
+        return FALSE;
+}
+
+static void
+pk_button_close_cb (GtkWidget *widget, gpointer data)
+{
+        /* we might have a transaction running */
+        pk_client_cancel (client, NULL);
+
+        gtk_main_quit ();
 }
 
 /**
@@ -57,13 +203,13 @@ pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	PkClient *client;
 	GOptionContext *context;
 	gboolean ret;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
-	gchar *tid;
 	GError *error;
+	GtkWidget *main_window;
+	GtkWidget *widget;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -110,9 +256,46 @@ main (int argc, char *argv[])
 	}
 
 	client = pk_client_new ();
+
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (pk_install_file_finished_cb), NULL);
+	g_signal_connect (client, "progress-changed",
+			  G_CALLBACK (pk_install_file_progress_changed_cb), NULL);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (pk_install_file_status_changed_cb), NULL);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (pk_install_file_error_code_cb), NULL);
+
+	glade_xml = glade_xml_new (PK_DATA "/pk-install-file.glade", NULL, NULL);
+	main_window = glade_xml_get_widget (glade_xml, "window_updates");
+
+        /* Get the main window quit */
+	g_signal_connect (main_window, "delete_event",
+			  G_CALLBACK (pk_window_delete_event_cb), NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_close");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_close2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), NULL);
+
+	widget = glade_xml_get_widget (glade_xml, "button_close3");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_cb), NULL);
+
+        /* set the label blank initially */
+        widget = glade_xml_get_widget (glade_xml, "progress_part_label");
+        gtk_label_set_label (GTK_LABEL (widget), "");
+
+	pk_updates_set_page (PAGE_PROGRESS);
+
 	error = NULL;
 	ret = pk_client_install_file (client, argv[1], &error);
 	if (ret == FALSE) {
+		gtk_widget_hide (main_window);
+
 		/* check if we got a permission denied */
 		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.localinstall")) {
 			pk_error_modal_dialog (_("Failed to install"),
@@ -123,17 +306,10 @@ main (int argc, char *argv[])
 					       error->message);
 		}
 	} else {
-		loop = g_main_loop_new (NULL, FALSE);
-		tid = pk_client_get_tid (client);
-		/* create a new progress object */
-		progress = pk_progress_new ();
-		g_signal_connect (progress, "action-unref",
-				  G_CALLBACK (pk_monitor_action_unref_cb), loop);
-		pk_progress_monitor_tid (progress, tid);
-		g_free (tid);
-		g_main_loop_run (loop);
+		gtk_main ();
 	}
 
 	g_object_unref (client);
+
 	return 0;
 }

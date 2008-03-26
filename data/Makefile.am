@@ -34,6 +34,7 @@ pkgdata_DATA =						\
 	pk-signature.glade				\
 	pk-transactions.glade				\
 	pk-backend-status.glade				\
+	pk-install-file.glade				\
 	$(NULL)
 
 EXTRA_DIST =						\
