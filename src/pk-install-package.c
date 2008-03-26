@@ -110,7 +110,7 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
  * pk_monitor_resolve_package_cb:
  **/
 static void
-pk_monitor_resolve_package_cb (PkClient *client, guint value, const gchar *package_id,
+pk_monitor_resolve_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			       const gchar *summary, gboolean data)
 {
 	/* save */

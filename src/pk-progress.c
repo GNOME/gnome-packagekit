@@ -203,11 +203,8 @@ pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, P
  * pk_progress_package_cb:
  */
 static void
-pk_progress_package_cb (PkClient    *client,
-			guint        value,
-			const gchar *package_id,
-			const gchar *summary,
-			PkProgress  *progress)
+pk_progress_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+			const gchar *summary, PkProgress *progress)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
