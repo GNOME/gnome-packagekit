@@ -446,8 +446,18 @@ pk_common_get_role_text (PkClient *client)
 	gchar *text;
 	PkRoleEnum role;
 	PkPackageId *ident;
+	GError *error = NULL;
+	gboolean ret;
 
-	pk_client_get_role (client, &role, &package_id, NULL);
+	/* get role and text */
+	ret = pk_client_get_role (client, &role, &package_id, &error);
+	if (!ret) {
+		pk_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		return NULL;
+	}
+
+	/* backup */
 	role_text = pk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
