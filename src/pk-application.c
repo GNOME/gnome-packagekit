@@ -203,6 +203,8 @@ static void
 pk_application_homepage_cb (GtkWidget      *widget,
 		            PkApplication  *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
 	pk_execute_url (application->priv->url);
 }
 
@@ -235,6 +237,9 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 static void
 pk_application_requires_dialog_cb (GtkDialog *dialog, gint id, PkApplication *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	if (id == -9) {
 		pk_debug ("the user clicked no");
 	} else if (id == -8) {
@@ -260,6 +265,9 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	GtkWidget *main_window;
 	GtkWidget *dialog;
 	guint i;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* see how many packages there are */
 	length = pk_client_package_buffer_get_size (client);
@@ -1062,6 +1070,7 @@ pk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	pk_notebook_populate (application, page);
 }
 
@@ -1131,6 +1140,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	pk_debug ("connected=%i", connected);
 }
 
@@ -1267,6 +1277,9 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 	GtkWidget *item;
 	GtkWidget *image;
 	PkApplication *application = PK_APPLICATION (data);
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* only respond to left button */
 	if (button != 1) {
@@ -1494,6 +1507,10 @@ static void
 pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
 {
 	gboolean ret;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	ret = g_spawn_command_line_async ("pk-repo", NULL);
 	if (ret == FALSE) {
 		pk_warning ("spawn of pk-repo failed");
@@ -1506,6 +1523,9 @@ pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
 static void
 pk_application_menu_quit_cb (GtkAction *action, PkApplication *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	pk_application_quit (application);
 }
 
@@ -1517,6 +1537,10 @@ static void
 pk_application_menu_filter_installed_cb (GtkWidget *widget, PkApplication *application)
 {
 	const gchar *name;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
@@ -1548,6 +1572,10 @@ static void
 pk_application_menu_filter_devel_cb (GtkWidget *widget, PkApplication *application)
 {
 	const gchar *name;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
@@ -1579,6 +1607,10 @@ static void
 pk_application_menu_filter_gui_cb (GtkWidget *widget, PkApplication *application)
 {
 	const gchar *name;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
@@ -1610,6 +1642,10 @@ static void
 pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *application)
 {
 	const gchar *name;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
@@ -1640,6 +1676,9 @@ pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *applicatio
 static void
 pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	/* single checkbox */
 	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
@@ -1658,6 +1697,9 @@ pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *applic
 static void
 pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
 	/* single checkbox */
 	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
 //		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
@@ -1675,7 +1717,24 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 static void
 pk_application_status_changed_cb (PkClient *client, PkStatusEnum status, PkApplication *application)
 {
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
 	pk_statusbar_set_status (application->priv->statusbar, status);
+}
+
+/**
+ * pk_application_allow_cancel_cb:
+ **/
+static void
+pk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkApplication *application)
+{
+	GtkWidget *widget;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
 }
 
 /**
@@ -1729,6 +1788,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_search, "status-changed",
 			  G_CALLBACK (pk_application_status_changed_cb), application);
+	g_signal_connect (application->priv->client_search, "allow-cancel",
+			  G_CALLBACK (pk_application_allow_cancel_cb), application);
 
 	application->priv->client_action = pk_client_new ();
 	g_signal_connect (application->priv->client_action, "package",
@@ -1741,6 +1802,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_action, "status-changed",
 			  G_CALLBACK (pk_application_status_changed_cb), application);
+	g_signal_connect (application->priv->client_action, "allow-cancel",
+			  G_CALLBACK (pk_application_allow_cancel_cb), application);
 
 	application->priv->client_description = pk_client_new ();
 	g_signal_connect (application->priv->client_description, "description",
@@ -1753,6 +1816,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_description, "status-changed",
 			  G_CALLBACK (pk_application_status_changed_cb), application);
+	g_signal_connect (application->priv->client_description, "allow-cancel",
+			  G_CALLBACK (pk_application_allow_cancel_cb), application);
 
 	application->priv->client_files = pk_client_new ();
 	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
@@ -1766,6 +1831,8 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_files, "status-changed",
 			  G_CALLBACK (pk_application_status_changed_cb), application);
+	g_signal_connect (application->priv->client_files, "allow-cancel",
+			  G_CALLBACK (pk_application_allow_cancel_cb), application);
 
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
