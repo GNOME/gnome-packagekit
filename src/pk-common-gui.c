@@ -571,6 +571,9 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
 		text = _("The transaction cannot be cancelled");
 		break;
+	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
+		text = _("Source packages cannot be installed");
+		break;
 	default:
 		text = _("Unknown error");
 	}
@@ -660,6 +663,10 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
 		text = _("The transaction is not safe to be cancelled at this time.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
+		text = _("Source packages are not normally installed this way.\n"
+			 "Check the extension of the file you are trying to install.");
 		break;
 	default:
 		text = _("Unknown error, please report a bug.\n"
