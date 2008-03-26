@@ -99,6 +99,9 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 			    REPO_COLUMN_ENABLED, &installed,
 			    REPO_COLUMN_ID, &repo_id, -1);
 
+	/* do something with the value */
+	installed ^= 1;
+
 	/* do this to the repo */
 	pk_debug ("setting %s to %i", repo_id, installed);
 	pk_client_reset (client, NULL);
@@ -108,9 +111,6 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 		g_error_free (error);
 		goto out;
 	}
-
-	/* do something with the value */
-	installed ^= 1;
 
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
