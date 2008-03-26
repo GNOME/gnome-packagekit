@@ -162,6 +162,8 @@ pk_update_viewer_LDADD =				\
 
 pk_repo_SOURCES =					\
 	pk-repo.c					\
+	pk-statusbar.c					\
+	pk-statusbar.h					\
 	pk-common-gui.c					\
 	pk-common-gui.h					\
 	$(NULL)
