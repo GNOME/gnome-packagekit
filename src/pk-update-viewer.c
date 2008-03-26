@@ -506,10 +506,10 @@ pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_button_close_cb:
+ * pk_button_close_and_cancel_cb:
  **/
 static void
-pk_button_close_cb (GtkWidget *widget, gpointer data)
+pk_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 
@@ -517,7 +517,15 @@ pk_button_close_cb (GtkWidget *widget, gpointer data)
 	pk_client_cancel (client, NULL);
 
 	g_main_loop_quit (loop);
-	pk_debug ("emitting action-close");
+}
+
+static void
+pk_button_close_cb (GtkWidget *widget, gpointer data)
+{
+	GMainLoop *loop = (GMainLoop *) data;
+
+	/* just close the UI, let the installation continue */
+	g_main_loop_quit (loop);
 }
 
 /**
@@ -790,9 +798,6 @@ pk_window_delete_event_cb (GtkWidget	*widget,
 			    gpointer    data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
-
-	/* we might have a transaction running */
-	pk_client_cancel (client, NULL);
 
 	g_main_loop_quit (loop);
 	return FALSE;
@@ -1480,14 +1485,16 @@ main (int argc, char *argv[])
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_window_delete_event_cb), loop);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_close_cb), loop);
-	gtk_widget_set_tooltip_text(widget, _("Close without updating"));
+	/* button_close2 and button_close3 are on the overview/review
+	 * screens, where we want to cancel transactions when closing
+	 */
 	widget = glade_xml_get_widget (glade_xml, "button_close2");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_close_cb), loop);
+			  G_CALLBACK (pk_button_close_and_cancel_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_close3");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_close_and_cancel_cb), loop);
+	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_close_cb), loop);
 	widget = glade_xml_get_widget (glade_xml, "button_close4");

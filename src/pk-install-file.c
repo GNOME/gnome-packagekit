@@ -180,9 +180,6 @@ pk_window_delete_event_cb (GtkWidget    *widget,
                             GdkEvent    *event,
                             gpointer    data)
 {
-        /* we might have a transaction running */
-        pk_client_cancel (client, NULL);
-
         gtk_main_quit ();
 
         return FALSE;
@@ -191,9 +188,6 @@ pk_window_delete_event_cb (GtkWidget    *widget,
 static void
 pk_button_close_cb (GtkWidget *widget, gpointer data)
 {
-        /* we might have a transaction running */
-        pk_client_cancel (client, NULL);
-
         gtk_main_quit ();
 }
 
