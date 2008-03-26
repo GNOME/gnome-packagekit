@@ -419,7 +419,7 @@ pk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, PkProgress
 	gtk_widget_show (widget);
 	icon_name = pk_status_enum_to_icon_name (status);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
-	g_print ("setting icon %s\n", icon_name);
+	pk_debug ("setting icon %s\n", icon_name);
 }
 
 /**
