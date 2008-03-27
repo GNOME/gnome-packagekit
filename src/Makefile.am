@@ -11,6 +11,7 @@ INCLUDES =						\
 	$(LIBNOTIFY_CFLAGS)				\
 	$(LIBSEXY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
+	$(POLKIT_GNOME_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	-DBINDIR=\"$(bindir)\"			 	\
 	-DDATADIR=\"$(datadir)\"			\
@@ -59,6 +60,7 @@ pk_install_file_LDADD =					\
 	$(LIBNOTIFY_LIBS)				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(LIBGLADE_LIBS)				\
 	$(NULL)
 
@@ -76,6 +78,7 @@ pk_install_package_LDADD =				\
 	$(LIBNOTIFY_LIBS)				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(LIBGLADE_LIBS)				\
 	$(NULL)
 
@@ -105,6 +108,7 @@ pk_update_icon_LDADD =					\
 	$(GCONF_LIBS)					\
 	$(LIBGLADE_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_application_SOURCES =				\
@@ -125,6 +129,7 @@ pk_application_LDADD =					\
 	$(LIBSEXY_LIBS)					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_prefs_SOURCES =					\
@@ -140,6 +145,7 @@ pk_prefs_LDADD =					\
 	$(GCONF_LIBS)					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_update_viewer_SOURCES =				\
@@ -158,6 +164,7 @@ pk_update_viewer_LDADD =				\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_repo_SOURCES =					\
@@ -174,6 +181,7 @@ pk_repo_LDADD =						\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_transaction_viewer_SOURCES =				\
@@ -188,6 +196,7 @@ pk_transaction_viewer_LDADD =				\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_backend_status_SOURCES =				\
@@ -221,6 +230,7 @@ pk_self_test_LDADD =					\
 	$(SELFTEST_LIBS)				\
 	$(PK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 pk_self_test_CPPFLAGS=	\
