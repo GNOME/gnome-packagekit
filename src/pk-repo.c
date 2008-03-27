@@ -233,6 +233,18 @@ pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *deta
 }
 
 /**
+ * pk_repo_repo_list_changed_cb:
+ **/
+static void
+pk_repo_repo_list_changed_cb (PkClient *client, gpointer data)
+{
+	pk_debug ("refreshing list");
+	gtk_list_store_clear (list_store);
+	pk_client_reset (client, NULL);
+	pk_client_get_repo_list (client, NULL);
+}
+
+/**
  * main:
  **/
 int
@@ -287,6 +299,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_repo_detail_cb), NULL);
 	g_signal_connect (client, "status-changed",
 			  G_CALLBACK (pk_repo_status_changed_cb), NULL);
+	g_signal_connect (client, "repo-list-changed",
+			  G_CALLBACK (pk_repo_repo_list_changed_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
 	g_signal_connect (client, "error-code",
