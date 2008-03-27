@@ -600,11 +600,12 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		text = pk_package_id_pretty_oneline (package_id, summary);
+		text = pk_package_id_pretty (package_id, summary);
 		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
 		gtk_label_set_markup (GTK_LABEL (widget), text);
 
 		g_free (text);
+
 		return;
 	}
 }
