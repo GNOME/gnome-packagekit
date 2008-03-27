@@ -106,9 +106,26 @@ pk_transaction_db_get_pretty_date (const gchar *timespec)
 {
 	GDate *date;
 	GTimeVal timeval;
+	GTimeVal timeval_now;
 	gchar buffer[100];
+	guint hours;
 
+	/* the old date */
 	g_time_val_from_iso8601 (timespec, &timeval);
+
+	/* the new date */
+	g_get_current_time (&timeval_now);
+
+	/* the difference in hours */
+	hours = (timeval_now.tv_sec - timeval.tv_sec) / (60 * 60);
+	pk_debug ("hours is %i", hours);
+
+	/* is this recently? */
+	if (hours < 24) {
+		return g_strdup (_("Today"));
+	} else if (hours < 24*2) {
+		return g_strdup (_("Yesterday"));
+	}
 
 	/* get printed string */
 	date = g_date_new ();
@@ -198,7 +215,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_MENU, NULL);
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Succeeded"), renderer,
 							   "icon-name", PACKAGES_COLUMN_GENERAL_SUCCEEDED, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -215,7 +232,7 @@ pk_treeview_add_details_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_MENU, NULL);
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Type"), renderer,
 							   "icon-name", PACKAGES_COLUMN_DETAILS_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
