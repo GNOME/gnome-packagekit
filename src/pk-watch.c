@@ -58,6 +58,7 @@ static void     pk_watch_init		(PkWatch      *watch);
 static void     pk_watch_finalize	(GObject       *object);
 
 #define PK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_WATCH, PkWatchPrivate))
+#define PK_WATCH_MAXIMUM_TOOLTIP_LINES		10
 
 struct PkWatchPrivate
 {
@@ -125,6 +126,12 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 			text = pk_package_get_name (item->package_id);
 			g_string_append_printf (status, "%s: %s\n", localised_status, text);
 			g_free (text);
+		}
+		/* don't fill the screen with a giant tooltip */
+		if (i > PK_WATCH_MAXIMUM_TOOLTIP_LINES) {
+			g_string_append_printf (status, _("(%i more transactions)\n"),
+						i - PK_WATCH_MAXIMUM_TOOLTIP_LINES);
+			break;
 		}
 	}
 	if (status->len == 0) {
