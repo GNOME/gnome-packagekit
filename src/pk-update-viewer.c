@@ -1719,7 +1719,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
 	g_object_unref (client_query);
-	g_object_unref (client_actions);
+	g_object_unref (client_action);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (cached_package_id);
