@@ -1699,9 +1699,9 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 
 	/* single checkbox */
 	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
-//		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
+		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
 	} else {
-//		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
+		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
 	}
 
 	/* refresh the search results */
