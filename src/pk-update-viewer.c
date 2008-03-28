@@ -124,6 +124,7 @@ pk_updates_set_page (PkPageEnum page)
 {
 	GList *list, *l;
 	GtkWidget *widget;
+	GtkRequisition req;
 	guint i;
 
 	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
@@ -138,8 +139,15 @@ pk_updates_set_page (PkPageEnum page)
 
 	/* some pages are resizeable */
 	widget = glade_xml_get_widget (glade_xml, "window_updates");
-	if (page == PAGE_DETAILS) {
+	if (page == PAGE_DETAILS || page == PAGE_PROGRESS) {
 		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
+		if (page == PAGE_PROGRESS) {
+			/* use the natural size unless it's really big */
+			gtk_widget_size_request (widget, &req);
+			gtk_window_resize (GTK_WINDOW (widget),
+				(req.width < 500) ? req.width : 500,
+				(req.height < 400) ? req.height : 400);
+		}
 	} else {
 		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	}
