@@ -1,3 +1,56 @@
+Version 0.1.10
+~~~~~~~~~~~~~~
+Released: 2008-03-28
+
+* Translations
+ - Updated Polish translation (Artur Flinta)
+ - Updated British English translation (Philip Withnall)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Catalan translation (Gil Forcada)
+ - Updated polish translation (Wadim Dziedzic)
+ - Updated French translation (Robert-André Mauchin and Stéphane Raimbault)
+ - Added Greek translation (Nikos Charonitakis)
+ - Added Finnish translation (Ville-Pekka Vainio)
+
+* New features:
+ - Make the restart computer buttons actually work (Richard Hughes, Matthias Clasen)
+ - Make the package lists sorted in a all applications (Richard Hughes)
+ - Show a status icon when we need to reboot (Richard Hughes)
+ - Convert applications to use PolKitGnomeAction for privileged operations (Matthias Clasen)
+ - Rework the update viewer UI to be a bit friendlier (Matthias Clasen)
+ - Add the time we last updated and since last refresh in pk-update-viewer (Richard Hughes)
+ - Add a boat load of unit tests and fix up all the issues (Richard Hughes)
+ - Add a message if no results were found in pk-application (Richard Hughes)
+ - Add the filters in a menubar for pk-application (Richard Hughes)
+ - Move 'Refresh' button and add a 'View History' button (Matthias Clasen)
+ - Do the GetUpdates in pk-update-viewer when the update list changes (Richard Hughes)
+ - Rewrite pk-install-file to be a more streamlined UI (Matthias Clasen)
+ - Make the refresh cache button actually work in pk-application (Richard Hughes)
+ - Show the status in a statusbar in pk-repo (Richard Hughes)
+ - Redo the search in pk-application if we change a filter setting (Richard Hughes)
+ - Use two lines to show the package summary in the progress dialog (Matthias Clasen)
+ - Add another mimetype, as apache is sending us a different mimetype for skype (Richard Hughes)
+
+* Bugfixes:
+ - Show the same number of updates in the tooltip as the viewer (Richard Hughes)
+ - Make the checkboxes work in pk-update-viewer (Richard Hughes)
+ - Show the skipped packages in the PkNotify UI when we have finished (Richard Hughes)
+ - Fix packing so long author list in pk-backend-status (Scott Reeves)
+ - Don't stretch the pk-update-viewer information pane (Debarshi Ray)
+ - Apply some fixes suggested by sparse (Richard Hughes)
+ - Hide helpless help buttons in applications (Matthias Clasen)
+ - Don't use a non-standard Tango-only icons (Matthias Clasen)
+ - Add progress indication to actions in pk-update-vewer (Matthias Clasen)
+ - Make 'only update security packages' actually do what it should (Richard Hughes)
+ - Give a meaningful errors when we are missing privileges to install local packages (Matthias Clasen)
+ - Rework the pk-update-viewer sequence for installing selected updates (Matthias Clasen)
+ - Make 'don't warn again' buttons in bubbles effective (Matthias Clasen)
+ - Allow the pk-application description to be resized to fix rh#439329 (Richard Hughes)
+ - Don't show Software Transaction Viewer in the menu (Richard Hughes)
+ - Refresh the repo list in pk-repo when we have RepolistChanged (Richard Hughes)
+ - Make the package label ellipsize to avoid continuous window resizing (Matthias Clasen)
+ - Make the cancel button insensitive if it's not going to work in pk-application (Richard Hughes)
+
 Version 0.1.9
 ~~~~~~~~~~~~~
 Released: 2008-03-04
