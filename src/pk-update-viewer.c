@@ -50,7 +50,8 @@ static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
 static GtkListStore *list_store_details = NULL;
 static GtkListStore *list_store_description = NULL;
-static PkClient *client = NULL;
+static PkClient *client_action = NULL;
+static PkClient *client_query = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
 
@@ -157,8 +158,8 @@ pk_updates_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
 
-	pk_client_reset (client, NULL);
-	pk_client_update_system (client, NULL);
+	pk_client_reset (client_action, NULL);
+	pk_client_update_system (client_action, NULL);
 }
 
 /**
@@ -229,8 +230,8 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 	pk_updates_set_page (PAGE_PROGRESS);
 
 	package_ids = pk_package_ids_from_array (array);
-	pk_client_reset (client, NULL);
-	ret = pk_client_update_packages_strv (client, package_ids, &error);
+	pk_client_reset (client_action, NULL);
+	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
 		pk_error_modal_dialog ("Individual updates failed", error->message);
 		g_error_free (error);
@@ -459,9 +460,9 @@ pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	GtkWidget *widget;
 
 	/* we can't click this if we havn't finished */
-	pk_client_reset (client, NULL);
+	pk_client_reset (client_action, NULL);
 	error = NULL;
-	ret = pk_client_refresh_cache (client, TRUE, &error);
+	ret = pk_client_refresh_cache (client_action, TRUE, &error);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Failed to refresh"), error->message);
 		g_error_free (error);
@@ -502,7 +503,8 @@ static void
 pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 {
 	/* we might have a transaction running */
-	pk_client_cancel (client, NULL);
+	pk_client_cancel (client_query, NULL);
+	pk_client_cancel (client_action, NULL);
 }
 
 /**
@@ -514,7 +516,7 @@ pk_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 	GMainLoop *loop = (GMainLoop *) data;
 
 	/* we might have a transaction running */
-	pk_client_cancel (client, NULL);
+	pk_client_cancel (client_action, NULL);
 
 	g_main_loop_quit (loop);
 }
@@ -963,14 +965,14 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		pk_debug ("selected row is: %s", cached_package_id);
 
 		/* cancel if exists */
-		ret = pk_client_cancel (client, &error);
+		ret = pk_client_cancel (client_query, &error);
 		if (!ret) {
 			pk_warning ("failed to reset: %s", error->message);
 			g_error_free (error);
 		}
 
 		/* reset */
-		ret = pk_client_reset (client, &error);
+		ret = pk_client_reset (client_query, &error);
 		if (!ret) {
 			pk_warning ("failed to reset: %s", error->message);
 			g_error_free (error);
@@ -978,7 +980,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 		/* get the description */
 		error = NULL;
-		ret = pk_client_get_update_detail (client, cached_package_id, &error);
+		ret = pk_client_get_update_detail (client_query, cached_package_id, &error);
 		if (!ret) {
 			pk_warning ("failed to get update detail: %s", error->message);
 			g_error_free (error);
@@ -1177,9 +1179,9 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 	pk_updates_set_page (PAGE_PREVIEW);
 
 	/* get the new update list */
-	pk_client_reset (client, NULL);
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_get_updates (client, "basename", NULL);
+	pk_client_reset (client_query, NULL);
+	pk_client_set_use_buffer (client_query, TRUE, NULL);
+	pk_client_get_updates (client_query, "basename", NULL);
 
 	populate_preview ();
 }
@@ -1193,7 +1195,7 @@ populate_preview (void)
 	/* clear existing lists */
 	gtk_list_store_clear (list_store_preview);
 
-	length = pk_client_package_buffer_get_size (client);
+	length = pk_client_package_buffer_get_size (client_query);
 	if (length == 0) {
 		/* put a message in the listbox */
 		pk_updates_add_preview_item ("dialog-information", _("There are no updates available!"), TRUE);
@@ -1216,7 +1218,7 @@ populate_preview (void)
 		gchar *text;
 
 		for (i=0;i<length;i++) {
-			item = pk_client_package_buffer_get_item (client, i);
+			item = pk_client_package_buffer_get_item (client_query, i);
 			if (item->info == PK_INFO_ENUM_LOW) {
 				num_low++;
 			} else if (item->info == PK_INFO_ENUM_IMPORTANT) {
@@ -1365,9 +1367,9 @@ pk_updates_changed_cb (PkClient *client, gpointer data)
 	GError *error = NULL;
 
 	/* get the update list */
-	pk_client_reset (client, NULL);
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	ret = pk_client_get_updates (client, "basename", &error);
+	pk_client_reset (client_query, NULL);
+	pk_client_set_use_buffer (client_query, TRUE, NULL);
+	ret = pk_client_get_updates (client_query, "basename", &error);
 	if (!ret) {
 		pk_warning ("failed to get new list: %s", error->message);
 		g_error_free (error);
@@ -1438,27 +1440,42 @@ main (int argc, char *argv[])
 
 	loop = g_main_loop_new (NULL, FALSE);
 
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	g_signal_connect (client, "package",
+	/* this is stuff we don't care about */
+	client_query = pk_client_new ();
+	pk_client_set_use_buffer (client_query, TRUE, NULL);
+	g_signal_connect (client_query, "package",
 			  G_CALLBACK (pk_updates_package_cb), NULL);
-	g_signal_connect (client, "finished",
+	g_signal_connect (client_query, "finished",
 			  G_CALLBACK (pk_updates_finished_cb), NULL);
-	g_signal_connect (client, "progress-changed",
+	g_signal_connect (client_query, "progress-changed",
 			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
-	g_signal_connect (client, "update-detail",
+	g_signal_connect (client_query, "update-detail",
 			  G_CALLBACK (pk_updates_update_detail_cb), NULL);
-	g_signal_connect (client, "status-changed",
+	g_signal_connect (client_query, "status-changed",
 			  G_CALLBACK (pk_updates_status_changed_cb), NULL);
-	g_signal_connect (client, "error-code",
+	g_signal_connect (client_query, "error-code",
 			  G_CALLBACK (pk_updates_error_code_cb), NULL);
-	g_signal_connect (client, "allow-cancel",
+	g_signal_connect (client_query, "allow-cancel",
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
-	g_signal_connect (client, "updates-changed",
+
+	client_action = pk_client_new ();
+	g_signal_connect (client_action, "package",
+			  G_CALLBACK (pk_updates_package_cb), NULL);
+	g_signal_connect (client_action, "finished",
+			  G_CALLBACK (pk_updates_finished_cb), NULL);
+	g_signal_connect (client_action, "progress-changed",
+			  G_CALLBACK (pk_updates_progress_changed_cb), NULL);
+	g_signal_connect (client_action, "status-changed",
+			  G_CALLBACK (pk_updates_status_changed_cb), NULL);
+	g_signal_connect (client_action, "error-code",
+			  G_CALLBACK (pk_updates_error_code_cb), NULL);
+	g_signal_connect (client_action, "allow-cancel",
+			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
+	g_signal_connect (client_action, "updates-changed",
 			  G_CALLBACK (pk_updates_changed_cb), NULL);
 
 	/* get actions */
-	role_list = pk_client_get_actions (client);
+	role_list = pk_client_get_actions (client_query);
 
 	pconnection = pk_connection_new ();
 	g_signal_connect (pconnection, "connection-changed",
@@ -1671,8 +1688,8 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set the last updated text */
-	pk_update_update_last_refreshed_time (client);
-	pk_update_update_last_updated_time (client);
+	pk_update_update_last_refreshed_time (client_query);
+	pk_update_update_last_updated_time (client_query);
 
 	/* set the labels blank until we get a package */
 	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
@@ -1681,7 +1698,7 @@ main (int argc, char *argv[])
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	/* get the update list */
-	ret = pk_client_get_updates (client, "basename", NULL);
+	ret = pk_client_get_updates (client_query, "basename", NULL);
 	if (ret) {
 		/* only show this if we succeeded */
 		pk_updates_preview_animation_start ();
@@ -1691,17 +1708,18 @@ main (int argc, char *argv[])
 	g_main_loop_unref (loop);
 
 	/* we might have visual stuff running, close it down */
-	pk_client_get_role (client, &role, NULL, NULL);
+	pk_client_get_role (client_query, &role, NULL, NULL);
 	if (role == PK_ROLE_ENUM_GET_UPDATES ||
 	    role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
-		pk_client_cancel (client, NULL);
+		pk_client_cancel (client_query, NULL);
 	}
 
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_preview);
 	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
-	g_object_unref (client);
+	g_object_unref (client_query);
+	g_object_unref (client_actions);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (cached_package_id);
