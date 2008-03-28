@@ -934,6 +934,8 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeIter iter;
 	gchar *package_id;
 	GtkWidget *widget;
+	GError *error = NULL;
+	gboolean ret;
 
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 
@@ -959,9 +961,28 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		gtk_widget_hide (widget);
 
 		pk_debug ("selected row is: %s", cached_package_id);
-		/* get the decription */
-		pk_client_reset (client, NULL);
-		pk_client_get_update_detail (client, cached_package_id, NULL);
+
+		/* cancel if exists */
+		ret = pk_client_cancel (client, &error);
+		if (!ret) {
+			pk_warning ("failed to reset: %s", error->message);
+			g_error_free (error);
+		}
+
+		/* reset */
+		ret = pk_client_reset (client, &error);
+		if (!ret) {
+			pk_warning ("failed to reset: %s", error->message);
+			g_error_free (error);
+		}
+
+		/* get the description */
+		error = NULL;
+		ret = pk_client_get_update_detail (client, cached_package_id, &error);
+		if (!ret) {
+			pk_warning ("failed to get update detail: %s", error->message);
+			g_error_free (error);
+		}
 	} else {
 		pk_debug ("no row selected");
 	}
