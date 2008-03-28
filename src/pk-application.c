@@ -712,15 +712,12 @@ pk_application_perform_search (PkApplication *application)
 
 	if (application->priv->search_type == PK_SEARCH_NAME) {
 		pk_client_reset (application->priv->client_search, NULL);
-		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
 		ret = pk_client_search_name (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
 		pk_client_reset (application->priv->client_search, NULL);
-		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
 		ret = pk_client_search_details (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
 		pk_client_reset (application->priv->client_search, NULL);
-		pk_client_set_name_filter (application->priv->client_search, TRUE, NULL);
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package, &error);
 	} else {
 		pk_warning ("invalid search type");
