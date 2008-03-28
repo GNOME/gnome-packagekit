@@ -137,7 +137,7 @@ pk_updates_set_page (PkPageEnum page)
 
 	/* some pages are resizeable */
 	widget = glade_xml_get_widget (glade_xml, "window_updates");
-	if (page == PAGE_DETAILS || page == PAGE_PROGRESS) {
+	if (page == PAGE_DETAILS) {
 		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
 	} else {
 		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
