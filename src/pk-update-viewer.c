@@ -1225,7 +1225,7 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 	gtk_list_store_clear (list_store_details);
 
 	/* set correct view */
-	pk_updates_set_page (PAGE_PREVIEW);
+	pk_updates_set_page (PAGE_DETAILS);
 
 	/* get the new update list */
 	ret = pk_client_reset (client_query, &error);
