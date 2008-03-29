@@ -112,7 +112,7 @@ pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
 static void
 pk_notify_show_preferences_cb (GtkMenuItem *item, PkNotify *notify)
 {
-	const gchar *command = "pk-prefs";
+	const gchar *command = "gpk-prefs";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
 		pk_warning ("Couldn't execute command: %s", command);
 	}
@@ -438,7 +438,7 @@ pk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 static void
 pk_notify_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 {
-	const gchar *command = "pk-update-viewer";
+	const gchar *command = "gpk-update-viewer";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
 		pk_warning ("Couldn't execute command: %s", command);
 	}

@@ -522,7 +522,7 @@ pk_updates_history_cb (GtkWidget *widget, gpointer data)
 	GError *error = NULL;
 
 	/* FIXME: do this in process */
-	if (!g_spawn_command_line_async ("pk-transaction-viewer", &error)) {
+	if (!g_spawn_command_line_async ("gpk-transaction-viewer", &error)) {
 		pk_error_modal_dialog (_("Failed to launch transaction viewer"),
 				       error->message);
 		g_error_free (error);			

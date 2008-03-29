@@ -1584,7 +1584,7 @@ pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ret = g_spawn_command_line_async ("pk-repo", NULL);
+	ret = g_spawn_command_line_async ("gpk-repo", NULL);
 	if (!ret) {
 		pk_warning ("spawn of pk-repo failed");
 	}

@@ -152,7 +152,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 
 	g_set_application_name (_("PackageKit Package Installer"));
-	context = g_option_context_new ("pk-install-package");
+	context = g_option_context_new ("gpk-install-package");
 	g_option_context_set_summary (context, _("PackageKit Package Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
