@@ -243,8 +243,7 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 	widget = glade_xml_get_widget (glade_xml, "button_overview2");
 	if (selected_all) {
 		gtk_widget_hide (widget);
-	}
-	else {
+	} else {
 		gtk_widget_show (widget);
 	}
 
@@ -1144,6 +1143,61 @@ pk_updates_restart_cb (GtkWidget *widget, gpointer data)
 static void populate_preview (void);
 
 /**
+ *pk_updates_check_blocked_packages:
+ **/
+static void
+pk_updates_check_blocked_packages (PkClient *client)
+{
+	guint i;
+	guint length;
+	PkPackageItem *item;
+	GString *string;
+	gboolean exists = FALSE;
+	gchar *text;
+	GtkWidget *widget;
+
+	string = g_string_new ("");
+
+	/* find any that are blocked */
+	length = pk_client_package_buffer_get_size (client);
+	for (i=0;i<length;i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		if (item->info == PK_INFO_ENUM_BLOCKED) {
+			text = pk_package_id_pretty_oneline (item->package_id, item->summary);
+			g_string_append_printf (string, "%s\n", text);
+			g_free (text);
+			exists = TRUE;
+		}
+	}
+
+	/* trim off extra newlines */
+	if (string->len != 0) {
+		g_string_set_size (string, string->len-1);
+	}
+
+	/* convert to a normal gchar */
+	text = g_string_free (string, FALSE);
+
+	/* set the widget text */
+	if (exists) {
+		widget = glade_xml_get_widget (glade_xml, "label_update_title");
+		gtk_label_set_markup (GTK_LABEL (widget), _("<b>Some updates were not updated</b>"));
+
+		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
+		gtk_label_set_markup (GTK_LABEL (widget), text);
+		gtk_widget_show (widget);
+	} else {
+		widget = glade_xml_get_widget (glade_xml, "label_update_title");
+		gtk_label_set_markup (GTK_LABEL (widget), _("<b>System Update Completed</b>"));
+
+		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
+		gtk_widget_hide (widget);
+	}
+
+	g_free (text);
+}
+
+/**
  * pk_updates_finished_cb:
  **/
 static void
@@ -1159,7 +1213,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		/* update last time in the UI */
 		pk_update_update_last_refreshed_time (client);
-	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM || role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+		   role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		pk_update_update_last_updated_time (client);
 	}
 
@@ -1179,6 +1234,12 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	gtk_widget_set_sensitive (widget, TRUE);
 	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
 	polkit_gnome_action_set_sensitive (update_system_action, TRUE);
+
+	/* check if we need to display infomation about blocked packages */
+	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		pk_updates_check_blocked_packages (client);
+	}
 
 	/* hide the cancel */
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
@@ -1523,6 +1584,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
 
 	client_action = pk_client_new ();
+	pk_client_set_use_buffer (client_action, TRUE, NULL);
 	g_signal_connect (client_action, "package",
 			  G_CALLBACK (pk_updates_package_cb), NULL);
 	g_signal_connect (client_action, "finished",
