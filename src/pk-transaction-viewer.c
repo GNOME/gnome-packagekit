@@ -82,8 +82,17 @@ pk_button_help_cb (GtkWidget *widget,
 static void
 pk_button_rollback_cb (PolKitGnomeAction *action, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
 	GMainLoop *loop = (GMainLoop *) data;
-	pk_client_rollback (client, transaction_id, NULL);
+
+	/* rollback */
+	ret = pk_client_rollback (client, transaction_id, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+	}
+
 	g_main_loop_quit (loop);
 }
 

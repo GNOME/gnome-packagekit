@@ -387,10 +387,7 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	}
 	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
 	pk_smart_icon_notify_show (notify->priv->sicon);
-
-	pk_debug ("resetting client %p", client);
 	g_string_free (message_text, TRUE);
-	pk_client_reset (client, NULL);
 }
 
 /**
@@ -857,6 +854,8 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 static gboolean
 pk_notify_query_updates (PkNotify *notify)
 {
+	gboolean ret;
+	GError *error = NULL;
 	PkClient *client;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
@@ -873,8 +872,14 @@ pk_notify_query_updates (PkNotify *notify)
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_notify_error_code_cb), notify);
 	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_get_updates (client, "basename", NULL);
-	return TRUE;
+
+	/* get updates */
+	ret = pk_client_get_updates (client, "basename", &error);
+	if (!ret) {
+		pk_warning ("failed to get updates: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
 }
 
 /**

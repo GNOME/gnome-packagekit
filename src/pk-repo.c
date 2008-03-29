@@ -104,7 +104,12 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 
 	/* do this to the repo */
 	pk_debug ("setting %s to %i", repo_id, installed);
-	pk_client_reset (client, NULL);
+	ret = pk_client_reset (client, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
 	ret = pk_client_repo_enable (client, repo_id, installed, &error);
 	if (!ret) {
 		pk_warning ("could not set repo enabled state: %s", error->message);
@@ -238,10 +243,23 @@ pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *deta
 static void
 pk_repo_repo_list_changed_cb (PkClient *client, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	pk_debug ("refreshing list");
 	gtk_list_store_clear (list_store);
-	pk_client_reset (client, NULL);
-	pk_client_get_repo_list (client, NULL);
+	ret = pk_client_reset (client, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	ret = pk_client_get_repo_list (client, &error);
+	if (!ret) {
+		pk_warning ("failed to get repo list: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -251,12 +269,14 @@ int
 main (int argc, char *argv[])
 {
 	GMainLoop *loop;
+	gboolean ret;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
+	GError *error = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -352,7 +372,11 @@ main (int argc, char *argv[])
 
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
-		pk_client_get_repo_list (client, NULL);
+		ret = pk_client_get_repo_list (client, &error);
+		if (!ret) {
+			pk_warning ("failed to get repo list: %s", error->message);
+			g_error_free (error);
+		}
 	} else {
 		pk_repo_detail_cb (client, "default",
 				   _("Getting repository list not supported by backend"), FALSE, NULL);

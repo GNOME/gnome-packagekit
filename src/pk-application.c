@@ -182,17 +182,28 @@ pk_application_install_cb (PolKitGnomeAction *action,
 		           PkApplication     *application)
 {
 	gboolean ret;
+	GError *error = NULL;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	pk_debug ("install %s", application->priv->package);
-	pk_client_reset (application->priv->client_action, NULL);
+
+	ret = pk_client_reset (application->priv->client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* do the install */
 	ret = pk_client_install_package (application->priv->client_action,
 					 application->priv->package, NULL);
-	/* ick, we failed so pretend we didn't do the action */
-	if (ret == FALSE) {
-		pk_application_error_message (application, _("The package could not be installed"), NULL);
+	if (!ret) {
+		pk_warning ("failed to install package: %s", error->message);
+		/* ick, we failed so pretend we didn't do the action */
+		pk_application_error_message (application, _("The package could not be installed"), error->message);
+		g_error_free (error);
 	}
 }
 
@@ -215,18 +226,29 @@ static gboolean
 pk_application_remove_only (PkApplication *application, gboolean force)
 {
 	gboolean ret;
+	GError *error = NULL;
 
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	pk_debug ("remove %s", application->priv->package);
-	pk_client_reset (application->priv->client_action, NULL);
+
+	ret = pk_client_reset (application->priv->client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* do the remove */
 	ret = pk_client_remove_package (application->priv->client_action,
-				        application->priv->package, force, FALSE, NULL);
-	/* ick, we failed so pretend we didn't do the action */
-	if (ret == FALSE) {
+				        application->priv->package, force, FALSE, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		/* ick, we failed so pretend we didn't do the action */
 		pk_application_error_message (application,
-					      _("The package could not be removed"), NULL);
+					      _("The package could not be removed"), error->message);
+		g_error_free (error);
 	}
 	return ret;
 }
@@ -317,7 +339,9 @@ static void
 pk_application_remove_cb (PolKitGnomeAction *action,
 		          PkApplication     *application)
 {
+	gboolean ret;
 	PkClient *client;
+	GError *error = NULL;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -334,8 +358,14 @@ pk_application_remove_cb (PolKitGnomeAction *action,
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_application_requires_finished_cb), application);
+
+	/* do the requires */
 	pk_debug ("getting requires for %s", application->priv->package);
-	pk_client_get_requires (client, "installed", application->priv->package, TRUE, NULL);
+	ret = pk_client_get_requires (client, "installed", application->priv->package, TRUE, &error);
+	if (!ret) {
+		pk_warning ("failed to get requires: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -561,7 +591,7 @@ pk_application_refresh_search_results (PkApplication *application)
 
 	gtk_list_store_clear (application->priv->packages_store);
 	ret = pk_client_requeue (application->priv->client_search, &error);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_warning ("failed to requeue the search: %s", error->message);
 		g_error_free (error);
 		return FALSE;
@@ -684,9 +714,6 @@ pk_application_perform_search (PkApplication *application)
 	GError *error = NULL;
 	gboolean ret;
 
-	/* do we need to cancel a running search? */
-	pk_client_cancel (application->priv->client_search, NULL);
-
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
@@ -697,7 +724,7 @@ pk_application_perform_search (PkApplication *application)
 	}
 
 	ret = pk_strvalidate (package);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
 		pk_application_error_message (application, _("Invalid search text"),
@@ -710,21 +737,27 @@ pk_application_perform_search (PkApplication *application)
 	filter_all = pk_enum_list_to_string (application->priv->current_filter);
 	pk_debug ("filter = %s", filter_all);
 
+	/* reset */
+	ret = pk_client_reset (application->priv->client_search, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* do the search */
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		pk_client_reset (application->priv->client_search, NULL);
 		ret = pk_client_search_name (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		pk_client_reset (application->priv->client_search, NULL);
 		ret = pk_client_search_details (application->priv->client_search, filter_all, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		pk_client_reset (application->priv->client_search, NULL);
 		ret = pk_client_search_file (application->priv->client_search, filter_all, package, &error);
 	} else {
 		pk_warning ("invalid search type");
 		return FALSE;
 	}
 
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_application_error_message (application,
 					      _("The search could not be completed"), error->message);
 		g_error_free (error);
@@ -770,13 +803,31 @@ pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
 static gboolean
 pk_application_quit (PkApplication *application)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	/* we might have visual stuff running, close them down */
-	pk_client_cancel (application->priv->client_search, NULL);
-	pk_client_cancel (application->priv->client_description, NULL);
-	pk_client_cancel (application->priv->client_files, NULL);
+	ret = pk_client_cancel (application->priv->client_search, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+		error = NULL;
+	}
+	ret = pk_client_cancel (application->priv->client_description, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+		error = NULL;
+	}
+	ret = pk_client_cancel (application->priv->client_files, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+		error = NULL;
+	}
 
 	pk_debug ("emitting action-close");
 	g_signal_emit (application, signals [ACTION_CLOSE], 0);
@@ -915,8 +966,13 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 		pk_debug ("filter = %s", filter);
 
 		/* cancel this, we don't care about old results that are pending */
-		pk_client_cancel (application->priv->client_search, NULL);
-		pk_client_reset (application->priv->client_search, NULL);
+		ret = pk_client_reset (application->priv->client_search, &error);
+		if (!ret) {
+			pk_warning ("failed to reset client: %s", error->message);
+			g_error_free (error);
+			return;
+		}
+
 		ret = pk_client_search_group (application->priv->client_search, filter, id, &error);
 		g_free (filter);
 		/* ick, we failed so pretend we didn't do the action */
@@ -946,6 +1002,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 	GtkWidget *widget;
 	GtkWidget *child;
 	gint potential;
+	GError *error = NULL;
 
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
@@ -976,15 +1033,21 @@ pk_notebook_populate (PkApplication *application, gint page)
 		gtk_widget_hide (widget);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_description, NULL);
-		if (ret == FALSE) {
-			pk_debug ("failed to cancel, and adding to queue");
+		ret = pk_client_reset (application->priv->client_description, &error);
+		if (!ret) {
+			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+			g_error_free (error);
+			return FALSE;
 		}
+
 		/* get the description */
-		pk_client_reset (application->priv->client_description, NULL);
-		pk_client_get_description (application->priv->client_description,
-					   application->priv->package, NULL);
-		return TRUE;
+		ret = pk_client_get_description (application->priv->client_description,
+						 application->priv->package, &error);
+		if (!ret) {
+			pk_warning ("failed to get description: %s", error->message);
+			g_error_free (error);
+		}
+		return ret;
 	}
 
 	/* are we description? */
@@ -997,16 +1060,21 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files, NULL);
-		if (ret == FALSE) {
-			pk_debug ("failed to cancel, and adding to queue");
+		ret = pk_client_reset (application->priv->client_files, &error);
+		if (!ret) {
+			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+			g_error_free (error);
+			return FALSE;
 		}
-		/* get the filelist */
-		pk_client_reset (application->priv->client_files, NULL);
-		pk_client_get_files (application->priv->client_files,
-				     application->priv->package, NULL);
 
-		return TRUE;
+		/* get the filelist */
+		ret = pk_client_get_files (application->priv->client_files,
+					   application->priv->package, &error);
+		if (!ret) {
+			pk_warning ("failed to det depends: %s", error->message);
+			g_error_free (error);
+		}
+		return ret;
 	}
 
 	/* are we depends? */
@@ -1019,17 +1087,23 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files, NULL);
-		if (ret == FALSE) {
-			pk_debug ("failed to cancel, and adding to queue");
+		ret = pk_client_reset (application->priv->client_files, &error);
+		if (!ret) {
+			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+			g_error_free (error);
+			return FALSE;
 		}
-		/* get the filelist */
-		pk_client_reset (application->priv->client_files, NULL);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-		pk_client_get_depends (application->priv->client_files, "none",
-				       application->priv->package, FALSE, NULL);
 
-		return TRUE;
+		/* get the depends */
+		ret = pk_client_get_depends (application->priv->client_files, "none",
+					     application->priv->package, FALSE, &error);
+
+		if (!ret) {
+			pk_warning ("failed to det depends: %s", error->message);
+			g_error_free (error);
+		}
+		return ret;
 	}
 
 	/* are we requires? */
@@ -1042,17 +1116,23 @@ pk_notebook_populate (PkApplication *application, gint page)
 		pk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
-		ret = pk_client_cancel (application->priv->client_files, NULL);
-		if (ret == FALSE) {
-			pk_debug ("failed to cancel, and adding to queue");
+		ret = pk_client_reset (application->priv->client_files, &error);
+		if (!ret) {
+			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+			g_error_free (error);
+			return FALSE;
 		}
-		/* get the filelist */
-		pk_client_reset (application->priv->client_files, NULL);
 		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-		pk_client_get_requires (application->priv->client_files, "none",
-				        application->priv->package, TRUE, NULL);
 
-		return TRUE;
+		/* get the requires */
+		ret = pk_client_get_requires (application->priv->client_files, "none",
+					      application->priv->package, TRUE, &error);
+
+		if (!ret) {
+			pk_warning ("failed to det depends: %s", error->message);
+			g_error_free (error);
+		}
+		return ret;
 	}
 	pk_warning ("unknown tab %i!", page);
 	return FALSE;
@@ -1381,7 +1461,7 @@ pk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address, 
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
 
-	if (ret == FALSE) {
+	if (!ret) {
 		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
 						       GTK_DIALOG_MODAL,
 						       GTK_MESSAGE_INFO,
@@ -1481,7 +1561,7 @@ pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 
 	/* can we cancel what we are doing? */
 	ret = pk_client_reset (application->priv->client_action, &error);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_application_error_message (application, _("Package list could not be refreshed"), error->message);
 		g_error_free (error);
 		return;
@@ -1489,7 +1569,7 @@ pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 
 	/* try to refresh the cache */
 	ret = pk_client_refresh_cache (application->priv->client_action, FALSE, &error);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_application_error_message (application, _("The package could not be installed"), error->message);
 		g_error_free (error);
 		return;
@@ -1509,7 +1589,7 @@ pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	ret = g_spawn_command_line_async ("pk-repo", NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_warning ("spawn of pk-repo failed");
 	}
 }

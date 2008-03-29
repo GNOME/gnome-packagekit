@@ -156,6 +156,8 @@ pk_updates_set_page (PkPageEnum page)
 static void
 pk_updates_update_system_cb (PolKitGnomeAction *action, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
 	GtkWidget *widget;
 
 	pk_debug ("Doing the system update");
@@ -166,8 +168,20 @@ pk_updates_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
 
-	pk_client_reset (client_action, NULL);
-	pk_client_update_system (client_action, NULL);
+	/* reset */
+	ret = pk_client_reset (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* update system */
+	ret = pk_client_update_system (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to update system: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -236,9 +250,17 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
-
 	package_ids = pk_package_ids_from_array (array);
-	pk_client_reset (client_action, NULL);
+
+	/* reset */
+	ret = pk_client_reset (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* update a list */
 	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
 		pk_error_modal_dialog ("Individual updates failed", error->message);
@@ -464,12 +486,16 @@ static void
 pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 {
 	gboolean ret;
-	GError *error;
+	GError *error = NULL;
 	GtkWidget *widget;
 
 	/* we can't click this if we havn't finished */
-	pk_client_reset (client_action, NULL);
-	error = NULL;
+	ret = pk_client_reset (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
 	ret = pk_client_refresh_cache (client_action, TRUE, &error);
 	if (ret == FALSE) {
 		pk_error_modal_dialog (_("Failed to refresh"), error->message);
@@ -510,9 +536,21 @@ pk_updates_history_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	/* we might have a transaction running */
-	pk_client_cancel (client_query, NULL);
-	pk_client_cancel (client_action, NULL);
+	ret = pk_client_cancel (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+		error = NULL;
+	}
+	ret = pk_client_cancel (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -521,10 +559,17 @@ pk_button_cancel_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	GMainLoop *loop = (GMainLoop *) data;
 
 	/* we might have a transaction running */
-	pk_client_cancel (client_action, NULL);
+	ret = pk_client_cancel (client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
 
 	g_main_loop_quit (loop);
 }
@@ -972,13 +1017,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 		pk_debug ("selected row is: %s", cached_package_id);
 
-		/* cancel if exists */
-		ret = pk_client_cancel (client_query, &error);
-		if (!ret) {
-			pk_warning ("failed to reset: %s", error->message);
-			g_error_free (error);
-		}
-
 		/* reset */
 		ret = pk_client_reset (client_query, &error);
 		if (!ret) {
@@ -1180,6 +1218,9 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 static void
 pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
 
@@ -1187,9 +1228,19 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 	pk_updates_set_page (PAGE_PREVIEW);
 
 	/* get the new update list */
-	pk_client_reset (client_query, NULL);
+	ret = pk_client_reset (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
 	pk_client_set_use_buffer (client_query, TRUE, NULL);
-	pk_client_get_updates (client_query, "basename", NULL);
+	ret = pk_client_get_updates (client_query, "basename", &error);
+	if (!ret) {
+		pk_warning ("failed to get updates: %s", error->message);
+		g_error_free (error);
+		return;
+	}
 
 	populate_preview ();
 }
@@ -1375,7 +1426,12 @@ pk_updates_changed_cb (PkClient *client, gpointer data)
 	GError *error = NULL;
 
 	/* get the update list */
-	pk_client_reset (client_query, NULL);
+	ret = pk_client_reset (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
 	pk_client_set_use_buffer (client_query, TRUE, NULL);
 	ret = pk_client_get_updates (client_query, "basename", &error);
 	if (!ret) {
@@ -1402,11 +1458,11 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkConnection *pconnection;
 	PkEnumList *role_list;
-	PkRoleEnum role;
 	gboolean ret;
 	GtkSizeGroup *size_group;
 	GtkWidget *button;
 	PolKitAction *pk_action;
+	GError *error = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1716,10 +1772,10 @@ main (int argc, char *argv[])
 	g_main_loop_unref (loop);
 
 	/* we might have visual stuff running, close it down */
-	pk_client_get_role (client_query, &role, NULL, NULL);
-	if (role == PK_ROLE_ENUM_GET_UPDATES ||
-	    role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
-		pk_client_cancel (client_query, NULL);
+	ret = pk_client_cancel (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
 	}
 
 	g_object_unref (glade_xml);

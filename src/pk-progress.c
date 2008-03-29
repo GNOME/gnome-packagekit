@@ -145,8 +145,15 @@ static void
 pk_progress_cancel_cb (GtkWidget  *widget,
 		       PkProgress *progress)
 {
+	gboolean ret;
+	GError *error = NULL;
+
 	pk_debug ("emitting cancel");
-	pk_client_cancel (progress->priv->client, NULL);
+	ret = pk_client_cancel (progress->priv->client, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
