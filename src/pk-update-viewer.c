@@ -1295,7 +1295,6 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 		g_error_free (error);
 		return;
 	}
-	pk_client_set_use_buffer (client_query, TRUE, NULL);
 	ret = pk_client_get_updates (client_query, "basename", &error);
 	if (!ret) {
 		pk_warning ("failed to get updates: %s", error->message);
@@ -1493,7 +1492,6 @@ pk_updates_changed_cb (PkClient *client, gpointer data)
 		g_error_free (error);
 		return;
 	}
-	pk_client_set_use_buffer (client_query, TRUE, NULL);
 	ret = pk_client_get_updates (client_query, "basename", &error);
 	if (!ret) {
 		pk_warning ("failed to get new list: %s", error->message);

@@ -1093,8 +1093,6 @@ pk_notebook_populate (PkApplication *application, gint page)
 			g_error_free (error);
 			return FALSE;
 		}
-		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-
 		/* get the depends */
 		ret = pk_client_get_depends (application->priv->client_files, "none",
 					     application->priv->package, FALSE, &error);
@@ -1122,8 +1120,6 @@ pk_notebook_populate (PkApplication *application, gint page)
 			g_error_free (error);
 			return FALSE;
 		}
-		pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-
 		/* get the requires */
 		ret = pk_client_get_requires (application->priv->client_files, "none",
 					      application->priv->package, TRUE, &error);
