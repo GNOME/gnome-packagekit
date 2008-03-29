@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-24 22:28+0000\n"
+"POT-Creation-Date: 2008-03-29 13:02+0000\n"
 "PO-Revision-Date: 2008-03-07 13:33+0100\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -38,8 +38,7 @@ msgid ""
 "\"weekly\", \"never\""
 msgstr ""
 "Cada quant s'ha de comprovar si hi ha actualitzacions. Les opcions són: "
-"«hourly» (cada hora), «daily» (cada dia), «weekly» (cada setmana) o "
-"«never» (mai)"
+"«hourly» (cada hora), «daily» (cada dia), «weekly» (cada setmana) o «never» (mai)"
 
 #: ../data/gnome-packagekit.schemas.in.h:5
 msgid "How often we should refresh the package cache"
@@ -64,519 +63,567 @@ msgstr ""
 "automàticament"
 
 #: ../data/gnome-packagekit.schemas.in.h:9
+#, fuzzy
+msgid "Notify the user when security updates are available"
+msgstr "Notifica a l'usuari quan hi ha actualitzacions disponibles"
+
+#: ../data/gnome-packagekit.schemas.in.h:10
 msgid "Notify the user when the transaction is complete"
 msgstr "Notifica a l'usuari quan s'ha completat la transacció"
 
-#: ../data/gnome-packagekit.schemas.in.h:10
+#: ../data/gnome-packagekit.schemas.in.h:11
 msgid "Notify the user when updates are available"
 msgstr "Notifica a l'usuari quan hi ha actualitzacions disponibles"
 
-#: ../data/gnome-packagekit.schemas.in.h:11
+#: ../data/gnome-packagekit.schemas.in.h:12
 msgid "Notify the user when we have errors"
 msgstr "Notifica a l'usuari quan hi ha hagi errades"
 
-#: ../data/gnome-packagekit.schemas.in.h:12
+#: ../data/gnome-packagekit.schemas.in.h:13
 msgid "Notify the user when we have messages"
 msgstr "Notifica a l'usuari quan hi hagi missatges"
 
-#: ../data/gnome-packagekit.schemas.in.h:13
+#: ../data/gnome-packagekit.schemas.in.h:14
 msgid "Notify the user when we have not started an autoupdate on battery"
 msgstr ""
 "Notifica a l'usuari quan no s'hagi iniciat una actualització automàtica "
 "estant en bateria"
 
-#: ../data/gnome-packagekit.schemas.in.h:14
+#: ../data/gnome-packagekit.schemas.in.h:15
 msgid "Notify the user when we have started a transaction"
 msgstr "Notifica a l'usuari quan s'hagi iniciat una transacció"
 
-#: ../data/gnome-packagekit.schemas.in.h:15
+#: ../data/gnome-packagekit.schemas.in.h:16
 msgid "Notify the user when we have to restart"
 msgstr "Notifica a l'usuari quan s'hagi de reiniciar"
 
-#: ../data/gnome-packagekit.schemas.in.h:16
+#: ../data/gnome-packagekit.schemas.in.h:17
 msgid ""
 "The number of seconds at session startup to wait before we check for updates"
 msgstr ""
 "El nombre de segons a esperar per a comprovar si hi ha actualitzacions quan "
 "s'inicia la sessió"
 
-#: ../data/pk-application.desktop.in.h:1 ../data/pk-application.glade.h:2
-#: ../src/pk-application-main.c:95
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.glade.h:2
+#: ../src/gpk-application-main.c:95
 msgid "Add/Remove Software"
 msgstr "Afegeix/Suprimeix programari"
 
-#: ../data/pk-application.desktop.in.h:2
+#: ../data/gpk-application.desktop.in.h:2
 msgid "Change the software installed on the system"
 msgstr "Canvia el programari instal·lat en el sistema"
 
-#: ../data/pk-application.glade.h:1
+#: ../data/gpk-application.glade.h:1
 msgid "About this software"
 msgstr ""
 
-#: ../data/pk-application.glade.h:3
+#: ../data/gpk-application.glade.h:3
 msgid "Close the program"
 msgstr ""
 
-#: ../data/pk-application.glade.h:4
+#: ../data/gpk-application.glade.h:4
 msgid "Depends on"
 msgstr "Depèn de"
 
 #. translators: this is the package description
-#: ../data/pk-application.glade.h:5 ../src/pk-update-viewer.c:720
+#: ../data/gpk-application.glade.h:5 ../src/gpk-update-viewer.c:799
 msgid "Description"
 msgstr "Descripció"
 
-#: ../data/pk-application.glade.h:6
+#: ../data/gpk-application.glade.h:6
 msgid "File List"
 msgstr "Llista de fitxers"
 
-#: ../data/pk-application.glade.h:7
+#: ../data/gpk-application.glade.h:7
 msgid "Homepage"
 msgstr "Pàgina inicial"
 
-#: ../data/pk-application.glade.h:8
+#: ../data/gpk-application.glade.h:8
 #, fuzzy
 msgid "Only _available"
 msgstr "Disponible"
 
-#: ../data/pk-application.glade.h:9
+#: ../data/gpk-application.glade.h:9
 #, fuzzy
 msgid "Only _development"
 msgstr "Només els de desenvolupament"
 
-#: ../data/pk-application.glade.h:10
+#: ../data/gpk-application.glade.h:10
 msgid "Only _end user files"
 msgstr ""
 
-#: ../data/pk-application.glade.h:11
+#: ../data/gpk-application.glade.h:11
 #, fuzzy
 msgid "Only _installed"
 msgstr "Instal·lat"
 
-#: ../data/pk-application.glade.h:12
+#: ../data/gpk-application.glade.h:12
 msgid "Only show one package, not subpackages"
 msgstr ""
 
-#: ../data/pk-application.glade.h:13
+#: ../data/gpk-application.glade.h:13
 msgid "Only show the newest available package"
 msgstr ""
 
-#: ../data/pk-application.glade.h:14
+#: ../data/gpk-application.glade.h:14
 msgid "Package size:"
 msgstr "Mida del paquet:"
 
-#: ../data/pk-application.glade.h:15
+#: ../data/gpk-application.glade.h:15
 msgid "Required by"
 msgstr "Requerit per"
 
-#: ../data/pk-application.glade.h:16
+#: ../data/gpk-application.glade.h:16
 #, fuzzy
 msgid "Software _sources"
 msgstr "Fonts de programari"
 
-#: ../data/pk-application.glade.h:17
+#: ../data/gpk-application.glade.h:17
 #, fuzzy
 msgid "_Development"
 msgstr "Desenvolupament:"
 
-#: ../data/pk-application.glade.h:18
+#: ../data/gpk-application.glade.h:18
 #, fuzzy
 msgid "_Filters"
 msgstr "<b>Filtres</b>"
 
-#: ../data/pk-application.glade.h:19
+#: ../data/gpk-application.glade.h:19
 #, fuzzy
 msgid "_Free"
 msgstr "Lliure:"
 
-#: ../data/pk-application.glade.h:20
+#: ../data/gpk-application.glade.h:20
 #, fuzzy
 msgid "_Graphical"
 msgstr "Gràfics:"
 
 #. No help yet
-#: ../data/pk-application.glade.h:21 ../src/pk-notify.c:264
+#: ../data/gpk-application.glade.h:21 ../src/gpk-notify.c:266
 msgid "_Help"
 msgstr "A_juda"
 
-#: ../data/pk-application.glade.h:22
+#: ../data/gpk-application.glade.h:22
 #, fuzzy
 msgid "_Installed"
 msgstr "Instal·lat"
 
-#: ../data/pk-application.glade.h:23
+#: ../data/gpk-application.glade.h:23
 #, fuzzy
 msgid "_Main packages"
 msgstr "Cerca paquets"
 
-#: ../data/pk-application.glade.h:24
+#: ../data/gpk-application.glade.h:24
 #, fuzzy
 msgid "_Newest packages"
 msgstr "S'ha suprimit el paquet"
 
-#: ../data/pk-application.glade.h:25
+#: ../data/gpk-application.glade.h:25
 #, fuzzy
 msgid "_No filter"
 msgstr "Cap fitxer"
 
-#: ../data/pk-application.glade.h:26
+#: ../data/gpk-application.glade.h:26
 msgid "_Only _non-free software"
 msgstr ""
 
-#: ../data/pk-application.glade.h:27
+#: ../data/gpk-application.glade.h:27
 #, fuzzy
 msgid "_Only free software"
 msgstr "Només els lliures"
 
-#: ../data/pk-application.glade.h:28
+#: ../data/gpk-application.glade.h:28
 #, fuzzy
 msgid "_Only graphical"
 msgstr "Només els d'interfície gràfica"
 
-#: ../data/pk-application.glade.h:29
+#: ../data/gpk-application.glade.h:29
 #, fuzzy
 msgid "_Only text"
 msgstr "Només text"
 
-#: ../data/pk-application.glade.h:30
+#: ../data/gpk-application.glade.h:30
 #, fuzzy
 msgid "_System"
 msgstr "Sistema"
 
-#: ../data/pk-application.glade.h:31
+#: ../data/gpk-application.glade.h:31
 msgid "gtk-about"
 msgstr ""
 
-#: ../data/pk-application.glade.h:32
+#: ../data/gpk-application.glade.h:32
 msgid "gtk-quit"
 msgstr ""
 
-#: ../data/pk-backend-status.glade.h:1
+#: ../data/gpk-backend-status.glade.h:1
 msgid "<b>Filters</b>"
 msgstr "<b>Filtres</b>"
 
-#: ../data/pk-backend-status.glade.h:2
+#: ../data/gpk-backend-status.glade.h:2
 msgid "<b>General</b>"
 msgstr "<b>General</b>"
 
-#: ../data/pk-backend-status.glade.h:3
+#: ../data/gpk-backend-status.glade.h:3
 msgid "<b>Methods</b>"
 msgstr "<b>Mètodes</b>"
 
-#: ../data/pk-backend-status.glade.h:4
+#: ../data/gpk-backend-status.glade.h:4
 msgid "Backend Author:"
 msgstr "Autor del rerefons:"
 
-#: ../data/pk-backend-status.glade.h:5
+#: ../data/gpk-backend-status.glade.h:5
 msgid "Backend Name:"
 msgstr "Nom del rerefons:"
 
-#: ../data/pk-backend-status.glade.h:6
+#: ../data/gpk-backend-status.glade.h:6
 msgid "Backend Status"
 msgstr "Estat del rerefons"
 
-#: ../data/pk-backend-status.glade.h:7
-msgid "Cancel Transaction:"
-msgstr "Cancel·la la transacció:"
+#: ../data/gpk-backend-status.glade.h:7
+#, fuzzy
+msgid "Cancel "
+msgstr "Cancel·la"
 
-#: ../data/pk-backend-status.glade.h:8
+#: ../data/gpk-backend-status.glade.h:8
 msgid "Development:"
 msgstr "Desenvolupament:"
 
-#: ../data/pk-backend-status.glade.h:9
+#: ../data/gpk-backend-status.glade.h:9
 msgid "Free:"
 msgstr "Lliure:"
 
-#: ../data/pk-backend-status.glade.h:10
+#: ../data/gpk-backend-status.glade.h:10
 msgid "GUI:"
 msgstr "Interfície gràfica:"
 
-#: ../data/pk-backend-status.glade.h:11
-msgid "Get Depends:"
+#: ../data/gpk-backend-status.glade.h:11
+#, fuzzy
+msgid "GetDepends:"
 msgstr "Obtenir les dependències:"
 
-#: ../data/pk-backend-status.glade.h:12
-msgid "Get Description:"
+#: ../data/gpk-backend-status.glade.h:12
+#, fuzzy
+msgid "GetDescription:"
 msgstr "Obtenir la descripció:"
 
-#: ../data/pk-backend-status.glade.h:13
-msgid "Get Files:"
+#: ../data/gpk-backend-status.glade.h:13
+#, fuzzy
+msgid "GetFiles:"
 msgstr "Obtenir el fitxers:"
 
-#: ../data/pk-backend-status.glade.h:14
-msgid "Get Repository List:"
+#: ../data/gpk-backend-status.glade.h:14
+#, fuzzy
+msgid "GetRepositoryList:"
 msgstr "Obtenir la llista de dipòsits:"
 
-#: ../data/pk-backend-status.glade.h:15
-msgid "Get Requires:"
+#: ../data/gpk-backend-status.glade.h:15
+#, fuzzy
+msgid "GetRequires:"
 msgstr "Obtenir els requeriments:"
 
-#: ../data/pk-backend-status.glade.h:16
-msgid "Get Update Detail:"
+#: ../data/gpk-backend-status.glade.h:16
+#, fuzzy
+msgid "GetUpdate Detail:"
 msgstr "Obtenir el detall de l'actualització:"
 
-#: ../data/pk-backend-status.glade.h:17
-msgid "Get Updates:"
+#: ../data/gpk-backend-status.glade.h:17
+#, fuzzy
+msgid "GetUpdates:"
 msgstr "Obtenir les actualitzacions:"
 
-#: ../data/pk-backend-status.glade.h:18
-msgid "Install File:"
+#: ../data/gpk-backend-status.glade.h:18
+#, fuzzy
+msgid "InstallFile:"
 msgstr "Instal·lar els fitxers:"
 
-#: ../data/pk-backend-status.glade.h:19
-msgid "Install Package:"
+#: ../data/gpk-backend-status.glade.h:19
+#, fuzzy
+msgid "InstallPackage:"
 msgstr "Instal·lar paquets:"
 
-#: ../data/pk-backend-status.glade.h:20
+#: ../data/gpk-backend-status.glade.h:20
 msgid "Installed:"
 msgstr "Instal·lat:"
 
-#: ../data/pk-backend-status.glade.h:21
-msgid "Refresh Cache:"
+#: ../data/gpk-backend-status.glade.h:21
+msgid "Newest:"
+msgstr ""
+
+#: ../data/gpk-backend-status.glade.h:22
+#, fuzzy
+msgid "RefreshCache:"
 msgstr "Actualitzar la memòria cau:"
 
-#: ../data/pk-backend-status.glade.h:22
-msgid "Remove Package:"
+#: ../data/gpk-backend-status.glade.h:23
+#, fuzzy
+msgid "RemovePackage:"
 msgstr "Suprimir paquets:"
 
-#: ../data/pk-backend-status.glade.h:23
-msgid "Repository Enable:"
+#: ../data/gpk-backend-status.glade.h:24
+#, fuzzy
+msgid "RepositoryEnable:"
 msgstr "Habilitar dipòsits:"
 
-#: ../data/pk-backend-status.glade.h:24
-msgid "Repository Set Data:"
+#: ../data/gpk-backend-status.glade.h:25
+#, fuzzy
+msgid "RepositorySetData:"
 msgstr "Establir les dades dels dipòsits:"
 
-#: ../data/pk-backend-status.glade.h:25
+#: ../data/gpk-backend-status.glade.h:26
 msgid "Resolve:"
 msgstr "Resoldre:"
 
-#: ../data/pk-backend-status.glade.h:26
-msgid "Search Details:"
+#: ../data/gpk-backend-status.glade.h:27
+#, fuzzy
+msgid "SearchDetails:"
 msgstr "Detalls de la cerca:"
 
-#: ../data/pk-backend-status.glade.h:27
-msgid "Search File:"
+#: ../data/gpk-backend-status.glade.h:28
+#, fuzzy
+msgid "SearchFile:"
 msgstr "Cerca de fitxers:"
 
-#: ../data/pk-backend-status.glade.h:28
-msgid "Search Group:"
+#: ../data/gpk-backend-status.glade.h:29
+#, fuzzy
+msgid "SearchGroup:"
 msgstr "Cerca per grups:"
 
-#: ../data/pk-backend-status.glade.h:29
-msgid "Search Name:"
+#: ../data/gpk-backend-status.glade.h:30
+#, fuzzy
+msgid "SearchName:"
 msgstr "Cerca per noms:"
 
-#: ../data/pk-backend-status.glade.h:30
-msgid "Update Package:"
+#: ../data/gpk-backend-status.glade.h:31
+msgid "Supported:"
+msgstr ""
+
+#: ../data/gpk-backend-status.glade.h:32
+#, fuzzy
+msgid "UpdatePackage:"
 msgstr "Actualitzar paquets:"
 
-#: ../data/pk-backend-status.glade.h:31
-msgid "Update System:"
+#: ../data/gpk-backend-status.glade.h:33
+#, fuzzy
+msgid "UpdateSystem:"
 msgstr "Actualitzar el sistema:"
 
-#: ../data/pk-install-file.desktop.in.h:1
+#: ../data/gpk-backend-status.glade.h:34
+msgid "Visible:"
+msgstr ""
+
+#: ../data/gpk-backend-status.glade.h:35
+msgid "WhatProvides:"
+msgstr ""
+
+#: ../data/gpk-install-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Instal·la el programari seleccionat en el sistema"
 
-#: ../data/pk-install-file.desktop.in.h:2
+#: ../data/gpk-install-file.desktop.in.h:2
 msgid "Package Installer"
 msgstr "Instal·lador de paquets"
 
-#: ../data/pk-repo.desktop.in.h:1
+#: ../data/gpk-install-file.glade.h:1
+#, fuzzy
+msgid "<b>Installation Complete</b>"
+msgstr "<b>S'ha completat l'actualització del sistema</b>"
+
+#: ../data/gpk-install-file.glade.h:2 ../data/gpk-update-viewer.glade.h:1
+msgid "<b>More details:</b>"
+msgstr "<b>Més detalls:</b>"
+
+#: ../data/gpk-install-file.glade.h:3
+#, fuzzy
+msgid "Install Package"
+msgstr "Instal·lar paquets:"
+
+#: ../data/gpk-repo.desktop.in.h:1
 msgid "Enable or disable software sources"
 msgstr "Habilita o inhabilita les fonts de programari"
 
-#: ../data/pk-repo.desktop.in.h:2
+#: ../data/gpk-repo.desktop.in.h:2
 msgid "Software Sources"
 msgstr "Fonts de programari"
 
-#: ../data/pk-repo.glade.h:1
+#: ../data/gpk-repo.glade.h:1
 msgid "Repository Viewer"
 msgstr "Visualitzador de dipòsits"
 
-#: ../data/pk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.desktop.in.h:1
 msgid "Change software update preferences"
 msgstr "Canvia les preferències de les actualitzacions de programari"
 
-#: ../data/pk-prefs.desktop.in.h:2
+#: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
 msgstr "Actualitzacions de programari"
 
 #. section for notifications
-#: ../data/pk-prefs.glade.h:2
+#: ../data/gpk-prefs.glade.h:2
 msgid "<b>Display Notification</b>"
 msgstr "<b>Mostra notificacions</b>"
 
-#: ../data/pk-prefs.glade.h:3
+#: ../data/gpk-prefs.glade.h:3
 msgid "<b>Update Settings</b>"
 msgstr "<b>Paràmetres d'actualització</b>"
 
-#: ../data/pk-prefs.glade.h:4
+#: ../data/gpk-prefs.glade.h:4
 msgid "C_heck for updates:"
 msgstr "C_omprova si hi ha actualitzacions:"
 
-#: ../data/pk-prefs.glade.h:5
+#: ../data/gpk-prefs.glade.h:5
 msgid "Install updates automatically when on _battery power"
 msgstr ""
 "Instal·la automàticament les actualitzacions quan s'estigui en _bateria"
 
-#: ../data/pk-prefs.glade.h:6 ../src/pk-prefs.c:316
+#: ../data/gpk-prefs.glade.h:6 ../src/gpk-prefs.c:316
 msgid "Software Update Preferences"
 msgstr "Preferències de l'actualització del programari"
 
-#: ../data/pk-prefs.glade.h:7
+#: ../data/gpk-prefs.glade.h:7
 msgid "When _updates are available"
 msgstr "Quan hi hagi _actualitzacions disponibles"
 
-#: ../data/pk-prefs.glade.h:8
+#: ../data/gpk-prefs.glade.h:8
 msgid "When long _tasks have completed"
 msgstr "Quan s'hagin completat _tasques llargues"
 
-#: ../data/pk-prefs.glade.h:9
+#: ../data/gpk-prefs.glade.h:9
 msgid "_Automatically install:"
 msgstr "Instal·la _automàticament:"
 
-#: ../data/pk-progress.glade.h:1
+#: ../data/gpk-progress.glade.h:1
 msgid "PackageKit Progress"
 msgstr "Progrés del PackageKit"
 
-#: ../data/pk-progress.glade.h:2
+#: ../data/gpk-progress.glade.h:2
 msgid "Part Progress:"
 msgstr "Progrés de la part:"
 
-#: ../data/pk-progress.glade.h:3
+#: ../data/gpk-progress.glade.h:3
 msgid "Status:"
 msgstr "Estat:"
 
-#: ../data/pk-progress.glade.h:4
+#: ../data/gpk-progress.glade.h:4
 msgid "Transaction Progress:"
 msgstr "Progrés de la transacció:"
 
-#: ../data/pk-progress.glade.h:5
+#: ../data/gpk-progress.glade.h:5
 msgid "Unknown"
 msgstr "Desconegut"
 
-#: ../data/pk-transactions.glade.h:1
+#: ../data/gpk-transactions.glade.h:1
 msgid "<b>More details</b>"
 msgstr "<b>Més detalls</b>"
 
-#: ../data/pk-transactions.glade.h:2
+#: ../data/gpk-transactions.glade.h:2
 #, fuzzy
 msgid "Update History"
 msgstr "Actualitza el sistema"
 
-#: ../data/pk-transaction-viewer.desktop.in.h:1
+#: ../data/gpk-transaction-viewer.desktop.in.h:1
 msgid "Show details for software transactions"
 msgstr "Mostra els detalls de les transaccions de programari"
 
-#: ../data/pk-transaction-viewer.desktop.in.h:2
+#: ../data/gpk-transaction-viewer.desktop.in.h:2
 msgid "Software Transaction Viewer"
 msgstr "Visualitzador de transaccions de programari"
 
-#: ../data/pk-update-icon.desktop.in.h:1 ../src/pk-update-icon.c:72
+#: ../data/gpk-update-icon.desktop.in.h:1 ../src/gpk-update-icon.c:72
 msgid "PackageKit Update Applet"
 msgstr "Miniaplicació d'actualitzacions del PackageKit"
 
-#: ../data/pk-update-viewer.desktop.in.h:1 ../src/pk-repo.c:241
-#: ../src/pk-update-viewer.c:1351
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:301
+#: ../src/gpk-update-viewer.c:1547
 msgid "Software Update Viewer"
 msgstr "Visualitzador de les actualitzacions de programari"
 
-#: ../data/pk-update-viewer.desktop.in.h:2 ../data/pk-update-viewer.glade.h:10
+#: ../data/gpk-update-viewer.desktop.in.h:2
+#: ../data/gpk-update-viewer.glade.h:8
 msgid "Update System"
 msgstr "Actualitza el sistema"
 
-#: ../data/pk-update-viewer.desktop.in.h:3
+#: ../data/gpk-update-viewer.desktop.in.h:3
 msgid "Update software installed on the system"
 msgstr "Actualitza el programari instal·lat en el sistema"
 
-#: ../data/pk-update-viewer.glade.h:1
-msgid "<b>More details:</b>"
-msgstr "<b>Més detalls:</b>"
-
-#: ../data/pk-update-viewer.glade.h:2
-#, fuzzy
-msgid "<b>System Update Completed</b>"
-msgstr "<b>S'ha completat l'actualització del sistema</b>"
-
-#: ../data/pk-update-viewer.glade.h:3
+#: ../data/gpk-update-viewer.glade.h:2
 msgid "<b>This update will require a reboot</b>"
 msgstr "<b>Aquesta actualització requerirà que es reinicii</b>"
 
-#: ../data/pk-update-viewer.glade.h:4
+#: ../data/gpk-update-viewer.glade.h:3
 #, fuzzy
 msgid "A system restart is recommended"
 msgstr "<b>Es recomana reiniciar el sistema</b>"
 
-#: ../data/pk-update-viewer.glade.h:5
-msgid "All selected updates have been successfully installed"
-msgstr "S'han instal·lat correctament totes les actualitzacions seleccionades"
-
-#: ../data/pk-update-viewer.glade.h:6
+#: ../data/gpk-update-viewer.glade.h:4
 msgid "Last refresh:"
 msgstr ""
 
-#: ../data/pk-update-viewer.glade.h:7
+#: ../data/gpk-update-viewer.glade.h:5
 #, fuzzy
 msgid "Last update:"
 msgstr "S'han obtingut les actualitzacions"
 
-#: ../data/pk-update-viewer.glade.h:8
+#: ../data/gpk-update-viewer.glade.h:6
 msgid "The following updates are available:"
 msgstr "Les actualitzacions següents estan disponibles:"
 
-#: ../data/pk-update-viewer.glade.h:9
+#: ../data/gpk-update-viewer.glade.h:7
 #, fuzzy
 msgid "Unknown...."
 msgstr "Desconegut"
 
-#: ../data/pk-update-viewer.glade.h:11
+#: ../data/gpk-update-viewer.glade.h:9
 msgid "View History"
 msgstr ""
 
-#: ../data/pk-update-viewer.glade.h:12
+#: ../data/gpk-update-viewer.glade.h:10
 msgid "_Back to overview"
 msgstr "_Enrere a la vista general"
 
-#: ../data/pk-update-viewer.glade.h:13
+#: ../data/gpk-update-viewer.glade.h:11
 msgid "_Cancel Update"
 msgstr "_Cancel·la l'actualització"
 
-#: ../data/pk-update-viewer.glade.h:14
+#: ../data/gpk-update-viewer.glade.h:12
+#, fuzzy
+msgid "_Install more updates"
+msgstr "Instal·lat"
+
+#: ../data/gpk-update-viewer.glade.h:13
 #, fuzzy
 msgid "_Review"
 msgstr "_Suprimeix"
 
-#: ../data/pk-signature.glade.h:1
+#: ../data/gpk-signature.glade.h:1
 msgid "Do you recognise the user and trust this key?"
 msgstr "Reconeixeu l'usuari i confieu en aquesta clau?"
 
-#: ../data/pk-signature.glade.h:2
+#: ../data/gpk-signature.glade.h:2
 msgid "Repository name:"
 msgstr "Nom del dipòsit"
 
-#: ../data/pk-signature.glade.h:3
+#: ../data/gpk-signature.glade.h:3
 msgid "Signature URL:"
 msgstr "URL de la signatura:"
 
-#: ../data/pk-signature.glade.h:4
+#: ../data/gpk-signature.glade.h:4
 msgid "Signature identifier:"
 msgstr "Identificador de la signatura:"
 
-#: ../data/pk-signature.glade.h:5
+#: ../data/gpk-signature.glade.h:5
 msgid "Signature time stamp:"
 msgstr "Marca horària de la signatura:"
 
-#: ../data/pk-signature.glade.h:6
+#: ../data/gpk-signature.glade.h:6
 msgid "Signature user identifier:"
 msgstr "Identificador d'usuari de la signatura:"
 
-#: ../data/pk-signature.glade.h:7
+#: ../data/gpk-signature.glade.h:7
 msgid "Software signature is required"
 msgstr "Es necessita la signatura del programari"
 
-#: ../data/pk-signature.glade.h:8
+#: ../data/gpk-signature.glade.h:8
 msgid ""
 "This signature is intended to ensure that software installed\n"
 "on your system is from a trusted source, and has not been tampered with.\n"
@@ -588,16 +635,17 @@ msgstr ""
 "Abans que es pugui instal·lar aquest programari, heu d'indicar que\n"
 "confieu en la font dels paquets."
 
-#: ../src/pk-application.c:195
+#. ick, we failed so pretend we didn't do the action
+#: ../src/gpk-application.c:205 ../src/gpk-application.c:1569
 msgid "The package could not be installed"
 msgstr "No s'ha pogut instal·lar el paquet"
 
-#: ../src/pk-application.c:227
+#: ../src/gpk-application.c:250
 msgid "The package could not be removed"
 msgstr "No s'ha pogut suprimir el paquet"
 
 #. present this to the user
-#: ../src/pk-application.c:276
+#: ../src/gpk-application.c:306
 msgid ""
 "The following packages have to be removed:\n"
 "\n"
@@ -605,1121 +653,82 @@ msgstr ""
 "S'han de suprimir els paquets següents\n"
 "\n"
 
-#: ../src/pk-application.c:290
+#: ../src/gpk-application.c:320
 #, c-format
 msgid "Other software depends on %s"
 msgstr "Altres programes depenen de %s"
 
-#: ../src/pk-application.c:296
+#: ../src/gpk-application.c:326
 msgid "Remove all packages"
 msgstr "Suprimeix-los tots"
 
 #. no information
-#: ../src/pk-application.c:433
+#: ../src/gpk-application.c:471
 msgid "No files"
 msgstr "Cap fitxer"
 
-#: ../src/pk-application.c:576
+#: ../src/gpk-application.c:650
 #, fuzzy
 msgid "No results were found"
 msgstr "No fa falta reiniciar"
 
-#. todo - make the dialog turn red...
-#: ../src/pk-application.c:656
+#. TODO - make the dialog turn red...
+#: ../src/gpk-application.c:730
 msgid "Invalid search text"
 msgstr "Text de cerca invàlid"
 
-#: ../src/pk-application.c:657
+#: ../src/gpk-application.c:731
 msgid "The search text contains invalid characters"
 msgstr "El text de cerca conté caràcters no vàlids"
 
-#: ../src/pk-application.c:685
+#: ../src/gpk-application.c:762
 msgid "The search could not be completed"
 msgstr "No s'ha pogut completar la cerca"
 
-#: ../src/pk-application.c:794 ../src/pk-application.c:815
+#: ../src/gpk-application.c:902 ../src/gpk-application.c:923
 msgid "Name"
 msgstr "Nom"
 
-#: ../src/pk-application.c:872
+#: ../src/gpk-application.c:989
 msgid "The group could not be queried"
 msgstr "No s'ha pogut consultar el grup"
 
-#: ../src/pk-application.c:1157
+#: ../src/gpk-application.c:1296
 msgid "Searching by name"
 msgstr "S'està cercant pel nom"
 
-#: ../src/pk-application.c:1178
+#: ../src/gpk-application.c:1317
 msgid "Searching by description"
 msgstr "S'està cercant per la descripció"
 
-#: ../src/pk-application.c:1199
+#: ../src/gpk-application.c:1338
 msgid "Searching by file"
 msgstr "S'està cercant pel fitxer"
 
-#: ../src/pk-application.c:1222
+#: ../src/gpk-application.c:1364
 msgid "Search by name"
 msgstr "Cerca pel nom"
 
-#: ../src/pk-application.c:1231
+#: ../src/gpk-application.c:1373
 msgid "Search by description"
 msgstr "Cerca per la descripció"
 
-#: ../src/pk-application.c:1240
+#: ../src/gpk-application.c:1382
 msgid "Search by file"
 msgstr "Cerca pel fitxer"
 
-#: ../src/pk-application.c:1299 ../src/pk-notify.c:184 ../src/pk-watch.c:462
+#: ../src/gpk-application.c:1465 ../src/gpk-notify.c:161
+#, fuzzy
+msgid "Failed to show url"
+msgstr "No s'ha pogut resoldre"
+
+#: ../src/gpk-application.c:1495 ../src/gpk-notify.c:187
+#: ../src/gpk-watch.c:488
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Publicat sota la Llicència Pública General GNU versió 2"
 
-#: ../src/pk-application.c:1300
-#, fuzzy
-msgid ""
-"Power Manager is free software; you can redistribute it and/or\n"
-"modify it under the terms of the GNU General Public License\n"
-"as published by the Free Software Foundation; either version 2\n"
-"of the License, or (at your option) any later version."
-msgstr ""
-"El PackageKit és programari lliure; podeu redistribuir-lo i/o\n"
-"modificar-lo sota els termes de la Llicència Pública General GNU\n"
-"tal com ha estat publicada per la Free Software Foundation; ja sigui\n"
-"la versió 2 de la Llicència o bé (si ho preferiu) qualsevol altra \n"
-"versió posterior."
-
-#: ../src/pk-application.c:1304
-#, fuzzy
-msgid ""
-"Power Manager is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details."
-msgstr ""
-"El PackageKit es distribueix amb l'expectativa que serà útil,\n"
-"però SENSE CAP GARANTIA; ni tan sols la garantia implícita de\n"
-"COMERCIABILITAT o ADEQUACIÓ PER UN PROPÒSIT PARTICULAR.\n"
-"Vegeu la Llicència Pública General GNU per obtenir-ne més detalls."
-
-#: ../src/pk-application.c:1308 ../src/pk-notify.c:193 ../src/pk-watch.c:471
-msgid ""
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
-"02110-1301, USA."
-msgstr ""
-"Hauríeu d'haver rebut una còpia de la Llicència Pública General GNU\n"
-"juntament amb el PackageKit; en cas contrari, escriviu a la Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA."
-
-#: ../src/pk-application.c:1313 ../src/pk-notify.c:198 ../src/pk-watch.c:476
-msgid "translator-credits"
-msgstr "Gil Forcada <gilforcada@guifi.net>"
-
-#: ../src/pk-application.c:1332 ../src/pk-notify.c:221 ../src/pk-watch.c:499
-msgid "PackageKit Website"
-msgstr "Lloc web del PackageKit"
-
-#: ../src/pk-application.c:1334
-msgid "Package Manager for GNOME"
-msgstr ""
-
-#: ../src/pk-application.c:1641
-msgid "_Install"
-msgstr "_Instal·la"
-
-#: ../src/pk-application.c:1642
-msgid "Install selected package"
-msgstr "Instal·la el paquet seleccionat"
-
-#: ../src/pk-application.c:1661
-msgid "_Remove"
-msgstr "_Suprimeix"
-
-#: ../src/pk-application.c:1662
-msgid "Remove selected package"
-msgstr "Suprimeix el paquet seleccionat"
-
-#: ../src/pk-application.c:1680
-msgid "Visit homepage for selected package"
-msgstr "Visita la pàgina d'inici del paquet seleccionat"
-
-#: ../src/pk-application.c:1690
-msgid "_Refresh application lists"
-msgstr ""
-
-#: ../src/pk-application.c:1821
-msgid "Find packages"
-msgstr "Cerca paquets"
-
-#: ../src/pk-application.c:1827
-msgid "Cancel search"
-msgstr "Cancel·la la cerca"
-
-#: ../src/pk-application-main.c:76 ../src/pk-backend-status.c:82
-#: ../src/pk-install-file.c:69 ../src/pk-install-package.c:136
-#: ../src/pk-repo.c:222 ../src/pk-prefs.c:297
-#: ../src/pk-transaction-viewer.c:353 ../src/pk-update-icon.c:54
-#: ../src/pk-update-viewer.c:1332
-msgid "Show extra debugging information"
-msgstr "Mostra més informació de depuració"
-
-#: ../src/pk-application-main.c:78 ../src/pk-backend-status.c:84
-#: ../src/pk-install-file.c:71 ../src/pk-install-package.c:138
-#: ../src/pk-repo.c:224 ../src/pk-prefs.c:299
-#: ../src/pk-transaction-viewer.c:355 ../src/pk-update-icon.c:56
-#: ../src/pk-update-viewer.c:1334
-msgid "Show the program version and exit"
-msgstr "Mostra la versió del programa i surt"
-
-#: ../src/pk-backend-status.c:101
-msgid "PackageKit Backend Details Viewer"
-msgstr "Visualitzador dels detalls del rerefons del PackageKit"
-
-#: ../src/pk-backend-status.c:123
-msgid "Exiting as backend details could not be retrieved\n"
-msgstr "Se surt perquè no es poden obtenir els detalls del rerefons\n"
-
-#: ../src/pk-common-gui.c:347 ../src/pk-common-gui.c:383
-#: ../src/pk-common-gui.c:410 ../src/pk-common-gui.c:1461
-#: ../src/pk-common-gui.c:1493
-msgid "Package identifier not valid"
-msgstr "L'identificador del paquet no és vàlid"
-
-#: ../src/pk-common-gui.c:508
-msgid "No network connection available"
-msgstr "No hi ha cap connexió disponible"
-
-#: ../src/pk-common-gui.c:511
-msgid "No package cache is available."
-msgstr "No hi ha cap memòria cau de paquets disponible."
-
-#: ../src/pk-common-gui.c:514
-msgid "Out of memory"
-msgstr "S'ha exhaurit la memòria"
-
-#: ../src/pk-common-gui.c:517
-msgid "Failed to create a thread"
-msgstr "No s'ha pogut crear cap fil"
-
-#: ../src/pk-common-gui.c:520
-msgid "Not supported by this backend"
-msgstr "No està implementat en aquest rerefons"
-
-#: ../src/pk-common-gui.c:523
-msgid "An internal system error has occurred"
-msgstr "S'ha produït un error intern del sistema"
-
-#: ../src/pk-common-gui.c:526
-msgid "A security trust relationship is not present"
-msgstr "No hi ha cap relació de confiança de seguretat"
-
-#: ../src/pk-common-gui.c:529
-msgid "The package is not installed"
-msgstr "El paquet no està instal·lat"
-
-#: ../src/pk-common-gui.c:532
-msgid "The package was not found"
-msgstr "No s'ha trobat el paquet"
-
-#: ../src/pk-common-gui.c:535
-msgid "The package is already installed"
-msgstr "El paquet ja està instal·lat"
-
-#: ../src/pk-common-gui.c:538
-msgid "The package download failed"
-msgstr "No s'ha pogut baixar el paquet"
-
-#: ../src/pk-common-gui.c:541
-msgid "The group was not found"
-msgstr "No s'ha trobat el grup"
-
-#: ../src/pk-common-gui.c:544
-msgid "Dependency resolution failed"
-msgstr "No s'han pogut resoldre les dependències"
-
-#: ../src/pk-common-gui.c:547
-msgid "Search filter was invalid"
-msgstr "El filtre de cerca és invàlid"
-
-#: ../src/pk-common-gui.c:550
-msgid "The package identifier was not well formed"
-msgstr "L'identificador del paquet no està ben format"
-
-#: ../src/pk-common-gui.c:553
-msgid "Transaction error"
-msgstr "Error de transacció"
-
-#: ../src/pk-common-gui.c:556
-msgid "Repository name was not found"
-msgstr "No s'ha trobat el nom del dipòsit"
-
-#: ../src/pk-common-gui.c:559
-msgid "Could not remove a protected system package"
-msgstr "No s'ha pogut suprimir un paquet protegit del sistema"
-
-#: ../src/pk-common-gui.c:562
-msgid "The transaction was canceled"
-msgstr "S'ha cancel·lat la transacció"
-
-#: ../src/pk-common-gui.c:565
-msgid "The transaction was forcibly canceled"
-msgstr "S'ha forçat la cancel·lació de la transacció"
-
-#: ../src/pk-common-gui.c:568
-msgid "Initialization of the package manager failed"
-msgstr "Ha fallat la inicialització del gestor de paquets"
-
-#: ../src/pk-common-gui.c:571
-msgid "Unloading of the package manager failed"
-msgstr "Ha fallat la descàrrega del gestor de paquets"
-
-#: ../src/pk-common-gui.c:574
-msgid "Reading the config file failed"
-msgstr "Ha fallat la lectura del fitxer de configuració"
-
-#: ../src/pk-common-gui.c:577
-msgid "The transaction cannot be cancelled"
-msgstr "No es pot cancel·lar la transacció"
-
-#: ../src/pk-common-gui.c:580
-msgid "Unknown error"
-msgstr "Error desconegut"
-
-#: ../src/pk-common-gui.c:594
-msgid ""
-"There is no network connection available.\n"
-"Please check your connection settings and try again"
-msgstr ""
-"No hi ha cap connexió de xarxa disponible.\n"
-"Comproveu els paràmetres de connexió i torneu a provar-ho"
-
-#: ../src/pk-common-gui.c:598
-msgid ""
-"The package list needs to be rebuilt\n"
-"This should have been done by the backend automatically."
-msgstr ""
-"S'ha de tornar a construir la llista de paquets\n"
-"El rerefons ja ho hauria d'haver fet automàticament."
-
-#: ../src/pk-common-gui.c:601
-msgid ""
-"The service that is responsible for handling user requests is out of "
-"memory.\n"
-"Please restart your computer."
-msgstr ""
-"El servei responsable de gestionar les peticions dels usuaris s'ha quedat "
-"sense memòria.\n"
-"Reinicieu l'ordinador."
-
-#: ../src/pk-common-gui.c:604
-msgid "A thread could not be created to service the user request."
-msgstr "No s'ha pogut crear un fil per a servir la petició de l'usuari."
-
-#: ../src/pk-common-gui.c:607
-msgid ""
-"The action is not supported by this backend\n"
-"Please report a bug as this shouldn't have happened."
-msgstr ""
-"El rerefons no permet fer aquesta operació\n"
-"Informeu de l'errada ja que no hauria d'haver passat."
-
-#: ../src/pk-common-gui.c:611
-msgid ""
-"A problem that we were not expecting has occurred.\n"
-"Please report this bug with the error description."
-msgstr ""
-"S'ha produït un error no esperat.\n"
-"Informeu de l'errada amb la descripció de l'error."
-
-#: ../src/pk-common-gui.c:615
-msgid ""
-"A security trust relationship could not be made with the remote software "
-"source\n"
-"Please check your security settings."
-msgstr ""
-"No s'ha pogut establir una relació de confiança amb la font de programari "
-"remot\n"
-"Comproveu els paràmetres de seguretat."
-
-#: ../src/pk-common-gui.c:619
-msgid ""
-"The package that is trying to be removed or updated is not already "
-"installed, and hence nothing can be done."
-msgstr ""
-"El paquet que s'està intentant suprimir o actualitzar no està instal·lat, de "
-"manera que no es pot fer res."
-
-#: ../src/pk-common-gui.c:622
-msgid ""
-"The package that is being modified was not found on your system or in any "
-"remote software source."
-msgstr ""
-"El paquet que s'està modificant no s'ha trobat en el sistema ni en cap font "
-"de programari remot."
-
-#: ../src/pk-common-gui.c:625
-msgid "The package that is trying to be installed is already installed."
-msgstr "El paquet que s'està intentant instal·lar ja està instal·lat."
-
-#: ../src/pk-common-gui.c:628
-msgid ""
-"The package download failed\n"
-"Please check your network connectivity."
-msgstr ""
-"No s'ha pogut baixar el paquet\n"
-"Comproveu la connexió de xarxa."
-
-#: ../src/pk-common-gui.c:631
-msgid ""
-"The group type was not found\n"
-"Please check your group list and try again."
-msgstr ""
-"No s'ha trobat el tipus de grup\n"
-"Comproveu la llista de grups i torneu a provar-ho."
-
-#: ../src/pk-common-gui.c:634
-msgid ""
-"A package could not be found on your system or in a remote software source "
-"that allows the transaction to complete\n"
-"More information is available in the detailed report."
-msgstr ""
-"No s'ha pogut trobar ni en el sistema ni en cap font de programari remot el "
-"paquet que permeti finalitzar la transacció\n"
-"Hi ha més informació en l'informe detallat."
-
-#: ../src/pk-common-gui.c:638
-msgid "The search filter was not correctly formed."
-msgstr "El filtre de cerca no està ben format."
-
-#: ../src/pk-common-gui.c:641
-msgid ""
-"The package identifier was not well formed when sent to the server.\n"
-"This normally indicates an internal error and should be reported."
-msgstr ""
-"L'identificador del paquet no estava ben format quan s'ha enviat al "
-"servidor.\n"
-"Normalment això indica que hi ha un error intern i s'hauria d'informar."
-
-#: ../src/pk-common-gui.c:645
-msgid ""
-"An unspecified transaction error has occurred.\n"
-"More information is available in the detailed report."
-msgstr ""
-"S'ha produït un error de transacció no especificat.\n"
-"Hi ha més informació en l'informe detallat."
-
-#: ../src/pk-common-gui.c:649
-msgid ""
-"The remote software source name was not found\n"
-"You may need to disable an item in Software Sources"
-msgstr ""
-"No s'ha trobat la font de programari remot\n"
-"Potser haureu d'inhabilitar un element en les fonts de programari"
-
-#: ../src/pk-common-gui.c:653
-msgid ""
-"Removing a protected system package was denied, and thus the whole "
-"transaction failed."
-msgstr ""
-"S'ha denegat la supressió d'un paquet de sistema protegit i en conseqüència "
-"ha fallat tota la transacció."
-
-#: ../src/pk-common-gui.c:656
-msgid "The transaction was canceled successfully and no packages were changed."
-msgstr ""
-"S'ha cancel·lat la transacció correctament i no s'ha canviat cap paquet."
-
-#: ../src/pk-common-gui.c:659
-msgid ""
-"The transaction was canceled successfully and no packages were changed.\n"
-"The backend did not exit cleanly."
-msgstr ""
-"S'ha cancel·lat la transacció correctament i no s'ha canviat cap paquet.\n"
-"El rerefons no ha acabat correctament."
-
-#: ../src/pk-common-gui.c:663
-msgid ""
-"The native package backend could not be initialised.\n"
-"Please make sure no other tools are accessing package information."
-msgstr ""
-"No s'ha pogut inicialitzar el rerefons de paquets nadiu.\n"
-"Assegureu-vos que no hi hagi altres eines que accedeixin a informació de "
-"paquets."
-
-#: ../src/pk-common-gui.c:667
-msgid ""
-"The native package backend could not be closed.\n"
-"Please make sure no other tools are accessing package information."
-msgstr ""
-"No s'ha pogut tancar el rerefons de paquets nadiu.\n"
-"Assegureu-vos que no hi hagi altres eines que accedeixin a informació de "
-"paquets."
-
-#: ../src/pk-common-gui.c:671
-msgid ""
-"The native package configuration file could not be opened.\n"
-"Please make sure configuration is valid."
-msgstr ""
-"No s'ha pogut obrir el fitxer de configuració del paquet nadiu.\n"
-"Assegureu-vos que la configuració sigui correcta."
-
-#: ../src/pk-common-gui.c:675
-msgid "The transaction is not safe to be cancelled at this time."
-msgstr "No és segur cancel·lar la transacció en aquest moment."
-
-#: ../src/pk-common-gui.c:678
-msgid ""
-"Unknown error, please report a bug.\n"
-"More information is available in the detailed report."
-msgstr ""
-"Error desconegut, informeu de l'errada.\n"
-"Hi ha més informació en l'informe detallat."
-
-#: ../src/pk-common-gui.c:693
-msgid "No restart is necessary for this update"
-msgstr "No fa falta reiniciar per aquesta actualització"
-
-#: ../src/pk-common-gui.c:696
-msgid "An application restart is required after this update"
-msgstr "Es necessita reiniciar l'aplicació després d'aquesta actualització"
-
-#: ../src/pk-common-gui.c:699
-msgid "You will be required to log off and back on after this update"
-msgstr ""
-"Se us demanarà que sortiu i torneu a entrar després d'aquesta actualització"
-
-#: ../src/pk-common-gui.c:702
-msgid "A system restart is required after this update"
-msgstr "S'haurà de reiniciar el sistema després d'aquesta actualització"
-
-#: ../src/pk-common-gui.c:719
-msgid "No restart is required"
-msgstr "No fa falta reiniciar"
-
-#: ../src/pk-common-gui.c:722
-msgid "A system restart is required"
-msgstr "S'ha de reiniciar el sistema"
-
-#: ../src/pk-common-gui.c:725
-msgid "You will need to log off and log back on"
-msgstr "Haureu de sortir i tornar a entrar"
-
-#: ../src/pk-common-gui.c:728
-msgid "You need to restart the application"
-msgstr "Heu de reiniciar l'aplicació"
-
-#: ../src/pk-common-gui.c:745
-msgid "PackageKit transaction notice"
-msgstr "Avís de transacció del PackageKit"
-
-#: ../src/pk-common-gui.c:748
-msgid "PackageKit transaction warning"
-msgstr "Avís de transacció del PackageKit"
-
-#: ../src/pk-common-gui.c:751
-msgid "PackageKit daemon"
-msgstr "Dimoni del PackageKit"
-
-#: ../src/pk-common-gui.c:768
-msgid "Unknown state"
-msgstr "Estat desconegut"
-
-#: ../src/pk-common-gui.c:771
-msgid "Setting up transaction"
-msgstr "S'està iniciant la transacció"
-
-#: ../src/pk-common-gui.c:774
-msgid "Waiting for transaction lock"
-msgstr "S'està esperant el blocatge de la transacció"
-
-#: ../src/pk-common-gui.c:777
-msgid "Querying"
-msgstr "S'està consultant"
-
-#: ../src/pk-common-gui.c:780
-msgid "Getting information"
-msgstr "S'està obtenint la informació"
-
-#: ../src/pk-common-gui.c:783 ../src/pk-common-gui.c:898
-#: ../src/pk-common-gui.c:957
-msgid "Removing"
-msgstr "S'està suprimint"
-
-#: ../src/pk-common-gui.c:786 ../src/pk-common-gui.c:889
-msgid "Downloading"
-msgstr "S'està baixant"
-
-#: ../src/pk-common-gui.c:789 ../src/pk-common-gui.c:895
-#: ../src/pk-common-gui.c:960
-msgid "Installing"
-msgstr "S'està instal·lant"
-
-#: ../src/pk-common-gui.c:792
-msgid "Refreshing software list"
-msgstr "S'està actualitzant la llista de programari"
-
-#: ../src/pk-common-gui.c:795 ../src/pk-common-gui.c:892
-msgid "Updating"
-msgstr "S'està actualitzant"
-
-#: ../src/pk-common-gui.c:798
-msgid "Cleaning up"
-msgstr "S'està netejant"
-
-#: ../src/pk-common-gui.c:801 ../src/pk-common-gui.c:910
-msgid "Obsoleting"
-msgstr "S'està fent obsolet"
-
-#: ../src/pk-common-gui.c:804
-msgid "Resolving dependencies"
-msgstr "S'estan resolent les dependències"
-
-#: ../src/pk-common-gui.c:807 ../src/pk-common-gui.c:978
-msgid "Rolling back"
-msgstr "S'està desfent"
-
-#: ../src/pk-common-gui.c:810
-msgid "Committing transaction"
-msgstr "S'està confirmant la transacció"
-
-#: ../src/pk-common-gui.c:813
-msgid "Requesting data"
-msgstr "S'estan demanant les dades"
-
-#: ../src/pk-common-gui.c:816
-msgid "Finished"
-msgstr "S'ha finalitzat"
-
-#: ../src/pk-common-gui.c:819
-msgid "Cancelling"
-msgstr "S'està cancel·lant"
-
-#: ../src/pk-common-gui.c:836
-#, c-format
-msgid "%i trivial update"
-msgid_plural "%i trivial updates"
-msgstr[0] "%i actualització trivial"
-msgstr[1] "%i actualitzacions trivials"
-
-#: ../src/pk-common-gui.c:839
-#, fuzzy, c-format
-msgid "%i update"
-msgid_plural "%i updates"
-msgstr[0] "%i actualització normal"
-msgstr[1] "%i actualitzacions normals"
-
-#: ../src/pk-common-gui.c:842
-#, c-format
-msgid "%i important update"
-msgid_plural "%i important updates"
-msgstr[0] "%i actualització important"
-msgstr[1] "%i actualitzacions importants"
-
-#: ../src/pk-common-gui.c:845
-#, c-format
-msgid "%i security update"
-msgid_plural "%i security updates"
-msgstr[0] "%i actualització de seguretat"
-msgstr[1] "%i actualitzacions de seguretat"
-
-#: ../src/pk-common-gui.c:848
-#, c-format
-msgid "%i bug fix update"
-msgid_plural "%i bug fix updates"
-msgstr[0] "%i actualització de correcció d'errades"
-msgstr[1] "%i actualitzacions de correcció d'errades"
-
-#: ../src/pk-common-gui.c:851
-#, c-format
-msgid "%i enhancement update"
-msgid_plural "%i enhancement updates"
-msgstr[0] "%i actualització de millora"
-msgstr[1] "%i actualitzacions de millora"
-
-#: ../src/pk-common-gui.c:868
-msgid "Trivial update"
-msgstr "Actualització trivial"
-
-#: ../src/pk-common-gui.c:871
-#, fuzzy
-msgid "Update"
-msgstr "Actualitzacions"
-
-#: ../src/pk-common-gui.c:874
-msgid "Important update"
-msgstr "Actualització important"
-
-#: ../src/pk-common-gui.c:877
-msgid "Security update"
-msgstr "Actualització de seguretat"
-
-#: ../src/pk-common-gui.c:880
-msgid "Bug fix update"
-msgstr "Actualització de correcció d'errades"
-
-#: ../src/pk-common-gui.c:883
-msgid "Enhancement update"
-msgstr "Actualització de millora"
-
-#: ../src/pk-common-gui.c:886
-msgid "Blocked update"
-msgstr "Actualització bloquejada"
-
-#: ../src/pk-common-gui.c:901
-msgid "Installed"
-msgstr "Instal·lat"
-
-#: ../src/pk-common-gui.c:904
-msgid "Available"
-msgstr "Disponible"
-
-#: ../src/pk-common-gui.c:907
-msgid "Cleaned up"
-msgstr "S'ha netejat"
-
-#: ../src/pk-common-gui.c:927 ../src/pk-common-gui.c:1018
-msgid "Unknown role type"
-msgstr "Tipus de rol desconegut"
-
-#: ../src/pk-common-gui.c:930
-msgid "Getting dependencies"
-msgstr "S'estan obtenint les dependències"
-
-#: ../src/pk-common-gui.c:933
-msgid "Getting update detail"
-msgstr "S'estan obtenint els detalls de l'actualització"
-
-#: ../src/pk-common-gui.c:936
-msgid "Getting description"
-msgstr "S'està obtenint la descripció"
-
-#: ../src/pk-common-gui.c:939
-msgid "Getting requires"
-msgstr "S'estan obtenint els requeriments"
-
-#: ../src/pk-common-gui.c:942
-msgid "Getting updates"
-msgstr "S'estan obtenint les actualitzacions"
-
-#: ../src/pk-common-gui.c:945
-msgid "Searching details"
-msgstr "S'estan cercant els detalls"
-
-#: ../src/pk-common-gui.c:948
-msgid "Searching for file"
-msgstr "S'està cercant el fitxer"
-
-#: ../src/pk-common-gui.c:951
-msgid "Searching groups"
-msgstr "S'estan cercant els grups"
-
-#: ../src/pk-common-gui.c:954
-msgid "Searching for package name"
-msgstr "S'està cercant el nom del paquet"
-
-#: ../src/pk-common-gui.c:963
-#, fuzzy
-msgid "Installing file"
-msgstr "S'està instal·lant"
-
-#: ../src/pk-common-gui.c:966
-msgid "Refreshing package cache"
-msgstr "S'està actualitzant la memòria cau dels paquets"
-
-#: ../src/pk-common-gui.c:969
-msgid "Updating package"
-msgstr "S'està actualitzant el paquet"
-
-#: ../src/pk-common-gui.c:972
-msgid "Updating system"
-msgstr "S'està actualitzant el sistema"
-
-#: ../src/pk-common-gui.c:975
-msgid "Canceling"
-msgstr "S'està cancel·lant"
-
-#: ../src/pk-common-gui.c:981
-msgid "Getting list of repositories"
-msgstr "S'està obtenint la llista de dipòsits"
-
-#: ../src/pk-common-gui.c:984
-msgid "Enabling repository"
-msgstr "S'està habilitant el dipòsit"
-
-#: ../src/pk-common-gui.c:987
-msgid "Setting repository data"
-msgstr "S'estan establint les dades del dipòsit"
-
-#: ../src/pk-common-gui.c:990 ../src/pk-common-gui.c:1084
-#, fuzzy
-msgid "Resolved"
-msgstr "Resoldre:"
-
-#: ../src/pk-common-gui.c:993 ../src/pk-common-gui.c:1087
-#, fuzzy
-msgid "Got file list"
-msgstr "Cap fitxer"
-
-#: ../src/pk-common-gui.c:996 ../src/pk-common-gui.c:1090
-msgid "Got what provides"
-msgstr ""
-
-#: ../src/pk-common-gui.c:999
-msgid "Service pack"
-msgstr ""
-
-#: ../src/pk-common-gui.c:1021
-msgid "Got dependencies"
-msgstr "S'han obtingut les dependències"
-
-#: ../src/pk-common-gui.c:1024
-msgid "Got update detail"
-msgstr "S'han obtingut els detalls de l'actualització"
-
-#: ../src/pk-common-gui.c:1027
-msgid "Got description"
-msgstr "S'ha obtingut la descripció"
-
-#: ../src/pk-common-gui.c:1030
-msgid "Got requires"
-msgstr "S'han obtingut els requeriments"
-
-#: ../src/pk-common-gui.c:1033
-msgid "Got updates"
-msgstr "S'han obtingut les actualitzacions"
-
-#: ../src/pk-common-gui.c:1036
-msgid "Got details"
-msgstr "S'han obtingut els detalls"
-
-#: ../src/pk-common-gui.c:1039
-msgid "Searched for file"
-msgstr "S'ha cercat el fitxer"
-
-#: ../src/pk-common-gui.c:1042
-msgid "Searched groups"
-msgstr "S'han cercat els grups"
-
-#: ../src/pk-common-gui.c:1045
-msgid "Searched for package name"
-msgstr "S'ha cercat el nom del paquet"
-
-#: ../src/pk-common-gui.c:1048
-msgid "Removed package"
-msgstr "S'ha suprimit el paquet"
-
-#: ../src/pk-common-gui.c:1051
-msgid "Installed package"
-msgstr "S'ha instal·lat el paquet"
-
-#: ../src/pk-common-gui.c:1054
-msgid "Installed local file"
-msgstr "S'ha instal·lat el fitxer local"
-
-#: ../src/pk-common-gui.c:1057
-msgid "Updating from service pack"
-msgstr "S'està actualitzant des del paquet de servei"
-
-#: ../src/pk-common-gui.c:1060
-msgid "Refreshed package cache"
-msgstr "S'ha actualitzat la memòria cau de paquets"
-
-#: ../src/pk-common-gui.c:1063
-msgid "Updated package"
-msgstr "S'ha actualitzat el paquet"
-
-#: ../src/pk-common-gui.c:1066
-msgid "Updated system"
-msgstr "S'ha actualitzat el sistema"
-
-#: ../src/pk-common-gui.c:1069
-msgid "Canceled"
-msgstr "S'ha cancel·lat"
-
-#: ../src/pk-common-gui.c:1072
-msgid "Rolled back"
-msgstr "S'ha desfet"
-
-#: ../src/pk-common-gui.c:1075
-msgid "Got list of repositories"
-msgstr "S'ha obtingut la llista de dipòsits"
-
-#: ../src/pk-common-gui.c:1078
-msgid "Enabled repository"
-msgstr "S'ha habilitat el dipòsit"
-
-#: ../src/pk-common-gui.c:1081
-msgid "Set repository data"
-msgstr "S'han establert les dades del dipòsit"
-
-#: ../src/pk-common-gui.c:1107
-msgid "Accessibility"
-msgstr "Accessibilitat"
-
-#: ../src/pk-common-gui.c:1110
-msgid "Accessories"
-msgstr "Accessoris"
-
-#: ../src/pk-common-gui.c:1113
-msgid "Education"
-msgstr "Educació"
-
-#: ../src/pk-common-gui.c:1116
-msgid "Games"
-msgstr "Jocs"
-
-#: ../src/pk-common-gui.c:1119
-msgid "Graphics"
-msgstr "Gràfics"
-
-#: ../src/pk-common-gui.c:1122
-msgid "Internet"
-msgstr "Internet"
-
-#: ../src/pk-common-gui.c:1125
-msgid "Office"
-msgstr "Oficina"
-
-#: ../src/pk-common-gui.c:1128
-msgid "Other"
-msgstr "Altres"
-
-#: ../src/pk-common-gui.c:1131
-msgid "Programming"
-msgstr "Programació"
-
-#: ../src/pk-common-gui.c:1134
-msgid "Multimedia"
-msgstr "So i vídeo"
-
-#: ../src/pk-common-gui.c:1137
-msgid "System"
-msgstr "Sistema"
-
-#: ../src/pk-common-gui.c:1140
-msgid "GNOME desktop"
-msgstr "Escriptori GNOME"
-
-#: ../src/pk-common-gui.c:1143
-msgid "KDE desktop"
-msgstr "Escriptori KDE"
-
-#: ../src/pk-common-gui.c:1146
-msgid "XFCE desktop"
-msgstr "Escriptori XFCE"
-
-#: ../src/pk-common-gui.c:1149
-msgid "Other desktops"
-msgstr "Altres escriptoris"
-
-# TERMCAT
-#: ../src/pk-common-gui.c:1152
-msgid "Publishing"
-msgstr "Autoedició"
-
-#: ../src/pk-common-gui.c:1155
-msgid "Servers"
-msgstr "Servidors"
-
-#: ../src/pk-common-gui.c:1158
-msgid "Fonts"
-msgstr "Tipus de lletra"
-
-#: ../src/pk-common-gui.c:1161
-msgid "Admin tools"
-msgstr "Eines del sistema"
-
-#: ../src/pk-common-gui.c:1164
-msgid "Legacy"
-msgstr "Llegat"
-
-#: ../src/pk-common-gui.c:1167
-msgid "Localization"
-msgstr "Localització"
-
-#: ../src/pk-common-gui.c:1170
-msgid "Virtualization"
-msgstr "Virtualització"
-
-#: ../src/pk-common-gui.c:1173
-msgid "Security"
-msgstr "Seguretat"
-
-#: ../src/pk-common-gui.c:1176
-msgid "Power management"
-msgstr "Gestió de l'energia"
-
-#: ../src/pk-common-gui.c:1179
-msgid "Communication"
-msgstr "Comunicació"
-
-#: ../src/pk-common-gui.c:1182
-msgid "Network"
-msgstr "Xarxa"
-
-#: ../src/pk-common-gui.c:1185
-msgid "Maps"
-msgstr "Mapes"
-
-#: ../src/pk-common-gui.c:1188
-msgid "Software sources"
-msgstr "Fonts de programari"
-
-#: ../src/pk-common-gui.c:1191
-msgid "Unknown group"
-msgstr "Grup desconegut"
-
-#: ../src/pk-common-gui.c:1272 ../src/pk-common-gui.c:1347
-#, c-format
-msgid "Now"
-msgstr "Ara"
-
-#: ../src/pk-common-gui.c:1281
-#, c-format
-msgid "%i second"
-msgid_plural "%i seconds"
-msgstr[0] "%i segon"
-msgstr[1] "%i segons"
-
-#: ../src/pk-common-gui.c:1294
-#, c-format
-msgid "%i minute"
-msgid_plural "%i minutes"
-msgstr[0] "%i minut"
-msgstr[1] "%i minuts"
-
-#. TRANSLATOR: "%i %s %i %s" are "%i minutes %i seconds"
-#. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
-#. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/pk-common-gui.c:1300 ../src/pk-common-gui.c:1318
-#, c-format
-msgid "%i %s %i %s"
-msgstr "%i %s %i %s"
-
-#: ../src/pk-common-gui.c:1301 ../src/pk-common-gui.c:1320
-msgid "minute"
-msgid_plural "minutes"
-msgstr[0] "minut"
-msgstr[1] "minuts"
-
-#: ../src/pk-common-gui.c:1302
-msgid "second"
-msgid_plural "seconds"
-msgstr[0] "segon"
-msgstr[1] "segons"
-
-#: ../src/pk-common-gui.c:1312
-#, c-format
-msgid "%i hour"
-msgid_plural "%i hours"
-msgstr[0] "%i hora"
-msgstr[1] "%i hores"
-
-#: ../src/pk-common-gui.c:1319
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "hora"
-msgstr[1] "hores"
-
-#: ../src/pk-common-gui.c:1357
-msgid "1 second"
-msgstr "1 segon"
-
-#: ../src/pk-common-gui.c:1367
-msgid "1 minute"
-msgstr "1 minut"
-
-#: ../src/pk-common-gui.c:1377
-msgid "1 hour"
-msgstr "1 hora"
-
-#: ../src/pk-common-gui.c:1387
-msgid "30 seconds"
-msgstr "30 segons"
-
-#: ../src/pk-common-gui.c:1397
-msgid "30 minutes"
-msgstr "30 minuts"
-
-#: ../src/pk-common-gui.c:1407
-msgid "30 minutes 1 second"
-msgstr "30 minuts i 1 segon"
-
-#: ../src/pk-common-gui.c:1417
-msgid "30 minutes 10 seconds"
-msgstr "30 minuts i 10 segons"
-
-#: ../src/pk-common-gui.c:1429
-msgid "0 bytes"
-msgstr "0 bytes"
-
-#: ../src/pk-common-gui.c:1439
-msgid "512 bytes"
-msgstr "512 bytes"
-
-#: ../src/pk-common-gui.c:1449
-msgid "256.2 MB"
-msgstr "256.2 MB"
-
-#: ../src/pk-install-file.c:87 ../src/pk-install-file.c:89
-msgid "PackageKit File Installer"
-msgstr "Instal·lador de fitxers del PackageKit"
-
-#: ../src/pk-install-file.c:88
-msgid "FILE"
-msgstr "FITXER"
-
-#: ../src/pk-install-file.c:107
-#, c-format
-msgid "You need to specify a file to install\n"
-msgstr "Heu d'especificar un fitxer per a instal·lar\n"
-
-#: ../src/pk-install-file.c:114 ../src/pk-install-package.c:93
-#: ../src/pk-install-package.c:187
-msgid "Method not supported"
-msgstr "El mètode no està implementat"
-
-#: ../src/pk-install-file.c:115
-msgid "Installing local files is not supported"
-msgstr ""
-"No es poden instal·lar fitxers locals perquè la funció no està implementada"
-
-#: ../src/pk-install-package.c:79
-msgid "Failed to resolve"
-msgstr "No s'ha pogut resoldre"
-
-#: ../src/pk-install-package.c:80
-msgid "The package could not be found on the system"
-msgstr "No s'ha pogut trobar el paquet en el sistema"
-
-#: ../src/pk-install-package.c:94
-msgid "Installing packages is not supported"
-msgstr "No es poden instal·lar paquets perquè la funció no està implementada"
-
-#: ../src/pk-install-package.c:154 ../src/pk-install-package.c:156
-msgid "PackageKit Package Installer"
-msgstr "Instal·lador de paquets del PackageKit"
-
-#: ../src/pk-install-package.c:174
-#, c-format
-msgid "You need to specify a package to install\n"
-msgstr "Heu d'especificar un paquet per a instal·lar\n"
-
-#: ../src/pk-install-package.c:188
-msgid "Resolving names to packages is not supported"
-msgstr ""
-"No es poden resoldre noms de paquets perquè la funció no està implementada"
-
-#: ../src/pk-notify.c:103
-msgid "Functionality incomplete"
-msgstr "La funcionalitat és incompleta"
-
-#: ../src/pk-notify.c:104
-msgid "No help yet, sorry..."
-msgstr "Encara no hi ha ajuda, disculpeu"
-
-#: ../src/pk-notify.c:185 ../src/pk-watch.c:463
+#: ../src/gpk-application.c:1496 ../src/gpk-notify.c:188
+#: ../src/gpk-watch.c:489
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -1732,7 +741,8 @@ msgstr ""
 "la versió 2 de la Llicència o bé (si ho preferiu) qualsevol altra \n"
 "versió posterior."
 
-#: ../src/pk-notify.c:189 ../src/pk-watch.c:467
+#: ../src/gpk-application.c:1500 ../src/gpk-notify.c:192
+#: ../src/gpk-watch.c:493
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1744,55 +754,1083 @@ msgstr ""
 "COMERCIABILITAT o ADEQUACIÓ PER UN PROPÒSIT PARTICULAR.\n"
 "Vegeu la Llicència Pública General GNU per obtenir-ne més detalls."
 
+#: ../src/gpk-application.c:1504 ../src/gpk-notify.c:196
+#: ../src/gpk-watch.c:497
+msgid ""
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
+"02110-1301, USA."
+msgstr ""
+"Hauríeu d'haver rebut una còpia de la Llicència Pública General GNU\n"
+"juntament amb el PackageKit; en cas contrari, escriviu a la Free Software\n"
+"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA."
+
+#: ../src/gpk-application.c:1509 ../src/gpk-notify.c:201
+#: ../src/gpk-watch.c:502
+msgid "translator-credits"
+msgstr "Gil Forcada <gilforcada@guifi.net>"
+
+#: ../src/gpk-application.c:1534 ../src/gpk-notify.c:224
+#: ../src/gpk-watch.c:525
+msgid "PackageKit Website"
+msgstr "Lloc web del PackageKit"
+
+#: ../src/gpk-application.c:1536
+msgid "Package Manager for GNOME"
+msgstr ""
+
+#: ../src/gpk-application.c:1561
+#, fuzzy
+msgid "Package list could not be refreshed"
+msgstr "No s'ha pogut suprimir el paquet"
+
+#: ../src/gpk-application.c:1953
+msgid "_Install"
+msgstr "_Instal·la"
+
+#: ../src/gpk-application.c:1954
+msgid "Install selected package"
+msgstr "Instal·la el paquet seleccionat"
+
+#: ../src/gpk-application.c:1973
+msgid "_Remove"
+msgstr "_Suprimeix"
+
+#: ../src/gpk-application.c:1974
+msgid "Remove selected package"
+msgstr "Suprimeix el paquet seleccionat"
+
+#: ../src/gpk-application.c:1992
+msgid "Visit homepage for selected package"
+msgstr "Visita la pàgina d'inici del paquet seleccionat"
+
+#: ../src/gpk-application.c:2002
+msgid "_Refresh application lists"
+msgstr ""
+
+#: ../src/gpk-application.c:2133
+msgid "Find packages"
+msgstr "Cerca paquets"
+
+#: ../src/gpk-application.c:2139
+msgid "Cancel search"
+msgstr "Cancel·la la cerca"
+
+#: ../src/gpk-application-main.c:76 ../src/gpk-backend-status.c:82
+#: ../src/gpk-install-file.c:210 ../src/gpk-install-package.c:136
+#: ../src/gpk-repo.c:282 ../src/gpk-prefs.c:297
+#: ../src/gpk-transaction-viewer.c:379 ../src/gpk-update-icon.c:54
+#: ../src/gpk-update-viewer.c:1528
+msgid "Show extra debugging information"
+msgstr "Mostra més informació de depuració"
+
+#: ../src/gpk-application-main.c:78 ../src/gpk-backend-status.c:84
+#: ../src/gpk-install-file.c:212 ../src/gpk-install-package.c:138
+#: ../src/gpk-repo.c:284 ../src/gpk-prefs.c:299
+#: ../src/gpk-transaction-viewer.c:381 ../src/gpk-update-icon.c:56
+#: ../src/gpk-update-viewer.c:1530
+msgid "Show the program version and exit"
+msgstr "Mostra la versió del programa i surt"
+
+#: ../src/gpk-backend-status.c:101
+msgid "PackageKit Backend Details Viewer"
+msgstr "Visualitzador dels detalls del rerefons del PackageKit"
+
+#: ../src/gpk-backend-status.c:123
+msgid "Exiting as backend details could not be retrieved\n"
+msgstr "Se surt perquè no es poden obtenir els detalls del rerefons\n"
+
+#: ../src/gpk-common.c:348 ../src/gpk-common.c:384 ../src/gpk-common.c:411
+#: ../src/gpk-common.c:1464 ../src/gpk-common.c:1496
+msgid "Package identifier not valid"
+msgstr "L'identificador del paquet no és vàlid"
+
+#: ../src/gpk-common.c:509
+msgid "No network connection available"
+msgstr "No hi ha cap connexió disponible"
+
+#: ../src/gpk-common.c:512
+msgid "No package cache is available."
+msgstr "No hi ha cap memòria cau de paquets disponible."
+
+#: ../src/gpk-common.c:515
+msgid "Out of memory"
+msgstr "S'ha exhaurit la memòria"
+
+#: ../src/gpk-common.c:518
+msgid "Failed to create a thread"
+msgstr "No s'ha pogut crear cap fil"
+
+#: ../src/gpk-common.c:521
+msgid "Not supported by this backend"
+msgstr "No està implementat en aquest rerefons"
+
+#: ../src/gpk-common.c:524
+msgid "An internal system error has occurred"
+msgstr "S'ha produït un error intern del sistema"
+
+#: ../src/gpk-common.c:527
+msgid "A security trust relationship is not present"
+msgstr "No hi ha cap relació de confiança de seguretat"
+
+#: ../src/gpk-common.c:530
+msgid "The package is not installed"
+msgstr "El paquet no està instal·lat"
+
+#: ../src/gpk-common.c:533
+msgid "The package was not found"
+msgstr "No s'ha trobat el paquet"
+
+#: ../src/gpk-common.c:536
+msgid "The package is already installed"
+msgstr "El paquet ja està instal·lat"
+
+#: ../src/gpk-common.c:539
+msgid "The package download failed"
+msgstr "No s'ha pogut baixar el paquet"
+
+#: ../src/gpk-common.c:542
+msgid "The group was not found"
+msgstr "No s'ha trobat el grup"
+
+#: ../src/gpk-common.c:545
+msgid "Dependency resolution failed"
+msgstr "No s'han pogut resoldre les dependències"
+
+#: ../src/gpk-common.c:548
+msgid "Search filter was invalid"
+msgstr "El filtre de cerca és invàlid"
+
+#: ../src/gpk-common.c:551
+msgid "The package identifier was not well formed"
+msgstr "L'identificador del paquet no està ben format"
+
+#: ../src/gpk-common.c:554
+msgid "Transaction error"
+msgstr "Error de transacció"
+
+#: ../src/gpk-common.c:557
+msgid "Repository name was not found"
+msgstr "No s'ha trobat el nom del dipòsit"
+
+#: ../src/gpk-common.c:560
+msgid "Could not remove a protected system package"
+msgstr "No s'ha pogut suprimir un paquet protegit del sistema"
+
+#: ../src/gpk-common.c:563
+msgid "The transaction was canceled"
+msgstr "S'ha cancel·lat la transacció"
+
+#: ../src/gpk-common.c:566
+msgid "The transaction was forcibly canceled"
+msgstr "S'ha forçat la cancel·lació de la transacció"
+
+#: ../src/gpk-common.c:569
+msgid "Reading the config file failed"
+msgstr "Ha fallat la lectura del fitxer de configuració"
+
+#: ../src/gpk-common.c:572
+msgid "The transaction cannot be cancelled"
+msgstr "No es pot cancel·lar la transacció"
+
+#: ../src/gpk-common.c:575
+#, fuzzy
+msgid "Source packages cannot be installed"
+msgstr "No s'ha pogut instal·lar el paquet"
+
+#: ../src/gpk-common.c:578
+msgid "Unknown error"
+msgstr "Error desconegut"
+
+#: ../src/gpk-common.c:592
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"No hi ha cap connexió de xarxa disponible.\n"
+"Comproveu els paràmetres de connexió i torneu a provar-ho"
+
+#: ../src/gpk-common.c:596
+msgid ""
+"The package list needs to be rebuilt\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"S'ha de tornar a construir la llista de paquets\n"
+"El rerefons ja ho hauria d'haver fet automàticament."
+
+#: ../src/gpk-common.c:599
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please restart your computer."
+msgstr ""
+"El servei responsable de gestionar les peticions dels usuaris s'ha quedat "
+"sense memòria.\n"
+"Reinicieu l'ordinador."
+
+#: ../src/gpk-common.c:602
+msgid "A thread could not be created to service the user request."
+msgstr "No s'ha pogut crear un fil per a servir la petició de l'usuari."
+
+#: ../src/gpk-common.c:605
+msgid ""
+"The action is not supported by this backend\n"
+"Please report a bug as this shouldn't have happened."
+msgstr ""
+"El rerefons no permet fer aquesta operació\n"
+"Informeu de l'errada ja que no hauria d'haver passat."
+
+#: ../src/gpk-common.c:609
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug with the error description."
+msgstr ""
+"S'ha produït un error no esperat.\n"
+"Informeu de l'errada amb la descripció de l'error."
+
+#: ../src/gpk-common.c:613
+msgid ""
+"A security trust relationship could not be made with the remote software "
+"source\n"
+"Please check your security settings."
+msgstr ""
+"No s'ha pogut establir una relació de confiança amb la font de programari "
+"remot\n"
+"Comproveu els paràmetres de seguretat."
+
+#: ../src/gpk-common.c:617
+msgid ""
+"The package that is trying to be removed or updated is not already "
+"installed, and hence nothing can be done."
+msgstr ""
+"El paquet que s'està intentant suprimir o actualitzar no està instal·lat, de "
+"manera que no es pot fer res."
+
+#: ../src/gpk-common.c:620
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"remote software source."
+msgstr ""
+"El paquet que s'està modificant no s'ha trobat en el sistema ni en cap font "
+"de programari remot."
+
+#: ../src/gpk-common.c:623
+msgid "The package that is trying to be installed is already installed."
+msgstr "El paquet que s'està intentant instal·lar ja està instal·lat."
+
+#: ../src/gpk-common.c:626
+msgid ""
+"The package download failed\n"
+"Please check your network connectivity."
+msgstr ""
+"No s'ha pogut baixar el paquet\n"
+"Comproveu la connexió de xarxa."
+
+#: ../src/gpk-common.c:629
+msgid ""
+"The group type was not found\n"
+"Please check your group list and try again."
+msgstr ""
+"No s'ha trobat el tipus de grup\n"
+"Comproveu la llista de grups i torneu a provar-ho."
+
+#: ../src/gpk-common.c:632
+msgid ""
+"A package could not be found on your system or in a remote software source "
+"that allows the transaction to complete\n"
+"More information is available in the detailed report."
+msgstr ""
+"No s'ha pogut trobar ni en el sistema ni en cap font de programari remot el "
+"paquet que permeti finalitzar la transacció\n"
+"Hi ha més informació en l'informe detallat."
+
+#: ../src/gpk-common.c:636
+msgid "The search filter was not correctly formed."
+msgstr "El filtre de cerca no està ben format."
+
+#: ../src/gpk-common.c:639
+msgid ""
+"The package identifier was not well formed when sent to the server.\n"
+"This normally indicates an internal error and should be reported."
+msgstr ""
+"L'identificador del paquet no estava ben format quan s'ha enviat al "
+"servidor.\n"
+"Normalment això indica que hi ha un error intern i s'hauria d'informar."
+
+#: ../src/gpk-common.c:643
+msgid ""
+"An unspecified transaction error has occurred.\n"
+"More information is available in the detailed report."
+msgstr ""
+"S'ha produït un error de transacció no especificat.\n"
+"Hi ha més informació en l'informe detallat."
+
+#: ../src/gpk-common.c:647
+msgid ""
+"The remote software source name was not found\n"
+"You may need to disable an item in Software Sources"
+msgstr ""
+"No s'ha trobat la font de programari remot\n"
+"Potser haureu d'inhabilitar un element en les fonts de programari"
+
+#: ../src/gpk-common.c:651
+msgid ""
+"Removing a protected system package was denied, and thus the whole "
+"transaction failed."
+msgstr ""
+"S'ha denegat la supressió d'un paquet de sistema protegit i en conseqüència "
+"ha fallat tota la transacció."
+
+#: ../src/gpk-common.c:654
+msgid "The transaction was canceled successfully and no packages were changed."
+msgstr ""
+"S'ha cancel·lat la transacció correctament i no s'ha canviat cap paquet."
+
+#: ../src/gpk-common.c:657
+msgid ""
+"The transaction was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"S'ha cancel·lat la transacció correctament i no s'ha canviat cap paquet.\n"
+"El rerefons no ha acabat correctament."
+
+#: ../src/gpk-common.c:661
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure configuration is valid."
+msgstr ""
+"No s'ha pogut obrir el fitxer de configuració del paquet nadiu.\n"
+"Assegureu-vos que la configuració sigui correcta."
+
+#: ../src/gpk-common.c:665
+msgid "The transaction is not safe to be cancelled at this time."
+msgstr "No és segur cancel·lar la transacció en aquest moment."
+
+#: ../src/gpk-common.c:668
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+
+#: ../src/gpk-common.c:672
+msgid ""
+"Unknown error, please report a bug.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Error desconegut, informeu de l'errada.\n"
+"Hi ha més informació en l'informe detallat."
+
+#: ../src/gpk-common.c:687
+msgid "No restart is necessary for this update"
+msgstr "No fa falta reiniciar per aquesta actualització"
+
+#: ../src/gpk-common.c:690
+msgid "An application restart is required after this update"
+msgstr "Es necessita reiniciar l'aplicació després d'aquesta actualització"
+
+#: ../src/gpk-common.c:693
+msgid "You will be required to log off and back on after this update"
+msgstr ""
+"Se us demanarà que sortiu i torneu a entrar després d'aquesta actualització"
+
+#: ../src/gpk-common.c:696
+msgid "A system restart is required after this update"
+msgstr "S'haurà de reiniciar el sistema després d'aquesta actualització"
+
+#: ../src/gpk-common.c:713
+msgid "No restart is required"
+msgstr "No fa falta reiniciar"
+
+#: ../src/gpk-common.c:716
+msgid "A system restart is required"
+msgstr "S'ha de reiniciar el sistema"
+
+#: ../src/gpk-common.c:719
+msgid "You will need to log off and log back on"
+msgstr "Haureu de sortir i tornar a entrar"
+
+#: ../src/gpk-common.c:722
+msgid "You need to restart the application"
+msgstr "Heu de reiniciar l'aplicació"
+
+#: ../src/gpk-common.c:739
+msgid "PackageKit transaction notice"
+msgstr "Avís de transacció del PackageKit"
+
+#: ../src/gpk-common.c:742
+msgid "PackageKit transaction warning"
+msgstr "Avís de transacció del PackageKit"
+
+#: ../src/gpk-common.c:745
+msgid "PackageKit daemon"
+msgstr "Dimoni del PackageKit"
+
+#: ../src/gpk-common.c:762
+msgid "Unknown state"
+msgstr "Estat desconegut"
+
+#: ../src/gpk-common.c:765
+#, fuzzy
+msgid "Waiting for PackageKit service"
+msgstr "S'està cercant el nom del paquet"
+
+#: ../src/gpk-common.c:768
+#, fuzzy
+msgid "Waiting for other tasks to complete"
+msgstr "S'està esperant el blocatge de la transacció"
+
+#: ../src/gpk-common.c:771
+#, fuzzy
+msgid "Running transaction"
+msgstr "S'està iniciant la transacció"
+
+#: ../src/gpk-common.c:774
+msgid "Querying"
+msgstr "S'està consultant"
+
+#: ../src/gpk-common.c:777
+msgid "Getting information"
+msgstr "S'està obtenint la informació"
+
+#: ../src/gpk-common.c:780 ../src/gpk-common.c:901 ../src/gpk-common.c:960
+msgid "Removing"
+msgstr "S'està suprimint"
+
+#: ../src/gpk-common.c:783 ../src/gpk-common.c:892
+msgid "Downloading"
+msgstr "S'està baixant"
+
+#: ../src/gpk-common.c:786 ../src/gpk-common.c:898 ../src/gpk-common.c:963
+msgid "Installing"
+msgstr "S'està instal·lant"
+
+#: ../src/gpk-common.c:789
+msgid "Refreshing software list"
+msgstr "S'està actualitzant la llista de programari"
+
+#: ../src/gpk-common.c:792 ../src/gpk-common.c:895
+msgid "Updating"
+msgstr "S'està actualitzant"
+
+#: ../src/gpk-common.c:795
+msgid "Cleaning up"
+msgstr "S'està netejant"
+
+#: ../src/gpk-common.c:798 ../src/gpk-common.c:913
+msgid "Obsoleting"
+msgstr "S'està fent obsolet"
+
+#: ../src/gpk-common.c:801
+msgid "Resolving dependencies"
+msgstr "S'estan resolent les dependències"
+
+#: ../src/gpk-common.c:804
+msgid "Checking signatures"
+msgstr ""
+
+#: ../src/gpk-common.c:807 ../src/gpk-common.c:981
+msgid "Rolling back"
+msgstr "S'està desfent"
+
+#: ../src/gpk-common.c:810
+#, fuzzy
+msgid "Trying transaction"
+msgstr "Transacció"
+
+#: ../src/gpk-common.c:813
+msgid "Committing transaction"
+msgstr "S'està confirmant la transacció"
+
+#: ../src/gpk-common.c:816
+msgid "Requesting data"
+msgstr "S'estan demanant les dades"
+
+#: ../src/gpk-common.c:819
+msgid "Finished"
+msgstr "S'ha finalitzat"
+
+#: ../src/gpk-common.c:822
+msgid "Cancelling"
+msgstr "S'està cancel·lant"
+
+#: ../src/gpk-common.c:839
+#, c-format
+msgid "%i trivial update"
+msgid_plural "%i trivial updates"
+msgstr[0] "%i actualització trivial"
+msgstr[1] "%i actualitzacions trivials"
+
+#: ../src/gpk-common.c:842
+#, fuzzy, c-format
+msgid "%i update"
+msgid_plural "%i updates"
+msgstr[0] "%i actualització normal"
+msgstr[1] "%i actualitzacions normals"
+
+#: ../src/gpk-common.c:845
+#, c-format
+msgid "%i important update"
+msgid_plural "%i important updates"
+msgstr[0] "%i actualització important"
+msgstr[1] "%i actualitzacions importants"
+
+#: ../src/gpk-common.c:848
+#, c-format
+msgid "%i security update"
+msgid_plural "%i security updates"
+msgstr[0] "%i actualització de seguretat"
+msgstr[1] "%i actualitzacions de seguretat"
+
+#: ../src/gpk-common.c:851
+#, c-format
+msgid "%i bug fix update"
+msgid_plural "%i bug fix updates"
+msgstr[0] "%i actualització de correcció d'errades"
+msgstr[1] "%i actualitzacions de correcció d'errades"
+
+#: ../src/gpk-common.c:854
+#, c-format
+msgid "%i enhancement update"
+msgid_plural "%i enhancement updates"
+msgstr[0] "%i actualització de millora"
+msgstr[1] "%i actualitzacions de millora"
+
+#: ../src/gpk-common.c:871
+msgid "Trivial update"
+msgstr "Actualització trivial"
+
+#: ../src/gpk-common.c:874
+#, fuzzy
+msgid "Update"
+msgstr "Actualitzacions"
+
+#: ../src/gpk-common.c:877
+msgid "Important update"
+msgstr "Actualització important"
+
+#: ../src/gpk-common.c:880
+msgid "Security update"
+msgstr "Actualització de seguretat"
+
+#: ../src/gpk-common.c:883
+msgid "Bug fix update"
+msgstr "Actualització de correcció d'errades"
+
+#: ../src/gpk-common.c:886
+msgid "Enhancement update"
+msgstr "Actualització de millora"
+
+#: ../src/gpk-common.c:889
+msgid "Blocked update"
+msgstr "Actualització bloquejada"
+
+#: ../src/gpk-common.c:904
+msgid "Installed"
+msgstr "Instal·lat"
+
+#: ../src/gpk-common.c:907
+msgid "Available"
+msgstr "Disponible"
+
+#: ../src/gpk-common.c:910
+msgid "Cleaned up"
+msgstr "S'ha netejat"
+
+#: ../src/gpk-common.c:930 ../src/gpk-common.c:1021
+msgid "Unknown role type"
+msgstr "Tipus de rol desconegut"
+
+#: ../src/gpk-common.c:933
+msgid "Getting dependencies"
+msgstr "S'estan obtenint les dependències"
+
+#: ../src/gpk-common.c:936
+msgid "Getting update detail"
+msgstr "S'estan obtenint els detalls de l'actualització"
+
+#: ../src/gpk-common.c:939
+msgid "Getting description"
+msgstr "S'està obtenint la descripció"
+
+#: ../src/gpk-common.c:942
+msgid "Getting requires"
+msgstr "S'estan obtenint els requeriments"
+
+#: ../src/gpk-common.c:945
+msgid "Getting updates"
+msgstr "S'estan obtenint les actualitzacions"
+
+#: ../src/gpk-common.c:948
+msgid "Searching details"
+msgstr "S'estan cercant els detalls"
+
+#: ../src/gpk-common.c:951
+msgid "Searching for file"
+msgstr "S'està cercant el fitxer"
+
+#: ../src/gpk-common.c:954
+msgid "Searching groups"
+msgstr "S'estan cercant els grups"
+
+#: ../src/gpk-common.c:957
+msgid "Searching for package name"
+msgstr "S'està cercant el nom del paquet"
+
+#: ../src/gpk-common.c:966
+#, fuzzy
+msgid "Installing file"
+msgstr "S'està instal·lant"
+
+#: ../src/gpk-common.c:969
+msgid "Refreshing package cache"
+msgstr "S'està actualitzant la memòria cau dels paquets"
+
+#: ../src/gpk-common.c:972
+msgid "Updating package"
+msgstr "S'està actualitzant el paquet"
+
+#: ../src/gpk-common.c:975
+msgid "Updating system"
+msgstr "S'està actualitzant el sistema"
+
+#: ../src/gpk-common.c:978
+msgid "Canceling"
+msgstr "S'està cancel·lant"
+
+#: ../src/gpk-common.c:984
+msgid "Getting list of repositories"
+msgstr "S'està obtenint la llista de dipòsits"
+
+#: ../src/gpk-common.c:987
+msgid "Enabling repository"
+msgstr "S'està habilitant el dipòsit"
+
+#: ../src/gpk-common.c:990
+msgid "Setting repository data"
+msgstr "S'estan establint les dades del dipòsit"
+
+#: ../src/gpk-common.c:993 ../src/gpk-common.c:1087
+#, fuzzy
+msgid "Resolved"
+msgstr "Resoldre:"
+
+#: ../src/gpk-common.c:996 ../src/gpk-common.c:1090
+#, fuzzy
+msgid "Got file list"
+msgstr "Cap fitxer"
+
+#: ../src/gpk-common.c:999 ../src/gpk-common.c:1093
+msgid "Got what provides"
+msgstr ""
+
+#: ../src/gpk-common.c:1002
+msgid "Service pack"
+msgstr ""
+
+#: ../src/gpk-common.c:1024
+msgid "Got dependencies"
+msgstr "S'han obtingut les dependències"
+
+#: ../src/gpk-common.c:1027
+msgid "Got update detail"
+msgstr "S'han obtingut els detalls de l'actualització"
+
+#: ../src/gpk-common.c:1030
+msgid "Got description"
+msgstr "S'ha obtingut la descripció"
+
+#: ../src/gpk-common.c:1033
+msgid "Got requires"
+msgstr "S'han obtingut els requeriments"
+
+#: ../src/gpk-common.c:1036
+msgid "Got updates"
+msgstr "S'han obtingut les actualitzacions"
+
+#: ../src/gpk-common.c:1039
+msgid "Got details"
+msgstr "S'han obtingut els detalls"
+
+#: ../src/gpk-common.c:1042
+msgid "Searched for file"
+msgstr "S'ha cercat el fitxer"
+
+#: ../src/gpk-common.c:1045
+msgid "Searched groups"
+msgstr "S'han cercat els grups"
+
+#: ../src/gpk-common.c:1048
+msgid "Searched for package name"
+msgstr "S'ha cercat el nom del paquet"
+
+#: ../src/gpk-common.c:1051
+msgid "Removed package"
+msgstr "S'ha suprimit el paquet"
+
+#: ../src/gpk-common.c:1054
+msgid "Installed package"
+msgstr "S'ha instal·lat el paquet"
+
+#: ../src/gpk-common.c:1057
+msgid "Installed local file"
+msgstr "S'ha instal·lat el fitxer local"
+
+#: ../src/gpk-common.c:1060
+msgid "Updating from service pack"
+msgstr "S'està actualitzant des del paquet de servei"
+
+#: ../src/gpk-common.c:1063
+msgid "Refreshed package cache"
+msgstr "S'ha actualitzat la memòria cau de paquets"
+
+#: ../src/gpk-common.c:1066
+msgid "Updated package"
+msgstr "S'ha actualitzat el paquet"
+
+#: ../src/gpk-common.c:1069
+msgid "Updated system"
+msgstr "S'ha actualitzat el sistema"
+
+#: ../src/gpk-common.c:1072
+msgid "Canceled"
+msgstr "S'ha cancel·lat"
+
+#: ../src/gpk-common.c:1075
+msgid "Rolled back"
+msgstr "S'ha desfet"
+
+#: ../src/gpk-common.c:1078
+msgid "Got list of repositories"
+msgstr "S'ha obtingut la llista de dipòsits"
+
+#: ../src/gpk-common.c:1081
+msgid "Enabled repository"
+msgstr "S'ha habilitat el dipòsit"
+
+#: ../src/gpk-common.c:1084
+msgid "Set repository data"
+msgstr "S'han establert les dades del dipòsit"
+
+#: ../src/gpk-common.c:1110
+msgid "Accessibility"
+msgstr "Accessibilitat"
+
+#: ../src/gpk-common.c:1113
+msgid "Accessories"
+msgstr "Accessoris"
+
+#: ../src/gpk-common.c:1116
+msgid "Education"
+msgstr "Educació"
+
+#: ../src/gpk-common.c:1119
+msgid "Games"
+msgstr "Jocs"
+
+#: ../src/gpk-common.c:1122
+msgid "Graphics"
+msgstr "Gràfics"
+
+#: ../src/gpk-common.c:1125
+msgid "Internet"
+msgstr "Internet"
+
+#: ../src/gpk-common.c:1128
+msgid "Office"
+msgstr "Oficina"
+
+#: ../src/gpk-common.c:1131
+msgid "Other"
+msgstr "Altres"
+
+#: ../src/gpk-common.c:1134
+msgid "Programming"
+msgstr "Programació"
+
+#: ../src/gpk-common.c:1137
+msgid "Multimedia"
+msgstr "So i vídeo"
+
+#: ../src/gpk-common.c:1140
+msgid "System"
+msgstr "Sistema"
+
+#: ../src/gpk-common.c:1143
+msgid "GNOME desktop"
+msgstr "Escriptori GNOME"
+
+#: ../src/gpk-common.c:1146
+msgid "KDE desktop"
+msgstr "Escriptori KDE"
+
+#: ../src/gpk-common.c:1149
+msgid "XFCE desktop"
+msgstr "Escriptori XFCE"
+
+#: ../src/gpk-common.c:1152
+msgid "Other desktops"
+msgstr "Altres escriptoris"
+
+# TERMCAT
+#: ../src/gpk-common.c:1155
+msgid "Publishing"
+msgstr "Autoedició"
+
+#: ../src/gpk-common.c:1158
+msgid "Servers"
+msgstr "Servidors"
+
+#: ../src/gpk-common.c:1161
+msgid "Fonts"
+msgstr "Tipus de lletra"
+
+#: ../src/gpk-common.c:1164
+msgid "Admin tools"
+msgstr "Eines del sistema"
+
+#: ../src/gpk-common.c:1167
+msgid "Legacy"
+msgstr "Llegat"
+
+#: ../src/gpk-common.c:1170
+msgid "Localization"
+msgstr "Localització"
+
+#: ../src/gpk-common.c:1173
+msgid "Virtualization"
+msgstr "Virtualització"
+
+#: ../src/gpk-common.c:1176
+msgid "Security"
+msgstr "Seguretat"
+
+#: ../src/gpk-common.c:1179
+msgid "Power management"
+msgstr "Gestió de l'energia"
+
+#: ../src/gpk-common.c:1182
+msgid "Communication"
+msgstr "Comunicació"
+
+#: ../src/gpk-common.c:1185
+msgid "Network"
+msgstr "Xarxa"
+
+#: ../src/gpk-common.c:1188
+msgid "Maps"
+msgstr "Mapes"
+
+#: ../src/gpk-common.c:1191
+msgid "Software sources"
+msgstr "Fonts de programari"
+
+#: ../src/gpk-common.c:1194
+msgid "Unknown group"
+msgstr "Grup desconegut"
+
+#: ../src/gpk-common.c:1275 ../src/gpk-common.c:1350
+#, c-format
+msgid "Now"
+msgstr "Ara"
+
+#: ../src/gpk-common.c:1284
+#, c-format
+msgid "%i second"
+msgid_plural "%i seconds"
+msgstr[0] "%i segon"
+msgstr[1] "%i segons"
+
+#: ../src/gpk-common.c:1297
+#, c-format
+msgid "%i minute"
+msgid_plural "%i minutes"
+msgstr[0] "%i minut"
+msgstr[1] "%i minuts"
+
+#. TRANSLATOR: "%i %s %i %s" are "%i minutes %i seconds"
+#. * Swap order with "%2$s %2$i %1$s %1$i if needed
+#. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
+#. * Swap order with "%2$s %2$i %1$s %1$i if needed
+#: ../src/gpk-common.c:1303 ../src/gpk-common.c:1321
+#, c-format
+msgid "%i %s %i %s"
+msgstr "%i %s %i %s"
+
+#: ../src/gpk-common.c:1304 ../src/gpk-common.c:1323
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minut"
+msgstr[1] "minuts"
+
+#: ../src/gpk-common.c:1305
+msgid "second"
+msgid_plural "seconds"
+msgstr[0] "segon"
+msgstr[1] "segons"
+
+#: ../src/gpk-common.c:1315
+#, c-format
+msgid "%i hour"
+msgid_plural "%i hours"
+msgstr[0] "%i hora"
+msgstr[1] "%i hores"
+
+#: ../src/gpk-common.c:1322
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "hora"
+msgstr[1] "hores"
+
+#: ../src/gpk-common.c:1360
+msgid "1 second"
+msgstr "1 segon"
+
+#: ../src/gpk-common.c:1370
+msgid "1 minute"
+msgstr "1 minut"
+
+#: ../src/gpk-common.c:1380
+msgid "1 hour"
+msgstr "1 hora"
+
+#: ../src/gpk-common.c:1390
+msgid "30 seconds"
+msgstr "30 segons"
+
+#: ../src/gpk-common.c:1400
+msgid "30 minutes"
+msgstr "30 minuts"
+
+#: ../src/gpk-common.c:1410
+msgid "30 minutes 1 second"
+msgstr "30 minuts i 1 segon"
+
+#: ../src/gpk-common.c:1420
+msgid "30 minutes 10 seconds"
+msgstr "30 minuts i 10 segons"
+
+#: ../src/gpk-common.c:1432
+msgid "0 bytes"
+msgstr "0 bytes"
+
+#: ../src/gpk-common.c:1442
+msgid "512 bytes"
+msgstr "512 bytes"
+
+#: ../src/gpk-common.c:1452
+msgid "256.2 MB"
+msgstr "256.2 MB"
+
+#: ../src/gpk-install-file.c:228 ../src/gpk-install-file.c:230
+msgid "PackageKit File Installer"
+msgstr "Instal·lador de fitxers del PackageKit"
+
+#: ../src/gpk-install-file.c:229
+msgid "FILE"
+msgstr "FITXER"
+
+#: ../src/gpk-install-file.c:248
+#, c-format
+msgid "You need to specify a file to install\n"
+msgstr "Heu d'especificar un fitxer per a instal·lar\n"
+
+#: ../src/gpk-install-file.c:295 ../src/gpk-install-file.c:299
+#, fuzzy
+msgid "Failed to install"
+msgstr "No s'ha pogut resoldre"
+
+#: ../src/gpk-install-file.c:296
+msgid "You don't have the necessary privileges to install local packages"
+msgstr ""
+
+#: ../src/gpk-install-package.c:79
+msgid "Failed to resolve"
+msgstr "No s'ha pogut resoldre"
+
+#: ../src/gpk-install-package.c:80
+msgid "The package could not be found on the system"
+msgstr "No s'ha pogut trobar el paquet en el sistema"
+
+#: ../src/gpk-install-package.c:93 ../src/gpk-install-package.c:187
+msgid "Method not supported"
+msgstr "El mètode no està implementat"
+
+#: ../src/gpk-install-package.c:94
+msgid "Installing packages is not supported"
+msgstr "No es poden instal·lar paquets perquè la funció no està implementada"
+
+#: ../src/gpk-install-package.c:154 ../src/gpk-install-package.c:156
+msgid "PackageKit Package Installer"
+msgstr "Instal·lador de paquets del PackageKit"
+
+#: ../src/gpk-install-package.c:174
+#, c-format
+msgid "You need to specify a package to install\n"
+msgstr "Heu d'especificar un paquet per a instal·lar\n"
+
+#: ../src/gpk-install-package.c:188
+msgid "Resolving names to packages is not supported"
+msgstr ""
+"No es poden resoldre noms de paquets perquè la funció no està implementada"
+
+#: ../src/gpk-notify.c:101
+msgid "Functionality incomplete"
+msgstr "La funcionalitat és incompleta"
+
+#: ../src/gpk-notify.c:102
+msgid "No help yet, sorry..."
+msgstr "Encara no hi ha ajuda, disculpeu"
+
 #. Preferences
-#: ../src/pk-notify.c:251
+#: ../src/gpk-notify.c:253
 msgid "_Preferences"
 msgstr "_Preferències"
 
 #. About
-#: ../src/pk-notify.c:273 ../src/pk-watch.c:531
+#: ../src/gpk-notify.c:275 ../src/gpk-watch.c:556
 msgid "_About"
 msgstr "_Quant a"
 
-#: ../src/pk-notify.c:345
+#: ../src/gpk-notify.c:355
 #, fuzzy
 msgid "One package was skipped:\n"
 msgstr "No s'ha pogut baixar el paquet"
 
-#: ../src/pk-notify.c:346
+#: ../src/gpk-notify.c:356
 msgid "Some packages were skipped:\n"
 msgstr ""
 
-#: ../src/pk-notify.c:372
+#: ../src/gpk-notify.c:382
 msgid "The system update has completed"
 msgstr "S'ha completat l'actualització del sistema"
 
-#: ../src/pk-notify.c:405 ../src/pk-watch.c:593
+#: ../src/gpk-notify.c:412 ../src/gpk-watch.c:618
 #, fuzzy, c-format
 msgid "Client action was refused: %s"
 msgstr "S'ha rebutjat l'acció del client"
 
-#: ../src/pk-notify.c:407
+#: ../src/gpk-notify.c:414
 msgid "Failed to update system"
 msgstr "No s'ha pogut actualitzar el sistema"
 
 #. show updates
-#: ../src/pk-notify.c:457
+#: ../src/gpk-notify.c:464
 msgid "_Show Updates"
 msgstr "_Mostra les actualitzacions"
 
 #. update system
-#: ../src/pk-notify.c:465
+#: ../src/gpk-notify.c:472
 msgid "_Update System Now"
 msgstr "_Actualitza el sistema ara"
 
-#: ../src/pk-notify.c:502
+#: ../src/gpk-notify.c:517
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Actualització de seguretat disponible"
 msgstr[1] "Actualitzacions de seguretat disponibles"
 
-#: ../src/pk-notify.c:503
+#: ../src/gpk-notify.c:518
 #, c-format
 msgid ""
 "The following important update is available for your computer:\n"
@@ -1812,261 +1850,279 @@ msgstr[1] ""
 "\n"
 "%s"
 
-#: ../src/pk-notify.c:526
+#: ../src/gpk-notify.c:550
 msgid "Updates are being installed"
 msgstr "S'estan instal·lant les actualitzacions"
 
-#: ../src/pk-notify.c:527
+#: ../src/gpk-notify.c:551
 msgid "Updates are being automatically installed on your computer"
 msgstr "S'estan instal·lant les actualitzacions automàticament"
 
-#: ../src/pk-notify.c:622
+#: ../src/gpk-notify.c:650
 msgid "Will not install updates"
 msgstr "No s'instal·laran les actualitzacions"
 
-#: ../src/pk-notify.c:623
+#: ../src/gpk-notify.c:651
 msgid ""
 "Automatic updates are not being installed as the computer is on battery power"
 msgstr ""
 "No s'instal·laran les actualitzacions automàtiques atès que s'està en bateria"
 
 #. make tooltip
-#: ../src/pk-notify.c:729
+#: ../src/gpk-notify.c:758
 #, c-format
 msgid "There is %d update pending"
 msgid_plural "There are %d updates pending"
 msgstr[0] "Hi ha %d actualització disponible"
 msgstr[1] "Hi ha %d actualitzacions disponibles"
 
-#: ../src/pk-notify.c:988
+#: ../src/gpk-notify.c:1033
 msgid "Could not stop"
 msgstr "No s'ha pogut aturar"
 
-#: ../src/pk-notify.c:989
+#: ../src/gpk-notify.c:1034
 msgid "Could not cancel the system update"
 msgstr "No s'ha pogut cancel·lar l'actualització del sistema"
 
-#: ../src/pk-repo.c:163
+#: ../src/gpk-repo.c:178
 msgid "Enabled"
 msgstr "Habilitat"
 
 #. translators: this is the repository the package has come from
-#: ../src/pk-repo.c:170 ../src/pk-update-viewer.c:715
+#: ../src/gpk-repo.c:185 ../src/gpk-update-viewer.c:794
 msgid "Repository"
 msgstr "Dipòsit"
 
-#: ../src/pk-repo.c:307
+#: ../src/gpk-repo.c:381
 msgid "Getting repository list not supported by backend"
 msgstr "El rerefons no permet obtenir una llista dels dipòsits"
 
-#: ../src/pk-prefs.c:40
+#: ../src/gpk-prefs.c:40
 msgid "Hourly"
 msgstr "Cada dia"
 
-#: ../src/pk-prefs.c:41
+#: ../src/gpk-prefs.c:41
 msgid "Daily"
 msgstr "Cada dia"
 
-#: ../src/pk-prefs.c:42
+#: ../src/gpk-prefs.c:42
 msgid "Weekly"
 msgstr "Cada setmana"
 
-#: ../src/pk-prefs.c:43
+#: ../src/gpk-prefs.c:43
 msgid "Never"
 msgstr "Mai"
 
-#: ../src/pk-prefs.c:45
+#: ../src/gpk-prefs.c:45
 msgid "All updates"
 msgstr "Totes les actualitzacions"
 
-#: ../src/pk-prefs.c:46
+#: ../src/gpk-prefs.c:46
 msgid "Only security updates"
 msgstr "Només les actualitzacions de seguretat"
 
-#: ../src/pk-prefs.c:47
+#: ../src/gpk-prefs.c:47
 msgid "Nothing"
 msgstr "Res"
 
-#: ../src/pk-transaction-viewer.c:117
+#: ../src/gpk-transaction-viewer.c:134
+msgid "Today"
+msgstr ""
+
+#: ../src/gpk-transaction-viewer.c:136
+msgid "Yesterday"
+msgstr ""
+
+#: ../src/gpk-transaction-viewer.c:143
 msgid "%A, %d %B %Y"
 msgstr "%A, %d de %B de %Y"
 
-#: ../src/pk-transaction-viewer.c:187
+#: ../src/gpk-transaction-viewer.c:213
 msgid "Role"
 msgstr "Rol"
 
-#: ../src/pk-transaction-viewer.c:193
+#: ../src/gpk-transaction-viewer.c:219
 msgid "Transaction"
 msgstr "Transacció"
 
-#: ../src/pk-transaction-viewer.c:202
+#: ../src/gpk-transaction-viewer.c:228
 msgid "Succeeded"
 msgstr "S'ha finalitzat amb èxit"
 
 #. translators: this is the update type, e.g. security
-#: ../src/pk-transaction-viewer.c:219 ../src/pk-update-viewer.c:692
+#: ../src/gpk-transaction-viewer.c:245 ../src/gpk-update-viewer.c:771
 msgid "Type"
 msgstr "Tipus"
 
-#: ../src/pk-transaction-viewer.c:225
+#: ../src/gpk-transaction-viewer.c:251
 msgid "Details"
 msgstr "Detalls"
 
-#: ../src/pk-transaction-viewer.c:372
+#: ../src/gpk-transaction-viewer.c:398
 msgid "Transaction Viewer"
 msgstr "Visualitzador de transaccions"
 
-#: ../src/pk-transaction-viewer.c:433
+#: ../src/gpk-transaction-viewer.c:459
 #, fuzzy
 msgid "_Rollback"
 msgstr "S'ha desfet"
 
-#: ../src/pk-update-icon.c:74
+#: ../src/gpk-update-icon.c:74
 msgid "PackageKit Update Icon"
 msgstr "Icona d'actualització del PackageKit"
 
-#: ../src/pk-update-viewer.c:195
+#: ../src/gpk-update-viewer.c:239
 #, fuzzy
 msgid "No updates selected"
 msgstr "Actualitza el paquet seleccionat"
 
-#: ../src/pk-update-viewer.c:195
+#: ../src/gpk-update-viewer.c:239
 #, fuzzy
 msgid "No updates are selected"
 msgstr "Actualitza el paquet seleccionat"
 
-#: ../src/pk-update-viewer.c:309
+#: ../src/gpk-update-viewer.c:355
 #, fuzzy
 msgid "Getting information..."
 msgstr "S'està obtenint la informació"
 
-#: ../src/pk-update-viewer.c:391
+#: ../src/gpk-update-viewer.c:437
 #, fuzzy
 msgid "Getting Information..."
 msgstr "S'està obtenint la informació"
 
-#: ../src/pk-update-viewer.c:450
+#: ../src/gpk-update-viewer.c:500
 #, fuzzy
 msgid "Failed to refresh"
 msgstr "No s'ha pogut refrescar la memòria cau"
 
-#: ../src/pk-update-viewer.c:476
+#: ../src/gpk-update-viewer.c:526
 #, fuzzy
 msgid "Failed to launch transaction viewer"
 msgstr "Visualitzador de transaccions de programari"
 
 #. translators: this is the package version
-#: ../src/pk-update-viewer.c:696
+#: ../src/gpk-update-viewer.c:775
 msgid "Version"
 msgstr "Versió"
 
 #. translators: this is a list of packages that are updated
-#: ../src/pk-update-viewer.c:702
+#: ../src/gpk-update-viewer.c:781
 msgid "Updates"
 msgstr "Actualitzacions"
 
 #. translators: this is a list of packages that are obsoleted
-#: ../src/pk-update-viewer.c:709
+#: ../src/gpk-update-viewer.c:788
 msgid "Obsoletes"
 msgstr "Obsolets"
 
 #. translators: this is a list of vendor URLs
-#: ../src/pk-update-viewer.c:726
+#: ../src/gpk-update-viewer.c:805
 msgid "Vendor"
 msgstr "Venedor"
 
 #. translators: this is a list of bugzilla URLs
-#: ../src/pk-update-viewer.c:730
+#: ../src/gpk-update-viewer.c:809
 msgid "Bugzilla"
 msgstr "Bugzilla"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/pk-update-viewer.c:734
+#: ../src/gpk-update-viewer.c:813
 msgid "CVE"
 msgstr "Seguretat"
 
-#: ../src/pk-update-viewer.c:823
+#: ../src/gpk-update-viewer.c:837
+msgid "Waiting for previous tasks to complete!"
+msgstr ""
+
+#: ../src/gpk-update-viewer.c:903
 msgid "Severity"
 msgstr "Severitat"
 
-#: ../src/pk-update-viewer.c:830
+#: ../src/gpk-update-viewer.c:910
 msgid "Software"
 msgstr "Programari"
 
-#: ../src/pk-update-viewer.c:870
+#: ../src/gpk-update-viewer.c:950
 msgid "Text"
 msgstr "Text"
 
-#: ../src/pk-update-viewer.c:989
+#: ../src/gpk-update-viewer.c:1083
 msgid "Less than a minute ago"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:991
+#: ../src/gpk-update-viewer.c:1085
 msgid "Less than an hour ago"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:993
+#: ../src/gpk-update-viewer.c:1087
 msgid "A few hours ago"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:995
+#: ../src/gpk-update-viewer.c:1089
 msgid "A few days ago"
 msgstr ""
 
-#: ../src/pk-update-viewer.c:997
+#: ../src/gpk-update-viewer.c:1091
 msgid "Over a week ago"
 msgstr ""
 
+#: ../src/gpk-update-viewer.c:1184
+#, fuzzy
+msgid "<b>Some updates were not updated</b>"
+msgstr "<b>S'ha completat l'actualització del sistema</b>"
+
+#: ../src/gpk-update-viewer.c:1191
+#, fuzzy
+msgid "<b>System Update Completed</b>"
+msgstr "<b>S'ha completat l'actualització del sistema</b>"
+
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:1128
+#: ../src/gpk-update-viewer.c:1320
 msgid "There are no updates available!"
 msgstr "Hi ha han actualitzacions disponibles"
 
 #. put a message in the listbox
-#: ../src/pk-update-viewer.c:1250
+#: ../src/gpk-update-viewer.c:1442
 msgid "There is an update already in progress!"
 msgstr "Ja hi ha una actualització en progrés"
 
-#: ../src/pk-update-viewer.c:1420
+#: ../src/gpk-update-viewer.c:1629
 msgid "_Restart computer now"
 msgstr "_Reinicia l'ordinador ara"
 
-#: ../src/pk-update-viewer.c:1445
-msgid "Close without updating"
-msgstr "Tanca sense actualitzar"
-
-#: ../src/pk-update-viewer.c:1471
+#: ../src/gpk-update-viewer.c:1682
 msgid "Review the update list"
 msgstr "Revisa la llista d'actualitzacions"
 
-#: ../src/pk-update-viewer.c:1476
+#: ../src/gpk-update-viewer.c:1687 ../src/gpk-update-viewer.c:1692
 msgid "Back to overview"
 msgstr "Enrere a la vista general"
 
-#: ../src/pk-update-viewer.c:1482
+#: ../src/gpk-update-viewer.c:1698
 #, fuzzy
 msgid "_Apply Updates"
 msgstr "Aplica totes les actualitzacions"
 
-#: ../src/pk-update-viewer.c:1483
+#: ../src/gpk-update-viewer.c:1699
 #, fuzzy
 msgid "Apply the selected updates"
 msgstr "Aplica totes les actualitzacions"
 
-#: ../src/pk-update-viewer.c:1502
+#: ../src/gpk-update-viewer.c:1718
 msgid "_Update System"
 msgstr "_Actualitza el sistema"
 
-#: ../src/pk-update-viewer.c:1503
+#: ../src/gpk-update-viewer.c:1719
 msgid "Apply all updates"
 msgstr "Aplica totes les actualitzacions"
 
-#: ../src/pk-update-viewer.c:1525
+#: ../src/gpk-update-viewer.c:1741
 #, fuzzy
 msgid "Refresh"
 msgstr "_Preferències"
 
-#: ../src/pk-update-viewer.c:1526
+#: ../src/gpk-update-viewer.c:1742
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
@@ -2074,72 +2130,139 @@ msgstr ""
 "Normalment no es requereix actualitzar, però farà que obtingueu les últimes "
 "aplicacions i unes llistes actualitzades"
 
-#: ../src/pk-watch.c:308
+#: ../src/gpk-watch.c:132
+#, fuzzy, c-format
+msgid "(%i more transactions)\n"
+msgstr "S'està esperant el blocatge de la transacció"
+
+#: ../src/gpk-watch.c:319
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr "S'ha suprimit el paquet «%s»"
 
-#: ../src/pk-watch.c:312
+#: ../src/gpk-watch.c:323
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr "S'ha instal·lat el paquet «%s»"
 
 #. libnotify dialog
-#: ../src/pk-watch.c:324
+#: ../src/gpk-watch.c:335
 msgid "Task completed"
 msgstr "Tasca completada"
 
-#: ../src/pk-watch.c:595
+#: ../src/gpk-watch.c:620
 msgid "Failed to refresh cache"
 msgstr "No s'ha pogut refrescar la memòria cau"
 
 #. don't know if we want this
-#: ../src/pk-watch.c:725
+#: ../src/gpk-watch.c:750
 msgid "_Refresh Software List"
 msgstr "_Actualitza la llista de programari"
 
 #. hide this option
-#: ../src/pk-watch.c:778
+#: ../src/gpk-watch.c:803
 msgid "_Hide this icon"
 msgstr ""
 
-#: ../src/pk-watch.c:887
+#: ../src/gpk-watch.c:912
 #, fuzzy
 msgid "_Restart computer"
 msgstr "_Reinicia l'ordinador ara"
 
-#: ../src/pk-inhibit.c:95
+#: ../src/gpk-inhibit.c:95
 msgid "Software Update Applet"
 msgstr "Miniaplicació d'actualització de programari"
 
-#: ../src/pk-inhibit.c:96
+#: ../src/gpk-inhibit.c:96
 msgid "A transaction that cannot be interrupted is running"
 msgstr "S'està fent una transacció que no es pot interrompre"
 
-#: ../src/pk-statusbar.c:213
+#: ../src/gpk-statusbar.c:213
 #, c-format
 msgid "Remaining time: %s"
 msgstr "Temps restant: %s"
 
-#: ../src/pk-smart-icon.c:268
+#: ../src/gpk-smart-icon.c:268
 msgid "Do not show this notification again"
 msgstr "No mostris més aquesta notificació"
 
-#: ../src/pk-smart-icon.c:270
+#: ../src/gpk-smart-icon.c:270
 msgid "Do not warn me again"
 msgstr "No m'avisis més"
 
-#: ../src/pk-smart-icon.c:272
+#: ../src/gpk-smart-icon.c:272
 msgid "Cancel system update"
 msgstr "Cancel·la l'actualització del sistema"
 
-#: ../src/pk-smart-icon.c:274
+#: ../src/gpk-smart-icon.c:274
 msgid "Update computer now"
 msgstr "Actualitza l'ordinador ara"
 
-#: ../src/pk-smart-icon.c:276
+#: ../src/gpk-smart-icon.c:276
 msgid "Restart computer now"
 msgstr "Reinicia l'ordinador ara"
+
+#~ msgid "Cancel Transaction:"
+#~ msgstr "Cancel·la la transacció:"
+
+#~ msgid "All selected updates have been successfully installed"
+#~ msgstr ""
+#~ "S'han instal·lat correctament totes les actualitzacions seleccionades"
+
+#, fuzzy
+#~ msgid ""
+#~ "Power Manager is free software; you can redistribute it and/or\n"
+#~ "modify it under the terms of the GNU General Public License\n"
+#~ "as published by the Free Software Foundation; either version 2\n"
+#~ "of the License, or (at your option) any later version."
+#~ msgstr ""
+#~ "El PackageKit és programari lliure; podeu redistribuir-lo i/o\n"
+#~ "modificar-lo sota els termes de la Llicència Pública General GNU\n"
+#~ "tal com ha estat publicada per la Free Software Foundation; ja sigui\n"
+#~ "la versió 2 de la Llicència o bé (si ho preferiu) qualsevol altra \n"
+#~ "versió posterior."
+
+#, fuzzy
+#~ msgid ""
+#~ "Power Manager is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details."
+#~ msgstr ""
+#~ "El PackageKit es distribueix amb l'expectativa que serà útil,\n"
+#~ "però SENSE CAP GARANTIA; ni tan sols la garantia implícita de\n"
+#~ "COMERCIABILITAT o ADEQUACIÓ PER UN PROPÒSIT PARTICULAR.\n"
+#~ "Vegeu la Llicència Pública General GNU per obtenir-ne més detalls."
+
+#~ msgid "Initialization of the package manager failed"
+#~ msgstr "Ha fallat la inicialització del gestor de paquets"
+
+#~ msgid "Unloading of the package manager failed"
+#~ msgstr "Ha fallat la descàrrega del gestor de paquets"
+
+#~ msgid ""
+#~ "The native package backend could not be initialised.\n"
+#~ "Please make sure no other tools are accessing package information."
+#~ msgstr ""
+#~ "No s'ha pogut inicialitzar el rerefons de paquets nadiu.\n"
+#~ "Assegureu-vos que no hi hagi altres eines que accedeixin a informació de "
+#~ "paquets."
+
+#~ msgid ""
+#~ "The native package backend could not be closed.\n"
+#~ "Please make sure no other tools are accessing package information."
+#~ msgstr ""
+#~ "No s'ha pogut tancar el rerefons de paquets nadiu.\n"
+#~ "Assegureu-vos que no hi hagi altres eines que accedeixin a informació de "
+#~ "paquets."
+
+#~ msgid "Installing local files is not supported"
+#~ msgstr ""
+#~ "No es poden instal·lar fitxers locals perquè la funció no està "
+#~ "implementada"
+
+#~ msgid "Close without updating"
+#~ msgstr "Tanca sense actualitzar"
 
 #~ msgid "Groups"
 #~ msgstr "Grups"
@@ -2167,9 +2290,6 @@ msgstr "Reinicia l'ordinador ara"
 
 #~ msgid "Find"
 #~ msgstr "Cerca"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancel·la"
 
 #~ msgid "All packages"
 #~ msgstr "Tots els paquets"
