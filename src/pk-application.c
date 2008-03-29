@@ -1939,7 +1939,7 @@ pk_application_init (PkApplication *application)
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), "PK_STOCK_APP_ICON");
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), PK_STOCK_APP_ICON);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
