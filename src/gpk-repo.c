@@ -23,6 +23,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <locale.h>
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
@@ -34,10 +35,8 @@
 #include <pk-client.h>
 #include <pk-connection.h>
 #include <pk-enum-list.h>
-#include "pk-common-gui.h"
-#include "pk-statusbar.h"
-
-#include <locale.h>
+#include "gpk-common.h"
+#include "gpk-statusbar.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
@@ -329,7 +328,7 @@ main (int argc, char *argv[])
 	/* get actions */
 	role_list = pk_client_get_actions (client);
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-repo.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
 

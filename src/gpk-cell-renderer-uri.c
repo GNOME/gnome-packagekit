@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <pk-debug.h>
 
-#include "pk-cell-renderer-uri.h"
+#include "gpk-cell-renderer-uri.h"
 
 enum {
 	PROP_0,

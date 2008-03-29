@@ -38,8 +38,8 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
-#include "pk-inhibit.h"
-#include "pk-common-gui.h"
+#include "gpk-inhibit.h"
+#include "gpk-common.h"
 
 static void     pk_inhibit_class_init	(PkInhibitClass *klass);
 static void     pk_inhibit_init	(PkInhibit      *inhibit);

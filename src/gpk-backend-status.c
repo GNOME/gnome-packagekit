@@ -124,7 +124,7 @@ main (int argc, char *argv[])
 		return 1;
 	}
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-backend-status.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-backend-status.glade", NULL, NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",

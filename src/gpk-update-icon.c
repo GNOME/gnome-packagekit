@@ -32,32 +32,9 @@
 #include <locale.h>
 
 #include <pk-debug.h>
-#include "pk-application.h"
 
-/**
- * pk_application_help_cb
- * @application: This application class instance
- *
- * What to do when help is requested
- **/
-static void
-pk_application_help_cb (PkApplication *application)
-{
-	pk_warning ("help application");
-}
-
-/**
- * pk_application_close_cb
- * @application: This application class instance
- *
- * What to do when we are asked to close for whatever reason
- **/
-static void
-pk_application_close_cb (PkApplication *application)
-{
-	g_object_unref (application);
-	exit (0);
-}
+#include "gpk-notify.h"
+#include "gpk-watch.h"
 
 /**
  * main:
@@ -68,7 +45,8 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
-	PkApplication *application = NULL;
+	PkNotify *notify = NULL;
+	PkWatch *watch = NULL;
 	GOptionContext *context;
 
 	const GOptionEntry options[] = {
@@ -91,8 +69,9 @@ main (int argc, char *argv[])
 	dbus_g_thread_init ();
 	g_type_init ();
 
+	g_set_application_name (_("PackageKit Update Applet"));
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Add/Remove Software"));
+	g_option_context_set_summary (context, _("PackageKit Update Icon"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -105,17 +84,18 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* create a new application object */
-	application = pk_application_new ();
-	g_signal_connect (application, "action-help",
-			  G_CALLBACK (pk_application_help_cb), NULL);
-	g_signal_connect (application, "action-close",
-			  G_CALLBACK (pk_application_close_cb), NULL);
+	/* add application specific icons to search path */
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PK_DATA G_DIR_SEPARATOR_S "icons");
 
+	/* create a new notify object */
+	notify = pk_notify_new ();
+	watch = pk_watch_new ();
 	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
-	g_object_unref (application);
+	g_object_unref (notify);
+	g_object_unref (watch);
 
 	return 0;
 }

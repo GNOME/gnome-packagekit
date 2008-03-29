@@ -40,8 +40,8 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-network.h>
-#include "pk-common-gui.h"
-#include "pk-auto-refresh.h"
+#include "gpk-common.h"
+#include "gpk-auto-refresh.h"
 
 static void     pk_auto_refresh_class_init	(PkAutoRefreshClass *klass);
 static void     pk_auto_refresh_init		(PkAutoRefresh      *arefresh);

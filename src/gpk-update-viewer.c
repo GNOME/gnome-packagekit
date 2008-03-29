@@ -42,9 +42,9 @@
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
 #include <pk-enum-list.h>
-#include "pk-common-gui.h"
-#include "pk-statusbar.h"
-#include "pk-cell-renderer-uri.h"
+#include "gpk-common.h"
+#include "gpk-statusbar.h"
+#include "gpk-cell-renderer-uri.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
@@ -1611,7 +1611,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_task_list_changed_cb), NULL);
 	pk_updates_task_list_changed_cb (tlist, NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-update-viewer.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
 	/* hide until we have updates */

@@ -35,8 +35,8 @@
 #include <pk-package-id.h>
 #include <pk-common.h>
 
-#include "pk-common-gui.h"
-#include "pk-progress.h"
+#include "gpk-common.h"
+#include "gpk-progress.h"
 
 static void     pk_progress_class_init (PkProgressClass *klass);
 static void     pk_progress_init       (PkProgress      *progress);
@@ -568,7 +568,7 @@ pk_progress_init (PkProgress *progress)
 	g_signal_connect (progress->priv->client, "allow-cancel",
 			  G_CALLBACK (pk_progress_allow_cancel_cb), progress);
 
-	progress->priv->glade_xml = glade_xml_new (PK_DATA "/pk-progress.glade", NULL, NULL);
+	progress->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");

@@ -34,26 +34,26 @@ SELFTEST_LIBS =						\
 	$(NULL)
 
 bin_PROGRAMS =						\
-	pk-application					\
-	pk-repo						\
-	pk-prefs					\
-	pk-install-file					\
-	pk-install-package				\
-	pk-update-icon					\
-	pk-update-viewer				\
-	pk-transaction-viewer				\
-	pk-backend-status				\
+	gpk-application					\
+	gpk-repo					\
+	gpk-prefs					\
+	gpk-install-file				\
+	gpk-install-package				\
+	gpk-update-icon					\
+	gpk-update-viewer				\
+	gpk-transaction-viewer				\
+	gpk-backend-status				\
 	$(NULL)
 
-pk_install_file_SOURCES =				\
-	pk-install-file.c				\
-	pk-progress.c					\
-	pk-progress.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_install_file_SOURCES =				\
+	gpk-install-file.c				\
+	gpk-progress.c					\
+	gpk-progress.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_install_file_LDADD =					\
+gpk_install_file_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(GBUS_LIBS)					\
 	$(DBUS_LIBS)					\
@@ -64,15 +64,15 @@ pk_install_file_LDADD =					\
 	$(LIBGLADE_LIBS)				\
 	$(NULL)
 
-pk_install_package_SOURCES =				\
-	pk-install-package.c				\
-	pk-progress.c					\
-	pk-progress.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_install_package_SOURCES =				\
+	gpk-install-package.c				\
+	gpk-progress.c					\
+	gpk-progress.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_install_package_LDADD =				\
+gpk_install_package_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
@@ -82,25 +82,27 @@ pk_install_package_LDADD =				\
 	$(LIBGLADE_LIBS)				\
 	$(NULL)
 
-pk_update_icon_SOURCES =				\
-	pk-update-icon.c				\
-	pk-notify.c					\
-	pk-notify.h					\
-	pk-auto-refresh.c				\
-	pk-auto-refresh.h				\
-	pk-watch.c					\
-	pk-watch.h					\
-	pk-inhibit.c					\
-	pk-inhibit.h					\
-	pk-smart-icon.c					\
-	pk-smart-icon.h					\
-	pk-progress.c					\
-	pk-progress.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_update_icon_SOURCES =				\
+	gpk-update-icon.c				\
+	gpk-notify.c					\
+	gpk-notify.h					\
+	gpk-auto-refresh.c				\
+	gpk-auto-refresh.h				\
+	gpk-watch.c					\
+	gpk-watch.h					\
+	gpk-inhibit.c					\
+	gpk-inhibit.h					\
+	gpk-smart-icon.c				\
+	gpk-smart-icon.h				\
+	gpk-marshal.c					\
+	gpk-marshal.h					\
+	gpk-progress.c					\
+	gpk-progress.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_update_icon_LDADD =					\
+gpk_update_icon_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
@@ -111,17 +113,17 @@ pk_update_icon_LDADD =					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_application_SOURCES =				\
-	pk-application-main.c				\
-	pk-application.c				\
-	pk-application.h				\
-	pk-statusbar.c					\
-	pk-statusbar.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_application_SOURCES =				\
+	gpk-application-main.c				\
+	gpk-application.c				\
+	gpk-application.h				\
+	gpk-statusbar.c					\
+	gpk-statusbar.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_application_LDADD =					\
+gpk_application_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
@@ -132,13 +134,13 @@ pk_application_LDADD =					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_prefs_SOURCES =					\
-	pk-prefs.c					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_prefs_SOURCES =					\
+	gpk-prefs.c					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_prefs_LDADD =					\
+gpk_prefs_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
@@ -148,17 +150,17 @@ pk_prefs_LDADD =					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_update_viewer_SOURCES =				\
-	pk-update-viewer.c				\
-	pk-statusbar.c					\
-	pk-statusbar.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
-	pk-cell-renderer-uri.c				\
-	pk-cell-renderer-uri.h				\
+gpk_update_viewer_SOURCES =				\
+	gpk-update-viewer.c				\
+	gpk-statusbar.c					\
+	gpk-statusbar.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-cell-renderer-uri.c				\
+	gpk-cell-renderer-uri.h				\
 	$(NULL)
 
-pk_update_viewer_LDADD =				\
+gpk_update_viewer_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
@@ -167,15 +169,15 @@ pk_update_viewer_LDADD =				\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_repo_SOURCES =					\
-	pk-repo.c					\
-	pk-statusbar.c					\
-	pk-statusbar.h					\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_repo_SOURCES =					\
+	gpk-repo.c					\
+	gpk-statusbar.c					\
+	gpk-statusbar.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_repo_LDADD =						\
+gpk_repo_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
@@ -184,13 +186,13 @@ pk_repo_LDADD =						\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_transaction_viewer_SOURCES =				\
-	pk-transaction-viewer.c				\
-	pk-common-gui.c					\
-	pk-common-gui.h					\
+gpk_transaction_viewer_SOURCES =			\
+	gpk-transaction-viewer.c			\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
-pk_transaction_viewer_LDADD =				\
+gpk_transaction_viewer_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
@@ -199,11 +201,11 @@ pk_transaction_viewer_LDADD =				\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_backend_status_SOURCES =				\
-	pk-backend-status.c				\
+gpk_backend_status_SOURCES =				\
+	gpk-backend-status.c				\
 	$(NULL)
 
-pk_backend_status_LDADD =				\
+gpk_backend_status_LDADD =				\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
@@ -212,18 +214,18 @@ pk_backend_status_LDADD =				\
 	$(NULL)
 
 check_PROGRAMS =					\
-	pk-self-test
+	gpk-self-test
 
 noinst_PROGRAMS =					\
-	pk-self-test
+	gpk-self-test
 
-pk_self_test_SOURCES =					\
-	pk-common-gui.h					\
-	pk-common-gui.c					\
-	pk-self-test.c					\
+gpk_self_test_SOURCES =					\
+	gpk-common.h					\
+	gpk-common.c					\
+	gpk-self-test.c					\
 	$(NULL)
 
-pk_self_test_LDADD =					\
+gpk_self_test_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(GTK_LIBS)					\
 	$(DBUS_LIBS)					\
@@ -233,34 +235,34 @@ pk_self_test_LDADD =					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-pk_self_test_CPPFLAGS=	\
+gpk_self_test_CPPFLAGS=	\
 	-DPK_BUILD_TESTS
 
 BUILT_SOURCES = 					\
-	pk-marshal.c					\
-	pk-marshal.h					\
+	gpk-marshal.c					\
+	gpk-marshal.h					\
 	$(NULL)
 
-pk-marshal.c: pk-marshal.list
-	echo "#include \"pk-marshal.h\"" > $@ && \
-	glib-genmarshal $< --prefix=pk_marshal --body >> $@
+gpk-marshal.c: gpk-marshal.list
+	echo "#include \"gpk-marshal.h\"" > $@ && \
+	glib-genmarshal $< --prefix=gpk_marshal --body >> $@
 
-pk-marshal.h: pk-marshal.list
-	glib-genmarshal $< --prefix=pk_marshal --header > $@
+gpk-marshal.h: gpk-marshal.list
+	glib-genmarshal $< --prefix=gpk_marshal --header > $@
 
 
 EXTRA_DIST =						\
-	pk-marshal.list					\
+	gpk-marshal.list				\
 	$(NULL)
 
 clean-local:
 	rm -f *~
-	rm -f pk-marshal.c pk-marshal.h
+	rm -f gpk-marshal.c gpk-marshal.h
 
 MAINTAINERCLEANFILES =					\
 	*~			      			\
 	Makefile.in					\
 	$(NULL)
 
-TESTS = pk-self-test
+TESTS = gpk-self-test
 

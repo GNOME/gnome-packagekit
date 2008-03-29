@@ -35,8 +35,8 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 
-#include "pk-progress.h"
-#include "pk-common-gui.h"
+#include "gpk-progress.h"
+#include "gpk-common.h"
 
 static GladeXML *glade_xml = NULL;
 static PkClient *client = NULL;
@@ -260,7 +260,7 @@ main (int argc, char *argv[])
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_install_file_error_code_cb), NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-install-file.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
         /* Get the main window quit */

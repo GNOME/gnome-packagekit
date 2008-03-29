@@ -43,9 +43,9 @@
 #include <pk-extra-obj.h>
 #include <locale.h>
 
-#include "pk-statusbar.h"
-#include "pk-common-gui.h"
-#include "pk-application.h"
+#include "gpk-statusbar.h"
+#include "gpk-common.h"
+#include "gpk-application.h"
 
 static void     pk_application_class_init (PkApplicationClass *klass);
 static void     pk_application_init       (PkApplication      *application);
@@ -1934,7 +1934,7 @@ pk_application_init (PkApplication *application)
 	locale = setlocale (LC_ALL, NULL);
 	pk_extra_set_locale (application->priv->extra, locale);
 
-	application->priv->glade_xml = glade_xml_new (PK_DATA "/pk-application.glade", NULL, NULL);
+	application->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-application.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */

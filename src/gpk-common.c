@@ -35,7 +35,7 @@
 #include <pk-package-id.h>
 #include <pk-enum.h>
 #include <pk-common.h>
-#include "pk-common-gui.h"
+#include "gpk-common.h"
 
 /* icon names */
 static PkEnumMatch enum_info_icon_name[] = {

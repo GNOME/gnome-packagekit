@@ -10,31 +10,31 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
-	pk-install-file.desktop.in			\
-	pk-prefs.desktop.in				\
-	pk-application.desktop.in			\
-	pk-update-viewer.desktop.in			\
-	pk-repo.desktop.in				\
-	pk-transaction-viewer.desktop.in		\
+	gpk-install-file.desktop.in			\
+	gpk-prefs.desktop.in				\
+	gpk-application.desktop.in			\
+	gpk-update-viewer.desktop.in			\
+	gpk-repo.desktop.in				\
+	gpk-transaction-viewer.desktop.in		\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 autostartdir = $(datadir)/gnome/autostart
-autostart_in_files = pk-update-icon.desktop.in
+autostart_in_files = gpk-update-icon.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
-	pk-repo.glade					\
-	pk-application.glade				\
-	pk-update-viewer.glade				\
-	pk-progress.glade				\
-	pk-prefs.glade					\
-	pk-signature.glade				\
-	pk-transactions.glade				\
-	pk-backend-status.glade				\
-	pk-install-file.glade				\
+	gpk-repo.glade					\
+	gpk-application.glade				\
+	gpk-update-viewer.glade				\
+	gpk-progress.glade				\
+	gpk-prefs.glade					\
+	gpk-signature.glade				\
+	gpk-transactions.glade				\
+	gpk-backend-status.glade			\
+	gpk-install-file.glade				\
 	$(NULL)
 
 EXTRA_DIST =						\
@@ -60,13 +60,13 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
-	pk-repo.desktop					\
-	pk-prefs.desktop				\
-	pk-update-viewer.desktop			\
-	pk-install-file.desktop				\
-	pk-transaction-viewer.desktop			\
-	pk-update-icon.desktop				\
-	pk-application.desktop				\
+	gpk-repo.desktop				\
+	gpk-prefs.desktop				\
+	gpk-update-viewer.desktop			\
+	gpk-install-file.desktop			\
+	gpk-transaction-viewer.desktop			\
+	gpk-update-icon.desktop				\
+	gpk-application.desktop				\
 	gnome-packagekit.schemas			\
 	$(NULL)
 

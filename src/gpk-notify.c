@@ -47,10 +47,10 @@
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
 
-#include "pk-smart-icon.h"
-#include "pk-auto-refresh.h"
-#include "pk-common-gui.h"
-#include "pk-notify.h"
+#include "gpk-smart-icon.h"
+#include "gpk-auto-refresh.h"
+#include "gpk-common.h"
+#include "gpk-notify.h"
 
 static void     pk_notify_class_init	(PkNotifyClass *klass);
 static void     pk_notify_init		(PkNotify      *notify);

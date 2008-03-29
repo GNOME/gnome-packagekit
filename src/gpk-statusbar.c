@@ -37,8 +37,8 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
-#include "pk-statusbar.h"
-#include "pk-common-gui.h"
+#include "gpk-statusbar.h"
+#include "gpk-common.h"
 
 static void     pk_statusbar_class_init	(PkStatusbarClass *klass);
 static void     pk_statusbar_init	(PkStatusbar      *sbar);

@@ -41,9 +41,9 @@
 
 #include <pk-debug.h>
 #include <pk-enum.h>
-#include "pk-marshal.h"
-#include "pk-common-gui.h"
-#include "pk-smart-icon.h"
+#include "gpk-marshal.h"
+#include "gpk-common.h"
+#include "gpk-smart-icon.h"
 
 static void     pk_smart_icon_class_init	(PkSmartIconClass *klass);
 static void     pk_smart_icon_init		(PkSmartIcon      *sicon);
@@ -94,7 +94,7 @@ pk_smart_icon_class_init (PkSmartIconClass *klass)
 	signals [NOTIFICATION_BUTTON] =
 		g_signal_new ("notification-button",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
-			      0, NULL, NULL, pk_marshal_VOID__UINT_STRING,
+			      0, NULL, NULL, gpk_marshal_VOID__UINT_STRING,
 			      G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_STRING);
 }
 

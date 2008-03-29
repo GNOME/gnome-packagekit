@@ -23,6 +23,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <locale.h>
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
@@ -34,8 +35,7 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-enum-list.h>
-#include "pk-common-gui.h"
-#include <locale.h>
+#include "gpk-common.h"
 
 #define PK_FREQ_HOURLY_TEXT		N_("Hourly")
 #define PK_FREQ_DAILY_TEXT		N_("Daily")
@@ -333,7 +333,7 @@ main (int argc, char *argv[])
 	/* get actions */
 	role_list = pk_client_get_actions (client);
 
-	glade_xml = glade_xml_new (PK_DATA "/pk-prefs.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-prefs.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_prefs");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
