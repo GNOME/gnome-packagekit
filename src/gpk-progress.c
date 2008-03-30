@@ -206,14 +206,20 @@ pk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkPro
 	/* we were cancelled */
 	if (exit == PK_EXIT_ENUM_QUIT ||
 	    exit == PK_EXIT_ENUM_KILL) {
-		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
 		gtk_label_set_label (GTK_LABEL (widget), _("The transaction was cancelled"));
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		gtk_widget_hide (widget);
 	}
 
 	/* we failed */
 	if (exit == PK_EXIT_ENUM_FAILED) {
-		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
 		gtk_label_set_label (GTK_LABEL (widget), _("The transaction failed"));
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		gtk_widget_hide (widget);
 	}
 
 	progress->priv->task_ended = TRUE;
