@@ -198,9 +198,24 @@ pk_progress_finished_timeout (gpointer data)
  * pk_progress_finished_cb:
  **/
 static void
-pk_progress_finished_cb (PkClient *client, PkStatusEnum status, guint runtime, PkProgress *progress)
+pk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkProgress *progress)
 {
+	GtkWidget *widget;
 	pk_debug ("finished");
+
+	/* we were cancelled */
+	if (exit == PK_EXIT_ENUM_QUIT ||
+	    exit == PK_EXIT_ENUM_KILL) {
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		gtk_label_set_label (GTK_LABEL (widget), _("The transaction was cancelled"));
+	}
+
+	/* we failed */
+	if (exit == PK_EXIT_ENUM_FAILED) {
+		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_package");
+		gtk_label_set_label (GTK_LABEL (widget), _("The transaction failed"));
+	}
+
 	progress->priv->task_ended = TRUE;
 	/* wait 5 seconds */
 	progress->priv->no_percentage_evt = g_timeout_add_seconds (30, pk_progress_finished_timeout, progress);
