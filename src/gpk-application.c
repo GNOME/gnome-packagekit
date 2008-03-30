@@ -2195,7 +2195,7 @@ pk_application_init (PkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
 		gtk_widget_hide (widget);
 	}
-	if (TRUE) {
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
 		gtk_widget_hide (widget);
 	}
