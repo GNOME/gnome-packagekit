@@ -254,7 +254,7 @@ pk_repo_repo_list_changed_cb (PkClient *client, gpointer data)
 		return;
 	}
 
-	ret = pk_client_get_repo_list (client, &error);
+	ret = pk_client_get_repo_list (client, "none", &error);
 	if (!ret) {
 		pk_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
@@ -371,7 +371,7 @@ main (int argc, char *argv[])
 
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
-		ret = pk_client_get_repo_list (client, &error);
+		ret = pk_client_get_repo_list (client, "none", &error);
 		if (!ret) {
 			pk_warning ("failed to get repo list: %s", error->message);
 			g_error_free (error);
