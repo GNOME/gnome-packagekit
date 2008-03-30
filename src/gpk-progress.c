@@ -204,8 +204,7 @@ pk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkPro
 	pk_debug ("finished");
 
 	/* we were cancelled */
-	if (exit == PK_EXIT_ENUM_QUIT ||
-	    exit == PK_EXIT_ENUM_KILL) {
+	if (exit == PK_EXIT_ENUM_CANCELLED) {
 		widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
 		gtk_label_set_label (GTK_LABEL (widget), _("The transaction was cancelled"));
 		gtk_widget_show (widget);
