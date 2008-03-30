@@ -19,38 +19,38 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __PK_WATCH_H
-#define __PK_WATCH_H
+#ifndef __GPK_WATCH_H
+#define __GPK_WATCH_H
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define PK_TYPE_WATCH		(pk_watch_get_type ())
-#define PK_WATCH(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_WATCH, PkWatch))
-#define PK_WATCH_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_WATCH, PkWatchClass))
-#define PK_IS_WATCH(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), PK_TYPE_WATCH))
-#define PK_IS_WATCH_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), PK_TYPE_WATCH))
-#define PK_WATCH_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_WATCH, PkWatchClass))
-#define PK_WATCH_ERROR		(pk_watch_error_quark ())
-#define PK_WATCH_TYPE_ERROR	(pk_watch_error_get_type ()) 
+#define GPK_TYPE_WATCH		(gpk_watch_get_type ())
+#define GPK_WATCH(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GPK_TYPE_WATCH, GpkWatch))
+#define GPK_WATCH_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GPK_TYPE_WATCH, GpkWatchClass))
+#define GPK_IS_WATCH(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), GPK_TYPE_WATCH))
+#define GPK_IS_WATCH_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GPK_TYPE_WATCH))
+#define GPK_WATCH_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GPK_TYPE_WATCH, GpkWatchClass))
+#define GPK_WATCH_ERROR		(gpk_watch_error_quark ())
+#define GPK_WATCH_TYPE_ERROR	(gpk_watch_error_get_type ())
 
-typedef struct PkWatchPrivate PkWatchPrivate;
+typedef struct GpkWatchPrivate GpkWatchPrivate;
 
 typedef struct
 {
 	 GObject		 parent;
-	 PkWatchPrivate	*priv;
-} PkWatch;
+	 GpkWatchPrivate	*priv;
+} GpkWatch;
 
 typedef struct
 {
 	GObjectClass	parent_class;
-} PkWatchClass;
+} GpkWatchClass;
 
-GType		 pk_watch_get_type		  	(void);
-PkWatch		*pk_watch_new				(void);
+GType		 gpk_watch_get_type		  	(void);
+GpkWatch	*gpk_watch_new				(void);
 
 G_END_DECLS
 
-#endif /* __PK_WATCH_H */
+#endif /* __GPK_WATCH_H */

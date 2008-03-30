@@ -33,6 +33,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-notify.h>
 #include <pk-connection.h>
 #include <pk-enum-list.h>
 #include "gpk-common.h"
@@ -240,7 +241,7 @@ pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *deta
  * pk_repo_repo_list_changed_cb:
  **/
 static void
-pk_repo_repo_list_changed_cb (PkClient *client, gpointer data)
+pk_repo_repo_list_changed_cb (PkNotify *notify, gpointer data)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -276,6 +277,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GError *error = NULL;
+	PkNotify *notify;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -318,12 +320,14 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_repo_detail_cb), NULL);
 	g_signal_connect (client, "status-changed",
 			  G_CALLBACK (pk_repo_status_changed_cb), NULL);
-	g_signal_connect (client, "repo-list-changed",
-			  G_CALLBACK (pk_repo_repo_list_changed_cb), NULL);
 	g_signal_connect (client, "finished",
 			  G_CALLBACK (pk_repo_finished_cb), NULL);
 	g_signal_connect (client, "error-code",
 			  G_CALLBACK (pk_repo_error_code_cb), NULL);
+
+	notify = pk_notify_new ();
+	g_signal_connect (notify, "repo-list-changed",
+			  G_CALLBACK (pk_repo_repo_list_changed_cb), NULL);
 
 	/* get actions */
 	role_list = pk_client_get_actions (client);
@@ -389,6 +393,7 @@ main (int argc, char *argv[])
 	g_object_unref (glade_xml);
 	g_object_unref (list_store);
 	g_object_unref (client);
+	g_object_unref (notify);
 	g_object_unref (role_list);
 	g_object_unref (statusbar);
 

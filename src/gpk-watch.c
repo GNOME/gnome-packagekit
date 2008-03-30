@@ -53,18 +53,18 @@
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
 
-static void     pk_watch_class_init	(PkWatchClass *klass);
-static void     pk_watch_init		(PkWatch      *watch);
-static void     pk_watch_finalize	(GObject       *object);
+static void     gpk_watch_class_init	(GpkWatchClass *klass);
+static void     gpk_watch_init		(GpkWatch      *watch);
+static void     gpk_watch_finalize	(GObject       *object);
 
-#define PK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_WATCH, PkWatchPrivate))
-#define PK_WATCH_MAXIMUM_TOOLTIP_LINES		10
+#define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
+#define GPK_WATCH_MAXIMUM_TOOLTIP_LINES		10
 
-struct PkWatchPrivate
+struct GpkWatchPrivate
 {
 	PkClient		*client;
-	PkSmartIcon		*sicon;
-	PkSmartIcon		*sicon_restart;
+	GpkSmartIcon		*sicon;
+	GpkSmartIcon		*sicon_restart;
 	PkInhibit		*inhibit;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
@@ -73,25 +73,25 @@ struct PkWatchPrivate
 	PolKitGnomeAction	*restart_action;
 };
 
-G_DEFINE_TYPE (PkWatch, pk_watch, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkWatch, gpk_watch, G_TYPE_OBJECT)
 
 /**
- * pk_watch_class_init:
- * @klass: The PkWatchClass
+ * gpk_watch_class_init:
+ * @klass: The GpkWatchClass
  **/
 static void
-pk_watch_class_init (PkWatchClass *klass)
+gpk_watch_class_init (GpkWatchClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_watch_finalize;
-	g_type_class_add_private (klass, sizeof (PkWatchPrivate));
+	object_class->finalize = gpk_watch_finalize;
+	g_type_class_add_private (klass, sizeof (GpkWatchPrivate));
 }
 
 /**
- * pk_watch_refresh_tooltip:
+ * gpk_watch_refresh_tooltip:
  **/
 static gboolean
-pk_watch_refresh_tooltip (PkWatch *watch)
+gpk_watch_refresh_tooltip (GpkWatch *watch)
 {
 	guint i;
 	PkTaskListItem *item;
@@ -101,12 +101,12 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	const gchar *localised_status;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	length = pk_task_list_get_size (watch->priv->tlist);
 	pk_debug ("refresh tooltip %i", length);
 	if (length == 0) {
-		pk_smart_icon_set_tooltip (watch->priv->sicon, "Doing nothing...");
+		gpk_smart_icon_set_tooltip (watch->priv->sicon, "Doing nothing...");
 		return TRUE;
 	}
 	status = g_string_new ("");
@@ -128,9 +128,9 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 			g_free (text);
 		}
 		/* don't fill the screen with a giant tooltip */
-		if (i > PK_WATCH_MAXIMUM_TOOLTIP_LINES) {
+		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
 			g_string_append_printf (status, _("(%i more transactions)\n"),
-						i - PK_WATCH_MAXIMUM_TOOLTIP_LINES);
+						i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
 			break;
 		}
 	}
@@ -139,16 +139,16 @@ pk_watch_refresh_tooltip (PkWatch *watch)
 	} else {
 		g_string_set_size (status, status->len-1);
 	}
-	pk_smart_icon_set_tooltip (watch->priv->sicon, status->str);
+	gpk_smart_icon_set_tooltip (watch->priv->sicon, status->str);
 	g_string_free (status, TRUE);
 	return TRUE;
 }
 
 /**
- * pk_watch_task_list_to_state_enum_list:
+ * gpk_watch_task_list_to_state_enum_list:
  **/
 static PkEnumList *
-pk_watch_task_list_to_state_enum_list (PkWatch *watch)
+gpk_watch_task_list_to_state_enum_list (GpkWatch *watch)
 {
 	guint i;
 	guint length;
@@ -156,7 +156,7 @@ pk_watch_task_list_to_state_enum_list (PkWatch *watch)
 	PkTaskListItem *item;
 
 	g_return_val_if_fail (watch != NULL, NULL);
-	g_return_val_if_fail (PK_IS_WATCH (watch), NULL);
+	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
 
 	/* shortcut */
 	length = pk_task_list_get_size (watch->priv->tlist);
@@ -182,25 +182,25 @@ pk_watch_task_list_to_state_enum_list (PkWatch *watch)
 }
 
 /**
- * pk_watch_refresh_icon:
+ * gpk_watch_refresh_icon:
  **/
 static gboolean
-pk_watch_refresh_icon (PkWatch *watch)
+gpk_watch_refresh_icon (GpkWatch *watch)
 {
 	const gchar *icon;
 	PkEnumList *elist;
 	gint value;
 
 	g_return_val_if_fail (watch != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_WATCH (watch), FALSE);
+	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	pk_debug ("rescan");
-	elist = pk_watch_task_list_to_state_enum_list (watch);
+	elist = gpk_watch_task_list_to_state_enum_list (watch);
 
 	/* nothing in the list */
 	if (elist == NULL) {
 		pk_debug ("no activity");
-		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 		return TRUE;
 	}
 
@@ -227,7 +227,7 @@ pk_watch_refresh_icon (PkWatch *watch)
 	/* only set if in the list and not unknown */
 	if (value != PK_STATUS_ENUM_UNKNOWN && value != -1) {
 		icon = pk_status_enum_to_icon_name (value);
-		pk_smart_icon_set_icon_name (watch->priv->sicon, icon);
+		gpk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 	}
 
 	g_object_unref (elist);
@@ -235,13 +235,13 @@ pk_watch_refresh_icon (PkWatch *watch)
 }
 
 /**
- * pk_watch_task_list_changed_cb:
+ * gpk_watch_task_list_changed_cb:
  **/
 static void
-pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
+gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
 	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
@@ -250,15 +250,15 @@ pk_watch_task_list_changed_cb (PkTaskList *tlist, PkWatch *watch)
 		watch->priv->show_refresh_in_menu = TRUE;
 	}
 
-	pk_watch_refresh_icon (watch);
-	pk_watch_refresh_tooltip (watch);
+	gpk_watch_refresh_icon (watch);
+	gpk_watch_refresh_tooltip (watch);
 }
 
 /**
- * pk_watch_finished_cb:
+ * gpk_watch_finished_cb:
  **/
 static void
-pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch *watch)
+gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatch *watch)
 {
 	gboolean ret;
 	gboolean value;
@@ -271,7 +271,7 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	const gchar *icon_name;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* get the role */
 	ret = pk_client_get_role (client, &role, &package_id, NULL);
@@ -290,8 +290,8 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 		    restart == PK_RESTART_ENUM_SESSION) {
 			restart_message = pk_restart_enum_to_localised_text (restart);
 			icon_name = pk_restart_enum_to_icon_name (restart);
-			pk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
-			pk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
+			gpk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
+			gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
 		}
 	}
 
@@ -332,19 +332,19 @@ pk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkWatch 
 	}
 
 	/* libnotify dialog */
-	pk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
-				  "help-browser", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_COMPLETED);
-	pk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
+				  "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_COMPLETED);
+	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (message);
 	g_free (package_id);
 }
 
 /**
- * pk_watch_error_code_cb:
+ * gpk_watch_error_code_cb:
  **/
 static void
-pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkWatch *watch)
+gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkWatch *watch)
 {
 	gchar *escaped_details;
 	const gchar *title;
@@ -352,7 +352,7 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	gboolean value;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	title = pk_error_enum_to_localised_text (error_code);
 
@@ -384,18 +384,18 @@ pk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gcha
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
-	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
-				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
-	pk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
 
 /**
- * pk_watch_message_cb:
+ * gpk_watch_message_cb:
  **/
 static void
-pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *details, PkWatch *watch)
+gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *details, GpkWatch *watch)
 {
 	const gchar *title;
 	const gchar *filename;
@@ -403,7 +403,7 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	gboolean value;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
         /* are we accepting notifications */
         value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
@@ -418,18 +418,18 @@ pk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *detai
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
-	pk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
-				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_NEVER);
-	pk_smart_icon_notify_button (watch->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_MESSAGE);
-	pk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_MESSAGE);
+	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
 
 /**
- * pk_watch_about_dialog_url_cb:
+ * gpk_watch_about_dialog_url_cb:
  **/
 static void 
-pk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
+gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
 {
 	GError *error = NULL;
 	gboolean ret;
@@ -472,10 +472,10 @@ out:
 }
 
 /**
- * pk_watch_show_about_cb:
+ * gpk_watch_show_about_cb:
  **/
 static void
-pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
+gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 {
 	static gboolean been_here = FALSE;
 	const char *authors[] = {
@@ -513,8 +513,8 @@ pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
 	if (!been_here) {
 		been_here = TRUE;
-		gtk_about_dialog_set_url_hook (pk_watch_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (pk_watch_about_dialog_url_cb, "mailto:", NULL);
+		gtk_about_dialog_set_url_hook (gpk_watch_about_dialog_url_cb, NULL, NULL);
+		gtk_about_dialog_set_email_hook (gpk_watch_about_dialog_url_cb, "mailto:", NULL);
 	}
 
 	gtk_window_set_default_icon_name ("system-software-installer");
@@ -534,22 +534,22 @@ pk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_watch_popup_menu_cb:
+ * gpk_watch_popup_menu_cb:
  *
  * Display the popup menu.
  **/
 static void
-pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
+gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 			guint          button,
 			guint32        timestamp,
-			PkWatch       *watch)
+			GpkWatch       *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
 	GtkWidget *image;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("icon right clicked");
 
 	/* About */
@@ -557,7 +557,7 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_watch_show_about_cb), watch);
+			  G_CALLBACK (gpk_watch_show_about_cb), watch);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* show the menu */
@@ -571,45 +571,45 @@ pk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 /**
- * pk_watch_refresh_cache_finished_cb:
+ * gpk_watch_refresh_cache_finished_cb:
  **/
 static void
-pk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkWatch *watch)
+gpk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("unreffing client %p", client);
 	g_object_unref (client);
 }
 
 /**
- * pk_watch_restart_cb:
+ * gpk_watch_restart_cb:
  **/
 static void
-pk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
+gpk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
 {
 	pk_restart_system ();
 }
 
 /**
- * pk_watch_refresh_cache_cb:
+ * gpk_watch_refresh_cache_cb:
  **/
 static void
-pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
+gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 {
 	gboolean ret;
-	PkWatch *watch = PK_WATCH (data);
+	GpkWatch *watch = GPK_WATCH (data);
 	PkClient *client;
 	GError *error = NULL;
 	gchar *message;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("refresh cache");
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_watch_refresh_cache_finished_cb), watch);
+			  G_CALLBACK (gpk_watch_refresh_cache_finished_cb), watch);
 
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
@@ -617,10 +617,10 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 		pk_warning ("failed to refresh cache: %s", error->message);
 		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
 		g_error_free (error);
-		pk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), message,
-				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		gpk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), message,
+				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
 		g_free (message);
-		pk_smart_icon_notify_show (watch->priv->sicon);
+		gpk_smart_icon_notify_show (watch->priv->sicon);
 	}
 }
 
@@ -628,25 +628,25 @@ pk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
  * pk_monitor_action_unref_cb:
  **/
 static void
-pk_monitor_action_unref_cb (PkProgress *progress, PkWatch *watch)
+pk_monitor_action_unref_cb (PkProgress *progress, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	g_object_unref (progress);
 }
 
 /**
- * pk_watch_menu_job_status_cb:
+ * gpk_watch_menu_job_status_cb:
  **/
 static void
-pk_watch_menu_job_status_cb (GtkMenuItem *item, PkWatch *watch)
+gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 {
 	gchar *tid;
 	PkProgress *progress = NULL;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* find the job we should bind to */
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
@@ -659,10 +659,10 @@ pk_watch_menu_job_status_cb (GtkMenuItem *item, PkWatch *watch)
 }
 
 /**
- * pk_watch_populate_menu_with_jobs:
+ * gpk_watch_populate_menu_with_jobs:
  **/
 static void
-pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
+gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 {
 	guint i;
 	PkTaskListItem *item;
@@ -676,7 +676,7 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 	guint length;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0) {
@@ -711,33 +711,33 @@ pk_watch_populate_menu_with_jobs (PkWatch *watch, GtkMenu *menu)
 		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 		g_signal_connect (G_OBJECT (widget), "activate",
-				  G_CALLBACK (pk_watch_menu_job_status_cb), watch);
+				  G_CALLBACK (gpk_watch_menu_job_status_cb), watch);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 		g_free (text);
 	}
 }
 
 /**
- * pk_watch_activate_status_cb:
+ * gpk_watch_activate_status_cb:
  * @button: Which buttons are pressed
  *
  * Callback when the icon is clicked
  **/
 static void
-pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
-			     PkWatch       *watch)
+gpk_watch_activate_status_cb (GtkStatusIcon *status_icon,
+			     GpkWatch       *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *widget;
 	GtkWidget *image;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("icon left clicked");
 
 	/* add jobs as drop down */
-	pk_watch_populate_menu_with_jobs (watch, menu);
+	gpk_watch_populate_menu_with_jobs (watch, menu);
 
 	/* force a refresh if we are not updating or refreshing */
 	if (watch->priv->show_refresh_in_menu) {
@@ -751,7 +751,7 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 		image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 		g_signal_connect (G_OBJECT (widget), "activate",
-				  G_CALLBACK (pk_watch_refresh_cache_cb), watch);
+				  G_CALLBACK (gpk_watch_refresh_cache_cb), watch);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 	}
 
@@ -763,35 +763,35 @@ pk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 }
 
 /**
- * pk_watch_hide_restart_cb:
+ * gpk_watch_hide_restart_cb:
  **/
 static void
-pk_watch_hide_restart_cb (GtkMenuItem *item, gpointer data)
+gpk_watch_hide_restart_cb (GtkMenuItem *item, gpointer data)
 {
-	PkWatch *watch = PK_WATCH (data);
+	GpkWatch *watch = GPK_WATCH (data);
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* just hide it */
-	pk_smart_icon_set_icon_name (watch->priv->sicon_restart, NULL);
+	gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, NULL);
 }
 
 /**
- * pk_watch_activate_status_restart_cb:
+ * gpk_watch_activate_status_restart_cb:
  * @button: Which buttons are pressed
  *
  * Callback when the icon is clicked
  **/
 static void
-pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
+gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *widget;
 	GtkWidget *image;
 
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("icon left clicked");
 
@@ -804,7 +804,7 @@ pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
 	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 	g_signal_connect (G_OBJECT (widget), "activate",
-			  G_CALLBACK (pk_watch_hide_restart_cb), watch);
+			  G_CALLBACK (gpk_watch_hide_restart_cb), watch);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
 	/* show the menu */
@@ -818,27 +818,27 @@ pk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, PkWatch *watch)
  * pk_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkWatch *watch)
+pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("connected=%i", connected);
 	if (connected) {
-		pk_watch_refresh_icon (watch);
-		pk_watch_refresh_tooltip (watch);
+		gpk_watch_refresh_icon (watch);
+		gpk_watch_refresh_tooltip (watch);
 	} else {
-		pk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 	}
 }
 
 /**
- * pk_watch_locked_cb:
+ * gpk_watch_locked_cb:
  **/
 static void
-pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
+gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
-	g_return_if_fail (PK_IS_WATCH (watch));
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
 	if (is_locked) {
@@ -849,53 +849,53 @@ pk_watch_locked_cb (PkClient *client, gboolean is_locked, PkWatch *watch)
 }
 
 /**
- * pk_watch_init:
+ * gpk_watch_init:
  * @watch: This class instance
  **/
 static void
-pk_watch_init (PkWatch *watch)
+gpk_watch_init (GpkWatch *watch)
 {
 	GtkStatusIcon *status_icon;
 	PolKitAction *pk_action;
 	PolKitGnomeAction *restart_action;
 
-	watch->priv = PK_WATCH_GET_PRIVATE (watch);
+	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
 
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
-	watch->priv->sicon = pk_smart_icon_new ();
-	watch->priv->sicon_restart = pk_smart_icon_new ();
+	watch->priv->sicon = gpk_smart_icon_new ();
+	watch->priv->sicon_restart = gpk_smart_icon_new ();
 
 	/* we need to get ::locked */
 	watch->priv->client = pk_client_new ();
 	pk_client_set_promiscuous (watch->priv->client, TRUE, NULL);
 	g_signal_connect (watch->priv->client, "locked",
-			  G_CALLBACK (pk_watch_locked_cb), watch);
+			  G_CALLBACK (gpk_watch_locked_cb), watch);
 	g_signal_connect (watch->priv->client, "finished",
-			  G_CALLBACK (pk_watch_finished_cb), watch);
+			  G_CALLBACK (gpk_watch_finished_cb), watch);
 	g_signal_connect (watch->priv->client, "error-code",
-			  G_CALLBACK (pk_watch_error_code_cb), watch);
+			  G_CALLBACK (gpk_watch_error_code_cb), watch);
 	g_signal_connect (watch->priv->client, "message",
-			  G_CALLBACK (pk_watch_message_cb), watch);
+			  G_CALLBACK (gpk_watch_message_cb), watch);
 
 	/* do session inhibit */
 	watch->priv->inhibit = pk_inhibit_new ();
 
 	/* right click actions are common */
-	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon);
+	status_icon = gpk_smart_icon_get_status_icon (watch->priv->sicon);
 	g_signal_connect_object (G_OBJECT (status_icon),
-				 "popup_menu", G_CALLBACK (pk_watch_popup_menu_cb), watch, 0);
+				 "popup_menu", G_CALLBACK (gpk_watch_popup_menu_cb), watch, 0);
 	g_signal_connect_object (G_OBJECT (status_icon),
-				 "activate", G_CALLBACK (pk_watch_activate_status_cb), watch, 0);
+				 "activate", G_CALLBACK (gpk_watch_activate_status_cb), watch, 0);
 
 	/* provide the user with a way to restart */
-	status_icon = pk_smart_icon_get_status_icon (watch->priv->sicon_restart);
+	status_icon = gpk_smart_icon_get_status_icon (watch->priv->sicon_restart);
 	g_signal_connect_object (G_OBJECT (status_icon),
-				 "activate", G_CALLBACK (pk_watch_activate_status_restart_cb), watch, 0);
+				 "activate", G_CALLBACK (gpk_watch_activate_status_restart_cb), watch, 0);
 
 	watch->priv->tlist = pk_task_list_new ();
 	g_signal_connect (watch->priv->tlist, "task-list-changed",
-			  G_CALLBACK (pk_watch_task_list_changed_cb), watch);
+			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
 
 	watch->priv->pconnection = pk_connection_new ();
 	g_signal_connect (watch->priv->pconnection, "connection-changed",
@@ -919,23 +919,23 @@ pk_watch_init (PkWatch *watch)
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (restart_action, "activate",
-			  G_CALLBACK (pk_watch_restart_cb), NULL);
+			  G_CALLBACK (gpk_watch_restart_cb), NULL);
 	watch->priv->restart_action = restart_action;
 }
 
 /**
- * pk_watch_finalize:
+ * gpk_watch_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_watch_finalize (GObject *object)
+gpk_watch_finalize (GObject *object)
 {
-	PkWatch *watch;
+	GpkWatch *watch;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (PK_IS_WATCH (object));
+	g_return_if_fail (GPK_IS_WATCH (object));
 
-	watch = PK_WATCH (object);
+	watch = GPK_WATCH (object);
 
 	g_return_if_fail (watch->priv != NULL);
 	g_object_unref (watch->priv->sicon);
@@ -946,19 +946,19 @@ pk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->restart_action);
 
-	G_OBJECT_CLASS (pk_watch_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
 }
 
 /**
- * pk_watch_new:
+ * gpk_watch_new:
  *
- * Return value: a new PkWatch object.
+ * Return value: a new GpkWatch object.
  **/
-PkWatch *
-pk_watch_new (void)
+GpkWatch *
+gpk_watch_new (void)
 {
-	PkWatch *watch;
-	watch = g_object_new (PK_TYPE_WATCH, NULL);
-	return PK_WATCH (watch);
+	GpkWatch *watch;
+	watch = g_object_new (GPK_TYPE_WATCH, NULL);
+	return GPK_WATCH (watch);
 }
 

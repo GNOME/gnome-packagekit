@@ -45,8 +45,8 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
-	PkNotify *notify = NULL;
-	PkWatch *watch = NULL;
+	GpkNotify *notify = NULL;
+	GpkWatch *watch = NULL;
 	GOptionContext *context;
 
 	const GOptionEntry options[] = {
@@ -89,8 +89,8 @@ main (int argc, char *argv[])
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* create a new notify object */
-	notify = pk_notify_new ();
-	watch = pk_watch_new ();
+	notify = gpk_notify_new ();
+	watch = gpk_watch_new ();
 	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);

@@ -36,6 +36,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-notify.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -1522,6 +1523,7 @@ main (int argc, char *argv[])
 	GtkWidget *button;
 	PolKitAction *pk_action;
 	GError *error = NULL;
+	PkNotify *notify;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1595,7 +1597,9 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_error_code_cb), NULL);
 	g_signal_connect (client_action, "allow-cancel",
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
-	g_signal_connect (client_action, "updates-changed",
+
+	notify = pk_notify_new ();
+	g_signal_connect (notify, "repo-list-changed",
 			  G_CALLBACK (pk_updates_changed_cb), NULL);
 
 	/* get actions */
@@ -1844,6 +1848,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_details);
 	g_object_unref (client_query);
 	g_object_unref (client_action);
+	g_object_unref (notify);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (cached_package_id);

@@ -40,6 +40,7 @@
 #include <pk-debug.h>
 #include <pk-job-list.h>
 #include <pk-client.h>
+#include <pk-notify.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -52,65 +53,66 @@
 #include "gpk-common.h"
 #include "gpk-notify.h"
 
-static void     pk_notify_class_init	(PkNotifyClass *klass);
-static void     pk_notify_init		(PkNotify      *notify);
-static void     pk_notify_finalize	(GObject       *object);
+static void     gpk_notify_class_init	(GpkNotifyClass *klass);
+static void     gpk_notify_init		(GpkNotify      *notify);
+static void     gpk_notify_finalize	(GObject       *object);
 
-#define PK_NOTIFY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_NOTIFY, PkNotifyPrivate))
+#define GPK_NOTIFY_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_NOTIFY, GpkNotifyPrivate))
 
-struct PkNotifyPrivate
+struct GpkNotifyPrivate
 {
-	PkSmartIcon		*sicon;
+	GpkSmartIcon		*sicon;
 	PkConnection		*pconnection;
 	PkClient		*client_update_system;
 	PkTaskList		*tlist;
 	PkAutoRefresh		*arefresh;
+	PkNotify		*notify;
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 };
 
-G_DEFINE_TYPE (PkNotify, pk_notify, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkNotify, gpk_notify, G_TYPE_OBJECT)
 
 /**
- * pk_notify_class_init:
- * @klass: The PkNotifyClass
+ * gpk_notify_class_init:
+ * @klass: The GpkNotifyClass
  **/
 static void
-pk_notify_class_init (PkNotifyClass *klass)
+gpk_notify_class_init (GpkNotifyClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->finalize = pk_notify_finalize;
+	object_class->finalize = gpk_notify_finalize;
 
-	g_type_class_add_private (klass, sizeof (PkNotifyPrivate));
+	g_type_class_add_private (klass, sizeof (GpkNotifyPrivate));
 }
 
 #if 0
 /* No help yet */
 /**
- * pk_notify_show_help_cb:
+ * gpk_notify_show_help_cb:
  **/
 static void
-pk_notify_show_help_cb (GtkMenuItem *item, PkNotify *notify)
+gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	pk_debug ("show help");
-	pk_smart_icon_notify_new (notify->priv->sicon,
+	gpk_smart_icon_notify_new (notify->priv->sicon,
 			      _("Functionality incomplete"),
 			      _("No help yet, sorry..."), "help-browser",
-			      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
-	pk_smart_icon_notify_show (notify->priv->sicon);
+			      GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
 }
 #endif
 
 /**
- * pk_notify_show_preferences_cb:
+ * gpk_notify_show_preferences_cb:
  **/
 static void
-pk_notify_show_preferences_cb (GtkMenuItem *item, PkNotify *notify)
+gpk_notify_show_preferences_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	const gchar *command = "gpk-prefs";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
@@ -119,10 +121,10 @@ pk_notify_show_preferences_cb (GtkMenuItem *item, PkNotify *notify)
 }
 
 /**
- * pk_notify_about_dialog_url_cb:
+ * gpk_notify_about_dialog_url_cb:
  **/
 static void 
-pk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
+gpk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
 {
 	GError *error = NULL;
 	gboolean ret;
@@ -171,10 +173,10 @@ out:
 }
 
 /**
- * pk_notify_show_about_cb:
+ * gpk_notify_show_about_cb:
  **/
 static void
-pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
+gpk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 {
 	static gboolean been_here = FALSE;
 	const char *authors[] = {
@@ -212,8 +214,8 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
 	if (!been_here) {
 		been_here = TRUE;
-		gtk_about_dialog_set_url_hook (pk_notify_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (pk_notify_about_dialog_url_cb, "mailto:", NULL);
+		gtk_about_dialog_set_url_hook (gpk_notify_about_dialog_url_cb, NULL, NULL);
+		gtk_about_dialog_set_email_hook (gpk_notify_about_dialog_url_cb, "mailto:", NULL);
 	}
 
 	gtk_window_set_default_icon_name ("system-software-installer");
@@ -233,15 +235,15 @@ pk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_notify_popup_menu_cb:
+ * gpk_notify_popup_menu_cb:
  *
  * Display the popup menu.
  **/
 static void
-pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
+gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 			 guint          button,
 			 guint32        timestamp,
-			 PkNotify      *icon)
+			 GpkNotify      *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -254,7 +256,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_show_preferences_cb), icon);
+			  G_CALLBACK (gpk_notify_show_preferences_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* Separator for HIG? */
@@ -267,7 +269,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_show_help_cb), icon);
+			  G_CALLBACK (gpk_notify_show_help_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 #endif
 
@@ -276,7 +278,7 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_show_about_cb), icon);
+			  G_CALLBACK (gpk_notify_show_about_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* show the menu */
@@ -289,15 +291,15 @@ pk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	}
 }
 
-static gboolean pk_notify_check_for_updates_cb (PkNotify *notify);
-static void pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify);
-static gboolean pk_notify_query_updates (PkNotify *notify);
+static gboolean gpk_notify_check_for_updates_cb (GpkNotify *notify);
+static void gpk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify);
+static gboolean gpk_notify_query_updates (GpkNotify *notify);
 
 /**
- * pk_notify_update_system_finished_cb:
+ * gpk_notify_update_system_finished_cb:
  **/
 static void
-pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify)
+gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify)
 {
 	PkRestartEnum restart;
 	guint i;
@@ -310,13 +312,13 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 	gboolean value;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* we failed, show the icon */
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
-		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 		/* we failed, so re-get the update list */
-		pk_notify_query_updates (notify);
+		gpk_notify_query_updates (notify);
 	}
 
 	/* check we got some packages */
@@ -378,65 +380,65 @@ pk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 
 	/* do the notify, and show the right buttons */
 	pk_debug ("Doing notification");
-	pk_smart_icon_notify_new (notify->priv->sicon,
+	gpk_smart_icon_notify_new (notify->priv->sicon,
 				  _("The system update has completed"), message_text->str,
 				  "software-update-available",
-				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
 	}
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
-	pk_smart_icon_notify_show (notify->priv->sicon);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_RESTART);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
 	g_string_free (message_text, TRUE);
 }
 
 /**
- * pk_notify_update_system:
+ * gpk_notify_update_system:
  **/
 static gboolean
-pk_notify_update_system (PkNotify *notify)
+gpk_notify_update_system (GpkNotify *notify)
 {
 	gboolean ret;
 	GError *error = NULL;
 	gchar *message;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
 	ret = pk_client_update_system (notify->priv->client_update_system, &error);
 	if (ret) {
-		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
 		pk_warning ("failed to update system: %s", error->message);
 		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
 		g_error_free (error);
-		pk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
-				      "process-stop", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
+		gpk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
+				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
 		g_free (message);
-		pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
-		pk_smart_icon_notify_show (notify->priv->sicon);
+		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+		gpk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	return ret;
 }
 
 /**
- * pk_notify_menuitem_update_system_cb:
+ * gpk_notify_menuitem_update_system_cb:
  **/
 static void
-pk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
+gpk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
-	PkNotify *notify = PK_NOTIFY (data);
+	GpkNotify *notify = GPK_NOTIFY (data);
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
-	pk_notify_update_system (notify);
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
+	gpk_notify_update_system (notify);
 }
 
 /**
- * pk_notify_menuitem_show_updates_cb:
+ * gpk_notify_menuitem_show_updates_cb:
  **/
 static void
-pk_notify_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
+gpk_notify_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 {
 	const gchar *command = "gpk-update-viewer";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
@@ -445,14 +447,14 @@ pk_notify_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_notify_activate_update_cb:
+ * gpk_notify_activate_update_cb:
  * @button: Which buttons are pressed
  *
  * Callback when the icon is clicked
  **/
 static void
-pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
-			      PkNotify      *icon)
+gpk_notify_activate_update_cb (GtkStatusIcon *status_icon,
+			      GpkNotify      *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -465,7 +467,7 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name ("system-software-update", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_menuitem_show_updates_cb), icon);
+			  G_CALLBACK (gpk_notify_menuitem_show_updates_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* update system */
@@ -473,7 +475,7 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 	image = gtk_image_new_from_icon_name ("software-update-available", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (pk_notify_menuitem_update_system_cb), icon);
+			  G_CALLBACK (gpk_notify_menuitem_update_system_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* show the menu */
@@ -487,25 +489,25 @@ pk_notify_activate_update_cb (GtkStatusIcon *status_icon,
  * pk_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkNotify *notify)
+pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	pk_debug ("connected=%i", connected);
 }
 
 /**
- * pk_notify_critical_updates_warning:
+ * gpk_notify_critical_updates_warning:
  **/
 static void
-pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guint number)
+gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, guint number)
 {
 	const gchar *title;
 	gchar *message;
 	gboolean value;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
         /* are we accepting notifications */
         value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_CRITICAL, NULL);
@@ -519,25 +521,25 @@ pk_notify_critical_updates_warning (PkNotify *notify, const gchar *details, guin
 					     "The following important updates are available for your computer:\n\n%s", number), details);
 
 	pk_debug ("Doing critical updates warning: %s", message);
-	pk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
-				  PK_NOTIFY_URGENCY_CRITICAL, PK_NOTIFY_TIMEOUT_NEVER);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, PK_CONF_NOTIFY_CRITICAL);
-	pk_smart_icon_notify_show (notify->priv->sicon);
+	gpk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
+				  GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, PK_CONF_NOTIFY_CRITICAL);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
 
 	g_free (message);
 }
 
 /**
- * pk_notify_auto_update_message:
+ * gpk_notify_auto_update_message:
  **/
 static void
-pk_notify_auto_update_message (PkNotify *notify)
+gpk_notify_auto_update_message (GpkNotify *notify)
 {
 	gboolean value;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* are we accepting notifications */
         value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
@@ -546,20 +548,20 @@ pk_notify_auto_update_message (PkNotify *notify)
                 return;
         }
 
-	pk_smart_icon_notify_new (notify->priv->sicon,
+	gpk_smart_icon_notify_new (notify->priv->sicon,
 				  _("Updates are being installed"),
 				  _("Updates are being automatically installed on your computer"), "software-update-urgent",
-				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_STARTED);
-	pk_smart_icon_notify_show (notify->priv->sicon);
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_STARTED);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**
- * pk_notify_client_packages_to_enum_list:
+ * gpk_notify_client_packages_to_enum_list:
  **/
 static PkEnumList *
-pk_notify_client_packages_to_enum_list (PkNotify *notify, PkClient *client)
+gpk_notify_client_packages_to_enum_list (GpkNotify *notify, PkClient *client)
 {
 	guint i;
 	guint length;
@@ -567,7 +569,7 @@ pk_notify_client_packages_to_enum_list (PkNotify *notify, PkClient *client)
 	PkPackageItem *item;
 
 	g_return_val_if_fail (notify != NULL, NULL);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), NULL);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* shortcut */
 	length = pk_client_package_buffer_get_size (client);
@@ -592,20 +594,20 @@ pk_notify_client_packages_to_enum_list (PkNotify *notify, PkClient *client)
 }
 
 /**
- * pk_notify_get_best_update_icon:
+ * gpk_notify_get_best_update_icon:
  **/
 static const gchar *
-pk_notify_get_best_update_icon (PkNotify *notify, PkClient *client)
+gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 {
 	gint value;
 	PkEnumList *elist;
 	const gchar *icon;
 
 	g_return_val_if_fail (notify != NULL, NULL);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), NULL);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* get an enumerated list with all the update types */
-	elist = pk_notify_client_packages_to_enum_list (notify, client);
+	elist = gpk_notify_client_packages_to_enum_list (notify, client);
 
 	/* get the most important icon */
 	value = pk_enum_list_contains_priority (elist,
@@ -628,17 +630,17 @@ pk_notify_get_best_update_icon (PkNotify *notify, PkClient *client)
 }
 
 /**
- * pk_notify_check_on_battery:
+ * gpk_notify_check_on_battery:
  **/
 static gboolean
-pk_notify_check_on_battery (PkNotify *notify)
+gpk_notify_check_on_battery (GpkNotify *notify)
 {
 	gboolean on_battery;
 	gboolean conf_update_battery;
 	gboolean value;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
 	conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
@@ -646,14 +648,14 @@ pk_notify_check_on_battery (PkNotify *notify)
 		/* are we accepting notifications */
 		value = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_NOTIFY_BATTERY_UPDATE, NULL);
 		if (value) {
-			pk_smart_icon_notify_new (notify->priv->sicon,
+			gpk_smart_icon_notify_new (notify->priv->sicon,
 						  _("Will not install updates"),
 						  _("Automatic updates are not being installed as the computer is on battery power"),
-					      "dialog-information", PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-			pk_smart_icon_notify_button (notify->priv->sicon,
-						     PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      "dialog-information", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+			gpk_smart_icon_notify_button (notify->priv->sicon,
+						     GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
 						     PK_CONF_NOTIFY_BATTERY_UPDATE);
-			pk_smart_icon_notify_show (notify->priv->sicon);
+			gpk_smart_icon_notify_show (notify->priv->sicon);
 		}
 		return FALSE;
 	}
@@ -661,16 +663,16 @@ pk_notify_check_on_battery (PkNotify *notify)
 }
 
 /**
- * pk_notify_get_update_policy:
+ * gpk_notify_get_update_policy:
  **/
 static PkUpdateEnum
-pk_notify_get_update_policy (PkNotify *notify)
+gpk_notify_get_update_policy (GpkNotify *notify)
 {
 	PkUpdateEnum update;
 	gchar *updates;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	updates = gconf_client_get_string (notify->priv->gconf_client, PK_CONF_AUTO_UPDATE, NULL);
 	if (updates == NULL) {
@@ -683,10 +685,10 @@ pk_notify_get_update_policy (PkNotify *notify)
 }
 
 /**
- * pk_notify_query_updates_finished_cb:
+ * gpk_notify_query_updates_finished_cb:
  **/
 static void
-pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkNotify *notify)
+gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkNotify *notify)
 {
 	PkPackageItem *item;
 	guint length;
@@ -699,7 +701,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	GPtrArray *security_array;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
@@ -712,7 +714,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	/* we have no updates */
 	if (length == 0) {
 		pk_debug ("no updates");
-		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 		goto out;
 	}
 
@@ -735,7 +737,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	g_object_unref (client);
 
 	/* do we do the automatic updates? */
-	update = pk_notify_get_update_policy (notify);
+	update = gpk_notify_get_update_policy (notify);
 	if (update == PK_UPDATE_ENUM_UNKNOWN) {
 		pk_warning ("policy unknown");
 		goto out;
@@ -747,7 +749,7 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		pk_debug ("not updating as policy NONE");
 
 		/* work out icon */
-		icon = pk_notify_get_best_update_icon (notify, client);
+		icon = gpk_notify_get_best_update_icon (notify, client);
 
 		/* trim off extra newlines */
 		if (status_security->len != 0) {
@@ -758,18 +760,18 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 		g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 								  "There are %d updates pending", length), length);
 
-		pk_smart_icon_set_icon_name (notify->priv->sicon, icon);
-		pk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
+		gpk_smart_icon_set_icon_name (notify->priv->sicon, icon);
+		gpk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
 
 		/* do we warn the user? */
 		if (security_array->len > 0) {
-			pk_notify_critical_updates_warning (notify, status_security->str, length);
+			gpk_notify_critical_updates_warning (notify, status_security->str, length);
 		}
 		goto out;
 	}
 
 	/* are we on battery and configured to skip the action */
-	ret = pk_notify_check_on_battery (notify);
+	ret = gpk_notify_check_on_battery (notify);
 	if (!ret) {
 		pk_debug ("on battery so not doing update");
 		goto out;
@@ -795,9 +797,9 @@ pk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	/* just do everything */
 	if (update == PK_UPDATE_ENUM_ALL) {
 		pk_debug ("we should do the update automatically!");
-		ret = pk_notify_update_system (notify);
+		ret = gpk_notify_update_system (notify);
 		if (ret) {
-			pk_notify_auto_update_message (notify);
+			gpk_notify_auto_update_message (notify);
 		} else {
 			pk_warning ("update failed");
 		}
@@ -815,16 +817,16 @@ out:
 }
 
 /**
- * pk_notify_error_code_cb:
+ * gpk_notify_error_code_cb:
  **/
 static void
-pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, PkNotify *notify)
+gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkNotify *notify)
 {
 	const gchar *title;
 	gboolean value;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	title = pk_error_enum_to_localised_text (error_code);
 
@@ -842,24 +844,24 @@ pk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
                 return;
         }
 
-	pk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
-				  PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_LONG);
-	pk_smart_icon_notify_button (notify->priv->sicon, PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
-	pk_smart_icon_notify_show (notify->priv->sicon);
+	gpk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
 }
 
 /**
- * pk_notify_query_updates:
+ * gpk_notify_query_updates:
  **/
 static gboolean
-pk_notify_query_updates (PkNotify *notify)
+gpk_notify_query_updates (GpkNotify *notify)
 {
 	gboolean ret;
 	GError *error = NULL;
 	PkClient *client;
 
 	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		pk_debug ("Not checking for updates as already in progress");
@@ -868,9 +870,9 @@ pk_notify_query_updates (PkNotify *notify)
 
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_notify_query_updates_finished_cb), notify);
+			  G_CALLBACK (gpk_notify_query_updates_finished_cb), notify);
 	g_signal_connect (client, "error-code",
-			  G_CALLBACK (pk_notify_error_code_cb), notify);
+			  G_CALLBACK (gpk_notify_error_code_cb), notify);
 	pk_client_set_use_buffer (client, TRUE, NULL);
 
 	/* get updates */
@@ -883,13 +885,13 @@ pk_notify_query_updates (PkNotify *notify)
 }
 
 /**
- * pk_notify_refresh_cache_finished_cb:
+ * gpk_notify_refresh_cache_finished_cb:
  **/
 static void
-pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, PkNotify *notify)
+gpk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	pk_debug ("finished refreshing cache :%s", pk_exit_enum_to_text (exit_code));
 	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
@@ -901,24 +903,24 @@ pk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 
 		/* now try to get updates */
 		pk_debug ("get updates");
-		pk_notify_query_updates (notify);
+		gpk_notify_query_updates (notify);
 	}
 	notify->priv->cache_update_in_progress = FALSE;
 	g_object_unref (client);
 }
 
 /**
- * pk_notify_check_for_updates_cb:
+ * gpk_notify_check_for_updates_cb:
  **/
 static gboolean
-pk_notify_check_for_updates_cb (PkNotify *notify)
+gpk_notify_check_for_updates_cb (GpkNotify *notify)
 {
 	gboolean ret;
 	PkClient *client;
 	pk_debug ("refresh cache");
 
 	g_return_val_if_fail (notify != NULL, FALSE);
-	g_return_val_if_fail (PK_IS_NOTIFY (notify), FALSE);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	/* got a cache, no need to poll */
 	if (notify->priv->cache_okay) {
@@ -934,9 +936,9 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 	notify->priv->cache_okay = TRUE;
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_notify_refresh_cache_finished_cb), notify);
+			  G_CALLBACK (gpk_notify_refresh_cache_finished_cb), notify);
 	g_signal_connect (client, "error-code",
-			  G_CALLBACK (pk_notify_error_code_cb), notify);
+			  G_CALLBACK (gpk_notify_error_code_cb), notify);
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		g_object_unref (client);
@@ -947,97 +949,97 @@ pk_notify_check_for_updates_cb (PkNotify *notify)
 }
 
 /**
- * pk_notify_updates_changed_cb:
+ * gpk_notify_updates_changed_cb:
  **/
 static void
-pk_notify_updates_changed_cb (PkClient *client, PkNotify *notify)
+gpk_notify_updates_changed_cb (PkClient *client, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* now try to get newest update list */
 	pk_debug ("get updates");
-	pk_notify_query_updates (notify);
+	gpk_notify_query_updates (notify);
 }
 
 /**
- * pk_notify_task_list_changed_cb:
+ * gpk_notify_task_list_changed_cb:
  **/
 static void
-pk_notify_task_list_changed_cb (PkTaskList *tlist, PkNotify *notify)
+gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	/* hide icon if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		pk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
+		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	}
 }
 
 /**
- * pk_notify_auto_refresh_cache_cb:
+ * gpk_notify_auto_refresh_cache_cb:
  **/
 static void
-pk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, PkNotify *notify)
+gpk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* schedule another update */
-	pk_notify_check_for_updates_cb (notify);
+	gpk_notify_check_for_updates_cb (notify);
 }
 
 /**
- * pk_notify_auto_get_updates_cb:
+ * gpk_notify_auto_get_updates_cb:
  **/
 static void
-pk_notify_auto_get_updates_cb (PkAutoRefresh *arefresh, PkNotify *notify)
+gpk_notify_auto_get_updates_cb (PkAutoRefresh *arefresh, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* show the icon at login time
 	 * hopefully it just needs a quick network access, else we may have to
 	 * make it a gconf variable */
-	pk_notify_query_updates (notify);
+	gpk_notify_query_updates (notify);
 }
 
 /**
- * pk_notify_smart_icon_notify_button:
+ * gpk_notify_smart_icon_notify_button:
  **/
 static void
-pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
-				    const gchar *data, PkNotify *notify)
+gpk_notify_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button,
+				     const gchar *data, GpkNotify *notify)
 {
 	gboolean ret;
 
 	g_return_if_fail (notify != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (notify));
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	pk_debug ("got: %i with data %s", button, data);
 	/* find the localised text */
-	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
-	    button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
+	    button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
 		if (data == NULL) {
 			pk_warning ("data NULL");
 		} else {
 			pk_debug ("setting %s to FALSE", data);
 			gconf_client_set_bool (notify->priv->gconf_client, data, FALSE, NULL);
 		}
-	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
+	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		gboolean ret;
 		ret = pk_client_cancel (notify->priv->client_update_system, NULL);
 		if (ret == FALSE) {
 			pk_warning ("cancelling updates failed");
-			pk_smart_icon_notify_new (notify->priv->sicon,
+			gpk_smart_icon_notify_new (notify->priv->sicon,
 					      _("Could not stop"),
 					      _("Could not cancel the system update"), "process-stop",
-					      PK_NOTIFY_URGENCY_LOW, PK_NOTIFY_TIMEOUT_SHORT);
-			pk_smart_icon_notify_show (notify->priv->sicon);
+					      GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+			gpk_smart_icon_notify_show (notify->priv->sicon);
 		}
-	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
-		pk_notify_update_system (notify);
-	} else if (button == PK_NOTIFY_BUTTON_RESTART_COMPUTER) {
+	} else if (button == GPK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
+		gpk_notify_update_system (notify);
+	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
 		/* restart using gnome-power-manager */
 		ret = pk_restart_system ();
 		if (!ret) {
@@ -1047,35 +1049,35 @@ pk_notify_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button,
 }
 
 /**
- * pk_notify_init:
+ * gpk_notify_init:
  * @notify: This class instance
  **/
 static void
-pk_notify_init (PkNotify *notify)
+gpk_notify_init (GpkNotify *notify)
 {
 	GtkStatusIcon *status_icon;
-	notify->priv = PK_NOTIFY_GET_PRIVATE (notify);
+	notify->priv = GPK_NOTIFY_GET_PRIVATE (notify);
 
-	notify->priv->sicon = pk_smart_icon_new ();
+	notify->priv->sicon = gpk_smart_icon_new ();
 	g_signal_connect (notify->priv->sicon, "notification-button",
-			  G_CALLBACK (pk_notify_smart_icon_notify_button), notify);
+			  G_CALLBACK (gpk_notify_smart_icon_notify_button), notify);
 
 	notify->priv->gconf_client = gconf_client_get_default ();
 	notify->priv->arefresh = pk_auto_refresh_new ();
 	g_signal_connect (notify->priv->arefresh, "refresh-cache",
-			  G_CALLBACK (pk_notify_auto_refresh_cache_cb), notify);
+			  G_CALLBACK (gpk_notify_auto_refresh_cache_cb), notify);
 	g_signal_connect (notify->priv->arefresh, "get-updates",
-			  G_CALLBACK (pk_notify_auto_get_updates_cb), notify);
+			  G_CALLBACK (gpk_notify_auto_get_updates_cb), notify);
 
 	/* right click actions are common */
-	status_icon = pk_smart_icon_get_status_icon (notify->priv->sicon);
+	status_icon = gpk_smart_icon_get_status_icon (notify->priv->sicon);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "popup_menu",
-				 G_CALLBACK (pk_notify_popup_menu_cb),
+				 G_CALLBACK (gpk_notify_popup_menu_cb),
 				 notify, 0);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate",
-				 G_CALLBACK (pk_notify_activate_update_cb),
+				 G_CALLBACK (gpk_notify_activate_update_cb),
 				 notify, 0);
 
 	notify->priv->pconnection = pk_connection_new ();
@@ -1085,20 +1087,21 @@ pk_notify_init (PkNotify *notify)
 		pk_connection_changed_cb (notify->priv->pconnection, TRUE, notify);
 	}
 
-	/* use a client to get the updates-changed signal */
 	notify->priv->client_update_system = pk_client_new ();
 	pk_client_set_use_buffer (notify->priv->client_update_system, TRUE, NULL);
-	g_signal_connect (notify->priv->client_update_system, "updates-changed",
-			  G_CALLBACK (pk_notify_updates_changed_cb), notify);
 	g_signal_connect (notify->priv->client_update_system, "finished",
-			  G_CALLBACK (pk_notify_update_system_finished_cb), notify);
+			  G_CALLBACK (gpk_notify_update_system_finished_cb), notify);
 	g_signal_connect (notify->priv->client_update_system, "error-code",
-			  G_CALLBACK (pk_notify_error_code_cb), notify);
+			  G_CALLBACK (gpk_notify_error_code_cb), notify);
+
+	notify->priv->notify = pk_notify_new ();
+	g_signal_connect (notify->priv->notify, "updates-changed",
+			  G_CALLBACK (gpk_notify_updates_changed_cb), notify);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	notify->priv->tlist = pk_task_list_new ();
 	g_signal_connect (notify->priv->tlist, "task-list-changed",
-			  G_CALLBACK (pk_notify_task_list_changed_cb), notify);
+			  G_CALLBACK (gpk_notify_task_list_changed_cb), notify);
 
 	/* refresh the cache, and poll until we get a good refresh */
 	notify->priv->cache_okay = FALSE;
@@ -1106,18 +1109,18 @@ pk_notify_init (PkNotify *notify)
 }
 
 /**
- * pk_notify_finalize:
+ * gpk_notify_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_notify_finalize (GObject *object)
+gpk_notify_finalize (GObject *object)
 {
-	PkNotify *notify;
+	GpkNotify *notify;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (PK_IS_NOTIFY (object));
+	g_return_if_fail (GPK_IS_NOTIFY (object));
 
-	notify = PK_NOTIFY (object);
+	notify = GPK_NOTIFY (object);
 
 	g_return_if_fail (notify->priv != NULL);
 
@@ -1127,20 +1130,21 @@ pk_notify_finalize (GObject *object)
 	g_object_unref (notify->priv->tlist);
 	g_object_unref (notify->priv->arefresh);
 	g_object_unref (notify->priv->gconf_client);
+	g_object_unref (notify->priv->notify);
 
-	G_OBJECT_CLASS (pk_notify_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_notify_parent_class)->finalize (object);
 }
 
 /**
- * pk_notify_new:
+ * gpk_notify_new:
  *
- * Return value: a new PkNotify object.
+ * Return value: a new GpkNotify object.
  **/
-PkNotify *
-pk_notify_new (void)
+GpkNotify *
+gpk_notify_new (void)
 {
-	PkNotify *notify;
-	notify = g_object_new (PK_TYPE_NOTIFY, NULL);
-	return PK_NOTIFY (notify);
+	GpkNotify *notify;
+	notify = g_object_new (GPK_TYPE_NOTIFY, NULL);
+	return GPK_NOTIFY (notify);
 }
 

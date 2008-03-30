@@ -26,71 +26,71 @@
 
 G_BEGIN_DECLS
 
-#define PK_TYPE_SMART_ICON		(pk_smart_icon_get_type ())
-#define PK_SMART_ICON(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_SMART_ICON, PkSmartIcon))
-#define PK_SMART_ICON_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_SMART_ICON, PkSmartIconClass))
+#define PK_TYPE_SMART_ICON		(gpk_smart_icon_get_type ())
+#define PK_SMART_ICON(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_SMART_ICON, GpkSmartIcon))
+#define PK_SMART_ICON_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_SMART_ICON, GpkSmartIconClass))
 #define PK_IS_SMART_ICON(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), PK_TYPE_SMART_ICON))
 #define PK_IS_SMART_ICON_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), PK_TYPE_SMART_ICON))
-#define PK_SMART_ICON_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_SMART_ICON, PkSmartIconClass))
-#define PK_SMART_ICON_ERROR		(pk_smart_icon_error_quark ())
-#define PK_SMART_ICON_TYPE_ERROR	(pk_smart_icon_error_get_type ()) 
+#define PK_SMART_ICON_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_SMART_ICON, GpkSmartIconClass))
+#define PK_SMART_ICON_ERROR		(gpk_smart_icon_error_quark ())
+#define PK_SMART_ICON_TYPE_ERROR	(gpk_smart_icon_error_get_type ())
 
-typedef struct PkSmartIconPrivate PkSmartIconPrivate;
+typedef struct GpkSmartIconPrivate GpkSmartIconPrivate;
 
 typedef struct
 {
 	 GObject		 parent;
-	 PkSmartIconPrivate	*priv;
-} PkSmartIcon;
+	 GpkSmartIconPrivate	*priv;
+} GpkSmartIcon;
 
 typedef struct
 {
 	GObjectClass	parent_class;
-} PkSmartIconClass;
+} GpkSmartIconClass;
 
 typedef enum
 {
-	PK_NOTIFY_URGENCY_LOW,
-	PK_NOTIFY_URGENCY_NORMAL,
-	PK_NOTIFY_URGENCY_CRITICAL
-} PkNotifyUrgency;
+	GPK_NOTIFY_URGENCY_LOW,
+	GPK_NOTIFY_URGENCY_NORMAL,
+	GPK_NOTIFY_URGENCY_CRITICAL
+} GpkNotifyUrgency;
 
 typedef enum
 {
-	PK_NOTIFY_TIMEOUT_SHORT,
-	PK_NOTIFY_TIMEOUT_LONG,
-	PK_NOTIFY_TIMEOUT_NEVER
-} PkNotifyTimeout;
+	GPK_NOTIFY_TIMEOUT_SHORT,
+	GPK_NOTIFY_TIMEOUT_LONG,
+	GPK_NOTIFY_TIMEOUT_NEVER
+} GpkNotifyTimeout;
 
 typedef enum
 {
-	PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-	PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,
-	PK_NOTIFY_BUTTON_CANCEL_UPDATE,
-	PK_NOTIFY_BUTTON_UPDATE_COMPUTER,
-	PK_NOTIFY_BUTTON_RESTART_COMPUTER,
-	PK_NOTIFY_BUTTON_UNKNOWN
-} PkNotifyButton;
+	GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+	GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,
+	GPK_NOTIFY_BUTTON_CANCEL_UPDATE,
+	GPK_NOTIFY_BUTTON_UPDATE_COMPUTER,
+	GPK_NOTIFY_BUTTON_RESTART_COMPUTER,
+	GPK_NOTIFY_BUTTON_UNKNOWN
+} GpkNotifyButton;
 
-GType		 pk_smart_icon_get_type		  	(void);
-PkSmartIcon	*pk_smart_icon_new			(void);
-GtkStatusIcon	*pk_smart_icon_get_status_icon		(PkSmartIcon	*sicon);
-gboolean	 pk_smart_icon_sync			(PkSmartIcon	*sicon);
-gboolean	 pk_smart_icon_set_icon_name		(PkSmartIcon	*sicon,
+GType		 gpk_smart_icon_get_type		(void);
+GpkSmartIcon	*gpk_smart_icon_new			(void);
+GtkStatusIcon	*gpk_smart_icon_get_status_icon		(GpkSmartIcon	*sicon);
+gboolean	 gpk_smart_icon_sync			(GpkSmartIcon	*sicon);
+gboolean	 gpk_smart_icon_set_icon_name		(GpkSmartIcon	*sicon,
 							 const gchar	*icon_name);
-gboolean	 pk_smart_icon_set_tooltip		(PkSmartIcon	*sicon,
+gboolean	 gpk_smart_icon_set_tooltip		(GpkSmartIcon	*sicon,
 							 const gchar	*tooltip);
-gboolean	 pk_smart_icon_notify_new		(PkSmartIcon	*sicon,
+gboolean	 gpk_smart_icon_notify_new		(GpkSmartIcon	*sicon,
 							 const gchar	*title,
 							 const gchar	*message,
 							 const gchar	*icon,
-							 PkNotifyUrgency urgency,
-							 PkNotifyTimeout timeout);
-gboolean	 pk_smart_icon_notify_button		(PkSmartIcon	*sicon,
-							 PkNotifyButton	 button,
+							 GpkNotifyUrgency urgency,
+							 GpkNotifyTimeout timeout);
+gboolean	 gpk_smart_icon_notify_button		(GpkSmartIcon	*sicon,
+							 GpkNotifyButton	 button,
 							 const gchar	*data);
-gboolean	 pk_smart_icon_notify_show		(PkSmartIcon	*sicon);
-gboolean	 pk_smart_icon_notify_close		(PkSmartIcon	*sicon);
+gboolean	 gpk_smart_icon_notify_show		(GpkSmartIcon	*sicon);
+gboolean	 gpk_smart_icon_notify_close		(GpkSmartIcon	*sicon);
 
 
 G_END_DECLS

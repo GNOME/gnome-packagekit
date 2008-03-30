@@ -45,14 +45,14 @@
 #include "gpk-common.h"
 #include "gpk-smart-icon.h"
 
-static void     pk_smart_icon_class_init	(PkSmartIconClass *klass);
-static void     pk_smart_icon_init		(PkSmartIcon      *sicon);
-static void     pk_smart_icon_finalize		(GObject       *object);
+static void     gpk_smart_icon_class_init	(GpkSmartIconClass *klass);
+static void     gpk_smart_icon_init		(GpkSmartIcon      *sicon);
+static void     gpk_smart_icon_finalize		(GObject       *object);
 
-#define PK_SMART_ICON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_SMART_ICON, PkSmartIconPrivate))
+#define PK_SMART_ICON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_SMART_ICON, GpkSmartIconPrivate))
 #define PK_SMART_ICON_PERSIST_TIMEOUT	100
 
-struct PkSmartIconPrivate
+struct GpkSmartIconPrivate
 {
 	GtkStatusIcon		*status_icon;
 	NotifyNotification	*dialog;
@@ -67,30 +67,30 @@ enum {
 	LAST_SIGNAL
 };
 
-G_DEFINE_TYPE (PkSmartIcon, pk_smart_icon, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkSmartIcon, gpk_smart_icon, G_TYPE_OBJECT)
 
 static guint signals [LAST_SIGNAL] = { 0 };
 
 static PkEnumMatch enum_button_ids[] = {
-	{PK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
-	{PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
-	{PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,	"do-not-warn-again"},
-	{PK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
-	{PK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
-	{PK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
+	{GPK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
+	{GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
+	{GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,	"do-not-warn-again"},
+	{GPK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
+	{GPK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
+	{GPK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
 	{0, NULL}
 };
 
 /**
- * pk_smart_icon_class_init:
- * @klass: The PkSmartIconClass
+ * gpk_smart_icon_class_init:
+ * @klass: The GpkSmartIconClass
  **/
 static void
-pk_smart_icon_class_init (PkSmartIconClass *klass)
+gpk_smart_icon_class_init (GpkSmartIconClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_smart_icon_finalize;
-	g_type_class_add_private (klass, sizeof (PkSmartIconPrivate));
+	object_class->finalize = gpk_smart_icon_finalize;
+	g_type_class_add_private (klass, sizeof (GpkSmartIconPrivate));
 	signals [NOTIFICATION_BUTTON] =
 		g_signal_new ("notification-button",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
@@ -99,9 +99,9 @@ pk_smart_icon_class_init (PkSmartIconClass *klass)
 }
 
 static gboolean
-pk_smart_icon_set_icon_name_cb (gpointer data)
+gpk_smart_icon_set_icon_name_cb (gpointer data)
 {
-	PkSmartIcon *sicon = (PkSmartIcon *) data;
+	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
 
 	/* no point setting the same */
 	if (sicon->priv->new != NULL &&
@@ -129,10 +129,10 @@ pk_smart_icon_set_icon_name_cb (gpointer data)
 }
 
 /**
- * pk_smart_icon_set_icon:
+ * gpk_smart_icon_set_icon:
  **/
 gboolean
-pk_smart_icon_set_icon_name (PkSmartIcon *sicon, const gchar *icon_name)
+gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 {
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
@@ -148,15 +148,15 @@ pk_smart_icon_set_icon_name (PkSmartIcon *sicon, const gchar *icon_name)
 	sicon->priv->new = g_strdup (icon_name);
 
 	/* wait a little while to see if it's worth displaying the icon */
-	sicon->priv->event_source = g_timeout_add (PK_SMART_ICON_PERSIST_TIMEOUT, pk_smart_icon_set_icon_name_cb, sicon);
+	sicon->priv->event_source = g_timeout_add (PK_SMART_ICON_PERSIST_TIMEOUT, gpk_smart_icon_set_icon_name_cb, sicon);
 	return TRUE;
 }
 
 /**
- * pk_smart_icon_sync:
+ * gpk_smart_icon_sync:
  **/
 gboolean
-pk_smart_icon_sync (PkSmartIcon *sicon)
+gpk_smart_icon_sync (GpkSmartIcon *sicon)
 {
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
@@ -168,7 +168,7 @@ pk_smart_icon_sync (PkSmartIcon *sicon)
 	}
 
 	/* sync the icon now */
-	pk_smart_icon_set_icon_name_cb (sicon);
+	gpk_smart_icon_set_icon_name_cb (sicon);
 
 	/* wait until we are in the panel.
 	 * We should probably use gtk_status_icon_is_embedded if it worked... */
@@ -178,10 +178,10 @@ pk_smart_icon_sync (PkSmartIcon *sicon)
 }
 
 /**
- * pk_smart_icon_get_status_icon:
+ * gpk_smart_icon_get_status_icon:
  **/
 GtkStatusIcon *
-pk_smart_icon_get_status_icon (PkSmartIcon *sicon)
+gpk_smart_icon_get_status_icon (GpkSmartIcon *sicon)
 {
 	g_return_val_if_fail (sicon != NULL, NULL);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), NULL);
@@ -189,10 +189,10 @@ pk_smart_icon_get_status_icon (PkSmartIcon *sicon)
 }
 
 /**
- * pk_smart_icon_set_tooltip:
+ * gpk_smart_icon_set_tooltip:
  **/
 gboolean
-pk_smart_icon_set_tooltip (PkSmartIcon *sicon, const gchar *tooltip)
+gpk_smart_icon_set_tooltip (GpkSmartIcon *sicon, const gchar *tooltip)
 {
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
@@ -201,11 +201,11 @@ pk_smart_icon_set_tooltip (PkSmartIcon *sicon, const gchar *tooltip)
 }
 
 /**
- * pk_smart_icon_notify:
+ * gpk_smart_icon_notify:
  **/
 gboolean
-pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *message,
-		      const gchar *icon, PkNotifyUrgency urgency, PkNotifyTimeout timeout)
+gpk_smart_icon_notify_new (GpkSmartIcon *sicon, const gchar *title, const gchar *message,
+		      const gchar *icon, GpkNotifyUrgency urgency, GpkNotifyTimeout timeout)
 {
 	guint timeout_val = 0;
 
@@ -213,9 +213,9 @@ pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *m
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
 	/* default values */
-	if (timeout == PK_NOTIFY_TIMEOUT_SHORT) {
+	if (timeout == GPK_NOTIFY_TIMEOUT_SHORT) {
 		timeout_val = 5000;
-	} else if (timeout == PK_NOTIFY_TIMEOUT_LONG) {
+	} else if (timeout == GPK_NOTIFY_TIMEOUT_LONG) {
 		timeout_val = 15000;
 	}
 
@@ -230,12 +230,12 @@ pk_smart_icon_notify_new (PkSmartIcon *sicon, const gchar *title, const gchar *m
 }
 
 /**
- * pk_smart_icon_libnotify_cb:
+ * gpk_smart_icon_libnotify_cb:
  **/
 static void
-pk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, PkSmartIcon *sicon)
+gpk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, GpkSmartIcon *sicon)
 {
-	PkNotifyButton button;
+	GpkNotifyButton button;
 
 	g_return_if_fail (sicon != NULL);
 	g_return_if_fail (PK_IS_SMART_ICON (sicon));
@@ -249,10 +249,10 @@ pk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, PkSmartIc
 }
 
 /**
- * pk_smart_icon_notify_button:
+ * gpk_smart_icon_notify_button:
  **/
 gboolean
-pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gchar *data)
+gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const gchar *data)
 {
 	const gchar *text = NULL;
 	const gchar *id = NULL;
@@ -264,15 +264,15 @@ pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gc
 	id = pk_enum_find_string (enum_button_ids, button);
 
 	/* find the localised text */
-	if (button == PK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
+	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
 		text = _("Do not show this notification again");
-	} else if (button == PK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+	} else if (button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
 		text = _("Do not warn me again");
-	} else if (button == PK_NOTIFY_BUTTON_CANCEL_UPDATE) {
+	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		text = _("Cancel system update");
-	} else if (button == PK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
+	} else if (button == GPK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
 		text = _("Update computer now");
-	} else if (button == PK_NOTIFY_BUTTON_RESTART_COMPUTER) {
+	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
 		text = _("Restart computer now");
 	}
 
@@ -280,15 +280,15 @@ pk_smart_icon_notify_button (PkSmartIcon *sicon, PkNotifyButton button, const gc
 	sicon->priv->notify_data = g_strdup (data);
 
 	/* add a button to the UI */
-	notify_notification_add_action (sicon->priv->dialog, id, text, (NotifyActionCallback) pk_smart_icon_libnotify_cb, sicon, NULL);
+	notify_notification_add_action (sicon->priv->dialog, id, text, (NotifyActionCallback) gpk_smart_icon_libnotify_cb, sicon, NULL);
 	return FALSE;
 }
 
 /**
- * pk_smart_icon_notify_show:
+ * gpk_smart_icon_notify_show:
  **/
 gboolean
-pk_smart_icon_notify_show (PkSmartIcon *sicon)
+gpk_smart_icon_notify_show (GpkSmartIcon *sicon)
 {
 	GError *error = NULL;
 
@@ -307,10 +307,10 @@ pk_smart_icon_notify_show (PkSmartIcon *sicon)
 }
 
 /**
- * pk_smart_icon_notify_close:
+ * gpk_smart_icon_notify_close:
  **/
 gboolean
-pk_smart_icon_notify_close (PkSmartIcon *sicon)
+gpk_smart_icon_notify_close (GpkSmartIcon *sicon)
 {
 	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
@@ -319,11 +319,11 @@ pk_smart_icon_notify_close (PkSmartIcon *sicon)
 }
 
 /**
- * pk_smart_icon_init:
+ * gpk_smart_icon_init:
  * @smart_icon: This class instance
  **/
 static void
-pk_smart_icon_init (PkSmartIcon *sicon)
+gpk_smart_icon_init (GpkSmartIcon *sicon)
 {
 	sicon->priv = PK_SMART_ICON_GET_PRIVATE (sicon);
 	sicon->priv->status_icon = gtk_status_icon_new ();
@@ -340,13 +340,13 @@ pk_smart_icon_init (PkSmartIcon *sicon)
 }
 
 /**
- * pk_smart_icon_finalize:
+ * gpk_smart_icon_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_smart_icon_finalize (GObject *object)
+gpk_smart_icon_finalize (GObject *object)
 {
-	PkSmartIcon *sicon;
+	GpkSmartIcon *sicon;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_SMART_ICON (object));
@@ -364,18 +364,18 @@ pk_smart_icon_finalize (GObject *object)
 		g_free (sicon->priv->notify_data);
 	}
 
-	G_OBJECT_CLASS (pk_smart_icon_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_smart_icon_parent_class)->finalize (object);
 }
 
 /**
- * pk_smart_icon_new:
+ * gpk_smart_icon_new:
  *
- * Return value: a new PkSmartIcon object.
+ * Return value: a new GpkSmartIcon object.
  **/
-PkSmartIcon *
-pk_smart_icon_new (void)
+GpkSmartIcon *
+gpk_smart_icon_new (void)
 {
-	PkSmartIcon *sicon;
+	GpkSmartIcon *sicon;
 	sicon = g_object_new (PK_TYPE_SMART_ICON, NULL);
 	return PK_SMART_ICON (sicon);
 }
