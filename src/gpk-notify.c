@@ -410,8 +410,8 @@ gpk_notify_update_system (GpkNotify *notify)
 	if (ret) {
 		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	} else {
-		pk_warning ("failed to update system: %s", error->message);
-		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
+		message = g_strdup_printf (_("The error was: %s"), error->message);
+		pk_warning ("%s", message);
 		g_error_free (error);
 		gpk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
 				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
