@@ -65,6 +65,7 @@ gboolean	 pk_icon_valid				(const gchar	*icon);
 gboolean	 pk_error_modal_dialog			(const gchar	*title,
 							 const gchar	*message);
 gboolean	 pk_execute_url				(const gchar	*url);
+gboolean	 pk_show_help				(const gchar	*link_id);
 gboolean	 pk_restart_system			(void);
 const gchar	*pk_role_enum_to_localised_past		(PkRoleEnum	 role);
 const gchar	*pk_role_enum_to_localised_present	(PkRoleEnum	 role);
