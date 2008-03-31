@@ -345,8 +345,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-	/* no help yet */
-	gtk_widget_hide (widget);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
