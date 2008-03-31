@@ -957,6 +957,32 @@ gpk_notify_updates_changed_cb (PkClient *client, GpkNotify *notify)
 }
 
 /**
+ * gpk_notify_restart_schedule_cb:
+ **/
+static void
+gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_if_fail (notify != NULL);
+	g_return_if_fail (GPK_IS_NOTIFY (notify));
+
+	/* wait for the daemon to quit */
+	g_usleep (2*G_USEC_PER_SEC);
+
+	ret = g_spawn_command_line_async ("gpk-update-icon", &error);
+	if (!ret) {
+		pk_warning ("failed to spawn new instance");
+		g_error_free (error);
+		return;
+	}
+	/* this seems extreme, but we are starting a new instance */
+	pk_warning ("exiting as ::RestartSchedule, and another instance started");
+	exit (0);
+}
+
+/**
  * gpk_notify_task_list_changed_cb:
  **/
 static void
@@ -1091,6 +1117,8 @@ gpk_notify_init (GpkNotify *notify)
 	notify->priv->notify = pk_notify_new ();
 	g_signal_connect (notify->priv->notify, "updates-changed",
 			  G_CALLBACK (gpk_notify_updates_changed_cb), notify);
+	g_signal_connect (notify->priv->notify, "restart-schedule",
+			  G_CALLBACK (gpk_notify_restart_schedule_cb), notify);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	notify->priv->tlist = pk_task_list_new ();
