@@ -41,7 +41,7 @@ bin_PROGRAMS =						\
 	gpk-install-package				\
 	gpk-update-icon					\
 	gpk-update-viewer				\
-	gpk-transaction-viewer				\
+	gpk-log						\
 	gpk-backend-status				\
 	$(NULL)
 
@@ -186,13 +186,13 @@ gpk_repo_LDADD =					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
-gpk_transaction_viewer_SOURCES =			\
-	gpk-transaction-viewer.c			\
+gpk_log_SOURCES =					\
+	gpk-log.c					\
 	gpk-common.c					\
 	gpk-common.h					\
 	$(NULL)
 
-gpk_transaction_viewer_LDADD =				\
+gpk_log_LDADD =						\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\

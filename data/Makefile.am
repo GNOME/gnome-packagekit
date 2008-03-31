@@ -15,7 +15,7 @@ desktop_in_files =					\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
 	gpk-repo.desktop.in				\
-	gpk-transaction-viewer.desktop.in		\
+	gpk-log.desktop.in				\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -32,7 +32,7 @@ pkgdata_DATA =						\
 	gpk-progress.glade				\
 	gpk-prefs.glade					\
 	gpk-signature.glade				\
-	gpk-transactions.glade				\
+	gpk-log.glade					\
 	gpk-backend-status.glade			\
 	gpk-install-file.glade				\
 	$(NULL)
@@ -64,7 +64,7 @@ DISTCLEANFILES =					\
 	gpk-prefs.desktop				\
 	gpk-update-viewer.desktop			\
 	gpk-install-file.desktop			\
-	gpk-transaction-viewer.desktop			\
+	gpk-log.desktop					\
 	gpk-update-icon.desktop				\
 	gpk-application.desktop				\
 	gnome-packagekit.schemas			\

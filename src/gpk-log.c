@@ -428,7 +428,7 @@ main (int argc, char *argv[])
 	g_signal_connect (pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-transactions.glade", NULL, NULL);
+	glade_xml = glade_xml_new (PK_DATA "/gpk-log.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_transactions");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
