@@ -25,7 +25,7 @@
     <title>&application; Manual</title>
     <abstract role="description">
       <para>
-        &application; is a suite of tools for interation with the GNOME desktop.
+        &application; is a suite of tools for integration with the GNOME desktop.
       </para>
     </abstract>
     <copyright>
@@ -76,6 +76,15 @@
 
     <revhistory>
       <revision>
+       <revnumber>3.0</revnumber>
+        <date>2008-03-31</date>
+        <revdescription>
+          <para role="author">Rahul Sundaram
+            <email>sundaram@fedoraproject.org</email>
+          </para>
+          <para role="publisher">Rahul Sundaram</para>
+        </revdescription>
+
         <revnumber>2.0</revnumber>
         <date>2007-08-30</date>
         <revdescription>
@@ -123,6 +132,9 @@
   The &app; is a suite of tools for the <systemitem>GNOME desktop</systemitem>
   </para>
 
+  <para>PackageKit is designed to unify all the software graphical tools used in different distributions. It abstracts the various underlying package management technologies like yum,apt,smart etc and provides unified graphical and command line frontends. It also provides a framework that includes programming interfaces that other software applications can take advantage of. It is not a replacement for existing package managers like Yum
+  </para>
+
 </section>
 
 <section id="using">
@@ -140,8 +152,97 @@
           then press <keycap>Return</keycap>:
         </para>
       </listitem>
-    </varlistentry>
+
+  <para>
+Below is a list containing the names and a short description of the utilities included in the gnome-packagekit pack: 
+  </para>
+
+ <listitem>
+         <para>
+           Type <command>pk-application</command>,
+         </para>
+        <para> Add/Remove Software </para>
+       </listitem>
+
+
+ <listitem>
+         <para>
+           Type <command>pk-update-viewer</command>,
+         </para>
+        <para> Updating your system. Also can view the history of updates via a option that calls pk-log </para>
+
+       </listitem>
+
+ <listitem>
+         <para>
+           Type <command>pk-prefs</command>,
+         </para>
+        <para> Configuring software updates preferences </para>
+       </listitem>
+
+ <listitem>
+         <para>
+           Type <command>pk-repo</command>,
+         </para>
+        <para> Enabling or disabling software repositories  </para>
+
+       </listitem>
+
+ <listitem>
+         <para>
+           Type <command>pk-log</command>,
+         </para>
+
+        <para> History of updates including installing, removing or updating any software  </para>
+       </listitem>
+
+ <listitem>
+         <para>
+           Type <command>pk-backend-status</command>,
+         </para>
+
+        <para> Shows technical status of support for the underlying package management backend. Only useful for developers  </para>
+       </listitem>
+
+
+     </varlistentry>
   </variablelist>
+
+<title>Add/Remove Software</title>
+
+  <para>
+
+Add/Remove software application accessed via System=> Administration=> Add/Remove Software allows you to search the software repository easily or browse through the different groups like multimedia or office and select software packages to install or remove from your system. You can find more information about any package such as description and dependencies by just clicking on it. Before installing a package, you also can visit the home page of the software projects easily for getting any additional details
+
+  </para>
+
+  <para>
+
+A software repository viewer is available in the system menu that allows you to enable or disable a existing software repository. You can also refresh the application lists for displaying the latest information.
+
+  </para>
+
+  <para>
+
+Typically, you can find several thousands of software packages under different groups available. Since this can be overwhelming you can choose to filter the lists of packages based on several criteria such as whether the package is already installed, whether it is a development or graphical application and based on the software license. 
+
+  </para>
+
+<title> Updating System </title>
+
+   <para>
+
+You can update your system via System=> Administration=> Update System. When you click on this, the application launches and immediately starts checking for updates. If you launched the application a while back, you can choose to manually refresh and verify the presence of updates. There is a option to view the date wise history of updates including previous installations, removal or updates of software. 
+
+  </para>
+
+<title> Configuring Software Updates Preferences </title>
+
+  <para>
+
+Preferences can be configured via System=> Preferences=> System=> Software Updates. You can configure it to check for updates on a daily, hourly or weekly basis or never. The default setting is to check for updates daily. You can also configure it to automatically install all updates or just the ones that fix security issues.
+
+  </para>
 </section>
 
 <section id="about">
