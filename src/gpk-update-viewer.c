@@ -617,8 +617,30 @@ pk_button_review_cb (GtkWidget *widget, gpointer data)
 static void
 pk_button_overview_cb (GtkWidget *widget, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+
+	/* clear existing list */
+	gtk_list_store_clear (list_store_details);
+
 	/* set correct view */
 	pk_updates_set_page (PAGE_PREVIEW);
+
+	/* get the new update list */
+	ret = pk_client_reset (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+	/* TODO: we don't actually need to re-request the data, but we've
+	 * nuked the preview window with the spinner */
+	ret = pk_client_get_updates (client_query, "basename", &error);
+	if (!ret) {
+		pk_warning ("failed to get updates: %s", error->message);
+		g_error_free (error);
+		return;
+	}
 }
 
 /**
