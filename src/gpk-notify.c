@@ -964,6 +964,7 @@ gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
 {
 	gboolean ret;
 	GError *error = NULL;
+	const gchar *file;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
@@ -971,9 +972,11 @@ gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
 	/* wait for the daemon to quit */
 	g_usleep (2*G_USEC_PER_SEC);
 
-	ret = g_spawn_command_line_async ("gpk-update-icon", &error);
+	file = BINDIR "/gpk-update-icon";
+	pk_debug ("trying to spawn: %s", file);
+	ret = g_spawn_command_line_async (file, &error);
 	if (!ret) {
-		pk_warning ("failed to spawn new instance");
+		pk_warning ("failed to spawn new instance: %s", error->message);
 		g_error_free (error);
 		return;
 	}
