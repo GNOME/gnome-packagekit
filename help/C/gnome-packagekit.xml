@@ -140,6 +140,16 @@
     software applications can take advantage of.
     It is not a replacement for existing package managers like yum.
   </para>
+  <para>
+    Some of the architectural advantages of PackageKit over other package
+    management solutions are that the PackageKit daemon runs as a system
+    process that is not tied to any user session, which means that a
+    long-running update or installation will not be interrupted if the user
+    who started it logs out. Tasks are queued up, meaning that multiple users
+    can use PackageKit in parallel without completely locking each other out.
+    Finally, access to all privileged operations is controlled via
+    <ulink url="http://en.wikipedia.org/wik/PolicyKit">PolicyKit</ulink>.
+  </para>
 
 </section>
 
@@ -147,7 +157,8 @@
   <title>Applications</title>
   <para>
     <application>packagekitd</application> is started automatically when it is
-    needed.
+    needed. <command>pkcon</command> offers a versatile commandline interface
+    to PackageKit.
   </para>
   <para>
     Below is a list containing the names and a short description of the
@@ -184,7 +195,14 @@
       </listitem>
       <listitem>
         <para>
-          <command>pk-backend-status</command>: Shows technical status of
+          <command>gpk-install-file</command>: Installs locally available
+          packages. This also gets run if you double-click on a package in
+          nautilus.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <command>gpk-backend-status</command>: Shows technical status of
           support for the underlying package management backend.
           Only useful for developers.
         </para>
