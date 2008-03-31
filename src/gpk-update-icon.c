@@ -32,9 +32,61 @@
 #include <locale.h>
 
 #include <pk-debug.h>
+#include <pk-common.h>
 
 #include "gpk-notify.h"
 #include "gpk-watch.h"
+#include "gpk-interface.h"
+
+/**
+ * gpk_object_register:
+ * @connection: What we want to register to
+ * @object: The GObject we want to register
+ *
+ * Return value: success
+ **/
+static gboolean
+gpk_object_register (DBusGConnection *connection, GObject *object)
+{
+	DBusGProxy *bus_proxy = NULL;
+	GError *error = NULL;
+	guint request_name_result;
+	gboolean ret;
+
+	/* connect to the bus */
+	bus_proxy = dbus_g_proxy_new_for_name (connection, DBUS_SERVICE_DBUS,
+					       DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+
+	/* get our name */
+	ret = dbus_g_proxy_call (bus_proxy, "RequestName", &error,
+				 G_TYPE_STRING, PK_DBUS_SERVICE,
+				 G_TYPE_UINT, DBUS_NAME_FLAG_ALLOW_REPLACEMENT |
+					      DBUS_NAME_FLAG_REPLACE_EXISTING |
+					      DBUS_NAME_FLAG_DO_NOT_QUEUE,
+				 G_TYPE_INVALID,
+				 G_TYPE_UINT, &request_name_result,
+				 G_TYPE_INVALID);
+	if (ret == FALSE) {
+		/* abort as the DBUS method failed */
+		pk_warning ("RequestName failed: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* free the bus_proxy */
+	g_object_unref (G_OBJECT (bus_proxy));
+
+	/* already running */
+	if (request_name_result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
+		return FALSE;
+	}
+
+	dbus_g_object_type_install_info (GPK_TYPE_NOTIFY, &dbus_glib_gpk_dbus_object_info);
+	dbus_g_connection_register_g_object (connection, PK_DBUS_PATH, object);
+
+	return TRUE;
+}
+
 
 /**
  * main:
@@ -48,6 +100,9 @@ main (int argc, char *argv[])
 	GpkNotify *notify = NULL;
 	GpkWatch *watch = NULL;
 	GOptionContext *context;
+	GError *error = NULL;
+	gboolean ret;
+	DBusGConnection *connection;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -92,7 +147,26 @@ main (int argc, char *argv[])
 	notify = gpk_notify_new ();
 	watch = gpk_watch_new ();
 	loop = g_main_loop_new (NULL, FALSE);
+
+	/* get the bus */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (error) {
+		pk_warning ("%s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* try to register */
+	ret = gpk_object_register (connection, G_OBJECT (notify));
+	if (!ret) {
+		pk_warning ("failed to replace running instance.");
+		goto out;
+	}
+
+	/* wait until loop killed */
 	g_main_loop_run (loop);
+
+out:
 	g_main_loop_unref (loop);
 	g_object_unref (notify);
 	g_object_unref (watch);
