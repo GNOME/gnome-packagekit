@@ -778,10 +778,15 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	}
 
 	/* just do security updates */
-	if (update == PK_UPDATE_ENUM_SECURITY && security_array->len > 0) {
+	if (update == PK_UPDATE_ENUM_SECURITY) {
 		gchar **package_ids;
 		gboolean ret;
 		GError *error = NULL;
+
+		if (security_array->len == 0) {
+			pk_debug ("policy security, but none available");
+			goto out;
+		}
 
 		pk_debug ("just process security updates");
 		package_ids = pk_package_ids_from_array (security_array);
