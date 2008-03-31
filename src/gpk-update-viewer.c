@@ -864,6 +864,12 @@ pk_updates_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer da
 	text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
+
+	/* when we are testing the transaction, no package should be displayed */
+	if (status == PK_STATUS_ENUM_TEST_COMMIT) {
+		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
+		gtk_label_set_label (GTK_LABEL (widget), "");
+	}
 }
 
 /**
