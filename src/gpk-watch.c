@@ -614,8 +614,8 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
 	if (ret == FALSE) {
 		g_object_unref (client);
-		pk_warning ("failed to refresh cache: %s", error->message);
-		message = g_strdup_printf (_("Client action was refused: %s"), error->message);
+		message = g_strdup_printf (_("The error was: %s"), error->message);
+		pk_warning ("%s", message);
 		g_error_free (error);
 		gpk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), message,
 				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
