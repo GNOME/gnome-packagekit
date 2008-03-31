@@ -647,16 +647,18 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please check your connection settings and try again");
 		break;
 	case PK_ERROR_ENUM_NO_CACHE:
-		text = _("The package list needs to be rebuilt\nThis should have been done by the backend automatically.");
+		text = _("The package list needs to be rebuilt.\n"
+			 "This should have been done by the backend automatically.");
 		break;
 	case PK_ERROR_ENUM_OOM:
-		text = _("The service that is responsible for handling user requests is out of memory.\nPlease restart your computer.");
+		text = _("The service that is responsible for handling user requests is out of memory.\n"
+			 "Please restart your computer.");
 		break;
 	case PK_ERROR_ENUM_CREATE_THREAD_FAILED:
 		text = _("A thread could not be created to service the user request.");
 		break;
 	case PK_ERROR_ENUM_NOT_SUPPORTED:
-		text = _("The action is not supported by this backend\n"
+		text = _("The action is not supported by this backend.\n"
 			 "Please report a bug as this shouldn't have happened.");
 		break;
 	case PK_ERROR_ENUM_INTERNAL_ERROR:
@@ -664,26 +666,28 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please report this bug with the error description.");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
-		text = _("A security trust relationship could not be made with the remote software source\n"
+		text = _("A security trust relationship could not be made with software source.\n"
 			 "Please check your security settings.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
-		text = _("The package that is trying to be removed or updated is not already installed, and hence nothing can be done.");
+		text = _("The package that is trying to be removed or updated is not already installed.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_FOUND:
-		text = _("The package that is being modified was not found on your system or in any remote software source.");
+		text = _("The package that is being modified was not found on your system or in any software source.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package that is trying to be installed is already installed.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_DOWNLOAD_FAILED:
-		text = _("The package download failed\nPlease check your network connectivity.");
+		text = _("The package download failed.\n"
+			 "Please check your network connectivity.");
 		break;
 	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
-		text = _("The group type was not found\nPlease check your group list and try again.");
+		text = _("The group type was not found.\n"
+			 "Please check your group list and try again.");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
-		text = _("A package could not be found on your system or in a remote software source that allows the transaction to complete\n"
+		text = _("A package could not be found that allows the transaction to complete.\n"
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_FILTER_INVALID:
@@ -698,11 +702,11 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
-		text = _("The remote software source name was not found\n"
-			 "You may need to disable an item in Software Sources");
+		text = _("The remote software source name was not found.\n"
+			 "You may need to enable an item in Software Sources");
 		break;
 	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
-		text = _("Removing a protected system package was denied, and thus the whole transaction failed.");
+		text = _("Removing a protected system package is not alloed.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
 		text = _("The transaction was canceled successfully and no packages were changed.");
