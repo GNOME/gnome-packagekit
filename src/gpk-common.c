@@ -334,6 +334,7 @@ pk_show_help (const gchar *link_id)
 	} else {
 		command = g_strconcat ("gnome-open ghelp://", uri,  NULL);
 	}
+	pk_debug ("using command %s", command);
 
 	gscreen = gdk_screen_get_default();
 	gdk_spawn_command_line_on_screen (gscreen, command, &error);

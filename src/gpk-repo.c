@@ -57,10 +57,9 @@ enum
  * pk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget,
-		   gboolean  data)
+pk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
-	pk_debug ("emitting action-help");
+	pk_show_help ("software-sources");
 }
 
 /**

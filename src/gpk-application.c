@@ -88,7 +88,6 @@ struct PkApplicationPrivate
 };
 
 enum {
-	ACTION_HELP,
 	ACTION_CLOSE,
 	LAST_SIGNAL
 };
@@ -125,15 +124,6 @@ pk_application_class_init (PkApplicationClass *klass)
 	object_class->finalize = pk_application_finalize;
 	g_type_class_add_private (klass, sizeof (PkApplicationPrivate));
 
-	signals [ACTION_HELP] =
-		g_signal_new ("action-help",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (PkApplicationClass, action_help),
-			      NULL,
-			      NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
 	signals [ACTION_CLOSE] =
 		g_signal_new ("action-close",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -1475,6 +1465,15 @@ out:
 }
 
 /**
+ * pk_application_menu_help_cb:
+ **/
+static void
+pk_application_menu_help_cb (GtkAction *action, PkApplication *application)
+{
+	pk_show_help ("add-remove");
+}
+
+/**
  * pk_application_menu_about_cb:
  **/
 static void
@@ -1991,9 +1990,13 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_homepage_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_about");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_about");
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (pk_application_menu_about_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (pk_application_menu_help_cb), application);
 
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");

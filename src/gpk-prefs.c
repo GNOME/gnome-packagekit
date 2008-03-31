@@ -52,10 +52,9 @@ static GladeXML *glade_xml = NULL;
  * pk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget,
-		   gboolean  data)
+pk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
-	pk_debug ("emitting action-help");
+	pk_show_help ("prefs");
 }
 
 /**
@@ -359,8 +358,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-	/* no help yet */
-	gtk_widget_hide (widget);
 
 	/* update the combo boxes */
 	pk_prefs_freq_combo_setup ();

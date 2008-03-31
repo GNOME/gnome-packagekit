@@ -35,18 +35,6 @@
 #include "gpk-application.h"
 
 /**
- * pk_application_help_cb
- * @application: This application class instance
- *
- * What to do when help is requested
- **/
-static void
-pk_application_help_cb (PkApplication *application)
-{
-	pk_warning ("help application");
-}
-
-/**
  * pk_application_close_cb
  * @application: This application class instance
  *
@@ -107,8 +95,6 @@ main (int argc, char *argv[])
 
 	/* create a new application object */
 	application = pk_application_new ();
-	g_signal_connect (application, "action-help",
-			  G_CALLBACK (pk_application_help_cb), NULL);
 	g_signal_connect (application, "action-close",
 			  G_CALLBACK (pk_application_close_cb), NULL);
 

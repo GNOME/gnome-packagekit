@@ -88,8 +88,6 @@ gpk_notify_class_init (GpkNotifyClass *klass)
 	g_type_class_add_private (klass, sizeof (GpkNotifyPrivate));
 }
 
-#if 0
-/* No help yet */
 /**
  * gpk_notify_show_help_cb:
  **/
@@ -98,15 +96,8 @@ gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
-	pk_debug ("show help");
-	gpk_smart_icon_notify_new (notify->priv->sicon,
-			      _("Functionality incomplete"),
-			      _("No help yet, sorry..."), "help-browser",
-			      GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
-	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
-	gpk_smart_icon_notify_show (notify->priv->sicon);
+	pk_show_help (NULL);
 }
-#endif
 
 /**
  * gpk_notify_show_preferences_cb:
@@ -263,7 +254,6 @@ gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	item = gtk_separator_menu_item_new ();
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-#if 0
 	/* No help yet */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Help"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU);
@@ -271,7 +261,6 @@ gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (gpk_notify_show_help_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-#endif
 
 	/* About */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_About"));

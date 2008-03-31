@@ -73,7 +73,7 @@ static void
 pk_button_help_cb (GtkWidget *widget,
 		   gboolean  data)
 {
-	pk_debug ("emitting action-help");
+	pk_show_help ("software-sources");
 }
 
 /**
@@ -449,8 +449,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-	/* no help yet */
-	gtk_widget_hide (widget);
 
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.rollback");
