@@ -130,8 +130,9 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		}
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
-			g_string_append_printf (status, _("(%i more tasks)\n"),
+			g_string_append_printf (status, _("(%i more tasks)"),
 						i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
+			g_string_append_c (status, '\n');
 			break;
 		}
 	}

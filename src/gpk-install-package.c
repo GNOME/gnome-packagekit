@@ -171,7 +171,7 @@ main (int argc, char *argv[])
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	if (argc < 2) {
-		g_print (_("You need to specify a package to install\n"));
+		g_print ("%s\n", _("You need to specify a package to install"));
 		return 1;
 	}
 	loop = g_main_loop_new (NULL, FALSE);

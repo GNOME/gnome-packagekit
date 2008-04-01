@@ -319,7 +319,8 @@ gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	}
 
 	/* present this to the user */
-	text = g_string_new (_("The following packages have to be removed:\n\n"));
+	text = g_string_new (_("The following packages have to be removed:"));
+	g_string_append (text, "\n\n");
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
 		message = gpk_package_id_pretty_oneline (item->package_id, item->summary);

@@ -343,9 +343,10 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 
 	/* notify the user if there were skipped entries */
 	if (skipped_number > 0) {
-		message = ngettext (_("One package was skipped:\n"),
-				    _("Some packages were skipped:\n"), skipped_number);
+		message = ngettext (_("One package was skipped:"),
+				    _("Some packages were skipped:"), skipped_number);
 		g_string_prepend (message_text, message);
+		g_string_append_c (message_text, '\n');
 	}
 
 	/* add a message that we need to restart */
@@ -359,7 +360,7 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 		}
 
 		g_string_append (message_text, message);
-		g_string_append (message_text, "\n");
+		g_string_append_c (message_text, '\n');
 	}
 
 	/* trim off extra newlines */
@@ -500,6 +501,7 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
 	const gchar *title;
 	gchar *message;
 	gboolean value;
+	GString *string;
 
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
@@ -511,13 +513,20 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
                 return;
         }
 
+	/* format title */
 	title = ngettext ("Security update available", "Security updates available", number);
-	message = g_strdup_printf (ngettext ("The following important update is available for your computer:\n\n%s",
-					     "The following important updates are available for your computer:\n\n%s", number), details);
+
+	/* format message text */
+	string = g_string_new ("");
+	g_string_append (string, ngettext ("The following important update is available for your computer:",
+					   "The following important updates are available for your computer:", number));
+	g_string_append (string, "\n\n");
+	g_string_append (string, details);
+	message = g_string_free (string, FALSE);
 
 	pk_debug ("Doing critical updates warning: %s", message);
 	gpk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
-				  GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
+				   GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
 	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
 	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, GPK_CONF_NOTIFY_CRITICAL);
 	gpk_smart_icon_notify_show (notify->priv->sicon);

@@ -226,7 +226,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 
 	g_set_application_name (_("PackageKit File Installer"));
-	context = g_option_context_new (_("FILE"));
+	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("PackageKit File Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
@@ -245,7 +245,7 @@ main (int argc, char *argv[])
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	if (argc < 2) {
-		g_print (_("You need to specify a file to install\n"));
+		g_print ("%s\n", _("You need to specify a file to install"));
 		return 1;
 	}
 
