@@ -48,7 +48,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_SECURITY,			"pk-update-security"},
 	{PK_INFO_ENUM_BUGFIX,			"pk-update-bugfix"},
 	{PK_INFO_ENUM_ENHANCEMENT,		"pk-update-enhancement"},
-	{PK_INFO_ENUM_BLOCKED,			"help-browser"}, /* TODO: need better icon */
+	{PK_INFO_ENUM_BLOCKED,			"pk-setup"},
 	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
 	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},
 	{PK_INFO_ENUM_INSTALLING,		"pk-package-add"},
@@ -159,24 +159,17 @@ static PkEnumMatch enum_message_icon_name[] = {
 };
 
 static gboolean
-try_system_restart (DBusGProxy  *proxy,
-		    GError     **error)
+try_system_restart (DBusGProxy *proxy, GError **error)
 {
-	return dbus_g_proxy_call_with_timeout (proxy,
-					      "Restart",
-					      INT_MAX,
-					      error,
-					      /* parameters: */
-					      G_TYPE_INVALID,
-					      /* return values: */
-					      G_TYPE_INVALID);
+	return dbus_g_proxy_call_with_timeout (proxy, "Restart", INT_MAX,
+					       error, G_TYPE_INVALID, G_TYPE_INVALID);
 }
 
 static PolKitAction *
 get_action_from_error (GError *error)
 {
 	PolKitAction *action;
-	const char   *paction;
+	const gchar *paction;
 
 	action = polkit_action_new ();
 
@@ -190,15 +183,13 @@ get_action_from_error (GError *error)
 }
 
 static void
-system_restart_auth_cb (PolKitAction *action,
-			gboolean      gained_privilege,
-			GError       *error,
-			DBusGProxy   *proxy)
+system_restart_auth_cb (PolKitAction *action, gboolean gained_privilege,
+			GError *error, DBusGProxy *proxy)
 {
-	GError          *local_error;
-	gboolean         res;
+	GError *local_error;
+	gboolean res;
 
-	if (! gained_privilege) {
+	if (!gained_privilege) {
 		if (error != NULL) {
 			pk_warning ("Not privileged to restart system: %s", error->message);
 		}
@@ -207,33 +198,31 @@ system_restart_auth_cb (PolKitAction *action,
 
         local_error = NULL;
         res = try_system_restart (proxy, &local_error);
-        if (! res) {
+        if (!res) {
                 pk_warning ("Unable to restart system: %s", local_error->message);
                 g_error_free (local_error);
         }
 }
 
 static gboolean
-request_restart_priv (DBusGProxy    *proxy,
-		      PolKitAction  *action,
-                      GError       **error)
+request_restart_priv (DBusGProxy *proxy, PolKitAction *action, GError **error)
 {
-        guint         xid;
-        pid_t         pid;
+        guint xid;
+        pid_t pid;
 
         xid = 0;
         pid = getpid ();
 
-	return polkit_gnome_auth_obtain (action,
-					 xid,
-					 pid,
+	return polkit_gnome_auth_obtain (action, xid, pid,
 					 (PolKitGnomeAuthCB) system_restart_auth_cb,
-					 proxy,
-					 error);
+					 proxy, error);
 }
 
+/**
+ * gpk_restart_system:
+ **/
 gboolean
-pk_restart_system (void)
+gpk_restart_system (void)
 {
 	DBusGProxy *proxy;
 	DBusGConnection *connection;
@@ -280,10 +269,10 @@ pk_restart_system (void)
 }
 
 /**
- * pk_execute_url:
+ * gpk_execute_url:
  **/
 gboolean
-pk_execute_url (const gchar *url)
+gpk_execute_url (const gchar *url)
 {
 	gchar *data;
 	gboolean ret;
@@ -300,11 +289,11 @@ pk_execute_url (const gchar *url)
 }
 
 /**
- * pk_show_help:
+ * gpk_show_help:
  * @link_id: Subsection of gnome-packagekit help file, or NULL.
  **/
 gboolean
-pk_show_help (const gchar *link_id)
+gpk_show_help (const gchar *link_id)
 {
 	GError *error = NULL;
 	gchar *command;
@@ -354,10 +343,10 @@ pk_show_help (const gchar *link_id)
 }
 
 /**
- * pk_size_to_si_size_text:
+ * gpk_size_to_si_size_text:
  **/
 gchar *
-pk_size_to_si_size_text (guint64 size)
+gpk_size_to_si_size_text (guint64 size)
 {
 	gdouble frac;
 
@@ -389,10 +378,10 @@ pk_size_to_si_size_text (guint64 size)
 }
 
 /**
- * pk_package_id_pretty:
+ * gpk_package_id_pretty:
  **/
 gchar *
-pk_package_id_pretty (const gchar *package_id, const gchar *summary)
+gpk_package_id_pretty (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
 	gchar *text;
@@ -426,10 +415,10 @@ pk_package_id_pretty (const gchar *package_id, const gchar *summary)
 }
 
 /**
- * pk_package_id_pretty_oneline:
+ * gpk_package_id_pretty_oneline:
  **/
 gchar *
-pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
+gpk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
 	gchar *text;
@@ -452,10 +441,10 @@ pk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 }
 
 /**
- * pk_package_id_name_version:
+ * gpk_package_id_name_version:
  **/
 gchar *
-pk_package_id_name_version (const gchar *package_id)
+gpk_package_id_name_version (const gchar *package_id)
 {
 	PkPackageId *ident;
 	gchar *text;
@@ -481,7 +470,7 @@ pk_package_id_name_version (const gchar *package_id)
  * pk_package_id_get_name:
  **/
 gchar *
-pk_package_get_name (const gchar *package_id)
+gpk_package_get_name (const gchar *package_id)
 {
 	gchar *package = NULL;
 	PkPackageId *ident;
@@ -503,12 +492,12 @@ pk_package_get_name (const gchar *package_id)
 }
 
 /**
- * pk_icon_valid:
+ * gpk_icon_valid:
  *
  * Check icon actually exists and is valid in this theme
  **/
 gboolean
-pk_icon_valid (const gchar *icon)
+gpk_icon_valid (const gchar *icon)
 {
 	GtkIconInfo *icon_info;
 	GtkIconTheme *icon_theme;
@@ -535,12 +524,12 @@ pk_icon_valid (const gchar *icon)
 }
 
 /**
- * pk_error_modal_dialog:
+ * gpk_error_modal_dialog:
  *
  * Shows a modal error, and blocks until the user clicks close
  **/
 gboolean
-pk_error_modal_dialog (const gchar *title, const gchar *message)
+gpk_error_modal_dialog (const gchar *title, const gchar *message)
 {
 	GtkWidget *dialog;
 	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -552,10 +541,10 @@ pk_error_modal_dialog (const gchar *title, const gchar *message)
 }
 
 /**
- * pk_error_enum_to_localised_text:
+ * gpk_error_enum_to_localised_text:
  **/
 const gchar *
-pk_error_enum_to_localised_text (PkErrorCodeEnum code)
+gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
@@ -614,16 +603,16 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Could not remove a protected system package");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
-		text = _("The transaction was canceled");
+		text = _("The task was canceled");
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
-		text = _("The transaction was forcibly canceled");
+		text = _("The task was forcibly canceled");
 		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("Reading the config file failed");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The transaction cannot be cancelled");
+		text = _("The task cannot be cancelled");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages cannot be installed");
@@ -635,10 +624,10 @@ pk_error_enum_to_localised_text (PkErrorCodeEnum code)
 }
 
 /**
- * pk_error_enum_to_localised_message:
+ * gpk_error_enum_to_localised_message:
  **/
 const gchar *
-pk_error_enum_to_localised_message (PkErrorCodeEnum code)
+gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
@@ -687,7 +676,7 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please check your group list and try again.");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
-		text = _("A package could not be found that allows the transaction to complete.\n"
+		text = _("A package could not be found that allows the task to complete.\n"
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_FILTER_INVALID:
@@ -698,7 +687,7 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "This normally indicates an internal error and should be reported.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_ERROR:
-		text = _("An unspecified transaction error has occurred.\n"
+		text = _("An unspecified task error has occurred.\n"
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
@@ -709,10 +698,10 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("Removing a protected system package is not alloed.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
-		text = _("The transaction was canceled successfully and no packages were changed.");
+		text = _("The task was canceled successfully and no packages were changed.");
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
-		text = _("The transaction was canceled successfully and no packages were changed.\n"
+		text = _("The task was canceled successfully and no packages were changed.\n"
 			 "The backend did not exit cleanly.");
 		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
@@ -720,7 +709,7 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please make sure configuration is valid.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The transaction is not safe to be cancelled at this time.");
+		text = _("The task is not safe to be cancelled at this time.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages are not normally installed this way.\n"
@@ -734,10 +723,10 @@ pk_error_enum_to_localised_message (PkErrorCodeEnum code)
 }
 
 /**
- * pk_restart_enum_to_localised_text_future:
+ * gpk_restart_enum_to_localised_text_future:
  **/
 const gchar *
-pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
+gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 {
 	const gchar *text = NULL;
 	switch (restart) {
@@ -760,10 +749,10 @@ pk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 }
 
 /**
- * pk_restart_enum_to_localised_text:
+ * gpk_restart_enum_to_localised_text:
  **/
 const gchar *
-pk_restart_enum_to_localised_text (PkRestartEnum restart)
+gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 {
 	const gchar *text = NULL;
 	switch (restart) {
@@ -786,18 +775,18 @@ pk_restart_enum_to_localised_text (PkRestartEnum restart)
 }
 
 /**
- * pk_message_enum_to_localised_text:
+ * gpk_message_enum_to_localised_text:
  **/
 const gchar *
-pk_message_enum_to_localised_text (PkMessageEnum message)
+gpk_message_enum_to_localised_text (PkMessageEnum message)
 {
 	const gchar *text = NULL;
 	switch (message) {
 	case PK_MESSAGE_ENUM_NOTICE:
-		text = _("PackageKit transaction notice");
+		text = _("PackageKit notice");
 		break;
 	case PK_MESSAGE_ENUM_WARNING:
-		text = _("PackageKit transaction warning");
+		text = _("PackageKit warning");
 		break;
 	case PK_MESSAGE_ENUM_DAEMON:
 		text = _("PackageKit daemon");
@@ -809,10 +798,10 @@ pk_message_enum_to_localised_text (PkMessageEnum message)
 }
 
 /**
- * pk_status_enum_to_localised_text:
+ * gpk_status_enum_to_localised_text:
  **/
 const gchar *
-pk_status_enum_to_localised_text (PkStatusEnum status)
+gpk_status_enum_to_localised_text (PkStatusEnum status)
 {
 	const gchar *text = NULL;
 	switch (status) {
@@ -826,7 +815,7 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Waiting for other tasks to complete");
 		break;
 	case PK_STATUS_ENUM_RUNNING:
-		text = _("Running transaction");
+		text = _("Running task");
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
@@ -865,10 +854,10 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Rolling back");
 		break;
 	case PK_STATUS_ENUM_TEST_COMMIT:
-		text = _("Trying transaction");
+		text = _("Testing changes");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
-		text = _("Committing transaction");
+		text = _("Committing changes");
 		break;
 	case PK_STATUS_ENUM_REQUEST:
 		text = _("Requesting data");
@@ -886,10 +875,10 @@ pk_status_enum_to_localised_text (PkStatusEnum status)
 }
 
 /**
- * pk_update_enum_to_localised_text:
+ * gpk_update_enum_to_localised_text:
  **/
 gchar *
-pk_update_enum_to_localised_text (PkInfoEnum info, guint number)
+gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 {
 	gchar *text = NULL;
 	switch (info) {
@@ -918,10 +907,10 @@ pk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 }
 
 /**
- * pk_info_enum_to_localised_text:
+ * gpk_info_enum_to_localised_text:
  **/
 const gchar *
-pk_info_enum_to_localised_text (PkInfoEnum info)
+gpk_info_enum_to_localised_text (PkInfoEnum info)
 {
 	const gchar *text = NULL;
 	switch (info) {
@@ -977,10 +966,10 @@ pk_info_enum_to_localised_text (PkInfoEnum info)
 }
 
 /**
- * pk_role_enum_to_localised_present:
+ * gpk_role_enum_to_localised_present:
  **/
 const gchar *
-pk_role_enum_to_localised_present (PkRoleEnum role)
+gpk_role_enum_to_localised_present (PkRoleEnum role)
 {
 	const gchar *text = NULL;
 	switch (role) {
@@ -1066,12 +1055,12 @@ pk_role_enum_to_localised_present (PkRoleEnum role)
 }
 
 /**
- * pk_role_enum_to_localised_past:
+ * gpk_role_enum_to_localised_past:
  *
  * These are past tense versions of the action
  **/
 const gchar *
-pk_role_enum_to_localised_past (PkRoleEnum role)
+gpk_role_enum_to_localised_past (PkRoleEnum role)
 {
 	const gchar *text = NULL;
 	switch (role) {
@@ -1157,10 +1146,10 @@ pk_role_enum_to_localised_past (PkRoleEnum role)
 }
 
 /**
- * pk_group_enum_to_localised_text:
+ * gpk_group_enum_to_localised_text:
  **/
 const gchar *
-pk_group_enum_to_localised_text (PkGroupEnum group)
+gpk_group_enum_to_localised_text (PkGroupEnum group)
 {
 	const gchar *text = NULL;
 	switch (group) {
@@ -1258,61 +1247,61 @@ pk_group_enum_to_localised_text (PkGroupEnum group)
 }
 
 /**
- * pk_info_enum_to_icon_name:
+ * gpk_info_enum_to_icon_name:
  **/
 const gchar *
-pk_info_enum_to_icon_name (PkInfoEnum info)
+gpk_info_enum_to_icon_name (PkInfoEnum info)
 {
 	return pk_enum_find_string (enum_info_icon_name, info);
 }
 
 /**
- * pk_status_enum_to_icon_name:
+ * gpk_status_enum_to_icon_name:
  **/
 const gchar *
-pk_status_enum_to_icon_name (PkStatusEnum status)
+gpk_status_enum_to_icon_name (PkStatusEnum status)
 {
 	return pk_enum_find_string (enum_status_icon_name, status);
 }
 
 /**
- * pk_role_enum_to_icon_name:
+ * gpk_role_enum_to_icon_name:
  **/
 const gchar *
-pk_role_enum_to_icon_name (PkRoleEnum role)
+gpk_role_enum_to_icon_name (PkRoleEnum role)
 {
 	return pk_enum_find_string (enum_role_icon_name, role);
 }
 
 /**
- * pk_group_enum_to_icon_name:
+ * gpk_group_enum_to_icon_name:
  **/
 const gchar *
-pk_group_enum_to_icon_name (PkGroupEnum group)
+gpk_group_enum_to_icon_name (PkGroupEnum group)
 {
 	return pk_enum_find_string (enum_group_icon_name, group);
 }
 
 /**
- * pk_restart_enum_to_icon_name:
+ * gpk_restart_enum_to_icon_name:
  **/
 const gchar *
-pk_restart_enum_to_icon_name (PkRestartEnum restart)
+gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 {
 	return pk_enum_find_string (enum_restart_icon_name, restart);
 }
 
 /**
- * pk_message_enum_to_icon_name:
+ * gpk_message_enum_to_icon_name:
  **/
 const gchar *
-pk_message_enum_to_icon_name (PkMessageEnum message)
+gpk_message_enum_to_icon_name (PkMessageEnum message)
 {
 	return pk_enum_find_string (enum_message_icon_name, message);
 }
 
 /**
- * pk_time_to_localised_string:
+ * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
  * @cookie: The cookie we are looking for
  *
@@ -1321,7 +1310,7 @@ pk_message_enum_to_icon_name (PkMessageEnum message)
  * Return value: The time string, e.g. "2 hours 3 minutes"
  **/
 gchar *
-pk_time_to_localised_string (guint time_secs)
+gpk_time_to_localised_string (guint time_secs)
 {
 	gchar* timestring = NULL;
 	guint hours;
@@ -1404,7 +1393,7 @@ libst_common_gui (LibSelfTest *test)
 	 ****************        time text             **************
 	 ************************************************************/
 	libst_title (test, "time zero");
-	text = pk_time_to_localised_string (0);
+	text = gpk_time_to_localised_string (0);
 	if (text != NULL && strcmp (text, _("Now")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1414,7 +1403,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 1s");
-	text = pk_time_to_localised_string (1);
+	text = gpk_time_to_localised_string (1);
 	if (text != NULL && strcmp (text, _("1 second")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1424,7 +1413,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 1m");
-	text = pk_time_to_localised_string (1*60);
+	text = gpk_time_to_localised_string (1*60);
 	if (text != NULL && strcmp (text, _("1 minute")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1434,7 +1423,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 1h");
-	text = pk_time_to_localised_string (1*60*60);
+	text = gpk_time_to_localised_string (1*60*60);
 	if (text != NULL && strcmp (text, _("1 hour")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1444,7 +1433,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 30s");
-	text = pk_time_to_localised_string (30);
+	text = gpk_time_to_localised_string (30);
 	if (text != NULL && strcmp (text, _("30 seconds")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1454,7 +1443,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 30m");
-	text = pk_time_to_localised_string (30*60);
+	text = gpk_time_to_localised_string (30*60);
 	if (text != NULL && strcmp (text, _("30 minutes")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1464,7 +1453,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 30m1s");
-	text = pk_time_to_localised_string (30*60+1);
+	text = gpk_time_to_localised_string (30*60+1);
 	if (text != NULL && strcmp (text, _("30 minutes 1 second")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1474,7 +1463,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "time 30m10s");
-	text = pk_time_to_localised_string (30*60+10);
+	text = gpk_time_to_localised_string (30*60+10);
 	if (text != NULL && strcmp (text, _("30 minutes 10 seconds")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1486,7 +1475,7 @@ libst_common_gui (LibSelfTest *test)
 	 ****************        size text             **************
 	 ************************************************************/
 	libst_title (test, "size zero");
-	text = pk_size_to_si_size_text (0);
+	text = gpk_size_to_si_size_text (0);
 	if (text != NULL && strcmp (text, _("0 bytes")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1496,7 +1485,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "size 512 bytes");
-	text = pk_size_to_si_size_text (512);
+	text = gpk_size_to_si_size_text (512);
 	if (text != NULL && strcmp (text, _("512 bytes")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1506,7 +1495,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "size 256.2 MB");
-	text = pk_size_to_si_size_text (256*1025*1024);
+	text = gpk_size_to_si_size_text (256*1025*1024);
 	if (text != NULL && strcmp (text, _("256.2 MB")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1518,7 +1507,7 @@ libst_common_gui (LibSelfTest *test)
 	 ****************     package name text        **************
 	 ************************************************************/
 	libst_title (test, "get name null");
-	text = pk_package_get_name (NULL);
+	text = gpk_package_get_name (NULL);
 	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1528,7 +1517,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "get name not id");
-	text = pk_package_get_name ("ania");
+	text = gpk_package_get_name ("ania");
 	if (text != NULL && strcmp (text, "ania") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1538,7 +1527,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "get name just id");
-	text = pk_package_get_name ("simon;1.0.0;i386;moo");
+	text = gpk_package_get_name ("simon;1.0.0;i386;moo");
 	if (text != NULL && strcmp (text, "simon") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1550,7 +1539,7 @@ libst_common_gui (LibSelfTest *test)
 	 ****************     package name text        **************
 	 ************************************************************/
 	libst_title (test, "package id pretty null");
-	text = pk_package_id_pretty (NULL, NULL);
+	text = gpk_package_id_pretty (NULL, NULL);
 	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1560,7 +1549,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
-	text = pk_package_id_pretty ("simon;0.0.1;i386;data", NULL);
+	text = gpk_package_id_pretty ("simon;0.0.1;i386;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1 (i386)</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1570,7 +1559,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 2");
-	text = pk_package_id_pretty ("simon;0.0.1;;data", NULL);
+	text = gpk_package_id_pretty ("simon;0.0.1;;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1580,7 +1569,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 3");
-	text = pk_package_id_pretty ("simon;;;data", NULL);
+	text = gpk_package_id_pretty ("simon;;;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1590,7 +1579,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 4");
-	text = pk_package_id_pretty ("simon;0.0.1;;data", "dude");
+	text = gpk_package_id_pretty ("simon;0.0.1;;data", "dude");
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>\ndude") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1603,7 +1592,7 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "check we convert all the localised past role enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
-		string = pk_role_enum_to_localised_past (i);
+		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1614,7 +1603,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised present role enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
-		string = pk_role_enum_to_localised_present (i);
+		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1625,7 +1614,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the role icon name enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
-		string = pk_role_enum_to_icon_name (i);
+		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1636,7 +1625,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised info enums");
 	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
-		string = pk_info_enum_to_localised_text (i);
+		string = gpk_info_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1647,7 +1636,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the info icon names enums");
 	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
-		string = pk_info_enum_to_icon_name (i);
+		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1658,7 +1647,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised status enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
-		string = pk_status_enum_to_localised_text (i);
+		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1669,7 +1658,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the status icon names enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
-		string = pk_status_enum_to_icon_name (i);
+		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1680,7 +1669,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the restart icon names enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
-		string = pk_restart_enum_to_icon_name (i);
+		string = gpk_restart_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1691,7 +1680,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised error enums");
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
-		string = pk_error_enum_to_localised_text (i);
+		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1702,7 +1691,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised error enums");
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
-		string = pk_error_enum_to_localised_message (i);
+		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1713,7 +1702,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised restart enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
-		string = pk_restart_enum_to_localised_text (i);
+		string = gpk_restart_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1724,7 +1713,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the message icon name enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
-		string = pk_message_enum_to_icon_name (i);
+		string = gpk_message_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1735,7 +1724,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised message enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
-		string = pk_message_enum_to_localised_text (i);
+		string = gpk_message_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1746,7 +1735,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised restart future enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
-		string = pk_restart_enum_to_localised_text_future (i);
+		string = gpk_restart_enum_to_localised_text_future (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1757,7 +1746,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the localised group enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
-		string = pk_group_enum_to_localised_text (i);
+		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;
@@ -1768,7 +1757,7 @@ libst_common_gui (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "check we convert all the group icon name enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
-		string = pk_group_enum_to_icon_name (i);
+		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;

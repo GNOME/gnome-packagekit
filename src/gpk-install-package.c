@@ -76,7 +76,7 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 
 	/* did we resolve? */
 	if (pk_strzero (package)) {
-		pk_error_modal_dialog (_("Failed to resolve"),
+		gpk_error_modal_dialog (_("Failed to resolve"),
 				       _("The package could not be found on the system"));
 		g_main_loop_quit (loop);
 		return;
@@ -90,7 +90,7 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 	pk_warning ("Installing '%s'", package);
 	ret = pk_client_install_package (client, package, NULL);
 	if (ret == FALSE) {
-		pk_error_modal_dialog (_("Method not supported"),
+		gpk_error_modal_dialog (_("Method not supported"),
 				       _("Installing packages is not supported"));
 		g_object_unref (client);
 		g_main_loop_quit (loop);
@@ -171,7 +171,7 @@ main (int argc, char *argv[])
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	if (argc < 2) {
-		g_print (_("You need to specify a package to install\n"));
+		g_print ("%s\n", _("You need to specify a package to install"));
 		return 1;
 	}
 	loop = g_main_loop_new (NULL, FALSE);
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
 	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_INSTALLED);
 	ret = pk_client_resolve (client, filter, argv[1], NULL);
 	if (ret == FALSE) {
-		pk_error_modal_dialog (_("Method not supported"),
+		gpk_error_modal_dialog (_("Method not supported"),
 				       _("Resolving names to packages is not supported"));
 	} else {
 		g_main_loop_run (loop);

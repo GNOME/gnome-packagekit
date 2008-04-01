@@ -120,7 +120,7 @@ main (int argc, char *argv[])
 	/* general stuff */
 	retval = pk_client_get_backend_detail (client, &name, &author, NULL);
 	if (FALSE == retval) {
-		pk_warning (_("Exiting as backend details could not be retrieved\n"));
+		pk_warning (_("Exiting as backend details could not be retrieved"));
 		return 1;
 	}
 

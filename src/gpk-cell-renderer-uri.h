@@ -19,42 +19,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef PK_CELL_RENDERER_URI_H
-#define PK_CELL_RENDERER_URI_H
+#ifndef GPK_CELL_RENDERER_URI_H
+#define GPK_CELL_RENDERER_URI_H
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#define PK_TYPE_CELL_RENDERER_URI		(pk_cell_renderer_uri_get_type	())
-#define PK_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_CAST	((obj), PK_TYPE_CELL_RENDERER_URI, PkCellRendererUri))
-#define PK_CELL_RENDERER_URI_CLASS(cls)		(G_TYPE_CHECK_CLASS_CAST	((cls), PK_TYPE_CELL_RENDERER_URI, PkCellRendererUriClass))
-#define PK_IS_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_TYPE	((obj), PK_TYPE_CELL_RENDERER_URI))
-#define PK_IS_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE	((cls), PK_TYPE_CELL_RENDERER_URI))
-#define PK_CELL_RENDERER_URI_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS	((obj), PK_TYPE_CELL_RENDERER_URI, PkCellRendererUriClass))
+#define GPK_TYPE_CELL_RENDERER_URI		(gpk_cell_renderer_uri_get_type())
+#define GPK_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_CAST((obj), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUri))
+#define GPK_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_CAST((cls), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUriClass))
+#define PK_IS_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_TYPE((obj), GPK_TYPE_CELL_RENDERER_URI))
+#define PK_IS_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE((cls), GPK_TYPE_CELL_RENDERER_URI))
+#define GPK_CELL_RENDERER_URI_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS((obj), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUriClass))
 
 G_BEGIN_DECLS
 
-typedef struct _PkCellRendererUri		PkCellRendererUri;
-typedef struct _PkCellRendererUriClass		PkCellRendererUriClass;
+typedef struct _GpkCellRendererUri		GpkCellRendererUri;
+typedef struct _GpkCellRendererUriClass		GpkCellRendererUriClass;
 
-struct _PkCellRendererUri
+struct _GpkCellRendererUri
 {
-	GtkCellRendererText parent;
-	gchar *uri;
-	gboolean clicked;
+	GtkCellRendererText	 parent;
+	gchar			*uri;
+	gboolean		 clicked;
 };
 
-struct _PkCellRendererUriClass
+struct _GpkCellRendererUriClass
 {
 	GtkCellRendererTextClass parent_class;
-	void (*clicked)		(PkCellRendererUri	*cru,
+	void (*clicked)		(GpkCellRendererUri	*cru,
 				 const gchar		*uri);
 };
 
-GType		 pk_cell_renderer_uri_get_type		(void);
-GtkCellRenderer	*pk_cell_renderer_uri_new		(void);
+GType		 gpk_cell_renderer_uri_get_type		(void);
+GtkCellRenderer	*gpk_cell_renderer_uri_new		(void);
 
 G_END_DECLS
 
-#endif /* PK_CELL_RENDERER_URI_H */
+#endif /* GPK_CELL_RENDERER_URI_H */
 

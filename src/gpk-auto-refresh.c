@@ -219,7 +219,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_REFRESH_CACHE);
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
@@ -252,7 +252,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
@@ -546,7 +546,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
 
 	/* wait a little bit for login to quiece, even if everything is okay */
-	value = gconf_client_get_int (arefresh->priv->gconf_client, PK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
+	value = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
 	g_timeout_add_seconds (value, gpk_auto_refresh_check_delay_cb, arefresh);
 }
 

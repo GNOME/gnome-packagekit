@@ -179,7 +179,7 @@ gpk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar 
 		pk_debug ("ignoring cancel error");
 		return;
 	}
-	gpk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
+	gpk_progress_error_message (progress, gpk_error_enum_to_localised_text (code), details);
 }
 
 /**
@@ -410,7 +410,7 @@ gpk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subp
 	if (remaining == 0) {
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), NULL);
 	} else {
-		time = pk_time_to_localised_string (remaining);
+		time = gpk_time_to_localised_string (remaining);
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), time);
 		g_free (time);
 	}
@@ -437,11 +437,11 @@ gpk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, GpkProgre
 	const gchar *icon_name;
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "label_status");
-	gtk_label_set_label (GTK_LABEL (widget), pk_status_enum_to_localised_text (status));
+	gtk_label_set_label (GTK_LABEL (widget), gpk_status_enum_to_localised_text (status));
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "image_status");
 	gtk_widget_show (widget);
-	icon_name = pk_status_enum_to_icon_name (status);
+	icon_name = gpk_status_enum_to_icon_name (status);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon_name, GTK_ICON_SIZE_DIALOG);
 	pk_debug ("setting icon %s\n", icon_name);
 }
@@ -482,7 +482,7 @@ pk_common_get_role_text (PkClient *client)
 	}
 
 	/* backup */
-	role_text = pk_role_enum_to_localised_present (role);
+	role_text = gpk_role_enum_to_localised_present (role);
 
 	/* check to see if we have a package_id or just a search term */
 	if (pk_strzero (package_id)) {

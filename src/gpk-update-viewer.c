@@ -116,7 +116,7 @@ pk_button_help_cb (GtkWidget *widget, gpointer data)
 {
 	const char *id = data;
 
-	pk_show_help (id);
+	gpk_show_help (id);
 }
 
 /**
@@ -239,7 +239,7 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* we have no checkboxes selected */
 	if (!selected_any) {
-		pk_error_modal_dialog (_("No updates selected"), _("No updates are selected"));
+		gpk_error_modal_dialog (_("No updates selected"), _("No updates are selected"));
 		return;
 	}
 
@@ -265,7 +265,7 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* update a list */
 	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
-		pk_error_modal_dialog ("Individual updates failed", error->message);
+		gpk_error_modal_dialog ("Individual updates failed", error->message);
 		g_error_free (error);
 	}
 	g_strfreev (package_ids);
@@ -500,7 +500,7 @@ pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	}
 	ret = pk_client_refresh_cache (client_action, TRUE, &error);
 	if (ret == FALSE) {
-		pk_error_modal_dialog (_("Failed to refresh"), error->message);
+		gpk_error_modal_dialog (_("Failed to refresh"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -526,7 +526,7 @@ pk_updates_history_cb (GtkWidget *widget, gpointer data)
 
 	/* FIXME: do this in process */
 	if (!g_spawn_command_line_async ("gpk-log", &error)) {
-		pk_error_modal_dialog (_("Failed to launch gpk-log"),
+		gpk_error_modal_dialog (_("Failed to launch gpk-log"),
 				       error->message);
 		g_error_free (error);			
 	}
@@ -663,8 +663,8 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		  pk_info_enum_to_text (info), package_id, summary);
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		text = pk_package_id_pretty (package_id, summary);
-		icon_name = pk_info_enum_to_icon_name (info);
+		text = gpk_package_id_pretty (package_id, summary);
+		icon_name = gpk_info_enum_to_icon_name (info);
 		gtk_list_store_append (list_store_details, &iter);
 		gtk_list_store_set (list_store_details, &iter,
 				    PACKAGES_COLUMN_TEXT, text,
@@ -679,7 +679,7 @@ pk_updates_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		text = pk_package_id_pretty (package_id, summary);
+		text = gpk_package_id_pretty (package_id, summary);
 		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
 		gtk_label_set_markup (GTK_LABEL (widget), text);
 
@@ -791,24 +791,24 @@ pk_updates_update_detail_cb (PkClient *client, const gchar *package_id,
 		info = PK_INFO_ENUM_NORMAL;
 	}
 
-	info_text = pk_info_enum_to_localised_text (info);
+	info_text = gpk_info_enum_to_localised_text (info);
 	/* translators: this is the update type, e.g. security */
 	pk_updates_add_description_item (_("Type"), info_text, NULL);
 
-	package_pretty = pk_package_id_name_version (package_id);
+	package_pretty = gpk_package_id_name_version (package_id);
 	/* translators: this is the package version */
 	pk_updates_add_description_item (_("Version"), package_pretty, NULL);
 	g_free (package_pretty);
 
 	if (!pk_strzero (updates)) {
-		updates_pretty = pk_package_id_name_version (updates);
+		updates_pretty = gpk_package_id_name_version (updates);
 		/* translators: this is a list of packages that are updated */
 		pk_updates_add_description_item (_("Updates"), updates_pretty, NULL);
 		g_free (updates_pretty);
 	}
 
 	if (!pk_strzero (obsoletes)) {
-		obsoletes_pretty = pk_package_id_name_version (obsoletes);
+		obsoletes_pretty = gpk_package_id_name_version (obsoletes);
 		/* translators: this is a list of packages that are obsoleted */
 		pk_updates_add_description_item (_("Obsoletes"), obsoletes_pretty, NULL);
 		g_free (obsoletes_pretty);
@@ -863,7 +863,7 @@ pk_updates_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer da
 	}
 
 	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
-	text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
+	text = g_strdup_printf ("<b>%s</b>", gpk_status_enum_to_localised_text (status));
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
 
@@ -951,7 +951,7 @@ static void
 pk_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer data)
 {
 	pk_debug ("clicked %s", uri);
-	pk_execute_url (uri);
+	gpk_execute_url (uri);
 }
 
 /**
@@ -976,7 +976,7 @@ pk_treeview_add_columns_description (GtkTreeView *treeview)
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for uris */
-	renderer = pk_cell_renderer_uri_new ();
+	renderer = gpk_cell_renderer_uri_new ();
 	g_signal_connect (renderer, "clicked", G_CALLBACK (pk_treeview_renderer_clicked), NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
 							   "text", DESC_COLUMN_TEXT,
@@ -1168,7 +1168,7 @@ pk_update_update_last_updated_time (PkClient *client)
 static void 
 pk_updates_restart_cb (GtkWidget *widget, gpointer data)
 {
-	pk_restart_system ();
+	gpk_restart_system ();
 }
 
 static void populate_preview (void);
@@ -1185,6 +1185,7 @@ pk_updates_check_blocked_packages (PkClient *client)
 	GString *string;
 	gboolean exists = FALSE;
 	gchar *text;
+	gchar *title_bold;
 	GtkWidget *widget;
 
 	string = g_string_new ("");
@@ -1194,7 +1195,7 @@ pk_updates_check_blocked_packages (PkClient *client)
 	for (i=0;i<length;i++) {
 		item = pk_client_package_buffer_get_item (client, i);
 		if (item->info == PK_INFO_ENUM_BLOCKED) {
-			text = pk_package_id_pretty_oneline (item->package_id, item->summary);
+			text = gpk_package_id_pretty_oneline (item->package_id, item->summary);
 			g_string_append_printf (string, "%s\n", text);
 			g_free (text);
 			exists = TRUE;
@@ -1212,14 +1213,18 @@ pk_updates_check_blocked_packages (PkClient *client)
 	/* set the widget text */
 	if (exists) {
 		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		gtk_label_set_markup (GTK_LABEL (widget), _("<b>Some updates were not updated</b>"));
+		title_bold = g_strdup_printf ("<b>%s</b>", _("Some updates were not updated"));
+		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
+		g_free (title_bold);
 
 		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
 		gtk_label_set_markup (GTK_LABEL (widget), text);
 		gtk_widget_show (widget);
 	} else {
 		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		gtk_label_set_markup (GTK_LABEL (widget), _("<b>System Update Completed</b>"));
+		title_bold = g_strdup_printf ("<b>%s</b>", _("System update completed"));
+		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
+		g_free (title_bold);
 
 		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
 		gtk_widget_hide (widget);
@@ -1389,38 +1394,38 @@ populate_preview (void)
 
 		/* add to preview box in order of priority */
 		if (num_security > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_important > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_bugfix > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_enhancement > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_low > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
 		if (num_normal > 0) {
-			icon = pk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
-			text = pk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
 			pk_updates_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
@@ -1494,13 +1499,13 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 
 	/* set bold title */
 	widget = glade_xml_get_widget (glade_xml, "label_error_title");
-	title = pk_error_enum_to_localised_text (code);
+	title = gpk_error_enum_to_localised_text (code);
 	title_bold = g_strdup_printf ("<b>%s</b>", title);
 	gtk_label_set_label (GTK_LABEL (widget), title_bold);
 	g_free (title_bold);
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_message");
-	gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
+	gtk_label_set_label (GTK_LABEL (widget), gpk_error_enum_to_localised_message (code));
 
 	widget = glade_xml_get_widget (glade_xml, "label_error_details");
 	details_safe = g_markup_escape_text (details, -1);

@@ -116,21 +116,23 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 			pk_warning ("not found item %i", i);
 			break;
 		}
-		localised_status = pk_status_enum_to_localised_text (item->status);
+		localised_status = gpk_status_enum_to_localised_text (item->status);
 
-		/* we have text? */
-		if (pk_strzero (item->package_id)) {
+		/* should we display the text */
+		if (item->role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+		    pk_strzero (item->package_id)) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
-			text = pk_package_get_name (item->package_id);
+			text = gpk_package_get_name (item->package_id);
 			g_string_append_printf (status, "%s: %s\n", localised_status, text);
 			g_free (text);
 		}
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
-			g_string_append_printf (status, _("(%i more transactions)\n"),
+			g_string_append_printf (status, _("(%i more tasks)"),
 						i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
+			g_string_append_c (status, '\n');
 			break;
 		}
 	}
@@ -226,7 +228,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 
 	/* only set if in the list and not unknown */
 	if (value != PK_STATUS_ENUM_UNKNOWN && value != -1) {
-		icon = pk_status_enum_to_icon_name (value);
+		icon = gpk_status_enum_to_icon_name (value);
 		gpk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 	}
 
@@ -289,8 +291,8 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 		restart = pk_client_get_require_restart (client);
 		if (restart == PK_RESTART_ENUM_SYSTEM ||
 		    restart == PK_RESTART_ENUM_SESSION) {
-			restart_message = pk_restart_enum_to_localised_text (restart);
-			icon_name = pk_restart_enum_to_icon_name (restart);
+			restart_message = gpk_restart_enum_to_localised_text (restart);
+			icon_name = gpk_restart_enum_to_icon_name (restart);
 			gpk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
 			gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
 		}
@@ -309,7 +311,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	}
 
 	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
+	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
 	if (!value) {
 		pk_debug ("not showing notification as prevented in gconf");
 		return;
@@ -328,11 +330,11 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	}
 
 	if (role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
-		package = pk_package_get_name (package_id);
+		package = gpk_package_get_name (package_id);
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);
 		g_free (package);
 	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGE) {
-		package = pk_package_get_name (package_id);
+		package = gpk_package_get_name (package_id);
 		message = g_strdup_printf (_("Package '%s' has been installed"), package);
 		g_free (package);
 	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
@@ -347,7 +349,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	/* libnotify dialog */
 	gpk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
 				  "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_COMPLETED);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_COMPLETED);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (message);
 	g_free (package_id);
@@ -367,7 +369,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	title = pk_error_enum_to_localised_text (error_code);
+	title = gpk_error_enum_to_localised_text (error_code);
 
 	/* if the client dbus connection is still active */
 	pk_client_is_caller_active (client, &is_active, NULL);
@@ -388,7 +390,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 	}
 
         /* are we accepting notifications */
-        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_ERROR, NULL);
+        value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
         if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
@@ -399,7 +401,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 
 	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
@@ -419,21 +421,21 @@ gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *deta
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
         /* are we accepting notifications */
-        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
+        value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
         if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
         }
 
-	title = pk_message_enum_to_localised_text (message);
-	filename = pk_message_enum_to_icon_name (message);
+	title = gpk_message_enum_to_localised_text (message);
+	filename = gpk_message_enum_to_icon_name (message);
 
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
 	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_MESSAGE);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_MESSAGE);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
@@ -601,7 +603,7 @@ gpk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, gui
 static void
 gpk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
 {
-	pk_restart_system ();
+	gpk_restart_system ();
 }
 
 /**
@@ -703,12 +705,12 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 			pk_warning ("not found item %i", i);
 			break;
 		}
-		localised_role = pk_role_enum_to_localised_present (item->role);
-		localised_status = pk_status_enum_to_localised_text (item->status);
+		localised_role = gpk_role_enum_to_localised_present (item->role);
+		localised_status = gpk_status_enum_to_localised_text (item->status);
 
-		icon_name = pk_status_enum_to_icon_name (item->status);
+		icon_name = gpk_status_enum_to_icon_name (item->status);
 		if (pk_strzero (item->package_id) == FALSE) {
-			package = pk_package_get_name (item->package_id);
+			package = gpk_package_get_name (item->package_id);
 			text = g_strdup_printf ("%s %s (%s)", localised_role, package, localised_status);
 			g_free (package);
 		} else {
