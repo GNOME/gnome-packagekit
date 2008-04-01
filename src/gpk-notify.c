@@ -65,7 +65,7 @@ struct GpkNotifyPrivate
 	PkConnection		*pconnection;
 	PkClient		*client_update_system;
 	PkTaskList		*tlist;
-	PkAutoRefresh		*arefresh;
+	GpkAutoRefresh		*arefresh;
 	PkNotify		*notify;
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
@@ -637,7 +637,7 @@ gpk_notify_check_on_battery (GpkNotify *notify)
 	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
-	on_battery = pk_auto_refresh_get_on_battery (notify->priv->arefresh);
+	on_battery = gpk_auto_refresh_get_on_battery (notify->priv->arefresh);
 	conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, PK_CONF_UPDATE_BATTERY, NULL);
 	if (!conf_update_battery && on_battery) {
 		/* are we accepting notifications */
@@ -1013,7 +1013,7 @@ gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
  * gpk_notify_auto_refresh_cache_cb:
  **/
 static void
-gpk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, GpkNotify *notify)
+gpk_notify_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
@@ -1026,7 +1026,7 @@ gpk_notify_auto_refresh_cache_cb (PkAutoRefresh *arefresh, GpkNotify *notify)
  * gpk_notify_auto_get_updates_cb:
  **/
 static void
-gpk_notify_auto_get_updates_cb (PkAutoRefresh *arefresh, GpkNotify *notify)
+gpk_notify_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
@@ -1096,7 +1096,7 @@ gpk_notify_init (GpkNotify *notify)
 			  G_CALLBACK (gpk_notify_smart_icon_notify_button), notify);
 
 	notify->priv->gconf_client = gconf_client_get_default ();
-	notify->priv->arefresh = pk_auto_refresh_new ();
+	notify->priv->arefresh = gpk_auto_refresh_new ();
 	g_signal_connect (notify->priv->arefresh, "refresh-cache",
 			  G_CALLBACK (gpk_notify_auto_refresh_cache_cb), notify);
 	g_signal_connect (notify->priv->arefresh, "get-updates",

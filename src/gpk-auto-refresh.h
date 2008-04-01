@@ -19,39 +19,39 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __PK_AUTO_REFRESH_H
-#define __PK_AUTO_REFRESH_H
+#ifndef __GPK_AUTO_REFRESH_H
+#define __GPK_AUTO_REFRESH_H
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define PK_TYPE_AUTO_REFRESH		(pk_auto_refresh_get_type ())
-#define PK_AUTO_REFRESH(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefresh))
-#define PK_AUTO_REFRESH_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_AUTO_REFRESH, PkAutoRefreshClass))
-#define PK_IS_AUTO_REFRESH(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), PK_TYPE_AUTO_REFRESH))
-#define PK_IS_AUTO_REFRESH_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), PK_TYPE_AUTO_REFRESH))
-#define PK_AUTO_REFRESH_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshClass))
-#define PK_AUTO_REFRESH_ERROR		(pk_auto_refresh_error_quark ())
-#define PK_AUTO_REFRESH_TYPE_ERROR	(pk_auto_refresh_error_get_type ()) 
+#define GPK_TYPE_AUTO_REFRESH		(gpk_auto_refresh_get_type ())
+#define GPK_AUTO_REFRESH(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefresh))
+#define GPK_AUTO_REFRESH_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshClass))
+#define PK_IS_AUTO_REFRESH(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), GPK_TYPE_AUTO_REFRESH))
+#define PK_IS_AUTO_REFRESH_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GPK_TYPE_AUTO_REFRESH))
+#define GPK_AUTO_REFRESH_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshClass))
+#define GPK_AUTO_REFRESH_ERROR		(gpk_auto_refresh_error_quark ())
+#define GPK_AUTO_REFRESH_TYPE_ERROR	(gpk_auto_refresh_error_get_type ())
 
-typedef struct PkAutoRefreshPrivate PkAutoRefreshPrivate;
+typedef struct GpkAutoRefreshPrivate GpkAutoRefreshPrivate;
 
 typedef struct
 {
 	 GObject		 parent;
-	 PkAutoRefreshPrivate	*priv;
-} PkAutoRefresh;
+	 GpkAutoRefreshPrivate	*priv;
+} GpkAutoRefresh;
 
 typedef struct
 {
 	GObjectClass	parent_class;
-} PkAutoRefreshClass;
+} GpkAutoRefreshClass;
 
-GType		 pk_auto_refresh_get_type		(void);
-PkAutoRefresh	*pk_auto_refresh_new			(void);
-gboolean	 pk_auto_refresh_get_on_battery		(PkAutoRefresh *arefresh);
+GType		 gpk_auto_refresh_get_type		(void);
+GpkAutoRefresh	*gpk_auto_refresh_new			(void);
+gboolean	 gpk_auto_refresh_get_on_battery		(GpkAutoRefresh *arefresh);
 
 G_END_DECLS
 
-#endif /* __PK_AUTO_REFRESH_H */
+#endif /* __GPK_AUTO_REFRESH_H */

@@ -43,12 +43,12 @@
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
 
-static void     pk_auto_refresh_class_init	(PkAutoRefreshClass *klass);
-static void     pk_auto_refresh_init		(PkAutoRefresh      *arefresh);
-static void     pk_auto_refresh_finalize	(GObject            *object);
+static void     gpk_auto_refresh_class_init	(GpkAutoRefreshClass *klass);
+static void     gpk_auto_refresh_init		(GpkAutoRefresh      *arefresh);
+static void     gpk_auto_refresh_finalize	(GObject            *object);
 
-#define PK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_AUTO_REFRESH, PkAutoRefreshPrivate))
-#define PK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
+#define GPK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshPrivate))
+#define GPK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
 
 /*
  * at startup, after a small delay, force a GetUpdates call
@@ -57,7 +57,7 @@ static void     pk_auto_refresh_finalize	(GObject            *object);
    - if we are online and it's been longer than the timeout since getting the updates period then GetUpdates
 */
 
-struct PkAutoRefreshPrivate
+struct GpkAutoRefreshPrivate
 {
 	gboolean		 session_idle;
 	gboolean		 on_battery;
@@ -82,18 +82,18 @@ enum {
 
 static guint signals [LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE (PkAutoRefresh, pk_auto_refresh, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkAutoRefresh, gpk_auto_refresh, G_TYPE_OBJECT)
 
 /**
- * pk_auto_refresh_class_init:
- * @klass: The PkAutoRefreshClass
+ * gpk_auto_refresh_class_init:
+ * @klass: The GpkAutoRefreshClass
  **/
 static void
-pk_auto_refresh_class_init (PkAutoRefreshClass *klass)
+gpk_auto_refresh_class_init (GpkAutoRefreshClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_auto_refresh_finalize;
-	g_type_class_add_private (klass, sizeof (PkAutoRefreshPrivate));
+	object_class->finalize = gpk_auto_refresh_finalize;
+	g_type_class_add_private (klass, sizeof (GpkAutoRefreshPrivate));
 	signals [REFRESH_CACHE] =
 		g_signal_new ("refresh-cache",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
@@ -107,10 +107,10 @@ pk_auto_refresh_class_init (PkAutoRefreshClass *klass)
 }
 
 /**
- * pk_auto_refresh_signal_refresh_cache:
+ * gpk_auto_refresh_signal_refresh_cache:
  **/
 static gboolean
-pk_auto_refresh_signal_refresh_cache (PkAutoRefresh *arefresh)
+gpk_auto_refresh_signal_refresh_cache (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -121,10 +121,10 @@ pk_auto_refresh_signal_refresh_cache (PkAutoRefresh *arefresh)
 }
 
 /**
- * pk_auto_refresh_signal_get_updates:
+ * gpk_auto_refresh_signal_get_updates:
  **/
 static gboolean
-pk_auto_refresh_signal_get_updates (PkAutoRefresh *arefresh)
+gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -135,12 +135,12 @@ pk_auto_refresh_signal_get_updates (PkAutoRefresh *arefresh)
 }
 
 /**
- * pk_auto_refresh_convert_frequency:
+ * gpk_auto_refresh_convert_frequency:
  *
  * Return value: The number of seconds for the frequency period
  **/
 static guint
-pk_auto_refresh_convert_frequency (PkFreqEnum freq)
+gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 {
 	if (freq == PK_FREQ_ENUM_UNKNOWN) {
 		pk_warning ("no schema");
@@ -163,10 +163,10 @@ pk_auto_refresh_convert_frequency (PkFreqEnum freq)
 }
 
 /**
- * pk_auto_refresh_convert_frequency_text:
+ * gpk_auto_refresh_convert_frequency_text:
  **/
 static guint
-pk_auto_refresh_convert_frequency_text (PkAutoRefresh *arefresh, const gchar *key)
+gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *key)
 {
 	const gchar *freq_text;
 	PkFreqEnum freq;
@@ -183,14 +183,14 @@ pk_auto_refresh_convert_frequency_text (PkAutoRefresh *arefresh, const gchar *ke
 
 	/* convert to enum and get seconds */
 	freq = pk_freq_enum_from_text (freq_text);
-	return pk_auto_refresh_convert_frequency (freq);
+	return gpk_auto_refresh_convert_frequency (freq);
 }
 
 /**
- * pk_auto_refresh_maybe_refresh_cache:
+ * gpk_auto_refresh_maybe_refresh_cache:
  **/
 static gboolean
-pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
+gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 {
 	guint time;
 	guint thresh;
@@ -219,7 +219,7 @@ pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = pk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_REFRESH_CACHE);
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_REFRESH_CACHE);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
@@ -227,15 +227,15 @@ pk_auto_refresh_maybe_refresh_cache (PkAutoRefresh *arefresh)
 		return FALSE;
 	}
 
-	pk_auto_refresh_signal_refresh_cache (arefresh);
+	gpk_auto_refresh_signal_refresh_cache (arefresh);
 	return TRUE;
 }
 
 /**
- * pk_auto_refresh_maybe_get_updates:
+ * gpk_auto_refresh_maybe_get_updates:
  **/
 static gboolean
-pk_auto_refresh_maybe_get_updates (PkAutoRefresh *arefresh)
+gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 {
 	guint time;
 	guint thresh;
@@ -252,7 +252,7 @@ pk_auto_refresh_maybe_get_updates (PkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = pk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, PK_CONF_FREQUENCY_GET_UPDATES);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
@@ -260,15 +260,15 @@ pk_auto_refresh_maybe_get_updates (PkAutoRefresh *arefresh)
 		return FALSE;
 	}
 
-	pk_auto_refresh_signal_get_updates (arefresh);
+	gpk_auto_refresh_signal_get_updates (arefresh);
 	return TRUE;
 }
 
 /**
- * pk_auto_refresh_change_state:
+ * gpk_auto_refresh_change_state:
  **/
 static gboolean
-pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
+gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -287,51 +287,51 @@ pk_auto_refresh_change_state (PkAutoRefresh *arefresh)
 
 	/* we do this to get an icon at startup */
 	if (arefresh->priv->sent_get_updates == FALSE) {
-		pk_auto_refresh_signal_get_updates (arefresh);
+		gpk_auto_refresh_signal_get_updates (arefresh);
 		arefresh->priv->sent_get_updates = TRUE;
 		return TRUE;
 	}
 
 	/* try to do both */
-	pk_auto_refresh_maybe_refresh_cache (arefresh);
-	pk_auto_refresh_maybe_get_updates (arefresh);
+	gpk_auto_refresh_maybe_refresh_cache (arefresh);
+	gpk_auto_refresh_maybe_get_updates (arefresh);
 
 	return TRUE;
 }
 
 /**
- * pk_auto_refresh_idle_cb:
+ * gpk_auto_refresh_idle_cb:
  **/
 static void
-pk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, PkAutoRefresh *arefresh)
+gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
-	pk_auto_refresh_change_state (arefresh);
+	gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
- * pk_auto_refresh_on_battery_cb:
+ * gpk_auto_refresh_on_battery_cb:
  **/
 static void
-pk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, PkAutoRefresh *arefresh)
+gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("setting on_battery %i", on_battery);
 	arefresh->priv->on_battery = on_battery;
-	pk_auto_refresh_change_state (arefresh);
+	gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
- * pk_auto_refresh_get_on_battery:
+ * gpk_auto_refresh_get_on_battery:
  **/
 gboolean
-pk_auto_refresh_get_on_battery (PkAutoRefresh *arefresh)
+gpk_auto_refresh_get_on_battery (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -339,44 +339,44 @@ pk_auto_refresh_get_on_battery (PkAutoRefresh *arefresh)
 }
 
 /**
- * pk_auto_refresh_network_changed_cb:
+ * gpk_auto_refresh_network_changed_cb:
  **/
 static void
-pk_auto_refresh_network_changed_cb (PkNetwork *network, gboolean online, PkAutoRefresh *arefresh)
+gpk_auto_refresh_network_changed_cb (PkNetwork *network, gboolean online, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (arefresh != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("setting online %i", online);
 	arefresh->priv->network_active = online;
-	pk_auto_refresh_change_state (arefresh);
+	gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
- * pk_auto_refresh_timeout_cb:
+ * gpk_auto_refresh_timeout_cb:
  **/
 static gboolean
-pk_auto_refresh_timeout_cb (gpointer user_data)
+gpk_auto_refresh_timeout_cb (gpointer user_data)
 {
-	PkAutoRefresh *arefresh = PK_AUTO_REFRESH (user_data);
+	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
 
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* triggered once an hour */
-	pk_auto_refresh_change_state (arefresh);
+	gpk_auto_refresh_change_state (arefresh);
 
 	/* always return */
 	return TRUE;
 }
 
 /**
- * pk_auto_refresh_check_delay_cb:
+ * gpk_auto_refresh_check_delay_cb:
  **/
 static gboolean
-pk_auto_refresh_check_delay_cb (gpointer user_data)
+gpk_auto_refresh_check_delay_cb (gpointer user_data)
 {
-	PkAutoRefresh *arefresh = PK_AUTO_REFRESH (user_data);
+	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
 
 	g_return_val_if_fail (arefresh != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
@@ -388,7 +388,7 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
 	}
 
 	/* if we failed to do the refresh cache at first boot, we'll pick up an event */
-	pk_auto_refresh_change_state (arefresh);
+	gpk_auto_refresh_change_state (arefresh);
 
 	/* we don't want to do this timer again as we sent the signal */
 	return FALSE;
@@ -398,7 +398,7 @@ pk_auto_refresh_check_delay_cb (gpointer user_data)
  * pk_connection_gpm_changed_cb:
  **/
 static void
-pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh *arefresh)
+pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, GpkAutoRefresh *arefresh)
 {
 	GError *error = NULL;
 	gboolean on_battery;
@@ -431,7 +431,7 @@ pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefres
 	dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
 				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-				     G_CALLBACK (pk_auto_refresh_on_battery_cb),
+				     G_CALLBACK (gpk_auto_refresh_on_battery_cb),
 				     arefresh, NULL);
 	/* coldplug the battery state */
 	ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
@@ -452,7 +452,7 @@ pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefres
  * pk_connection_gs_changed_cb:
  **/
 static void
-pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh *arefresh)
+pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, GpkAutoRefresh *arefresh)
 {
 	GError *error = NULL;
 
@@ -482,22 +482,22 @@ pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, PkAutoRefresh
 	dbus_g_proxy_add_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
 				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
-				     G_CALLBACK (pk_auto_refresh_idle_cb),
+				     G_CALLBACK (gpk_auto_refresh_idle_cb),
 				     arefresh, NULL);
 
 }
 
 /**
- * pk_auto_refresh_init:
+ * gpk_auto_refresh_init:
  * @auto_refresh: This class instance
  **/
 static void
-pk_auto_refresh_init (PkAutoRefresh *arefresh)
+gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 {
 	guint value;
 	GError *error = NULL;
 
-	arefresh->priv = PK_AUTO_REFRESH_GET_PRIVATE (arefresh);
+	arefresh->priv = GPK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->on_battery = FALSE;
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
@@ -537,32 +537,32 @@ pk_auto_refresh_init (PkAutoRefresh *arefresh)
 	 * NetworkManager or alternative */
 	arefresh->priv->network = pk_network_new ();
 	g_signal_connect (arefresh->priv->network, "online",
-			  G_CALLBACK (pk_auto_refresh_network_changed_cb), arefresh);
+			  G_CALLBACK (gpk_auto_refresh_network_changed_cb), arefresh);
 	if (pk_network_is_online (arefresh->priv->network)) {
 		arefresh->priv->network_active = TRUE;
 	}
 
 	/* we check this in case we miss one of the async signals */
-	g_timeout_add_seconds (PK_AUTO_REFRESH_PERIODIC_CHECK, pk_auto_refresh_timeout_cb, arefresh);
+	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
 
 	/* wait a little bit for login to quiece, even if everything is okay */
 	value = gconf_client_get_int (arefresh->priv->gconf_client, PK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
-	g_timeout_add_seconds (value, pk_auto_refresh_check_delay_cb, arefresh);
+	g_timeout_add_seconds (value, gpk_auto_refresh_check_delay_cb, arefresh);
 }
 
 /**
- * pk_auto_refresh_finalize:
+ * gpk_auto_refresh_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_auto_refresh_finalize (GObject *object)
+gpk_auto_refresh_finalize (GObject *object)
 {
-	PkAutoRefresh *arefresh;
+	GpkAutoRefresh *arefresh;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_AUTO_REFRESH (object));
 
-	arefresh = PK_AUTO_REFRESH (object);
+	arefresh = GPK_AUTO_REFRESH (object);
 	g_return_if_fail (arefresh->priv != NULL);
 
 	g_object_unref (arefresh->priv->client);
@@ -579,19 +579,19 @@ pk_auto_refresh_finalize (GObject *object)
 		g_object_unref (arefresh->priv->proxy_gpm);
 	}
 
-	G_OBJECT_CLASS (pk_auto_refresh_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_auto_refresh_parent_class)->finalize (object);
 }
 
 /**
- * pk_auto_refresh_new:
+ * gpk_auto_refresh_new:
  *
- * Return value: a new PkAutoRefresh object.
+ * Return value: a new GpkAutoRefresh object.
  **/
-PkAutoRefresh *
-pk_auto_refresh_new (void)
+GpkAutoRefresh *
+gpk_auto_refresh_new (void)
 {
-	PkAutoRefresh *arefresh;
-	arefresh = g_object_new (PK_TYPE_AUTO_REFRESH, NULL);
-	return PK_AUTO_REFRESH (arefresh);
+	GpkAutoRefresh *arefresh;
+	arefresh = g_object_new (GPK_TYPE_AUTO_REFRESH, NULL);
+	return GPK_AUTO_REFRESH (arefresh);
 }
 
