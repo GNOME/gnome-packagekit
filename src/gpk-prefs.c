@@ -128,8 +128,8 @@ pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_freq_enum_to_text (freq);
-	pk_debug ("Changing %s to %s", PK_CONF_FREQUENCY_GET_UPDATES, action);
-	gconf_client_set_string (client, PK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
+	pk_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
+	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -172,8 +172,8 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_update_enum_to_text (update);
-	pk_debug ("Changing %s to %s", PK_CONF_AUTO_UPDATE, action);
-	gconf_client_set_string (client, PK_CONF_AUTO_UPDATE, action, NULL);
+	pk_debug ("Changing %s to %s", GPK_CONF_AUTO_UPDATE, action);
+	gconf_client_set_string (client, GPK_CONF_AUTO_UPDATE, action, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -192,8 +192,8 @@ pk_prefs_freq_combo_setup (void)
 
 	client = gconf_client_get_default ();
 	widget = glade_xml_get_widget (glade_xml, "combobox_check");
-	is_writable = gconf_client_key_is_writable (client, PK_CONF_FREQUENCY_GET_UPDATES, NULL);
-	value = gconf_client_get_string (client, PK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (value == NULL) {
 		pk_warning ("invalid schema, please re-install");
 		return;
@@ -232,8 +232,8 @@ pk_prefs_update_combo_setup (void)
 
 	client = gconf_client_get_default ();
 	widget = glade_xml_get_widget (glade_xml, "combobox_install");
-	is_writable = gconf_client_key_is_writable (client, PK_CONF_AUTO_UPDATE, NULL);
-	value = gconf_client_get_string (client, PK_CONF_AUTO_UPDATE, NULL);
+	is_writable = gconf_client_key_is_writable (client, GPK_CONF_AUTO_UPDATE, NULL);
+	value = gconf_client_get_string (client, GPK_CONF_AUTO_UPDATE, NULL);
 	if (value == NULL) {
 		pk_warning ("invalid schema, please re-install");
 		return;
@@ -344,13 +344,13 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_window_delete_event_cb), loop);
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
-	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_NOTIFY_AVAILABLE);
+	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_AVAILABLE);
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_completed");
-	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_NOTIFY_COMPLETED);
+	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_update_battery");
-	pk_prefs_notify_checkbutton_setup (widget, PK_CONF_UPDATE_BATTERY);
+	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_UPDATE_BATTERY);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",

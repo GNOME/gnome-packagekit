@@ -1785,7 +1785,7 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 	/* save users preference to gconf */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
 	gconf_client_set_bool (application->priv->gconf_client,
-			       PK_CONF_APPLICATION_FILTER_BASENAME, enabled, NULL);
+			       GPK_CONF_APPLICATION_FILTER_BASENAME, enabled, NULL);
 
 	/* change the filter */
 	if (enabled) {
@@ -1818,7 +1818,7 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 	/* save users preference to gconf */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
 	gconf_client_set_bool (application->priv->gconf_client,
-			       PK_CONF_APPLICATION_FILTER_NEWEST, enabled, NULL);
+			       GPK_CONF_APPLICATION_FILTER_NEWEST, enabled, NULL);
 
 	/* change the filter */
 	if (enabled) {
@@ -2243,7 +2243,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 
 	/* autocompletion can be turned off as it's slow */
-	autocomplete = gconf_client_get_bool (application->priv->gconf_client, PK_CONF_AUTOCOMPLETE, NULL);
+	autocomplete = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
 	if (autocomplete) {
 		/* create the completion object */
 		completion = gtk_entry_completion_new ();
@@ -2296,7 +2296,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_BASENAME)) {
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 PK_CONF_APPLICATION_FILTER_BASENAME, NULL);
+						 GPK_CONF_APPLICATION_FILTER_BASENAME, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_basename_cb (widget, application);
@@ -2309,7 +2309,7 @@ gpk_application_init (GpkApplication *application)
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST)) {
 		/* set from remembered state */
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 PK_CONF_APPLICATION_FILTER_NEWEST, NULL);
+						 GPK_CONF_APPLICATION_FILTER_NEWEST, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_newest_cb (widget, application);

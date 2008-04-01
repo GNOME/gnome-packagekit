@@ -309,7 +309,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	}
 
 	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
+	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
 	if (!value) {
 		pk_debug ("not showing notification as prevented in gconf");
 		return;
@@ -347,7 +347,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	/* libnotify dialog */
 	gpk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
 				  "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_COMPLETED);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_COMPLETED);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (message);
 	g_free (package_id);
@@ -388,7 +388,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 	}
 
         /* are we accepting notifications */
-        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_ERROR, NULL);
+        value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
         if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
@@ -399,7 +399,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 
 	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
@@ -419,7 +419,7 @@ gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *deta
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
         /* are we accepting notifications */
-        value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
+        value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
         if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
@@ -433,7 +433,7 @@ gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *deta
 
 	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, PK_CONF_NOTIFY_MESSAGE);
+	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_MESSAGE);
 	gpk_smart_icon_notify_show (watch->priv->sicon);
 	g_free (escaped_details);
 }
