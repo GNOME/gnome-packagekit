@@ -264,6 +264,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	gboolean value;
 	PkRoleEnum role;
 	PkRestartEnum restart;
+	GError *error = NULL;
 	gchar *package_id;
 	gchar *message = NULL;
 	gchar *package;
@@ -275,7 +276,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 
 	/* get the role */
 	ret = pk_client_get_role (client, &role, &package_id, NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		pk_warning ("cannot get role");
 		return;
 	}
@@ -309,8 +310,20 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 
 	/* are we accepting notifications */
 	value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_COMPLETED, NULL);
-	if (value == FALSE) {
+	if (!value) {
 		pk_debug ("not showing notification as prevented in gconf");
+		return;
+	}
+
+	/* is caller able to handle the messages itself? */
+	ret = pk_client_is_caller_active (client, &value, &error);
+	if (!ret) {
+		pk_warning ("could not get caller active status: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+	if (value) {
+		pk_debug ("not showing notification as caller is still present");
 		return;
 	}
 
@@ -376,7 +389,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 
         /* are we accepting notifications */
         value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_ERROR, NULL);
-        if (value == FALSE) {
+        if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
         }
@@ -407,7 +420,7 @@ gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *deta
 
         /* are we accepting notifications */
         value = gconf_client_get_bool (watch->priv->gconf_client, PK_CONF_NOTIFY_MESSAGE, NULL);
-        if (value == FALSE) {
+        if (!value) {
                 pk_debug ("not showing notification as prevented in gconf");
                 return;
         }
@@ -460,7 +473,7 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
         
-	if (ret == FALSE) {
+	if (!ret) {
 		error_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Failed to show url %s", error->message); 
 		gtk_dialog_run (GTK_DIALOG (error_dialog));
 		gtk_widget_destroy (error_dialog);
@@ -612,7 +625,7 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 			  G_CALLBACK (gpk_watch_refresh_cache_finished_cb), watch);
 
 	ret = pk_client_refresh_cache (client, TRUE, NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		g_object_unref (client);
 		message = g_strdup_printf (_("The error was: %s"), error->message);
 		pk_warning ("%s", message);
