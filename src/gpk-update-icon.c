@@ -31,6 +31,8 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 
+#include <libgbus.h>
+
 #include <pk-debug.h>
 #include <pk-common.h>
 
@@ -87,6 +89,16 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 	return TRUE;
 }
 
+/**
+ * pk_dbus_connection_replaced_cb:
+ **/
+static void
+pk_dbus_connection_replaced_cb (LibGBus *libgbus, gpointer data)
+{
+	GMainLoop *loop = (GMainLoop *) data;
+	pk_warning ("exiting the mainloop as we have been replaced");
+	g_main_loop_quit (loop);
+}
 
 /**
  * main:
@@ -103,6 +115,7 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	gboolean ret;
 	DBusGConnection *connection;
+	LibGBus *libgbus;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -143,10 +156,16 @@ main (int argc, char *argv[])
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* create a new notify object */
+	/* create new objects */
 	notify = gpk_notify_new ();
 	watch = gpk_watch_new ();
 	loop = g_main_loop_new (NULL, FALSE);
+
+	/* find out when we are replaced */
+	libgbus = libgbus_new ();
+	libgbus_assign (libgbus, LIBGBUS_SESSION, PK_DBUS_SERVICE);
+	g_signal_connect (libgbus, "connection-replaced",
+			  G_CALLBACK (pk_dbus_connection_replaced_cb), loop);
 
 	/* get the bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
@@ -170,6 +189,7 @@ out:
 	g_main_loop_unref (loop);
 	g_object_unref (notify);
 	g_object_unref (watch);
+	g_object_unref (libgbus);
 
 	return 0;
 }
