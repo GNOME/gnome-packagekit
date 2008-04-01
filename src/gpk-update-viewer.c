@@ -1639,11 +1639,8 @@ main (int argc, char *argv[])
 	g_signal_connect (pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), NULL);
 
-	/* we need to grey out all the buttons if we are in progress */
+	/* monitor for other updates in progress */
 	tlist = pk_task_list_new ();
-	g_signal_connect (tlist, "task-list-changed",
-			  G_CALLBACK (pk_updates_task_list_changed_cb), NULL);
-	pk_updates_task_list_changed_cb (tlist, NULL);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
@@ -1856,6 +1853,11 @@ main (int argc, char *argv[])
 	gtk_label_set_label (GTK_LABEL (widget), "");
 	widget = glade_xml_get_widget (glade_xml, "progress_package_label");
 	gtk_label_set_label (GTK_LABEL (widget), "");
+
+	/* we need to grey out all the buttons if we are in progress */
+	g_signal_connect (tlist, "task-list-changed",
+			  G_CALLBACK (pk_updates_task_list_changed_cb), NULL);
+	pk_updates_task_list_changed_cb (tlist, NULL);
 
 	/* get the update list */
 	ret = pk_client_get_updates (client_query, "basename", NULL);
