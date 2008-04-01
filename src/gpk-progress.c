@@ -97,7 +97,7 @@ pk_progress_error_message (PkProgress *progress, const gchar *title, const gchar
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
+					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", title);
 
 	if (details != NULL) {
 		escaped_details = g_markup_escape_text (details, -1);

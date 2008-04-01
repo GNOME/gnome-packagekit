@@ -341,7 +341,7 @@ pk_show_help (const gchar *link_id)
 	if (error != NULL) {
 		GtkWidget *d;
 		d = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, error->message);
+					    GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s", error->message);
 		gtk_dialog_run (GTK_DIALOG(d));
 		gtk_widget_destroy (d);
 		g_error_free (error);
@@ -544,8 +544,8 @@ pk_error_modal_dialog (const gchar *title, const gchar *message)
 {
 	GtkWidget *dialog;
 	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, title);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), message);
+					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 	return TRUE;

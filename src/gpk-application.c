@@ -152,7 +152,7 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
+					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", title);
 
 	/* we need to be careful of markup */
 	if (details != NULL) {
@@ -312,7 +312,7 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, title);
+					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, "%s", title);
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("Remove all packages"), -8, NULL);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 	g_signal_connect (dialog, "response", G_CALLBACK (pk_application_requires_dialog_cb), application);
