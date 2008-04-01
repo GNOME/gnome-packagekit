@@ -903,7 +903,7 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 }
 
 static void
-pk_packages_add_columns (GtkTreeView *treeview)
+gpk_application_packages_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -925,7 +925,7 @@ pk_packages_add_columns (GtkTreeView *treeview)
 }
 
 static void
-pk_groups_add_columns (GtkTreeView *treeview)
+gpk_application_groups_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -947,11 +947,10 @@ pk_groups_add_columns (GtkTreeView *treeview)
 }
 
 /**
- * pk_groups_treeview_clicked_cb:
+ * gpk_application_groups_treeview_clicked_cb:
  **/
 static void
-pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
-			       GpkApplication *application)
+gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplication *application)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -1012,10 +1011,10 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 }
 
 /**
- * pk_notebook_populate:
+ * gpk_application_notebook_populate:
  **/
 static gboolean
-pk_notebook_populate (GpkApplication *application, gint page)
+gpk_application_notebook_populate (GpkApplication *application, gint page)
 {
 	gboolean ret;
 	GtkWidget *widget;
@@ -1163,14 +1162,14 @@ gpk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_notebook_populate (application, page);
+	gpk_application_notebook_populate (application, page);
 }
 
 /**
- * pk_packages_treeview_clicked_cb:
+ * gpk_application_packages_treeview_clicked_cb:
  **/
 static void
-pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
+gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 				 GpkApplication *application)
 {
 	GtkWidget *widget;
@@ -1211,7 +1210,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		/* refresh */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
 		page = gtk_notebook_get_current_page (GTK_NOTEBOOK (widget));
-		pk_notebook_populate (application, page);
+		gpk_application_notebook_populate (application, page);
 
 	} else {
 		pk_debug ("no row selected");
@@ -1225,10 +1224,10 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 }
 
 /**
- * pk_connection_changed_cb:
+ * gpk_application_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkApplication *application)
+gpk_application_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1237,10 +1236,10 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkAppl
 }
 
 /**
- * pk_group_add_data:
+ * gpk_application_group_add_data:
  **/
 static void
-pk_group_add_data (GpkApplication *application, PkGroupEnum group)
+gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 {
 	GtkTreeIter iter;
 	const gchar *icon_name;
@@ -2011,7 +2010,7 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
-			  G_CALLBACK (pk_connection_changed_cb), application);
+			  G_CALLBACK (gpk_application_connection_changed_cb), application);
 
 	/* single instance, so this is valid */
 	application->priv->extra = pk_extra_new ();
@@ -2362,10 +2361,10 @@ gpk_application_init (GpkApplication *application)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_packages_treeview_clicked_cb), application);
+			  G_CALLBACK (gpk_application_packages_treeview_clicked_cb), application);
 
 	/* add columns to the tree view */
-	pk_packages_add_columns (GTK_TREE_VIEW (widget));
+	gpk_application_packages_add_columns (GTK_TREE_VIEW (widget));
 
 	/* create group tree view if we can search by group */
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
@@ -2375,17 +2374,17 @@ gpk_application_init (GpkApplication *application)
 
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 		g_signal_connect (selection, "changed",
-				  G_CALLBACK (pk_groups_treeview_clicked_cb), application);
+				  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
 
 		/* add columns to the tree view */
-		pk_groups_add_columns (GTK_TREE_VIEW (widget));
+		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
 
 		/* add all the groups supported */
 		length = pk_enum_list_size (application->priv->group_list);
 		for (i=0; i<length; i++) {
 			group = pk_enum_list_get_item (application->priv->group_list, i);
 			if (group != PK_GROUP_ENUM_UNKNOWN) {
-				pk_group_add_data (application, group);
+				gpk_application_group_add_data (application, group);
 			}
 		}
 	}
