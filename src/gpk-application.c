@@ -165,17 +165,17 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 }
 
 /**
- * pk_application_install_cb:
+ * pk_application_install:
  **/
-static void
-pk_application_install_cb (PolKitGnomeAction *action,
-		           PkApplication     *application)
+static gboolean
+pk_application_install (PkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
 	GError *error = NULL;
 
-	g_return_if_fail (application != NULL);
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_val_if_fail (application != NULL, FALSE);
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	pk_debug ("install %s", application->priv->package);
 
@@ -183,7 +183,7 @@ pk_application_install_cb (PolKitGnomeAction *action,
 	if (!ret) {
 		pk_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
-		return;
+		return FALSE;
 	}
 
 	/* do the install */
@@ -195,6 +195,18 @@ pk_application_install_cb (PolKitGnomeAction *action,
 		pk_application_error_message (application, _("The package could not be installed"), error->message);
 		g_error_free (error);
 	}
+	return ret;
+}
+
+/**
+ * pk_application_install_cb:
+ **/
+static void
+pk_application_install_cb (PolKitGnomeAction *action, PkApplication *application)
+{
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+	pk_application_install (application, application->priv->package);
 }
 
 /**
@@ -1834,6 +1846,41 @@ pk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkAppli
 }
 
 /**
+ * pk_application_package_row_activated_cb:
+ **/
+void
+pk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
+					 GtkTreeViewColumn *col, PkApplication *application)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gchar *package_id = NULL;
+	gboolean installed;
+	gboolean ret;
+
+	g_return_if_fail (application != NULL);
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* get selection */
+	model = gtk_tree_view_get_model (treeview);
+	ret = gtk_tree_model_get_iter (model, &iter, path);
+	if (!ret) {
+		pk_warning ("failed to get selection");
+		return;
+	}
+
+	/* get details */
+	gtk_tree_model_get (model, &iter,
+			    PACKAGES_COLUMN_INSTALLED, &installed,
+			    PACKAGES_COLUMN_ID, &package_id, -1);
+	if (!installed) {
+		pk_debug ("auto installing due to double click");
+		pk_application_install (application, package_id);
+	}
+	g_free (package_id);
+}
+
+/**
  * pk_application_init:
  **/
 static void
@@ -2259,6 +2306,8 @@ pk_application_init (PkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
+			  G_CALLBACK (pk_application_package_row_activated_cb), application);
 
 	/* use the in-statusbar for progress */
 	application->priv->statusbar = pk_statusbar_new ();
