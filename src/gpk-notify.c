@@ -978,11 +978,7 @@ gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
 	if (!ret) {
 		pk_warning ("failed to spawn new instance: %s", error->message);
 		g_error_free (error);
-		return;
 	}
-	/* this seems extreme, but we are starting a new instance */
-	pk_warning ("exiting as ::RestartSchedule, and another instance started");
-	exit (0);
 }
 
 /**
