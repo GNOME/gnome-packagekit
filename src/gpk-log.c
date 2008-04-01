@@ -73,7 +73,7 @@ static void
 pk_button_help_cb (GtkWidget *widget,
 		   gboolean  data)
 {
-	pk_show_help ("software-sources");
+	gpk_show_help ("software-sources");
 }
 
 /**
@@ -163,7 +163,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 
 	pretty = pk_transaction_db_get_pretty_date (timespec);
 	pk_debug ("pretty=%s", pretty);
-	role_text = pk_role_enum_to_localised_past (role);
+	role_text = gpk_role_enum_to_localised_past (role);
 	text = g_markup_printf_escaped ("<b>%s</b>\n%s", role_text, pretty);
 	g_free (pretty);
 
@@ -173,7 +173,7 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 			    PACKAGES_COLUMN_GENERAL_ID, tid,
 			    -1);
 
-	icon_name = pk_role_enum_to_icon_name (role);
+	icon_name = gpk_role_enum_to_icon_name (role);
 	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon_name, -1);
 
 	if (succeeded) {
@@ -267,9 +267,9 @@ pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *pac
 	const gchar *icon_name;
 	const gchar *info_text;
 
-	info_text = pk_info_enum_to_localised_text (info);
-	text = pk_package_id_pretty (package_id, summary);
-	icon_name = pk_info_enum_to_icon_name (info);
+	info_text = gpk_info_enum_to_localised_text (info);
+	text = gpk_package_id_pretty (package_id, summary);
+	icon_name = gpk_info_enum_to_icon_name (info);
 
 	gtk_list_store_append (list_store_details, &iter);
 	gtk_list_store_set (list_store_details, &iter,

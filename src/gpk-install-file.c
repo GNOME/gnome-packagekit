@@ -133,7 +133,7 @@ gpk_install_file_status_changed_cb (PkClient     *client,
         gchar *text;
 
         widget = glade_xml_get_widget (glade_xml, "progress_part_label");
-        text = g_strdup_printf ("<b>%s</b>", pk_status_enum_to_localised_text (status));
+        text = g_strdup_printf ("<b>%s</b>", gpk_status_enum_to_localised_text (status));
         gtk_label_set_markup (GTK_LABEL (widget), text);
         g_free (text);
 
@@ -162,13 +162,13 @@ gpk_install_file_error_code_cb (PkClient        *client,
 
         /* set bold title */
         widget = glade_xml_get_widget (glade_xml, "label_error_title");
-        title = pk_error_enum_to_localised_text (code);
+        title = gpk_error_enum_to_localised_text (code);
         title_bold = g_strdup_printf ("<b>%s</b>", title);
         gtk_label_set_label (GTK_LABEL (widget), title_bold);
         g_free (title_bold);
 
         widget = glade_xml_get_widget (glade_xml, "label_error_message");
-        gtk_label_set_label (GTK_LABEL (widget), pk_error_enum_to_localised_message (code));
+        gtk_label_set_label (GTK_LABEL (widget), gpk_error_enum_to_localised_message (code));
 
         widget = glade_xml_get_widget (glade_xml, "label_error_details");
         details_safe = g_markup_escape_text (details, -1);
@@ -292,11 +292,11 @@ main (int argc, char *argv[])
 
 		/* check if we got a permission denied */
 		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.localinstall")) {
-			pk_error_modal_dialog (_("Failed to install"),
+			gpk_error_modal_dialog (_("Failed to install"),
 					       _("You don't have the necessary privileges to install local packages"));
 		}
 		else {
-			pk_error_modal_dialog (_("Failed to install"),
+			gpk_error_modal_dialog (_("Failed to install"),
 					       error->message);
 		}
 	} else {

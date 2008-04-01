@@ -96,7 +96,7 @@ gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
-	pk_show_help ("update-icon");
+	gpk_show_help ("update-icon");
 }
 
 /**
@@ -351,7 +351,7 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 	/* add a message that we need to restart */
 	restart = pk_client_get_require_restart (client);
 	if (restart != PK_RESTART_ENUM_NONE) {
-		message = pk_restart_enum_to_localised_text (restart);
+		message = gpk_restart_enum_to_localised_text (restart);
 
 		/* add a gap if we are putting both */
 		if (skipped_number > 0) {
@@ -618,7 +618,7 @@ gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 	}
 
 	/* get the icon */
-	icon = pk_info_enum_to_icon_name (value);
+	icon = gpk_info_enum_to_icon_name (value);
 
 	g_object_unref (elist);
 	return icon;
@@ -836,7 +836,7 @@ gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gc
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
-	title = pk_error_enum_to_localised_text (error_code);
+	title = gpk_error_enum_to_localised_text (error_code);
 
 	/* ignore some errors */
 	if (error_code == PK_ERROR_ENUM_PROCESS_KILL ||
@@ -1074,7 +1074,7 @@ gpk_notify_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button
 		gpk_notify_update_system (notify);
 	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
 		/* restart using gnome-power-manager */
-		ret = pk_restart_system ();
+		ret = gpk_restart_system ();
 		if (!ret) {
 			pk_warning ("failed to reboot");
 		}

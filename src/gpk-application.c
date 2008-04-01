@@ -226,7 +226,7 @@ gpk_application_homepage_cb (GtkWidget      *widget,
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
-	pk_execute_url (application->priv->url);
+	gpk_execute_url (application->priv->url);
 }
 
 /**
@@ -322,7 +322,7 @@ gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	text = g_string_new (_("The following packages have to be removed:\n\n"));
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
-		message = pk_package_id_pretty_oneline (item->package_id, item->summary);
+		message = gpk_package_id_pretty_oneline (item->package_id, item->summary);
 		g_string_append_printf (text, "%s\n", message);
 		g_free (message);
 	}
@@ -332,7 +332,7 @@ gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint r
 
 	/* display messagebox  */
 	message = g_string_free (text, FALSE);
-	package_name = pk_package_get_name (application->priv->package);
+	package_name = gpk_package_get_name (application->priv->package);
 	title = g_strdup_printf (_("Other software depends on %s"), package_name);
 	g_free (package_name);
 
@@ -444,7 +444,7 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
-		value = pk_size_to_si_size_text (size);
+		value = gpk_size_to_si_size_text (size);
 		gtk_label_set_label (GTK_LABEL (widget), value);
 		g_free (value);
 	} else {
@@ -517,12 +517,12 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 	eobj = pk_extra_obj_new_from_package_id_summary (package_id, summary);
 
 	/* check icon actually exists and is valid in this theme */
-	valid = pk_icon_valid (eobj->icon);
+	valid = gpk_icon_valid (eobj->icon);
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
 		g_free (eobj->icon);
-		eobj->icon = g_strdup (pk_info_enum_to_icon_name (info));
+		eobj->icon = g_strdup (gpk_info_enum_to_icon_name (info));
 	}
 
 	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", eobj->id->name,
@@ -555,7 +555,7 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 	}
 
 	gpk_application_error_message (application,
-				      pk_error_enum_to_localised_text (code), details);
+				      gpk_error_enum_to_localised_text (code), details);
 }
 
 /**
@@ -579,7 +579,7 @@ gpk_application_package_buffer_to_name_version (PkClient *client)
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
 		/* just use the name */
-		text_pretty = pk_package_id_name_version (item->package_id);
+		text_pretty = gpk_package_id_name_version (item->package_id);
 		g_string_append_printf (string, "%s\n", text_pretty);
 		g_free (text_pretty);
 	}
@@ -1247,8 +1247,8 @@ pk_group_add_data (GpkApplication *application, PkGroupEnum group)
 
 	gtk_list_store_append (application->priv->groups_store, &iter);
 
-	text = pk_group_enum_to_localised_text (group);
-	icon_name = pk_group_enum_to_icon_name (group);
+	text = gpk_group_enum_to_localised_text (group);
+	icon_name = gpk_group_enum_to_icon_name (group);
 	gtk_list_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
@@ -1498,7 +1498,7 @@ out:
 static void
 gpk_application_menu_help_cb (GtkAction *action, GpkApplication *application)
 {
-	pk_show_help ("add-remove");
+	gpk_show_help ("add-remove");
 }
 
 /**

@@ -174,7 +174,7 @@ gpk_statusbar_set_status (GpkStatusbar *sbar, PkStatusEnum status)
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
 
 	/* set the status */
-	text = pk_status_enum_to_localised_text (status);
+	text = gpk_status_enum_to_localised_text (status);
 	gtk_label_set_label (GTK_LABEL (sbar->priv->statusbar->label), text);
 
 	return TRUE;
@@ -209,7 +209,7 @@ gpk_statusbar_set_remaining (GpkStatusbar *sbar, guint remaining)
 	gtk_widget_show (GTK_WIDGET (sbar->priv->statusbar->label));
 
 	/* print remaining time */
-	time = pk_time_to_localised_string (remaining);
+	time = gpk_time_to_localised_string (remaining);
 	text = g_strdup_printf (_("Remaining time: %s"), time);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (sbar->priv->progressbar), text);
 	g_free (time);

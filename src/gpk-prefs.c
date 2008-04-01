@@ -54,7 +54,7 @@ static GladeXML *glade_xml = NULL;
 static void
 pk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
-	pk_show_help ("prefs");
+	gpk_show_help ("prefs");
 }
 
 /**
