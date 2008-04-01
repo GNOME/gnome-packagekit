@@ -72,7 +72,7 @@ struct GpkApplicationPrivate
 	PkClient		*client_description;
 	PkClient		*client_files;
 	PkConnection		*pconnection;
-	PkStatusbar		*statusbar;
+	GpkStatusbar		*statusbar;
 	PkExtra			*extra;
 	gchar			*package;
 	gchar			*url;
@@ -670,7 +670,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 	}
 
 	/* hide widget */
-	pk_statusbar_hide (application->priv->statusbar);
+	gpk_statusbar_hide (application->priv->statusbar);
 
 	/* do we need to update the search? */
 	if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
@@ -692,8 +692,8 @@ gpk_application_progress_changed_cb (PkClient *client, guint percentage, guint s
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_statusbar_set_percentage (application->priv->statusbar, percentage);
-	pk_statusbar_set_remaining (application->priv->statusbar, remaining);
+	gpk_statusbar_set_percentage (application->priv->statusbar, percentage);
+	gpk_statusbar_set_remaining (application->priv->statusbar, remaining);
 }
 
 /**
@@ -1843,7 +1843,7 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
-	pk_statusbar_set_status (application->priv->statusbar, status);
+	gpk_statusbar_set_status (application->priv->statusbar, status);
 }
 
 /**
@@ -2335,9 +2335,9 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_package_row_activated_cb), application);
 
 	/* use the in-statusbar for progress */
-	application->priv->statusbar = pk_statusbar_new ();
+	application->priv->statusbar = gpk_statusbar_new ();
 	widget = glade_xml_get_widget (application->priv->glade_xml, "statusbar_status");
-	pk_statusbar_set_widget (application->priv->statusbar, widget);
+	gpk_statusbar_set_widget (application->priv->statusbar, widget);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,

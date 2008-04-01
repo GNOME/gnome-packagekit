@@ -43,7 +43,7 @@ static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkEnumList *role_list;
-static PkStatusbar *statusbar;
+static GpkStatusbar *statusbar;
 
 enum
 {
@@ -224,7 +224,7 @@ pk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer 
 static void
 pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
-	pk_statusbar_set_status (statusbar, status);
+	gpk_statusbar_set_status (statusbar, status);
 }
 
 /**
@@ -366,9 +366,9 @@ main (int argc, char *argv[])
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* use the in-statusbar for progress */
-	statusbar = pk_statusbar_new ();
+	statusbar = gpk_statusbar_new ();
 	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
-	pk_statusbar_set_widget (statusbar, widget);
+	gpk_statusbar_set_widget (statusbar, widget);
 
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */

@@ -40,13 +40,13 @@
 #include "gpk-statusbar.h"
 #include "gpk-common.h"
 
-static void     pk_statusbar_class_init	(PkStatusbarClass *klass);
-static void     pk_statusbar_init	(PkStatusbar      *sbar);
-static void     pk_statusbar_finalize	(GObject          *object);
+static void     gpk_statusbar_class_init	(GpkStatusbarClass *klass);
+static void     gpk_statusbar_init	(GpkStatusbar      *sbar);
+static void     gpk_statusbar_finalize	(GObject          *object);
 
-#define PK_STATUSBAR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_STATUSBAR, PkStatusbarPrivate))
+#define GPK_STATUSBAR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_STATUSBAR, GpkStatusbarPrivate))
 
-struct PkStatusbarPrivate
+struct GpkStatusbarPrivate
 {
 	guint			 timer_id;
 	guint			 last_remaining;
@@ -55,25 +55,25 @@ struct PkStatusbarPrivate
 	GtkProgressBar		*progressbar;
 };
 
-G_DEFINE_TYPE (PkStatusbar, pk_statusbar, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkStatusbar, gpk_statusbar, G_TYPE_OBJECT)
 
 /**
- * pk_statusbar_class_init:
- * @klass: The PkStatusbarClass
+ * gpk_statusbar_class_init:
+ * @klass: The GpkStatusbarClass
  **/
 static void
-pk_statusbar_class_init (PkStatusbarClass *klass)
+gpk_statusbar_class_init (GpkStatusbarClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_statusbar_finalize;
-	g_type_class_add_private (klass, sizeof (PkStatusbarPrivate));
+	object_class->finalize = gpk_statusbar_finalize;
+	g_type_class_add_private (klass, sizeof (GpkStatusbarPrivate));
 }
 
 /**
- * pk_statusbar_set_widget:
+ * gpk_statusbar_set_widget:
  **/
 gboolean
-pk_statusbar_set_widget (PkStatusbar *sbar, GtkWidget *widget)
+gpk_statusbar_set_widget (GpkStatusbar *sbar, GtkWidget *widget)
 {
 	GtkWidget *hbox;
 	GtkWidget *icon_container;
@@ -110,21 +110,21 @@ pk_statusbar_set_widget (PkStatusbar *sbar, GtkWidget *widget)
 }
 
 /**
- * pk_statusbar_pulse_timeout:
+ * gpk_statusbar_pulse_timeout:
  **/
 static gboolean
-pk_statusbar_pulse_timeout (gpointer data)
+gpk_statusbar_pulse_timeout (gpointer data)
 {
-	PkStatusbar *sbar = (PkStatusbar *) data;
+	GpkStatusbar *sbar = (GpkStatusbar *) data;
 	gtk_progress_bar_pulse (sbar->priv->progressbar);
 	return TRUE;
 }
 
 /**
- * pk_statusbar_set_percentage:
+ * gpk_statusbar_set_percentage:
  **/
 gboolean
-pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
+gpk_statusbar_set_percentage (GpkStatusbar *sbar, guint percentage)
 {
 	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
@@ -139,7 +139,7 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 			return TRUE;
 		}
 		sbar->priv->timer_id = g_timeout_add (GPK_PROGRESS_BAR_PULSE_DELAY,
-						      pk_statusbar_pulse_timeout, sbar);
+						      gpk_statusbar_pulse_timeout, sbar);
 		sbar->priv->last_percentage = percentage;
 		return TRUE;
 	}
@@ -162,10 +162,10 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 }
 
 /**
- * pk_statusbar_set_status:
+ * gpk_statusbar_set_status:
  **/
 gboolean
-pk_statusbar_set_status (PkStatusbar *sbar, PkStatusEnum status)
+gpk_statusbar_set_status (GpkStatusbar *sbar, PkStatusEnum status)
 {
 	const gchar *text;
 
@@ -181,10 +181,10 @@ pk_statusbar_set_status (PkStatusbar *sbar, PkStatusEnum status)
 }
 
 /**
- * pk_statusbar_set_remaining:
+ * gpk_statusbar_set_remaining:
  **/
 gboolean
-pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
+gpk_statusbar_set_remaining (GpkStatusbar *sbar, guint remaining)
 {
 	gchar *time;
 	gchar *text;
@@ -219,10 +219,10 @@ pk_statusbar_set_remaining (PkStatusbar *sbar, guint remaining)
 }
 
 /**
- * pk_statusbar_hide:
+ * gpk_statusbar_hide:
  **/
 gboolean
-pk_statusbar_hide (PkStatusbar *sbar)
+gpk_statusbar_hide (GpkStatusbar *sbar)
 {
 	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
@@ -238,13 +238,13 @@ pk_statusbar_hide (PkStatusbar *sbar)
 }
 
 /**
- * pk_statusbar_init:
+ * gpk_statusbar_init:
  * @statusbar: This class instance
  **/
 static void
-pk_statusbar_init (PkStatusbar *sbar)
+gpk_statusbar_init (GpkStatusbar *sbar)
 {
-	sbar->priv = PK_STATUSBAR_GET_PRIVATE (sbar);
+	sbar->priv = GPK_STATUSBAR_GET_PRIVATE (sbar);
 	sbar->priv->timer_id = 0;
 	sbar->priv->last_percentage = PK_CLIENT_PERCENTAGE_INVALID;
 	sbar->priv->last_remaining = 0;
@@ -255,18 +255,18 @@ pk_statusbar_init (PkStatusbar *sbar)
 }
 
 /**
- * pk_statusbar_finalize:
+ * gpk_statusbar_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_statusbar_finalize (GObject *object)
+gpk_statusbar_finalize (GObject *object)
 {
-	PkStatusbar *sbar;
+	GpkStatusbar *sbar;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_STATUSBAR (object));
 
-	sbar = PK_STATUSBAR (object);
+	sbar = GPK_STATUSBAR (object);
 	g_return_if_fail (sbar->priv != NULL);
 
 	/* don't spin anymore */
@@ -274,19 +274,19 @@ pk_statusbar_finalize (GObject *object)
 		g_source_remove (sbar->priv->timer_id);
 	}
 
-	G_OBJECT_CLASS (pk_statusbar_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_statusbar_parent_class)->finalize (object);
 }
 
 /**
- * pk_statusbar_new:
+ * gpk_statusbar_new:
  *
- * Return value: a new PkStatusbar object.
+ * Return value: a new GpkStatusbar object.
  **/
-PkStatusbar *
-pk_statusbar_new (void)
+GpkStatusbar *
+gpk_statusbar_new (void)
 {
-	PkStatusbar *sbar;
-	sbar = g_object_new (PK_TYPE_STATUSBAR, NULL);
-	return PK_STATUSBAR (sbar);
+	GpkStatusbar *sbar;
+	sbar = g_object_new (GPK_TYPE_STATUSBAR, NULL);
+	return GPK_STATUSBAR (sbar);
 }
 
