@@ -292,14 +292,44 @@
 <section id="update-viewer">
   <title>Update Viewer</title>
    <para>
-    You can update your system via <menuchoice><guimenu>System</guimenu><guisubmenu>Administration</guisubmenu><guimenuitem>Update System</guimenuitem></menuchoice>.
-    When you click on this, the application launches and immediately starts
-    checking for updates.
+     You can update your system via <menuchoice><guimenu>System</guimenu><guisubmenu>Administration</guisubmenu><guimenuitem>Update System</guimenuitem></menuchoice>
+     or by selecting <menuchoice><guimenuitem>Show Updates</guimenuitem></menuchoice>
+     from the update icon in the notification area.
+     When you do this, the update viewer application launches and immediately
+     starts checking for updates. Once this check completes, it shows you an
+     overview of available updates, grouped by severity. The severities range
+     from security updates over important updates to bug fix updates and
+     finally enhancements.
+   </para>
+   <note><para>
+    Note that the severity information must be provided by the software
+    repositories where the packages originate. This information may not
+    be available for development branches of distributions.
+   </para></note>
+   <!-- TODO Explain the Last refresh/Last update -->
+   <para>
     If you launched the application a while back, you can choose to manually
     refresh and verify the presence of updates.
     There is a option to view the history of updates including
     previous installations, removal or updates of software.
   </para>
+
+  <section id="update-viewer-details">
+    <title>Detailed information about updates</title>
+    <para>
+      The <guibutton>Review</guibutton> button brings up a listing
+      of the individual updates that are available. The area below
+      the list displays detailed information about the selected update.
+      The information may include references to bugs and vulnerability
+      reports that are fixed by the update.
+    </para>
+    <note><para>
+      Note that the detailed update information must be provided by the
+      software repositories where the packages originate. This information
+      may not be available for development branches of distributions.
+    </para></note>
+    <!-- TODO Explain selecting individual updates -->
+  </section>
 </section>
 
 <section id="prefs">

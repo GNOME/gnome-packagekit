@@ -112,9 +112,11 @@ typedef enum {
  * pk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget, gboolean data)
+pk_button_help_cb (GtkWidget *widget, gpointer data)
 {
-	pk_show_help ("update-viewer");
+	const char *id = data;
+
+	pk_show_help (id);
 }
 
 /**
@@ -1789,7 +1791,11 @@ main (int argc, char *argv[])
 
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), NULL);
+			  G_CALLBACK (pk_button_help_cb), "update-viewer");
+
+	widget = glade_xml_get_widget (glade_xml, "button_help2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_button_help_cb), "update-viewer-details");
 
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
