@@ -96,7 +96,7 @@ gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
-	pk_show_help (NULL);
+	pk_show_help ("update-icon");
 }
 
 /**
