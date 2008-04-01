@@ -353,9 +353,11 @@ gpk_smart_icon_finalize (GObject *object)
 
 	sicon = PK_SMART_ICON (object);
 	g_return_if_fail (sicon->priv != NULL);
+
+	g_free (sicon->priv->new);
+	g_free (sicon->priv->current);
+
 	g_object_unref (sicon->priv->status_icon);
-	g_object_unref (sicon->priv->new);
-	g_object_unref (sicon->priv->current);
 	if (sicon->priv->dialog != NULL) {
 		notify_notification_close (sicon->priv->dialog, NULL);
 		g_object_unref (sicon->priv->dialog);
