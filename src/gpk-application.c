@@ -1749,6 +1749,7 @@ static void
 pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *application)
 {
 	gboolean enabled;
+	gchar *filter;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1765,6 +1766,9 @@ pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *applic
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
 	}
 
+	filter = pk_enum_list_to_string (application->priv->current_filter);
+	pk_debug ("filter now = %s", filter);
+	g_free (filter);
 
 	/* refresh the search results */
 	pk_application_perform_search (application);
@@ -1778,6 +1782,7 @@ static void
 pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *application)
 {
 	gboolean enabled;
+	gchar *filter;
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1793,6 +1798,10 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
 	}
+
+	filter = pk_enum_list_to_string (application->priv->current_filter);
+	pk_debug ("filter now = %s", filter);
+	g_free (filter);
 
 	/* refresh the search results */
 	pk_application_perform_search (application);
@@ -2217,6 +2226,8 @@ pk_application_init (PkApplication *application)
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
 						 PK_CONF_APPLICATION_FILTER_BASENAME, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
+		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
+		pk_application_menu_filter_basename_cb (widget, application);
 	} else {
 		gtk_widget_hide (widget);
 	}
@@ -2228,6 +2239,8 @@ pk_application_init (PkApplication *application)
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
 						 PK_CONF_APPLICATION_FILTER_NEWEST, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
+		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
+		pk_application_menu_filter_newest_cb (widget, application);
 	} else {
 		gtk_widget_hide (widget);
 	}
