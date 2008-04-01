@@ -1185,6 +1185,7 @@ pk_updates_check_blocked_packages (PkClient *client)
 	GString *string;
 	gboolean exists = FALSE;
 	gchar *text;
+	gchar *title_bold;
 	GtkWidget *widget;
 
 	string = g_string_new ("");
@@ -1212,14 +1213,18 @@ pk_updates_check_blocked_packages (PkClient *client)
 	/* set the widget text */
 	if (exists) {
 		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		gtk_label_set_markup (GTK_LABEL (widget), _("<b>Some updates were not updated</b>"));
+		title_bold = g_strdup_printf ("<b>%s</b>", _("Some updates were not updated"));
+		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
+		g_free (title_bold);
 
 		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
 		gtk_label_set_markup (GTK_LABEL (widget), text);
 		gtk_widget_show (widget);
 	} else {
 		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		gtk_label_set_markup (GTK_LABEL (widget), _("<b>System Update Completed</b>"));
+		title_bold = g_strdup_printf ("<b>%s</b>", _("System update completed"));
+		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
+		g_free (title_bold);
 
 		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
 		gtk_widget_hide (widget);
