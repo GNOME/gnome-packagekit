@@ -395,7 +395,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Transaction Viewer"));
+	g_option_context_set_summary (context, _("Software Log Viewer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

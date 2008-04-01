@@ -603,16 +603,16 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Could not remove a protected system package");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
-		text = _("The transaction was canceled");
+		text = _("The task was canceled");
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
-		text = _("The transaction was forcibly canceled");
+		text = _("The task was forcibly canceled");
 		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
 		text = _("Reading the config file failed");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The transaction cannot be cancelled");
+		text = _("The task cannot be cancelled");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages cannot be installed");
@@ -676,7 +676,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please check your group list and try again.");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
-		text = _("A package could not be found that allows the transaction to complete.\n"
+		text = _("A package could not be found that allows the task to complete.\n"
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_FILTER_INVALID:
@@ -687,7 +687,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "This normally indicates an internal error and should be reported.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_ERROR:
-		text = _("An unspecified transaction error has occurred.\n"
+		text = _("An unspecified task error has occurred.\n"
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
@@ -698,10 +698,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("Removing a protected system package is not alloed.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
-		text = _("The transaction was canceled successfully and no packages were changed.");
+		text = _("The task was canceled successfully and no packages were changed.");
 		break;
 	case PK_ERROR_ENUM_PROCESS_KILL:
-		text = _("The transaction was canceled successfully and no packages were changed.\n"
+		text = _("The task was canceled successfully and no packages were changed.\n"
 			 "The backend did not exit cleanly.");
 		break;
 	case PK_ERROR_ENUM_FAILED_CONFIG_PARSING:
@@ -709,7 +709,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please make sure configuration is valid.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The transaction is not safe to be cancelled at this time.");
+		text = _("The task is not safe to be cancelled at this time.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages are not normally installed this way.\n"
@@ -783,10 +783,10 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 	const gchar *text = NULL;
 	switch (message) {
 	case PK_MESSAGE_ENUM_NOTICE:
-		text = _("PackageKit transaction notice");
+		text = _("PackageKit notice");
 		break;
 	case PK_MESSAGE_ENUM_WARNING:
-		text = _("PackageKit transaction warning");
+		text = _("PackageKit warning");
 		break;
 	case PK_MESSAGE_ENUM_DAEMON:
 		text = _("PackageKit daemon");
@@ -815,7 +815,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Waiting for other tasks to complete");
 		break;
 	case PK_STATUS_ENUM_RUNNING:
-		text = _("Running transaction");
+		text = _("Running task");
 		break;
 	case PK_STATUS_ENUM_QUERY:
 		text = _("Querying");
@@ -854,10 +854,10 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Rolling back");
 		break;
 	case PK_STATUS_ENUM_TEST_COMMIT:
-		text = _("Trying transaction");
+		text = _("Testing changes");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
-		text = _("Committing transaction");
+		text = _("Committing changes");
 		break;
 	case PK_STATUS_ENUM_REQUEST:
 		text = _("Requesting data");
