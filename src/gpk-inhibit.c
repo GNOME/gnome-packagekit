@@ -41,37 +41,37 @@
 #include "gpk-inhibit.h"
 #include "gpk-common.h"
 
-static void     pk_inhibit_class_init	(PkInhibitClass *klass);
-static void     pk_inhibit_init	(PkInhibit      *inhibit);
-static void     pk_inhibit_finalize	(GObject          *object);
+static void     gpk_inhibit_class_init	(GpkInhibitClass *klass);
+static void     gpk_inhibit_init	(GpkInhibit      *inhibit);
+static void     gpk_inhibit_finalize	(GObject          *object);
 
-#define PK_INHIBIT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_INHIBIT, PkInhibitPrivate))
+#define GPK_INHIBIT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_INHIBIT, GpkInhibitPrivate))
 
-struct PkInhibitPrivate
+struct GpkInhibitPrivate
 {
 	DBusGProxy		*proxy_gpm;
 	guint			 cookie;
 };
 
-G_DEFINE_TYPE (PkInhibit, pk_inhibit, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkInhibit, gpk_inhibit, G_TYPE_OBJECT)
 
 /**
- * pk_inhibit_class_init:
- * @klass: The PkInhibitClass
+ * gpk_inhibit_class_init:
+ * @klass: The GpkInhibitClass
  **/
 static void
-pk_inhibit_class_init (PkInhibitClass *klass)
+gpk_inhibit_class_init (GpkInhibitClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_inhibit_finalize;
-	g_type_class_add_private (klass, sizeof (PkInhibitPrivate));
+	object_class->finalize = gpk_inhibit_finalize;
+	g_type_class_add_private (klass, sizeof (GpkInhibitPrivate));
 }
 
 /**
- * pk_inhibit_create:
+ * gpk_inhibit_create:
  **/
 gboolean
-pk_inhibit_create (PkInhibit *inhibit)
+gpk_inhibit_create (GpkInhibit *inhibit)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -105,10 +105,10 @@ pk_inhibit_create (PkInhibit *inhibit)
 }
 
 /**
- * pk_inhibit_remove:
+ * gpk_inhibit_remove:
  **/
 gboolean
-pk_inhibit_remove (PkInhibit *inhibit)
+gpk_inhibit_remove (GpkInhibit *inhibit)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -141,15 +141,15 @@ pk_inhibit_remove (PkInhibit *inhibit)
 }
 
 /**
- * pk_inhibit_init:
+ * gpk_inhibit_init:
  * @inhibit: This class instance
  **/
 static void
-pk_inhibit_init (PkInhibit *inhibit)
+gpk_inhibit_init (GpkInhibit *inhibit)
 {
 	DBusGConnection *connection;
 	GError *error = NULL;
-	inhibit->priv = PK_INHIBIT_GET_PRIVATE (inhibit);
+	inhibit->priv = GPK_INHIBIT_GET_PRIVATE (inhibit);
 	inhibit->priv->cookie = 0;
 
 	/* connect to session bus */
@@ -171,35 +171,35 @@ pk_inhibit_init (PkInhibit *inhibit)
 }
 
 /**
- * pk_inhibit_finalize:
+ * gpk_inhibit_finalize:
  * @object: The object to finalize
  **/
 static void
-pk_inhibit_finalize (GObject *object)
+gpk_inhibit_finalize (GObject *object)
 {
-	PkInhibit *inhibit;
+	GpkInhibit *inhibit;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_INHIBIT (object));
 
-	inhibit = PK_INHIBIT (object);
+	inhibit = GPK_INHIBIT (object);
 	g_return_if_fail (inhibit->priv != NULL);
 
 	g_object_unref (inhibit->priv->proxy_gpm);
 
-	G_OBJECT_CLASS (pk_inhibit_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_inhibit_parent_class)->finalize (object);
 }
 
 /**
- * pk_inhibit_new:
+ * gpk_inhibit_new:
  *
- * Return value: a new PkInhibit object.
+ * Return value: a new GpkInhibit object.
  **/
-PkInhibit *
-pk_inhibit_new (void)
+GpkInhibit *
+gpk_inhibit_new (void)
 {
-	PkInhibit *inhibit;
-	inhibit = g_object_new (PK_TYPE_INHIBIT, NULL);
-	return PK_INHIBIT (inhibit);
+	GpkInhibit *inhibit;
+	inhibit = g_object_new (GPK_TYPE_INHIBIT, NULL);
+	return GPK_INHIBIT (inhibit);
 }
 

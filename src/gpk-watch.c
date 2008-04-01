@@ -65,7 +65,7 @@ struct GpkWatchPrivate
 	PkClient		*client;
 	GpkSmartIcon		*sicon;
 	GpkSmartIcon		*sicon_restart;
-	PkInhibit		*inhibit;
+	GpkInhibit		*inhibit;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
@@ -855,9 +855,9 @@ gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 
 	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
 	if (is_locked) {
-		pk_inhibit_create (watch->priv->inhibit);
+		gpk_inhibit_create (watch->priv->inhibit);
 	} else {
-		pk_inhibit_remove (watch->priv->inhibit);
+		gpk_inhibit_remove (watch->priv->inhibit);
 	}
 }
 
@@ -892,7 +892,7 @@ gpk_watch_init (GpkWatch *watch)
 			  G_CALLBACK (gpk_watch_message_cb), watch);
 
 	/* do session inhibit */
-	watch->priv->inhibit = pk_inhibit_new ();
+	watch->priv->inhibit = gpk_inhibit_new ();
 
 	/* right click actions are common */
 	status_icon = gpk_smart_icon_get_status_icon (watch->priv->sicon);
