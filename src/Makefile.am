@@ -241,6 +241,7 @@ gpk_self_test_CPPFLAGS=	\
 BUILT_SOURCES = 					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
+	gpk-interface.h					\
 	$(NULL)
 
 gpk-marshal.c: gpk-marshal.list
@@ -250,9 +251,16 @@ gpk-marshal.c: gpk-marshal.list
 gpk-marshal.h: gpk-marshal.list
 	glib-genmarshal $< --prefix=gpk_marshal --header > $@
 
+gpk-interface.h: gpk-interface.xml
+	$(LIBTOOL) --mode=execute dbus-binding-tool	\
+		--prefix=gpk_dbus			\
+		--mode=glib-server			\
+		--output=gpk-interface.h		\
+		$(srcdir)/gpk-interface.xml
 
 EXTRA_DIST =						\
 	gpk-marshal.list				\
+	gpk-interface.xml				\
 	$(NULL)
 
 clean-local:
