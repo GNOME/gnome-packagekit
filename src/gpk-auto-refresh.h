@@ -50,7 +50,7 @@ typedef struct
 
 GType		 gpk_auto_refresh_get_type		(void);
 GpkAutoRefresh	*gpk_auto_refresh_new			(void);
-gboolean	 gpk_auto_refresh_get_on_battery		(GpkAutoRefresh *arefresh);
+gboolean	 gpk_auto_refresh_get_on_battery	(GpkAutoRefresh *arefresh);
 
 G_END_DECLS
 

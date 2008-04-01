@@ -641,7 +641,7 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
  * pk_monitor_action_unref_cb:
  **/
 static void
-pk_monitor_action_unref_cb (PkProgress *progress, GpkWatch *watch)
+pk_monitor_action_unref_cb (GpkProgress *progress, GpkWatch *watch)
 {
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
@@ -656,7 +656,7 @@ static void
 gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 {
 	gchar *tid;
-	PkProgress *progress = NULL;
+	GpkProgress *progress = NULL;
 
 	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
@@ -665,10 +665,10 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
 
 	/* launch the UI */
-	progress = pk_progress_new ();
+	progress = gpk_progress_new ();
 	g_signal_connect (progress, "action-unref",
 			  G_CALLBACK (pk_monitor_action_unref_cb), watch);
-	pk_progress_monitor_tid (progress, tid);
+	gpk_progress_monitor_tid (progress, tid);
 }
 
 /**
@@ -718,7 +718,7 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);
 
-		/* we need the job ID so we know what PkProgress to show */
+		/* we need the job ID so we know what GpkProgress to show */
 		g_object_set_data (G_OBJECT (widget), "tid", (gpointer) item->tid);
 
 		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);

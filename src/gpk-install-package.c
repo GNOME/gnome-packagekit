@@ -38,15 +38,15 @@
 #include "gpk-progress.h"
 #include "gpk-common.h"
 
-static PkProgress *progress = NULL;
+static GpkProgress *progress = NULL;
 static gchar *package = NULL;
 static GMainLoop *loop = NULL;
 
 /**
- * pk_monitor_action_unref_cb:
+ * gpk_install_package_action_unref_cb:
  **/
 static void
-pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
+gpk_install_package_action_unref_cb (GpkProgress *progress, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	g_object_unref (progress);
@@ -54,19 +54,19 @@ pk_monitor_action_unref_cb (PkProgress *progress, gpointer data)
 }
 
 /**
- * pk_monitor_install_finished_cb:
+ * gpk_install_package_install_finished_cb:
  **/
 static void
-pk_monitor_install_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
+gpk_install_package_install_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
 {
 	g_object_unref (client);
 }
 
 /**
- * pk_monitor_resolve_finished_cb:
+ * gpk_install_package_resolve_finished_cb:
  **/
 static void
-pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
+gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
 {
 	gchar *tid;
 	gboolean ret;
@@ -85,7 +85,7 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 	/* create a new instance */
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_monitor_install_finished_cb), NULL);
+			  G_CALLBACK (gpk_install_package_install_finished_cb), NULL);
 
 	pk_warning ("Installing '%s'", package);
 	ret = pk_client_install_package (client, package, NULL);
@@ -99,19 +99,19 @@ pk_monitor_resolve_finished_cb (PkClient *client, PkExitEnum exit_code, guint ru
 
 	tid = pk_client_get_tid (client);
 	/* create a new progress object */
-	progress = pk_progress_new ();
+	progress = gpk_progress_new ();
 	g_signal_connect (progress, "action-unref",
-			  G_CALLBACK (pk_monitor_action_unref_cb), loop);
-	pk_progress_monitor_tid (progress, tid);
+			  G_CALLBACK (gpk_install_package_action_unref_cb), loop);
+	gpk_progress_monitor_tid (progress, tid);
 	g_free (tid);
 }
 
 /**
- * pk_monitor_resolve_package_cb:
+ * gpk_install_package_resolve_package_cb:
  **/
 static void
-pk_monitor_resolve_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			       const gchar *summary, gboolean data)
+gpk_install_package_resolve_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+					const gchar *summary, gboolean data)
 {
 	/* save */
 	pk_debug ("package '%s' resolved!", package_id);
@@ -178,9 +178,9 @@ main (int argc, char *argv[])
 
 	client = pk_client_new ();
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_monitor_resolve_finished_cb), NULL);
+			  G_CALLBACK (gpk_install_package_resolve_finished_cb), NULL);
 	g_signal_connect (client, "package",
-			  G_CALLBACK (pk_monitor_resolve_package_cb), NULL);
+			  G_CALLBACK (gpk_install_package_resolve_package_cb), NULL);
 	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_INSTALLED);
 	ret = pk_client_resolve (client, filter, argv[1], NULL);
 	if (ret == FALSE) {

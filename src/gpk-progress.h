@@ -19,38 +19,38 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __PK_PROGRESS_H
-#define __PK_PROGRESS_H
+#ifndef __GPK_PROGRESS_H
+#define __GPK_PROGRESS_H
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define PK_TYPE_PROGRESS		(pk_progress_get_type ())
-#define PK_PROGRESS(o)			(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_PROGRESS, PkProgress))
-#define PK_PROGRESS_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_PROGRESS, PkProgressClass))
-#define PK_IS_PROGRESS(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), PK_TYPE_PROGRESS))
-#define PK_IS_PROGRESS_CLASS(k)		(G_TYPE_CHECK_CLASS_TYPE ((k), PK_TYPE_PROGRESS))
-#define PK_PROGRESS_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_PROGRESS, PkProgressClass))
+#define GPK_TYPE_PROGRESS		(gpk_progress_get_type ())
+#define GPK_PROGRESS(o)			(G_TYPE_CHECK_INSTANCE_CAST ((o), GPK_TYPE_PROGRESS, GpkProgress))
+#define GPK_PROGRESS_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), GPK_TYPE_PROGRESS, GpkProgressClass))
+#define PK_IS_PROGRESS(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GPK_TYPE_PROGRESS))
+#define PK_IS_PROGRESS_CLASS(k)		(G_TYPE_CHECK_CLASS_TYPE ((k), GPK_TYPE_PROGRESS))
+#define GPK_PROGRESS_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GPK_TYPE_PROGRESS, GpkProgressClass))
 
-typedef struct PkProgressPrivate PkProgressPrivate;
+typedef struct GpkProgressPrivate GpkProgressPrivate;
 
 typedef struct
 {
 	GObject		 parent;
-	PkProgressPrivate *priv;
-} PkProgress;
+	GpkProgressPrivate *priv;
+} GpkProgress;
 
 typedef struct
 {
 	GObjectClass	parent_class;
-} PkProgressClass;
+} GpkProgressClass;
 
-GType		 pk_progress_get_type			(void);
-PkProgress	*pk_progress_new			(void);
-gboolean	 pk_progress_monitor_tid		(PkProgress	*progress,
+GType		 gpk_progress_get_type			(void);
+GpkProgress	*gpk_progress_new			(void);
+gboolean	 gpk_progress_monitor_tid		(GpkProgress	*progress,
 							 const gchar	*tid);
 
 G_END_DECLS
 
-#endif	/* __PK_PROGRESS_H */
+#endif	/* __GPK_PROGRESS_H */

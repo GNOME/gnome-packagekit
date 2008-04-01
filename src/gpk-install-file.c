@@ -49,7 +49,7 @@ typedef enum {
 } PkPageEnum;
 
 static void
-pk_updates_set_page (PkPageEnum page)
+gpk_install_file_set_page (PkPageEnum page)
 {
         GList *list, *l;
         GtkWidget *widget;
@@ -67,7 +67,7 @@ pk_updates_set_page (PkPageEnum page)
 }
 
 static gboolean
-finished_timeout (gpointer data)
+gpk_install_finished_timeout (gpointer data)
 {
 	gtk_main_quit ();
 
@@ -75,15 +75,15 @@ finished_timeout (gpointer data)
 }
 
 static void
-pk_install_file_finished_cb (PkClient   *client,
+gpk_install_file_finished_cb (PkClient   *client,
 			     PkExitEnum  exit,
 			     guint       runtime,
 			     gpointer    data)
 {
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
-                pk_updates_set_page (PAGE_CONFIRM);
+                gpk_install_file_set_page (PAGE_CONFIRM);
 
-		g_timeout_add_seconds (30, finished_timeout, NULL);
+		g_timeout_add_seconds (30, gpk_install_finished_timeout, NULL);
 	}
 
 }
@@ -91,7 +91,7 @@ pk_install_file_finished_cb (PkClient   *client,
 static gint pulse_timeout = 0;
 
 static void
-pk_install_file_progress_changed_cb (PkClient *client,
+gpk_install_file_progress_changed_cb (PkClient *client,
 				     guint     percentage,
 				     guint     subpercentage,
 				     guint     elapsed,
@@ -125,9 +125,9 @@ pulse_progress (gpointer data)
 }
 
 static void
-pk_install_file_status_changed_cb (PkClient     *client,
-				   PkStatusEnum  status,
-				   gpointer      data)
+gpk_install_file_status_changed_cb (PkClient     *client,
+				    PkStatusEnum  status,
+				    gpointer      data)
 {
         GtkWidget *widget;
         gchar *text;
@@ -148,17 +148,17 @@ pk_install_file_status_changed_cb (PkClient     *client,
 }
 
 static void
-pk_install_file_error_code_cb (PkClient        *client,
-			       PkErrorCodeEnum  code,
-			       const gchar     *details,
-			       gpointer         data)
+gpk_install_file_error_code_cb (PkClient        *client,
+			        PkErrorCodeEnum  code,
+			        const gchar     *details,
+			        gpointer         data)
 {
         GtkWidget *widget;
         const gchar *title;
         gchar *title_bold;
         gchar *details_safe;
 
-        pk_updates_set_page (PAGE_ERROR);
+        gpk_install_file_set_page (PAGE_ERROR);
 
         /* set bold title */
         widget = glade_xml_get_widget (glade_xml, "label_error_title");
@@ -177,8 +177,8 @@ pk_install_file_error_code_cb (PkClient        *client,
 
 static gboolean
 pk_window_delete_event_cb (GtkWidget    *widget,
-                            GdkEvent    *event,
-                            gpointer    data)
+                           GdkEvent    *event,
+                           gpointer    data)
 {
         gtk_main_quit ();
 
@@ -252,13 +252,13 @@ main (int argc, char *argv[])
 	client = pk_client_new ();
 
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_install_file_finished_cb), NULL);
+			  G_CALLBACK (gpk_install_file_finished_cb), NULL);
 	g_signal_connect (client, "progress-changed",
-			  G_CALLBACK (pk_install_file_progress_changed_cb), NULL);
+			  G_CALLBACK (gpk_install_file_progress_changed_cb), NULL);
 	g_signal_connect (client, "status-changed",
-			  G_CALLBACK (pk_install_file_status_changed_cb), NULL);
+			  G_CALLBACK (gpk_install_file_status_changed_cb), NULL);
 	g_signal_connect (client, "error-code",
-			  G_CALLBACK (pk_install_file_error_code_cb), NULL);
+			  G_CALLBACK (gpk_install_file_error_code_cb), NULL);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
@@ -283,7 +283,7 @@ main (int argc, char *argv[])
         widget = glade_xml_get_widget (glade_xml, "progress_part_label");
         gtk_label_set_label (GTK_LABEL (widget), "");
 
-	pk_updates_set_page (PAGE_PROGRESS);
+	gpk_install_file_set_page (PAGE_PROGRESS);
 
 	error = NULL;
 	ret = pk_client_install_file (client, argv[1], &error);

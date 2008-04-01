@@ -138,7 +138,7 @@ pk_statusbar_set_percentage (PkStatusbar *sbar, guint percentage)
 		if (sbar->priv->timer_id != 0) {
 			return TRUE;
 		}
-		sbar->priv->timer_id = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
+		sbar->priv->timer_id = g_timeout_add (GPK_PROGRESS_BAR_PULSE_DELAY,
 						      pk_statusbar_pulse_timeout, sbar);
 		sbar->priv->last_percentage = percentage;
 		return TRUE;
@@ -251,7 +251,7 @@ pk_statusbar_init (PkStatusbar *sbar)
 
 	sbar->priv->progressbar = GTK_PROGRESS_BAR (gtk_progress_bar_new ());
 	gtk_progress_bar_set_fraction (sbar->priv->progressbar, 0.0);
-	gtk_progress_bar_set_pulse_step (sbar->priv->progressbar, PK_PROGRESS_BAR_PULSE_STEP);
+	gtk_progress_bar_set_pulse_step (sbar->priv->progressbar, GPK_PROGRESS_BAR_PULSE_STEP);
 }
 
 /**

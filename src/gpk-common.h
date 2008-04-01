@@ -27,8 +27,8 @@
 
 G_BEGIN_DECLS
 
-#define PK_PROGRESS_BAR_PULSE_DELAY	50
-#define PK_PROGRESS_BAR_PULSE_STEP	0.05
+#define GPK_PROGRESS_BAR_PULSE_DELAY	50
+#define GPK_PROGRESS_BAR_PULSE_STEP	0.05
 
 #define PK_CONF_NOTIFY_COMPLETED	"/apps/gnome-packagekit/notify_complete"
 #define PK_CONF_NOTIFY_AVAILABLE	"/apps/gnome-packagekit/notify_available"

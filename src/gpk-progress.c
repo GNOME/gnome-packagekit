@@ -38,13 +38,13 @@
 #include "gpk-common.h"
 #include "gpk-progress.h"
 
-static void     pk_progress_class_init (PkProgressClass *klass);
-static void     pk_progress_init       (PkProgress      *progress);
-static void     pk_progress_finalize   (GObject	    *object);
+static void     gpk_progress_class_init (GpkProgressClass *klass);
+static void     gpk_progress_init       (GpkProgress      *progress);
+static void     gpk_progress_finalize   (GObject	    *object);
 
-#define PK_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_PROGRESS, PkProgressPrivate))
+#define GPK_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_PROGRESS, GpkProgressPrivate))
 
-struct PkProgressPrivate
+struct GpkProgressPrivate
 {
 	GladeXML		*glade_xml;
 	PkClient		*client;
@@ -61,18 +61,18 @@ enum {
 
 static guint	     signals [LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE (PkProgress, pk_progress, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkProgress, gpk_progress, G_TYPE_OBJECT)
 
 /**
- * pk_progress_class_init:
+ * gpk_progress_class_init:
  * @klass: This graph class instance
  **/
 static void
-pk_progress_class_init (PkProgressClass *klass)
+gpk_progress_class_init (GpkProgressClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_progress_finalize;
-	g_type_class_add_private (klass, sizeof (PkProgressPrivate));
+	object_class->finalize = gpk_progress_finalize;
+	g_type_class_add_private (klass, sizeof (GpkProgressPrivate));
 
 	signals [ACTION_UNREF] =
 		g_signal_new ("action-unref",
@@ -84,10 +84,10 @@ pk_progress_class_init (PkProgressClass *klass)
 }
 
 /**
- * pk_progress_error_code_cb:
+ * gpk_progress_error_code_cb:
  **/
 static void
-pk_progress_error_message (PkProgress *progress, const gchar *title, const gchar *details)
+gpk_progress_error_message (GpkProgress *progress, const gchar *title, const gchar *details)
 {
 	GtkWidget *main_window;
 	GtkWidget *dialog;
@@ -110,10 +110,10 @@ pk_progress_error_message (PkProgress *progress, const gchar *title, const gchar
 }
 
 /**
- * pk_progress_clean_exit:
+ * gpk_progress_clean_exit:
  **/
 static void
-pk_progress_clean_exit (PkProgress *progress)
+gpk_progress_clean_exit (GpkProgress *progress)
 {
 	/* remove the back and forth progress bar update */
 	if (progress->priv->no_percentage_evt != 0) {
@@ -128,22 +128,22 @@ pk_progress_clean_exit (PkProgress *progress)
 }
 
 /**
- * pk_progress_help_cb:
+ * gpk_progress_help_cb:
  **/
 static void
-pk_progress_help_cb (GtkWidget  *widget,
-		     PkProgress *progress)
+gpk_progress_help_cb (GtkWidget  *widget,
+		     GpkProgress *progress)
 {
 	pk_debug ("emitting help");
-	pk_progress_clean_exit (progress);
+	gpk_progress_clean_exit (progress);
 }
 
 /**
- * pk_progress_cancel_cb:
+ * gpk_progress_cancel_cb:
  **/
 static void
-pk_progress_cancel_cb (GtkWidget  *widget,
-		       PkProgress *progress)
+gpk_progress_cancel_cb (GtkWidget  *widget,
+		       GpkProgress *progress)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -157,21 +157,21 @@ pk_progress_cancel_cb (GtkWidget  *widget,
 }
 
 /**
- * pk_progress_hide_cb:
+ * gpk_progress_hide_cb:
  **/
 static void
-pk_progress_hide_cb (GtkWidget   *widget,
-		     PkProgress  *progress)
+gpk_progress_hide_cb (GtkWidget   *widget,
+		     GpkProgress  *progress)
 {
 	pk_debug ("hide");
-	pk_progress_clean_exit (progress);
+	gpk_progress_clean_exit (progress);
 }
 
 /**
- * pk_progress_error_code_cb:
+ * gpk_progress_error_code_cb:
  **/
 static void
-pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkProgress *progress)
+gpk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkProgress *progress)
 {
 	/* ignore some errors */
 	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED ||
@@ -179,26 +179,26 @@ pk_progress_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *
 		pk_debug ("ignoring cancel error");
 		return;
 	}
-	pk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
+	gpk_progress_error_message (progress, pk_error_enum_to_localised_text (code), details);
 }
 
 /**
- * pk_progress_finished_timeout:
+ * gpk_progress_finished_timeout:
  **/
 static gboolean
-pk_progress_finished_timeout (gpointer data)
+gpk_progress_finished_timeout (gpointer data)
 {
-	PkProgress *progress = PK_PROGRESS (data);
+	GpkProgress *progress = GPK_PROGRESS (data);
 	pk_debug ("emit unref");
-	pk_progress_clean_exit (progress);
+	gpk_progress_clean_exit (progress);
 	return FALSE;
 }
 
 /**
- * pk_progress_finished_cb:
+ * gpk_progress_finished_cb:
  **/
 static void
-pk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkProgress *progress)
+gpk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkProgress *progress)
 {
 	GtkWidget *widget;
 	pk_debug ("finished");
@@ -223,15 +223,15 @@ pk_progress_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkPro
 
 	progress->priv->task_ended = TRUE;
 	/* wait 5 seconds */
-	progress->priv->no_percentage_evt = g_timeout_add_seconds (30, pk_progress_finished_timeout, progress);
+	progress->priv->no_percentage_evt = g_timeout_add_seconds (30, gpk_progress_finished_timeout, progress);
 }
 
 /**
- * pk_progress_package_cb:
+ * gpk_progress_package_cb:
  */
 static void
-pk_progress_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			const gchar *summary, PkProgress *progress)
+gpk_progress_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+			const gchar *summary, GpkProgress *progress)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
@@ -248,13 +248,13 @@ pk_progress_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_
 }
 
 /**
- * pk_progress_spin_timeout_percentage:
+ * gpk_progress_spin_timeout_percentage:
  **/
 static gboolean
-pk_progress_spin_timeout_percentage (gpointer data)
+gpk_progress_spin_timeout_percentage (gpointer data)
 {
 	GtkWidget *widget;
-	PkProgress *progress = PK_PROGRESS (data);
+	GpkProgress *progress = GPK_PROGRESS (data);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
@@ -273,13 +273,13 @@ pk_progress_spin_timeout_percentage (gpointer data)
 }
 
 /**
- * pk_progress_spin_timeout_subpercentage:
+ * gpk_progress_spin_timeout_subpercentage:
  **/
 static gboolean
-pk_progress_spin_timeout_subpercentage (gpointer data)
+gpk_progress_spin_timeout_subpercentage (gpointer data)
 {
 	GtkWidget *widget;
-	PkProgress *progress = PK_PROGRESS (data);
+	GpkProgress *progress = GPK_PROGRESS (data);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_subpercentage");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
@@ -298,10 +298,10 @@ pk_progress_spin_timeout_subpercentage (gpointer data)
 }
 
 /**
- * pk_progress_action_percentage:
+ * gpk_progress_action_percentage:
  **/
 static void
-pk_progress_action_percentage (PkProgress *progress, guint percentage)
+gpk_progress_action_percentage (GpkProgress *progress, guint percentage)
 {
 	GtkWidget *widget_hbox;
 	GtkWidget *widget_percentage;
@@ -326,8 +326,8 @@ pk_progress_action_percentage (PkProgress *progress, guint percentage)
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
 		/* don't queue duplicate events */
 		if (progress->priv->no_percentage_evt == 0) {
-			progress->priv->no_percentage_evt = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
-									   pk_progress_spin_timeout_percentage, progress);
+			progress->priv->no_percentage_evt = g_timeout_add (GPK_PROGRESS_BAR_PULSE_DELAY,
+									   gpk_progress_spin_timeout_percentage, progress);
 		}
 		return;
 	}
@@ -346,10 +346,10 @@ pk_progress_action_percentage (PkProgress *progress, guint percentage)
 }
 
 /**
- * pk_progress_action_subpercentage:
+ * gpk_progress_action_subpercentage:
  **/
 static void
-pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
+gpk_progress_action_subpercentage (GpkProgress *progress, guint percentage)
 {
 	GtkWidget *widget_hbox;
 	GtkWidget *widget_percentage;
@@ -376,8 +376,8 @@ pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
 		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget_percentage), NULL);
 		/* don't queue duplicate events */
 		if (progress->priv->no_subpercentage_evt == 0) {
-			progress->priv->no_subpercentage_evt = g_timeout_add (PK_PROGRESS_BAR_PULSE_DELAY,
-									      pk_progress_spin_timeout_subpercentage, progress);
+			progress->priv->no_subpercentage_evt = g_timeout_add (GPK_PROGRESS_BAR_PULSE_DELAY,
+									      gpk_progress_spin_timeout_subpercentage, progress);
 		}
 		return;
 	}
@@ -393,17 +393,17 @@ pk_progress_action_subpercentage (PkProgress *progress, guint percentage)
 }
 
 /**
- * pk_progress_progress_changed_cb:
+ * gpk_progress_progress_changed_cb:
  **/
 static void
-pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				 guint elapsed, guint remaining, PkProgress *progress)
+gpk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				 guint elapsed, guint remaining, GpkProgress *progress)
 {
 	GtkWidget *widget;
 	gchar *time;
 
-	pk_progress_action_percentage (progress, percentage);
-	pk_progress_action_subpercentage (progress, subpercentage);
+	gpk_progress_action_percentage (progress, percentage);
+	gpk_progress_action_subpercentage (progress, subpercentage);
 
 	/* set some localised text if we have time */
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "progressbar_percentage");
@@ -417,10 +417,10 @@ pk_progress_progress_changed_cb (PkClient *client, guint percentage, guint subpe
 }
 
 /**
- * pk_progress_allow_cancel_cb:
+ * gpk_progress_allow_cancel_cb:
  **/
 static void
-pk_progress_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkProgress *progress)
+gpk_progress_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkProgress *progress)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
@@ -428,10 +428,10 @@ pk_progress_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkProgress
 }
 
 /**
- * pk_progress_status_changed_cb:
+ * gpk_progress_status_changed_cb:
  */
 static void
-pk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, PkProgress *progress)
+gpk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, GpkProgress *progress)
 {
 	GtkWidget *widget;
 	const gchar *icon_name;
@@ -447,15 +447,15 @@ pk_progress_status_changed_cb (PkClient *client, PkStatusEnum status, PkProgress
 }
 
 /**
- * pk_progress_delete_event_cb:
+ * gpk_progress_delete_event_cb:
  * @event: The event type, unused.
  **/
 static gboolean
-pk_progress_delete_event_cb (GtkWidget	*widget,
+gpk_progress_delete_event_cb (GtkWidget	*widget,
 			     GdkEvent	*event,
-			     PkProgress	*progress)
+			     GpkProgress	*progress)
 {
-	pk_progress_clean_exit (progress);
+	gpk_progress_clean_exit (progress);
 	return FALSE;
 }
 
@@ -498,10 +498,10 @@ pk_common_get_role_text (PkClient *client)
 }
 
 /**
- * pk_progress_monitor_tid:
+ * gpk_progress_monitor_tid:
  **/
 gboolean
-pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
+gpk_progress_monitor_tid (GpkProgress *progress, const gchar *tid)
 {
 	GtkWidget *widget;
 	PkStatusEnum status;
@@ -534,16 +534,16 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
 
-	pk_progress_status_changed_cb (progress->priv->client, status, progress);
+	gpk_progress_status_changed_cb (progress->priv->client, status, progress);
 
 	/* coldplug */
 	ret = pk_client_get_progress (progress->priv->client, &percentage, &subpercentage, &elapsed, &remaining, NULL);
 	if (ret) {
-		pk_progress_progress_changed_cb (progress->priv->client, percentage,
+		gpk_progress_progress_changed_cb (progress->priv->client, percentage,
 						 subpercentage, elapsed, remaining, progress);
 	} else {
 		pk_warning ("GetProgress failed");
-		pk_progress_progress_changed_cb (progress->priv->client,
+		gpk_progress_progress_changed_cb (progress->priv->client,
 						 PK_CLIENT_PERCENTAGE_INVALID,
 						 PK_CLIENT_PERCENTAGE_INVALID, 0, 0, progress);
 	}
@@ -551,7 +551,7 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 	/* do the best we can */
 	ret = pk_client_get_package (progress->priv->client, &text, NULL);
 	if (ret) {
-		pk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
+		gpk_progress_package_cb (progress->priv->client, 0, text, NULL, progress);
 	}
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
@@ -560,33 +560,33 @@ pk_progress_monitor_tid (PkProgress *progress, const gchar *tid)
 }
 
 /**
- * pk_progress_init:
+ * gpk_progress_init:
  **/
 static void
-pk_progress_init (PkProgress *progress)
+gpk_progress_init (GpkProgress *progress)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkEnumList *role_list;
 
-	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
+	progress->priv = GPK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->task_ended = FALSE;
 	progress->priv->no_percentage_evt = 0;
 	progress->priv->no_subpercentage_evt = 0;
 
 	progress->priv->client = pk_client_new ();
 	g_signal_connect (progress->priv->client, "error-code",
-			  G_CALLBACK (pk_progress_error_code_cb), progress);
+			  G_CALLBACK (gpk_progress_error_code_cb), progress);
 	g_signal_connect (progress->priv->client, "finished",
-			  G_CALLBACK (pk_progress_finished_cb), progress);
+			  G_CALLBACK (gpk_progress_finished_cb), progress);
 	g_signal_connect (progress->priv->client, "package",
-			  G_CALLBACK (pk_progress_package_cb), progress);
+			  G_CALLBACK (gpk_progress_package_cb), progress);
 	g_signal_connect (progress->priv->client, "progress-changed",
-			  G_CALLBACK (pk_progress_progress_changed_cb), progress);
+			  G_CALLBACK (gpk_progress_progress_changed_cb), progress);
 	g_signal_connect (progress->priv->client, "status-changed",
-			  G_CALLBACK (pk_progress_status_changed_cb), progress);
+			  G_CALLBACK (gpk_progress_status_changed_cb), progress);
 	g_signal_connect (progress->priv->client, "allow-cancel",
-			  G_CALLBACK (pk_progress_allow_cancel_cb), progress);
+			  G_CALLBACK (gpk_progress_allow_cancel_cb), progress);
 
 	progress->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-progress.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
@@ -604,7 +604,7 @@ pk_progress_init (PkProgress *progress)
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_progress_delete_event_cb), progress);
+			  G_CALLBACK (gpk_progress_delete_event_cb), progress);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "hbox_percentage");
 	gtk_widget_hide (widget);
@@ -615,11 +615,11 @@ pk_progress_init (PkProgress *progress)
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_progress_help_cb), progress);
+			  G_CALLBACK (gpk_progress_help_cb), progress);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_progress_cancel_cb), progress);
+			  G_CALLBACK (gpk_progress_cancel_cb), progress);
 
 	/* get actions */
 	role_list = pk_client_get_actions (progress->priv->client);
@@ -633,27 +633,27 @@ pk_progress_init (PkProgress *progress)
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_hide");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_progress_hide_cb), progress);
+			  G_CALLBACK (gpk_progress_hide_cb), progress);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_help");
 	gtk_widget_set_sensitive (widget, FALSE);
 }
 
 /**
- * pk_progress_finalize:
+ * gpk_progress_finalize:
  * @object: This graph class instance
  **/
 static void
-pk_progress_finalize (GObject *object)
+gpk_progress_finalize (GObject *object)
 {
-	PkProgress *progress;
+	GpkProgress *progress;
 	GtkWidget *widget;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_PROGRESS (object));
 
-	progress = PK_PROGRESS (object);
-	progress->priv = PK_PROGRESS_GET_PRIVATE (progress);
+	progress = GPK_PROGRESS (object);
+	progress->priv = GPK_PROGRESS_GET_PRIVATE (progress);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "window_progress");
 	gtk_widget_hide (widget);
@@ -661,18 +661,18 @@ pk_progress_finalize (GObject *object)
 	g_object_unref (progress->priv->client);
 	g_object_unref (progress->priv->glade_xml);
 
-	G_OBJECT_CLASS (pk_progress_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_progress_parent_class)->finalize (object);
 }
 
 /**
- * pk_progress_new:
- * Return value: new PkProgress instance.
+ * gpk_progress_new:
+ * Return value: new GpkProgress instance.
  **/
-PkProgress *
-pk_progress_new (void)
+GpkProgress *
+gpk_progress_new (void)
 {
-	PkProgress *progress;
-	progress = g_object_new (PK_TYPE_PROGRESS, NULL);
-	return PK_PROGRESS (progress);
+	GpkProgress *progress;
+	progress = g_object_new (GPK_TYPE_PROGRESS, NULL);
+	return GPK_PROGRESS (progress);
 }
 
