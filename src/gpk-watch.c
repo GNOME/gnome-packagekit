@@ -118,8 +118,9 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		}
 		localised_status = gpk_status_enum_to_localised_text (item->status);
 
-		/* we have text? */
-		if (pk_strzero (item->package_id)) {
+		/* should we display the text */
+		if (item->role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+		    pk_strzero (item->package_id)) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
