@@ -2194,12 +2194,22 @@ pk_application_init (PkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free");
 		gtk_widget_hide (widget);
 	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_BASENAME) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
+
+	/* BASENAME, use by default, or hide */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_BASENAME)) {
+		/* enable this by default */
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
+	} else {
 		gtk_widget_hide (widget);
 	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
+
+	/* NEWEST, use by default, or hide */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
+	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST)) {
+		/* enable this by default */
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
+	} else {
 		gtk_widget_hide (widget);
 	}
 
