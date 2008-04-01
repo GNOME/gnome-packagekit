@@ -35,13 +35,13 @@
 #include "gpk-application.h"
 
 /**
- * pk_application_close_cb
+ * gpk_application_close_cb
  * @application: This application class instance
  *
  * What to do when we are asked to close for whatever reason
  **/
 static void
-pk_application_close_cb (PkApplication *application)
+gpk_application_close_cb (GpkApplication *application)
 {
 	g_object_unref (application);
 	exit (0);
@@ -56,7 +56,7 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
-	PkApplication *application = NULL;
+	GpkApplication *application = NULL;
 	GOptionContext *context;
 
 	const GOptionEntry options[] = {
@@ -94,9 +94,9 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* create a new application object */
-	application = pk_application_new ();
+	application = gpk_application_new ();
 	g_signal_connect (application, "action-close",
-			  G_CALLBACK (pk_application_close_cb), NULL);
+			  G_CALLBACK (gpk_application_close_cb), NULL);
 
 	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);

@@ -47,11 +47,11 @@
 #include "gpk-common.h"
 #include "gpk-application.h"
 
-static void     pk_application_class_init (PkApplicationClass *klass);
-static void     pk_application_init       (PkApplication      *application);
-static void     pk_application_finalize   (GObject	    *object);
+static void     gpk_application_class_init (GpkApplicationClass *klass);
+static void     gpk_application_init       (GpkApplication      *application);
+static void     gpk_application_finalize   (GObject	    *object);
 
-#define PK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), PK_TYPE_APPLICATION, PkApplicationPrivate))
+#define GPK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_APPLICATION, GpkApplicationPrivate))
 #define PK_STOCK_APP_ICON		"system-software-installer"
 
 typedef enum {
@@ -61,7 +61,7 @@ typedef enum {
 	PK_SEARCH_UNKNOWN
 } PkSearchType;
 
-struct PkApplicationPrivate
+struct GpkApplicationPrivate
 {
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
@@ -111,24 +111,24 @@ enum
 
 static guint	     signals [LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE (PkApplication, pk_application, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkApplication, gpk_application, G_TYPE_OBJECT)
 
 /**
- * pk_application_class_init:
+ * gpk_application_class_init:
  * @klass: This graph class instance
  **/
 static void
-pk_application_class_init (PkApplicationClass *klass)
+gpk_application_class_init (GpkApplicationClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = pk_application_finalize;
-	g_type_class_add_private (klass, sizeof (PkApplicationPrivate));
+	object_class->finalize = gpk_application_finalize;
+	g_type_class_add_private (klass, sizeof (GpkApplicationPrivate));
 
 	signals [ACTION_CLOSE] =
 		g_signal_new ("action-close",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (PkApplicationClass, action_close),
+			      G_STRUCT_OFFSET (GpkApplicationClass, action_close),
 			      NULL,
 			      NULL,
 			      g_cclosure_marshal_VOID__VOID,
@@ -136,10 +136,10 @@ pk_application_class_init (PkApplicationClass *klass)
 }
 
 /**
- * pk_application_error_message:
+ * gpk_application_error_message:
  **/
 static void
-pk_application_error_message (PkApplication *application, const gchar *title, const gchar *details)
+gpk_application_error_message (GpkApplication *application, const gchar *title, const gchar *details)
 {
 	GtkWidget *main_window;
 	GtkWidget *dialog;
@@ -165,10 +165,10 @@ pk_application_error_message (PkApplication *application, const gchar *title, co
 }
 
 /**
- * pk_application_install:
+ * gpk_application_install:
  **/
 static gboolean
-pk_application_install (PkApplication *application, const gchar *package_id)
+gpk_application_install (GpkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -192,17 +192,17 @@ pk_application_install (PkApplication *application, const gchar *package_id)
 	if (!ret) {
 		pk_warning ("failed to install package: %s", error->message);
 		/* ick, we failed so pretend we didn't do the action */
-		pk_application_error_message (application, _("The package could not be installed"), error->message);
+		gpk_application_error_message (application, _("The package could not be installed"), error->message);
 		g_error_free (error);
 	}
 	return ret;
 }
 
 /**
- * pk_application_install_cb:
+ * gpk_application_install_cb:
  **/
 static void
-pk_application_install_cb (PolKitGnomeAction *action, PkApplication *application)
+gpk_application_install_cb (PolKitGnomeAction *action, GpkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -214,15 +214,15 @@ pk_application_install_cb (PolKitGnomeAction *action, PkApplication *application
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
 	gtk_widget_show (widget);
 
-	pk_application_install (application, application->priv->package);
+	gpk_application_install (application, application->priv->package);
 }
 
 /**
- * pk_application_homepage_cb:
+ * gpk_application_homepage_cb:
  **/
 static void
-pk_application_homepage_cb (GtkWidget      *widget,
-		            PkApplication  *application)
+gpk_application_homepage_cb (GtkWidget      *widget,
+		            GpkApplication  *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -230,10 +230,10 @@ pk_application_homepage_cb (GtkWidget      *widget,
 }
 
 /**
- * pk_application_remove_only:
+ * gpk_application_remove_only:
  **/
 static gboolean
-pk_application_remove_only (PkApplication *application, gboolean force)
+gpk_application_remove_only (GpkApplication *application, gboolean force)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -262,7 +262,7 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 	if (!ret) {
 		pk_warning ("failed to reset client: %s", error->message);
 		/* ick, we failed so pretend we didn't do the action */
-		pk_application_error_message (application,
+		gpk_application_error_message (application,
 					      _("The package could not be removed"), error->message);
 		g_error_free (error);
 	}
@@ -270,10 +270,10 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 }
 
 /**
- * pk_application_requires_dialog_cb:
+ * gpk_application_requires_dialog_cb:
  **/
 static void
-pk_application_requires_dialog_cb (GtkDialog *dialog, gint id, PkApplication *application)
+gpk_application_requires_dialog_cb (GtkDialog *dialog, gint id, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -282,17 +282,17 @@ pk_application_requires_dialog_cb (GtkDialog *dialog, gint id, PkApplication *ap
 		pk_debug ("the user clicked no");
 	} else if (id == -8) {
 		pk_debug ("the user clicked yes, remove with deps");
-		pk_application_remove_only (application, TRUE);
+		gpk_application_remove_only (application, TRUE);
 	} else {
 		pk_warning ("id unknown=%i", id);
 	}
 }
 
 /**
- * pk_application_requires_finished_cb:
+ * gpk_application_requires_finished_cb:
  **/
 static void
-pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkApplication *application)
+gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
 {
 	guint length;
 	gchar *title;
@@ -313,7 +313,7 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 	/* if there are no required packages, just do the remove */
 	if (length == 0) {
 		pk_debug ("no requires");
-		pk_application_remove_only (application, FALSE);
+		gpk_application_remove_only (application, FALSE);
 		g_object_unref (client);
 		return;
 	}
@@ -341,7 +341,7 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, "%s", title);
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("Remove all packages"), -8, NULL);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-	g_signal_connect (dialog, "response", G_CALLBACK (pk_application_requires_dialog_cb), application);
+	g_signal_connect (dialog, "response", G_CALLBACK (gpk_application_requires_dialog_cb), application);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	g_free (message);
@@ -349,11 +349,11 @@ pk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint ru
 }
 
 /**
- * pk_application_remove_cb:
+ * gpk_application_remove_cb:
  **/
 static void
-pk_application_remove_cb (PolKitGnomeAction *action,
-		          PkApplication     *application)
+gpk_application_remove_cb (PolKitGnomeAction *action,
+		          GpkApplication     *application)
 {
 	gboolean ret;
 	PkClient *client;
@@ -365,7 +365,7 @@ pk_application_remove_cb (PolKitGnomeAction *action,
 	/* are we dumb and can't check for requires? */
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
 		/* no, just try to remove it without deps */
-		pk_application_remove_only (application, FALSE);
+		gpk_application_remove_only (application, FALSE);
 		return;
 	}
 
@@ -373,7 +373,7 @@ pk_application_remove_cb (PolKitGnomeAction *action,
 	client = pk_client_new ();
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_application_requires_finished_cb), application);
+			  G_CALLBACK (gpk_application_requires_finished_cb), application);
 
 	/* do the requires */
 	pk_debug ("getting requires for %s", application->priv->package);
@@ -385,10 +385,10 @@ pk_application_remove_cb (PolKitGnomeAction *action,
 }
 
 /**
- * pk_application_set_text_buffer:
+ * gpk_application_set_text_buffer:
  **/
 static void
-pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
+gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 {
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_buffer_new (NULL);
@@ -403,13 +403,13 @@ pk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 }
 
 /**
- * pk_application_description_cb:
+ * gpk_application_description_cb:
  **/
 static void
-pk_application_description_cb (PkClient *client, const gchar *package_id,
+gpk_application_description_cb (PkClient *client, const gchar *package_id,
 			       const gchar *license, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
-			       guint64 size, PkApplication *application)
+			       guint64 size, GpkApplication *application)
 {
 	GtkWidget *widget;
 	gchar *text;
@@ -435,7 +435,7 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 	/* set the description */
 	text = g_markup_escape_text (detail, -1);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-	pk_application_set_text_buffer (widget, text);
+	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
 	/* if non-zero, set the size */
@@ -454,11 +454,11 @@ pk_application_description_cb (PkClient *client, const gchar *package_id,
 }
 
 /**
- * pk_application_files_cb:
+ * gpk_application_files_cb:
  **/
 static void
-pk_application_files_cb (PkClient *client, const gchar *package_id,
-			 const gchar *filelist, PkApplication *application)
+gpk_application_files_cb (PkClient *client, const gchar *package_id,
+			 const gchar *filelist, GpkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -479,21 +479,21 @@ pk_application_files_cb (PkClient *client, const gchar *package_id,
 		list = g_strjoinv ("\n", array);
 
 		/* apply the list */
-		pk_application_set_text_buffer (widget, list);
+		gpk_application_set_text_buffer (widget, list);
 		g_strfreev (array);
 		g_free (list);
 	} else {
 		/* no information */
-		pk_application_set_text_buffer (widget, _("No files"));
+		gpk_application_set_text_buffer (widget, _("No files"));
 	}
 }
 
 /**
- * pk_application_package_cb:
+ * gpk_application_package_cb:
  **/
 static void
-pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			   const gchar *summary, PkApplication *application)
+gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+			   const gchar *summary, GpkApplication *application)
 {
 	GtkTreeIter iter;
 	PkExtraObj *eobj;
@@ -541,10 +541,10 @@ pk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *packa
 }
 
 /**
- * pk_application_error_code_cb:
+ * gpk_application_error_code_cb:
  **/
 static void
-pk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, PkApplication *application)
+gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -554,15 +554,15 @@ pk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gcha
 		return;
 	}
 
-	pk_application_error_message (application,
+	gpk_application_error_message (application,
 				      pk_error_enum_to_localised_text (code), details);
 }
 
 /**
- * pk_application_package_buffer_to_name_version:
+ * gpk_application_package_buffer_to_name_version:
  **/
 static gchar *
-pk_application_package_buffer_to_name_version (PkClient *client)
+gpk_application_package_buffer_to_name_version (PkClient *client)
 {
 	guint i;
 	PkPackageItem *item;
@@ -588,10 +588,10 @@ pk_application_package_buffer_to_name_version (PkClient *client)
 }
 
 /**
- * pk_application_refresh_search_results:
+ * gpk_application_refresh_search_results:
  **/
 static gboolean
-pk_application_refresh_search_results (PkApplication *application)
+gpk_application_refresh_search_results (GpkApplication *application)
 {
 	GtkWidget *widget;
 	gboolean ret;
@@ -620,10 +620,10 @@ pk_application_refresh_search_results (PkApplication *application)
 }
 
 /**
- * pk_application_finished_cb:
+ * gpk_application_finished_cb:
  **/
 static void
-pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, PkApplication *application)
+gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
 {
 	GtkWidget *widget;
 	PkRoleEnum role;
@@ -636,14 +636,14 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 	pk_client_get_role (client, &role, NULL, NULL);
 	/* do we need to fill in the tab box? */
 	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
-		text = pk_application_package_buffer_to_name_version (client);
+		text = gpk_application_package_buffer_to_name_version (client);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
-		pk_application_set_text_buffer (widget, text);
+		gpk_application_set_text_buffer (widget, text);
 		g_free (text);
 	} else if (role == PK_ROLE_ENUM_GET_REQUIRES) {
-		text = pk_application_package_buffer_to_name_version (client);
+		text = gpk_application_package_buffer_to_name_version (client);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
-		pk_application_set_text_buffer (widget, text);
+		gpk_application_set_text_buffer (widget, text);
 		g_free (text);
 	}
 
@@ -678,16 +678,16 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
 		gtk_widget_hide (widget);
 		/* refresh the search as the items may have changed and the filter has not changed */
-		pk_application_refresh_search_results (application);
+		gpk_application_refresh_search_results (application);
 	}
 }
 
 /**
- * pk_application_progress_changed_cb:
+ * gpk_application_progress_changed_cb:
  **/
 static void
-pk_application_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				    guint elapsed, guint remaining, PkApplication *application)
+gpk_application_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				    guint elapsed, guint remaining, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -697,10 +697,10 @@ pk_application_progress_changed_cb (PkClient *client, guint percentage, guint su
 }
 
 /**
- * pk_application_cancel_cb:
+ * gpk_application_cancel_cb:
  **/
 static void
-pk_application_cancel_cb (GtkWidget *button_widget, PkApplication *application)
+gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application)
 {
 	GtkWidget *widget;
 	gboolean ret;
@@ -721,10 +721,10 @@ pk_application_cancel_cb (GtkWidget *button_widget, PkApplication *application)
 }
 
 /**
- * pk_application_perform_search:
+ * gpk_application_perform_search:
  **/
 static gboolean
-pk_application_perform_search (PkApplication *application)
+gpk_application_perform_search (GpkApplication *application)
 {
 	GtkWidget *widget;
 	const gchar *package;
@@ -745,7 +745,7 @@ pk_application_perform_search (PkApplication *application)
 	if (!ret) {
 		pk_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
-		pk_application_error_message (application, _("Invalid search text"),
+		gpk_application_error_message (application, _("Invalid search text"),
 					      _("The search text contains invalid characters"));
 		return FALSE;
 	}
@@ -776,7 +776,7 @@ pk_application_perform_search (PkApplication *application)
 	}
 
 	if (!ret) {
-		pk_application_error_message (application,
+		gpk_application_error_message (application,
 					      _("The search could not be completed"), error->message);
 		g_error_free (error);
 		return FALSE;
@@ -803,23 +803,23 @@ pk_application_perform_search (PkApplication *application)
 }
 
 /**
- * pk_application_find_cb:
+ * gpk_application_find_cb:
  **/
 static void
-pk_application_find_cb (GtkWidget *button_widget, PkApplication *application)
+gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_quit:
+ * gpk_application_quit:
  * @event: The event type, unused.
  **/
 static gboolean
-pk_application_quit (PkApplication *application)
+gpk_application_quit (GpkApplication *application)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -853,23 +853,23 @@ pk_application_quit (PkApplication *application)
 }
 
 /**
- * pk_application_delete_event_cb:
+ * gpk_application_delete_event_cb:
  * @event: The event type, unused.
  **/
 static gboolean
-pk_application_delete_event_cb (GtkWidget	*widget,
+gpk_application_delete_event_cb (GtkWidget	*widget,
 				GdkEvent	*event,
-				PkApplication	*application)
+				GpkApplication	*application)
 {
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
-	pk_application_quit (application);
+	gpk_application_quit (application);
 	return FALSE;
 }
 
 static gboolean
-pk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, PkApplication *application)
+gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplication *application)
 {
 	gboolean valid;
 	GtkWidget *widget;
@@ -950,7 +950,7 @@ pk_groups_add_columns (GtkTreeView *treeview)
  **/
 static void
 pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
-			       PkApplication *application)
+			       GpkApplication *application)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -1003,7 +1003,7 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
 				gtk_widget_show (widget);
 			}
 		} else {
-			pk_application_error_message (application,
+			gpk_application_error_message (application,
 						      _("The group could not be queried"), error->message);
 			g_error_free (error);
 		}
@@ -1014,7 +1014,7 @@ pk_groups_treeview_clicked_cb (GtkTreeSelection *selection,
  * pk_notebook_populate:
  **/
 static gboolean
-pk_notebook_populate (PkApplication *application, gint page)
+pk_notebook_populate (GpkApplication *application, gint page)
 {
 	gboolean ret;
 	GtkWidget *widget;
@@ -1044,7 +1044,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 	if (potential == page) {
 		/* clear the old text */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-		pk_application_set_text_buffer (widget, NULL);
+		gpk_application_set_text_buffer (widget, NULL);
 
 		/* hide the homepage button until we get data */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
@@ -1075,7 +1075,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 	if (potential == page) {
 		/* clear the old text */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
-		pk_application_set_text_buffer (widget, NULL);
+		gpk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
 		ret = pk_client_reset (application->priv->client_files, &error);
@@ -1102,7 +1102,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 	if (potential == page) {
 		/* clear the old text */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
-		pk_application_set_text_buffer (widget, NULL);
+		gpk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
 		ret = pk_client_reset (application->priv->client_files, &error);
@@ -1129,7 +1129,7 @@ pk_notebook_populate (PkApplication *application, gint page)
 	if (potential == page) {
 		/* clear the old text */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
-		pk_application_set_text_buffer (widget, NULL);
+		gpk_application_set_text_buffer (widget, NULL);
 
 		/* cancel any previous request */
 		ret = pk_client_reset (application->priv->client_files, &error);
@@ -1153,11 +1153,11 @@ pk_notebook_populate (PkApplication *application, gint page)
 }
 
 /**
- * pk_application_notebook_changed_cb:
+ * gpk_application_notebook_changed_cb:
  **/
 static void
-pk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
-				    gint page, PkApplication *application)
+gpk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
+				    gint page, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1170,7 +1170,7 @@ pk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
  **/
 static void
 pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
-				 PkApplication *application)
+				 GpkApplication *application)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;
@@ -1227,7 +1227,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection,
  * pk_connection_changed_cb:
  **/
 static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkApplication *application)
+pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1239,7 +1239,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, PkAppli
  * pk_group_add_data:
  **/
 static void
-pk_group_add_data (PkApplication *application, PkGroupEnum group)
+pk_group_add_data (GpkApplication *application, PkGroupEnum group)
 {
 	GtkTreeIter iter;
 	const gchar *icon_name;
@@ -1257,10 +1257,10 @@ pk_group_add_data (PkApplication *application, PkGroupEnum group)
 }
 
 /**
- * pk_application_create_custom_widget:
+ * gpk_application_create_custom_widget:
  **/
 static GtkWidget *
-pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
+gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
 {
@@ -1273,10 +1273,10 @@ pk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *nam
 }
 
 /**
- * pk_application_popup_position_menu:
+ * gpk_application_popup_position_menu:
  **/
 static void
-pk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
+gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
 {
 	GtkWidget     *widget;
 	GtkRequisition requisition;
@@ -1296,14 +1296,14 @@ pk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *p
 }
 
 /**
- * pk_application_menu_search_by_name:
+ * gpk_application_menu_search_by_name:
  **/
 static void
-pk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
+gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 {
 	GtkWidget *icon;
 	GtkWidget *widget;
-	PkApplication *application = PK_APPLICATION (data);
+	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* change type */
 	application->priv->search_type = PK_SEARCH_NAME;
@@ -1317,14 +1317,14 @@ pk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_application_menu_search_by_description:
+ * gpk_application_menu_search_by_description:
  **/
 static void
-pk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
+gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 {
 	GtkWidget *icon;
 	GtkWidget *widget;
-	PkApplication *application = PK_APPLICATION (data);
+	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* set type */
 	application->priv->search_type = PK_SEARCH_DETAILS;
@@ -1338,14 +1338,14 @@ pk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_application_menu_search_by_file:
+ * gpk_application_menu_search_by_file:
  **/
 static void
-pk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
+gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 {
 	GtkWidget *icon;
 	GtkWidget *widget;
-	PkApplication *application = PK_APPLICATION (data);
+	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* set type */
 	application->priv->search_type = PK_SEARCH_FILE;
@@ -1359,15 +1359,15 @@ pk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_application_entry_text_icon_pressed_cb:
+ * gpk_application_entry_text_icon_pressed_cb:
  **/
 static void
-pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, gint button, gpointer data)
+gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, gint button, gpointer data)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
 	GtkWidget *image;
-	PkApplication *application = PK_APPLICATION (data);
+	GpkApplication *application = GPK_APPLICATION (data);
 
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1383,7 +1383,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (pk_application_menu_search_by_name), application);
+				  G_CALLBACK (gpk_application_menu_search_by_name), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
@@ -1392,7 +1392,7 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (pk_application_menu_search_by_description), application);
+				  G_CALLBACK (gpk_application_menu_search_by_description), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
@@ -1401,23 +1401,23 @@ pk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, 
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		g_signal_connect (G_OBJECT (item), "activate",
-				  G_CALLBACK (pk_application_menu_search_by_file), application);
+				  G_CALLBACK (gpk_application_menu_search_by_file), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
 	gtk_widget_show_all (GTK_WIDGET (menu));
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			pk_application_popup_position_menu, entry,
+			gpk_application_popup_position_menu, entry,
 			1, gtk_get_current_event_time());
 }
 
 /**
- * pk_application_create_completion_model:
+ * gpk_application_create_completion_model:
  *
  * Creates a tree model containing the completions
  **/
 static GtkTreeModel *
-pk_application_create_completion_model (void)
+gpk_application_create_completion_model (void)
 {
 	GtkListStore *store;
 	GtkTreeIter iter;
@@ -1441,10 +1441,10 @@ pk_application_create_completion_model (void)
 
 
 /**
- *  * pk_application_about_dialog_url_cb:
+ *  * gpk_application_about_dialog_url_cb:
  *   **/
 static void
-pk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
+gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
 {
 	GError *error = NULL;
 	gboolean ret;
@@ -1493,19 +1493,19 @@ out:
 }
 
 /**
- * pk_application_menu_help_cb:
+ * gpk_application_menu_help_cb:
  **/
 static void
-pk_application_menu_help_cb (GtkAction *action, PkApplication *application)
+gpk_application_menu_help_cb (GtkAction *action, GpkApplication *application)
 {
 	pk_show_help ("add-remove");
 }
 
 /**
- * pk_application_menu_about_cb:
+ * gpk_application_menu_about_cb:
  **/
 static void
-pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
+gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 {
 	static gboolean been_here = FALSE;
 	GtkWidget *main_window;
@@ -1546,8 +1546,8 @@ pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
 
 	if (!been_here) {
 		been_here = TRUE;
-		gtk_about_dialog_set_url_hook (pk_application_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (pk_application_about_dialog_url_cb, "mailto:", NULL);
+		gtk_about_dialog_set_url_hook (gpk_application_about_dialog_url_cb, NULL, NULL);
+		gtk_about_dialog_set_email_hook (gpk_application_about_dialog_url_cb, "mailto:", NULL);
 	}
 
 	/* use parent */
@@ -1571,10 +1571,10 @@ pk_application_menu_about_cb (GtkAction *action, PkApplication *application)
 }
 
 /**
- * pk_application_menu_refresh_cb:
+ * gpk_application_menu_refresh_cb:
  **/
 static void
-pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
+gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -1585,7 +1585,7 @@ pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 	/* can we cancel what we are doing? */
 	ret = pk_client_reset (application->priv->client_action, &error);
 	if (!ret) {
-		pk_application_error_message (application, _("Package list could not be refreshed"), error->message);
+		gpk_application_error_message (application, _("Package list could not be refreshed"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -1593,7 +1593,7 @@ pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 	/* try to refresh the cache */
 	ret = pk_client_refresh_cache (application->priv->client_action, FALSE, &error);
 	if (!ret) {
-		pk_application_error_message (application, _("The package could not be installed"), error->message);
+		gpk_application_error_message (application, _("The package could not be installed"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -1601,10 +1601,10 @@ pk_application_menu_refresh_cb (GtkAction *action, PkApplication *application)
 }
 
 /**
- * pk_application_menu_sources_cb:
+ * gpk_application_menu_sources_cb:
  **/
 static void
-pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
+gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
 
@@ -1618,23 +1618,23 @@ pk_application_menu_sources_cb (GtkAction *action, PkApplication *application)
 }
 
 /**
- * pk_application_menu_quit_cb:
+ * gpk_application_menu_quit_cb:
  **/
 static void
-pk_application_menu_quit_cb (GtkAction *action, PkApplication *application)
+gpk_application_menu_quit_cb (GtkAction *action, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_application_quit (application);
+	gpk_application_quit (application);
 }
 
 /**
- * pk_application_menu_filter_installed_cb:
+ * gpk_application_menu_filter_installed_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_installed_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *application)
 {
 	const gchar *name;
 
@@ -1661,15 +1661,15 @@ pk_application_menu_filter_installed_cb (GtkWidget *widget, PkApplication *appli
 	}
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_menu_filter_devel_cb:
+ * gpk_application_menu_filter_devel_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_devel_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *application)
 {
 	const gchar *name;
 
@@ -1696,15 +1696,15 @@ pk_application_menu_filter_devel_cb (GtkWidget *widget, PkApplication *applicati
 	}
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_menu_filter_gui_cb:
+ * gpk_application_menu_filter_gui_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_gui_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *application)
 {
 	const gchar *name;
 
@@ -1731,15 +1731,15 @@ pk_application_menu_filter_gui_cb (GtkWidget *widget, PkApplication *application
 	}
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_menu_filter_free_cb:
+ * gpk_application_menu_filter_free_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *application)
 {
 	const gchar *name;
 
@@ -1766,15 +1766,15 @@ pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *applicatio
 	}
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_menu_filter_basename_cb:
+ * gpk_application_menu_filter_basename_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gboolean enabled;
 	gchar *filter;
@@ -1799,15 +1799,15 @@ pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *applic
 	g_free (filter);
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_menu_filter_newest_cb:
+ * gpk_application_menu_filter_newest_cb:
  * @widget: The GtkWidget object
  **/
 static void
-pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *application)
+gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gboolean enabled;
 	gchar *filter;
@@ -1832,14 +1832,14 @@ pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *applicat
 	g_free (filter);
 
 	/* refresh the search results */
-	pk_application_perform_search (application);
+	gpk_application_perform_search (application);
 }
 
 /**
- * pk_application_status_changed_cb:
+ * gpk_application_status_changed_cb:
  **/
 static void
-pk_application_status_changed_cb (PkClient *client, PkStatusEnum status, PkApplication *application)
+gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApplication *application)
 {
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1847,10 +1847,10 @@ pk_application_status_changed_cb (PkClient *client, PkStatusEnum status, PkAppli
 }
 
 /**
- * pk_application_allow_cancel_cb:
+ * gpk_application_allow_cancel_cb:
  **/
 static void
-pk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkApplication *application)
+gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -1864,11 +1864,11 @@ pk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkAppli
 }
 
 /**
- * pk_application_package_row_activated_cb:
+ * gpk_application_package_row_activated_cb:
  **/
 void
-pk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
-					 GtkTreeViewColumn *col, PkApplication *application)
+gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
+					 GtkTreeViewColumn *col, GpkApplication *application)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -1893,16 +1893,16 @@ pk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pat
 			    PACKAGES_COLUMN_ID, &package_id, -1);
 	if (!installed) {
 		pk_debug ("auto installing due to double click");
-		pk_application_install (application, package_id);
+		gpk_application_install (application, package_id);
 	}
 	g_free (package_id);
 }
 
 /**
- * pk_application_init:
+ * gpk_application_init:
  **/
 static void
-pk_application_init (PkApplication *application)
+gpk_application_init (GpkApplication *application)
 {
 	GtkWidget *main_window;
 	GtkWidget *vbox;
@@ -1922,7 +1922,7 @@ pk_application_init (PkApplication *application)
 	GtkWidget *button;
 	GtkWidget *item;
 
-	application->priv = PK_APPLICATION_GET_PRIVATE (application);
+	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
 	application->priv->url = NULL;
 	application->priv->has_package = FALSE;
@@ -1937,64 +1937,64 @@ pk_application_init (PkApplication *application)
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* use a sexy widget */
-	glade_set_custom_handler (pk_application_create_custom_widget, application);
+	glade_set_custom_handler (gpk_application_create_custom_widget, application);
 
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
-			  G_CALLBACK (pk_application_package_cb), application);
+			  G_CALLBACK (gpk_application_package_cb), application);
 	g_signal_connect (application->priv->client_search, "error-code",
-			  G_CALLBACK (pk_application_error_code_cb), application);
+			  G_CALLBACK (gpk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_search, "finished",
-			  G_CALLBACK (pk_application_finished_cb), application);
+			  G_CALLBACK (gpk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_search, "progress-changed",
-			  G_CALLBACK (pk_application_progress_changed_cb), application);
+			  G_CALLBACK (gpk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_search, "status-changed",
-			  G_CALLBACK (pk_application_status_changed_cb), application);
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_search, "allow-cancel",
-			  G_CALLBACK (pk_application_allow_cancel_cb), application);
+			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	application->priv->client_action = pk_client_new ();
 	g_signal_connect (application->priv->client_action, "package",
-			  G_CALLBACK (pk_application_package_cb), application);
+			  G_CALLBACK (gpk_application_package_cb), application);
 	g_signal_connect (application->priv->client_action, "error-code",
-			  G_CALLBACK (pk_application_error_code_cb), application);
+			  G_CALLBACK (gpk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_action, "finished",
-			  G_CALLBACK (pk_application_finished_cb), application);
+			  G_CALLBACK (gpk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_action, "progress-changed",
-			  G_CALLBACK (pk_application_progress_changed_cb), application);
+			  G_CALLBACK (gpk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_action, "status-changed",
-			  G_CALLBACK (pk_application_status_changed_cb), application);
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_action, "allow-cancel",
-			  G_CALLBACK (pk_application_allow_cancel_cb), application);
+			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	application->priv->client_description = pk_client_new ();
 	g_signal_connect (application->priv->client_description, "description",
-			  G_CALLBACK (pk_application_description_cb), application);
+			  G_CALLBACK (gpk_application_description_cb), application);
 	g_signal_connect (application->priv->client_description, "error-code",
-			  G_CALLBACK (pk_application_error_code_cb), application);
+			  G_CALLBACK (gpk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_description, "finished",
-			  G_CALLBACK (pk_application_finished_cb), application);
+			  G_CALLBACK (gpk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_description, "progress-changed",
-			  G_CALLBACK (pk_application_progress_changed_cb), application);
+			  G_CALLBACK (gpk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_description, "status-changed",
-			  G_CALLBACK (pk_application_status_changed_cb), application);
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_description, "allow-cancel",
-			  G_CALLBACK (pk_application_allow_cancel_cb), application);
+			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	application->priv->client_files = pk_client_new ();
 	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
 	g_signal_connect (application->priv->client_files, "files",
-			  G_CALLBACK (pk_application_files_cb), application);
+			  G_CALLBACK (gpk_application_files_cb), application);
 	g_signal_connect (application->priv->client_files, "error-code",
-			  G_CALLBACK (pk_application_error_code_cb), application);
+			  G_CALLBACK (gpk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_files, "finished",
-			  G_CALLBACK (pk_application_finished_cb), application);
+			  G_CALLBACK (gpk_application_finished_cb), application);
 	g_signal_connect (application->priv->client_files, "progress-changed",
-			  G_CALLBACK (pk_application_progress_changed_cb), application);
+			  G_CALLBACK (gpk_application_progress_changed_cb), application);
 	g_signal_connect (application->priv->client_files, "status-changed",
-			  G_CALLBACK (pk_application_status_changed_cb), application);
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_files, "allow-cancel",
-			  G_CALLBACK (pk_application_allow_cancel_cb), application);
+			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	/* get actions */
 	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
@@ -2032,7 +2032,7 @@ pk_application_init (PkApplication *application)
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_application_delete_event_cb), application);
+			  G_CALLBACK (gpk_application_delete_event_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_package");
 	pk_action = polkit_action_new ();
@@ -2049,7 +2049,7 @@ pk_application_init (PkApplication *application)
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (application->priv->install_action, "activate",
-			  G_CALLBACK (pk_application_install_cb), application);
+			  G_CALLBACK (gpk_application_install_cb), application);
         button = polkit_gnome_action_create_button (application->priv->install_action);
 
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
@@ -2069,7 +2069,7 @@ pk_application_init (PkApplication *application)
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (application->priv->remove_action, "activate",
-			  G_CALLBACK (pk_application_remove_cb), application);
+			  G_CALLBACK (gpk_application_remove_cb), application);
         button = polkit_gnome_action_create_button (application->priv->remove_action);
 
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
@@ -2077,16 +2077,16 @@ pk_application_init (PkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_homepage_cb), application);
+			  G_CALLBACK (gpk_application_homepage_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_about");
 	g_signal_connect (widget, "activate",
-			  G_CALLBACK (pk_application_menu_about_cb), application);
+			  G_CALLBACK (gpk_application_menu_about_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
 	g_signal_connect (widget, "activate",
-			  G_CALLBACK (pk_application_menu_help_cb), application);
+			  G_CALLBACK (gpk_application_menu_help_cb), application);
 
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
@@ -2102,7 +2102,7 @@ pk_application_init (PkApplication *application)
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (application->priv->refresh_action, "activate",
-			  G_CALLBACK (pk_application_menu_refresh_cb), application);
+			  G_CALLBACK (gpk_application_menu_refresh_cb), application);
 	item = gtk_action_create_menu_item (GTK_ACTION (application->priv->refresh_action));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menu_system");
@@ -2110,55 +2110,55 @@ pk_application_init (PkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
 	g_signal_connect (widget, "activate",
-			  G_CALLBACK (pk_application_menu_sources_cb), application);
+			  G_CALLBACK (gpk_application_menu_sources_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_quit");
 	g_signal_connect (widget, "activate",
-			  G_CALLBACK (pk_application_menu_quit_cb), application);
+			  G_CALLBACK (gpk_application_menu_quit_cb), application);
 
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_installed_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_no");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_installed_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_both");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_installed_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
 
 	/* devel filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_yes");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_no");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_both");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_devel_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
 
 	/* gui filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_yes");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_no");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_both");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_gui_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
 
 	/* free filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_yes");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_no");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_both");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_free_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
 	gtk_widget_hide (widget);
@@ -2169,17 +2169,17 @@ pk_application_init (PkApplication *application)
 	/* basename filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_basename_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_basename_cb), application);
 
 	/* newest filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
 	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (pk_application_menu_filter_newest_cb), application);
+			  G_CALLBACK (gpk_application_menu_filter_newest_cb), application);
 
 	/* Remove description/file list if needed. */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
 	g_signal_connect (widget, "switch-page",
-			  G_CALLBACK (pk_application_notebook_changed_cb), application);
+			  G_CALLBACK (gpk_application_notebook_changed_cb), application);
 	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
@@ -2222,20 +2222,20 @@ pk_application_init (PkApplication *application)
 	/* simple find button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_find_cb), application);
+			  G_CALLBACK (gpk_application_find_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	/* search cancel button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_cancel_cb), application);
+			  G_CALLBACK (gpk_application_cancel_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 	gtk_widget_hide (widget);
 
 	/* cancel button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_application_cancel_cb), application);
+			  G_CALLBACK (gpk_application_cancel_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Cancel action"));
 	gtk_widget_hide (widget);
 
@@ -2253,7 +2253,7 @@ pk_application_init (PkApplication *application)
 		g_object_unref (completion);
 
 		/* create a tree model and use it as the completion model */
-		completion_model = pk_application_create_completion_model ();
+		completion_model = gpk_application_create_completion_model ();
 		gtk_entry_completion_set_model (completion, completion_model);
 		g_object_unref (completion_model);
 
@@ -2267,12 +2267,12 @@ pk_application_init (PkApplication *application)
 	gtk_widget_show (widget);
 	sexy_icon_entry_set_icon_highlight (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, TRUE);
 	g_signal_connect (widget, "activate",
-			  G_CALLBACK (pk_application_find_cb), application);
+			  G_CALLBACK (gpk_application_find_cb), application);
 	g_signal_connect (widget, "icon-pressed",
-			  G_CALLBACK (pk_application_entry_text_icon_pressed_cb), application);
+			  G_CALLBACK (gpk_application_entry_text_icon_pressed_cb), application);
 
 	/* coldplug icon to default to search by name*/
-	pk_application_menu_search_by_name (NULL, application);
+	gpk_application_menu_search_by_name (NULL, application);
 
 	/* hide the filters we can't support */
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
@@ -2299,7 +2299,7 @@ pk_application_init (PkApplication *application)
 						 PK_CONF_APPLICATION_FILTER_BASENAME, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		pk_application_menu_filter_basename_cb (widget, application);
+		gpk_application_menu_filter_basename_cb (widget, application);
 	} else {
 		gtk_widget_hide (widget);
 	}
@@ -2312,16 +2312,16 @@ pk_application_init (PkApplication *application)
 						 PK_CONF_APPLICATION_FILTER_NEWEST, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		pk_application_menu_filter_newest_cb (widget, application);
+		gpk_application_menu_filter_newest_cb (widget, application);
 	} else {
 		gtk_widget_hide (widget);
 	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",
-			  G_CALLBACK (pk_application_text_changed_cb), application);
+			  G_CALLBACK (gpk_application_text_changed_cb), application);
 	g_signal_connect (widget, "key-release-event",
-			  G_CALLBACK (pk_application_text_changed_cb), application);
+			  G_CALLBACK (gpk_application_text_changed_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -2332,7 +2332,7 @@ pk_application_init (PkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
-			  G_CALLBACK (pk_application_package_row_activated_cb), application);
+			  G_CALLBACK (gpk_application_package_row_activated_cb), application);
 
 	/* use the in-statusbar for progress */
 	application->priv->statusbar = pk_statusbar_new ();
@@ -2391,18 +2391,18 @@ pk_application_init (PkApplication *application)
 }
 
 /**
- * pk_application_finalize:
+ * gpk_application_finalize:
  * @object: This graph class instance
  **/
 static void
-pk_application_finalize (GObject *object)
+gpk_application_finalize (GObject *object)
 {
-	PkApplication *application;
+	GpkApplication *application;
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (object));
 
-	application = PK_APPLICATION (object);
-	application->priv = PK_APPLICATION_GET_PRIVATE (application);
+	application = GPK_APPLICATION (object);
+	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 
 	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
@@ -2425,18 +2425,18 @@ pk_application_finalize (GObject *object)
 	g_free (application->priv->url);
 	g_free (application->priv->package);
 
-	G_OBJECT_CLASS (pk_application_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpk_application_parent_class)->finalize (object);
 }
 
 /**
- * pk_application_new:
- * Return value: new PkApplication instance.
+ * gpk_application_new:
+ * Return value: new GpkApplication instance.
  **/
-PkApplication *
-pk_application_new (void)
+GpkApplication *
+gpk_application_new (void)
 {
-	PkApplication *application;
-	application = g_object_new (PK_TYPE_APPLICATION, NULL);
-	return PK_APPLICATION (application);
+	GpkApplication *application;
+	application = g_object_new (GPK_TYPE_APPLICATION, NULL);
+	return GPK_APPLICATION (application);
 }
 
