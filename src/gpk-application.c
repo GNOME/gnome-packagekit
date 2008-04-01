@@ -204,8 +204,16 @@ pk_application_install (PkApplication *application, const gchar *package_id)
 static void
 pk_application_install_cb (PolKitGnomeAction *action, PkApplication *application)
 {
+	GtkWidget *widget;
+
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* hide and show the right things */
+	polkit_gnome_action_set_visible (application->priv->install_action, FALSE);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
+	gtk_widget_show (widget);
+
 	pk_application_install (application, application->priv->package);
 }
 
@@ -229,11 +237,17 @@ pk_application_remove_only (PkApplication *application, gboolean force)
 {
 	gboolean ret;
 	GError *error = NULL;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (application != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	pk_debug ("remove %s", application->priv->package);
+
+	/* hide and show the right things */
+	polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
+	gtk_widget_show (widget);
 
 	ret = pk_client_reset (application->priv->client_action, &error);
 	if (!ret) {
@@ -661,6 +675,8 @@ pk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, Pk
 	/* do we need to update the search? */
 	if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
 	    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
+		gtk_widget_hide (widget);
 		/* refresh the search as the items may have changed and the filter has not changed */
 		pk_application_refresh_search_results (application);
 	}
@@ -1843,6 +1859,8 @@ pk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, PkAppli
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
+	gtk_widget_set_sensitive (widget, allow_cancel);
 }
 
 /**
@@ -2207,11 +2225,18 @@ pk_application_init (PkApplication *application)
 			  G_CALLBACK (pk_application_find_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
-	/* cancel button */
+	/* search cancel button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_application_cancel_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
+	gtk_widget_hide (widget);
+
+	/* cancel button */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_application_cancel_cb), application);
+	gtk_widget_set_tooltip_text (widget, _("Cancel action"));
 	gtk_widget_hide (widget);
 
 	/* the fancy text entry widget */
