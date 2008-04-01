@@ -45,6 +45,9 @@ G_BEGIN_DECLS
 #define PK_CONF_AUTO_UPDATE		"/apps/gnome-packagekit/auto_update"
 #define PK_CONF_UPDATE_BATTERY		"/apps/gnome-packagekit/update_battery"
 
+#define PK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
+#define PK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
+
 #define GS_DBUS_SERVICE			"org.gnome.ScreenSaver"
 #define GS_DBUS_PATH			"/org/gnome/ScreenSaver"
 #define GS_DBUS_INTERFACE		"org.gnome.ScreenSaver"

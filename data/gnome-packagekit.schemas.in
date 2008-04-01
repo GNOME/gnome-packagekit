@@ -169,6 +169,30 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/application/filter_basename</key>
+      <applyto>/apps/gnome-packagekit/application/update_basename</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>If we should filter using basename in gpk-application</short>
+        <long>If we should filter package lists using basename in gpk-application</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/application/filter_newest</key>
+      <applyto>/apps/gnome-packagekit/application/update_newest</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>If we should filter using newest in gpk-application</short>
+        <long>If we should filter package lists using newest in gpk-application</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
 

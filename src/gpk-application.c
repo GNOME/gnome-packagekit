@@ -1748,15 +1748,23 @@ pk_application_menu_filter_free_cb (GtkWidget *widget, PkApplication *applicatio
 static void
 pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *application)
 {
+	gboolean enabled;
+
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	/* single checkbox */
-	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	/* save users preference to gconf */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	gconf_client_set_bool (application->priv->gconf_client,
+			       PK_CONF_APPLICATION_FILTER_BASENAME, enabled, NULL);
+
+	/* change the filter */
+	if (enabled) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
 	}
+
 
 	/* refresh the search results */
 	pk_application_perform_search (application);
@@ -1769,11 +1777,18 @@ pk_application_menu_filter_basename_cb (GtkWidget *widget, PkApplication *applic
 static void
 pk_application_menu_filter_newest_cb (GtkWidget *widget, PkApplication *application)
 {
+	gboolean enabled;
+
 	g_return_if_fail (application != NULL);
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	/* single checkbox */
-	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	/* save users preference to gconf */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	gconf_client_set_bool (application->priv->gconf_client,
+			       PK_CONF_APPLICATION_FILTER_NEWEST, enabled, NULL);
+
+	/* change the filter */
+	if (enabled) {
 		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
 	} else {
 		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
@@ -1822,6 +1837,7 @@ pk_application_init (PkApplication *application)
 	GtkTreeModel *completion_model;
 	GtkTreeSelection *selection;
 	gboolean autocomplete;
+	gboolean enabled;
 	PkGroupEnum group;
 	gchar *locale; /* does not need to be freed */
 	guint length;
@@ -2198,8 +2214,9 @@ pk_application_init (PkApplication *application)
 	/* BASENAME, use by default, or hide */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_BASENAME)) {
-		/* enable this by default */
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
+		enabled = gconf_client_get_bool (application->priv->gconf_client,
+						 PK_CONF_APPLICATION_FILTER_BASENAME, NULL);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 	} else {
 		gtk_widget_hide (widget);
 	}
@@ -2207,8 +2224,10 @@ pk_application_init (PkApplication *application)
 	/* NEWEST, use by default, or hide */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
 	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST)) {
-		/* enable this by default */
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), TRUE);
+		/* set from remembered state */
+		enabled = gconf_client_get_bool (application->priv->gconf_client,
+						 PK_CONF_APPLICATION_FILTER_NEWEST, NULL);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 	} else {
 		gtk_widget_hide (widget);
 	}
