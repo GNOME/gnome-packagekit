@@ -39,18 +39,18 @@ enum {
 	LAST_SIGNAL
 };
 
-G_DEFINE_TYPE (PkCellRendererUri, pk_cell_renderer_uri, GTK_TYPE_CELL_RENDERER_TEXT)
+G_DEFINE_TYPE (GpkCellRendererUri, gpk_cell_renderer_uri, GTK_TYPE_CELL_RENDERER_TEXT)
 
 static gpointer parent_class = NULL;
 static guint signals[LAST_SIGNAL] = { 0 };
 
 static gboolean
-pk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
-			       GtkWidget *widget, const gchar *path,
-			       GdkRectangle *background_area,
-			       GdkRectangle *cell_area, GtkCellRendererState flags)
+gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
+			        GtkWidget *widget, const gchar *path,
+			        GdkRectangle *background_area,
+			        GdkRectangle *cell_area, GtkCellRendererState flags)
 {
-	PkCellRendererUri *cru = PK_CELL_RENDERER_URI (g_object_get_data (G_OBJECT (cell), "cru"));
+	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (g_object_get_data (G_OBJECT (cell), "cru"));
 
 	/* nothing to do */
 	if (cru->uri == NULL) {
@@ -64,12 +64,10 @@ pk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 }
 
 static void
-pk_cell_renderer_uri_get_property (GObject *object,
-				guint param_id,
-				GValue *value,
-				GParamSpec *pspec)
+gpk_cell_renderer_uri_get_property (GObject *object, guint param_id,
+				    GValue *value, GParamSpec *pspec)
 {
-	PkCellRendererUri *cru = PK_CELL_RENDERER_URI (object);
+	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (object);
 
 	switch (param_id) {
 	case PROP_URI:
@@ -85,12 +83,10 @@ pk_cell_renderer_uri_get_property (GObject *object,
 }
 
 static void
-pk_cell_renderer_uri_set_property (GObject *object,
-				guint param_id,
-				const GValue *value,
-				GParamSpec *pspec)
+gpk_cell_renderer_uri_set_property (GObject *object, guint param_id,
+				    const GValue *value, GParamSpec *pspec)
 {
-	PkCellRendererUri *cru = PK_CELL_RENDERER_URI (object);
+	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (object);
 
 	switch (param_id) {
 	case PROP_URI:
@@ -109,7 +105,7 @@ pk_cell_renderer_uri_set_property (GObject *object,
 }
 
 static void
-pk_cell_renderer_uri_render (GtkCellRenderer *cell,
+gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			     GdkWindow *window,
 			     GtkWidget *widget,
 			     GdkRectangle *background_area,
@@ -118,7 +114,7 @@ pk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			     GtkCellRendererState flags)
 {
 	GdkCursor *cursor;
-	PkCellRendererUri *cru = PK_CELL_RENDERER_URI (cell);
+	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
 	/* set cursor */
 	if (cru->uri == NULL) {
@@ -151,7 +147,7 @@ pk_cell_renderer_uri_render (GtkCellRenderer *cell,
 }
 
 static void
-pk_cell_renderer_uri_class_init (PkCellRendererUriClass *class)
+gpk_cell_renderer_uri_class_init (GpkCellRendererUriClass *class)
 {
 	GtkCellRendererClass *cell_renderer_class;
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -159,11 +155,11 @@ pk_cell_renderer_uri_class_init (PkCellRendererUriClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	cell_renderer_class = GTK_CELL_RENDERER_CLASS (class);
-	cell_renderer_class->activate = pk_cell_renderer_uri_activate;
-	cell_renderer_class->render = pk_cell_renderer_uri_render;
+	cell_renderer_class->activate = gpk_cell_renderer_uri_activate;
+	cell_renderer_class->render = gpk_cell_renderer_uri_render;
 
-	object_class->get_property = pk_cell_renderer_uri_get_property;
-	object_class->set_property = pk_cell_renderer_uri_set_property;
+	object_class->get_property = gpk_cell_renderer_uri_get_property;
+	object_class->set_property = gpk_cell_renderer_uri_set_property;
 
 	g_object_class_install_property (object_class, PROP_URI,
 					 g_param_spec_string ("uri", "URI",
@@ -173,28 +169,28 @@ pk_cell_renderer_uri_class_init (PkCellRendererUriClass *class)
 					 "If the URI has been clicked", FALSE, G_PARAM_READWRITE));
 
 	signals [CLICKED] =
-		g_signal_new ( "clicked",
+		g_signal_new ("clicked",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (PkCellRendererUriClass, clicked), NULL, NULL,
+			      G_STRUCT_OFFSET (GpkCellRendererUriClass, clicked), NULL, NULL,
 			      g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING);
 }
 
 /**
- * pk_cell_renderer_uri_init:
+ * gpk_cell_renderer_uri_init:
  **/
 static void
-pk_cell_renderer_uri_init (PkCellRendererUri *cru)
+gpk_cell_renderer_uri_init (GpkCellRendererUri *cru)
 {
 	cru->uri = NULL;
 	cru->clicked = FALSE;
 }
 
 /**
- * pk_cell_renderer_uri_new:
+ * gpk_cell_renderer_uri_new:
  **/
 GtkCellRenderer *
-pk_cell_renderer_uri_new (void)
+gpk_cell_renderer_uri_new (void)
 {
-	return g_object_new (PK_TYPE_CELL_RENDERER_URI, NULL);
+	return g_object_new (GPK_TYPE_CELL_RENDERER_URI, NULL);
 }
 

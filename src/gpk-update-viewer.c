@@ -976,7 +976,7 @@ pk_treeview_add_columns_description (GtkTreeView *treeview)
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for uris */
-	renderer = pk_cell_renderer_uri_new ();
+	renderer = gpk_cell_renderer_uri_new ();
 	g_signal_connect (renderer, "clicked", G_CALLBACK (pk_treeview_renderer_clicked), NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
 							   "text", DESC_COLUMN_TEXT,
