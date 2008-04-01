@@ -258,6 +258,20 @@ gpk-interface.h: gpk-interface.xml
 		--output=gpk-interface.h		\
 		$(srcdir)/gpk-interface.xml
 
+if PK_BUILD_GCOV
+clean-gcov:
+	rm -f *.gcov *.gcda
+gcov: clean-gcov all check
+	$(top_srcdir)/tools/create-coverage-report.sh packagekit $(filter %.c,$(packagekitd_SOURCES)) > gcov.txt
+endif
+
+if PK_BUILD_GPROF
+clean-gprof:
+	rm -f *.out
+gprof: clean-gprof all check
+	gprof ./gpk-self-test > gprof.txt
+endif
+
 EXTRA_DIST =						\
 	gpk-marshal.list				\
 	gpk-interface.xml				\
