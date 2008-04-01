@@ -395,6 +395,12 @@ gpk_notify_update_system (GpkNotify *notify)
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
+	ret = pk_client_reset (notify->priv->client_update_system, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
 	ret = pk_client_update_system (notify->priv->client_update_system, &error);
 	if (ret) {
 		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
@@ -778,6 +784,14 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 		}
 
 		pk_debug ("just process security updates");
+		ret = pk_client_reset (notify->priv->client_update_system, &error);
+		if (!ret) {
+			pk_warning ("failed to reset client: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
+
+		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
 		ret = pk_client_update_packages_strv (notify->priv->client_update_system, package_ids, &error);
 		if (!ret) {
