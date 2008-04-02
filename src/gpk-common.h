@@ -70,25 +70,35 @@ gboolean	 gpk_error_modal_dialog			(const gchar	*title,
 gboolean	 gpk_execute_url			(const gchar	*url);
 gboolean	 gpk_show_help				(const gchar	*link_id);
 gboolean	 gpk_restart_system			(void);
-const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role);
-const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role);
+const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
+							 G_GNUC_CONST;
+const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role)
+							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
-const gchar	*gpk_info_enum_to_localised_text	(PkInfoEnum	 info);
+const gchar	*gpk_info_enum_to_localised_text	(PkInfoEnum	 info)
+							 G_GNUC_CONST;
 const gchar	*gpk_info_enum_to_icon_name		(PkInfoEnum	 info);
-const gchar	*gpk_status_enum_to_localised_text	(PkStatusEnum	 status);
+const gchar	*gpk_status_enum_to_localised_text	(PkStatusEnum	 status)
+							 G_GNUC_CONST;
 const gchar	*gpk_status_enum_to_icon_name		(PkStatusEnum	 status);
 const gchar	*gpk_restart_enum_to_icon_name		(PkRestartEnum	 restart);
-const gchar	*gpk_error_enum_to_localised_text	(PkErrorCodeEnum code);
+const gchar	*gpk_error_enum_to_localised_text	(PkErrorCodeEnum code)
+							 G_GNUC_CONST;
 const gchar	*gpk_error_enum_to_localised_message	(PkErrorCodeEnum code);
-const gchar	*gpk_restart_enum_to_localised_text	(PkRestartEnum	 restart);
+const gchar	*gpk_restart_enum_to_localised_text	(PkRestartEnum	 restart)
+							 G_GNUC_CONST;
 const gchar	*gpk_message_enum_to_icon_name		(PkMessageEnum	 message);
-const gchar	*gpk_message_enum_to_localised_text	(PkMessageEnum	 message);
-const gchar	*gpk_restart_enum_to_localised_text_future(PkRestartEnum	 restart);
-const gchar	*gpk_group_enum_to_localised_text	(PkGroupEnum	 group);
+const gchar	*gpk_message_enum_to_localised_text	(PkMessageEnum	 message)
+							 G_GNUC_CONST;
+const gchar	*gpk_restart_enum_to_localised_text_future(PkRestartEnum	 restart)
+							 G_GNUC_CONST;
+const gchar	*gpk_group_enum_to_localised_text	(PkGroupEnum	 group)
+							 G_GNUC_CONST;
 const gchar	*gpk_group_enum_to_icon_name		(PkGroupEnum	 group);
 gchar		*gpk_size_to_si_size_text		(guint64	 size);
 gchar		*gpk_update_enum_to_localised_text	(PkInfoEnum	 info,
-							 guint		 number);
+							 guint		 number)
+							 G_GNUC_CONST;
 gchar		*gpk_time_to_localised_string		(guint		 time_secs);
 
 G_END_DECLS
