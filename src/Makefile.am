@@ -279,6 +279,11 @@ EXTRA_DIST =						\
 
 clean-local:
 	rm -f *~
+	rm -f *.out
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f gcov.txt
+	rm -f gprof.txt
 	rm -f gpk-marshal.c gpk-marshal.h
 
 MAINTAINERCLEANFILES =					\

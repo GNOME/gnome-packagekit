@@ -49,7 +49,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkStatusbarClass;
 
-GType		 gpk_statusbar_get_type			(void);
+GType		 gpk_statusbar_get_type			(void) G_GNUC_CONST;
 GpkStatusbar	*gpk_statusbar_new			(void);
 gboolean	 gpk_statusbar_set_widget		(GpkStatusbar	*arefresh,
 							 GtkWidget	*widget);

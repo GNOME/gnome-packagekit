@@ -72,7 +72,7 @@ typedef enum
 	GPK_NOTIFY_BUTTON_UNKNOWN
 } GpkNotifyButton;
 
-GType		 gpk_smart_icon_get_type		(void);
+GType		 gpk_smart_icon_get_type		(void) G_GNUC_CONST;
 GpkSmartIcon	*gpk_smart_icon_new			(void);
 GtkStatusIcon	*gpk_smart_icon_get_status_icon		(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_sync			(GpkSmartIcon	*sicon);

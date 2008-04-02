@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkNotifyClass;
 
-GType		 gpk_notify_get_type		  	(void);
+GType		 gpk_notify_get_type		  	(void) G_GNUC_CONST;
 GpkNotify	*gpk_notify_new				(void);
 
 G_END_DECLS

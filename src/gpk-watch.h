@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkWatchClass;
 
-GType		 gpk_watch_get_type		  	(void);
+GType		 gpk_watch_get_type		  	(void) G_GNUC_CONST;
 GpkWatch	*gpk_watch_new				(void);
 
 G_END_DECLS

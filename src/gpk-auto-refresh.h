@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkAutoRefreshClass;
 
-GType		 gpk_auto_refresh_get_type		(void);
+GType		 gpk_auto_refresh_get_type		(void) G_GNUC_CONST;
 GpkAutoRefresh	*gpk_auto_refresh_new			(void);
 gboolean	 gpk_auto_refresh_get_on_battery	(GpkAutoRefresh *arefresh);
 

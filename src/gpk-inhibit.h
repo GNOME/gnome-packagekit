@@ -48,8 +48,8 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkInhibitClass;
 
-GType		 gpk_inhibit_get_type			(void);
-GpkInhibit	*gpk_inhibit_new				(void);
+GType		 gpk_inhibit_get_type			(void) G_GNUC_CONST;
+GpkInhibit	*gpk_inhibit_new			(void);
 gboolean	 gpk_inhibit_create			(GpkInhibit	*inhibit);
 gboolean	 gpk_inhibit_remove			(GpkInhibit	*inhibit);
 

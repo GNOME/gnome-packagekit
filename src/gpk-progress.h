@@ -46,7 +46,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkProgressClass;
 
-GType		 gpk_progress_get_type			(void);
+GType		 gpk_progress_get_type			(void) G_GNUC_CONST;
 GpkProgress	*gpk_progress_new			(void);
 gboolean	 gpk_progress_monitor_tid		(GpkProgress	*progress,
 							 const gchar	*tid);
