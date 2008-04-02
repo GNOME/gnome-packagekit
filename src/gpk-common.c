@@ -500,7 +500,7 @@ gboolean
 gpk_icon_valid (const gchar *icon)
 {
 	GtkIconInfo *icon_info;
-	GtkIconTheme *icon_theme;
+	static GtkIconTheme *icon_theme = NULL;
 	gboolean ret = TRUE;
 
 	/* trivial case */
@@ -508,8 +508,10 @@ gpk_icon_valid (const gchar *icon)
 		return FALSE;
 	}
 
-	/* no unref */
-	icon_theme = gtk_icon_theme_get_default ();
+	/* no unref required */
+	if (icon_theme == NULL) {
+		icon_theme = gtk_icon_theme_get_default ();
+	}
 
 	/* default to 32x32 */
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
