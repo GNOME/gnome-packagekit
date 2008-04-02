@@ -253,27 +253,39 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* set correct view */
 	pk_updates_set_page (PAGE_PROGRESS);
-	package_ids = pk_package_ids_from_array (array);
 
 	/* reset */
 	ret = pk_client_reset (client_action, &error);
 	if (!ret) {
 		pk_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
+	}
+
+	/* update all of them */
+	if (selected_all) {
+		ret = pk_client_update_system (client_action, &error);
+		if (!ret) {
+			text = g_markup_escape_text (error->message, -1);
+			gpk_error_modal_dialog (_("Updating all packages failed"), text);
+			g_free (text);
+			g_error_free (error);
+		}
+		goto out;
 	}
 
 	/* update a list */
+	package_ids = pk_package_ids_from_array (array);
 	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
 		text = g_markup_escape_text (error->message, -1);
-		gpk_error_modal_dialog ("Individual updates failed", text);
+		gpk_error_modal_dialog (_("Updating individual packages failed"), text);
 		g_free (text);
 		g_error_free (error);
 	}
 	g_strfreev (package_ids);
 
-	/* get rid of the array, and free the contents */
+out:
 	g_ptr_array_free (array, TRUE);
 }
 
