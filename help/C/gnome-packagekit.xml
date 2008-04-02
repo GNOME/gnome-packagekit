@@ -241,7 +241,7 @@
   <section id="filters">
     <title>Filters</title>
     <para>
-      You can limit the amount of packages that is shown by serveral criteria.
+      You can limit the amount of packages that is shown by several criteria.
     </para>
     <para>
       To see only installed or only uninstalled packages, choose the
@@ -260,6 +260,10 @@
       filter from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Graphical</guisubmenu></menuchoice>
       menu.
     </para>
+    <note><para>
+      Note that PackageKit uses a heuristic to determine if a package is a 'graphical'
+      application and can get this wrong when a package has dependencies like gtk2+.
+    </para></note>
     <para>
       To see only packages that qualify as free software, choose the
       corresponding menuitem from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Free</guisubmenu></menuchoice>
@@ -275,7 +279,7 @@
       The search entry and <guibutton>Find</guibutton> button let you search
       for software packages. The icon inside the entry indicates what kind
       of search is performed. By clicking on it, you can select to search for
-      a string thats contained in package name, the package description, or
+      a string that is contained in package name, the package description, or
       search for the name of a file contained in the package.
     </para>
   </section>
@@ -384,7 +388,7 @@
      When PackageKit is installed, it starts the <command>gpk-update-icon</command>
      command when you log in. This application displays an icon in the
      notification area of your panel when software updates are available,
-     and is reponsible for showing notifications about PackageKit operations
+     and is responsible for showing notifications about PackageKit operations
      and events.
   </para>
   <para>
