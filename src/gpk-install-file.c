@@ -173,6 +173,7 @@ gpk_install_file_error_code_cb (PkClient        *client,
         widget = glade_xml_get_widget (glade_xml, "label_error_details");
         details_safe = g_markup_escape_text (details, -1);
         gtk_label_set_label (GTK_LABEL (widget), details_safe);
+	g_free (details_safe);
 }
 
 static gboolean
@@ -204,6 +205,7 @@ main (int argc, char *argv[])
 	GError *error;
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	char *text;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -296,9 +298,12 @@ main (int argc, char *argv[])
 					       _("You don't have the necessary privileges to install local packages"));
 		}
 		else {
+			text = g_markup_escape_text (error->message, -1);
 			gpk_error_modal_dialog (_("Failed to install"),
-					       error->message);
+					        text);
+			g_free (text);
 		}
+		g_error_free (error);
 	} else {
 		gtk_main ();
 	}

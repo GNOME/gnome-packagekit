@@ -205,6 +205,7 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 	gchar **package_ids;
 	gboolean ret;
 	GError *error = NULL;
+	gchar *text;
 
 	pk_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
@@ -265,7 +266,9 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* update a list */
 	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
-		gpk_error_modal_dialog ("Individual updates failed", error->message);
+		text = g_markup_escape_text (error->message, -1);
+		gpk_error_modal_dialog ("Individual updates failed", text);
+		g_free (text);
 		g_error_free (error);
 	}
 	g_strfreev (package_ids);
@@ -490,6 +493,7 @@ pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	gboolean ret;
 	GError *error = NULL;
 	GtkWidget *widget;
+	gchar *text;
 
 	/* we can't click this if we havn't finished */
 	ret = pk_client_reset (client_action, &error);
@@ -500,7 +504,9 @@ pk_updates_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	}
 	ret = pk_client_refresh_cache (client_action, TRUE, &error);
 	if (ret == FALSE) {
-		gpk_error_modal_dialog (_("Failed to refresh"), error->message);
+		text = g_markup_escape_text (error->message, -1);
+		gpk_error_modal_dialog (_("Failed to refresh"), text);
+		g_free (text);
 		g_error_free (error);
 		return;
 	}
@@ -523,11 +529,13 @@ static void
 pk_updates_history_cb (GtkWidget *widget, gpointer data)
 {
 	GError *error = NULL;
+	gchar *text;
 
 	/* FIXME: do this in process */
 	if (!g_spawn_command_line_async ("gpk-log", &error)) {
-		gpk_error_modal_dialog (_("Failed to launch gpk-log"),
-				       error->message);
+		text = g_markup_escape_text (error->message, -1);
+		gpk_error_modal_dialog (_("Failed to launch gpk-log"), text);
+		g_free (text);
 		g_error_free (error);			
 	}
 }
@@ -1510,6 +1518,7 @@ pk_updates_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	widget = glade_xml_get_widget (glade_xml, "label_error_details");
 	details_safe = g_markup_escape_text (details, -1);
 	gtk_label_set_label (GTK_LABEL (widget), details_safe);
+	g_free (details_safe);
 }
 
 /**
