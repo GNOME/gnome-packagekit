@@ -78,7 +78,6 @@ gpk_statusbar_set_widget (GpkStatusbar *sbar, GtkWidget *widget)
 	GtkWidget *hbox;
 	GtkWidget *icon_container;
 
-	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar == NULL, FALSE);
 
@@ -126,7 +125,6 @@ gpk_statusbar_pulse_timeout (gpointer data)
 gboolean
 gpk_statusbar_set_percentage (GpkStatusbar *sbar, guint percentage)
 {
-	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
 
@@ -169,7 +167,6 @@ gpk_statusbar_set_status (GpkStatusbar *sbar, PkStatusEnum status)
 {
 	const gchar *text;
 
-	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
 
@@ -189,7 +186,6 @@ gpk_statusbar_set_remaining (GpkStatusbar *sbar, guint remaining)
 	gchar *time;
 	gchar *text;
 
-	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
 
@@ -224,7 +220,6 @@ gpk_statusbar_set_remaining (GpkStatusbar *sbar, guint remaining)
 gboolean
 gpk_statusbar_hide (GpkStatusbar *sbar)
 {
-	g_return_val_if_fail (sbar != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_STATUSBAR (sbar), FALSE);
 	g_return_val_if_fail (sbar->priv->statusbar != NULL, FALSE);
 
@@ -263,7 +258,6 @@ gpk_statusbar_finalize (GObject *object)
 {
 	GpkStatusbar *sbar;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_STATUSBAR (object));
 
 	sbar = GPK_STATUSBAR (object);

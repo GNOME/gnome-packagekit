@@ -94,7 +94,6 @@ gpk_notify_class_init (GpkNotifyClass *klass)
 static void
 gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	gpk_show_help ("update-icon");
 }
@@ -300,7 +299,6 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 	const gchar *message;
 	gboolean value;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* we failed, show the icon */
@@ -392,7 +390,6 @@ gpk_notify_update_system (GpkNotify *notify)
 	GError *error = NULL;
 	gchar *message;
 
-	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	pk_debug ("install updates");
@@ -425,7 +422,6 @@ static void
 gpk_notify_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkNotify *notify = GPK_NOTIFY (data);
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	gpk_notify_update_system (notify);
 }
@@ -487,7 +483,6 @@ gpk_notify_activate_update_cb (GtkStatusIcon *status_icon,
 static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	pk_debug ("connected=%i", connected);
 }
@@ -503,7 +498,6 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
 	gboolean value;
 	GString *string;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
         /* are we accepting notifications */
@@ -542,7 +536,6 @@ gpk_notify_auto_update_message (GpkNotify *notify)
 {
 	gboolean value;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* are we accepting notifications */
@@ -572,7 +565,6 @@ gpk_notify_client_packages_to_enum_list (GpkNotify *notify, PkClient *client)
 	PkEnumList *elist;
 	PkPackageItem *item;
 
-	g_return_val_if_fail (notify != NULL, NULL);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* shortcut */
@@ -607,7 +599,6 @@ gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 	PkEnumList *elist;
 	const gchar *icon;
 
-	g_return_val_if_fail (notify != NULL, NULL);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* get an enumerated list with all the update types */
@@ -643,7 +634,6 @@ gpk_notify_check_on_battery (GpkNotify *notify)
 	gboolean conf_update_battery;
 	gboolean value;
 
-	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	on_battery = gpk_auto_refresh_get_on_battery (notify->priv->arefresh);
@@ -675,7 +665,6 @@ gpk_notify_get_update_policy (GpkNotify *notify)
 	PkUpdateEnum update;
 	gchar *updates;
 
-	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	updates = gconf_client_get_string (notify->priv->gconf_client, GPK_CONF_AUTO_UPDATE, NULL);
@@ -704,7 +693,6 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	PkPackageId *ident;
 	GPtrArray *security_array;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	status_security = g_string_new ("");
@@ -842,7 +830,6 @@ gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gc
 	const gchar *title;
 	gboolean value;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	title = gpk_error_enum_to_localised_text (error_code);
@@ -877,7 +864,6 @@ gpk_notify_query_updates (GpkNotify *notify)
 	GError *error = NULL;
 	PkClient *client;
 
-	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
@@ -907,7 +893,6 @@ gpk_notify_query_updates (GpkNotify *notify)
 static void
 gpk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	pk_debug ("finished refreshing cache :%s", pk_exit_enum_to_text (exit_code));
@@ -936,7 +921,6 @@ gpk_notify_check_for_updates_cb (GpkNotify *notify)
 	PkClient *client;
 	pk_debug ("refresh cache");
 
-	g_return_val_if_fail (notify != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	/* got a cache, no need to poll */
@@ -971,7 +955,6 @@ gpk_notify_check_for_updates_cb (GpkNotify *notify)
 static void
 gpk_notify_updates_changed_cb (PkClient *client, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* now try to get newest update list */
@@ -989,7 +972,6 @@ gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
 	GError *error = NULL;
 	const gchar *file;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* wait for the daemon to quit */
@@ -1010,7 +992,6 @@ gpk_notify_restart_schedule_cb (PkClient *client, GpkNotify *notify)
 static void
 gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	/* hide icon if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
@@ -1024,7 +1005,6 @@ gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
 static void
 gpk_notify_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* schedule another update */
@@ -1037,7 +1017,6 @@ gpk_notify_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 static void
 gpk_notify_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 {
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	/* show the icon at login time
@@ -1055,7 +1034,6 @@ gpk_notify_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button
 {
 	gboolean ret;
 
-	g_return_if_fail (notify != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
 	pk_debug ("got: %i with data %s", button, data);
@@ -1161,7 +1139,6 @@ gpk_notify_finalize (GObject *object)
 {
 	GpkNotify *notify;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (GPK_IS_NOTIFY (object));
 
 	notify = GPK_NOTIFY (object);

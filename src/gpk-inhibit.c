@@ -76,7 +76,6 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 	gboolean ret;
 	GError *error = NULL;
 
-	g_return_val_if_fail (inhibit != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy_gpm == NULL) {
@@ -113,7 +112,6 @@ gpk_inhibit_remove (GpkInhibit *inhibit)
 	gboolean ret;
 	GError *error = NULL;
 
-	g_return_val_if_fail (inhibit != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy_gpm == NULL) {
@@ -179,7 +177,6 @@ gpk_inhibit_finalize (GObject *object)
 {
 	GpkInhibit *inhibit;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_INHIBIT (object));
 
 	inhibit = GPK_INHIBIT (object);

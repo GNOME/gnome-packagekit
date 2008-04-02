@@ -134,7 +134,6 @@ gpk_smart_icon_set_icon_name_cb (gpointer data)
 gboolean
 gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 {
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
 	/* if we have a request pending, then cancel it in preference to this one */
@@ -158,7 +157,6 @@ gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 gboolean
 gpk_smart_icon_sync (GpkSmartIcon *sicon)
 {
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
 	/* if we have a request pending, then cancel it in preference to this one */
@@ -183,7 +181,6 @@ gpk_smart_icon_sync (GpkSmartIcon *sicon)
 GtkStatusIcon *
 gpk_smart_icon_get_status_icon (GpkSmartIcon *sicon)
 {
-	g_return_val_if_fail (sicon != NULL, NULL);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), NULL);
 	return sicon->priv->status_icon;
 }
@@ -194,7 +191,6 @@ gpk_smart_icon_get_status_icon (GpkSmartIcon *sicon)
 gboolean
 gpk_smart_icon_set_tooltip (GpkSmartIcon *sicon, const gchar *tooltip)
 {
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (sicon->priv->status_icon), tooltip);
 	return TRUE;
@@ -209,7 +205,6 @@ gpk_smart_icon_notify_new (GpkSmartIcon *sicon, const gchar *title, const gchar 
 {
 	guint timeout_val = 0;
 
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
 	/* default values */
@@ -237,7 +232,6 @@ gpk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, GpkSmart
 {
 	GpkNotifyButton button;
 
-	g_return_if_fail (sicon != NULL);
 	g_return_if_fail (PK_IS_SMART_ICON (sicon));
 
 	/* get the value */
@@ -257,7 +251,6 @@ gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const
 	const gchar *text = NULL;
 	const gchar *id = NULL;
 
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 
 	/* get the id */
@@ -292,7 +285,6 @@ gpk_smart_icon_notify_show (GpkSmartIcon *sicon)
 {
 	GError *error = NULL;
 
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 	g_return_val_if_fail (sicon->priv->dialog != NULL, FALSE);
 
@@ -312,7 +304,6 @@ gpk_smart_icon_notify_show (GpkSmartIcon *sicon)
 gboolean
 gpk_smart_icon_notify_close (GpkSmartIcon *sicon)
 {
-	g_return_val_if_fail (sicon != NULL, FALSE);
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 	notify_notification_close (sicon->priv->dialog, NULL);
 	return TRUE;
@@ -348,7 +339,6 @@ gpk_smart_icon_finalize (GObject *object)
 {
 	GpkSmartIcon *sicon;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_SMART_ICON (object));
 
 	sicon = PK_SMART_ICON (object);

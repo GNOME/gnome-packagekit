@@ -513,6 +513,8 @@ gpk_progress_monitor_tid (GpkProgress *progress, const gchar *tid)
 	guint elapsed;
 	guint remaining;
 
+	g_return_val_if_fail (PK_IS_PROGRESS (progress), FALSE);
+
 	pk_client_set_tid (progress->priv->client, tid, NULL);
 
 	/* fill in role */
@@ -649,7 +651,6 @@ gpk_progress_finalize (GObject *object)
 	GpkProgress *progress;
 	GtkWidget *widget;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (PK_IS_PROGRESS (object));
 
 	progress = GPK_PROGRESS (object);

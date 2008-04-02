@@ -75,10 +75,8 @@ gpk_install_finished_timeout (gpointer data)
 }
 
 static void
-gpk_install_file_finished_cb (PkClient   *client,
-			     PkExitEnum  exit,
-			     guint       runtime,
-			     gpointer    data)
+gpk_install_file_finished_cb (PkClient *client, PkExitEnum exit,
+			      guint runtime, gpointer data)
 {
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
                 gpk_install_file_set_page (PAGE_CONFIRM);
@@ -92,11 +90,11 @@ static gint pulse_timeout = 0;
 
 static void
 gpk_install_file_progress_changed_cb (PkClient *client,
-				     guint     percentage,
-				     guint     subpercentage,
-				     guint     elapsed,
-				     guint     remaining,
-				     gpointer  data)
+				      guint     percentage,
+				      guint     subpercentage,
+				      guint     elapsed,
+				      guint     remaining,
+				      gpointer  data)
 {
         GtkWidget *widget;
 

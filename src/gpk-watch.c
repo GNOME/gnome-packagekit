@@ -100,7 +100,6 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	gchar *text;
 	const gchar *localised_status;
 
-	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	length = pk_task_list_get_size (watch->priv->tlist);
@@ -157,7 +156,6 @@ gpk_watch_task_list_to_state_enum_list (GpkWatch *watch)
 	PkEnumList *elist;
 	PkTaskListItem *item;
 
-	g_return_val_if_fail (watch != NULL, NULL);
 	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
 
 	/* shortcut */
@@ -193,7 +191,6 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	PkEnumList *elist;
 	gint value;
 
-	g_return_val_if_fail (watch != NULL, FALSE);
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	pk_debug ("rescan");
@@ -242,7 +239,6 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 static void
 gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
 {
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
@@ -273,7 +269,6 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
 	const gchar *restart_message;
 	const gchar *icon_name;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* get the role */
@@ -366,7 +361,6 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
 	gboolean is_active;
 	gboolean value;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	title = gpk_error_enum_to_localised_text (error_code);
@@ -417,7 +411,6 @@ gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *deta
 	gchar *escaped_details;
 	gboolean value;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
         /* are we accepting notifications */
@@ -563,7 +556,6 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	GtkWidget *item;
 	GtkWidget *image;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("icon right clicked");
 
@@ -591,7 +583,6 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 static void
 gpk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkWatch *watch)
 {
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("unreffing client %p", client);
 	g_object_unref (client);
@@ -618,7 +609,6 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	GError *error = NULL;
 	gchar *message;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("refresh cache");
@@ -645,7 +635,6 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 static void
 pk_monitor_action_unref_cb (GpkProgress *progress, GpkWatch *watch)
 {
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	g_object_unref (progress);
@@ -660,7 +649,6 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 	gchar *tid;
 	GpkProgress *progress = NULL;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* find the job we should bind to */
@@ -690,7 +678,6 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 	gchar *text;
 	guint length;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	length = pk_task_list_get_size (watch->priv->tlist);
@@ -746,7 +733,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 	GtkWidget *widget;
 	GtkWidget *image;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("icon left clicked");
@@ -785,7 +771,6 @@ gpk_watch_hide_restart_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkWatch *watch = GPK_WATCH (data);
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* just hide it */
@@ -805,7 +790,6 @@ gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watc
 	GtkWidget *widget;
 	GtkWidget *image;
 
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("icon left clicked");
@@ -835,7 +819,6 @@ gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watc
 static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
 {
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 	pk_debug ("connected=%i", connected);
 	if (connected) {
@@ -852,7 +835,6 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatc
 static void
 gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 {
-	g_return_if_fail (watch != NULL);
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
@@ -947,7 +929,6 @@ gpk_watch_finalize (GObject *object)
 {
 	GpkWatch *watch;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (GPK_IS_WATCH (object));
 
 	watch = GPK_WATCH (object);
