@@ -129,13 +129,6 @@ pk_transaction_db_get_pretty_date (const gchar *timespec)
 	hours = (timeval_now.tv_sec - timeval.tv_sec) / (60 * 60);
 	pk_debug ("hours is %i", hours);
 
-	/* is this recently? */
-	if (hours < 24) {
-		return g_strdup (_("Today"));
-	} else if (hours < 24*2) {
-		return g_strdup (_("Yesterday"));
-	}
-
 	/* get printed string */
 	date = g_date_new ();
 	g_date_set_time_val (date, &timeval);
