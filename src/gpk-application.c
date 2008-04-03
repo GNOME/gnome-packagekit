@@ -645,10 +645,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 		gtk_widget_hide (widget);
 
-		/* sorted */
-		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
-						      PACKAGES_COLUMN_TEXT, GTK_SORT_ASCENDING);
-
 		/* were there no entries found? */
 		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
 			GtkTreeIter iter;
@@ -2316,6 +2312,10 @@ gpk_application_init (GpkApplication *application)
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
+
+	/* sorted */
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
+					      PACKAGES_COLUMN_TEXT, GTK_SORT_ASCENDING);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
