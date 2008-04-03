@@ -141,14 +141,7 @@
     It is not a replacement for existing package managers like yum.
   </para>
   <para>
-    Some of the architectural advantages of PackageKit over other package
-    management solutions are that the PackageKit daemon runs as a system
-    process that is not tied to any user session, which means that a
-    long-running update or installation will not be interrupted if the user
-    who started it logs out. Tasks are queued up, meaning that multiple users
-    can use PackageKit in parallel without completely locking each other out.
-    Finally, access to all privileged operations is controlled via
-    <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
+    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that single users can initiate multiple tasks which will be executed one by one and also that multiple users can use PackageKit in parallel without completely locking each other out.inally, access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
 
 </section>
@@ -235,7 +228,7 @@
     A software source configuration is available in the system menu that
     allows you to enable or disable a existing software repository.
     You can also refresh the application lists for displaying the latest
-    information.
+    information about software packages available in the repository.
   </para>
 
   <section id="filters">
@@ -268,7 +261,7 @@
       To see only packages that qualify as free software, choose the
       corresponding menuitem from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Free</guisubmenu></menuchoice>
       menu. Currently, PackageKit considers a package to be free software
-      if its license is listed in the Fedora
+      if its license is listed as such in the Fedora
       <ulink url="http://fedoraproject.org/wiki/Licensing">Licensing</ulink> page.
     </para>
   </section>
@@ -295,13 +288,10 @@
     are compatible with your operating system. Apart from the repositories for
     the operating system itself, there are third-party repositories offering
     additional software for many Linux distributions &dash; check your
-    distribution-specific documentation.
+    distribution-specific documentation for more information.
   </para>
   <para>
-    At this time, PackageKit does not offer a way to add new repositories
-    to your system. It only allows you to enable or disable known repositories.
-    However, it is often possible to make a new repository known to PackageKit
-    by installing a package with the necessary information.
+    At this time, PackageKit does not offer a way to add new repositories to your system. It only allows you to enable or disable known repositories.However, it is often possible to make a new repository known to PackageKit by installing a package with the necessary information. These are usually called (foo)-release, where foo is the name of the repository.
   </para>
 </section>
 
@@ -374,12 +364,14 @@
 <section id="prefs">
   <title>Software Updates Preferences</title>
   <para>
-    Preferences can be configured via <menuchoice><guimenu>System</guimenu><guisubmenu>Preferences</guisubmenu><guisubmenu>System</guisubmenu><guimenuitem>Software Updates</guimenuitem></menuchoice>.
-    You can configure it to check for updates on a daily, hourly or weekly basis
-    or never. The default setting is to check for updates daily.
-    You can also configure it to automatically install all updates or just the
-    ones that fix security issues.
-  </para>
+    Preferences can be configured via <menuchoice><guimenu>System</guimenu><guisubmenu>Preferences</guisubmenu><guisubmenu>System</guisubmenu><guimenuitem>Software Updates</guimenuitem></menuchoice>.You can configure it to check for updates on a daily, hourly or weekly basis or never. The default setting is to check for updates daily. You can also configure it to automatically install all updates or just the ones that fix security issues. These settings are per-user and effective only for the current user logged in the system.
+ </para>
+</section>
+
+<section id="auto-updates">
+  <title>Automatic Updates</title>
+  <para>
+    Automatic updates can be performed in the background system wide using the PackageKit-cron package. This package contains a cron job that as well as a configuration file. The settings are controlled via the configuration file at /etc/sysconfig/packagekit-background. You can set it to just check for updates or perform the updates automatically and notify any email address. </para>
 </section>
 
 <section id="update-icon">
