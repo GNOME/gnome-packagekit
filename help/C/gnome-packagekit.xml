@@ -141,7 +141,15 @@
     It is not a replacement for existing package managers like yum.
   </para>
   <para>
-    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that single users can initiate multiple tasks which will be executed one by one and also that multiple users can use PackageKit in parallel without completely locking each other out.inally, access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
+    Some of the architectural advantages of PackageKit over other package
+    management solutions are that the PackageKit daemon runs as a system
+    process that is not tied to any user session, which means that a
+    long-running update or installation will not be interrupted if the user who
+    started it logs out. Tasks are queued up, meaning that single users can
+    initiate multiple tasks which will be executed one by one and also that
+    multiple users can use PackageKit in parallel without completely locking
+    each other out.inally, access to all privileged operations is controlled
+    via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
 
 </section>
@@ -189,7 +197,9 @@
       <listitem>
         <para>
           <command>gpk-install-file</command>: Installs locally available
-          packages. This also gets run if you double-click on a package in your desktop or within a file manager.
+          packages.
+          This also gets run if you double-click on a package in your desktop
+          or within a file manager.
         </para>
       </listitem>
       <listitem>
@@ -206,7 +216,9 @@
 <section id="add-remove">
   <title>Add/Remove Software</title>
   <para>
-    Add/Remove software application accessed via <menuchoice><guimenu>System</guimenu><guisubmenu>Administration</guisubmenu><guimenuitem>Add/Remove Software</guimenuitem></menuchoice>
+    Add/Remove software application accessed via <menuchoice><guimenu>System</guimenu>
+    <guisubmenu>Administration</guisubmenu>
+    <guimenuitem>Add/Remove Software</guimenuitem></menuchoice>
     allows you to search the software repository easily or browse through the
     different groups like multimedia or office and select software packages to
     install or remove from your system.
@@ -238,19 +250,22 @@
     </para>
     <para>
       To see only installed or only uninstalled packages, choose the
-      corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Installed</guisubmenu></menuchoice> menu.
+      corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu>
+      <guisubmenu>Installed</guisubmenu></menuchoice> menu.
     </para>
     <para>
       To see only packages that are required for developing software or only
       packages that are not for that purpose, choose a filter from
-      the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Development</guisubmenu></menuchoice>
+      the <menuchoice><guimenu>Filters</guimenu>
+      <guisubmenu>Development</guisubmenu></menuchoice>
       menu. Typical packages in this category are compilers, programming
       languages or libraries.
     </para>
     <para>
       To see only packages containing applications with a graphical user
       interface or only applications with a commandline interface, choose a
-      filter from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Graphical</guisubmenu></menuchoice>
+      filter from the <menuchoice><guimenu>Filters</guimenu>
+      <guisubmenu>Graphical</guisubmenu></menuchoice>
       menu.
     </para>
     <note><para>
@@ -259,7 +274,8 @@
     </para></note>
     <para>
       To see only packages that qualify as free software, choose the
-      corresponding menuitem from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Free</guisubmenu></menuchoice>
+      corresponding menuitem from the <menuchoice><guimenu>Filters</guimenu>
+      <guisubmenu>Free</guisubmenu></menuchoice>
       menu. Currently, PackageKit considers a package to be free software
       if its license is listed as such in the Fedora
       <ulink url="http://fedoraproject.org/wiki/Licensing">Licensing</ulink> page.
@@ -283,22 +299,28 @@
   <title>Software Sources</title>
   <para>
     The software repository viewer allows you to enable or disable software
-    sources &dash; also known as <quote>repositories</quote>. Repositories
+    sources - also known as <quote>repositories</quote>. Repositories
     are collections of software packages that are known to work together and
     are compatible with your operating system. Apart from the repositories for
     the operating system itself, there are third-party repositories offering
-    additional software for many Linux distributions &dash; check your
+    additional software for many Linux distributions - check your
     distribution-specific documentation for more information.
   </para>
   <para>
-    At this time, PackageKit does not offer a way to add new repositories to your system. It only allows you to enable or disable known repositories.However, it is often possible to make a new repository known to PackageKit by installing a package with the necessary information. These are usually called (foo)-release, where foo is the name of the repository.
+    At this time, PackageKit does not offer a way to add new repositories to
+    your system. It only allows you to enable or disable known repositories.
+    However, it is often possible to make a new repository known to PackageKit
+    by installing a package with the necessary information. These are usually
+    called (foo)-release, where foo is the name of the repository.
   </para>
 </section>
 
 <section id="update-viewer">
   <title>Update Viewer</title>
    <para>
-     You can update your system via <menuchoice><guimenu>System</guimenu><guisubmenu>Administration</guisubmenu><guimenuitem>Update System</guimenuitem></menuchoice>
+     You can update your system via <menuchoice><guimenu>System</guimenu>
+     <guisubmenu>Administration</guisubmenu>
+     <guimenuitem>Update System</guimenuitem></menuchoice>
      or by selecting <menuchoice><guimenuitem>Show Updates</guimenuitem></menuchoice>
      from the update icon in the notification area.
      When you do this, the update viewer application launches and immediately
@@ -364,14 +386,30 @@
 <section id="prefs">
   <title>Software Updates Preferences</title>
   <para>
-    Preferences can be configured via <menuchoice><guimenu>System</guimenu><guisubmenu>Preferences</guisubmenu><guisubmenu>System</guisubmenu><guimenuitem>Software Updates</guimenuitem></menuchoice>.You can configure it to check for updates on a daily, hourly or weekly basis or never. The default setting is to check for updates daily. You can also configure it to automatically install all updates or just the ones that fix security issues. These settings are per-user and effective only for the current user logged in the system.
+    Preferences can be configured via <menuchoice><guimenu>System</guimenu>
+    <guisubmenu>Preferences</guisubmenu><guisubmenu>System</guisubmenu>
+    <guimenuitem>Software Updates</guimenuitem></menuchoice>.
+    You can configure it to check for updates on a daily, hourly or weekly
+    basis or never.
+    The default setting is to check for updates daily.
+    You can also configure it to automatically install all updates or just the
+    ones that fix security issues.
+    These settings are per-user and effective only for the current user logged
+    in the system.
  </para>
 </section>
 
 <section id="auto-updates">
   <title>Automatic Updates</title>
   <para>
-    Automatic updates can be performed in the background system wide using the PackageKit-cron package. This package contains a cron job that as well as a configuration file. The settings are controlled via the configuration file at /etc/sysconfig/packagekit-background. You can set it to just check for updates or perform the updates automatically and notify any email address. </para>
+    Automatic updates can be performed in the background system wide using the
+    PackageKit-cron package.
+    This package contains a cron job that as well as a configuration file.
+    The settings are controlled via the configuration file at
+    <command>/etc/sysconfig/packagekit-background</command>.
+    You can set it to just check for updates or perform the updates
+    automatically and notify any email address.
+  </para>
 </section>
 
 <section id="update-icon">
