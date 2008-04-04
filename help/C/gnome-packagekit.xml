@@ -146,7 +146,7 @@
     It is not a replacement for existing package managers like yum.
   </para>
   <para>
-    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that single users can initiate multiple tasks which will be executed one by one and also that multiple users can use PackageKit in parallel without completely locking each other out.Access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
+    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that a user can initiate multiple tasks which will be executed one by one and also that multiple users can also use PackageKit in parallel without completely locking each other out. Access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
 
 </section>
