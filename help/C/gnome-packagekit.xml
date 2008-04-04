@@ -56,6 +56,11 @@
 
     <authorgroup>
       <author role="maintainer">
+	<firstname>Rahul<firstname>
+	<surname>Sundaram</surname>
+	<email>sundaram@fedoraproject.org</email>
+       </author>
+        <author role="maintainer">
         <firstname>Richard</firstname>
         <surname>Hughes</surname>
         <email>richard@hughsie.com</email>
@@ -141,7 +146,7 @@
     It is not a replacement for existing package managers like yum.
   </para>
   <para>
-    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that single users can initiate multiple tasks which will be executed one by one and also that multiple users can use PackageKit in parallel without completely locking each other out.inally, access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
+    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that single users can initiate multiple tasks which will be executed one by one and also that multiple users can use PackageKit in parallel without completely locking each other out.Access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
 
 </section>
@@ -188,11 +193,15 @@
       </listitem>
       <listitem>
         <para>
-          <command>gpk-install-file</command>: Installs locally available
-          packages. This also gets run if you double-click on a package in your desktop or within a file manager.
+          <command>gpk-install-file</command>: Installs locally available software packages. This also gets run if you double-click on a package in your desktop or within a file manager.
         </para>
       </listitem>
       <listitem>
+	 <para>
+	 <command>gpk-update-icon</command>: When PackageKit is installed, it starts the gpk-update-icon command automatically when you log in. This applicationdisplays an icon in the notification area of your panel when software updates are available, and is responsible for showing notifications about PackageKit operations and events.
+	</para>
+	</listitem>
+       <listitem>
         <para>
           <command>gpk-backend-status</command>: Shows technical status of
           support for the underlying package management backend.
@@ -219,7 +228,7 @@
     Typically, you can find several thousands of software packages under
     different groups available.
     Since this can be overwhelming you can choose to filter the lists of
-    packages based on several criteria such as whether the package is already
+    software packages based on several criteria such as whether the package is already
     installed, whether it is a development or graphical application and based
     on the software license.
     See <xref linkend="filters"/> for more information about filters.
@@ -234,21 +243,20 @@
   <section id="filters">
     <title>Filters</title>
     <para>
-      You can limit the amount of packages that is shown by several criteria.
+      You can limit the amount of software packages that is shown by several criteria.
     </para>
     <para>
-      To see only installed or only uninstalled packages, choose the
+      To see only installed or only uninstalled software packages, choose the
       corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Installed</guisubmenu></menuchoice> menu.
     </para>
     <para>
-      To see only packages that are required for developing software or only
-      packages that are not for that purpose, choose a filter from
+      To see only software packages that are required for developing software or only software packages that are not for that purpose, choose a filter from
       the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Development</guisubmenu></menuchoice>
-      menu. Typical packages in this category are compilers, programming
+      menu. Typical software packages in this category are compilers, programming
       languages or libraries.
     </para>
     <para>
-      To see only packages containing applications with a graphical user
+      To see only software packages containing applications with a graphical user
       interface or only applications with a commandline interface, choose a
       filter from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Graphical</guisubmenu></menuchoice>
       menu.
@@ -258,7 +266,7 @@
       application and can get this wrong when a package has dependencies like gtk2+.
     </para></note>
     <para>
-      To see only packages that qualify as free software, choose the
+      To see only software packages that qualify as free software, choose the
       corresponding menuitem from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Free</guisubmenu></menuchoice>
       menu. Currently, PackageKit considers a package to be free software
       if its license is listed as such in the Fedora
@@ -309,7 +317,7 @@
    </para>
    <note><para>
      Note that the severity information must be provided by the software
-     repositories where the packages originate. This information may not
+     repositories where the software packages originate. This information may not
      be available for development branches of distributions.
    </para></note>
    <para>
@@ -348,7 +356,7 @@
     </para>
     <note><para>
       Note that the detailed update information must be provided by the
-      software repositories where the packages originate. This information
+      software repositories where the software packages originate. This information
       may not be available for development branches of distributions.
     </para></note>
     <para>
@@ -377,14 +385,7 @@
 <section id="update-icon">
   <title>Update Icon</title>
   <para>
-     When PackageKit is installed, it starts the <command>gpk-update-icon</command>
-     command when you log in. This application displays an icon in the
-     notification area of your panel when software updates are available,
-     and is responsible for showing notifications about PackageKit operations
-     and events.
-  </para>
-  <para>
-     The icon offers menuitems for installing the available updates or
+     The icon offers menu items for installing the available updates or
      for starting the update viewer, which allows you to obtain detailed
      information about the available updates before installing them. See
      <xref linkend="update-viewer"/> for more information.
@@ -394,9 +395,7 @@
 <section id="about">
   <title>About</title>
   <para>
-    &app; was written by Richard Hughes <email>richard@hughsie.com</email>.
-    To find more information about &app;, please visit the
-    <ulink url="http://live.gnome.org/PackageKit" type="http">
+    &app; is maintained Richard Hughes <email>richard@hughsie.com</email> and developed along with several others.To find more information about &app;, please visit the <ulink url="http://live.gnome.org/PackageKit" type="http">
     &application; web page</ulink>.
   </para>
   <para>
