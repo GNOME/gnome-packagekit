@@ -76,7 +76,7 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 
 	/* did we resolve? */
 	if (pk_strzero (package)) {
-		gpk_error_modal_dialog (_("Failed to resolve"),
+		gpk_error_modal_dialog (_("Failed to find package"),
 				       _("The package could not be found on the system"));
 		g_main_loop_quit (loop);
 		return;
