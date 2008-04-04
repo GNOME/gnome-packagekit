@@ -76,7 +76,7 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 
 	/* did we resolve? */
 	if (pk_strzero (package)) {
-		gpk_error_modal_dialog (_("Failed to resolve"),
+		gpk_error_modal_dialog (_("Failed to find package"),
 				       _("The package could not be found on the system"));
 		g_main_loop_quit (loop);
 		return;
@@ -172,6 +172,11 @@ main (int argc, char *argv[])
 
 	if (argc < 2) {
 		g_print ("%s\n", _("You need to specify a package to install"));
+		return 1;
+	}
+	if (argc > 2) {
+		g_print ("%s\n%s\n", _("You can only specify one package to install"),
+			 _("This will change in future versions of PackageKit"));
 		return 1;
 	}
 	loop = g_main_loop_new (NULL, FALSE);

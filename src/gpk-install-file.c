@@ -248,6 +248,11 @@ main (int argc, char *argv[])
 		g_print ("%s\n", _("You need to specify a file to install"));
 		return 1;
 	}
+	if (argc > 2) {
+		g_print ("%s\n%s\n", _("You can only specify one file to install"),
+			 _("This will change in future versions of PackageKit"));
+		return 1;
+	}
 
 	client = pk_client_new ();
 

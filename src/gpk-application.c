@@ -61,6 +61,12 @@ typedef enum {
 	PK_SEARCH_UNKNOWN
 } PkSearchType;
 
+typedef enum {
+	PK_MODE_NAME_DETAILS_FILE,
+	PK_MODE_GROUP,
+	PK_MODE_UNKNOWN
+} PkSearchMode;
+
 struct GpkApplicationPrivate
 {
 	GladeXML		*glade_xml;
@@ -75,6 +81,7 @@ struct GpkApplicationPrivate
 	GpkStatusbar		*statusbar;
 	PkExtra			*extra;
 	gchar			*package;
+	gchar			*group;
 	gchar			*url;
 	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
@@ -82,6 +89,7 @@ struct GpkApplicationPrivate
 	PkEnumList		*current_filter;
 	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
+	PkSearchMode		 search_mode;
 	PolKitGnomeAction	*install_action;
 	PolKitGnomeAction	*remove_action;
 	PolKitGnomeAction	*refresh_action;
@@ -703,14 +711,15 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 		gtk_widget_hide (widget);
+		application->priv->search_mode = PK_MODE_UNKNOWN;
 	}
 }
 
 /**
- * gpk_application_perform_search:
+ * gpk_application_perform_search_name_details_file:
  **/
 static gboolean
-gpk_application_perform_search (GpkApplication *application)
+gpk_application_perform_search_name_details_file (GpkApplication *application)
 {
 	GtkWidget *widget;
 	const gchar *package;
@@ -789,6 +798,71 @@ gpk_application_perform_search (GpkApplication *application)
 }
 
 /**
+ * gpk_application_perform_search_group:
+ **/
+static gboolean
+gpk_application_perform_search_group (GpkApplication *application)
+{
+	GtkWidget *widget;
+	gchar *filter;
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (application->priv->group != NULL, FALSE);
+
+	/* make a valid filter string */
+	filter = pk_enum_list_to_string (application->priv->current_filter);
+	pk_debug ("filter = %s", filter);
+
+	/* cancel this, we don't care about old results that are pending */
+	ret = pk_client_reset (application->priv->client_search, &error);
+	if (!ret) {
+		pk_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* refresh the search as the items may have changed */
+	gtk_list_store_clear (application->priv->packages_store);
+
+	ret = pk_client_search_group (application->priv->client_search, filter, application->priv->group, &error);
+	g_free (filter);
+	/* ick, we failed so pretend we didn't do the action */
+	if (ret) {
+		/* switch around buttons */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+		gtk_widget_hide (widget);
+		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
+			widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+			gtk_widget_show (widget);
+		}
+	} else {
+		gpk_application_error_message (application,
+					      _("The group could not be queried"), error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
+ * gpk_application_perform_search:
+ **/
+static gboolean
+gpk_application_perform_search (GpkApplication *application)
+{
+	gboolean ret = FALSE;
+	if (application->priv->search_mode == PK_MODE_NAME_DETAILS_FILE) {
+		ret = gpk_application_perform_search_name_details_file (application);
+	} else if (application->priv->search_mode == PK_MODE_GROUP) {
+		ret = gpk_application_perform_search_group (application);
+	} else {
+		pk_debug ("doing nothing");
+	}
+	return ret;
+}
+
+/**
  * gpk_application_find_cb:
  **/
 static void
@@ -796,6 +870,7 @@ gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	application->priv->search_mode = PK_MODE_NAME_DETAILS_FILE;
 	gpk_application_perform_search (application);
 }
 
@@ -936,10 +1011,6 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkWidget *widget;
-	gboolean ret;
-	gchar *filter;
-	gchar *id;
-	GError *error = NULL;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -953,40 +1024,13 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &id, -1);
-		pk_debug ("selected row is: %s", id);
+		g_free (application->priv->group);
+		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &application->priv->group, -1);
+		pk_debug ("selected row is: %s", application->priv->group);
 
-		/* refresh the search as the items may have changed */
-		gtk_list_store_clear (application->priv->packages_store);
-
-		/* make a valid filter string */
-		filter = pk_enum_list_to_string (application->priv->current_filter);
-		pk_debug ("filter = %s", filter);
-
-		/* cancel this, we don't care about old results that are pending */
-		ret = pk_client_reset (application->priv->client_search, &error);
-		if (!ret) {
-			pk_warning ("failed to reset client: %s", error->message);
-			g_error_free (error);
-			return;
-		}
-
-		ret = pk_client_search_group (application->priv->client_search, filter, id, &error);
-		g_free (filter);
-		/* ick, we failed so pretend we didn't do the action */
-		if (ret) {
-			/* switch around buttons */
-			widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-			gtk_widget_hide (widget);
-			if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
-				widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
-				gtk_widget_show (widget);
-			}
-		} else {
-			gpk_application_error_message (application,
-						      _("The group could not be queried"), error->message);
-			g_error_free (error);
-		}
+		/* actually do the search */
+		application->priv->search_mode = PK_MODE_GROUP;
+		gpk_application_perform_search (application);
 	}
 }
 
@@ -1887,11 +1931,13 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
+	application->priv->group = NULL;
 	application->priv->url = NULL;
 	application->priv->has_package = FALSE;
 	application->priv->gconf_client = gconf_client_get_default ();
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
+	application->priv->search_mode = PK_MODE_UNKNOWN;
 	application->priv->current_filter = pk_enum_list_new ();
 	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
 
@@ -2385,6 +2431,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->refresh_action);
 
 	g_free (application->priv->url);
+	g_free (application->priv->group);
 	g_free (application->priv->package);
 
 	G_OBJECT_CLASS (gpk_application_parent_class)->finalize (object);
