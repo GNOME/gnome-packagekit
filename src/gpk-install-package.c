@@ -174,6 +174,11 @@ main (int argc, char *argv[])
 		g_print ("%s\n", _("You need to specify a package to install"));
 		return 1;
 	}
+	if (argc > 2) {
+		g_print ("%s\n%s\n", _("You can only specify one package to install"),
+			 _("This will change in future versions of PackageKit"));
+		return 1;
+	}
 	loop = g_main_loop_new (NULL, FALSE);
 
 	client = pk_client_new ();
