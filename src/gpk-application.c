@@ -2023,7 +2023,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* single instance, so this is valid */
 	application->priv->extra = pk_extra_new ();
-	ret = pk_extra_set_database (application->priv->extra, "/var/lib/PackageKit/extra-data.db");
+	ret = pk_extra_set_database (application->priv->extra, NULL);
 	if (!ret) {
 		pk_warning ("Failure setting database");
 	}
