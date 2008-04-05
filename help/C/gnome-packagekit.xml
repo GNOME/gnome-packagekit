@@ -56,11 +56,6 @@
 
     <authorgroup>
       <author role="maintainer">
-	<firstname>Rahul</firstname>
-	<surname>Sundaram</surname>
-	<email>sundaram@fedoraproject.org</email>
-       </author>
-        <author role="maintainer">
         <firstname>Richard</firstname>
         <surname>Hughes</surname>
         <email>richard@hughsie.com</email>
@@ -147,7 +142,15 @@
     It is not a replacement for existing package managers like yum.
   </para>
   <para>
-    Some of the architectural advantages of PackageKit over other package management solutions are that the PackageKit daemon runs as a system process that is not tied to any user session, which means that a long-running update or installation will not be interrupted if the user who started it logs out. Tasks are queued up, meaning that a user can initiate multiple tasks which will be executed one by one and also that multiple users can also use PackageKit in parallel without completely locking each other out. Access to all privileged operations is controlled via <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
+    Some of the architectural advantages of PackageKit over other package management solutions are
+    that the PackageKit daemon runs as a system process that is not tied to any user session,
+    which means that a long-running update or installation will not be interrupted if the user who
+    started it logs out.
+    Tasks are queued up, meaning that a user can initiate multiple tasks which will be executed one
+    by one and also that multiple users can also use PackageKit in parallel without completely
+    locking each other out.
+    Access to all privileged operations is controlled via
+    <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
 
 </section>
@@ -210,18 +213,26 @@
       <term>Command line</term>
       <listitem>
         <para>
-          <command>gpk-install-file</command>: Installs locally available software packages. This also gets run if you double-click on a package in your desktop or within a file manager.
+          <command>gpk-install-file</command>: Installs locally available software packages.
+          This also gets run if you double-click on a package in your desktop or within a file manager.
         </para>
       </listitem>
     </varlistentry>
     <varlistentry>
       <term>Command line</term>
       <listitem>
-	 <para>
-	 <command>gpk-update-icon</command>: When PackageKit is installed, it starts the gpk-update-icon command automatically when you log in. This applicationdisplays an icon in the notification area of your panel when software updates are available, and is responsible for showing notifications about PackageKit operations and events.
-	</para>
-	</listitem>
-       <listitem>
+        <para>
+          <command>gpk-update-icon</command>: When PackageKit is installed, it starts the session
+          icon automatically when you log in.
+          This application displays an icon in the notification area of your panel when software
+          updates are available, and is responsible for showing notifications about PackageKit
+          operations and events.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Command line</term>
+      <listitem>
         <para>
           <command>gpk-backend-status</command>: Shows technical status of
           support for the underlying package management backend.
@@ -269,7 +280,8 @@
     </para>
     <para>
       To see only installed or only uninstalled software packages, choose the
-      corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Installed</guisubmenu></menuchoice> menu.
+      corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu>
+      <guisubmenu>Installed</guisubmenu></menuchoice> menu.
       To see only installed or only uninstalled packages, choose the
       corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu>
       <guisubmenu>Installed</guisubmenu></menuchoice> menu.
@@ -438,8 +450,10 @@
 <section id="about">
   <title>About</title>
   <para>
-    &app; is maintained Richard Hughes <email>richard@hughsie.com</email> and developed along with several others.To find more information about &app;, please visit the <ulink url="http://live.gnome.org/PackageKit" type="http">
-    &application; web page</ulink>.
+    &app; is maintained Richard Hughes <email>richard@hughsie.com</email> and developed along with
+    several others.
+    To find more information about &app;, please visit the
+    <ulink url="http://live.gnome.org/PackageKit" type="http">&application; web page</ulink>.
   </para>
   <para>
     To report a bug or make a suggestion regarding this application or
