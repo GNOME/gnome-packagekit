@@ -387,12 +387,12 @@ gpk_package_id_pretty (const gchar *package_id, const gchar *summary)
 	gchar *text;
 	GString *string;
 
-	if (pk_strzero (package_id)) {
-		return g_strdup (_("Package identifier not valid"));
-	}
-
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		pk_warning ("invalid package_id %s", package_id);
+		return NULL;
+	}
 
 	string = g_string_new (ident->name);
 	if (ident->version != NULL) {
@@ -423,12 +423,13 @@ gpk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
 	PkPackageId *ident;
 	gchar *text;
 
-	if (pk_strzero (package_id)) {
-		return g_strdup (_("Package identifier not valid"));
-	}
-
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		pk_warning ("invalid package_id %s", package_id);
+		return NULL;
+	}
+
 	if (pk_strzero (summary)) {
 		/* just have name */
 		text = g_strdup (ident->name);
@@ -456,6 +457,11 @@ gpk_package_id_name_version (const gchar *package_id)
 
 	/* split by delimeter */
 	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		pk_warning ("invalid package_id %s", package_id);
+		return NULL;
+	}
+
 	string = g_string_new (ident->name);
 	if (ident->version != NULL) {
 		g_string_append_printf (string, "-%s", ident->version);
@@ -474,12 +480,6 @@ gpk_package_get_name (const gchar *package_id)
 {
 	gchar *package = NULL;
 	PkPackageId *ident;
-
-	/* not set! */
-	if (pk_strzero (package_id)) {
-		pk_warning ("package_id blank, returning 'unknown'");
-		return g_strdup ("Package identifier not valid");
-	}
 
 	ident = pk_package_id_new_from_string (package_id);
 	if (ident == NULL) {
@@ -1510,12 +1510,11 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "get name null");
 	text = gpk_package_get_name (NULL);
-	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
+	if (text == NULL) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
 	}
-	g_free (text);
 
 	/************************************************************/
 	libst_title (test, "get name not id");
@@ -1542,12 +1541,11 @@ libst_common_gui (LibSelfTest *test)
 	 ************************************************************/
 	libst_title (test, "package id pretty null");
 	text = gpk_package_id_pretty (NULL, NULL);
-	if (text != NULL && strcmp (text, _("Package identifier not valid")) == 0) {
+	if (text == NULL) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
 	}
-	g_free (text);
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
