@@ -1,3 +1,43 @@
+Version 0.1.11
+~~~~~~~~~~~~~~
+Released: 2008-04-05
+
+* Translations
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Polish translation (Artur Flinta)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Greek translation (Giannis Katsampirhs, Nikos Charonitakis)
+
+* New features:
+ - Rename the tools and client GObjects:
+     pk-transaction-viewer   ->   gpk-log
+     pk-update-viewer        ->   gpk-update-viewer
+     pk-update-icon          ->   gpk-update-icon
+     pk-prefs                ->   gpk-prefs
+ - Add some yelp documentation (Rahul Sundaram, Matthias Clasen)
+ - Check for multiple command line targets. rh#440106 (Richard Hughes)
+ - Add a cancel button you can use when removing or adding software (Richard Hughes)
+ - Make double clicking on a line in pk-application install the package (Richard Hughes)
+ - Save and restore some filter settings in gconf for pk-application (Richard Hughes)
+ - Allow the user to manually update the system from the status icon more than once (Richard Hughes)
+ - Add a session dbus interface to pk-update-icon so we can detect other instances (Richard Hughes)
+ - Handle RestartSchedule by starting another gpk-update-icon (Richard Hughes)
+ - Show the help buttons now we have some yelp help (Richard Hughes)
+ - Set the icon size for software sources in pk-application. rh#439783 (Richard Hughes)
+ - Show the blocked packages on the pk-update-viewer finish page (Richard Hughes)
+
+* Bugfixes:
+ - Refresh the search_group entry when changing filters (Richard Hughes)
+ - Remove some markup and make the translations sane (Richard Hughes)
+ - Only show the libnotify message if the client is not still active. rh#439809 (Richard Hughes)
+ - Only connect up task-list-changed when we have created all the other widgets (Richard Hughes)
+ - Don't show the last package when we are doing the test transaction. rh#439808 (Richard Hughes)
+ - Request the data in pk-update-viewer if we go back to the preview window (Richard Hughes)
+ - Fix wording about updating on battery power in pk-prefs (Rahul Sundaram)
+ - Be more anal about checking errors from the PkClient methods (Richard Hughes)
+ - Truncate the tooltip to avoid filling the screen. rh#439414 (Richard Hughes)
+ - Set the correct page for 'Install more updates'. rh#439471 (Richard Hughes)
+
 Version 0.1.10
 ~~~~~~~~~~~~~~
 Released: 2008-03-28
