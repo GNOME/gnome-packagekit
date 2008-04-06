@@ -426,7 +426,7 @@ main (int argc, char *argv[])
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-software-update");
 
 	/* hide the details for now */
 	widget = glade_xml_get_widget (glade_xml, "frame_details");
