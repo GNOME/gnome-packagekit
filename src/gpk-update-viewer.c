@@ -1593,24 +1593,63 @@ pk_updates_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer userdata
 }
 
 /**
+ * pk_updates_get_checked_status:
+ **/
+void
+pk_updates_get_checked_status (gboolean *all_checked, gboolean *none_checked)
+{
+	GtkTreeView *treeview;
+	gboolean valid;
+	gboolean update;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	/* get the first iter in the list */
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	*all_checked = TRUE;
+	*none_checked = TRUE;
+	while (valid) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update, -1);
+		if (update) {
+			*none_checked = FALSE;
+		} else {
+			*all_checked = FALSE;
+		}
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
  * pk_updates_detail_popup_menu_create:
  **/
 void
 pk_updates_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
-	GtkWidget *menu, *menuitem;
+	GtkWidget *menu;
+	GtkWidget *menuitem;
+	gboolean all_checked;
+	gboolean none_checked;
 
 	menu = gtk_menu_new();
 
-	menuitem = gtk_menu_item_new_with_label ("Select all");
-	g_signal_connect (menuitem, "activate",
-			  G_CALLBACK (pk_updates_detail_popup_menu_select_all), treeview);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	/* we don't want to show 'Select all' if they are all checked */
+	pk_updates_get_checked_status (&all_checked, &none_checked);
 
-	menuitem = gtk_menu_item_new_with_label ("Unselect all");
-	g_signal_connect (menuitem, "activate",
-			  G_CALLBACK (pk_updates_detail_popup_menu_select_none), treeview);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	if (!all_checked) {
+		menuitem = gtk_menu_item_new_with_label ("Select all");
+		g_signal_connect (menuitem, "activate",
+				  G_CALLBACK (pk_updates_detail_popup_menu_select_all), treeview);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	}
+
+	if (!none_checked) {
+		menuitem = gtk_menu_item_new_with_label ("Unselect all");
+		g_signal_connect (menuitem, "activate",
+				  G_CALLBACK (pk_updates_detail_popup_menu_select_none), treeview);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+	}
 
 	menuitem = gtk_menu_item_new_with_label ("Ignore this package");
 	gtk_widget_set_sensitive (GTK_WIDGET (menuitem), FALSE);
