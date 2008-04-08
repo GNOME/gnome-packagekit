@@ -1174,7 +1174,7 @@ pk_update_update_last_updated_time (void)
 	return TRUE;
 }
 
-static void 
+static void
 pk_updates_restart_cb (GtkWidget *widget, gpointer data)
 {
 	gpk_restart_system ();
@@ -1549,6 +1549,125 @@ pk_updates_changed_cb (PkClient *client, gpointer data)
 }
 
 /**
+ * pk_updates_detail_popup_menu_select_all:
+ **/
+void
+pk_updates_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer userdata)
+{
+	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	/* get the first iter in the list */
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter, -1);
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+				    PACKAGES_COLUMN_SELECT, TRUE, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
+ * pk_updates_detail_popup_menu_select_none:
+ **/
+void
+pk_updates_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer userdata)
+{
+	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	/* get the first iter in the list */
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter, -1);
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+				    PACKAGES_COLUMN_SELECT, FALSE, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
+ * pk_updates_detail_popup_menu_create:
+ **/
+void
+pk_updates_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
+{
+	GtkWidget *menu, *menuitem;
+
+	menu = gtk_menu_new();
+
+	menuitem = gtk_menu_item_new_with_label ("Select all");
+	g_signal_connect (menuitem, "activate",
+			  G_CALLBACK (pk_updates_detail_popup_menu_select_all), treeview);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+
+	menuitem = gtk_menu_item_new_with_label ("Unselect all");
+	g_signal_connect (menuitem, "activate",
+			  G_CALLBACK (pk_updates_detail_popup_menu_select_none), treeview);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+
+	menuitem = gtk_menu_item_new_with_label ("Ignore this package");
+	gtk_widget_set_sensitive (GTK_WIDGET (menuitem), FALSE);
+	g_signal_connect (menuitem, "activate",
+			  G_CALLBACK (pk_updates_detail_popup_menu_select_all), treeview);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+
+	gtk_widget_show_all (menu);
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
+		        (event != NULL) ? event->button : 0,
+		        gdk_event_get_time((GdkEvent*)event));
+}
+
+/**
+ * pk_updates_detail_button_pressed:
+ **/
+gboolean
+pk_updates_detail_button_pressed (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
+{
+	GtkTreeSelection *selection;
+
+	/* single click with the right mouse button? */
+	if (event->type != GDK_BUTTON_PRESS || event->button != 3) {
+		/* we did not handle this */
+		return FALSE;
+	}
+
+	pk_debug ("Single right click on the tree view");
+
+	/* select the row */
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
+	if (gtk_tree_selection_count_selected_rows (selection) <= 1) {
+		GtkTreePath *path;
+		/* Get tree path for row that was clicked */
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (treeview), (gint) event->x, (gint) event->y, &path, NULL, NULL, NULL)) {
+			gtk_tree_selection_unselect_all (selection);
+			gtk_tree_selection_select_path (selection, path);
+			gtk_tree_path_free (path);
+		}
+	}
+
+	/* create */
+	pk_updates_detail_popup_menu_create (treeview, event, userdata);
+	return TRUE;
+}
+
+/**
+ * pk_updates_detail_popup_menu:
+ **/
+gboolean
+pk_updates_detail_popup_menu (GtkWidget *treeview, gpointer userdata)
+{
+	pk_updates_detail_popup_menu_create (treeview, NULL, userdata);
+	return TRUE;
+}
+
+/**
  * main:
  **/
 int
@@ -1840,6 +1959,10 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_details));
+	g_signal_connect (widget, "popup-menu",
+			  G_CALLBACK (pk_updates_detail_popup_menu), NULL);
+	g_signal_connect (widget, "button-press-event",
+			  G_CALLBACK (pk_updates_detail_button_pressed), NULL);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
