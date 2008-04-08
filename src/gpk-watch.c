@@ -40,12 +40,13 @@
 #include <polkit-gnome/polkit-gnome.h>
 
 #include <pk-debug.h>
-#include <pk-job-list.h>
+#include <pk-control.h>
 #include <pk-client.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-enum-list.h>
 
 #include "gpk-common.h"
 #include "gpk-watch.h"
@@ -63,6 +64,7 @@ static void     gpk_watch_finalize	(GObject       *object);
 struct GpkWatchPrivate
 {
 	PkClient		*client;
+	PkControl		*control;
 	GpkSmartIcon		*sicon;
 	GpkSmartIcon		*sicon_restart;
 	GpkInhibit		*inhibit;
@@ -864,10 +866,12 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->sicon_restart = gpk_smart_icon_new ();
 
 	/* we need to get ::locked */
-	watch->priv->client = pk_client_new ();
-	pk_client_set_promiscuous (watch->priv->client, TRUE, NULL);
-	g_signal_connect (watch->priv->client, "locked",
+	watch->priv->control = pk_control_new ();
+	g_signal_connect (watch->priv->control, "locked",
 			  G_CALLBACK (gpk_watch_locked_cb), watch);
+
+	watch->priv->client = pk_client_new ();
+//XXX	pk_client_set_promiscuous (watch->priv->client, TRUE, NULL);
 	g_signal_connect (watch->priv->client, "finished",
 			  G_CALLBACK (gpk_watch_finished_cb), watch);
 	g_signal_connect (watch->priv->client, "error-code",
@@ -938,6 +942,7 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->client);
+	g_object_unref (watch->priv->control);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->restart_action);

@@ -33,6 +33,7 @@
 #include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
+#include <pk-control.h>
 #include <pk-client.h>
 #include <pk-enum-list.h>
 #include "gpk-common.h"
@@ -290,6 +291,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	PkEnumList *role_list;
 	PkClient *client;
+	PkControl *control;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -330,7 +332,9 @@ main (int argc, char *argv[])
 	client = pk_client_new ();
 
 	/* get actions */
-	role_list = pk_client_get_actions (client);
+	control = pk_control_new ();
+	role_list = pk_control_get_actions (control);
+	g_object_unref (control);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-prefs.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_prefs");

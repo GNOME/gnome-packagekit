@@ -38,7 +38,7 @@
 #include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
-#include <pk-client.h>
+#include <pk-control.h>
 #include <pk-network.h>
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
@@ -70,7 +70,7 @@ struct GpkAutoRefreshPrivate
 	DBusGProxy		*proxy_gs;
 	DBusGProxy		*proxy_gpm;
 	DBusGConnection		*connection;
-	PkClient		*client;
+	PkControl		*control;
 	PkNetwork		*network;
 };
 
@@ -208,7 +208,8 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* get the time since the last refresh */
-	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+	ret = pk_control_get_time_since_action (arefresh->priv->control,
+						PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to get last time");
 		return FALSE;
@@ -240,7 +241,8 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* get the time since the last refresh */
-	ret = pk_client_get_time_since_action (arefresh->priv->client, PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
+	ret = pk_control_get_time_since_action (arefresh->priv->control,
+						PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
 	if (ret == FALSE) {
 		pk_warning ("failed to get last time");
 		return FALSE;
@@ -497,7 +499,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->gconf_client = gconf_client_get_default ();
 
 	/* we need to query the last cache refresh time */
-	arefresh->priv->client = pk_client_new ();
+	arefresh->priv->control = pk_control_new ();
 
 	/* connect to session bus */
 	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
@@ -550,7 +552,7 @@ gpk_auto_refresh_finalize (GObject *object)
 	arefresh = GPK_AUTO_REFRESH (object);
 	g_return_if_fail (arefresh->priv != NULL);
 
-	g_object_unref (arefresh->priv->client);
+	g_object_unref (arefresh->priv->control);
 	g_object_unref (arefresh->priv->network);
 	g_object_unref (arefresh->priv->gbus_gs);
 	g_object_unref (arefresh->priv->gbus_gpm);

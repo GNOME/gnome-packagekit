@@ -35,6 +35,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-control.h>
 #include <pk-common.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
@@ -73,6 +74,7 @@ struct GpkApplicationPrivate
 	GConfClient		*gconf_client;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
+	PkControl		*control;
 	PkClient		*client_search;
 	PkClient		*client_action;
 	PkClient		*client_description;
@@ -1948,6 +1950,8 @@ gpk_application_init (GpkApplication *application)
 	/* use a sexy widget */
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
 
+	application->priv->control = pk_control_new ();
+
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
 			  G_CALLBACK (gpk_application_package_cb), application);
@@ -2006,15 +2010,15 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	/* get actions */
-	application->priv->role_list = pk_client_get_actions (application->priv->client_action);
+	application->priv->role_list = pk_control_get_actions (application->priv->control);
 	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
 
 	/* get filters supported */
-	application->priv->filter_list = pk_client_get_filters (application->priv->client_action);
+	application->priv->filter_list = pk_control_get_filters (application->priv->control);
 	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
 
 	/* get groups supported */
-	application->priv->group_list = pk_client_get_groups (application->priv->client_action);
+	application->priv->group_list = pk_control_get_groups (application->priv->control);
 	pk_debug ("groups=%s", pk_enum_list_to_string (application->priv->group_list));
 
 	application->priv->pconnection = pk_connection_new ();
@@ -2414,6 +2418,7 @@ gpk_application_finalize (GObject *object)
 
 	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
+	g_object_unref (application->priv->control);
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
 	g_object_unref (application->priv->client_description);

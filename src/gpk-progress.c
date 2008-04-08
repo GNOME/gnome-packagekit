@@ -31,9 +31,11 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-control.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-common.h>
+#include <pk-enum-list.h>
 
 #include "gpk-common.h"
 #include "gpk-progress.h"
@@ -570,6 +572,7 @@ gpk_progress_init (GpkProgress *progress)
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkEnumList *role_list;
+	PkControl *control;
 
 	progress->priv = GPK_PROGRESS_GET_PRIVATE (progress);
 	progress->priv->task_ended = FALSE;
@@ -624,7 +627,9 @@ gpk_progress_init (GpkProgress *progress)
 			  G_CALLBACK (gpk_progress_cancel_cb), progress);
 
 	/* get actions */
-	role_list = pk_client_get_actions (progress->priv->client);
+	control = pk_control_new ();
+	role_list = pk_control_get_actions (control);
+	g_object_unref (control);
 
 	/* can we ever do the action? */
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == FALSE) {

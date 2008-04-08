@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <pk-enum-list.h>
-#include <pk-client.h>
+#include <pk-control.h>
 #include <locale.h>
 
 #include <pk-debug.h>
@@ -74,7 +74,7 @@ main (int argc, char *argv[])
 	gchar *author;
 	PkEnumList *role_list;
 	PkEnumList *filter_list;
-	PkClient *client;
+	PkControl *control;
 	gboolean retval;
 
 	const GOptionEntry options[] = {
@@ -113,12 +113,12 @@ main (int argc, char *argv[])
 
 	loop = g_main_loop_new (NULL, FALSE);
 
-	client = pk_client_new ();
-	role_list = pk_client_get_actions (client);
-	filter_list = pk_client_get_filters (client);
+	control = pk_control_new ();
+	role_list = pk_control_get_actions (control);
+	filter_list = pk_control_get_filters (control);
 
 	/* general stuff */
-	retval = pk_client_get_backend_detail (client, &name, &author, NULL);
+	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
 	if (FALSE == retval) {
 		pk_warning (_("Exiting as backend details could not be retrieved"));
 		return 1;
@@ -265,7 +265,7 @@ main (int argc, char *argv[])
 	}
 
 	g_object_unref (glade_xml);
-	g_object_unref (client);
+	g_object_unref (control);
 	g_object_unref (role_list);
 	g_object_unref (filter_list);
 

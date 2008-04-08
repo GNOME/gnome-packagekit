@@ -38,9 +38,8 @@
 #include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
-#include <pk-job-list.h>
 #include <pk-client.h>
-#include <pk-notify.h>
+#include <pk-control.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -66,7 +65,7 @@ struct GpkNotifyPrivate
 	PkClient		*client_update_system;
 	PkTaskList		*tlist;
 	GpkAutoRefresh		*arefresh;
-	PkNotify		*notify;
+	PkControl		*control;
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
@@ -1114,10 +1113,10 @@ gpk_notify_init (GpkNotify *notify)
 	g_signal_connect (notify->priv->client_update_system, "error-code",
 			  G_CALLBACK (gpk_notify_error_code_cb), notify);
 
-	notify->priv->notify = pk_notify_new ();
-	g_signal_connect (notify->priv->notify, "updates-changed",
+	notify->priv->control = pk_control_new ();
+	g_signal_connect (notify->priv->control, "updates-changed",
 			  G_CALLBACK (gpk_notify_updates_changed_cb), notify);
-	g_signal_connect (notify->priv->notify, "restart-schedule",
+	g_signal_connect (notify->priv->control, "restart-schedule",
 			  G_CALLBACK (gpk_notify_restart_schedule_cb), notify);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
@@ -1151,7 +1150,7 @@ gpk_notify_finalize (GObject *object)
 	g_object_unref (notify->priv->tlist);
 	g_object_unref (notify->priv->arefresh);
 	g_object_unref (notify->priv->gconf_client);
-	g_object_unref (notify->priv->notify);
+	g_object_unref (notify->priv->control);
 
 	G_OBJECT_CLASS (gpk_notify_parent_class)->finalize (object);
 }

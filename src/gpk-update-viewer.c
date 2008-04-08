@@ -36,7 +36,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
-#include <pk-notify.h>
+#include <pk-control.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -53,6 +53,7 @@ static GtkListStore *list_store_details = NULL;
 static GtkListStore *list_store_description = NULL;
 static PkClient *client_action = NULL;
 static PkClient *client_query = NULL;
+static PkControl *control = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
 
@@ -1134,14 +1135,14 @@ pk_update_get_approx_time (guint time)
  * pk_update_update_last_refreshed_time:
  **/
 static gboolean
-pk_update_update_last_refreshed_time (PkClient *client)
+pk_update_update_last_refreshed_time (void)
 {
 	GtkWidget *widget;
 	guint time;
 	const gchar *time_text;
 
 	/* get times from the daemon */
-	pk_client_get_time_since_action (client, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+	pk_control_get_time_since_action (control, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
 	time_text = pk_update_get_approx_time (time);
 	widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
@@ -1152,7 +1153,7 @@ pk_update_update_last_refreshed_time (PkClient *client)
  * pk_update_update_last_updated_time:
  **/
 static gboolean
-pk_update_update_last_updated_time (PkClient *client)
+pk_update_update_last_updated_time (void)
 {
 	GtkWidget *widget;
 	guint time;
@@ -1160,8 +1161,8 @@ pk_update_update_last_updated_time (PkClient *client)
 	const gchar *time_text;
 
 	/* get times from the daemon */
-	pk_client_get_time_since_action (client, PK_ROLE_ENUM_UPDATE_SYSTEM, &time, NULL);
-	pk_client_get_time_since_action (client, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
+	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_SYSTEM, &time, NULL);
+	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
 
 	/* always use the shortest time */
 	if (time_new < time) {
@@ -1256,10 +1257,10 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	/* just update the preview page */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		/* update last time in the UI */
-		pk_update_update_last_refreshed_time (client);
+		pk_update_update_last_refreshed_time ();
 	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 		   role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		pk_update_update_last_updated_time (client);
+		pk_update_update_last_updated_time ();
 	}
 
 	/* we don't need to do anything here */
@@ -1567,7 +1568,6 @@ main (int argc, char *argv[])
 	GtkWidget *button;
 	PolKitAction *pk_action;
 	GError *error = NULL;
-	PkNotify *notify;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1609,6 +1609,10 @@ main (int argc, char *argv[])
 
 	loop = g_main_loop_new (NULL, FALSE);
 
+	control = pk_control_new ();
+	g_signal_connect (control, "repo-list-changed",
+			  G_CALLBACK (pk_updates_changed_cb), NULL);
+
 	/* this is stuff we don't care about */
 	client_query = pk_client_new ();
 	pk_client_set_use_buffer (client_query, TRUE, NULL);
@@ -1642,12 +1646,8 @@ main (int argc, char *argv[])
 	g_signal_connect (client_action, "allow-cancel",
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
 
-	notify = pk_notify_new ();
-	g_signal_connect (notify, "repo-list-changed",
-			  G_CALLBACK (pk_updates_changed_cb), NULL);
-
 	/* get actions */
-	role_list = pk_client_get_actions (client_query);
+	role_list = pk_control_get_actions (control);
 
 	pconnection = pk_connection_new ();
 	g_signal_connect (pconnection, "connection-changed",
@@ -1859,8 +1859,8 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set the last updated text */
-	pk_update_update_last_refreshed_time (client_query);
-	pk_update_update_last_updated_time (client_query);
+	pk_update_update_last_refreshed_time ();
+	pk_update_update_last_updated_time ();
 
 	/* set the labels blank until we get a package */
 	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
@@ -1894,9 +1894,9 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_preview);
 	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
+	g_object_unref (control);
 	g_object_unref (client_query);
 	g_object_unref (client_action);
-	g_object_unref (notify);
 	g_object_unref (pconnection);
 	g_object_unref (role_list);
 	g_free (cached_package_id);

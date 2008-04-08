@@ -35,6 +35,7 @@
 
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-control.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-enum-list.h>
@@ -366,6 +367,7 @@ main (int argc, char *argv[])
 	PkEnumList *role_list;
 	PolKitAction *pk_action;
 	GtkWidget *button;
+	PkControl *control;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -412,7 +414,9 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_transaction_cb), NULL);
 
 	/* get actions */
-	role_list = pk_client_get_actions (client);
+	control = pk_control_new ();
+	role_list = pk_control_get_actions (control);
+	g_object_unref (control);
 
 	/* save the description in a hash */
 	hash = g_hash_table_new (g_str_hash, g_str_equal);
