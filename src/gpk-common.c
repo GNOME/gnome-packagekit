@@ -105,6 +105,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"emblem-system"},
+	{PK_ROLE_ENUM_INSTALL_SIGNATURE,	"emblem-system"},
 	{0, NULL}
 };
 
@@ -1083,13 +1084,16 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Resolved");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
-		text = _("Got file list");
+		text = _("Getting file list");
 		break;
 	case PK_ROLE_ENUM_WHAT_PROVIDES:
-		text = _("Got what provides");
+		text = _("Getting what provides");
 		break;
 	case PK_ROLE_ENUM_SERVICE_PACK:
 		text = _("Service pack");
+		break;
+	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
+		text = _("Installing signature");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
@@ -1181,6 +1185,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_WHAT_PROVIDES:
 		text = _("Got what provides");
+		break;
+	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
+		text = _("Installed signature");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
@@ -1428,7 +1435,7 @@ libst_common_gui (LibSelfTest *test)
 	guint i;
 	const gchar *string;
 
-	if (libst_start (test, "PkCommonGui", CLASS_AUTO) == FALSE) {
+	if (libst_start (test, "GpkCommon", CLASS_AUTO) == FALSE) {
 		return;
 	}
 
