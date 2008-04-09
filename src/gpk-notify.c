@@ -993,7 +993,8 @@ gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
 {
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 	/* hide icon if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
 		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 	}
 }
