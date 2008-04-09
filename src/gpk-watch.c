@@ -42,6 +42,7 @@
 #include <pk-debug.h>
 #include <pk-control.h>
 #include <pk-client.h>
+#include <pk-task-list.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -63,7 +64,6 @@ static void     gpk_watch_finalize	(GObject       *object);
 
 struct GpkWatchPrivate
 {
-	PkClient		*client;
 	PkControl		*control;
 	GpkSmartIcon		*sicon;
 	GpkSmartIcon		*sicon_restart;
@@ -258,7 +258,7 @@ gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
  * gpk_watch_finished_cb:
  **/
 static void
-gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatch *watch)
+gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, guint runtime, GpkWatch *watch)
 {
 	gboolean ret;
 	gboolean value;
@@ -356,7 +356,7 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkWatc
  * gpk_watch_error_code_cb:
  **/
 static void
-gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkWatch *watch)
+gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkWatch *watch)
 {
 	gchar *escaped_details;
 	const gchar *title;
@@ -406,7 +406,7 @@ gpk_watch_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gch
  * gpk_watch_message_cb:
  **/
 static void
-gpk_watch_message_cb (PkClient *client, PkMessageEnum message, const gchar *details, GpkWatch *watch)
+gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message, const gchar *details, GpkWatch *watch)
 {
 	const gchar *title;
 	const gchar *filename;
@@ -870,15 +870,6 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->control, "locked",
 			  G_CALLBACK (gpk_watch_locked_cb), watch);
 
-	watch->priv->client = pk_client_new ();
-//XXX	pk_client_set_promiscuous (watch->priv->client, TRUE, NULL);
-	g_signal_connect (watch->priv->client, "finished",
-			  G_CALLBACK (gpk_watch_finished_cb), watch);
-	g_signal_connect (watch->priv->client, "error-code",
-			  G_CALLBACK (gpk_watch_error_code_cb), watch);
-	g_signal_connect (watch->priv->client, "message",
-			  G_CALLBACK (gpk_watch_message_cb), watch);
-
 	/* do session inhibit */
 	watch->priv->inhibit = gpk_inhibit_new ();
 
@@ -897,6 +888,12 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->tlist = pk_task_list_new ();
 	g_signal_connect (watch->priv->tlist, "task-list-changed",
 			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
+	g_signal_connect (watch->priv->tlist, "finished",
+			  G_CALLBACK (gpk_watch_finished_cb), watch);
+	g_signal_connect (watch->priv->tlist, "error-code",
+			  G_CALLBACK (gpk_watch_error_code_cb), watch);
+	g_signal_connect (watch->priv->tlist, "message",
+			  G_CALLBACK (gpk_watch_message_cb), watch);
 
 	watch->priv->pconnection = pk_connection_new ();
 	g_signal_connect (watch->priv->pconnection, "connection-changed",
@@ -941,7 +938,6 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
-	g_object_unref (watch->priv->client);
 	g_object_unref (watch->priv->control);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);

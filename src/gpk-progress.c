@@ -514,10 +514,16 @@ gpk_progress_monitor_tid (GpkProgress *progress, const gchar *tid)
 	guint subpercentage;
 	guint elapsed;
 	guint remaining;
+	GError *error = NULL;
 
 	g_return_val_if_fail (PK_IS_PROGRESS (progress), FALSE);
 
-	pk_client_set_tid (progress->priv->client, tid, NULL);
+	ret = pk_client_set_tid (progress->priv->client, tid, &error);
+	if (!ret) {
+		pk_warning ("could not set tid: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
 
 	/* fill in role */
 	text = pk_common_get_role_text (progress->priv->client);
