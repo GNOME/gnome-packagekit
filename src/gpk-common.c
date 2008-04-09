@@ -1060,7 +1060,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Refreshing package cache");
 		break;
 	case PK_ROLE_ENUM_UPDATE_PACKAGES:
-		text = _("Updating package");
+		text = _("Updating packages");
 		break;
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
 		text = _("Updating system");

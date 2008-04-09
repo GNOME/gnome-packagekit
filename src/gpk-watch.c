@@ -699,7 +699,8 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		localised_status = gpk_status_enum_to_localised_text (item->status);
 
 		icon_name = gpk_status_enum_to_icon_name (item->status);
-		if (pk_strzero (item->package_id) == FALSE) {
+		if (!pk_strzero (item->package_id) &&
+		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			package = gpk_package_get_name (item->package_id);
 			text = g_strdup_printf ("%s %s (%s)", localised_role, package, localised_status);
 			g_free (package);
