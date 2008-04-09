@@ -286,6 +286,8 @@ clean-local:
 	rm -f gprof.txt
 	rm -f gpk-marshal.c gpk-marshal.h
 
+CLEANFILES = *~ $(BUILT_SOURCES)
+
 MAINTAINERCLEANFILES =					\
 	*~			      			\
 	Makefile.in					\
