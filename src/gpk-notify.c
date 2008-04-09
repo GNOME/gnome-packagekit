@@ -691,6 +691,7 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	PkUpdateEnum update;
 	PkPackageId *ident;
 	GPtrArray *security_array;
+	const gchar *icon;
 
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
@@ -734,25 +735,21 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 		goto out;
 	}
 
+	/* work out icon */
+	icon = gpk_notify_get_best_update_icon (notify, client);
+	gpk_smart_icon_set_icon_name (notify->priv->sicon, icon);
+
+	/* make tooltip */
+	if (status_security->len != 0) {
+		g_string_set_size (status_security, status_security->len-1);
+	}
+	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
+							  "There are %d updates pending", length), length);
+	gpk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
+
 	/* is policy none? */
 	if (update == PK_UPDATE_ENUM_NONE) {
-		const gchar *icon;
 		pk_debug ("not updating as policy NONE");
-
-		/* work out icon */
-		icon = gpk_notify_get_best_update_icon (notify, client);
-
-		/* trim off extra newlines */
-		if (status_security->len != 0) {
-			g_string_set_size (status_security, status_security->len-1);
-		}
-
-		/* make tooltip */
-		g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
-								  "There are %d updates pending", length), length);
-
-		gpk_smart_icon_set_icon_name (notify->priv->sicon, icon);
-		gpk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
 
 		/* do we warn the user? */
 		if (security_array->len > 0) {
@@ -765,6 +762,10 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	ret = gpk_notify_check_on_battery (notify);
 	if (!ret) {
 		pk_debug ("on battery so not doing update");
+		/* do we warn the user? */
+		if (security_array->len > 0) {
+			gpk_notify_critical_updates_warning (notify, status_security->str, length);
+		}
 		goto out;
 	}
 
