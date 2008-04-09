@@ -244,6 +244,7 @@ gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		watch->priv->show_refresh_in_menu = FALSE;
 	} else {
