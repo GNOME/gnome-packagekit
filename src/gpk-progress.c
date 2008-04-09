@@ -470,8 +470,8 @@ pk_common_get_role_text (PkClient *client)
 	const gchar *role_text;
 	gchar *package_id;
 	gchar *text;
+	gchar *package;
 	PkRoleEnum role;
-	PkPackageId *ident;
 	GError *error = NULL;
 	gboolean ret;
 
@@ -486,16 +486,15 @@ pk_common_get_role_text (PkClient *client)
 	/* backup */
 	role_text = gpk_role_enum_to_localised_present (role);
 
-	/* check to see if we have a package_id or just a search term */
-	if (pk_strzero (package_id)) {
-		text = g_strdup (role_text);
-	} else if (pk_package_id_check (package_id) == FALSE) {
-		text = g_strdup_printf ("%s: %s", role_text, package_id);
+	if (!pk_strzero (package_id) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		package = gpk_package_get_name (package_id);
+		text = g_strdup_printf ("%s: %s", role_text, package);
+		g_free (package);
 	} else {
-		ident = pk_package_id_new_from_string (package_id);
-		text = g_strdup_printf ("%s: %s", role_text, ident->name);
-		pk_package_id_free (ident);
+		text = g_strdup_printf ("%s", role_text);
 	}
+	g_free (package_id);
+
 	return text;
 }
 
