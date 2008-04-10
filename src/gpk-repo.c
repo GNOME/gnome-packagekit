@@ -258,7 +258,7 @@ pk_repo_repo_list_refresh (void)
 		return;
 	}
 
-	if (show_details) {
+	if (!show_details) {
 		filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else {
 		filter = "none";
