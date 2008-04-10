@@ -257,6 +257,16 @@ gpk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
+ * gpk_client_button_help_cb:
+ **/
+static void
+gpk_client_button_help_cb (GtkWidget *widget, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gpk_show_help (NULL);
+}
+
+/**
  * pk_client_button_cancel_cb:
  **/
 static void
@@ -488,11 +498,9 @@ gpk_client_init (GpkClient *gclient)
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_client_button_close_cb), gclient);
-
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_client_button_close_cb), gclient);
-
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close3");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_client_button_close_cb), gclient);
@@ -501,6 +509,16 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_client_button_cancel_cb), gclient);
 	gtk_widget_set_sensitive (widget, FALSE);
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_help3");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_button_help_cb), gclient);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_help4");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_button_help_cb), gclient);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_help5");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_button_help_cb), gclient);
 
 	/* set the label blank initially */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
