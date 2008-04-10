@@ -16,7 +16,7 @@
           <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
             <property name="border_width">10</property>
-            <property name="spacing">5</property>
+            <property name="spacing">6</property>
             <child>
               <widget class="GtkScrolledWindow" id="scrolledwindow_repo">
                 <property name="visible">True</property>
@@ -30,6 +30,21 @@
                   </widget>
                 </child>
               </widget>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="checkbutton_detail">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Shows more repositories that may be interesting</property>
+                <property name="label" translatable="yes" comments="shows extra -source and -debuginfo repos">_Show detailed information</property>
+                <property name="use_underline">True</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkHButtonBox" id="hbuttonbox1">
@@ -66,7 +81,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </widget>

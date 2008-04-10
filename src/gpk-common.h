@@ -44,6 +44,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_FREQUENCY_REFRESH_CACHE	"/apps/gnome-packagekit/frequency_refresh_cache"
 #define GPK_CONF_AUTO_UPDATE			"/apps/gnome-packagekit/auto_update"
 #define GPK_CONF_UPDATE_BATTERY			"/apps/gnome-packagekit/update_battery"
+#define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
 
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"

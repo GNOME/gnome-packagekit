@@ -183,6 +183,7 @@ gpk_repo_LDADD =					\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
+	$(GCONF_LIBS)					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\

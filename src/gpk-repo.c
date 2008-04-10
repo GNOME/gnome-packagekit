@@ -30,6 +30,7 @@
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
@@ -44,6 +45,8 @@ static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkEnumList *role_list;
 static GpkStatusbar *statusbar;
+static GConfClient *gconf_client;
+static gboolean show_details;
 
 enum
 {
@@ -237,13 +240,14 @@ pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *deta
 }
 
 /**
- * pk_repo_repo_list_changed_cb:
+ * pk_repo_repo_list_refresh:
  **/
 static void
-pk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
+pk_repo_repo_list_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
+	const gchar *filter;
 
 	pk_debug ("refreshing list");
 	gtk_list_store_clear (list_store);
@@ -254,11 +258,37 @@ pk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
 		return;
 	}
 
-	ret = pk_client_get_repo_list (client, "none", &error);
+	if (show_details) {
+		filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_DEVELOPMENT);
+	} else {
+		filter = "none";
+	}
+	ret = pk_client_get_repo_list (client, filter, &error);
 	if (!ret) {
 		pk_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
 	}
+}
+
+/**
+ * pk_repo_repo_list_changed_cb:
+ **/
+static void
+pk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
+{
+	pk_repo_repo_list_refresh ();
+}
+
+/**
+ * pk_repo_checkbutton_details:
+ **/
+static void
+pk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
+{
+	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	pk_debug ("Changing %s to %i", GPK_CONF_REPO_SHOW_DETAILS, show_details);
+	gconf_client_set_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, show_details, NULL);
+	pk_repo_repo_list_refresh ();
 }
 
 /**
@@ -268,21 +298,16 @@ int
 main (int argc, char *argv[])
 {
 	GMainLoop *loop;
-	gboolean ret;
 	gboolean verbose = FALSE;
-	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	GError *error = NULL;
 	PkControl *control;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  N_("Show extra debugging information"), NULL },
-		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  N_("Show the program version and exit"), NULL },
 		{ NULL}
 	};
 
@@ -304,15 +329,12 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version) {
-		g_print (VERSION "\n");
-		return 0;
-	}
-
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	loop = g_main_loop_new (NULL, FALSE);
+
+	gconf_client = gconf_client_get_default ();
 
 	client = pk_client_new ();
 	g_signal_connect (client, "repo-detail",
@@ -344,6 +366,12 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
 
+	widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
+	show_details = gconf_client_get_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, NULL);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), show_details);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_repo_checkbutton_details), NULL);
+
 	gtk_widget_set_size_request (main_window, 500, 300);
 
 	/* create list stores */
@@ -370,15 +398,13 @@ main (int argc, char *argv[])
 
 	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
-		ret = pk_client_get_repo_list (client, "none", &error);
-		if (!ret) {
-			pk_warning ("failed to get repo list: %s", error->message);
-			g_error_free (error);
-		}
+		pk_repo_repo_list_refresh ();
 	} else {
 		pk_repo_detail_cb (client, "default",
 				   _("Getting repository list not supported by backend"), FALSE, NULL);
 		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
@@ -387,6 +413,7 @@ main (int argc, char *argv[])
 
 	g_object_unref (glade_xml);
 	g_object_unref (list_store);
+	g_object_unref (gconf_client);
 	g_object_unref (client);
 	g_object_unref (control);
 	g_object_unref (role_list);
