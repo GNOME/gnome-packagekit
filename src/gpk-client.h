@@ -55,6 +55,9 @@ GpkClient	*gpk_client_new				(void);
 gboolean	 gpk_client_install_file		(GpkClient	*gclient,
 							 const gchar	*file_rel)
 							 G_GNUC_WARN_UNUSED_RESULT;
+gboolean	 gpk_client_install_package		(GpkClient	*gclient,
+							 const gchar	*package)
+							 G_GNUC_WARN_UNUSED_RESULT;
 
 G_END_DECLS
 

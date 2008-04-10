@@ -38,7 +38,8 @@ static void     gpk_client_finalize	(GObject	*object);
 
 struct GpkClientPrivate
 {
-	PkClient		*client;
+	PkClient		*client_action;
+	PkClient		*client_resolve;
 	GladeXML		*glade_xml;
 	gint			 pulse_timeout;
 };
@@ -193,6 +194,24 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 }
 
 /**
+ * pk_client_package_cb:
+ **/
+static void
+pk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+		      const gchar *summary, GpkClient *gclient)
+{
+	gchar *text;
+	GtkWidget *widget;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	text = gpk_package_id_pretty (package_id, summary);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_label_set_markup (GTK_LABEL (widget), text);
+	g_free (text);
+}
+
+/**
  * gpk_client_window_delete_event_cb:
  **/
 static gboolean
@@ -214,54 +233,158 @@ gpk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
+ * gpk_client_error_message:
+ **/
+static void
+gpk_client_error_msg (GpkClient *gclient, const gchar *title, const gchar *message)
+{
+	GtkWidget *widget;
+
+	/* hide the main window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_hide (widget);
+
+	/* do a modal error */
+	gpk_error_modal_dialog (title, message);
+}
+
+/**
  * gpk_client_install_file:
  * @gclient: a valid #GpkClient instance
  * @file: a file such as "./hal-devel-0.10.0.rpm"
- * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a file locally, and get the deps from the repositories.
  * This is useful for double clicking on a .rpm or .deb file.
  *
- * Return value: %TRUE if the daemon queued the transaction
+ * Return value: %TRUE if the method is running
  **/
 gboolean
 gpk_client_install_file (GpkClient *gclient, const gchar *file_rel)
 {
 	gboolean ret;
 	GError *error = NULL;
-	GtkWidget *widget;
 	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (file_rel != NULL, FALSE);
 
-	ret = pk_client_install_file (gclient->priv->client, file_rel, &error);
-	if (ret == FALSE) {
-		/* hide window straight away */
-		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-		gtk_widget_hide (widget);
-
+	ret = pk_client_install_file (gclient->priv->client_action, file_rel, &error);
+	if (!ret) {
 		/* check if we got a permission denied */
-		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.localinstall")) {
-			gpk_error_modal_dialog (_("Failed to install"),
-					       _("You don't have the necessary privileges to install local packages"));
-		}
-		else {
+		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
+			gpk_client_error_msg (gclient, _("Failed to install file"),
+					      _("You don't have the necessary privileges to install local files"));
+		} else {
 			text = g_markup_escape_text (error->message, -1);
-			gpk_error_modal_dialog (_("Failed to install"),
-						text);
+			gpk_client_error_msg (gclient, _("Failed to install file"), text);
 			g_free (text);
 		}
 		g_error_free (error);
-	} else {
-		gtk_main ();
+		goto out;
 	}
 
+	/* wait for completion */
+	gtk_main ();
+
+	/* we're done */
 	if (gclient->priv->pulse_timeout != 0) {
 		g_source_remove (gclient->priv->pulse_timeout);
 	}
+out:
+	return ret;
+}
 
-	return TRUE;
+/**
+ * gpk_client_install_package:
+ * @gclient: a valid #GpkClient instance
+ * @package: a file such as hal-info
+ *
+ * Install a package of the newest and most correct version.
+ *
+ * Return value: %TRUE if the method is running
+ **/
+gboolean
+gpk_client_install_package (GpkClient *gclient, const gchar *package)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gchar *text;
+	guint len;
+	guint i;
+	PkPackageItem *item;
+	gboolean already_installed = FALSE;
+	gchar *package_id = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (package != NULL, FALSE);
+
+	ret = pk_client_resolve (gclient->priv->client_resolve, "none", package, &error);
+	if (!ret) {
+		/* check if we got a permission denied */
+		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
+			gpk_client_error_msg (gclient, _("Failed to install package"),
+					        _("You don't have the necessary privileges to install packages"));
+		} else {
+			text = g_markup_escape_text (error->message, -1);
+			gpk_client_error_msg (gclient, _("Failed to install package"), text);
+			g_free (text);
+		}
+		ret = FALSE;
+		goto out;
+	}
+
+	/* found nothing? */
+	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	if (len == 0) {
+		gpk_client_error_msg (gclient, _("Failed to find package"), _("The package could not be found online"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* see what we've got already */
+	for (i=0; i<len; i++) {
+		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
+		if (item->info == PK_INFO_ENUM_INSTALLED) {
+			already_installed = TRUE;
+			break;
+		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
+			pk_debug ("package '%s' resolved", item->package_id);
+			package_id = g_strdup (item->package_id);
+			break;
+		}
+	}
+
+	/* already installed? */
+	if (already_installed) {
+		gpk_client_error_msg (gclient, _("Failed to install package"), _("The package is already installed"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* got junk? */
+	if (package_id == NULL) {
+		gpk_client_error_msg (gclient, _("Failed to find package"), _("Incorrect response from search"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* try to install out file */
+	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error);
+	if (!ret) {
+		g_error_free (error);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+	/* we're done */
+	if (gclient->priv->pulse_timeout != 0) {
+		g_source_remove (gclient->priv->pulse_timeout);
+	}
+out:
+	g_free (package_id);
+	return ret;
 }
 
 /**
@@ -283,35 +406,41 @@ gpk_client_class_init (GpkClientClass *klass)
 static void
 gpk_client_init (GpkClient *gclient)
 {
-	GtkWidget *main_window;
 	GtkWidget *widget;
 
 	gclient->priv = GPK_CLIENT_GET_PRIVATE (gclient);
 
 	gclient->priv->glade_xml = NULL;
-	gclient->priv->client = NULL;
 	gclient->priv->pulse_timeout = 0;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
 
-	gclient->priv->client = pk_client_new ();
-
-	g_signal_connect (gclient->priv->client, "finished",
+	gclient->priv->client_action = pk_client_new ();
+	g_signal_connect (gclient->priv->client_action, "finished",
 			  G_CALLBACK (gpk_client_finished_cb), gclient);
-	g_signal_connect (gclient->priv->client, "progress-changed",
+	g_signal_connect (gclient->priv->client_action, "progress-changed",
 			  G_CALLBACK (gpk_client_progress_changed_cb), gclient);
-	g_signal_connect (gclient->priv->client, "status-changed",
+	g_signal_connect (gclient->priv->client_action, "status-changed",
 			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
-	g_signal_connect (gclient->priv->client, "error-code",
+	g_signal_connect (gclient->priv->client_action, "error-code",
 			  G_CALLBACK (gpk_client_error_code_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "package",
+			  G_CALLBACK (pk_client_package_cb), gclient);
+
+	gclient->priv->client_resolve = pk_client_new ();
+	g_signal_connect (gclient->priv->client_resolve, "status-changed",
+			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
+	pk_client_set_use_buffer (gclient->priv->client_resolve, TRUE, NULL);
+	pk_client_set_synchronous (gclient->priv->client_resolve, TRUE, NULL);
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_set_size_request (widget, 400, 150);
 
 	/* Get the main window quit */
-	g_signal_connect (main_window, "delete_event",
+	g_signal_connect (widget, "delete_event",
 			  G_CALLBACK (gpk_client_window_delete_event_cb), gclient);
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close");
@@ -346,7 +475,8 @@ gpk_client_finalize (GObject *object)
 
 	gclient = GPK_CLIENT (object);
 	g_return_if_fail (gclient->priv != NULL);
-	g_object_unref (gclient->priv->client);
+	g_object_unref (gclient->priv->client_action);
+	g_object_unref (gclient->priv->client_resolve);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }

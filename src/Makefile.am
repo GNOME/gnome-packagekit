@@ -68,6 +68,8 @@ gpk_install_package_SOURCES =				\
 	gpk-install-package.c				\
 	gpk-progress.c					\
 	gpk-progress.h					\
+	gpk-client.c					\
+	gpk-client.h					\
 	gpk-common.c					\
 	gpk-common.h					\
 	$(NULL)
