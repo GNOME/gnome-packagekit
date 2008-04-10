@@ -92,11 +92,21 @@ gpk_install_finished_timeout (gpointer data)
 static void
 gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
 {
+	GtkWidget *widget;
+
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	}
+	/* make insensitive */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, FALSE);
+
+	/* set to 100% */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
 }
 
 /**
@@ -212,6 +222,20 @@ pk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id
 }
 
 /**
+ * pk_client_allow_cancel_cb:
+ **/
+static void
+pk_client_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkClient *gclient)
+{
+	GtkWidget *widget;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
+}
+
+/**
  * gpk_client_window_delete_event_cb:
  **/
 static gboolean
@@ -230,6 +254,23 @@ gpk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 	gtk_main_quit ();
+}
+
+/**
+ * pk_client_button_cancel_cb:
+ **/
+static void
+pk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* we might have a transaction running */
+	ret = pk_client_cancel (gclient->priv->client_action, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -428,6 +469,8 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_error_code_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "package",
 			  G_CALLBACK (pk_client_package_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "allow-cancel",
+			  G_CALLBACK (pk_client_allow_cancel_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -437,7 +480,6 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_widget_set_size_request (widget, 400, 150);
 
 	/* Get the main window quit */
 	g_signal_connect (widget, "delete_event",
@@ -454,6 +496,11 @@ gpk_client_init (GpkClient *gclient)
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close3");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_client_button_close_cb), gclient);
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_client_button_cancel_cb), gclient);
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set the label blank initially */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
