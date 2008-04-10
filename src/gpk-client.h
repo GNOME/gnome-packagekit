@@ -52,11 +52,14 @@ typedef struct
 GType		 gpk_client_get_type			(void) G_GNUC_CONST;
 GpkClient	*gpk_client_new				(void);
 
-gboolean	 gpk_client_install_file		(GpkClient	*gclient,
+gboolean	 gpk_client_install_local_file		(GpkClient	*gclient,
 							 const gchar	*file_rel)
 							 G_GNUC_WARN_UNUSED_RESULT;
-gboolean	 gpk_client_install_package		(GpkClient	*gclient,
+gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
 							 const gchar	*package)
+							 G_GNUC_WARN_UNUSED_RESULT;
+gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
+							 const gchar	*package_id)
 							 G_GNUC_WARN_UNUSED_RESULT;
 
 G_END_DECLS
