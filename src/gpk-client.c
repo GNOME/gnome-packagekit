@@ -26,6 +26,8 @@
 #include <glade/glade.h>
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-control.h>
+#include <pk-enum-list.h>
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -42,6 +44,8 @@ struct GpkClientPrivate
 	PkClient		*client_resolve;
 	GladeXML		*glade_xml;
 	gint			 pulse_timeout;
+	PkControl		*control;
+	PkEnumList		*role_list;
 };
 
 typedef enum {
@@ -374,6 +378,12 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
+	/* are we dumb and can't check for depends? */
+	if (!pk_enum_list_contains (gclient->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS)) {
+		pk_warning ("skipping depends check");
+		goto skip_checks;
+	}
+
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error);
 	if (!ret) {
@@ -427,7 +437,8 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 		goto out;
 	}
 
-	/* try to install out file */
+skip_checks:
+	/* try to install the package_id */
 	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error);
 	if (!ret) {
 		/* check if we got a permission denied */
@@ -557,6 +568,11 @@ gpk_client_init (GpkClient *gclient)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
 
+	/* get actions */
+	gclient->priv->control = pk_control_new ();
+	gclient->priv->role_list = pk_control_get_actions (gclient->priv->control);
+	pk_debug ("actions=%s", pk_enum_list_to_string (gclient->priv->role_list));
+
 	gclient->priv->client_action = pk_client_new ();
 	g_signal_connect (gclient->priv->client_action, "finished",
 			  G_CALLBACK (gpk_client_finished_cb), gclient);
@@ -631,6 +647,8 @@ gpk_client_finalize (GObject *object)
 	g_return_if_fail (gclient->priv != NULL);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
+	g_object_unref (gclient->priv->control);
+	g_object_unref (gclient->priv->role_list);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }
