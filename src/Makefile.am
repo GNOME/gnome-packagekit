@@ -47,8 +47,8 @@ bin_PROGRAMS =						\
 
 gpk_install_file_SOURCES =				\
 	gpk-install-file.c				\
-	gpk-progress.c					\
-	gpk-progress.h					\
+	gpk-client.c					\
+	gpk-client.h					\
 	gpk-common.c					\
 	gpk-common.h					\
 	$(NULL)
