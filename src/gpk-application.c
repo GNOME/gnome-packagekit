@@ -45,6 +45,7 @@
 #include <locale.h>
 
 #include "gpk-statusbar.h"
+#include "gpk-client.h"
 #include "gpk-common.h"
 #include "gpk-application.h"
 
@@ -181,11 +182,19 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
 	GError *error = NULL;
+	GpkClient *gclient;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	pk_debug ("install %s", application->priv->package);
+
+	/* xxx TODO: this is hacky code for testing only */
+	gclient = gpk_client_new ();
+	ret = gpk_client_install_package_id (gclient, package_id);
+	g_object_unref (gclient);
+
+	return ret;
 
 	ret = pk_client_reset (application->priv->client_action, &error);
 	if (!ret) {

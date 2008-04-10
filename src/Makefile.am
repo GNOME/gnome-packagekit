@@ -121,6 +121,8 @@ gpk_application_SOURCES =				\
 	gpk-application.h				\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
+	gpk-client.c					\
+	gpk-client.h					\
 	gpk-common.c					\
 	gpk-common.h					\
 	$(NULL)
