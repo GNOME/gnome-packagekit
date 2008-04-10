@@ -41,6 +41,9 @@
 static GpkProgress *progress = NULL;
 static gchar *package = NULL;
 static GMainLoop *loop = NULL;
+static PkClient *client_resolve = NULL;
+static PkClient *client_install = NULL;
+static gboolean already_installed = FALSE;
 
 /**
  * gpk_install_package_action_unref_cb:
@@ -49,17 +52,7 @@ static void
 gpk_install_package_action_unref_cb (GpkProgress *progress, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
-	g_object_unref (progress);
 	g_main_loop_quit (loop);
-}
-
-/**
- * gpk_install_package_install_finished_cb:
- **/
-static void
-gpk_install_package_install_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, gpointer data)
-{
-	g_object_unref (client);
 }
 
 /**
@@ -71,8 +64,13 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 	gchar *tid;
 	gboolean ret;
 
-	pk_debug ("unref'ing %p", client);
-	g_object_unref (client);
+	/* already installed? */
+	if (already_installed) {
+		gpk_error_modal_dialog (_("Failed to install package"),
+				       _("The package is already installed"));
+		g_main_loop_quit (loop);
+		return;
+	}
 
 	/* did we resolve? */
 	if (pk_strzero (package)) {
@@ -82,26 +80,16 @@ gpk_install_package_resolve_finished_cb (PkClient *client, PkExitEnum exit_code,
 		return;
 	}
 
-	/* create a new instance */
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_install_package_install_finished_cb), NULL);
-
 	pk_warning ("Installing '%s'", package);
-	ret = pk_client_install_package (client, package, NULL);
+	ret = pk_client_install_package (client_install, package, NULL);
 	if (ret == FALSE) {
 		gpk_error_modal_dialog (_("Method not supported"),
 				       _("Installing packages is not supported"));
-		g_object_unref (client);
 		g_main_loop_quit (loop);
 		return;
 	}
 
-	tid = pk_client_get_tid (client);
-	/* create a new progress object */
-	progress = gpk_progress_new ();
-	g_signal_connect (progress, "action-unref",
-			  G_CALLBACK (gpk_install_package_action_unref_cb), loop);
+	tid = pk_client_get_tid (client_install);
 	gpk_progress_monitor_tid (progress, tid);
 	g_free (tid);
 }
@@ -113,9 +101,12 @@ static void
 gpk_install_package_resolve_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 					const gchar *summary, gboolean data)
 {
-	/* save */
-	pk_debug ("package '%s' resolved!", package_id);
-	package = g_strdup (package_id);
+	if (info == PK_INFO_ENUM_INSTALLED) {
+		already_installed = TRUE;
+	} else if (info == PK_INFO_ENUM_AVAILABLE) {
+		pk_debug ("package '%s' resolved!", package_id);
+		package = g_strdup (package_id);
+	}
 }
 
 /**
@@ -124,9 +115,7 @@ gpk_install_package_resolve_package_cb (PkClient *client, PkInfoEnum info, const
 int
 main (int argc, char *argv[])
 {
-	PkClient *client;
 	GOptionContext *context;
-	const gchar *filter;
 	gboolean ret;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
@@ -181,13 +170,21 @@ main (int argc, char *argv[])
 	}
 	loop = g_main_loop_new (NULL, FALSE);
 
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
+	/* create a new progress object */
+	progress = gpk_progress_new ();
+	g_signal_connect (progress, "action-unref",
+			  G_CALLBACK (gpk_install_package_action_unref_cb), loop);
+
+	/* create seporate instances */
+	client_install = pk_client_new ();
+
+	/* find the name */
+	client_resolve = pk_client_new ();
+	g_signal_connect (client_resolve, "finished",
 			  G_CALLBACK (gpk_install_package_resolve_finished_cb), NULL);
-	g_signal_connect (client, "package",
+	g_signal_connect (client_resolve, "package",
 			  G_CALLBACK (gpk_install_package_resolve_package_cb), NULL);
-	filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_INSTALLED);
-	ret = pk_client_resolve (client, filter, argv[1], NULL);
+	ret = pk_client_resolve (client_resolve, "newest", argv[1], NULL);
 	if (ret == FALSE) {
 		gpk_error_modal_dialog (_("Method not supported"),
 				       _("Resolving names to packages is not supported"));
@@ -196,9 +193,9 @@ main (int argc, char *argv[])
 	}
 
 	g_free (package);
-	if (progress != NULL) {
-		g_object_unref (progress);
-	}
+	g_object_unref (progress);
+	g_object_unref (client_resolve);
+	g_object_unref (client_install);
 
 	return 0;
 }
