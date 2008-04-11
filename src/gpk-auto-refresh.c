@@ -145,7 +145,7 @@ gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 		return 0;
 	}
 	if (freq == PK_FREQ_ENUM_NEVER) {
-		return 0;
+		return G_MAXUINT;
 	}
 	if (freq == PK_FREQ_ENUM_HOURLY) {
 		return 60*60;
@@ -220,7 +220,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_debug ("not before timeout, thresh=%i, now=%i", thresh, time);
+		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
@@ -253,7 +253,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_debug ("not before timeout, thresh=%i, now=%i", thresh, time);
+		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
