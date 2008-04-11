@@ -538,6 +538,82 @@ out:
 }
 
 /**
+ * gpk_client_install_provide_file:
+ * @gclient: a valid #GpkClient instance
+ * @full_path: a file path name such as /usr/sbin/packagekitd
+ *
+ * Install a package which provides a file on the system.
+ *
+ * Return value: %TRUE if the method is running
+ **/
+gboolean
+gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
+{
+	gboolean ret;
+	GError *error = NULL;
+	guint len;
+	guint i;
+	gboolean already_installed = FALSE;
+	gchar *package_id = NULL;
+	PkPackageItem *item;
+	gchar *text;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (full_path != NULL, FALSE);
+
+
+	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error);
+	if (!ret) {
+		text = g_strdup_printf ("%s: %s", _("Incorrect response from search"), error->message);
+		gpk_client_error_msg (gclient, _("Failed to search for file"), text);
+		g_free (text);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* found nothing? */
+	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	if (len == 0) {
+		gpk_client_error_msg (gclient, _("Failed to find package"), _("The file could not be found in any packages"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* see what we've got already */
+	for (i=0; i<len; i++) {
+		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
+		if (item->info == PK_INFO_ENUM_INSTALLED) {
+			already_installed = TRUE;
+			break;
+		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
+			pk_debug ("package '%s' resolved", item->package_id);
+			package_id = g_strdup (item->package_id);
+			break;
+		}
+	}
+
+	/* already installed? */
+	if (already_installed) {
+		gpk_client_error_msg (gclient, _("Failed to install file"), _("A package providing that file is already installed"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* got junk? */
+	if (package_id == NULL) {
+		gpk_client_error_msg (gclient, _("Failed to install file"), _("Incorrect response from file search"));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* install this specific package */
+	ret = gpk_client_install_package_id (gclient, package_id);
+out:
+	g_free (package_id);
+	return ret;
+}
+
+/**
  * gpk_client_class_init:
  * @klass: The GpkClientClass
  **/

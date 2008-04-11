@@ -37,19 +37,20 @@ bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-repo					\
 	gpk-prefs					\
-	gpk-install-file				\
-	gpk-install-package				\
+	gpk-install-local-file				\
+	gpk-install-provide-file			\
+	gpk-install-package-name			\
 	gpk-update-icon					\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-backend-status				\
 	$(NULL)
 
-gpk_install_file_SOURCES =				\
-	gpk-install-file.c				\
+gpk_install_provide_file_SOURCES =			\
+	gpk-install-provide-file.c			\
 	$(NULL)
 
-gpk_install_file_LDADD =				\
+gpk_install_provide_file_LDADD =			\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
@@ -60,11 +61,26 @@ gpk_install_file_LDADD =				\
 	$(GPK_LIBS)					\
 	$(NULL)
 
-gpk_install_package_SOURCES =				\
-	gpk-install-package.c				\
+gpk_install_local_file_SOURCES =			\
+	gpk-install-local-file.c			\
 	$(NULL)
 
-gpk_install_package_LDADD =				\
+gpk_install_local_file_LDADD =				\
+	$(GLIB_LIBS)					\
+	$(DBUS_LIBS)					\
+	$(GCONF_LIBS)					\
+	$(LIBGLADE_LIBS)				\
+	$(GTK_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
+	$(POLKIT_GNOME_LIBS)				\
+	$(GPK_LIBS)					\
+	$(NULL)
+
+gpk_install_package_name_SOURCES =			\
+	gpk-install-package-name.c			\
+	$(NULL)
+
+gpk_install_package_name_LDADD =			\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
