@@ -36,14 +36,13 @@
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-connection.h>
-#include <pk-enum-list.h>
 #include "gpk-common.h"
 #include "gpk-statusbar.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
-static PkEnumList *role_list;
+static PkRoleEnum roles;
 static GpkStatusbar *statusbar;
 static GConfClient *gconf_client;
 static gboolean show_details;
@@ -90,7 +89,7 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	GError *error = NULL;
 
 	/* do we have the capability? */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		pk_debug ("can't change state");
 		return;
 	}
@@ -349,7 +348,7 @@ main (int argc, char *argv[])
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (pk_repo_repo_list_changed_cb), NULL);
-	role_list = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
@@ -396,7 +395,7 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
 	gpk_statusbar_set_widget (statusbar, widget);
 
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
 		pk_repo_repo_list_refresh ();
 	} else {
@@ -416,7 +415,6 @@ main (int argc, char *argv[])
 	g_object_unref (gconf_client);
 	g_object_unref (client);
 	g_object_unref (control);
-	g_object_unref (role_list);
 	g_object_unref (statusbar);
 
 	return 0;

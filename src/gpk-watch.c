@@ -47,7 +47,6 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
-#include <pk-enum-list.h>
 
 #include "gpk-common.h"
 #include "gpk-watch.h"
@@ -148,27 +147,23 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 }
 
 /**
- * gpk_watch_task_list_to_state_enum_list:
+ * gpk_watch_task_list_to_status_enums:
  **/
-static PkEnumList *
-gpk_watch_task_list_to_state_enum_list (GpkWatch *watch)
+static PkStatusEnum
+gpk_watch_task_list_to_status_enums (GpkWatch *watch)
 {
 	guint i;
 	guint length;
-	PkEnumList *elist;
+	PkStatusEnum status = 0;
 	PkTaskListItem *item;
 
-	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
+	g_return_val_if_fail (GPK_IS_WATCH (watch), PK_STATUS_ENUM_UNKNOWN);
 
 	/* shortcut */
 	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0) {
-		return NULL;
+		return PK_STATUS_ENUM_UNKNOWN;
 	}
-
-	/* we can use an enumerated list */
-	elist = pk_enum_list_new ();
-	pk_enum_list_set_type (elist, PK_ENUM_LIST_TYPE_STATUS);
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
@@ -178,9 +173,9 @@ gpk_watch_task_list_to_state_enum_list (GpkWatch *watch)
 			break;
 		}
 		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
-		pk_enum_list_append (elist, item->status);
+		pk_enums_add (status, item->status);
 	}
-	return elist;
+	return status;
 }
 
 /**
@@ -190,40 +185,40 @@ static gboolean
 gpk_watch_refresh_icon (GpkWatch *watch)
 {
 	const gchar *icon;
-	PkEnumList *elist;
+	PkStatusEnum status;
 	gint value;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	pk_debug ("rescan");
-	elist = gpk_watch_task_list_to_state_enum_list (watch);
+	status = gpk_watch_task_list_to_status_enums (watch);
 
 	/* nothing in the list */
-	if (elist == NULL) {
+	if (status == 0) {
 		pk_debug ("no activity");
 		gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 		return TRUE;
 	}
 
 	/* get the most important icon */
-	value = pk_enum_list_contains_priority (elist,
-						PK_STATUS_ENUM_REFRESH_CACHE,
-						PK_STATUS_ENUM_CANCEL,
-						PK_STATUS_ENUM_INSTALL,
-						PK_STATUS_ENUM_REMOVE,
-						PK_STATUS_ENUM_CLEANUP,
-						PK_STATUS_ENUM_OBSOLETE,
-						PK_STATUS_ENUM_SETUP,
-						PK_STATUS_ENUM_UPDATE,
-						PK_STATUS_ENUM_DOWNLOAD,
-						PK_STATUS_ENUM_QUERY,
-						PK_STATUS_ENUM_INFO,
-						PK_STATUS_ENUM_WAIT,
-						PK_STATUS_ENUM_DEP_RESOLVE,
-						PK_STATUS_ENUM_ROLLBACK,
-						PK_STATUS_ENUM_COMMIT,
-						PK_STATUS_ENUM_REQUEST,
-						PK_STATUS_ENUM_FINISHED, -1);
+	value = pk_enums_contain_priority (status,
+					   PK_STATUS_ENUM_REFRESH_CACHE,
+					   PK_STATUS_ENUM_CANCEL,
+					   PK_STATUS_ENUM_INSTALL,
+					   PK_STATUS_ENUM_REMOVE,
+					   PK_STATUS_ENUM_CLEANUP,
+					   PK_STATUS_ENUM_OBSOLETE,
+					   PK_STATUS_ENUM_SETUP,
+					   PK_STATUS_ENUM_UPDATE,
+					   PK_STATUS_ENUM_DOWNLOAD,
+					   PK_STATUS_ENUM_QUERY,
+					   PK_STATUS_ENUM_INFO,
+					   PK_STATUS_ENUM_WAIT,
+					   PK_STATUS_ENUM_DEP_RESOLVE,
+					   PK_STATUS_ENUM_ROLLBACK,
+					   PK_STATUS_ENUM_COMMIT,
+					   PK_STATUS_ENUM_REQUEST,
+					   PK_STATUS_ENUM_FINISHED, -1);
 
 	/* only set if in the list and not unknown */
 	if (value != PK_STATUS_ENUM_UNKNOWN && value != -1) {
@@ -231,7 +226,6 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 		gpk_smart_icon_set_icon_name (watch->priv->sicon, icon);
 	}
 
-	g_object_unref (elist);
 	return TRUE;
 }
 

@@ -35,7 +35,6 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-common.h>
-#include <pk-enum-list.h>
 
 #include "gpk-common.h"
 #include "gpk-progress.h"
@@ -576,7 +575,7 @@ gpk_progress_init (GpkProgress *progress)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
-	PkEnumList *role_list;
+	PkRoleEnum roles;
 	PkControl *control;
 
 	progress->priv = GPK_PROGRESS_GET_PRIVATE (progress);
@@ -633,15 +632,13 @@ gpk_progress_init (GpkProgress *progress)
 
 	/* get actions */
 	control = pk_control_new ();
-	role_list = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control);
 	g_object_unref (control);
 
 	/* can we ever do the action? */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == FALSE) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_CANCEL) == FALSE) {
 		gtk_widget_hide (widget);
 	}
-
-	g_object_unref (role_list);
 
 	widget = glade_xml_get_widget (progress->priv->glade_xml, "button_hide");
 	g_signal_connect (widget, "clicked",

@@ -38,7 +38,6 @@
 #include <pk-control.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
-#include <pk-enum-list.h>
 #include <pk-common.h>
 
 #include "gpk-common.h"
@@ -364,7 +363,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkConnection *pconnection;
-	PkEnumList *role_list;
+	PkRoleEnum roles;
 	PolKitAction *pk_action;
 	GtkWidget *button;
 	PkControl *control;
@@ -415,7 +414,7 @@ main (int argc, char *argv[])
 
 	/* get actions */
 	control = pk_control_new ();
-	role_list = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control);
 	g_object_unref (control);
 
 	/* save the description in a hash */
@@ -467,7 +466,7 @@ main (int argc, char *argv[])
         gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
         gtk_box_reorder_child (GTK_BOX (widget), button, 1);
 	/* hide the rollback button if we can't do the action */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_ROLLBACK)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_ROLLBACK)) {
 		polkit_gnome_action_set_visible (rollback_action, TRUE);
 	} else {
 		polkit_gnome_action_set_visible (rollback_action, FALSE);
@@ -512,7 +511,6 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_details);
 	g_object_unref (client);
 	g_object_unref (pconnection);
-	g_object_unref (role_list);
 	g_free (transaction_id);
 	g_hash_table_unref (hash);
 

@@ -27,7 +27,6 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-control.h>
-#include <pk-enum-list.h>
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -45,7 +44,7 @@ struct GpkClientPrivate
 	GladeXML		*glade_xml;
 	gint			 pulse_timeout;
 	PkControl		*control;
-	PkEnumList		*role_list;
+	PkRoleEnum		 roles;
 };
 
 typedef enum {
@@ -379,7 +378,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enum_list_contains (gclient->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS)) {
+	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
@@ -570,8 +569,7 @@ gpk_client_init (GpkClient *gclient)
 
 	/* get actions */
 	gclient->priv->control = pk_control_new ();
-	gclient->priv->role_list = pk_control_get_actions (gclient->priv->control);
-	pk_debug ("actions=%s", pk_enum_list_to_string (gclient->priv->role_list));
+	gclient->priv->roles = pk_control_get_actions (gclient->priv->control);
 
 	gclient->priv->client_action = pk_client_new ();
 	g_signal_connect (gclient->priv->client_action, "finished",
@@ -648,7 +646,6 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->control);
-	g_object_unref (gclient->priv->role_list);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }

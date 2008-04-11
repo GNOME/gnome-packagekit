@@ -30,7 +30,6 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <pk-enum-list.h>
 #include <pk-control.h>
 #include <locale.h>
 
@@ -72,8 +71,8 @@ main (int argc, char *argv[])
 	GladeXML *glade_xml;
 	gchar *name;
 	gchar *author;
-	PkEnumList *role_list;
-	PkEnumList *filter_list;
+	PkRoleEnum roles;
+	PkFilterEnum filters;
 	PkControl *control;
 	gboolean retval;
 
@@ -114,8 +113,8 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	control = pk_control_new ();
-	role_list = pk_control_get_actions (control);
-	filter_list = pk_control_get_filters (control);
+	roles = pk_control_get_actions (control);
+	filters = pk_control_get_filters (control);
 
 	/* general stuff */
 	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
@@ -143,135 +142,133 @@ main (int argc, char *argv[])
 	g_free (author);
 
 	/* actions */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_CANCEL)) {
 		widget = glade_xml_get_widget (glade_xml, "image_cancel");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_DEPENDS)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_DEPENDS)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_depends");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_UPDATE_DETAIL)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_UPDATE_DETAIL)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_update_detail");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_DESCRIPTION)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_DESCRIPTION)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_description");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_FILES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_FILES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_files");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REQUIRES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REQUIRES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_requires");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_UPDATES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_UPDATES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_updates");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_SEARCH_DETAILS)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 		widget = glade_xml_get_widget (glade_xml, "image_search_details");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_SEARCH_FILE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_search_file");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		widget = glade_xml_get_widget (glade_xml, "image_search_group");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_SEARCH_NAME)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		widget = glade_xml_get_widget (glade_xml, "image_search_name");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REFRESH_CACHE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REFRESH_CACHE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_refresh_cache");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_remove");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_INSTALL_FILE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_FILE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_file_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_update");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		widget = glade_xml_get_widget (glade_xml, "image_system_update");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_RESOLVE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_RESOLVE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_resolve");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_WHAT_PROVIDES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_WHAT_PROVIDES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_what_provides");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_PACKAGES)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_packages");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
 	/* repos */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_GET_REPO_LIST)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_repo_list");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_ENABLE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REPO_ENABLE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_repo_enable");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_REPO_SET_DATA)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REPO_SET_DATA)) {
 		widget = glade_xml_get_widget (glade_xml, "image_repo_set_data");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
 	/* filters */
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_INSTALLED)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_INSTALLED)) {
 		widget = glade_xml_get_widget (glade_xml, "image_installed");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_DEVELOPMENT)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_DEVELOPMENT)) {
 		widget = glade_xml_get_widget (glade_xml, "image_devel");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_GUI)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_GUI)) {
 		widget = glade_xml_get_widget (glade_xml, "image_gui");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_FREE)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_FREE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_free");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_VISIBLE)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_VISIBLE)) {
 		widget = glade_xml_get_widget (glade_xml, "image_visible");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_SUPPORTED)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_SUPPORTED)) {
 		widget = glade_xml_get_widget (glade_xml, "image_supported");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enum_list_contains (filter_list, PK_FILTER_ENUM_NEWEST)) {
+	if (pk_enums_contain (filters, PK_FILTER_ENUM_NEWEST)) {
 		widget = glade_xml_get_widget (glade_xml, "image_newest");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
 	g_object_unref (glade_xml);
 	g_object_unref (control);
-	g_object_unref (role_list);
-	g_object_unref (filter_list);
 
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);

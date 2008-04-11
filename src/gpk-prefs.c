@@ -35,7 +35,6 @@
 #include <pk-debug.h>
 #include <pk-control.h>
 #include <pk-client.h>
-#include <pk-enum-list.h>
 #include "gpk-common.h"
 
 #define PK_FREQ_HOURLY_TEXT		N_("Hourly")
@@ -289,7 +288,7 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
-	PkEnumList *role_list;
+	PkRoleEnum roles;
 	PkClient *client;
 	PkControl *control;
 
@@ -333,7 +332,7 @@ main (int argc, char *argv[])
 
 	/* get actions */
 	control = pk_control_new ();
-	role_list = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control);
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-prefs.glade", NULL, NULL);
@@ -374,7 +373,6 @@ main (int argc, char *argv[])
 
 	g_object_unref (glade_xml);
 	g_object_unref (client);
-	g_object_unref (role_list);
 
 	return 0;
 }

@@ -554,26 +554,23 @@ gpk_notify_auto_update_message (GpkNotify *notify)
 }
 
 /**
- * gpk_notify_client_packages_to_enum_list:
+ * gpk_notify_client_info_to_enums:
  **/
-static PkEnumList *
-gpk_notify_client_packages_to_enum_list (GpkNotify *notify, PkClient *client)
+static PkInfoEnum
+gpk_notify_client_info_to_enums (GpkNotify *notify, PkClient *client)
 {
 	guint i;
 	guint length;
-	PkEnumList *elist;
+	PkInfoEnum infos = 0;
 	PkPackageItem *item;
 
-	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), PK_INFO_ENUM_UNKNOWN);
 
 	/* shortcut */
 	length = pk_client_package_buffer_get_size (client);
 	if (length == 0) {
-		return NULL;
+		return PK_INFO_ENUM_UNKNOWN;
 	}
-
-	/* we can use an enumerated list */
-	elist = pk_enum_list_new ();
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
@@ -583,9 +580,9 @@ gpk_notify_client_packages_to_enum_list (GpkNotify *notify, PkClient *client)
 			break;
 		}
 		pk_debug ("%s %s", item->package_id, pk_info_enum_to_text (item->info));
-		pk_enum_list_append (elist, item->info);
+		pk_enums_add (infos, item->info);
 	}
-	return elist;
+	return infos;
 }
 
 /**
@@ -595,22 +592,22 @@ static const gchar *
 gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 {
 	gint value;
-	PkEnumList *elist;
+	PkInfoEnum infos;
 	const gchar *icon;
 
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* get an enumerated list with all the update types */
-	elist = gpk_notify_client_packages_to_enum_list (notify, client);
+	infos = gpk_notify_client_info_to_enums (notify, client);
 
 	/* get the most important icon */
-	value = pk_enum_list_contains_priority (elist,
-						PK_INFO_ENUM_SECURITY,
-						PK_INFO_ENUM_IMPORTANT,
-						PK_INFO_ENUM_BUGFIX,
-						PK_INFO_ENUM_NORMAL,
-						PK_INFO_ENUM_ENHANCEMENT,
-						PK_INFO_ENUM_LOW, -1);
+	value = pk_enums_contain_priority (infos,
+					   PK_INFO_ENUM_SECURITY,
+					   PK_INFO_ENUM_IMPORTANT,
+					   PK_INFO_ENUM_BUGFIX,
+					   PK_INFO_ENUM_NORMAL,
+					   PK_INFO_ENUM_ENHANCEMENT,
+					   PK_INFO_ENUM_LOW, -1);
 	if (value == -1) {
 		pk_warning ("should not be possible!");
 		value = PK_INFO_ENUM_LOW;
@@ -618,8 +615,6 @@ gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 
 	/* get the icon */
 	icon = gpk_info_enum_to_icon_name (value);
-
-	g_object_unref (elist);
 	return icon;
 }
 

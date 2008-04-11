@@ -34,12 +34,12 @@
 #include <polkit-gnome/polkit-gnome.h>
 
 #include <pk-debug.h>
+#include <pk-enum.h>
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
-#include <pk-enum-list.h>
 #include <pk-extra.h>
 #include <pk-extra-obj.h>
 #include <locale.h>
@@ -86,10 +86,10 @@ struct GpkApplicationPrivate
 	gchar			*package;
 	gchar			*group;
 	gchar			*url;
-	PkEnumList		*role_list;
-	PkEnumList		*filter_list;
-	PkEnumList		*group_list;
+	PkRoleEnum		 roles;
 	PkFilterEnum		 filters;
+	PkGroupEnum		 groups;
+	PkFilterEnum		 filters_current;
 	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
 	PkSearchMode		 search_mode;
@@ -375,7 +375,7 @@ gpk_application_remove_cb (PolKitGnomeAction *action,
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* are we dumb and can't check for requires? */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
 		/* no, just try to remove it without deps */
 		gpk_application_remove_only (application, FALSE);
 		return;
@@ -766,11 +766,11 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* do the search */
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		ret = pk_client_search_name (application->priv->client_search, application->priv->filters, package, &error);
+		ret = pk_client_search_name (application->priv->client_search, application->priv->filters_current, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		ret = pk_client_search_details (application->priv->client_search, application->priv->filters, package, &error);
+		ret = pk_client_search_details (application->priv->client_search, application->priv->filters_current, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		ret = pk_client_search_file (application->priv->client_search, application->priv->filters, package, &error);
+		ret = pk_client_search_file (application->priv->client_search, application->priv->filters_current, package, &error);
 	} else {
 		pk_warning ("invalid search type");
 		return FALSE;
@@ -794,7 +794,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	/* switch around buttons */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	gtk_widget_hide (widget);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 		gtk_widget_show (widget);
 	}
@@ -826,13 +826,13 @@ gpk_application_perform_search_group (GpkApplication *application)
 	/* refresh the search as the items may have changed */
 	gtk_list_store_clear (application->priv->packages_store);
 
-	ret = pk_client_search_group (application->priv->client_search, application->priv->filters, application->priv->group, &error);
+	ret = pk_client_search_group (application->priv->client_search, application->priv->filters_current, application->priv->group, &error);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret) {
 		/* switch around buttons */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 		gtk_widget_hide (widget);
-		if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_CANCEL)) {
+		if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
 			widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 			gtk_widget_show (widget);
 		}
@@ -939,7 +939,7 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
 	/* clear group selection if we have the tab */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 		gtk_tree_selection_unselect_all (selection);
@@ -1215,13 +1215,13 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection,
 		pk_debug ("selected row is: %i %s", installed, application->priv->package);
 
 		if (installed == FALSE &&
-		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
+		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
 			polkit_gnome_action_set_visible (application->priv->install_action, TRUE);
 		} else {
 			polkit_gnome_action_set_visible (application->priv->install_action, FALSE);
 		}
 		if (installed &&
-		    pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
+		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
 			polkit_gnome_action_set_visible (application->priv->remove_action, TRUE);
 		} else {
 			polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);
@@ -1396,7 +1396,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	}
 	pk_debug ("icon_pos=%i", icon_pos);
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_NAME)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1405,7 +1405,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_DETAILS)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1414,7 +1414,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	}
 
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_FILE)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file"));
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -1664,14 +1664,14 @@ gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *app
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
 	}
 
 	/* refresh the search results */
@@ -1698,14 +1698,14 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *applica
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	}
 
 	/* refresh the search results */
@@ -1732,14 +1732,14 @@ gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *applicati
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_GUI);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_GUI);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
 	}
 
 	/* refresh the search results */
@@ -1766,14 +1766,14 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_FREE);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_FREE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
 	}
 
 	/* refresh the search results */
@@ -1798,9 +1798,9 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 
 	/* change the filter */
 	if (enabled) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_BASENAME);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_BASENAME);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
 	}
 
 	/* refresh the search results */
@@ -1825,9 +1825,9 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 
 	/* change the filter */
 	if (enabled) {
-		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NEWEST);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
 	} else {
-		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NEWEST);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
 	}
 
 	/* refresh the search results */
@@ -1908,9 +1908,7 @@ gpk_application_init (GpkApplication *application)
 	GtkTreeSelection *selection;
 	gboolean autocomplete;
 	gboolean enabled;
-	PkGroupEnum group;
 	gchar *locale; /* does not need to be freed */
-	guint length;
 	guint page;
 	guint i;
 	gboolean ret;
@@ -1927,7 +1925,7 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
-	application->priv->filters = PK_FILTER_ENUM_NONE;
+	application->priv->filters_current = PK_FILTER_ENUM_NONE;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -1995,17 +1993,10 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (application->priv->client_files, "allow-cancel",
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
-	/* get actions */
-	application->priv->role_list = pk_control_get_actions (application->priv->control);
-	pk_debug ("actions=%s", pk_enum_list_to_string (application->priv->role_list));
-
-	/* get filters supported */
-	application->priv->filter_list = pk_control_get_filters (application->priv->control);
-	pk_debug ("filter=%s", pk_enum_list_to_string (application->priv->filter_list));
-
-	/* get groups supported */
-	application->priv->group_list = pk_control_get_groups (application->priv->control);
-	pk_debug ("groups=%s", pk_enum_list_to_string (application->priv->group_list));
+	/* get enums */
+	application->priv->roles = pk_control_get_actions (application->priv->control);
+	application->priv->filters = pk_control_get_filters (application->priv->control);
+	application->priv->groups = pk_control_get_groups (application->priv->control);
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",
@@ -2179,41 +2170,41 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
 	g_signal_connect (widget, "switch-page",
 			  G_CALLBACK (gpk_application_notebook_changed_cb), application);
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_FILES) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_FILES) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
 	}
 
 	/* hide the group selector if we don't support search-groups */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_groups");
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the refresh cache button if we can't do it */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_refresh");
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the software-sources button if we can't do it */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_sources");
 		gtk_widget_hide (widget);
 	}
@@ -2274,26 +2265,26 @@ gpk_application_init (GpkApplication *application)
 	gpk_application_menu_search_by_name (NULL, application);
 
 	/* hide the filters we can't support */
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_INSTALLED) == FALSE) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed");
 		gtk_widget_hide (widget);
 	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel");
 		gtk_widget_hide (widget);
 	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_GUI) == FALSE) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_GUI) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui");
 		gtk_widget_hide (widget);
 	}
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_FREE) == FALSE) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_FREE) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free");
 		gtk_widget_hide (widget);
 	}
 
 	/* BASENAME, use by default, or hide */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_BASENAME)) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_BASENAME)) {
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
 						 GPK_CONF_APPLICATION_FILTER_BASENAME, NULL);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
@@ -2305,7 +2296,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* NEWEST, use by default, or hide */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
-	if (pk_enum_list_contains (application->priv->filter_list, PK_FILTER_ENUM_NEWEST)) {
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_NEWEST)) {
 		/* set from remembered state */
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
 						 GPK_CONF_APPLICATION_FILTER_NEWEST, NULL);
@@ -2366,7 +2357,7 @@ gpk_application_init (GpkApplication *application)
 	gpk_application_packages_add_columns (GTK_TREE_VIEW (widget));
 
 	/* create group tree view if we can search by group */
-	if (pk_enum_list_contains (application->priv->role_list, PK_ROLE_ENUM_SEARCH_GROUP)) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 					 GTK_TREE_MODEL (application->priv->groups_store));
@@ -2379,11 +2370,9 @@ gpk_application_init (GpkApplication *application)
 		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
 
 		/* add all the groups supported */
-		length = pk_enum_list_size (application->priv->group_list);
-		for (i=0; i<length; i++) {
-			group = pk_enum_list_get_item (application->priv->group_list, i);
-			if (group != PK_GROUP_ENUM_UNKNOWN) {
-				gpk_application_group_add_data (application, group);
+		for (i=1; i<PK_GROUP_ENUM_UNKNOWN; i*=2) {
+			if (pk_enums_contain (application->priv->groups, i)) {
+				gpk_application_group_add_data (application, i);
 			}
 		}
 	}
@@ -2410,9 +2399,6 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->client_description);
 	g_object_unref (application->priv->client_files);
 	g_object_unref (application->priv->pconnection);
-	g_object_unref (application->priv->filter_list);
-	g_object_unref (application->priv->group_list);
-	g_object_unref (application->priv->role_list);
 	g_object_unref (application->priv->statusbar);
 	g_object_unref (application->priv->extra);
 	g_object_unref (application->priv->gconf_client);

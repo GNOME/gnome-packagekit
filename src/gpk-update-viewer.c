@@ -42,7 +42,6 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
-#include <pk-enum-list.h>
 #include "gpk-common.h"
 #include "gpk-statusbar.h"
 #include "gpk-cell-renderer-uri.h"
@@ -1712,7 +1711,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkConnection *pconnection;
-	PkEnumList *role_list;
+	PkRoleEnum roles;
 	gboolean ret;
 	GtkSizeGroup *size_group;
 	GtkWidget *button;
@@ -1797,7 +1796,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_updates_allow_cancel_cb), NULL);
 
 	/* get actions */
-	role_list = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control);
 
 	pconnection = pk_connection_new ();
 	g_signal_connect (pconnection, "connection-changed",
@@ -1867,7 +1866,7 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* can we ever do the action? */
-	if (pk_enum_list_contains (role_list, PK_ROLE_ENUM_CANCEL) == FALSE) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_CANCEL) == FALSE) {
 		gtk_widget_hide (widget);
 	}
 
@@ -2052,7 +2051,6 @@ main (int argc, char *argv[])
 	g_object_unref (client_query);
 	g_object_unref (client_action);
 	g_object_unref (pconnection);
-	g_object_unref (role_list);
 	g_free (cached_package_id);
 
 	return 0;
