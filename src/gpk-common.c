@@ -106,6 +106,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"emblem-system"},
 	{PK_ROLE_ENUM_INSTALL_SIGNATURE,	"emblem-system"},
+	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{0, NULL}
 };
 
@@ -1095,6 +1096,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
 		text = _("Installing signature");
 		break;
+	case PK_ROLE_ENUM_GET_PACKAGES:
+		text = _("Getting package lists");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1188,6 +1192,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
 		text = _("Installed signature");
+		break;
+	case PK_ROLE_ENUM_GET_PACKAGES:
+		text = _("Got package lists");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
