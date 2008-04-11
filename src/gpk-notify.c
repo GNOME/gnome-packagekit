@@ -879,7 +879,7 @@ gpk_notify_query_updates (GpkNotify *notify)
 	pk_client_set_use_buffer (client, TRUE, NULL);
 
 	/* get updates */
-	ret = pk_client_get_updates (client, "basename", &error);
+	ret = pk_client_get_updates (client, PK_FILTER_ENUM_BASENAME, &error);
 	if (!ret) {
 		pk_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);

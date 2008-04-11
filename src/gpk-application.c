@@ -89,7 +89,7 @@ struct GpkApplicationPrivate
 	PkEnumList		*role_list;
 	PkEnumList		*filter_list;
 	PkEnumList		*group_list;
-	PkEnumList		*current_filter;
+	PkFilterEnum		 filters;
 	gboolean		 has_package; /* if we got a package in the search */
 	PkSearchType		 search_type;
 	PkSearchMode		 search_mode;
@@ -389,7 +389,7 @@ gpk_application_remove_cb (PolKitGnomeAction *action,
 
 	/* do the requires */
 	pk_debug ("getting requires for %s", application->priv->package);
-	ret = pk_client_get_requires (client, "installed", application->priv->package, TRUE, &error);
+	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, application->priv->package, TRUE, &error);
 	if (!ret) {
 		pk_warning ("failed to get requires: %s", error->message);
 		g_error_free (error);
@@ -734,7 +734,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 {
 	GtkWidget *widget;
 	const gchar *package;
-	gchar *filter_all;
 	GError *error = NULL;
 	gboolean ret;
 
@@ -757,10 +756,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	}
 	pk_debug ("find %s", package);
 
-	/* make a valid filter string */
-	filter_all = pk_enum_list_to_string (application->priv->current_filter);
-	pk_debug ("filter = %s", filter_all);
-
 	/* reset */
 	ret = pk_client_reset (application->priv->client_search, &error);
 	if (!ret) {
@@ -771,11 +766,11 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* do the search */
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		ret = pk_client_search_name (application->priv->client_search, filter_all, package, &error);
+		ret = pk_client_search_name (application->priv->client_search, application->priv->filters, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		ret = pk_client_search_details (application->priv->client_search, filter_all, package, &error);
+		ret = pk_client_search_details (application->priv->client_search, application->priv->filters, package, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		ret = pk_client_search_file (application->priv->client_search, filter_all, package, &error);
+		ret = pk_client_search_file (application->priv->client_search, application->priv->filters, package, &error);
 	} else {
 		pk_warning ("invalid search type");
 		return FALSE;
@@ -804,7 +799,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 		gtk_widget_show (widget);
 	}
 
-	g_free (filter_all);
 	return TRUE;
 }
 
@@ -815,16 +809,11 @@ static gboolean
 gpk_application_perform_search_group (GpkApplication *application)
 {
 	GtkWidget *widget;
-	gchar *filter;
 	gboolean ret;
 	GError *error = NULL;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (application->priv->group != NULL, FALSE);
-
-	/* make a valid filter string */
-	filter = pk_enum_list_to_string (application->priv->current_filter);
-	pk_debug ("filter = %s", filter);
 
 	/* cancel this, we don't care about old results that are pending */
 	ret = pk_client_reset (application->priv->client_search, &error);
@@ -837,8 +826,7 @@ gpk_application_perform_search_group (GpkApplication *application)
 	/* refresh the search as the items may have changed */
 	gtk_list_store_clear (application->priv->packages_store);
 
-	ret = pk_client_search_group (application->priv->client_search, filter, application->priv->group, &error);
-	g_free (filter);
+	ret = pk_client_search_group (application->priv->client_search, application->priv->filters, application->priv->group, &error);
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret) {
 		/* switch around buttons */
@@ -1146,7 +1134,7 @@ gpk_application_notebook_populate (GpkApplication *application, gint page)
 			return FALSE;
 		}
 		/* get the depends */
-		ret = pk_client_get_depends (application->priv->client_files, "none",
+		ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
 					     application->priv->package, FALSE, &error);
 
 		if (!ret) {
@@ -1173,7 +1161,7 @@ gpk_application_notebook_populate (GpkApplication *application, gint page)
 			return FALSE;
 		}
 		/* get the requires */
-		ret = pk_client_get_requires (application->priv->client_files, "none",
+		ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
 					      application->priv->package, TRUE, &error);
 
 		if (!ret) {
@@ -1676,14 +1664,14 @@ gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *app
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_INSTALLED);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_INSTALLED);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_INSTALLED);
 	}
 
 	/* refresh the search results */
@@ -1710,14 +1698,14 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *applica
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	}
 
 	/* refresh the search results */
@@ -1744,14 +1732,14 @@ gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *applicati
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_GUI);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_GUI);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_GUI);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_GUI);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_GUI);
 	}
 
 	/* refresh the search results */
@@ -1778,14 +1766,14 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_FREE);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_FREE);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
 	} else if (g_str_has_suffix (name, "_no")) {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_FREE);
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_FREE);
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NOT_FREE);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_FREE);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NOT_FREE);
 	}
 
 	/* refresh the search results */
@@ -1800,7 +1788,6 @@ static void
 gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gboolean enabled;
-	gchar *filter;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1811,14 +1798,10 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 
 	/* change the filter */
 	if (enabled) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_BASENAME);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_BASENAME);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_BASENAME);
 	}
-
-	filter = pk_enum_list_to_string (application->priv->current_filter);
-	pk_debug ("filter now = %s", filter);
-	g_free (filter);
 
 	/* refresh the search results */
 	gpk_application_perform_search (application);
@@ -1832,7 +1815,6 @@ static void
 gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gboolean enabled;
-	gchar *filter;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1843,14 +1825,10 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 
 	/* change the filter */
 	if (enabled) {
-		pk_enum_list_append (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
+		pk_enums_add (application->priv->filters, PK_FILTER_ENUM_NEWEST);
 	} else {
-		pk_enum_list_remove (application->priv->current_filter, PK_FILTER_ENUM_NEWEST);
+		pk_enums_remove (application->priv->filters, PK_FILTER_ENUM_NEWEST);
 	}
-
-	filter = pk_enum_list_to_string (application->priv->current_filter);
-	pk_debug ("filter now = %s", filter);
-	g_free (filter);
 
 	/* refresh the search results */
 	gpk_application_perform_search (application);
@@ -1949,8 +1927,7 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
-	application->priv->current_filter = pk_enum_list_new ();
-	pk_enum_list_set_type (application->priv->current_filter, PK_ENUM_LIST_TYPE_FILTER);
+	application->priv->filters = PK_FILTER_ENUM_NONE;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -2436,7 +2413,6 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->filter_list);
 	g_object_unref (application->priv->group_list);
 	g_object_unref (application->priv->role_list);
-	g_object_unref (application->priv->current_filter);
 	g_object_unref (application->priv->statusbar);
 	g_object_unref (application->priv->extra);
 	g_object_unref (application->priv->gconf_client);

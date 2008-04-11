@@ -1639,7 +1639,7 @@ libst_common_gui (LibSelfTest *test)
 	 ****************     localised enums          **************
 	 ************************************************************/
 	libst_title (test, "check we convert all the localised past role enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1650,7 +1650,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised present role enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1661,7 +1661,7 @@ libst_common_gui (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the role icon name enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);

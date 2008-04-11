@@ -393,7 +393,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	}
 
 	/* find out if this would drag in other packages */
-	ret = pk_client_get_depends (gclient->priv->client_resolve, "~installed", package_id, TRUE, &error);
+	ret = pk_client_get_depends (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error);
 	if (!ret) {
 		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also installed"), error->message);
 		gpk_client_error_msg (gclient, _("Failed to get depends"), text);
@@ -489,7 +489,7 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package != NULL, FALSE);
 
-	ret = pk_client_resolve (gclient->priv->client_resolve, "none", package, &error);
+	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to resolve package"), _("Incorrect response from search"));
 		ret = FALSE;

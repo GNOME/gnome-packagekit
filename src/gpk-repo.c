@@ -247,7 +247,7 @@ pk_repo_repo_list_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
-	const gchar *filter;
+	PkFilterEnum filter;
 
 	pk_debug ("refreshing list");
 	gtk_list_store_clear (list_store);
@@ -259,9 +259,9 @@ pk_repo_repo_list_refresh (void)
 	}
 
 	if (!show_details) {
-		filter = pk_filter_enum_to_text (PK_FILTER_ENUM_NOT_DEVELOPMENT);
+		filter = PK_FILTER_ENUM_NOT_DEVELOPMENT;
 	} else {
-		filter = "none";
+		filter = PK_FILTER_ENUM_NONE;
 	}
 	ret = pk_client_get_repo_list (client, filter, &error);
 	if (!ret) {

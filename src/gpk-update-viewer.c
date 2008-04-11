@@ -646,7 +646,7 @@ pk_button_overview_cb (GtkWidget *widget, gpointer data)
 	}
 	/* TODO: we don't actually need to re-request the data, but we've
 	 * nuked the preview window with the spinner */
-	ret = pk_client_get_updates (client_query, "basename", &error);
+	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_BASENAME, &error);
 	if (!ret) {
 		pk_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
@@ -1340,7 +1340,7 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 		g_error_free (error);
 		return;
 	}
-	ret = pk_client_get_updates (client_query, "basename", &error);
+	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_BASENAME, &error);
 	if (!ret) {
 		pk_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
@@ -1538,7 +1538,7 @@ pk_updates_changed_cb (PkClient *client, gpointer data)
 		g_error_free (error);
 		return;
 	}
-	ret = pk_client_get_updates (client_query, "basename", &error);
+	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_BASENAME, &error);
 	if (!ret) {
 		pk_warning ("failed to get new list: %s", error->message);
 		g_error_free (error);
@@ -2036,7 +2036,7 @@ main (int argc, char *argv[])
 	pk_updates_task_list_changed_cb (tlist, NULL);
 
 	/* get the update list */
-	ret = pk_client_get_updates (client_query, "basename", NULL);
+	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_BASENAME, NULL);
 	if (ret) {
 		/* only show this if we succeeded */
 		pk_updates_preview_animation_start ();
