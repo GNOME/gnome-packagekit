@@ -267,6 +267,8 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 static gboolean
 gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
+	guint thresh;
+
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we shouldn't do this early in the session startup */
@@ -278,6 +280,13 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* no point continuing if we have no network */
 	if (arefresh->priv->network_active == FALSE) {
 		pk_debug ("not when no network");
+		return FALSE;
+	}
+
+	/* have we been told to never check for updates? */
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (thresh == 0) {
+		pk_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
