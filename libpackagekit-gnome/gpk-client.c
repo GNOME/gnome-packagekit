@@ -585,12 +585,12 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
 		if (item->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
+			g_free (package_id);
 			package_id = g_strdup (item->package_id);
 			break;
 		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved", item->package_id);
+			pk_debug ("package '%s' resolved to:", item->package_id);
 			package_id = g_strdup (item->package_id);
-			break;
 		}
 	}
 
