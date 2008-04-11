@@ -402,8 +402,14 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 		goto out;
 	}
 
-	/* process package list */
+	/* any additional packages? */
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	if (len == 0) {
+		pk_debug ("no additional deps");
+		goto skip_checks;
+	}
+
+	/* process package list */
 	string = g_string_new (_("The following packages also have to be downloaded:"));
 	g_string_append (string, "\n\n");
 	for (i=0; i<len; i++) {

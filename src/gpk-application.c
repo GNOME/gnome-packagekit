@@ -66,6 +66,7 @@ typedef enum {
 typedef enum {
 	PK_MODE_NAME_DETAILS_FILE,
 	PK_MODE_GROUP,
+	PK_MODE_ALL_PACKAGES,
 	PK_MODE_UNKNOWN
 } PkSearchMode;
 
@@ -803,10 +804,10 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 }
 
 /**
- * gpk_application_perform_search_group:
+ * gpk_application_perform_search_others:
  **/
 static gboolean
-gpk_application_perform_search_group (GpkApplication *application)
+gpk_application_perform_search_others (GpkApplication *application)
 {
 	GtkWidget *widget;
 	gboolean ret;
@@ -826,7 +827,14 @@ gpk_application_perform_search_group (GpkApplication *application)
 	/* refresh the search as the items may have changed */
 	gtk_list_store_clear (application->priv->packages_store);
 
-	ret = pk_client_search_group (application->priv->client_search, application->priv->filters_current, application->priv->group, &error);
+	if (application->priv->search_mode == PK_MODE_GROUP) {
+		ret = pk_client_search_group (application->priv->client_search,
+					      application->priv->filters_current,
+					      application->priv->group, &error);
+	} else {
+		ret = pk_client_get_packages (application->priv->client_search,
+					      application->priv->filters_current, &error);
+	}
 	/* ick, we failed so pretend we didn't do the action */
 	if (ret) {
 		/* switch around buttons */
@@ -853,8 +861,9 @@ gpk_application_perform_search (GpkApplication *application)
 	gboolean ret = FALSE;
 	if (application->priv->search_mode == PK_MODE_NAME_DETAILS_FILE) {
 		ret = gpk_application_perform_search_name_details_file (application);
-	} else if (application->priv->search_mode == PK_MODE_GROUP) {
-		ret = gpk_application_perform_search_group (application);
+	} else if (application->priv->search_mode == PK_MODE_GROUP ||
+		   application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
+		ret = gpk_application_perform_search_others (application);
 	} else {
 		pk_debug ("doing nothing");
 	}
@@ -1027,8 +1036,14 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &application->priv->group, -1);
 		pk_debug ("selected row is: %s", application->priv->group);
 
+		/* GetPackages? */
+		if (pk_strequal (application->priv->group, "all-packages")) {
+			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
+		} else {
+			application->priv->search_mode = PK_MODE_GROUP;
+		}
+
 		/* actually do the search */
-		application->priv->search_mode = PK_MODE_GROUP;
 		gpk_application_perform_search (application);
 	}
 }
@@ -2355,6 +2370,18 @@ gpk_application_init (GpkApplication *application)
 
 	/* add columns to the tree view */
 	gpk_application_packages_add_columns (GTK_TREE_VIEW (widget));
+
+	/* add an "all" entry if we can GetPackages */
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
+		GtkTreeIter iter;
+		const gchar *icon_name;
+		gtk_list_store_append (application->priv->groups_store, &iter);
+		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
+		gtk_list_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_NAME, _("All packages"),
+				    GROUPS_COLUMN_ID, "all-packages",
+				    GROUPS_COLUMN_ICON, icon_name, -1);
+	}
 
 	/* create group tree view if we can search by group */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
