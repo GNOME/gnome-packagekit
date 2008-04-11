@@ -1287,7 +1287,8 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 	}
 
 	/* hide the cancel */
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		widget = glade_xml_get_widget (glade_xml, "button_cancel");
 		gtk_widget_hide (widget);
 
@@ -1307,15 +1308,6 @@ pk_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpoint
 			/* set correct view */
 			pk_updates_set_page (PAGE_CONFIRM);
 		}
-	}
-
-	/* we don't need to do anything here */
-	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-
-		/* set correct view */
-		pk_updates_set_page (PAGE_CONFIRM);
-
-		return;
 	}
 
 	populate_preview ();
