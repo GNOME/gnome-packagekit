@@ -162,7 +162,7 @@ gpk_watch_task_list_to_status_enums (GpkWatch *watch)
 	/* shortcut */
 	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0) {
-		return PK_STATUS_ENUM_UNKNOWN;
+		goto out;
 	}
 
 	/* add each status to a list */
@@ -175,6 +175,7 @@ gpk_watch_task_list_to_status_enums (GpkWatch *watch)
 		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
 		pk_enums_add (status, item->status);
 	}
+out:
 	return status;
 }
 
