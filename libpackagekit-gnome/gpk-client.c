@@ -26,6 +26,7 @@
 #include <glade/glade.h>
 #include <pk-debug.h>
 #include <pk-client.h>
+#include <pk-package-id.h>
 #include <pk-control.h>
 
 #include "gpk-client.h"
@@ -407,7 +408,6 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	g_string_append (string, "\n\n");
 	for (i=0; i<len; i++) {
 		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-//		if (item->package_id[0] == 'b') continue;
 		text = gpk_package_id_pretty_oneline (item->package_id, item->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
@@ -556,6 +556,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
 	PkPackageItem *item;
+	PkPackageId *ident;
 	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -584,6 +585,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
 		if (item->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
+			package_id = g_strdup (item->package_id);
 			break;
 		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
 			pk_debug ("package '%s' resolved", item->package_id);
@@ -594,7 +596,11 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 
 	/* already installed? */
 	if (already_installed) {
-		gpk_client_error_msg (gclient, _("Failed to install file"), _("A package providing that file is already installed"));
+		ident = pk_package_id_new_from_string (package_id);
+		text = g_strdup_printf (_("The %s package already provides the file %s"), ident->name, full_path);
+		gpk_client_error_msg (gclient, _("Failed to install file"), text);
+		g_free (text);
+		pk_package_id_free (ident);
 		ret = FALSE;
 		goto out;
 	}
