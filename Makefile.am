@@ -1,16 +1,21 @@
 SUBDIRS =						\
 	libselftest					\
 	libgbus						\
+	libpackagekit-gnome				\
 	src						\
 	po						\
 	data						\
 	help
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = packagekit-gnome.pc
 
 EXTRA_DIST =						\
 	MAINTAINERS					\
 	intltool-extract.in				\
 	intltool-merge.in				\
 	intltool-update.in				\
+	packagekit-gnome.pc.in				\
 	omf.make					\
 	xmldocs.make					\
 	gnome-doc-utils.make
