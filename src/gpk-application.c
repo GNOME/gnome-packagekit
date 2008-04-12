@@ -192,7 +192,7 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 
 	/* xxx TODO: this is hacky code for testing only */
 	gclient = gpk_client_new ();
-	ret = gpk_client_install_package_id (gclient, package_id);
+	ret = gpk_client_install_package_id (gclient, package_id, NULL);
 	g_object_unref (gclient);
 
 	return ret;

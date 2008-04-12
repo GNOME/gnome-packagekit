@@ -1360,7 +1360,6 @@ gpk_message_enum_to_icon_name (PkMessageEnum message)
 /**
  * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
- * @cookie: The cookie we are looking for
  *
  * Returns a localised timestring
  *

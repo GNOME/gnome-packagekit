@@ -81,7 +81,7 @@ main (int argc, char *argv[])
 
 	error = NULL;
 	gclient = gpk_client_new ();
-	ret = gpk_client_install_package_name (gclient, argv[1]);
+	ret = gpk_client_install_package_name (gclient, argv[1], NULL);
 	g_object_unref (gclient);
 
 	return !ret;

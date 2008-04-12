@@ -54,6 +54,9 @@ AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 
 AM_GLIB_GNU_GETTEXT
 
+# set up gtk-doc
+GTK_DOC_CHECK(1.9)
+
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
@@ -201,6 +204,9 @@ src/Makefile
 help/Makefile
 po/Makefile.in
 data/Makefile
+docs/Makefile
+docs/api/version.xml
+docs/api/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile

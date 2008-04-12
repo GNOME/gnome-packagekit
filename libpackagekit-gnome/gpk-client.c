@@ -19,9 +19,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:gpk-client
+ * @short_description: GObject class for libpackagekit-gnome client access
+ *
+ * A nice GObject to use for installing software in GNOME applications
+ */
+
 #include "config.h"
 
 #include <glib/gi18n.h>
+#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <pk-debug.h>
@@ -38,7 +46,12 @@ static void     gpk_client_finalize	(GObject	*object);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))
 
-struct GpkClientPrivate
+/**
+ * GpkClientPrivate:
+ *
+ * Private #GpkClient data
+ **/
+struct _GpkClientPrivate
 {
 	PkClient		*client_action;
 	PkClient		*client_resolve;
@@ -56,6 +69,41 @@ typedef enum {
 } GpkClientPageEnum;
 
 G_DEFINE_TYPE (GpkClient, gpk_client, G_TYPE_OBJECT)
+
+/**
+ * gpk_client_error_quark:
+ *
+ * Return value: Our personal error quark.
+ **/
+GQuark
+gpk_client_error_quark (void)
+{
+	static GQuark quark = 0;
+	if (!quark) {
+		quark = g_quark_from_static_string ("gpk_client_error");
+	}
+	return quark;
+}
+
+/**
+ * gpk_client_error_get_type:
+ **/
+#define ENUM_ENTRY(NAME, DESC) { NAME, "" #NAME "", DESC }
+GType
+gpk_client_error_get_type (void)
+{
+	static GType etype = 0;
+
+	if (etype == 0) {
+		static const GEnumValue values[] =
+		{
+			ENUM_ENTRY (GPK_CLIENT_ERROR_FAILED, "Failed"),
+			{ 0, NULL, NULL }
+		};
+		etype = g_enum_register_static ("PkClientError", values);
+	}
+	return etype;
+}
 
 /**
  * gpk_client_set_page:
@@ -308,37 +356,78 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, const gchar *messa
 }
 
 /**
+ * gpk_client_error_set:
+ *
+ * Sets the correct error code (if allowed) and print to the screen
+ * as a warning.
+ **/
+static gboolean
+gpk_client_error_set (GError **error, gint code, const gchar *format, ...)
+{
+	va_list args;
+	gchar *buffer = NULL;
+	gboolean ret = TRUE;
+
+	va_start (args, format);
+	g_vasprintf (&buffer, format, args);
+	va_end (args);
+
+	/* dumb */
+	if (error == NULL) {
+		pk_warning ("No error set, so can't set: %s", buffer);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* already set */
+	if (*error != NULL) {
+		pk_warning ("not NULL error!");
+		g_clear_error (error);
+	}
+
+	/* propogate */
+	g_set_error (error, GPK_CLIENT_ERROR, code, "%s", buffer);
+
+out:
+	g_free(buffer);
+	return ret;
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
- * @file: a file such as "./hal-devel-0.10.0.rpm"
+ * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a file locally, and get the deps from the repositories.
  * This is useful for double clicking on a .rpm or .deb file.
  *
- * Return value: %TRUE if the method is running
+ * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel)
+gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError **error)
 {
 	gboolean ret;
-	GError *error = NULL;
+	GError *error_local = NULL;
 	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (file_rel != NULL, FALSE);
 
-	ret = pk_client_install_file (gclient->priv->client_action, file_rel, &error);
+	ret = pk_client_install_file (gclient->priv->client_action, file_rel, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
-		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
+		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
 			gpk_client_error_msg (gclient, _("Failed to install file"),
 					      _("You don't have the necessary privileges to install local files"));
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		} else {
-			text = g_markup_escape_text (error->message, -1);
+			text = g_markup_escape_text (error_local->message, -1);
 			gpk_client_error_msg (gclient, _("Failed to install file"), text);
 			g_free (text);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		}
-		g_error_free (error);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -357,18 +446,19 @@ out:
 /**
  * gpk_client_install_package_id:
  * @gclient: a valid #GpkClient instance
- * @package_id: a package_id such as hal-info;0.20;i386;fedora
+ * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
  *
- * Return value: %TRUE if the method is running
+ * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
+gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GError **error)
 {
 	GtkWidget *widget;
 	GtkWidget *dialog;
 	GtkResponseType button;
 	gboolean ret;
-	GError *error = NULL;
+	GError *error_local = NULL;
 	gchar *text;
 	guint len;
 	guint i;
@@ -385,18 +475,20 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	}
 
 	/* reset */
-	ret = pk_client_reset (gclient->priv->client_resolve, &error);
+	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* find out if this would drag in other packages */
-	ret = pk_client_get_depends (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error);
+	ret = pk_client_get_depends (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error_local);
 	if (!ret) {
-		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also installed"), error->message);
+		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also installed"), error_local->message);
 		gpk_client_error_msg (gclient, _("Failed to get depends"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_free (text);
 		ret = FALSE;
 		goto out;
@@ -438,24 +530,27 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id)
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("Additional packages were not downloaded"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
 
 skip_checks:
 	/* try to install the package_id */
-	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error);
+	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
-		if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
+		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
 			gpk_client_error_msg (gclient, _("Failed to install package"),
 					        _("You don't have the necessary privileges to install packages"));
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		} else {
-			text = g_markup_escape_text (error->message, -1);
+			text = g_markup_escape_text (error_local->message, -1);
 			gpk_client_error_msg (gclient, _("Failed to install package"), text);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 			g_free (text);
 		}
-		g_error_free (error);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -474,17 +569,18 @@ out:
 /**
  * gpk_client_install_package_name:
  * @gclient: a valid #GpkClient instance
- * @package: a pakage name such as hal-info
+ * @package: a pakage name such as <literal>hal-info</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a package of the newest and most correct version.
  *
- * Return value: %TRUE if the method is running
+ * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
+gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GError **error)
 {
 	gboolean ret;
-	GError *error = NULL;
+	GError *error_local = NULL;
 	guint len;
 	guint i;
 	gboolean already_installed = FALSE;
@@ -494,9 +590,10 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package != NULL, FALSE);
 
-	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error);
+	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to resolve package"), _("Incorrect response from search"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
@@ -505,6 +602,7 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("The package could not be found online"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
@@ -525,6 +623,7 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
 	/* already installed? */
 	if (already_installed) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("The package is already installed"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
@@ -532,12 +631,13 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package)
 	/* got junk? */
 	if (package_id == NULL) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("Incorrect response from search"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, package_id);
+	ret = gpk_client_install_package_id (gclient, package_id, error);
 out:
 	g_free (package_id);
 	return ret;
@@ -546,17 +646,18 @@ out:
 /**
  * gpk_client_install_provide_file:
  * @gclient: a valid #GpkClient instance
- * @full_path: a file path name such as /usr/sbin/packagekitd
+ * @full_path: a file path name such as <literal>/usr/sbin/packagekitd</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a package which provides a file on the system.
  *
- * Return value: %TRUE if the method is running
+ * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
+gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GError **error)
 {
 	gboolean ret;
-	GError *error = NULL;
+	GError *error_local = NULL;
 	guint len;
 	guint i;
 	gboolean already_installed = FALSE;
@@ -568,11 +669,11 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (full_path != NULL, FALSE);
 
-
-	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error);
+	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
-		text = g_strdup_printf ("%s: %s", _("Incorrect response from search"), error->message);
+		text = g_strdup_printf ("%s: %s", _("Incorrect response from search"), error_local->message);
 		gpk_client_error_msg (gclient, _("Failed to search for file"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_free (text);
 		ret = FALSE;
 		goto out;
@@ -582,6 +683,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("The file could not be found in any packages"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
@@ -605,6 +707,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 		ident = pk_package_id_new_from_string (package_id);
 		text = g_strdup_printf (_("The %s package already provides the file %s"), ident->name, full_path);
 		gpk_client_error_msg (gclient, _("Failed to install file"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_free (text);
 		pk_package_id_free (ident);
 		ret = FALSE;
@@ -614,12 +717,13 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path)
 	/* got junk? */
 	if (package_id == NULL) {
 		gpk_client_error_msg (gclient, _("Failed to install file"), _("Incorrect response from file search"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, package_id);
+	ret = gpk_client_install_package_id (gclient, package_id, error);
 out:
 	g_free (package_id);
 	return ret;
@@ -627,7 +731,7 @@ out:
 
 /**
  * gpk_client_class_init:
- * @klass: The GpkClientClass
+ * @klass: The #GpkClientClass
  **/
 static void
 gpk_client_class_init (GpkClientClass *klass)
@@ -639,7 +743,7 @@ gpk_client_class_init (GpkClientClass *klass)
 
 /**
  * gpk_client_init:
- * @client: This class instance
+ * @gclient: a valid #GpkClient instance
  **/
 static void
 gpk_client_init (GpkClient *gclient)
@@ -741,7 +845,9 @@ gpk_client_finalize (GObject *object)
 /**
  * gpk_client_new:
  *
- * Return value: a new GpkClient object.
+ * PkClient is a nice GObject wrapper for gnome-packagekit and makes installing software easy
+ *
+ * Return value: A new %GpkClient instance
  **/
 GpkClient *
 gpk_client_new (void)

@@ -36,33 +36,51 @@ G_BEGIN_DECLS
 #define GPK_CLIENT_ERROR	(gpk_client_error_quark ())
 #define GPK_CLIENT_TYPE_ERROR	(gpk_client_error_get_type ())
 
-typedef struct GpkClientPrivate GpkClientPrivate;
-
-typedef struct
+/**
+ * GpkClientError:
+ * @GPK_CLIENT_ERROR_FAILED: the transaction failed for an unknown reason
+ *
+ * Errors that can be thrown
+ */
+typedef enum
 {
-	 GObject		 parent;
-	 GpkClientPrivate	*priv;
-} GpkClient;
+	GPK_CLIENT_ERROR_FAILED
+} GpkClientError;
 
-typedef struct
+typedef struct _GpkClientPrivate	 GpkClientPrivate;
+typedef struct _GpkClient		 GpkClient;
+typedef struct _GpkClientClass		 GpkClientClass;
+
+struct _GpkClient
+{
+	GObject				 parent;
+	GpkClientPrivate		*priv;
+};
+
+struct _GpkClientClass
 {
 	GObjectClass	parent_class;
-} GpkClientClass;
+};
 
+GQuark		 gpk_client_error_quark			(void);
 GType		 gpk_client_get_type			(void) G_GNUC_CONST;
 GpkClient	*gpk_client_new				(void);
 
 gboolean	 gpk_client_install_local_file		(GpkClient	*gclient,
-							 const gchar	*file_rel)
+							 const gchar	*file_rel,
+							 GError		**error)
 							 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 gpk_client_install_provide_file	(GpkClient	*gclient,
-							 const gchar	*full_path)
+							 const gchar	*full_path,
+							 GError		**error)
 							 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
-							 const gchar	*package)
+							 const gchar	*package,
+							 GError		**error)
 							 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
-							 const gchar	*package_id)
+							 const gchar	*package_id,
+							 GError		**error)
 							 G_GNUC_WARN_UNUSED_RESULT;
 
 G_END_DECLS
