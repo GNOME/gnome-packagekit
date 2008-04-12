@@ -280,7 +280,7 @@ pk_updates_apply_cb (PolKitGnomeAction *action, gpointer data)
 /**
  * pk_updates_animation_load_frames:
  **/
-static void
+static gboolean
 pk_updates_animation_load_frames (void)
 {
 	GtkWidget *widget;
@@ -299,7 +299,10 @@ pk_updates_animation_load_frames (void)
 		pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
 						   "process-working",
 						   w, 0, NULL);
-
+		/* can't load from gnome-icon-theme */
+		if (pixbuf == NULL) {
+			return FALSE;
+		}
 		cols = gdk_pixbuf_get_width (pixbuf) / w;
 		rows = gdk_pixbuf_get_height (pixbuf) / h;
 
@@ -313,6 +316,7 @@ pk_updates_animation_load_frames (void)
 
 		g_object_unref (pixbuf);
 	}
+	return TRUE;
 }
 
 /**
@@ -326,6 +330,12 @@ pk_updates_animation_update (gpointer data)
 	gint column;
 
 	column = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (model), "progress-column"));
+
+	/* have we loaded a file */
+	if (frames == NULL) {
+		pk_warning ("no frames to process");
+		return FALSE;
+	}
 
 	gtk_tree_model_get_iter_first (model, &iter);
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
