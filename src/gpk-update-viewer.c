@@ -1479,17 +1479,28 @@ pk_updates_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer da
 static void
 pk_updates_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 {
+	GtkWidget *widget;
+
 	/* hide buttons if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
 		/* clear existing list */
 		gtk_list_store_clear (list_store_preview);
 
 		/* put a message in the listbox */
 		pk_updates_add_preview_item ("dialog-information", _("There is an update already in progress!"), TRUE);
 
-		/* if doing it then hide apply and refresh */
-		polkit_gnome_action_set_visible (update_system_action, FALSE);
-		polkit_gnome_action_set_visible (refresh_action, FALSE);
+		/* hide apply, review and refresh */
+		polkit_gnome_action_set_sensitive (update_system_action, FALSE);
+		polkit_gnome_action_set_sensitive (refresh_action, FALSE);
+		widget = glade_xml_get_widget (glade_xml, "button_review");
+		gtk_widget_set_sensitive (widget, FALSE);
+	} else {
+		/* show apply, review and refresh */
+		polkit_gnome_action_set_sensitive (update_system_action, TRUE);
+		polkit_gnome_action_set_sensitive (refresh_action, TRUE);
+		widget = glade_xml_get_widget (glade_xml, "button_review");
+		gtk_widget_set_sensitive (widget, TRUE);
 	}
 }
 
