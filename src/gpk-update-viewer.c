@@ -2043,7 +2043,7 @@ main (int argc, char *argv[])
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	/* we need to grey out all the buttons if we are in progress */
-	g_signal_connect (tlist, "task-list-changed",
+	g_signal_connect (tlist, "changed",
 			  G_CALLBACK (pk_updates_task_list_changed_cb), NULL);
 	pk_updates_task_list_changed_cb (tlist, NULL);
 

@@ -883,7 +883,9 @@ gpk_watch_init (GpkWatch *watch)
 				 "activate", G_CALLBACK (gpk_watch_activate_status_restart_cb), watch, 0);
 
 	watch->priv->tlist = pk_task_list_new ();
-	g_signal_connect (watch->priv->tlist, "task-list-changed",
+	g_signal_connect (watch->priv->tlist, "changed",
+			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
+	g_signal_connect (watch->priv->tlist, "status-changed",
 			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
 	g_signal_connect (watch->priv->tlist, "finished",
 			  G_CALLBACK (gpk_watch_finished_cb), watch);

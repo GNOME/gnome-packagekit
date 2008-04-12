@@ -1118,7 +1118,7 @@ gpk_notify_init (GpkNotify *notify)
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	notify->priv->tlist = pk_task_list_new ();
-	g_signal_connect (notify->priv->tlist, "task-list-changed",
+	g_signal_connect (notify->priv->tlist, "changed",
 			  G_CALLBACK (gpk_notify_task_list_changed_cb), notify);
 
 	/* refresh the cache, and poll until we get a good refresh */
