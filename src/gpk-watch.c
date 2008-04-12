@@ -53,6 +53,7 @@
 #include "gpk-progress.h"
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
+#include "gpk-consolekit.h"
 
 static void     gpk_watch_class_init	(GpkWatchClass *klass);
 static void     gpk_watch_init		(GpkWatch      *watch);

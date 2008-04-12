@@ -35,7 +35,9 @@
 #include <pk-debug.h>
 #include <pk-control.h>
 #include <pk-client.h>
-#include "gpk-common.h"
+
+#include <gpk-common.h>
+#include <gpk-gnome.h>
 
 #define PK_FREQ_HOURLY_TEXT		N_("Hourly")
 #define PK_FREQ_DAILY_TEXT		N_("Daily")
@@ -54,7 +56,7 @@ static GladeXML *glade_xml = NULL;
 static void
 pk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
-	gpk_show_help ("prefs");
+	gpk_gnome_help ("prefs");
 }
 
 /**

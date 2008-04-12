@@ -105,6 +105,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-smart-icon.h				\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
+	gpk-consolekit.c				\
+	gpk-consolekit.h				\
 	gpk-progress.c					\
 	gpk-progress.h					\
 	$(NULL)
@@ -160,6 +162,8 @@ gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
+	gpk-consolekit.c				\
+	gpk-consolekit.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(NULL)

@@ -44,6 +44,8 @@ static void     gpk_progress_init       (GpkProgress      *progress);
 static void     gpk_progress_finalize   (GObject	    *object);
 
 #define GPK_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_PROGRESS, GpkProgressPrivate))
+#define GPK_PROGRESS_BAR_PULSE_DELAY		50
+#define GPK_PROGRESS_BAR_PULSE_STEP		0.05
 
 struct GpkProgressPrivate
 {

@@ -50,6 +50,16 @@ static void     gpk_auto_refresh_finalize	(GObject            *object);
 #define GPK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshPrivate))
 #define GPK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
 
+#define GS_DBUS_SERVICE				"org.gnome.ScreenSaver"
+#define GS_DBUS_PATH				"/org/gnome/ScreenSaver"
+#define GS_DBUS_INTERFACE			"org.gnome.ScreenSaver"
+
+#define GPM_DBUS_SERVICE			"org.freedesktop.PowerManagement"
+#define GPM_DBUS_PATH				"/org/freedesktop/PowerManagement"
+#define GPM_DBUS_PATH_INHIBIT			"/org/freedesktop/PowerManagement/Inhibit"
+#define GPM_DBUS_INTERFACE			"org.freedesktop.PowerManagement"
+#define GPM_DBUS_INTERFACE_INHIBIT		"org.freedesktop.PowerManagement.Inhibit"
+
 /*
  * at startup, after a small delay, force a GetUpdates call
  * every hour (or any event) check:

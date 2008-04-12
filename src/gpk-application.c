@@ -30,7 +30,7 @@
 #include <libsexy/sexy-icon-entry.h>
 #include <math.h>
 #include <string.h>
-
+#include <locale.h>
 #include <polkit-gnome/polkit-gnome.h>
 
 #include <pk-debug.h>
@@ -42,11 +42,12 @@
 #include <pk-package-id.h>
 #include <pk-extra.h>
 #include <pk-extra-obj.h>
-#include <locale.h>
+
+#include <gpk-client.h>
+#include <gpk-common.h>
+#include <gpk-gnome.h>
 
 #include "gpk-statusbar.h"
-#include "gpk-client.h"
-#include "gpk-common.h"
 #include "gpk-application.h"
 
 static void     gpk_application_class_init (GpkApplicationClass *klass);
@@ -242,7 +243,7 @@ gpk_application_homepage_cb (GtkWidget      *widget,
 		            GpkApplication  *application)
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
-	gpk_execute_url (application->priv->url);
+	gpk_gnome_open (application->priv->url);
 }
 
 /**
@@ -497,6 +498,40 @@ gpk_application_files_cb (PkClient *client, const gchar *package_id,
 		/* no information */
 		gpk_application_set_text_buffer (widget, _("No files"));
 	}
+}
+
+/**
+ * gpk_icon_valid:
+ *
+ * Check icon actually exists and is valid in this theme
+ **/
+gboolean
+gpk_icon_valid (const gchar *icon)
+{
+	GtkIconInfo *icon_info;
+	static GtkIconTheme *icon_theme = NULL;
+	gboolean ret = TRUE;
+
+	/* trivial case */
+	if (pk_strzero (icon)) {
+		return FALSE;
+	}
+
+	/* no unref required */
+	if (icon_theme == NULL) {
+		icon_theme = gtk_icon_theme_get_default ();
+	}
+
+	/* default to 32x32 */
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
+	if (icon_info == NULL) {
+		pk_debug ("ignoring broken icon %s", icon);
+		ret = FALSE;
+	} else {
+		/* we only used this to see if it was valid */
+		gtk_icon_info_free (icon_info);
+	}
+	return ret;
 }
 
 /**
@@ -1531,7 +1566,7 @@ out:
 static void
 gpk_application_menu_help_cb (GtkAction *action, GpkApplication *application)
 {
-	gpk_show_help ("add-remove");
+	gpk_gnome_help ("add-remove");
 }
 
 /**

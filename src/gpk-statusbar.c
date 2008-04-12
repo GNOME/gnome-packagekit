@@ -45,6 +45,8 @@ static void     gpk_statusbar_init	(GpkStatusbar      *sbar);
 static void     gpk_statusbar_finalize	(GObject          *object);
 
 #define GPK_STATUSBAR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_STATUSBAR, GpkStatusbarPrivate))
+#define GPK_STATUSBAR_BAR_PULSE_DELAY		50
+#define GPK_STATUSBAR_BAR_PULSE_STEP		0.05
 
 struct GpkStatusbarPrivate
 {
@@ -136,7 +138,7 @@ gpk_statusbar_set_percentage (GpkStatusbar *sbar, guint percentage)
 		if (sbar->priv->timer_id != 0) {
 			return TRUE;
 		}
-		sbar->priv->timer_id = g_timeout_add (GPK_PROGRESS_BAR_PULSE_DELAY,
+		sbar->priv->timer_id = g_timeout_add (GPK_STATUSBAR_BAR_PULSE_DELAY,
 						      gpk_statusbar_pulse_timeout, sbar);
 		sbar->priv->last_percentage = percentage;
 		return TRUE;
@@ -246,7 +248,7 @@ gpk_statusbar_init (GpkStatusbar *sbar)
 
 	sbar->priv->progressbar = GTK_PROGRESS_BAR (gtk_progress_bar_new ());
 	gtk_progress_bar_set_fraction (sbar->priv->progressbar, 0.0);
-	gtk_progress_bar_set_pulse_step (sbar->priv->progressbar, GPK_PROGRESS_BAR_PULSE_STEP);
+	gtk_progress_bar_set_pulse_step (sbar->priv->progressbar, GPK_STATUSBAR_BAR_PULSE_STEP);
 }
 
 /**

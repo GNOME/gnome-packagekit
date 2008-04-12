@@ -42,8 +42,12 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
-#include "gpk-common.h"
+
+#include <gpk-common.h>
+#include <gpk-gnome.h>
+
 #include "gpk-statusbar.h"
+#include "gpk-consolekit.h"
 #include "gpk-cell-renderer-uri.h"
 
 static GladeXML *glade_xml = NULL;
@@ -116,7 +120,7 @@ pk_button_help_cb (GtkWidget *widget, gpointer data)
 {
 	const char *id = data;
 
-	gpk_show_help (id);
+	gpk_gnome_help (id);
 }
 
 /**
@@ -969,7 +973,7 @@ static void
 pk_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer data)
 {
 	pk_debug ("clicked %s", uri);
-	gpk_execute_url (uri);
+	gpk_gnome_open (uri);
 }
 
 /**

@@ -39,6 +39,7 @@
 
 #include "gpk-client.h"
 #include "gpk-common.h"
+#include "gpk-gnome.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
@@ -315,7 +316,7 @@ static void
 gpk_client_button_help_cb (GtkWidget *widget, GpkClient *gclient)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gpk_show_help (NULL);
+	gpk_gnome_help (NULL);
 }
 
 /**

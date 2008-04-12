@@ -36,7 +36,10 @@
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-connection.h>
-#include "gpk-common.h"
+
+#include <gpk-gnome.h>
+#include <gpk-common.h>
+
 #include "gpk-statusbar.h"
 
 static GladeXML *glade_xml = NULL;
@@ -61,7 +64,7 @@ enum
 static void
 pk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
-	gpk_show_help ("software-sources");
+	gpk_gnome_help ("software-sources");
 }
 
 /**

@@ -40,7 +40,8 @@
 #include <pk-package-id.h>
 #include <pk-common.h>
 
-#include "gpk-common.h"
+#include <gpk-common.h>
+#include <gpk-gnome.h>
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_general = NULL;
@@ -73,7 +74,7 @@ static void
 pk_button_help_cb (GtkWidget *widget,
 		   gboolean  data)
 {
-	gpk_show_help ("software-sources");
+	gpk_gnome_help ("software-sources");
 }
 
 /**

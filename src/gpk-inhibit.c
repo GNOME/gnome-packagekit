@@ -47,6 +47,10 @@ static void     gpk_inhibit_finalize	(GObject          *object);
 
 #define GPK_INHIBIT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_INHIBIT, GpkInhibitPrivate))
 
+#define GPM_DBUS_SERVICE			"org.freedesktop.PowerManagement"
+#define GPM_DBUS_PATH_INHIBIT			"/org/freedesktop/PowerManagement/Inhibit"
+#define GPM_DBUS_INTERFACE_INHIBIT		"org.freedesktop.PowerManagement.Inhibit"
+
 struct GpkInhibitPrivate
 {
 	DBusGProxy		*proxy_gpm;

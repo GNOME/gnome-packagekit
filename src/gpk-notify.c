@@ -47,9 +47,12 @@
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
 
+#include <gpk-common.h>
+#include <gpk-gnome.h>
+
 #include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
-#include "gpk-common.h"
+#include "gpk-consolekit.h"
 #include "gpk-notify.h"
 
 static void     gpk_notify_class_init	(GpkNotifyClass *klass);
@@ -94,7 +97,7 @@ static void
 gpk_notify_show_help_cb (GtkMenuItem *item, GpkNotify *notify)
 {
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
-	gpk_show_help ("update-icon");
+	gpk_gnome_help ("update-icon");
 }
 
 /**

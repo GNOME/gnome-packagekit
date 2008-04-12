@@ -35,6 +35,8 @@ libpackagekit_gnome_la_SOURCES =				\
 	gpk-common.h						\
 	gpk-client.c						\
 	gpk-client.h						\
+	gpk-gnome.c						\
+	gpk-gnome.h						\
 	$(NULL)
 
 libpackagekit_gnome_la_LIBADD =					\
