@@ -71,11 +71,11 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	if (argc < 2) {
-		gpk_error_modal_dialog (_("Failed to install"), _("You need to specify a file to install"));
+		gpk_error_modal_dialog (_("Failed to install local file"), _("You need to specify a file to install"));
 		return 1;
 	}
 	if (argc > 2) {
-		gpk_error_modal_dialog (_("Failed to install files"), _("You can only specify one file to install"));
+		gpk_error_modal_dialog (_("Failed to install local files"), _("You can only specify one file to install"));
 		return 1;
 	}
 
