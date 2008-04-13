@@ -464,6 +464,12 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 		g_free (application->priv->url);
 		/* save the url for the button */
 		application->priv->url = g_strdup (url);
+
+		/* set the tooltip to where we are going */
+		text = g_strdup_printf (_("Visit %s"), url);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		gtk_widget_set_tooltip_text (widget, text);
+		g_free (text);
 	} else {
 		gtk_widget_hide (widget);
 	}
