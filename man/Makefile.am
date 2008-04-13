@@ -25,16 +25,12 @@ endif
 if HAVE_DOCBOOK2MAN
 gpk-application.1: gpk-application.sgml
 	docbook2man $? > /dev/null
-
 gpk-backend-status.1: gpk-backend-status.sgml
 	docbook2man $? > /dev/null
-
 gpk-install-local-file.1: gpk-install-local-file.sgml
 	docbook2man $? > /dev/null
-
 gpk-install-package-name.1: gpk-install-package-name.sgml
 	docbook2man $? > /dev/null
-
 gpk-install-provide-file.1: gpk-install-provide-file.sgml
 	docbook2man $? > /dev/null
 gpk-prefs.1: gpk-prefs.sgml
