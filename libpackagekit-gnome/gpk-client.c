@@ -515,8 +515,11 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	/* show UI */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
-					 "%s", _("Download additional packages?"));
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
+					 "%s", _("Install additional packages?"));
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
