@@ -573,8 +573,8 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 		eobj->icon = g_strdup (gpk_info_enum_to_icon_name (info));
 	}
 
-	text = g_markup_printf_escaped ("<b>%s-%s (%s)</b>\n%s", eobj->id->name,
-					eobj->id->version, eobj->id->arch, eobj->summary);
+	/* use two lines */
+	text = gpk_package_id_format_twoline (package_id, eobj->summary);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,

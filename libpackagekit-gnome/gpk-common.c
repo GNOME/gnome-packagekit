@@ -197,6 +197,8 @@ gpk_size_to_si_size_text (guint64 size)
 
 /**
  * gpk_package_id_format_twoline:
+ *
+ * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
  **/
 gchar *
 gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
@@ -212,28 +214,31 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 		return NULL;
 	}
 
-	string = g_string_new (ident->name);
+	/* optional */
+	if (pk_strzero (summary)) {
+		string = g_string_new (ident->name);
+	} else {
+		string = g_string_new ("");
+		g_string_append_printf (string, "<b>%s</b>\n%s", summary, ident->name);
+	}
+
+	/* some backends don't provide this */
 	if (ident->version != NULL) {
 		g_string_append_printf (string, "-%s", ident->version);
 	}
 	if (ident->arch != NULL) {
 		g_string_append_printf (string, " (%s)", ident->arch);
 	}
-	g_string_prepend (string, "<b>");
-	g_string_append (string, "</b>");
 
-	/* ITS4: ignore, we generated this */
-	if (pk_strzero (summary) == FALSE) {
-		g_string_append_printf (string, "\n%s", summary);
-	}
 	text = g_string_free (string, FALSE);
-
 	pk_package_id_free (ident);
 	return text;
 }
 
 /**
  * gpk_package_id_format_oneline:
+ *
+ * Return value: "<b>GTK Toolkit</b> (gtk2)"
  **/
 gchar *
 gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
@@ -1328,7 +1333,7 @@ libst_common (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
 	text = gpk_package_id_format_twoline ("simon;0.0.1;i386;data", NULL);
-	if (text != NULL && strcmp (text, "<b>simon-0.0.1 (i386)</b>") == 0) {
+	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
@@ -1338,7 +1343,7 @@ libst_common (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 2");
 	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", NULL);
-	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>") == 0) {
+	if (text != NULL && strcmp (text, "simon-0.0.1") == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
@@ -1348,7 +1353,7 @@ libst_common (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 3");
 	text = gpk_package_id_format_twoline ("simon;;;data", NULL);
-	if (text != NULL && strcmp (text, "<b>simon</b>") == 0) {
+	if (text != NULL && strcmp (text, "simon") == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
@@ -1358,7 +1363,7 @@ libst_common (LibSelfTest *test)
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 4");
 	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", "dude");
-	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>\ndude") == 0) {
+	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0) {
 		libst_success (test, NULL);
 	} else {
 		libst_failed (test, "failed, got %s", text);
