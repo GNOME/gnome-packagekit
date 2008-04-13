@@ -52,8 +52,6 @@ gchar		*gpk_package_id_pretty			(const gchar	*package_id,
 gchar		*gpk_package_id_pretty_oneline		(const gchar	*package_id,
 							 const gchar	*summary);
 gchar		*gpk_package_id_name_version		(const gchar	*package_id);
-gboolean	 gpk_error_modal_dialog			(const gchar	*title,
-							 const gchar	*message);
 
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

@@ -29,6 +29,7 @@
 #include <pk-debug.h>
 #include <gpk-common.h>
 #include <gpk-client.h>
+#include <gpk-error.h>
 
 /**
  * main:
@@ -70,11 +71,13 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	if (argc < 2) {
-		gpk_error_modal_dialog (_("Failed to install package from name"), _("You need to specify a package to install"));
+		gpk_error_dialog (_("Failed to install package from name"),
+				  _("You need to specify a package to install"), NULL);
 		return 1;
 	}
 	if (argc > 2) {
-		gpk_error_modal_dialog (_("Failed to install packages from name"), _("You can only specify one package name to install"));
+		gpk_error_dialog (_("Failed to install packages from name"),
+				  _("You can only specify one package name to install"), NULL);
 		return 1;
 	}
 

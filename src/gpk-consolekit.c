@@ -30,6 +30,7 @@
 
 #include <pk-debug.h>
 #include <gpk-common.h>
+#include <gpk-error.h>
 
 /**
  * gpk_consolekit_try_system_restart:
@@ -172,9 +173,9 @@ gpk_restart_system (void)
 				polkit_action_set_action_id (action2,
 							     "org.freedesktop.consolekit.system.restart-multiple-users");
 				if (polkit_action_equal (action, action2)) {
-					gpk_error_modal_dialog (_("Failed to restart"),
-								_("You are not allowed to restart the computer "
-								  "because multiple users are logged in"));
+					gpk_error_dialog (_("Failed to restart"),
+							  _("You are not allowed to restart the computer "
+							    "because multiple users are logged in"), NULL);
 				}
 
 				g_error_free (error);

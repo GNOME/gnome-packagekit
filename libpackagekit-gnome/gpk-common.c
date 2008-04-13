@@ -310,23 +310,6 @@ gpk_package_get_name (const gchar *package_id)
 }
 
 /**
- * gpk_error_modal_dialog:
- *
- * Shows a modal error, and blocks until the user clicks close
- **/
-gboolean
-gpk_error_modal_dialog (const gchar *title, const gchar *message)
-{
-	GtkWidget *dialog;
-	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, "%s", title);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-	return TRUE;
-}
-
-/**
  * gpk_error_enum_to_localised_text:
  **/
 const gchar *

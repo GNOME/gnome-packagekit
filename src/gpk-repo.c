@@ -39,6 +39,7 @@
 
 #include <gpk-gnome.h>
 #include <gpk-common.h>
+#include <gpk-error.h>
 
 #include "gpk-statusbar.h"
 
@@ -238,7 +239,7 @@ pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 static void
 pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	gpk_error_modal_dialog (gpk_error_enum_to_localised_text (code), details);
+	gpk_error_dialog (_("Failed to change status"), gpk_error_enum_to_localised_text (code), details);
 }
 
 /**

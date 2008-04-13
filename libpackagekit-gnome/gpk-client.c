@@ -37,9 +37,10 @@
 #include <pk-package-id.h>
 #include <pk-control.h>
 
-#include "gpk-client.h"
-#include "gpk-common.h"
-#include "gpk-gnome.h"
+#include <gpk-client.h>
+#include <gpk-common.h>
+#include <gpk-gnome.h>
+#include <gpk-error.h>
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
@@ -848,7 +849,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	pk_debug ("install signature %s", key_id);
 	ret = pk_client_reset (gclient->priv->client_signature, &error);
 	if (ret == FALSE) {
-		gpk_error_modal_dialog (_("Failed to install signature"), error->message);
+		gpk_error_dialog (_("Failed to install signature"), _("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -856,7 +857,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	ret = pk_client_install_signature (gclient->priv->client_signature, PK_SIGTYPE_ENUM_GPG,
 					   key_id, package_id, &error);
 	if (!ret) {
-		gpk_error_modal_dialog (_("Failed to install signature"), error->message);
+		gpk_error_dialog (_("Failed to install signature"), _("The method failed"), error->message);
 		g_error_free (error);
 		gclient->priv->do_key_auth = FALSE;
 	}
@@ -876,7 +877,7 @@ gpk_client_signature_finished_cb (PkClient *client, PkExitEnum exit, guint runti
 	pk_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
-		gpk_error_modal_dialog (_("Failed to requeue action"), error->message);
+		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error->message);
 		g_error_free (error);
 	}
 }

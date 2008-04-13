@@ -70,6 +70,7 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 		gtk_widget_hide (widget);
 	} else {
 		buffer = gtk_text_buffer_new (NULL);
+//		text = g_markup_escape_text (details, -1);
 		gtk_text_buffer_insert_at_cursor (buffer, details, strlen (details));
 		widget = glade_xml_get_widget (glade_xml, "textview_details");
 		gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);

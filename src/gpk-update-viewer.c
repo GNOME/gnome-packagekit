@@ -44,6 +44,7 @@
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
+#include <gpk-error.h>
 
 #include "gpk-statusbar.h"
 #include "gpk-consolekit.h"
@@ -210,7 +211,6 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	gchar **package_ids;
 	gboolean ret;
 	GError *error = NULL;
-	gchar *text;
 
 	pk_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
@@ -245,7 +245,7 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* we have no checkboxes selected */
 	if (!selected_any) {
-		gpk_error_modal_dialog (_("No updates selected"), _("No updates are selected"));
+		gpk_error_dialog (_("No updates selected"), _("No updates are selected"), NULL);
 		return;
 	}
 
@@ -271,9 +271,7 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* update a list */
 	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
 	if (!ret) {
-		text = g_markup_escape_text (error->message, -1);
-		gpk_error_modal_dialog ("Individual updates failed", text);
-		g_free (text);
+		gpk_error_dialog (_("Failed to update"), _("Individual updates failed"), error->message);
 		g_error_free (error);
 	}
 	g_strfreev (package_ids);
@@ -504,7 +502,6 @@ pk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 {
 	gboolean ret;
 	GError *error = NULL;
-	gchar *text;
 
 	/* we can't click this if we havn't finished */
 	ret = pk_client_reset (client_action, &error);
@@ -515,9 +512,7 @@ pk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	}
 	ret = pk_client_refresh_cache (client_action, TRUE, &error);
 	if (ret == FALSE) {
-		text = g_markup_escape_text (error->message, -1);
-		gpk_error_modal_dialog (_("Failed to refresh"), text);
-		g_free (text);
+		gpk_error_dialog (_("Failed to refresh"), _("Method refused"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -530,13 +525,10 @@ static void
 pk_update_viewer_history_cb (GtkWidget *widget, gpointer data)
 {
 	GError *error = NULL;
-	gchar *text;
 
 	/* FIXME: do this in process */
 	if (!g_spawn_command_line_async ("gpk-log", &error)) {
-		text = g_markup_escape_text (error->message, -1);
-		gpk_error_modal_dialog (_("Failed to launch gpk-log"), text);
-		g_free (text);
+		gpk_error_dialog (_("Failed to launch"), _("The file was not found"), error->message);
 		g_error_free (error);			
 	}
 }
