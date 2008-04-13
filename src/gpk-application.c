@@ -41,7 +41,6 @@
 #include <pk-connection.h>
 #include <pk-package-id.h>
 #include <pk-extra.h>
-#include <pk-extra-obj.h>
 
 #include <gpk-client.h>
 #include <gpk-common.h>
@@ -542,11 +541,14 @@ gpk_icon_valid (const gchar *icon)
  **/
 static void
 gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			   const gchar *summary, GpkApplication *application)
+			    const gchar *summary, GpkApplication *application)
 {
 	GtkTreeIter iter;
-	PkExtraObj *eobj;
+	PkPackageId *ident;
 	gboolean valid = FALSE;
+	gboolean ret;
+	gchar *summary_new;
+	gchar *icon = NULL;
 	gchar *text;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -561,30 +563,41 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
 
-	/* get convenience object */
-	eobj = pk_extra_obj_new_from_package_id_summary (package_id, summary);
+	/* find localised summary */
+	ident = pk_package_id_new_from_string (package_id);
+	ret = pk_extra_get_localised_detail (application->priv->extra, ident->name, &summary_new);
+	if (!ret) {
+		/* use the non-localised one */
+		summary_new = g_strdup (summary);
+	}
 
-	/* check icon actually exists and is valid in this theme */
-	valid = gpk_icon_valid (eobj->icon);
+	/* get the icon */
+	ret = pk_extra_get_package_detail (application->priv->extra, ident->name, &icon, NULL);
+	if (ret) {
+		/* check icon actually exists and is valid in this theme */
+		valid = gpk_icon_valid (icon);
+	}
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
-		g_free (eobj->icon);
-		eobj->icon = g_strdup (gpk_info_enum_to_icon_name (info));
+		g_free (icon);
+		icon = g_strdup (gpk_info_enum_to_icon_name (info));
 	}
 
 	/* use two lines */
-	text = gpk_package_id_format_twoline (package_id, eobj->summary);
+	text = gpk_package_id_format_twoline (package_id, summary);
 
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_INSTALLED, (info == PK_INFO_ENUM_INSTALLED),
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
-			    PACKAGES_COLUMN_IMAGE, eobj->icon,
+			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
 
-	pk_extra_obj_free (eobj);
+	pk_package_id_free (ident);
+	g_free (summary_new);
+	g_free (icon);
 	g_free (text);
 }
 
