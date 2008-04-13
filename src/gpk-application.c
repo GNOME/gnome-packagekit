@@ -149,6 +149,29 @@ gpk_application_class_init (GpkApplicationClass *klass)
 }
 
 /**
+ * gpk_application_set_find_cancel_buttons:
+ **/
+static void
+gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean find)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
+
+	/* if we can't do it, then just make the button insensitive */
+	if (!pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
+
+	/* which tab to enable? */
+	if (find) {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
+	} else {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
+	}
+}
+
+/**
  * gpk_application_error_message:
  **/
 static void
@@ -695,10 +718,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 	    role == PK_ROLE_ENUM_SEARCH_GROUP) {
 
 		/* switch round buttons */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
-		gtk_widget_hide (widget);
+		gpk_application_set_find_cancel_buttons (application, TRUE);
 
 		/* were there no entries found? */
 		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
@@ -744,7 +764,6 @@ gpk_application_progress_changed_cb (PkClient *client, guint percentage, guint s
 static void
 gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application)
 {
-	GtkWidget *widget;
 	gboolean ret;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -754,10 +773,7 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 
 	/* switch buttons around */
 	if (ret) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
-		gtk_widget_hide (widget);
+		gpk_application_set_find_cancel_buttons (application, TRUE);
 		application->priv->search_mode = PK_MODE_UNKNOWN;
 	}
 }
@@ -828,12 +844,11 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	gtk_widget_hide (widget);
 
 	/* switch around buttons */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	gtk_widget_hide (widget);
-	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
-		gtk_widget_show (widget);
-	}
+	gpk_application_set_find_cancel_buttons (application, FALSE);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
+
 
 	return TRUE;
 }
@@ -844,7 +859,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 static gboolean
 gpk_application_perform_search_others (GpkApplication *application)
 {
-	GtkWidget *widget;
 	gboolean ret;
 	GError *error = NULL;
 
@@ -870,15 +884,9 @@ gpk_application_perform_search_others (GpkApplication *application)
 		ret = pk_client_get_packages (application->priv->client_search,
 					      application->priv->filters_current, &error);
 	}
-	/* ick, we failed so pretend we didn't do the action */
 	if (ret) {
 		/* switch around buttons */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-		gtk_widget_hide (widget);
-		if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
-			widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
-			gtk_widget_show (widget);
-		}
+		gpk_application_set_find_cancel_buttons (application, FALSE);
 	} else {
 		gpk_application_error_message (application,
 					      _("The group could not be queried"), error->message);
@@ -2270,7 +2278,6 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
-	gtk_widget_hide (widget);
 
 	/* cancel button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
