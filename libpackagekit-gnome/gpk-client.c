@@ -56,10 +56,12 @@ struct _GpkClientPrivate
 {
 	PkClient		*client_action;
 	PkClient		*client_resolve;
+	PkClient		*client_signature;
 	GladeXML		*glade_xml;
 	gint			 pulse_timeout;
 	PkControl		*control;
 	PkRoleEnum		 roles;
+	gboolean		 do_key_auth;
 };
 
 typedef enum {
@@ -238,6 +240,15 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	/* have we handled? */
+	if (code == PK_ERROR_ENUM_GPG_FAILURE) {
+		if (gclient->priv->do_key_auth) {
+			pk_debug ("ignoring GPG error as handled");
+			return;
+		}
+		pk_warning ("did not auth");
+	}
+
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_ERROR);
 
 	/* set bold title */
@@ -257,10 +268,10 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 }
 
 /**
- * pk_client_package_cb:
+ * gpk_client_package_cb:
  **/
 static void
-pk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
+gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 		      const gchar *summary, GpkClient *gclient)
 {
 	gchar *text;
@@ -275,10 +286,10 @@ pk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id
 }
 
 /**
- * pk_client_allow_cancel_cb:
+ * gpk_client_allow_cancel_cb:
  **/
 static void
-pk_client_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkClient *gclient)
+gpk_client_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkClient *gclient)
 {
 	GtkWidget *widget;
 
@@ -531,7 +542,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("Additional packages were not downloaded"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user did not agree to additional deps");
 		ret = FALSE;
 		goto out;
 	}
@@ -731,6 +742,146 @@ out:
 }
 
 /**
+ * gpk_client_sig_button_yes:
+ **/
+static void
+gpk_client_sig_button_yes (GtkWidget *widget, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gclient->priv->do_key_auth = TRUE;
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_sig_button_no:
+ **/
+static void
+gpk_client_sig_button_no (GtkWidget *widget, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_sig_button_help:
+ **/
+static void
+gpk_client_sig_button_help (GtkWidget *widget, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	/* TODO: need a whole section on this! */
+	gpk_gnome_help (NULL);
+}
+
+/**
+ * gpk_client_sig_delete_event_cb:
+ * @event: The event type, unused.
+ **/
+static gboolean
+gpk_client_sig_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	gtk_main_quit ();
+	return FALSE;
+}
+
+/**
+ * gpk_client_repo_signature_required_cb:
+ **/
+static void
+gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id, const gchar *repository_name,
+				       const gchar *key_url, const gchar *key_userid, const gchar *key_id,
+				       const gchar *key_fingerprint, const gchar *key_timestamp,
+				       PkSigTypeEnum type, GpkClient *gclient)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GtkWidget *widget;
+	GladeXML *glade_xml;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	glade_xml = glade_xml_new (PK_DATA "/gpk-signature.glade", NULL, NULL);
+	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	g_signal_connect (widget, "delete_event",
+			  G_CALLBACK (gpk_client_sig_delete_event_cb), gclient);
+
+	/* connect up buttons */
+	widget = glade_xml_get_widget (glade_xml, "button_yes");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_sig_button_yes), gclient);
+	widget = glade_xml_get_widget (glade_xml, "button_no");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_sig_button_no), gclient);
+	widget = glade_xml_get_widget (glade_xml, "button_help");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_client_sig_button_help), gclient);
+
+	/* show correct text */
+	widget = glade_xml_get_widget (glade_xml, "label_name");
+	gtk_label_set_label (GTK_LABEL (widget), repository_name);
+	widget = glade_xml_get_widget (glade_xml, "label_url");
+	gtk_label_set_label (GTK_LABEL (widget), key_url);
+	widget = glade_xml_get_widget (glade_xml, "label_user");
+	gtk_label_set_label (GTK_LABEL (widget), key_userid);
+	widget = glade_xml_get_widget (glade_xml, "label_id");
+	gtk_label_set_label (GTK_LABEL (widget), key_id);
+
+	/* show window */
+	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	gtk_widget_show (widget);
+
+	/* wait for button press */
+	gclient->priv->do_key_auth = FALSE;
+	gtk_main ();
+
+	/* hide window */
+	gtk_widget_hide (widget);
+	g_object_unref (glade_xml);
+
+	/* disagreed with auth */
+	if (!gclient->priv->do_key_auth) {
+		return;
+	}
+
+	/* install signature */
+	pk_debug ("install signature %s", key_id);
+	ret = pk_client_reset (gclient->priv->client_signature, &error);
+	if (ret == FALSE) {
+		gpk_error_modal_dialog (_("Failed to install signature"), error->message);
+		g_error_free (error);
+		return;
+	}
+	/* this is asynchronous, else we get into livelock */
+	ret = pk_client_install_signature (gclient->priv->client_signature, PK_SIGTYPE_ENUM_GPG,
+					   key_id, package_id, &error);
+	if (!ret) {
+		gpk_error_modal_dialog (_("Failed to install signature"), error->message);
+		g_error_free (error);
+		gclient->priv->do_key_auth = FALSE;
+	}
+}
+
+/**
+ * gpk_client_signature_finished_cb:
+ **/
+static void
+gpk_client_signature_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	pk_debug ("trying to requeue install");
+	ret = pk_client_requeue (gclient->priv->client_action, &error);
+	if (!ret) {
+		gpk_error_modal_dialog (_("Failed to requeue action"), error->message);
+		g_error_free (error);
+	}
+}
+
+/**
  * gpk_client_class_init:
  * @klass: The #GpkClientClass
  **/
@@ -755,6 +906,7 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timeout = 0;
+	gclient->priv->do_key_auth = FALSE;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -774,15 +926,22 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_action, "error-code",
 			  G_CALLBACK (gpk_client_error_code_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "package",
-			  G_CALLBACK (pk_client_package_cb), gclient);
+			  G_CALLBACK (gpk_client_package_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "allow-cancel",
-			  G_CALLBACK (pk_client_allow_cancel_cb), gclient);
+			  G_CALLBACK (gpk_client_allow_cancel_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "repo-signature-required",
+			  G_CALLBACK (gpk_client_repo_signature_required_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
 			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
 	pk_client_set_use_buffer (gclient->priv->client_resolve, TRUE, NULL);
 	pk_client_set_synchronous (gclient->priv->client_resolve, TRUE, NULL);
+
+	/* this is asynchronous, else we get into livelock */
+	gclient->priv->client_signature = pk_client_new ();
+	g_signal_connect (gclient->priv->client_signature, "finished",
+			  G_CALLBACK (gpk_client_signature_finished_cb), gclient);
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
@@ -838,6 +997,7 @@ gpk_client_finalize (GObject *object)
 	g_return_if_fail (gclient->priv != NULL);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
+	g_object_unref (gclient->priv->client_signature);
 	g_object_unref (gclient->priv->control);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
