@@ -28,6 +28,7 @@ libpackagekit_gnome_includedir = $(includedir)/packagekit-gnome
 libpackagekit_gnome_include_HEADERS =				\
 	gpk-client.h						\
 	gpk-common.h						\
+	gpk-error.h						\
 	$(NULL)
 
 libpackagekit_gnome_la_SOURCES =				\
@@ -37,6 +38,8 @@ libpackagekit_gnome_la_SOURCES =				\
 	gpk-client.h						\
 	gpk-gnome.c						\
 	gpk-gnome.h						\
+	gpk-error.c						\
+	gpk-error.h						\
 	$(NULL)
 
 libpackagekit_gnome_la_LIBADD =					\

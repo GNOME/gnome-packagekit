@@ -32,6 +32,7 @@ pkgdata_DATA =						\
 	gpk-progress.glade				\
 	gpk-prefs.glade					\
 	gpk-signature.glade				\
+	gpk-error.glade					\
 	gpk-log.glade					\
 	gpk-backend-status.glade			\
 	gpk-install-file.glade				\
