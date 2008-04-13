@@ -730,6 +730,10 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 					    PACKAGES_COLUMN_IMAGE, "search",
 					    -1);
 		}
+
+		/* focus back to the text extry */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+		gtk_widget_grab_focus (widget);
 	}
 
 	/* hide widget */
