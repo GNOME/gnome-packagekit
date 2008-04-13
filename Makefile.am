@@ -3,6 +3,7 @@ SUBDIRS =						\
 	libgbus						\
 	libpackagekit-gnome				\
 	docs						\
+	man						\
 	src						\
 	po						\
 	data						\

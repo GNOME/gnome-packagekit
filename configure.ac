@@ -158,6 +158,15 @@ fi
 AC_SUBST(DOCDIR)
 
 dnl ---------------------------------------------------------------------------
+dnl - Is docbook2man available?
+dnl ---------------------------------------------------------------------------
+AC_PATH_PROG(DOCBOOK2MAN, docbook2man, no)
+if test "$DOCBOOK2MAN" = "no" ; then
+	AC_MSG_WARN([docbook2man not found, will not be able to build man documentation])
+	fi
+AM_CONDITIONAL(HAVE_DOCBOOK2MAN, [test "$DOCBOOK2MAN" != "no"])
+
+dnl ---------------------------------------------------------------------------
 dnl - Other tests
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(gcov, AS_HELP_STRING([--enable-gcov],[compile with coverage profiling instrumentation (gcc only)]),
@@ -202,6 +211,7 @@ libpackagekit-gnome/Makefile
 libgbus/Makefile
 src/Makefile
 help/Makefile
+man/Makefile
 po/Makefile.in
 data/Makefile
 docs/Makefile
