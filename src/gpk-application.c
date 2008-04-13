@@ -46,6 +46,7 @@
 #include <gpk-client.h>
 #include <gpk-common.h>
 #include <gpk-gnome.h>
+#include <gpk-error.h>
 
 #include "gpk-statusbar.h"
 #include "gpk-application.h"
@@ -172,34 +173,6 @@ gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean f
 }
 
 /**
- * gpk_application_error_message:
- **/
-static void
-gpk_application_error_message (GpkApplication *application, const gchar *title, const gchar *details)
-{
-	GtkWidget *main_window;
-	GtkWidget *dialog;
-	gchar *escaped_details = NULL;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	pk_warning ("error %s:%s", title, details);
-	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-
-	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", title);
-
-	/* we need to be careful of markup */
-	if (details != NULL) {
-		escaped_details = g_markup_escape_text (details, -1);
-		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", escaped_details);
-		g_free (escaped_details);
-	}
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-/**
  * gpk_application_install:
  **/
 static gboolean
@@ -234,7 +207,8 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 	if (!ret) {
 		pk_warning ("failed to install package: %s", error->message);
 		/* ick, we failed so pretend we didn't do the action */
-		gpk_application_error_message (application, _("The package could not be installed"), error->message);
+		gpk_error_dialog (_("The package could not be installed"),
+				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 	}
 	return ret;
@@ -301,8 +275,8 @@ gpk_application_remove_only (GpkApplication *application, gboolean force)
 	if (!ret) {
 		pk_warning ("failed to reset client: %s", error->message);
 		/* ick, we failed so pretend we didn't do the action */
-		gpk_application_error_message (application,
-					      _("The package could not be removed"), error->message);
+		gpk_error_dialog (_("The package could not be removed"),
+				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 	}
 	return ret;
@@ -627,8 +601,8 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 		return;
 	}
 
-	gpk_application_error_message (application,
-				      gpk_error_enum_to_localised_text (code), details);
+	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
+			  gpk_error_enum_to_localised_message (code), details);
 }
 
 /**
@@ -812,8 +786,8 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	if (!ret) {
 		pk_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
-		gpk_application_error_message (application, _("Invalid search text"),
-					      _("The search text contains invalid characters"));
+		gpk_error_dialog (_("Invalid search text"),
+				  _("The search text contains invalid characters"), NULL);
 		return FALSE;
 	}
 	pk_debug ("find %s", package);
@@ -839,8 +813,8 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	}
 
 	if (!ret) {
-		gpk_application_error_message (application,
-					      _("The search could not be completed"), error->message);
+		gpk_error_dialog (_("The search could not be completed"),
+				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -898,8 +872,8 @@ gpk_application_perform_search_others (GpkApplication *application)
 		/* switch around buttons */
 		gpk_application_set_find_cancel_buttons (application, FALSE);
 	} else {
-		gpk_application_error_message (application,
-					      _("The group could not be queried"), error->message);
+		gpk_error_dialog (_("The group could not be queried"),
+				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 	}
 	return ret;
@@ -1670,7 +1644,8 @@ gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 	/* can we cancel what we are doing? */
 	ret = pk_client_reset (application->priv->client_action, &error);
 	if (!ret) {
-		gpk_application_error_message (application, _("Package list could not be refreshed"), error->message);
+		gpk_error_dialog (_("Package list could not be refreshed"),
+				  _("Failed to reset"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -1678,7 +1653,8 @@ gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 	/* try to refresh the cache */
 	ret = pk_client_refresh_cache (application->priv->client_action, FALSE, &error);
 	if (!ret) {
-		gpk_application_error_message (application, _("The package could not be installed"), error->message);
+		gpk_error_dialog (_("The package could not be installed"),
+				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return;
 	}

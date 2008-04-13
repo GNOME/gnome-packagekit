@@ -234,11 +234,6 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 static void
 gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkClient *gclient)
 {
-	GtkWidget *widget;
-	const gchar *title;
-	gchar *title_bold;
-	gchar *details_safe;
-
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* have we handled? */
@@ -250,22 +245,9 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		pk_warning ("did not auth");
 	}
 
-	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_ERROR);
-
-	/* set bold title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_error_title");
-	title = gpk_error_enum_to_localised_text (code);
-	title_bold = g_strdup_printf ("<b>%s</b>", title);
-	gtk_label_set_label (GTK_LABEL (widget), title_bold);
-	g_free (title_bold);
-
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_error_message");
-	gtk_label_set_label (GTK_LABEL (widget), gpk_error_enum_to_localised_message (code));
-
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_error_details");
-	details_safe = g_markup_escape_text (details, -1);
-	gtk_label_set_label (GTK_LABEL (widget), details_safe);
-	g_free (details_safe);
+	//remove GPK_CLIENT_PAGE_ERROR?
+	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
+			  gpk_error_enum_to_localised_message (code), details);
 }
 
 /**
