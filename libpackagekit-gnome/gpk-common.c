@@ -196,10 +196,10 @@ gpk_size_to_si_size_text (guint64 size)
 }
 
 /**
- * gpk_package_id_pretty:
+ * gpk_package_id_format_twoline:
  **/
 gchar *
-gpk_package_id_pretty (const gchar *package_id, const gchar *summary)
+gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
 	gchar *text;
@@ -233,10 +233,10 @@ gpk_package_id_pretty (const gchar *package_id, const gchar *summary)
 }
 
 /**
- * gpk_package_id_pretty_oneline:
+ * gpk_package_id_format_oneline:
  **/
 gchar *
-gpk_package_id_pretty_oneline (const gchar *package_id, const gchar *summary)
+gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
 	gchar *text;
@@ -1318,7 +1318,7 @@ libst_common (LibSelfTest *test)
 	 ****************     package name text        **************
 	 ************************************************************/
 	libst_title (test, "package id pretty null");
-	text = gpk_package_id_pretty (NULL, NULL);
+	text = gpk_package_id_format_twoline (NULL, NULL);
 	if (text == NULL) {
 		libst_success (test, NULL);
 	} else {
@@ -1327,7 +1327,7 @@ libst_common (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
-	text = gpk_package_id_pretty ("simon;0.0.1;i386;data", NULL);
+	text = gpk_package_id_format_twoline ("simon;0.0.1;i386;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1 (i386)</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1337,7 +1337,7 @@ libst_common (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 2");
-	text = gpk_package_id_pretty ("simon;0.0.1;;data", NULL);
+	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1347,7 +1347,7 @@ libst_common (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 3");
-	text = gpk_package_id_pretty ("simon;;;data", NULL);
+	text = gpk_package_id_format_twoline ("simon;;;data", NULL);
 	if (text != NULL && strcmp (text, "<b>simon</b>") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1357,7 +1357,7 @@ libst_common (LibSelfTest *test)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 4");
-	text = gpk_package_id_pretty ("simon;0.0.1;;data", "dude");
+	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", "dude");
 	if (text != NULL && strcmp (text, "<b>simon-0.0.1</b>\ndude") == 0) {
 		libst_success (test, NULL);
 	} else {

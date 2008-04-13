@@ -334,7 +334,7 @@ gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	g_string_append (text, "\n\n");
 	for (i=0; i<length; i++) {
 		item = pk_client_package_buffer_get_item (client, i);
-		message = gpk_package_id_pretty_oneline (item->package_id, item->summary);
+		message = gpk_package_id_format_oneline (item->package_id, item->summary);
 		g_string_append_printf (text, "%s\n", message);
 		g_free (message);
 	}

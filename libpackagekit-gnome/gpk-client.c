@@ -264,7 +264,7 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	text = gpk_package_id_pretty (package_id, summary);
+	text = gpk_package_id_format_twoline (package_id, summary);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
@@ -526,7 +526,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	g_string_append (string, "\n\n");
 	for (i=0; i<len; i++) {
 		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-		text = gpk_package_id_pretty_oneline (item->package_id, item->summary);
+		text = gpk_package_id_format_oneline (item->package_id, item->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}

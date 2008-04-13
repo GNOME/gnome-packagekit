@@ -48,9 +48,9 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 
 gchar		*gpk_package_get_name			(const gchar	*package_id);
-gchar		*gpk_package_id_pretty			(const gchar	*package_id,
+gchar		*gpk_package_id_format_twoline		(const gchar	*package_id,
 							 const gchar	*summary);
-gchar		*gpk_package_id_pretty_oneline		(const gchar	*package_id,
+gchar		*gpk_package_id_format_oneline		(const gchar	*package_id,
 							 const gchar	*summary);
 gchar		*gpk_package_id_name_version		(const gchar	*package_id);
 

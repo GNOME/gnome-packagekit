@@ -262,7 +262,7 @@ pk_details_item_add (GtkListStore *list_store, PkInfoEnum info, const gchar *pac
 	const gchar *info_text;
 
 	info_text = gpk_info_enum_to_localised_text (info);
-	text = gpk_package_id_pretty (package_id, summary);
+	text = gpk_package_id_format_twoline (package_id, summary);
 	icon_name = gpk_info_enum_to_icon_name (info);
 
 	gtk_list_store_append (list_store_details, &iter);

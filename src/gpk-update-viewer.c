@@ -774,7 +774,7 @@ pk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *pac
 		  pk_info_enum_to_text (info), package_id, summary);
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		text = gpk_package_id_pretty (package_id, summary);
+		text = gpk_package_id_format_twoline (package_id, summary);
 		icon_name = gpk_info_enum_to_icon_name (info);
 		gtk_list_store_append (list_store_details, &iter);
 		gtk_list_store_set (list_store_details, &iter,
@@ -790,7 +790,7 @@ pk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *pac
 
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		text = gpk_package_id_pretty (package_id, summary);
+		text = gpk_package_id_format_twoline (package_id, summary);
 		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
 		gtk_label_set_markup (GTK_LABEL (widget), text);
 
@@ -1290,7 +1290,7 @@ pk_update_viewer_check_blocked_packages (PkClient *client)
 	for (i=0;i<length;i++) {
 		item = pk_client_package_buffer_get_item (client, i);
 		if (item->info == PK_INFO_ENUM_BLOCKED) {
-			text = gpk_package_id_pretty_oneline (item->package_id, item->summary);
+			text = gpk_package_id_format_oneline (item->package_id, item->summary);
 			g_string_append_printf (string, "%s\n", text);
 			g_free (text);
 			exists = TRUE;
