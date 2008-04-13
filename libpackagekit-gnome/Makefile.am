@@ -49,6 +49,7 @@ libpackagekit_gnome_la_LIBADD =					\
 	$(PACKAGEKIT_LIBS)					\
 	$(POLKIT_GNOME_LIBS)					\
 	$(LIBGLADE_LIBS)					\
+	$(GCONF_LIBS)						\
 	$(NULL)
 
 libpackagekit_gnome_la_LDFLAGS =				\
@@ -62,8 +63,6 @@ noinst_PROGRAMS =						\
 	gpk-self-test
 
 gpk_self_test_SOURCES =						\
-	gpk-common.h						\
-	gpk-common.c						\
 	gpk-self-test.c						\
 	$(NULL)
 

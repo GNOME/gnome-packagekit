@@ -23,9 +23,10 @@
 #include <glib-object.h>
 #include <libselftest.h>
 #include <pk-debug.h>
+#include "gpk-common.h"
 
 /* prototypes */
-void libst_common_gui (LibSelfTest *test);
+void libst_common (LibSelfTest *test);
 
 int
 main (int argc, char **argv)
@@ -40,7 +41,7 @@ main (int argc, char **argv)
 	pk_debug_init (TRUE);
 
 	/* tests go here */
-	libst_common_gui (&test);
+	libst_common (&test);
 
 	return (libst_finish (&test));
 }

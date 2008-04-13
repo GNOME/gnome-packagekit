@@ -32,6 +32,7 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <gconf/gconf-client.h>
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-package-id.h>
@@ -59,6 +60,7 @@ struct _GpkClientPrivate
 	PkClient		*client_resolve;
 	PkClient		*client_signature;
 	GladeXML		*glade_xml;
+	GConfClient		*gconf_client;
 	gint			 pulse_timeout;
 	PkControl		*control;
 	PkRoleEnum		 roles;
@@ -439,6 +441,22 @@ out:
 }
 
 /**
+ * gpk_client_checkbutton_show_depends_cb:
+ **/
+static void
+gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, GpkClient *gclient)
+{
+	gboolean checked;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* set the policy */
+	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+	pk_debug ("Changing %s to %i", GPK_CONF_SHOW_DEPENDS, checked);
+	gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, checked, NULL);
+}
+
+/**
  * gpk_client_install_package_id:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
@@ -496,6 +514,13 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 		goto skip_checks;
 	}
 
+	/* have we previously said we don't want to be shown the confirmation */
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
+	if (!ret) {
+		pk_debug ("we've said we don't want deps anymore");
+		goto skip_checks;
+	}
+
 	/* process package list */
 	string = g_string_new (_("The following packages also have to be downloaded:"));
 	g_string_append (string, "\n\n");
@@ -519,6 +544,12 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 					 "%s", _("Install additional packages?"));
 	/* add a specialist button */
 	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+
+	/* add a checkbutton for deps screen */
+	widget = gtk_check_button_new_with_label (_("Do not show me this again"));
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), gclient);
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), widget);
+	gtk_widget_show (widget);
 
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -898,6 +929,9 @@ gpk_client_init (GpkClient *gclient)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
 
+	/* use gconf for session settings */
+	gclient->priv->gconf_client = gconf_client_get_default ();
+
 	/* get actions */
 	gclient->priv->control = pk_control_new ();
 	gclient->priv->roles = pk_control_get_actions (gclient->priv->control);
@@ -985,6 +1019,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_signature);
 	g_object_unref (gclient->priv->control);
+	g_object_unref (gclient->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }
