@@ -27,6 +27,7 @@ autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
 	gpk-repo.glade					\
+	gpk-eula.glade					\
 	gpk-application.glade				\
 	gpk-update-viewer.glade				\
 	gpk-progress.glade				\

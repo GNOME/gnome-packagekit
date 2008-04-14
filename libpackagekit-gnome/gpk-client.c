@@ -28,6 +28,7 @@
 
 #include "config.h"
 
+#include <string.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
@@ -157,7 +158,10 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
+	} else {
+		gtk_main_quit ();
 	}
+
 	/* make insensitive */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, FALSE);
@@ -282,27 +286,6 @@ gpk_client_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkClient *
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
-}
-
-/**
- * gpk_client_window_delete_event_cb:
- **/
-static gboolean
-gpk_client_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
-{
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	gtk_main_quit ();
-	return FALSE;
-}
-
-/**
- * gpk_client_button_close_cb:
- **/
-static void
-gpk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gtk_main_quit ();
 }
 
 /**
@@ -770,36 +753,14 @@ gpk_client_sig_button_yes (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
- * gpk_client_sig_button_no:
+ * gpk_client_button_help:
  **/
 static void
-gpk_client_sig_button_no (GtkWidget *widget, GpkClient *gclient)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gtk_main_quit ();
-}
-
-/**
- * gpk_client_sig_button_help:
- **/
-static void
-gpk_client_sig_button_help (GtkWidget *widget, GpkClient *gclient)
+gpk_client_button_help (GtkWidget *widget, GpkClient *gclient)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 	/* TODO: need a whole section on this! */
 	gpk_gnome_help (NULL);
-}
-
-/**
- * gpk_client_sig_delete_event_cb:
- * @event: The event type, unused.
- **/
-static gboolean
-gpk_client_sig_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
-{
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	gtk_main_quit ();
-	return FALSE;
 }
 
 /**
@@ -819,20 +780,18 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-signature.glade", NULL, NULL);
+
+	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_gpg");
-	g_signal_connect (widget, "delete_event",
-			  G_CALLBACK (gpk_client_sig_delete_event_cb), gclient);
+	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	widget = glade_xml_get_widget (glade_xml, "button_no");
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_yes");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_sig_button_yes), gclient);
-	widget = glade_xml_get_widget (glade_xml, "button_no");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_sig_button_no), gclient);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_sig_button_yes), gclient);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_sig_button_help), gclient);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_button_help), gclient);
 
 	/* show correct text */
 	widget = glade_xml_get_widget (glade_xml, "label_name");
@@ -853,7 +812,9 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	gtk_main ();
 
 	/* hide window */
-	gtk_widget_hide (widget);
+	if (GTK_IS_WIDGET (widget)) {
+		gtk_widget_hide (widget);
+	}
 	g_object_unref (glade_xml);
 
 	/* disagreed with auth */
@@ -877,6 +838,63 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 		g_error_free (error);
 		gclient->priv->do_key_auth = FALSE;
 	}
+}
+
+/**
+ * gpk_client_eula_required_cb:
+ **/
+static void
+gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar *package_id,
+			     const gchar *vendor_name, const gchar *license_agreement, GpkClient *gclient)
+{
+	GtkWidget *widget;
+	GladeXML *glade_xml;
+	GtkTextBuffer *buffer;
+	gchar *text;
+	PkPackageId *ident;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	glade_xml = glade_xml_new (PK_DATA "/gpk-eula.glade", NULL, NULL);
+
+	/* connect up default actions */
+	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* connect up buttons */
+	widget = glade_xml_get_widget (glade_xml, "button_agree");
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_sig_button_yes), gclient);
+	widget = glade_xml_get_widget (glade_xml, "button_help");
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_button_help), gclient);
+
+	/* title */
+	widget = glade_xml_get_widget (glade_xml, "label_title");
+	ident = pk_package_id_new_from_string (package_id);
+	text = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", ident->name, vendor_name);
+	gtk_label_set_label (GTK_LABEL (widget), text);
+	pk_package_id_free (ident);
+	g_free (text);
+
+	buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_insert_at_cursor (buffer, license_agreement, strlen (license_agreement));
+	widget = glade_xml_get_widget (glade_xml, "textview_details");
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+
+	/* show window */
+	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	gtk_widget_show (widget);
+
+	/* wait for button press */
+	gtk_main ();
+
+	/* hide window */
+	if (GTK_IS_WIDGET (widget)) {
+		gtk_widget_hide (widget);
+	}
+	g_object_unref (glade_xml);
+	g_object_unref (buffer);
 }
 
 /**
@@ -951,6 +969,8 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_allow_cancel_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "repo-signature-required",
 			  G_CALLBACK (gpk_client_repo_signature_required_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "eula-required",
+			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -964,21 +984,18 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_signature_finished_cb), gclient);
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 
 	/* Get the main window quit */
-	g_signal_connect (widget, "delete_event",
-			  G_CALLBACK (gpk_client_window_delete_event_cb), gclient);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
+	/* just close */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_button_close_cb), gclient);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_button_close_cb), gclient);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close3");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_client_button_close_cb), gclient);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",

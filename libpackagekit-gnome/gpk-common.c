@@ -391,6 +391,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages cannot be installed");
 		break;
+	case PK_ERROR_ENUM_NO_LICENSE_AGREEMENT:
+		text = _("The license agreement failed");
+		break;
 	default:
 		text = _("Unknown error");
 	}
@@ -488,6 +491,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages are not normally installed this way.\n"
 			 "Check the extension of the file you are trying to install.");
+		break;
+	case PK_ERROR_ENUM_NO_LICENSE_AGREEMENT:
+		text = _("The license agreement was not agreed to.\n"
+			 "To use this software you have to accept the license.");
 		break;
 	default:
 		text = _("Unknown error, please report a bug.\n"
