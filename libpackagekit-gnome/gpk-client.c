@@ -882,6 +882,9 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	widget = glade_xml_get_widget (glade_xml, "textview_details");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 
+	/* set minimum size a bit bigger */
+	gtk_widget_set_size_request (widget, 100, 200);
+
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_eula");
 	gtk_widget_show (widget);
