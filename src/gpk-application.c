@@ -172,6 +172,53 @@ gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean f
 }
 
 /**
+ * gpk_application_treeview_sort_none:
+ **/
+static gint
+gpk_application_treeview_sort_none (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data)
+{
+	return 0;
+}
+
+/**
+ * gpk_application_treeview_sort_text:
+ **/
+static gint
+gpk_application_treeview_sort_text (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data)
+{
+	gchar *a_txt;
+	gchar *b_txt;
+	gint ret;
+	gtk_tree_model_get (model, a, PACKAGES_COLUMN_ID, &a_txt, -1);
+	gtk_tree_model_get (model, b, PACKAGES_COLUMN_ID, &b_txt, -1);
+	ret = strcmp (a_txt, b_txt);
+	g_free (a_txt);
+	g_free (b_txt);
+	return ret;
+}
+
+/**
+ * gpk_application_treeview_set_sorted:
+ **/
+static void
+gpk_application_treeview_set_sorted (GpkApplication *application, gboolean sorted)
+{
+	if (sorted) {
+		g_print ("sorted\n");
+		gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
+						 PACKAGES_COLUMN_ID, gpk_application_treeview_sort_text, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
+						      PACKAGES_COLUMN_ID, GTK_SORT_ASCENDING);
+	} else {
+		g_print ("unsorted\n");
+		gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
+							 gpk_application_treeview_sort_none, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
+						      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+	}
+}
+
+/**
  * gpk_application_install:
  **/
 static gboolean
@@ -186,7 +233,7 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 
 	pk_debug ("install %s", application->priv->package);
 
-	/* xxx TODO: this is hacky code for testing only */
+	/* TODO: this is hacky code for testing only */
 	gclient = gpk_client_new ();
 	ret = gpk_client_install_package_id (gclient, package_id, NULL);
 	g_object_unref (gclient);
@@ -708,7 +755,8 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 
 	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
 	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
-	    role == PK_ROLE_ENUM_SEARCH_GROUP) {
+	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
+	    role == PK_ROLE_ENUM_GET_PACKAGES) {
 
 		/* switch round buttons */
 		gpk_application_set_find_cancel_buttons (application, TRUE);
@@ -727,6 +775,8 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 		/* focus back to the text extry */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 		gtk_widget_grab_focus (widget);
+
+		gpk_application_treeview_set_sorted (application, TRUE);
 	}
 
 	/* hide widget */
@@ -832,6 +882,9 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 		return FALSE;
 	}
 
+	/* unsorted */
+	gpk_application_treeview_set_sorted (application, FALSE);
+
 	/* clear existing list */
 	gtk_list_store_clear (application->priv->packages_store);
 	application->priv->has_package = FALSE;
@@ -870,6 +923,9 @@ gpk_application_perform_search_others (GpkApplication *application)
 		return FALSE;
 	}
 
+	/* unsorted */
+	gpk_application_treeview_set_sorted (application, FALSE);
+
 	/* refresh the search as the items may have changed */
 	gtk_list_store_clear (application->priv->packages_store);
 
@@ -881,6 +937,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 		ret = pk_client_get_packages (application->priv->client_search,
 					      application->priv->filters_current, &error);
 	}
+
 	if (ret) {
 		/* switch around buttons */
 		gpk_application_set_find_cancel_buttons (application, FALSE);
@@ -899,6 +956,7 @@ static gboolean
 gpk_application_perform_search (GpkApplication *application)
 {
 	gboolean ret = FALSE;
+
 	if (application->priv->search_mode == PK_MODE_NAME_DETAILS_FILE) {
 		ret = gpk_application_perform_search_name_details_file (application);
 	} else if (application->priv->search_mode == PK_MODE_GROUP ||
@@ -2410,9 +2468,8 @@ gpk_application_init (GpkApplication *application)
 						       G_TYPE_STRING,
 						       G_TYPE_STRING);
 
-	/* sorted */
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
-					      PACKAGES_COLUMN_TEXT, GTK_SORT_ASCENDING);
+	/* unsorted */
+	gpk_application_treeview_set_sorted (application, FALSE);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
