@@ -204,6 +204,7 @@ gchar *
 gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
+	gchar *summary_safe;
 	gchar *text;
 	GString *string;
 
@@ -219,7 +220,9 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 		string = g_string_new (ident->name);
 	} else {
 		string = g_string_new ("");
-		g_string_append_printf (string, "<b>%s</b>\n%s", summary, ident->name);
+		summary_safe = g_markup_escape_text (summary, -1);
+		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, ident->name);
+		g_free (summary_safe);
 	}
 
 	/* some backends don't provide this */
@@ -244,6 +247,7 @@ gchar *
 gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 {
 	PkPackageId *ident;
+	gchar *summary_safe;
 	gchar *text;
 
 	/* split by delimeter */
@@ -257,7 +261,9 @@ gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 		/* just have name */
 		text = g_strdup (ident->name);
 	} else {
-		text = g_strdup_printf ("<b>%s</b> (%s)", summary, ident->name);
+		summary_safe = g_markup_escape_text (summary, -1);
+		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, ident->name);
+		g_free (summary_safe);
 	}
 
 	pk_package_id_free (ident);
