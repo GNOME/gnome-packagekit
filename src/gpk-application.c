@@ -1952,6 +1952,20 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 }
 
 /**
+ * gpk_application_group_row_separator_func:
+ **/
+static gboolean
+gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter, gpointer data)
+{
+	gchar *name = NULL;
+	gboolean ret;
+	gtk_tree_model_get (model, iter, GROUPS_COLUMN_ID, &name, -1);
+	ret = pk_strequal (name, "separator");
+	g_free (name);
+	return ret;
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2422,6 +2436,10 @@ gpk_application_init (GpkApplication *application)
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ICON, icon_name, -1);
+		/* add a separator */
+		gtk_list_store_append (application->priv->groups_store, &iter);
+		gtk_list_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_ID, "separator", -1);
 	}
 
 	/* create group tree view if we can search by group */
@@ -2444,6 +2462,10 @@ gpk_application_init (GpkApplication *application)
 			}
 		}
 	}
+
+	/* use a seporator */
+	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+					      gpk_application_group_row_separator_func, NULL, NULL);
 }
 
 /**
