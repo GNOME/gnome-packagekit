@@ -403,6 +403,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_FILE_CONFLICTS:
 		text = _("Local file conflict between packages");
 		break;
+	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
+		text = _("Problem connecting to a software source");
+		break;
 	default:
 		text = _("Unknown error");
 	}
@@ -507,7 +510,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_FILE_CONFLICTS:
 		text = _("Two packages provide the same file.\n"
-			 "This is usually due to mixing packages for different software sources");
+			 "This is usually due to mixing packages for different software sources.");
+		break;
+	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
+		text = _("There was a (possibly temporary) problem connecting to a software source\n"
+			 "Please check the detailed error for further details.");
 		break;
 	default:
 		text = _("Unknown error, please report a bug.\n"
