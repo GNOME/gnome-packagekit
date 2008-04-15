@@ -14,38 +14,62 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/gnome-packagekit/notify_restart</key>
-      <applyto>/apps/gnome-packagekit/notify_restart</applyto>
+      <key>/schemas/apps/gnome-packagekit/notify_update_failed</key>
+      <applyto>/apps/gnome-packagekit/notify_update_failed</applyto>
       <owner>gnome-packagekit</owner>
       <type>bool</type>
       <default>true</default>
       <locale name="C">
-        <short>Notify the user when we have to restart</short>
-        <long>Notify the user when we have to restart</long>
+        <short>Notify the user when we have failed an update</short>
+        <long>Notify the user when we have failed an update</long>
       </locale>
     </schema>
 
     <schema>
-      <key>/schemas/apps/gnome-packagekit/notify_battery_update</key>
-      <applyto>/apps/gnome-packagekit/notify_battery_update</applyto>
+      <key>/schemas/apps/gnome-packagekit/notify_update_complete</key>
+      <applyto>/apps/gnome-packagekit/notify_update_complete</applyto>
       <owner>gnome-packagekit</owner>
       <type>bool</type>
       <default>true</default>
       <locale name="C">
-        <short>Notify the user when we have not started an autoupdate on battery</short>
-        <long>Notify the user when we have not started an autoupdate on battery</long>
+        <short>Notify the user when we have completed an update</short>
+        <long>Notify the user when we have completed an update</long>
       </locale>
     </schema>
 
     <schema>
-      <key>/schemas/apps/gnome-packagekit/notify_started</key>
-      <applyto>/apps/gnome-packagekit/notify_started</applyto>
+      <key>/schemas/apps/gnome-packagekit/notify_update_complete_restart</key>
+      <applyto>/apps/gnome-packagekit/notify_update_complete_restart</applyto>
       <owner>gnome-packagekit</owner>
       <type>bool</type>
       <default>true</default>
       <locale name="C">
-        <short>Notify the user when we have started a task</short>
-        <long>Notify the user when we have started a task</long>
+        <short>Notify the user when we have completed an update and need to restart</short>
+        <long>Notify the user when we have completed an update and need to restart</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/notify_update_not_battery</key>
+      <applyto>/apps/gnome-packagekit/notify_update_not_battery</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Notify the user when we have not started an auto-update on battery</short>
+        <long>Notify the user when we have not started an auto-update on battery</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/notify_update_started</key>
+      <applyto>/apps/gnome-packagekit/notify_update_started</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Notify the user when we have started an update</short>
+        <long>Notify the user when we have started an update</long>
       </locale>
     </schema>
 

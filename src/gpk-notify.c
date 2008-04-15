@@ -146,7 +146,7 @@ gpk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoi
 	cmdline = g_strconcat ("gnome-open ", url, NULL);
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
-        
+
 	if (ret == FALSE) {
 		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
 						       GTK_DIALOG_MODAL,
@@ -232,10 +232,7 @@ gpk_notify_show_about_cb (GtkMenuItem *item, gpointer data)
  * Display the popup menu.
  **/
 static void
-gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon,
-			 guint          button,
-			 guint32        timestamp,
-			 GpkNotify      *icon)
+gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint32 timestamp, GpkNotify *icon)
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -299,7 +296,6 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 	GString *message_text;
 	guint skipped_number = 0;
 	const gchar *message;
-	gboolean value;
 
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
@@ -315,13 +311,6 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
-		return;
-	}
-
-	/* are we accepting notifications */
-	value = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
-	if (value == FALSE) {
-		pk_debug ("not showing notification as prevented in gconf");
 		return;
 	}
 
@@ -368,16 +357,19 @@ gpk_notify_update_system_finished_cb (PkClient *client, PkExitEnum exit_code, gu
 		g_string_set_size (message_text, message_text->len-1);
 	}
 
-	/* do the notify, and show the right buttons */
-	pk_debug ("Doing notification");
+	/* this will not show if specified in gconf */
 	gpk_smart_icon_notify_new (notify->priv->sicon,
 				  _("The system update has completed"), message_text->str,
 				  "software-update-available",
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
 		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
+	} else {
+		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_COMPLETE);
 	}
-	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_RESTART);
 	gpk_smart_icon_notify_show (notify->priv->sicon);
 	g_string_free (message_text, TRUE);
 }
@@ -411,7 +403,9 @@ gpk_notify_update_system (GpkNotify *notify)
 		gpk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
 				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
 		g_free (message);
-		gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
+		gpk_smart_icon_notify_button (notify->priv->sicon,
+					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_FAILED);
 		gpk_smart_icon_notify_show (notify->priv->sicon);
 	}
 	return ret;
@@ -497,17 +491,9 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
 {
 	const gchar *title;
 	gchar *message;
-	gboolean value;
 	GString *string;
 
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
-
-        /* are we accepting notifications */
-        value = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
-        if (value == FALSE) {
-                pk_debug ("not showing notification as prevented in gconf");
-                return;
-        }
 
 	/* format title */
 	title = ngettext ("Security update available", "Security updates available", number);
@@ -520,7 +506,7 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
 	g_string_append (string, details);
 	message = g_string_free (string, FALSE);
 
-	pk_debug ("Doing critical updates warning: %s", message);
+	/* this will not show if specified in gconf */
 	gpk_smart_icon_notify_new (notify->priv->sicon, title, message, "software-update-urgent",
 				   GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
 	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
@@ -536,23 +522,17 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
 static void
 gpk_notify_auto_update_message (GpkNotify *notify)
 {
-	gboolean value;
-
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
-	/* are we accepting notifications */
-        value = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
-        if (value == FALSE) {
-                pk_debug ("not showing notification as prevented in gconf");
-                return;
-        }
-
+	/* this will not show if specified in gconf */
 	gpk_smart_icon_notify_new (notify->priv->sicon,
 				  _("Updates are being installed"),
-				  _("Updates are being automatically installed on your computer"), "software-update-urgent",
+				  _("Updates are being automatically installed on your computer"),
+				  "software-update-urgent",
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
 	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
-	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_STARTED);
+	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+				      GPK_CONF_NOTIFY_UPDATE_STARTED);
 	gpk_smart_icon_notify_show (notify->priv->sicon);
 }
 
@@ -629,28 +609,25 @@ gpk_notify_check_on_battery (GpkNotify *notify)
 {
 	gboolean on_battery;
 	gboolean conf_update_battery;
-	gboolean value;
+	gboolean ret;
 
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
 	on_battery = gpk_auto_refresh_get_on_battery (notify->priv->arefresh);
 	conf_update_battery = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_UPDATE_BATTERY, NULL);
 	if (!conf_update_battery && on_battery) {
-		/* are we accepting notifications */
-		value = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_NOTIFY_BATTERY_UPDATE, NULL);
-		if (value) {
-			gpk_smart_icon_notify_new (notify->priv->sicon,
-						  _("Will not install updates"),
-						  _("Automatic updates are not being installed as the computer is on battery power"),
-					      "dialog-information", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-			gpk_smart_icon_notify_button (notify->priv->sicon,
-						     GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-						     GPK_CONF_NOTIFY_BATTERY_UPDATE);
-			gpk_smart_icon_notify_show (notify->priv->sicon);
-		}
-		return FALSE;
+		/* this will not show if specified in gconf */
+		gpk_smart_icon_notify_new (notify->priv->sicon,
+					  _("Will not install updates"),
+					  _("Automatic updates are not being installed as the computer is on battery power"),
+					  "dialog-information",
+					  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+		gpk_smart_icon_notify_button (notify->priv->sicon,
+					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
+		ret = gpk_smart_icon_notify_show (notify->priv->sicon);
 	}
-	return TRUE;
+	return ret;
 }
 
 /**
@@ -826,7 +803,6 @@ static void
 gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkNotify *notify)
 {
 	const gchar *title;
-	gboolean value;
 
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
@@ -839,16 +815,11 @@ gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gc
 		return;
 	}
 
-        /* are we accepting notifications */
-        value = gconf_client_get_bool (notify->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
-        if (value == FALSE) {
-                pk_debug ("not showing notification as prevented in gconf");
-                return;
-        }
-
+	/* this will not show if specified in gconf */
 	gpk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
 				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (notify->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
+	gpk_smart_icon_notify_button (notify->priv->sicon,
+				      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
 	gpk_smart_icon_notify_show (notify->priv->sicon);
 }
 

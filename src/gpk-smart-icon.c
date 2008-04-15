@@ -38,6 +38,7 @@
 #include <libnotify/notify.h>
 #include <gtk/gtkstatusicon.h>
 #include <libnotify/notify.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-enum.h>
@@ -56,10 +57,12 @@ struct GpkSmartIconPrivate
 {
 	GtkStatusIcon		*status_icon;
 	NotifyNotification	*dialog;
+	GConfClient		*gconf_client;
 	gchar			*current;
 	gchar			*new;
 	gchar			*notify_data;
 	guint			 event_source;
+	gboolean		 has_gconf_check;
 };
 
 enum {
@@ -201,11 +204,16 @@ gpk_smart_icon_set_tooltip (GpkSmartIcon *sicon, const gchar *tooltip)
  **/
 gboolean
 gpk_smart_icon_notify_new (GpkSmartIcon *sicon, const gchar *title, const gchar *message,
-		      const gchar *icon, GpkNotifyUrgency urgency, GpkNotifyTimeout timeout)
+			   const gchar *icon, GpkNotifyUrgency urgency, GpkNotifyTimeout timeout)
 {
 	guint timeout_val = 0;
 
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	pk_debug ("Doing notification: %s, %s, %s", title, message, icon);
+
+	/* no gconf to check */
+	sicon->priv->has_gconf_check = FALSE;
 
 	/* default values */
 	if (timeout == GPK_NOTIFY_TIMEOUT_SHORT) {
@@ -259,8 +267,10 @@ gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const
 	/* find the localised text */
 	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
 		text = _("Do not show this notification again");
+		sicon->priv->has_gconf_check = TRUE;
 	} else if (button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
 		text = _("Do not warn me again");
+		sicon->priv->has_gconf_check = TRUE;
 	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
 		text = _("Cancel system update");
 	} else if (button == GPK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
@@ -279,14 +289,34 @@ gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const
 
 /**
  * gpk_smart_icon_notify_show:
+ * Return value: if the notification is being displayed
+ *
+ * This will show the notification previously setup with gpk_smart_icon_notify_new() and
+ * gpk_smart_icon_notify_button().
+ *
+ * If you set a key using %GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN or
+ * %GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN then this key will be checked before the notification is
+ * shown.
  **/
 gboolean
 gpk_smart_icon_notify_show (GpkSmartIcon *sicon)
 {
 	GError *error = NULL;
+	gboolean value;
 
 	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
 	g_return_val_if_fail (sicon->priv->dialog != NULL, FALSE);
+
+	/* check the gconf key isn't set to ignore */
+	if (sicon->priv->has_gconf_check) {
+		pk_debug ("key is %s", sicon->priv->notify_data);
+		/* are we accepting notifications */
+		value = gconf_client_get_bool (sicon->priv->gconf_client, sicon->priv->notify_data, NULL);
+		if (!value) {
+			pk_debug ("not showing notification as prevented in gconf with %s", sicon->priv->notify_data);
+			return FALSE;
+		}
+	}
 
 	notify_notification_close (sicon->priv->dialog, NULL);
 	notify_notification_show (sicon->priv->dialog, &error);
@@ -323,6 +353,8 @@ gpk_smart_icon_init (GpkSmartIcon *sicon)
 	sicon->priv->dialog = NULL;
 	sicon->priv->notify_data = NULL;
 	sicon->priv->event_source = 0;
+	sicon->priv->has_gconf_check = FALSE;
+	sicon->priv->gconf_client = gconf_client_get_default ();
 
 	/* signal we are here... */
 	notify_init ("packagekit");
@@ -346,6 +378,7 @@ gpk_smart_icon_finalize (GObject *object)
 
 	g_free (sicon->priv->new);
 	g_free (sicon->priv->current);
+	g_object_unref (sicon->priv->gconf_client);
 
 	g_object_unref (sicon->priv->status_icon);
 	if (sicon->priv->dialog != NULL) {
