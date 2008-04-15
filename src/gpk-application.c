@@ -249,12 +249,21 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 
 	/* do the install */
 	ret = pk_client_install_package (application->priv->client_action,
-					 application->priv->package, NULL);
+					 application->priv->package, &error);
 	if (!ret) {
 		pk_warning ("failed to install package: %s", error->message);
-		/* ick, we failed so pretend we didn't do the action */
-		gpk_error_dialog (_("The package could not be installed"),
-				  _("Running the transaction failed"), error->message);
+
+                if (strcmp (error->message, "org.freedesktop.packagekit.install no") == 0) {
+                        gpk_application_error_message (application, _("You don't have the necessary privileges to install packages"), NULL);
+                }
+                else if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.install")) {
+                        /* canceled auth dialog, be silent */
+                }
+                else {
+                        /* ick, we failed so pretend we didn't do the action */
+                        gpk_application_error_message (application, _("The package could not be installed"), error->message);
+                }
+
 		g_error_free (error);
 	}
 	return ret;
