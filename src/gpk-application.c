@@ -252,12 +252,14 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 	if (!ret) {
 		pk_warning ("failed to install package: %s", error->message);
                 if (strcmp (error->message, "org.freedesktop.packagekit.install no") == 0) {
-                        gpk_error_dialog (application, _("You don't have the necessary privileges to install packages"), NULL);
+                        gpk_error_dialog (_("The package could not be installed"),
+					  _("You don't have the necessary privileges to install packages"), NULL);
                 } else if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.install")) {
                         /* canceled auth dialog, be silent */
                 } else {
                         /* ick, we failed so pretend we didn't do the action */
-                        gpk_error_dialog (application, _("The package could not be installed"), error->message);
+                        gpk_error_dialog (_("The package could not be installed"),
+					  _("The package could not be installed"), error->message);
                 }
 		g_error_free (error);
 	}
@@ -1742,7 +1744,7 @@ gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 	/* try to refresh the cache */
 	ret = pk_client_refresh_cache (application->priv->client_action, FALSE, &error);
 	if (!ret) {
-		gpk_error_dialog (_("The package could not be installed"),
+		gpk_error_dialog (_("The cache could not be refreshed"),
 				  _("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return;
