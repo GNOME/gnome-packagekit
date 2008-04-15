@@ -2026,6 +2026,9 @@ main (int argc, char *argv[])
 	g_signal_connect (tlist, "finished",
 			  G_CALLBACK (pk_update_viewer_task_list_finished_cb), NULL);
 
+	/* show window */
+	gtk_widget_show (main_window);
+
 	/* coldplug */
 	pk_update_viewer_get_new_update_list ();
 

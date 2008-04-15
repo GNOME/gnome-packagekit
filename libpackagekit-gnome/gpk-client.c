@@ -391,9 +391,14 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (file_rel != NULL, FALSE);
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
 
 	ret = pk_client_install_file (gclient->priv->client_action, file_rel, &error_local);
 	if (!ret) {
@@ -464,6 +469,10 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -599,9 +608,14 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GErro
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
 	PkPackageItem *item;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package != NULL, FALSE);
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
 
 	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error_local);
 	if (!ret) {
@@ -678,9 +692,14 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	PkPackageItem *item;
 	PkPackageId *ident;
 	gchar *text;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (full_path != NULL, FALSE);
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
 
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {

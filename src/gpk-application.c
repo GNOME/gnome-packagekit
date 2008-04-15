@@ -226,7 +226,6 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
 	GError *error = NULL;
-	GpkClient *gclient;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
@@ -234,11 +233,11 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 	pk_debug ("install %s", application->priv->package);
 
 	/* TODO: this is hacky code for testing only */
-	gclient = gpk_client_new ();
-	ret = gpk_client_install_package_id (gclient, package_id, NULL);
-	g_object_unref (gclient);
-
-	return ret;
+//	GpkClient *gclient;
+//	gclient = gpk_client_new ();
+//	ret = gpk_client_install_package_id (gclient, package_id, NULL);
+//	g_object_unref (gclient);
+//	return ret;
 
 	ret = pk_client_reset (application->priv->client_action, &error);
 	if (!ret) {
@@ -252,18 +251,14 @@ gpk_application_install (GpkApplication *application, const gchar *package_id)
 					 application->priv->package, &error);
 	if (!ret) {
 		pk_warning ("failed to install package: %s", error->message);
-
                 if (strcmp (error->message, "org.freedesktop.packagekit.install no") == 0) {
-                        gpk_application_error_message (application, _("You don't have the necessary privileges to install packages"), NULL);
-                }
-                else if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.install")) {
+                        gpk_error_dialog (application, _("You don't have the necessary privileges to install packages"), NULL);
+                } else if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.install")) {
                         /* canceled auth dialog, be silent */
-                }
-                else {
+                } else {
                         /* ick, we failed so pretend we didn't do the action */
-                        gpk_application_error_message (application, _("The package could not be installed"), error->message);
+                        gpk_error_dialog (application, _("The package could not be installed"), error->message);
                 }
-
 		g_error_free (error);
 	}
 	return ret;
