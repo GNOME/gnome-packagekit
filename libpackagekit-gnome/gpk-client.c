@@ -49,6 +49,7 @@ static void     gpk_client_init		(GpkClient      *gclient);
 static void     gpk_client_finalize	(GObject	*object);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))
+#define PK_STOCK_WINDOW_ICON		"system-software-installer"
 
 /**
  * GpkClientPrivate:
@@ -787,6 +788,9 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	widget = glade_xml_get_widget (glade_xml, "button_no");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
+	/* set icon name */
+	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
+
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_yes");
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_sig_button_yes), gclient);
@@ -862,6 +866,9 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* set icon name */
+	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_agree");
