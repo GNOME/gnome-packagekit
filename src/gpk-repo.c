@@ -399,6 +399,13 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
 	gpk_statusbar_set_widget (statusbar, widget);
 
+	/* show window */
+	gtk_widget_show (main_window);
+
+	/* focus back to the close button */
+	widget = glade_xml_get_widget (glade_xml, "button_close");
+	gtk_widget_grab_focus (widget);
+
 	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
 		pk_repo_repo_list_refresh ();
