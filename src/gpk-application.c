@@ -204,13 +204,13 @@ static void
 gpk_application_treeview_set_sorted (GpkApplication *application, gboolean sorted)
 {
 	if (sorted) {
-		g_print ("sorted\n");
+		pk_debug ("sorted");
 		gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
 						 PACKAGES_COLUMN_ID, gpk_application_treeview_sort_text, NULL, NULL);
 		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
 						      PACKAGES_COLUMN_ID, GTK_SORT_ASCENDING);
 	} else {
-		g_print ("unsorted\n");
+		pk_debug ("unsorted");
 		gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
 							 gpk_application_treeview_sort_none, NULL, NULL);
 		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
@@ -470,6 +470,7 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	gchar *text;
+	PkPackageId *ident;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -513,6 +514,19 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_hide (widget);
 	}
+
+	/* set the repo text, or hide if installed */
+	ident = pk_package_id_new_from_string (package_id);
+	if (pk_strequal (ident->data, "installed")) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
+		gtk_widget_hide (widget);
+	} else {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
+		gtk_label_set_label (GTK_LABEL (widget), ident->data);
+	}
+	pk_package_id_free (ident);
 }
 
 /**
