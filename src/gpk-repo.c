@@ -188,7 +188,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Repository"), renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Software Source"), renderer,
 							   "markup", REPO_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, REPO_COLUMN_TEXT);
 	gtk_tree_view_append_column (treeview, column);
@@ -411,7 +411,7 @@ main (int argc, char *argv[])
 		pk_repo_repo_list_refresh ();
 	} else {
 		pk_repo_detail_cb (client, "default",
-				   _("Getting repository list not supported by backend"), FALSE, NULL);
+				   _("Getting software source list not supported by backend"), FALSE, NULL);
 		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
