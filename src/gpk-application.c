@@ -88,6 +88,7 @@ struct GpkApplicationPrivate
 	gchar			*package;
 	gchar			*group;
 	gchar			*url;
+	GHashTable		*repos;
 	PkRoleEnum		 roles;
 	PkFilterEnum		 filters;
 	PkGroupEnum		 groups;
@@ -477,6 +478,7 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 	GtkWidget *widget;
 	gchar *text;
 	PkPackageId *ident;
+	const gchar *repo_name;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -530,7 +532,14 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
 		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
-		gtk_label_set_label (GTK_LABEL (widget), ident->data);
+
+		/* see if we can get the full name of the repo from the repo_id */
+		repo_name = (const gchar *) g_hash_table_lookup (application->priv->repos, ident->data);
+		if (repo_name == NULL) {
+			pk_warning ("no repo name, falling back to %s", ident->data);
+			repo_name = ident->data;
+		}
+		gtk_label_set_label (GTK_LABEL (widget), repo_name);
 	}
 	pk_package_id_free (ident);
 }
@@ -2044,6 +2053,24 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 }
 
 /**
+ * pk_application_repo_detail_cb:
+ **/
+static void
+pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
+			       const gchar *description, gboolean enabled,
+			       GpkApplication *application)
+{
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	pk_debug ("repo = %s:%s", repo_id, description);
+	/* no problem, just no point adding as we will fallback to the repo_id */
+	if (description == NULL) {
+		return;
+	}
+	g_hash_table_insert (application->priv->repos, g_strdup (repo_id), g_strdup (description));
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2064,6 +2091,7 @@ gpk_application_init (GpkApplication *application)
 	PolKitAction *pk_action;
 	GtkWidget *button;
 	GtkWidget *item;
+	GError *error = NULL;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -2071,6 +2099,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->url = NULL;
 	application->priv->has_package = FALSE;
 	application->priv->gconf_client = gconf_client_get_default ();
+	application->priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
@@ -2112,6 +2141,8 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_action, "allow-cancel",
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
+	g_signal_connect (application->priv->client_action, "repo-detail",
+			  G_CALLBACK (pk_application_repo_detail_cb), application);
 
 	application->priv->client_description = pk_client_new ();
 	g_signal_connect (application->priv->client_description, "description",
@@ -2151,7 +2182,7 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (application->priv->pconnection, "connection-changed",
 			  G_CALLBACK (gpk_application_connection_changed_cb), application);
 
-	/* single instance, so this is valid */
+	/* get localised data from sqlite database */
 	application->priv->extra = pk_extra_new ();
 	ret = pk_extra_set_database (application->priv->extra, NULL);
 	if (!ret) {
@@ -2303,6 +2334,9 @@ gpk_application_init (GpkApplication *application)
 	gtk_widget_hide (widget);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
 	gtk_widget_hide (widget);
 
 	/* basename filter */
@@ -2543,6 +2577,13 @@ gpk_application_init (GpkApplication *application)
 	/* use a seporator */
 	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
 					      gpk_application_group_row_separator_func, NULL, NULL);
+
+	/* get repos, so we can show the full name in the software source box */
+	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
+	if (!ret) {
+		pk_warning ("failed to get repo list: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -2576,6 +2617,7 @@ gpk_application_finalize (GObject *object)
 	g_free (application->priv->url);
 	g_free (application->priv->group);
 	g_free (application->priv->package);
+	g_hash_table_destroy (application->priv->repos);
 
 	G_OBJECT_CLASS (gpk_application_parent_class)->finalize (object);
 }

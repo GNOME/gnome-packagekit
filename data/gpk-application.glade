@@ -522,7 +522,7 @@
                           <widget class="GtkVBox" id="vbox_description">
                             <property name="visible">True</property>
                             <property name="border_width">5</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <widget class="GtkScrolledWindow" id="scrolledwindow2">
                                 <property name="visible">True</property>
@@ -543,74 +543,64 @@
                               </widget>
                             </child>
                             <child>
-                              <widget class="GtkHBox" id="hbox2">
+                              <widget class="GtkHBox" id="hbox_source">
                                 <property name="visible">True</property>
-                                <property name="spacing">12</property>
+                                <property name="spacing">6</property>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox_filesize">
+                                  <widget class="GtkLabel" id="label_source_text">
                                     <property name="visible">True</property>
-                                    <property name="border_width">5</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_filesize_text">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Package size:</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_filesize">
-                                        <property name="visible">True</property>
-                                        <property name="label">1.4 Mb</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="label" translatable="yes">Software source:</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
+                                    <property name="fill">False</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkHBox" id="hbox_source">
+                                  <widget class="GtkLabel" id="label_source">
                                     <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_source_text">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Software source:</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkLabel" id="label_source">
-                                        <property name="visible">True</property>
-                                        <property name="label">rawhide</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="label">Fedora - Rawhide</property>
+                                    <property name="wrap">True</property>
                                   </widget>
                                   <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkHBox" id="hbox_filesize">
+                                <property name="visible">True</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <widget class="GtkLabel" id="label_filesize_text">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Package size:</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label_filesize">
+                                    <property name="visible">True</property>
+                                    <property name="label">124kb</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </widget>
