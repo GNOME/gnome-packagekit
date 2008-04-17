@@ -848,7 +848,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	/* install signature */
 	pk_debug ("install signature %s", key_id);
 	ret = pk_client_reset (gclient->priv->client_signature, &error);
-	if (ret == FALSE) {
+	if (!ret) {
 		gpk_error_dialog (_("Failed to install signature"), _("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
@@ -870,6 +870,8 @@ static void
 gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar *package_id,
 			     const gchar *vendor_name, const gchar *license_agreement, GpkClient *gclient)
 {
+	gboolean ret;
+	GError *error = NULL;
 	GtkWidget *widget;
 	GladeXML *glade_xml;
 	GtkTextBuffer *buffer;
@@ -916,6 +918,7 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	gtk_widget_show (widget);
 
 	/* wait for button press */
+	gclient->priv->do_key_auth = FALSE;
 	gtk_main ();
 
 	/* hide window */
@@ -924,6 +927,28 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	}
 	g_object_unref (glade_xml);
 	g_object_unref (buffer);
+
+	/* disagreed with auth */
+	if (!gclient->priv->do_key_auth) {
+		return;
+	}
+
+	/* install signature */
+	pk_debug ("accept EULA %s", eula_id);
+	ret = pk_client_reset (gclient->priv->client_signature, &error);
+	if (!ret) {
+		gpk_error_dialog (_("Failed to accept EULA"), _("The client could not be reset"), error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* this is asynchronous, else we get into livelock */
+	ret = pk_client_accept_eula (gclient->priv->client_signature, eula_id, &error);
+	if (!ret) {
+		gpk_error_dialog (_("Failed to accept EULA"), _("The method failed"), error->message);
+		g_error_free (error);
+		gclient->priv->do_key_auth = FALSE;
+	}
 }
 
 /**
