@@ -78,6 +78,12 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
 	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_CANCEL,			"pk-package-cleanup"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_FILELIST,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
 	{0, NULL}
 };
 
@@ -668,6 +674,24 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_CANCEL:
 		text = _("Cancelling");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_REPOSITORY:
+		text = _("Downloading repository information");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST:
+		text = _("Downloading list of packages");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_FILELIST:
+		text = _("Downloading file lists");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_CHANGELOG:
+		text = _("Downloading lists of changes");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_GROUP:
+		text = _("Downloading groups");
+		break;
+	case PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO:
+		text = _("Downloading update information");
 		break;
 	default:
 		pk_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
