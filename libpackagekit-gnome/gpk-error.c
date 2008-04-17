@@ -30,6 +30,8 @@
 #include <pk-debug.h>
 #include <pk-common.h>
 
+#define PK_STOCK_WINDOW_ICON		"system-software-installer"
+
 /**
  * gpk_error_dialog:
  * @title: the localised text to put in bold as a title
@@ -51,6 +53,11 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* set icon name */
+	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
+
+	/* close button */
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
