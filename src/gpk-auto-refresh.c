@@ -145,7 +145,8 @@ gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 /**
  * gpk_auto_refresh_convert_frequency:
  *
- * Return value: The number of seconds for the frequency period
+ * Return value: The number of seconds for the frequency period,
+ * or zero for never or no schema
  **/
 static guint
 gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
@@ -155,7 +156,7 @@ gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 		return 0;
 	}
 	if (freq == PK_FREQ_ENUM_NEVER) {
-		return G_MAXUINT;
+		return 0;
 	}
 	if (freq == PK_FREQ_ENUM_HOURLY) {
 		return 60*60;
@@ -184,7 +185,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 	/* get from gconf */
 	freq_text = gconf_client_get_string (arefresh->priv->gconf_client, key, NULL);
 	if (freq_text == NULL) {
-		pk_warning ("no schema");
+		pk_warning ("no schema for %s", key);
 		return 0;
 	}
 
@@ -217,6 +218,13 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 		return FALSE;
 	}
 
+	/* get this each time, as it may have changed behind out back */
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
+	if (thresh == 0) {
+		pk_debug ("not when policy is to never refresh");
+		return FALSE;
+	}
+
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
@@ -224,9 +232,6 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 		pk_warning ("failed to get last time");
 		return FALSE;
 	}
-
-	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
@@ -250,6 +255,13 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 
 	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
 
+	/* get this each time, as it may have changed behind out back */
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (thresh == 0) {
+		pk_debug ("not when policy is to never refresh");
+		return FALSE;
+	}
+
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
@@ -257,9 +269,6 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 		pk_warning ("failed to get last time");
 		return FALSE;
 	}
-
-	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 
 	/* have we passed the timout? */
 	if (time < thresh) {
