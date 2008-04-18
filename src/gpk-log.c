@@ -55,7 +55,6 @@ enum
 {
 	PACKAGES_COLUMN_GENERAL_ICON,
 	PACKAGES_COLUMN_GENERAL_TEXT,
-	PACKAGES_COLUMN_GENERAL_SUCCEEDED,
 	PACKAGES_COLUMN_GENERAL_ID,
 	PACKAGES_COLUMN_GENERAL_LAST
 };
@@ -152,6 +151,12 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 	const gchar *icon_name;
 	const gchar *role_text;
 
+	/* only show transactions that succeeded */
+	if (!succeeded) {
+		pk_debug ("tid %s did not succeed, so not adding", tid);
+		return;
+	}
+
 	/* we save this */
 	g_hash_table_insert (hash, g_strdup (tid), g_strdup (data));
 
@@ -169,13 +174,6 @@ pk_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
 
 	icon_name = gpk_role_enum_to_icon_name (role);
 	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_ICON, icon_name, -1);
-
-	if (succeeded) {
-		icon_name = "document-new";
-	} else {
-		icon_name = "dialog-error";
-	}
-	gtk_list_store_set (list_store_general, &iter, PACKAGES_COLUMN_GENERAL_SUCCEEDED, icon_name, -1);
 }
 
 /**
@@ -215,13 +213,6 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_GENERAL_TEXT);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
-
-	/* image */
-	renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
-	column = gtk_tree_view_column_new_with_attributes (_("Succeeded"), renderer,
-							   "icon-name", PACKAGES_COLUMN_GENERAL_SUCCEEDED, NULL);
-	gtk_tree_view_append_column (treeview, column);
 }
 
 /**
@@ -235,7 +226,7 @@ pk_treeview_add_details_columns (GtkTreeView *treeview)
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
+        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Type"), renderer,
 							   "icon-name", PACKAGES_COLUMN_DETAILS_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -304,7 +295,11 @@ pk_treeview_details_populate (const gchar *tid)
 	for (i=0; i<size; i++) {
 		sections = g_strsplit (array[i], "\t", 0);
 		info = pk_info_enum_from_text (sections[0]);
-		pk_details_item_add (list_store_details, info, sections[1], sections[2]);
+		if (info == PK_INFO_ENUM_UPDATING ||
+		    info == PK_INFO_ENUM_INSTALLING ||
+		    info == PK_INFO_ENUM_REMOVING) {
+			pk_details_item_add (list_store_details, info, sections[1], sections[2]);
+		}
 		g_strfreev (sections);
 	}
 	g_strfreev (array);
