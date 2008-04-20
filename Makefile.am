@@ -25,6 +25,9 @@ EXTRA_DIST =						\
 clean-local :
 	rm -f *~
 
+snapshot:
+	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-`date +"%Y%m%d"`
+
 DISTCLEANFILES =					\
 	intltool-extract				\
 	intltool-merge					\
