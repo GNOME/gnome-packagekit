@@ -734,7 +734,7 @@ pk_update_viewer_get_new_update_list (void)
 		g_error_free (error);
 		return;
 	}
-	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_BASENAME, &error);
+	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_NONE, &error);
 	if (!ret) {
 		pk_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
