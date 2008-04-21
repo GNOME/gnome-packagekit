@@ -73,7 +73,7 @@ gpk_firmware_timeout_cb (gpointer data)
 	gpk_smart_icon_notify_new (firmware->priv->sicon, _("Additional firmware required"), message,
 				   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
 	gpk_smart_icon_notify_button (firmware->priv->sicon, GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE, NULL);
-	gpk_smart_icon_notify_button (firmware->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_COMPLETED);
+	gpk_smart_icon_notify_button (firmware->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_PROMPT_FIRMWARE);
 	gpk_smart_icon_notify_show (firmware->priv->sicon);
 
 	return FALSE;
