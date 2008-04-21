@@ -76,6 +76,7 @@ GType		 gpk_smart_icon_get_type		(void) G_GNUC_CONST;
 GpkSmartIcon	*gpk_smart_icon_new			(void);
 GtkStatusIcon	*gpk_smart_icon_get_status_icon		(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_sync			(GpkSmartIcon	*sicon);
+gboolean	 gpk_smart_icon_pulse			(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_set_icon_name		(GpkSmartIcon	*sicon,
 							 const gchar	*icon_name);
 gboolean	 gpk_smart_icon_set_tooltip		(GpkSmartIcon	*sicon,

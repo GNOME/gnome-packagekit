@@ -713,6 +713,7 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	/* work out icon */
 	icon = gpk_notify_get_best_update_icon (notify, client);
 	gpk_smart_icon_set_icon_name (notify->priv->sicon, icon);
+	gpk_smart_icon_pulse (notify->priv->sicon);
 
 	/* make tooltip */
 	if (status_security->len != 0) {

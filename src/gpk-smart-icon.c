@@ -62,7 +62,10 @@ struct GpkSmartIconPrivate
 	gchar			*new;
 	gchar			*notify_data;
 	guint			 event_source;
+	guint			 pulse_source;
 	gboolean		 has_gconf_check;
+	gfloat			 icon_opacity;
+	gboolean		 going_down;
 };
 
 enum {
@@ -101,6 +104,101 @@ gpk_smart_icon_class_init (GpkSmartIconClass *klass)
 			      G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_STRING);
 }
 
+/**
+ * gpk_smart_icon_set_pixmap_opacity:
+ **/
+static gboolean
+gpk_smart_icon_set_pixmap_opacity (GdkPixbuf *pixbuf, gfloat adjust)
+{
+	gint width, height, rowstride, n_channels;
+	guchar *pixels, *p;
+	gint x, y;
+
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+	pixels = gdk_pixbuf_get_pixels (pixbuf);
+
+	/* scale the opacity of each pixel */
+	for (y=0; y<height-1;y++) {
+		for (x=0; x<height-1;x++) {
+			p = pixels + y * rowstride + x * n_channels;
+			p[3] = (gfloat) p[3] * adjust;
+		}
+	}
+	return TRUE;
+}
+
+/**
+ * gpk_smart_icon_pulse_timeout_cb:
+ **/
+static gboolean
+gpk_smart_icon_pulse_timeout_cb (gpointer data)
+{
+	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
+	GdkPixbuf *pixbuf;
+	GdkRectangle area;
+
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	/* have we hidden the icon already? */
+	if (sicon->priv->current == NULL || sicon->priv->new == NULL) {
+		pk_debug ("not pulsing as icon cleared");
+		return FALSE;
+	}
+
+	/* get pixmap the same size as the original icon */
+	gtk_status_icon_get_geometry (GTK_STATUS_ICON (sicon->priv->status_icon), NULL, &area, NULL);
+	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), sicon->priv->current, area.width, 0, NULL);
+
+	/* set the new pixmap with the correct opacity */
+	gpk_smart_icon_set_pixmap_opacity (pixbuf, sicon->priv->icon_opacity);
+	gtk_status_icon_set_from_pixbuf (GTK_STATUS_ICON (sicon->priv->status_icon), pixbuf);
+	g_object_unref (pixbuf);
+
+	/* dimming down */
+	if (sicon->priv->going_down) {
+		sicon->priv->icon_opacity -= 0.1;
+		if (sicon->priv->icon_opacity<0) {
+			sicon->priv->icon_opacity = 0;
+			sicon->priv->going_down = FALSE;
+		}
+		return TRUE;
+	}
+
+	/* dimming up */
+	sicon->priv->icon_opacity += 0.1;
+	if (sicon->priv->icon_opacity>1) {
+		/* restore */
+		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon->priv->status_icon), sicon->priv->current);
+		sicon->priv->pulse_source = 0;
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * gpk_smart_icon_pulse:
+ **/
+gboolean
+gpk_smart_icon_pulse (GpkSmartIcon *sicon)
+{
+	g_return_val_if_fail (PK_IS_SMART_ICON (sicon), FALSE);
+
+	sicon->priv->icon_opacity = 0.9;
+	sicon->priv->going_down = TRUE;
+	if (sicon->priv->pulse_source != 0) {
+		pk_warning ("already pulsing");
+		return FALSE;
+	}
+	sicon->priv->pulse_source = g_timeout_add (20, gpk_smart_icon_pulse_timeout_cb, sicon);
+	return TRUE;
+}
+
+/**
+ * gpk_smart_icon_set_icon_name_cb:
+ **/
 static gboolean
 gpk_smart_icon_set_icon_name_cb (gpointer data)
 {
@@ -353,6 +451,7 @@ gpk_smart_icon_init (GpkSmartIcon *sicon)
 	sicon->priv->dialog = NULL;
 	sicon->priv->notify_data = NULL;
 	sicon->priv->event_source = 0;
+	sicon->priv->pulse_source = 0;
 	sicon->priv->has_gconf_check = FALSE;
 	sicon->priv->gconf_client = gconf_client_get_default ();
 
@@ -375,6 +474,14 @@ gpk_smart_icon_finalize (GObject *object)
 
 	sicon = PK_SMART_ICON (object);
 	g_return_if_fail (sicon->priv != NULL);
+
+	/* remove any timers that may be firing */
+	if (sicon->priv->event_source != 0) {
+		g_source_remove (sicon->priv->event_source);
+	}
+	if (sicon->priv->pulse_source != 0) {
+		g_source_remove (sicon->priv->pulse_source);
+	}
 
 	g_free (sicon->priv->new);
 	g_free (sicon->priv->current);
