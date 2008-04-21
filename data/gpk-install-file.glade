@@ -48,7 +48,6 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkLabel" id="label_package">
-                        <property name="visible">True</property>
                         <property name="label">&lt;b&gt;The second update&lt;/b&gt;
 (update2)</property>
                         <property name="use_markup">True</property>
@@ -168,8 +167,39 @@
                             <property name="expand">False</property>
                           </packing>
                         </child>
+                        <child>
+                          <widget class="GtkHBox" id="hbox_reboot">
+                            <property name="spacing">5</property>
+                            <child>
+                              <widget class="GtkImage" id="image1">
+                                <property name="visible">True</property>
+                                <property name="stock">gtk-dialog-warning</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label2">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">A system restart is recommended</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
