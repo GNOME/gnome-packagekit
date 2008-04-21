@@ -760,6 +760,26 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 	case PK_INFO_ENUM_BLOCKED:
 		text = _("Blocked update");
 		break;
+	case PK_INFO_ENUM_INSTALLED:
+		text = _("Installed");
+		break;
+	case PK_INFO_ENUM_AVAILABLE:
+		text = _("Available");
+		break;
+	default:
+		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+	}
+	return text;
+}
+
+/**
+ * gpk_info_enum_to_localised_present:
+ **/
+const gchar *
+gpk_info_enum_to_localised_present (PkInfoEnum info)
+{
+	const gchar *text = NULL;
+	switch (info) {
 	case PK_INFO_ENUM_DOWNLOADING:
 		text = _("Downloading");
 		break;
@@ -772,17 +792,43 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 	case PK_INFO_ENUM_REMOVING:
 		text = _("Removing");
 		break;
-	case PK_INFO_ENUM_INSTALLED:
+	case PK_INFO_ENUM_CLEANUP:
+		text = _("Cleaning up");
+		break;
+	case PK_INFO_ENUM_OBSOLETING:
+		text = _("Obsoleting");
+		break;
+	default:
+		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+	}
+	return text;
+}
+
+/**
+ * gpk_info_enum_to_localised_past:
+ **/
+const gchar *
+gpk_info_enum_to_localised_past (PkInfoEnum info)
+{
+	const gchar *text = NULL;
+	switch (info) {
+	case PK_INFO_ENUM_DOWNLOADING:
+		text = _("Downloaded");
+		break;
+	case PK_INFO_ENUM_UPDATING:
+		text = _("Updated");
+		break;
+	case PK_INFO_ENUM_INSTALLING:
 		text = _("Installed");
 		break;
-	case PK_INFO_ENUM_AVAILABLE:
-		text = _("Available");
+	case PK_INFO_ENUM_REMOVING:
+		text = _("Removed");
 		break;
 	case PK_INFO_ENUM_CLEANUP:
 		text = _("Cleaned up");
 		break;
 	case PK_INFO_ENUM_OBSOLETING:
-		text = _("Obsoleting");
+		text = _("Obsoleted");
 		break;
 	default:
 		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
@@ -1449,17 +1495,6 @@ libst_common (LibSelfTest *test)
 	libst_title (test, "check we convert all the role icon name enums");
 	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
 		string = gpk_role_enum_to_icon_name (i);
-		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
-			break;
-		}
-	}
-	libst_success (test, NULL);
-
-	/************************************************************/
-	libst_title (test, "check we convert all the localised info enums");
-	for (i=1; i<PK_INFO_ENUM_UNKNOWN; i*=2) {
-		string = gpk_info_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
 			break;

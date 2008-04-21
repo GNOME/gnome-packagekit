@@ -63,6 +63,10 @@ const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role)
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
 const gchar	*gpk_info_enum_to_localised_text	(PkInfoEnum	 info)
 							 G_GNUC_CONST;
+const gchar	*gpk_info_enum_to_localised_past	(PkInfoEnum	 info)
+							 G_GNUC_CONST;
+const gchar	*gpk_info_enum_to_localised_present	(PkInfoEnum	 info)
+							 G_GNUC_CONST;
 const gchar	*gpk_info_enum_to_icon_name		(PkInfoEnum	 info);
 const gchar	*gpk_status_enum_to_localised_text	(PkStatusEnum	 status)
 							 G_GNUC_CONST;
