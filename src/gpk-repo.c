@@ -356,7 +356,7 @@ main (int argc, char *argv[])
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), "system-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), "pk-package-sources");
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
