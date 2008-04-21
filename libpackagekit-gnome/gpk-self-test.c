@@ -25,9 +25,6 @@
 #include <pk-debug.h>
 #include "gpk-common.h"
 
-/* prototypes */
-void libst_common (LibSelfTest *test);
-
 int
 main (int argc, char **argv)
 {
@@ -41,7 +38,7 @@ main (int argc, char **argv)
 	pk_debug_init (TRUE);
 
 	/* tests go here */
-	libst_common (&test);
+	gpk_common_self_test (&test);
 
 	return (libst_finish (&test));
 }

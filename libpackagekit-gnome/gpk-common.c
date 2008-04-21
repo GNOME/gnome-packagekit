@@ -1261,7 +1261,7 @@ gpk_time_to_localised_string (guint time_secs)
 #include <libselftest.h>
 
 void
-libst_common (LibSelfTest *test)
+gpk_common_self_test (LibSelfTest *test)
 {
 	gchar *text;
 	guint i;

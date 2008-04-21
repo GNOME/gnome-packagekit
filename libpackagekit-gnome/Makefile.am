@@ -64,6 +64,8 @@ noinst_PROGRAMS =						\
 
 gpk_self_test_SOURCES =						\
 	gpk-self-test.c						\
+	gpk-common.c						\
+	gpk-common.h						\
 	$(NULL)
 
 gpk_self_test_LDADD =						\
