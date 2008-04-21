@@ -99,6 +99,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-auto-refresh.h				\
 	gpk-watch.c					\
 	gpk-watch.h					\
+	gpk-firmware.c					\
+	gpk-firmware.h					\
 	gpk-inhibit.c					\
 	gpk-inhibit.h					\
 	gpk-smart-icon.c				\

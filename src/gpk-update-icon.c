@@ -38,6 +38,7 @@
 
 #include "gpk-notify.h"
 #include "gpk-watch.h"
+#include "gpk-firmware.h"
 #include "gpk-interface.h"
 
 /**
@@ -111,6 +112,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkNotify *notify = NULL;
 	GpkWatch *watch = NULL;
+	GpkFirmware *firmware = NULL;
 	GOptionContext *context;
 	GError *error = NULL;
 	gboolean ret;
@@ -159,6 +161,7 @@ main (int argc, char *argv[])
 	/* create new objects */
 	notify = gpk_notify_new ();
 	watch = gpk_watch_new ();
+	firmware = gpk_firmware_new ();
 	loop = g_main_loop_new (NULL, FALSE);
 
 	/* find out when we are replaced */
@@ -189,6 +192,7 @@ out:
 	g_main_loop_unref (loop);
 	g_object_unref (notify);
 	g_object_unref (watch);
+	g_object_unref (firmware);
 	g_object_unref (libgbus);
 
 	return 0;

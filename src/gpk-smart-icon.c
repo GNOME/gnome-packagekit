@@ -84,6 +84,7 @@ static PkEnumMatch enum_button_ids[] = {
 	{GPK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
 	{GPK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
 	{GPK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
+	{GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE,	"install-firmware"},
 	{0, NULL}
 };
 
@@ -375,6 +376,8 @@ gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const
 		text = _("Update computer now");
 	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
 		text = _("Restart computer now");
+	} else if (button == GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE) {
+		text = _("Install firmware");
 	}
 
 	/* save data privately, TODO: this really needs to be in a hashtable */
