@@ -412,8 +412,32 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
 		text = _("Problem connecting to a software source");
 		break;
+	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
+		text = _("Failed to initialize");
+		break;
+	case PK_ERROR_ENUM_FAILED_FINALISE:
+		text = _("Failed to finalise");
+		break;
+	case PK_ERROR_ENUM_CANNOT_GET_LOCK:
+		text = _("Cannot get lock");
+		break;
+	case PK_ERROR_ENUM_NO_PACKAGES_TO_UPDATE:
+		text = _("No packages to update");
+		break;
+	case PK_ERROR_ENUM_CANNOT_WRITE_REPO_CONFIG:
+		text = _("Cannot write repository configuration");
+		break;
+	case PK_ERROR_ENUM_LOCAL_INSTALL_FAILED:
+		text = _("Local install failed");
+		break;
+	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
+		text = _("Bad GPG signature");
+		break;
+	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
+		text = _("Repository configuration invalid");
+		break;
 	default:
-		text = _("Unknown error");
+		g_warning ("Unknown error");
 	}
 	return text;
 }
@@ -522,9 +546,37 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("There was a (possibly temporary) problem connecting to a software source\n"
 			 "Please check the detailed error for further details.");
 		break;
-	default:
-		text = _("Unknown error, please report a bug.\n"
+	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
+		text = _("Failed to initialize packaging backend.\n"
+			 "This may occur if other packaging tools are being used simultaneously.");
+		break;
+	case PK_ERROR_ENUM_FAILED_FINALISE:
+		text = _("Failed to close down the backend instance.\n"
+			 "This error can normally be ignored.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_GET_LOCK:
+		text = _("Cannot get the exclusive lock on the packaging backend.\n"
+			 "Please close any other legacy packaging tools that may be open.");
+		break;
+	case PK_ERROR_ENUM_NO_PACKAGES_TO_UPDATE:
+		text = _("No packages that were selected we able to be updated.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_WRITE_REPO_CONFIG:
+		text = _("The repository configuration could not be modified.");
+		break;
+	case PK_ERROR_ENUM_LOCAL_INSTALL_FAILED:
+		text = _("Installing the local file failed.\n"
 			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
+		text = _("The software source signature could not be verified.");
+		break;
+	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
+		text = _("Repository configuration was invalid and could not be read.");
+		break;
+	default:
+		g_warning ("Unknown error, please report a bug.\n"
+			   "More information is available in the detailed report.");
 	}
 	return text;
 }
@@ -925,6 +977,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_PACKAGES:
 		text = _("Getting package lists");
 		break;
+	case PK_ROLE_ENUM_ACCEPT_EULA:
+		text = _("Accepting EULA");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1021,6 +1076,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_GET_PACKAGES:
 		text = _("Got package lists");
+		break;
+	case PK_ROLE_ENUM_ACCEPT_EULA:
+		text = _("Accepted EULA");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
@@ -1551,18 +1609,18 @@ gpk_common_self_test (LibSelfTest *test)
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
 		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			libst_failed (test, "failed to get %s", pk_error_enum_to_text(i));
 			break;
 		}
 	}
 	libst_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised error enums");
+	libst_title (test, "check we convert all the localised error messages");
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
 		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			libst_failed (test, "failed to get %s", pk_error_enum_to_text(i));
 			break;
 		}
 	}
