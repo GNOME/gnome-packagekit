@@ -1037,7 +1037,7 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_signature, "finished",
 			  G_CALLBACK (gpk_client_signature_finished_cb), gclient);
 
-	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-install-file.glade", NULL, NULL);
+	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
 
 	/* Get the main window quit */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");

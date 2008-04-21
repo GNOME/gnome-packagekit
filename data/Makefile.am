@@ -36,7 +36,7 @@ pkgdata_DATA =						\
 	gpk-error.glade					\
 	gpk-log.glade					\
 	gpk-backend-status.glade			\
-	gpk-install-file.glade				\
+	gpk-client.glade				\
 	$(NULL)
 
 EXTRA_DIST =						\
