@@ -108,9 +108,9 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_SERVICE_PACK,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
-	{PK_ROLE_ENUM_GET_REPO_LIST,		"emblem-system"},
-	{PK_ROLE_ENUM_REPO_ENABLE,		"emblem-system"},
-	{PK_ROLE_ENUM_REPO_SET_DATA,		"emblem-system"},
+	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
+	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
+	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
 	{PK_ROLE_ENUM_INSTALL_SIGNATURE,	"emblem-system"},
 	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{0, NULL}

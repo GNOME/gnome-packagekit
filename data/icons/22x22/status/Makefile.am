@@ -14,6 +14,7 @@ icons_DATA = 				\
 	pk-package-search.png		\
 	pk-package-update.png		\
 	pk-package-info.png		\
+	pk-package-sources.png		\
 	pk-update-bugfix.png		\
 	pk-update-enhancement.png	\
 	pk-update-high.png		\
@@ -25,7 +26,9 @@ icons_DATA = 				\
 	pk-setup.png			\
 	pk-wait.png
 
-noinst_DATA = 
+install-data-hook:
+	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/status;
+	ln -fs $(iconsdir)/pk-package-sources.png $(DESTDIR)$(DATADIR)/icons/hicolor/22x22/status/;
 
 EXTRA_DIST =				\
 	$(icons_DATA)
