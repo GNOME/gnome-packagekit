@@ -342,6 +342,8 @@ main (int argc, char *argv[])
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	gtk_widget_grab_default (widget);
+
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_log_button_help_cb), NULL);

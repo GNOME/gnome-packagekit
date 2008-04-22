@@ -158,6 +158,10 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
+
+		widget = glade_xml_get_widget (glade_xml, "button_close2");
+		gtk_widget_grab_default (widget)
+
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	} else {
 		gtk_main_quit ();

@@ -636,6 +636,9 @@ pk_update_viewer_populate_preview (void)
 		gtk_widget_set_sensitive (widget, FALSE);
 		polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 		polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
+
+		widget = glade_xml_get_widget (glade_xml, "button_close3");
+		gtk_widget_grab_default (widget);
 	} else {
 
 		PkPackageItem *item;
@@ -1374,6 +1377,9 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 				polkit_gnome_action_set_visible (restart_action, TRUE);
 			}
 
+			widget = glade_xml_get_widget (glade_xml, "button_close4");
+			gtk_widget_grab_default (widget);
+
 			/* set correct view */
 			pk_update_viewer_set_page (PAGE_CONFIRM);
 		}
@@ -1481,9 +1487,6 @@ pk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gc
 	gchar *title_bold;
 	gchar *details_safe;
 
-	/* set correct view */
-	pk_update_viewer_set_page (PAGE_ERROR);
-
 	/* set bold title */
 	widget = glade_xml_get_widget (glade_xml, "label_error_title");
 	title = gpk_error_enum_to_localised_text (code);
@@ -1498,6 +1501,12 @@ pk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gc
 	details_safe = g_markup_escape_text (details, -1);
 	gtk_label_set_label (GTK_LABEL (widget), details_safe);
 	g_free (details_safe);
+
+	widget = glade_xml_get_widget (glade_xml, "button_close5");
+	gtk_widget_grab_default (widget);
+
+	/* set correct view */
+	pk_update_viewer_set_page (PAGE_ERROR);
 }
 
 /**
