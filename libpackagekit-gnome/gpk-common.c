@@ -1319,11 +1319,12 @@ gpk_time_to_localised_string (guint time_secs)
 #include <libselftest.h>
 
 void
-gpk_common_self_test (LibSelfTest *test)
+gpk_common_self_test (gpointer data)
 {
 	gchar *text;
 	guint i;
 	const gchar *string;
+	LibSelfTest *test = (LibSelfTest *) data;
 
 	if (libst_start (test, "GpkCommon", CLASS_AUTO) == FALSE) {
 		return;
