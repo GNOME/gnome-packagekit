@@ -629,7 +629,7 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GErro
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("The package could not be found online"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
 		ret = FALSE;
 		goto out;
 	}
@@ -715,7 +715,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("The file could not be found in any packages"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
 		ret = FALSE;
 		goto out;
 	}
