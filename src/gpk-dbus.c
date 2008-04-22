@@ -48,6 +48,7 @@
 #include <pk-package-list.h>
 
 #include "gpk-dbus.h"
+#include "gpk-client.h"
 
 static void     gpk_dbus_class_init	(GpkDbusClass *klass);
 static void     gpk_dbus_init		(GpkDbus      *dbus);
@@ -57,7 +58,7 @@ static void     gpk_dbus_finalize		(GObject	   *object);
 
 struct GpkDbusPrivate
 {
-	guint			 signal_update_detail;
+	GpkClient		*gclient;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -102,23 +103,27 @@ gpk_dbus_error_get_type (void)
 void
 gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodInvocation *context)
 {
+	gboolean ret;
 	GError *error;
+	GError *error_local;
 	gchar *sender;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallFile method called: %s", full_path);
+	pk_debug ("InstallLocalFile method called: %s", full_path);
 
-	if (FALSE) {
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+	pk_warning ("sender=%s", sender);
+
+	ret = gpk_client_install_local_file (dbus->priv->gclient, full_path, &error_local);
+	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
-				     "Invalid input passed to daemon");
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
 		return;
 	}
-
-	/* check if the action is allowed from this dbus - if not, set an error */
-	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
 
 	dbus_g_method_return (context);
 }
@@ -129,6 +134,28 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 void
 gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local;
+	gchar *sender;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	pk_debug ("InstallProvideFile method called: %s", full_path);
+
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+	pk_warning ("sender=%s", sender);
+
+	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 
@@ -138,6 +165,28 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
 void
 gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local;
+	gchar *sender;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	pk_debug ("InstallPackageName method called: %s", package_name);
+
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+	pk_warning ("sender=%s", sender);
+
+	ret = gpk_client_install_package_name (dbus->priv->gclient, package_name, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 
@@ -161,6 +210,7 @@ static void
 gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
+	dbus->priv->gclient = gpk_client_new ();
 }
 
 /**
@@ -175,6 +225,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
+	g_object_unref (dbus->priv->gclient);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
 }
