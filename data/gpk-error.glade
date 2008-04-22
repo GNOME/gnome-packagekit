@@ -15,67 +15,26 @@
         <property name="border_width">10</property>
         <property name="spacing">12</property>
         <child>
-          <widget class="GtkTable" id="table1">
+          <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-            <property name="n_rows">2</property>
-            <property name="n_columns">2</property>
-            <property name="column_spacing">9</property>
-            <property name="row_spacing">12</property>
+            <property name="spacing">9</property>
             <child>
-              <widget class="GtkLabel" id="label2">
+              <widget class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-              </widget>
-              <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkImage" id="image1">
-                <property name="visible">True</property>
-                <property name="stock">gtk-dialog-warning</property>
-                <property name="icon_size">6</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkExpander" id="expander_details">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow1">
+                  <widget class="GtkImage" id="image1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                    <property name="shadow_type">GTK_SHADOW_IN</property>
-                    <child>
-                      <widget class="GtkTextView" id="textview_details">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="wrap_mode">GTK_WRAP_WORD</property>
-                        <property name="cursor_visible">False</property>
-                        <property name="accepts_tab">False</property>
-                      </widget>
-                    </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label1">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;More details&lt;/b&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="stock">gtk-dialog-warning</property>
+                    <property name="icon_size">6</property>
                   </widget>
                   <packing>
-                    <property name="type">label_item</property>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                   </packing>
                 </child>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="expand">False</property>
               </packing>
             </child>
             <child>
@@ -120,16 +79,52 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkExpander" id="expander_details">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <widget class="GtkScrolledWindow" id="scrolledwindow1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="shadow_type">GTK_SHADOW_IN</property>
+                        <child>
+                          <widget class="GtkTextView" id="textview_details">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="wrap_mode">GTK_WRAP_WORD</property>
+                            <property name="cursor_visible">False</property>
+                            <property name="accepts_tab">False</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;More details&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
           </packing>
         </child>
         <child>
