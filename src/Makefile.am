@@ -21,16 +21,12 @@ INCLUDES =						\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
-	-I$(top_srcdir)/libpackagekit-gnome		\
 	-I$(top_srcdir)/libgbus				\
+	-I$(top_srcdir)/libselftest			\
 	$(NULL)
 
-GPK_LIBS =						\
-	$(top_builddir)/libpackagekit-gnome/libpackagekit-gnome.la	\
-	$(NULL)
-
-GBUS_LIBS =						\
-	$(top_builddir)/libgbus/libgbus.la		\
+SELFTEST_LIBS =						\
+	$(top_builddir)/libselftest/libselftest.la	\
 	$(NULL)
 
 bin_PROGRAMS =						\
@@ -48,6 +44,14 @@ bin_PROGRAMS =						\
 
 gpk_install_provide_file_SOURCES =			\
 	gpk-install-provide-file.c			\
+	gpk-client.c					\
+	gpk-client.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
 gpk_install_provide_file_LDADD =			\
@@ -58,11 +62,18 @@ gpk_install_provide_file_LDADD =			\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_install_local_file_SOURCES =			\
 	gpk-install-local-file.c			\
+	gpk-client.c					\
+	gpk-client.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
@@ -73,11 +84,18 @@ gpk_install_local_file_LDADD =				\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_install_package_name_SOURCES =			\
 	gpk-install-package-name.c			\
+	gpk-client.c					\
+	gpk-client.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
 gpk_install_package_name_LDADD =			\
@@ -88,7 +106,6 @@ gpk_install_package_name_LDADD =			\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_update_icon_SOURCES =				\
@@ -113,6 +130,14 @@ gpk_update_icon_SOURCES =				\
 	gpk-consolekit.h				\
 	gpk-progress.c					\
 	gpk-progress.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-client.c					\
+	gpk-client.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
 gpk_update_icon_LDADD =					\
@@ -124,13 +149,20 @@ gpk_update_icon_LDADD =					\
 	$(LIBGLADE_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_application_SOURCES =				\
 	gpk-application-main.c				\
 	gpk-application.c				\
 	gpk-application.h				\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-error.c					\
+	gpk-error.h					\
+	gpk-client.c					\
+	gpk-client.h					\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
 	$(NULL)
@@ -144,11 +176,12 @@ gpk_application_LDADD =					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\
 	gpk-prefs.c					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
 	$(NULL)
 
 gpk_prefs_LDADD =					\
@@ -159,7 +192,6 @@ gpk_prefs_LDADD =					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_update_viewer_SOURCES =				\
@@ -168,6 +200,14 @@ gpk_update_viewer_SOURCES =				\
 	gpk-statusbar.h					\
 	gpk-consolekit.c				\
 	gpk-consolekit.h				\
+	gpk-client.c					\
+	gpk-client.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(NULL)
@@ -177,13 +217,19 @@ gpk_update_viewer_LDADD =				\
 	$(DBUS_LIBS)					\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
+	$(GCONF_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_repo_SOURCES =					\
 	gpk-repo.c					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
 	$(NULL)
@@ -196,11 +242,14 @@ gpk_repo_LDADD =					\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_log_SOURCES =					\
 	gpk-log.c					\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-common.c					\
+	gpk-common.h					\
 	$(NULL)
 
 gpk_log_LDADD =						\
@@ -210,7 +259,6 @@ gpk_log_LDADD =						\
 	$(GTK_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
-	$(GPK_LIBS)					\
 	$(NULL)
 
 gpk_backend_status_SOURCES =				\
@@ -245,6 +293,39 @@ gpk-interface.h: gpk-interface.xml
 		--output=gpk-interface.h		\
 		$(srcdir)/gpk-interface.xml
 
+check_PROGRAMS =						\
+	gpk-self-test
+
+noinst_PROGRAMS =						\
+	gpk-self-test
+
+gpk_self_test_SOURCES =						\
+	gpk-self-test.c						\
+	gpk-common.c						\
+	gpk-common.h						\
+	$(NULL)
+
+gpk_self_test_LDADD =						\
+	$(GLIB_LIBS)						\
+	$(GTK_LIBS)						\
+	$(DBUS_LIBS)						\
+	$(SELFTEST_LIBS)					\
+	$(PK_LIBS)						\
+	$(PACKAGEKIT_LIBS)					\
+	$(POLKIT_GNOME_LIBS)					\
+	$(NULL)
+
+gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
+
+TESTS = gpk-self-test
+
+if PK_BUILD_GPROF
+clean-gprof:
+	rm -f *.out
+gprof: clean-gprof all check
+	gprof ./gpk-self-test > gprof.txt
+endif
+
 EXTRA_DIST =						\
 	gpk-marshal.list				\
 	gpk-interface.xml				\
@@ -253,6 +334,11 @@ EXTRA_DIST =						\
 clean-local:
 	rm -f *~
 	rm -f gpk-marshal.c gpk-marshal.h
+	rm -f *.out
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f gcov.txt
+	rm -f gprof.txt
 
 CLEANFILES = *~ $(BUILT_SOURCES)
 

@@ -5,29 +5,17 @@ AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
 
-# libtool versioning - this applies to libpackagekit
-#
-# See http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91 for details
-#
-# increment;
-# CURRENT	If the API or ABI interface has changed (reset REVISION to 0)
-# REVISION	If the API and ABI remains the same, but bugs are fixed.
-# AGE		If libpackagekit can be linked into executables which can be
-# 		built with previous versions of this library. Don't use.
-LT_CURRENT=1
-LT_REVISION=0
-LT_AGE=0
-AC_SUBST(LT_CURRENT)
-AC_SUBST(LT_REVISION)
-AC_SUBST(LT_AGE)
-
 AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_LIBTOOL
+AM_PROG_CC_C_O
 IT_PROG_INTLTOOL([0.35.0])
 
 GNOME_COMPILE_WARNINGS
 GNOME_DOC_INIT
+
+# set up gtk-doc
+GTK_DOC_CHECK(1.9)
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
@@ -53,9 +41,6 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 
 AM_GLIB_GNU_GETTEXT
-
-# set up gtk-doc
-GTK_DOC_CHECK(1.9)
 
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
@@ -205,9 +190,7 @@ dnl - Makefiles, etc.
 dnl ---------------------------------------------------------------------------
 AC_OUTPUT([
 Makefile
-packagekit-gnome.pc
 libselftest/Makefile
-libpackagekit-gnome/Makefile
 libgbus/Makefile
 src/Makefile
 help/Makefile
@@ -215,8 +198,6 @@ man/Makefile
 po/Makefile.in
 data/Makefile
 docs/Makefile
-docs/api/version.xml
-docs/api/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile
