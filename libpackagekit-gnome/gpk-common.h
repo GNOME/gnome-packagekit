@@ -50,11 +50,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 
-#ifdef PK_BUILD_TESTS
-#include <libselftest.h>
-void		 gpk_common_self_test			(LibSelfTest	*test);
-#endif
-
+void		 gpk_common_self_test			(gpointer	 data);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const gchar	*package_id,
 							 const gchar	*summary);
