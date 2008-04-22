@@ -34,9 +34,11 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <gconf/gconf-client.h>
+#include <polkit-gnome/polkit-gnome.h>
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-package-id.h>
+#include <pk-common.h>
 #include <pk-control.h>
 
 #include <gpk-client.h>
@@ -67,6 +69,7 @@ struct _GpkClientPrivate
 	PkControl		*control;
 	PkRoleEnum		 roles;
 	gboolean		 do_key_auth;
+	gboolean		 retry_untrusted_value;
 };
 
 typedef enum {
@@ -159,8 +162,8 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	if (exit == PK_EXIT_ENUM_SUCCESS) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
 
-		widget = glade_xml_get_widget (glade_xml, "button_close2");
-		gtk_widget_grab_default (widget)
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
+		gtk_widget_grab_default (widget);
 
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	} else {
@@ -240,6 +243,108 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 }
 
 /**
+ * gpk_client_button_retry_untrusted:
+ **/
+static void
+gpk_client_button_retry_untrusted (PolKitGnomeAction *action, GpkClient *gclient)
+{
+	pk_debug ("need to retry...");
+	gclient->priv->retry_untrusted_value = TRUE;
+}
+
+/**
+ * gpk_client_error_dialog_retry_untrusted:
+ **/
+static gboolean
+gpk_client_error_dialog_retry_untrusted (GpkClient *gclient, PkErrorCodeEnum code, const gchar *details)
+{
+	GtkWidget *widget;
+	GtkWidget *button;
+	PolKitAction *pk_action;
+	GladeXML *glade_xml;
+	GtkTextBuffer *buffer = NULL;
+	gchar *text;
+	const gchar *title;
+	const gchar *message;
+	PolKitGnomeAction *update_system_action;
+
+	title = gpk_error_enum_to_localised_text (code);
+	message = gpk_error_enum_to_localised_message (code);
+
+	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
+
+	/* connect up actions */
+	widget = glade_xml_get_widget (glade_xml, "window_error");
+	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* set icon name */
+	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
+
+	/* close button */
+	widget = glade_xml_get_widget (glade_xml, "button_close");
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* title */
+	widget = glade_xml_get_widget (glade_xml, "label_title");
+	text = g_strdup_printf ("<b><big>%s</big></b>", title);
+	gtk_label_set_label (GTK_LABEL (widget), text);
+	g_free (text);
+
+	/* message */
+	widget = glade_xml_get_widget (glade_xml, "label_message");
+	gtk_label_set_label (GTK_LABEL (widget), message);
+
+	/* show text in the expander */
+	if (pk_strzero (details)) {
+		widget = glade_xml_get_widget (glade_xml, "expander_details");
+		gtk_widget_hide (widget);
+	} else {
+		buffer = gtk_text_buffer_new (NULL);
+		gtk_text_buffer_insert_at_cursor (buffer, details, strlen (details));
+		widget = glade_xml_get_widget (glade_xml, "textview_details");
+		gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+	}
+
+	/* add the extra button and connect up to a Policykit action */
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.localinstall-untrusted");
+	update_system_action = polkit_gnome_action_new_default ("localinstall-untrusted",
+								pk_action,
+								_("_Force install"),
+								_("Force installing package"));
+	g_object_set (update_system_action,
+		      "no-icon-name", GTK_STOCK_APPLY,
+		      "auth-icon-name", GTK_STOCK_APPLY,
+		      "yes-icon-name", GTK_STOCK_APPLY,
+		      "self-blocked-icon-name", GTK_STOCK_APPLY,
+		      NULL);
+	polkit_action_unref (pk_action);
+	g_signal_connect (update_system_action, "activate",
+			  G_CALLBACK (gpk_client_button_retry_untrusted), gclient);
+	button = polkit_gnome_action_create_button (update_system_action);
+	widget = glade_xml_get_widget (glade_xml, "hbuttonbox2");
+	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (widget), button, 0);
+
+	/* show window */
+	widget = glade_xml_get_widget (glade_xml, "window_error");
+	gtk_widget_show (widget);
+
+	/* wait for button press */
+	gtk_main ();
+
+	/* hide window */
+	if (GTK_IS_WIDGET (widget)) {
+		gtk_widget_hide (widget);
+	}
+	g_object_unref (glade_xml);
+	if (buffer != NULL) {
+		g_object_unref (buffer);
+	}
+	return TRUE;
+}
+
+/**
  * gpk_client_error_code_cb:
  **/
 static void
@@ -255,6 +360,16 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		}
 		pk_warning ("did not auth");
 	}
+
+	/* have we handled? */
+	if (code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
+	    code == PK_ERROR_ENUM_MISSING_GPG_SIGNATURE) {
+		pk_debug ("handle and requeue");
+		gpk_client_error_dialog_retry_untrusted (gclient, code, details);
+		return;
+	}
+
+	pk_debug ("code was %s", pk_error_enum_to_text (code));
 
 	//remove GPK_CLIENT_PAGE_ERROR?
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
@@ -321,7 +436,7 @@ pk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
- * gpk_client_error_message:
+ * gpk_client_error_msg:
  **/
 static void
 gpk_client_error_msg (GpkClient *gclient, const gchar *title, const gchar *message)
@@ -379,6 +494,47 @@ out:
 }
 
 /**
+ * gpk_client_install_local_file_internal:
+ **/
+static gboolean
+gpk_client_install_local_file_internal (GpkClient *gclient, gboolean trusted,
+					const gchar *file_rel, GError **error)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+	gchar *text;
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* install local file */
+	ret = pk_client_install_file (gclient->priv->client_action, trusted, file_rel, &error_local);
+	if (ret) {
+		return TRUE;
+	}
+
+	/* check if we got a permission denied */
+	if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
+		gpk_client_error_msg (gclient, _("Failed to install file"),
+				      _("You don't have the necessary privileges to install local files"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+	} else {
+		text = g_markup_escape_text (error_local->message, -1);
+		gpk_client_error_msg (gclient, _("Failed to install file"), text);
+		g_free (text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+	}
+	g_error_free (error_local);
+	return FALSE;
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -393,8 +549,6 @@ gboolean
 gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError **error)
 {
 	gboolean ret;
-	GError *error_local = NULL;
-	gchar *text;
 	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -404,25 +558,24 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_show (widget);
 
-	ret = pk_client_install_file (gclient->priv->client_action, file_rel, &error_local);
+	gclient->priv->retry_untrusted_value = FALSE;
+	ret = gpk_client_install_local_file_internal (gclient, TRUE, file_rel, error);
 	if (!ret) {
-		/* check if we got a permission denied */
-		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
-			gpk_client_error_msg (gclient, _("Failed to install file"),
-					      _("You don't have the necessary privileges to install local files"));
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		} else {
-			text = g_markup_escape_text (error_local->message, -1);
-			gpk_client_error_msg (gclient, _("Failed to install file"), text);
-			g_free (text);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		}
-		g_error_free (error_local);
 		goto out;
 	}
 
 	/* wait for completion */
 	gtk_main ();
+
+	/* do we need to try again with better auth? */
+	if (gclient->priv->retry_untrusted_value) {
+		ret = gpk_client_install_local_file_internal (gclient, FALSE, file_rel, error);
+		if (!ret) {
+			goto out;
+		}
+		/* wait again */
+		gtk_main ();
+	}
 
 	/* we're done */
 	if (gclient->priv->pulse_timeout != 0) {
