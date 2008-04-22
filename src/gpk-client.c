@@ -250,6 +250,7 @@ gpk_client_button_retry_untrusted (PolKitGnomeAction *action, GpkClient *gclient
 {
 	pk_debug ("need to retry...");
 	gclient->priv->retry_untrusted_value = TRUE;
+	gtk_main_quit ();
 }
 
 /**
