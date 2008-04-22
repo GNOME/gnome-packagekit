@@ -1311,7 +1311,7 @@ pk_update_viewer_check_blocked_packages (PkClient *client)
 	/* set the widget text */
 	if (exists) {
 		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		title_bold = g_strdup_printf ("<b>%s</b>", _("Some updates were not updated"));
+		title_bold = g_strdup_printf ("<b>%s</b>", _("Some updates were not installed"));
 		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
 		g_free (title_bold);
 
