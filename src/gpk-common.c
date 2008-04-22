@@ -433,6 +433,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
 		text = _("Bad GPG signature");
 		break;
+	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
+		text = _("Missing GPG signature");
+		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration invalid");
 		break;
@@ -569,7 +572,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		text = _("The software source signature could not be verified.");
+		text = _("The package signature could not be verified.");
+		break;
+	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
+		text = _("The package signature was missing and this package is untrusted.\n"
+			 "This package was not signed with a GPG key when created.");
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration was invalid and could not be read.");
