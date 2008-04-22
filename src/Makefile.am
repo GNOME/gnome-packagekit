@@ -103,6 +103,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-firmware.h					\
 	gpk-inhibit.c					\
 	gpk-inhibit.h					\
+	gpk-dbus.c					\
+	gpk-dbus.h					\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-marshal.c					\

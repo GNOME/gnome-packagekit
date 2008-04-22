@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <node name="/">
   <interface name="org.freedesktop.PackageKit">
+    <method name="InstallLocalFile">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="s" name="full_path" direction="in"/>
+    </method>
+    <method name="InstallProvideFile">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="s" name="full_path" direction="in"/>
+    </method>
+    <method name="InstallPackageName">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="s" name="package_name" direction="in"/>
+    </method>
   </interface>
 </node>
 
