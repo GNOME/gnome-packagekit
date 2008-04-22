@@ -22,7 +22,6 @@
 #ifndef __GPK_COMMON_H
 #define __GPK_COMMON_H
 
-#include <libselftest.h>
 #include <glib-object.h>
 #include <pk-enum.h>
 
@@ -51,7 +50,11 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 
+#ifdef PK_BUILD_TESTS
+#include <libselftest.h>
 void		 gpk_common_self_test			(LibSelfTest	*test);
+#endif
+
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const gchar	*package_id,
 							 const gchar	*summary);
