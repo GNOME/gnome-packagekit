@@ -439,6 +439,12 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration invalid");
 		break;
+	case PK_ERROR_ENUM_INVALID_PACKAGE_FILE:
+		text = _("Invalid package file");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED:
+		text = _("Package install blocked");
+		break;
 	default:
 		g_warning ("Unknown error");
 	}
@@ -580,6 +586,13 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration was invalid and could not be read.");
+		break;
+	case PK_ERROR_ENUM_INVALID_PACKAGE_FILE:
+		text = _("The package you are attempting to install is not valid.\n"
+			 "The package file could be corrupt, or not a proper package.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED:
+		text = _("Installation of this package prevented by your packaging system's configuration.");
 		break;
 	default:
 		g_warning ("Unknown error, please report a bug.\n"
