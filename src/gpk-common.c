@@ -562,7 +562,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please close any other legacy packaging tools that may be open.");
 		break;
 	case PK_ERROR_ENUM_NO_PACKAGES_TO_UPDATE:
-		text = _("No packages that were selected we able to be updated.");
+		text = _("None of the selected packages could be updated.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_WRITE_REPO_CONFIG:
 		text = _("The repository configuration could not be modified.");
