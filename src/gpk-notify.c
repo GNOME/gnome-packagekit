@@ -609,7 +609,7 @@ gpk_notify_check_on_battery (GpkNotify *notify)
 {
 	gboolean on_battery;
 	gboolean conf_update_battery;
-	gboolean ret;
+	gboolean ret = FALSE;
 
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
