@@ -396,19 +396,26 @@ gpk_notify_update_system (GpkNotify *notify)
 	ret = pk_client_update_system (notify->priv->client_update_system, &error);
 	if (ret) {
 		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
+		return TRUE;
+	}
+
+	/* print a proper error if we have it */
+	if (error->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+		message = g_strdup (_("Authorisation could not be obtained"));
 	} else {
 		message = g_strdup_printf (_("The error was: %s"), error->message);
-		pk_warning ("%s", message);
-		g_error_free (error);
-		gpk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
-				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
-		g_free (message);
-		gpk_smart_icon_notify_button (notify->priv->sicon,
-					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-					      GPK_CONF_NOTIFY_UPDATE_FAILED);
-		gpk_smart_icon_notify_show (notify->priv->sicon);
 	}
-	return ret;
+
+	pk_debug ("%s", message);
+	g_error_free (error);
+	gpk_smart_icon_notify_new (notify->priv->sicon, _("Failed to update system"), message,
+			      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+	g_free (message);
+	gpk_smart_icon_notify_button (notify->priv->sicon,
+				      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+				      GPK_CONF_NOTIFY_UPDATE_FAILED);
+	gpk_smart_icon_notify_show (notify->priv->sicon);
+	return FALSE;
 }
 
 /**
