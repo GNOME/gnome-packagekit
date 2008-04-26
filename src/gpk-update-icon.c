@@ -97,9 +97,8 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 static void
 pk_dbus_connection_replaced_cb (LibGBus *libgbus, gpointer data)
 {
-	GMainLoop *loop = (GMainLoop *) data;
-	pk_warning ("exiting the mainloop as we have been replaced");
-	g_main_loop_quit (loop);
+	pk_warning ("exiting as we have been replaced");
+	gtk_main_quit ();
 }
 
 /**
@@ -108,7 +107,6 @@ pk_dbus_connection_replaced_cb (LibGBus *libgbus, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GpkNotify *notify = NULL;
@@ -165,13 +163,12 @@ main (int argc, char *argv[])
 	notify = gpk_notify_new ();
 	watch = gpk_watch_new ();
 	firmware = gpk_firmware_new ();
-	loop = g_main_loop_new (NULL, FALSE);
 
 	/* find out when we are replaced */
 	libgbus = libgbus_new ();
 	libgbus_assign (libgbus, LIBGBUS_SESSION, PK_DBUS_SERVICE);
 	g_signal_connect (libgbus, "connection-replaced",
-			  G_CALLBACK (pk_dbus_connection_replaced_cb), loop);
+			  G_CALLBACK (pk_dbus_connection_replaced_cb), NULL);
 
 	/* get the bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
@@ -188,11 +185,10 @@ main (int argc, char *argv[])
 		goto out;
 	}
 
-	/* wait until loop killed */
-	g_main_loop_run (loop);
+	/* wait */
+	gtk_main ();
 
 out:
-	g_main_loop_unref (loop);
 	g_object_unref (dbus);
 	g_object_unref (notify);
 	g_object_unref (watch);
