@@ -675,6 +675,9 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 	g_free (summary_new);
 	g_free (icon);
 	g_free (text);
+
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
 }
 
 /**
