@@ -564,8 +564,6 @@ pk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 	gboolean ret;
 	GError *error = NULL;
 
-	GMainLoop *loop = (GMainLoop *) data;
-
 	/* we might have a transaction running */
 	ret = pk_client_cancel (client_action, &error);
 	if (!ret) {
@@ -573,19 +571,7 @@ pk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 		g_error_free (error);
 	}
 
-	g_main_loop_quit (loop);
-}
-
-/**
- * pk_update_viewer_close_cb:
- **/
-static void
-pk_update_viewer_close_cb (GtkWidget *widget, gpointer data)
-{
-	GMainLoop *loop = (GMainLoop *) data;
-
-	/* just close the UI, let the installation continue */
-	g_main_loop_quit (loop);
+	gtk_main_quit ();
 }
 
 /**
@@ -981,18 +967,6 @@ pk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoin
 		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
 		gtk_label_set_label (GTK_LABEL (widget), "");
 	}
-}
-
-/**
- * pk_update_viewer_window_delete_event_cb:
- * @event: The event type, unused.
- **/
-static gboolean
-pk_update_viewer_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-	GMainLoop *loop = (GMainLoop *) data;
-	g_main_loop_quit (loop);
-	return FALSE;
 }
 
 /**
@@ -1781,7 +1755,6 @@ gpk_update_viewer_setup_policykit (void)
 int
 main (int argc, char *argv[])
 {
-	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GOptionContext *context;
@@ -1836,8 +1809,6 @@ main (int argc, char *argv[])
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
-
-	loop = g_main_loop_new (NULL, FALSE);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
@@ -1894,30 +1865,30 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* Get the main window quit */
-	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_update_viewer_window_delete_event_cb), loop);
+	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* button_close2 and button_close3 are on the overview/review
 	 * screens, where we want to cancel transactions when closing
 	 */
 	widget = glade_xml_get_widget (glade_xml, "button_close2");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_button_close_and_cancel_cb), loop);
+			  G_CALLBACK (pk_update_viewer_button_close_and_cancel_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close3");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_button_close_and_cancel_cb), loop);
+			  G_CALLBACK (pk_update_viewer_button_close_and_cancel_cb), NULL);
+
+	/* normal close buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_close_cb), loop);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_close_cb), loop);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close5");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_close_cb), loop);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* cancel button */
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_button_cancel_cb), loop);
+			  G_CALLBACK (pk_update_viewer_button_cancel_cb), NULL);
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* can we ever do the action? */
@@ -1929,25 +1900,25 @@ main (int argc, char *argv[])
 	g_signal_connect (refresh_action, "activate",
 			  G_CALLBACK (pk_update_viewer_refresh_cb), NULL);
 	g_signal_connect (restart_action, "activate",
-			  G_CALLBACK (pk_update_viewer_restart_cb), loop);
+			  G_CALLBACK (pk_update_viewer_restart_cb), NULL);
 	g_signal_connect (update_packages_action, "activate",
-			  G_CALLBACK (pk_update_viewer_apply_cb), loop);
+			  G_CALLBACK (pk_update_viewer_apply_cb), NULL);
 	g_signal_connect (update_system_action, "activate",
-			  G_CALLBACK (pk_update_viewer_update_system_cb), loop);
+			  G_CALLBACK (pk_update_viewer_update_system_cb), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_review_cb), loop);
+			  G_CALLBACK (pk_update_viewer_review_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Review the update list"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_overview");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_overview_cb), loop);
+			  G_CALLBACK (pk_update_viewer_overview_cb), NULL);
 	gtk_widget_set_tooltip_text(widget, _("Back to overview"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_overview2");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_more_installs_cb), loop);
+			  G_CALLBACK (pk_button_more_installs_cb), NULL);
 	gtk_widget_set_tooltip_text (widget, _("Back to overview"));
 
 	widget = glade_xml_get_widget (glade_xml, "button_help");
@@ -2045,8 +2016,8 @@ main (int argc, char *argv[])
 	/* coldplug */
 	pk_update_viewer_get_new_update_list ();
 
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
+	/* wait */
+	gtk_main ();
 
 	/* we might have visual stuff running, close it down */
 	ret = pk_client_cancel (client_query, &error);

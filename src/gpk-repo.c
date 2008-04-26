@@ -68,19 +68,6 @@ pk_button_help_cb (GtkWidget *widget, gboolean  data)
 	gpk_gnome_help ("software-sources");
 }
 
-/**
- * pk_button_close_cb:
- **/
-static void
-pk_button_close_cb (GtkWidget	*widget,
-		     gpointer data)
-{
-	GMainLoop *loop = (GMainLoop *) data;
-
-	g_main_loop_quit (loop);
-	pk_debug ("emitting action-close");
-}
-
 static void
 pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
 {
@@ -150,21 +137,6 @@ pk_repo_detail_cb (PkClient *client, const gchar *repo_id,
 			    -1);
 	/* sort after each entry, which is okay as there shouldn't be many */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
-}
-
-/**
- * pk_window_delete_event_cb:
- * @event: The event type, unused.
- **/
-static gboolean
-pk_window_delete_event_cb (GtkWidget *widget,
-			   GdkEvent  *event,
-			   gpointer   data)
-{
-	GMainLoop *loop = (GMainLoop *) data;
-
-	g_main_loop_quit (loop);
-	return FALSE;
 }
 
 /**
@@ -300,7 +272,6 @@ pk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
@@ -335,8 +306,6 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	loop = g_main_loop_new (NULL, FALSE);
-
 	gconf_client = gconf_client_get_default ();
 
 	client = pk_client_new ();
@@ -359,12 +328,10 @@ main (int argc, char *argv[])
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "pk-package-sources");
 
 	/* Get the main window quit */
-	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (pk_window_delete_event_cb), loop);
+	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_close_cb), loop);
+	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
@@ -418,8 +385,8 @@ main (int argc, char *argv[])
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
+	/* wait */
+	gtk_main ();
 
 	g_object_unref (glade_xml);
 	g_object_unref (list_store);

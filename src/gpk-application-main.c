@@ -53,7 +53,6 @@ gpk_application_close_cb (GpkApplication *application)
 int
 main (int argc, char *argv[])
 {
-	GMainLoop *loop;
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GpkApplication *application = NULL;
@@ -98,9 +97,9 @@ main (int argc, char *argv[])
 	g_signal_connect (application, "action-close",
 			  G_CALLBACK (gpk_application_close_cb), NULL);
 
-	loop = g_main_loop_new (NULL, FALSE);
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
+	/* wait */
+	gtk_main ();
+
 	g_object_unref (application);
 
 	return 0;
