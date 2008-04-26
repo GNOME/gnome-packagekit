@@ -1713,6 +1713,93 @@ pk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkE
 }
 
 /**
+ * gpk_update_viewer_create_custom_widget:
+ **/
+static GtkWidget *
+gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
+				     gchar *string1, gchar *string2,
+				     gint int1, gint int2, gpointer user_data)
+{
+	if (pk_strequal (name, "button_refresh")) {
+		return polkit_gnome_action_create_button (refresh_action);
+	}
+	if (pk_strequal (name, "button_restart")) {
+		return polkit_gnome_action_create_button (restart_action);
+	}
+	if (pk_strequal (name, "button_update_system")) {
+		return polkit_gnome_action_create_button (update_system_action);
+	}
+	if (pk_strequal (name, "button_update_packages")) {
+		return polkit_gnome_action_create_button (update_packages_action);
+	}
+	pk_warning ("name unknown=%s", name);
+	return NULL;
+}
+
+/**
+ * gpk_update_viewer_setup_policykit:
+ *
+ * We have to do this before the glade stuff if done as the custom handler needs the actions setup
+ **/
+static void
+gpk_update_viewer_setup_policykit (void)
+{
+	PolKitAction *pk_action;
+
+	/* refresh */
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
+	refresh_action = polkit_gnome_action_new_default ("refresh", pk_action,
+							  _("Refresh"),
+							  _("Refreshing is not normally required but will retrieve the latest application and update lists"));
+	g_object_set (refresh_action, "auth-icon-name", NULL, NULL);
+	polkit_action_unref (pk_action);
+
+	/* restart */
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
+	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
+							  _("_Restart computer now"), NULL);
+	g_object_set (restart_action,
+		      "no-icon-name", GTK_STOCK_REFRESH,
+		      "auth-icon-name", GTK_STOCK_REFRESH,
+		      "yes-icon-name", GTK_STOCK_REFRESH,
+		      "self-blocked-icon-name", GTK_STOCK_REFRESH,
+		      "no-visible", FALSE,
+		      "master-visible", FALSE,
+		      NULL);
+	polkit_action_unref (pk_action);
+
+	/* update-package */
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-package");
+	update_packages_action = polkit_gnome_action_new_default ("update-package", pk_action,
+								  _("_Apply Updates"),
+								  _("Apply the selected updates"));
+	g_object_set (update_packages_action,
+		      "no-icon-name", GTK_STOCK_APPLY,
+		      "auth-icon-name", GTK_STOCK_APPLY,
+		      "yes-icon-name", GTK_STOCK_APPLY,
+		      "self-blocked-icon-name", GTK_STOCK_APPLY,
+		      NULL);
+	polkit_action_unref (pk_action);
+
+	/* update-system */
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-system");
+	update_system_action = polkit_gnome_action_new_default ("update-system", pk_action,
+								_("_Update System"),
+								_("Apply all updates"));
+	g_object_set (update_system_action,
+		      "no-icon-name", GTK_STOCK_APPLY,
+		      "auth-icon-name", GTK_STOCK_APPLY,
+		      "yes-icon-name", GTK_STOCK_APPLY,
+		      "self-blocked-icon-name", GTK_STOCK_APPLY,
+		      NULL);
+	polkit_action_unref (pk_action);
+}
+
+/**
  * main:
  **/
 int
@@ -1728,8 +1815,6 @@ main (int argc, char *argv[])
 	PkRoleEnum roles;
 	gboolean ret;
 	GtkSizeGroup *size_group;
-	GtkWidget *button;
-	PolKitAction *pk_action;
 	GError *error = NULL;
 
 	const GOptionEntry options[] = {
@@ -1769,6 +1854,12 @@ main (int argc, char *argv[])
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
+
+	/* we have to do this before we connect up the glade file */
+	gpk_update_viewer_setup_policykit ();
+
+	/* use custom widgets */
+	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
 
 	loop = g_main_loop_new (NULL, FALSE);
 
@@ -1826,26 +1917,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "hbox_restart");
 	gtk_widget_hide (widget);
 
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
-	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
-							  _("_Restart computer now"), NULL);
-	g_object_set (restart_action,
-		      "no-icon-name", GTK_STOCK_REFRESH,
-		      "auth-icon-name", GTK_STOCK_REFRESH,
-		      "yes-icon-name", GTK_STOCK_REFRESH,
-		      "self-blocked-icon-name", GTK_STOCK_REFRESH,
-		      "no-visible", FALSE,
-		      "master-visible", FALSE,
-		      NULL);
-	polkit_action_unref (pk_action);
-	g_signal_connect (restart_action, "activate",
-			  G_CALLBACK (pk_update_viewer_restart_cb), loop);
-	button = polkit_gnome_action_create_button (restart_action);
-	widget = glade_xml_get_widget (glade_xml, "buttonbox_confirm");
-	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
-	gtk_box_reorder_child (GTK_BOX (widget), button, 1);
-
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (pk_update_viewer_window_delete_event_cb), loop);
@@ -1878,6 +1949,16 @@ main (int argc, char *argv[])
 		gtk_widget_hide (widget);
 	}
 
+	/* connect up PolicyKit actions */
+	g_signal_connect (refresh_action, "activate",
+			  G_CALLBACK (pk_update_viewer_refresh_cb), NULL);
+	g_signal_connect (restart_action, "activate",
+			  G_CALLBACK (pk_update_viewer_restart_cb), loop);
+	g_signal_connect (update_packages_action, "activate",
+			  G_CALLBACK (pk_update_viewer_apply_cb), loop);
+	g_signal_connect (update_system_action, "activate",
+			  G_CALLBACK (pk_update_viewer_update_system_cb), loop);
+
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_update_viewer_review_cb), loop);
@@ -1893,70 +1974,6 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_more_installs_cb), loop);
 	gtk_widget_set_tooltip_text (widget, _("Back to overview"));
 
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-package");
-	update_packages_action = polkit_gnome_action_new_default ("update-package",
-								pk_action,
-								_("_Apply Updates"),
-								_("Apply the selected updates"));
-	g_object_set (update_packages_action,
-		      "no-icon-name", GTK_STOCK_APPLY,
-		      "auth-icon-name", GTK_STOCK_APPLY,
-		      "yes-icon-name", GTK_STOCK_APPLY,
-		      "self-blocked-icon-name", GTK_STOCK_APPLY,
-		      NULL);
-	polkit_action_unref (pk_action);
-	g_signal_connect (update_packages_action, "activate",
-			  G_CALLBACK (pk_update_viewer_apply_cb), loop);
-	button = polkit_gnome_action_create_button (update_packages_action);
-	widget = glade_xml_get_widget (glade_xml, "buttonbox_review");
-	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
-	gtk_box_reorder_child (GTK_BOX (widget), button, 2);
-
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-system");
-	update_system_action = polkit_gnome_action_new_default ("update-system",
-								pk_action,
-								_("_Update System"),
-								_("Apply all updates"));
-	g_object_set (update_system_action,
-		      "no-icon-name", GTK_STOCK_APPLY,
-		      "auth-icon-name", GTK_STOCK_APPLY,
-		      "yes-icon-name", GTK_STOCK_APPLY,
-		      "self-blocked-icon-name", GTK_STOCK_APPLY,
-		      NULL);
-	polkit_action_unref (pk_action);
-	g_signal_connect (update_system_action, "activate",
-			  G_CALLBACK (pk_update_viewer_update_system_cb), loop);
-	button = polkit_gnome_action_create_button (update_system_action);
-	widget = glade_xml_get_widget (glade_xml, "buttonbox_overview");
-	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
-	gtk_box_reorder_child (GTK_BOX (widget), button, 1);
-
-	size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
-
-	widget = glade_xml_get_widget (glade_xml, "alignment_refresh");
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
-	refresh_action = polkit_gnome_action_new_default ("refresh",
-						          pk_action,
-							  _("Refresh"),
-							  _("Refreshing is not normally required but will retrieve the latest application and update lists"));
-	g_object_set (refresh_action, "auth-icon-name", NULL, NULL);
-	polkit_action_unref (pk_action);
-
-	g_signal_connect (refresh_action, "activate",
-			  G_CALLBACK (pk_update_viewer_refresh_cb), NULL);
-
-	button = polkit_gnome_action_create_button (refresh_action);
-	gtk_container_add (GTK_CONTAINER (widget), button);
-	gtk_size_group_add_widget (size_group, button);
-
-	widget = glade_xml_get_widget (glade_xml, "button_history");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_history_cb), NULL);
-	gtk_size_group_add_widget (size_group, widget);
-
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), "update-viewer");
@@ -1964,6 +1981,17 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help2");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), "update-viewer-details");
+
+	widget = glade_xml_get_widget (glade_xml, "button_history");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (pk_update_viewer_history_cb), NULL);
+
+	/* make the refresh button the same size as the history one */
+	size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	gtk_size_group_add_widget (size_group, widget);
+	widget = glade_xml_get_widget (glade_xml, "button_history");
+	gtk_size_group_add_widget (size_group, widget);
 
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,

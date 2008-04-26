@@ -2173,7 +2173,7 @@ gpk_application_init (GpkApplication *application)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* use a sexy widget */
+	/* use custom widgets */
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
 
 	application->priv->control = pk_control_new ();
