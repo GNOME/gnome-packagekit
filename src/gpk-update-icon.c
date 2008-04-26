@@ -113,6 +113,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkNotify *notify = NULL;
 	GpkWatch *watch = NULL;
+	GpkDbus *dbus = NULL;
 	GpkFirmware *firmware = NULL;
 	GOptionContext *context;
 	GError *error = NULL;
@@ -160,6 +161,7 @@ main (int argc, char *argv[])
                                            PK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* create new objects */
+	dbus = gpk_dbus_new ();
 	notify = gpk_notify_new ();
 	watch = gpk_watch_new ();
 	firmware = gpk_firmware_new ();
@@ -180,7 +182,7 @@ main (int argc, char *argv[])
 	}
 
 	/* try to register */
-	ret = gpk_object_register (connection, G_OBJECT (notify));
+	ret = gpk_object_register (connection, G_OBJECT (dbus));
 	if (!ret) {
 		pk_warning ("failed to replace running instance.");
 		goto out;
@@ -191,6 +193,7 @@ main (int argc, char *argv[])
 
 out:
 	g_main_loop_unref (loop);
+	g_object_unref (dbus);
 	g_object_unref (notify);
 	g_object_unref (watch);
 	g_object_unref (firmware);
