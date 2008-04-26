@@ -108,7 +108,6 @@ typedef enum {
 	PAGE_DETAILS,
 	PAGE_PROGRESS,
 	PAGE_CONFIRM,
-	PAGE_ERROR,
 	PAGE_LAST
 } PkPageEnum;
 
@@ -1482,31 +1481,8 @@ pk_update_viewer_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 static void
 pk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	GtkWidget *widget;
-	const gchar *title;
-	gchar *title_bold;
-	gchar *details_safe;
-
-	/* set bold title */
-	widget = glade_xml_get_widget (glade_xml, "label_error_title");
-	title = gpk_error_enum_to_localised_text (code);
-	title_bold = g_strdup_printf ("<b>%s</b>", title);
-	gtk_label_set_label (GTK_LABEL (widget), title_bold);
-	g_free (title_bold);
-
-	widget = glade_xml_get_widget (glade_xml, "label_error_message");
-	gtk_label_set_label (GTK_LABEL (widget), gpk_error_enum_to_localised_message (code));
-
-	widget = glade_xml_get_widget (glade_xml, "label_error_details");
-	details_safe = g_markup_escape_text (details, -1);
-	gtk_label_set_label (GTK_LABEL (widget), details_safe);
-	g_free (details_safe);
-
-	widget = glade_xml_get_widget (glade_xml, "button_close5");
-	gtk_widget_grab_default (widget);
-
-	/* set correct view */
-	pk_update_viewer_set_page (PAGE_ERROR);
+	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
+			  gpk_error_enum_to_localised_message (code), details);
 }
 
 /**
