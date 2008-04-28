@@ -1571,6 +1571,12 @@ gpk_client_finalize (GObject *object)
 
 	gclient = GPK_CLIENT (object);
 	g_return_if_fail (gclient->priv != NULL);
+
+	/* stop the timer if running */
+	if (gclient->priv->finished_timer_id != 0) {
+		g_source_remove (gclient->priv->finished_timer_id);
+	}
+
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_signature);
