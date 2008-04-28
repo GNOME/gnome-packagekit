@@ -61,6 +61,7 @@ static PkControl *control = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
 static GpkClient *gclient = NULL;
+static gboolean are_updates_available = FALSE;
 
 static PolKitGnomeAction *refresh_action = NULL;
 static PolKitGnomeAction *update_system_action = NULL;
@@ -240,11 +241,14 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 		gtk_widget_show (widget);
 	}
 
+	pk_update_viewer_set_page (PAGE_LAST);
+
 	/* set correct view */
-	pk_update_viewer_set_page (PAGE_PROGRESS);
 	package_ids = pk_package_ids_from_array (array);
 	gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
+
+	pk_update_viewer_set_page (PAGE_PROGRESS);
 
 	/* get rid of the array, and free the contents */
 	g_ptr_array_free (array, TRUE);
@@ -586,13 +590,6 @@ pk_update_viewer_populate_preview (void)
 	length = pk_client_package_buffer_get_size (client_query);
 	if (length == 0) {
 		pk_update_viewer_add_preview_item ("dialog-information", _("There are no updates available!"), TRUE);
-
-		/* if no updates then hide apply */
-		widget = glade_xml_get_widget (glade_xml, "button_review");
-		gtk_widget_set_sensitive (widget, FALSE);
-		polkit_gnome_action_set_sensitive (update_system_action, FALSE);
-		polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
-
 		widget = glade_xml_get_widget (glade_xml, "button_close3");
 		gtk_widget_grab_default (widget);
 	} else {
@@ -699,6 +696,7 @@ pk_update_viewer_get_new_update_list (void)
 		g_error_free (error);
 		return;
 	}
+
 	pk_update_viewer_populate_preview ();
 }
 
@@ -1284,6 +1282,7 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 	GtkWidget *widget;
 	PkRoleEnum role;
 	PkRestartEnum restart;
+	guint length;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 
@@ -1291,6 +1290,24 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		return;
+	}
+
+	/* update sensitivities */
+	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+	pk_warning ("are_updates_available=%i", are_updates_available);
+		length = pk_client_package_buffer_get_size (client_query);
+		if (length == 0) {
+			are_updates_available = FALSE;
+		} else {
+			are_updates_available = TRUE;
+		}
+
+		/* make the buttons non-clickable until we get completion */
+		polkit_gnome_action_set_sensitive (refresh_action, are_updates_available);
+		polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
+		polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
+		widget = glade_xml_get_widget (glade_xml, "button_review");
+		gtk_widget_set_sensitive (widget, are_updates_available);
 	}
 
 	/* stop the throbber */
@@ -1412,11 +1429,11 @@ pk_update_viewer_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		pk_update_viewer_preview_animation_stop ();
 
 		/* show apply, review and refresh */
-		polkit_gnome_action_set_sensitive (update_system_action, TRUE);
-		polkit_gnome_action_set_sensitive (update_packages_action, TRUE);
-		polkit_gnome_action_set_sensitive (refresh_action, TRUE);
+		polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
+		polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
+		polkit_gnome_action_set_sensitive (refresh_action, are_updates_available);
 		widget = glade_xml_get_widget (glade_xml, "button_review");
-		gtk_widget_set_sensitive (widget, TRUE);
+		gtk_widget_set_sensitive (widget, are_updates_available);
 	}
 }
 
@@ -1629,6 +1646,7 @@ pk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkE
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
+		pk_warning ("getting new");
 		pk_update_viewer_get_new_update_list ();
 	}
 }
