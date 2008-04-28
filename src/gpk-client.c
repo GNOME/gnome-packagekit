@@ -937,6 +937,112 @@ out:
 }
 
 /**
+ * gpk_client_update_system:
+ **/
+gboolean
+gpk_client_update_system (GpkClient *gclient, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *message = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		/* print a proper error if we have it */
+		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+			message = g_strdup (_("Authorisation could not be obtained"));
+		} else {
+			message = g_strdup_printf (_("The error was: %s"), error_local->message);
+		}
+
+		/* display and set */
+		text = g_strdup_printf ("%s: %s", _("Failed to update system"), message);
+		gpk_client_error_msg (gclient, _("Failed to update system"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+out:
+	g_free (message);
+	g_free (text);
+	return FALSE;
+}
+
+/**
+ * gpk_client_update_packages:
+ **/
+gboolean
+gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *message = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_update_packages_strv (gclient->priv->client_action, package_ids, &error_local);
+	if (!ret) {
+		/* print a proper error if we have it */
+		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+			message = g_strdup (_("Authorisation could not be obtained"));
+		} else {
+			message = g_strdup_printf (_("The error was: %s"), error_local->message);
+		}
+
+		/* display and set */
+		text = g_strdup_printf ("%s: %s", _("Failed to update packages"), message);
+		gpk_client_error_msg (gclient, _("Failed to update packages"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+out:
+	g_free (message);
+	g_free (text);
+	return FALSE;
+}
+
+/**
  * gpk_client_sig_button_yes:
  **/
 static void

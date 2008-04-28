@@ -68,20 +68,21 @@ GpkClient	*gpk_client_new				(void);
 
 gboolean	 gpk_client_install_local_file		(GpkClient	*gclient,
 							 const gchar	*file_rel,
-							 GError		**error)
-							 G_GNUC_WARN_UNUSED_RESULT;
+							 GError		**error);
 gboolean	 gpk_client_install_provide_file	(GpkClient	*gclient,
 							 const gchar	*full_path,
-							 GError		**error)
-							 G_GNUC_WARN_UNUSED_RESULT;
+							 GError		**error);
 gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
 							 const gchar	*package,
-							 GError		**error)
-							 G_GNUC_WARN_UNUSED_RESULT;
+							 GError		**error);
 gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
 							 const gchar	*package_id,
-							 GError		**error)
-							 G_GNUC_WARN_UNUSED_RESULT;
+							 GError		**error);
+gboolean	 gpk_client_update_system		(GpkClient	*gclient,
+							 GError		**error);
+gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
+							 gchar		**package_ids,
+							 GError		**error);
 void		 gpk_client_show_finished		(GpkClient	*gclient,
 							 gboolean	 enabled);
 
