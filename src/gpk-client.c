@@ -158,7 +158,6 @@ gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient
 	/* go! */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_hide (widget);
-	gtk_main_quit ();
 }
 
 /**
