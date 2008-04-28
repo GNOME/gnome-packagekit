@@ -76,7 +76,6 @@ struct _GpkClientPrivate
 typedef enum {
 	GPK_CLIENT_PAGE_PROGRESS,
 	GPK_CLIENT_PAGE_CONFIRM,
-	GPK_CLIENT_PAGE_ERROR,
 	GPK_CLIENT_PAGE_LAST
 } GpkClientPageEnum;
 
@@ -384,8 +383,6 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	}
 
 	pk_debug ("code was %s", pk_error_enum_to_text (code));
-
-	//remove GPK_CLIENT_PAGE_ERROR?
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
 			  gpk_error_enum_to_localised_message (code), details);
 }
