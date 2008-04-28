@@ -667,6 +667,139 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
+ * gpk_client_remove_package_id:
+ * @gclient: a valid #GpkClient instance
+ * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+gboolean
+gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GError **error)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	GtkResponseType button;
+	gboolean ret;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *title = NULL;
+	gchar *package_name = NULL;
+	guint len;
+	guint i;
+	GString *string;
+	PkPackageItem *item;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (package_id != NULL, FALSE);
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
+
+	/* are we dumb and can't check for depends? */
+	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
+		pk_warning ("skipping depends check");
+		goto skip_checks;
+	}
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* find out if this would drag in other packages */
+	ret = pk_client_get_requires (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error_local);
+	if (!ret) {
+		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also removeed"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to get depends"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* any additional packages? */
+	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	if (len == 0) {
+		pk_debug ("no additional requires");
+		goto skip_checks;
+	}
+
+	/* process package list */
+	string = g_string_new (_("The following packages have to be removed:"));
+	g_string_append (string, "\n\n");
+	for (i=0; i<len; i++) {
+		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
+		text = gpk_package_id_format_oneline (item->package_id, item->summary);
+		g_string_append_printf (string, "%s\n", text);
+		g_free (text);
+	}
+	/* remove last \n */
+	g_string_set_size (string, string->len - 1);
+
+	/* display messagebox  */
+	text = g_string_free (string, FALSE);
+	pk_debug ("text=%s", text);
+
+	/* show UI */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	package_name = gpk_package_get_name (package_id);
+	title = g_strdup_printf (_("Other software depends on %s"), package_name);
+	g_free (package_name);
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
+	g_free (title);
+
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Remove all packages"), GTK_RESPONSE_OK);
+
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
+	button = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (text);
+
+	/* did we click no or exit the window? */
+	if (button != GTK_RESPONSE_OK) {
+		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user did not agree to additional requires");
+		ret = FALSE;
+		goto out;
+	}
+
+skip_checks:
+	/* try to remove the package_id */
+	ret = pk_client_remove_package (gclient->priv->client_action, package_id, TRUE, FALSE, &error_local);
+	if (!ret) {
+		/* check if we got a permission denied */
+		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
+			gpk_client_error_msg (gclient, _("Failed to remove package"),
+					        _("You don't have the necessary privileges to remove packages"));
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		} else {
+			text = g_markup_escape_text (error_local->message, -1);
+			gpk_client_error_msg (gclient, _("Failed to remove package"), text);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			g_free (text);
+		}
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+	/* we're done */
+	gpk_client_done (gclient);
+out:
+	return ret;
+}
+
+/**
  * gpk_client_install_package_id:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>

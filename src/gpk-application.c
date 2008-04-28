@@ -264,163 +264,28 @@ gpk_application_install_cb (PolKitGnomeAction *action, GpkApplication *applicati
  * gpk_application_homepage_cb:
  **/
 static void
-gpk_application_homepage_cb (GtkWidget      *widget,
-		            GpkApplication  *application)
+gpk_application_homepage_cb (GtkWidget *widget, GpkApplication *application)
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
 	gpk_gnome_open (application->priv->url);
 }
 
 /**
- * gpk_application_remove_only:
- **/
-static gboolean
-gpk_application_remove_only (GpkApplication *application, gboolean force)
-{
-	gboolean ret;
-	GError *error = NULL;
-	GtkWidget *widget;
-
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
-
-	pk_debug ("remove %s", application->priv->package);
-
-	/* hide and show the right things */
-	polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
-	gtk_widget_show (widget);
-
-	ret = pk_client_reset (application->priv->client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* do the remove */
-	ret = pk_client_remove_package (application->priv->client_action,
-				        application->priv->package, force, FALSE, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		/* ick, we failed so pretend we didn't do the action */
-		gpk_error_dialog (_("The package could not be removed"),
-				  _("Running the transaction failed"), error->message);
-		g_error_free (error);
-	}
-	return ret;
-}
-
-/**
- * gpk_application_requires_dialog_cb:
- **/
-static void
-gpk_application_requires_dialog_cb (GtkDialog *dialog, gint id, GpkApplication *application)
-{
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	if (id == -9) {
-		pk_debug ("the user clicked no");
-	} else if (id == -8) {
-		pk_debug ("the user clicked yes, remove with deps");
-		gpk_application_remove_only (application, TRUE);
-	} else {
-		pk_warning ("id unknown=%i", id);
-	}
-}
-
-/**
- * gpk_application_requires_finished_cb:
- **/
-static void
-gpk_application_requires_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
-{
-	guint length;
-	gchar *title;
-	gchar *message;
-	gchar *package_name;
-	GString *text;
-	PkPackageItem *item;
-	GtkWidget *main_window;
-	GtkWidget *dialog;
-	guint i;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* see how many packages there are */
-	length = pk_client_package_buffer_get_size (client);
-
-	/* if there are no required packages, just do the remove */
-	if (length == 0) {
-		pk_debug ("no requires");
-		gpk_application_remove_only (application, FALSE);
-		g_object_unref (client);
-		return;
-	}
-
-	/* present this to the user */
-	text = g_string_new (_("The following packages have to be removed:"));
-	g_string_append (text, "\n\n");
-	for (i=0; i<length; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
-		message = gpk_package_id_format_oneline (item->package_id, item->summary);
-		g_string_append_printf (text, "%s\n", message);
-		g_free (message);
-	}
-
-	/* remove last \n */
-	g_string_set_size (text, text->len - 1);
-
-	/* display messagebox  */
-	message = g_string_free (text, FALSE);
-	package_name = gpk_package_get_name (application->priv->package);
-	title = g_strdup_printf (_("Other software depends on %s"), package_name);
-	g_free (package_name);
-
-	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-	dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, "%s", title);
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("Remove all packages"), -8, NULL);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-	g_signal_connect (dialog, "response", G_CALLBACK (gpk_application_requires_dialog_cb), application);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (message);
-	g_object_unref (client);
-}
-
-/**
  * gpk_application_remove_cb:
  **/
 static void
-gpk_application_remove_cb (PolKitGnomeAction *action,
-		          GpkApplication     *application)
+gpk_application_remove_cb (PolKitGnomeAction *action, GpkApplication *application)
 {
 	gboolean ret;
-	PkClient *client;
-	GError *error = NULL;
-
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	/* are we dumb and can't check for requires? */
-	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		/* no, just try to remove it without deps */
-		gpk_application_remove_only (application, FALSE);
-		return;
-	}
+	ret = gpk_client_remove_package_id (application->priv->gclient, application->priv->package, NULL);
 
-	/* see if any packages require this one */
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_application_requires_finished_cb), application);
-
-	/* do the requires */
-	pk_debug ("getting requires for %s", application->priv->package);
-	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, application->priv->package, TRUE, &error);
-	if (!ret) {
-		pk_warning ("failed to get requires: %s", error->message);
-		g_error_free (error);
+	/* refresh the search as the items may have changed and the filter has not changed */
+	if (ret) {
+		gpk_application_refresh_search_results (application);
 	}
+	return;
 }
 
 /**
@@ -1310,8 +1175,7 @@ gpk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
  * gpk_application_packages_treeview_clicked_cb:
  **/
 static void
-gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection,
-				 GpkApplication *application)
+gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplication *application)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;

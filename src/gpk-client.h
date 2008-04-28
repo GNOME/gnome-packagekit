@@ -78,6 +78,9 @@ gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
 gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
 							 const gchar	*package_id,
 							 GError		**error);
+gboolean	 gpk_client_remove_package_id		(GpkClient	*gclient,
+							 const gchar	*package_id,
+							 GError		**error);
 gboolean	 gpk_client_update_system		(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
