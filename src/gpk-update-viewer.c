@@ -49,6 +49,7 @@
 #include "gpk-statusbar.h"
 #include "gpk-consolekit.h"
 #include "gpk-cell-renderer-uri.h"
+#include "gpk-client.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
@@ -59,6 +60,7 @@ static PkClient *client_query = NULL;
 static PkControl *control = NULL;
 static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
+static GpkClient *gclient = NULL;
 
 static PolKitGnomeAction *refresh_action = NULL;
 static PolKitGnomeAction *update_system_action = NULL;
@@ -164,8 +166,6 @@ pk_update_viewer_set_page (PkPageEnum page)
 static void
 pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 {
-	gboolean ret;
-	GError *error = NULL;
 	GtkWidget *widget;
 
 	pk_debug ("Doing the system update");
@@ -174,22 +174,9 @@ pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	gtk_widget_hide (widget);
 
 	/* set correct view */
-	pk_update_viewer_set_page (PAGE_PROGRESS);
+//	pk_update_viewer_set_page (PAGE_PROGRESS);
 
-	/* reset */
-	ret = pk_client_reset (client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-
-	/* update system */
-	ret = pk_client_update_system (client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to update system: %s", error->message);
-		g_error_free (error);
-	}
+	gpk_client_update_system (gclient, NULL);
 }
 
 /**
@@ -208,8 +195,6 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	gchar *package_id;
 	GPtrArray *array;
 	gchar **package_ids;
-	gboolean ret;
-	GError *error = NULL;
 
 	pk_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
@@ -258,21 +243,7 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	pk_update_viewer_set_page (PAGE_PROGRESS);
 	package_ids = pk_package_ids_from_array (array);
-
-	/* reset */
-	ret = pk_client_reset (client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-
-	/* update a list */
-	ret = pk_client_update_packages_strv (client_action, package_ids, &error);
-	if (!ret) {
-		gpk_error_dialog (_("Failed to update"), _("Individual updates failed"), error->message);
-		g_error_free (error);
-	}
+	gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
 
 	/* get rid of the array, and free the contents */
@@ -1853,6 +1824,10 @@ main (int argc, char *argv[])
 	/* monitor for other updates in progress */
 	tlist = pk_task_list_new ();
 
+	/* install stuff using the gnome helpers */
+	gclient = gpk_client_new ();
+	gpk_client_show_finished (gclient, FALSE);
+
 	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
@@ -2028,6 +2003,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_preview);
 	g_object_unref (list_store_description);
 	g_object_unref (list_store_details);
+	g_object_unref (gclient);
 	g_object_unref (control);
 	g_object_unref (client_query);
 	g_object_unref (client_action);

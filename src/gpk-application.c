@@ -82,6 +82,7 @@ struct GpkApplicationPrivate
 	PkClient		*client_action;
 	PkClient		*client_description;
 	PkClient		*client_files;
+	GpkClient		*gclient;
 	PkConnection		*pconnection;
 	GpkStatusbar		*statusbar;
 	PkExtra			*extra;
@@ -126,6 +127,8 @@ enum
 static guint	     signals [LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (GpkApplication, gpk_application, G_TYPE_OBJECT)
+
+static gboolean gpk_application_refresh_search_results (GpkApplication *application);
 
 /**
  * gpk_application_class_init:
@@ -226,43 +229,15 @@ static gboolean
 gpk_application_install (GpkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
-	GError *error = NULL;
-
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	pk_debug ("install %s", application->priv->package);
+	ret = gpk_client_install_package_id (application->priv->gclient, package_id, NULL);
 
-	/* TODO: this is hacky code for testing only */
-//	GpkClient *gclient;
-//	gclient = gpk_client_new ();
-//	ret = gpk_client_install_package_id (gclient, package_id, NULL);
-//	g_object_unref (gclient);
-//	return ret;
-
-	ret = pk_client_reset (application->priv->client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* do the install */
-	ret = pk_client_install_package (application->priv->client_action,
-					 application->priv->package, &error);
-	if (!ret) {
-		pk_warning ("failed to install package: %s", error->message);
-                if (strcmp (error->message, "org.freedesktop.packagekit.install no") == 0) {
-                        gpk_error_dialog (_("The package could not be installed"),
-					  _("You don't have the necessary privileges to install packages"), NULL);
-                } else if (g_str_has_prefix (error->message, "org.freedesktop.packagekit.install")) {
-                        /* canceled auth dialog, be silent */
-                } else {
-                        /* ick, we failed so pretend we didn't do the action */
-                        gpk_error_dialog (_("The package could not be installed"),
-					  _("The package could not be installed"), error->message);
-                }
-		g_error_free (error);
+	/* refresh the search as the items may have changed and the filter has not changed */
+	if (ret) {
+		gpk_application_refresh_search_results (application);
 	}
 	return ret;
 }
@@ -2177,6 +2152,8 @@ gpk_application_init (GpkApplication *application)
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
 
 	application->priv->control = pk_control_new ();
+	application->priv->gclient = gpk_client_new ();
+	gpk_client_show_finished (application->priv->gclient, FALSE);
 
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",
@@ -2632,6 +2609,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->install_action);
 	g_object_unref (application->priv->remove_action);
 	g_object_unref (application->priv->refresh_action);
+	g_object_unref (application->priv->gclient);
 
 	g_free (application->priv->url);
 	g_free (application->priv->group);
