@@ -694,6 +694,7 @@ gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GErro
 
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Remove packages"));
 	gtk_widget_show (widget);
 
 	/* are we dumb and can't check for depends? */
@@ -825,6 +826,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Install packages"));
 	gtk_widget_show (widget);
 
 	/* are we dumb and can't check for depends? */
@@ -1136,6 +1138,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("System update"));
 	gtk_widget_show (widget);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
@@ -1189,6 +1192,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Update packages"));
 	gtk_widget_show (widget);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
