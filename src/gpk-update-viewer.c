@@ -1882,8 +1882,6 @@ main (int argc, char *argv[])
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_close5");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* cancel button */
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
