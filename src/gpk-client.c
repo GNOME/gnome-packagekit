@@ -65,7 +65,8 @@ struct _GpkClientPrivate
 	PkClient		*client_signature;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
-	gint			 pulse_timeout;
+	guint			 pulse_timer_id;
+	guint			 finished_timer_id;
 	PkControl		*control;
 	PkRoleEnum		 roles;
 	gboolean		 do_key_auth;
@@ -140,6 +141,47 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 }
 
 /**
+ * gpk_client_signature_button_close_cb:
+ **/
+static void
+gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient)
+{
+	GtkWidget *widget;
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* stop the timer */
+	if (gclient->priv->finished_timer_id != 0) {
+		g_source_remove (gclient->priv->finished_timer_id);
+		gclient->priv->finished_timer_id = 0;
+	}
+
+	/* go! */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_hide (widget);
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_signature_window_delete_event_cb:
+ **/
+static gboolean
+gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* stop the timer */
+	if (gclient->priv->finished_timer_id != 0) {
+		g_source_remove (gclient->priv->finished_timer_id);
+		gclient->priv->finished_timer_id = 0;
+	}
+
+	/* go! */
+	gtk_widget_hide (widget);
+	gtk_main_quit ();
+	return FALSE;
+}
+
+/**
  * gpk_install_finished_timeout:
  **/
 static gboolean
@@ -175,10 +217,10 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
 		gtk_widget_grab_default (widget);
-
-		//TODO: need to be removed to avoid a crash...
-		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
+		gclient->priv->finished_timer_id = g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	} else {
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gtk_widget_hide (widget);
 		gtk_main_quit ();
 	}
 
@@ -203,9 +245,9 @@ gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subper
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
+	if (gclient->priv->pulse_timer_id != 0) {
+		g_source_remove (gclient->priv->pulse_timer_id);
+		gclient->priv->pulse_timer_id = 0;
 	}
 
 	if (percentage != PK_CLIENT_PERCENTAGE_INVALID) {
@@ -245,11 +287,11 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 	g_free (text);
 
 	if (status == PK_STATUS_ENUM_WAIT) {
-		if (gclient->priv->pulse_timeout == 0) {
+		if (gclient->priv->pulse_timer_id == 0) {
 			widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 
 			gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
-			gclient->priv->pulse_timeout = g_timeout_add (75, (GSourceFunc) gpk_client_pulse_progress, gclient);
+			gclient->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_client_pulse_progress, gclient);
 		}
 	}
 }
@@ -401,6 +443,7 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 
 	text = gpk_package_id_format_twoline (package_id, summary);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_widget_show (widget);
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
 }
@@ -552,9 +595,9 @@ static void
 gpk_client_done (GpkClient *gclient)
 {
 	/* we're done */
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
+	if (gclient->priv->pulse_timer_id != 0) {
+		g_source_remove (gclient->priv->pulse_timer_id);
+		gclient->priv->pulse_timer_id = 0;
 	}
 }
 
@@ -1046,10 +1089,13 @@ out:
  * gpk_client_sig_button_yes:
  **/
 static void
-gpk_client_sig_button_yes (GtkWidget *widget, GpkClient *gclient)
+gpk_client_sig_button_yes (GtkWidget *widget_button, GpkClient *gclient)
 {
+	GtkWidget *widget;
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 	gclient->priv->do_key_auth = TRUE;
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_gpg");
+	gtk_widget_hide (widget);
 	gtk_main_quit ();
 }
 
@@ -1062,6 +1108,31 @@ gpk_client_button_help (GtkWidget *widget, GpkClient *gclient)
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 	/* TODO: need a whole section on this! */
 	gpk_gnome_help (NULL);
+}
+
+/**
+ * gpk_client_signature_button_close_cb:
+ **/
+static void
+gpk_client_signature_button_close_cb (GtkWidget *widget_button, GpkClient *gclient)
+{
+	GtkWidget *widget;
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_gpg");
+	gtk_widget_hide (widget);
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_signature_window_delete_event_cb:
+ **/
+static gboolean
+gpk_client_signature_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	gtk_widget_hide (widget);
+	gtk_main_quit ();
+	return FALSE;
 }
 
 /**
@@ -1084,9 +1155,9 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_gpg");
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_signature_window_delete_event_cb), gclient);
 	widget = glade_xml_get_widget (glade_xml, "button_no");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_signature_button_close_cb), gclient);
 
 	/* set icon name */
 	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
@@ -1275,9 +1346,10 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv = GPK_CLIENT_GET_PRIVATE (gclient);
 
 	gclient->priv->glade_xml = NULL;
-	gclient->priv->pulse_timeout = 0;
+	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->do_key_auth = FALSE;
 	gclient->priv->show_finished = TRUE;
+	gclient->priv->finished_timer_id = 0;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -1321,17 +1393,15 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
 
-	/* Get the main window quit */
+	/* common stuff */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-
-	/* just close */
+	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_updates_window_delete_event_cb), gclient);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_updates_button_close_cb), gclient);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_updates_button_close_cb), gclient);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close3");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_updates_button_close_cb), gclient);
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
