@@ -42,10 +42,15 @@ bin_PROGRAMS =						\
 	gpk-backend-status				\
 	$(NULL)
 
-gpk_install_provide_file_SOURCES =			\
-	gpk-install-provide-file.c			\
+shared_SOURCES =					\
+	gpk-marshal.c					\
+	gpk-marshal.h					\
+	gpk-consolekit.c				\
+	gpk-consolekit.h				\
 	gpk-client.c					\
 	gpk-client.h					\
+	gpk-smart-icon.c				\
+	gpk-smart-icon.h				\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
 	gpk-common.c					\
@@ -54,58 +59,42 @@ gpk_install_provide_file_SOURCES =			\
 	gpk-error.h					\
 	$(NULL)
 
-gpk_install_provide_file_LDADD =			\
+shared_LIBS =						\
 	$(GLIB_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
+	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
+	$(NULL)
+
+gpk_install_provide_file_SOURCES =			\
+	gpk-install-provide-file.c			\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_install_provide_file_LDADD =			\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_local_file_SOURCES =			\
 	gpk-install-local-file.c			\
-	gpk-client.c					\
-	gpk-client.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-error.c					\
-	gpk-error.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(GCONF_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_package_name_SOURCES =			\
 	gpk-install-package-name.c			\
-	gpk-client.c					\
-	gpk-client.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-error.c					\
-	gpk-error.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_package_name_LDADD =			\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(GCONF_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_update_icon_SOURCES =				\
@@ -122,60 +111,27 @@ gpk_update_icon_SOURCES =				\
 	gpk-inhibit.h					\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
-	gpk-smart-icon.c				\
-	gpk-smart-icon.h				\
-	gpk-marshal.c					\
-	gpk-marshal.h					\
-	gpk-consolekit.c				\
-	gpk-consolekit.h				\
 	gpk-progress.c					\
 	gpk-progress.h					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-client.c					\
-	gpk-client.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-error.c					\
-	gpk-error.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_update_icon_LDADD =					\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBNOTIFY_LIBS)				\
-	$(GTK_LIBS)					\
-	$(GCONF_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_application_SOURCES =				\
 	gpk-application-main.c				\
 	gpk-application.c				\
 	gpk-application.h				\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-error.c					\
-	gpk-error.h					\
-	gpk-client.c					\
-	gpk-client.h					\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_application_LDADD =					\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(GCONF_LIBS)					\
-	$(LIBGLADE_LIBS)				\
+	$(shared_LIBS)					\
 	$(LIBSEXY_LIBS)					\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\
@@ -185,41 +141,20 @@ gpk_prefs_SOURCES =					\
 	$(NULL)
 
 gpk_prefs_LDADD =					\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GCONF_LIBS)					\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
-	gpk-consolekit.c				\
-	gpk-consolekit.h				\
-	gpk-client.c					\
-	gpk-client.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-error.c					\
-	gpk-error.h					\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_update_viewer_LDADD =				\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GTK_LIBS)					\
-	$(GCONF_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_repo_SOURCES =					\
@@ -235,13 +170,7 @@ gpk_repo_SOURCES =					\
 	$(NULL)
 
 gpk_repo_LDADD =					\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GCONF_LIBS)					\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_log_SOURCES =					\
@@ -253,12 +182,7 @@ gpk_log_SOURCES =					\
 	$(NULL)
 
 gpk_log_LDADD =						\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(POLKIT_GNOME_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_backend_status_SOURCES =				\
@@ -266,11 +190,7 @@ gpk_backend_status_SOURCES =				\
 	$(NULL)
 
 gpk_backend_status_LDADD =				\
-	$(GLIB_LIBS)					\
-	$(DBUS_LIBS)					\
-	$(LIBGLADE_LIBS)				\
-	$(GTK_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 BUILT_SOURCES = 					\
@@ -306,13 +226,7 @@ gpk_self_test_SOURCES =						\
 	$(NULL)
 
 gpk_self_test_LDADD =						\
-	$(GLIB_LIBS)						\
-	$(GTK_LIBS)						\
-	$(DBUS_LIBS)						\
-	$(SELFTEST_LIBS)					\
-	$(PK_LIBS)						\
-	$(PACKAGEKIT_LIBS)					\
-	$(POLKIT_GNOME_LIBS)					\
+	$(shared_LIBS)						\
 	$(NULL)
 
 gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
