@@ -546,6 +546,19 @@ gpk_client_install_local_file_internal (GpkClient *gclient, gboolean trusted,
 }
 
 /**
+ * gpk_client_done:
+ **/
+static void
+gpk_client_done (GpkClient *gclient)
+{
+	/* we're done */
+	if (gclient->priv->pulse_timeout != 0) {
+		g_source_remove (gclient->priv->pulse_timeout);
+		gclient->priv->pulse_timeout = 0;
+	}
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -589,10 +602,7 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	}
 
 	/* we're done */
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
-	}
+	gpk_client_done (gclient);
 out:
 	return ret;
 }
@@ -748,10 +758,7 @@ skip_checks:
 	gtk_main ();
 
 	/* we're done */
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
-	}
+	gpk_client_done (gclient);
 out:
 	return ret;
 }
