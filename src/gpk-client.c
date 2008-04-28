@@ -70,12 +70,12 @@ struct _GpkClientPrivate
 	PkRoleEnum		 roles;
 	gboolean		 do_key_auth;
 	gboolean		 retry_untrusted_value;
+	gboolean		 show_finished;
 };
 
 typedef enum {
 	GPK_CLIENT_PAGE_PROGRESS,
 	GPK_CLIENT_PAGE_CONFIRM,
-	GPK_CLIENT_PAGE_ERROR,
 	GPK_CLIENT_PAGE_LAST
 } GpkClientPageEnum;
 
@@ -150,6 +150,16 @@ gpk_install_finished_timeout (gpointer data)
 }
 
 /**
+ * gpk_client_show_finished:
+ **/
+void
+gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gclient->priv->show_finished = enabled;
+}
+
+/**
  * gpk_client_finished_cb:
  **/
 static void
@@ -159,12 +169,14 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	if (exit == PK_EXIT_ENUM_SUCCESS) {
+	if (exit == PK_EXIT_ENUM_SUCCESS &&
+	    gclient->priv->show_finished) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
 
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
 		gtk_widget_grab_default (widget);
 
+		//TODO: need to be removed to avoid a crash...
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	} else {
 		gtk_main_quit ();
@@ -371,8 +383,6 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	}
 
 	pk_debug ("code was %s", pk_error_enum_to_text (code));
-
-	//remove GPK_CLIENT_PAGE_ERROR?
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
 			  gpk_error_enum_to_localised_message (code), details);
 }
@@ -536,6 +546,19 @@ gpk_client_install_local_file_internal (GpkClient *gclient, gboolean trusted,
 }
 
 /**
+ * gpk_client_done:
+ **/
+static void
+gpk_client_done (GpkClient *gclient)
+{
+	/* we're done */
+	if (gclient->priv->pulse_timeout != 0) {
+		g_source_remove (gclient->priv->pulse_timeout);
+		gclient->priv->pulse_timeout = 0;
+	}
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -579,10 +602,7 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	}
 
 	/* we're done */
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
-	}
+	gpk_client_done (gclient);
 out:
 	return ret;
 }
@@ -738,10 +758,7 @@ skip_checks:
 	gtk_main ();
 
 	/* we're done */
-	if (gclient->priv->pulse_timeout != 0) {
-		g_source_remove (gclient->priv->pulse_timeout);
-		gclient->priv->pulse_timeout = 0;
-	}
+	gpk_client_done (gclient);
 out:
 	return ret;
 }
@@ -917,6 +934,112 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 out:
 	g_free (package_id);
 	return ret;
+}
+
+/**
+ * gpk_client_update_system:
+ **/
+gboolean
+gpk_client_update_system (GpkClient *gclient, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *message = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		/* print a proper error if we have it */
+		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+			message = g_strdup (_("Authorisation could not be obtained"));
+		} else {
+			message = g_strdup_printf (_("The error was: %s"), error_local->message);
+		}
+
+		/* display and set */
+		text = g_strdup_printf ("%s: %s", _("Failed to update system"), message);
+		gpk_client_error_msg (gclient, _("Failed to update system"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+out:
+	g_free (message);
+	g_free (text);
+	return FALSE;
+}
+
+/**
+ * gpk_client_update_packages:
+ **/
+gboolean
+gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *message = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_update_packages_strv (gclient->priv->client_action, package_ids, &error_local);
+	if (!ret) {
+		/* print a proper error if we have it */
+		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+			message = g_strdup (_("Authorisation could not be obtained"));
+		} else {
+			message = g_strdup_printf (_("The error was: %s"), error_local->message);
+		}
+
+		/* display and set */
+		text = g_strdup_printf ("%s: %s", _("Failed to update packages"), message);
+		gpk_client_error_msg (gclient, _("Failed to update packages"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		goto out;
+	}
+
+	/* wait for completion */
+	gtk_main ();
+
+out:
+	g_free (message);
+	g_free (text);
+	return FALSE;
 }
 
 /**
@@ -1154,6 +1277,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timeout = 0;
 	gclient->priv->do_key_auth = FALSE;
+	gclient->priv->show_finished = TRUE;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
