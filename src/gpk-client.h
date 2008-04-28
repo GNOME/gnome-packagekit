@@ -88,6 +88,8 @@ gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
 							 GError		**error);
 void		 gpk_client_show_finished		(GpkClient	*gclient,
 							 gboolean	 enabled);
+void		 gpk_client_show_progress		(GpkClient	*gclient,
+							 gboolean	 enabled);
 
 G_END_DECLS
 

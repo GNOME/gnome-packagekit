@@ -72,6 +72,7 @@ struct _GpkClientPrivate
 	gboolean		 do_key_auth;
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
+	gboolean		 show_progress;
 };
 
 typedef enum {
@@ -128,6 +129,11 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 	guint i;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* should we hide the progress box?" */
+	if (!gclient->priv->show_progress && page == GPK_CLIENT_PAGE_PROGRESS) {
+		page = GPK_CLIENT_PAGE_LAST;
+	}
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
@@ -198,6 +204,16 @@ gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 	gclient->priv->show_finished = enabled;
+}
+
+/**
+ * gpk_client_show_progress:
+ **/
+void
+gpk_client_show_progress (GpkClient *gclient, gboolean enabled)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gclient->priv->show_progress = enabled;
 }
 
 /**
@@ -620,15 +636,18 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (file_rel != NULL, FALSE);
 
-	/* show window */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_widget_show (widget);
-
 	gclient->priv->retry_untrusted_value = FALSE;
 	ret = gpk_client_install_local_file_internal (gclient, TRUE, file_rel, error);
 	if (!ret) {
 		goto out;
 	}
+
+	/* show window */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Install local file"));
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
 	gtk_main ();
@@ -695,7 +714,6 @@ gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GErro
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Remove packages"));
-	gtk_widget_show (widget);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -789,6 +807,9 @@ skip_checks:
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
 	gtk_main ();
@@ -960,14 +981,9 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GErro
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
 	PkPackageItem *item;
-	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package != NULL, FALSE);
-
-	/* show window */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_widget_show (widget);
 
 	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error_local);
 	if (!ret) {
@@ -1139,7 +1155,6 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("System update"));
-	gtk_widget_show (widget);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
@@ -1157,6 +1172,9 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
 		goto out;
 	}
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
 	gtk_main ();
@@ -1193,7 +1211,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* show window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Update packages"));
-	gtk_widget_show (widget);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages_strv (gclient->priv->client_action, package_ids, &error_local);
@@ -1211,6 +1228,9 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
 		goto out;
 	}
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
 	gtk_main ();
@@ -1485,6 +1505,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->do_key_auth = FALSE;
 	gclient->priv->show_finished = TRUE;
+	gclient->priv->show_progress = TRUE;
 	gclient->priv->finished_timer_id = 0;
 
 	/* add application specific icons to search path */
