@@ -70,6 +70,7 @@ struct _GpkClientPrivate
 	PkRoleEnum		 roles;
 	gboolean		 do_key_auth;
 	gboolean		 retry_untrusted_value;
+	gboolean		 show_finished;
 };
 
 typedef enum {
@@ -150,6 +151,16 @@ gpk_install_finished_timeout (gpointer data)
 }
 
 /**
+ * gpk_client_show_finished:
+ **/
+void
+gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gclient->priv->show_finished = enabled;
+}
+
+/**
  * gpk_client_finished_cb:
  **/
 static void
@@ -159,12 +170,14 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	if (exit == PK_EXIT_ENUM_SUCCESS) {
+	if (exit == PK_EXIT_ENUM_SUCCESS &&
+	    gclient->priv->show_finished) {
 		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_CONFIRM);
 
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
 		gtk_widget_grab_default (widget);
 
+		//TODO: need to be removed to avoid a crash...
 		g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
 	} else {
 		gtk_main_quit ();
@@ -1154,6 +1167,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timeout = 0;
 	gclient->priv->do_key_auth = FALSE;
+	gclient->priv->show_finished = TRUE;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),

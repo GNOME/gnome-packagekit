@@ -82,6 +82,8 @@ gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
 							 const gchar	*package_id,
 							 GError		**error)
 							 G_GNUC_WARN_UNUSED_RESULT;
+void		 gpk_client_show_finished		(GpkClient	*gclient,
+							 gboolean	 enabled);
 
 G_END_DECLS
 
