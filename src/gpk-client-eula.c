@@ -83,6 +83,7 @@ gpk_client_eula_show (const gchar *eula_id, const gchar *package_id,
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
+	widget = glade_xml_get_widget (glade_xml, "window_eula");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
 
 	/* connect up buttons */

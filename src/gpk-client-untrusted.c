@@ -75,6 +75,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
+	widget = glade_xml_get_widget (glade_xml, "window_error");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
 
 	/* close button */
