@@ -45,6 +45,8 @@
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
+#include "gpk-smart-icon.h"
+#include "gpk-consolekit.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
@@ -63,6 +65,7 @@ struct _GpkClientPrivate
 	PkClient		*client_action;
 	PkClient		*client_resolve;
 	PkClient		*client_signature;
+	GpkSmartIcon		*sicon;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
 	guint			 pulse_timer_id;
@@ -130,10 +133,14 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	/* should we hide the progress box?" */
-	if (!gclient->priv->show_progress && page == GPK_CLIENT_PAGE_PROGRESS) {
-		page = GPK_CLIENT_PAGE_LAST;
+	if (!gclient->priv->show_progress) {
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gtk_widget_hide (widget);
+		return;
 	}
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_show (widget);
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
@@ -217,6 +224,91 @@ gpk_client_show_progress (GpkClient *gclient, gboolean enabled)
 }
 
 /**
+ * gpk_client_finished_no_progress:
+ **/
+static void
+gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint runtime, GpkClient *gclient)
+{
+	PkRestartEnum restart;
+	guint i;
+	guint length;
+	PkPackageId *ident;
+	PkPackageItem *item;
+	GString *message_text;
+	guint skipped_number = 0;
+	const gchar *message;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* check we got some packages */
+	length = pk_client_package_buffer_get_size (client);
+	pk_debug ("length=%i", length);
+	if (length == 0) {
+		pk_debug ("no updates");
+		return;
+	}
+
+	message_text = g_string_new ("");
+
+	/* find any we skipped */
+	for (i=0; i<length; i++) {
+		item = pk_client_package_buffer_get_item (client, i);
+		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
+			  item->package_id, item->summary);
+		ident = pk_package_id_new_from_string (item->package_id);
+		if (item->info == PK_INFO_ENUM_BLOCKED) {
+			skipped_number++;
+			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
+						ident->name, item->summary);
+		}
+		pk_package_id_free (ident);
+	}
+
+	/* notify the user if there were skipped entries */
+	if (skipped_number > 0) {
+		message = ngettext (_("One package was skipped:"),
+				    _("Some packages were skipped:"), skipped_number);
+		g_string_prepend (message_text, message);
+		g_string_append_c (message_text, '\n');
+	}
+
+	/* add a message that we need to restart */
+	restart = pk_client_get_require_restart (client);
+	if (restart != PK_RESTART_ENUM_NONE) {
+		message = gpk_restart_enum_to_localised_text (restart);
+
+		/* add a gap if we are putting both */
+		if (skipped_number > 0) {
+			g_string_append (message_text, "\n");
+		}
+
+		g_string_append (message_text, message);
+		g_string_append_c (message_text, '\n');
+	}
+
+	/* trim off extra newlines */
+	if (message_text->len != 0) {
+		g_string_set_size (message_text, message_text->len-1);
+	}
+
+	/* this will not show if specified in gconf */
+	gpk_smart_icon_notify_new (gclient->priv->sicon,
+				  _("The system update has completed"), message_text->str,
+				  "software-update-available",
+				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
+	} else {
+		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_COMPLETE);
+	}
+	gpk_smart_icon_notify_show (gclient->priv->sicon);
+	g_string_free (message_text, TRUE);
+}
+
+/**
  * gpk_client_finished_cb:
  **/
 static void
@@ -225,6 +317,13 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	GtkWidget *widget;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* do we show a libnotify window instead? */
+	if (!gclient->priv->show_progress) {
+		gpk_client_finished_no_progress (client, exit, runtime, gclient);
+		gtk_main_quit ();
+		return;
+	}
 
 	if (exit == PK_EXIT_ENUM_SUCCESS &&
 	    gclient->priv->show_finished) {
@@ -236,7 +335,6 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	} else {
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 		gtk_widget_hide (widget);
-		gtk_main_quit ();
 	}
 
 	/* make insensitive */
@@ -246,6 +344,7 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	/* set to 100% */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
+	gtk_main_quit ();
 }
 
 /**
@@ -642,7 +741,7 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 		goto out;
 	}
 
-	/* show window */
+	/* set title */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Install local file"));
 
@@ -711,7 +810,7 @@ gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GErro
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
-	/* show window */
+	/* set title */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Remove packages"));
 
@@ -845,10 +944,9 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
-	/* show window */
+	/* set title */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Install packages"));
-	gtk_widget_show (widget);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -1060,14 +1158,9 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	PkPackageItem *item;
 	PkPackageId *ident;
 	gchar *text;
-	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (full_path != NULL, FALSE);
-
-	/* show window */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_widget_show (widget);
 
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
@@ -1152,7 +1245,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 		return FALSE;
 	}
 
-	/* show window */
+	/* set title */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("System update"));
 
@@ -1175,6 +1268,20 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* setup the UI */
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
+	if (!gclient->priv->show_progress) {
+		/* this will not show if specified in gconf */
+		gpk_smart_icon_notify_new (gclient->priv->sicon,
+					  _("Updates are being installed"),
+					  _("Updates are being automatically installed on your computer"),
+					  "software-update-urgent",
+					  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
+		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+					      GPK_CONF_NOTIFY_UPDATE_STARTED);
+		gpk_smart_icon_notify_show (gclient->priv->sicon);
+	}
 
 	/* wait for completion */
 	gtk_main ();
@@ -1208,7 +1315,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 		return FALSE;
 	}
 
-	/* show window */
+	/* set title */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_title (GTK_WINDOW (widget), _("Update packages"));
 
@@ -1479,6 +1586,38 @@ gpk_client_signature_finished_cb (PkClient *client, PkExitEnum exit, guint runti
 }
 
 /**
+ * gpk_client_smart_icon_notify_button:
+ **/
+static void
+gpk_client_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button,
+				     const gchar *data, GpkClient *gclient)
+{
+	gboolean ret;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	pk_debug ("got: %i with data %s", button, data);
+	/* find the localised text */
+	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
+	    button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
+		if (data == NULL) {
+			pk_warning ("data NULL");
+		} else {
+			pk_debug ("setting %s to FALSE", data);
+			gconf_client_set_bool (gclient->priv->gconf_client, data, FALSE, NULL);
+		}
+	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
+		pk_client_button_cancel_cb (NULL, gclient);
+	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
+		/* restart using gnome-power-manager */
+		ret = gpk_restart_system ();
+		if (!ret) {
+			pk_warning ("failed to reboot");
+		}
+	}
+}
+
+/**
  * gpk_client_class_init:
  * @klass: The #GpkClientClass
  **/
@@ -1537,6 +1676,10 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_action, "eula-required",
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 
+	gclient->priv->sicon = gpk_smart_icon_new ();
+	g_signal_connect (gclient->priv->sicon, "notification-button",
+			  G_CALLBACK (gpk_client_smart_icon_notify_button), gclient);
+
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
 			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
@@ -1578,8 +1721,6 @@ gpk_client_init (GpkClient *gclient)
 	/* set the label blank initially */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
 	gtk_label_set_label (GTK_LABEL (widget), "");
-
-	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 }
 
 /**
@@ -1606,6 +1747,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_signature);
 	g_object_unref (gclient->priv->control);
 	g_object_unref (gclient->priv->gconf_client);
+	g_object_unref (gclient->priv->sicon);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }
