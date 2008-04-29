@@ -422,9 +422,10 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* have we handled? */
-	if (code == PK_ERROR_ENUM_GPG_FAILURE) {
+	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
+	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
 		if (gclient->priv->do_key_auth) {
-			pk_debug ("ignoring GPG error as handled");
+			pk_debug ("ignoring error as handled");
 			return;
 		}
 		pk_warning ("did not auth");
@@ -932,6 +933,15 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	}
 
 skip_checks:
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
 	/* try to install the package_id */
 	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error_local);
 	if (!ret) {
@@ -1280,10 +1290,10 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	/* this is asynchronous, else we get into livelock */
 	ret = pk_client_install_signature (gclient->priv->client_signature, PK_SIGTYPE_ENUM_GPG,
 					   key_id, package_id, &error);
+	gclient->priv->do_key_auth = ret;
 	if (!ret) {
 		gpk_error_dialog (_("Failed to install signature"), _("The method failed"), error->message);
 		g_error_free (error);
-		gclient->priv->do_key_auth = FALSE;
 	}
 }
 
@@ -1319,8 +1329,8 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	if (!ret) {
 		gpk_error_dialog (_("Failed to accept EULA"), _("The method failed"), error->message);
 		g_error_free (error);
-		gclient->priv->do_key_auth = FALSE;
 	}
+	gclient->priv->do_key_auth = ret;
 }
 
 /**
