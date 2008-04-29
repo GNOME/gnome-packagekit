@@ -49,6 +49,10 @@ shared_SOURCES =					\
 	gpk-consolekit.h				\
 	gpk-client.c					\
 	gpk-client.h					\
+	gpk-client-eula.c				\
+	gpk-client-eula.h				\
+	gpk-client-signature.c				\
+	gpk-client-signature.h				\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-gnome.c					\

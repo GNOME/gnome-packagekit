@@ -42,6 +42,8 @@
 #include <pk-control.h>
 
 #include <gpk-client.h>
+#include <gpk-client-eula.h>
+#include <gpk-client-signature.h>
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
@@ -1349,56 +1351,6 @@ out:
 }
 
 /**
- * gpk_client_sig_button_yes:
- **/
-static void
-gpk_client_sig_button_yes (GtkWidget *widget_button, GpkClient *gclient)
-{
-	GtkWidget *widget;
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gclient->priv->do_key_auth = TRUE;
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_gpg");
-	gtk_widget_hide (widget);
-	gtk_main_quit ();
-}
-
-/**
- * gpk_client_button_help:
- **/
-static void
-gpk_client_button_help (GtkWidget *widget, GpkClient *gclient)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	/* TODO: need a whole section on this! */
-	gpk_gnome_help (NULL);
-}
-
-/**
- * gpk_client_signature_button_close_cb:
- **/
-static void
-gpk_client_signature_button_close_cb (GtkWidget *widget_button, GpkClient *gclient)
-{
-	GtkWidget *widget;
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_gpg");
-	gtk_widget_hide (widget);
-	gtk_main_quit ();
-}
-
-/**
- * gpk_client_signature_window_delete_event_cb:
- **/
-static gboolean
-gpk_client_signature_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)
-{
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	gtk_widget_hide (widget);
-	gtk_main_quit ();
-	return FALSE;
-}
-
-/**
  * gpk_client_repo_signature_required_cb:
  **/
 static void
@@ -1409,54 +1361,13 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 {
 	gboolean ret;
 	GError *error = NULL;
-	GtkWidget *widget;
-	GladeXML *glade_xml;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-signature.glade", NULL, NULL);
-
-	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
-	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_signature_window_delete_event_cb), gclient);
-	widget = glade_xml_get_widget (glade_xml, "button_no");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_signature_button_close_cb), gclient);
-
-	/* set icon name */
-	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
-
-	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_yes");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_sig_button_yes), gclient);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_button_help), gclient);
-
-	/* show correct text */
-	widget = glade_xml_get_widget (glade_xml, "label_name");
-	gtk_label_set_label (GTK_LABEL (widget), repository_name);
-	widget = glade_xml_get_widget (glade_xml, "label_url");
-	gtk_label_set_label (GTK_LABEL (widget), key_url);
-	widget = glade_xml_get_widget (glade_xml, "label_user");
-	gtk_label_set_label (GTK_LABEL (widget), key_userid);
-	widget = glade_xml_get_widget (glade_xml, "label_id");
-	gtk_label_set_label (GTK_LABEL (widget), key_id);
-
-	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
-	gtk_widget_show (widget);
-
-	/* wait for button press */
-	gclient->priv->do_key_auth = FALSE;
-	gtk_main ();
-
-	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
-		gtk_widget_hide (widget);
-	}
-	g_object_unref (glade_xml);
-
+	ret = gpk_client_signature_show (package_id, repository_name, key_url, key_userid,
+					 key_id, key_fingerprint, key_timestamp);
 	/* disagreed with auth */
-	if (!gclient->priv->do_key_auth) {
+	if (!ret) {
 		return;
 	}
 
@@ -1487,64 +1398,12 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 {
 	gboolean ret;
 	GError *error = NULL;
-	GtkWidget *widget;
-	GladeXML *glade_xml;
-	GtkTextBuffer *buffer;
-	gchar *text;
-	PkPackageId *ident;
 
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	glade_xml = glade_xml_new (PK_DATA "/gpk-eula.glade", NULL, NULL);
-
-	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_eula");
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_cancel");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-
-	/* set icon name */
-	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
-
-	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_agree");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_sig_button_yes), gclient);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_button_help), gclient);
-
-	/* title */
-	widget = glade_xml_get_widget (glade_xml, "label_title");
-	ident = pk_package_id_new_from_string (package_id);
-	text = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", ident->name, vendor_name);
-	gtk_label_set_label (GTK_LABEL (widget), text);
-	pk_package_id_free (ident);
-	g_free (text);
-
-	buffer = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_insert_at_cursor (buffer, license_agreement, strlen (license_agreement));
-	widget = glade_xml_get_widget (glade_xml, "textview_details");
-	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
-
-	/* set minimum size a bit bigger */
-	gtk_widget_set_size_request (widget, 100, 200);
-
-	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_eula");
-	gtk_widget_show (widget);
-
-	/* wait for button press */
-	gclient->priv->do_key_auth = FALSE;
-	gtk_main ();
-
-	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
-		gtk_widget_hide (widget);
-	}
-	g_object_unref (glade_xml);
-	g_object_unref (buffer);
+	/* do a helper */
+	ret = gpk_client_eula_show (eula_id, package_id, vendor_name, license_agreement);
 
 	/* disagreed with auth */
-	if (!gclient->priv->do_key_auth) {
+	if (!ret) {
 		return;
 	}
 
