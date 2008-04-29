@@ -53,6 +53,8 @@ shared_SOURCES =					\
 	gpk-client-eula.h				\
 	gpk-client-signature.c				\
 	gpk-client-signature.h				\
+	gpk-client-untrusted.c				\
+	gpk-client-untrusted.h				\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-gnome.c					\
