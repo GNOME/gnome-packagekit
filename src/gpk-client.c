@@ -1347,7 +1347,7 @@ gpk_client_signature_finished_cb (PkClient *client, PkExitEnum exit, guint runti
 	pk_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error->message);
+		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error ? error->message : _("Error details not available"));
 		g_error_free (error);
 	}
 }
