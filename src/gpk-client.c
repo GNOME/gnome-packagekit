@@ -157,7 +157,7 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 }
 
 /**
- * gpk_client_signature_button_close_cb:
+ * gpk_client_updates_button_close_cb:
  **/
 static void
 gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient)
@@ -177,7 +177,7 @@ gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient
 }
 
 /**
- * gpk_client_signature_window_delete_event_cb:
+ * gpk_client_updates_window_delete_event_cb:
  **/
 static gboolean
 gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClient *gclient)

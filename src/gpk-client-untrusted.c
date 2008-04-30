@@ -66,7 +66,8 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	PolKitGnomeAction *update_system_action;
 
 	title = gpk_error_enum_to_localised_text (code);
-	message = gpk_error_enum_to_localised_message (code);
+	message = _("Malicious software can damage your computer or cause other harm. "
+		    "Are you <b>sure</b> you want to install this package?");
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
 
@@ -90,7 +91,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 
 	/* message */
 	widget = glade_xml_get_widget (glade_xml, "label_message");
-	gtk_label_set_label (GTK_LABEL (widget), message);
+	gtk_label_set_markup (GTK_LABEL (widget), message);
 
 	/* don't show text in the expander */
 	widget = glade_xml_get_widget (glade_xml, "expander_details");
