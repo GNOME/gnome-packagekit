@@ -254,24 +254,29 @@
                           <widget class="GtkMenu" id="menu1">
                             <property name="visible">True</property>
                             <child>
-                              <widget class="GtkMenuItem" id="menuitem_arch_yes">
+                              <widget class="GtkRadioMenuItem" id="menuitem_arch_yes">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">_Only native architectures</property>
                                 <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
                               </widget>
                             </child>
                             <child>
-                              <widget class="GtkMenuItem" id="menuitem_arch_no">
+                              <widget class="GtkRadioMenuItem" id="menuitem_arch_no">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">_Only non-native architectures</property>
                                 <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">menuitem_arch_yes</property>
                               </widget>
                             </child>
                             <child>
-                              <widget class="GtkMenuItem" id="menuitem_arch_both">
+                              <widget class="GtkRadioMenuItem" id="menuitem_arch_both">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">_No filter</property>
                                 <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">menuitem_arch_yes</property>
                               </widget>
                             </child>
                           </widget>
