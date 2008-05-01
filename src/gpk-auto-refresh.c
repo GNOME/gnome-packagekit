@@ -39,7 +39,6 @@
 
 #include <pk-debug.h>
 #include <pk-control.h>
-#include <pk-network.h>
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
 
@@ -81,7 +80,6 @@ struct GpkAutoRefreshPrivate
 	DBusGProxy		*proxy_gpm;
 	DBusGConnection		*connection;
 	PkControl		*control;
-	PkNetwork		*network;
 };
 
 enum {
@@ -360,15 +358,15 @@ gpk_auto_refresh_get_on_battery (GpkAutoRefresh *arefresh)
 }
 
 /**
- * gpk_auto_refresh_network_changed_cb:
+ * gpk_auto_refresh_network_status_changed_cb:
  **/
 static void
-gpk_auto_refresh_network_changed_cb (PkNetwork *network, gboolean online, GpkAutoRefresh *arefresh)
+gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum state, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
 
-	pk_debug ("setting online %i", online);
-	arefresh->priv->network_active = online;
+	arefresh->priv->network_active = pk_enums_contain (state, PK_NETWORK_ENUM_ONLINE);
+	pk_debug ("setting online %i", arefresh->priv->network_active);
 	gpk_auto_refresh_change_state (arefresh);
 }
 
@@ -512,6 +510,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 {
 	guint value;
 	GError *error = NULL;
+	PkNetworkEnum state;
 
 	arefresh->priv = GPK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->on_battery = FALSE;
@@ -528,6 +527,12 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 
 	/* we need to query the last cache refresh time */
 	arefresh->priv->control = pk_control_new ();
+	g_signal_connect (arefresh->priv->control, "network-state-changed",
+			  G_CALLBACK (gpk_auto_refresh_network_status_changed_cb), arefresh);
+	state = pk_control_get_network_state (arefresh->priv->control);
+	if (pk_enums_contain (state, PK_NETWORK_ENUM_ONLINE)) {
+		arefresh->priv->network_active = TRUE;
+	}
 
 	/* connect to session bus */
 	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
@@ -548,15 +553,6 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	g_signal_connect (arefresh->priv->gbus_gpm, "connection-changed",
 			  G_CALLBACK (pk_connection_gpm_changed_cb), arefresh);
 	libgbus_assign (arefresh->priv->gbus_gpm, LIBGBUS_SESSION, GPM_DBUS_SERVICE);
-
-	/* we don't start the daemon for this, it's just a wrapper for
-	 * NetworkManager or alternative */
-	arefresh->priv->network = pk_network_new ();
-	g_signal_connect (arefresh->priv->network, "online",
-			  G_CALLBACK (gpk_auto_refresh_network_changed_cb), arefresh);
-	if (pk_network_is_online (arefresh->priv->network)) {
-		arefresh->priv->network_active = TRUE;
-	}
 
 	/* we check this in case we miss one of the async signals */
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
@@ -581,7 +577,6 @@ gpk_auto_refresh_finalize (GObject *object)
 	g_return_if_fail (arefresh->priv != NULL);
 
 	g_object_unref (arefresh->priv->control);
-	g_object_unref (arefresh->priv->network);
 	g_object_unref (arefresh->priv->gbus_gs);
 	g_object_unref (arefresh->priv->gbus_gpm);
 	g_object_unref (arefresh->priv->gconf_client);
