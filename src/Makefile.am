@@ -34,6 +34,7 @@ bin_PROGRAMS =						\
 	gpk-repo					\
 	gpk-prefs					\
 	gpk-install-local-file				\
+	gpk-install-mime-type				\
 	gpk-install-provide-file			\
 	gpk-install-package-name			\
 	gpk-update-icon					\
@@ -91,6 +92,15 @@ gpk_install_local_file_SOURCES =			\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
+	$(shared_LIBS)					\
+	$(NULL)
+
+gpk_install_mime_type_SOURCES =				\
+	gpk-install-mime-type.c				\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_install_mime_type_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 
