@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!--*- mode: xml -*-->
 <glade-interface>
-  <widget class="GtkWindow" id="window_transactions">
+  <widget class="GtkWindow" id="window_simple">
     <property name="title" translatable="yes">Update History</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="icon_name">gtk-info</property>
@@ -11,16 +11,16 @@
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="border_width">10</property>
-        <property name="spacing">5</property>
+        <property name="spacing">12</property>
         <child>
-          <widget class="GtkScrolledWindow" id="scrolledwindow_transactions">
+          <widget class="GtkScrolledWindow" id="scrolledwindow_simple">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
             <property name="shadow_type">GTK_SHADOW_IN</property>
             <child>
-              <widget class="GtkTreeView" id="treeview_transactions">
+              <widget class="GtkTreeView" id="treeview_simple">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="headers_visible">False</property>
@@ -32,7 +32,7 @@
         <child>
           <widget class="GtkHButtonBox" id="buttonbox">
             <property name="visible">True</property>
-            <property name="spacing">5</property>
+            <property name="spacing">6</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
               <widget class="GtkButton" id="button_help">
@@ -48,7 +48,12 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="Custom" id="button_action">
+                <property name="visible">True</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="button_close">
