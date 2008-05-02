@@ -72,6 +72,9 @@ gboolean	 gpk_client_install_local_file		(GpkClient	*gclient,
 gboolean	 gpk_client_install_provide_file	(GpkClient	*gclient,
 							 const gchar	*full_path,
 							 GError		**error);
+gboolean	 gpk_client_install_mime_type		(GpkClient	*gclient,
+							 const gchar	*mime_type,
+							 GError		**error);
 gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
 							 const gchar	*package,
 							 GError		**error);

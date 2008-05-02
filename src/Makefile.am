@@ -34,6 +34,7 @@ bin_PROGRAMS =						\
 	gpk-repo					\
 	gpk-prefs					\
 	gpk-install-local-file				\
+	gpk-install-mime-type				\
 	gpk-install-provide-file			\
 	gpk-install-package-name			\
 	gpk-update-icon					\
@@ -55,6 +56,8 @@ shared_SOURCES =					\
 	gpk-client-signature.h				\
 	gpk-client-untrusted.c				\
 	gpk-client-untrusted.h				\
+	gpk-client-chooser.c				\
+	gpk-client-chooser.h				\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-gnome.c					\
@@ -91,6 +94,15 @@ gpk_install_local_file_SOURCES =			\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
+	$(shared_LIBS)					\
+	$(NULL)
+
+gpk_install_mime_type_SOURCES =				\
+	gpk-install-mime-type.c				\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_install_mime_type_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 

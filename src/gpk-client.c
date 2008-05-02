@@ -45,6 +45,7 @@
 #include <gpk-client-eula.h>
 #include <gpk-client-signature.h>
 #include <gpk-client-untrusted.h>
+#include <gpk-client-chooser.h>
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
@@ -1121,6 +1122,67 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	if (package_id == NULL) {
 		gpk_client_error_msg (gclient, _("Failed to install file"), _("Incorrect response from file search"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* install this specific package */
+	ret = gpk_client_install_package_id (gclient, package_id, error);
+out:
+	g_free (package_id);
+	return ret;
+}
+
+/**
+ * gpk_client_install_mime_type:
+ * @gclient: a valid #GpkClient instance
+ * @mime_type: a mime_type such as <literal>application/text</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a application to handle a mime type
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+gboolean
+gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError **error)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+	gchar *package_id = NULL;
+	gchar *text;
+	guint len;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (mime_type != NULL, FALSE);
+
+	ret = pk_client_what_provides (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED,
+				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
+	if (!ret) {
+		text = g_strdup_printf ("%s: %s", _("Incorrect response from search"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to search for provides"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_free (text);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* found nothing? */
+	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	if (len == 0) {
+		gpk_client_error_msg (gclient, _("Failed to find software"),
+				      _("No new software can be found to handle this file type"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* populate a chooser */
+	package_id = gpk_client_chooser_show (gclient->priv->client_resolve, 0, _("Software that can open this file type"));
+
+	/* selected nothing */
+	if (package_id == NULL) {
+		gpk_client_error_msg (gclient, _("Failed to install software"), _("No software was chosen for install"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
 	}
