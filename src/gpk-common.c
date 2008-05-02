@@ -94,7 +94,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_ROLLBACK,			"pk-rollback"},
 	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
-	{PK_ROLE_ENUM_GET_DESCRIPTION,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_UPDATES,		"pk-package-info"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
@@ -933,8 +933,8 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
 		text = _("Getting update detail");
 		break;
-	case PK_ROLE_ENUM_GET_DESCRIPTION:
-		text = _("Getting description");
+	case PK_ROLE_ENUM_GET_DETAILS:
+		text = _("Getting details");
 		break;
 	case PK_ROLE_ENUM_GET_REQUIRES:
 		text = _("Getting requires");
@@ -1033,8 +1033,8 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
 		text = _("Got update detail");
 		break;
-	case PK_ROLE_ENUM_GET_DESCRIPTION:
-		text = _("Got description");
+	case PK_ROLE_ENUM_GET_DETAILS:
+		text = _("Got details");
 		break;
 	case PK_ROLE_ENUM_GET_REQUIRES:
 		text = _("Got requires");
