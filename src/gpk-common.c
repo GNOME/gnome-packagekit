@@ -370,6 +370,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
 		text = _("The group was not found");
 		break;
+	case PK_ERROR_ENUM_GROUP_LIST_INVALID:
+		text = _("The group list was invalid");
+		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
 		text = _("Dependency resolution failed");
 		break;
@@ -502,6 +505,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_GROUP_NOT_FOUND:
 		text = _("The group type was not found.\n"
 			 "Please check your group list and try again.");
+		break;
+	case PK_ERROR_ENUM_GROUP_LIST_INVALID:
+		text = _("The group list could not be loaded.\n"
+			 "Refreshing your cache may help, although this is normally a software "
+			 "source error.");
 		break;
 	case PK_ERROR_ENUM_DEP_RESOLUTION_FAILED:
 		text = _("A package could not be found that allows the task to complete.\n"
