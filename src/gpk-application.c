@@ -462,9 +462,8 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 	GtkTreeIter iter;
 	PkPackageId *ident;
 	gboolean valid = FALSE;
-	gboolean ret;
-	gchar *summary_new;
-	gchar *icon = NULL;
+	const gchar *summary_new;
+	const gchar *icon = NULL;
 	gchar *text;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -481,23 +480,22 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 
 	/* find localised summary */
 	ident = pk_package_id_new_from_string (package_id);
-	ret = pk_extra_get_localised_detail (application->priv->extra, ident->name, &summary_new);
-	if (!ret) {
+	summary_new = pk_extra_get_summary (application->priv->extra, ident->name);
+	if (summary_new == NULL) {
 		/* use the non-localised one */
-		summary_new = g_strdup (summary);
+		summary_new = summary;
 	}
 
 	/* get the icon */
-	ret = pk_extra_get_package_detail (application->priv->extra, ident->name, &icon, NULL);
-	if (ret) {
+	icon = pk_extra_get_icon_name (application->priv->extra, ident->name);
+	if (icon != NULL) {
 		/* check icon actually exists and is valid in this theme */
 		valid = gpk_icon_valid (icon);
 	}
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
-		g_free (icon);
-		icon = g_strdup (gpk_info_enum_to_icon_name (info));
+		icon = gpk_info_enum_to_icon_name (info);
 	}
 
 	/* use two lines */
@@ -512,8 +510,6 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 			    -1);
 
 	pk_package_id_free (ident);
-	g_free (summary_new);
-	g_free (icon);
 	g_free (text);
 
 	while (gtk_events_pending ())
