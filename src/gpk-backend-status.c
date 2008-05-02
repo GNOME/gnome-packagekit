@@ -154,7 +154,7 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_get_update_detail");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_DESCRIPTION)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_DETAILS)) {
 		widget = glade_xml_get_widget (glade_xml, "image_get_description");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}

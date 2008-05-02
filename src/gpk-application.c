@@ -80,7 +80,7 @@ struct GpkApplicationPrivate
 	PkControl		*control;
 	PkClient		*client_search;
 	PkClient		*client_action;
-	PkClient		*client_description;
+	PkClient		*client_details;
 	PkClient		*client_files;
 	GpkClient		*gclient;
 	PkConnection		*pconnection;
@@ -307,10 +307,10 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 }
 
 /**
- * gpk_application_description_cb:
+ * gpk_application_details_cb:
  **/
 static void
-gpk_application_description_cb (PkClient *client, const gchar *package_id,
+gpk_application_details_cb (PkClient *client, const gchar *package_id,
 			       const gchar *license, PkGroupEnum group,
 			       const gchar *detail, const gchar *url,
 			       guint64 size, GpkApplication *application)
@@ -322,7 +322,7 @@ gpk_application_description_cb (PkClient *client, const gchar *package_id,
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("description = %s:%i:%s:%s", package_id, group, detail, url);
+	pk_debug ("details = %s:%i:%s:%s", package_id, group, detail, url);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
 	gtk_widget_show (widget);
 
@@ -867,7 +867,7 @@ gpk_application_quit (GpkApplication *application)
 		g_error_free (error);
 		error = NULL;
 	}
-	ret = pk_client_cancel (application->priv->client_description, &error);
+	ret = pk_client_cancel (application->priv->client_details, &error);
 	if (!ret) {
 		pk_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
@@ -1054,18 +1054,18 @@ gpk_application_notebook_populate (GpkApplication *application, gint page)
 		gtk_widget_hide (widget);
 
 		/* cancel any previous request */
-		ret = pk_client_reset (application->priv->client_description, &error);
+		ret = pk_client_reset (application->priv->client_details, &error);
 		if (!ret) {
 			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
 			g_error_free (error);
 			return FALSE;
 		}
 
-		/* get the description */
-		ret = pk_client_get_description (application->priv->client_description,
-						 application->priv->package, &error);
+		/* get the details */
+		ret = pk_client_get_details (application->priv->client_details,
+					     application->priv->package, &error);
 		if (!ret) {
-			pk_warning ("failed to get description: %s", error->message);
+			pk_warning ("failed to get details: %s", error->message);
 			g_error_free (error);
 		}
 		return ret;
@@ -2079,18 +2079,18 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (application->priv->client_action, "repo-detail",
 			  G_CALLBACK (pk_application_repo_detail_cb), application);
 
-	application->priv->client_description = pk_client_new ();
-	g_signal_connect (application->priv->client_description, "description",
-			  G_CALLBACK (gpk_application_description_cb), application);
-	g_signal_connect (application->priv->client_description, "error-code",
+	application->priv->client_details = pk_client_new ();
+	g_signal_connect (application->priv->client_details, "details",
+			  G_CALLBACK (gpk_application_details_cb), application);
+	g_signal_connect (application->priv->client_details, "error-code",
 			  G_CALLBACK (gpk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client_description, "finished",
+	g_signal_connect (application->priv->client_details, "finished",
 			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_description, "progress-changed",
+	g_signal_connect (application->priv->client_details, "progress-changed",
 			  G_CALLBACK (gpk_application_progress_changed_cb), application);
-	g_signal_connect (application->priv->client_description, "status-changed",
+	g_signal_connect (application->priv->client_details, "status-changed",
 			  G_CALLBACK (gpk_application_status_changed_cb), application);
-	g_signal_connect (application->priv->client_description, "allow-cancel",
+	g_signal_connect (application->priv->client_details, "allow-cancel",
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	application->priv->client_files = pk_client_new ();
@@ -2254,7 +2254,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
 	g_signal_connect (widget, "switch-page",
 			  G_CALLBACK (gpk_application_notebook_changed_cb), application);
-	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DESCRIPTION) == FALSE) {
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
 		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
@@ -2509,7 +2509,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->control);
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
-	g_object_unref (application->priv->client_description);
+	g_object_unref (application->priv->client_details);
 	g_object_unref (application->priv->client_files);
 	g_object_unref (application->priv->pconnection);
 	g_object_unref (application->priv->statusbar);
