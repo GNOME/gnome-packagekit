@@ -1170,18 +1170,18 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find software"),
-				      _("No new software can be found to handle this file type"));
+				      _("No new applications can be found to handle this type of file"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* populate a chooser */
-	package_id = gpk_client_chooser_show (gclient->priv->client_resolve, 0, _("Software that can open this file type"));
+	package_id = gpk_client_chooser_show (gclient->priv->client_resolve, 0, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to install software"), _("No software was chosen for install"));
+		gpk_client_error_msg (gclient, _("Failed to install software"), _("No spplications were chosen to be installed"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
