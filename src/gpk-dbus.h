@@ -69,6 +69,9 @@ void		 gpk_dbus_install_provide_file		(GpkDbus	*dbus,
 void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
 							 const gchar	*package_name,
 							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
+							 const gchar	*mime_type,
+							 DBusGMethodInvocation *context);
 
 G_END_DECLS
 
