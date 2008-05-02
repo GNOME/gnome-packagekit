@@ -45,6 +45,7 @@
 #include <gpk-client-eula.h>
 #include <gpk-client-signature.h>
 #include <gpk-client-untrusted.h>
+#include <gpk-client-chooser.h>
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
@@ -1147,13 +1148,9 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 {
 	gboolean ret;
 	GError *error_local = NULL;
-	guint len;
-	guint i;
-	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
-	PkPackageItem *item;
-	PkPackageId *ident;
 	gchar *text;
+	guint len;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
@@ -1179,14 +1176,19 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 		goto out;
 	}
 
-	/* see what we've got already */
-	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-		pk_debug ("package '%s' resolved to:", item->package_id);
+	/* populate a chooser */
+	package_id = gpk_client_chooser_show (gclient->priv->client_resolve, 0, _("Software that can open this file type"));
+
+	/* selected nothing */
+	if (package_id == NULL) {
+		gpk_client_error_msg (gclient, _("Failed to install software"), _("No software was chosen for install"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
+		ret = FALSE;
+		goto out;
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, item->package_id, error);
+	ret = gpk_client_install_package_id (gclient, package_id, error);
 out:
 	g_free (package_id);
 	return ret;
