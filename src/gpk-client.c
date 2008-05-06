@@ -634,6 +634,29 @@ gpk_client_done (GpkClient *gclient)
 }
 
 /**
+ * gpk_client_setup_window:
+ **/
+static gboolean
+gpk_client_setup_window (GpkClient *gclient, const gchar *title)
+{
+	GtkWidget *widget;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* set title */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), title);
+
+	/* clear status and progress text */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+
+	return TRUE;
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -648,7 +671,6 @@ gboolean
 gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError **error)
 {
 	gboolean ret;
-	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (file_rel != NULL, FALSE);
@@ -660,8 +682,7 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 	}
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Install local file"));
+	gpk_client_setup_window (gclient, _("Install local file"));
 
 	/* setup the UI */
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
@@ -729,8 +750,7 @@ gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GErro
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Remove packages"));
+	gpk_client_setup_window (gclient, _("Remove packages"));
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -863,8 +883,7 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Install packages"));
+	gpk_client_setup_window (gclient, _("Install packages"));
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -1217,7 +1236,6 @@ gboolean
 gpk_client_update_system (GpkClient *gclient, GError **error)
 {
 	gboolean ret;
-	GtkWidget *widget;
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
@@ -1234,8 +1252,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	}
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("System update"));
+	gpk_client_setup_window (gclient, _("System update"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
@@ -1287,7 +1304,6 @@ gboolean
 gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 {
 	gboolean ret;
-	GtkWidget *widget;
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
@@ -1304,14 +1320,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	}
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Refresh package lists"));
-
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
-	gtk_label_set_label (GTK_LABEL (widget), "");
+	gpk_client_setup_window (gclient, _("Refresh package lists"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_refresh_cache (gclient->priv->client_action, TRUE, &error_local);
@@ -1349,7 +1358,6 @@ PkPackageList *
 gpk_client_get_updates (GpkClient *gclient, GError **error)
 {
 	gboolean ret;
-	GtkWidget *widget;
 	GError *error_local = NULL;
 	PkPackageList *list = NULL;
 	PkPackageItem *item;
@@ -1368,8 +1376,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	}
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Getting update lists"));
+	gpk_client_setup_window (gclient, _("Getting update lists"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
@@ -1403,7 +1410,6 @@ gboolean
 gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **error)
 {
 	gboolean ret;
-	GtkWidget *widget;
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
@@ -1420,8 +1426,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	}
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), _("Update packages"));
+	gpk_client_setup_window (gclient, _("Update packages"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages_strv (gclient->priv->client_action, package_ids, &error_local);
