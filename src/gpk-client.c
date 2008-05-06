@@ -449,6 +449,13 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		return;
 	}
 
+	/* ignore some errors */
+	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		pk_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
 	pk_debug ("code was %s", pk_error_enum_to_text (code));
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
 			  gpk_error_enum_to_localised_message (code), details);
@@ -1263,6 +1270,68 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 					      GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gpk_smart_icon_notify_show (gclient->priv->sicon);
 	}
+
+	/* wait for completion */
+	gtk_main ();
+
+out:
+	g_free (message);
+	g_free (text);
+	return FALSE;
+}
+
+/**
+ * gpk_client_refresh_cache:
+ **/
+gboolean
+gpk_client_refresh_cache (GpkClient *gclient, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	gchar *text = NULL;
+	gchar *message = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* set title */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Refresh package lists"));
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_refresh_cache (gclient->priv->client_action, TRUE, &error_local);
+	if (!ret) {
+		/* print a proper error if we have it */
+		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
+			message = g_strdup (_("Authorisation could not be obtained"));
+		} else {
+			message = g_strdup_printf (_("The error was: %s"), error_local->message);
+		}
+
+		/* display and set */
+		text = g_strdup_printf ("%s: %s", _("Failed to update package lists"), message);
+		gpk_client_error_msg (gclient, _("Failed to update package lists"), text);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		goto out;
+	}
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
 	gtk_main ();

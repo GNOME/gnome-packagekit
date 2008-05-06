@@ -87,6 +87,8 @@ gboolean	 gpk_client_remove_package_id		(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_update_system		(GpkClient	*gclient,
 							 GError		**error);
+gboolean	 gpk_client_refresh_cache		(GpkClient	*gclient,
+							 GError		**error);
 gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
 							 gchar		**package_ids,
 							 GError		**error);
