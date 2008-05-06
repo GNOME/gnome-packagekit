@@ -62,12 +62,8 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	GladeXML *glade_xml;
 	gchar *text;
 	const gchar *title;
-	const gchar *message;
+	gchar *message;
 	PolKitGnomeAction *update_system_action;
-
-	title = gpk_error_enum_to_localised_text (code);
-	message = _("Malicious software can damage your computer or cause other harm. "
-		    "Are you <b>sure</b> you want to install this package?");
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
 
@@ -84,14 +80,19 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* title */
+	title = gpk_error_enum_to_localised_text (code);
 	widget = glade_xml_get_widget (glade_xml, "label_title");
 	text = g_strdup_printf ("<b><big>%s</big></b>", title);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 	g_free (text);
 
 	/* message */
+	message = g_strdup_printf ("%s\n%s",
+				   _("Malicious software can damage your computer or cause other harm."),
+				   _("Are you <b>sure</b> you want to install this package?");
 	widget = glade_xml_get_widget (glade_xml, "label_message");
 	gtk_label_set_markup (GTK_LABEL (widget), message);
+	g_free (message);
 
 	/* don't show text in the expander */
 	widget = glade_xml_get_widget (glade_xml, "expander_details");
