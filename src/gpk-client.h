@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <pk-package-list.h>
 
 G_BEGIN_DECLS
 
@@ -93,6 +94,8 @@ void		 gpk_client_show_finished		(GpkClient	*gclient,
 							 gboolean	 enabled);
 void		 gpk_client_show_progress		(GpkClient	*gclient,
 							 gboolean	 enabled);
+PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
+							 GError		**error);
 
 G_END_DECLS
 

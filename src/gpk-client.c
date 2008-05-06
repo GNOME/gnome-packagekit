@@ -319,8 +319,17 @@ static void
 gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
 {
 	GtkWidget *widget;
+	PkRoleEnum role;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	pk_client_get_role (client, &role, NULL, NULL);
+
+	/* do nothing */
+	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+		gtk_main_quit ();
+		return;
+	}
 
 	/* do we show a libnotify window instead? */
 	if (!gclient->priv->show_progress) {
@@ -1265,6 +1274,60 @@ out:
 }
 
 /**
+ * gpk_client_get_updates:
+ **/
+PkPackageList *
+gpk_client_get_updates (GpkClient *gclient, GError **error)
+{
+	gboolean ret;
+	GtkWidget *widget;
+	GError *error_local = NULL;
+	PkPackageList *list = NULL;
+	PkPackageItem *item;
+	guint length;
+	guint i;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-updates"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* set title */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), _("Getting update lists"));
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Getting update lists failed"), _("Failed to get updates"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	/* wait for completion */
+	gtk_main ();
+
+	/* copy from client to local */
+	list = pk_package_list_new ();
+	length = pk_client_package_buffer_get_size (gclient->priv->client_action);
+	for (i=0;i<length;i++) {
+		item = pk_client_package_buffer_get_item (gclient->priv->client_action, i);
+		pk_package_list_add (list, item->info, item->package_id, item->summary);
+	}
+out:
+	return list;
+}
+
+/**
  * gpk_client_update_packages:
  **/
 gboolean
@@ -1488,6 +1551,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->roles = pk_control_get_actions (gclient->priv->control);
 
 	gclient->priv->client_action = pk_client_new ();
+	pk_client_set_use_buffer (gclient->priv->client_action, TRUE, NULL);
 	g_signal_connect (gclient->priv->client_action, "finished",
 			  G_CALLBACK (gpk_client_finished_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "progress-changed",
