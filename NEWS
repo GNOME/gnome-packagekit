@@ -1,3 +1,87 @@
+Version 0.2.0
+~~~~~~~~~~~~~~
+Released: 2008-05-06
+
+* Cool new stuff
+ - Session service for trivial installation
+ - Tons of new help
+ - New faster transaction DBUS interface
+ - EULA and GPG signature callback support
+
+* Caveats
+ - This is the first (read: unstable) release of a new codebase - 0.1.11 is more stable.
+ - Most of the UI tools have trivial regressions due to the new interface work.
+ - There's a ton of new functionality that has only had light testing.
+ - Importing multiple GPG keys or EULAs in one transaction breaks horribly.
+
+* Translations
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Fixed strange english sentence (Mario Danic)
+ - Updated Spanish translation (Daniel Mustieles)
+
+* New features:
+ - Add some better icons for an available package (Mike Langlie)
+ - Convert all the tools for the big .Transaction API break (Richard Hughes)
+ - Add a context menu in gpk-update-viewer to select or unselect all the updates. Fixes rh#441010 (Richard Hughes)
+ - Show a checkbox for repo details in gpk-repo (Richard Hughes)
+ - Add a prompt when packages have to be added to an install (Richard Hughes)
+ - Check for get_depends, and skip if it can't be done (Richard Hughes)
+ - Allow gpg signatures to be imported when using GpkClient (Richard Hughes)
+ - Add a clever error modal box that can display a details expander (Richard Hughes)
+ - Add some simple man pages for the client tools (Richard Hughes)
+ - Set the tooltip for the homepage button to where we are actually going. Fixes rh#442230 (Richard Hughes)
+ - Set some text in the description about where the package has come from, else you don't know
+   where you are downloading it from. Fixes rh#442543 (Richard Hughes)
+ - Add support for accepting a EULA (Richard Hughes)
+ - Try to make the gpk-log program a bit more sane. first loose the right-hand icons, and only show
+   interesting transactions (success) and interesting actions (Richard Hughes)
+ - Pulse the icon when the update list changes to fix rh#436726 (Richard Hughes)
+ - Add a firmware checker that notices the udev integration file at startup (Richard Hughes)
+ - Try to retry a package as untrusted when it fails with a missing or broken gpg key (Richard Hughes)
+ - Add support for the arch filter in pk-application (Richard Hughes)
+ - Add a simple package chooser widget (Richard Hughes)
+ - Add gpk_client_refresh_cache() so we can do the EULA and GPG callbacks without any hassle (Richard Hughes)
+
+* Bugfixes:
+ - Improve the handling of CK errors (Matthias Clasen)
+ - Use the same window icon for gpk-log as for gpk-update-viewer. Fixes rh #439330 (Matthias Clasen)
+ - Make "never" work in gpk-prefs (Matthias Clasen)
+ - Explain that the update frequencies are only approximate (Matthias Clasen)
+ - Fix crash when cancelling auth after double-click install. Fixes rh#442150 (Matthias Clasen)
+ - Grab default to the close button where it makes sense (Matthias Clasen)
+ - Fix some unref braindamage in gpk-install-package to fix rh#441768 (Richard Hughes)
+ - Cope if there are more than one file that can provide a file (Richard Hughes)
+ - Don't show the 'additional downloads' dialog if there are no packages (Richard Hughes)
+ - When gnome-icon theme is not available, don't crash gpk-update-icon when we try to do the
+   animation. Fixes rh#441062 (Richard Hughes)
+ - Fix the update viewer to properly update the UI if things like rereshing the cache are done
+   using pkcon or the tray icon when the tool is open (Richard Hughes)
+ - Put the find and cancel buttons in a notebook so they are forced to be the same size (Richard Hughes)
+ - When we've done a search, focus back on the text widget (Richard Hughes)
+ - Add the EulaRequired connections to GpkClient (Richard Hughes)
+ - Only sort the package list after the transaction has finished. Fixes rh#441755 (Richard Hughes)
+ - Make sure we repect the users request of ignoring a specific type of notification. fix this
+   properly by adding a check when we go to compose the notification. Fixes rh#442398 (Richard Hughes)
+ - Show the full repo name in gpk-application to fix rh#442647 (Richard Hughes)
+ - Never check for updates when the update policy if 'never'. Fixes rh#442998 (Richard Hughes)
+ - Turn off BASENAME when getting updates, as users are noticing that the updates are only done on
+   the selected package, and not the whole subtype. Fixes rh#443117 (Richard Hughes)
+ - Left align the packages when downloading to fix rh#443210 (Richard Hughes)
+ - Use a custom widget handler to avoid filling the hbuttonboxes manually (Richard Hughes)
+ - Be more HIG friendly with button ordering to fix rh#441852 (Richard Hughes)
+ - Don't use g_main_loop in the gtk-tools, use gtk_main instead (Richard Hughes)
+ - Handle failed updates (when we can't get policykit auth) better - fixes rh#443551 (Richard Hughes)
+ - Allow GpkClient to emit notification windows when running without progress (Richard Hughes)
+ - Make the signature dialogue more HIG friendly (Richard Hughes)
+ - Make the unsigned package warning a little more stern (Richard Hughes)
+ - Use GpkClient rather than GpkProgress so the dialogs look the same. Fixes rh#439189 (Richard Hughes)
+ - Fix text for 'show development repos', and don't show the scrollbar unless we have to (Robin Norwood)
+ - Change 'Repository' to 'Software Source' in a few more places (Robin Norwood)
+ - Patch from Matthias to fix hanging on 'Other' group (Robin Norwood)
+ - Remove 'apply updates when on battery power' checkbox (Robin Norwood)
+ - Make gpk-client.c compile (Robin Norwood)
+ - Fix a segfault when pk_client_requeue does not set error (Robin Norwood)
+
 Version 0.1.11
 ~~~~~~~~~~~~~~
 Released: 2008-04-05
