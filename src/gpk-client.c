@@ -1584,6 +1584,116 @@ gpk_client_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button
 }
 
 /**
+ * pk_common_get_role_text:
+ **/
+static gchar *
+pk_common_get_role_text (PkClient *client)
+{
+	const gchar *role_text;
+	gchar *package_id;
+	gchar *text;
+	gchar *package;
+	PkRoleEnum role;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get role and text */
+	ret = pk_client_get_role (client, &role, &package_id, &error);
+	if (!ret) {
+		pk_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		return NULL;
+	}
+
+	/* backup */
+	role_text = gpk_role_enum_to_localised_present (role);
+
+	if (!pk_strzero (package_id) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		package = gpk_package_get_name (package_id);
+		text = g_strdup_printf ("%s: %s", role_text, package);
+		g_free (package);
+	} else {
+		text = g_strdup_printf ("%s", role_text);
+	}
+	g_free (package_id);
+
+	return text;
+}
+
+/**
+ * gpk_client_monitor_tid:
+ **/
+gboolean
+gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
+{
+	GtkWidget *widget;
+	PkStatusEnum status;
+	gboolean ret;
+	gboolean allow_cancel;
+	gchar *text;
+	guint percentage;
+	guint subpercentage;
+	guint elapsed;
+	guint remaining;
+	GError *error = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	ret = pk_client_set_tid (gclient->priv->client_action, tid, &error);
+	if (!ret) {
+		pk_warning ("could not set tid: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* fill in role */
+	text = pk_common_get_role_text (gclient->priv->client_action);
+	gpk_client_setup_window (gclient, text);
+	g_free (text);
+
+	/* coldplug */
+	ret = pk_client_get_status (gclient->priv->client_action, &status, NULL);
+	/* no such transaction? */
+	if (!ret) {
+		pk_warning ("could not get status");
+		return FALSE;
+	}
+
+	/* are we cancellable? */
+	pk_client_get_allow_cancel (gclient->priv->client_action, &allow_cancel, NULL);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
+
+	gpk_client_status_changed_cb (gclient->priv->client_action, status, gclient);
+
+	/* coldplug */
+	ret = pk_client_get_progress (gclient->priv->client_action,
+				      &percentage, &subpercentage, &elapsed, &remaining, NULL);
+	if (ret) {
+		gpk_client_progress_changed_cb (gclient->priv->client_action, percentage,
+						subpercentage, elapsed, remaining, gclient);
+	} else {
+		pk_warning ("GetProgress failed");
+		gpk_client_progress_changed_cb (gclient->priv->client_action,
+						PK_CLIENT_PERCENTAGE_INVALID,
+						PK_CLIENT_PERCENTAGE_INVALID, 0, 0, gclient);
+	}
+
+	/* do the best we can */
+	ret = pk_client_get_package (gclient->priv->client_action, &text, NULL);
+	if (ret) {
+		gpk_client_package_cb (gclient->priv->client_action, 0, text, NULL, gclient);
+	}
+
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	/* wait for completion */
+	gtk_main ();
+
+	return TRUE;
+}
+
+/**
  * gpk_client_class_init:
  * @klass: The #GpkClientClass
  **/
