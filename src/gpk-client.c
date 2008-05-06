@@ -88,6 +88,12 @@ typedef enum {
 	GPK_CLIENT_PAGE_LAST
 } GpkClientPageEnum;
 
+enum {
+	GPK_CLIENT_QUIT,
+	LAST_SIGNAL
+};
+
+static guint signals [LAST_SIGNAL] = { 0 };
 G_DEFINE_TYPE (GpkClient, gpk_client, G_TYPE_OBJECT)
 
 /**
@@ -175,6 +181,7 @@ gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient
 	/* go! */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_hide (widget);
+	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 }
 
 /**
@@ -194,6 +201,7 @@ gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, G
 	/* go! */
 	gtk_widget_hide (widget);
 	gtk_main_quit ();
+	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
 }
 
@@ -203,7 +211,9 @@ gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, G
 static gboolean
 gpk_install_finished_timeout (gpointer data)
 {
+	GpkClient *gclient = (GpkClient *) data;
 	gtk_main_quit ();
+	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
 }
 
@@ -1703,6 +1713,13 @@ gpk_client_class_init (GpkClientClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = gpk_client_finalize;
 	g_type_class_add_private (klass, sizeof (GpkClientPrivate));
+	signals [GPK_CLIENT_QUIT] =
+		g_signal_new ("quit",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      0, NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 }
 
 /**

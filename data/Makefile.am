@@ -30,7 +30,6 @@ pkgdata_DATA =						\
 	gpk-eula.glade					\
 	gpk-application.glade				\
 	gpk-update-viewer.glade				\
-	gpk-progress.glade				\
 	gpk-prefs.glade					\
 	gpk-signature.glade				\
 	gpk-error.glade					\

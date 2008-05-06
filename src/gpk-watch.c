@@ -50,7 +50,7 @@
 
 #include "gpk-common.h"
 #include "gpk-watch.h"
-#include "gpk-progress.h"
+#include "gpk-client.h"
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
@@ -632,11 +632,10 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
  * pk_monitor_action_unref_cb:
  **/
 static void
-pk_monitor_action_unref_cb (GpkProgress *progress, GpkWatch *watch)
+pk_monitor_action_unref_cb (GpkClient *gclient, GpkWatch *watch)
 {
 	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	g_object_unref (progress);
+	g_object_unref (gclient);
 }
 
 /**
@@ -646,18 +645,22 @@ static void
 gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 {
 	gchar *tid;
-	GpkProgress *progress = NULL;
+	GpkClient *gclient = NULL;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* find the job we should bind to */
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
+	if (pk_strzero(tid) || tid[0] != '/') {
+		pk_warning ("invalid job, maybe transaction already removed");
+		return;
+	}
 
 	/* launch the UI */
-	progress = gpk_progress_new ();
-	g_signal_connect (progress, "action-unref",
-			  G_CALLBACK (pk_monitor_action_unref_cb), watch);
-	gpk_progress_monitor_tid (progress, tid);
+	gclient = gpk_client_new ();
+	gpk_client_show_finished (gclient, FALSE);
+	g_signal_connect (gclient, "quit", G_CALLBACK (pk_monitor_action_unref_cb), watch);
+	gpk_client_monitor_tid (gclient, tid);
 }
 
 /**
@@ -707,7 +710,7 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);
 
-		/* we need the job ID so we know what GpkProgress to show */
+		/* we need the job ID so we know what transaction to show */
 		g_object_set_data (G_OBJECT (widget), "tid", (gpointer) item->tid);
 
 		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);

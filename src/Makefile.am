@@ -129,8 +129,6 @@ gpk_update_icon_SOURCES =				\
 	gpk-inhibit.h					\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
-	gpk-progress.c					\
-	gpk-progress.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 
