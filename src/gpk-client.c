@@ -1339,7 +1339,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 out:
 	g_free (message);
 	g_free (text);
-	return FALSE;
+	return ret;
 }
 
 /**
