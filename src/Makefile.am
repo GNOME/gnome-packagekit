@@ -248,6 +248,8 @@ gpk_self_test_LDADD =						\
 
 gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
 
+TESTS = gpk-self-test
+
 if PK_BUILD_GPROF
 clean-gprof:
 	rm -f *.out
