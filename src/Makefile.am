@@ -243,6 +243,7 @@ gpk_self_test_SOURCES =						\
 
 gpk_self_test_LDADD =						\
 	$(shared_LIBS)						\
+	$(SELFTEST_LIBS)					\
 	$(NULL)
 
 gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
