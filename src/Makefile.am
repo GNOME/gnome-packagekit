@@ -52,6 +52,10 @@ shared_SOURCES =					\
 	gpk-client.h					\
 	gpk-client-eula.c				\
 	gpk-client-eula.h				\
+	gpk-client-depends.c				\
+	gpk-client-depends.h				\
+	gpk-client-requires.c				\
+	gpk-client-requires.h				\
 	gpk-client-signature.c				\
 	gpk-client-signature.h				\
 	gpk-client-untrusted.c				\
