@@ -67,8 +67,8 @@ GQuark		 gpk_client_error_quark			(void);
 GType		 gpk_client_get_type			(void) G_GNUC_CONST;
 GpkClient	*gpk_client_new				(void);
 
-gboolean	 gpk_client_install_local_file		(GpkClient	*gclient,
-							 const gchar	*file_rel,
+gboolean	 gpk_client_install_local_files		(GpkClient	*gclient,
+							 gchar		**files_rel,
 							 GError		**error);
 gboolean	 gpk_client_install_provide_file	(GpkClient	*gclient,
 							 const gchar	*full_path,

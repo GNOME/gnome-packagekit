@@ -107,6 +107,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 	GError *error;
 	GError *error_local;
 	gchar *sender;
+	gchar **full_paths;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -116,7 +117,10 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 	sender = dbus_g_method_get_sender (context);
 	pk_warning ("sender=%s", sender);
 
-	ret = gpk_client_install_local_file (dbus->priv->gclient, full_path, &error_local);
+	/* just convert from char* to char** */
+	full_paths = g_strsplit (full_path, "|", 1);
+	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
+	g_strfreev (full_paths);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);

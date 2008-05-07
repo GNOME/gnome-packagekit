@@ -42,6 +42,7 @@ main (int argc, char *argv[])
 	gboolean verbose = FALSE;
 	GError *error;
 	GpkClient *gclient;
+	gchar **files;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -75,15 +76,12 @@ main (int argc, char *argv[])
 				  _("You need to specify a file to install"), NULL);
 		return 1;
 	}
-	if (argc > 2) {
-		gpk_error_dialog (_("Failed to install local files"),
-				  _("You can only specify one file to install"), NULL);
-		return 1;
-	}
 
 	error = NULL;
 	gclient = gpk_client_new ();
-	ret = gpk_client_install_local_file (gclient, argv[1], NULL);
+	files = gpk_convert_argv_to_strv (argv);
+	ret = gpk_client_install_local_files (gclient, files, NULL);
+	g_strfreev (files);
 	g_object_unref (gclient);
 
 	return !ret;

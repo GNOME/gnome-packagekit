@@ -590,15 +590,17 @@ out:
 }
 
 /**
- * gpk_client_install_local_file_internal:
+ * gpk_client_install_local_files_internal:
  **/
 static gboolean
-gpk_client_install_local_file_internal (GpkClient *gclient, gboolean trusted,
-					const gchar *file_rel, GError **error)
+gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
+					 gchar **files_rel, GError **error)
 {
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text;
+	guint length;
+	const gchar *title;
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
@@ -610,19 +612,21 @@ gpk_client_install_local_file_internal (GpkClient *gclient, gboolean trusted,
 	}
 
 	/* install local file */
-	ret = pk_client_install_file (gclient->priv->client_action, trusted, file_rel, &error_local);
+	ret = pk_client_install_files (gclient->priv->client_action, trusted, files_rel, &error_local);
 	if (ret) {
 		return TRUE;
 	}
 
 	/* check if we got a permission denied */
 	if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
-		gpk_client_error_msg (gclient, _("Failed to install file"),
+		gpk_client_error_msg (gclient, _("Failed to install files"),
 				      _("You don't have the necessary privileges to install local files"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 	} else {
 		text = g_markup_escape_text (error_local->message, -1);
-		gpk_client_error_msg (gclient, _("Failed to install file"), text);
+		length = g_strv_length (files_rel);
+		title = ngettext ("Failed to install file", "Failed to install files", length);
+		gpk_client_error_msg (gclient, title, text);
 		g_free (text);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 	}
@@ -678,15 +682,15 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
  * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError **error)
+gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **error)
 {
 	gboolean ret;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (file_rel != NULL, FALSE);
+	g_return_val_if_fail (files_rel != NULL, FALSE);
 
 	gclient->priv->retry_untrusted_value = FALSE;
-	ret = gpk_client_install_local_file_internal (gclient, TRUE, file_rel, error);
+	ret = gpk_client_install_local_files_internal (gclient, TRUE, files_rel, error);
 	if (!ret) {
 		goto out;
 	}
@@ -702,7 +706,7 @@ gpk_client_install_local_file (GpkClient *gclient, const gchar *file_rel, GError
 
 	/* do we need to try again with better auth? */
 	if (gclient->priv->retry_untrusted_value) {
-		ret = gpk_client_install_local_file_internal (gclient, FALSE, file_rel, error);
+		ret = gpk_client_install_local_files_internal (gclient, FALSE, files_rel, error);
 		if (!ret) {
 			goto out;
 		}

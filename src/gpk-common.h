@@ -92,6 +92,7 @@ gchar		*gpk_update_enum_to_localised_text	(PkInfoEnum	 info,
 							 guint		 number)
 							 G_GNUC_CONST;
 gchar		*gpk_time_to_localised_string		(guint		 time_secs);
+gchar		**gpk_convert_argv_to_strv		(gchar		*argv[]);
 
 G_END_DECLS
 
