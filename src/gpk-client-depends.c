@@ -141,6 +141,10 @@ gpk_client_depends_show (gchar **package_ids)
 	string = g_string_new (_("The following packages also have to be downloaded:"));
 	g_string_append (string, "\n\n");
 	length = pk_package_list_get_size (list);
+	/* shortcut */
+	if (length == 0) {
+		goto out;
+	}
 	for (i=0; i<length; i++) {
 		item = pk_package_list_get_item (list, i);
 		text = gpk_package_id_format_oneline (item->package_id, item->summary);
