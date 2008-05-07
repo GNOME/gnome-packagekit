@@ -68,7 +68,7 @@ struct _GpkClientPrivate
 {
 	PkClient		*client_action;
 	PkClient		*client_resolve;
-	PkClient		*client_signature;
+	PkClient		*client_secondary;
 	GpkSmartIcon		*sicon;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
@@ -1490,14 +1490,14 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	/* install signature */
 	pk_debug ("install signature %s", key_id);
-	ret = pk_client_reset (gclient->priv->client_signature, &error);
+	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
 		gpk_error_dialog (_("Failed to install signature"), _("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
 	}
 	/* this is asynchronous, else we get into livelock */
-	ret = pk_client_install_signature (gclient->priv->client_signature, PK_SIGTYPE_ENUM_GPG,
+	ret = pk_client_install_signature (gclient->priv->client_secondary, PK_SIGTYPE_ENUM_GPG,
 					   key_id, package_id, &error);
 	gclient->priv->do_key_auth = ret;
 	if (!ret) {
@@ -1526,7 +1526,7 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 
 	/* install signature */
 	pk_debug ("accept EULA %s", eula_id);
-	ret = pk_client_reset (gclient->priv->client_signature, &error);
+	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
 		gpk_error_dialog (_("Failed to accept EULA"), _("The client could not be reset"), error->message);
 		g_error_free (error);
@@ -1534,7 +1534,7 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	}
 
 	/* this is asynchronous, else we get into livelock */
-	ret = pk_client_accept_eula (gclient->priv->client_signature, eula_id, &error);
+	ret = pk_client_accept_eula (gclient->priv->client_secondary, eula_id, &error);
 	if (!ret) {
 		gpk_error_dialog (_("Failed to accept EULA"), _("The method failed"), error->message);
 		g_error_free (error);
@@ -1543,22 +1543,35 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 }
 
 /**
- * gpk_client_signature_finished_cb:
+ * gpk_client_secondary_now_requeue:
  **/
-static void
-gpk_client_signature_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
+static gboolean
+gpk_client_secondary_now_requeue (GpkClient *gclient)
 {
 	gboolean ret;
 	GError *error = NULL;
 
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	pk_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error ? error->message : _("Error details not available"));
+		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error->message);
 		g_error_free (error);
 	}
+	gtk_main ();
+	return FALSE;
+}
+
+/**
+ * gpk_client_secondary_finished_cb:
+ **/
+static void
+gpk_client_secondary_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	/* we have to do this idle add, else we get into deadlock */
+	g_idle_add ((GSourceFunc) gpk_client_secondary_now_requeue, gclient);
 }
 
 /**
@@ -1781,9 +1794,9 @@ gpk_client_init (GpkClient *gclient)
 	pk_client_set_synchronous (gclient->priv->client_resolve, TRUE, NULL);
 
 	/* this is asynchronous, else we get into livelock */
-	gclient->priv->client_signature = pk_client_new ();
-	g_signal_connect (gclient->priv->client_signature, "finished",
-			  G_CALLBACK (gpk_client_signature_finished_cb), gclient);
+	gclient->priv->client_secondary = pk_client_new ();
+	g_signal_connect (gclient->priv->client_secondary, "finished",
+			  G_CALLBACK (gpk_client_secondary_finished_cb), gclient);
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
 
@@ -1838,7 +1851,7 @@ gpk_client_finalize (GObject *object)
 
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
-	g_object_unref (gclient->priv->client_signature);
+	g_object_unref (gclient->priv->client_secondary);
 	g_object_unref (gclient->priv->control);
 	g_object_unref (gclient->priv->gconf_client);
 	g_object_unref (gclient->priv->sicon);
