@@ -109,7 +109,6 @@ enum {
 typedef enum {
 	PAGE_PREVIEW,
 	PAGE_DETAILS,
-	PAGE_PROGRESS,
 	PAGE_CONFIRM,
 	PAGE_LAST
 } PkPageEnum;
@@ -130,10 +129,23 @@ pk_button_help_cb (GtkWidget *widget, gpointer data)
 static void
 pk_update_viewer_set_page (PkPageEnum page)
 {
-	GList *list, *l;
 	GtkWidget *widget;
-	GtkRequisition req;
+	GList *list, *l;
 	guint i;
+
+	widget = glade_xml_get_widget (glade_xml, "window_updates");
+	if (page == PAGE_LAST) {
+		gtk_widget_hide (widget);
+		return;
+	}
+
+	/* some pages are resizeable */
+	if (page == PAGE_DETAILS) {
+		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
+	} else {
+		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
+	}
+	gtk_widget_show (widget);
 
 	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
@@ -143,21 +155,6 @@ pk_update_viewer_set_page (PkPageEnum page)
 		} else {
 			gtk_widget_hide (l->data);
 		}
-	}
-
-	/* some pages are resizeable */
-	widget = glade_xml_get_widget (glade_xml, "window_updates");
-	if (page == PAGE_DETAILS || page == PAGE_PROGRESS) {
-		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
-		if (page == PAGE_PROGRESS) {
-			/* use the natural size unless it's really big */
-			gtk_widget_size_request (widget, &req);
-			gtk_window_resize (GTK_WINDOW (widget),
-				(req.width < 500) ? req.width : 500,
-				(req.height < 400) ? req.height : 400);
-		}
-	} else {
-		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	}
 }
 
@@ -174,10 +171,9 @@ pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	widget = glade_xml_get_widget (glade_xml, "button_overview2");
 	gtk_widget_hide (widget);
 
-	/* set correct view */
-//	pk_update_viewer_set_page (PAGE_PROGRESS);
-
+	pk_update_viewer_set_page (PAGE_LAST);
 	gpk_client_update_system (gclient, NULL);
+	pk_update_viewer_set_page (PAGE_CONFIRM);
 }
 
 /**
@@ -241,14 +237,12 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 		gtk_widget_show (widget);
 	}
 
-	pk_update_viewer_set_page (PAGE_LAST);
-
 	/* set correct view */
+	pk_update_viewer_set_page (PAGE_LAST);
 	package_ids = pk_package_ids_from_array (array);
 	gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
-
-	pk_update_viewer_set_page (PAGE_PROGRESS);
+	pk_update_viewer_set_page (PAGE_CONFIRM);
 
 	/* get rid of the array, and free the contents */
 	g_ptr_array_free (array, TRUE);
@@ -508,29 +502,6 @@ pk_update_viewer_history_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_update_viewer_button_cancel_cb:
- **/
-static void
-pk_update_viewer_button_cancel_cb (GtkWidget *widget, gpointer data)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* we might have a transaction running */
-	ret = pk_client_cancel (client_query, &error);
-	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-	ret = pk_client_cancel (client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-	}
-}
-
-/**
  * pk_update_viewer_button_close_and_cancel_cb:
  **/
 static void
@@ -724,7 +695,6 @@ pk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *pac
 	gchar *text;
 	PkRoleEnum role;
 	const gchar *icon_name;
-	GtkWidget *widget;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
@@ -742,17 +712,6 @@ pk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *pac
 				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
 		g_free (text);
-		return;
-	}
-
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
-	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		text = gpk_package_id_format_twoline (package_id, summary);
-		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
-		gtk_label_set_markup (GTK_LABEL (widget), text);
-
-		g_free (text);
-
 		return;
 	}
 }
@@ -924,12 +883,6 @@ static void
 pk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	GtkWidget *widget;
-	gchar *text;
-
-	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
-	text = g_strdup_printf ("<b>%s</b>", gpk_status_enum_to_localised_text (status));
-	gtk_label_set_markup (GTK_LABEL (widget), text);
-	g_free (text);
 
 	/* when we are testing the transaction, no package should be displayed */
 	if (status == PK_STATUS_ENUM_TEST_COMMIT) {
@@ -1374,17 +1327,6 @@ pk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint 
 }
 
 /**
- * pk_update_viewer_allow_cancel_cb:
- **/
-static void
-pk_update_viewer_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
-{
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "button_cancel");
-	gtk_widget_set_sensitive (widget, allow_cancel);
-}
-
-/**
  * pk_update_viewer_preview_set_animation:
  **/
 static void
@@ -1818,8 +1760,6 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_update_viewer_status_changed_cb), NULL);
 	g_signal_connect (client_query, "error-code",
 			  G_CALLBACK (pk_update_viewer_error_code_cb), NULL);
-	g_signal_connect (client_query, "allow-cancel",
-			  G_CALLBACK (pk_update_viewer_allow_cancel_cb), NULL);
 
 	client_action = pk_client_new ();
 	pk_client_set_use_buffer (client_action, TRUE, NULL);
@@ -1833,8 +1773,6 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_update_viewer_status_changed_cb), NULL);
 	g_signal_connect (client_action, "error-code",
 			  G_CALLBACK (pk_update_viewer_error_code_cb), NULL);
-	g_signal_connect (client_action, "allow-cancel",
-			  G_CALLBACK (pk_update_viewer_allow_cancel_cb), NULL);
 
 	/* get actions */
 	roles = pk_control_get_actions (control);
@@ -1871,21 +1809,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_update_viewer_button_close_and_cancel_cb), NULL);
 
 	/* normal close buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-
-	/* cancel button */
-	widget = glade_xml_get_widget (glade_xml, "button_cancel");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_update_viewer_button_cancel_cb), NULL);
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* can we ever do the action? */
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_CANCEL) == FALSE) {
-		gtk_widget_hide (widget);
-	}
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (refresh_action, "activate",
@@ -1987,12 +1912,6 @@ main (int argc, char *argv[])
 	/* set the last updated text */
 	pk_update_update_last_refreshed_time ();
 	pk_update_update_last_updated_time ();
-
-	/* set the labels blank until we get a package */
-	widget = glade_xml_get_widget (glade_xml, "progress_part_label");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-	widget = glade_xml_get_widget (glade_xml, "progress_package_label");
-	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	/* we need to grey out all the buttons if we are in progress */
 	g_signal_connect (tlist, "changed",
