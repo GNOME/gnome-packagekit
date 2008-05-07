@@ -52,6 +52,8 @@ shared_SOURCES =					\
 	gpk-client.h					\
 	gpk-client-eula.c				\
 	gpk-client-eula.h				\
+	gpk-client-resolve.c				\
+	gpk-client-resolve.h				\
 	gpk-client-depends.c				\
 	gpk-client-depends.h				\
 	gpk-client-requires.c				\

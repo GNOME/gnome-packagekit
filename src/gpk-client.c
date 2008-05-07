@@ -46,6 +46,7 @@
 #include <gpk-client-signature.h>
 #include <gpk-client-untrusted.h>
 #include <gpk-client-chooser.h>
+#include <gpk-client-resolve.h>
 #include <gpk-client-depends.h>
 #include <gpk-client-requires.h>
 #include <gpk-common.h>
@@ -886,77 +887,22 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 {
 	gboolean ret;
 	GError *error_local = NULL;
-	guint len;
-	guint i;
-	gboolean already_installed = FALSE;
-	gchar *package_id = NULL;
-	PkPackageItem *item;
 	gchar **package_ids = NULL;
-	gchar *package = NULL;
-	gchar *title;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (packages != NULL, FALSE);
 
-	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, packages[0], &error_local);
-	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to resolve package"), _("Incorrect response from search"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+	/* resolve a 2D array to package_id's */
+	package_ids = gpk_client_resolve_show (packages);
+	if (package_ids == NULL) {
 		ret = FALSE;
 		goto out;
 	}
 
-	/* a pretty name */
-	package = gpk_package_get_name (packages[0]);
-
-	/* found nothing? */
-	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
-	if (len == 0) {
-		title = g_strdup_printf (_("Could not find %s"), package);
-		gpk_client_error_msg (gclient, title, _("The package could not be found in any software sources"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
-		g_free (title);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* see what we've got already */
-	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-		if (item->info == PK_INFO_ENUM_INSTALLED) {
-			already_installed = TRUE;
-		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved", item->package_id);
-			package_id = g_strdup (item->package_id);
-			break;
-		}
-	}
-
-	/* already installed? */
-	if (already_installed) {
-		title = g_strdup_printf (_("Failed to install %s"), package);
-		gpk_client_error_msg (gclient, title, _("The package is already installed"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package is already installed");
-		g_free (title);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* got junk? */
-	if (package_id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to find package"), _("Incorrect response from search"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "incorrect response from search");
-		ret = FALSE;
-		goto out;
-	}
-
-	/* install this specific package */
-//TODO: only resolved the first one
-	package_ids = g_strsplit (package_id, "|", 1);
+	/* install these packages */
 	ret = gpk_client_install_package_ids (gclient, package_ids, &error_local);
 	if (!ret) {
 		/* copy error message */
-		gpk_client_error_msg (gclient, _("Failed to install packages"), error_local->message);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -964,8 +910,6 @@ out:
 	if (error_local != NULL) {
 		g_error_free (error_local);
 	}
-	g_free (package);
-	g_free (package_id);
 	g_strfreev (package_ids);
 	return ret;
 }
