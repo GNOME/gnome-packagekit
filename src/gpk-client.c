@@ -46,6 +46,8 @@
 #include <gpk-client-signature.h>
 #include <gpk-client-untrusted.h>
 #include <gpk-client-chooser.h>
+#include <gpk-client-depends.h>
+#include <gpk-client-requires.h>
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
@@ -721,23 +723,7 @@ out:
 }
 
 /**
- * gpk_client_checkbutton_show_depends_cb:
- **/
-static void
-gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, GpkClient *gclient)
-{
-	gboolean checked;
-
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	/* set the policy */
-	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-	pk_debug ("Changing %s to %i", GPK_CONF_SHOW_DEPENDS, checked);
-	gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, checked, NULL);
-}
-
-/**
- * gpk_client_remove_package_id:
+ * gpk_client_remove_package_ids:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
  * @error: a %GError to put the error code and message in, or %NULL
@@ -745,95 +731,27 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, GpkClient *gclient)
  * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GError **error)
+gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError **error)
 {
-	GtkWidget *widget;
-	GtkWidget *dialog;
-	GtkResponseType button;
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text = NULL;
-	gchar *title = NULL;
-	gchar *package_name = NULL;
-	guint len;
-	guint i;
-	GString *string;
-	PkPackageItem *item;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (package_id != NULL, FALSE);
+	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
 	gpk_client_setup_window (gclient, _("Remove packages"));
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
+	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
 
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
-	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* find out if this would drag in other packages */
-	ret = pk_client_get_requires (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error_local);
-	if (!ret) {
-		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also removeed"), error_local->message);
-		gpk_client_error_msg (gclient, _("Failed to get depends"), text);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* any additional packages? */
-	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
-	if (len == 0) {
-		pk_debug ("no additional requires");
-		goto skip_checks;
-	}
-
-	/* process package list */
-	string = g_string_new (_("The following packages have to be removed:"));
-	g_string_append (string, "\n\n");
-	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-		text = gpk_package_id_format_oneline (item->package_id, item->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
-
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-	pk_debug ("text=%s", text);
-
-	/* show UI */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	package_name = gpk_package_get_name (package_id);
-	title = g_strdup_printf (_("Other software depends on %s"), package_name);
-	g_free (package_name);
-
-	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
-	g_free (title);
-
-	/* add a specialist button */
-	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Remove all packages"), GTK_RESPONSE_OK);
-
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
-	button = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (text);
-
+	ret = gpk_client_depends_show (package_ids);
 	/* did we click no or exit the window? */
-	if (button != GTK_RESPONSE_OK) {
+	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user did not agree to additional requires");
 		ret = FALSE;
@@ -841,13 +759,22 @@ gpk_client_remove_package_id (GpkClient *gclient, const gchar *package_id, GErro
 	}
 
 skip_checks:
-	/* try to remove the package_id */
-	ret = pk_client_remove_package (gclient->priv->client_action, package_id, TRUE, FALSE, &error_local);
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* try to remove the package_ids */
+	ret = pk_client_remove_packages (gclient->priv->client_action, package_ids, TRUE, FALSE, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
 		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
 			gpk_client_error_msg (gclient, _("Failed to remove package"),
-					        _("You don't have the necessary privileges to remove packages"));
+						_("You don't have the necessary privileges to remove packages"));
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		} else {
 			text = g_markup_escape_text (error_local->message, -1);
@@ -872,7 +799,7 @@ out:
 }
 
 /**
- * gpk_client_install_package_id:
+ * gpk_client_install_package_ids:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
  * @error: a %GError to put the error code and message in, or %NULL
@@ -880,21 +807,14 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GError **error)
+gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError **error)
 {
-	GtkWidget *widget;
-	GtkWidget *dialog;
-	GtkResponseType button;
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text;
-	guint len;
-	guint i;
-	GString *string;
-	PkPackageItem *item;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (package_id != NULL, FALSE);
+	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
 	gpk_client_setup_window (gclient, _("Install packages"));
@@ -905,77 +825,9 @@ gpk_client_install_package_id (GpkClient *gclient, const gchar *package_id, GErr
 		goto skip_checks;
 	}
 
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
-	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* find out if this would drag in other packages */
-	ret = pk_client_get_depends (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error_local);
-	if (!ret) {
-		text = g_strdup_printf ("%s: %s", _("Could not work out what packages would be also installed"), error_local->message);
-		gpk_client_error_msg (gclient, _("Failed to get depends"), text);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_free (text);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* any additional packages? */
-	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
-	if (len == 0) {
-		pk_debug ("no additional deps");
-		goto skip_checks;
-	}
-
-	/* have we previously said we don't want to be shown the confirmation */
-	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
-	if (!ret) {
-		pk_debug ("we've said we don't want deps anymore");
-		goto skip_checks;
-	}
-
-	/* process package list */
-	string = g_string_new (_("The following packages also have to be downloaded:"));
-	g_string_append (string, "\n\n");
-	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
-		text = gpk_package_id_format_oneline (item->package_id, item->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
-
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-	pk_debug ("text=%s", text);
-
-	/* show UI */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
-					 "%s", _("Install additional packages?"));
-	/* add a specialist button */
-	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
-
-	/* add a checkbutton for deps screen */
-	widget = gtk_check_button_new_with_label (_("Do not show me this again"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), gclient);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), widget);
-	gtk_widget_show (widget);
-
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
-	button = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (text);
-
+	ret = gpk_client_depends_show (package_ids);
 	/* did we click no or exit the window? */
-	if (button != GTK_RESPONSE_OK) {
+	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("Additional packages were not downloaded"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user did not agree to additional deps");
 		ret = FALSE;
@@ -993,12 +845,12 @@ skip_checks:
 	}
 
 	/* try to install the package_id */
-	ret = pk_client_install_package (gclient->priv->client_action, package_id, &error_local);
+	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
 		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
 			gpk_client_error_msg (gclient, _("Failed to install package"),
-					        _("You don't have the necessary privileges to install packages"));
+						_("You don't have the necessary privileges to install packages"));
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		} else {
 			text = g_markup_escape_text (error_local->message, -1);
@@ -1030,7 +882,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GError **error)
+gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError **error)
 {
 	gboolean ret;
 	GError *error_local = NULL;
@@ -1041,9 +893,9 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GErro
 	PkPackageItem *item;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (package != NULL, FALSE);
+	g_return_val_if_fail (packages != NULL, FALSE);
 
-	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, package, &error_local);
+	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, packages[0], &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to resolve package"), _("Incorrect response from search"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
@@ -1090,7 +942,7 @@ gpk_client_install_package_name (GpkClient *gclient, const gchar *package, GErro
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, package_id, error);
+	ret = gpk_client_install_package_ids (gclient, NULL/*package_ids*/, error);
 out:
 	g_free (package_id);
 	return ret;
@@ -1117,6 +969,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	gchar *package_id = NULL;
 	PkPackageItem *item;
 	PkPackageId *ident;
+	gchar **package_ids = NULL;
 	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -1176,8 +1029,10 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, package_id, error);
+	package_ids = g_strsplit (package_id, "|", 1);
+	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
+	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
 }
@@ -1198,6 +1053,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *package_id = NULL;
+	gchar **package_ids = NULL;
 	gchar *text;
 	guint len;
 
@@ -1237,8 +1093,10 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_id (gclient, package_id, error);
+	package_ids = g_strsplit (package_id, "|", 1);
+	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
+	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
 }

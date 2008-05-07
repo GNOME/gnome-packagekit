@@ -42,6 +42,7 @@ main (int argc, char *argv[])
 	gboolean verbose = FALSE;
 	GError *error;
 	GpkClient *gclient;
+	gchar **packages;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -75,15 +76,12 @@ main (int argc, char *argv[])
 				  _("You need to specify a package to install"), NULL);
 		return 1;
 	}
-	if (argc > 2) {
-		gpk_error_dialog (_("Failed to install packages from name"),
-				  _("You can only specify one package name to install"), NULL);
-		return 1;
-	}
 
 	error = NULL;
 	gclient = gpk_client_new ();
-	ret = gpk_client_install_package_name (gclient, argv[1], NULL);
+	packages = gpk_convert_argv_to_strv (argv);
+	ret = gpk_client_install_package_names (gclient, packages, NULL);
+	g_strfreev (packages);
 	g_object_unref (gclient);
 
 	return !ret;

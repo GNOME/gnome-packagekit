@@ -229,11 +229,14 @@ static gboolean
 gpk_application_install (GpkApplication *application, const gchar *package_id)
 {
 	gboolean ret;
+	gchar **package_ids = NULL;
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
 	pk_debug ("install %s", application->priv->package);
-	ret = gpk_client_install_package_id (application->priv->gclient, package_id, NULL);
+	package_ids = g_strsplit (package_id, "|", 1);
+	ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
+	g_strfreev (package_ids);
 
 	/* refresh the search as the items may have changed and the filter has not changed */
 	if (ret) {
@@ -277,9 +280,12 @@ static void
 gpk_application_remove_cb (PolKitGnomeAction *action, GpkApplication *application)
 {
 	gboolean ret;
+	gchar **package_ids = NULL;
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ret = gpk_client_remove_package_id (application->priv->gclient, application->priv->package, NULL);
+	package_ids = g_strsplit (application->priv->package, "|", 1);
+	ret = gpk_client_remove_package_ids (application->priv->gclient, package_ids, NULL);
+	g_strfreev (package_ids);
 
 	/* refresh the search as the items may have changed and the filter has not changed */
 	if (ret) {

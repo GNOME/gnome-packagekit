@@ -76,14 +76,14 @@ gboolean	 gpk_client_install_provide_file	(GpkClient	*gclient,
 gboolean	 gpk_client_install_mime_type		(GpkClient	*gclient,
 							 const gchar	*mime_type,
 							 GError		**error);
-gboolean	 gpk_client_install_package_name	(GpkClient	*gclient,
-							 const gchar	*package,
+gboolean	 gpk_client_install_package_names	(GpkClient	*gclient,
+							 gchar		**packages,
 							 GError		**error);
-gboolean	 gpk_client_install_package_id		(GpkClient	*gclient,
-							 const gchar	*package_id,
+gboolean	 gpk_client_install_package_ids		(GpkClient	*gclient,
+							 gchar		**package_ids,
 							 GError		**error);
-gboolean	 gpk_client_remove_package_id		(GpkClient	*gclient,
-							 const gchar	*package_id,
+gboolean	 gpk_client_remove_package_ids		(GpkClient	*gclient,
+							 gchar		**package_ids,
 							 GError		**error);
 gboolean	 gpk_client_update_system		(GpkClient	*gclient,
 							 GError		**error);

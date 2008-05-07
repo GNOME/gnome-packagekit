@@ -173,6 +173,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 	GError *error;
 	GError *error_local;
 	gchar *sender;
+	gchar **package_names;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -182,7 +183,11 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 	sender = dbus_g_method_get_sender (context);
 	pk_warning ("sender=%s", sender);
 
-	ret = gpk_client_install_package_name (dbus->priv->gclient, package_name, &error_local);
+	/* just convert from char* to char** */
+	package_names = g_strsplit (package_name, "|", 1);
+	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
+	g_strfreev (package_names);
+
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
