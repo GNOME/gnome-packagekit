@@ -102,9 +102,9 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
 	{PK_ROLE_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
-	{PK_ROLE_ENUM_REMOVE_PACKAGE,		"pk-package-delete"},
-	{PK_ROLE_ENUM_INSTALL_PACKAGE,		"pk-package-add"},
-	{PK_ROLE_ENUM_INSTALL_FILE,		"pk-package-add"},
+	{PK_ROLE_ENUM_REMOVE_PACKAGES,		"pk-package-delete"},
+	{PK_ROLE_ENUM_INSTALL_PACKAGES,		"pk-package-add"},
+	{PK_ROLE_ENUM_INSTALL_FILES,		"pk-package-add"},
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_SERVICE_PACK,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
@@ -954,13 +954,13 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_SEARCH_NAME:
 		text = _("Searching for package name");
 		break;
-	case PK_ROLE_ENUM_REMOVE_PACKAGE:
+	case PK_ROLE_ENUM_REMOVE_PACKAGES:
 		text = _("Removing");
 		break;
-	case PK_ROLE_ENUM_INSTALL_PACKAGE:
+	case PK_ROLE_ENUM_INSTALL_PACKAGES:
 		text = _("Installing");
 		break;
-	case PK_ROLE_ENUM_INSTALL_FILE:
+	case PK_ROLE_ENUM_INSTALL_FILES:
 		text = _("Installing file");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
@@ -1054,13 +1054,13 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_SEARCH_NAME:
 		text = _("Searched for package name");
 		break;
-	case PK_ROLE_ENUM_REMOVE_PACKAGE:
+	case PK_ROLE_ENUM_REMOVE_PACKAGES:
 		text = _("Removed package");
 		break;
-	case PK_ROLE_ENUM_INSTALL_PACKAGE:
+	case PK_ROLE_ENUM_INSTALL_PACKAGES:
 		text = _("Installed package");
 		break;
-	case PK_ROLE_ENUM_INSTALL_FILE:
+	case PK_ROLE_ENUM_INSTALL_FILES:
 		text = _("Installed local file");
 		break;
 	case PK_ROLE_ENUM_SERVICE_PACK:

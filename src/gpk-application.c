@@ -651,8 +651,8 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 	gpk_statusbar_hide (application->priv->statusbar);
 
 	/* do we need to update the search? */
-	if (role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
-	    role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
+	if (role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
+	    role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel2");
 		gtk_widget_hide (widget);
 		/* refresh the search as the items may have changed and the filter has not changed */
@@ -1195,13 +1195,13 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		pk_debug ("selected row is: %i %s", installed, application->priv->package);
 
 		if (installed == FALSE &&
-		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
+		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_INSTALL_PACKAGES)) {
 			polkit_gnome_action_set_visible (application->priv->install_action, TRUE);
 		} else {
 			polkit_gnome_action_set_visible (application->priv->install_action, FALSE);
 		}
 		if (installed &&
-		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
+		    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REMOVE_PACKAGES)) {
 			polkit_gnome_action_set_visible (application->priv->remove_action, TRUE);
 		} else {
 			polkit_gnome_action_set_visible (application->priv->remove_action, FALSE);

@@ -1439,7 +1439,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	gpk_client_setup_window (gclient, _("Update packages"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
-	ret = pk_client_update_packages_strv (gclient->priv->client_action, package_ids, &error_local);
+	ret = pk_client_update_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
 		/* print a proper error if we have it */
 		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {

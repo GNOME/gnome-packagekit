@@ -190,15 +190,15 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "image_refresh_cache");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_REMOVE_PACKAGE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_REMOVE_PACKAGES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_remove");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_PACKAGE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_PACKAGES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_package_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_FILE)) {
+	if (pk_enums_contain (roles, PK_ROLE_ENUM_INSTALL_FILES)) {
 		widget = glade_xml_get_widget (glade_xml, "image_file_install");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}

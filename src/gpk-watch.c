@@ -280,7 +280,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 
 	/* show an icon if the user needs to reboot */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-	    role == PK_ROLE_ENUM_INSTALL_PACKAGE ||
+	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
 	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		restart = pk_client_get_require_restart (client);
 		if (restart == PK_RESTART_ENUM_SYSTEM ||
@@ -323,11 +323,11 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 		return;
 	}
 
-	if (role == PK_ROLE_ENUM_REMOVE_PACKAGE) {
+	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
 		package = gpk_package_get_name (package_id);
 		message = g_strdup_printf (_("Package '%s' has been removed"), package);
 		g_free (package);
-	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGE) {
+	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
 		package = gpk_package_get_name (package_id);
 		message = g_strdup_printf (_("Package '%s' has been installed"), package);
 		g_free (package);
