@@ -891,6 +891,9 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
 	PkPackageItem *item;
+	gchar **package_ids = NULL;
+	gchar *package = NULL;
+	gchar *title;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (packages != NULL, FALSE);
@@ -903,11 +906,16 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 		goto out;
 	}
 
+	/* a pretty name */
+	package = gpk_package_get_name (packages[0]);
+
 	/* found nothing? */
 	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
 	if (len == 0) {
-		gpk_client_error_msg (gclient, _("Failed to find package"), _("The package could not be found online"));
+		title = g_strdup_printf (_("Could not find %s"), package);
+		gpk_client_error_msg (gclient, title, _("The package could not be found in any software sources"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		g_free (title);
 		ret = FALSE;
 		goto out;
 	}
@@ -917,7 +925,6 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
 		if (item->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
-			break;
 		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
 			pk_debug ("package '%s' resolved", item->package_id);
 			package_id = g_strdup (item->package_id);
@@ -927,8 +934,10 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 
 	/* already installed? */
 	if (already_installed) {
-		gpk_client_error_msg (gclient, _("Failed to install package"), _("The package is already installed"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		title = g_strdup_printf (_("Failed to install %s"), package);
+		gpk_client_error_msg (gclient, title, _("The package is already installed"));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package is already installed");
+		g_free (title);
 		ret = FALSE;
 		goto out;
 	}
@@ -936,15 +945,28 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	/* got junk? */
 	if (package_id == NULL) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("Incorrect response from search"));
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "incorrect response from search");
 		ret = FALSE;
 		goto out;
 	}
 
 	/* install this specific package */
-	ret = gpk_client_install_package_ids (gclient, NULL/*package_ids*/, error);
+//TODO: only resolved the first one
+	package_ids = g_strsplit (package_id, "|", 1);
+	ret = gpk_client_install_package_ids (gclient, package_ids, &error_local);
+	if (!ret) {
+		/* copy error message */
+		gpk_client_error_msg (gclient, _("Failed to install packages"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
 out:
+	if (error_local != NULL) {
+		g_error_free (error_local);
+	}
+	g_free (package);
 	g_free (package_id);
+	g_strfreev (package_ids);
 	return ret;
 }
 
