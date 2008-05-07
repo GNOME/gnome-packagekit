@@ -45,7 +45,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.1.11
+PACKAGEKIT_REQUIRED=0.2.0
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.12.0
 DBUS_REQUIRED=1.1.2
@@ -54,6 +54,7 @@ DBUS_GLIB_REQUIRED=0.73
 LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
 LIBSEXY_REQUIRED=0.1.10
+POLKIT_GNOME_REQUIRED=0.8
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -66,6 +67,7 @@ AC_SUBST(DBUS_GLIB_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(LIBNOTIFY_REQUIRED)
 AC_SUBST(LIBSEXY_REQUIRED)
+AC_SUBST(POLKIT_GNOME_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
@@ -74,7 +76,7 @@ PKG_CHECK_MODULES(PACKAGEKIT, packagekit >= $PACKAGEKIT_REQUIRED)
 AC_SUBST(PACKAGEKIT_CFLAGS)
 AC_SUBST(PACKAGEKIT_LIBS)
 
-PKG_CHECK_MODULES(POLKIT_GNOME, polkit-gnome)
+PKG_CHECK_MODULES(POLKIT_GNOME, polkit-gnome >= $POLKIT_GNOME_REQUIRED)
 AC_SUBST(POLKIT_GNOME_CFLAGS)
 AC_SUBST(POLKIT_GNOME_LIBS)
 
