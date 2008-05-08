@@ -1247,7 +1247,6 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 
 	/* update sensitivities */
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-	pk_warning ("are_updates_available=%i", are_updates_available);
 		length = pk_client_package_buffer_get_size (client_query);
 		if (length == 0) {
 			are_updates_available = FALSE;
@@ -1588,7 +1587,7 @@ pk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkE
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_warning ("getting new");
+		pk_debug ("getting new");
 		pk_update_viewer_get_new_update_list ();
 	}
 }
