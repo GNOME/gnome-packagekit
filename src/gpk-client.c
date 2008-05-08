@@ -61,7 +61,7 @@ static void     gpk_client_finalize	(GObject	*object);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))
 #define PK_STOCK_WINDOW_ICON		"system-software-installer"
-
+#define GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY	10 /* seconds */
 /**
  * GpkClientPrivate:
  *
@@ -214,7 +214,16 @@ gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, G
 static gboolean
 gpk_install_finished_timeout (gpointer data)
 {
+	GtkWidget *widget;
 	GpkClient *gclient = (GpkClient *) data;
+
+	/* hide window manually to get it out of the way */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_hide (widget);
+
+	/* the timer will be done */
+	gclient->priv->finished_timer_id = 0;
+
 	gtk_main_quit ();
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
@@ -355,7 +364,8 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_close2");
 		gtk_widget_grab_default (widget);
-		gclient->priv->finished_timer_id = g_timeout_add_seconds (30, gpk_install_finished_timeout, gclient);
+		gclient->priv->finished_timer_id = g_timeout_add_seconds (GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY,
+									  gpk_install_finished_timeout, gclient);
 	} else {
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 		gtk_widget_hide (widget);
