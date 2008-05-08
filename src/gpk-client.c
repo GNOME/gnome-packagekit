@@ -79,7 +79,7 @@ struct _GpkClientPrivate
 	guint			 finished_timer_id;
 	PkControl		*control;
 	PkRoleEnum		 roles;
-	gboolean		 do_key_auth;
+	gboolean		 using_secondary_client;
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
 	gboolean		 show_progress;
@@ -340,15 +340,13 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	/* do nothing */
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		gtk_main_quit ();
-		return;
+		goto out;
 	}
 
 	/* do we show a libnotify window instead? */
 	if (!gclient->priv->show_progress) {
 		gpk_client_finished_no_progress (client, exit, runtime, gclient);
-		gtk_main_quit ();
-		return;
+		goto out;
 	}
 
 	if (exit == PK_EXIT_ENUM_SUCCESS &&
@@ -370,7 +368,11 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	/* set to 100% */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
-	gtk_main_quit ();
+out:
+	/* only quit if there is not another transaction scheduled to be finished */
+	if (!gclient->priv->using_secondary_client){
+		gtk_main_quit ();
+	}
 }
 
 /**
@@ -447,7 +449,7 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	/* have we handled? */
 	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
 	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
-		if (gclient->priv->do_key_auth) {
+		if (gclient->priv->using_secondary_client) {
 			pk_debug ("ignoring error as handled");
 			return;
 		}
@@ -819,6 +821,9 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 
 	/* set title */
 	gpk_client_setup_window (gclient, _("Install packages"));
+
+	/* setup the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -1327,7 +1332,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	/* this is asynchronous, else we get into livelock */
 	ret = pk_client_install_signature (gclient->priv->client_secondary, PK_SIGTYPE_ENUM_GPG,
 					   key_id, package_id, &error);
-	gclient->priv->do_key_auth = ret;
+	gclient->priv->using_secondary_client = ret;
 	if (!ret) {
 		gpk_error_dialog (_("Failed to install signature"), _("The method failed"), error->message);
 		g_error_free (error);
@@ -1367,7 +1372,7 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 		gpk_error_dialog (_("Failed to accept EULA"), _("The method failed"), error->message);
 		g_error_free (error);
 	}
-	gclient->priv->do_key_auth = ret;
+	gclient->priv->using_secondary_client = ret;
 }
 
 /**
@@ -1381,13 +1386,17 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
+	/* go back to the UI */
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+	gclient->priv->using_secondary_client = FALSE;
+
 	pk_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
 		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error->message);
 		g_error_free (error);
 	}
-	gtk_main ();
+
 	return FALSE;
 }
 
@@ -1576,7 +1585,7 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timer_id = 0;
-	gclient->priv->do_key_auth = FALSE;
+	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->finished_timer_id = 0;
