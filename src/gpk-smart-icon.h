@@ -19,21 +19,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __PK_SMART_ICON_H
-#define __PK_SMART_ICON_H
+#ifndef __GPK_SMART_ICON_H
+#define __GPK_SMART_ICON_H
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define PK_TYPE_SMART_ICON		(gpk_smart_icon_get_type ())
-#define PK_SMART_ICON(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), PK_TYPE_SMART_ICON, GpkSmartIcon))
-#define PK_SMART_ICON_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), PK_TYPE_SMART_ICON, GpkSmartIconClass))
-#define PK_IS_SMART_ICON(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), PK_TYPE_SMART_ICON))
-#define PK_IS_SMART_ICON_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), PK_TYPE_SMART_ICON))
-#define PK_SMART_ICON_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), PK_TYPE_SMART_ICON, GpkSmartIconClass))
-#define PK_SMART_ICON_ERROR		(gpk_smart_icon_error_quark ())
-#define PK_SMART_ICON_TYPE_ERROR	(gpk_smart_icon_error_get_type ())
+#define GPK_TYPE_SMART_ICON		(gpk_smart_icon_get_type ())
+#define GPK_SMART_ICON(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GPK_TYPE_SMART_ICON, GpkSmartIcon))
+#define GPK_SMART_ICON_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), GPK_TYPE_SMART_ICON, GpkSmartIconClass))
+#define GPK_IS_SMART_ICON(o)	 	(G_TYPE_CHECK_INSTANCE_TYPE ((o), GPK_TYPE_SMART_ICON))
+#define GPK_IS_SMART_ICON_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GPK_TYPE_SMART_ICON))
+#define GPK_SMART_ICON_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GPK_TYPE_SMART_ICON, GpkSmartIconClass))
+#define GPK_SMART_ICON_ERROR		(gpk_smart_icon_error_quark ())
+#define GPK_SMART_ICON_TYPE_ERROR	(gpk_smart_icon_error_get_type ())
 
 typedef struct GpkSmartIconPrivate GpkSmartIconPrivate;
 
@@ -97,4 +97,4 @@ gboolean	 gpk_smart_icon_notify_close		(GpkSmartIcon	*sicon);
 
 G_END_DECLS
 
-#endif /* __PK_SMART_ICON_H */
+#endif /* __GPK_SMART_ICON_H */
