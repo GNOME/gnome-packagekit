@@ -699,10 +699,43 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 gboolean
 gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **error)
 {
+	GtkWidget *dialog;
+	GtkResponseType button;
+	const gchar *title;
+	gchar *message;
+	guint length;
 	gboolean ret;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (files_rel != NULL, FALSE);
+
+	length = g_strv_length (files_rel);
+	title = ngettext (_("Do you want to install this file?"),
+			  _("Do you want to install these files?"), length);
+	message = g_strjoinv ("\n", files_rel);
+
+	/* show UI */
+	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
+					 "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+
+	button = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (message);
+
+	/* did we click no or exit the window? */
+	if (button != GTK_RESPONSE_OK) {
+		title = ngettext (_("The file was not installed"),
+				  _("The files were not installed"), length);
+		dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+						 "%s", title);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		ret = FALSE;
+		goto out;
+	}
 
 	gclient->priv->retry_untrusted_value = FALSE;
 	ret = gpk_client_install_local_files_internal (gclient, TRUE, files_rel, error);
