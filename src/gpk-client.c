@@ -668,6 +668,7 @@ gpk_client_done (GpkClient *gclient)
 static gboolean
 gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 {
+	GtkRequisition requisition;
 	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -680,6 +681,12 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
 	gtk_label_set_label (GTK_LABEL (widget), "");
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_label_set_label (GTK_LABEL (widget), " \n\n\n");
+	gtk_widget_show (widget);
+
+	/* set the correct height of the label to stop the window jumping around */
+	gtk_widget_size_request (widget, &requisition);
+	gtk_widget_set_size_request (widget, -1, requisition.height);
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	return TRUE;
