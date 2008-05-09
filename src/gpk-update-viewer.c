@@ -652,8 +652,13 @@ pk_update_viewer_get_new_update_list (void)
 {
 	GError *error = NULL;
 	PkPackageList *list;
+	PkPackageItem *item;
 	GtkWidget *widget;
 	guint length;
+	guint i;
+	gchar *text;
+	const gchar *icon_name;
+	GtkTreeIter iter;
 
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
@@ -673,6 +678,22 @@ pk_update_viewer_get_new_update_list (void)
 	} else {
 		are_updates_available = TRUE;
 	}
+
+	for (i=0; i<length; i++) {
+		item = pk_package_list_get_item (list, i);
+		text = gpk_package_id_format_twoline (item->package_id, item->summary);
+		icon_name = gpk_info_enum_to_icon_name (item->info);
+		gtk_list_store_append (list_store_details, &iter);
+		gtk_list_store_set (list_store_details, &iter,
+				    PACKAGES_COLUMN_TEXT, text,
+				    PACKAGES_COLUMN_ID, item->package_id,
+				    PACKAGES_COLUMN_ICON, icon_name,
+				    PACKAGES_COLUMN_INFO, item->info,
+				    PACKAGES_COLUMN_SELECT, TRUE,
+				    -1);
+		g_free (text);
+	}
+
 
 	/* make the buttons non-clickable until we get completion */
 	polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
@@ -705,29 +726,11 @@ static void
 pk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
 			     const gchar *summary, gpointer data)
 {
-	GtkTreeIter iter;
-	gchar *text;
 	PkRoleEnum role;
-	const gchar *icon_name;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
 		  pk_info_enum_to_text (info), package_id, summary);
-
-	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		text = gpk_package_id_format_twoline (package_id, summary);
-		icon_name = gpk_info_enum_to_icon_name (info);
-		gtk_list_store_append (list_store_details, &iter);
-		gtk_list_store_set (list_store_details, &iter,
-				    PACKAGES_COLUMN_TEXT, text,
-				    PACKAGES_COLUMN_ID, package_id,
-				    PACKAGES_COLUMN_ICON, icon_name,
-				    PACKAGES_COLUMN_INFO, info,
-				    PACKAGES_COLUMN_SELECT, TRUE,
-				    -1);
-		g_free (text);
-		return;
-	}
 }
 
 /**
