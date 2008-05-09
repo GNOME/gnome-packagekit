@@ -1,3 +1,24 @@
+Version 0.2.1
+~~~~~~~~~~~~~~
+Released: 2008-05-09
+
+* Caveats
+ - Some of the client tools still have bugs. Much better than the 0.2.0 release.
+
+* Translations
+ - Update Spanish translation (Daniel Mustieles)
+
+* New features:
+ - Make gpk-update-viewer use GpkClient for getting the updates and refreshing the cache - this
+   means we get the GPG and EULA callbacks for free (Richard Hughes)
+ - Don't let the progress window jump around by ensuring it's always set to at least 3 lines (Richard Hughes)
+ - Ask the user to confirm they want to install local files (Richard Hughes)
+ - gpk-install-local-file can now install more than one file at once. fixes rh#439662 (Richard Hughes)
+
+* Bugfixes:
+ - Cleanup our handling of gtk-mainloops (Richard Hughes)
+ - Make gpk-update-viewer integrate with the new GpkClient code better (Richard Hughes)
+
 Version 0.2.0
 ~~~~~~~~~~~~~~
 Released: 2008-05-06
