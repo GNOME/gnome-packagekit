@@ -346,7 +346,6 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	pk_client_get_role (client, &role, NULL, NULL);
-
 	/* do nothing */
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
 		goto out;
@@ -380,7 +379,8 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
 out:
 	/* only quit if there is not another transaction scheduled to be finished */
-	if (!gclient->priv->using_secondary_client){
+	if (!gclient->priv->using_secondary_client) {
+		pk_debug ("quitting");
 		gtk_main_quit ();
 	}
 }

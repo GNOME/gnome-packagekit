@@ -71,6 +71,8 @@ static PolKitGnomeAction *restart_action = NULL;
 /* for the preview throbber */
 static void pk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gboolean clear);
 static void pk_update_viewer_description_animation_stop (void);
+static void pk_update_viewer_get_new_update_list (void);
+
 static int animation_timeout = 0;
 static int frame_counter = 0;
 static int n_frames = 0;
@@ -172,6 +174,7 @@ pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	gtk_widget_hide (widget);
 
 	pk_update_viewer_set_page (PAGE_LAST);
+	gpk_client_show_progress (gclient, TRUE);
 	gpk_client_update_system (gclient, NULL);
 	pk_update_viewer_set_page (PAGE_CONFIRM);
 }
@@ -240,6 +243,7 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	pk_update_viewer_set_page (PAGE_LAST);
 	package_ids = pk_package_ids_from_array (array);
+	gpk_client_show_progress (gclient, TRUE);
 	gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
 	pk_update_viewer_set_page (PAGE_CONFIRM);
@@ -471,19 +475,17 @@ pk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	gboolean ret;
 	GError *error = NULL;
 
-	/* we can't click this if we havn't finished */
-	ret = pk_client_reset (client_action, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-	ret = pk_client_refresh_cache (client_action, TRUE, &error);
+	/* refresh the cache */
+	gpk_client_show_progress (gclient, TRUE);
+	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
+	ret = gpk_client_refresh_cache (gclient, &error);
+	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
 	if (ret == FALSE) {
-		gpk_error_dialog (_("Failed to refresh"), _("Method refused"), error->message);
+		pk_warning ("failed: %s", error->message);
 		g_error_free (error);
-		return;
 	}
+	/* get new list */
+	pk_update_viewer_get_new_update_list ();
 }
 
 /**
@@ -497,7 +499,7 @@ pk_update_viewer_history_cb (GtkWidget *widget, gpointer data)
 	/* FIXME: do this in process */
 	if (!g_spawn_command_line_async ("gpk-log", &error)) {
 		gpk_error_dialog (_("Failed to launch"), _("The file was not found"), error->message);
-		g_error_free (error);			
+		g_error_free (error);
 	}
 }
 
@@ -553,12 +555,12 @@ pk_update_viewer_review_cb (GtkWidget *widget, gpointer data)
  * pk_update_viewer_populate_preview:
  **/
 static void
-pk_update_viewer_populate_preview (void)
+pk_update_viewer_populate_preview (PkPackageList *list)
 {
 	GtkWidget *widget;
 	guint length;
 
-	length = pk_client_package_buffer_get_size (client_query);
+	length = pk_package_list_get_size (list);
 	if (length == 0) {
 		pk_update_viewer_add_preview_item ("dialog-information", _("There are no updates available!"), TRUE);
 		widget = glade_xml_get_widget (glade_xml, "button_close3");
@@ -577,7 +579,7 @@ pk_update_viewer_populate_preview (void)
 		gchar *text;
 
 		for (i=0;i<length;i++) {
-			item = pk_client_package_buffer_get_item (client_query, i);
+			item = pk_package_list_get_item (list, i);
 			if (item->info == PK_INFO_ENUM_LOW) {
 				num_low++;
 			} else if (item->info == PK_INFO_ENUM_IMPORTANT) {
@@ -648,27 +650,39 @@ pk_update_viewer_populate_preview (void)
 static void
 pk_update_viewer_get_new_update_list (void)
 {
-	gboolean ret;
 	GError *error = NULL;
+	PkPackageList *list;
+	GtkWidget *widget;
+	guint length;
 
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
 
-	/* get the new update list */
-	ret = pk_client_reset (client_query, &error);
-	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+	gpk_client_show_progress (gclient, FALSE);
+	list = gpk_client_get_updates (gclient, &error);
+	if (list == NULL) {
+		pk_warning ("failed: %s", error->message);
 		g_error_free (error);
-		return;
-	}
-	ret = pk_client_get_updates (client_query, PK_FILTER_ENUM_NONE, &error);
-	if (!ret) {
-		pk_warning ("failed to get updates: %s", error->message);
-		g_error_free (error);
-		return;
+		goto out;
 	}
 
-	pk_update_viewer_populate_preview ();
+	/* do we have updates? */
+	length = pk_package_list_get_size (list);
+	if (length == 0) {
+		are_updates_available = FALSE;
+	} else {
+		are_updates_available = TRUE;
+	}
+
+	/* make the buttons non-clickable until we get completion */
+	polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
+	polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
+	widget = glade_xml_get_widget (glade_xml, "button_review");
+	gtk_widget_set_sensitive (widget, are_updates_available);
+
+	pk_update_viewer_populate_preview (list);
+out:
+	g_object_unref (list);
 }
 
 /**
@@ -1164,7 +1178,7 @@ pk_update_viewer_restart_cb (GtkWidget *widget, gpointer data)
 	gpk_restart_system ();
 }
 
-static void pk_update_viewer_populate_preview (void);
+static void pk_update_viewer_populate_preview (PkPackageList *list);
 
 /**
  * pk_update_viewer_check_blocked_packages:
@@ -1235,7 +1249,6 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 	GtkWidget *widget;
 	PkRoleEnum role;
 	PkRestartEnum restart;
-	guint length;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 
@@ -1245,29 +1258,13 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 		return;
 	}
 
-	/* update sensitivities */
-	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		length = pk_client_package_buffer_get_size (client_query);
-		if (length == 0) {
-			are_updates_available = FALSE;
-		} else {
-			are_updates_available = TRUE;
-		}
-
-		/* make the buttons non-clickable until we get completion */
-		polkit_gnome_action_set_sensitive (refresh_action, are_updates_available);
-		polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
-		polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
-		widget = glade_xml_get_widget (glade_xml, "button_review");
-		gtk_widget_set_sensitive (widget, are_updates_available);
-	}
-
 	/* stop the throbber */
 	pk_update_viewer_preview_animation_stop ();
 
 	/* check if we need to display infomation about blocked packages */
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		//TODO: this has to be moved to GpkClient
 		pk_update_viewer_check_blocked_packages (client);
 	}
 
@@ -1298,7 +1295,7 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 		}
 	}
 
-	pk_update_viewer_populate_preview ();
+//	pk_update_viewer_populate_preview (list);
 }
 
 static void
@@ -1339,7 +1336,6 @@ pk_update_viewer_preview_set_animation (const gchar *text)
 	/* hide apply, review and refresh */
 	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 	polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
-	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
 	gtk_widget_set_sensitive (widget, FALSE);
 
@@ -1372,7 +1368,6 @@ pk_update_viewer_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 		/* show apply, review and refresh */
 		polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
 		polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
-		polkit_gnome_action_set_sensitive (refresh_action, are_updates_available);
 		widget = glade_xml_get_widget (glade_xml, "button_review");
 		gtk_widget_set_sensitive (widget, are_updates_available);
 	}
@@ -1588,7 +1583,7 @@ pk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkE
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		pk_debug ("getting new");
-		pk_update_viewer_get_new_update_list ();
+		//pk_update_viewer_get_new_update_list ();
 	}
 }
 
@@ -1902,7 +1897,6 @@ main (int argc, char *argv[])
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* make the buttons non-clickable until we get completion */
-	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
 	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 	polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
 	widget = glade_xml_get_widget (glade_xml, "button_review");
