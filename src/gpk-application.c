@@ -153,6 +153,17 @@ gpk_application_class_init (GpkApplicationClass *klass)
 }
 
 /**
+ * gpk_application_show:
+ **/
+void
+gpk_application_show (GpkApplication *application)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	gtk_window_present (GTK_WINDOW (widget));
+}
+
+/**
  * gpk_application_set_find_cancel_buttons:
  **/
 static void

@@ -50,6 +50,7 @@ typedef struct
 
 GType		 gpk_application_get_type		(void) G_GNUC_CONST;
 GpkApplication	*gpk_application_new			(void);
+void		 gpk_application_show			(GpkApplication *application);
 
 G_END_DECLS
 
