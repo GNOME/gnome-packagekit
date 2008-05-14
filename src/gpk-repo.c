@@ -32,6 +32,9 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 
+/* local .la */
+#include <libunique.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -267,6 +270,17 @@ pk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * pk_repo_activated_cb
+ **/
+static void
+pk_repo_activated_cb (LibUnique *libunique, gpointer data)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "window_repo");
+	gtk_window_present (GTK_WINDOW (widget));
+}
+
+/**
  * main:
  **/
 int
@@ -278,6 +292,8 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkControl *control;
+	LibUnique *libunique;
+	gboolean ret;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -305,6 +321,15 @@ main (int argc, char *argv[])
 
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
+
+	/* are we already activated? */
+	libunique = libunique_new ();
+	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Repo");
+	if (!ret) {
+		goto unique_out;
+	}
+	g_signal_connect (libunique, "activated",
+			  G_CALLBACK (pk_repo_activated_cb), NULL);
 
 	gconf_client = gconf_client_get_default ();
 
@@ -394,6 +419,8 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_object_unref (control);
 	g_object_unref (statusbar);
+unique_out:
+	g_object_unref (libunique);
 
 	return 0;
 }
