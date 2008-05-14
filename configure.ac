@@ -55,6 +55,7 @@ LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
 LIBSEXY_REQUIRED=0.1.10
 POLKIT_GNOME_REQUIRED=0.8
+UNIQUE_REQUIRED=0.9.4
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -68,6 +69,7 @@ AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(LIBNOTIFY_REQUIRED)
 AC_SUBST(LIBSEXY_REQUIRED)
 AC_SUBST(POLKIT_GNOME_REQUIRED)
+AC_SUBST(UNIQUE_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
@@ -154,6 +156,21 @@ if test "$DOCBOOK2MAN" = "no" ; then
 AM_CONDITIONAL(HAVE_DOCBOOK2MAN, [test "$DOCBOOK2MAN" != "no"])
 
 dnl ---------------------------------------------------------------------------
+dnl - Is unique available?
+dnl ---------------------------------------------------------------------------
+if $PKG_CONFIG --atleast-version $UNIQUE_REQUIRED unique-1.0; then
+   have_unique=yes
+   PKG_CHECK_MODULES(UNIQUE, unique-1.0 >= $UNIQUE_REQUIRED)
+   AC_SUBST(UNIQUE_CFLAGS)
+   AC_SUBST(UNIQUE_LIBS)
+   AC_DEFINE(HAVE_UNIQUE, 1, [Building with unique support])
+else
+   have_unique=no
+   AC_DEFINE(HAVE_UNIQUE, 0, [Not building with unique support])
+fi
+AM_CONDITIONAL([HAVE_UNIQUE], [test $have_unique = yes])
+
+dnl ---------------------------------------------------------------------------
 dnl - Other tests
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(gcov, AS_HELP_STRING([--enable-gcov],[compile with coverage profiling instrumentation (gcc only)]),
@@ -194,6 +211,7 @@ AC_OUTPUT([
 Makefile
 libselftest/Makefile
 libgbus/Makefile
+libunique/Makefile
 src/Makefile
 help/Makefile
 man/Makefile
@@ -225,6 +243,7 @@ echo "
 
         GCC coverage profiling:    ${enable_gcov}
         GCC time profiling:        ${enable_gprof}
+        unique support:            ${have_unique}
         prefix:                    ${prefix}
         datadir:                   ${datadir}
         compiler:                  ${CC}

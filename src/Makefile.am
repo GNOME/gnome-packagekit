@@ -22,11 +22,16 @@ INCLUDES =						\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-I$(top_srcdir)/libgbus				\
+	-I$(top_srcdir)/libunique			\
 	-I$(top_srcdir)/libselftest			\
 	$(NULL)
 
 SELFTEST_LIBS =						\
 	$(top_builddir)/libselftest/libselftest.la	\
+	$(NULL)
+
+LIBUNIQUE_LIBS =					\
+	$(top_builddir)/libunique/libunique.la		\
 	$(NULL)
 
 bin_PROGRAMS =						\
@@ -83,6 +88,7 @@ shared_LIBS =						\
 	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
+	$(LIBUNIQUE_LIBS)				\
 	$(NULL)
 
 gpk_install_provide_file_SOURCES =			\

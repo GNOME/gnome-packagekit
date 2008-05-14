@@ -1,6 +1,7 @@
 SUBDIRS =						\
 	libselftest					\
 	libgbus						\
+	libunique					\
 	docs						\
 	man						\
 	src						\
