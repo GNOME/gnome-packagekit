@@ -122,11 +122,11 @@ out:
 }
 
 /**
- * pk_repo_detail_cb:
+ * gpk_repo_detail_cb:
  **/
 static void
-pk_repo_detail_cb (PkClient *client, const gchar *repo_id,
-		   const gchar *description, gboolean enabled, gpointer data)
+gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
+		    const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
 
@@ -191,37 +191,37 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * pk_repo_finished_cb:
+ * gpk_repo_finished_cb:
  **/
 static void
-pk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
+gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	/* nothing? */
 }
 
 /**
- * pk_repo_status_changed_cb:
+ * gpk_repo_status_changed_cb:
  **/
 static void
-pk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	gpk_statusbar_set_status (statusbar, status);
 }
 
 /**
- * pk_repo_error_code_cb:
+ * gpk_repo_error_code_cb:
  **/
 static void
-pk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
+gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
 	gpk_error_dialog (_("Failed to change status"), gpk_error_enum_to_localised_text (code), details);
 }
 
 /**
- * pk_repo_repo_list_refresh:
+ * gpk_repo_repo_list_refresh:
  **/
 static void
-pk_repo_repo_list_refresh (void)
+gpk_repo_repo_list_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -249,31 +249,31 @@ pk_repo_repo_list_refresh (void)
 }
 
 /**
- * pk_repo_repo_list_changed_cb:
+ * gpk_repo_repo_list_changed_cb:
  **/
 static void
-pk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
+gpk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
 {
-	pk_repo_repo_list_refresh ();
+	gpk_repo_repo_list_refresh ();
 }
 
 /**
- * pk_repo_checkbutton_details:
+ * gpk_repo_checkbutton_details:
  **/
 static void
-pk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
+gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 {
 	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	pk_debug ("Changing %s to %i", GPK_CONF_REPO_SHOW_DETAILS, show_details);
 	gconf_client_set_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, show_details, NULL);
-	pk_repo_repo_list_refresh ();
+	gpk_repo_repo_list_refresh ();
 }
 
 /**
- * pk_repo_activated_cb
+ * gpk_repo_activated_cb
  **/
 static void
-pk_repo_activated_cb (LibUnique *libunique, gpointer data)
+gpk_repo_activated_cb (LibUnique *libunique, gpointer data)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "window_repo");
@@ -329,23 +329,23 @@ main (int argc, char *argv[])
 		goto unique_out;
 	}
 	g_signal_connect (libunique, "activated",
-			  G_CALLBACK (pk_repo_activated_cb), NULL);
+			  G_CALLBACK (gpk_repo_activated_cb), NULL);
 
 	gconf_client = gconf_client_get_default ();
 
 	client = pk_client_new ();
 	g_signal_connect (client, "repo-detail",
-			  G_CALLBACK (pk_repo_detail_cb), NULL);
+			  G_CALLBACK (gpk_repo_detail_cb), NULL);
 	g_signal_connect (client, "status-changed",
-			  G_CALLBACK (pk_repo_status_changed_cb), NULL);
+			  G_CALLBACK (gpk_repo_status_changed_cb), NULL);
 	g_signal_connect (client, "finished",
-			  G_CALLBACK (pk_repo_finished_cb), NULL);
+			  G_CALLBACK (gpk_repo_finished_cb), NULL);
 	g_signal_connect (client, "error-code",
-			  G_CALLBACK (pk_repo_error_code_cb), NULL);
+			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
-			  G_CALLBACK (pk_repo_repo_list_changed_cb), NULL);
+			  G_CALLBACK (gpk_repo_repo_list_changed_cb), NULL);
 	roles = pk_control_get_actions (control);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
@@ -365,7 +365,7 @@ main (int argc, char *argv[])
 	show_details = gconf_client_get_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, NULL);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), show_details);
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_repo_checkbutton_details), NULL);
+			  G_CALLBACK (gpk_repo_checkbutton_details), NULL);
 
 	gtk_widget_set_size_request (main_window, 500, 300);
 
@@ -400,9 +400,9 @@ main (int argc, char *argv[])
 
 	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
-		pk_repo_repo_list_refresh ();
+		gpk_repo_repo_list_refresh ();
 	} else {
-		pk_repo_detail_cb (client, "default",
+		gpk_repo_detail_cb (client, "default",
 				   _("Getting software source list not supported by backend"), FALSE, NULL);
 		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
 		gtk_widget_set_sensitive (widget, FALSE);
