@@ -43,8 +43,7 @@
 static void
 gpk_application_close_cb (GpkApplication *application)
 {
-	g_object_unref (application);
-	exit (0);
+	gtk_main_quit ();
 }
 
 /**
