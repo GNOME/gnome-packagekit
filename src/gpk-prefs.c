@@ -32,6 +32,9 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 
+/* local .la */
+#include <libunique.h>
+
 #include <pk-debug.h>
 #include <pk-control.h>
 #include <pk-client.h>
@@ -249,6 +252,17 @@ pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
 }
 
 /**
+ * gpk_prefs_activated_cb
+ **/
+static void
+gpk_prefs_activated_cb (LibUnique *libunique, gpointer data)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "window_prefs");
+	gtk_window_present (GTK_WINDOW (widget));
+}
+
+/**
  * main:
  **/
 int
@@ -262,6 +276,8 @@ main (int argc, char *argv[])
 	PkRoleEnum roles;
 	PkClient *client;
 	PkControl *control;
+	LibUnique *libunique;
+	gboolean ret;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -296,6 +312,15 @@ main (int argc, char *argv[])
 
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
+
+	/* are we already activated? */
+	libunique = libunique_new ();
+	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Prefs");
+	if (!ret) {
+		goto unique_out;
+	}
+	g_signal_connect (libunique, "activated",
+			  G_CALLBACK (gpk_prefs_activated_cb), NULL);
 
 	client = pk_client_new ();
 
@@ -337,6 +362,8 @@ main (int argc, char *argv[])
 
 	g_object_unref (glade_xml);
 	g_object_unref (client);
+unique_out:
+	g_object_unref (libunique);
 
 	return 0;
 }
