@@ -33,6 +33,9 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
+/* local .la */
+#include <libunique.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -306,6 +309,17 @@ gpk_update_viewer_setup_policykit (void)
 }
 
 /**
+ * gpk_log_activated_cb
+ **/
+static void
+gpk_log_activated_cb (LibUnique *libunique, gpointer data)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	gtk_window_present (GTK_WINDOW (widget));
+}
+
+/**
  * main:
  **/
 int
@@ -318,6 +332,8 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkRoleEnum roles;
 	PkControl *control;
+	LibUnique *libunique;
+	gboolean ret;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -352,6 +368,15 @@ main (int argc, char *argv[])
 
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
+
+	/* are we already activated? */
+	libunique = libunique_new ();
+	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.LogViewer");
+	if (!ret) {
+		goto unique_out;
+	}
+	g_signal_connect (libunique, "activated",
+			  G_CALLBACK (gpk_log_activated_cb), NULL);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -427,6 +452,8 @@ main (int argc, char *argv[])
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_free (transaction_id);
+unique_out:
+	g_object_unref (libunique);
 
 	return 0;
 }
