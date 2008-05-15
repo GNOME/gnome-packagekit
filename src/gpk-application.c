@@ -1820,6 +1820,40 @@ gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *applicat
 }
 
 /**
+ * gpk_application_menu_filter_source_cb:
+ * @widget: The GtkWidget object
+ **/
+static void
+gpk_application_menu_filter_source_cb (GtkWidget *widget, GpkApplication *application)
+{
+	const gchar *name;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	name = gtk_widget_get_name (widget);
+
+	/* only care about new state */
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+		return;
+	}
+
+	/* set new filter */
+	if (g_str_has_suffix (name, "_yes")) {
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
+	} else if (g_str_has_suffix (name, "_no")) {
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+		pk_enums_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
+	} else {
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_SOURCE);
+		pk_enums_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
+	}
+
+	/* refresh the sesource results */
+	gpk_application_perform_search (application);
+}
+
+/**
  * gpk_application_menu_filter_basename_cb:
  * @widget: The GtkWidget object
  **/
@@ -2248,6 +2282,17 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
 
+	/* source filter */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_yes");
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_no");
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_both");
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description_pane");
 	gtk_widget_hide (widget);
 
@@ -2383,6 +2428,10 @@ gpk_application_init (GpkApplication *application)
 	}
 	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_ARCH) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_arch");
+		gtk_widget_hide (widget);
+	}
+	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_SOURCE) == FALSE) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source");
 		gtk_widget_hide (widget);
 	}
 
