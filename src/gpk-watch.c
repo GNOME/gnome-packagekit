@@ -61,8 +61,9 @@ static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
 #define GPK_WATCH_MAXIMUM_TOOLTIP_LINES		10
-#define GPK_WATCH_GCONF_PROXY_HTTP 	"/system/http_proxy"
-#define GPK_WATCH_GCONF_PROXY_FTP 	"/system/proxy"
+#define GPK_WATCH_GCONF_PROXY_HTTP 		"/system/http_proxy"
+#define GPK_WATCH_GCONF_PROXY_FTP 		"/system/proxy"
+#define GPK_WATCH_SET_PROXY_RATE_LIMIT		200 /* ms */
 
 struct GpkWatchPrivate
 {
@@ -75,6 +76,7 @@ struct GpkWatchPrivate
 	GConfClient		*gconf_client;
 	gboolean		 show_refresh_in_menu;
 	PolKitGnomeAction	*restart_action;
+	guint			 set_proxy_timeout;
 };
 
 G_DEFINE_TYPE (GpkWatch, gpk_watch, G_TYPE_OBJECT)
@@ -857,11 +859,19 @@ gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 static gchar *
 gpk_watch_get_proxy_ftp (GpkWatch *watch)
 {
+	gchar *mode = NULL;
 	gchar *connection = NULL;
-	gchar *host;
+	gchar *host = NULL;
 	gint port;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
+
+	/* common case, a direct connection */
+	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
+	if (pk_strequal (mode, "none")) {
+		pk_debug ("not using session proxy");
+		goto out;
+	}
 
 	host = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/ftp_host", NULL);
 	if (pk_strzero (host)) {
@@ -877,6 +887,7 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 		connection = g_strdup_printf ("%s:%i", host, port);
 	}
 out:
+	g_free (mode);
 	g_free (host);
 	return connection;
 }
@@ -888,6 +899,7 @@ out:
 gchar *
 gpk_watch_get_proxy_http (GpkWatch *watch)
 {
+	gchar *mode = NULL;
 	gchar *host = NULL;
 	gchar *auth = NULL;
 	gchar *connection = NULL;
@@ -897,10 +909,17 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
 
+	/* common case, a direct connection */
+	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
+	if (pk_strequal (mode, "none")) {
+		pk_debug ("not using session proxy");
+		goto out;
+	}
+
 	/* do we use this? */
 	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_http_proxy", NULL);
 	if (!ret) {
-		pk_debug ("using direct");
+		pk_debug ("not using http proxy");
 		goto out;
 	}
 
@@ -947,6 +966,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 		proxy_http = g_strdup_printf ("%s@%s", auth, connection);
 	}
 out:
+	g_free (mode);
 	g_free (connection);
 	g_free (auth);
 	g_free (host);
@@ -954,10 +974,10 @@ out:
 }
 
 /**
- * gpk_watch_set_proxies:
+ * gpk_watch_set_proxies_ratelimit:
  **/
 static gboolean
-gpk_watch_set_proxies (GpkWatch *watch)
+gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 {
 	gchar *proxy_http;
 	gchar *proxy_ftp;
@@ -968,8 +988,7 @@ gpk_watch_set_proxies (GpkWatch *watch)
 	proxy_http = gpk_watch_get_proxy_http (watch);
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
-	pk_warning ("set proxy_http=%s", proxy_http);
-	pk_warning ("set proxy_ftp=%s", proxy_ftp);
+	pk_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
 	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp);
 	if (!ret) {
 		pk_warning ("setting proxy failed");
@@ -977,7 +996,25 @@ gpk_watch_set_proxies (GpkWatch *watch)
 
 	g_free (proxy_http);
 	g_free (proxy_ftp);
-	return ret;
+
+	/* we can run again */
+	watch->priv->set_proxy_timeout = 0;
+	return FALSE;
+}
+
+/**
+ * gpk_watch_set_proxies:
+ **/
+static gboolean
+gpk_watch_set_proxies (GpkWatch *watch)
+{
+	if (watch->priv->set_proxy_timeout != 0) {
+		pk_debug ("already scheduled");
+		return FALSE;
+	}
+	watch->priv->set_proxy_timeout = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
+							(GSourceFunc) gpk_watch_set_proxies_ratelimit, watch);
+	return TRUE;
 }
 
 /**
@@ -1010,6 +1047,7 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->gconf_client = gconf_client_get_default ();
 	watch->priv->sicon = gpk_smart_icon_new ();
 	watch->priv->sicon_restart = gpk_smart_icon_new ();
+	watch->priv->set_proxy_timeout = 0;
 
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
@@ -1096,6 +1134,12 @@ gpk_watch_finalize (GObject *object)
 	watch = GPK_WATCH (object);
 
 	g_return_if_fail (watch->priv != NULL);
+
+	/* we might we waiting for a proxy update */
+	if (watch->priv->set_proxy_timeout != 0) {
+		g_source_remove (watch->priv->set_proxy_timeout);
+	}
+
 	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
