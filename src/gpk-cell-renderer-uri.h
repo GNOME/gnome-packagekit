@@ -28,8 +28,8 @@
 #define GPK_TYPE_CELL_RENDERER_URI		(gpk_cell_renderer_uri_get_type())
 #define GPK_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_CAST((obj), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUri))
 #define GPK_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_CAST((cls), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUriClass))
-#define PK_IS_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_TYPE((obj), GPK_TYPE_CELL_RENDERER_URI))
-#define PK_IS_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE((cls), GPK_TYPE_CELL_RENDERER_URI))
+#define GPK_IS_CELL_RENDERER_URI(obj)		(G_TYPE_CHECK_INSTANCE_TYPE((obj), GPK_TYPE_CELL_RENDERER_URI))
+#define GPK_IS_CELL_RENDERER_URI_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE((cls), GPK_TYPE_CELL_RENDERER_URI))
 #define GPK_CELL_RENDERER_URI_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS((obj), GPK_TYPE_CELL_RENDERER_URI, GpkCellRendererUriClass))
 
 G_BEGIN_DECLS
@@ -41,7 +41,7 @@ struct _GpkCellRendererUri
 {
 	GtkCellRendererText	 parent;
 	gchar			*uri;
-	gboolean		 clicked;
+	GHashTable		*clicked;
 };
 
 struct _GpkCellRendererUriClass

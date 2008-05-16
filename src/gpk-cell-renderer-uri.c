@@ -45,6 +45,29 @@ static gpointer parent_class = NULL;
 static guint signals[LAST_SIGNAL] = { 0 };
 
 static gboolean
+gpk_cell_renderer_uri_is_clicked (GpkCellRendererUri *cru)
+{
+	gpointer value;
+	g_return_val_if_fail (cru != NULL, FALSE);
+	if (cru->uri == NULL) {
+		return FALSE;
+	}
+	value = g_hash_table_lookup (cru->clicked, cru->uri);
+	return (value != NULL);
+}
+
+static void
+gpk_cell_renderer_uri_set_clicked (GpkCellRendererUri *cru, gboolean clicked)
+{
+	g_return_if_fail (cru != NULL);
+	if (clicked) {
+		g_hash_table_insert (cru->clicked, g_strdup (cru->uri), GINT_TO_POINTER (1));
+	} else {
+		g_hash_table_remove (cru->clicked, cru->uri);
+	}
+}
+
+static gboolean
 gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 			        GtkWidget *widget, const gchar *path,
 			        GdkRectangle *background_area,
@@ -57,7 +80,8 @@ gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 		return TRUE;
 	}
 
-	cru->clicked = TRUE;
+	gpk_cell_renderer_uri_set_clicked (cru, TRUE);
+
 	pk_debug ("emit: %s", cru->uri);
 	g_signal_emit (cell, signals [CLICKED], 0, cru->uri);
 	return TRUE;
@@ -67,6 +91,7 @@ static void
 gpk_cell_renderer_uri_get_property (GObject *object, guint param_id,
 				    GValue *value, GParamSpec *pspec)
 {
+	gboolean ret;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (object);
 
 	switch (param_id) {
@@ -74,7 +99,8 @@ gpk_cell_renderer_uri_get_property (GObject *object, guint param_id,
 		g_value_set_string (value, cru->uri);
 		break;
 	case PROP_CLICKED:
-		g_value_set_boolean (value, cru->clicked);
+		ret = gpk_cell_renderer_uri_is_clicked (cru);
+		g_value_set_boolean (value, ret);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -86,6 +112,7 @@ static void
 gpk_cell_renderer_uri_set_property (GObject *object, guint param_id,
 				    const GValue *value, GParamSpec *pspec)
 {
+	gboolean ret;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (object);
 
 	switch (param_id) {
@@ -96,7 +123,8 @@ gpk_cell_renderer_uri_set_property (GObject *object, guint param_id,
 		cru->uri = g_strdup (g_value_get_string (value));
 		break;
 	case PROP_CLICKED:
-		cru->clicked = g_value_get_boolean (value);
+		ret = g_value_get_boolean (value);
+		gpk_cell_renderer_uri_set_clicked (cru, ret);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -113,6 +141,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			     GdkRectangle *expose_area,
 			     GtkCellRendererState flags)
 {
+	gboolean ret;
 	GdkCursor *cursor;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
@@ -124,12 +153,13 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	}
 	gdk_window_set_cursor (widget->window, cursor);
 	gdk_cursor_destroy (cursor);
+	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
 	/* set colour */
 	if (cru->uri == NULL) {
 		g_object_set (G_OBJECT (cell), "foreground", "#000000", NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
-	} else if (cru->clicked) {
+	} else if (ret) {
 		g_object_set (G_OBJECT (cell), "foreground", "#840084", NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {
@@ -146,11 +176,25 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, window, widget, background_area, cell_area, expose_area, flags);
 }
 
+/**
+ * gpk_cell_renderer_finalize:
+ * @object: The object to finalize
+ **/
+static void
+gpk_cell_renderer_finalize (GObject *object)
+{
+	GpkCellRendererUri *cru;
+	cru = GPK_CELL_RENDERER_URI (object);
+	g_hash_table_unref (cru->clicked);
+	G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
 static void
 gpk_cell_renderer_uri_class_init (GpkCellRendererUriClass *class)
 {
 	GtkCellRendererClass *cell_renderer_class;
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
+	object_class->finalize = gpk_cell_renderer_finalize;
 
 	parent_class = g_type_class_peek_parent (class);
 
@@ -182,7 +226,7 @@ static void
 gpk_cell_renderer_uri_init (GpkCellRendererUri *cru)
 {
 	cru->uri = NULL;
-	cru->clicked = FALSE;
+	cru->clicked = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 }
 
 /**
