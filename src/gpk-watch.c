@@ -61,6 +61,8 @@ static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
 #define GPK_WATCH_MAXIMUM_TOOLTIP_LINES		10
+#define GPK_WATCH_GCONF_PROXY_HTTP 	"/system/http_proxy"
+#define GPK_WATCH_GCONF_PROXY_FTP 	"/system/proxy"
 
 struct GpkWatchPrivate
 {
@@ -849,6 +851,149 @@ gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 }
 
 /**
+ * gpk_watch_get_proxy_ftp:
+ * Return value: server.lan:8080
+ **/
+static gchar *
+gpk_watch_get_proxy_ftp (GpkWatch *watch)
+{
+	gchar *connection = NULL;
+	gchar *host;
+	gint port;
+
+	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
+
+	host = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/ftp_host", NULL);
+	if (pk_strzero (host)) {
+		pk_debug ("no hostname for ftp proxy");
+		goto out;
+	}
+	port = gconf_client_get_int (watch->priv->gconf_client, "/system/proxy/ftp_port", NULL);
+
+	/* ftp has no username or password */
+	if (port == 0) {
+		connection = g_strdup (host);
+	} else {
+		connection = g_strdup_printf ("%s:%i", host, port);
+	}
+out:
+	g_free (host);
+	return connection;
+}
+
+/**
+ * gpk_watch_get_proxy_ftp:
+ * Return value: username:password@server.lan:8080
+ **/
+gchar *
+gpk_watch_get_proxy_http (GpkWatch *watch)
+{
+	gchar *host = NULL;
+	gchar *auth = NULL;
+	gchar *connection = NULL;
+	gchar *proxy_http = NULL;
+	gint port;
+	gboolean ret;
+
+	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
+
+	/* do we use this? */
+	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_http_proxy", NULL);
+	if (!ret) {
+		pk_debug ("using direct");
+		goto out;
+	}
+
+	/* http has 4 parameters */
+	host = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/host", NULL);
+	if (pk_strzero (host)) {
+		pk_debug ("no hostname for http proxy");
+		goto out;
+	}
+
+	/* user and password are both optional */
+	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_authentication", NULL);
+	if (ret) {
+		gchar *user = NULL;
+		gchar *password = NULL;
+
+		user = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_user", NULL);
+		password = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_password", NULL);
+
+		if (user != NULL && password != NULL) {
+			auth = g_strdup_printf ("%s:%s", user, password);
+		} else if (user != NULL) {
+			auth = g_strdup (user);
+		} else if (password != NULL) {
+			auth = g_strdup_printf (":%s", user);
+		}
+
+		g_free (user);
+		g_free (password);
+	}
+
+	/* port is optional too */
+	port = gconf_client_get_int (watch->priv->gconf_client, "/system/http_proxy/port", NULL);
+	if (port == 0) {
+		connection = g_strdup (host);
+	} else {
+		connection = g_strdup_printf ("%s:%i", host, port);
+	}
+
+	/* the whole auth section is optional */
+	if (pk_strzero (auth)) {
+		proxy_http = g_strdup (connection);
+	} else {
+		proxy_http = g_strdup_printf ("%s@%s", auth, connection);
+	}
+out:
+	g_free (connection);
+	g_free (auth);
+	g_free (host);
+	return proxy_http;
+}
+
+/**
+ * gpk_watch_set_proxies:
+ **/
+static gboolean
+gpk_watch_set_proxies (GpkWatch *watch)
+{
+	gchar *proxy_http;
+	gchar *proxy_ftp;
+	gboolean ret;
+
+	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
+
+	proxy_http = gpk_watch_get_proxy_http (watch);
+	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
+
+	pk_warning ("set proxy_http=%s", proxy_http);
+	pk_warning ("set proxy_ftp=%s", proxy_ftp);
+	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp);
+	if (!ret) {
+		pk_warning ("setting proxy failed");
+	}
+
+	g_free (proxy_http);
+	g_free (proxy_ftp);
+	return ret;
+}
+
+/**
+ * gpk_watch_gconf_key_changed_cb:
+ *
+ * We might have to do things when the gconf keys change; do them here.
+ **/
+static void
+gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkWatch *watch)
+{
+	pk_debug ("keys have changed");
+	/* set the proxy */
+	gpk_watch_set_proxies (watch);
+}
+
+/**
  * gpk_watch_init:
  * @watch: This class instance
  **/
@@ -922,6 +1067,19 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (restart_action, "activate",
 			  G_CALLBACK (gpk_watch_restart_cb), NULL);
 	watch->priv->restart_action = restart_action;
+
+	/* watch proxy keys */
+	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
+			      GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_FTP,
+			      GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
+				 (GConfClientNotifyFunc) gpk_watch_gconf_key_changed_cb, watch, NULL, NULL);
+	gconf_client_notify_add (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_FTP,
+				 (GConfClientNotifyFunc) gpk_watch_gconf_key_changed_cb, watch, NULL, NULL);
+
+	/* set the proxy */
+	gpk_watch_set_proxies (watch);
 }
 
 /**
