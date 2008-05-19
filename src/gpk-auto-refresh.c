@@ -120,7 +120,7 @@ gpk_auto_refresh_class_init (GpkAutoRefreshClass *klass)
 static gboolean
 gpk_auto_refresh_signal_refresh_cache (GpkAutoRefresh *arefresh)
 {
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	pk_debug ("emitting refresh-cache");
 	g_signal_emit (arefresh, signals [REFRESH_CACHE], 0);
@@ -133,7 +133,7 @@ gpk_auto_refresh_signal_refresh_cache (GpkAutoRefresh *arefresh)
 static gboolean
 gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 {
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	pk_debug ("emitting get-updates");
 	g_signal_emit (arefresh, signals [GET_UPDATES], 0);
@@ -178,7 +178,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 	const gchar *freq_text;
 	PkFreqEnum freq;
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), 0);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), 0);
 
 	/* get from gconf */
 	freq_text = gconf_client_get_string (arefresh->priv->gconf_client, key, NULL);
@@ -202,7 +202,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	guint thresh;
 	gboolean ret;
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* not on battery */
 	if (arefresh->priv->on_battery) {
@@ -251,7 +251,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	guint thresh;
 	gboolean ret;
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
@@ -286,7 +286,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
 	guint thresh;
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we shouldn't do this early in the session startup */
 	if (arefresh->priv->session_delay == FALSE) {
@@ -327,7 +327,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 static void
 gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *arefresh)
 {
-	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
@@ -340,7 +340,7 @@ gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *a
 static void
 gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoRefresh *arefresh)
 {
-	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("setting on_battery %i", on_battery);
 	arefresh->priv->on_battery = on_battery;
@@ -353,7 +353,7 @@ gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoR
 gboolean
 gpk_auto_refresh_get_on_battery (GpkAutoRefresh *arefresh)
 {
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 	return arefresh->priv->on_battery;
 }
 
@@ -363,7 +363,7 @@ gpk_auto_refresh_get_on_battery (GpkAutoRefresh *arefresh)
 static void
 gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum state, GpkAutoRefresh *arefresh)
 {
-	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	arefresh->priv->network_active = pk_enums_contain (state, PK_NETWORK_ENUM_ONLINE);
 	pk_debug ("setting online %i", arefresh->priv->network_active);
@@ -378,7 +378,7 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 {
 	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* triggered once an hour */
 	gpk_auto_refresh_change_state (arefresh);
@@ -395,7 +395,7 @@ gpk_auto_refresh_check_delay_cb (gpointer user_data)
 {
 	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
 
-	g_return_val_if_fail (PK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we have waited enough */
 	if (arefresh->priv->session_delay == FALSE) {
@@ -420,7 +420,7 @@ pk_connection_gpm_changed_cb (LibGBus *libgbus, gboolean connected, GpkAutoRefre
 	gboolean on_battery;
 	gboolean ret;
 
-	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("gnome-power-manager connection-changed: %i", connected);
 
@@ -471,7 +471,7 @@ pk_connection_gs_changed_cb (LibGBus *libgbus, gboolean connected, GpkAutoRefres
 {
 	GError *error = NULL;
 
-	g_return_if_fail (PK_IS_AUTO_REFRESH (arefresh));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	pk_debug ("gnome-screensaver connection-changed: %i", connected);
 
@@ -571,7 +571,7 @@ gpk_auto_refresh_finalize (GObject *object)
 {
 	GpkAutoRefresh *arefresh;
 
-	g_return_if_fail (PK_IS_AUTO_REFRESH (object));
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (object));
 
 	arefresh = GPK_AUTO_REFRESH (object);
 	g_return_if_fail (arefresh->priv != NULL);
