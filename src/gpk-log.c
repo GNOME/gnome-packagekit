@@ -369,6 +369,12 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Log viewer"));
+	if (!ret) {
+		return 1;
+	}
+
 	/* are we already activated? */
 	libunique = libunique_new ();
 	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.LogViewer");
@@ -454,6 +460,5 @@ main (int argc, char *argv[])
 	g_free (transaction_id);
 unique_out:
 	g_object_unref (libunique);
-
 	return 0;
 }

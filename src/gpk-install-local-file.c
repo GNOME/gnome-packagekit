@@ -71,6 +71,12 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Local file installer"));
+	if (!ret) {
+		return 1;
+	}
+
 	if (argc < 2) {
 		gpk_error_dialog (_("Failed to install local file"),
 				  _("You need to specify a file to install"), NULL);

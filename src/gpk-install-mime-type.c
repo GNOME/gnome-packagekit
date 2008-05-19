@@ -70,6 +70,12 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Mime type installer"));
+	if (!ret) {
+		return 1;
+	}
+
 	if (argc < 2) {
 		gpk_error_dialog (_("Failed to install file handler"),
 				  _("You need to specify a mime-type to install"), NULL);

@@ -36,6 +36,7 @@
 
 #include <pk-debug.h>
 #include "gpk-application.h"
+#include "gpk-common.h"
 
 /**
  * gpk_application_close_cb
@@ -105,6 +106,12 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Package installer"));
+	if (!ret) {
+		return 1;
+	}
+
 	/* are we already activated? */
 	libunique = libunique_new ();
 	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Repo");
@@ -125,7 +132,6 @@ main (int argc, char *argv[])
 	g_object_unref (application);
 unique_out:
 	g_object_unref (libunique);
-
 	return 0;
 }
 

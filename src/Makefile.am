@@ -207,6 +207,8 @@ gpk_log_SOURCES =					\
 	gpk-gnome.h					\
 	gpk-common.c					\
 	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
 gpk_log_LDADD =						\
@@ -241,21 +243,23 @@ gpk-interface.h: gpk-interface.xml
 		--output=gpk-interface.h		\
 		$(srcdir)/gpk-interface.xml
 
-check_PROGRAMS =						\
+check_PROGRAMS =					\
 	gpk-self-test
 
-noinst_PROGRAMS =						\
+noinst_PROGRAMS =					\
 	gpk-self-test
 
-gpk_self_test_SOURCES =						\
-	gpk-self-test.c						\
-	gpk-common.c						\
-	gpk-common.h						\
+gpk_self_test_SOURCES =					\
+	gpk-self-test.c					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	$(NULL)
 
-gpk_self_test_LDADD =						\
-	$(shared_LIBS)						\
-	$(SELFTEST_LIBS)					\
+gpk_self_test_LDADD =					\
+	$(shared_LIBS)					\
+	$(SELFTEST_LIBS)				\
 	$(NULL)
 
 gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS

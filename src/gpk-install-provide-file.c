@@ -70,6 +70,12 @@ main (int argc, char *argv[])
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Provide file installer"));
+	if (!ret) {
+		return 1;
+	}
+
 	if (argc < 2) {
 		gpk_error_dialog (_("Failed to install a package to provide a file"),
 				  _("You need to specify a filename to install"), NULL);

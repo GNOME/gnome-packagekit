@@ -26,6 +26,7 @@
 #include <math.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
 
@@ -35,7 +36,9 @@
 #include <pk-package-id.h>
 #include <pk-enum.h>
 #include <pk-common.h>
+
 #include "gpk-common.h"
+#include "gpk-error.h"
 
 /* icon names */
 static PkEnumMatch enum_info_icon_name[] = {
@@ -1267,6 +1270,35 @@ const gchar *
 gpk_message_enum_to_icon_name (PkMessageEnum message)
 {
 	return pk_enum_find_string (enum_message_icon_name, message);
+}
+
+/**
+ * gpk_check_privileged_user
+ **/
+gboolean
+gpk_check_privileged_user (const gchar *application_name)
+{
+	guint uid;
+	gchar *message;
+	gchar *title;
+
+	uid = getuid ();
+	if (uid == 0) {
+		if (application_name == NULL) {
+			title = g_strdup (_("This application is running as a privileged user"));
+		} else {
+			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
+		}
+		message = g_strjoin ("\n",
+				     _("Running graphical applications as a privileged user should be avoided for security reasons."),
+				     _("PackageKit applications are security sensitive and therefore this application will now close."), NULL);
+		gpk_error_dialog (title, message, "");
+		g_free (title);
+		g_free (message);
+		pk_warning ("uid=%i so closing", uid);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**

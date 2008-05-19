@@ -41,6 +41,7 @@
 #include "gpk-firmware.h"
 #include "gpk-dbus.h"
 #include "gpk-interface.h"
+#include "gpk-common.h"
 
 /**
  * gpk_object_register:
@@ -153,6 +154,12 @@ main (int argc, char *argv[])
 
 	pk_debug_init (verbose);
 	gtk_init (&argc, &argv);
+
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Update applet"));
+	if (!ret) {
+		return 1;
+	}
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
