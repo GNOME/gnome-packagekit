@@ -176,6 +176,8 @@ gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
+	gpk-animated-icon.c				\
+	gpk-animated-icon.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(shared_SOURCES)				\
