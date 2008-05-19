@@ -52,6 +52,7 @@
 #include "gpk-statusbar.h"
 #include "gpk-consolekit.h"
 #include "gpk-cell-renderer-uri.h"
+#include "gpk-animated-icon.h"
 #include "gpk-client.h"
 
 static GladeXML *glade_xml = NULL;
@@ -75,11 +76,6 @@ static PolKitGnomeAction *restart_action = NULL;
 static void pk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gboolean clear);
 static void pk_update_viewer_description_animation_stop (void);
 static void pk_update_viewer_get_new_update_list (void);
-
-static int animation_timeout = 0;
-static int frame_counter = 0;
-static int n_frames = 0;
-static GdkPixbuf **frames = NULL;
 
 enum {
 	PREVIEW_COLUMN_ICON,
@@ -264,112 +260,30 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 }
 
 /**
- * pk_update_viewer_animation_load_frames:
- **/
-static gboolean
-pk_update_viewer_animation_load_frames (void)
-{
-	GtkWidget *widget;
-	GdkPixbuf *pixbuf;
-	gint w, h;
-	gint rows, cols;
-	gint r, c, i;
-
-	if (frames == NULL) {
-		/* get the process-working animation from the icon theme
-		 * and split it into frames.
-		 * FIXME reset frames on theme changes
-		 */
-		widget = glade_xml_get_widget (glade_xml, "window_updates");
-		gtk_icon_size_lookup (GTK_ICON_SIZE_DIALOG, &w, &h);
-		pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-						   "process-working",
-						   w, 0, NULL);
-		/* can't load from gnome-icon-theme */
-		if (pixbuf == NULL) {
-			return FALSE;
-		}
-		cols = gdk_pixbuf_get_width (pixbuf) / w;
-		rows = gdk_pixbuf_get_height (pixbuf) / h;
-
-		n_frames = rows * cols;
-		frames = g_new (GdkPixbuf*, n_frames);
-
-		for (i = 0, r = 0; r < rows; r++)
-			for (c = 0; c < cols; c++, i++) {
-			frames[i] = gdk_pixbuf_new_subpixbuf (pixbuf, c * w, r * h, w, h);
-		}
-
-		g_object_unref (pixbuf);
-	}
-	return TRUE;
-}
-
-/**
- * pk_update_viewer_animation_update:
- **/
-static gboolean
-pk_update_viewer_animation_update (gpointer data)
-{
-	GtkTreeModel *model = data;
-	GtkTreeIter iter;
-	gint column;
-
-	column = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (model), "progress-column"));
-
-	/* have we loaded a file */
-	if (frames == NULL) {
-		pk_warning ("no frames to process");
-		return FALSE;
-	}
-
-	gtk_tree_model_get_iter_first (model, &iter);
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			    column, frames[frame_counter],
-			    -1);
-
-	frame_counter = (frame_counter + 1) % n_frames;
-
-	return TRUE;
-}
-
-/**
  * pk_update_viewer_preview_animation_start:
  **/
 static void
-pk_update_viewer_preview_animation_start (void)
+pk_update_viewer_preview_animation_start (const gchar *text)
 {
 	GtkWidget *widget;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeModel *model;
-	GList *list;
+	gchar *text_bold;
 
-	/* don't double queue */
-	if (animation_timeout != 0) {
-		pk_debug ("don't double start");
-		return;
-	}
+	widget = glade_xml_get_widget (glade_xml, "image_animation_preview");
+	gpk_animated_icon_set_frame_delay (GPK_ANIMATED_ICON (widget), 50);
+	gpk_animated_icon_set_filename_tile (GPK_ANIMATED_ICON (widget), GTK_ICON_SIZE_DIALOG, "process-working");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), TRUE);
+	gtk_widget_show (widget);
 
-	pk_update_viewer_animation_load_frames ();
+	text_bold = g_strdup_printf ("<b>%s</b>", text);
+	widget = glade_xml_get_widget (glade_xml, "label_animation_preview");
+	gtk_label_set_label (GTK_LABEL (widget), text_bold);
+	g_free (text_bold);
 
-	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
-	list = gtk_tree_view_column_get_cell_renderers (column);
-	renderer = list->data;
-	g_list_free (list);
-	gtk_tree_view_column_clear_attributes (column, renderer);
-	gtk_tree_view_column_set_attributes (column, renderer,
-					     "pixbuf", PREVIEW_COLUMN_PROGRESS, NULL);
+	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
+	gtk_widget_show (widget);
 
-	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
-	frame_counter = 0;
-
-	g_object_set_data (G_OBJECT (model), "progress-column",
-			   GINT_TO_POINTER (PREVIEW_COLUMN_PROGRESS));
-
-	animation_timeout = g_timeout_add (50, pk_update_viewer_animation_update, model);
-	pk_update_viewer_animation_update (model);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_preview");
+	gtk_widget_hide (widget);
 }
 
 /**
@@ -379,24 +293,18 @@ static void
 pk_update_viewer_preview_animation_stop (void)
 {
 	GtkWidget *widget;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GList *list;
 
-	if (animation_timeout == 0)
-		return;
+	widget = glade_xml_get_widget (glade_xml, "image_animation_preview");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
 
-	g_source_remove (animation_timeout);
-	animation_timeout = 0;
+	widget = glade_xml_get_widget (glade_xml, "label_animation_preview");
+	gtk_label_set_label (GTK_LABEL (widget), "");
 
-	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
-	list = gtk_tree_view_column_get_cell_renderers (column);
-	renderer = list->data;
-	g_list_free (list);
-	gtk_tree_view_column_clear_attributes (column, renderer);
-	gtk_tree_view_column_set_attributes (column, renderer,
-					     "icon-name", PREVIEW_COLUMN_ICON, NULL);
+	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_preview");
+	gtk_widget_show (widget);
 }
 
 /**
@@ -406,46 +314,24 @@ static void
 pk_update_viewer_description_animation_start (void)
 {
 	GtkWidget *widget;
-	GtkTreeViewColumn *column;
-	GList *list, *l;
-	GtkCellRenderer *renderer;
-	GtkTreeIter iter;
-	gchar *text;
+	gchar *text_bold;
 
-	/* don't double queue */
-	if (animation_timeout != 0) {
-		pk_debug ("don't double start");
-		return;
-	}
+	widget = glade_xml_get_widget (glade_xml, "image_animation_description");
+	gpk_animated_icon_set_frame_delay (GPK_ANIMATED_ICON (widget), 50);
+	gpk_animated_icon_set_filename_tile (GPK_ANIMATED_ICON (widget), GTK_ICON_SIZE_DIALOG, "process-working");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), TRUE);
+	gtk_widget_show (widget);
 
-	gtk_list_store_clear (list_store_description);
+	text_bold = g_strdup_printf ("<b>%s</b>", _("Getting Description..."));
+	widget = glade_xml_get_widget (glade_xml, "label_animation_description");
+	gtk_label_set_label (GTK_LABEL (widget), text_bold);
+	g_free (text_bold);
 
-	pk_update_viewer_animation_load_frames ();
+	widget = glade_xml_get_widget (glade_xml, "viewport_animation_description");
+	gtk_widget_show (widget);
 
-	widget = glade_xml_get_widget (glade_xml, "treeview_description");
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
-	list = gtk_tree_view_column_get_cell_renderers (column);
-	for (l = list; l; l = l->next) {
-		renderer = l->data;
-		if (GTK_IS_CELL_RENDERER_PIXBUF (renderer)) {
-			g_object_set (renderer, "visible", TRUE, NULL);
-		}
-	}
-	g_list_free (list);
-
-	text = g_strdup_printf ("<b>%s</b>", _("Getting Description..."));
-	gtk_list_store_append (list_store_description, &iter);
-	gtk_list_store_set (list_store_description, &iter,
-			    DESC_COLUMN_TITLE, text,
-			    -1);
-	g_free (text);
-
-	frame_counter = 0;
-
-	g_object_set_data (G_OBJECT (list_store_description), "progress-column",
-		           GINT_TO_POINTER (DESC_COLUMN_PROGRESS));
-	animation_timeout = g_timeout_add (50, pk_update_viewer_animation_update, list_store_description);
-	pk_update_viewer_animation_update (list_store_description);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
+	gtk_widget_hide (widget);
 }
 
 /**
@@ -455,26 +341,18 @@ static void
 pk_update_viewer_description_animation_stop (void)
 {
 	GtkWidget *widget;
-	GtkTreeViewColumn *column;
-	GList *list, *l;
-	GtkCellRenderer *renderer;
 
-	if (animation_timeout == 0)
-		return;
+	widget = glade_xml_get_widget (glade_xml, "image_animation_description");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
 
-	g_source_remove (animation_timeout);
-	animation_timeout = 0;
+	widget = glade_xml_get_widget (glade_xml, "label_animation_description");
+	gtk_label_set_label (GTK_LABEL (widget), "");
 
-	widget = glade_xml_get_widget (glade_xml, "treeview_description");
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW (widget), 0);
-	list = gtk_tree_view_column_get_cell_renderers (column);
-	for (l = list; l; l = l->next) {
-		renderer = list->data;
-		if (GTK_IS_CELL_RENDERER_PIXBUF (renderer)) {
-			g_object_set (renderer, "visible", FALSE, NULL);
-		}
-	}
-	g_list_free (list);
+	widget = glade_xml_get_widget (glade_xml, "viewport_animation_description");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
+	gtk_widget_show (widget);
 }
 
 /**
@@ -1344,9 +1222,6 @@ pk_update_viewer_preview_set_animation (const gchar *text)
 {
 	GtkWidget *widget;
 
-	/* put a message in the listbox */
-	pk_update_viewer_add_preview_item ("dialog-information", text, TRUE);
-
 	/* hide apply, review and refresh */
 	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
 	polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
@@ -1354,7 +1229,7 @@ pk_update_viewer_preview_set_animation (const gchar *text)
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* start the spinning preview */
-	pk_update_viewer_preview_animation_start ();
+	pk_update_viewer_preview_animation_start (text);
 }
 
 /**
@@ -1620,6 +1495,12 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 	}
 	if (pk_strequal (name, "button_update_packages")) {
 		return polkit_gnome_action_create_button (update_packages_action);
+	}
+	if (pk_strequal (name, "image_animation_preview")) {
+		return gpk_animated_icon_new ();
+	}
+	if (pk_strequal (name, "image_animation_description")) {
+		return gpk_animated_icon_new ();
 	}
 	pk_warning ("name unknown=%s", name);
 	return NULL;
