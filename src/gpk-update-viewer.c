@@ -170,6 +170,7 @@ static void
 pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 {
 	GtkWidget *widget;
+	gboolean ret;
 
 	pk_debug ("Doing the system update");
 
@@ -178,8 +179,15 @@ pk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 
 	pk_update_viewer_set_page (PAGE_LAST);
 	gpk_client_show_progress (gclient, TRUE);
-	gpk_client_update_system (gclient, NULL);
-	pk_update_viewer_set_page (PAGE_CONFIRM);
+	ret = gpk_client_update_system (gclient, NULL);
+
+	/* did we succeed updating the system */
+	if (!ret) {
+		/* show the preview page */
+		pk_update_viewer_set_page (PAGE_PREVIEW);
+	} else {
+		pk_update_viewer_set_page (PAGE_CONFIRM);
+	}
 }
 
 /**

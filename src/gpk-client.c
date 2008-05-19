@@ -83,6 +83,7 @@ struct _GpkClientPrivate
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
 	gboolean		 show_progress;
+	gboolean 		 finished_okay;
 };
 
 typedef enum {
@@ -344,6 +345,9 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	PkRoleEnum role;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* save this */
+	gclient->priv->finished_okay = (exit == PK_EXIT_ENUM_SUCCESS);
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	/* do nothing */
@@ -769,6 +773,9 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		gtk_main ();
 	}
 
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
+
 	/* we're done */
 	gpk_client_done (gclient);
 out:
@@ -844,6 +851,9 @@ skip_checks:
 
 	/* wait for completion */
 	gtk_main ();
+
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
 
 	/* we're done */
 	gpk_client_done (gclient);
@@ -921,6 +931,9 @@ skip_checks:
 	/* wait for completion */
 	gtk_main ();
 
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
+
 	/* we're done */
 	gpk_client_done (gclient);
 out:
@@ -961,6 +974,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
+
 out:
 	if (error_local != NULL) {
 		g_error_free (error_local);
@@ -1128,7 +1142,7 @@ out:
 gboolean
 gpk_client_update_system (GpkClient *gclient, GError **error)
 {
-	gboolean ret;
+	gboolean ret = TRUE;
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
@@ -1140,8 +1154,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_error_free (error_local);
-		return FALSE;
+		goto out;
 	}
 
 	/* set title */
@@ -1184,10 +1197,16 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* wait for completion */
 	gtk_main ();
 
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
+
 out:
+	if (error_local != NULL) {
+		g_error_free (error_local);
+	}
 	g_free (message);
 	g_free (text);
-	return FALSE;
+	return ret;
 }
 
 /**
@@ -1208,8 +1227,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_error_free (error_local);
-		return FALSE;
+		goto out;
 	}
 
 	/* set title */
@@ -1238,7 +1256,13 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	/* wait for completion */
 	gtk_main ();
 
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
+
 out:
+	if (error_local != NULL) {
+		g_error_free (error_local);
+	}
 	g_free (message);
 	g_free (text);
 	return ret;
@@ -1302,7 +1326,7 @@ out:
 gboolean
 gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **error)
 {
-	gboolean ret;
+	gboolean ret = TRUE;
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
@@ -1314,8 +1338,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_error_free (error_local);
-		return FALSE;
+		goto out;
 	}
 
 	/* set title */
@@ -1344,10 +1367,16 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* wait for completion */
 	gtk_main ();
 
+	/* retval depends on SUCCESS */
+	ret = gclient->priv->finished_okay;
+
 out:
+	if (error_local != NULL) {
+		g_error_free (error_local);
+	}
 	g_free (message);
 	g_free (text);
-	return FALSE;
+	return ret;
 }
 
 /**
@@ -1636,6 +1665,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->using_secondary_client = FALSE;
+	gclient->priv->finished_okay = TRUE;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->finished_timer_id = 0;
