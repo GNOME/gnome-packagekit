@@ -224,12 +224,16 @@ data/icons/22x22/Makefile
 data/icons/24x24/Makefile
 data/icons/48x48/Makefile
 data/icons/scalable/Makefile
+data/icons/16x16/animations/Makefile
 data/icons/16x16/categories/Makefile
 data/icons/16x16/status/Makefile
+data/icons/22x22/animations/Makefile
 data/icons/22x22/categories/Makefile
 data/icons/22x22/status/Makefile
+data/icons/24x24/animations/Makefile
 data/icons/24x24/categories/Makefile
 data/icons/24x24/status/Makefile
+data/icons/48x48/animations/Makefile
 data/icons/48x48/categories/Makefile
 data/icons/48x48/status/Makefile
 data/icons/scalable/categories/Makefile
