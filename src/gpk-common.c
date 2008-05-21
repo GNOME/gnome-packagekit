@@ -1302,6 +1302,40 @@ gpk_check_privileged_user (const gchar *application_name)
 }
 
 /**
+ * gpk_check_icon_valid:
+ *
+ * Check icon actually exists and is valid in this theme
+ **/
+gboolean
+gpk_check_icon_valid (const gchar *icon)
+{
+	GtkIconInfo *icon_info;
+	static GtkIconTheme *icon_theme = NULL;
+	gboolean ret = TRUE;
+
+	/* trivial case */
+	if (pk_strzero (icon)) {
+		return FALSE;
+	}
+
+	/* no unref required */
+	if (icon_theme == NULL) {
+		icon_theme = gtk_icon_theme_get_default ();
+	}
+
+	/* default to 32x32 */
+	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
+	if (icon_info == NULL) {
+		pk_debug ("ignoring broken icon %s", icon);
+		ret = FALSE;
+	} else {
+		/* we only used this to see if it was valid */
+		gtk_icon_info_free (icon_info);
+	}
+	return ret;
+}
+
+/**
  * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
  *
