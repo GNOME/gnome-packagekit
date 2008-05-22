@@ -114,7 +114,7 @@ main (int argc, char *argv[])
 
 	/* are we already activated? */
 	libunique = libunique_new ();
-	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Repo");
+	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Application");
 	if (!ret) {
 		goto unique_out;
 	}
