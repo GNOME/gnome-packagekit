@@ -667,7 +667,14 @@ pk_update_viewer_add_description_link_item (const gchar *title, const gchar *url
 
 	urls = g_strsplit (url_string, ";", 0);
 	length = g_strv_length (urls);
-	for (i = 0; urls[i]; i += 2) {
+
+	/* could we have malformed descriptions with ';' in them? */
+	if (length % 2 != 0) {
+		pk_warning ("length not correct, correcting");
+		length--;
+	}
+
+	for (i=0; i<length; i+=2) {
 		uri = urls[i];
 		text = urls[i+1];
 		if (pk_strzero (text)) {
