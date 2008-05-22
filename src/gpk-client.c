@@ -692,12 +692,12 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
 	gtk_label_set_label (GTK_LABEL (widget), "");
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
-	gtk_label_set_label (GTK_LABEL (widget), " \n\n\n");
+	gtk_label_set_label (GTK_LABEL (widget), "The Linux kernel (the core of the Linux operating system)\n\n\n");
 	gtk_widget_show (widget);
 
 	/* set the correct height of the label to stop the window jumping around */
 	gtk_widget_size_request (widget, &requisition);
-	gtk_widget_set_size_request (widget, -1, requisition.height);
+	gtk_widget_set_size_request (widget, requisition.width * 1.1f, requisition.height);
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	return TRUE;

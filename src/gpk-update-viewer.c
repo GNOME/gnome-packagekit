@@ -1648,9 +1648,6 @@ main (int argc, char *argv[])
 	/* we have to do this before we connect up the glade file */
 	gpk_update_viewer_setup_policykit ();
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
-
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (pk_update_viewer_repo_list_changed_cb), NULL);
@@ -1693,6 +1690,9 @@ main (int argc, char *argv[])
 	/* install stuff using the gnome helpers */
 	gclient = gpk_client_new ();
 	gpk_client_show_finished (gclient, FALSE);
+
+	/* use custom widgets */
+	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
