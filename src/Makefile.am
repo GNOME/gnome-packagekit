@@ -51,6 +51,8 @@ bin_PROGRAMS =						\
 shared_SOURCES =					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
+	gpk-animated-icon.c				\
+	gpk-animated-icon.h				\
 	gpk-consolekit.c				\
 	gpk-consolekit.h				\
 	gpk-client.c					\
@@ -152,8 +154,6 @@ gpk_application_SOURCES =				\
 	gpk-application-main.c				\
 	gpk-application.c				\
 	gpk-application.h				\
-	gpk-statusbar.c					\
-	gpk-statusbar.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 
@@ -176,8 +176,6 @@ gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
-	gpk-animated-icon.c				\
-	gpk-animated-icon.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(shared_SOURCES)				\
@@ -189,14 +187,9 @@ gpk_update_viewer_LDADD =				\
 
 gpk_repo_SOURCES =					\
 	gpk-repo.c					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-error.c					\
-	gpk-error.h					\
 	gpk-statusbar.c					\
 	gpk-statusbar.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_repo_LDADD =					\
@@ -205,12 +198,7 @@ gpk_repo_LDADD =					\
 
 gpk_log_SOURCES =					\
 	gpk-log.c					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-error.c					\
-	gpk-error.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_log_LDADD =						\
@@ -253,10 +241,7 @@ noinst_PROGRAMS =					\
 
 gpk_self_test_SOURCES =					\
 	gpk-self-test.c					\
-	gpk-common.c					\
-	gpk-common.h					\
-	gpk-error.c					\
-	gpk-error.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_self_test_LDADD =					\
