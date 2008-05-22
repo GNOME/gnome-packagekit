@@ -54,6 +54,7 @@
 #include <gpk-error.h>
 #include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
+#include "gpk-animated-icon.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
@@ -437,6 +438,12 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	/* set icon */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "image_status");
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_DIALOG);
+	gtk_widget_show (widget);
+
+	/* set label */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
 	text = g_strdup_printf ("<b>%s</b>", gpk_status_enum_to_localised_text (status));
 	gtk_label_set_markup (GTK_LABEL (widget), text);
@@ -1633,6 +1640,21 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 }
 
 /**
+ * gpk_client_create_custom_widget:
+ **/
+static GtkWidget *
+gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
+				 gchar *string1, gchar *string2,
+				 gint int1, gint int2, gpointer user_data)
+{
+	if (pk_strequal (name, "image_status")) {
+		return gpk_animated_icon_new ();
+	}
+	pk_warning ("name unknown=%s", name);
+	return NULL;
+}
+
+/**
  * gpk_client_class_init:
  * @klass: The #GpkClientClass
  **/
@@ -1673,6 +1695,9 @@ gpk_client_init (GpkClient *gclient)
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
+
+	/* use custom widgets */
+	glade_set_custom_handler (gpk_client_create_custom_widget, gclient);
 
 	/* use gconf for session settings */
 	gclient->priv->gconf_client = gconf_client_get_default ();
