@@ -40,6 +40,7 @@ typedef struct _GpkAnimatedIconClass		GpkAnimatedIconClass;
 struct _GpkAnimatedIcon
 {
 	GtkImage		 parent;
+	gchar			*filename;
 	guint			 animation_id;
 	guint			 frame_counter;
 	guint			 number_frames;

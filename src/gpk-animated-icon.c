@@ -25,12 +25,38 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <pk-debug.h>
+#include <pk-common.h>
 
 #include "gpk-animated-icon.h"
 
 G_DEFINE_TYPE (GpkAnimatedIcon, gpk_animated_icon, GTK_TYPE_IMAGE)
 
 static gpointer parent_class = NULL;
+
+/**
+ * gpk_animated_icon_free_pixbufs:
+ **/
+static gboolean
+gpk_animated_icon_free_pixbufs (GpkAnimatedIcon *icon)
+{
+	guint i;
+
+	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
+
+	/* none loaded */
+	if (icon->frames == NULL) {
+		pk_debug ("nothing to free");
+		return FALSE;
+	}
+
+	/* free each frame */
+	for (i=0; i<icon->number_frames; i++) {
+		g_object_unref (icon->frames[i]);
+	}
+	g_free (icon->frames);
+	icon->frames = NULL;
+	return TRUE;
+}
 
 /**
  * gpk_animated_icon_set_filename_tile:
@@ -44,10 +70,21 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	GdkPixbuf *pixbuf;
 
 	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
 
-	if (icon->frames != NULL) {
-		pk_debug ("already set, not supported");
+	/* have we already set the same icon */
+	if (pk_strequal (icon->filename, name)) {
+		pk_debug ("already set the same icon name %s, ignoring", name);
 		return FALSE;
+	}
+
+	/* save new value */
+	g_free (icon->filename);
+	icon->filename = g_strdup (name);
+
+	/* do we need to unload */
+	if (icon->frames != NULL) {
+		gpk_animated_icon_free_pixbufs (icon);
 	}
 
 	pk_debug ("loading from %s", name);
@@ -77,19 +114,6 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 }
 
 /**
- * gpk_animated_icon_set_frame_delay:
- **/
-gboolean
-gpk_animated_icon_set_frame_delay (GpkAnimatedIcon *icon, guint delay_ms)
-{
-	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
-
-	pk_debug ("frame delay set to %ims", delay_ms);
-	icon->frame_delay = delay_ms;
-	return TRUE;
-}
-
-/**
  * gpk_animated_icon_update:
  **/
 static gboolean
@@ -110,6 +134,25 @@ gpk_animated_icon_update (GpkAnimatedIcon *icon)
 	return TRUE;
 }
 
+/**
+ * gpk_animated_icon_set_frame_delay:
+ **/
+gboolean
+gpk_animated_icon_set_frame_delay (GpkAnimatedIcon *icon, guint delay_ms)
+{
+	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
+
+	pk_debug ("frame delay set to %ims", delay_ms);
+	icon->frame_delay = delay_ms;
+
+	/* do we have to change a running icon? */
+	if (icon->animation_id != 0) {
+		g_source_remove (icon->animation_id);
+		icon->animation_id = g_timeout_add (icon->frame_delay, (GSourceFunc) gpk_animated_icon_update, icon);
+	}
+
+	return TRUE;
+}
 
 /**
  * gpk_animated_icon_enable_animation:
@@ -157,7 +200,8 @@ gpk_image_finalize (GObject *object)
 	if (icon->animation_id != 0) {
 		g_source_remove (icon->animation_id);
 	}
-
+	g_free (icon->filename);
+	gpk_animated_icon_free_pixbufs (icon);
 
 	G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -181,6 +225,7 @@ gpk_animated_icon_init (GpkAnimatedIcon *icon)
 {
 	g_return_if_fail (GPK_IS_ANIMATED_ICON (icon));
 	icon->frames = NULL;
+	icon->filename = NULL;
 	icon->animation_id = 0;
 	icon->frame_counter = 0;
 	icon->number_frames = 0;
