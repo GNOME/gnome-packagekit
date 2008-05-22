@@ -1713,7 +1713,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	}
 
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
-		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file"));
+		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		g_signal_connect (G_OBJECT (item), "activate",
