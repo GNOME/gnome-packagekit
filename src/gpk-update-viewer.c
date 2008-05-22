@@ -730,7 +730,7 @@ pk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 
 	package_pretty = gpk_package_id_name_version (package_id);
 	/* translators: this is the package version */
-	pk_update_viewer_add_description_item (_("Version"), package_pretty, NULL);
+	pk_update_viewer_add_description_item (_("Installed"), package_pretty, NULL);
 	g_free (package_pretty);
 
 	if (!pk_strzero (updates)) {
