@@ -1336,6 +1336,39 @@ gpk_check_icon_valid (const gchar *icon)
 }
 
 /**
+ * gpk_set_animated_icon_from_status:
+ **/
+gboolean
+gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, GtkIconSize size)
+{
+	const gchar *name;
+
+	/* choose icon */
+	if (status == PK_STATUS_ENUM_REFRESH_CACHE ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO) {
+		name = "pk-action-refresh-cache";
+		gpk_animated_icon_set_frame_delay (icon, 150);
+		gpk_animated_icon_set_filename_tile (icon, size, name);
+		gpk_animated_icon_enable_animation (icon, TRUE);
+	} else if (status == PK_STATUS_ENUM_QUERY ||
+		   status == PK_STATUS_ENUM_INFO) {
+		name = "process-working";
+		gpk_animated_icon_set_frame_delay (icon, 50);
+		gpk_animated_icon_set_filename_tile (icon, size, name);
+		gpk_animated_icon_enable_animation (icon, TRUE);
+	} else {
+		name = gpk_status_enum_to_icon_name (status);
+		gtk_image_set_from_icon_name (GTK_IMAGE (icon), name, size);
+	}
+	return TRUE;
+}
+
+/**
  * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
  *

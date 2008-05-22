@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include <pk-enum.h>
+#include "gpk-animated-icon.h"
 
 G_BEGIN_DECLS
 
@@ -95,6 +96,9 @@ gchar		*gpk_time_to_localised_string		(guint		 time_secs);
 gchar		**gpk_convert_argv_to_strv		(gchar		*argv[]);
 gboolean	 gpk_check_privileged_user		(const gchar	*application_name);
 gboolean	 gpk_check_icon_valid			(const gchar	*icon);
+gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
+							 PkStatusEnum	 status,
+							 GtkIconSize	 size);
 
 G_END_DECLS
 
