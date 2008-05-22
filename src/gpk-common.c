@@ -1365,6 +1365,11 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 		name = gpk_status_enum_to_icon_name (status);
 		gtk_image_set_from_icon_name (GTK_IMAGE (icon), name, size);
 	}
+
+	/* stop spinning */
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		gpk_animated_icon_enable_animation (icon, FALSE);
+	}
 	return TRUE;
 }
 
