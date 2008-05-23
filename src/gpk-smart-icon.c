@@ -190,7 +190,7 @@ gpk_smart_icon_pulse (GpkSmartIcon *sicon)
 	sicon->priv->icon_opacity = 0.9;
 	sicon->priv->going_down = TRUE;
 	if (sicon->priv->pulse_source != 0) {
-		pk_warning ("already pulsing");
+		pk_debug ("already pulsing");
 		return FALSE;
 	}
 	sicon->priv->pulse_source = g_timeout_add (20, gpk_smart_icon_pulse_timeout_cb, sicon);
