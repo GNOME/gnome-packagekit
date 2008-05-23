@@ -147,7 +147,7 @@ gpk_notify_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoi
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
 
-	if (ret == FALSE) {
+	if (!ret) {
 		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
 						       GTK_DIALOG_MODAL,
 						       GTK_MESSAGE_INFO,
@@ -278,8 +278,6 @@ gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint32 time
 	}
 }
 
-static gboolean gpk_notify_check_for_updates_cb (GpkNotify *notify);
-static void gpk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify);
 static gboolean gpk_notify_query_updates (GpkNotify *notify);
 
 /**
@@ -729,68 +727,6 @@ gpk_notify_query_updates (GpkNotify *notify)
 }
 
 /**
- * gpk_notify_refresh_cache_finished_cb:
- **/
-static void
-gpk_notify_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkNotify *notify)
-{
-	g_return_if_fail (GPK_IS_NOTIFY (notify));
-
-	pk_debug ("finished refreshing cache :%s", pk_exit_enum_to_text (exit_code));
-	if (exit_code != PK_EXIT_ENUM_SUCCESS) {
-		/* we failed to get the cache */
-		notify->priv->cache_okay = FALSE;
-	} else {
-		/* stop the polling */
-		notify->priv->cache_okay = TRUE;
-
-		/* now try to get updates */
-		pk_debug ("get updates");
-		gpk_notify_query_updates (notify);
-	}
-	notify->priv->cache_update_in_progress = FALSE;
-	g_object_unref (client);
-}
-
-/**
- * gpk_notify_check_for_updates_cb:
- **/
-static gboolean
-gpk_notify_check_for_updates_cb (GpkNotify *notify)
-{
-	gboolean ret;
-	PkClient *client;
-	pk_debug ("refresh cache");
-
-	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
-
-	/* got a cache, no need to poll */
-	if (notify->priv->cache_okay) {
-		return FALSE;
-	}
-
-	/* already in progress, but not yet certified okay */
-	if (notify->priv->cache_update_in_progress) {
-		return TRUE;
-	}
-
-	notify->priv->cache_update_in_progress = TRUE;
-	notify->priv->cache_okay = TRUE;
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_notify_refresh_cache_finished_cb), notify);
-	g_signal_connect (client, "error-code",
-			  G_CALLBACK (gpk_notify_error_code_cb), notify);
-	ret = pk_client_refresh_cache (client, TRUE, NULL);
-	if (ret == FALSE) {
-		g_object_unref (client);
-		pk_warning ("failed to refresh cache");
-		/* try again in a few minutes */
-	}
-	return TRUE;
-}
-
-/**
  * gpk_notify_updates_changed_cb:
  **/
 static void
@@ -847,10 +783,43 @@ gpk_notify_task_list_changed_cb (PkTaskList *tlist, GpkNotify *notify)
 static void
 gpk_notify_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkNotify *notify)
 {
+	gboolean ret;
 	g_return_if_fail (GPK_IS_NOTIFY (notify));
 
-	/* schedule another update */
-	gpk_notify_check_for_updates_cb (notify);
+	pk_debug ("refresh cache");
+
+	/* got a cache, no need to poll */
+	if (notify->priv->cache_okay) {
+		return;
+	}
+
+	/* already in progress, but not yet certified okay */
+	if (notify->priv->cache_update_in_progress) {
+		return;
+	}
+
+	notify->priv->cache_update_in_progress = TRUE;
+	notify->priv->cache_okay = TRUE;
+
+	/* use the gnome helper to refresh the cache */
+	gpk_client_show_finished (notify->priv->gclient, FALSE);
+	gpk_client_show_progress (notify->priv->gclient, FALSE);
+	ret = gpk_client_refresh_cache (notify->priv->gclient, NULL);
+	if (!ret) {
+		/* we failed to get the cache */
+		pk_warning ("failed to refresh cache");
+
+		/* try again in a few minutes */
+		notify->priv->cache_okay = FALSE;
+	} else {
+		/* stop the polling */
+		notify->priv->cache_okay = TRUE;
+
+		/* now try to get updates */
+		pk_debug ("get updates");
+		gpk_notify_query_updates (notify);
+	}
+	notify->priv->cache_update_in_progress = FALSE;
 }
 
 /**
