@@ -760,8 +760,14 @@ pk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	pk_package_id_free (ident);
 
 	if (!pk_strzero (update_text)) {
+		gchar *first;
+		gchar *second;
+		first = pk_strreplace (update_text, "\n- ", "\n• ");
+		second = pk_strreplace (first, "\n* ", "\n• ");
 		/* translators: this is the package description */
-		pk_update_viewer_add_description_item (_("Description"), update_text, NULL);
+		pk_update_viewer_add_description_item (_("Description"), second, NULL);
+		g_free (first);
+		g_free (second);
 	}
 
 	/* add all the links */
