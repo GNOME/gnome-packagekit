@@ -281,6 +281,17 @@ gpk_notify_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint32 time
 static gboolean gpk_notify_query_updates (GpkNotify *notify);
 
 /**
+ * gpk_notify_get_updates_post_update_cb:
+ **/
+static gboolean
+gpk_notify_get_updates_post_update_cb (GpkNotify *notify)
+{
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
+	gpk_notify_query_updates (notify);
+	return FALSE;
+}
+
+/**
  * gpk_notify_update_system:
  **/
 static gboolean
@@ -293,7 +304,7 @@ gpk_notify_update_system (GpkNotify *notify)
 	if (!ret) {
 		gpk_smart_icon_set_icon_name (notify->priv->sicon, NULL);
 		/* we failed, so re-get the update list */
-		gpk_notify_query_updates (notify);
+		g_timeout_add_seconds (2, (GSourceFunc) gpk_notify_get_updates_post_update_cb, notify);
 	}
 	return ret;
 }
@@ -409,7 +420,7 @@ gpk_notify_critical_updates_warning (GpkNotify *notify, const gchar *details, gu
  * gpk_notify_client_info_to_enums:
  **/
 static PkInfoEnum
-gpk_notify_client_info_to_enums (GpkNotify *notify, PkClient *client)
+gpk_notify_client_info_to_enums (GpkNotify *notify, PkPackageList *list)
 {
 	guint i;
 	guint length;
@@ -419,14 +430,14 @@ gpk_notify_client_info_to_enums (GpkNotify *notify, PkClient *client)
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), PK_INFO_ENUM_UNKNOWN);
 
 	/* shortcut */
-	length = pk_client_package_buffer_get_size (client);
+	length = pk_package_list_get_size (list);
 	if (length == 0) {
 		return PK_INFO_ENUM_UNKNOWN;
 	}
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		if (item == NULL) {
 			pk_warning ("not found item %i", i);
 			break;
@@ -441,7 +452,7 @@ gpk_notify_client_info_to_enums (GpkNotify *notify, PkClient *client)
  * gpk_notify_get_best_update_icon:
  **/
 static const gchar *
-gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
+gpk_notify_get_best_update_icon (GpkNotify *notify, PkPackageList *list)
 {
 	gint value;
 	PkInfoEnum infos;
@@ -450,7 +461,7 @@ gpk_notify_get_best_update_icon (GpkNotify *notify, PkClient *client)
 	g_return_val_if_fail (GPK_IS_NOTIFY (notify), NULL);
 
 	/* get an enumerated list with all the update types */
-	infos = gpk_notify_client_info_to_enums (notify, client);
+	infos = gpk_notify_client_info_to_enums (notify, list);
 
 	/* get the most important icon */
 	value = pk_enums_contain_priority (infos,
@@ -527,30 +538,49 @@ gpk_notify_get_update_policy (GpkNotify *notify)
 }
 
 /**
- * gpk_notify_query_updates_finished_cb:
+ * gpk_notify_query_updates:
  **/
-static void
-gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkNotify *notify)
+static gboolean
+gpk_notify_query_updates (GpkNotify *notify)
 {
 	PkPackageItem *item;
 	guint length;
 	guint i;
-	gboolean ret;
+	gboolean ret = FALSE;
 	GString *status_security;
 	GString *status_tooltip;
 	PkUpdateEnum update;
 	PkPackageId *ident;
 	GPtrArray *security_array;
 	const gchar *icon;
+	gchar **package_ids;
+	PkPackageList *list;
+	GError *error;
 
-	g_return_if_fail (GPK_IS_NOTIFY (notify));
+	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
 
+	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+		pk_debug ("Not checking for updates as already in progress");
+		return FALSE;
+	}
+
+	/* get updates */
+	gpk_client_show_finished (notify->priv->gclient, FALSE);
+	gpk_client_show_progress (notify->priv->gclient, FALSE);
+	list = gpk_client_get_updates (notify->priv->gclient, &error);
+	if (list == NULL) {
+		pk_warning ("failed to get updates: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* we have updates to process */
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
 	security_array = g_ptr_array_new ();
 
 	/* find packages */
-	length = pk_client_package_buffer_get_size (client);
+	length = pk_package_list_get_size (list);
 	pk_debug ("length=%i", length);
 
 	/* we have no updates */
@@ -562,7 +592,7 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 
 	/* find the security updates */
 	for (i=0; i<length; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
 			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
@@ -575,9 +605,6 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 		pk_package_id_free (ident);
 	}
 
-	/* we are done querying this */
-	g_object_unref (client);
-
 	/* do we do the automatic updates? */
 	update = gpk_notify_get_update_policy (notify);
 	if (update == PK_UPDATE_ENUM_UNKNOWN) {
@@ -586,7 +613,7 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	}
 
 	/* work out icon */
-	icon = gpk_notify_get_best_update_icon (notify, client);
+	icon = gpk_notify_get_best_update_icon (notify, list);
 	gpk_smart_icon_set_icon_name (notify->priv->sicon, icon);
 	gpk_smart_icon_pulse (notify->priv->sicon);
 
@@ -622,10 +649,6 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 
 	/* just do security updates */
 	if (update == PK_UPDATE_ENUM_SECURITY) {
-		gchar **package_ids;
-		gboolean ret;
-		GError *error = NULL;
-
 		if (security_array->len == 0) {
 			pk_debug ("policy security, but none available");
 			goto out;
@@ -659,70 +682,11 @@ gpk_notify_query_updates_finished_cb (PkClient *client, PkExitEnum exit, guint r
 	/* shouldn't happen */
 	pk_warning ("unknown update mode");
 out:
+	g_object_unref (list);
 	g_string_free (status_security, TRUE);
 	g_string_free (status_tooltip, TRUE);
-
-	/* get rid of the array, and free the contents */
 	g_ptr_array_free (security_array, TRUE);
-}
 
-/**
- * gpk_notify_error_code_cb:
- **/
-static void
-gpk_notify_error_code_cb (PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkNotify *notify)
-{
-	const gchar *title;
-
-	g_return_if_fail (GPK_IS_NOTIFY (notify));
-
-	title = gpk_error_enum_to_localised_text (error_code);
-
-	/* ignore some errors */
-	if (error_code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    error_code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		pk_debug ("error ignored %s\n%s", title, details);
-		return;
-	}
-
-	/* this will not show if specified in gconf */
-	gpk_smart_icon_notify_new (notify->priv->sicon, title, details, "help-browser",
-				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (notify->priv->sicon,
-				      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
-	gpk_smart_icon_notify_show (notify->priv->sicon);
-}
-
-/**
- * gpk_notify_query_updates:
- **/
-static gboolean
-gpk_notify_query_updates (GpkNotify *notify)
-{
-	gboolean ret;
-	GError *error = NULL;
-	PkClient *client;
-
-	g_return_val_if_fail (GPK_IS_NOTIFY (notify), FALSE);
-
-	if (pk_task_list_contains_role (notify->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		pk_debug ("Not checking for updates as already in progress");
-		return FALSE;
-	}
-
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_notify_query_updates_finished_cb), notify);
-	g_signal_connect (client, "error-code",
-			  G_CALLBACK (gpk_notify_error_code_cb), notify);
-	pk_client_set_use_buffer (client, TRUE, NULL);
-
-	/* get updates */
-	ret = pk_client_get_updates (client, PK_FILTER_ENUM_NONE, &error);
-	if (!ret) {
-		pk_warning ("failed to get updates: %s", error->message);
-		g_error_free (error);
-	}
 	return ret;
 }
 
