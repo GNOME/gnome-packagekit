@@ -465,6 +465,9 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 static void
 gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkClient *gclient)
 {
+	const gchar *title;
+	const gchar *message;
+
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* have we handled? */
@@ -493,8 +496,21 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	}
 
 	pk_debug ("code was %s", pk_error_enum_to_text (code));
-	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
-			  gpk_error_enum_to_localised_message (code), details);
+
+	/* use a modal dialog if showing progress, else use libnotify */
+	title = gpk_error_enum_to_localised_text (code);
+	message = gpk_error_enum_to_localised_message (code);
+	if (gclient->priv->show_progress) {
+		gpk_error_dialog (title, message, details);
+	} else {
+		/* this will not show if specified in gconf */
+		gpk_smart_icon_notify_new (gclient->priv->sicon, title, message, "help-browser",
+					   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+		gpk_smart_icon_notify_button (gclient->priv->sicon,
+					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
+		gpk_smart_icon_notify_show (gclient->priv->sicon);
+	}
+
 }
 
 /**
