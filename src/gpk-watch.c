@@ -49,6 +49,7 @@
 #include <pk-package-id.h>
 
 #include "gpk-common.h"
+#include "gpk-notify.h"
 #include "gpk-watch.h"
 #include "gpk-client.h"
 #include "gpk-inhibit.h"
@@ -70,6 +71,7 @@ struct GpkWatchPrivate
 	PkControl		*control;
 	GpkSmartIcon		*sicon;
 	GpkSmartIcon		*sicon_restart;
+	GpkNotify		*notify;
 	GpkInhibit		*inhibit;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
@@ -345,10 +347,10 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	}
 
 	/* libnotify dialog */
-	gpk_smart_icon_notify_new (watch->priv->sicon, _("Task completed"), message,
-				  "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_COMPLETED);
-	gpk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_notify_create (watch->priv->notify, _("Task completed"), message,
+			   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+	gpk_notify_button (watch->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_COMPLETED);
+	gpk_notify_show (watch->priv->notify);
 	g_free (message);
 	g_free (package_id);
 }
@@ -396,10 +398,10 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
-	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, "help-browser",
-				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
-	gpk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_notify_create (watch->priv->notify, title, escaped_details, "help-browser",
+			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_notify_button (watch->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
+	gpk_notify_show (watch->priv->notify);
 	g_free (escaped_details);
 }
 
@@ -429,10 +431,10 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
-	gpk_smart_icon_notify_new (watch->priv->sicon, title, escaped_details, filename,
-				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_smart_icon_notify_button (watch->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_MESSAGE);
-	gpk_smart_icon_notify_show (watch->priv->sicon);
+	gpk_notify_create (watch->priv->notify, title, escaped_details, filename,
+			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
+	gpk_notify_button (watch->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_MESSAGE);
+	gpk_notify_show (watch->priv->notify);
 	g_free (escaped_details);
 }
 
@@ -625,10 +627,10 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 		message = g_strdup_printf (_("The error was: %s"), error->message);
 		pk_warning ("%s", message);
 		g_error_free (error);
-		gpk_smart_icon_notify_new (watch->priv->sicon, _("Failed to refresh cache"), message,
-				      "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
+		gpk_notify_create (watch->priv->notify, _("Failed to refresh cache"), message,
+				   "process-stop", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_SHORT);
 		g_free (message);
-		gpk_smart_icon_notify_show (watch->priv->sicon);
+		gpk_notify_show (watch->priv->notify);
 	}
 }
 
@@ -1049,6 +1051,8 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->sicon_restart = gpk_smart_icon_new ();
 	watch->priv->set_proxy_timeout = 0;
 
+	watch->priv->notify = gpk_notify_new ();
+
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
 	g_signal_connect (watch->priv->control, "locked",
@@ -1140,6 +1144,7 @@ gpk_watch_finalize (GObject *object)
 		g_source_remove (watch->priv->set_proxy_timeout);
 	}
 
+	g_object_unref (watch->priv->notify);
 	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);

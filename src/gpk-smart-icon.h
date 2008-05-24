@@ -49,51 +49,12 @@ typedef struct
 	GtkStatusIconClass	 parent_class;
 } GpkSmartIconClass;
 
-typedef enum
-{
-	GPK_NOTIFY_URGENCY_LOW,
-	GPK_NOTIFY_URGENCY_NORMAL,
-	GPK_NOTIFY_URGENCY_CRITICAL
-} GpkNotifyUrgency;
-
-typedef enum
-{
-	GPK_NOTIFY_TIMEOUT_SHORT,
-	GPK_NOTIFY_TIMEOUT_LONG,
-	GPK_NOTIFY_TIMEOUT_NEVER
-} GpkNotifyTimeout;
-
-typedef enum
-{
-	GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-	GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,
-	GPK_NOTIFY_BUTTON_CANCEL_UPDATE,
-	GPK_NOTIFY_BUTTON_UPDATE_COMPUTER,
-	GPK_NOTIFY_BUTTON_RESTART_COMPUTER,
-	GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE,
-	GPK_NOTIFY_BUTTON_UNKNOWN
-} GpkNotifyButton;
-
 GType		 gpk_smart_icon_get_type		(void) G_GNUC_CONST;
 GpkSmartIcon	*gpk_smart_icon_new			(void);
 gboolean	 gpk_smart_icon_sync			(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_pulse			(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_set_icon_name		(GpkSmartIcon	*sicon,
 							 const gchar	*icon_name);
-
-
-gboolean	 gpk_smart_icon_notify_new		(GpkSmartIcon	*sicon,
-							 const gchar	*title,
-							 const gchar	*message,
-							 const gchar	*icon,
-							 GpkNotifyUrgency urgency,
-							 GpkNotifyTimeout timeout);
-gboolean	 gpk_smart_icon_notify_button		(GpkSmartIcon	*sicon,
-							 GpkNotifyButton	 button,
-							 const gchar	*data);
-gboolean	 gpk_smart_icon_notify_show		(GpkSmartIcon	*sicon);
-gboolean	 gpk_smart_icon_notify_close		(GpkSmartIcon	*sicon);
-
 
 G_END_DECLS
 

@@ -53,6 +53,7 @@
 #include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
 #include "gpk-client.h"
+#include "gpk-notify.h"
 #include "gpk-check-update.h"
 
 static void     gpk_check_update_class_init	(GpkCheckUpdateClass *klass);
@@ -64,6 +65,7 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 struct GpkCheckUpdatePrivate
 {
 	GpkSmartIcon		*sicon;
+	GpkNotify		*notify;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkControl		*control;
@@ -406,11 +408,11 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	message = g_string_free (string, FALSE);
 
 	/* this will not show if specified in gconf */
-	gpk_smart_icon_notify_new (cupdate->priv->sicon, title, message, "software-update-urgent",
-				   GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_smart_icon_notify_button (cupdate->priv->sicon, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
-	gpk_smart_icon_notify_button (cupdate->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, GPK_CONF_NOTIFY_CRITICAL);
-	gpk_smart_icon_notify_show (cupdate->priv->sicon);
+	gpk_notify_create (cupdate->priv->notify, title, message, "software-update-urgent",
+			   GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
+	gpk_notify_button (cupdate->priv->notify, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
+	gpk_notify_button (cupdate->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, GPK_CONF_NOTIFY_CRITICAL);
+	gpk_notify_show (cupdate->priv->notify);
 
 	g_free (message);
 }
@@ -503,15 +505,15 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	}
 
 	/* this will not show if specified in gconf */
-	gpk_smart_icon_notify_new (cupdate->priv->sicon,
-				  _("Will not install updates"),
-				  _("Automatic updates are not being installed as the computer is on battery power"),
-				  "dialog-information",
-				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_smart_icon_notify_button (cupdate->priv->sicon,
-				      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-				      GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
-	gpk_smart_icon_notify_show (cupdate->priv->sicon);
+	gpk_notify_create (cupdate->priv->notify,
+			   _("Will not install updates"),
+			   _("Automatic updates are not being installed as the computer is on battery power"),
+			   "dialog-information",
+			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_notify_button (cupdate->priv->notify,
+			   GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+			   GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
+	gpk_notify_show (cupdate->priv->notify);
 	return FALSE;
 }
 
@@ -800,10 +802,10 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 }
 
 /**
- * gpk_check_update_notify_button:
+ * gpk_check_update_notify_button_cb:
  **/
 static void
-gpk_check_update_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button,
+gpk_check_update_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
 				const gchar *data, GpkCheckUpdate *cupdate)
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
@@ -836,8 +838,9 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
 	cupdate->priv->sicon = gpk_smart_icon_new ();
-	g_signal_connect (cupdate->priv->sicon, "notification-button",
-			  G_CALLBACK (gpk_check_update_notify_button), cupdate);
+	cupdate->priv->notify = gpk_notify_new ();
+	g_signal_connect (cupdate->priv->notify, "notification-button",
+			  G_CALLBACK (gpk_check_update_notify_button_cb), cupdate);
 
 	cupdate->priv->gconf_client = gconf_client_get_default ();
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
@@ -900,6 +903,7 @@ gpk_check_update_finalize (GObject *object)
 
 	g_return_if_fail (cupdate->priv != NULL);
 
+	g_object_unref (cupdate->priv->notify);
 	g_object_unref (cupdate->priv->sicon);
 	g_object_unref (cupdate->priv->pconnection);
 	g_object_unref (cupdate->priv->tlist);

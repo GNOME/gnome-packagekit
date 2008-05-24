@@ -53,6 +53,7 @@
 #include <gpk-gnome.h>
 #include <gpk-error.h>
 #include "gpk-smart-icon.h"
+#include "gpk-notify.h"
 #include "gpk-consolekit.h"
 #include "gpk-animated-icon.h"
 
@@ -74,6 +75,7 @@ struct _GpkClientPrivate
 	PkClient		*client_resolve;
 	PkClient		*client_secondary;
 	GpkSmartIcon		*sicon;
+	GpkNotify		*notify;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
 	guint			 pulse_timer_id;
@@ -320,19 +322,19 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	}
 
 	/* this will not show if specified in gconf */
-	gpk_smart_icon_notify_new (gclient->priv->sicon,
-				  _("The system update has completed"), message_text->str,
-				  "software-update-available",
-				  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+	gpk_notify_create (gclient->priv->notify,
+			   _("The system update has completed"), message_text->str,
+			   "software-update-available",
+			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
-		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
-		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
+		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
 					      GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
 	} else {
-		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
 					      GPK_CONF_NOTIFY_UPDATE_COMPLETE);
 	}
-	gpk_smart_icon_notify_show (gclient->priv->sicon);
+	gpk_notify_show (gclient->priv->notify);
 	g_string_free (message_text, TRUE);
 }
 
@@ -504,11 +506,11 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		gpk_error_dialog (title, message, details);
 	} else {
 		/* this will not show if specified in gconf */
-		gpk_smart_icon_notify_new (gclient->priv->sicon, title, message, "help-browser",
-					   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-		gpk_smart_icon_notify_button (gclient->priv->sicon,
+		gpk_notify_create (gclient->priv->notify, title, message, "help-browser",
+				   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+		gpk_notify_button (gclient->priv->notify,
 					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
-		gpk_smart_icon_notify_show (gclient->priv->sicon);
+		gpk_notify_show (gclient->priv->notify);
 	}
 
 }
@@ -1206,15 +1208,15 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
 	if (!gclient->priv->show_progress) {
 		/* this will not show if specified in gconf */
-		gpk_smart_icon_notify_new (gclient->priv->sicon,
-					  _("Updates are being installed"),
-					  _("Updates are being automatically installed on your computer"),
-					  "software-update-urgent",
-					  GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
-		gpk_smart_icon_notify_button (gclient->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
+		gpk_notify_create (gclient->priv->notify,
+				   _("Updates are being installed"),
+				   _("Updates are being automatically installed on your computer"),
+				   "software-update-urgent",
+				   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
+		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
+		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
 					      GPK_CONF_NOTIFY_UPDATE_STARTED);
-		gpk_smart_icon_notify_show (gclient->priv->sicon);
+		gpk_notify_show (gclient->priv->notify);
 	}
 
 	/* wait for completion */
@@ -1514,10 +1516,10 @@ gpk_client_secondary_finished_cb (PkClient *client, PkExitEnum exit, guint runti
 }
 
 /**
- * gpk_client_smart_icon_notify_button:
+ * gpk_client_notify_button_cb:
  **/
 static void
-gpk_client_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button,
+gpk_client_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
 				     const gchar *data, GpkClient *gclient)
 {
 	gboolean ret;
@@ -1742,8 +1744,9 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 
 	gclient->priv->sicon = gpk_smart_icon_new ();
-	g_signal_connect (gclient->priv->sicon, "notification-button",
-			  G_CALLBACK (gpk_client_smart_icon_notify_button), gclient);
+	gclient->priv->notify = gpk_notify_new ();
+	g_signal_connect (gclient->priv->notify, "notification-button",
+			  G_CALLBACK (gpk_client_notify_button_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -1813,6 +1816,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->control);
 	g_object_unref (gclient->priv->gconf_client);
 	g_object_unref (gclient->priv->sicon);
+	g_object_unref (gclient->priv->notify);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }

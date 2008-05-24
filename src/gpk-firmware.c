@@ -44,6 +44,7 @@
 #include <gpk-client.h>
 #include <gpk-common.h>
 
+#include "gpk-notify.h"
 #include "gpk-firmware.h"
 #include "gpk-smart-icon.h"
 
@@ -58,6 +59,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 struct GpkFirmwarePrivate
 {
 	GpkSmartIcon		*sicon;
+	GpkNotify		*notify;
 	gchar			**files;
 };
 
@@ -70,11 +72,11 @@ gpk_firmware_timeout_cb (gpointer data)
 	GpkFirmware *firmware = (GpkFirmware *) data;
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
-	gpk_smart_icon_notify_new (firmware->priv->sicon, _("Additional firmware required"), message,
+	gpk_notify_create (firmware->priv->notify, _("Additional firmware required"), message,
 				   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_smart_icon_notify_button (firmware->priv->sicon, GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE, NULL);
-	gpk_smart_icon_notify_button (firmware->priv->sicon, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_PROMPT_FIRMWARE);
-	gpk_smart_icon_notify_show (firmware->priv->sicon);
+	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE, NULL);
+	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_PROMPT_FIRMWARE);
+	gpk_notify_show (firmware->priv->notify);
 
 	return FALSE;
 }
@@ -95,11 +97,11 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 }
 
 /**
- * gpk_firmware_smart_icon_notify_button:
+ * gpk_firmware_notify_button_cb:
  **/
 static void
-gpk_firmware_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button,
-				       const gchar *data, GpkFirmware *firmware)
+gpk_firmware_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
+			    const gchar *data, GpkFirmware *firmware)
 {
 	pk_debug ("got: %i with data %s", button, data);
 	/* find the localised text */
@@ -134,8 +136,9 @@ gpk_firmware_init (GpkFirmware *firmware)
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
 	firmware->priv->files = NULL;
 	firmware->priv->sicon = gpk_smart_icon_new ();
-	g_signal_connect (firmware->priv->sicon, "notification-button",
-			  G_CALLBACK (gpk_firmware_smart_icon_notify_button), firmware);
+	firmware->priv->notify = gpk_notify_new ();
+	g_signal_connect (firmware->priv->notify, "notification-button",
+			  G_CALLBACK (gpk_firmware_notify_button_cb), firmware);
 
 	/* file exists? */
 	ret = g_file_test (GPK_FIRMWARE_STATE_FILE, G_FILE_TEST_EXISTS);
@@ -181,6 +184,7 @@ gpk_firmware_finalize (GObject *object)
 	g_return_if_fail (firmware->priv != NULL);
 	g_strfreev (firmware->priv->files);
 	g_object_unref (firmware->priv->sicon);
+	g_object_unref (firmware->priv->notify);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
 }

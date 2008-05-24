@@ -35,10 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
 #include <gtk/gtkstatusicon.h>
-#include <libnotify/notify.h>
-#include <gconf/gconf-client.h>
 
 #include <pk-debug.h>
 #include <pk-enum.h>
@@ -55,37 +52,15 @@ static void     gpk_smart_icon_finalize		(GObject           *object);
 
 struct GpkSmartIconPrivate
 {
-	NotifyNotification	*dialog;
-	GConfClient		*gconf_client;
 	gchar			*current;
 	gchar			*new;
-	gchar			*notify_data;
 	guint			 event_source;
 	guint			 pulse_source;
-	gboolean		 has_gconf_check;
 	gfloat			 icon_opacity;
 	gboolean		 going_down;
 };
 
-enum {
-	NOTIFICATION_BUTTON,
-	LAST_SIGNAL
-};
-
 G_DEFINE_TYPE (GpkSmartIcon, gpk_smart_icon, GTK_TYPE_STATUS_ICON)
-
-static guint signals [LAST_SIGNAL] = { 0 };
-
-static PkEnumMatch enum_button_ids[] = {
-	{GPK_NOTIFY_BUTTON_UNKNOWN,		"unknown"},	/* fall though value */
-	{GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,	"do-not-show-again"},
-	{GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN,	"do-not-warn-again"},
-	{GPK_NOTIFY_BUTTON_CANCEL_UPDATE,	"cancel-update"},
-	{GPK_NOTIFY_BUTTON_UPDATE_COMPUTER,	"update-computer"},
-	{GPK_NOTIFY_BUTTON_RESTART_COMPUTER,	"restart-computer"},
-	{GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE,	"install-firmware"},
-	{0, NULL}
-};
 
 /**
  * gpk_smart_icon_class_init:
@@ -97,11 +72,6 @@ gpk_smart_icon_class_init (GpkSmartIconClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = gpk_smart_icon_finalize;
 	g_type_class_add_private (klass, sizeof (GpkSmartIconPrivate));
-	signals [NOTIFICATION_BUTTON] =
-		g_signal_new ("notification-button",
-			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
-			      0, NULL, NULL, gpk_marshal_VOID__UINT_STRING,
-			      G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_STRING);
 }
 
 /**
@@ -277,148 +247,6 @@ gpk_smart_icon_sync (GpkSmartIcon *sicon)
 }
 
 /**
- * gpk_smart_icon_notify:
- **/
-gboolean
-gpk_smart_icon_notify_new (GpkSmartIcon *sicon, const gchar *title, const gchar *message,
-			   const gchar *icon, GpkNotifyUrgency urgency, GpkNotifyTimeout timeout)
-{
-	guint timeout_val = 0;
-
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-
-	pk_debug ("Doing notification: %s, %s, %s", title, message, icon);
-
-	/* no gconf to check */
-	sicon->priv->has_gconf_check = FALSE;
-
-	/* default values */
-	if (timeout == GPK_NOTIFY_TIMEOUT_SHORT) {
-		timeout_val = 5000;
-	} else if (timeout == GPK_NOTIFY_TIMEOUT_LONG) {
-		timeout_val = 15000;
-	}
-
-	if (gtk_status_icon_get_visible (GTK_STATUS_ICON (sicon))) {
-		sicon->priv->dialog = notify_notification_new_with_status_icon (title, message, icon, GTK_STATUS_ICON (sicon));
-	} else {
-		sicon->priv->dialog = notify_notification_new (title, message, icon, NULL);
-	}
-	notify_notification_set_timeout (sicon->priv->dialog, timeout_val);
-	notify_notification_set_urgency (sicon->priv->dialog, (NotifyUrgency) urgency);
-	return TRUE;
-}
-
-/**
- * gpk_smart_icon_libnotify_cb:
- **/
-static void
-gpk_smart_icon_libnotify_cb (NotifyNotification *dialog, gchar *action, GpkSmartIcon *sicon)
-{
-	GpkNotifyButton button;
-
-	g_return_if_fail (GPK_IS_SMART_ICON (sicon));
-
-	/* get the value */
-	button = pk_enum_find_value (enum_button_ids, action);
-
-	/* send a signal with the type and data */
-	pk_debug ("emit: %s with data %s", action, sicon->priv->notify_data);
-	g_signal_emit (sicon, signals [NOTIFICATION_BUTTON], 0, button, sicon->priv->notify_data);
-}
-
-/**
- * gpk_smart_icon_notify_button:
- **/
-gboolean
-gpk_smart_icon_notify_button (GpkSmartIcon *sicon, GpkNotifyButton button, const gchar *data)
-{
-	const gchar *text = NULL;
-	const gchar *id = NULL;
-
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-
-	/* get the id */
-	id = pk_enum_find_string (enum_button_ids, button);
-
-	/* find the localised text */
-	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN) {
-		text = _("Do not show this notification again");
-		sicon->priv->has_gconf_check = TRUE;
-	} else if (button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
-		text = _("Do not warn me again");
-		sicon->priv->has_gconf_check = TRUE;
-	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
-		text = _("Cancel system update");
-	} else if (button == GPK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
-		text = _("Update computer now");
-	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
-		text = _("Restart computer now");
-	} else if (button == GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE) {
-		text = _("Install firmware");
-	}
-
-	/* save data privately, TODO: this really needs to be in a hashtable */
-	sicon->priv->notify_data = g_strdup (data);
-
-	/* add a button to the UI */
-	notify_notification_add_action (sicon->priv->dialog, id, text, (NotifyActionCallback) gpk_smart_icon_libnotify_cb, sicon, NULL);
-	return FALSE;
-}
-
-/**
- * gpk_smart_icon_notify_show:
- * Return value: if the notification is being displayed
- *
- * This will show the notification previously setup with gpk_smart_icon_notify_new() and
- * gpk_smart_icon_notify_button().
- *
- * If you set a key using %GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN or
- * %GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN then this key will be checked before the notification is
- * shown.
- **/
-gboolean
-gpk_smart_icon_notify_show (GpkSmartIcon *sicon)
-{
-	GError *error = NULL;
-	gboolean value;
-
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-	g_return_val_if_fail (sicon->priv->dialog != NULL, FALSE);
-
-	/* check the gconf key isn't set to ignore */
-	if (sicon->priv->has_gconf_check) {
-		pk_debug ("key is %s", sicon->priv->notify_data);
-		/* are we accepting notifications */
-		value = gconf_client_get_bool (sicon->priv->gconf_client, sicon->priv->notify_data, NULL);
-		if (!value) {
-			pk_debug ("not showing notification as prevented in gconf with %s", sicon->priv->notify_data);
-			return FALSE;
-		}
-	}
-
-	notify_notification_close (sicon->priv->dialog, NULL);
-	notify_notification_show (sicon->priv->dialog, &error);
-	if (error != NULL) {
-		pk_warning ("error: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * gpk_smart_icon_notify_close:
- **/
-gboolean
-gpk_smart_icon_notify_close (GpkSmartIcon *sicon)
-{
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-	notify_notification_close (sicon->priv->dialog, NULL);
-	return TRUE;
-}
-
-/**
  * gpk_smart_icon_init:
  * @smart_icon: This class instance
  **/
@@ -428,16 +256,8 @@ gpk_smart_icon_init (GpkSmartIcon *sicon)
 	sicon->priv = GPK_SMART_ICON_GET_PRIVATE (sicon);
 	sicon->priv->new = NULL;
 	sicon->priv->current = NULL;
-	sicon->priv->dialog = NULL;
-	sicon->priv->notify_data = NULL;
 	sicon->priv->event_source = 0;
 	sicon->priv->pulse_source = 0;
-	sicon->priv->has_gconf_check = FALSE;
-	sicon->priv->gconf_client = gconf_client_get_default ();
-
-	/* signal we are here... */
-	notify_init ("packagekit");
-
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon), FALSE);
 }
 
@@ -465,15 +285,6 @@ gpk_smart_icon_finalize (GObject *object)
 
 	g_free (sicon->priv->new);
 	g_free (sicon->priv->current);
-	g_object_unref (sicon->priv->gconf_client);
-
-	if (sicon->priv->dialog != NULL) {
-		notify_notification_close (sicon->priv->dialog, NULL);
-		g_object_unref (sicon->priv->dialog);
-	}
-	if (sicon->priv->notify_data != NULL) {
-		g_free (sicon->priv->notify_data);
-	}
 
 	G_OBJECT_CLASS (gpk_smart_icon_parent_class)->finalize (object);
 }

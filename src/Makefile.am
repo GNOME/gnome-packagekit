@@ -73,6 +73,8 @@ shared_SOURCES =					\
 	gpk-client-chooser.h				\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
+	gpk-notify.c					\
+	gpk-notify.h					\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
 	gpk-common.c					\
