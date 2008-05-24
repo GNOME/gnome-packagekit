@@ -111,7 +111,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	length = pk_task_list_get_size (watch->priv->tlist);
 	pk_debug ("refresh tooltip %i", length);
 	if (length == 0) {
-		gpk_smart_icon_set_tooltip (watch->priv->sicon, "Doing nothing...");
+		gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), "Doing nothing...");
 		return TRUE;
 	}
 	status = g_string_new ("");
@@ -146,7 +146,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	} else {
 		g_string_set_size (status, status->len-1);
 	}
-	gpk_smart_icon_set_tooltip (watch->priv->sicon, status->str);
+	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), status->str);
 	g_string_free (status, TRUE);
 	return TRUE;
 }
@@ -291,7 +291,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 		    restart == PK_RESTART_ENUM_SESSION) {
 			restart_message = gpk_restart_enum_to_localised_text (restart);
 			icon_name = gpk_restart_enum_to_icon_name (restart);
-			gpk_smart_icon_set_tooltip (watch->priv->sicon_restart, restart_message);
+			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_restart), restart_message);
 			gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
 		}
 	}
@@ -1058,14 +1058,14 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->inhibit = gpk_inhibit_new ();
 
 	/* right click actions are common */
-	status_icon = gpk_smart_icon_get_status_icon (watch->priv->sicon);
+	status_icon = GTK_STATUS_ICON (watch->priv->sicon);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "popup_menu", G_CALLBACK (gpk_watch_popup_menu_cb), watch, 0);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate", G_CALLBACK (gpk_watch_activate_status_cb), watch, 0);
 
 	/* provide the user with a way to restart */
-	status_icon = gpk_smart_icon_get_status_icon (watch->priv->sicon_restart);
+	status_icon = GTK_STATUS_ICON (watch->priv->sicon_restart);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate", G_CALLBACK (gpk_watch_activate_status_restart_cb), watch, 0);
 

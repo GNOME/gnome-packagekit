@@ -623,7 +623,7 @@ gpk_notify_query_updates (GpkNotify *notify)
 	}
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 							  "There are %d updates pending", length), length);
-	gpk_smart_icon_set_tooltip (notify->priv->sicon, status_tooltip->str);
+	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (notify->priv->sicon), status_tooltip->str);
 
 	/* is policy none? */
 	if (update == PK_UPDATE_ENUM_NONE) {
@@ -848,7 +848,7 @@ gpk_notify_init (GpkNotify *notify)
 			  G_CALLBACK (gpk_notify_auto_get_updates_cb), notify);
 
 	/* right click actions are common */
-	status_icon = gpk_smart_icon_get_status_icon (notify->priv->sicon);
+	status_icon = GTK_STATUS_ICON (notify->priv->sicon);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "popup_menu",
 				 G_CALLBACK (gpk_notify_popup_menu_cb),

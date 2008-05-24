@@ -48,14 +48,13 @@
 
 static void     gpk_smart_icon_class_init	(GpkSmartIconClass *klass);
 static void     gpk_smart_icon_init		(GpkSmartIcon      *sicon);
-static void     gpk_smart_icon_finalize		(GObject       *object);
+static void     gpk_smart_icon_finalize		(GObject           *object);
 
 #define GPK_SMART_ICON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_SMART_ICON, GpkSmartIconPrivate))
 #define GPK_SMART_ICON_PERSIST_TIMEOUT	100
 
 struct GpkSmartIconPrivate
 {
-	GtkStatusIcon		*status_icon;
 	NotifyNotification	*dialog;
 	GConfClient		*gconf_client;
 	gchar			*current;
@@ -73,7 +72,7 @@ enum {
 	LAST_SIGNAL
 };
 
-G_DEFINE_TYPE (GpkSmartIcon, gpk_smart_icon, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkSmartIcon, gpk_smart_icon, GTK_TYPE_STATUS_ICON)
 
 static guint signals [LAST_SIGNAL] = { 0 };
 
@@ -150,12 +149,12 @@ gpk_smart_icon_pulse_timeout_cb (gpointer data)
 	}
 
 	/* get pixmap the same size as the original icon */
-	gtk_status_icon_get_geometry (GTK_STATUS_ICON (sicon->priv->status_icon), NULL, &area, NULL);
+	gtk_status_icon_get_geometry (GTK_STATUS_ICON (sicon), NULL, &area, NULL);
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), sicon->priv->current, area.width, 0, NULL);
 
 	/* set the new pixmap with the correct opacity */
 	gpk_smart_icon_set_pixmap_opacity (pixbuf, sicon->priv->icon_opacity);
-	gtk_status_icon_set_from_pixbuf (GTK_STATUS_ICON (sicon->priv->status_icon), pixbuf);
+	gtk_status_icon_set_from_pixbuf (GTK_STATUS_ICON (sicon), pixbuf);
 	g_object_unref (pixbuf);
 
 	/* dimming down */
@@ -172,7 +171,7 @@ gpk_smart_icon_pulse_timeout_cb (gpointer data)
 	sicon->priv->icon_opacity += 0.1;
 	if (sicon->priv->icon_opacity>1) {
 		/* restore */
-		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon->priv->status_icon), sicon->priv->current);
+		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon), sicon->priv->current);
 		sicon->priv->pulse_source = 0;
 		return FALSE;
 	}
@@ -222,10 +221,10 @@ gpk_smart_icon_set_icon_name_cb (gpointer data)
 
 	/* set the correct thing */
 	if (sicon->priv->new == NULL) {
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon->priv->status_icon), FALSE);
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon), FALSE);
 	} else {
-		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon->priv->status_icon), sicon->priv->new);
-		gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon->priv->status_icon), TRUE);
+		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon), sicon->priv->new);
+		gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon), TRUE);
 	}
 	return FALSE;
 }
@@ -278,27 +277,6 @@ gpk_smart_icon_sync (GpkSmartIcon *sicon)
 }
 
 /**
- * gpk_smart_icon_get_status_icon:
- **/
-GtkStatusIcon *
-gpk_smart_icon_get_status_icon (GpkSmartIcon *sicon)
-{
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), NULL);
-	return sicon->priv->status_icon;
-}
-
-/**
- * gpk_smart_icon_set_tooltip:
- **/
-gboolean
-gpk_smart_icon_set_tooltip (GpkSmartIcon *sicon, const gchar *tooltip)
-{
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (sicon->priv->status_icon), tooltip);
-	return TRUE;
-}
-
-/**
  * gpk_smart_icon_notify:
  **/
 gboolean
@@ -321,8 +299,8 @@ gpk_smart_icon_notify_new (GpkSmartIcon *sicon, const gchar *title, const gchar 
 		timeout_val = 15000;
 	}
 
-	if (gtk_status_icon_get_visible (sicon->priv->status_icon)) {
-		sicon->priv->dialog = notify_notification_new_with_status_icon (title, message, icon, sicon->priv->status_icon);
+	if (gtk_status_icon_get_visible (GTK_STATUS_ICON (sicon))) {
+		sicon->priv->dialog = notify_notification_new_with_status_icon (title, message, icon, GTK_STATUS_ICON (sicon));
 	} else {
 		sicon->priv->dialog = notify_notification_new (title, message, icon, NULL);
 	}
@@ -448,7 +426,6 @@ static void
 gpk_smart_icon_init (GpkSmartIcon *sicon)
 {
 	sicon->priv = GPK_SMART_ICON_GET_PRIVATE (sicon);
-	sicon->priv->status_icon = gtk_status_icon_new ();
 	sicon->priv->new = NULL;
 	sicon->priv->current = NULL;
 	sicon->priv->dialog = NULL;
@@ -461,7 +438,7 @@ gpk_smart_icon_init (GpkSmartIcon *sicon)
 	/* signal we are here... */
 	notify_init ("packagekit");
 
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon->priv->status_icon), FALSE);
+	gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon), FALSE);
 }
 
 /**
@@ -490,7 +467,6 @@ gpk_smart_icon_finalize (GObject *object)
 	g_free (sicon->priv->current);
 	g_object_unref (sicon->priv->gconf_client);
 
-	g_object_unref (sicon->priv->status_icon);
 	if (sicon->priv->dialog != NULL) {
 		notify_notification_close (sicon->priv->dialog, NULL);
 		g_object_unref (sicon->priv->dialog);

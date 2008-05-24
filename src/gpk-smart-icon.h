@@ -23,6 +23,7 @@
 #define __GPK_SMART_ICON_H
 
 #include <glib-object.h>
+#include <gtk/gtkstatusicon.h>
 
 G_BEGIN_DECLS
 
@@ -39,13 +40,13 @@ typedef struct GpkSmartIconPrivate GpkSmartIconPrivate;
 
 typedef struct
 {
-	 GObject		 parent;
+	 GtkStatusIcon		 parent;
 	 GpkSmartIconPrivate	*priv;
 } GpkSmartIcon;
 
 typedef struct
 {
-	GObjectClass	parent_class;
+	GtkStatusIconClass	 parent_class;
 } GpkSmartIconClass;
 
 typedef enum
@@ -75,13 +76,12 @@ typedef enum
 
 GType		 gpk_smart_icon_get_type		(void) G_GNUC_CONST;
 GpkSmartIcon	*gpk_smart_icon_new			(void);
-GtkStatusIcon	*gpk_smart_icon_get_status_icon		(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_sync			(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_pulse			(GpkSmartIcon	*sicon);
 gboolean	 gpk_smart_icon_set_icon_name		(GpkSmartIcon	*sicon,
 							 const gchar	*icon_name);
-gboolean	 gpk_smart_icon_set_tooltip		(GpkSmartIcon	*sicon,
-							 const gchar	*tooltip);
+
+
 gboolean	 gpk_smart_icon_notify_new		(GpkSmartIcon	*sicon,
 							 const gchar	*title,
 							 const gchar	*message,
