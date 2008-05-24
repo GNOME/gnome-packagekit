@@ -36,7 +36,7 @@
 #include <pk-debug.h>
 #include <pk-common.h>
 
-#include "gpk-notify.h"
+#include "gpk-check-update.h"
 #include "gpk-watch.h"
 #include "gpk-firmware.h"
 #include "gpk-dbus.h"
@@ -110,7 +110,7 @@ main (int argc, char *argv[])
 {
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
-	GpkNotify *notify = NULL;
+	GpkCheckUpdate *cupdate = NULL;
 	GpkWatch *watch = NULL;
 	GpkDbus *dbus = NULL;
 	GpkFirmware *firmware = NULL;
@@ -167,7 +167,7 @@ main (int argc, char *argv[])
 
 	/* create new objects */
 	dbus = gpk_dbus_new ();
-	notify = gpk_notify_new ();
+	cupdate = gpk_check_update_new ();
 	watch = gpk_watch_new ();
 	firmware = gpk_firmware_new ();
 
@@ -197,7 +197,7 @@ main (int argc, char *argv[])
 
 out:
 	g_object_unref (dbus);
-	g_object_unref (notify);
+	g_object_unref (cupdate);
 	g_object_unref (watch);
 	g_object_unref (firmware);
 	g_object_unref (libgbus);

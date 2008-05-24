@@ -131,8 +131,8 @@ gpk_install_package_name_LDADD =			\
 
 gpk_update_icon_SOURCES =				\
 	gpk-update-icon.c				\
-	gpk-notify.c					\
-	gpk-notify.h					\
+	gpk-check-update.c				\
+	gpk-check-update.h				\
 	gpk-auto-refresh.c				\
 	gpk-auto-refresh.h				\
 	gpk-watch.c					\
