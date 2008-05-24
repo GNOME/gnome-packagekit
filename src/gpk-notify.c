@@ -121,8 +121,9 @@ gpk_notify_create (GpkNotify *notify, const gchar *title, const gchar *message,
 		timeout_val = 15000;
 	}
 
-	if (gtk_status_icon_get_visible (GTK_STATUS_ICON (notify))) {
-		notify->priv->notification = notify_notification_new_with_status_icon (title, message, icon, GTK_STATUS_ICON (notify));
+	/* TODO: use the single icon */
+	if (FALSE && gtk_status_icon_get_visible (GTK_STATUS_ICON (NULL))) {
+		notify->priv->notification = notify_notification_new_with_status_icon (title, message, icon, GTK_STATUS_ICON (NULL));
 	} else {
 		notify->priv->notification = notify_notification_new (title, message, icon, NULL);
 	}
@@ -255,8 +256,6 @@ gpk_notify_init (GpkNotify *notify)
 
 	/* signal we are here... */
 	notify_init ("packagekit");
-
-	gtk_status_icon_set_visible (GTK_STATUS_ICON (notify), FALSE);
 }
 
 /**
