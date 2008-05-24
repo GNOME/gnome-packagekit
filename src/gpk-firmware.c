@@ -54,7 +54,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))
 #define GPK_FIRMWARE_STATE_FILE		"/var/run/PackageKit/udev-firmware"
-#define GPK_FIRMWARE_LOGIN_DELAY	1 /* seconds */
+#define GPK_FIRMWARE_LOGIN_DELAY	20 /* seconds */
 
 struct GpkFirmwarePrivate
 {
@@ -73,7 +73,7 @@ gpk_firmware_timeout_cb (gpointer data)
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
 	gpk_notify_create (firmware->priv->notify, _("Additional firmware required"), message,
-				   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
+			   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
 	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE, NULL);
 	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_PROMPT_FIRMWARE);
 	gpk_notify_show (firmware->priv->notify);
