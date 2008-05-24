@@ -223,6 +223,18 @@ gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 }
 
 /**
+ * gpk_smart_icon_set_priority:
+ **/
+gboolean
+gpk_smart_icon_set_priority (GpkSmartIcon *sicon, guint number)
+{
+	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
+
+	pk_debug ("set priority %i", number);
+	return TRUE;
+}
+
+/**
  * gpk_smart_icon_init:
  * @smart_icon: This class instance
  **/

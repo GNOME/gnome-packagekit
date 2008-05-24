@@ -52,7 +52,6 @@
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
-#include "gpk-smart-icon.h"
 #include "gpk-notify.h"
 #include "gpk-consolekit.h"
 #include "gpk-animated-icon.h"
@@ -74,7 +73,6 @@ struct _GpkClientPrivate
 	PkClient		*client_action;
 	PkClient		*client_resolve;
 	PkClient		*client_secondary;
-	GpkSmartIcon		*sicon;
 	GpkNotify		*notify;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
@@ -1519,8 +1517,8 @@ gpk_client_secondary_finished_cb (PkClient *client, PkExitEnum exit, guint runti
  * gpk_client_notify_button_cb:
  **/
 static void
-gpk_client_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
-				     const gchar *data, GpkClient *gclient)
+gpk_client_notify_button_cb (GpkNotify *notify, GpkNotifyButton button,
+			     const gchar *data, GpkClient *gclient)
 {
 	gboolean ret;
 
@@ -1743,7 +1741,6 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_action, "eula-required",
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 
-	gclient->priv->sicon = gpk_smart_icon_new ();
 	gclient->priv->notify = gpk_notify_new ();
 	g_signal_connect (gclient->priv->notify, "notification-button",
 			  G_CALLBACK (gpk_client_notify_button_cb), gclient);
@@ -1815,7 +1812,6 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_secondary);
 	g_object_unref (gclient->priv->control);
 	g_object_unref (gclient->priv->gconf_client);
-	g_object_unref (gclient->priv->sicon);
 	g_object_unref (gclient->priv->notify);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);

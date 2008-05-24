@@ -46,7 +46,6 @@
 
 #include "gpk-notify.h"
 #include "gpk-firmware.h"
-#include "gpk-smart-icon.h"
 
 static void     gpk_firmware_class_init	(GpkFirmwareClass *klass);
 static void     gpk_firmware_init	(GpkFirmware      *firmware);
@@ -58,7 +57,6 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 struct GpkFirmwarePrivate
 {
-	GpkSmartIcon		*sicon;
 	GpkNotify		*notify;
 	gchar			**files;
 };
@@ -100,8 +98,8 @@ gpk_firmware_install_file (GpkFirmware *firmware)
  * gpk_firmware_notify_button_cb:
  **/
 static void
-gpk_firmware_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
-			    const gchar *data, GpkFirmware *firmware)
+gpk_firmware_notify_button_cb (GpkNotify *notify, GpkNotifyButton button,
+			       const gchar *data, GpkFirmware *firmware)
 {
 	pk_debug ("got: %i with data %s", button, data);
 	/* find the localised text */
@@ -135,7 +133,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
 	firmware->priv->files = NULL;
-	firmware->priv->sicon = gpk_smart_icon_new ();
+
 	firmware->priv->notify = gpk_notify_new ();
 	g_signal_connect (firmware->priv->notify, "notification-button",
 			  G_CALLBACK (gpk_firmware_notify_button_cb), firmware);
@@ -183,7 +181,6 @@ gpk_firmware_finalize (GObject *object)
 
 	g_return_if_fail (firmware->priv != NULL);
 	g_strfreev (firmware->priv->files);
-	g_object_unref (firmware->priv->sicon);
 	g_object_unref (firmware->priv->notify);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);

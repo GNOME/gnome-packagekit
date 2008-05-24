@@ -1047,8 +1047,13 @@ gpk_watch_init (GpkWatch *watch)
 
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
+
 	watch->priv->sicon = gpk_smart_icon_new ();
+	gpk_smart_icon_set_priority (watch->priv->sicon, 1);
+
 	watch->priv->sicon_restart = gpk_smart_icon_new ();
+	gpk_smart_icon_set_priority (watch->priv->sicon_restart, 3);
+
 	watch->priv->set_proxy_timeout = 0;
 
 	watch->priv->notify = gpk_notify_new ();

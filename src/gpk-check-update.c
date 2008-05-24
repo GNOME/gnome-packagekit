@@ -838,6 +838,8 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
 	cupdate->priv->sicon = gpk_smart_icon_new ();
+	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
+
 	cupdate->priv->notify = gpk_notify_new ();
 	g_signal_connect (cupdate->priv->notify, "notification-button",
 			  G_CALLBACK (gpk_check_update_notify_button_cb), cupdate);
