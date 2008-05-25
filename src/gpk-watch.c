@@ -1087,10 +1087,8 @@ gpk_watch_init (GpkWatch *watch)
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
 
-	restart_action = polkit_gnome_action_new_default ("restart-system",
-							  pk_action,
-							  _("_Restart computer"),
-							  NULL);
+	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
+							  _("_Restart computer"), NULL);
 	g_object_set (restart_action,
 		      "no-icon-name", "gnome-shutdown",
 		      "auth-icon-name", "gnome-shutdown",
