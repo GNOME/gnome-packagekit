@@ -73,6 +73,7 @@ struct GpkWatchPrivate
 	GpkSmartIcon		*sicon_restart;
 	GpkNotify		*notify;
 	GpkInhibit		*inhibit;
+	GpkClient		*gclient;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	GConfClient		*gconf_client;
@@ -583,17 +584,6 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 }
 
 /**
- * gpk_watch_refresh_cache_finished_cb:
- **/
-static void
-gpk_watch_refresh_cache_finished_cb (PkClient *client, PkExitEnum exit_code, guint runtime, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-	pk_debug ("unreffing client %p", client);
-	g_object_unref (client);
-}
-
-/**
  * gpk_watch_restart_cb:
  **/
 static void
@@ -610,20 +600,16 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 {
 	gboolean ret;
 	GpkWatch *watch = GPK_WATCH (data);
-	PkClient *client;
 	GError *error = NULL;
 	gchar *message;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("refresh cache");
-	client = pk_client_new ();
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_watch_refresh_cache_finished_cb), watch);
-
-	ret = pk_client_refresh_cache (client, TRUE, NULL);
+	gpk_client_show_finished (watch->priv->gclient, FALSE);
+	gpk_client_show_progress (watch->priv->gclient, FALSE);
+	ret = gpk_client_refresh_cache (watch->priv->gclient, &error);
 	if (!ret) {
-		g_object_unref (client);
 		message = g_strdup_printf (_("The error was: %s"), error->message);
 		pk_warning ("%s", message);
 		g_error_free (error);
@@ -1057,6 +1043,7 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->set_proxy_timeout = 0;
 
 	watch->priv->notify = gpk_notify_new ();
+	watch->priv->gclient = gpk_client_new ();
 
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
@@ -1154,6 +1141,7 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->control);
+	g_object_unref (watch->priv->gclient);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->restart_action);
