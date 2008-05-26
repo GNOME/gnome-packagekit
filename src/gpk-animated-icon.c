@@ -78,6 +78,9 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 		return FALSE;
 	}
 
+	/* stop existing animation */
+	gpk_animated_icon_enable_animation (icon, FALSE);
+
 	/* save new value */
 	g_free (icon->filename);
 	icon->filename = g_strdup (name);
@@ -100,6 +103,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	cols = gdk_pixbuf_get_width (pixbuf) / w;
 	rows = gdk_pixbuf_get_height (pixbuf) / h;
 
+	icon->frame_counter = 0;
 	icon->number_frames = rows * cols;
 	icon->frames = g_new (GdkPixbuf*, icon->number_frames);
 
