@@ -2408,6 +2408,9 @@ gpk_application_init (GpkApplication *application)
 	application->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-application.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
+	/* make GpkClient windows modal */
+	gpk_client_set_parent (application->priv->gclient, GTK_WINDOW (main_window));
+
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), PK_STOCK_APP_ICON);

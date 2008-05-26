@@ -1656,6 +1656,19 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 }
 
 /**
+ * gpk_client_set_parent:
+ **/
+gboolean
+gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
+{
+	GtkWidget *widget;
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	return TRUE;
+}
+
+/**
  * gpk_client_create_custom_widget:
  **/
 static GtkWidget *

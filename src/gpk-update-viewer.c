@@ -1710,6 +1710,9 @@ main (int argc, char *argv[])
 	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
+	/* make GpkClient windows modal */
+	gpk_client_set_parent (gclient, GTK_WINDOW (main_window));
+
 	/* hide until we have updates */
 	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
 	gtk_widget_hide (widget);

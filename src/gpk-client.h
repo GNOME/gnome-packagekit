@@ -100,6 +100,8 @@ PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
 							 const gchar	*tid);
+gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
+							 GtkWindow	*window);
 
 G_END_DECLS
 
