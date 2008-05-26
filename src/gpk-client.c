@@ -84,7 +84,7 @@ struct _GpkClientPrivate
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
 	gboolean		 show_progress;
-	gboolean 		 finished_okay;
+	PkExitEnum		 exit;
 };
 
 typedef enum {
@@ -347,8 +347,8 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	/* save this */
-	gclient->priv->finished_okay = (exit == PK_EXIT_ENUM_SUCCESS);
+	/* save this so we can return a proper error value */
+	gclient->priv->exit = exit;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	/* do nothing */
@@ -720,6 +720,34 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 }
 
 /**
+ * gpk_client_set_error_from_exit_enum:
+ **/
+static gboolean
+gpk_client_set_error_from_exit_enum (PkExitEnum exit, GError **error)
+{
+	/* trivial case */
+	if (exit == PK_EXIT_ENUM_SUCCESS) {
+		return TRUE;
+	}
+
+	/* set the correct error type */
+	if (exit == PK_EXIT_ENUM_FAILED) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Unspecified failure");
+	} else if (exit == PK_EXIT_ENUM_CANCELLED) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Transaction was cancelled");
+	} else if (exit == PK_EXIT_ENUM_KEY_REQUIRED) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "A key was required but not provided");
+	} else if (exit == PK_EXIT_ENUM_EULA_REQUIRED) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "A EULA was not agreed to");
+	} else if (exit == PK_EXIT_ENUM_KILLED) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "The transaction was killed");
+	} else {
+		pk_error ("unknown exit code");
+	}
+	return FALSE;
+}
+
+/**
  * gpk_client_install_local_file:
  * @gclient: a valid #GpkClient instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -796,8 +824,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		gtk_main ();
 	}
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 	/* we're done */
 	gpk_client_done (gclient);
@@ -875,8 +903,8 @@ skip_checks:
 	/* wait for completion */
 	gtk_main ();
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 	/* we're done */
 	gpk_client_done (gclient);
@@ -954,8 +982,8 @@ skip_checks:
 	/* wait for completion */
 	gtk_main ();
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 	/* we're done */
 	gpk_client_done (gclient);
@@ -1220,8 +1248,8 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* wait for completion */
 	gtk_main ();
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
 	if (error_local != NULL) {
@@ -1279,8 +1307,8 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	/* wait for completion */
 	gtk_main ();
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
 	if (error_local != NULL) {
@@ -1390,8 +1418,8 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* wait for completion */
 	gtk_main ();
 
-	/* retval depends on SUCCESS */
-	ret = gclient->priv->finished_okay;
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
 	if (error_local != NULL) {
@@ -1716,7 +1744,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->using_secondary_client = FALSE;
-	gclient->priv->finished_okay = TRUE;
+	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->finished_timer_id = 0;
