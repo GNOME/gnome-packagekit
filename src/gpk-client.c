@@ -84,6 +84,7 @@ struct _GpkClientPrivate
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
 	gboolean		 show_progress;
+	gboolean		 show_progress_files;
 	PkExitEnum		 exit;
 };
 
@@ -525,6 +526,11 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	/* ignore this if it's uninteresting */
+	if (!gclient->priv->show_progress_files) {
+		return;
+	}
+
 	text = gpk_package_id_format_twoline (package_id, summary);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
 	gtk_widget_show (widget);
@@ -809,6 +815,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	gpk_client_setup_window (gclient, _("Install local file"));
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = TRUE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -898,6 +905,7 @@ skip_checks:
 	}
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = TRUE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -934,6 +942,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_setup_window (gclient, _("Install packages"));
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = TRUE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
@@ -1229,6 +1238,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = TRUE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
@@ -1302,6 +1312,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = FALSE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1355,6 +1366,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = FALSE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1413,6 +1425,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	}
 
 	/* setup the UI */
+	gclient->priv->show_progress_files = TRUE;
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1626,6 +1639,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	guint elapsed;
 	guint remaining;
 	GError *error = NULL;
+	PkRoleEnum role;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -1675,6 +1689,19 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		gpk_client_package_cb (gclient->priv->client_action, 0, text, NULL, gclient);
 	}
 
+	/* get the role */
+	ret = pk_client_get_role (gclient->priv->client_action, &role, NULL, &error);
+	if (!ret) {
+		pk_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* setup the UI */
+	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+		gclient->priv->show_progress_files = FALSE;
+	} else {
+		gclient->priv->show_progress_files = TRUE;
+	}
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1747,6 +1774,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_progress = TRUE;
+	gclient->priv->show_progress_files = TRUE;
 	gclient->priv->finished_timer_id = 0;
 
 	/* add application specific icons to search path */
