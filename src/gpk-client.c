@@ -35,6 +35,8 @@
 #include <glade/glade.h>
 #include <gconf/gconf-client.h>
 #include <polkit-gnome/polkit-gnome.h>
+#include <libnotify/notify.h>
+
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-package-id.h>
@@ -52,7 +54,6 @@
 #include <gpk-common.h>
 #include <gpk-gnome.h>
 #include <gpk-error.h>
-#include "gpk-notify.h"
 #include "gpk-consolekit.h"
 #include "gpk-animated-icon.h"
 
@@ -73,7 +74,6 @@ struct _GpkClientPrivate
 	PkClient		*client_action;
 	PkClient		*client_resolve;
 	PkClient		*client_secondary;
-	GpkNotify		*notify;
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
 	guint			 pulse_timer_id;
@@ -253,11 +253,51 @@ gpk_client_show_progress (GpkClient *gclient, gboolean enabled)
 }
 
 /**
+ * gpk_client_libnotify_cb:
+ **/
+static void
+gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GpkClient *gclient = GPK_CLIENT (data);
+
+	if (pk_strequal (action, "do-not-show-complete-restart")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
+		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
+	} else if (pk_strequal (action, "do-not-show-complete")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
+		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
+	} else if (pk_strequal (action, "do-not-show-update-started")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
+		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
+	} else if (pk_strequal (action, "cancel")) {
+		/* try to cancel */
+		ret = pk_client_cancel (gclient->priv->client_action, &error);
+		if (!ret) {
+			pk_warning ("failed to cancel client: %s", error->message);
+			g_error_free (error);
+		}
+	} else if (pk_strequal (action, "restart-computer")) {
+		/* restart using gnome-power-manager */
+		ret = gpk_restart_system ();
+		if (!ret) {
+			pk_warning ("failed to reboot");
+		}
+	} else {
+		pk_warning ("unknown action id: %s", action);
+	}
+}
+
+/**
  * gpk_client_finished_no_progress:
  **/
 static void
 gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint runtime, GpkClient *gclient)
 {
+	gboolean ret;
+	GError *error = NULL;
+	NotifyNotification *notification;
 	PkRestartEnum restart;
 	guint i;
 	guint length;
@@ -320,20 +360,31 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 		g_string_set_size (message_text, message_text->len-1);
 	}
 
-	/* this will not show if specified in gconf */
-	gpk_notify_create (gclient->priv->notify,
-			   _("The system update has completed"), message_text->str,
-			   "software-update-available",
-			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	if (restart == PK_RESTART_ENUM_SYSTEM) {
-		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_RESTART_COMPUTER, NULL);
-		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-					      GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
-	} else {
-		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-					      GPK_CONF_NOTIFY_UPDATE_COMPLETE);
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, NULL);
+	if (!ret) {
+		pk_debug ("ignoring due to GConf");
+		return;
 	}
-	gpk_notify_show (gclient->priv->notify);
+
+	/* do the bubble */
+	notification = notify_notification_new (_("The system update has completed"), message_text->str, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		notify_notification_add_action (notification, "restart",
+						_("Restart computer now"), gpk_client_libnotify_cb, gclient, NULL);
+		notify_notification_add_action (notification, "do-not-show-complete-restart",
+						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
+	} else {
+		notify_notification_add_action (notification, "do-not-show-complete",
+						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
+	}
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
 	g_string_free (message_text, TRUE);
 }
 
@@ -466,8 +517,11 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 static void
 gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkClient *gclient)
 {
+	gboolean ret;
+	GError *error = NULL;
 	const gchar *title;
 	const gchar *message;
+	NotifyNotification *notification;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
@@ -503,15 +557,18 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	message = gpk_error_enum_to_localised_message (code);
 	if (gclient->priv->show_progress) {
 		gpk_error_dialog (title, message, details);
-	} else {
-		/* this will not show if specified in gconf */
-		gpk_notify_create (gclient->priv->notify, title, message, "help-browser",
-				   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-		gpk_notify_button (gclient->priv->notify,
-					      GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_NOTIFY_ERROR);
-		gpk_notify_show (gclient->priv->notify);
+		return;
 	}
 
+	/* do the bubble */
+	notification = notify_notification_new (title, message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
 }
 
 /**
@@ -1206,6 +1263,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
+	NotifyNotification *notification;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -1242,17 +1300,23 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
-	if (!gclient->priv->show_progress) {
-		/* this will not show if specified in gconf */
-		gpk_notify_create (gclient->priv->notify,
-				   _("Updates are being installed"),
-				   _("Updates are being automatically installed on your computer"),
-				   "software-update-urgent",
-				   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_CANCEL_UPDATE, NULL);
-		gpk_notify_button (gclient->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-					      GPK_CONF_NOTIFY_UPDATE_STARTED);
-		gpk_notify_show (gclient->priv->notify);
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
+	if (!gclient->priv->show_progress && ret) {
+		/* do the bubble */
+		notification = notify_notification_new (_("Updates are being installed"),
+							_("Updates are being automatically installed on your computer"),
+							"software-update-urgent", NULL);
+		notify_notification_set_timeout (notification, 15000);
+		notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+		notify_notification_add_action (notification, "cancel",
+						_("Cancel update"), gpk_client_libnotify_cb, gclient, NULL);
+		notify_notification_add_action (notification, "do-not-show-update-started",
+						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
+		ret = notify_notification_show (notification, &error_local);
+		if (!ret) {
+			pk_warning ("error: %s", error_local->message);
+			g_error_free (error_local);
+		}
 	}
 
 	/* wait for completion */
@@ -1555,38 +1619,6 @@ gpk_client_secondary_finished_cb (PkClient *client, PkExitEnum exit, guint runti
 }
 
 /**
- * gpk_client_notify_button_cb:
- **/
-static void
-gpk_client_notify_button_cb (GpkNotify *notify, GpkNotifyButton button,
-			     const gchar *data, GpkClient *gclient)
-{
-	gboolean ret;
-
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	pk_debug ("got: %i with data %s", button, data);
-	/* find the localised text */
-	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
-	    button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
-		if (data == NULL) {
-			pk_warning ("data NULL");
-		} else {
-			pk_debug ("setting %s to FALSE", data);
-			gconf_client_set_bool (gclient->priv->gconf_client, data, FALSE, NULL);
-		}
-	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
-		pk_client_button_cancel_cb (NULL, gclient);
-	} else if (button == GPK_NOTIFY_BUTTON_RESTART_COMPUTER) {
-		/* restart using gnome-power-manager */
-		ret = gpk_restart_system ();
-		if (!ret) {
-			pk_warning ("failed to reboot");
-		}
-	}
-}
-
-/**
  * pk_common_get_role_text:
  **/
 static gchar *
@@ -1810,10 +1842,6 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_action, "eula-required",
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 
-	gclient->priv->notify = gpk_notify_new ();
-	g_signal_connect (gclient->priv->notify, "notification-button",
-			  G_CALLBACK (gpk_client_notify_button_cb), gclient);
-
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
 			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
@@ -1881,7 +1909,6 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_secondary);
 	g_object_unref (gclient->priv->control);
 	g_object_unref (gclient->priv->gconf_client);
-	g_object_unref (gclient->priv->notify);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
 }

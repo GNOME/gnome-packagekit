@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
+#include <libnotify/notify.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
@@ -44,7 +45,6 @@
 #include <gpk-client.h>
 #include <gpk-common.h>
 
-#include "gpk-notify.h"
 #include "gpk-firmware.h"
 
 static void     gpk_firmware_class_init	(GpkFirmwareClass *klass);
@@ -57,27 +57,11 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 struct GpkFirmwarePrivate
 {
-	GpkNotify		*notify;
 	gchar			**files;
+	GConfClient		*gconf_client;
 };
 
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
-
-static gboolean
-gpk_firmware_timeout_cb (gpointer data)
-{
-	const gchar *message;
-	GpkFirmware *firmware = (GpkFirmware *) data;
-
-	message = _("Additional firmware is required to make hardware in this computer function correctly.");
-	gpk_notify_create (firmware->priv->notify, _("Additional firmware required"), message,
-			   "help-browser", GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE, NULL);
-	gpk_notify_button (firmware->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN, GPK_CONF_PROMPT_FIRMWARE);
-	gpk_notify_show (firmware->priv->notify);
-
-	return FALSE;
-}
 
 /**
  * gpk_firmware_install_file:
@@ -95,17 +79,48 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 }
 
 /**
- * gpk_firmware_notify_button_cb:
+ * gpk_firmware_libnotify_cb:
  **/
 static void
-gpk_firmware_notify_button_cb (GpkNotify *notify, GpkNotifyButton button,
-			       const gchar *data, GpkFirmware *firmware)
+gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
 {
-	pk_debug ("got: %i with data %s", button, data);
-	/* find the localised text */
-	if (button == GPK_NOTIFY_BUTTON_INSTALL_FIRMWARE) {
+	GpkFirmware *firmware = GPK_FIRMWARE (data);
+
+	if (pk_strequal (action, "install-firmware")) {
 		gpk_firmware_install_file (firmware);
+	} else if (pk_strequal (action, "do-not-show-prompt-firmware")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
+		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, FALSE, NULL);
+	} else {
+		pk_warning ("unknown action id: %s", action);
 	}
+}
+
+static gboolean
+gpk_firmware_timeout_cb (gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+	const gchar *message;
+	GpkFirmware *firmware = GPK_FIRMWARE (data);
+	NotifyNotification *notification;
+
+	message = _("Additional firmware is required to make hardware in this computer function correctly.");
+	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "install-firmware",
+					_("Install firmware"), gpk_firmware_libnotify_cb, firmware, NULL);
+	notify_notification_add_action (notification, "do-not-show-prompt-firmware",
+					_("Do not show this again"), gpk_firmware_libnotify_cb, firmware, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* never repeat */
+	return FALSE;
 }
 
 /**
@@ -133,10 +148,14 @@ gpk_firmware_init (GpkFirmware *firmware)
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
 	firmware->priv->files = NULL;
+	firmware->priv->gconf_client = gconf_client_get_default ();
 
-	firmware->priv->notify = gpk_notify_new ();
-	g_signal_connect (firmware->priv->notify, "notification-button",
-			  G_CALLBACK (gpk_firmware_notify_button_cb), firmware);
+	/* should we check and show the user */
+	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, NULL);
+	if (!ret) {
+		pk_debug ("not showing thanks to GConf");
+		return;
+	}
 
 	/* file exists? */
 	ret = g_file_test (GPK_FIRMWARE_STATE_FILE, G_FILE_TEST_EXISTS);
@@ -181,7 +200,7 @@ gpk_firmware_finalize (GObject *object)
 
 	g_return_if_fail (firmware->priv != NULL);
 	g_strfreev (firmware->priv->files);
-	g_object_unref (firmware->priv->notify);
+	g_object_unref (firmware->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
 }

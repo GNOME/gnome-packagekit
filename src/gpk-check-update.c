@@ -36,6 +36,7 @@
 
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
+#include <libnotify/notify.h>
 
 #include <pk-debug.h>
 #include <pk-client.h>
@@ -53,7 +54,6 @@
 #include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
 #include "gpk-client.h"
-#include "gpk-notify.h"
 #include "gpk-check-update.h"
 
 static void     gpk_check_update_class_init	(GpkCheckUpdateClass *klass);
@@ -65,7 +65,6 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 struct GpkCheckUpdatePrivate
 {
 	GpkSmartIcon		*sicon;
-	GpkNotify		*notify;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkControl		*control;
@@ -385,6 +384,27 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkChec
 }
 
 /**
+ * gpk_check_update_libnotify_cb:
+ **/
+static void
+gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
+{
+	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
+
+	if (pk_strequal (action, "update-all-packages")) {
+		gpk_check_update_update_system (cupdate);
+	} else if (pk_strequal (action, "do-not-show-notify-critical")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
+	} else if (pk_strequal (action, "do-not-show-update-not-battery")) {
+		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
+	} else {
+		pk_warning ("unknown action id: %s", action);
+	}
+}
+
+/**
  * gpk_check_update_critical_updates_warning:
  **/
 static void
@@ -393,8 +413,18 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	const gchar *title;
 	gchar *message;
 	GString *string;
+	gboolean ret;
+	GError *error = NULL;
+	NotifyNotification *notification;
 
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
+	if (!ret) {
+		pk_debug ("ignoring due to GConf");
+		return;
+	}
 
 	/* format title */
 	title = ngettext ("Security update available", "Security updates available", number);
@@ -407,12 +437,19 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	g_string_append (string, details);
 	message = g_string_free (string, FALSE);
 
-	/* this will not show if specified in gconf */
-	gpk_notify_create (cupdate->priv->notify, title, message, "software-update-urgent",
-			   GPK_NOTIFY_URGENCY_CRITICAL, GPK_NOTIFY_TIMEOUT_NEVER);
-	gpk_notify_button (cupdate->priv->notify, GPK_NOTIFY_BUTTON_UPDATE_COMPUTER, NULL);
-	gpk_notify_button (cupdate->priv->notify, GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN, GPK_CONF_NOTIFY_CRITICAL);
-	gpk_notify_show (cupdate->priv->notify);
+	/* do the bubble */
+	notification = notify_notification_new (title, message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
+	notify_notification_add_action (notification, "update-all-packages",
+					_("Update all packages now"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	notify_notification_add_action (notification, "do-not-show-notify-critical",
+					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
 
 	g_free (message);
 }
@@ -489,6 +526,9 @@ static gboolean
 gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 {
 	gboolean ret;
+	GError *error = NULL;
+	const gchar *message;
+	NotifyNotification *notification;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
@@ -504,16 +544,28 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 		return TRUE;
 	}
 
-	/* this will not show if specified in gconf */
-	gpk_notify_create (cupdate->priv->notify,
-			   _("Will not install updates"),
-			   _("Automatic updates are not being installed as the computer is on battery power"),
-			   "dialog-information",
-			   GPK_NOTIFY_URGENCY_LOW, GPK_NOTIFY_TIMEOUT_LONG);
-	gpk_notify_button (cupdate->priv->notify,
-			   GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN,
-			   GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
-	gpk_notify_show (cupdate->priv->notify);
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, NULL);
+	if (!ret) {
+		pk_debug ("ignoring due to GConf");
+		return FALSE;
+	}
+
+	/* do the bubble */
+	message = _("Automatic updates are not being installed as the computer is on battery power");
+	notification = notify_notification_new (_("Will not install updates"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "do-not-show-update-not-battery",
+					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	notify_notification_add_action (notification, "update-all-packages",
+					_("Do the update anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+
 	return FALSE;
 }
 
@@ -556,7 +608,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	const gchar *icon;
 	gchar **package_ids;
 	PkPackageList *list;
-	GError *error;
+	GError *error = NULL;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
@@ -802,32 +854,6 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 }
 
 /**
- * gpk_check_update_notify_button_cb:
- **/
-static void
-gpk_check_update_notify_button_cb (GpkSmartIcon *sicon, GpkNotifyButton button,
-				const gchar *data, GpkCheckUpdate *cupdate)
-{
-	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-
-	pk_debug ("got: %i with data %s", button, data);
-	/* find the localised text */
-	if (button == GPK_NOTIFY_BUTTON_DO_NOT_SHOW_AGAIN ||
-	    button == GPK_NOTIFY_BUTTON_DO_NOT_WARN_AGAIN) {
-		if (data == NULL) {
-			pk_warning ("data NULL");
-		} else {
-			pk_debug ("setting %s to FALSE", data);
-			gconf_client_set_bool (cupdate->priv->gconf_client, data, FALSE, NULL);
-		}
-	} else if (button == GPK_NOTIFY_BUTTON_CANCEL_UPDATE) {
-		pk_warning ("unable to cancel!");
-	} else if (button == GPK_NOTIFY_BUTTON_UPDATE_COMPUTER) {
-		gpk_check_update_update_system (cupdate);
-	}
-}
-
-/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -839,10 +865,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	cupdate->priv->sicon = gpk_smart_icon_new ();
 	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
-
-	cupdate->priv->notify = gpk_notify_new ();
-	g_signal_connect (cupdate->priv->notify, "notification-button",
-			  G_CALLBACK (gpk_check_update_notify_button_cb), cupdate);
 
 	cupdate->priv->gconf_client = gconf_client_get_default ();
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
@@ -905,7 +927,6 @@ gpk_check_update_finalize (GObject *object)
 
 	g_return_if_fail (cupdate->priv != NULL);
 
-	g_object_unref (cupdate->priv->notify);
 	g_object_unref (cupdate->priv->sicon);
 	g_object_unref (cupdate->priv->pconnection);
 	g_object_unref (cupdate->priv->tlist);
