@@ -195,6 +195,7 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	gboolean ret;
 	gboolean valid;
 	gboolean update;
 	gboolean selected_all = TRUE;
@@ -251,9 +252,16 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	pk_update_viewer_set_page (PAGE_LAST);
 	package_ids = pk_package_ids_from_array (array);
 	gpk_client_show_progress (gclient, TRUE);
-	gpk_client_update_packages (gclient, package_ids, NULL);
+	ret = gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
-	pk_update_viewer_set_page (PAGE_CONFIRM);
+
+	/* did we succeed updating the system */
+	if (!ret) {
+		/* show the preview page */
+		pk_update_viewer_set_page (PAGE_PREVIEW);
+	} else {
+		pk_update_viewer_set_page (PAGE_CONFIRM);
+	}
 
 	/* get rid of the array, and free the contents */
 	g_ptr_array_free (array, TRUE);
