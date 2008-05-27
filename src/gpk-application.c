@@ -177,7 +177,6 @@ static void
 gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean find)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
 
 	/* if we can't do it, then just make the button insensitive */
 	if (!pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
@@ -186,6 +185,7 @@ gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean f
 	}
 
 	/* which tab to enable? */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
 	if (find) {
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
 	} else {
@@ -777,7 +777,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
-
 
 	return TRUE;
 }
@@ -2589,13 +2588,13 @@ gpk_application_init (GpkApplication *application)
 
 	/* hide the refresh cache button if we can't do it */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_refresh");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_refresh");
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the software-sources button if we can't do it */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "imagemenuitem_sources");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_sources");
 		gtk_widget_hide (widget);
 	}
 
