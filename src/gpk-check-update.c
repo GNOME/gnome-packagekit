@@ -73,6 +73,7 @@ struct GpkCheckUpdatePrivate
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
+	NotifyNotification	*notification_updates_available;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -437,6 +438,12 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	g_string_append (string, details);
 	message = g_string_free (string, FALSE);
 
+	/* close any existing notification */
+	if (cupdate->priv->notification_updates_available != NULL) {
+		notify_notification_close (cupdate->priv->notification_updates_available, NULL);
+		cupdate->priv->notification_updates_available = NULL;
+	}
+
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
@@ -450,6 +457,8 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 		pk_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
+	/* track so we can prevent doubled notifications */
+	cupdate->priv->notification_updates_available = notification;
 
 	g_free (message);
 }
@@ -863,6 +872,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	GtkStatusIcon *status_icon;
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
+	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->sicon = gpk_smart_icon_new ();
 	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
 
