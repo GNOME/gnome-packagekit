@@ -171,6 +171,7 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 	GladeXML *glade_xml;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
+	PkPackageList *list;
 	PkPackageItem *item;
 	GtkTreeIter iter;
 	const gchar *icon_name;
@@ -226,9 +227,10 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* see what we've got already */
-	len = pk_client_package_buffer_get_size	(results);
+	list = pk_client_get_package_list (results);
+	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (results, i);
+		item = pk_package_list_get_item (list, i);
 		pk_debug ("package '%s' got:", item->package_id);
 
 		/* put formatted text into treeview */
@@ -241,6 +243,7 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}
+	g_object_unref (list);
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");

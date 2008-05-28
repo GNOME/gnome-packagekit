@@ -1138,7 +1138,7 @@ static void pk_update_viewer_populate_preview (PkPackageList *list);
  * pk_update_viewer_check_blocked_packages:
  **/
 static void
-pk_update_viewer_check_blocked_packages (PkClient *client)
+pk_update_viewer_check_blocked_packages (PkPackageList *list)
 {
 	guint i;
 	guint length;
@@ -1152,9 +1152,9 @@ pk_update_viewer_check_blocked_packages (PkClient *client)
 	string = g_string_new ("");
 
 	/* find any that are blocked */
-	length = pk_client_package_buffer_get_size (client);
+	length = pk_package_list_get_size (list);
 	for (i=0;i<length;i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		if (item->info == PK_INFO_ENUM_BLOCKED) {
 			text = gpk_package_id_format_oneline (item->package_id, item->summary);
 			g_string_append_printf (string, "%s\n", text);
@@ -1203,6 +1203,7 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 	GtkWidget *widget;
 	PkRoleEnum role;
 	PkRestartEnum restart;
+	PkPackageList *list;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 
@@ -1219,7 +1220,9 @@ pk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, 
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		//TODO: this has to be moved to GpkClient
-		pk_update_viewer_check_blocked_packages (client);
+		list = pk_client_get_package_list (client);
+		pk_update_viewer_check_blocked_packages (list);
+		g_object_unref (list);
 	}
 
 	/* hide the cancel */

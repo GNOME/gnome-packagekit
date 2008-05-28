@@ -570,25 +570,32 @@ gpk_application_package_buffer_to_name_version (PkClient *client)
 {
 	guint i;
 	PkPackageItem *item;
+	PkPackageList *list;
 	gchar *text_pretty;
 	guint length;
 	GString *string;
+	gchar *text;
 
-	length = pk_client_package_buffer_get_size (client);
+	list = pk_client_get_package_list (client);
+	length = pk_package_list_get_size (list);
 	if (length == 0) {
-		return g_strdup ("No packages");
+		text = g_strdup ("No packages");
+		goto out;
 	}
 
 	string = g_string_new ("");
 	for (i=0; i<length; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		/* just use the name */
 		text_pretty = gpk_package_id_name_version (item->package_id);
 		g_string_append_printf (string, "%s\n", text_pretty);
 		g_free (text_pretty);
 	}
 	g_string_set_size (string, string->len - 1);
-	return g_string_free (string, FALSE);
+	text = g_string_free (string, FALSE);
+out:
+	g_object_unref (list);
+	return text;
 }
 
 /**

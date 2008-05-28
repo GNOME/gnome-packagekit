@@ -42,6 +42,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 {
 	GError *error = NULL;
 	PkPackageItem *item;
+	PkPackageList *list;
 	gchar *package_id = NULL;
 	gboolean already_installed = FALSE;
 	gboolean ret;
@@ -68,7 +69,8 @@ gpk_client_resolve_indervidual (const gchar *package)
 	}
 
 	/* found nothing? */
-	len = pk_client_package_buffer_get_size	(client);
+	list = pk_client_get_package_list (client);
+	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		title = g_strdup_printf (_("Could not find %s"), package);
 		gpk_error_dialog (title, _("The package could not be found in any software sources"), NULL);
@@ -78,7 +80,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 
 	/* see what we've got already */
 	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		if (item->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
@@ -91,6 +93,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 			package_id = g_strdup (item->package_id);
 		}
 	}
+	g_object_unref (list);
 
 	/* already installed? */
 	if (already_installed) {

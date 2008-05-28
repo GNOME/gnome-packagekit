@@ -53,13 +53,11 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, gpointer data)
 }
 
 static gboolean
-gpk_client_depends_indervidual (PkPackageList *list, const gchar *package_id)
+gpk_client_depends_indervidual (PkPackageList *list_ret, const gchar *package_id)
 {
 	GError *error = NULL;
-	PkPackageItem *item;
+	PkPackageList *list;
 	gboolean ret;
-	guint len;
-	guint i;
 
 	/* reset */
 	ret = pk_client_reset (client, &error);
@@ -79,18 +77,10 @@ gpk_client_depends_indervidual (PkPackageList *list, const gchar *package_id)
 		return FALSE;
 	}
 
-	/* no additional packages? */
-	len = pk_client_package_buffer_get_size	(client);
-	if (len == 0) {
-		pk_debug ("no additional deps");
-		return TRUE;
-	}
-
-	/* process package list */
-	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
-		pk_package_list_add (list, item->info, item->package_id, item->summary);
-	}
+	/* add additional packages */
+	list = pk_client_get_package_list (client);
+	pk_package_list_add_list (list_ret, list);
+	g_object_unref (list);
 	return TRUE;
 }
 
