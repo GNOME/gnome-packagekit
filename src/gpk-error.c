@@ -33,7 +33,8 @@
 #define PK_STOCK_WINDOW_ICON		"system-software-installer"
 
 /**
- * gpk_error_dialog:
+ * gpk_error_dialog_modal:
+ * @window: the parent dialog
  * @title: the localised text to put in bold as a title
  * @message: the localised text to put as a message
  * @details: the geeky text to in the expander, or %NULL if nothing
@@ -41,7 +42,7 @@
  * Shows a modal error, and blocks until the user clicks close
  **/
 gboolean
-gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details)
+gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details)
 {
 	GtkWidget *widget;
 	GladeXML *glade_xml;
@@ -53,6 +54,11 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* make modal if window set */
+	if (window != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	}
 
 	/* set icon name */
 	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
@@ -99,5 +105,19 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 		g_object_unref (buffer);
 	}
 	return TRUE;
+}
+
+/**
+ * gpk_error_dialog:
+ * @title: the localised text to put in bold as a title
+ * @message: the localised text to put as a message
+ * @details: the geeky text to in the expander, or %NULL if nothing
+ *
+ * Shows a modal error, and blocks until the user clicks close
+ **/
+gboolean
+gpk_error_dialog (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details)
+{
+	return gpk_error_dialog_modal (NULL, title, message, details);
 }
 

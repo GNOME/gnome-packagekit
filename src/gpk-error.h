@@ -29,6 +29,10 @@ G_BEGIN_DECLS
 gboolean	 gpk_error_dialog			(const gchar	*title,
 							 const gchar	*message,
 							 const gchar	*details);
+gboolean	 gpk_error_dialog_modal			(GtkWindow	*window,
+							 const gchar	*title,
+							 const gchar	*message,
+							 const gchar	*details);
 
 G_END_DECLS
 
