@@ -1376,6 +1376,7 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 		gpk_animated_icon_set_filename_tile (icon, size, name);
 		gpk_animated_icon_enable_animation (icon, TRUE);
 	} else {
+		gpk_animated_icon_enable_animation (icon, FALSE);
 		gtk_image_set_from_icon_name (GTK_IMAGE (icon), name, size);
 	}
 
