@@ -98,6 +98,9 @@ void		 gpk_client_show_progress		(GpkClient	*gclient,
 							 gboolean	 enabled);
 PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
+gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
+							 const gchar	*package_id,
+							 GError		**error);
 gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
 							 const gchar	*tid);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,

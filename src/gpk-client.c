@@ -85,6 +85,7 @@ struct _GpkClientPrivate
 	gboolean		 show_finished;
 	gboolean		 show_progress;
 	gboolean		 show_progress_files;
+	gchar			**files_array;
 	PkExitEnum		 exit;
 };
 
@@ -302,6 +303,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	guint i;
 	guint length;
 	PkPackageId *ident;
+	PkPackageList *list;
 	PkPackageItem *item;
 	GString *message_text;
 	guint skipped_number = 0;
@@ -310,7 +312,8 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* check we got some packages */
-	length = pk_client_package_buffer_get_size (client);
+	list = pk_client_get_package_list (client);
+	length = pk_package_list_get_size (list);
 	pk_debug ("length=%i", length);
 	if (length == 0) {
 		pk_debug ("no updates");
@@ -321,7 +324,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 
 	/* find any we skipped */
 	for (i=0; i<length; i++) {
-		item = pk_client_package_buffer_get_item (client, i);
+		item = pk_package_list_get_item (list, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
 			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
@@ -332,6 +335,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 		}
 		pk_package_id_free (ident);
 	}
+	g_object_unref (list);
 
 	/* notify the user if there were skipped entries */
 	if (skipped_number > 0) {
@@ -593,6 +597,29 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	gtk_widget_show (widget);
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
+}
+
+/**
+ * gpk_client_files_cb:
+ **/
+static void
+gpk_client_files_cb (PkClient *client, const gchar *package_id,
+		     const gchar *filelist, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* free old array and set new */
+	g_strfreev (gclient->priv->files_array);
+
+	/* no data, eugh */
+	if (pk_strzero (filelist)) {
+		gclient->priv->files_array = NULL;
+		return;
+	}
+
+	/* set new */
+	g_strfreev (gclient->priv->files_array);
+	gclient->priv->files_array = g_strsplit (filelist, ";", 0);
 }
 
 /**
@@ -972,6 +999,48 @@ out:
 }
 
 /**
+ * gpk_client_show_new_applications:
+ * @gclient: a valid #GpkClient instance
+ * @package_ids: package_id's such as <literal>hal-info;0.20;i386;fedora</literal>
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+static gboolean
+gpk_client_show_new_applications (GpkClient *gclient, gchar **package_ids)
+{
+	guint i, j;
+	guint length;
+	guint files_len;
+	gchar **files;
+	const gchar *package_id;
+	GPtrArray *array;
+	GError *error = NULL;
+
+	array = g_ptr_array_new ();
+	length = g_strv_length (package_ids);
+	for (i=0; i<length; i++) {
+		package_id = package_ids[i];
+		pk_warning ("package_id=%s", package_id);
+		files = gpk_client_get_file_list (gclient, package_ids[0], &error);
+		if (files == NULL) {
+			pk_warning ("damn: %s", error->message);
+			g_error_free (error);
+			error = NULL;
+			continue;
+		}
+		files_len = g_strv_length (files);
+		for (j=0; j<files_len; j++) {
+			if (g_str_has_suffix (files[j], ".desktop")) {
+				pk_warning ("package=%s, file=%s", package_id, files[j]);
+				g_ptr_array_add (array, g_strdup (files[j]));
+			}
+		}
+	}
+	g_ptr_array_free (array, TRUE);
+	return TRUE;
+}
+
+/**
  * gpk_client_install_package_ids:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
@@ -1045,6 +1114,11 @@ skip_checks:
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
+	/* can we show the user the new application? */
+	if (ret) {
+		gpk_client_show_new_applications (gclient, package_ids);
+	}
+
 	/* we're done */
 	gpk_client_done (gclient);
 out:
@@ -1113,6 +1187,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	guint i;
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
+	PkPackageList *list = NULL;
 	PkPackageItem *item;
 	PkPackageId *ident;
 	gchar **package_ids = NULL;
@@ -1132,7 +1207,8 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* found nothing? */
-	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	list = pk_client_get_package_list (gclient->priv->client_resolve);
+	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find package"), _("The file could not be found in any packages"), NULL);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
@@ -1142,7 +1218,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 
 	/* see what we've got already */
 	for (i=0; i<len; i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_resolve, i);
+		item = pk_package_list_get_item (list, i);
 		if (item->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 			g_free (package_id);
@@ -1178,6 +1254,9 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	package_ids = g_strsplit (package_id, "|", 1);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
+	if (list != NULL) {
+		g_object_unref (list);
+	}
 	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
@@ -1197,6 +1276,7 @@ gboolean
 gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError **error)
 {
 	gboolean ret;
+	PkPackageList *list = NULL;
 	GError *error_local = NULL;
 	gchar *package_id = NULL;
 	gchar **package_ids = NULL;
@@ -1215,7 +1295,8 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* found nothing? */
-	len = pk_client_package_buffer_get_size	(gclient->priv->client_resolve);
+	list = pk_client_get_package_list (gclient->priv->client_resolve);
+	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find software"),
 				      _("No new applications can be found to handle this type of file"), NULL);
@@ -1239,6 +1320,9 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	package_ids = g_strsplit (package_id, "|", 1);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
+	if (list != NULL) {
+		g_object_unref (list);
+	}
 	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
@@ -1394,9 +1478,6 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	gboolean ret;
 	GError *error_local = NULL;
 	PkPackageList *list = NULL;
-	PkPackageItem *item;
-	guint length;
-	guint i;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -1428,14 +1509,59 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	gtk_main ();
 
 	/* copy from client to local */
-	list = pk_package_list_new ();
-	length = pk_client_package_buffer_get_size (gclient->priv->client_action);
-	for (i=0;i<length;i++) {
-		item = pk_client_package_buffer_get_item (gclient->priv->client_action, i);
-		pk_package_list_add (list, item->info, item->package_id, item->summary);
-	}
+	list = pk_client_get_package_list (gclient->priv->client_action);
 out:
 	return list;
+}
+
+/**
+ * gpk_client_get_file_list:
+ **/
+gchar **
+gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **error)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-file-list"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* set title */
+	gpk_client_setup_window (gclient, _("Getting file lists"));
+
+	/* wrap get files */
+	ret = pk_client_get_files (gclient->priv->client_action, package_id, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Getting file list failed"), _("Failed to get file list"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
+
+	/* setup the UI */
+	gclient->priv->show_progress_files = FALSE;
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	/* wait for completion */
+	gtk_main ();
+
+	/* fail the transaction and set the correct error */
+	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
+
+out:
+	if (error_local != NULL) {
+		g_error_free (error_local);
+	}
+
+	/* return the file list */
+	return gclient->priv->files_array;
 }
 
 /**
@@ -1792,6 +1918,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv = GPK_CLIENT_GET_PRIVATE (gclient);
 
 	gclient->priv->glade_xml = NULL;
+	gclient->priv->files_array = NULL;
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
@@ -1832,6 +1959,8 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_repo_signature_required_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "eula-required",
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "files",
+			  G_CALLBACK (gpk_client_files_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -1895,6 +2024,7 @@ gpk_client_finalize (GObject *object)
 		g_source_remove (gclient->priv->finished_timer_id);
 	}
 
+	g_strfreev (gclient->priv->files_array);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_secondary);
