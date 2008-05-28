@@ -549,6 +549,7 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 static void
 gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkApplication *application)
 {
+	GtkWidget *widget;
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* obvious message, don't tell the user */
@@ -556,8 +557,9 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 		return;
 	}
 
-	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
-			  gpk_error_enum_to_localised_message (code), details);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
+				gpk_error_enum_to_localised_message (code), details);
 }
 
 /**
@@ -728,8 +730,9 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	if (!ret) {
 		pk_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
-		gpk_error_dialog (_("Invalid search text"),
-				  _("The search text contains invalid characters"), NULL);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Invalid search text"),
+					_("The search text contains invalid characters"), NULL);
 		return FALSE;
 	}
 	pk_debug ("find %s", package);
@@ -755,8 +758,9 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	}
 
 	if (!ret) {
-		gpk_error_dialog (_("The search could not be completed"),
-				  _("Running the transaction failed"), error->message);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("The search could not be completed"),
+					_("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -788,6 +792,7 @@ static gboolean
 gpk_application_perform_search_others (GpkApplication *application)
 {
 	gboolean ret;
+	GtkWidget *widget;
 	GError *error = NULL;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
@@ -820,8 +825,9 @@ gpk_application_perform_search_others (GpkApplication *application)
 		/* switch around buttons */
 		gpk_application_set_find_cancel_buttons (application, FALSE);
 	} else {
-		gpk_error_dialog (_("The group could not be queried"),
-				  _("Running the transaction failed"), error->message);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("The group could not be queried"),
+					_("Running the transaction failed"), error->message);
 		g_error_free (error);
 	}
 	return ret;
@@ -1000,6 +1006,7 @@ gpk_application_packages_add_selection (GpkApplication *application, GtkTreeMode
 	gchar *package_id = NULL;
 	gchar *message;
 	const gchar *icon;
+	GtkWidget *widget;
 
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_INSTALLED, &installed,
@@ -1020,7 +1027,8 @@ gpk_application_packages_add_selection (GpkApplication *application, GtkTreeMode
 					   _("Click 'Clear list' to remove the previous selection or "
 					     "'Remove packages' to complete the previous action."),
 					   _("After completing the action new packages can be selected to be installed."));
-		gpk_error_dialog (_("Already selected packages to be removed"), message, NULL);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Already selected packages to be removed"), message, NULL);
 		g_free (message);
 		pk_warning ("ignoring action as ACTION=REMOVE and not in list");
 		goto out;
@@ -1039,7 +1047,8 @@ gpk_application_packages_add_selection (GpkApplication *application, GtkTreeMode
 					   _("Click 'Clear list' to remove the previous selection or "
 					     "'Install packages' to complete the previous action."),
 					   _("After completing the action new packages can be selected to be removed."));
-		gpk_error_dialog (_("Already selected packages to be installed"), message, NULL);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Already selected packages to be installed"), message, NULL);
 		g_free (message);
 		pk_warning ("ignoring action as ACTION=INSTALL");
 		goto out;
@@ -1129,7 +1138,8 @@ gpk_application_button_list_add_cb (GtkWidget *widget_button, GpkApplication *ap
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	if (application->priv->package == NULL) {
-		gpk_error_dialog (_("Cannot add package"), _("There is no package selected"), NULL);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Cannot add package"), _("There is no package selected"), NULL);
 		return;
 	}
 
