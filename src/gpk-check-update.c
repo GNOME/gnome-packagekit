@@ -74,6 +74,7 @@ struct GpkCheckUpdatePrivate
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 	NotifyNotification	*notification_updates_available;
+	GPtrArray		*important_updates_array;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -390,10 +391,26 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkChec
 static void
 gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+	gchar **package_ids;
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (pk_strequal (action, "update-all-packages")) {
 		gpk_check_update_update_system (cupdate);
+	} else if (pk_strequal (action, "update-just-security")) {
+
+		/* just update the important updates */
+		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
+		gpk_client_show_finished (cupdate->priv->gclient, FALSE);
+		gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
+		if (!ret) {
+			pk_warning ("Individual updates failed: %s", error->message);
+			g_error_free (error);
+		}
+		g_strfreev (package_ids);
+
 	} else if (pk_strequal (action, "do-not-show-notify-critical")) {
 		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
@@ -409,8 +426,10 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
  * gpk_check_update_critical_updates_warning:
  **/
 static void
-gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar *details, guint number)
+gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar *details, GPtrArray *array)
 {
+	guint i;
+	const gchar *package_id;
 	const gchar *title;
 	gchar *message;
 	GString *string;
@@ -427,13 +446,23 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 		return;
 	}
 
+	/* save for later */
+	if (cupdate->priv->important_updates_array != NULL) {
+		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
+	}
+	cupdate->priv->important_updates_array = g_ptr_array_new ();
+	for (i=0; i<array->len; i++) {
+		package_id = g_ptr_array_index (array, i);
+		g_ptr_array_add (cupdate->priv->important_updates_array, g_strdup (package_id));
+	}
+
 	/* format title */
-	title = ngettext ("Security update available", "Security updates available", number);
+	title = ngettext ("Security update available", "Security updates available", array->len);
 
 	/* format message text */
 	string = g_string_new ("");
 	g_string_append (string, ngettext ("The following important update is available for your computer:",
-					   "The following important updates are available for your computer:", number));
+					   "The following important updates are available for your computer:", array->len));
 	g_string_append (string, "\n\n");
 	g_string_append (string, details);
 	message = g_string_free (string, FALSE);
@@ -446,10 +475,15 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
+	if (notification == NULL) {
+		pk_error ("moo");
+	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
+	notify_notification_add_action (notification, "update-just-security",
+					_("Install important updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
-					_("Update all packages now"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-notify-critical",
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
@@ -568,7 +602,7 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	notify_notification_add_action (notification, "do-not-show-update-not-battery",
 					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
-					_("Do the update anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Do the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		pk_warning ("error: %s", error->message);
@@ -693,7 +727,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 		/* do we warn the user? */
 		if (security_array->len > 0) {
-			gpk_check_update_critical_updates_warning (cupdate, status_security->str, length);
+			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
 		}
 		goto out;
 	}
@@ -704,7 +738,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		pk_debug ("on battery so not doing update");
 		/* do we warn the user? */
 		if (security_array->len > 0) {
-			gpk_check_update_critical_updates_warning (cupdate, status_security->str, length);
+			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
 		}
 		goto out;
 	}
@@ -873,6 +907,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
 	cupdate->priv->notification_updates_available = NULL;
+	cupdate->priv->important_updates_array = NULL;
 	cupdate->priv->sicon = gpk_smart_icon_new ();
 	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
 
@@ -944,6 +979,9 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->gconf_client);
 	g_object_unref (cupdate->priv->control);
 	g_object_unref (cupdate->priv->gclient);
+	if (cupdate->priv->important_updates_array != NULL) {
+		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
+	}
 
 	G_OBJECT_CLASS (gpk_check_update_parent_class)->finalize (object);
 }
