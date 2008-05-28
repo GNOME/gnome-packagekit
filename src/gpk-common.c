@@ -1341,7 +1341,8 @@ gpk_check_icon_valid (const gchar *icon)
 gboolean
 gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, GtkIconSize size)
 {
-	const gchar *name;
+	const gchar *name = NULL;
+	guint delay = 0;
 
 	/* choose icon */
 	if (status == PK_STATUS_ENUM_REFRESH_CACHE ||
@@ -1352,17 +1353,29 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO) {
 		name = "pk-action-refresh-cache";
-		gpk_animated_icon_set_frame_delay (icon, 150);
-		gpk_animated_icon_set_filename_tile (icon, size, name);
-		gpk_animated_icon_enable_animation (icon, TRUE);
-	} else if (status == PK_STATUS_ENUM_QUERY ||
-		   status == PK_STATUS_ENUM_INFO) {
+		delay = 150;
+	} else if (status == PK_STATUS_ENUM_DOWNLOAD) {
+		name = "pk-action-download";
+		delay = 150;
+	} else if (status == PK_STATUS_ENUM_QUERY) {
+		name = "pk-action-searching";
+		delay = 150;
+	} else if (status == PK_STATUS_ENUM_WAIT) {
+		name = "pk-action-waiting";
+		delay = 150;
+	} else if (status == PK_STATUS_ENUM_INFO) {
 		name = "process-working";
-		gpk_animated_icon_set_frame_delay (icon, 50);
+		delay = 50;
+	} else {
+		name = gpk_status_enum_to_icon_name (status);
+	}
+
+	/* animate or set static */
+	if (delay != 0) {
+		gpk_animated_icon_set_frame_delay (icon, delay);
 		gpk_animated_icon_set_filename_tile (icon, size, name);
 		gpk_animated_icon_enable_animation (icon, TRUE);
 	} else {
-		name = gpk_status_enum_to_icon_name (status);
 		gtk_image_set_from_icon_name (GTK_IMAGE (icon), name, size);
 	}
 
