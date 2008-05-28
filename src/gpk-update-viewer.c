@@ -704,6 +704,44 @@ pk_update_viewer_add_description_link_item (const gchar *title, const gchar *url
 }
 
 /**
+ * pk_update_viewer_get_pretty_from_composite:
+ *
+ * NOTE: Split using ^, because \t was already taken.
+ **/
+static gchar *
+pk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
+{
+	guint i;
+	guint length;
+	gchar **package_ids;
+	gchar *pretty = NULL;
+	GString *string;
+
+	/* do we have any data? */
+	if (pk_strzero (package_ids_delimit)) {
+		goto out;
+	}
+
+	string = g_string_new ("");
+	package_ids = g_strsplit (package_ids_delimit, "^", 0);
+	length = g_strv_length (package_ids);
+	for (i=0; i<length; i++) {
+		pretty = gpk_package_id_name_version (package_ids[i]);
+		g_string_append (string, pretty);
+		g_string_append_c (string, '\n');
+		g_free (pretty);
+	}
+
+	/* remove trailing \n */
+	g_string_set_size (string, string->len - 1);
+	pretty = g_string_free (string, FALSE);
+	g_strfreev (package_ids);
+out:
+	return pretty;
+}
+
+
+/**
  * pk_update_viewer_update_detail_cb:
  **/
 static void
@@ -719,8 +757,6 @@ pk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
 	gchar *package_pretty;
-	gchar *updates_pretty;
-	gchar *obsoletes_pretty;
 	const gchar *info_text;
 	PkInfoEnum info;
 
@@ -751,19 +787,21 @@ pk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	pk_update_viewer_add_description_item (_("Installed"), package_pretty, NULL);
 	g_free (package_pretty);
 
-	if (!pk_strzero (updates)) {
-		updates_pretty = gpk_package_id_name_version (updates);
+	/* split and add */
+	package_pretty = pk_update_viewer_get_pretty_from_composite (updates);
+	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are updated */
-		pk_update_viewer_add_description_item (_("Updates"), updates_pretty, NULL);
-		g_free (updates_pretty);
+		pk_update_viewer_add_description_item (_("Updates"), package_pretty, NULL);
 	}
+	g_free (package_pretty);
 
-	if (!pk_strzero (obsoletes)) {
-		obsoletes_pretty = gpk_package_id_name_version (obsoletes);
+	/* split and add */
+	package_pretty = pk_update_viewer_get_pretty_from_composite (obsoletes);
+	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are obsoleted */
-		pk_update_viewer_add_description_item (_("Obsoletes"), obsoletes_pretty, NULL);
-		g_free (obsoletes_pretty);
+		pk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
 	}
+	g_free (package_pretty);
 
 	ident = pk_package_id_new_from_string (package_id);
 	/* translators: this is the repository the package has come from */
