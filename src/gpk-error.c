@@ -116,7 +116,7 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
  * Shows a modal error, and blocks until the user clicks close
  **/
 gboolean
-gpk_error_dialog (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details)
+gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details)
 {
 	return gpk_error_dialog_modal (NULL, title, message, details);
 }
