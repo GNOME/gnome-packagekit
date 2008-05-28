@@ -146,6 +146,9 @@ pk_update_viewer_set_page (PkPageEnum page)
 	} else {
 		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	}
+	if (page == PAGE_CONFIRM) {
+		gtk_window_unmaximize (GTK_WINDOW (widget));
+	}
 	gtk_widget_show (widget);
 
 	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
