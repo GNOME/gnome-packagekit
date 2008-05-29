@@ -1871,10 +1871,15 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	}
 
 	/* setup the UI */
-	if (role == PK_ROLE_ENUM_GET_UPDATES) {
-		gclient->priv->show_progress_files = FALSE;
+	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
+	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
+	    role == PK_ROLE_ENUM_SEARCH_FILE ||
+	    role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_GET_UPDATES) {
+		gpk_client_set_progress_files (gclient, FALSE);
 	} else {
-		gclient->priv->show_progress_files = TRUE;
+		gpk_client_set_progress_files (gclient, TRUE);
 	}
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
