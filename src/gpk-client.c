@@ -1331,7 +1331,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* populate a chooser */
-	package_id = gpk_client_chooser_show (gclient->priv->client_resolve, 0, _("Applications that can open this type of file"));
+	package_id = gpk_client_chooser_show (list, 0, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {

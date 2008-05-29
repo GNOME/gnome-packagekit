@@ -166,12 +166,11 @@ gpk_update_viewer_setup_policykit (void)
  * Return value: the package_id of the selected package, or NULL
  **/
 gchar *
-gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
+gpk_client_chooser_show (PkPackageList *list, PkRoleEnum role, const gchar *title)
 {
 	GladeXML *glade_xml;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	PkPackageList *list;
 	PkPackageItem *item;
 	GtkTreeIter iter;
 	const gchar *icon_name;
@@ -179,7 +178,7 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 	guint len;
 	guint i;
 
-	g_return_val_if_fail (results != NULL, FALSE);
+	g_return_val_if_fail (list != NULL, FALSE);
 	g_return_val_if_fail (title != NULL, FALSE);
 
 	/* we have to do this before we connect up the glade file */
@@ -227,7 +226,6 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* see what we've got already */
-	list = pk_client_get_package_list (results);
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
 		item = pk_package_list_get_item (list, i);
@@ -243,7 +241,6 @@ gpk_client_chooser_show (PkClient *results, PkRoleEnum role, const gchar *title)
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}
-	g_object_unref (list);
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");

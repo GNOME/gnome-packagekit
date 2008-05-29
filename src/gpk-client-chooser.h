@@ -28,7 +28,7 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_chooser_self_test		(gpointer	 data);
-gchar		*gpk_client_chooser_show		(PkClient	*results,
+gchar		*gpk_client_chooser_show		(PkPackageList	*list,
 							 PkRoleEnum	 role,
 							 const gchar	*title);
 
