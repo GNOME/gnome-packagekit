@@ -970,7 +970,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto skip_checks;
 	}
 
-	ret = gpk_client_depends_show (package_ids);
+	ret = gpk_client_requires_show (package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"), NULL);
