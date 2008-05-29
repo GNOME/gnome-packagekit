@@ -49,6 +49,7 @@
 
 #include "gpk-application.h"
 #include "gpk-animated-icon.h"
+#include <gpk-client-run.h>
 
 static void     gpk_application_class_init (GpkApplicationClass *klass);
 static void     gpk_application_init       (GpkApplication      *application);
@@ -1219,13 +1220,27 @@ static void
 gpk_application_button_install_remove_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gboolean ret = FALSE;
+	GError *error = NULL;
 	gchar **package_ids = NULL;
+	gchar *exec;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	package_ids = pk_ptr_array_to_argv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
+		/* can we show the user the new application? */
+		if (ret) {
+			exec = gpk_client_run_show (package_ids);
+			if (exec != NULL) {
+				ret = g_spawn_command_line_async (exec, &error);
+				if (!ret) {
+					pk_warning ("failed to run: %s", error->message);
+					g_error_free (error);
+				}
+			}
+			g_free (exec);
+		}
 	}
 	if (application->priv->action == PK_ACTION_REMOVE) {
 		ret = gpk_client_remove_package_ids (application->priv->gclient, package_ids, NULL);

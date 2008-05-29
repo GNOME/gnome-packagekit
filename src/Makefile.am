@@ -71,6 +71,8 @@ shared_SOURCES =					\
 	gpk-client-untrusted.h				\
 	gpk-client-chooser.c				\
 	gpk-client-chooser.h				\
+	gpk-client-run.c				\
+	gpk-client-run.h				\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-gnome.c					\

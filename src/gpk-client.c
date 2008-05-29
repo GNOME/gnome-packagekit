@@ -1024,48 +1024,6 @@ out:
 }
 
 /**
- * gpk_client_show_new_applications:
- * @gclient: a valid #GpkClient instance
- * @package_ids: package_id's such as <literal>hal-info;0.20;i386;fedora</literal>
- *
- * Return value: %TRUE if the method succeeded
- **/
-static gboolean
-gpk_client_show_new_applications (GpkClient *gclient, gchar **package_ids)
-{
-	guint i, j;
-	guint length;
-	guint files_len;
-	gchar **files;
-	const gchar *package_id;
-	GPtrArray *array;
-	GError *error = NULL;
-
-	array = g_ptr_array_new ();
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		package_id = package_ids[i];
-		pk_warning ("package_id=%s", package_id);
-		files = gpk_client_get_file_list (gclient, package_ids[0], &error);
-		if (files == NULL) {
-			pk_warning ("damn: %s", error->message);
-			g_error_free (error);
-			error = NULL;
-			continue;
-		}
-		files_len = g_strv_length (files);
-		for (j=0; j<files_len; j++) {
-			if (g_str_has_suffix (files[j], ".desktop")) {
-				pk_warning ("package=%s, file=%s", package_id, files[j]);
-				g_ptr_array_add (array, g_strdup (files[j]));
-			}
-		}
-	}
-	g_ptr_array_free (array, TRUE);
-	return TRUE;
-}
-
-/**
  * gpk_client_install_package_ids:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
@@ -1138,11 +1096,6 @@ skip_checks:
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
-
-	/* can we show the user the new application? */
-	if (ret) {
-		gpk_client_show_new_applications (gclient, package_ids);
-	}
 
 	/* we're done */
 	gpk_client_done (gclient);
