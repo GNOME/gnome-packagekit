@@ -790,14 +790,21 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 
 	/* clear status and progress text */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
+	gtk_label_set_label (GTK_LABEL (widget), "The Linux kernel (the Linux operating system)");
+	gtk_widget_show (widget);
+
+	/* set the correct width of the label to stop the window jumping around */
+	gtk_widget_size_request (widget, &requisition);
+	gtk_widget_set_size_request (widget, requisition.width * 1.1f, requisition.height);
 	gtk_label_set_label (GTK_LABEL (widget), "");
+
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
 	gtk_label_set_label (GTK_LABEL (widget), "The Linux kernel (the core of the Linux operating system)\n\n\n");
 	gtk_widget_show (widget);
 
 	/* set the correct height of the label to stop the window jumping around */
 	gtk_widget_size_request (widget, &requisition);
-	gtk_widget_set_size_request (widget, requisition.width * 1.1f, requisition.height);
+	gtk_widget_set_size_request (widget, requisition.width, requisition.height);
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
 	return TRUE;
@@ -829,6 +836,24 @@ gpk_client_set_error_from_exit_enum (PkExitEnum exit, GError **error)
 		pk_error ("unknown exit code");
 	}
 	return FALSE;
+}
+
+/**
+ * gpk_client_set_progress_files:
+ **/
+static void
+gpk_client_set_progress_files (GpkClient *gclient, gboolean enabled)
+{
+	GtkWidget *widget;
+
+	/* if we're never going to show it, hide the allocation */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	if (!enabled) {
+		gtk_widget_hide (widget);
+	} else {
+		gtk_widget_show (widget);
+	}
+	gclient->priv->show_progress_files = enabled;
 }
 
 /**
@@ -893,7 +918,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	gpk_client_setup_window (gclient, _("Install local file"));
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = TRUE;
+	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -983,7 +1008,7 @@ skip_checks:
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = TRUE;
+	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1062,7 +1087,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_setup_window (gclient, _("Install packages"));
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = TRUE;
+	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
@@ -1371,7 +1396,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = TRUE;
+	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
@@ -1451,7 +1476,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = FALSE;
+	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1502,7 +1527,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = FALSE;
+	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1546,7 +1571,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = FALSE;
+	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
@@ -1606,7 +1631,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	}
 
 	/* setup the UI */
-	gclient->priv->show_progress_files = TRUE;
+	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* wait for completion */
