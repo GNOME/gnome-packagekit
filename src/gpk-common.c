@@ -1357,6 +1357,9 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	} else if (status == PK_STATUS_ENUM_DOWNLOAD) {
 		name = "pk-action-download";
 		delay = 150;
+	} else if (status == PK_STATUS_ENUM_INSTALL) {
+		name = "pk-action-installing";
+		delay = 150;
 	} else if (status == PK_STATUS_ENUM_QUERY) {
 		name = "pk-action-searching";
 		delay = 150;

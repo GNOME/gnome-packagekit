@@ -8,6 +8,7 @@ icons_DATA = 				\
 	pk-action-download.png		\
 	pk-action-refresh-cache.png	\
 	pk-action-searching.png		\
+	pk-action-installing.png	\
 	pk-action-waiting.png
 
 noinst_DATA =
