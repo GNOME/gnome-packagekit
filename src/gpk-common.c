@@ -451,6 +451,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED:
 		text = _("Package install blocked");
 		break;
+	case PK_ERROR_ENUM_PACKAGE_CORRUPT:
+		text = _("Package is corrupt");
+		break;
 	default:
 		g_warning ("Unknown error");
 	}
@@ -604,6 +607,9 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED:
 		text = _("Installation of this package prevented by your packaging system's configuration.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_CORRUPT:
+		text = _("The package that was downloaded is corrupt and needs to be downloaded again.");
 		break;
 	default:
 		g_warning ("Unknown error, please report a bug.\n"
