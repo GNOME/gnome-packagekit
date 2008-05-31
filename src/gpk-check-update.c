@@ -655,7 +655,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
-	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
+	    pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		pk_debug ("Not checking for updates as already in progress");
 		return FALSE;
 	}
