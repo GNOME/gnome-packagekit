@@ -73,6 +73,7 @@ struct GpkCheckUpdatePrivate
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
+	gboolean		 get_updates_in_progress;
 	NotifyNotification	*notification_updates_available;
 	GPtrArray		*important_updates_array;
 };
@@ -655,6 +656,13 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
+	/* are we already called */
+	if (cupdate->priv->get_updates_in_progress) {
+		pk_debug ("GetUpdate already in progress");
+		return FALSE;
+	}
+
+	/* No point if we are already updating */
 	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		pk_debug ("Not checking for updates as already in progress");
@@ -664,7 +672,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* get updates */
 	gpk_client_show_finished (cupdate->priv->gclient, FALSE);
 	gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+	cupdate->priv->get_updates_in_progress = TRUE;
 	list = gpk_client_get_updates (cupdate->priv->gclient, &error);
+	cupdate->priv->get_updates_in_progress = FALSE;
 	if (list == NULL) {
 		pk_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
@@ -794,7 +804,11 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 
 	/* now try to get newest update list */
 	pk_debug ("updates changed");
-	g_idle_add ((GSourceFunc) gpk_check_update_query_updates, cupdate);
+
+	/* ignore our own updates */
+	if (cupdate->priv->get_updates_in_progress) {
+		g_idle_add ((GSourceFunc) gpk_check_update_query_updates, cupdate);
+	}
 }
 
 /**
@@ -888,9 +902,7 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
-	/* show the icon at login time
-	 * hopefully it just needs a quick network access, else we may have to
-	 * make it a gconf variable */
+	/* show the icon at login time */
 	gpk_check_update_query_updates (cupdate);
 }
 
@@ -953,6 +965,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	/* refresh the cache, and poll until we get a good refresh */
 	cupdate->priv->cache_okay = FALSE;
 	cupdate->priv->cache_update_in_progress = FALSE;
+	cupdate->priv->get_updates_in_progress = FALSE;
 }
 
 /**
