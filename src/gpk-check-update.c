@@ -759,9 +759,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		if (!ret) {
 			pk_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
-
-			/* we failed, so re-get the update list */
-			gpk_check_update_query_updates (cupdate);
 		}
 		g_strfreev (package_ids);
 		goto out;
