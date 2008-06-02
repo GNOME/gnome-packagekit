@@ -240,7 +240,9 @@ pk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* we have no checkboxes selected */
 	if (!selected_any) {
-		gpk_error_dialog (_("No updates selected"), _("No updates are selected"), NULL);
+		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No updates selected"),
+					_("No updates are selected"), NULL);
 		return;
 	}
 
@@ -392,13 +394,16 @@ pk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
  * pk_update_viewer_history_cb:
  **/
 static void
-pk_update_viewer_history_cb (GtkWidget *widget, gpointer data)
+pk_update_viewer_history_cb (GtkWidget *widget_button, gpointer data)
 {
 	GError *error = NULL;
+	GtkWidget *widget;
 
 	/* FIXME: do this in process */
 	if (!g_spawn_command_line_async ("gpk-log", &error)) {
-		gpk_error_dialog (_("Failed to launch"), _("The file was not found"), error->message);
+		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to launch"),
+					_("The file was not found"), error->message);
 		g_error_free (error);
 	}
 }
@@ -1333,8 +1338,10 @@ pk_update_viewer_task_list_changed_cb (PkTaskList *tlist, gpointer data)
 static void
 pk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
-			  gpk_error_enum_to_localised_message (code), details);
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "window_updates");
+	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
+				gpk_error_enum_to_localised_message (code), details);
 }
 
 /**

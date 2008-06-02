@@ -214,7 +214,10 @@ gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data
 static void
 gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	gpk_error_dialog (_("Failed to change status"), gpk_error_enum_to_localised_text (code), details);
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "window_repo");
+	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to change status"),
+				gpk_error_enum_to_localised_text (code), details);
 }
 
 /**

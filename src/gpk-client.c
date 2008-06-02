@@ -527,6 +527,7 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	const gchar *title;
 	const gchar *message;
 	NotifyNotification *notification;
+	GtkWidget *widget;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
@@ -561,7 +562,8 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	title = gpk_error_enum_to_localised_text (code);
 	message = gpk_error_enum_to_localised_message (code);
 	if (gclient->priv->show_progress) {
-		gpk_error_dialog (title, message, details);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), title, message, details);
 		return;
 	}
 
@@ -968,6 +970,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text = NULL;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -987,7 +990,8 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto skip_checks;
 	}
 
-	ret = gpk_client_requires_show (package_ids);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	ret = gpk_client_requires_show (GTK_WINDOW (widget), package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"), NULL);
@@ -1056,6 +1060,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -1079,7 +1084,8 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 		goto skip_checks;
 	}
 
-	ret = gpk_client_depends_show (package_ids);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	ret = gpk_client_depends_show (GTK_WINDOW (widget), package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("Additional packages were not downloaded"), NULL);
@@ -1146,12 +1152,14 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar **package_ids = NULL;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (packages != NULL, FALSE);
 
 	/* resolve a 2D array to package_id's */
-	package_ids = gpk_client_resolve_show (packages);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	package_ids = gpk_client_resolve_show (GTK_WINDOW (widget), packages);
 	if (package_ids == NULL) {
 		ret = FALSE;
 		goto out;
@@ -1286,6 +1294,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	gchar *package_id = NULL;
 	gchar **package_ids = NULL;
 	guint len;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
@@ -1311,7 +1320,8 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* populate a chooser */
-	package_id = gpk_client_chooser_show (list, 0, _("Applications that can open this type of file"));
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, 0, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {
@@ -1680,6 +1690,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 {
 	gboolean ret;
 	GError *error = NULL;
+	GtkWidget *widget;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
@@ -1694,7 +1705,9 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	pk_debug ("install signature %s", key_id);
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to install signature"), _("The client could not be reset"), error->message);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install signature"),
+					_("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
 	}
@@ -1703,7 +1716,9 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 					   key_id, package_id, &error);
 	gclient->priv->using_secondary_client = ret;
 	if (!ret) {
-		gpk_error_dialog (_("Failed to install signature"), _("The method failed"), error->message);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install signature"),
+					_("The method failed"), error->message);
 		g_error_free (error);
 	}
 }
@@ -1717,9 +1732,11 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 {
 	gboolean ret;
 	GError *error = NULL;
+	GtkWidget *widget;
 
 	/* do a helper */
-	ret = gpk_client_eula_show (eula_id, package_id, vendor_name, license_agreement);
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	ret = gpk_client_eula_show (GTK_WINDOW (widget), eula_id, package_id, vendor_name, license_agreement);
 
 	/* disagreed with auth */
 	if (!ret) {
@@ -1730,15 +1747,20 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	pk_debug ("accept EULA %s", eula_id);
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to accept EULA"), _("The client could not be reset"), error->message);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to accept EULA"),
+					_("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
 	}
 
 	/* this is asynchronous, else we get into livelock */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	ret = pk_client_accept_eula (gclient->priv->client_secondary, eula_id, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to accept EULA"), _("The method failed"), error->message);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to accept EULA"),
+					_("The method failed"), error->message);
 		g_error_free (error);
 	}
 	gclient->priv->using_secondary_client = ret;
@@ -1752,6 +1774,7 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 {
 	gboolean ret;
 	GError *error = NULL;
+	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -1762,7 +1785,9 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 	pk_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to install"), _("The install task could not be requeued"), error->message);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install"),
+					_("The install task could not be requeued"), error->message);
 		g_error_free (error);
 	}
 

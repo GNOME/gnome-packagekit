@@ -60,7 +60,7 @@ gpk_client_eula_button_help_cb (GtkWidget *widget, gpointer data)
  * TODO: Add in gconf checks to see if we've already agreed
  **/
 gboolean
-gpk_client_eula_show (const gchar *eula_id, const gchar *package_id,
+gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *package_id,
 		      const gchar *vendor_name, const gchar *license_agreement)
 {
 	GladeXML *glade_xml;
@@ -108,8 +108,13 @@ gpk_client_eula_show (const gchar *eula_id, const gchar *package_id,
 	/* set minimum size a bit bigger */
 	gtk_widget_set_size_request (widget, 100, 200);
 
-	/* show window */
+	/* make modal if window set */
 	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	if (window != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	}
+
+	/* show window */
 	gtk_widget_show (widget);
 
 	/* wait for button press */

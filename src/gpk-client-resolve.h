@@ -27,7 +27,8 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_resolve_self_test		(gpointer	 data);
-gchar		**gpk_client_resolve_show		(gchar		**packages);
+gchar		**gpk_client_resolve_show		(GtkWindow	*window,
+							 gchar		**packages);
 
 G_END_DECLS
 

@@ -166,7 +166,7 @@ gpk_update_viewer_setup_policykit (void)
  * Return value: the package_id of the selected package, or NULL
  **/
 gchar *
-gpk_client_chooser_show (PkPackageList *list, PkRoleEnum role, const gchar *title)
+gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role, const gchar *title)
 {
 	GladeXML *glade_xml;
 	GtkWidget *widget;
@@ -204,6 +204,11 @@ gpk_client_chooser_show (PkPackageList *list, PkRoleEnum role, const gchar *titl
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
 	gtk_window_set_title (GTK_WINDOW (widget), title);
+
+	/* make modal if window set */
+	if (window != NULL) {
+		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	}
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_client_chooser_button_action_cb), NULL);

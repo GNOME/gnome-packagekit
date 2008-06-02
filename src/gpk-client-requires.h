@@ -27,7 +27,8 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_requires_self_test		(gpointer	 data);
-gboolean	 gpk_client_requires_show		(gchar		**package_ids);
+gboolean	 gpk_client_requires_show		(GtkWindow	*window,
+							 gchar		**package_ids);
 
 G_END_DECLS
 

@@ -28,7 +28,8 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_chooser_self_test		(gpointer	 data);
-gchar		*gpk_client_chooser_show		(PkPackageList	*list,
+gchar		*gpk_client_chooser_show		(GtkWindow	*window,
+							 PkPackageList	*list,
 							 PkRoleEnum	 role,
 							 const gchar	*title);
 

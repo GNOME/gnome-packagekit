@@ -38,7 +38,7 @@
 static PkClient *client = NULL;
 
 static gboolean
-gpk_client_requires_indervidual (PkPackageList *list_ret, const gchar *package_id)
+gpk_client_requires_indervidual (GtkWindow *window, PkPackageList *list_ret, const gchar *package_id)
 {
 	GError *error = NULL;
 	PkPackageList *list;
@@ -47,7 +47,7 @@ gpk_client_requires_indervidual (PkPackageList *list_ret, const gchar *package_i
 	/* reset */
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to reset client"), NULL, error->message);
+		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -55,9 +55,9 @@ gpk_client_requires_indervidual (PkPackageList *list_ret, const gchar *package_i
 	/* find out if this would force removal of other packages */
 	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, package_id, TRUE, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to get requires"),
-				  _("Could not work out what packages would also be removed"),
-				  error->message);
+		gpk_error_dialog_modal (window, _("Failed to get requires"),
+					_("Could not work out what packages would also be removed"),
+					error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -75,7 +75,7 @@ gpk_client_requires_indervidual (PkPackageList *list_ret, const gchar *package_i
  * Return value: if we agreed to remove the deps
  **/
 gboolean
-gpk_client_requires_show (gchar **package_ids)
+gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 {
 	GtkWidget *dialog;
 	GtkResponseType button;
@@ -96,7 +96,7 @@ gpk_client_requires_show (gchar **package_ids)
 
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
-		ret = gpk_client_requires_indervidual (list, package_ids[i]);
+		ret = gpk_client_requires_indervidual (window, list, package_ids[i]);
 		if (!ret) {
 			ret = FALSE;
 			goto out;
@@ -128,7 +128,7 @@ gpk_client_requires_show (gchar **package_ids)
 	} else {
 		text = g_strdup_printf (_("%i other packages depends on these packages"), length);
 	}
-	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", text);
 	g_free (text);
 	/* add a specialist button */
@@ -163,7 +163,7 @@ gpk_client_requires_self_test (gpointer data)
 {
 	LibSelfTest *test = (LibSelfTest *) data;
 
-	if (libst_start (test, "GpkClientDepends", CLASS_AUTO) == FALSE) {
+	if (libst_start (test, "GpkClientRequires", CLASS_AUTO) == FALSE) {
 		return;
 	}
 	libst_end (test);

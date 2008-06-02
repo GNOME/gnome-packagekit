@@ -53,7 +53,7 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, gpointer data)
 }
 
 static gboolean
-gpk_client_depends_indervidual (PkPackageList *list_ret, const gchar *package_id)
+gpk_client_depends_indervidual (GtkWindow *window, PkPackageList *list_ret, const gchar *package_id)
 {
 	GError *error = NULL;
 	PkPackageList *list;
@@ -62,7 +62,7 @@ gpk_client_depends_indervidual (PkPackageList *list_ret, const gchar *package_id
 	/* reset */
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to reset client"), NULL, error->message);
+		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -70,9 +70,9 @@ gpk_client_depends_indervidual (PkPackageList *list_ret, const gchar *package_id
 	/* find out if this would drag in other packages */
 	ret = pk_client_get_depends (client, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to get depends"),
-				  _("Could not work out what packages would be also installed"),
-				  error->message);
+		gpk_error_dialog_modal (window, _("Failed to get depends"),
+					_("Could not work out what packages would be also installed"),
+					error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -90,7 +90,7 @@ gpk_client_depends_indervidual (PkPackageList *list_ret, const gchar *package_id
  * Return value: if we agreed to remove the deps
  **/
 gboolean
-gpk_client_depends_show (gchar **package_ids)
+gpk_client_depends_show (GtkWindow *window, gchar **package_ids)
 {
 	GtkWidget *widget;
 	GtkWidget *dialog;
@@ -120,7 +120,7 @@ gpk_client_depends_show (gchar **package_ids)
 
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
-		ret = gpk_client_depends_indervidual (list, package_ids[i]);
+		ret = gpk_client_depends_indervidual (window, list, package_ids[i]);
 		if (!ret) {
 			ret = FALSE;
 			goto out;
@@ -148,7 +148,7 @@ gpk_client_depends_show (gchar **package_ids)
 	text = g_string_free (string, FALSE);
 
 	/* show UI */
-	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
 					 "%s", _("Install additional packages?"));
 	/* add a specialist button */

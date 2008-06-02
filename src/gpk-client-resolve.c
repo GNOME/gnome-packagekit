@@ -38,7 +38,7 @@
 static PkClient *client = NULL;
 
 static gchar *
-gpk_client_resolve_indervidual (const gchar *package)
+gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
 {
 	GError *error = NULL;
 	PkPackageItem *item;
@@ -53,7 +53,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 	/* reset */
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to reset client"), NULL, error->message);
+		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -61,7 +61,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 	/* find out if we can find a package */
 	ret = pk_client_resolve (client, PK_FILTER_ENUM_NONE, package, &error);
 	if (!ret) {
-		gpk_error_dialog (_("Failed to resolve package"),
+		gpk_error_dialog_modal (window, _("Failed to resolve package"),
 				  _("Incorrect response from search"),
 				  error->message);
 		g_error_free (error);
@@ -73,7 +73,7 @@ gpk_client_resolve_indervidual (const gchar *package)
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		title = g_strdup_printf (_("Could not find %s"), package);
-		gpk_error_dialog (title, _("The package could not be found in any software sources"), NULL);
+		gpk_error_dialog_modal (window, title, _("The package could not be found in any software sources"), NULL);
 		g_free (title);
 		goto out;
 	}
@@ -98,14 +98,14 @@ gpk_client_resolve_indervidual (const gchar *package)
 	/* already installed? */
 	if (already_installed) {
 		title = g_strdup_printf (_("Failed to install %s"), package);
-		gpk_error_dialog (title, _("The package is already installed"), NULL);
+		gpk_error_dialog_modal (window, title, _("The package is already installed"), NULL);
 		g_free (title);
 		goto out;
 	}
 
 	/* got junk? */
 	if (package_id == NULL) {
-		gpk_error_dialog (_("Failed to find package"), _("Incorrect response from search"), NULL);
+		gpk_error_dialog_modal (window, _("Failed to find package"), _("Incorrect response from search"), NULL);
 		goto out;
 	}
 out:
@@ -118,7 +118,7 @@ out:
  * Return value: if we agreed to remove the deps
  **/
 gchar **
-gpk_client_resolve_show (gchar **packages)
+gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 {
 	guint i;
 	guint length;
@@ -133,7 +133,7 @@ gpk_client_resolve_show (gchar **packages)
 
 	length = g_strv_length (packages);
 	for (i=0; i<length; i++) {
-		package_id = gpk_client_resolve_indervidual (packages[i]);
+		package_id = gpk_client_resolve_indervidual (window, packages[i]);
 		if (package_id == NULL) {
 			goto out;
 		}

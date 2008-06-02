@@ -28,7 +28,8 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_eula_self_test		(gpointer	 data);
-gboolean	 gpk_client_eula_show			(const gchar	*eula_id,
+gboolean	 gpk_client_eula_show			(GtkWindow	*window,
+							 const gchar	*eula_id,
 							 const gchar	*package_id,
 							 const gchar	*vendor_name,
 							 const gchar	*license_agreement);
