@@ -86,6 +86,7 @@ gpk_client_requires_show (gchar **package_ids)
 	GString *string;
 	PkPackageItem *item;
 	gchar *text;
+	gchar *name;
 
 	list = pk_package_list_new ();
 
@@ -119,12 +120,11 @@ gpk_client_requires_show (gchar **package_ids)
 	/* remove last \n */
 	g_string_set_size (string, string->len - 1);
 
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-
 	/* show UI */
 	if (g_strv_length (package_ids) == 1) {
-		text = g_strdup_printf (_("%i other packages depends on %s"), length, package_ids[0]);
+		name = gpk_package_id_name_version (package_ids[0]);
+		text = g_strdup_printf (_("%i other packages depends on %s"), length, name);
+		g_free (name);
 	} else {
 		text = g_strdup_printf (_("%i other packages depends on these packages"), length);
 	}
@@ -134,6 +134,8 @@ gpk_client_requires_show (gchar **package_ids)
 	/* add a specialist button */
 	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Remove all packages"), GTK_RESPONSE_OK);
 
+	/* display messagebox  */
+	text = g_string_free (string, FALSE);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
