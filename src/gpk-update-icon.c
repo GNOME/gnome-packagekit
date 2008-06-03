@@ -30,6 +30,7 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
+#include <libnotify/notify.h>
 
 #include <libgbus.h>
 
@@ -139,6 +140,7 @@ main (int argc, char *argv[])
 	}
 	dbus_g_thread_init ();
 	g_type_init ();
+	notify_init ("gpk-update-icon");
 
 	g_set_application_name (_("PackageKit Update Applet"));
 	context = g_option_context_new (NULL);
