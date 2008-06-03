@@ -337,12 +337,23 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	/* if non-zero, set the size */
 	if (size > 0) {
 		gchar *value;
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
-		gtk_widget_show (widget);
+
+		/* change the label */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize_text");
+		if (installed) {
+			gtk_label_set_label (GTK_LABEL (widget), _("Installed size:"));
+		} else {
+			gtk_label_set_label (GTK_LABEL (widget), _("Download size:"));
+		}
+
+		/* set the size */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
 		value = gpk_size_to_si_size_text (size);
 		gtk_label_set_label (GTK_LABEL (widget), value);
 		g_free (value);
+
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		gtk_widget_show (widget);
 	} else {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_hide (widget);
@@ -1387,10 +1398,6 @@ gpk_application_notebook_populate (GpkApplication *application, gint page)
 		/* clear the old text */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 		gpk_application_set_text_buffer (widget, NULL);
-
-		/* hide the homepage button until we get data */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-		gtk_widget_hide (widget);
 
 		/* cancel any previous request */
 		ret = pk_client_reset (application->priv->client_details, &error);

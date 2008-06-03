@@ -705,10 +705,10 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
-		text = _("Waiting for PackageKit service");
+		text = _("Waiting for service to start");
 		break;
 	case PK_STATUS_ENUM_WAIT:
-		text = _("Waiting for other tasks to complete");
+		text = _("Waiting for other tasks");
 		break;
 	case PK_STATUS_ENUM_RUNNING:
 		text = _("Running task");
