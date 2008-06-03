@@ -103,6 +103,9 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 		}
 	}
 
+	/* sort by package_id */
+	pk_package_list_sort (list);
+
 	/* process package list */
 	string = g_string_new (_("The following packages have to be removed:"));
 	g_string_append (string, "\n\n");

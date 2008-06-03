@@ -578,17 +578,18 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
  * gpk_application_package_buffer_to_name_version:
  **/
 static gchar *
-gpk_application_package_buffer_to_name_version (PkClient *client)
+gpk_application_package_buffer_to_name_version (PkPackageList *list)
 {
 	guint i;
 	PkPackageItem *item;
-	PkPackageList *list;
 	gchar *text_pretty;
 	guint length;
 	GString *string;
 	gchar *text;
 
-	list = pk_client_get_package_list (client);
+	/* sort the list */
+	pk_package_list_sort (list);
+
 	length = pk_package_list_get_size (list);
 	if (length == 0) {
 		text = g_strdup ("No packages");
@@ -606,7 +607,6 @@ gpk_application_package_buffer_to_name_version (PkClient *client)
 	g_string_set_size (string, string->len - 1);
 	text = g_string_free (string, FALSE);
 out:
-	g_object_unref (list);
 	return text;
 }
 
@@ -651,6 +651,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 	GtkWidget *widget;
 	PkRoleEnum role;
 	gchar *text;
+	PkPackageList *list;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -658,12 +659,16 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 	pk_client_get_role (client, &role, NULL, NULL);
 	/* do we need to fill in the tab box? */
 	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
-		text = gpk_application_package_buffer_to_name_version (client);
+		list = pk_client_get_package_list (client);
+		text = gpk_application_package_buffer_to_name_version (list);
+		g_object_unref (list);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
 		gpk_application_set_text_buffer (widget, text);
 		g_free (text);
 	} else if (role == PK_ROLE_ENUM_GET_REQUIRES) {
-		text = gpk_application_package_buffer_to_name_version (client);
+		list = pk_client_get_package_list (client);
+		text = gpk_application_package_buffer_to_name_version (list);
+		g_object_unref (list);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
 		gpk_application_set_text_buffer (widget, text);
 		g_free (text);

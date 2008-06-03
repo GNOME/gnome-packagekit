@@ -576,6 +576,10 @@ pk_update_viewer_get_new_update_list (void)
 		goto out;
 	}
 
+	/* sort by priority, then by package_id (reversed) */
+	pk_package_list_sort (list);
+	pk_package_list_sort_info (list);
+
 	/* do we have updates? */
 	length = pk_package_list_get_size (list);
 	if (length == 0) {
