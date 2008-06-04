@@ -38,6 +38,7 @@
 
 static GtkListStore *list_store = NULL;
 static gchar *full_path = NULL;
+gchar *last_tryexec = NULL;
 
 enum
 {
@@ -64,6 +65,7 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
 {
 	/* clear full_path */
 	g_free (full_path);
+	g_free (last_tryexec);
 	full_path = NULL;
 	gtk_main_quit ();
 }
@@ -74,6 +76,7 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
 static void
 gpk_client_run_button_action_cb (GtkWidget *widget, gpointer data)
 {
+	g_free (last_tryexec);
 	gtk_main_quit ();
 }
 
@@ -166,6 +169,19 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 			/* abandon attempt */
 			goto out;
 		}
+
+		/* have we the same executable name?
+		 * this helps when there's "f-spot", "fspot --import %f", and "f-spot --view" in 3
+		 * different desktop files */
+		if (pk_strequal (exec, last_tryexec)) {
+			pk_debug ("same as the last exec '%s' so skipping", exec);
+			goto out;
+		}
+
+		/* save for next time */
+		g_free (last_tryexec);
+		last_tryexec = g_strdup (exec);
+
 		icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
 		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
 		/* try harder */
