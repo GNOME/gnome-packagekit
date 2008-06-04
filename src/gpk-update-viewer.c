@@ -1343,6 +1343,14 @@ static void
 pk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
 	GtkWidget *widget;
+
+	/* ignore some errors */
+	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		pk_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
 	widget = glade_xml_get_widget (glade_xml, "window_updates");
 	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
 				gpk_error_enum_to_localised_message (code), details);
