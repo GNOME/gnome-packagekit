@@ -1859,10 +1859,6 @@ main (int argc, char *argv[])
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 
-	/* sorted */
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store_details),
-					      PACKAGES_COLUMN_TEXT, GTK_SORT_ASCENDING);
-
 	/* create preview tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
