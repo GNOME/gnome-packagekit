@@ -1,3 +1,50 @@
+Version 0.2.2
+~~~~~~~~~~~~~~
+Released: 2008-06-05
+
+* Translations
+ - Add Russian translation (Leonid Kanter)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Update polish translation (Wadim Dziedzic)
+ - Updated Hebrew translation (Yair Hershkovitz)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+
+* New features:
+ - Add three new animated icons (Mike Langlie)
+ - Add installing icons and add into common code for the dialogs to use (Mike Langlie)
+ - Add a Unique GObject that can give single instance capability to the tools (Richard Hughes)
+ - Set the network proxy when we login or whenever the session proxy changes (Richard Hughes)
+ - Don't allow the GTK tools to be run as the root user (Richard Hughes)
+ - Add a simple GtkImage superclass to handle animation from tiles (Richard Hughes)
+ - Show an animated status icon in gpk-client - sometimes things just take too long (Richard Hughes)
+ - Allow users to install and remove multiple packages using gpk-application (Richard Hughes)
+ - Add a check in for malformed descriptions to fix rh#447347 (Richard Hughes)
+ - In GpkNotify use GtkClient rather than PkClient so we get the GPG callback to work (Richard Hughes)
+ - Replace all the usual tags with the bullet symbol in the update viewer (Richard Hughes)
+ - Only show the confirm page when we have succeeded to update packages (Richard Hughes)
+ - Make the update-viewer non-modal and resizable (Richard Hughes)
+ - Give the user a chance to update only the security updates. Fixes rh#448019 (Richard Hughes)
+ - Allow the user to run an application after it has been installed (Richard Hughes)
+
+* Bugfixes:
+ - Stop the animation when we are loading in a new tile to prevent a segfault (Richard Hughes)
+ - Make sure we set a valid error when we return in a failed or cancelled case (Richard Hughes)
+ - Only show the Package() results in if we are not refreshing the cache (Richard Hughes)
+ - Replace duplicate hotkey. Fixes rh#447970 (Richard Hughes)
+ - Don't show a huge maximised confirmation window when we've maximised the chooser (Richard Hughes)
+ - Support the new format ::UpdateDetail() obsoletes and updates (Richard Hughes)
+ - When we remove, we want to get the required packages, not the dependant ones (Richard Hughes)
+ - When GtkClient is waiting, we could potentially re-use the GpkClient object (Richard Hughes)
+ - Don't allow GetUpdates() to be called from two different callbacks (Richard Hughes)
+ - Fix the remove software 'Other software depends on...' window (Richard Hughes)
+ - Ignore cancellation errors in gpk-update-viewer (Richard Hughes)
+ - Don't make GTK sort the gpk-update-viewer list (Richard Hughes)
+ - Make the visited link status only mark the correct link as visited. Fixes rh#446739 (Richard Hughes)
+ - Make the gpk-client window resize (aka, jump around) less (Richard Hughes)
+ - Don't double up notifications. fixed rh#448116 (Richard Hughes)
+
 Version 0.2.1
 ~~~~~~~~~~~~~~
 Released: 2008-05-09
