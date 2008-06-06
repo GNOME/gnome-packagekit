@@ -82,6 +82,9 @@ gboolean	 gpk_client_install_package_names	(GpkClient	*gclient,
 gboolean	 gpk_client_install_package_ids		(GpkClient	*gclient,
 							 gchar		**package_ids,
 							 GError		**error);
+gboolean	 gpk_client_install_catalogs		(GpkClient	*gclient,
+							 gchar		**filenames,
+							 GError		**error);
 gboolean	 gpk_client_remove_package_ids		(GpkClient	*gclient,
 							 gchar		**package_ids,
 							 GError		**error);

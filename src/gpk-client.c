@@ -42,6 +42,7 @@
 #include <pk-package-id.h>
 #include <pk-common.h>
 #include <pk-control.h>
+#include <pk-catalog.h>
 
 #include <gpk-client.h>
 #include <gpk-client-eula.h>
@@ -88,6 +89,7 @@ struct _GpkClientPrivate
 	gboolean		 gtk_main_waiting;
 	gchar			**files_array;
 	PkExitEnum		 exit;
+	GtkWindow		*parent_window;
 };
 
 typedef enum {
@@ -485,6 +487,20 @@ gpk_client_pulse_progress (GpkClient *gclient)
 }
 
 /**
+ * gpk_client_make_progressbar_pulse:
+ **/
+static void
+gpk_client_make_progressbar_pulse (GpkClient *gclient)
+{
+	GtkWidget *widget;
+	if (gclient->priv->pulse_timer_id == 0) {
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
+		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
+		gclient->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_client_pulse_progress, gclient);
+	}
+}
+
+/**
  * gpk_client_status_changed_cb:
  **/
 static void
@@ -507,12 +523,7 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 	g_free (text);
 
 	if (status == PK_STATUS_ENUM_WAIT) {
-		if (gclient->priv->pulse_timer_id == 0) {
-			widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
-
-			gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
-			gclient->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_client_pulse_progress, gclient);
-		}
+		gpk_client_make_progressbar_pulse (gclient);
 	}
 }
 
@@ -579,6 +590,19 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 }
 
 /**
+ * gpk_client_set_package_label:
+ **/
+static gboolean
+gpk_client_set_package_label (GpkClient *gclient, const gchar *text)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_widget_show (widget);
+	gtk_label_set_markup (GTK_LABEL (widget), text);
+	return TRUE;
+}
+
+/**
  * gpk_client_package_cb:
  **/
 static void
@@ -586,8 +610,6 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		      const gchar *summary, GpkClient *gclient)
 {
 	gchar *text;
-	GtkWidget *widget;
-
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* ignore this if it's uninteresting */
@@ -596,9 +618,7 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 	}
 
 	text = gpk_package_id_format_twoline (package_id, summary);
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
-	gtk_widget_show (widget);
-	gtk_label_set_markup (GTK_LABEL (widget), text);
+	gpk_client_set_package_label (gclient, text);
 	g_free (text);
 }
 
@@ -816,6 +836,9 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 	gtk_widget_set_size_request (widget, requisition.width, requisition.height);
 	gtk_label_set_label (GTK_LABEL (widget), "");
 
+	/* start with the progressbar pulsing */
+	gpk_client_make_progressbar_pulse (gclient);
+
 	return TRUE;
 }
 
@@ -895,7 +918,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	message = g_strjoinv ("\n", files_rel);
 
 	/* show UI */
-	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+	dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
 					 "%s", title);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
@@ -908,7 +932,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	if (button != GTK_RESPONSE_OK) {
 		title = ngettext (_("The file was not installed"),
 				  _("The files were not installed"), length);
-		dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 						 "%s", title);
 		gtk_dialog_run (GTK_DIALOG (dialog));
@@ -1340,6 +1365,172 @@ out:
 	}
 	g_strfreev (package_ids);
 	g_free (package_id);
+	return ret;
+}
+
+/**
+ * gpk_client_catalog_progress_cb:
+ **/
+static void
+gpk_client_catalog_progress_cb (PkCatalog *catalog, PkCatalogProgress mode, const gchar *text, GpkClient *gclient)
+{
+	gchar *message = NULL;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	if (mode == PK_CATALOG_PROGRESS_PACKAGES) {
+		message = g_strdup_printf (_("Finding package name: %s"), text);
+	} else if (mode == PK_CATALOG_PROGRESS_FILES) {
+		message = g_strdup_printf (_("Finding file name: %s"), text);
+	} else if (mode == PK_CATALOG_PROGRESS_PROVIDES) {
+		message = g_strdup_printf (_("Finding a package to provide: %s"), text);
+	}
+
+	gpk_client_status_changed_cb (NULL, PK_STATUS_ENUM_QUERY, gclient);
+	gpk_client_set_package_label (gclient, message);
+	g_free (message);
+}
+
+/**
+ * gpk_client_install_catalogs:
+ **/
+gboolean
+gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **error)
+{
+	GtkWidget *dialog;
+	GtkWidget *widget;
+	GtkResponseType button;
+	gchar **package_ids = NULL;
+	gchar *message;
+	const gchar *title;
+	gboolean ret;
+	PkPackageItem *item;
+	PkPackageList *list;
+	GPtrArray *array;
+	PkCatalog *catalog;
+	GString *string;
+	gchar *text;
+	guint len;
+	guint i;
+
+	/* check if we are already waiting */
+	if (gclient->priv->gtk_main_waiting) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Already waiting on this GpkClient");
+		return FALSE;
+	}
+
+	len = g_strv_length (filenames);
+
+	title = ngettext (_("Do you want to install this catalog?"),
+			  _("Do you want to install these catalogs?"), len);
+	message = g_strjoinv ("\n", filenames);
+
+	/* show UI */
+	dialog = gtk_message_dialog_new (gclient->priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+
+	button = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (message);
+
+	/* did we click no or exit the window? */
+	if (button != GTK_RESPONSE_OK) {
+		title = ngettext (_("The catalog was not installed"),
+				  _("The catalogs were not installed"), len);
+		dialog = gtk_message_dialog_new (gclient->priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		return FALSE;
+	}
+
+	/* set title */
+	gpk_client_setup_window (gclient, _("Install catalogs"));
+	gpk_client_status_changed_cb (NULL, PK_STATUS_ENUM_WAIT, gclient);
+
+	/* setup the UI */
+	gpk_client_set_progress_files (gclient, TRUE);
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	/* get files to be installed */
+	catalog = pk_catalog_new ();
+	g_signal_connect (catalog, "progress", G_CALLBACK (gpk_client_catalog_progress_cb), gclient);
+	gclient->priv->gtk_main_waiting = TRUE;
+	list = pk_catalog_process_files (catalog, filenames);
+	gclient->priv->gtk_main_waiting = FALSE;
+	g_object_unref (catalog);
+
+	/* nothing to do? */
+	len = pk_package_list_get_size (list);
+	if (len == 0) {
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("No packages need to be installed"));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* process package list */
+	string = g_string_new (_("The following packages are marked to be installed from the catalog:"));
+	g_string_append (string, "\n\n");
+	for (i=0; i<len; i++) {
+		item = pk_package_list_get_item (list, i);
+		text = gpk_package_id_format_oneline (item->package_id, item->summary);
+		g_string_append_printf (string, "%s\n", text);
+		g_free (text);
+	}
+	/* remove last \n */
+	g_string_set_size (string, string->len - 1);
+
+	/* display messagebox  */
+	text = g_string_free (string, FALSE);
+
+	/* show UI */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
+					 "%s", _("Install packages in catalog?"));
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
+	button = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (text);
+
+	/* did we click no or exit the window? */
+	if (button != GTK_RESPONSE_OK) {
+		len = g_strv_length (filenames);
+		title = ngettext (_("The catalog was not installed"),
+				  _("The catalogs were not installed"), len);
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "Action was cancelled");
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		ret = FALSE;
+		goto out;
+	}
+
+	/* convert to list of package id's */
+	array = g_ptr_array_new ();
+	for (i=0; i<len; i++) {
+		item = pk_package_list_get_item (list, i);
+		g_ptr_array_add (array, g_strdup (item->package_id));
+	}
+
+	/* install packages */
+	package_ids = pk_ptr_array_to_argv (array);
+	ret = gpk_client_install_package_ids (gclient, package_ids, error);
+
+out:
+	g_strfreev (package_ids);
+	g_object_unref (list);
+
 	return ret;
 }
 
@@ -1946,6 +2137,7 @@ gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	gclient->priv->parent_window = window;
 	return TRUE;
 }
 
@@ -1996,6 +2188,7 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->files_array = NULL;
+	gclient->priv->parent_window = NULL;
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->gtk_main_waiting = FALSE;
