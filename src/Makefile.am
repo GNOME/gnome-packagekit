@@ -38,6 +38,7 @@ bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-repo					\
 	gpk-prefs					\
+	gpk-install-catalog				\
 	gpk-install-local-file				\
 	gpk-install-mime-type				\
 	gpk-install-provide-file			\
@@ -101,6 +102,15 @@ gpk_install_provide_file_SOURCES =			\
 	$(NULL)
 
 gpk_install_provide_file_LDADD =			\
+	$(shared_LIBS)					\
+	$(NULL)
+
+gpk_install_catalog_SOURCES =				\
+	gpk-install-catalog.c				\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_install_catalog_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 
