@@ -11,6 +11,7 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-file.desktop.in			\
+	gpk-install-catalog.desktop.in			\
 	gpk-prefs.desktop.in				\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
@@ -64,6 +65,7 @@ DISTCLEANFILES =					\
 	gpk-repo.desktop				\
 	gpk-prefs.desktop				\
 	gpk-update-viewer.desktop			\
+	gpk-install-catalog.desktop			\
 	gpk-install-file.desktop			\
 	gpk-log.desktop					\
 	gpk-update-icon.desktop				\
