@@ -374,6 +374,10 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 			pk_warning ("no repo name, falling back to %s", ident->data);
 			repo_name = ident->data;
 		}
+		if (repo_name == NULL) {
+			pk_warning ("no ident data in %s", package_id);
+			repo_name = _("Invalid");
+		}
 		gtk_label_set_label (GTK_LABEL (widget), repo_name);
 	}
 	pk_package_id_free (ident);
