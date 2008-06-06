@@ -290,6 +290,10 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		pk_warning ("failed to get PkPackageId for %s", package_id);
+		return;
+	}
 	installed = pk_strequal (ident->data, "installed");
 
 	pk_debug ("details = %s:%i:%s:%s", package_id, group, detail, url);
@@ -518,17 +522,20 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 		return;
 	}
 
-	/* mark as got so we don't warn */
-	application->priv->has_package = TRUE;
-
 	/* find localised summary */
 	ident = pk_package_id_new_from_string (package_id);
+	if (ident == NULL) {
+		pk_warning ("failed to get PkPackageId for %s", package_id);
+		return;
+	}
 	summary_new = pk_extra_get_summary (application->priv->extra, ident->name);
 	if (summary_new == NULL) {
 		/* use the non-localised one */
 		summary_new = summary;
 	}
 
+	/* mark as got so we don't warn */
+	application->priv->has_package = TRUE;
 
 	/* are we in the package list? */
 	index = pk_ptr_array_find_string (application->priv->package_list, package_id);
