@@ -1957,10 +1957,10 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 }
 
 /**
- * gpk_application_button_sources_cb:
+ * gpk_application_menu_sources_cb:
  **/
 static void
-gpk_application_button_sources_cb (GtkWidget *widget, GpkApplication *application)
+gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
 
@@ -1973,10 +1973,10 @@ gpk_application_button_sources_cb (GtkWidget *widget, GpkApplication *applicatio
 }
 
 /**
- * gpk_application_button_refresh_cb:
+ * gpk_application_menu_refresh_cb:
  **/
 static void
-gpk_application_button_refresh_cb (GtkWidget *widget, GpkApplication *application)
+gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
 	gpk_client_refresh_cache (application->priv->gclient, NULL);
 }
@@ -2528,14 +2528,13 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_help_cb), application);
 
-	/* connect up the other menuitems */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_sources");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_sources_cb), application);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_sources_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_refresh");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_refresh_cb), application);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_refresh");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_refresh_cb), application);
 
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");

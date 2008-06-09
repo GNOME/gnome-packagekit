@@ -14,6 +14,47 @@
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <child>
+              <widget class="GtkMenuItem" id="menuitem_system">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_System</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu8">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem_sources">
+                        <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Edit list of software sources</property>
+                        <property name="label" translatable="yes">Software sources</property>
+                        <property name="use_underline">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image1">
+                            <property name="stock">gtk-cdrom</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem_refresh">
+                        <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Refresh the list of packages on the system</property>
+                        <property name="label" translatable="yes">Refresh package lists</property>
+                        <property name="use_underline">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image2">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-refresh</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
               <widget class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -396,33 +437,6 @@
                 <property name="label" translatable="yes">_Remove packages</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-delete</property>
-              </widget>
-              <packing>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkSeparatorToolItem" id="toolbutton1">
-                <property name="visible">True</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkToolButton" id="toolbutton_sources">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Software sources</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-cdrom</property>
-              </widget>
-              <packing>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkToolButton" id="toolbutton_refresh">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Refresh package lists</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-refresh</property>
               </widget>
               <packing>
                 <property name="homogeneous">True</property>
