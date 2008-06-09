@@ -1443,52 +1443,6 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 }
 
 /**
- * gpk_application_notebook_populate:
- **/
-static gboolean
-gpk_application_notebook_populate (GpkApplication *application)
-{
-	gboolean ret;
-	GtkWidget *widget;
-	GError *error = NULL;
-
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
-
-	/* are we just removing tabs? */
-	if (application->priv->package == NULL) {
-		return FALSE;
-	}
-
-	/* show the box */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-	gtk_widget_show (widget);
-
-	/* get the notebook reference */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-
-	/* clear the old text */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-	gpk_application_set_text_buffer (widget, NULL);
-
-	/* cancel any previous request */
-	ret = pk_client_reset (application->priv->client_details, &error);
-	if (!ret) {
-		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* get the details */
-	ret = pk_client_get_details (application->priv->client_details,
-				     application->priv->package, &error);
-	if (!ret) {
-		pk_warning ("failed to get details: %s", error->message);
-		g_error_free (error);
-	}
-	return ret;
-}
-
-/**
  * gpk_application_packages_treeview_clicked_cb:
  **/
 static void
@@ -1498,55 +1452,75 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean installed;
-	gchar *package_id;
+	gboolean ret;
+	GError *error = NULL;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	/* reset */
+	g_free (application->priv->package);
+	application->priv->package = NULL;
+
 	/* This will only work in single or browse selection mode! */
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (application->priv->package);
-		gtk_tree_model_get (model, &iter,
-				    PACKAGES_COLUMN_INSTALLED, &installed,
-				    PACKAGES_COLUMN_ID, &package_id, -1);
-
-		/* we can now add it */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
-		gtk_widget_set_sensitive (widget, TRUE);
-
-		/* make back into package ID */
-		application->priv->package = g_strdup (package_id);
-		g_free (package_id);
-		pk_debug ("selected row is: %i %s", installed, application->priv->package);
-
-		/* only show add if we are in the correct mode */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
-		if (application->priv->action == PK_ACTION_INSTALL && installed) {
-			gtk_widget_set_sensitive (widget, FALSE);
-		} else if (application->priv->action == PK_ACTION_REMOVE && !installed) {
-			gtk_widget_set_sensitive (widget, FALSE);
-		} else {
-			gtk_widget_set_sensitive (widget, TRUE);
-		}
-
-		/* refresh */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-		gpk_application_notebook_populate (application);
-
-	} else {
+	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		pk_debug ("no row selected");
 
 		/* we cannot now add it */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
 		gtk_widget_set_sensitive (widget, FALSE);
-
-		/* make back into package ID */
-		g_free (application->priv->package);
-		application->priv->package = NULL;
-
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_hide (widget);
+		return;
+	}
+
+	/* show the menu item */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
+	gtk_widget_show (widget);
+
+	/* get data */
+	gtk_tree_model_get (model, &iter,
+			    PACKAGES_COLUMN_INSTALLED, &installed,
+			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
+	pk_debug ("selected row is: %i %s", installed, application->priv->package);
+
+	/* we can now add it */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
+	gtk_widget_set_sensitive (widget, TRUE);
+
+	/* only show add if we are in the correct mode */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
+	if (application->priv->action == PK_ACTION_INSTALL && installed) {
+		gtk_widget_set_sensitive (widget, FALSE);
+	} else if (application->priv->action == PK_ACTION_REMOVE && !installed) {
+		gtk_widget_set_sensitive (widget, FALSE);
+	} else {
+		gtk_widget_set_sensitive (widget, TRUE);
+	}
+
+	/* clear the old text */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	gpk_application_set_text_buffer (widget, NULL);
+
+	/* show the box */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+	gtk_widget_show (widget);
+
+	/* cancel any previous request */
+	ret = pk_client_reset (application->priv->client_details, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* get the details */
+	ret = pk_client_get_details (application->priv->client_details,
+				     application->priv->package, &error);
+	if (!ret) {
+		pk_warning ("failed to get details: %s", error->message);
+		g_error_free (error);
 	}
 }
 
@@ -2483,6 +2457,9 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_requires");
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_requires_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
+	gtk_widget_hide (widget);
 
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
