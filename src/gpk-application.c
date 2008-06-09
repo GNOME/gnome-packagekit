@@ -50,7 +50,8 @@
 
 #include "gpk-application.h"
 #include "gpk-animated-icon.h"
-#include <gpk-client-run.h>
+#include "gpk-client-run.h"
+#include "gpk-client-chooser.h"
 
 static void     gpk_application_class_init (GpkApplicationClass *klass);
 static void     gpk_application_init       (GpkApplication      *application);
@@ -243,16 +244,6 @@ gpk_application_treeview_set_sorted (GpkApplication *application, gboolean sorte
 }
 
 /**
- * gpk_application_menu_homepage_cb:
- **/
-static void
-gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application)
-{
-	g_return_if_fail (PK_IS_APPLICATION (application));
-	gpk_gnome_open (application->priv->url);
-}
-
-/**
  * gpk_application_set_text_buffer:
  **/
 static void
@@ -268,6 +259,156 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 		gtk_text_buffer_set_text (buffer, "", -1);
 	}
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+}
+
+/**
+ * gpk_application_menu_homepage_cb:
+ **/
+static void
+gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application)
+{
+	g_return_if_fail (PK_IS_APPLICATION (application));
+	gpk_gnome_open (application->priv->url);
+}
+
+/**
+ * gpk_application_modal_info:
+ **/
+static void
+gpk_application_modal_info (GpkApplication *application, const gchar *title, const gchar *text)
+{
+	GtkWidget *dialog;
+	GtkWidget *widget;
+	GtkWidget *main_window;
+	GtkWidget *scrolled_window;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	widget = gtk_text_view_new ();
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_set_size_request (scrolled_window, 400, 200);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), widget);
+
+	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	dialog = gtk_dialog_new_with_buttons (title, GTK_WINDOW (main_window),
+					      GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
+					      GTK_RESPONSE_NONE, NULL);
+
+	gpk_application_set_text_buffer (widget, text);
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), scrolled_window);
+
+	/* ensure that the dialog box is destroyed when the user responds. */
+	g_signal_connect_swapped (dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
+	gtk_widget_show_all (dialog);
+}
+
+/**
+ * gpk_application_menu_files_cb:
+ **/
+static void
+gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
+{
+	GError *error = NULL;
+	gchar **files;
+	gchar *text;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	files = gpk_client_get_file_list (application->priv->gclient, application->priv->package, &error);
+	if (files == NULL) {
+		pk_warning ("could not get file list: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* split and show */
+	text = g_strjoinv ("\n", files);
+
+	if (pk_strzero (text)) {
+		g_free (text);
+		text = g_strdup (_("No files"));
+	}
+
+	gpk_application_modal_info (application, _("File list"), text);
+
+	g_free (text);
+	g_strfreev (files);
+}
+
+/**
+ * gpk_application_menu_requires_cb:
+ **/
+static void
+gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application)
+{
+	GError *error = NULL;
+	gboolean ret;
+	PkPackageList *list;
+	GtkWidget *widget;
+
+	/* cancel any previous request */
+	ret = pk_client_reset (application->priv->client_files, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* get the requires */
+	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
+	ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
+				      application->priv->package, TRUE, &error);
+	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
+
+	if (!ret) {
+		pk_warning ("failed to get requires: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	list = pk_client_get_package_list (application->priv->client_files);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	gpk_client_chooser_show (GTK_WINDOW (widget), list, PK_ROLE_ENUM_GET_DEPENDS, _("Required by"));
+
+	g_object_unref (list);
+}
+
+/**
+ * gpk_application_menu_depends_cb:
+ **/
+static void
+gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
+{
+	GError *error = NULL;
+	gboolean ret;
+	PkPackageList *list;
+	GtkWidget *widget;
+
+	/* cancel any previous request */
+	ret = pk_client_reset (application->priv->client_files, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* get the requires */
+	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
+	ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
+				     application->priv->package, TRUE, &error);
+	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
+
+	if (!ret) {
+		pk_warning ("failed to get depends: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	list = pk_client_get_package_list (application->priv->client_files);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	gpk_client_chooser_show (GTK_WINDOW (widget), list, PK_ROLE_ENUM_GET_DEPENDS, _("Depends on"));
+
+	g_object_unref (list);
 }
 
 /**
@@ -321,7 +462,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	installed = pk_strequal (ident->data, "installed");
 
 	pk_debug ("details = %s:%i:%s:%s", package_id, group, detail, url);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_show (widget);
 
 	/* get the icon */
@@ -400,40 +541,6 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		gtk_label_set_label (GTK_LABEL (widget), repo_name);
 	}
 	pk_package_id_free (ident);
-}
-
-/**
- * gpk_application_files_cb:
- **/
-static void
-gpk_application_files_cb (PkClient *client, const gchar *package_id,
-			 const gchar *filelist, GpkApplication *application)
-{
-	GtkWidget *widget;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
-	gtk_widget_show (widget);
-
-	/* set the text box */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
-	/* ITS4: ignore, not used for allocation */
-	if (pk_strzero (filelist) == FALSE) {
-		gchar *list;
-		gchar **array;
-		/* replace the ; with a newline */
-		array = g_strsplit (filelist, ";", 0);
-		list = g_strjoinv ("\n", array);
-
-		/* apply the list */
-		gpk_application_set_text_buffer (widget, list);
-		g_strfreev (array);
-		g_free (list);
-	} else {
-		/* no information */
-		gpk_application_set_text_buffer (widget, _("No files"));
-	}
 }
 
 static gint
@@ -601,42 +708,6 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 }
 
 /**
- * gpk_application_package_buffer_to_name_version:
- **/
-static gchar *
-gpk_application_package_buffer_to_name_version (PkPackageList *list)
-{
-	guint i;
-	PkPackageItem *item;
-	gchar *text_pretty;
-	guint length;
-	GString *string;
-	gchar *text;
-
-	/* sort the list */
-	pk_package_list_sort (list);
-
-	length = pk_package_list_get_size (list);
-	if (length == 0) {
-		text = g_strdup ("No packages");
-		goto out;
-	}
-
-	string = g_string_new ("");
-	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		/* just use the name */
-		text_pretty = gpk_package_id_name_version (item->package_id);
-		g_string_append_printf (string, "%s\n", text_pretty);
-		g_free (text_pretty);
-	}
-	g_string_set_size (string, string->len - 1);
-	text = g_string_free (string, FALSE);
-out:
-	return text;
-}
-
-/**
  * gpk_application_refresh_search_results:
  **/
 static gboolean
@@ -663,7 +734,7 @@ gpk_application_refresh_search_results (GpkApplication *application)
 	}
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_hide (widget);
 	return TRUE;
 }
@@ -676,29 +747,11 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 {
 	GtkWidget *widget;
 	PkRoleEnum role;
-	gchar *text;
-	PkPackageList *list;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* get role */
 	pk_client_get_role (client, &role, NULL, NULL);
-	/* do we need to fill in the tab box? */
-	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
-		list = pk_client_get_package_list (client);
-		text = gpk_application_package_buffer_to_name_version (list);
-		g_object_unref (list);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
-		gpk_application_set_text_buffer (widget, text);
-		g_free (text);
-	} else if (role == PK_ROLE_ENUM_GET_REQUIRES) {
-		list = pk_client_get_package_list (client);
-		text = gpk_application_package_buffer_to_name_version (list);
-		g_object_unref (list);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
-		gpk_application_set_text_buffer (widget, text);
-		g_free (text);
-	}
 
 	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
 	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
@@ -823,7 +876,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	application->priv->has_package = FALSE;
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_hide (widget);
 
 	/* switch around buttons */
@@ -1364,7 +1417,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* hide the details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_hide (widget);
 
 	/* clear the search text if we clicked the group list */
@@ -1393,12 +1446,10 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
  * gpk_application_notebook_populate:
  **/
 static gboolean
-gpk_application_notebook_populate (GpkApplication *application, gint page)
+gpk_application_notebook_populate (GpkApplication *application)
 {
 	gboolean ret;
 	GtkWidget *widget;
-	GtkWidget *child;
-	gint potential;
 	GError *error = NULL;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
@@ -1409,133 +1460,32 @@ gpk_application_notebook_populate (GpkApplication *application, gint page)
 	}
 
 	/* show the box */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_show (widget);
 
 	/* get the notebook reference */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 
-	/* are we description? */
-	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
-	pk_debug ("potential=%i", potential);
-	if (potential == page) {
-		/* clear the old text */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-		gpk_application_set_text_buffer (widget, NULL);
+	/* clear the old text */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	gpk_application_set_text_buffer (widget, NULL);
 
-		/* cancel any previous request */
-		ret = pk_client_reset (application->priv->client_details, &error);
-		if (!ret) {
-			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
-			g_error_free (error);
-			return FALSE;
-		}
-
-		/* get the details */
-		ret = pk_client_get_details (application->priv->client_details,
-					     application->priv->package, &error);
-		if (!ret) {
-			pk_warning ("failed to get details: %s", error->message);
-			g_error_free (error);
-		}
-		return ret;
+	/* cancel any previous request */
+	ret = pk_client_reset (application->priv->client_details, &error);
+	if (!ret) {
+		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		g_error_free (error);
+		return FALSE;
 	}
 
-	/* are we description? */
-	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
-	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
-	pk_debug ("potential=%i", potential);
-	if (potential == page) {
-		/* clear the old text */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_files");
-		gpk_application_set_text_buffer (widget, NULL);
-
-		/* cancel any previous request */
-		ret = pk_client_reset (application->priv->client_files, &error);
-		if (!ret) {
-			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
-			g_error_free (error);
-			return FALSE;
-		}
-
-		/* get the filelist */
-		ret = pk_client_get_files (application->priv->client_files,
-					   application->priv->package, &error);
-		if (!ret) {
-			pk_warning ("failed to det depends: %s", error->message);
-			g_error_free (error);
-		}
-		return ret;
+	/* get the details */
+	ret = pk_client_get_details (application->priv->client_details,
+				     application->priv->package, &error);
+	if (!ret) {
+		pk_warning ("failed to get details: %s", error->message);
+		g_error_free (error);
 	}
-
-	/* are we depends? */
-	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
-	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
-	pk_debug ("potential=%i", potential);
-	if (potential == page) {
-		/* clear the old text */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_depends");
-		gpk_application_set_text_buffer (widget, NULL);
-
-		/* cancel any previous request */
-		ret = pk_client_reset (application->priv->client_files, &error);
-		if (!ret) {
-			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
-			g_error_free (error);
-			return FALSE;
-		}
-		/* get the depends */
-		ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
-					     application->priv->package, FALSE, &error);
-
-		if (!ret) {
-			pk_warning ("failed to det depends: %s", error->message);
-			g_error_free (error);
-		}
-		return ret;
-	}
-
-	/* are we requires? */
-	child = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
-	potential = gtk_notebook_page_num (GTK_NOTEBOOK (widget), child);
-	pk_debug ("potential=%i", potential);
-	if (potential == page) {
-		/* clear the old text */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "textview_requires");
-		gpk_application_set_text_buffer (widget, NULL);
-
-		/* cancel any previous request */
-		ret = pk_client_reset (application->priv->client_files, &error);
-		if (!ret) {
-			pk_warning ("failed to cancel, and adding to queue: %s", error->message);
-			g_error_free (error);
-			return FALSE;
-		}
-		/* get the requires */
-		ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
-					      application->priv->package, TRUE, &error);
-
-		if (!ret) {
-			pk_warning ("failed to det depends: %s", error->message);
-			g_error_free (error);
-		}
-		return ret;
-	}
-	pk_warning ("unknown tab %i!", page);
-	return FALSE;
-}
-
-/**
- * gpk_application_notebook_changed_cb:
- **/
-static void
-gpk_application_notebook_changed_cb (GtkWidget *widget, gboolean arg1,
-				    gint page, GpkApplication *application)
-{
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	gpk_application_notebook_populate (application, page);
+	return ret;
 }
 
 /**
@@ -1549,7 +1499,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	GtkTreeIter iter;
 	gboolean installed;
 	gchar *package_id;
-	guint page;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1580,9 +1529,8 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		}
 
 		/* refresh */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
-		page = gtk_notebook_get_current_page (GTK_NOTEBOOK (widget));
-		gpk_application_notebook_populate (application, page);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+		gpk_application_notebook_populate (application);
 
 	} else {
 		pk_debug ("no row selected");
@@ -2359,7 +2307,6 @@ static void
 gpk_application_init (GpkApplication *application)
 {
 	GtkWidget *main_window;
-	GtkWidget *vbox;
 	GtkWidget *widget;
 	GtkEntryCompletion *completion;
 	GtkTreeModel *completion_model;
@@ -2367,7 +2314,6 @@ gpk_application_init (GpkApplication *application)
 	gboolean autocomplete;
 	gboolean enabled;
 	gchar *locale; /* does not need to be freed */
-	guint page;
 	guint i;
 	gboolean ret;
 	GError *error = NULL;
@@ -2434,8 +2380,6 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->client_files = pk_client_new ();
 	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-	g_signal_connect (application->priv->client_files, "files",
-			  G_CALLBACK (gpk_application_files_cb), application);
 	g_signal_connect (application->priv->client_files, "error-code",
 			  G_CALLBACK (gpk_application_error_code_cb), application);
 	g_signal_connect (application->priv->client_files, "finished",
@@ -2528,6 +2472,18 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_menu_homepage_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_files");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_files_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_depends");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_depends_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_requires");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_requires_cb), application);
+
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
 	g_signal_connect (widget, "toggled",
@@ -2594,7 +2550,7 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
 	gtk_widget_hide (widget);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
@@ -2618,28 +2574,21 @@ gpk_application_init (GpkApplication *application)
 	gpk_application_set_button_actions (application);
 
 	/* Remove description/file list if needed. */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_description");
-	g_signal_connect (widget, "switch-page",
-			  G_CALLBACK (gpk_application_notebook_changed_cb), application);
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
-		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow2");
+		gtk_widget_hide (widget);
 	}
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_FILES) == FALSE) {
-		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_files");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_files");
+		gtk_widget_hide (widget);
 	}
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_depends");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_depends");
+		gtk_widget_hide (widget);
 	}
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		vbox = glade_xml_get_widget (application->priv->glade_xml, "vbox_requires");
-		page = gtk_notebook_page_num (GTK_NOTEBOOK (widget), vbox);
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), page);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_requires");
+		gtk_widget_hide (widget);
 	}
 
 	/* hide the group selector if we don't support search-groups */
