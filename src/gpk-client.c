@@ -641,7 +641,6 @@ gpk_client_files_cb (PkClient *client, const gchar *package_id,
 	}
 
 	/* set new */
-	g_strfreev (gclient->priv->files_array);
 	gclient->priv->files_array = g_strsplit (filelist, ";", 0);
 }
 
