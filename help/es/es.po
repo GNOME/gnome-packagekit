@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.help.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-13 04:43+0100\n"
-"PO-Revision-Date: 2008-04-14 17:03+0200\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2008-05-22 17:09+0000\n"
+"PO-Revision-Date: 2008-05-29 11:01+0100\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,10 +260,9 @@ msgstr ""
 "usuario, lo que significa que una actualización larga o una instalación no "
 "se interrumpirán si el usuario que inició la sesión la finaliza. Las tareas "
 "se procesan en una cola, lo que significa que múltiples usuarios pueden "
-"utilizar PackageKit en paralelo sin bloquear en absoluto a los demás. "
-"El acceso a todas las operaciones privilegiadas se controla por "
-"medio de <ulink url=\"http://en.wikipedia.org/wiki/PolicyKit\">PolicyKit</"
-"ulink>."
+"utilizar PackageKit en paralelo sin bloquear en absoluto a los demás. El "
+"acceso a todas las operaciones privilegiadas se controla por medio de <ulink "
+"url=\"http://en.wikipedia.org/wiki/PolicyKit\">PolicyKit</ulink>."
 
 #: C/gnome-packagekit.xml:159(title)
 msgid "Applications"
@@ -345,9 +344,9 @@ msgid ""
 "available, and is responsible for showing notifications about PackageKit "
 "operations and events."
 msgstr ""
-"<command>gpk-update-icon</command>: Cuando se instala PackageKit, "
-"inicia automáticamente el icono de sesión cuando entra en el sistema."
-"Esta aplicación muestra un icono en el área de notificación de su panel cuando "
+"<command>gpk-update-icon</command>: Cuando se instala PackageKit, inicia "
+"automáticamente el icono de sesión cuando entra en el sistema.Esta "
+"aplicación muestra un icono en el área de notificación de su panel cuando "
 "hay actualizaciones de software disponibles, y es la responsable de mostrar "
 "notificaciones acerca de las operaciones y los eventos de PackageKit."
 
@@ -398,10 +397,10 @@ msgid ""
 msgstr ""
 "Habitualmente, puede encontrar varios cientos de paquetes de software "
 "disponibles bajo varios grupos. Puesto que esto puede desbordarle, puede "
-"elegir filtrar la lista de paquetes de software en base a varios criterios tales "
-"como si el paquete está ya instalado, si es una aplicación gráfica o de desarrollo o "
-"basados en la licencia del software. Consulte <xref linkend=\"filters\"/> para obtener "
-"más información acerca de los filtros."
+"elegir filtrar la lista de paquetes de software en base a varios criterios "
+"tales como si el paquete está ya instalado, si es una aplicación gráfica o "
+"de desarrollo o basados en la licencia del software. Consulte <xref linkend="
+"\"filters\"/> para obtener más información acerca de los filtros."
 
 #: C/gnome-packagekit.xml:269(para)
 msgid ""
@@ -411,9 +410,10 @@ msgid ""
 "software packages available in the repository."
 msgstr ""
 "Dispone de una configuración de fuentes de software en el menú del sistema "
-"que le permite habilitar o deshabilitar un repositorio de software existente. "
-"También puede actualizar la lista de aplicaciones para que muestre la última información "
-"acerca de los paquetes de software disponibles en el repositorio."
+"que le permite habilitar o deshabilitar un repositorio de software "
+"existente. También puede actualizar la lista de aplicaciones para que "
+"muestre la última información acerca de los paquetes de software disponibles "
+"en el repositorio."
 
 #: C/gnome-packagekit.xml:277(title)
 msgid "Filters"
@@ -427,7 +427,6 @@ msgstr ""
 "Puede limitar la cantidad de paquetes que se muestran por varios criterios."
 
 #: C/gnome-packagekit.xml:281(para)
-#, fuzzy
 msgid ""
 "To see only installed or only uninstalled software packages, choose the "
 "corresponding menuitem in the <menuchoice><guimenu>Filters</"
@@ -439,8 +438,8 @@ msgstr ""
 "Para ver solamente los paquetes instalados o sólo los desinstalados, "
 "seleccione el elemento de menú correspondiente en el menú "
 "<menuchoice><guimenu>Filtros</guimenu><guisubmenu>Instalados</guisubmenu></"
-"menuchoice>. Para ver solamente los paquetes instalados o sólo los desinstalados, "
-"seleccione el elemento de menú correspondiente en el menú "
+"menuchoice>. Para ver solamente los paquetes instalados o sólo los "
+"desinstalados, seleccione el elemento de menú correspondiente en el menú "
 "<menuchoice><guimenu>Filtros</guimenu><guisubmenu>Instalados</guisubmenu></"
 "menuchoice>."
 
@@ -534,13 +533,35 @@ msgstr ""
 "repositorios a su sistema. Sólo le permite activar o desactivar repositorios "
 "conocidos. Sin embargo, habitualmente es posible crear un repositorio "
 "conocido por Packagekit instalando un paquete con la información necesaria. "
-"Habitualmente se llaman (foo)-release, donde foo es el nombre del repositorio."
+"Habitualmente se llaman (foo)-release, donde foo es el nombre del "
+"repositorio."
 
 #: C/gnome-packagekit.xml:344(title)
+msgid "File handler helper"
+msgstr "Ayuda del gestor de archivos"
+
+#: C/gnome-packagekit.xml:345(para)
+msgid ""
+"Sometimes you will not have the software on your system to open a particular "
+"file. If the file type is not recognised, then applications that can open "
+"this file type are shown."
+msgstr ""
+"En algunas ocaciones no tendrá en su sistema el software necesario para abrir un archivo concreto. Si no se reconoce el tipo de archivo, entonces se mostrarán las aplicaciones que pueden abrir este tipo de archivo."
+
+#: C/gnome-packagekit.xml:350(para)
+msgid ""
+"At this time, only a limited number of packages will be shown, as they will "
+"need to be rebuilt by the distro to support the extra data needed by "
+"PackageKit. This will happen automatically, and soon all suitable "
+"applications will be shown."
+msgstr ""
+"En este momento sólo se muestra un número limitado de paquetes, que deben ser reconstruidos por la distro para soportar los datos adicionales requeridos por PackageKit. Esto sucederá automáticamente y pronto se mostrarán todas las aplicaciones convenientes."
+
+#: C/gnome-packagekit.xml:358(title)
 msgid "Update Viewer"
 msgstr "Visor de actualizaciones"
 
-#: C/gnome-packagekit.xml:345(para)
+#: C/gnome-packagekit.xml:359(para)
 msgid ""
 "You can update your system via <menuchoice><guimenu>System</"
 "guimenu><guisubmenu>Administration</guisubmenu><guimenuitem>Update System</"
@@ -564,7 +585,7 @@ msgstr ""
 "actualizaciones importantes hasta actualizaciones para corregir errores y "
 "mejoras finales."
 
-#: C/gnome-packagekit.xml:357(para)
+#: C/gnome-packagekit.xml:371(para)
 msgid ""
 "Note that the severity information must be provided by the software "
 "repositories where the software packages originate. This information may not "
@@ -574,7 +595,7 @@ msgstr ""
 "repositorios de software donde se originó el paquete. Esta información puede "
 "no estar disponible para las ramas de desarrollo de las distribuciones."
 
-#: C/gnome-packagekit.xml:362(para)
+#: C/gnome-packagekit.xml:376(para)
 msgid ""
 "Below the summary of available updates, the update viewer gives and "
 "indication how long ago the last check (or <quote>refresh</quote>) for new "
@@ -585,7 +606,7 @@ msgstr ""
 "comprobación (o <quote>actualización</quote>) para actualizaciones nuevas, y "
 "cuándo se instalaron actualizaciones por última vez."
 
-#: C/gnome-packagekit.xml:367(para)
+#: C/gnome-packagekit.xml:381(para)
 msgid ""
 "You can choose to manually refresh and verify the presence of updates by "
 "clicking the <guibutton>Refresh</guibutton> button."
@@ -593,7 +614,7 @@ msgstr ""
 "Puede seleccionar actualizar y verificar manualmente la existencia de "
 "actualizaciones pulsando en el botón <guibutton>Actualizar</guibutton>."
 
-#: C/gnome-packagekit.xml:371(para)
+#: C/gnome-packagekit.xml:385(para)
 msgid ""
 "You can change how often PackageKit refreshes on its own in the <link "
 "linkend=\"prefs\">Software Update Preferences</link>."
@@ -601,7 +622,7 @@ msgstr ""
 "Puede modificar con qué frecuencia se actualiza PackageKit en <link linkend="
 "\"prefs\">Preferencias de actualización de software</link>."
 
-#: C/gnome-packagekit.xml:375(para)
+#: C/gnome-packagekit.xml:389(para)
 msgid ""
 "There is a option to view the history of updates including previous "
 "installations, removal or updates of software."
@@ -609,7 +630,7 @@ msgstr ""
 "Hay una opción para ver el historial de actualizaciones, incluyendo "
 "instalaciones previas, eliminaciones o actualizaciones de software."
 
-#: C/gnome-packagekit.xml:379(para)
+#: C/gnome-packagekit.xml:393(para)
 msgid ""
 "Use the <guibutton>Update System</guibutton> button to install all available "
 "updates or use the <guibutton>Review</guibutton> button to review and select "
@@ -622,11 +643,11 @@ msgstr ""
 "individuales. si no quiere instalar actualizaciones en este momento, puede "
 "simplemente cerrar la ventana."
 
-#: C/gnome-packagekit.xml:388(title)
+#: C/gnome-packagekit.xml:402(title)
 msgid "Detailed information about updates"
 msgstr "Información detallada acerca de las actualizaciones"
 
-#: C/gnome-packagekit.xml:389(para)
+#: C/gnome-packagekit.xml:403(para)
 msgid ""
 "The <guibutton>Review</guibutton> button brings up a listing of the "
 "individual updates that are available. The area below the list displays "
@@ -639,7 +660,7 @@ msgstr ""
 "información debe incluir referencias a errores e informes de "
 "vulnerabilidades corregidos por la actualización."
 
-#: C/gnome-packagekit.xml:396(para)
+#: C/gnome-packagekit.xml:410(para)
 msgid ""
 "Note that the detailed update information must be provided by the software "
 "repositories where the software packages originate. This information may not "
@@ -649,7 +670,7 @@ msgstr ""
 "repositorios de software donde se origina el paquete. Esta información puede "
 "no estar disponible para las ramas de desarrollo de las distribuciones."
 
-#: C/gnome-packagekit.xml:401(para)
+#: C/gnome-packagekit.xml:415(para)
 msgid ""
 "The checkboxes next to each package in the list allow to select individual "
 "updates for installation. Use the <guibutton>Apply Updates</guibutton> "
@@ -662,11 +683,11 @@ msgstr ""
 "actualizaciones seleccionadas. Si no quiere instalar las actualizaciones en "
 "este momento, simplemente puede cerrar la ventana."
 
-#: C/gnome-packagekit.xml:412(title)
+#: C/gnome-packagekit.xml:426(title)
 msgid "Software Updates Preferences"
 msgstr "Preferencias de actualización de software"
 
-#: C/gnome-packagekit.xml:413(para)
+#: C/gnome-packagekit.xml:427(para)
 msgid ""
 "Preferences can be configured via <menuchoice><guimenu>System</"
 "guimenu><guisubmenu>Preferences</guisubmenu><guisubmenu>System</"
@@ -680,22 +701,25 @@ msgid ""
 "These settings are per-user and effective only for the current user logged "
 "in the system."
 msgstr ""
-"Se pueden configurar las preferencias a través de <menuchoice><guimenu>Sistema</"
-"guimenu><guisubmenu>Preferencias</guisubmenu><guisubmenu>Sistema</guisubmenu>"
-"<guimenuitem>Actualizaciones de software</guimenuitem></menuchoice>. Puede configurarlo "
-"para buscar actualizaciones cada día, hora o semana o nunca. Tenga en cuenta que esa periodicidad "
-"es aproximada, y que otros eventos, tales como el bloqueo de la pantalla, habilitar la red, u otro "
-"usuario buscando actualizaciones pueden ejecutar la comprobación de actualizaciones. La configuración "
-"predeterminada es comprobar actualizaciones diariamente. También puede configurarlo para instalar "
-"automáticamente todas las actualizaciones o simplemente las que resuelven problemas de seguridad. "
-"Las configuraciones son propias de cada usuario y se hacen efectivas sólo cuando el usuario ha iniciado "
-"sesión en el sistema."
+"Se pueden configurar las preferencias a través de "
+"<menuchoice><guimenu>Sistema</guimenu><guisubmenu>Preferencias</"
+"guisubmenu><guisubmenu>Sistema</guisubmenu><guimenuitem>Actualizaciones de "
+"software</guimenuitem></menuchoice>. Puede configurarlo para buscar "
+"actualizaciones cada día, hora o semana o nunca. Tenga en cuenta que esa "
+"periodicidad es aproximada, y que otros eventos, tales como el bloqueo de la "
+"pantalla, habilitar la red, u otro usuario buscando actualizaciones pueden "
+"ejecutar la comprobación de actualizaciones. La configuración predeterminada "
+"es comprobar actualizaciones diariamente. También puede configurarlo para "
+"instalar automáticamente todas las actualizaciones o simplemente las que "
+"resuelven problemas de seguridad. Las configuraciones son propias de cada "
+"usuario y se hacen efectivas sólo cuando el usuario ha iniciado sesión en el "
+"sistema."
 
-#: C/gnome-packagekit.xml:430(title)
+#: C/gnome-packagekit.xml:444(title)
 msgid "Automatic Updates"
 msgstr "Actualizaciones automáticas"
 
-#: C/gnome-packagekit.xml:431(para)
+#: C/gnome-packagekit.xml:445(para)
 msgid ""
 "Automatic updates can be performed in the background system wide using the "
 "PackageKit-cron package. This package contains a cron job that as well as a "
@@ -704,18 +728,19 @@ msgid ""
 "to just check for updates or perform the updates automatically and notify "
 "any email address."
 msgstr ""
-"Las actualizaciones automáticas se pueden ejecutar en segundo plano utilizando "
-"el paquete PackageKit-cron. Este paquete contiene un trabajo cron, así como un archivo "
-"de configuración. La configuración se controla a través del archivo de configuración "
-"en <command>/etc/sysconfig/packagekit-background</command>. Puede configurarlo "
-"para comprobar simplemente si hay actualizaciones o ejecutar las actualizaciones "
-"automáticamente y notificar cualquier dirección de correo."
+"Las actualizaciones automáticas se pueden ejecutar en segundo plano "
+"utilizando el paquete PackageKit-cron. Este paquete contiene un trabajo "
+"cron, así como un archivo de configuración. La configuración se controla a "
+"través del archivo de configuración en <command>/etc/sysconfig/packagekit-"
+"background</command>. Puede configurarlo para comprobar simplemente si hay "
+"actualizaciones o ejecutar las actualizaciones automáticamente y notificar "
+"cualquier dirección de correo."
 
-#: C/gnome-packagekit.xml:443(title)
+#: C/gnome-packagekit.xml:457(title)
 msgid "Update Icon"
 msgstr "Icono Actualizar"
 
-#: C/gnome-packagekit.xml:444(para)
+#: C/gnome-packagekit.xml:458(para)
 msgid ""
 "The icon offers menu items for installing the available updates or for "
 "starting the update viewer, which allows you to obtain detailed information "
@@ -728,11 +753,11 @@ msgstr ""
 "antes de instalarlas. Vea <xref linkend=\"update-viewer\"/> para obtener más "
 "información."
 
-#: C/gnome-packagekit.xml:453(title)
+#: C/gnome-packagekit.xml:467(title)
 msgid "About"
 msgstr "Acerca de"
 
-#: C/gnome-packagekit.xml:454(para)
+#: C/gnome-packagekit.xml:468(para)
 msgid ""
 "gnome-packagekit is maintained Richard Hughes <email>richard@hughsie.com</"
 "email> and developed along with several others. To find more information "
@@ -740,12 +765,12 @@ msgid ""
 "PackageKit\" type=\"http\"><application>gnome-packagekit</application> web "
 "page</ulink>."
 msgstr ""
-"Richard Hughes <email>richard@hughsie.com</email> mantiene gnome-packageKit y otros"
-"muchos lo desarrollan. Para encontrar más información acerca de "
-"gnome-packagekit, visite la <ulink url=\"http://live.gnome.org/PackageKit\" type=\"http\">página web "
-"de <application>gnome-packagekit</application></ulink>."
+"Richard Hughes <email>richard@hughsie.com</email> mantiene gnome-packageKit "
+"y otrosmuchos lo desarrollan. Para encontrar más información acerca de gnome-"
+"packagekit, visite la <ulink url=\"http://live.gnome.org/PackageKit\" type="
+"\"http\">página web de <application>gnome-packagekit</application></ulink>."
 
-#: C/gnome-packagekit.xml:460(para)
+#: C/gnome-packagekit.xml:474(para)
 msgid ""
 "To report a bug or make a suggestion regarding this application or this "
 "manual, follow the directions at the <ulink url=\"http://live.gnome.org/"
@@ -757,7 +782,7 @@ msgstr ""
 "org/PackageKit/\" type=\"http\">página de errores de <application>gnome-"
 "packagekit</application></ulink>."
 
-#: C/gnome-packagekit.xml:466(para)
+#: C/gnome-packagekit.xml:480(para)
 msgid ""
 "This program is distributed under the terms of the GNU General Public "
 "license as published by the Free Software Foundation; either version 2 of "
@@ -776,8 +801,8 @@ msgstr ""
 #: C/gnome-packagekit.xml:0(None)
 msgid "translator-credits"
 msgstr ""
-"Jorge González <jorgegonz@svn.gnome.org>, 2008.\n"
-"Daniel Mustieles <daniel.mustieles@gmail.com>, 2008."
+"Jorge González <jorgegonz@svn.gnome.org>, 2008\n"
+"Daniel Mustieles <daniel.mustieles@gmail.com>, 2008"
 
 #~ msgid ""
 #~ "To see only packages that are required for developing software or only "
