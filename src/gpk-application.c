@@ -270,6 +270,29 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 }
 
 /**
+ * gpk_application_get_full_repo_name:
+ **/
+static const gchar *
+gpk_application_get_full_repo_name (GpkApplication *application, const gchar *data)
+{
+	const gchar *repo_name;
+
+	/* if no data, we can't look up in the hash table */
+	if (pk_strzero (data)) {
+		pk_warning ("no ident data");
+		return _("Invalid");
+	}
+
+	/* try to find in cached repo list */
+	repo_name = (const gchar *) g_hash_table_lookup (application->priv->repos, data);
+	if (repo_name == NULL) {
+		pk_warning ("no repo name, falling back to %s", data);
+		return data;
+	}
+	return repo_name;
+}
+
+/**
  * gpk_application_details_cb:
  **/
 static void
@@ -373,15 +396,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
 
 		/* see if we can get the full name of the repo from the repo_id */
-		repo_name = (const gchar *) g_hash_table_lookup (application->priv->repos, ident->data);
-		if (repo_name == NULL) {
-			pk_warning ("no repo name, falling back to %s", ident->data);
-			repo_name = ident->data;
-		}
-		if (repo_name == NULL) {
-			pk_warning ("no ident data in %s", package_id);
-			repo_name = _("Invalid");
-		}
+		repo_name = gpk_application_get_full_repo_name (application, ident->data);
 		gtk_label_set_label (GTK_LABEL (widget), repo_name);
 	}
 	pk_package_id_free (ident);
