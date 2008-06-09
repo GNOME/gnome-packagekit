@@ -40,6 +40,7 @@
 #include <pk-common.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-package-list.h>
 #include <pk-extra.h>
 
 #include <gpk-client.h>
