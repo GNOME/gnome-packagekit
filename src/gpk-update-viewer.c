@@ -1455,20 +1455,20 @@ pk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton *
 	pk_update_viewer_get_checked_status (&all_checked, &none_checked);
 
 	if (!all_checked) {
-		menuitem = gtk_menu_item_new_with_label ("Select all");
+		menuitem = gtk_menu_item_new_with_label (_("Select all"));
 		g_signal_connect (menuitem, "activate",
 				  G_CALLBACK (pk_update_viewer_detail_popup_menu_select_all), treeview);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	}
 
 	if (!none_checked) {
-		menuitem = gtk_menu_item_new_with_label ("Unselect all");
+		menuitem = gtk_menu_item_new_with_label (_("Unselect all"));
 		g_signal_connect (menuitem, "activate",
 				  G_CALLBACK (pk_update_viewer_detail_popup_menu_select_none), treeview);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	}
 
-	menuitem = gtk_menu_item_new_with_label ("Ignore this package");
+	menuitem = gtk_menu_item_new_with_label (_("Ignore this package"));
 	gtk_widget_set_sensitive (GTK_WIDGET (menuitem), FALSE);
 	g_signal_connect (menuitem, "activate",
 			  G_CALLBACK (pk_update_viewer_detail_popup_menu_select_all), treeview);
