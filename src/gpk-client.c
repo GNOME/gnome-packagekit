@@ -1798,7 +1798,7 @@ out:
 	}
 
 	/* return the file list */
-	return gclient->priv->files_array;
+	return g_strdupv (gclient->priv->files_array);
 }
 
 /**
