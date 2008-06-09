@@ -243,10 +243,10 @@ gpk_application_treeview_set_sorted (GpkApplication *application, gboolean sorte
 }
 
 /**
- * gpk_application_homepage_cb:
+ * gpk_application_menu_homepage_cb:
  **/
 static void
-gpk_application_homepage_cb (GtkWidget *widget, GpkApplication *application)
+gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application)
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
 	gpk_gnome_open (application->priv->url);
@@ -340,7 +340,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon, GTK_ICON_SIZE_DIALOG);
 
 	/* homepage button? */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 	if (pk_strzero (url) == FALSE) {
 		gtk_widget_show (widget);
 		g_free (application->priv->url);
@@ -349,7 +349,6 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 
 		/* set the tooltip to where we are going */
 		text = g_strdup_printf (_("Visit %s"), url);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
 	} else {
@@ -1014,8 +1013,6 @@ gpk_application_set_button_actions (GpkApplication *application)
 
 	/* set label */
 	if (application->priv->action == PK_ACTION_INSTALL) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_show");
-		gtk_widget_set_sensitive (widget, TRUE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_clear");
 		gtk_widget_set_sensitive (widget, TRUE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
@@ -1023,8 +1020,6 @@ gpk_application_set_button_actions (GpkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else if (application->priv->action == PK_ACTION_REMOVE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_show");
-		gtk_widget_set_sensitive (widget, TRUE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_clear");
 		gtk_widget_set_sensitive (widget, TRUE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
@@ -1032,8 +1027,6 @@ gpk_application_set_button_actions (GpkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_remove");
 		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_show");
-		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_clear");
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_install");
@@ -1602,7 +1595,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		g_free (application->priv->package);
 		application->priv->package = NULL;
 
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
 		gtk_widget_hide (widget);
@@ -2489,12 +2482,6 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (gpk_application_delete_event_cb), application);
 
-	/* connect normal buttons */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_homepage_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
-
 	/* add */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_list_add");
 	g_signal_connect (widget, "clicked",
@@ -2535,6 +2522,11 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_refresh");
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_refresh_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_homepage_cb), application);
+	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
 
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
@@ -2658,13 +2650,13 @@ gpk_application_init (GpkApplication *application)
 
 	/* hide the refresh cache button if we can't do it */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_refresh");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_refresh");
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the software-sources button if we can't do it */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "toolbutton_sources");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
 		gtk_widget_hide (widget);
 	}
 
