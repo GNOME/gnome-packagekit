@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libsexy/sexy-icon-entry.h>
+#include <libsexy/sexy-url-label.h>
 #include <math.h>
 #include <string.h>
 #include <locale.h>
@@ -572,17 +573,20 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		/* save the url for the button */
 		application->priv->url = g_strdup (url);
 
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
+		text = g_strdup_printf ("<a href=\"%s\">Project website</a>", url);
+		sexy_url_label_set_markup (SEXY_URL_LABEL (widget), text);
+		gtk_widget_show (widget);
+		g_free (text);
+
 		/* set the tooltip to where we are going */
 		text = g_strdup_printf (_("Visit %s"), url);
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
-
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-		gtk_widget_set_sensitive (widget, TRUE);
 	} else {
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-		gtk_widget_set_sensitive (widget, FALSE);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
+		gtk_widget_hide (widget);
 	}
 
 	/* set the description */
@@ -832,8 +836,6 @@ gpk_application_refresh_search_results (GpkApplication *application)
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	gtk_widget_set_sensitive (widget, FALSE);
 	return TRUE;
 }
 
@@ -976,8 +978,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	/* hide details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* switch around buttons */
 	gpk_application_set_find_cancel_buttons (application, FALSE);
@@ -1470,13 +1470,13 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 }
 
 /**
- * gpk_application_button_homepage_cb:
+ * gpk_application_url_activated_cb:
  **/
 static void
-gpk_application_button_homepage_cb (GtkWidget *widget_button, GpkApplication *application)
+gpk_application_url_activated_cb (SexyUrlLabel *widget, gchar *url, GpkApplication *application)
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
-	gpk_gnome_open (application->priv->url);
+	gpk_gnome_open (url);
 }
 
 /**
@@ -1597,8 +1597,6 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	/* hide the details */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* clear the search text if we clicked the group list */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1687,8 +1685,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	/* hide stuff until we have data */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* only show run menuitem for installed programs */
 	ret = gpk_application_state_installed (state);
@@ -1754,6 +1750,9 @@ gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *na
 {
 	if (pk_strequal (name, "entry_text")) {
 		return sexy_icon_entry_new ();
+	}
+	if (pk_strequal (name, "label_homepage")) {
+		return sexy_url_label_new ();
 	}
 	if (pk_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
@@ -2598,11 +2597,10 @@ gpk_application_init (GpkApplication *application)
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
 	/* homepage */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_homepage_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Visit project homepage"));
-	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
+	g_signal_connect (widget, "url-activated",
+			  G_CALLBACK (gpk_application_url_activated_cb), application);
+	gtk_widget_hide (widget);
 
 	/* install */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
