@@ -450,31 +450,6 @@ out:
 }
 
 /**
- * gpk_client_progress_changed_cb:
- **/
-static void
-gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				guint elapsed, guint remaining, GpkClient *gclient)
-{
-	GtkWidget *widget;
-
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
-	if (gclient->priv->pulse_timer_id != 0) {
-		g_source_remove (gclient->priv->pulse_timer_id);
-		gclient->priv->pulse_timer_id = 0;
-	}
-
-	/* either pulse or set percentage */
-	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
-		gpk_client_make_progressbar_pulse (gclient);
-	} else {
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-	}
-}
-
-/**
  * gpk_client_pulse_progress:
  **/
 static gboolean
@@ -500,6 +475,31 @@ gpk_client_make_progressbar_pulse (GpkClient *gclient)
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
 		gclient->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_client_pulse_progress, gclient);
+	}
+}
+
+/**
+ * gpk_client_progress_changed_cb:
+ **/
+static void
+gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				guint elapsed, guint remaining, GpkClient *gclient)
+{
+	GtkWidget *widget;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
+	if (gclient->priv->pulse_timer_id != 0) {
+		g_source_remove (gclient->priv->pulse_timer_id);
+		gclient->priv->pulse_timer_id = 0;
+	}
+
+	/* either pulse or set percentage */
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		gpk_client_make_progressbar_pulse (gclient);
+	} else {
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 	}
 }
 
