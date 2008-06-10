@@ -466,7 +466,10 @@ gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subper
 		gclient->priv->pulse_timer_id = 0;
 	}
 
-	if (percentage != PK_CLIENT_PERCENTAGE_INVALID) {
+	/* either pulse or set percentage */
+	if (percentage == PK_CLIENT_PERCENTAGE_INVALID) {
+		gpk_client_make_progressbar_pulse (gclient);
+	} else {
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 	}
 }
