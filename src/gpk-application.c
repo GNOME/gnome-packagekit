@@ -1242,12 +1242,17 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	const gchar *icon;
 	gboolean checkbox;
 	GpkPackageState state;
+	gboolean ret;
 
 	/* get the selection and add */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	treeview = GTK_TREE_VIEW (widget);
 	selection = gtk_tree_view_get_selection (treeview);
-	gtk_tree_selection_get_selected (selection, &model, &iter);
+	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
+	if (!ret) {
+		pk_warning ("no selection");
+		return;
+	}
 
 	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
 
@@ -1409,11 +1414,10 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
+	GtkTreeSelection *selection;
 	GpkPackageState state;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	pk_warning ("method not yet safe");
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	treeview = GTK_TREE_VIEW (widget);
@@ -1426,6 +1430,11 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
 			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
+
+	/* enforce the selection in case we just fire at the checkbox without selecting */
+	selection = gtk_tree_view_get_selection (treeview);
+	gtk_tree_selection_select_iter (selection, &iter);
+
 	if (gpk_application_state_get_checkbox (state)) {
 		gpk_application_button_remove_cb (NULL, application);
 	} else {
