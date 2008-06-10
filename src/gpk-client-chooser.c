@@ -32,6 +32,7 @@
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-enum.h>
+#include <pk-extra.h>
 #include <pk-package-id.h>
 #include "gpk-gnome.h"
 #include "gpk-common.h"
@@ -172,7 +173,10 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkPackageItem *item;
+	PkPackageId *ident;
 	GtkTreeIter iter;
+	PkExtra *extra;
+	gboolean ret;
 	const gchar *icon_name;
 	gchar *text;
 	guint len;
@@ -237,6 +241,9 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
+	/* use PkExtra to get better icon */
+	extra = pk_extra_new ();
+
 	/* see what we've got already */
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
@@ -246,13 +253,26 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 		/* put formatted text into treeview */
 		gtk_list_store_append (list_store, &iter);
 		text = gpk_package_id_format_twoline (item->package_id, item->summary);
-		icon_name = gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE);
+
+		/* get the icon */
+		ident = pk_package_id_new_from_string (item->package_id);
+		icon_name = pk_extra_get_icon_name (extra, ident->name);
+		pk_package_id_free (ident);
+
+		/* check icon actually exists and is valid in this theme */
+		ret = gpk_check_icon_valid (icon_name);
+		if (!ret) {
+			icon_name = gpk_info_enum_to_icon_name (item->info);
+		}
+
 		gtk_list_store_set (list_store, &iter,
 				    GPK_CHOOSER_COLUMN_TEXT, text,
 				    GPK_CHOOSER_COLUMN_ID, item->package_id, -1);
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}
+
+	g_object_unref (extra);
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");

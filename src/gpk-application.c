@@ -532,7 +532,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	PkPackageId *ident;
 	const gchar *repo_name;
 	const gchar *icon;
-	gboolean valid = FALSE;
+	gboolean valid;
 	gboolean installed;
 	PkInfoEnum info;
 
@@ -551,10 +551,9 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 
 	/* get the icon */
 	icon = pk_extra_get_icon_name (application->priv->extra, ident->name);
-	if (icon != NULL) {
-		/* check icon actually exists and is valid in this theme */
-		valid = gpk_check_icon_valid (icon);
-	}
+
+	/* check icon actually exists and is valid in this theme */
+	valid = gpk_check_icon_valid (icon);
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
