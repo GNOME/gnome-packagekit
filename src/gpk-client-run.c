@@ -38,7 +38,7 @@
 
 static GtkListStore *list_store = NULL;
 static gchar *full_path = NULL;
-gchar *last_tryexec = NULL;
+static gchar *last_tryexec = NULL;
 
 enum
 {
@@ -65,7 +65,6 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
 {
 	/* clear full_path */
 	g_free (full_path);
-	g_free (last_tryexec);
 	full_path = NULL;
 	gtk_main_quit ();
 }
@@ -76,7 +75,6 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
 static void
 gpk_client_run_button_action_cb (GtkWidget *widget, gpointer data)
 {
-	g_free (last_tryexec);
 	gtk_main_quit ();
 }
 
@@ -325,6 +323,12 @@ gpk_client_run_show (gchar **package_ids)
 		goto out;
 	}
 
+	/* just one, so shortcut the UI */
+	if (len == 1) {
+		full_path = g_strdup (last_tryexec);
+		goto out;
+	}
+
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_widget_show (widget);
@@ -332,11 +336,15 @@ gpk_client_run_show (gchar **package_ids)
 	/* wait for button press */
 	gtk_main ();
 
+out:
+	g_free (last_tryexec);
+
 	/* hide window */
+	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	if (GTK_IS_WIDGET (widget)) {
 		gtk_widget_hide (widget);
 	}
-out:
+
 	g_object_unref (glade_xml);
 
 	return full_path;
