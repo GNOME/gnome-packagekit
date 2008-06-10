@@ -1690,6 +1690,11 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_homepage");
 	gtk_widget_set_sensitive (widget, FALSE);
 
+	/* only show run menuitem for installed programs */
+	ret = gpk_application_state_installed (state);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_run");
+	gtk_widget_set_sensitive (widget, ret);
+
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_details, &error);
 	if (!ret) {
