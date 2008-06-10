@@ -377,13 +377,6 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkSeparatorMenuItem" id="menuitem_sep">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">menuitem3</property>
-                        <property name="use_underline">True</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkImageMenuItem" id="menuitem_homepage">
                         <property name="visible">True</property>
                         <property name="tooltip" translatable="yes">Visit the project homepage</property>
@@ -485,24 +478,13 @@
         <child>
           <widget class="GtkToolbar" id="toolbar1">
             <property name="visible">True</property>
-            <property name="icon_size">GTK_ICON_SIZE_BUTTON</property>
+            <property name="icon_size">GTK_ICON_SIZE_SMALL_TOOLBAR</property>
             <child>
-              <widget class="GtkToolButton" id="toolbutton_list_add">
+              <widget class="GtkToolButton" id="toolbutton_remove">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Add to list</property>
+                <property name="label" translatable="yes">_Remove</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-add</property>
-              </widget>
-              <packing>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkToolButton" id="toolbutton_list_clear">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Clear list</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-clear</property>
+                <property name="stock_id">gtk-delete</property>
               </widget>
               <packing>
                 <property name="homogeneous">True</property>
@@ -516,7 +498,7 @@
             <child>
               <widget class="GtkToolButton" id="toolbutton_install">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Install packages</property>
+                <property name="label" translatable="yes">_Install</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-floppy</property>
               </widget>
@@ -525,11 +507,18 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkToolButton" id="toolbutton_remove">
+              <widget class="GtkToolButton" id="toolbutton_apply">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Remove packages</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-delete</property>
+                <property name="stock_id">gtk-apply</property>
+              </widget>
+              <packing>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkToolButton" id="toolbutton_clear">
+                <property name="visible">True</property>
+                <property name="stock_id">gtk-clear</property>
               </widget>
               <packing>
                 <property name="homogeneous">True</property>

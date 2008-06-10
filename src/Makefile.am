@@ -166,6 +166,8 @@ gpk_application_SOURCES =				\
 	gpk-application-main.c				\
 	gpk-application.c				\
 	gpk-application.h				\
+	gpk-application-state.c				\
+	gpk-application-state.h				\
 	$(shared_SOURCES)				\
 	$(NULL)
 
