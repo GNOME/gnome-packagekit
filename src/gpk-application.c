@@ -467,6 +467,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 {
 	GtkWidget *widget;
 	gchar *text;
+	gchar *value;
 	PkPackageId *ident;
 	const gchar *repo_name;
 	const gchar *icon;
@@ -484,7 +485,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	installed = pk_strequal (ident->data, "installed");
 
 	pk_debug ("details = %s:%i:%s:%s", package_id, group, detail, url);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_show (widget);
 
 	/* get the icon */
@@ -501,8 +502,9 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	}
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon, GTK_ICON_SIZE_DIALOG);
+	gtk_widget_show (widget);
 
-	/* homepage button? */
+	/* homepage */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 	if (pk_strzero (url) == FALSE) {
 		gtk_widget_show (widget);
@@ -524,43 +526,50 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
+	gtk_widget_hide (widget);
+
 	/* if non-zero, set the size */
 	if (size > 0) {
-		gchar *value;
-
-		/* change the label */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize_text");
-		if (installed) {
-			gtk_label_set_label (GTK_LABEL (widget), _("Installed size:"));
-		} else {
-			gtk_label_set_label (GTK_LABEL (widget), _("Download size:"));
-		}
-
 		/* set the size */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
 		value = gpk_size_to_si_size_text (size);
-		gtk_label_set_label (GTK_LABEL (widget), value);
+		if (installed) {
+			text = g_strdup_printf (_("Installed size: %s"), value);
+		} else {
+			text = g_strdup_printf (_("Download size: %s"), value);
+		}
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
 		g_free (value);
 
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		gtk_widget_show (widget);
+
+		/* and the containter */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 		gtk_widget_show (widget);
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
 		gtk_widget_hide (widget);
 	}
 
 	/* set the repo text, or hide if installed */
 	if (installed) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
 		gtk_widget_hide (widget);
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
-		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
+		gtk_widget_show (widget);
 
 		/* see if we can get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (application, ident->data);
-		gtk_label_set_label (GTK_LABEL (widget), repo_name);
+		text = g_strdup_printf (_("Source: %s"), repo_name);
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
+
+		/* and the containter */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
+		gtk_widget_show (widget);
 	}
 	pk_package_id_free (ident);
 }
@@ -756,7 +765,7 @@ gpk_application_refresh_search_results (GpkApplication *application)
 	}
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
 	return TRUE;
 }
@@ -898,7 +907,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	application->priv->has_package = FALSE;
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
 
 	/* switch around buttons */
@@ -1616,7 +1625,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* hide the details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
 
 	/* clear the search text if we clicked the group list */
@@ -1703,9 +1712,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gpk_application_set_text_buffer (widget, NULL);
 
-	/* show the box */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-	gtk_widget_show (widget);
+	/* hide stuff until we have data */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
+	gtk_widget_hide (widget);
 
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_details, &error);
@@ -2658,6 +2667,10 @@ gpk_application_init (GpkApplication *application)
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
+	gtk_widget_hide (widget);
 
 	/* installed filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
@@ -2724,15 +2737,6 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_both");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_description");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_source");
-	gtk_widget_hide (widget);
 
 	/* basename filter */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
