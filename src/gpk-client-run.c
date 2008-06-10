@@ -236,7 +236,7 @@ gpk_client_add_package_ids (gchar **package_ids)
 	gpk_client_show_progress (gclient, FALSE);
 	for (i=0; i<length; i++) {
 		package_id = package_ids[i];
-		pk_warning ("package_id=%s", package_id);
+		pk_debug ("package_id=%s", package_id);
 		files = gpk_client_get_file_list (gclient, package_ids[0], &error);
 		if (files == NULL) {
 			pk_warning ("could not get file list: %s", error->message);
