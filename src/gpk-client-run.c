@@ -150,8 +150,10 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 	gboolean ret;
 	gchar *icon = NULL;
 	gchar *text = NULL;
+	gchar *name = NULL;
 	gchar *exec = NULL;
 	gchar *summary = NULL;
+	gchar *joint = NULL;
 	GtkTreeIter iter;
 	GKeyFile *file;
 
@@ -182,17 +184,19 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 		g_free (last_tryexec);
 		last_tryexec = g_strdup (exec);
 
+		name = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
 		icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
 		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
 		/* try harder */
 		if (summary == NULL) {
-			summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
+			summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
 		}
 	}
 
 	/* put formatted text into treeview */
 	gtk_list_store_append (list_store, &iter);
-	text = gpk_package_id_format_twoline (package_id, summary);
+	joint = g_strdup_printf ("%s - %s", name, summary);
+	text = gpk_package_id_format_twoline (package_id, joint);
 
 	/* might not be valid */
 	if (!gpk_check_icon_valid (icon)) {
@@ -211,7 +215,9 @@ out:
 	g_key_file_free (file);
 	g_free (exec);
 	g_free (icon);
+	g_free (name);
 	g_free (text);
+	g_free (joint);
 	g_free (summary);
 }
 
@@ -247,7 +253,7 @@ gpk_client_add_package_ids (gchar **package_ids)
 		files_len = g_strv_length (files);
 		for (j=0; j<files_len; j++) {
 			if (g_str_has_suffix (files[j], ".desktop")) {
-				pk_warning ("package=%s, file=%s", package_id, files[j]);
+				pk_debug ("package=%s, file=%s", package_id, files[j]);
 				gpk_client_add_executable (package_id, files[j]);
 				added++;
 			}
