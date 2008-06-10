@@ -548,6 +548,18 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	/* do we force progress? */
+	if (status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
+	    status == PK_STATUS_ENUM_REFRESH_CACHE) {
+		gpk_client_show_progress (gclient, TRUE);
+		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+	}
+
 	/* set icon */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "image_status");
 	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_DIALOG);
