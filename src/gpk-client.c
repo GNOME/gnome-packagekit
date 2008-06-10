@@ -174,6 +174,37 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 }
 
 /**
+ * gpk_client_main_wait:
+ **/
+static gboolean
+gpk_client_main_wait (GpkClient *gclient)
+{
+	if (gclient->priv->gtk_main_waiting) {
+		pk_warning ("already started!");
+		return FALSE;
+	}
+	/* wait for completion */
+	gclient->priv->gtk_main_waiting = TRUE;
+	gtk_main ();
+	gclient->priv->gtk_main_waiting = FALSE;
+	return TRUE;
+}
+
+/**
+ * gpk_client_main_quit:
+ **/
+static gboolean
+gpk_client_main_quit (GpkClient *gclient)
+{
+	if (!gclient->priv->gtk_main_waiting) {
+		pk_warning ("not already started!");
+		return FALSE;
+	}
+	gtk_main_quit ();
+	return TRUE;
+}
+
+/**
  * gpk_client_updates_button_close_cb:
  **/
 static void
@@ -210,7 +241,9 @@ gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, G
 
 	/* go! */
 	gtk_widget_hide (widget);
-	gtk_main_quit ();
+
+	pk_debug ("quitting due to window close");
+	gpk_client_main_quit (gclient);
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
 }
@@ -231,7 +264,8 @@ gpk_install_finished_timeout (gpointer data)
 	/* the timer will be done */
 	gclient->priv->finished_timer_id = 0;
 
-	gtk_main_quit ();
+	pk_debug ("quitting due to timeout");
+	gpk_client_main_quit (gclient);
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
 }
@@ -444,8 +478,8 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 out:
 	/* only quit if there is not another transaction scheduled to be finished */
 	if (!gclient->priv->using_secondary_client) {
-		pk_debug ("quitting");
-		gtk_main_quit ();
+		pk_debug ("quitting due to finished");
+		gpk_client_main_quit (gclient);
 	}
 }
 
@@ -957,10 +991,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* do we need to try again with better auth? */
 	if (gclient->priv->retry_untrusted_value) {
@@ -1059,10 +1090,7 @@ skip_checks:
 	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -1149,10 +1177,7 @@ skip_checks:
 		goto out;
 	}
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -1608,10 +1633,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 		}
 	}
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -1676,10 +1698,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -1735,10 +1754,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* copy from client to local */
 	list = pk_client_get_package_list (gclient->priv->client_action);
@@ -1787,10 +1803,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -1855,10 +1868,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	gpk_client_set_progress_files (gclient, TRUE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
@@ -2121,10 +2131,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	}
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
-	/* wait for completion */
-	gclient->priv->gtk_main_waiting = TRUE;
-	gtk_main ();
-	gclient->priv->gtk_main_waiting = FALSE;
+	gpk_client_main_wait (gclient);
 
 	return TRUE;
 }
