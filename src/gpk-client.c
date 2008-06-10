@@ -2311,9 +2311,12 @@ gpk_client_finalize (GObject *object)
 	gclient = GPK_CLIENT (object);
 	g_return_if_fail (gclient->priv != NULL);
 
-	/* stop the timer if running */
+	/* stop the timers if running */
 	if (gclient->priv->finished_timer_id != 0) {
 		g_source_remove (gclient->priv->finished_timer_id);
+	}
+	if (gclient->priv->pulse_timer_id != 0) {
+		g_source_remove (gclient->priv->pulse_timer_id);
 	}
 
 	g_strfreev (gclient->priv->files_array);
