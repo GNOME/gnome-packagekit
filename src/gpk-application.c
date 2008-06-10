@@ -1652,7 +1652,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		gpk_application_allow_remove (application, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_filesize");
+		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 		gtk_widget_hide (widget);
 		return;
 	}
