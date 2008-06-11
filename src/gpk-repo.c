@@ -36,6 +36,7 @@
 #include <libunique.h>
 
 #include <pk-debug.h>
+#include <pk-common.h>
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-connection.h>
@@ -43,14 +44,12 @@
 #include <gpk-gnome.h>
 #include <gpk-common.h>
 #include <gpk-error.h>
-
-#include "gpk-statusbar.h"
+#include "gpk-animated-icon.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkRoleEnum roles;
-static GpkStatusbar *statusbar;
 static GConfClient *gconf_client;
 static gboolean show_details;
 
@@ -205,7 +204,27 @@ gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer
 static void
 gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
-	gpk_statusbar_set_status (statusbar, status);
+	const gchar *text;
+	GtkWidget *widget;
+
+	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "image_animation");
+		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
+		return;
+	}
+
+	/* set the text and show */
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (glade_xml, "label_animation");
+	text = gpk_status_enum_to_localised_text (status);
+	gtk_label_set_label (GTK_LABEL (widget), text);
+
+	/* set icon */
+	widget = glade_xml_get_widget (glade_xml, "image_animation");
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	gtk_widget_show (widget);
 }
 
 /**
@@ -284,6 +303,21 @@ gpk_repo_activated_cb (LibUnique *libunique, gpointer data)
 }
 
 /**
+ * gpk_repo_create_custom_widget:
+ **/
+static GtkWidget *
+gpk_repo_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
+			       gchar *string1, gchar *string2,
+			       gint int1, gint int2, gpointer user_data)
+{
+	if (pk_strequal (name, "image_animation")) {
+		return gpk_animated_icon_new ();
+	}
+	pk_warning ("name unknown='%s'", name);
+	return NULL;
+}
+
+/**
  * main:
  **/
 int
@@ -357,6 +391,9 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_repo_repo_list_changed_cb), NULL);
 	roles = pk_control_get_actions (control);
 
+	/* use custom widgets */
+	glade_set_custom_handler (gpk_repo_create_custom_widget, NULL);
+
 	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), "pk-package-sources");
@@ -395,11 +432,6 @@ main (int argc, char *argv[])
 	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* use the in-statusbar for progress */
-	statusbar = gpk_statusbar_new ();
-	widget = glade_xml_get_widget (glade_xml, "statusbar_status");
-	gpk_statusbar_set_widget (statusbar, widget);
-
 	/* show window */
 	gtk_widget_show (main_window);
 
@@ -427,7 +459,6 @@ main (int argc, char *argv[])
 	g_object_unref (gconf_client);
 	g_object_unref (client);
 	g_object_unref (control);
-	g_object_unref (statusbar);
 unique_out:
 	g_object_unref (libunique);
 

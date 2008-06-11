@@ -190,8 +190,6 @@ gpk_prefs_LDADD =					\
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
-	gpk-statusbar.c					\
-	gpk-statusbar.h					\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(shared_SOURCES)				\
@@ -203,8 +201,6 @@ gpk_update_viewer_LDADD =				\
 
 gpk_repo_SOURCES =					\
 	gpk-repo.c					\
-	gpk-statusbar.c					\
-	gpk-statusbar.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 
