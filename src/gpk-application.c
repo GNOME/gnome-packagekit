@@ -264,6 +264,189 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 }
 
 /**
+ * gpk_application_allow_install:
+ **/
+static void
+gpk_application_allow_install (GpkApplication *application, gboolean allow)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_install");
+	gtk_widget_set_sensitive (widget, allow);
+}
+
+/**
+ * gpk_application_allow_remove:
+ **/
+static void
+gpk_application_allow_remove (GpkApplication *application, gboolean allow)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_remove");
+	gtk_widget_set_sensitive (widget, allow);
+}
+
+/**
+ * gpk_application_packages_checkbox_invert:
+ **/
+static void
+gpk_application_packages_checkbox_invert (GpkApplication *application)
+{
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+	GtkWidget *widget;
+	const gchar *icon;
+	gboolean checkbox;
+	GpkPackageState state;
+	gboolean ret;
+
+	/* get the selection and add */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+	treeview = GTK_TREE_VIEW (widget);
+	selection = gtk_tree_view_get_selection (treeview);
+	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
+	if (!ret) {
+		pk_warning ("no selection");
+		return;
+	}
+
+	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
+
+	/* do something with the value */
+	gpk_application_state_invert (&state);
+
+	/* get the new icon */
+	icon = gpk_application_state_get_icon (state);
+	checkbox = gpk_application_state_get_checkbox (state);
+
+	/* set new value */
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			    PACKAGES_COLUMN_STATE, state,
+			    PACKAGES_COLUMN_CHECKBOX, checkbox,
+			    PACKAGES_COLUMN_IMAGE, icon,
+			    -1);
+}
+
+/**
+ * gpk_application_get_checkbox_enable:
+ **/
+static gboolean
+gpk_application_get_checkbox_enable (GpkApplication *application, GpkPackageState state)
+{
+	gboolean enable_installed = TRUE;
+	gboolean enable_available = TRUE;
+
+	if (application->priv->action == PK_ACTION_INSTALL) {
+		enable_installed = FALSE;
+	} else if (application->priv->action == PK_ACTION_REMOVE) {
+		enable_available = FALSE;
+	}
+
+	if (gpk_application_state_installed (state)) {
+		return enable_installed;
+	}
+	return enable_available;
+}
+
+/**
+ * gpk_application_set_buttons_apply_clear:
+ **/
+static void
+gpk_application_set_buttons_apply_clear (GpkApplication *application)
+{
+	GtkWidget *widget;
+	GtkTreeView *treeview;
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GpkPackageState state;
+	gboolean enabled;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* okay to apply? */
+	if (application->priv->package_list->len == 0) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
+		gtk_widget_set_sensitive (widget, FALSE);
+		application->priv->action = PK_ACTION_NONE;
+	} else {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
+		gtk_widget_set_sensitive (widget, TRUE);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
+		gtk_widget_set_sensitive (widget, TRUE);
+	}
+
+	/* correct the enabled state */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+	treeview = GTK_TREE_VIEW (widget);
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+
+	/* for all current items, reset the state if in the list */
+	while (valid) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
+		enabled = gpk_application_get_checkbox_enable (application, state);
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_ENABLE, enabled, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
+ * gpk_application_install:
+ **/
+static gboolean
+gpk_application_install (GpkApplication *application)
+{
+	gboolean ret;
+	guint index;
+
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+
+	/* shouldn't be possible */
+	if (application->priv->package == NULL) {
+		pk_warning ("no package");
+		return FALSE;
+	}
+
+	/* changed mind, or wrong mode */
+	if (application->priv->action == PK_ACTION_REMOVE) {
+		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
+		if (ret) {
+			pk_debug ("removed %s from package list", application->priv->package);
+
+			/* correct buttons */
+			gpk_application_allow_install (application, FALSE);
+			gpk_application_allow_remove (application, TRUE);
+			gpk_application_packages_checkbox_invert (application);
+			gpk_application_set_buttons_apply_clear (application);
+			return TRUE;
+		}
+		pk_warning ("wrong mode and not in list");
+		return FALSE;
+	}
+
+	/* already added */
+	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
+	if (index != -1) {
+		pk_warning ("already added");
+		return FALSE;
+	}
+
+	application->priv->action = PK_ACTION_INSTALL;
+	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+
+	/* correct buttons */
+	gpk_application_allow_install (application, FALSE);
+	gpk_application_allow_remove (application, TRUE);
+	gpk_application_packages_checkbox_invert (application);
+	gpk_application_set_buttons_apply_clear (application);
+	return TRUE;
+}
+
+/**
  * gpk_application_menu_homepage_cb:
  **/
 static void
@@ -337,8 +520,57 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	g_strfreev (files);
 }
 
-static void gpk_application_button_install_cb (GtkWidget *widget_button, GpkApplication *application);
-static void gpk_application_button_remove_cb (GtkWidget *widget_button, GpkApplication *application);
+/**
+ * gpk_application_remove:
+ **/
+static gboolean
+gpk_application_remove (GpkApplication *application)
+{
+	gboolean ret;
+	guint index;
+
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+
+	/* shouldn't be possible */
+	if (application->priv->package == NULL) {
+		pk_warning ("no package");
+		return FALSE;
+	}
+
+	/* changed mind, or wrong mode */
+	if (application->priv->action == PK_ACTION_INSTALL) {
+		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
+		if (ret) {
+			pk_debug ("removed %s from package list", application->priv->package);
+
+			/* correct buttons */
+			gpk_application_allow_install (application, TRUE);
+			gpk_application_allow_remove (application, FALSE);
+			gpk_application_packages_checkbox_invert (application);
+			gpk_application_set_buttons_apply_clear (application);
+			return TRUE;
+		}
+		pk_warning ("wrong mode and not in list");
+		return FALSE;
+	}
+
+	/* already added */
+	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
+	if (index != -1) {
+		pk_warning ("already added");
+		return FALSE;
+	}
+
+	application->priv->action = PK_ACTION_REMOVE;
+	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+
+	/* correct buttons */
+	gpk_application_allow_install (application, TRUE);
+	gpk_application_allow_remove (application, FALSE);
+	gpk_application_packages_checkbox_invert (application);
+	gpk_application_set_buttons_apply_clear (application);
+	return TRUE;
+}
 
 /**
  * gpk_application_menu_install_cb:
@@ -346,7 +578,7 @@ static void gpk_application_button_remove_cb (GtkWidget *widget_button, GpkAppli
 static void
 gpk_application_menu_install_cb (GtkAction *action, GpkApplication *application)
 {
-	gpk_application_button_install_cb (NULL, application);
+	gpk_application_install (application);
 }
 
 /**
@@ -355,7 +587,7 @@ gpk_application_menu_install_cb (GtkAction *action, GpkApplication *application)
 static void
 gpk_application_menu_remove_cb (GtkAction *action, GpkApplication *application)
 {
-	gpk_application_button_remove_cb (NULL, application);
+	gpk_application_remove (application);
 }
 
 /**
@@ -641,66 +873,6 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		gtk_widget_show (widget);
 	}
 	pk_package_id_free (ident);
-}
-
-static gint
-pk_ptr_array_find_string (GPtrArray *array, const gchar *string)
-{
-	gint i;
-	gchar *item;
-
-	g_return_val_if_fail (array != NULL, FALSE);
-	g_return_val_if_fail (string != NULL, FALSE);
-
-	for (i=0; i<array->len; i++) {
-		item = (gchar *) g_ptr_array_index (array, i);
-		if (pk_strequal (string, item)) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-static gboolean
-pk_ptr_array_remove_string (GPtrArray *array, const gchar *string)
-{
-	guint i;
-	gchar *item;
-	gboolean ret = FALSE;
-
-	g_return_val_if_fail (array != NULL, FALSE);
-	g_return_val_if_fail (string != NULL, FALSE);
-
-	for (i=0; i<array->len; i++) {
-		item = (gchar *) g_ptr_array_index (array, i);
-		if (pk_strequal (string, item)) {
-			g_free (item);
-			g_ptr_array_remove_index (array, i);
-			ret = TRUE;
-		}
-	}
-	return ret;
-}
-
-/**
- * gpk_application_get_checkbox_enable:
- **/
-static gboolean
-gpk_application_get_checkbox_enable (GpkApplication *application, GpkPackageState state)
-{
-	gboolean enable_installed = TRUE;
-	gboolean enable_available = TRUE;
-
-	if (application->priv->action == PK_ACTION_INSTALL) {
-		enable_installed = FALSE;
-	} else if (application->priv->action == PK_ACTION_REMOVE) {
-		enable_available = FALSE;
-	}
-
-	if (gpk_application_state_installed (state)) {
-		return enable_installed;
-	}
-	return enable_available;
 }
 
 /**
@@ -1155,224 +1327,6 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 }
 
 /**
- * gpk_application_set_buttons_apply_clear:
- **/
-static void
-gpk_application_set_buttons_apply_clear (GpkApplication *application)
-{
-	GtkWidget *widget;
-	GtkTreeView *treeview;
-	gboolean valid;
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	GpkPackageState state;
-	gboolean enabled;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* okay to apply? */
-	if (application->priv->package_list->len == 0) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
-		gtk_widget_set_sensitive (widget, FALSE);
-		application->priv->action = PK_ACTION_NONE;
-	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
-		gtk_widget_set_sensitive (widget, TRUE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
-		gtk_widget_set_sensitive (widget, TRUE);
-	}
-
-	/* correct the enabled state */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
-	model = gtk_tree_view_get_model (treeview);
-	valid = gtk_tree_model_get_iter_first (model, &iter);
-
-	/* for all current items, reset the state if in the list */
-	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
-		enabled = gpk_application_get_checkbox_enable (application, state);
-		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_ENABLE, enabled, -1);
-		valid = gtk_tree_model_iter_next (model, &iter);
-	}
-}
-
-/**
- * gpk_application_packages_checkbox_invert:
- **/
-static void
-gpk_application_packages_checkbox_invert (GpkApplication *application)
-{
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	GtkTreeSelection *selection;
-	GtkWidget *widget;
-	const gchar *icon;
-	gboolean checkbox;
-	GpkPackageState state;
-	gboolean ret;
-
-	/* get the selection and add */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
-	selection = gtk_tree_view_get_selection (treeview);
-	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
-	if (!ret) {
-		pk_warning ("no selection");
-		return;
-	}
-
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
-
-	/* do something with the value */
-	gpk_application_state_invert (&state);
-
-	/* get the new icon */
-	icon = gpk_application_state_get_icon (state);
-	checkbox = gpk_application_state_get_checkbox (state);
-
-	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			    PACKAGES_COLUMN_STATE, state,
-			    PACKAGES_COLUMN_CHECKBOX, checkbox,
-			    PACKAGES_COLUMN_IMAGE, icon,
-			    -1);
-}
-
-/**
- * gpk_application_allow_install:
- **/
-static void
-gpk_application_allow_install (GpkApplication *application, gboolean allow)
-{
-	GtkWidget *widget;
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
-	gtk_widget_set_sensitive (widget, allow);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_install");
-	gtk_widget_set_sensitive (widget, allow);
-}
-
-/**
- * gpk_application_allow_remove:
- **/
-static void
-gpk_application_allow_remove (GpkApplication *application, gboolean allow)
-{
-	GtkWidget *widget;
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-	gtk_widget_set_sensitive (widget, allow);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_remove");
-	gtk_widget_set_sensitive (widget, allow);
-}
-
-/**
- * gpk_application_button_remove_cb:
- **/
-static void
-gpk_application_button_remove_cb (GtkWidget *widget_button, GpkApplication *application)
-{
-	gboolean ret;
-	guint index;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* shouldn't be possible */
-	if (application->priv->package == NULL) {
-		pk_warning ("no package");
-		return;
-	}
-
-	/* changed mind, or wrong mode */
-	if (application->priv->action == PK_ACTION_INSTALL) {
-		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
-		if (ret) {
-			pk_debug ("removed %s from package list", application->priv->package);
-
-			/* correct buttons */
-			gpk_application_allow_install (application, TRUE);
-			gpk_application_allow_remove (application, FALSE);
-			gpk_application_packages_checkbox_invert (application);
-			gpk_application_set_buttons_apply_clear (application);
-			return;
-		}
-		pk_warning ("wrong mode and not in list");
-		return;
-	}
-
-	/* already added */
-	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
-	if (index != -1) {
-		pk_warning ("already added");
-		return;
-	}
-
-	application->priv->action = PK_ACTION_REMOVE;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
-
-	/* correct buttons */
-	gpk_application_allow_install (application, TRUE);
-	gpk_application_allow_remove (application, FALSE);
-	gpk_application_packages_checkbox_invert (application);
-	gpk_application_set_buttons_apply_clear (application);
-}
-
-/**
- * gpk_application_button_install_cb:
- **/
-static void
-gpk_application_button_install_cb (GtkWidget *widget_button, GpkApplication *application)
-{
-	gboolean ret;
-	guint index;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* shouldn't be possible */
-	if (application->priv->package == NULL) {
-		pk_warning ("no package");
-		return;
-	}
-
-	/* changed mind, or wrong mode */
-	if (application->priv->action == PK_ACTION_REMOVE) {
-		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
-		if (ret) {
-			pk_debug ("removed %s from package list", application->priv->package);
-
-			/* correct buttons */
-			gpk_application_allow_install (application, FALSE);
-			gpk_application_allow_remove (application, TRUE);
-			gpk_application_packages_checkbox_invert (application);
-			gpk_application_set_buttons_apply_clear (application);
-			return;
-		}
-		pk_warning ("wrong mode and not in list");
-		return;
-	}
-
-	/* already added */
-	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
-	if (index != -1) {
-		pk_warning ("already added");
-		return;
-	}
-
-	application->priv->action = PK_ACTION_INSTALL;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
-
-	/* correct buttons */
-	gpk_application_allow_install (application, FALSE);
-	gpk_application_allow_remove (application, TRUE);
-	gpk_application_packages_checkbox_invert (application);
-	gpk_application_set_buttons_apply_clear (application);
-}
-
-/**
  * gpk_application_packages_installed_clicked_cb:
  **/
 static void
@@ -1406,9 +1360,9 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 	gtk_tree_selection_select_iter (selection, &iter);
 
 	if (gpk_application_state_get_checkbox (state)) {
-		gpk_application_button_remove_cb (NULL, application);
+		gpk_application_remove (application);
 	} else {
-		gpk_application_button_install_cb (NULL, application);
+		gpk_application_install (application);
 	}
 	gtk_tree_path_free (path);
 }
@@ -2412,9 +2366,9 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 			    PACKAGES_COLUMN_STATE, &state,
 			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
 	if (gpk_application_state_get_checkbox (state)) {
-		gpk_application_button_remove_cb (NULL, application);
+		gpk_application_remove (application);
 	} else {
-		gpk_application_button_install_cb (NULL, application);
+		gpk_application_install (application);
 	}
 }
 
@@ -2575,20 +2529,6 @@ gpk_application_init (GpkApplication *application)
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (gpk_application_delete_event_cb), application);
-
-	/* install */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_install");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_install_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Add current selection"));
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* remove */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_remove");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_remove_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Remove current selection"));
-	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* clear */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
