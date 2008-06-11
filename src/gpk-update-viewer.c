@@ -49,7 +49,6 @@
 #include <gpk-gnome.h>
 #include <gpk-error.h>
 
-#include "gpk-statusbar.h"
 #include "gpk-consolekit.h"
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-animated-icon.h"
