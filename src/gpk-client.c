@@ -478,13 +478,6 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 		gtk_widget_hide (widget);
 	}
 
-	/* make insensitive */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* set to 100% */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
 out:
 	/* only quit if there is not another transaction scheduled to be finished */
 	if (!gclient->priv->using_secondary_client) {
@@ -583,8 +576,26 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 	gtk_label_set_markup (GTK_LABEL (widget), text);
 	g_free (text);
 
+	/* spin */
 	if (status == PK_STATUS_ENUM_WAIT) {
 		gpk_client_make_progressbar_pulse (gclient);
+	}
+
+	/* do visual stuff when finished */
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		/* make insensitive */
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
+		gtk_widget_set_sensitive (widget, FALSE);
+
+		/* stop spinning */
+		if (gclient->priv->pulse_timer_id != 0) {
+			g_source_remove (gclient->priv->pulse_timer_id);
+			gclient->priv->pulse_timer_id = 0;
+		}
+
+		/* set to 100% */
+		widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
 	}
 }
 
