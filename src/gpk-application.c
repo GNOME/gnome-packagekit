@@ -28,7 +28,6 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libsexy/sexy-icon-entry.h>
-#include <libsexy/sexy-url-label.h>
 #include <math.h>
 #include <string.h>
 #include <locale.h>
@@ -54,6 +53,7 @@
 #include "gpk-animated-icon.h"
 #include "gpk-client-run.h"
 #include "gpk-client-chooser.h"
+#include "gpk-cell-renderer-uri.h"
 
 static void     gpk_application_class_init (GpkApplicationClass *klass);
 static void     gpk_application_init       (GpkApplication      *application);
@@ -89,6 +89,7 @@ struct GpkApplicationPrivate
 	GConfClient		*gconf_client;
 	GtkListStore		*packages_store;
 	GtkListStore		*groups_store;
+	GtkListStore		*details_store;
 	PkControl		*control;
 	PkClient		*client_search;
 	PkClient		*client_action;
@@ -134,6 +135,13 @@ enum
 	GROUPS_COLUMN_NAME,
 	GROUPS_COLUMN_ID,
 	GROUPS_COLUMN_LAST
+};
+
+enum {
+	DETAIL_COLUMN_TITLE,
+	DETAIL_COLUMN_TEXT,
+	DETAIL_COLUMN_URI,
+	DETAIL_COLUMN_LAST
 };
 
 static guint	     signals [LAST_SIGNAL] = { 0 };
@@ -751,11 +759,41 @@ gpk_application_get_full_repo_name (GpkApplication *application, const gchar *da
 }
 
 /**
+ * gpk_application_add_detail_item:
+ **/
+static void
+gpk_application_add_detail_item (GpkApplication *application, const gchar *title, const gchar *text, const gchar *uri)
+{
+	gchar *markup;
+	GtkWidget *tree_view;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+
+	/* format */
+	markup = g_strdup_printf ("<b>%s:</b>", title);
+
+	pk_debug ("%s %s %s", markup, text, uri);
+	gtk_list_store_append (application->priv->details_store, &iter);
+	gtk_list_store_set (application->priv->details_store, &iter,
+			    DETAIL_COLUMN_TITLE, markup,
+			    DETAIL_COLUMN_TEXT, text,
+			    DETAIL_COLUMN_URI, uri,
+			    -1);
+
+	g_free (markup);
+
+	tree_view = glade_xml_get_widget (application->priv->glade_xml, "treeview_detail");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
+}
+
+/**
  * gpk_application_details_cb:
  **/
 static void
 gpk_application_details_cb (PkClient *client, const gchar *package_id,
-			    const gchar *license, PkGroupEnum group,
+			    const gchar *license, PkGroupEnum group_enum,
 			    const gchar *detail, const gchar *url,
 			    guint64 size, GpkApplication *application)
 {
@@ -765,6 +803,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	PkPackageId *ident;
 	const gchar *repo_name;
 	const gchar *icon;
+	const gchar *group;
 	gboolean valid;
 	gboolean installed;
 	PkInfoEnum info;
@@ -777,10 +816,6 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		return;
 	}
 	installed = pk_strequal (ident->data, "installed");
-
-	pk_debug ("details = %s:%i:%s:%s", package_id, group, detail, url);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_show (widget);
 
 	/* get the icon */
 	icon = pk_extra_get_icon_name (application->priv->extra, ident->name);
@@ -797,28 +832,39 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon, GTK_ICON_SIZE_DIALOG);
 	gtk_widget_show (widget);
 
+	gtk_list_store_clear (application->priv->details_store);
+
 	/* homepage */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 	if (pk_strzero (url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
-		g_free (application->priv->url);
-		/* save the url for the button */
-		application->priv->url = g_strdup (url);
-
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
-		text = g_strdup_printf ("<a href=\"%s\">Project website</a>", url);
-		sexy_url_label_set_markup (SEXY_URL_LABEL (widget), text);
-		gtk_widget_show (widget);
-		g_free (text);
 
 		/* set the tooltip to where we are going */
 		text = g_strdup_printf (_("Visit %s"), url);
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
+
+		gpk_application_add_detail_item (application, _("Project"), _("Hompage"), url);
+
+		/* save the url for the button */
+		g_free (application->priv->url);
+		application->priv->url = g_strdup (url);
+
 	} else {
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
-		gtk_widget_hide (widget);
+	}
+
+	/* group */
+	if (TRUE || group_enum != PK_GROUP_ENUM_UNKNOWN) {
+		group = gpk_group_enum_to_localised_text (group_enum);
+		gpk_application_add_detail_item (application, _("Group"), group, NULL);
+	}
+
+	/* group */
+	if (!pk_strzero (license)) {
+		/* This should be a licence enum value - bad API, bad.
+		 * license = pk_license_enum_to_text (license_enum); */
+		gpk_application_add_detail_item (application, _("License"), license, NULL);
 	}
 
 	/* set the description */
@@ -827,50 +873,23 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_hide (widget);
-
 	/* if non-zero, set the size */
 	if (size > 0) {
 		/* set the size */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
 		value = gpk_size_to_si_size_text (size);
 		if (installed) {
-			text = g_strdup_printf (_("Installed size: %s"), value);
+			gpk_application_add_detail_item (application, _("Installed size"), value, NULL);
 		} else {
-			text = g_strdup_printf (_("Download size: %s"), value);
+			gpk_application_add_detail_item (application, _("Download size"), value, NULL);
 		}
-		gtk_label_set_label (GTK_LABEL (widget), text);
-		g_free (text);
 		g_free (value);
-
-		gtk_widget_show (widget);
-
-		/* and the containter */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-		gtk_widget_show (widget);
-	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_filesize");
-		gtk_widget_hide (widget);
 	}
 
 	/* set the repo text, or hide if installed */
-	if (installed) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
-		gtk_widget_hide (widget);
-	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "label_source");
-		gtk_widget_show (widget);
-
+	if (!installed) {
 		/* see if we can get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (application, ident->data);
-		text = g_strdup_printf (_("Source: %s"), repo_name);
-		gtk_label_set_label (GTK_LABEL (widget), text);
-		g_free (text);
-
-		/* and the containter */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-		gtk_widget_show (widget);
+		gpk_application_add_detail_item (application, _("Source"), repo_name, NULL);
 	}
 	pk_package_id_free (ident);
 }
@@ -985,7 +1004,6 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 static gboolean
 gpk_application_refresh_search_results (GpkApplication *application)
 {
-	GtkWidget *widget;
 	gboolean ret;
 	GError *error = NULL;
 	PkRoleEnum role;
@@ -1006,8 +1024,7 @@ gpk_application_refresh_search_results (GpkApplication *application)
 	}
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_hide (widget);
+	gtk_list_store_clear (application->priv->details_store);
 	return TRUE;
 }
 
@@ -1148,8 +1165,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	application->priv->has_package = FALSE;
 
 	/* hide details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_hide (widget);
+	gtk_list_store_clear (application->priv->details_store);
 
 	/* switch around buttons */
 	gpk_application_set_find_cancel_buttons (application, FALSE);
@@ -1424,16 +1440,6 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 }
 
 /**
- * gpk_application_url_activated_cb:
- **/
-static void
-gpk_application_url_activated_cb (SexyUrlLabel *widget, gchar *url, GpkApplication *application)
-{
-	g_return_if_fail (PK_IS_APPLICATION (application));
-	gpk_gnome_open (url);
-}
-
-/**
  * gpk_application_button_apply_cb:
  **/
 static void
@@ -1549,8 +1555,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* hide the details */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_hide (widget);
+	gtk_list_store_clear (application->priv->details_store);
 
 	/* clear the search text if we clicked the group list */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1604,8 +1609,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		gpk_application_allow_remove (application, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-		gtk_widget_hide (widget);
+		gtk_list_store_clear (application->priv->details_store);
 		return;
 	}
 
@@ -1637,8 +1641,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gpk_application_set_text_buffer (widget, NULL);
 
 	/* hide stuff until we have data */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
-	gtk_widget_hide (widget);
+	gtk_list_store_clear (application->priv->details_store);
 
 	/* only show run menuitem for installed programs */
 	ret = gpk_application_state_installed (state);
@@ -1704,9 +1707,6 @@ gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *na
 {
 	if (pk_strequal (name, "entry_text")) {
 		return sexy_icon_entry_new ();
-	}
-	if (pk_strequal (name, "label_homepage")) {
-		return sexy_url_label_new ();
 	}
 	if (pk_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
@@ -2405,6 +2405,45 @@ pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
 }
 
 /**
+ * gpk_application_treeview_renderer_clicked:
+ **/
+static void
+gpk_application_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, GpkApplication *application)
+{
+	pk_debug ("clicked %s", uri);
+	gpk_gnome_open (uri);
+}
+
+/**
+ * gpk_application_treeview_add_columns_description:
+ **/
+static void
+gpk_application_treeview_add_columns_description (GpkApplication *application)
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeView *treeview;
+
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (application->priv->glade_xml, "treeview_detail"));
+
+	/* title */
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "markup", DETAIL_COLUMN_TITLE);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* column for uris */
+	renderer = gpk_cell_renderer_uri_new ();
+	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_application_treeview_renderer_clicked), application);
+	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
+							   "text", DETAIL_COLUMN_TEXT,
+							   "uri", DETAIL_COLUMN_URI, NULL);
+	gtk_tree_view_append_column (treeview, column);
+	gtk_tree_view_columns_autosize (treeview);
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2536,12 +2575,6 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_button_clear_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
-	/* homepage */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "label_homepage");
-	g_signal_connect (widget, "url-activated",
-			  G_CALLBACK (gpk_application_url_activated_cb), application);
-	gtk_widget_hide (widget);
-
 	/* install */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
@@ -2595,8 +2628,6 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 	gtk_widget_hide (widget);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
-	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "vbox_detail_extra");
 	gtk_widget_hide (widget);
 
 	/* installed filter */
@@ -2838,6 +2869,21 @@ gpk_application_init (GpkApplication *application)
 							      G_TYPE_STRING,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING);
+	application->priv->details_store = gtk_list_store_new (DETAIL_COLUMN_LAST,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
+
+	/* use a list store for the extra data */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_detail");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (application->priv->details_store));
+
+	/* add columns to the tree view */
+	gpk_application_treeview_add_columns_description (application);
+
+	/* make bigger than 1x1 */
+	gpk_application_add_detail_item (application, "foo", "bar", NULL);
+	gtk_list_store_clear (application->priv->details_store);
 
 	/* unsorted */
 	gpk_application_treeview_set_sorted (application, FALSE);
@@ -2922,6 +2968,7 @@ gpk_application_finalize (GObject *object)
 
 	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
+	g_object_unref (application->priv->details_store);
 	g_object_unref (application->priv->control);
 	g_object_unref (application->priv->client_search);
 	g_object_unref (application->priv->client_action);
