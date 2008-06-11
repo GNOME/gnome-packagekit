@@ -176,7 +176,7 @@ gpk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	gtk_widget_hide (widget);
 
 	gpk_update_viewer_set_page (PAGE_LAST);
-	gpk_client_show_progress (gclient, TRUE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	ret = gpk_client_update_system (gclient, NULL);
 
 	/* did we succeed updating the system */
@@ -255,7 +255,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	gpk_update_viewer_set_page (PAGE_LAST);
 	package_ids = pk_package_ids_from_array (array);
-	gpk_client_show_progress (gclient, TRUE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	ret = gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
 
@@ -377,7 +377,7 @@ gpk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	GError *error = NULL;
 
 	/* refresh the cache */
-	gpk_client_show_progress (gclient, TRUE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
 	ret = gpk_client_refresh_cache (gclient, &error);
 	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
@@ -567,7 +567,7 @@ gpk_update_viewer_get_new_update_list (void)
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
 
-	gpk_client_show_progress (gclient, FALSE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
 	list = gpk_client_get_updates (gclient, &error);
 	if (list == NULL) {
 		pk_warning ("failed: %s", error->message);

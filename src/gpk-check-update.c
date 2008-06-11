@@ -321,8 +321,7 @@ gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	gpk_client_show_finished (cupdate->priv->gclient, TRUE);
-	gpk_client_show_progress (cupdate->priv->gclient, TRUE);
+	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	gpk_check_update_update_system (cupdate);
 }
 
@@ -403,8 +402,7 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
-		gpk_client_show_finished (cupdate->priv->gclient, FALSE);
-		gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
 		if (!ret) {
 			pk_warning ("Individual updates failed: %s", error->message);
@@ -670,8 +668,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	}
 
 	/* get updates */
-	gpk_client_show_finished (cupdate->priv->gclient, FALSE);
-	gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 	cupdate->priv->get_updates_in_progress = TRUE;
 	list = gpk_client_get_updates (cupdate->priv->gclient, &error);
 	cupdate->priv->get_updates_in_progress = FALSE;
@@ -763,8 +760,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
-		gpk_client_show_finished (cupdate->priv->gclient, FALSE);
-		gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
 		if (!ret) {
 			pk_warning ("Individual updates failed: %s", error->message);
@@ -777,8 +773,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* just do everything */
 	if (update == PK_UPDATE_ENUM_ALL) {
 		pk_debug ("we should do the update automatically!");
-		gpk_client_show_finished (cupdate->priv->gclient, FALSE);
-		gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
 		goto out;
 	}
@@ -874,8 +869,7 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	cupdate->priv->cache_okay = TRUE;
 
 	/* use the gnome helper to refresh the cache */
-	gpk_client_show_finished (cupdate->priv->gclient, FALSE);
-	gpk_client_show_progress (cupdate->priv->gclient, FALSE);
+	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 	ret = gpk_client_refresh_cache (cupdate->priv->gclient, NULL);
 	if (!ret) {
 		/* we failed to get the cache */
@@ -941,8 +935,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	/* install stuff using the gnome helpers */
 	cupdate->priv->gclient = gpk_client_new ();
-	gpk_client_show_finished (cupdate->priv->gclient, TRUE);
-	gpk_client_show_progress (cupdate->priv->gclient, TRUE);
 
 	cupdate->priv->pconnection = pk_connection_new ();
 	g_signal_connect (cupdate->priv->pconnection, "connection-changed",

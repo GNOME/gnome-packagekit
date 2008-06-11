@@ -48,6 +48,17 @@ typedef enum
 	GPK_CLIENT_ERROR_FAILED
 } GpkClientError;
 
+/**
+ * GpkClientInteract:
+ */
+typedef enum
+{
+	GPK_CLIENT_INTERACT_ALWAYS,
+	GPK_CLIENT_INTERACT_SOMETIMES,
+	GPK_CLIENT_INTERACT_NEVER,
+	GPK_CLIENT_INTERACT_UNKNOWN
+} GpkClientInteract;
+
 typedef struct _GpkClientPrivate	 GpkClientPrivate;
 typedef struct _GpkClient		 GpkClient;
 typedef struct _GpkClientClass		 GpkClientClass;
@@ -97,8 +108,8 @@ gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
 							 GError		**error);
 void		 gpk_client_show_finished		(GpkClient	*gclient,
 							 gboolean	 enabled);
-void		 gpk_client_show_progress		(GpkClient	*gclient,
-							 gboolean	 enabled);
+void		 gpk_client_set_interaction		(GpkClient	*gclient,
+							 GpkClientInteract interact);
 PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
 gchar		**gpk_client_get_file_list		(GpkClient	*gclient,

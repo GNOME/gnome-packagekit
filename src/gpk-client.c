@@ -86,6 +86,7 @@ struct _GpkClientPrivate
 	gboolean		 show_finished;
 	gboolean		 show_progress;
 	gboolean		 show_progress_files;
+	GpkClientInteract	 interact;
 	gboolean		 gtk_main_waiting;
 	gchar			**files_array;
 	PkExitEnum		 exit;
@@ -272,6 +273,8 @@ gpk_install_finished_timeout (gpointer data)
 
 /**
  * gpk_client_show_finished:
+ *
+ * You probably don't need to use this function, use gpk_client_set_interaction() instead
  **/
 void
 gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
@@ -281,13 +284,20 @@ gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
 }
 
 /**
- * gpk_client_show_progress:
+ * gpk_client_set_interaction:
  **/
 void
-gpk_client_show_progress (GpkClient *gclient, gboolean enabled)
+gpk_client_set_interaction (GpkClient *gclient, GpkClientInteract interact)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gclient->priv->show_progress = enabled;
+	gclient->priv->interact = interact;
+	/* only start showing if we always show */
+	gclient->priv->show_progress = (interact == GPK_CLIENT_INTERACT_ALWAYS);
+
+	/* normally, if we don't want to show progress then we don't want finished */
+	if (gclient->priv->show_progress) {
+		gclient->priv->show_finished = FALSE;
+	}
 }
 
 /**
@@ -549,15 +559,17 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
 	/* do we force progress? */
-	if (status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
-	    status == PK_STATUS_ENUM_REFRESH_CACHE) {
-		gpk_client_show_progress (gclient, TRUE);
-		gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+	if (gclient->priv->interact == GPK_CLIENT_INTERACT_SOMETIMES) {
+		if (status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
+		    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
+		    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
+		    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
+		    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
+		    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
+		    status == PK_STATUS_ENUM_REFRESH_CACHE) {
+			gclient->priv->show_progress = TRUE;
+			gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+		}
 	}
 
 	/* set icon */
@@ -2214,6 +2226,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->gtk_main_waiting = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
+	gclient->priv->interact = GPK_CLIENT_INTERACT_NEVER;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->show_progress_files = TRUE;

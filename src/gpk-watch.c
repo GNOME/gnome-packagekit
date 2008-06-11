@@ -646,8 +646,8 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	pk_debug ("refresh cache");
+	gpk_client_set_interaction (watch->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	gpk_client_show_finished (watch->priv->gclient, FALSE);
-	gpk_client_show_progress (watch->priv->gclient, FALSE);
 	ret = gpk_client_refresh_cache (watch->priv->gclient, &error);
 	if (!ret) {
 		pk_warning ("%s", error->message);
