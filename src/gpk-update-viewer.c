@@ -844,11 +844,9 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	/* reboot */
 	if (restart == PK_RESTART_ENUM_SESSION ||
 	    restart == PK_RESTART_ENUM_SYSTEM) {
-		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
-		gtk_widget_show (widget);
-	} else {
-		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
-		gtk_widget_hide (widget);
+		info_text = gpk_restart_enum_to_localised_text (restart);
+		/* translators: this is a notice a restart might be required */
+		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
 	}
 }
 
@@ -1014,9 +1012,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 		/* clear and display animation until new details come in */
 		gpk_update_viewer_description_animation_start ();
-
-		widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
-		gtk_widget_hide (widget);
 
 		pk_debug ("selected row is: %s", cached_package_id);
 
@@ -1777,10 +1772,6 @@ main (int argc, char *argv[])
 
 	/* make GpkClient windows modal */
 	gpk_client_set_parent (gclient, GTK_WINDOW (main_window));
-
-	/* hide until we have updates */
-	widget = glade_xml_get_widget (glade_xml, "hbox_reboot");
-	gtk_widget_hide (widget);
 
 	/* hide from finished page until we have updates */
 	widget = glade_xml_get_widget (glade_xml, "hbox_restart");
