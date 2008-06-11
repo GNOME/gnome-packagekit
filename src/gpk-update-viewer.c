@@ -88,7 +88,6 @@ enum {
 	DESC_COLUMN_TITLE,
 	DESC_COLUMN_TEXT,
 	DESC_COLUMN_URI,
-	DESC_COLUMN_PROGRESS,
 	DESC_COLUMN_LAST
 };
 
@@ -942,13 +941,8 @@ pk_update_viewer_treeview_add_columns_description (GtkTreeView *treeview)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	/* image */
+	/* title */
 	column = gtk_tree_view_column_new ();
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	g_object_set (renderer, "visible", FALSE, NULL);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", DESC_COLUMN_PROGRESS);
-
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", DESC_COLUMN_TITLE);
@@ -1857,7 +1851,7 @@ main (int argc, char *argv[])
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
-	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
+	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create preview tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
