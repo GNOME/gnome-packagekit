@@ -1029,6 +1029,43 @@ gpk_application_refresh_search_results (GpkApplication *application)
 }
 
 /**
+ * gpk_application_suggest_better_search:
+ **/
+static void
+gpk_application_suggest_better_search (GpkApplication *application)
+{
+	const gchar *message = NULL;
+	const gchar *title = _("No results were found.");
+	GtkTreeIter iter;
+	gchar *text;
+
+	if (application->priv->search_mode == PK_MODE_GROUP ||
+	    application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
+		/* this shouldn't happen */
+		message = _("Try entering a package name in the search bar.");
+	} else {
+		if (application->priv->search_type == PK_SEARCH_NAME ||
+		    application->priv->search_type == PK_SEARCH_FILE) {
+			message = _("Try searching package descriptions by clicking the icon next to the search text.");
+		} else {
+			message = _("Try again with a different search term.");
+		}
+	}
+
+	text = g_strdup_printf ("%s\n%s", title, message);
+
+	gtk_list_store_append (application->priv->packages_store, &iter);
+	gtk_list_store_set (application->priv->packages_store, &iter,
+			    PACKAGES_COLUMN_STATE, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
+			    PACKAGES_COLUMN_TEXT, text,
+			    PACKAGES_COLUMN_IMAGE, "search",
+			    -1);
+	g_free (text);
+}
+
+/**
  * gpk_application_finished_cb:
  **/
 static void
@@ -1052,15 +1089,9 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 
 		/* were there no entries found? */
 		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
-			GtkTreeIter iter;
-			gtk_list_store_append (application->priv->packages_store, &iter);
-			gtk_list_store_set (application->priv->packages_store, &iter,
-					    PACKAGES_COLUMN_STATE, FALSE,
-					    PACKAGES_COLUMN_CHECKBOX, FALSE,
-					    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
-					    PACKAGES_COLUMN_TEXT, _("No results were found"),
-					    PACKAGES_COLUMN_IMAGE, "search",
-					    -1);
+
+			/* try to be helpful... */
+			gpk_application_suggest_better_search (application);
 		}
 
 		/* focus back to the text extry */
@@ -2444,6 +2475,32 @@ gpk_application_treeview_add_columns_description (GpkApplication *application)
 }
 
 /**
+ * gpk_application_add_welcome:
+ **/
+static void
+gpk_application_add_welcome (GpkApplication *application)
+{
+	GtkTreeIter iter;
+	const gchar *welcome;
+
+	gtk_list_store_clear (application->priv->packages_store);
+	gtk_list_store_append (application->priv->packages_store, &iter);
+
+	/* enter something nice */
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+		welcome = _("Enter a package name and then click find, or click a group to get started.");
+	} else {
+		welcome = _("Enter a package name and then click find to get started.");
+	}
+	gtk_list_store_set (application->priv->packages_store, &iter,
+			    PACKAGES_COLUMN_STATE, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
+			    PACKAGES_COLUMN_TEXT, welcome,
+			    PACKAGES_COLUMN_IMAGE, "search", -1);
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2951,6 +3008,9 @@ gpk_application_init (GpkApplication *application)
 	/* set current action */
 	application->priv->action = PK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
+
+	/* welcome */
+	gpk_application_add_welcome (application);
 }
 
 /**
