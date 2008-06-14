@@ -789,6 +789,43 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 }
 
 /**
+ * gpk_application_clear_details:
+ **/
+static void
+gpk_application_clear_details (GpkApplication *application)
+{
+	GtkWidget *widget;
+
+	/* hide details */
+	gtk_list_store_clear (application->priv->details_store);
+
+	/* clear the old text */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	gpk_application_set_text_buffer (widget, NULL);
+
+	/* hide dead widgets */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
+	gtk_widget_hide (widget);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
+	gtk_widget_hide (widget);
+}
+
+/**
+ * gpk_application_clear_packages:
+ **/
+static void
+gpk_application_clear_packages (GpkApplication *application)
+{
+	/* unsorted */
+	gpk_application_treeview_set_sorted (application, FALSE);
+
+	/* clear existing list */
+	gtk_list_store_clear (application->priv->packages_store);
+	application->priv->has_package = FALSE;
+}
+
+/**
  * gpk_application_details_cb:
  **/
 static void
@@ -822,6 +859,10 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 
 	/* check icon actually exists and is valid in this theme */
 	valid = gpk_check_icon_valid (icon);
+
+	/* hide to start */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
+	gtk_widget_show (widget);
 
 	/* nothing in the detail database or invalid */
 	if (valid == FALSE) {
@@ -1015,16 +1056,16 @@ gpk_application_refresh_search_results (GpkApplication *application)
 		return FALSE;
 	}
 
-	gtk_list_store_clear (application->priv->packages_store);
+	/* hide details */
+	gpk_application_clear_details (application);
+	gpk_application_clear_packages (application);
+
 	ret = pk_client_requeue (application->priv->client_search, &error);
 	if (!ret) {
 		pk_warning ("failed to requeue the search: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
-
-	/* hide details */
-	gtk_list_store_clear (application->priv->details_store);
 	return TRUE;
 }
 
@@ -1188,22 +1229,6 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 		return FALSE;
 	}
 
-	/* unsorted */
-	gpk_application_treeview_set_sorted (application, FALSE);
-
-	/* clear existing list */
-	gtk_list_store_clear (application->priv->packages_store);
-	application->priv->has_package = FALSE;
-
-	/* hide details */
-	gtk_list_store_clear (application->priv->details_store);
-
-	/* switch around buttons */
-	gpk_application_set_find_cancel_buttons (application, FALSE);
-
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
-
 	return TRUE;
 }
 
@@ -1228,12 +1253,6 @@ gpk_application_perform_search_others (GpkApplication *application)
 		return FALSE;
 	}
 
-	/* unsorted */
-	gpk_application_treeview_set_sorted (application, FALSE);
-
-	/* refresh the search as the items may have changed */
-	gtk_list_store_clear (application->priv->packages_store);
-
 	if (application->priv->search_mode == PK_MODE_GROUP) {
 		ret = pk_client_search_group (application->priv->client_search,
 					      application->priv->filters_current,
@@ -1243,16 +1262,15 @@ gpk_application_perform_search_others (GpkApplication *application)
 					      application->priv->filters_current, &error);
 	}
 
-	if (ret) {
-		/* switch around buttons */
-		gpk_application_set_find_cancel_buttons (application, FALSE);
-	} else {
+	if (!ret) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("The group could not be queried"),
 					_("Running the transaction failed"), error->message);
 		g_error_free (error);
+		return FALSE;
 	}
-	return ret;
+
+	return TRUE;
 }
 
 /**
@@ -1263,6 +1281,11 @@ gpk_application_perform_search (GpkApplication *application)
 {
 	gboolean ret = FALSE;
 
+	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+
+	gpk_application_clear_details (application);
+	gpk_application_clear_packages (application);
+
 	if (application->priv->search_mode == PK_MODE_NAME_DETAILS_FILE) {
 		ret = gpk_application_perform_search_name_details_file (application);
 	} else if (application->priv->search_mode == PK_MODE_GROUP ||
@@ -1271,6 +1294,13 @@ gpk_application_perform_search (GpkApplication *application)
 	} else {
 		pk_debug ("doing nothing");
 	}
+	if (!ret) {
+		return ret;
+	}
+
+	/* switch around buttons */
+	gpk_application_set_find_cancel_buttons (application, FALSE);
+
 	return ret;
 }
 
@@ -1585,8 +1615,9 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	/* hide the details */
-	gtk_list_store_clear (application->priv->details_store);
+	/* hide details */
+	gpk_application_clear_details (application);
+	gpk_application_clear_packages (application);
 
 	/* clear the search text if we clicked the group list */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1640,7 +1671,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		gpk_application_allow_remove (application, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 		gtk_widget_hide (widget);
-		gtk_list_store_clear (application->priv->details_store);
+
+		/* hide details */
+		gpk_application_clear_details (application);
 		return;
 	}
 
@@ -1667,12 +1700,8 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gpk_application_allow_install (application, show_install);
 	gpk_application_allow_remove (application, show_remove);
 
-	/* clear the old text */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
-	gpk_application_set_text_buffer (widget, NULL);
-
-	/* hide stuff until we have data */
-	gtk_list_store_clear (application->priv->details_store);
+	/* hide details */
+	gpk_application_clear_details (application);
 
 	/* only show run menuitem for installed programs */
 	ret = gpk_application_state_installed (state);
@@ -2483,7 +2512,7 @@ gpk_application_add_welcome (GpkApplication *application)
 	GtkTreeIter iter;
 	const gchar *welcome;
 
-	gtk_list_store_clear (application->priv->packages_store);
+	gpk_application_clear_packages (application);
 	gtk_list_store_append (application->priv->packages_store, &iter);
 
 	/* enter something nice */
@@ -2531,6 +2560,23 @@ gpk_application_init (GpkApplication *application)
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
 	application->priv->filters_current = PK_FILTER_ENUM_NONE;
+
+	/* create list stores */
+	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
+							        G_TYPE_STRING,
+							        G_TYPE_UINT,
+							        G_TYPE_BOOLEAN,
+							        G_TYPE_BOOLEAN,
+							        G_TYPE_STRING,
+							        G_TYPE_STRING);
+	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
+							      G_TYPE_STRING,
+							      G_TYPE_STRING,
+							      G_TYPE_STRING);
+	application->priv->details_store = gtk_list_store_new (DETAIL_COLUMN_LAST,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -2683,8 +2729,6 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_menu_run_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
-	gtk_widget_hide (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
 	gtk_widget_hide (widget);
 
 	/* installed filter */
@@ -2843,9 +2887,6 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "icon-pressed",
 			  G_CALLBACK (gpk_application_entry_text_icon_pressed_cb), application);
 
-	/* coldplug icon to default to search by name*/
-	gpk_application_menu_search_by_name (NULL, application);
-
 	/* hide the filters we can't support */
 	if (pk_enums_contain (application->priv->filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed");
@@ -2914,23 +2955,6 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
 			  G_CALLBACK (gpk_application_package_row_activated_cb), application);
 
-	/* create list stores */
-	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
-							        G_TYPE_STRING,
-							        G_TYPE_UINT,
-							        G_TYPE_BOOLEAN,
-							        G_TYPE_BOOLEAN,
-							        G_TYPE_STRING,
-							        G_TYPE_STRING);
-	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
-							      G_TYPE_STRING,
-							      G_TYPE_STRING,
-							      G_TYPE_STRING);
-	application->priv->details_store = gtk_list_store_new (DETAIL_COLUMN_LAST,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING);
-
 	/* use a list store for the extra data */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_detail");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (application->priv->details_store));
@@ -2938,12 +2962,8 @@ gpk_application_init (GpkApplication *application)
 	/* add columns to the tree view */
 	gpk_application_treeview_add_columns_description (application);
 
-	/* make bigger than 1x1 */
-	gpk_application_add_detail_item (application, "foo", "bar", NULL);
-	gtk_list_store_clear (application->priv->details_store);
-
 	/* unsorted */
-	gpk_application_treeview_set_sorted (application, FALSE);
+//	gpk_application_treeview_set_sorted (application, FALSE);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
@@ -3008,6 +3028,12 @@ gpk_application_init (GpkApplication *application)
 	/* set current action */
 	application->priv->action = PK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
+
+	/* hide details */
+	gpk_application_clear_details (application);
+
+	/* coldplug icon to default to search by name*/
+	gpk_application_menu_search_by_name (NULL, application);
 
 	/* welcome */
 	gpk_application_add_welcome (application);
