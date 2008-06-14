@@ -1447,6 +1447,15 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 static void gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplication *application);
 
 /**
+ * gpk_application_button_help_cb:
+ **/
+static void
+gpk_application_button_help_cb (GtkWidget *widget_button, GpkApplication *application)
+{
+	gpk_gnome_help ("add-remove");
+}
+
+/**
  * gpk_application_button_clear_cb:
  **/
 static void
@@ -2677,6 +2686,11 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_clear_cb), application);
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
+
+	/* help */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "button_help");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_application_button_help_cb), application);
 
 	/* install */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
