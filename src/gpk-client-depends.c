@@ -118,6 +118,7 @@ gpk_client_depends_show (GtkWindow *window, gchar **package_ids)
 		goto out;
 	}
 
+	/* get the packages we depend on */
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
 		ret = gpk_client_depends_indervidual (window, list, package_ids[i]);
@@ -125,6 +126,11 @@ gpk_client_depends_show (GtkWindow *window, gchar **package_ids)
 			ret = FALSE;
 			goto out;
 		}
+	}
+
+	/* sometimes a package may pull in a depend we have already selected; we remove those */
+	for (i=0; i<length; i++) {
+		pk_package_list_remove (list, package_ids[i]);
 	}
 
 	/* process package list */
