@@ -801,7 +801,7 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	pk_debug ("updates changed");
 
 	/* ignore our own updates */
-	if (cupdate->priv->get_updates_in_progress) {
+	if (!cupdate->priv->get_updates_in_progress) {
 		g_idle_add ((GSourceFunc) gpk_check_update_query_updates, cupdate);
 	}
 }
