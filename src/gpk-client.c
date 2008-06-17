@@ -1434,6 +1434,74 @@ out:
 }
 
 /**
+ * gpk_client_install_font:
+ * @gclient: a valid #GpkClient instance
+ * @font_desc: a font description such as <literal>lang:en_GB</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a application to handle a mime type
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+gboolean
+gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **error)
+{
+	gboolean ret;
+	PkPackageList *list = NULL;
+	GError *error_local = NULL;
+	gchar *package_id = NULL;
+	gchar **package_ids = NULL;
+	guint len;
+	GtkWidget *widget;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (font_desc != NULL, FALSE);
+
+	ret = pk_client_what_provides (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED,
+				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to search for provides"), _("Incorrect response from search"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* found nothing? */
+	list = pk_client_get_package_list (gclient->priv->client_resolve);
+	len = pk_package_list_get_size (list);
+	if (len == 0) {
+		gpk_client_error_msg (gclient, _("Failed to find font"),
+				      _("No new fonts can be found for this document"), NULL);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* populate a chooser */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, 0, _("Available fonts for this document"));
+
+	/* selected nothing */
+	if (package_id == NULL) {
+		gpk_client_error_msg (gclient, _("Failed to install fonts"), _("No fonts were chosen to be installed"), NULL);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
+		ret = FALSE;
+		goto out;
+	}
+
+	/* install this specific package */
+	package_ids = g_strsplit (package_id, "|", 1);
+	ret = gpk_client_install_package_ids (gclient, package_ids, error);
+out:
+	if (list != NULL) {
+		g_object_unref (list);
+	}
+	g_strfreev (package_ids);
+	g_free (package_id);
+	return ret;
+}
+
+/**
  * gpk_client_catalog_progress_cb:
  **/
 static void

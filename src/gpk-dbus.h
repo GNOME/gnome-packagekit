@@ -72,6 +72,9 @@ void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
 void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
 							 const gchar	*mime_type,
 							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_font			(GpkDbus	*dbus,
+							 const gchar	*font_desc,
+							 DBusGMethodInvocation *context);
 
 G_END_DECLS
 

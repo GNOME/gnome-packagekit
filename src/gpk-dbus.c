@@ -212,13 +212,44 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallmimeType method called: %s", mime_type);
+	pk_debug ("InstallMimeType method called: %s", mime_type);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
 	pk_warning ("sender=%s", sender);
 
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_install_font:
+ **/
+void
+gpk_dbus_install_font (GpkDbus *dbus, const gchar *font_desc, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+	gchar *sender;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	pk_debug ("InstallFont method called: %s", font_desc);
+
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+	pk_warning ("sender=%s", sender);
+
+	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
