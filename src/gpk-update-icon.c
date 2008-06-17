@@ -88,6 +88,7 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 	}
 
 	dbus_g_object_type_install_info (GPK_TYPE_DBUS, &dbus_glib_gpk_dbus_object_info);
+	dbus_g_error_domain_register (GPK_DBUS_ERROR, NULL, GPK_DBUS_TYPE_ERROR);
 	dbus_g_connection_register_g_object (connection, PK_DBUS_PATH, object);
 
 	return TRUE;

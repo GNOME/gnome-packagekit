@@ -1009,6 +1009,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 						 "%s", title);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted");
 		ret = FALSE;
 		goto out;
 	}
@@ -1224,7 +1225,7 @@ out:
 }
 
 /**
- * gpk_client_install_package_name:
+ * gpk_client_install_package_names:
  * @gclient: a valid #GpkClient instance
  * @package: a pakage name such as <literal>hal-info</literal>
  * @error: a %GError to put the error code and message in, or %NULL
@@ -1248,6 +1249,8 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	package_ids = gpk_client_resolve_show (GTK_WINDOW (widget), packages);
 	if (package_ids == NULL) {
+		/* generic error message */
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to resolve packages");
 		ret = FALSE;
 		goto out;
 	}
@@ -1531,6 +1534,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("No packages need to be installed"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "No packages need to be installed");
 		ret = FALSE;
 		goto out;
 	}
@@ -1574,6 +1578,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "Action was cancelled");
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Action was cancelled");
 		ret = FALSE;
 		goto out;
 	}

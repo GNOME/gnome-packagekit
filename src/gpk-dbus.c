@@ -105,7 +105,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 {
 	gboolean ret;
 	GError *error;
-	GError *error_local;
+	GError *error_local = NULL;
 	gchar *sender;
 	gchar **full_paths;
 
@@ -140,7 +140,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
 {
 	gboolean ret;
 	GError *error;
-	GError *error_local;
+	GError *error_local = NULL;
 	gchar *sender;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
@@ -171,7 +171,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 {
 	gboolean ret;
 	GError *error;
-	GError *error_local;
+	GError *error_local = NULL;
 	gchar *sender;
 	gchar **package_names;
 
@@ -207,7 +207,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
 {
 	gboolean ret;
 	GError *error;
-	GError *error_local;
+	GError *error_local = NULL;
 	gchar *sender;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
