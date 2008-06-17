@@ -50,9 +50,9 @@
 #include "gpk-dbus.h"
 #include "gpk-client.h"
 
-static void     gpk_dbus_class_init	(GpkDbusClass *klass);
-static void     gpk_dbus_init		(GpkDbus      *dbus);
-static void     gpk_dbus_finalize		(GObject	   *object);
+static void     gpk_dbus_class_init	(GpkDbusClass	*klass);
+static void     gpk_dbus_init		(GpkDbus	*dbus);
+static void     gpk_dbus_finalize	(GObject	*object);
 
 #define GPK_DBUS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_DBUS, GpkDbusPrivate))
 
