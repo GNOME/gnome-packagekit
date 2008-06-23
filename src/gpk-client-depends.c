@@ -53,41 +53,6 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, gpointer data)
 	gconf_client_set_bool (gconf_client, GPK_CONF_SHOW_DEPENDS, checked, NULL);
 }
 
-static gboolean
-gpk_client_depends_indervidual (GpkClient *gclient, PkPackageList *list_ret, const gchar *package_id)
-{
-	GtkWindow *window;
-	GError *error = NULL;
-	PkPackageList *list;
-	gboolean ret;
-
-	/* reset */
-	ret = pk_client_reset (client, &error);
-	if (!ret) {
-		window = gpk_client_get_window (gclient);
-		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* find out if this would drag in other packages */
-	ret = pk_client_get_depends (client, PK_FILTER_ENUM_NOT_INSTALLED, package_id, TRUE, &error);
-	if (!ret) {
-		window = gpk_client_get_window (gclient);
-		gpk_error_dialog_modal (window, _("Failed to get depends"),
-					_("Could not work out what packages would be also installed"),
-					error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* add additional packages */
-	list = pk_client_get_package_list (client);
-	pk_package_list_add_list (list_ret, list);
-	g_object_unref (list);
-	return TRUE;
-}
-
 /**
  * gpk_client_status_changed_cb:
  **/
@@ -116,6 +81,7 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	GString *string;
 	PkPackageItem *item;
 	gchar *text;
+	GError *error = NULL;
 
 	list = pk_package_list_new ();
 	gconf_client = gconf_client_get_default ();
@@ -136,19 +102,31 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 
 	/* get the packages we depend on */
 	gpk_client_set_title (gclient, _("Finding packages we depend on"));
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		ret = gpk_client_depends_indervidual (gclient, list, package_ids[i]);
-		if (!ret) {
-			ret = FALSE;
-			goto out;
-		}
+
+	/* reset */
+	ret = pk_client_reset (client, &error);
+	if (!ret) {
+		window = gpk_client_get_window (gclient);
+		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
+		g_error_free (error);
+		ret = FALSE;
+		goto out;
 	}
 
-	/* sometimes a package may pull in a depend we have already selected; we remove those */
-	for (i=0; i<length; i++) {
-		pk_package_list_remove (list, package_ids[i]);
+	/* find out if this would drag in other packages */
+	ret = pk_client_get_depends (client, PK_FILTER_ENUM_NOT_INSTALLED, package_ids, TRUE, &error);
+	if (!ret) {
+		window = gpk_client_get_window (gclient);
+		gpk_error_dialog_modal (window, _("Failed to get depends"),
+					_("Could not work out what packages would be also installed"),
+					error->message);
+		g_error_free (error);
+		ret = FALSE;
+		goto out;
 	}
+
+	/* these are the new packages */
+	list = pk_client_get_package_list (client);
 
 	/* process package list */
 	string = g_string_new (_("The following packages also have to be downloaded:"));

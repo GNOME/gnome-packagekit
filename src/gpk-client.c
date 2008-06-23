@@ -40,6 +40,7 @@
 #include <pk-debug.h>
 #include <pk-client.h>
 #include <pk-package-id.h>
+#include <pk-package-ids.h>
 #include <pk-common.h>
 #include <pk-control.h>
 #include <pk-catalog.h>
@@ -1919,6 +1920,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 {
 	gboolean ret;
 	GError *error_local = NULL;
+	gchar **package_ids;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -1941,7 +1943,9 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	gpk_client_setup_window (gclient, _("Getting file lists"));
 
 	/* wrap get files */
-	ret = pk_client_get_files (gclient->priv->client_action, package_id, &error_local);
+	package_ids = pk_package_ids_from_id (package_id);
+	ret = pk_client_get_files (gclient->priv->client_action, package_ids, &error_local);
+	g_strfreev (package_ids);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Getting file list failed"), _("Failed to get file list"), error_local->message);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);

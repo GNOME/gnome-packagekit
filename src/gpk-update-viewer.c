@@ -991,6 +991,7 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkWidget *widget;
 	GError *error = NULL;
 	gboolean ret;
+	gchar **package_ids;
 
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 
@@ -1023,7 +1024,9 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 		/* get the description */
 		error = NULL;
-		ret = pk_client_get_update_detail (client_query, cached_package_id, &error);
+		package_ids = pk_package_ids_from_id (cached_package_id);
+		ret = pk_client_get_update_detail (client_query, package_ids, &error);
+		g_strfreev (package_ids);
 		if (!ret) {
 			pk_warning ("failed to get update detail: %s", error->message);
 			g_error_free (error);

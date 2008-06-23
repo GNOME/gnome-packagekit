@@ -37,38 +37,6 @@
 
 static PkClient *client = NULL;
 
-static gboolean
-gpk_client_requires_indervidual (GtkWindow *window, PkPackageList *list_ret, const gchar *package_id)
-{
-	GError *error = NULL;
-	PkPackageList *list;
-	gboolean ret;
-
-	/* reset */
-	ret = pk_client_reset (client, &error);
-	if (!ret) {
-		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* find out if this would force removal of other packages */
-	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, package_id, TRUE, &error);
-	if (!ret) {
-		gpk_error_dialog_modal (window, _("Failed to get requires"),
-					_("Could not work out what packages would also be removed"),
-					error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	list = pk_client_get_package_list (client);
-	pk_package_list_add_list (list_ret, list);
-	g_object_unref (list);
-
-	return TRUE;
-}
-
 /**
  * gpk_client_requires_show:
  *
@@ -87,6 +55,7 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	PkPackageItem *item;
 	gchar *text;
 	gchar *name;
+	GError *error = NULL;
 
 	list = pk_package_list_new ();
 
@@ -94,14 +63,28 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	pk_client_set_synchronous (client, TRUE, NULL);
 
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		ret = gpk_client_requires_indervidual (window, list, package_ids[i]);
-		if (!ret) {
-			ret = FALSE;
-			goto out;
-		}
+	/* reset */
+	ret = pk_client_reset (client, &error);
+	if (!ret) {
+		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
+		g_error_free (error);
+		ret = FALSE;
+		goto out;
 	}
+
+	/* find out if this would force removal of other packages */
+	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, package_ids, TRUE, &error);
+	if (!ret) {
+		gpk_error_dialog_modal (window, _("Failed to get requires"),
+					_("Could not work out what packages would also be removed"),
+					error->message);
+		g_error_free (error);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* these are the new packages */
+	list = pk_client_get_package_list (client);
 
 	/* sort by package_id */
 	pk_package_list_sort (list);

@@ -40,6 +40,7 @@
 #include <pk-common.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+#include <pk-package-ids.h>
 #include <pk-package-list.h>
 #include <pk-extra.h>
 
@@ -659,6 +660,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	gboolean ret;
 	PkPackageList *list;
 	GtkWidget *widget;
+	gchar **package_ids;
 
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_files, &error);
@@ -670,8 +672,10 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 
 	/* get the requires */
 	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
+	package_ids = pk_package_ids_from_id (application->priv->package);
 	ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
-				      application->priv->package, TRUE, &error);
+				      package_ids, TRUE, &error);
+	g_strfreev (package_ids);
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
@@ -702,6 +706,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	gboolean ret;
 	PkPackageList *list;
 	GtkWidget *widget;
+	gchar **package_ids;
 
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_files, &error);
@@ -713,8 +718,10 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 
 	/* get the depends */
 	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
+	package_ids = pk_package_ids_from_id (application->priv->package);
 	ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
-				     application->priv->package, TRUE, &error);
+				     package_ids, TRUE, &error);
+	g_strfreev (package_ids);
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
@@ -1664,6 +1671,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gboolean show_install = TRUE;
 	gboolean show_remove = TRUE;
 	GpkPackageState state;
+	gchar **package_ids;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1726,8 +1734,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	}
 
 	/* get the details */
-	ret = pk_client_get_details (application->priv->client_details,
-				     application->priv->package, &error);
+	package_ids = pk_package_ids_from_id (application->priv->package);
+	ret = pk_client_get_details (application->priv->client_details, package_ids, &error);
+	g_strfreev (package_ids);
 	if (!ret) {
 		pk_warning ("failed to get details: %s", error->message);
 		g_error_free (error);

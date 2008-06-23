@@ -31,24 +31,36 @@
 #include <pk-client.h>
 #include <pk-common.h>
 #include <pk-package-id.h>
+#include <pk-package-ids.h>
 #include "gpk-gnome.h"
 #include "gpk-error.h"
 #include "gpk-common.h"
 
 static PkClient *client = NULL;
 
-static gchar *
-gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
+/**
+ * gpk_client_resolve_show:
+ *
+ * Return value: if we agreed to remove the deps
+ **/
+gchar **
+gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 {
 	GError *error = NULL;
 	PkPackageItem *item;
 	PkPackageList *list;
 	gchar *package_id = NULL;
+	gchar **package_ids = NULL;
+	gchar *text;
 	gboolean already_installed = FALSE;
 	gboolean ret;
 	gchar *title;
 	guint len;
 	guint i;
+
+	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_set_synchronous (client, TRUE, NULL);
 
 	/* reset */
 	ret = pk_client_reset (client, &error);
@@ -59,11 +71,10 @@ gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
 	}
 
 	/* find out if we can find a package */
-	ret = pk_client_resolve (client, PK_FILTER_ENUM_NONE, package, &error);
+	ret = pk_client_resolve (client, PK_FILTER_ENUM_NONE, packages, &error);
 	if (!ret) {
 		gpk_error_dialog_modal (window, _("Failed to resolve package"),
-				  _("Incorrect response from search"),
-				  error->message);
+					_("Incorrect response from search"), error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -72,8 +83,10 @@ gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
 	list = pk_client_get_package_list (client);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		title = g_strdup_printf (_("Could not find %s"), package);
-		gpk_error_dialog_modal (window, title, _("The package could not be found in any software sources"), NULL);
+		text = pk_package_ids_to_text (packages, ",");
+		title = g_strdup_printf (_("Could not find %s"), text);
+		g_free (text);
+		gpk_error_dialog_modal (window, title, _("The packages could not be found in any software source"), NULL);
 		g_free (title);
 		goto out;
 	}
@@ -93,11 +106,12 @@ gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
 			package_id = g_strdup (item->package_id);
 		}
 	}
-	g_object_unref (list);
 
 	/* already installed? */
 	if (already_installed) {
-		title = g_strdup_printf (_("Failed to install %s"), package);
+		text = pk_package_ids_to_text (packages, ",");
+		title = g_strdup_printf (_("Failed to install %s"), text);
+		g_free (text);
 		gpk_error_dialog_modal (window, title, _("The package is already installed"), NULL);
 		g_free (title);
 		goto out;
@@ -108,41 +122,12 @@ gpk_client_resolve_indervidual (GtkWindow *window, const gchar *package)
 		gpk_error_dialog_modal (window, _("Failed to find package"), _("Incorrect response from search"), NULL);
 		goto out;
 	}
-out:
-	return package_id;
-}
 
-/**
- * gpk_client_resolve_show:
- *
- * Return value: if we agreed to remove the deps
- **/
-gchar **
-gpk_client_resolve_show (GtkWindow *window, gchar **packages)
-{
-	guint i;
-	guint length;
-	gchar *package_id;
-	gchar **package_ids = NULL;
-	GPtrArray *array;
-
-	array = g_ptr_array_new ();
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_set_synchronous (client, TRUE, NULL);
-
-	length = g_strv_length (packages);
-	for (i=0; i<length; i++) {
-		package_id = gpk_client_resolve_indervidual (window, packages[i]);
-		if (package_id == NULL) {
-			goto out;
-		}
-		g_ptr_array_add (array, package_id);
-	}
-	package_ids = pk_ptr_array_to_argv (array);
+	/* convert to data */
+	package_ids = pk_package_list_to_argv (list);
+	g_object_unref (list);
 
 out:
-	g_ptr_array_free (array, TRUE);
 	g_object_unref (client);
 	return package_ids;
 }
