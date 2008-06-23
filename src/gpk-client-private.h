@@ -19,17 +19,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPK_CLIENT_DEPENDS_H
-#define __GPK_CLIENT_DEPENDS_H
+#ifndef __GPK_CLIENT_PRIVATE_H
+#define __GPK_CLIENT_PRIVATE_H
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
+#include <pk-enum.h>
+#include "gpk-client.h"
 
 G_BEGIN_DECLS
 
-void		 gpk_client_depends_self_test		(gpointer	 data);
-gboolean	 gpk_client_depends_show		(GpkClient	*gclient,
-							 gchar		**package_ids);
+GtkWindow	*gpk_client_get_window			(GpkClient	*gclient);
+gboolean	 gpk_client_set_title			(GpkClient	*gclient,
+							 const gchar	*title);
+gboolean	 gpk_client_set_package_label		(GpkClient	*gclient,
+							 const gchar	*text);
+gboolean	 gpk_client_set_percentage		(GpkClient	*gclient,
+							 guint		 percentage);
+gboolean	 gpk_client_set_status			(GpkClient	*gclient,
+							 PkStatusEnum	 status);
 
 G_END_DECLS
 
-#endif	/* __GPK_CLIENT_DEPENDS_H */
+#endif /* __GPK_CLIENT_PRIVATE_H */

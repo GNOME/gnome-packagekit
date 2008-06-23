@@ -516,15 +516,14 @@ gpk_client_make_progressbar_pulse (GpkClient *gclient)
 }
 
 /**
- * gpk_client_progress_changed_cb:
+ * gpk_client_set_percentage:
  **/
-static void
-gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				guint elapsed, guint remaining, GpkClient *gclient)
+gboolean
+gpk_client_set_percentage (GpkClient *gclient, guint percentage)
 {
 	GtkWidget *widget;
 
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 	if (gclient->priv->pulse_timer_id != 0) {
@@ -538,18 +537,19 @@ gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subper
 	} else {
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
 	}
+	return TRUE;
 }
 
 /**
- * gpk_client_status_changed_cb:
+ * gpk_client_set_status:
  **/
-static void
-gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *gclient)
+gboolean
+gpk_client_set_status (GpkClient *gclient, PkStatusEnum status)
 {
 	GtkWidget *widget;
 	gchar *text;
 
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* do we force progress? */
 	if (gclient->priv->interact == GPK_CLIENT_INTERACT_SOMETIMES) {
@@ -597,6 +597,51 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), 1.0f);
 	}
+	return TRUE;
+}
+
+/**
+ * gpk_client_set_package_label:
+ **/
+gboolean
+gpk_client_set_package_label (GpkClient *gclient, const gchar *text)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
+	gtk_widget_show (widget);
+	gtk_label_set_markup (GTK_LABEL (widget), text);
+	return TRUE;
+}
+
+/**
+ * gpk_client_set_title:
+ **/
+gboolean
+gpk_client_set_title (GpkClient *gclient, const gchar *title)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_window_set_title (GTK_WINDOW (widget), title);
+	return TRUE;
+}
+
+/**
+ * gpk_client_progress_changed_cb:
+ **/
+static void
+gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				guint elapsed, guint remaining, GpkClient *gclient)
+{
+	gpk_client_set_percentage (gclient, percentage);
+}
+
+/**
+ * gpk_client_status_changed_cb:
+ **/
+static void
+gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *gclient)
+{
+	gpk_client_set_status (gclient, status);
 }
 
 /**
@@ -659,19 +704,6 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		pk_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
-}
-
-/**
- * gpk_client_set_package_label:
- **/
-static gboolean
-gpk_client_set_package_label (GpkClient *gclient, const gchar *text)
-{
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
-	gtk_widget_show (widget);
-	gtk_label_set_markup (GTK_LABEL (widget), text);
-	return TRUE;
 }
 
 /**
@@ -885,8 +917,7 @@ gpk_client_setup_window (GpkClient *gclient, const gchar *title)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* set title */
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_window_set_title (GTK_WINDOW (widget), title);
+	gpk_client_set_title (gclient, title);
 
 	/* clear status and progress text */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
@@ -1138,6 +1169,17 @@ out:
 }
 
 /**
+ * gpk_client_get_window:
+ **/
+GtkWindow *
+gpk_client_get_window (GpkClient *gclient)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	return GTK_WINDOW (widget);
+}
+
+/**
  * gpk_client_install_package_ids:
  * @gclient: a valid #GpkClient instance
  * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
@@ -1151,7 +1193,6 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text;
-	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -1175,8 +1216,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 		goto skip_checks;
 	}
 
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	ret = gpk_client_depends_show (GTK_WINDOW (widget), package_ids);
+	ret = gpk_client_depends_show (gclient, package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to install package"), _("Additional packages were not downloaded"), NULL);
@@ -1196,6 +1236,7 @@ skip_checks:
 	}
 
 	/* try to install the package_id */
+	gpk_client_set_title (gclient, _("Installing packages"));
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
@@ -1519,7 +1560,7 @@ gpk_client_catalog_progress_cb (PkCatalog *catalog, PkCatalogProgress mode, cons
 		message = g_strdup_printf (_("Finding a package to provide: %s"), text);
 	}
 
-	gpk_client_status_changed_cb (NULL, PK_STATUS_ENUM_QUERY, gclient);
+	gpk_client_set_status (gclient, PK_STATUS_ENUM_QUERY);
 	gpk_client_set_package_label (gclient, message);
 	g_free (message);
 }
@@ -1580,7 +1621,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 
 	/* set title */
 	gpk_client_setup_window (gclient, _("Install catalogs"));
-	gpk_client_status_changed_cb (NULL, PK_STATUS_ENUM_WAIT, gclient);
+	gpk_client_set_status (gclient, PK_STATUS_ENUM_WAIT);
 
 	/* setup the UI */
 	gpk_client_set_progress_files (gclient, TRUE);
@@ -2192,13 +2233,12 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		pk_warning ("could not get status");
 		return FALSE;
 	}
+	gpk_client_set_status (gclient, status);
 
 	/* are we cancellable? */
 	pk_client_get_allow_cancel (gclient->priv->client_action, &allow_cancel, NULL);
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
-
-	gpk_client_status_changed_cb (gclient->priv->client_action, status, gclient);
 
 	/* coldplug */
 	ret = pk_client_get_progress (gclient->priv->client_action,

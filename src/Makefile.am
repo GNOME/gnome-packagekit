@@ -58,6 +58,7 @@ shared_SOURCES =					\
 	gpk-consolekit.h				\
 	gpk-client.c					\
 	gpk-client.h					\
+	gpk-client-private.h				\
 	gpk-client-eula.c				\
 	gpk-client-eula.h				\
 	gpk-client-resolve.c				\
