@@ -480,7 +480,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (notification, "update-just-security",
-					_("Install important updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Install these updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
 					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-notify-critical",
