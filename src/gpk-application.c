@@ -43,6 +43,7 @@
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
 #include <pk-extra.h>
+#include <pk-details.h>
 
 #include <gpk-client.h>
 #include <gpk-common.h>
@@ -836,10 +837,7 @@ gpk_application_clear_packages (GpkApplication *application)
  * gpk_application_details_cb:
  **/
 static void
-gpk_application_details_cb (PkClient *client, const gchar *package_id,
-			    const gchar *license, PkGroupEnum group_enum,
-			    const gchar *detail, const gchar *url,
-			    guint64 size, GpkApplication *application)
+gpk_application_details_cb (PkClient *client, PkDetails *details, GpkApplication *application)
 {
 	GtkWidget *widget;
 	gchar *text;
@@ -854,9 +852,9 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ident = pk_package_id_new_from_string (package_id);
+	ident = pk_package_id_new_from_string (details->package_id);
 	if (ident == NULL) {
-		pk_warning ("failed to get PkPackageId for %s", package_id);
+		pk_warning ("failed to get PkPackageId for %s", details->package_id);
 		return;
 	}
 	installed = pk_strequal (ident->data, "installed");
@@ -884,47 +882,47 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 
 	/* homepage */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
-	if (pk_strzero (url) == FALSE) {
+	if (pk_strzero (details->url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
 
 		/* set the tooltip to where we are going */
-		text = g_strdup_printf (_("Visit %s"), url);
+		text = g_strdup_printf (_("Visit %s"), details->url);
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
 
-		gpk_application_add_detail_item (application, _("Project"), _("Hompage"), url);
+		gpk_application_add_detail_item (application, _("Project"), _("Hompage"), details->url);
 
 		/* save the url for the button */
 		g_free (application->priv->url);
-		application->priv->url = g_strdup (url);
+		application->priv->url = g_strdup (details->url);
 
 	} else {
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
 	/* group */
-	if (TRUE || group_enum != PK_GROUP_ENUM_UNKNOWN) {
-		group = gpk_group_enum_to_localised_text (group_enum);
+	if (details->group != PK_GROUP_ENUM_UNKNOWN) {
+		group = gpk_group_enum_to_localised_text (details->group);
 		gpk_application_add_detail_item (application, _("Group"), group, NULL);
 	}
 
 	/* group */
-	if (!pk_strzero (license)) {
+	if (!pk_strzero (details->license)) {
 		/* This should be a licence enum value - bad API, bad.
 		 * license = pk_license_enum_to_text (license_enum); */
-		gpk_application_add_detail_item (application, _("License"), license, NULL);
+		gpk_application_add_detail_item (application, _("License"), details->license, NULL);
 	}
 
 	/* set the description */
-	text = g_markup_escape_text (detail, -1);
+	text = g_markup_escape_text (details->description, -1);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
 	/* if non-zero, set the size */
-	if (size > 0) {
+	if (details->size > 0) {
 		/* set the size */
-		value = gpk_size_to_si_size_text (size);
+		value = gpk_size_to_si_size_text (details->size);
 		if (installed) {
 			gpk_application_add_detail_item (application, _("Installed size"), value, NULL);
 		} else {

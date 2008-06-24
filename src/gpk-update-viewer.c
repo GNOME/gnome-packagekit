@@ -44,6 +44,7 @@
 #include <pk-task-list.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
+#include <pk-update-detail.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
@@ -773,11 +774,7 @@ out:
  * gpk_update_viewer_update_detail_cb:
  **/
 static void
-gpk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
-				    const gchar *updates, const gchar *obsoletes,
-				    const gchar *vendor_url, const gchar *bugzilla_url,
-				    const gchar *cve_url, PkRestartEnum restart,
-				    const gchar *update_text, gpointer data)
+gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetail *detail, gpointer data)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
@@ -810,13 +807,13 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	/* translators: this is the update type, e.g. security */
 	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
 
-	package_pretty = gpk_package_id_name_version (package_id);
+	package_pretty = gpk_package_id_name_version (detail->package_id);
 	/* translators: this is the package version */
 	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
 	g_free (package_pretty);
 
 	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (updates);
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (detail->updates);
 	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are updated */
 		gpk_update_viewer_add_description_item (_("Updates"), package_pretty, NULL);
@@ -824,22 +821,22 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	g_free (package_pretty);
 
 	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obsoletes);
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (detail->obsoletes);
 	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are obsoleted */
 		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
 	}
 	g_free (package_pretty);
 
-	ident = pk_package_id_new_from_string (package_id);
+	ident = pk_package_id_new_from_string (detail->package_id);
 	/* translators: this is the repository the package has come from */
 	gpk_update_viewer_add_description_item (_("Repository"), ident->data, NULL);
 	pk_package_id_free (ident);
 
-	if (!pk_strzero (update_text)) {
+	if (!pk_strzero (detail->update_text)) {
 		gchar *first;
 		gchar *second;
-		first = pk_strreplace (update_text, "\n- ", "\n• ");
+		first = pk_strreplace (detail->update_text, "\n- ", "\n• ");
 		second = pk_strreplace (first, "\n* ", "\n• ");
 		/* translators: this is the package description */
 		gpk_update_viewer_add_description_item (_("Description"), second, NULL);
@@ -848,23 +845,23 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const gchar *package_id,
 	}
 
 	/* add all the links */
-	if (!pk_strzero (vendor_url)) {
+	if (!pk_strzero (detail->vendor_url)) {
 		/* translators: this is a list of vendor URLs */
-		gpk_update_viewer_add_description_link_item (_("Vendor"), vendor_url);
+		gpk_update_viewer_add_description_link_item (_("Vendor"), detail->vendor_url);
 	}
-	if (!pk_strzero (bugzilla_url)) {
+	if (!pk_strzero (detail->bugzilla_url)) {
 		/* translators: this is a list of bugzilla URLs */
-		gpk_update_viewer_add_description_link_item (_("Bugzilla"), bugzilla_url);
+		gpk_update_viewer_add_description_link_item (_("Bugzilla"), detail->bugzilla_url);
 	}
-	if (!pk_strzero (cve_url)) {
+	if (!pk_strzero (detail->cve_url)) {
 		/* translators: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_link_item (_("CVE"), cve_url);
+		gpk_update_viewer_add_description_link_item (_("CVE"), detail->cve_url);
 	}
 
 	/* reboot */
-	if (restart == PK_RESTART_ENUM_SESSION ||
-	    restart == PK_RESTART_ENUM_SYSTEM) {
-		info_text = gpk_restart_enum_to_localised_text (restart);
+	if (detail->restart == PK_RESTART_ENUM_SESSION ||
+	    detail->restart == PK_RESTART_ENUM_SYSTEM) {
+		info_text = gpk_restart_enum_to_localised_text (detail->restart);
 		/* translators: this is a notice a restart might be required */
 		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
 	}
