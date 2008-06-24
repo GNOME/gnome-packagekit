@@ -561,7 +561,9 @@ gpk_update_viewer_get_new_update_list (void)
 	guint i;
 	gchar *text;
 	const gchar *icon_name;
+	gchar **package_ids;
 	GtkTreeIter iter;
+	gboolean ret;
 
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
@@ -609,6 +611,25 @@ gpk_update_viewer_get_new_update_list (void)
 	gtk_widget_set_sensitive (widget, are_updates_available);
 
 	gpk_update_viewer_populate_preview (list);
+
+	/* reset */
+	ret = pk_client_reset (client_query, &error);
+	if (!ret) {
+		pk_warning ("failed to reset: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* pre-cache the update detail if we can */
+	package_ids = pk_package_list_to_argv (list);
+	ret = pk_client_get_update_detail (client_query, package_ids, &error);
+	g_strfreev (package_ids);
+	if (!ret) {
+		pk_warning ("failed to cache update detail: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
 out:
 	g_object_unref (list);
 }
