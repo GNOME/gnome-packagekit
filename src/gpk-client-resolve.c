@@ -47,7 +47,7 @@ gchar **
 gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 {
 	GError *error = NULL;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	PkPackageList *list;
 	gchar *package_id = NULL;
 	gchar **package_ids = NULL;
@@ -93,17 +93,17 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 
 	/* see what we've got already */
 	for (i=0; i<len; i++) {
-		item = pk_package_list_get_item (list, i);
-		if (item->info == PK_INFO_ENUM_INSTALLED) {
+		obj = pk_package_list_get_obj (list, i);
+		if (obj->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
-		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved", item->package_id);
+		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
+			pk_debug ("package '%s' resolved", obj->package_id);
 			//TODO: we need to list these in a gpk-client-chooser
 			if (package_id != NULL) {
 				pk_warning ("throwing away %s", package_id);
 				g_free (package_id);
 			}
-			package_id = g_strdup (item->package_id);
+			package_id = g_strdup (obj->package_id);
 		}
 	}
 

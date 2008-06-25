@@ -79,7 +79,7 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	guint length;
 	guint i;
 	GString *string;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	gchar *text;
 	GError *error = NULL;
 
@@ -137,8 +137,8 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 		goto out;
 	}
 	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		text = gpk_package_id_format_oneline (item->package_id, item->summary);
+		obj = pk_package_list_get_obj (list, i);
+		text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}

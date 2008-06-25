@@ -43,7 +43,7 @@
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
 #include <pk-extra.h>
-#include <pk-details.h>
+#include <pk-details-obj.h>
 
 #include <gpk-client.h>
 #include <gpk-common.h>
@@ -837,7 +837,7 @@ gpk_application_clear_packages (GpkApplication *application)
  * gpk_application_details_cb:
  **/
 static void
-gpk_application_details_cb (PkClient *client, PkDetails *details, GpkApplication *application)
+gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplication *application)
 {
 	GtkWidget *widget;
 	gchar *text;

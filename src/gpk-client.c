@@ -352,7 +352,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	guint length;
 	PkPackageId *ident;
 	PkPackageList *list;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	GString *message_text;
 	guint skipped_number = 0;
 	const gchar *message;
@@ -372,14 +372,14 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 
 	/* find any we skipped */
 	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
-			  item->package_id, item->summary);
-		ident = pk_package_id_new_from_string (item->package_id);
-		if (item->info == PK_INFO_ENUM_BLOCKED) {
+		obj = pk_package_list_get_obj (list, i);
+		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
+			  obj->package_id, obj->summary);
+		ident = pk_package_id_new_from_string (obj->package_id);
+		if (obj->info == PK_INFO_ENUM_BLOCKED) {
 			skipped_number++;
 			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
-						ident->name, item->summary);
+						ident->name, obj->summary);
 		}
 		pk_package_id_free (ident);
 	}
@@ -1333,7 +1333,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	gboolean already_installed = FALSE;
 	gchar *package_id = NULL;
 	PkPackageList *list = NULL;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	PkPackageId *ident;
 	gchar **package_ids = NULL;
 	gchar *text;
@@ -1363,15 +1363,15 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 
 	/* see what we've got already */
 	for (i=0; i<len; i++) {
-		item = pk_package_list_get_item (list, i);
-		if (item->info == PK_INFO_ENUM_INSTALLED) {
+		obj = pk_package_list_get_obj (list, i);
+		if (obj->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 			g_free (package_id);
-			package_id = g_strdup (item->package_id);
+			package_id = g_strdup (obj->package_id);
 			break;
-		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved to:", item->package_id);
-			package_id = g_strdup (item->package_id);
+		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
+			pk_debug ("package '%s' resolved to:", obj->package_id);
+			package_id = g_strdup (obj->package_id);
 		}
 	}
 
@@ -1579,7 +1579,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	gchar *message;
 	const gchar *title;
 	gboolean ret;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	PkPackageList *list;
 	GPtrArray *array;
 	PkCatalog *catalog;
@@ -1653,8 +1653,8 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	string = g_string_new (_("The following packages are marked to be installed from the catalog:"));
 	g_string_append (string, "\n\n");
 	for (i=0; i<len; i++) {
-		item = pk_package_list_get_item (list, i);
-		text = gpk_package_id_format_oneline (item->package_id, item->summary);
+		obj = pk_package_list_get_obj (list, i);
+		text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}
@@ -1696,8 +1696,8 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	/* convert to list of package id's */
 	array = g_ptr_array_new ();
 	for (i=0; i<len; i++) {
-		item = pk_package_list_get_item (list, i);
-		g_ptr_array_add (array, g_strdup (item->package_id));
+		obj = pk_package_list_get_obj (list, i);
+		g_ptr_array_add (array, g_strdup (obj->package_id));
 	}
 
 	/* install packages */

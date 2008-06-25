@@ -44,7 +44,7 @@
 #include <pk-task-list.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
-#include <pk-update-detail.h>
+#include <pk-update-detail-obj.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
@@ -470,8 +470,7 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 		widget = glade_xml_get_widget (glade_xml, "button_close3");
 		gtk_widget_grab_default (widget);
 	} else {
-
-		PkPackageItem *item;
+		const PkPackageObj *obj;
 		guint i;
 		guint num_low = 0;
 		guint num_normal = 0;
@@ -483,16 +482,16 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 		gchar *text;
 
 		for (i=0;i<length;i++) {
-			item = pk_package_list_get_item (list, i);
-			if (item->info == PK_INFO_ENUM_LOW) {
+			obj = pk_package_list_get_obj (list, i);
+			if (obj->info == PK_INFO_ENUM_LOW) {
 				num_low++;
-			} else if (item->info == PK_INFO_ENUM_IMPORTANT) {
+			} else if (obj->info == PK_INFO_ENUM_IMPORTANT) {
 				num_important++;
-			} else if (item->info == PK_INFO_ENUM_SECURITY) {
+			} else if (obj->info == PK_INFO_ENUM_SECURITY) {
 				num_security++;
-			} else if (item->info == PK_INFO_ENUM_BUGFIX) {
+			} else if (obj->info == PK_INFO_ENUM_BUGFIX) {
 				num_bugfix++;
-			} else if (item->info == PK_INFO_ENUM_ENHANCEMENT) {
+			} else if (obj->info == PK_INFO_ENUM_ENHANCEMENT) {
 				num_enhancement++;
 			} else {
 				num_normal++;
@@ -556,7 +555,7 @@ gpk_update_viewer_get_new_update_list (void)
 {
 	GError *error = NULL;
 	PkPackageList *list;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	GtkWidget *widget;
 	guint length;
 	guint i;
@@ -590,15 +589,15 @@ gpk_update_viewer_get_new_update_list (void)
 	}
 
 	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		text = gpk_package_id_format_twoline (item->package_id, item->summary);
-		icon_name = gpk_info_enum_to_icon_name (item->info);
+		obj = pk_package_list_get_obj (list, i);
+		text = gpk_package_id_format_twoline (obj->package_id, obj->summary);
+		icon_name = gpk_info_enum_to_icon_name (obj->info);
 		gtk_list_store_append (list_store_details, &iter);
 		gtk_list_store_set (list_store_details, &iter,
 				    PACKAGES_COLUMN_TEXT, text,
-				    PACKAGES_COLUMN_ID, item->package_id,
+				    PACKAGES_COLUMN_ID, obj->package_id,
 				    PACKAGES_COLUMN_ICON, icon_name,
-				    PACKAGES_COLUMN_INFO, item->info,
+				    PACKAGES_COLUMN_INFO, obj->info,
 				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
 		g_free (text);
@@ -774,7 +773,7 @@ out:
  * gpk_update_viewer_update_detail_cb:
  **/
 static void
-gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetail *detail, gpointer data)
+gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *detail, gpointer data)
 {
 	GtkWidget *widget;
 	PkPackageId *ident;
@@ -1160,7 +1159,7 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 {
 	guint i;
 	guint length;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	GString *string;
 	gboolean exists = FALSE;
 	gchar *text;
@@ -1172,9 +1171,9 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 	/* find any that are blocked */
 	length = pk_package_list_get_size (list);
 	for (i=0;i<length;i++) {
-		item = pk_package_list_get_item (list, i);
-		if (item->info == PK_INFO_ENUM_BLOCKED) {
-			text = gpk_package_id_format_oneline (item->package_id, item->summary);
+		obj = pk_package_list_get_obj (list, i);
+		if (obj->info == PK_INFO_ENUM_BLOCKED) {
+			text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
 			g_string_append_printf (string, "%s\n", text);
 			g_free (text);
 			exists = TRUE;

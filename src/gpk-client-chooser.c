@@ -172,7 +172,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	GladeXML *glade_xml;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	PkPackageId *ident;
 	GtkTreeIter iter;
 	PkExtra *extra;
@@ -247,27 +247,27 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	/* see what we've got already */
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
-		item = pk_package_list_get_item (list, i);
-		pk_debug ("package '%s' got:", item->package_id);
+		obj = pk_package_list_get_obj (list, i);
+		pk_debug ("package '%s' got:", obj->package_id);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (list_store, &iter);
-		text = gpk_package_id_format_twoline (item->package_id, item->summary);
+		text = gpk_package_id_format_twoline (obj->package_id, obj->summary);
 
 		/* get the icon */
-		ident = pk_package_id_new_from_string (item->package_id);
+		ident = pk_package_id_new_from_string (obj->package_id);
 		icon_name = pk_extra_get_icon_name (extra, ident->name);
 		pk_package_id_free (ident);
 
 		/* check icon actually exists and is valid in this theme */
 		ret = gpk_check_icon_valid (icon_name);
 		if (!ret) {
-			icon_name = gpk_info_enum_to_icon_name (item->info);
+			icon_name = gpk_info_enum_to_icon_name (obj->info);
 		}
 
 		gtk_list_store_set (list_store, &iter,
 				    GPK_CHOOSER_COLUMN_TEXT, text,
-				    GPK_CHOOSER_COLUMN_ID, item->package_id, -1);
+				    GPK_CHOOSER_COLUMN_ID, obj->package_id, -1);
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}

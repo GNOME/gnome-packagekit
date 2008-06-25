@@ -505,7 +505,7 @@ gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *l
 	guint i;
 	guint length;
 	PkInfoEnum infos = 0;
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), PK_INFO_ENUM_UNKNOWN);
 
@@ -517,13 +517,13 @@ gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *l
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		if (item == NULL) {
-			pk_warning ("not found item %i", i);
+		obj = pk_package_list_get_obj (list, i);
+		if (obj == NULL) {
+			pk_warning ("not found obj %i", i);
 			break;
 		}
-		pk_debug ("%s %s", item->package_id, pk_info_enum_to_text (item->info));
-		pk_enums_add (infos, item->info);
+		pk_debug ("%s %s", obj->package_id, pk_info_enum_to_text (obj->info));
+		pk_enums_add (infos, obj->info);
 	}
 	return infos;
 }
@@ -638,7 +638,7 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 static gboolean
 gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 {
-	PkPackageItem *item;
+	const PkPackageObj *obj;
 	guint length;
 	guint i;
 	gboolean ret = FALSE;
@@ -696,15 +696,15 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* find the security updates */
 	for (i=0; i<length; i++) {
-		item = pk_package_list_get_item (list, i);
-		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
-			  item->package_id, item->summary);
-		ident = pk_package_id_new_from_string (item->package_id);
-		if (item->info == PK_INFO_ENUM_SECURITY) {
+		obj = pk_package_list_get_obj (list, i);
+		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
+			  obj->package_id, obj->summary);
+		ident = pk_package_id_new_from_string (obj->package_id);
+		if (obj->info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
-			g_ptr_array_add (security_array, g_strdup (item->package_id));
+			g_ptr_array_add (security_array, g_strdup (obj->package_id));
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
-						ident->name, item->summary);
+						ident->name, obj->summary);
 		}
 		pk_package_id_free (ident);
 	}
