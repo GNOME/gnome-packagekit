@@ -1457,7 +1457,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 
 	/* selected nothing */
 	if (package_id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to install software"), _("No spplications were chosen to be installed"), NULL);
+		gpk_client_error_msg (gclient, _("Failed to install software"), _("No applications were chosen to be installed"), NULL);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
@@ -1747,7 +1747,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* print a proper error if we have it */
 		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
-			message = g_strdup (_("Authorisation could not be obtained"));
+			message = g_strdup (_("Authorization could not be obtained"));
 		} else {
 			message = g_strdup_printf (_("The error was: %s"), error_local->message);
 		}

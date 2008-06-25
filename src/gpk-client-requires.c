@@ -38,6 +38,37 @@
 static PkClient *client = NULL;
 
 /**
+ * gpk_client_requires_get_package_ids_name:
+ **/
+gchar *
+gpk_client_requires_get_package_ids_name (gchar **package_ids)
+{
+	guint i;
+	guint length;
+	gchar *text;
+	GString *string;
+	PkPackageId *ident;
+
+	string = g_string_new ("");
+	length = g_strv_length (package_ids);
+
+	/* for each name */
+	for (i=0; i<length; i++) {
+		ident = pk_package_id_new_from_string (package_ids[i]);
+		g_string_append_printf (string, "%s, ", ident->name);
+		pk_package_id_free (ident);
+	}
+
+	/* remove last ', ' */
+	if (string->len > 2) {
+		g_string_set_size (string, string->len - 2);
+	}
+
+	text = g_string_free (string, FALSE);
+	return text;
+}
+
+/**
  * gpk_client_requires_show:
  *
  * Return value: if we agreed to remove the deps
@@ -106,14 +137,11 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	/* remove last \n */
 	g_string_set_size (string, string->len - 1);
 
+	name = gpk_client_requires_get_package_ids_name (package_ids);
+	text = g_strdup_printf (ngettext ("%i other package depends on %s", "%i other packages depend on %s", length), length, name);
+	g_free (name);
+
 	/* show UI */
-	if (g_strv_length (package_ids) == 1) {
-		name = gpk_package_id_name_version (package_ids[0]);
-		text = g_strdup_printf (_("%i other packages depends on %s"), length, name);
-		g_free (name);
-	} else {
-		text = g_strdup_printf (_("%i other packages depends on these packages"), length);
-	}
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", text);
 	g_free (text);
