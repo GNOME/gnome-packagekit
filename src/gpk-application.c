@@ -885,7 +885,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
 
-		gpk_application_add_detail_item (application, _("Project"), _("Hompage"), url);
+		gpk_application_add_detail_item (application, _("Project"), _("Homepage"), url);
 
 		/* save the url for the button */
 		g_free (application->priv->url);

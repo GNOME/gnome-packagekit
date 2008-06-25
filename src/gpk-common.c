@@ -405,7 +405,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Reading the config file failed");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The task cannot be cancelled");
+		text = _("The task cannot be canceled");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages cannot be installed");
@@ -486,11 +486,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_NOT_SUPPORTED:
 		text = _("The action is not supported by this backend.\n"
-			 "Please report a bug as this shouldn't have happened.");
+			 "Please report a bug at " GPK_BUGZILLA_URL " as this should not have happened.");
 		break;
 	case PK_ERROR_ENUM_INTERNAL_ERROR:
 		text = _("A problem that we were not expecting has occurred.\n"
-			 "Please report this bug with the error description.");
+			 "Please report this bug at " GPK_BUGZILLA_URL " with the error description.");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
 		text = _("A security trust relationship could not be made with software source.\n"
@@ -538,7 +538,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "You may need to enable an item in Software Sources");
 		break;
 	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
-		text = _("Removing a protected system package is not alloed.");
+		text = _("Removing a protected system package is not allowed.");
 		break;
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
 		text = _("The task was canceled successfully and no packages were changed.");
@@ -552,7 +552,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "Please make sure configuration is valid.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
-		text = _("The task is not safe to be cancelled at this time.");
+		text = _("The task is not safe to be canceled at this time.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
 		text = _("Source packages are not normally installed this way.\n"
@@ -613,7 +613,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("The package that was downloaded is corrupt and needs to be downloaded again.");
 		break;
 	default:
-		g_warning ("Unknown error, please report a bug.\n"
+		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
 			   "More information is available in the detailed report.");
 	}
 	return text;
