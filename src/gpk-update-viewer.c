@@ -390,24 +390,6 @@ gpk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 }
 
 /**
- * gpk_update_viewer_history_cb:
- **/
-static void
-gpk_update_viewer_history_cb (GtkWidget *widget_button, gpointer data)
-{
-	GError *error = NULL;
-	GtkWidget *widget;
-
-	/* FIXME: do this in process */
-	if (!g_spawn_command_line_async ("gpk-log", &error)) {
-		widget = glade_xml_get_widget (glade_xml, "window_updates");
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to launch"),
-					_("The file was not found"), error->message);
-		g_error_free (error);
-	}
-}
-
-/**
  * gpk_update_viewer_button_close_and_cancel_cb:
  **/
 static void
@@ -1101,10 +1083,10 @@ pk_update_get_approx_time (guint time)
 }
 
 /**
- * pk_update_update_last_refreshed_time:
+ * pk_update_viewer_set_last_refreshed_time:
  **/
 static gboolean
-pk_update_update_last_refreshed_time (void)
+pk_update_viewer_set_last_refreshed_time (void)
 {
 	GtkWidget *widget;
 	guint time;
@@ -1112,17 +1094,28 @@ pk_update_update_last_refreshed_time (void)
 
 	/* get times from the daemon */
 	pk_control_get_time_since_action (control, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+	if (time < 60*60*24) {
+		widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
+		gtk_widget_hide (widget);
+		return FALSE;
+	}
+
+	widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
+	gtk_widget_show (widget);
 	time_text = pk_update_get_approx_time (time);
 	widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
+	gtk_widget_show (widget);
 	return TRUE;
 }
 
 /**
- * pk_update_update_last_updated_time:
+ * pk_update_viewer_set_last_updated_time:
  **/
 static gboolean
-pk_update_update_last_updated_time (void)
+pk_update_viewer_set_last_updated_time (void)
 {
 	GtkWidget *widget;
 	guint time;
@@ -1553,10 +1546,10 @@ gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, Pk
 
 	/* update last time in the UI */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_update_update_last_refreshed_time ();
+		pk_update_viewer_set_last_refreshed_time ();
 	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 		   role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		pk_update_update_last_updated_time ();
+		pk_update_viewer_set_last_updated_time ();
 	}
 
 	/* do we need to repopulate the preview widget */
@@ -1686,7 +1679,6 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkRoleEnum roles;
 	gboolean ret;
-	GtkSizeGroup *size_group;
 	GError *error = NULL;
 	LibUnique *libunique;
 
@@ -1846,17 +1838,6 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), "update-viewer-details");
 
-	widget = glade_xml_get_widget (glade_xml, "button_history");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_history_cb), NULL);
-
-	/* make the refresh button the same size as the history one */
-	size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
-	gtk_size_group_add_widget (size_group, widget);
-	widget = glade_xml_get_widget (glade_xml, "button_history");
-	gtk_size_group_add_widget (size_group, widget);
-
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
@@ -1906,8 +1887,8 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set the last updated text */
-	pk_update_update_last_refreshed_time ();
-	pk_update_update_last_updated_time ();
+	pk_update_viewer_set_last_refreshed_time ();
+	pk_update_viewer_set_last_updated_time ();
 
 	/* we need to grey out all the buttons if we are in progress */
 	g_signal_connect (tlist, "changed",
