@@ -173,7 +173,6 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	const PkPackageObj *obj;
-	PkPackageId *ident;
 	GtkTreeIter iter;
 	PkExtra *extra;
 	gboolean ret;
@@ -248,16 +247,14 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		pk_debug ("package '%s' got:", obj->package_id);
+		pk_debug ("package '%s' got:", obj->id->name);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (list_store, &iter);
-		text = gpk_package_id_format_twoline (obj->package_id, obj->summary);
+		text = gpk_package_id_format_twoline (obj->id, obj->summary);
 
 		/* get the icon */
-		ident = pk_package_id_new_from_string (obj->package_id);
-		icon_name = pk_extra_get_icon_name (extra, ident->name);
-		pk_package_id_free (ident);
+		icon_name = pk_extra_get_icon_name (extra, obj->id->name);
 
 		/* check icon actually exists and is valid in this theme */
 		ret = gpk_check_icon_valid (icon_name);
@@ -265,9 +262,11 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 			icon_name = gpk_info_enum_to_icon_name (obj->info);
 		}
 
+		package_id = pk_package_id_to_string (obj->id);
 		gtk_list_store_set (list_store, &iter,
 				    GPK_CHOOSER_COLUMN_TEXT, text,
-				    GPK_CHOOSER_COLUMN_ID, obj->package_id, -1);
+				    GPK_CHOOSER_COLUMN_ID, package_id, -1);
+		g_free (package_id);
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}

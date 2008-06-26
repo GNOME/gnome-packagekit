@@ -49,7 +49,7 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 	GError *error = NULL;
 	const PkPackageObj *obj;
 	PkPackageList *list;
-	gchar *package_id = NULL;
+	PkPackageId *id = NULL;
 	gchar **package_ids = NULL;
 	gchar *text;
 	gboolean already_installed = FALSE;
@@ -97,13 +97,9 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 		if (obj->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved", obj->package_id);
+			pk_debug ("package '%s' resolved", obj->id->name);
+			id = obj->id;
 			//TODO: we need to list these in a gpk-client-chooser
-			if (package_id != NULL) {
-				pk_warning ("throwing away %s", package_id);
-				g_free (package_id);
-			}
-			package_id = g_strdup (obj->package_id);
 		}
 	}
 
@@ -118,7 +114,7 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 	}
 
 	/* got junk? */
-	if (package_id == NULL) {
+	if (id == NULL) {
 		gpk_error_dialog_modal (window, _("Failed to find package"), _("Incorrect response from search"), NULL);
 		goto out;
 	}

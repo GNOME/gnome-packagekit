@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include <pk-enum.h>
+#include <pk-package-id.h>
 #include "gpk-animated-icon.h"
 
 G_BEGIN_DECLS
@@ -55,11 +56,11 @@ G_BEGIN_DECLS
 
 void		 gpk_common_self_test			(gpointer	 data);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
-gchar		*gpk_package_id_format_twoline		(const gchar	*package_id,
+gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,
 							 const gchar	*summary);
-gchar		*gpk_package_id_format_oneline		(const gchar	*package_id,
+gchar		*gpk_package_id_format_oneline		(const PkPackageId *id,
 							 const gchar	*summary);
-gchar		*gpk_package_id_name_version		(const gchar	*package_id);
+gchar		*gpk_package_id_name_version		(const PkPackageId *id);
 
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

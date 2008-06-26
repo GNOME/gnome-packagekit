@@ -138,7 +138,7 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	}
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
+		text = gpk_package_id_format_oneline (obj->id, obj->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}

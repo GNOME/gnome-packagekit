@@ -121,6 +121,7 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	gchar *text;
 	gchar *whole;
 	gchar **sections;
+	PkPackageId *id;
 
 	string = g_string_new ("");
 	size = g_strv_length (array);
@@ -128,9 +129,11 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_text (sections[0]);
 		if (info_local == info) {
-			text = gpk_package_id_format_oneline (sections[1], NULL);
+			id = pk_package_id_new_from_string (sections[1]);
+			text = gpk_package_id_format_oneline (id, NULL);
 			g_string_append_printf (string, "%s, ", text);
 			g_free (text);
+			pk_package_id_free (id);
 		}
 		g_strfreev (sections);
 	}

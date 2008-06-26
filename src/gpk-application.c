@@ -112,7 +112,7 @@ struct GpkApplicationPrivate
 	PkSearchType		 search_type;
 	PkSearchMode		 search_mode;
 	PkActionMode		 action;
-	GPtrArray		*package_list;
+	PkPackageList		*package_list;
 };
 
 enum {
@@ -372,11 +372,13 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	GtkTreeModel *model;
 	GpkPackageState state;
 	gboolean enabled;
+	guint length;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* okay to apply? */
-	if (application->priv->package_list->len == 0) {
+	length = pk_package_list_get_size (application->priv->package_list);
+	if (length == 0) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
@@ -411,7 +413,7 @@ static gboolean
 gpk_application_install (GpkApplication *application)
 {
 	gboolean ret;
-	guint index;
+	PkPackageId *id;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
@@ -423,7 +425,7 @@ gpk_application_install (GpkApplication *application)
 
 	/* changed mind, or wrong mode */
 	if (application->priv->action == PK_ACTION_REMOVE) {
-		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
+		ret = pk_package_list_remove (application->priv->package_list, application->priv->package);
 		if (ret) {
 			pk_debug ("removed %s from package list", application->priv->package);
 
@@ -439,14 +441,16 @@ gpk_application_install (GpkApplication *application)
 	}
 
 	/* already added */
-	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
-	if (index != -1) {
+	ret = pk_package_list_contains (application->priv->package_list, application->priv->package);
+	if (ret) {
 		pk_warning ("already added");
 		return FALSE;
 	}
 
 	application->priv->action = PK_ACTION_INSTALL;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+	id = pk_package_id_new_from_string (application->priv->package);
+	pk_package_list_add (application->priv->package_list, 0, id, NULL);
+	pk_package_id_free (id);
 
 	/* correct buttons */
 	gpk_application_allow_install (application, FALSE);
@@ -537,7 +541,7 @@ static gboolean
 gpk_application_remove (GpkApplication *application)
 {
 	gboolean ret;
-	guint index;
+	PkPackageId *id;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
@@ -549,7 +553,7 @@ gpk_application_remove (GpkApplication *application)
 
 	/* changed mind, or wrong mode */
 	if (application->priv->action == PK_ACTION_INSTALL) {
-		ret = pk_ptr_array_remove_string (application->priv->package_list, application->priv->package);
+		ret = pk_package_list_remove (application->priv->package_list, application->priv->package);
 		if (ret) {
 			pk_debug ("removed %s from package list", application->priv->package);
 
@@ -565,14 +569,16 @@ gpk_application_remove (GpkApplication *application)
 	}
 
 	/* already added */
-	index = pk_ptr_array_find_string (application->priv->package_list, application->priv->package);
-	if (index != -1) {
+	ret = pk_package_list_contains (application->priv->package_list, application->priv->package);
+	if (ret) {
 		pk_warning ("already added");
 		return FALSE;
 	}
 
 	application->priv->action = PK_ACTION_REMOVE;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+	id = pk_package_id_new_from_string (application->priv->package);
+	pk_package_list_add (application->priv->package_list, 0, id, NULL);
+	pk_package_id_free (id);
 
 	/* correct buttons */
 	gpk_application_allow_install (application, TRUE);
@@ -944,15 +950,13 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
  * gpk_application_package_cb:
  **/
 static void
-gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			    const gchar *summary, GpkApplication *application)
+gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
 {
 	GtkTreeIter iter;
-	PkPackageId *ident;
 	const gchar *summary_new;
 	const gchar *icon = NULL;
 	gchar *text;
-	gint index;
+	gchar *package_id;
 	gboolean in_queue;
 	gboolean installed;
 	gboolean checkbox;
@@ -961,32 +965,25 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (info), package_id, summary);
+	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
 	/* ignore progress */
-	if (info != PK_INFO_ENUM_INSTALLED && info != PK_INFO_ENUM_AVAILABLE) {
+	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE) {
 		return;
 	}
 
-	/* find localised summary */
-	ident = pk_package_id_new_from_string (package_id);
-	if (ident == NULL) {
-		pk_warning ("failed to get PkPackageId for %s", package_id);
-		return;
-	}
-	summary_new = pk_extra_get_summary (application->priv->extra, ident->name);
+	summary_new = pk_extra_get_summary (application->priv->extra, obj->id->name);
 	if (summary_new == NULL) {
 		/* use the non-localised one */
-		summary_new = summary;
+		summary_new = obj->summary;
 	}
 
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
 
 	/* are we in the package list? */
-	index = pk_ptr_array_find_string (application->priv->package_list, package_id);
-	in_queue = (index != -1);
-	installed = (info == PK_INFO_ENUM_INSTALLED);
+	in_queue = pk_package_list_contains_obj (application->priv->package_list, obj);
+	installed = (obj->info == PK_INFO_ENUM_INSTALLED);
 
 	if (installed && in_queue) {
 		state = GPK_STATE_INSTALLED_TO_BE_REMOVED;
@@ -1002,11 +999,12 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* use two lines */
-	text = gpk_package_id_format_twoline (package_id, summary);
+	text = gpk_package_id_format_twoline (obj->id, summary_new);
 
 	/* can we modify this? */
 	enabled = gpk_application_get_checkbox_enable (application, state);
 
+	package_id = pk_package_id_to_string (obj->id);
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
@@ -1017,7 +1015,7 @@ gpk_application_package_cb (PkClient *client, PkInfoEnum info, const gchar *pack
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
 
-	pk_package_id_free (ident);
+	g_free (package_id);
 	g_free (text);
 
 	while (gtk_events_pending ()) {
@@ -1504,7 +1502,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
-	g_ptr_array_remove_range (application->priv->package_list, 0, application->priv->package_list->len);
+	pk_package_list_clear (application->priv->package_list);
 
 	/* force a button refresh */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
@@ -1527,7 +1525,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	package_ids = pk_ptr_array_to_argv (application->priv->package_list);
+	package_ids = pk_package_list_to_argv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
 		/* can we show the user the new application? */
@@ -1551,7 +1549,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	/* refresh the search as the items may have changed and the filter has not changed */
 	if (ret) {
 		/* clear if success */
-		g_ptr_array_remove_range (application->priv->package_list, 0, application->priv->package_list->len);
+		pk_package_list_clear (application->priv->package_list);
 		application->priv->action = PK_ACTION_NONE;
 		gpk_application_set_buttons_apply_clear (application);
 		gpk_application_refresh_search_results (application);
@@ -2568,7 +2566,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->group = NULL;
 	application->priv->url = NULL;
 	application->priv->has_package = FALSE;
-	application->priv->package_list = g_ptr_array_new ();
+	application->priv->package_list = pk_package_list_new ();
 
 	application->priv->gconf_client = gconf_client_get_default ();
 	application->priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
@@ -3010,6 +3008,15 @@ gpk_application_init (GpkApplication *application)
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
 
+	/* set up the groups checkbox */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (application->priv->groups_store));
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	g_signal_connect (selection, "changed",
+			  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
+
 	/* only if we can do both */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) &&
 	    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
@@ -3027,14 +3034,6 @@ gpk_application_init (GpkApplication *application)
 
 	/* create group tree view if we can search by group */
 	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-		gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-					 GTK_TREE_MODEL (application->priv->groups_store));
-
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-		g_signal_connect (selection, "changed",
-				  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
-
 		/* add columns to the tree view */
 		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
 
@@ -3092,12 +3091,12 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->extra);
 	g_object_unref (application->priv->gconf_client);
 	g_object_unref (application->priv->gclient);
+	g_object_unref (application->priv->package_list);
 
 	g_free (application->priv->url);
 	g_free (application->priv->group);
 	g_free (application->priv->package);
 	g_hash_table_destroy (application->priv->repos);
-	g_ptr_array_free (application->priv->package_list, TRUE);
 
 	G_OBJECT_CLASS (gpk_application_parent_class)->finalize (object);
 }

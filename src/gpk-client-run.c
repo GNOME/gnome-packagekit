@@ -154,6 +154,7 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 	gchar *joint = NULL;
 	GtkTreeIter iter;
 	GKeyFile *file;
+	PkPackageId *id;
 
 	/* get some data from the desktop file */
 	file = g_key_file_new ();
@@ -194,7 +195,9 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 	/* put formatted text into treeview */
 	gtk_list_store_append (list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
-	text = gpk_package_id_format_twoline (package_id, joint);
+	id = pk_package_id_new_from_string (package_id);
+	text = gpk_package_id_format_twoline (id, joint);
+	pk_package_id_free (id);
 
 	/* might not be valid */
 	if (!gpk_check_icon_valid (icon)) {

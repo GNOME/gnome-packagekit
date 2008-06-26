@@ -542,6 +542,7 @@ gpk_update_viewer_get_new_update_list (void)
 	guint length;
 	guint i;
 	gchar *text;
+	gchar *package_id;
 	const gchar *icon_name;
 	gchar **package_ids;
 	GtkTreeIter iter;
@@ -572,16 +573,18 @@ gpk_update_viewer_get_new_update_list (void)
 
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_twoline (obj->package_id, obj->summary);
+		text = gpk_package_id_format_twoline (obj->id, obj->summary);
 		icon_name = gpk_info_enum_to_icon_name (obj->info);
 		gtk_list_store_append (list_store_details, &iter);
+		package_id = pk_package_id_to_string (obj->id);
 		gtk_list_store_set (list_store_details, &iter,
 				    PACKAGES_COLUMN_TEXT, text,
-				    PACKAGES_COLUMN_ID, obj->package_id,
+				    PACKAGES_COLUMN_ID, package_id,
 				    PACKAGES_COLUMN_ICON, icon_name,
 				    PACKAGES_COLUMN_INFO, obj->info,
 				    PACKAGES_COLUMN_SELECT, TRUE,
 				    -1);
+		g_free (package_id);
 		g_free (text);
 	}
 
@@ -633,14 +636,13 @@ gpk_update_viewer_overview_cb (GtkWidget *widget, gpointer data)
  * gpk_update_viewer_package_cb:
  **/
 static void
-gpk_update_viewer_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-			     const gchar *summary, gpointer data)
+gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointer data)
 {
 	PkRoleEnum role;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
-		  pk_info_enum_to_text (info), package_id, summary);
+		  pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 }
 
 /**
@@ -726,6 +728,7 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 	gchar **package_ids;
 	gchar *pretty = NULL;
 	GString *string;
+	PkPackageId *id;
 
 	/* do we have any data? */
 	if (pk_strzero (package_ids_delimit)) {
@@ -736,7 +739,9 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 	package_ids = g_strsplit (package_ids_delimit, "^", 0);
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
-		pretty = gpk_package_id_name_version (package_ids[i]);
+		id = pk_package_id_new_from_string (package_ids[i]);
+		pretty = gpk_package_id_name_version (id);
+		pk_package_id_free (id);
 		g_string_append (string, pretty);
 		g_string_append_c (string, '\n');
 		g_free (pretty);
@@ -758,13 +763,13 @@ static void
 gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *detail, gpointer data)
 {
 	GtkWidget *widget;
-	PkPackageId *ident;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
 	gchar *package_pretty;
 	const gchar *info_text;
 	PkInfoEnum info;
+	PkPackageId *id;
 
 	/* clear existing list */
 	gpk_update_viewer_description_animation_stop ();
@@ -788,7 +793,8 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	/* translators: this is the update type, e.g. security */
 	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
 
-	package_pretty = gpk_package_id_name_version (detail->package_id);
+	id = pk_package_id_new_from_string (detail->package_id);
+	package_pretty = gpk_package_id_name_version (id);
 	/* translators: this is the package version */
 	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
 	g_free (package_pretty);
@@ -809,10 +815,8 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	}
 	g_free (package_pretty);
 
-	ident = pk_package_id_new_from_string (detail->package_id);
 	/* translators: this is the repository the package has come from */
-	gpk_update_viewer_add_description_item (_("Repository"), ident->data, NULL);
-	pk_package_id_free (ident);
+	gpk_update_viewer_add_description_item (_("Repository"), id->data, NULL);
 
 	if (!pk_strzero (detail->update_text)) {
 		gchar *first;
@@ -846,6 +850,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 		/* translators: this is a notice a restart might be required */
 		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
 	}
+	pk_package_id_free (id);
 }
 
 /**
@@ -1166,7 +1171,7 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 	for (i=0;i<length;i++) {
 		obj = pk_package_list_get_obj (list, i);
 		if (obj->info == PK_INFO_ENUM_BLOCKED) {
-			text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
+			text = gpk_package_id_format_oneline (obj->id, obj->summary);
 			g_string_append_printf (string, "%s\n", text);
 			g_free (text);
 			exists = TRUE;

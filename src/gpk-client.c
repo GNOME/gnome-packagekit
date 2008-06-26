@@ -350,7 +350,6 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	PkRestartEnum restart;
 	guint i;
 	guint length;
-	PkPackageId *ident;
 	PkPackageList *list;
 	const PkPackageObj *obj;
 	GString *message_text;
@@ -374,14 +373,12 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
-			  obj->package_id, obj->summary);
-		ident = pk_package_id_new_from_string (obj->package_id);
+			  obj->id->name, obj->summary);
 		if (obj->info == PK_INFO_ENUM_BLOCKED) {
 			skipped_number++;
 			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
-						ident->name, obj->summary);
+						obj->id->name, obj->summary);
 		}
-		pk_package_id_free (ident);
 	}
 	g_object_unref (list);
 
@@ -711,8 +708,7 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
  * gpk_client_package_cb:
  **/
 static void
-gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_id,
-		      const gchar *summary, GpkClient *gclient)
+gpk_client_package_cb (PkClient *client, const PkPackageObj *obj, GpkClient *gclient)
 {
 	gchar *text;
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
@@ -722,7 +718,7 @@ gpk_client_package_cb (PkClient *client, PkInfoEnum info, const gchar *package_i
 		return;
 	}
 
-	text = gpk_package_id_format_twoline (package_id, summary);
+	text = gpk_package_id_format_twoline (obj->id, obj->summary);
 	gpk_client_set_package_label (gclient, text);
 	g_free (text);
 }
@@ -1334,7 +1330,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	gchar *package_id = NULL;
 	PkPackageList *list = NULL;
 	const PkPackageObj *obj;
-	PkPackageId *ident;
+	PkPackageId *id = NULL;
 	gchar **package_ids = NULL;
 	gchar *text;
 
@@ -1366,29 +1362,25 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 		obj = pk_package_list_get_obj (list, i);
 		if (obj->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
-			g_free (package_id);
-			package_id = g_strdup (obj->package_id);
-			break;
+			id = obj->id;
 		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved to:", obj->package_id);
-			package_id = g_strdup (obj->package_id);
+			pk_debug ("package '%s' resolved to:", obj->id->name);
+			id = obj->id;
 		}
 	}
 
 	/* already installed? */
 	if (already_installed) {
-		ident = pk_package_id_new_from_string (package_id);
-		text = g_strdup_printf (_("The %s package already provides the file %s"), ident->name, full_path);
+		text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
 		gpk_client_error_msg (gclient, _("Failed to install file"), text, NULL);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_free (text);
-		pk_package_id_free (ident);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* got junk? */
-	if (package_id == NULL) {
+	if (id == NULL) {
 		gpk_client_error_msg (gclient, _("Failed to install file"), _("Incorrect response from file search"), NULL);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
@@ -1396,7 +1388,8 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* install this specific package */
-	package_ids = g_strsplit (package_id, "|", 1);
+	package_id = pk_package_id_to_string (id);
+	package_ids = pk_package_ids_from_id (package_id);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
 	if (list != NULL) {
@@ -1581,7 +1574,6 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	gboolean ret;
 	const PkPackageObj *obj;
 	PkPackageList *list;
-	GPtrArray *array;
 	PkCatalog *catalog;
 	GString *string;
 	gchar *text;
@@ -1654,7 +1646,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	g_string_append (string, "\n\n");
 	for (i=0; i<len; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->package_id, obj->summary);
+		text = gpk_package_id_format_oneline (obj->id, obj->summary);
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}
@@ -1694,14 +1686,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	}
 
 	/* convert to list of package id's */
-	array = g_ptr_array_new ();
-	for (i=0; i<len; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		g_ptr_array_add (array, g_strdup (obj->package_id));
-	}
-
-	/* install packages */
-	package_ids = pk_ptr_array_to_argv (array);
+	package_ids = pk_package_list_to_argv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 
 out:
@@ -2259,9 +2244,17 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 
 	/* do the best we can */
 	ret = pk_client_get_package (gclient->priv->client_action, &text, NULL);
+
+	PkPackageId *id;
+	PkPackageObj *obj;
+
+	id = pk_package_id_new_from_string (text);
+	obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
+	pk_package_id_free (id);
 	if (ret) {
-		gpk_client_package_cb (gclient->priv->client_action, 0, text, NULL, gclient);
+		gpk_client_package_cb (gclient->priv->client_action, obj, gclient);
 	}
+	pk_package_obj_free (obj);
 
 	/* get the role */
 	ret = pk_client_get_role (gclient->priv->client_action, &role, NULL, &error);

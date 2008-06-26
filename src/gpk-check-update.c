@@ -522,7 +522,7 @@ gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *l
 			pk_warning ("not found obj %i", i);
 			break;
 		}
-		pk_debug ("%s %s", obj->package_id, pk_info_enum_to_text (obj->info));
+		pk_debug ("%s %s", obj->id->name, pk_info_enum_to_text (obj->info));
 		pk_enums_add (infos, obj->info);
 	}
 	return infos;
@@ -645,9 +645,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	GString *status_security;
 	GString *status_tooltip;
 	PkUpdateEnum update;
-	PkPackageId *ident;
 	GPtrArray *security_array;
 	const gchar *icon;
+	gchar *package_id;
 	gchar **package_ids;
 	PkPackageList *list;
 	GError *error = NULL;
@@ -698,15 +698,14 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
-			  obj->package_id, obj->summary);
-		ident = pk_package_id_new_from_string (obj->package_id);
+			  obj->id->name, obj->summary);
 		if (obj->info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
-			g_ptr_array_add (security_array, g_strdup (obj->package_id));
+			package_id = pk_package_id_to_string (obj->id);
+			g_ptr_array_add (security_array, package_id);
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
-						ident->name, obj->summary);
+						obj->id->name, obj->summary);
 		}
-		pk_package_id_free (ident);
 	}
 
 	/* do we do the automatic updates? */

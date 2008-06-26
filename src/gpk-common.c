@@ -211,40 +211,31 @@ gpk_size_to_si_size_text (guint64 size)
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
  **/
 gchar *
-gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
+gpk_package_id_format_twoline (const PkPackageId *id, const gchar *summary)
 {
-	PkPackageId *ident;
 	gchar *summary_safe;
 	gchar *text;
 	GString *string;
 
-	/* split by delimeter */
-	ident = pk_package_id_new_from_string (package_id);
-	if (ident == NULL) {
-		pk_warning ("invalid package_id %s", package_id);
-		return NULL;
-	}
-
 	/* optional */
 	if (pk_strzero (summary)) {
-		string = g_string_new (ident->name);
+		string = g_string_new (id->name);
 	} else {
 		string = g_string_new ("");
 		summary_safe = g_markup_escape_text (summary, -1);
-		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, ident->name);
+		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, id->name);
 		g_free (summary_safe);
 	}
 
 	/* some backends don't provide this */
-	if (ident->version != NULL) {
-		g_string_append_printf (string, "-%s", ident->version);
+	if (id->version != NULL) {
+		g_string_append_printf (string, "-%s", id->version);
 	}
-	if (ident->arch != NULL) {
-		g_string_append_printf (string, " (%s)", ident->arch);
+	if (id->arch != NULL) {
+		g_string_append_printf (string, " (%s)", id->arch);
 	}
 
 	text = g_string_free (string, FALSE);
-	pk_package_id_free (ident);
 	return text;
 }
 
@@ -254,29 +245,19 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
  * Return value: "<b>GTK Toolkit</b> (gtk2)"
  **/
 gchar *
-gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
+gpk_package_id_format_oneline (const PkPackageId *id, const gchar *summary)
 {
-	PkPackageId *ident;
 	gchar *summary_safe;
 	gchar *text;
 
-	/* split by delimeter */
-	ident = pk_package_id_new_from_string (package_id);
-	if (ident == NULL) {
-		pk_warning ("invalid package_id %s", package_id);
-		return NULL;
-	}
-
 	if (pk_strzero (summary)) {
 		/* just have name */
-		text = g_strdup (ident->name);
+		text = g_strdup (id->name);
 	} else {
 		summary_safe = g_markup_escape_text (summary, -1);
-		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, ident->name);
+		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, id->name);
 		g_free (summary_safe);
 	}
-
-	pk_package_id_free (ident);
 	return text;
 }
 
@@ -284,30 +265,17 @@ gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
  * gpk_package_id_name_version:
  **/
 gchar *
-gpk_package_id_name_version (const gchar *package_id)
+gpk_package_id_name_version (const PkPackageId *id)
 {
-	PkPackageId *ident;
 	gchar *text;
 	GString *string;
 
-	if (pk_strzero (package_id)) {
-		return g_strdup (_("Package identifier not valid"));
-	}
-
-	/* split by delimeter */
-	ident = pk_package_id_new_from_string (package_id);
-	if (ident == NULL) {
-		pk_warning ("invalid package_id %s", package_id);
-		return NULL;
-	}
-
-	string = g_string_new (ident->name);
-	if (ident->version != NULL) {
-		g_string_append_printf (string, "-%s", ident->version);
+	string = g_string_new (id->name);
+	if (id->version != NULL) {
+		g_string_append_printf (string, "-%s", id->version);
 	}
 	text = g_string_free (string, FALSE);
 
-	pk_package_id_free (ident);
 	return text;
 }
 
@@ -318,15 +286,15 @@ gchar *
 gpk_package_get_name (const gchar *package_id)
 {
 	gchar *package = NULL;
-	PkPackageId *ident;
+	PkPackageId *id;
 
-	ident = pk_package_id_new_from_string (package_id);
-	if (ident == NULL) {
+	id = pk_package_id_new_from_string (package_id);
+	if (id == NULL) {
 		package = g_strdup (package_id);
 	} else {
-		package = g_strdup (ident->name);
+		package = g_strdup (id->name);
 	}
-	pk_package_id_free (ident);
+	pk_package_id_free (id);
 	return package;
 }
 
@@ -1506,6 +1474,7 @@ gpk_common_self_test (gpointer data)
 	gchar *text;
 	guint i;
 	const gchar *string;
+	PkPackageId *id;
 	LibSelfTest *test = (LibSelfTest *) data;
 
 	if (libst_start (test, "GpkCommon", CLASS_AUTO) == FALSE) {
@@ -1670,7 +1639,9 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;i386;data", NULL);
+	id = pk_package_id_new_from_string ("simon;0.0.1;i386;data");
+	text = gpk_package_id_format_twoline (id, NULL);
+	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1680,7 +1651,9 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 2");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", NULL);
+	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
+	text = gpk_package_id_format_twoline (id, NULL);
+	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon-0.0.1") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1690,7 +1663,9 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 3");
-	text = gpk_package_id_format_twoline ("simon;;;data", NULL);
+	id = pk_package_id_new_from_string ("simon;;;data");
+	text = gpk_package_id_format_twoline (id, NULL);
+	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon") == 0) {
 		libst_success (test, NULL);
 	} else {
@@ -1700,7 +1675,9 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary 4");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", "dude");
+	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
+	text = gpk_package_id_format_twoline (id, "dude");
+	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0) {
 		libst_success (test, NULL);
 	} else {
