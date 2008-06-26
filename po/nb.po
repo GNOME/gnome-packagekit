@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit 0.2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-09 12:56+0200\n"
-"PO-Revision-Date: 2008-06-09 13:35+0200\n"
+"POT-Creation-Date: 2008-06-26 14:06+0200\n"
+"PO-Revision-Date: 2008-06-26 14:02+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -121,9 +121,8 @@ msgid "Notify the user when we have not started an auto-update on battery"
 msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:25
-#, fuzzy
 msgid "Notify the user when we have started an update"
-msgstr "Når _oppdateringer er tilgjengelig"
+msgstr "Varsle brukeren når en oppdatering er startet"
 
 #: ../data/gnome-packagekit.schemas.in.h:26
 msgid ""
@@ -141,165 +140,176 @@ msgstr "Endre hvilken programvare som er installert på systemet"
 
 #: ../data/gpk-application.glade.h:1
 msgid "About this software"
-msgstr ""
+msgstr "Om denne programvaren"
 
-#: ../data/gpk-application.glade.h:3
+#: ../data/gpk-application.glade.h:3 ../src/gpk-application.c:740
 msgid "Depends on"
 msgstr "Er avhengig av"
 
-#. translators: this is the package description
-#: ../data/gpk-application.glade.h:4 ../src/gpk-update-viewer.c:826
-msgid "Description"
-msgstr "Beskrivelse"
+#: ../data/gpk-application.glade.h:4
+msgid "Edit list of software sources"
+msgstr "Rediger listen med programvarekilder"
 
 #: ../data/gpk-application.glade.h:5
-msgid "File List"
-msgstr "Filliste"
+msgid "Execute graphical applications"
+msgstr "Kjør grafiske programmer"
 
 #: ../data/gpk-application.glade.h:6
+msgid "Get file list"
+msgstr "Hent filliste"
+
+#: ../data/gpk-application.glade.h:7
 msgid "Help with this software"
 msgstr "Hjelp for denne programvaren"
 
-#: ../data/gpk-application.glade.h:7
-msgid "Homepage"
-msgstr "Hjemmeside"
+#. add a specialist button
+#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:1673
+#: ../src/gpk-client-depends.c:157
+msgid "Install"
+msgstr "Installer"
 
-#: ../data/gpk-application.glade.h:8
+#: ../data/gpk-application.glade.h:9
 msgid "Only _available"
 msgstr "Kun _tilgjengelige"
 
-#: ../data/gpk-application.glade.h:9
+#: ../data/gpk-application.glade.h:10
 msgid "Only _development"
 msgstr "Kun _utvikling"
 
-#: ../data/gpk-application.glade.h:10
+#: ../data/gpk-application.glade.h:11
 msgid "Only _end user files"
 msgstr "Kun _sluttbrukerfiler"
 
-#: ../data/gpk-application.glade.h:11
+#: ../data/gpk-application.glade.h:12
 msgid "Only _installed"
 msgstr "Kun installerte"
 
-#: ../data/gpk-application.glade.h:12
+#: ../data/gpk-application.glade.h:13
 msgid "Only _newest packages"
 msgstr "Kun de _nyeste pakkene"
 
-#: ../data/gpk-application.glade.h:13
+#: ../data/gpk-application.glade.h:14
 msgid "Only _non-free software"
 msgstr "Kun i_kke-fri programvare"
 
-#: ../data/gpk-application.glade.h:14
+#: ../data/gpk-application.glade.h:15
 msgid "Only _non-sourcecode"
 msgstr "Kun ute_n kildekode"
 
-#: ../data/gpk-application.glade.h:15
+#: ../data/gpk-application.glade.h:16
 msgid "Only show one package, not subpackages"
 msgstr "Vis kun en pakke, ikke underpakker"
 
-#: ../data/gpk-application.glade.h:16
+#: ../data/gpk-application.glade.h:17
 msgid "Only show the newest available package"
 msgstr "Vis kun nyeste tilgjengelige pakke"
 
-#: ../data/gpk-application.glade.h:17
+#: ../data/gpk-application.glade.h:18
+msgid "Project homepage"
+msgstr "Hjemmeside for prosjektet"
+
+#. set title
+#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:1828
+msgid "Refresh package lists"
+msgstr "Oppdater pakkelistene"
+
+#: ../data/gpk-application.glade.h:20
+#, fuzzy
+msgid "Refresh the list of packages on the system"
+msgstr "Endre hvilken programvare som er installert på systemet"
+
+#: ../data/gpk-application.glade.h:21
+msgid "Remove"
+msgstr "Fjern"
+
+#: ../data/gpk-application.glade.h:22 ../src/gpk-application.c:694
 msgid "Required by"
 msgstr "Krevet av"
 
-#: ../data/gpk-application.glade.h:18
-msgid "Source:"
-msgstr "Kilde:"
+#: ../data/gpk-application.glade.h:23
+msgid "Run program"
+msgstr "Kjør program"
 
-#: ../data/gpk-application.glade.h:19
-msgid "_Add to list"
-msgstr "_Legg til i listen"
+#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1220
+msgid "Software sources"
+msgstr "Programvarekilder"
 
-#: ../data/gpk-application.glade.h:20
+#: ../data/gpk-application.glade.h:25
+msgid "Visit the project homepage"
+msgstr "Gå til hjemmesiden for prosjektet"
+
+#: ../data/gpk-application.glade.h:26
 msgid "_Architectures"
 msgstr "_Arkitekturer"
 
-#: ../data/gpk-application.glade.h:21
-msgid "_Clear list"
-msgstr "_Tøm listen"
-
-#: ../data/gpk-application.glade.h:22
+#: ../data/gpk-application.glade.h:27
 msgid "_Development"
 msgstr "_Utvikling:"
 
-#: ../data/gpk-application.glade.h:23
+#: ../data/gpk-application.glade.h:28
 msgid "_Filters"
 msgstr "Filtre"
 
-#: ../data/gpk-application.glade.h:24
+#: ../data/gpk-application.glade.h:29
 msgid "_Free"
-msgstr "_Ledig:"
+msgstr "_Fri"
 
-#: ../data/gpk-application.glade.h:25
+#: ../data/gpk-application.glade.h:30
 msgid "_Graphical"
 msgstr "_Grafisk:"
 
 #. No help yet
-#: ../data/gpk-application.glade.h:26 ../src/gpk-check-update.c:260
+#: ../data/gpk-application.glade.h:31 ../src/gpk-check-update.c:260
 msgid "_Help"
 msgstr "_Hjelp"
 
-#: ../data/gpk-application.glade.h:27
+#: ../data/gpk-application.glade.h:32
 msgid "_Hide subpackages"
 msgstr "_Skjul underpakker"
 
-#: ../data/gpk-application.glade.h:28
-msgid "_Install packages"
-msgstr "_Installer pakker"
-
-#: ../data/gpk-application.glade.h:29
+#: ../data/gpk-application.glade.h:33
 msgid "_Installed"
 msgstr "_Installert"
 
-#: ../data/gpk-application.glade.h:30
+#: ../data/gpk-application.glade.h:34
 msgid "_No filter"
 msgstr "_Uten filer"
 
-#: ../data/gpk-application.glade.h:31
+#: ../data/gpk-application.glade.h:35
 msgid "_Only free software"
 msgstr "_Kun fri programvare"
 
-#: ../data/gpk-application.glade.h:32
+#: ../data/gpk-application.glade.h:36
 msgid "_Only graphical"
 msgstr "_Kun grafiske"
 
-#: ../data/gpk-application.glade.h:33
+#: ../data/gpk-application.glade.h:37
 msgid "_Only native architectures"
 msgstr ""
 
-#: ../data/gpk-application.glade.h:34
+#: ../data/gpk-application.glade.h:38
 msgid "_Only non-native architectures"
 msgstr ""
 
-#: ../data/gpk-application.glade.h:35
+#: ../data/gpk-application.glade.h:39
 msgid "_Only sourcecode"
 msgstr "_Kun kildekode"
 
-#: ../data/gpk-application.glade.h:36
+#: ../data/gpk-application.glade.h:40
 msgid "_Only text"
 msgstr "_Kun tekstbaserte"
 
-#: ../data/gpk-application.glade.h:37
-msgid "_Refresh package lists"
-msgstr "Oppdate_r pakkelistene"
-
-#: ../data/gpk-application.glade.h:38
-msgid "_Remove packages"
-msgstr "Fje_rn pakker"
-
-#: ../data/gpk-application.glade.h:39
-msgid "_Show list"
-msgstr "Vi_s liste"
-
-#: ../data/gpk-application.glade.h:40
-msgid "_Software sources"
-msgstr "_Programvarekilder"
-
 #: ../data/gpk-application.glade.h:41
+msgid "_Selection"
+msgstr "_Utvalg"
+
+#: ../data/gpk-application.glade.h:42
 msgid "_Source"
 msgstr "_Kilde"
+
+#: ../data/gpk-application.glade.h:43
+msgid "_System"
+msgstr "_System"
 
 #: ../data/gpk-backend-status.glade.h:1
 msgid "Backend author:"
@@ -309,14 +319,6 @@ msgstr "Motor skrevet av:"
 msgid "Backend name:"
 msgstr "Navn på motor:"
 
-#: ../data/gpk-install-file.desktop.in.h:1
-msgid "Install selected software on the system"
-msgstr "Installer valgt programvare på systemet"
-
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Pakkeinstallering"
-
 #: ../data/gpk-client.glade.h:1
 msgid "<b>Installation Complete</b>"
 msgstr "<b>Installasjon fullført</b>"
@@ -325,13 +327,45 @@ msgstr "<b>Installasjon fullført</b>"
 msgid "<b>More details:</b>"
 msgstr "<b>Flere detaljer:</b>"
 
-#: ../data/gpk-client.glade.h:3 ../data/gpk-update-viewer.glade.h:2
+#: ../data/gpk-client.glade.h:3 ../data/gpk-update-viewer.glade.h:1
 msgid "A system restart is recommended"
 msgstr "Omstart av systemet anbefales"
 
 #: ../data/gpk-client.glade.h:4
 msgid "Install Package"
 msgstr "Installer pakke"
+
+#: ../data/gpk-error.glade.h:1
+msgid "<b>More details</b>"
+msgstr "<b>Flere detaljer</b>"
+
+#: ../data/gpk-error.glade.h:2
+msgid "PackageKit Error"
+msgstr "Feil i PackageKit"
+
+#: ../data/gpk-eula.glade.h:1
+msgid "License Agreement Required"
+msgstr "Lisensavtale kreves"
+
+#: ../data/gpk-eula.glade.h:2
+msgid "_Accept Agreement"
+msgstr "Godt_a avtale"
+
+#: ../data/gpk-install-catalog.desktop.in.h:1
+msgid "Catalog Installer"
+msgstr "Kataloginstallering"
+
+#: ../data/gpk-install-catalog.desktop.in.h:2
+msgid "Install a catalog of software on the system"
+msgstr "Installer en katalog med programvare på systemet"
+
+#: ../data/gpk-install-file.desktop.in.h:1
+msgid "Install selected software on the system"
+msgstr "Installer valgt programvare på systemet"
+
+#: ../data/gpk-install-file.desktop.in.h:2
+msgid "Package Installer"
+msgstr "Pakkeinstallering"
 
 #: ../data/gpk-log.desktop.in.h:1
 msgid "Log viewer showing past package management tasks"
@@ -427,17 +461,17 @@ msgstr ""
 msgid "Software signature is required"
 msgstr "Programvaresignatur kreves"
 
-#: ../data/gpk-update-icon.desktop.in.h:1 ../src/gpk-update-icon.c:145
+#: ../data/gpk-update-icon.desktop.in.h:1 ../src/gpk-update-icon.c:146
 msgid "PackageKit Update Applet"
 msgstr "Panelprogram for oppdatering med PackageKit"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:320
-#: ../src/gpk-update-viewer.c:1706
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:354
+#: ../src/gpk-update-viewer.c:1715
 msgid "Software Update Viewer"
 msgstr "Vis programvareoppdateringer"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
-#: ../data/gpk-update-viewer.glade.h:6
+#: ../data/gpk-update-viewer.glade.h:5
 msgid "Update System"
 msgstr "Oppdater system"
 
@@ -445,61 +479,832 @@ msgstr "Oppdater system"
 msgid "Update software installed on the system"
 msgstr "Oppdater programvare som er installert på systemet"
 
-#: ../data/gpk-update-viewer.glade.h:1
-msgid "<b>This update will require a reboot</b>"
-msgstr "<b>Denne oppdateringen krever en omstart</b>"
-
-#: ../data/gpk-update-viewer.glade.h:3
+#: ../data/gpk-update-viewer.glade.h:2
 msgid "Last refresh:"
 msgstr "Siste oppfrisking:"
 
-#: ../data/gpk-update-viewer.glade.h:4
+#: ../data/gpk-update-viewer.glade.h:3
 msgid "Last update:"
 msgstr "Siste oppdatering:"
 
-#: ../data/gpk-update-viewer.glade.h:5
+#: ../data/gpk-update-viewer.glade.h:4
 msgid "The following updates are available:"
 msgstr "Følgende oppdateringer er tilgjengelig:"
 
-#: ../data/gpk-update-viewer.glade.h:7
+#: ../data/gpk-update-viewer.glade.h:6
 msgid "View History"
 msgstr "Vis historikk"
 
-#: ../data/gpk-update-viewer.glade.h:8
+#: ../data/gpk-update-viewer.glade.h:7
 msgid "_Back to overview"
 msgstr "Til_bake til oversikt"
 
-#: ../data/gpk-update-viewer.glade.h:9
+#: ../data/gpk-update-viewer.glade.h:8
 msgid "_Install more updates"
 msgstr "Installer flere oppdateringer"
 
-#: ../data/gpk-update-viewer.glade.h:10
+#: ../data/gpk-update-viewer.glade.h:9
 msgid "_Review"
 msgstr "Se _gjennom"
 
-#: ../data/gpk-error.glade.h:1
-msgid "<b>More details</b>"
-msgstr "<b>Flere detaljer</b>"
+#: ../src/gpk-application.c:524
+msgid "No files"
+msgstr "Ingen filer"
 
-#: ../data/gpk-error.glade.h:2
-msgid "PackageKit Error"
-msgstr "Feil i PackageKit"
+#: ../src/gpk-application.c:527
+#, fuzzy
+msgid "File list"
+msgstr "Filliste"
 
-#: ../data/gpk-eula.glade.h:1
-msgid "License Agreement Required"
-msgstr "Lisensavtale kreves"
+#: ../src/gpk-application.c:691 ../src/gpk-application.c:737
+#, fuzzy
+msgid "No packages"
+msgstr "Alle pakker"
 
-#: ../data/gpk-eula.glade.h:2
-msgid "_Accept Agreement"
-msgstr "Godt_a avtale"
+#: ../src/gpk-application.c:692
+#, fuzzy
+msgid "This package does not require any others"
+msgstr "Pakken ble ikke funnet i noen programvarekilder"
 
-#: ../data/gpk-eula.glade.h:3
-msgid "gtk-cancel"
+#: ../src/gpk-application.c:738
+#, fuzzy
+msgid "This package does not depends on any others"
+msgstr "Pakken ble ikke funnet i noen programvarekilder"
+
+#: ../src/gpk-application.c:757
+#, fuzzy
+msgid "Invalid"
+msgstr "Installert"
+
+#. set the tooltip to where we are going
+#: ../src/gpk-application.c:889
+#, c-format
+msgid "Visit %s"
+msgstr "Besøk %s"
+
+#: ../src/gpk-application.c:893
+msgid "Project"
 msgstr ""
 
-#: ../data/gpk-eula.glade.h:4
-msgid "gtk-help"
+#: ../src/gpk-application.c:893
+#, fuzzy
+msgid "Homepage"
+msgstr "Hjemmeside"
+
+#: ../src/gpk-application.c:906
+msgid "Group"
 msgstr ""
+
+#. This should be a licence enum value - bad API, bad.
+#. * license = pk_license_enum_to_text (license_enum);
+#: ../src/gpk-application.c:913
+msgid "License"
+msgstr ""
+
+#: ../src/gpk-application.c:927
+#, fuzzy
+msgid "Installed size"
+msgstr "Installert størrelse:"
+
+#: ../src/gpk-application.c:929
+#, fuzzy
+msgid "Download size"
+msgstr "Størrelse på nedlasting:"
+
+#: ../src/gpk-application.c:938
+#, fuzzy
+msgid "Source"
+msgstr "Kilde:"
+
+#: ../src/gpk-application.c:1084
+#, fuzzy
+msgid "No results were found."
+msgstr "Ingen resultater funnet"
+
+#. this shouldn't happen
+#: ../src/gpk-application.c:1091
+msgid "Try entering a package name in the search bar."
+msgstr ""
+
+#: ../src/gpk-application.c:1095
+msgid ""
+"Try searching package descriptions by clicking the icon next to the search "
+"text."
+msgstr ""
+
+#: ../src/gpk-application.c:1097
+msgid "Try again with a different search term."
+msgstr ""
+
+#: ../src/gpk-application.c:1203
+msgid "Invalid search text"
+msgstr "Ugyldig søketekst"
+
+#: ../src/gpk-application.c:1204
+msgid "The search text contains invalid characters"
+msgstr ""
+
+#: ../src/gpk-application.c:1231
+msgid "The search could not be completed"
+msgstr ""
+
+#: ../src/gpk-application.c:1232 ../src/gpk-application.c:1273
+#, fuzzy
+msgid "Running the transaction failed"
+msgstr "Forbereder transaksjon"
+
+#: ../src/gpk-application.c:1272
+msgid "The group could not be queried"
+msgstr "Kunne ikke søke i gruppen"
+
+#: ../src/gpk-application.c:1577 ../src/gpk-common.c:857
+#: ../src/gpk-common.c:915
+msgid "Installed"
+msgstr "Installert"
+
+#: ../src/gpk-application.c:1592 ../src/gpk-application.c:1613
+msgid "Name"
+msgstr "Navn"
+
+#: ../src/gpk-application.c:1833
+msgid "Searching by name"
+msgstr "Søker etter navn"
+
+#: ../src/gpk-application.c:1854
+msgid "Searching by description"
+msgstr "Søker etter beskrivelse"
+
+#: ../src/gpk-application.c:1875
+msgid "Searching by file"
+msgstr "Søker etter fil"
+
+#: ../src/gpk-application.c:1900
+msgid "Search by name"
+msgstr "Søk etter navn:"
+
+#: ../src/gpk-application.c:1909
+msgid "Search by description"
+msgstr "Søk etter beskrivelse"
+
+#: ../src/gpk-application.c:1918
+msgid "Search by file name"
+msgstr "Søk på filnavn"
+
+#: ../src/gpk-application.c:2000 ../src/gpk-check-update.c:159
+msgid "Failed to show url"
+msgstr ""
+
+#: ../src/gpk-application.c:2039 ../src/gpk-check-update.c:185
+#: ../src/gpk-watch.c:543
+msgid "Licensed under the GNU General Public License Version 2"
+msgstr ""
+
+#: ../src/gpk-application.c:2040 ../src/gpk-check-update.c:186
+#: ../src/gpk-watch.c:544
+msgid ""
+"PackageKit is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 2\n"
+"of the License, or (at your option) any later version."
+msgstr ""
+
+#: ../src/gpk-application.c:2044 ../src/gpk-check-update.c:190
+#: ../src/gpk-watch.c:548
+msgid ""
+"PackageKit is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details."
+msgstr ""
+
+#: ../src/gpk-application.c:2048 ../src/gpk-check-update.c:194
+#: ../src/gpk-watch.c:552
+msgid ""
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
+"02110-1301, USA."
+msgstr ""
+
+#: ../src/gpk-application.c:2053 ../src/gpk-check-update.c:199
+#: ../src/gpk-watch.c:557
+msgid "translator-credits"
+msgstr "Kjartan Maraas <kmaraas@gnome.org>"
+
+#: ../src/gpk-application.c:2078 ../src/gpk-check-update.c:222
+#: ../src/gpk-watch.c:580
+msgid "PackageKit Website"
+msgstr "Nettsted for PackageKit"
+
+#: ../src/gpk-application.c:2080
+msgid "Package Manager for GNOME"
+msgstr "Pakkehåndtering for GNOME"
+
+#: ../src/gpk-application.c:2515 ../src/gpk-update-viewer.c:969
+msgid "Text"
+msgstr "Tekst"
+
+#: ../src/gpk-application.c:2536
+msgid ""
+"Enter a package name and then click find, or click a group to get started."
+msgstr ""
+
+#: ../src/gpk-application.c:2538
+msgid "Enter a package name and then click find to get started."
+msgstr ""
+
+#: ../src/gpk-application.c:2695
+msgid "Clear current selection"
+msgstr ""
+
+#: ../src/gpk-application.c:2726
+msgid "Visit homepage for selected package"
+msgstr "Besøk pakkens hjemmeside"
+
+#: ../src/gpk-application.c:2871
+msgid "Find packages"
+msgstr "Finn pakker"
+
+#: ../src/gpk-application.c:2877
+msgid "Cancel search"
+msgstr "Avbryt søk"
+
+#: ../src/gpk-application.c:3008
+msgid "All packages"
+msgstr "Alle pakker"
+
+#: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:81
+#: ../src/gpk-install-catalog.c:49 ../src/gpk-install-local-file.c:49
+#: ../src/gpk-install-mime-type.c:48 ../src/gpk-install-package-name.c:49
+#: ../src/gpk-install-provide-file.c:48 ../src/gpk-log.c:340
+#: ../src/gpk-prefs.c:284 ../src/gpk-repo.c:337 ../src/gpk-update-icon.c:127
+#: ../src/gpk-update-viewer.c:1696
+msgid "Show extra debugging information"
+msgstr "Vis ekstra feilsøkingsinformasjon"
+
+#: ../src/gpk-application-main.c:79 ../src/gpk-backend-status.c:83
+#: ../src/gpk-log.c:342 ../src/gpk-prefs.c:286 ../src/gpk-update-icon.c:129
+#: ../src/gpk-update-viewer.c:1698
+msgid "Show the program version and exit"
+msgstr "Vis versjon og avslutt"
+
+#. are we running privileged
+#: ../src/gpk-application-main.c:110
+msgid "Package installer"
+msgstr "Pakkeinstallering"
+
+#: ../src/gpk-backend-status.c:100
+msgid "PackageKit Backend Details Viewer"
+msgstr ""
+
+#: ../src/gpk-backend-status.c:122
+#, fuzzy
+msgid "Exiting as backend details could not be retrieved"
+msgstr "Kunne ikke søke i gruppen"
+
+#. Preferences
+#: ../src/gpk-check-update.c:248
+msgid "_Preferences"
+msgstr "_Brukervalg"
+
+#. About
+#: ../src/gpk-check-update.c:268 ../src/gpk-watch.c:610
+msgid "_About"
+msgstr "_Om"
+
+#. show updates
+#: ../src/gpk-check-update.c:356
+msgid "_Show Updates"
+msgstr "Vi_s oppdateringer"
+
+#. update system
+#: ../src/gpk-check-update.c:364
+msgid "_Update System Now"
+msgstr "_Oppdater systemet nå"
+
+#. format title
+#: ../src/gpk-check-update.c:459
+msgid "Security update available"
+msgid_plural "Security updates available"
+msgstr[0] "Sikkerhetsoppdatering tilgjengelig"
+msgstr[1] "Sikkerhetsoppdateringer tilgjengelig"
+
+#: ../src/gpk-check-update.c:463
+msgid "The following important update is available for your computer:"
+msgid_plural "The following important updates are available for your computer:"
+msgstr[0] "Følgende viktige oppdatering er tilgjengelig for din datamaskin:"
+msgstr[1] "Følgende viktige oppdateringer er tilgjengelig for din datamaskin:"
+
+#: ../src/gpk-check-update.c:483
+#, fuzzy
+msgid "Install these updates"
+msgstr "Installer flere oppdateringer"
+
+#: ../src/gpk-check-update.c:485
+msgid "Install all updates"
+msgstr "Installer alle oppdateringene"
+
+#: ../src/gpk-check-update.c:487 ../src/gpk-client.c:430
+#: ../src/gpk-client.c:433 ../src/gpk-client.c:1778 ../src/gpk-firmware.c:115
+#: ../src/gpk-watch.c:371
+#, fuzzy
+msgid "Do not show this again"
+msgstr "Ikke vis meg dette igjen"
+
+#. do the bubble
+#: ../src/gpk-check-update.c:597
+msgid ""
+"Automatic updates are not being installed as the computer is on battery power"
+msgstr ""
+
+#: ../src/gpk-check-update.c:598
+msgid "Will not install updates"
+msgstr "Vil ikke installere oppdateringer"
+
+#: ../src/gpk-check-update.c:602
+msgid "Do not show this warning again"
+msgstr "Ikke vis denne meldingen igjen"
+
+#: ../src/gpk-check-update.c:604
+msgid "Do the updates anyway"
+msgstr "Utfør oppdateringen likevel"
+
+#: ../src/gpk-check-update.c:728
+#, c-format
+msgid "There is %d update pending"
+msgid_plural "There are %d updates pending"
+msgstr[0] "%d oppdatering er utestående"
+msgstr[1] "%d oppdateringer er utestående"
+
+#: ../src/gpk-client.c:390
+msgid "One package was skipped:"
+msgstr "Hoppet over en pakke:"
+
+#: ../src/gpk-client.c:391
+msgid "Some packages were skipped:"
+msgstr "Hoppet over noen pakker:"
+
+#. do the bubble
+#: ../src/gpk-client.c:423
+msgid "The system update has completed"
+msgstr "Systemoppdatering fullført"
+
+#: ../src/gpk-client.c:428
+msgid "Restart computer now"
+msgstr "Start datamaskinen på nytt nå"
+
+#: ../src/gpk-client.c:867 ../src/gpk-client.c:1133 ../src/gpk-client.c:1233
+#: ../src/gpk-client.c:1737 ../src/gpk-client.c:1822 ../src/gpk-client.c:1886
+#: ../src/gpk-client.c:1936 ../src/gpk-client.c:1995
+#: ../src/gpk-client-depends.c:110 ../src/gpk-client-requires.c:100
+#: ../src/gpk-client-resolve.c:68
+msgid "Failed to reset client"
+msgstr ""
+
+#: ../src/gpk-client.c:867 ../src/gpk-client.c:1133 ../src/gpk-client.c:1233
+#: ../src/gpk-client.c:1737 ../src/gpk-client.c:1822 ../src/gpk-client.c:1995
+msgid "Failed to reset resolve"
+msgstr ""
+
+#: ../src/gpk-client.c:881
+msgid "Failed to install files"
+msgstr "Klarte ikke å installere filer"
+
+#: ../src/gpk-client.c:882
+msgid "You don't have the necessary privileges to install local files"
+msgstr ""
+
+#: ../src/gpk-client.c:887 ../src/gpk-client.c:1382 ../src/gpk-client.c:1392
+msgid "Failed to install file"
+msgid_plural "Failed to install files"
+msgstr[0] "Klarte ikke å installere fil"
+msgstr[1] "Klarte ikke å installere filer"
+
+#: ../src/gpk-client.c:1019
+msgid "Do you want to install this file?"
+msgstr "Vil du installere denne filen?"
+
+#: ../src/gpk-client.c:1020
+msgid "Do you want to install these files?"
+msgstr "Vil du installere disse filene?"
+
+#: ../src/gpk-client.c:1036
+msgid "The file was not installed"
+msgstr "Filen ble ikke installert"
+
+#: ../src/gpk-client.c:1037
+msgid "The files were not installed"
+msgstr "Filene ble ikke installert"
+
+#. set title
+#: ../src/gpk-client.c:1056
+msgid "Install local file"
+msgstr "Installer lokal fil"
+
+#. set title
+#: ../src/gpk-client.c:1111
+msgid "Remove packages"
+msgstr "Fjern pakker"
+
+#: ../src/gpk-client.c:1123 ../src/gpk-client.c:1144 ../src/gpk-client.c:1149
+msgid "Failed to remove package"
+msgstr "Klarte ikke å fjerne pakke"
+
+#: ../src/gpk-client.c:1123
+msgid "Additional packages were also not removed"
+msgstr ""
+
+#: ../src/gpk-client.c:1145
+msgid "You don't have the necessary privileges to remove packages"
+msgstr ""
+
+#. set title
+#: ../src/gpk-client.c:1208
+msgid "Install packages"
+msgstr "Installer pakker"
+
+#: ../src/gpk-client.c:1223 ../src/gpk-client.c:1245 ../src/gpk-client.c:1250
+msgid "Failed to install package"
+msgstr "Klarte ikke å installere pakke"
+
+#: ../src/gpk-client.c:1223
+msgid "Additional packages were not downloaded"
+msgstr ""
+
+#. try to install the package_id
+#: ../src/gpk-client.c:1240
+#, fuzzy
+msgid "Installing packages"
+msgstr "Installer pakker"
+
+#: ../src/gpk-client.c:1246
+msgid "You don't have the necessary privileges to install packages"
+msgstr ""
+
+#: ../src/gpk-client.c:1346 ../src/gpk-client.c:1437 ../src/gpk-client.c:1505
+#: ../src/gpk-client-resolve.c:77 ../src/gpk-client-resolve.c:122
+msgid "Incorrect response from search"
+msgstr ""
+
+#: ../src/gpk-client.c:1347
+msgid "Failed to search for file"
+msgstr "Klarte ikke å søke etter fil"
+
+#: ../src/gpk-client.c:1358 ../src/gpk-client-resolve.c:122
+msgid "Failed to find package"
+msgstr "Klarte ikke å finne pakke"
+
+#: ../src/gpk-client.c:1358
+msgid "The file could not be found in any packages"
+msgstr ""
+
+#: ../src/gpk-client.c:1381
+#, c-format
+msgid "The %s package already provides the file %s"
+msgstr ""
+
+#: ../src/gpk-client.c:1392
+msgid "Incorrect response from file search"
+msgstr ""
+
+#: ../src/gpk-client.c:1437 ../src/gpk-client.c:1505
+#, fuzzy
+msgid "Failed to search for provides"
+msgstr "Klarte ikke å søke etter fil"
+
+#: ../src/gpk-client.c:1447
+msgid "Failed to find software"
+msgstr "Klarte ikke å finne programvare"
+
+#: ../src/gpk-client.c:1448
+msgid "No new applications can be found to handle this type of file"
+msgstr ""
+
+#: ../src/gpk-client.c:1456
+msgid "Applications that can open this type of file"
+msgstr ""
+
+#: ../src/gpk-client.c:1460
+msgid "Failed to install software"
+msgstr "Klarte ikke å installere programvare"
+
+#: ../src/gpk-client.c:1460
+#, fuzzy
+msgid "No applications were chosen to be installed"
+msgstr "Noen oppdateringer ble ikke installert"
+
+#: ../src/gpk-client.c:1515
+#, fuzzy
+msgid "Failed to find font"
+msgstr "Klarte ikke å finne programvare"
+
+#: ../src/gpk-client.c:1516
+msgid "No new fonts can be found for this document"
+msgstr ""
+
+#: ../src/gpk-client.c:1524
+msgid "Available fonts for this document"
+msgstr ""
+
+#: ../src/gpk-client.c:1528
+#, fuzzy
+msgid "Failed to install fonts"
+msgstr "Klarte ikke å installere %s"
+
+#: ../src/gpk-client.c:1528
+#, fuzzy
+msgid "No fonts were chosen to be installed"
+msgstr "Noen oppdateringer ble ikke installert"
+
+#: ../src/gpk-client.c:1557
+#, fuzzy, c-format
+msgid "Finding package name: %s"
+msgstr "Finn pakker"
+
+#: ../src/gpk-client.c:1559
+#, fuzzy, c-format
+msgid "Finding file name: %s"
+msgstr "Gjenstående tid: %s"
+
+#: ../src/gpk-client.c:1561
+#, c-format
+msgid "Finding a package to provide: %s"
+msgstr ""
+
+#: ../src/gpk-client.c:1599
+#, fuzzy
+msgid "Do you want to install this catalog?"
+msgstr "Vil du installere denne filen?"
+
+#: ../src/gpk-client.c:1600
+#, fuzzy
+msgid "Do you want to install these catalogs?"
+msgstr "Vil du installere disse filene?"
+
+#: ../src/gpk-client.c:1614 ../src/gpk-client.c:1683
+#, fuzzy
+msgid "The catalog was not installed"
+msgstr "Filen ble ikke installert"
+
+#: ../src/gpk-client.c:1615 ../src/gpk-client.c:1684
+#, fuzzy
+msgid "The catalogs were not installed"
+msgstr "Filene ble ikke installert"
+
+#. set title
+#: ../src/gpk-client.c:1624
+#, fuzzy
+msgid "Install catalogs"
+msgstr "Installer pakker"
+
+#: ../src/gpk-client.c:1644
+#, fuzzy
+msgid "No packages need to be installed"
+msgstr "Kildekodepakken kan ikke installeres"
+
+#. process package list
+#: ../src/gpk-client.c:1653
+#, fuzzy
+msgid "The following packages are marked to be installed from the catalog:"
+msgstr "Følgende pakker vil også måtte lastes ned:"
+
+#: ../src/gpk-client.c:1671
+#, fuzzy
+msgid "Install packages in catalog?"
+msgstr "Installer pakker"
+
+#. set title
+#: ../src/gpk-client.c:1743
+msgid "System update"
+msgstr "Systemoppdatering"
+
+#: ../src/gpk-client.c:1750
+#, fuzzy
+msgid "Authorization could not be obtained"
+msgstr "Kunne ikke søke i gruppen"
+
+#: ../src/gpk-client.c:1752 ../src/gpk-client.c:1837 ../src/gpk-client.c:2010
+#, c-format
+msgid "The error was: %s"
+msgstr "Feilen var: %s"
+
+#. display and set
+#: ../src/gpk-client.c:1756 ../src/gpk-client.c:1757
+msgid "Failed to update system"
+msgstr "Klarte ikke å oppdatere systemet"
+
+#. do the bubble
+#: ../src/gpk-client.c:1770
+msgid "Updates are being installed"
+msgstr "Oppdateringer holder på å installeres"
+
+#: ../src/gpk-client.c:1771
+msgid "Updates are being automatically installed on your computer"
+msgstr ""
+
+#: ../src/gpk-client.c:1776
+msgid "Cancel update"
+msgstr "Avbryt oppdatering"
+
+#: ../src/gpk-client.c:1835 ../src/gpk-client.c:2008
+#, fuzzy
+msgid "Authorisation could not be obtained"
+msgstr "Kunne ikke søke i gruppen"
+
+#. display and set
+#: ../src/gpk-client.c:1841 ../src/gpk-client.c:1842
+#, fuzzy
+msgid "Failed to update package lists"
+msgstr "Klarte ikke å finne pakke"
+
+#: ../src/gpk-client.c:1886
+#, fuzzy
+msgid "Failed to reset get-updates"
+msgstr "Klarte ikke å installere oppdatering"
+
+#. set title
+#: ../src/gpk-client.c:1893
+msgid "Getting update lists"
+msgstr "Henter liste med oppdateringer"
+
+#: ../src/gpk-client.c:1898
+#, fuzzy
+msgid "Getting update lists failed"
+msgstr "Henter detaljer om oppdatering"
+
+#: ../src/gpk-client.c:1898
+#, fuzzy
+msgid "Failed to get updates"
+msgstr "Klarte ikke å installere oppdatering"
+
+#: ../src/gpk-client.c:1936
+#, fuzzy
+msgid "Failed to reset get-file-list"
+msgstr "Klarte ikke å installere oppdatering"
+
+#. set title
+#: ../src/gpk-client.c:1943
+msgid "Getting file lists"
+msgstr "Henter filliste"
+
+#: ../src/gpk-client.c:1950
+#, fuzzy
+msgid "Getting file list failed"
+msgstr "Henter filliste"
+
+#: ../src/gpk-client.c:1950
+#, fuzzy
+msgid "Failed to get file list"
+msgstr "Kunne ikke lese på nytt"
+
+#. set title
+#: ../src/gpk-client.c:2001
+msgid "Update packages"
+msgstr "Oppdater pakker"
+
+#. display and set
+#: ../src/gpk-client.c:2014 ../src/gpk-client.c:2015
+msgid "Failed to update packages"
+msgstr "Klarte ikke å oppdatere pakker"
+
+#: ../src/gpk-client.c:2065 ../src/gpk-client.c:2076
+msgid "Failed to install signature"
+msgstr "Klarte ikke å installere signatur"
+
+#: ../src/gpk-client.c:2066 ../src/gpk-client.c:2108
+#, fuzzy
+msgid "The client could not be reset"
+msgstr "Kunne ikke søke i gruppen"
+
+#: ../src/gpk-client.c:2077 ../src/gpk-client.c:2119
+msgid "The method failed"
+msgstr "Metoden feilet"
+
+#: ../src/gpk-client.c:2107 ../src/gpk-client.c:2118
+msgid "Failed to accept EULA"
+msgstr ""
+
+#: ../src/gpk-client.c:2145
+msgid "Failed to install"
+msgstr "Klarte ikke å installere"
+
+#: ../src/gpk-client.c:2146
+#, fuzzy
+msgid "The install task could not be requeued"
+msgstr "Kunne ikke søke i gruppen"
+
+#: ../src/gpk-client-chooser.c:130 ../src/gpk-client-run.c:129
+msgid "Icon"
+msgstr "Ikon"
+
+#: ../src/gpk-client-chooser.c:136 ../src/gpk-client-run.c:135
+msgid "Package"
+msgstr "Pakke"
+
+#: ../src/gpk-client-chooser.c:154
+msgid "_Install"
+msgstr "_Installer"
+
+#. get the packages we depend on
+#: ../src/gpk-client-depends.c:104
+#, fuzzy
+msgid "Finding packages we depend on"
+msgstr "Finn pakker"
+
+#: ../src/gpk-client-depends.c:120
+msgid "Failed to get depends"
+msgstr "Klarte ikke å finne avhengigheter"
+
+#: ../src/gpk-client-depends.c:121
+msgid "Could not work out what packages would be also installed"
+msgstr "Klarte ikke å finne ut hvilke pakker som vil installeres i tillegg"
+
+#. process package list
+#: ../src/gpk-client-depends.c:132
+msgid "The following packages also have to be downloaded:"
+msgstr "Følgende pakker vil også måtte lastes ned:"
+
+#: ../src/gpk-client-depends.c:155
+msgid "Install additional packages?"
+msgstr "Vil du installere flere pakker?"
+
+#. add a checkbutton for deps screen
+#: ../src/gpk-client-depends.c:160
+msgid "Do not show me this again"
+msgstr "Ikke vis meg dette igjen"
+
+#: ../src/gpk-client-requires.c:109
+msgid "Failed to get requires"
+msgstr "Kunne ikke lese pakker denne er avhengig av"
+
+#: ../src/gpk-client-requires.c:110
+msgid "Could not work out what packages would also be removed"
+msgstr "Klarte ikke å finne ut hvilke pakker som også ville bli fjernet"
+
+#. process package list
+#: ../src/gpk-client-requires.c:124
+msgid "The following packages have to be removed:"
+msgstr "Følgende pakker må fjernes:"
+
+#: ../src/gpk-client-requires.c:141
+#, fuzzy, c-format
+msgid "%i other package depends on %s"
+msgid_plural "%i other packages depend on %s"
+msgstr[0] "%i andre pakker er avhengig av %s"
+msgstr[1] "%i andre pakker er avhengig av %s"
+
+#. add a specialist button
+#: ../src/gpk-client-requires.c:149
+msgid "Remove all packages"
+msgstr "Fjern alle pakker"
+
+#: ../src/gpk-client-resolve.c:76
+msgid "Failed to resolve package"
+msgstr "Klarte ikke å løse avhengigheter for pakke"
+
+#: ../src/gpk-client-resolve.c:87
+#, c-format
+msgid "Could not find %s"
+msgstr "Fant ikke %s"
+
+#: ../src/gpk-client-resolve.c:89
+#, fuzzy
+msgid "The packages could not be found in any software source"
+msgstr "Pakken ble ikke funnet i noen programvarekilder"
+
+#: ../src/gpk-client-resolve.c:113
+#, c-format
+msgid "Failed to install %s"
+msgstr "Klarte ikke å installere %s"
+
+#: ../src/gpk-client-resolve.c:115 ../src/gpk-common.c:369
+msgid "The package is already installed"
+msgstr "Pakken er allerede installert"
+
+#: ../src/gpk-client-run.c:111
+msgid "_Run"
+msgstr ""
+
+#: ../src/gpk-client-run.c:303
+msgid "Run new application?"
+msgstr ""
+
+#: ../src/gpk-client-untrusted.c:91
+msgid "Malicious software can damage your computer or cause other harm."
+msgstr ""
+"Ondsinnet programvare kan skade din datamaskin eller forårsake annen skade."
+
+#: ../src/gpk-client-untrusted.c:92
+msgid "Are you <b>sure</b> you want to install this package?"
+msgstr "Er du <b>sikker</b> på at du vil installere denne pakken?"
+
+#: ../src/gpk-client-untrusted.c:105
+msgid "_Force install"
+msgstr "_Tvungen installering"
+
+#: ../src/gpk-client-untrusted.c:106
+msgid "Force installing package"
+msgstr "Tvungen installasjon av pakke"
 
 #: ../src/gpk-common.c:294
 msgid "Package identifier not valid"
@@ -540,10 +1345,6 @@ msgstr "Pakken er ikke installert"
 #: ../src/gpk-common.c:366
 msgid "The package was not found"
 msgstr "Pakken ble ikke funnet"
-
-#: ../src/gpk-common.c:369 ../src/gpk-client-resolve.c:101
-msgid "The package is already installed"
-msgstr "Pakken er allerede installert"
 
 #: ../src/gpk-common.c:372
 msgid "The package download failed"
@@ -594,7 +1395,8 @@ msgid "Reading the config file failed"
 msgstr "Lesing av konfigurasjonsfilen feilet"
 
 #: ../src/gpk-common.c:408
-msgid "The task cannot be cancelled"
+#, fuzzy
+msgid "The task cannot be canceled"
 msgstr "Oppgaven kan ikke avbrytes"
 
 #: ../src/gpk-common.c:411
@@ -683,7 +1485,8 @@ msgid ""
 "memory.\n"
 "Please restart your computer."
 msgstr ""
-"Tjenesten som er ansvarlig for å håndtere brukerforespørsler har ikke mer minne tilgjengelig.\n"
+"Tjenesten som er ansvarlig for å håndtere brukerforespørsler har ikke mer "
+"minne tilgjengelig.\n"
 "Vennligst start datamaskinen på nytt."
 
 #: ../src/gpk-common.c:485
@@ -691,17 +1494,19 @@ msgid "A thread could not be created to service the user request."
 msgstr ""
 
 #: ../src/gpk-common.c:488
+#, fuzzy
 msgid ""
 "The action is not supported by this backend.\n"
-"Please report a bug as this shouldn't have happened."
+"Please report a bug at "
 msgstr ""
 "Handlingen er ikke støttet av motoren.\n"
 "Vennligst rapporter en feil da dette ikke skulle skje."
 
 #: ../src/gpk-common.c:492
+#, fuzzy
 msgid ""
 "A problem that we were not expecting has occurred.\n"
-"Please report this bug with the error description."
+"Please report this bug at "
 msgstr ""
 "Et uventet problem har oppstått.\n"
 "Vennligst rapporter dette med en beskrivelse av feilen."
@@ -779,8 +1584,9 @@ msgid ""
 msgstr ""
 
 #: ../src/gpk-common.c:541
-msgid "Removing a protected system package is not alloed."
-msgstr ""
+#, fuzzy
+msgid "Removing a protected system package is not allowed."
+msgstr "Kunne ikke fjerne en beskyttet systempakke"
 
 #: ../src/gpk-common.c:544
 msgid "The task was canceled successfully and no packages were changed."
@@ -799,8 +1605,9 @@ msgid ""
 msgstr ""
 
 #: ../src/gpk-common.c:555
-msgid "The task is not safe to be cancelled at this time."
-msgstr ""
+#, fuzzy
+msgid "The task is not safe to be canceled at this time."
+msgstr "Oppgaven kan ikke avbrytes"
 
 #: ../src/gpk-common.c:558
 msgid ""
@@ -1116,11 +1923,6 @@ msgstr "Oppdatering med forbedringer"
 msgid "Blocked update"
 msgstr "Blokkert oppdatering"
 
-#: ../src/gpk-common.c:857 ../src/gpk-common.c:915
-#: ../src/gpk-application.c:1292
-msgid "Installed"
-msgstr "Installert"
-
 #: ../src/gpk-common.c:860
 msgid "Available"
 msgstr "Tilgjengelig"
@@ -1165,7 +1967,7 @@ msgstr "Henter detaljer"
 msgid "Getting requires"
 msgstr "Henter pakker som kreves"
 
-#: ../src/gpk-common.c:956 ../src/gpk-update-viewer.c:1323
+#: ../src/gpk-common.c:956 ../src/gpk-update-viewer.c:1332
 msgid "Getting updates"
 msgstr "Henter oppdateringer"
 
@@ -1189,7 +1991,7 @@ msgstr "Søker etter pakkenavn"
 msgid "Installing file"
 msgstr "Installerer fil"
 
-#: ../src/gpk-common.c:980 ../src/gpk-update-viewer.c:1326
+#: ../src/gpk-common.c:980 ../src/gpk-update-viewer.c:1335
 msgid "Refreshing package cache"
 msgstr "Oppdaterer pakkeinformasjonen"
 
@@ -1455,10 +2257,6 @@ msgstr "Nettverk"
 msgid "Maps"
 msgstr "Kart"
 
-#: ../src/gpk-common.c:1220
-msgid "Software sources"
-msgstr "Programvarekilder"
-
 #: ../src/gpk-common.c:1223
 msgid "Unknown group"
 msgstr "Ukjent gruppe"
@@ -1577,523 +2375,16 @@ msgstr "512 bytes"
 msgid "256.2 MB"
 msgstr "256.2 MB"
 
-#: ../src/gpk-client.c:343
-msgid "One package was skipped:"
-msgstr "Hoppet over en pakke:"
-
-#: ../src/gpk-client.c:344
-msgid "Some packages were skipped:"
-msgstr "Hoppet over noen pakker:"
-
-#. do the bubble
-#: ../src/gpk-client.c:376
-msgid "The system update has completed"
-msgstr "Systemoppdatering fullført"
-
-#: ../src/gpk-client.c:381
-msgid "Restart computer now"
-msgstr "Start datamaskinen på nytt nå"
-
-#: ../src/gpk-client.c:383 ../src/gpk-client.c:386 ../src/gpk-client.c:1410
-#: ../src/gpk-firmware.c:115 ../src/gpk-check-update.c:489
-#: ../src/gpk-watch.c:371
-#, fuzzy
-msgid "Do not show this again"
-msgstr "Ikke vis meg dette igjen"
-
-#: ../src/gpk-client.c:743 ../src/gpk-client.c:1007 ../src/gpk-client.c:1101
-#: ../src/gpk-client.c:1369 ../src/gpk-client.c:1457 ../src/gpk-client.c:1524
-#: ../src/gpk-client.c:1576 ../src/gpk-client.c:1636
-#: ../src/gpk-client-depends.c:65 ../src/gpk-client-resolve.c:56
-#: ../src/gpk-client-requires.c:50
-msgid "Failed to reset client"
-msgstr ""
-
-#: ../src/gpk-client.c:743 ../src/gpk-client.c:1007 ../src/gpk-client.c:1101
-#: ../src/gpk-client.c:1369 ../src/gpk-client.c:1457 ../src/gpk-client.c:1636
-msgid "Failed to reset resolve"
-msgstr ""
-
-#: ../src/gpk-client.c:757
-msgid "Failed to install files"
-msgstr "Klarte ikke å installere filer"
-
-#: ../src/gpk-client.c:758
-msgid "You don't have the necessary privileges to install local files"
-msgstr ""
-
-#: ../src/gpk-client.c:763 ../src/gpk-client.c:1250 ../src/gpk-client.c:1260
-msgid "Failed to install file"
-msgid_plural "Failed to install files"
-msgstr[0] "Klarte ikke å installere fil"
-msgstr[1] "Klarte ikke å installere filer"
-
-#: ../src/gpk-client.c:893
-msgid "Do you want to install this file?"
-msgstr "Vil du installere denne filen?"
-
-#: ../src/gpk-client.c:894
-msgid "Do you want to install these files?"
-msgstr "Vil du installere disse filene?"
-
-#: ../src/gpk-client.c:909
-msgid "The file was not installed"
-msgstr "Filen ble ikke installert"
-
-#: ../src/gpk-client.c:910
-msgid "The files were not installed"
-msgstr "Filene ble ikke installert"
-
-#. set title
-#: ../src/gpk-client.c:927
-msgid "Install local file"
-msgstr "Installer lokal fil"
-
-#. set title
-#: ../src/gpk-client.c:985
-msgid "Remove packages"
-msgstr "Fjern pakker"
-
-#: ../src/gpk-client.c:997 ../src/gpk-client.c:1018 ../src/gpk-client.c:1023
-msgid "Failed to remove package"
-msgstr "Klarte ikke å fjerne pakke"
-
-#: ../src/gpk-client.c:997
-msgid "Additional packages were also not removed"
-msgstr ""
-
-#: ../src/gpk-client.c:1019
-msgid "You don't have the necessary privileges to remove packages"
-msgstr ""
-
-#. set title
-#: ../src/gpk-client.c:1075
-msgid "Install packages"
-msgstr "Installer pakker"
-
-#: ../src/gpk-client.c:1091 ../src/gpk-client.c:1112 ../src/gpk-client.c:1117
-msgid "Failed to install package"
-msgstr "Klarte ikke å installere pakke"
-
-#: ../src/gpk-client.c:1091
-msgid "Additional packages were not downloaded"
-msgstr ""
-
-#: ../src/gpk-client.c:1113
-msgid "You don't have the necessary privileges to install packages"
-msgstr ""
-
-#: ../src/gpk-client.c:1214 ../src/gpk-client.c:1305
-#: ../src/gpk-client-resolve.c:65 ../src/gpk-client-resolve.c:108
-msgid "Incorrect response from search"
-msgstr ""
-
-#: ../src/gpk-client.c:1215
-msgid "Failed to search for file"
-msgstr "Klarte ikke å søke etter fil"
-
-#: ../src/gpk-client.c:1226 ../src/gpk-client-resolve.c:108
-msgid "Failed to find package"
-msgstr "Klarte ikke å finne pakke"
-
-#: ../src/gpk-client.c:1226
-msgid "The file could not be found in any packages"
-msgstr ""
-
-#: ../src/gpk-client.c:1249
-#, c-format
-msgid "The %s package already provides the file %s"
-msgstr ""
-
-#: ../src/gpk-client.c:1260
-msgid "Incorrect response from file search"
-msgstr ""
-
-#: ../src/gpk-client.c:1305
-#, fuzzy
-msgid "Failed to search for provides"
-msgstr "Klarte ikke å søke etter fil"
-
-#: ../src/gpk-client.c:1315
-msgid "Failed to find software"
-msgstr "Klarte ikke å finne programvare"
-
-#: ../src/gpk-client.c:1316
-msgid "No new applications can be found to handle this type of file"
-msgstr ""
-
-#: ../src/gpk-client.c:1324
-msgid "Applications that can open this type of file"
-msgstr ""
-
-#: ../src/gpk-client.c:1328
-msgid "Failed to install software"
-msgstr "Klarte ikke å installere programvare"
-
-#: ../src/gpk-client.c:1328
-msgid "No spplications were chosen to be installed"
-msgstr ""
-
-#. set title
-#: ../src/gpk-client.c:1375
-msgid "System update"
-msgstr "Systemoppdatering"
-
-#: ../src/gpk-client.c:1382 ../src/gpk-client.c:1470 ../src/gpk-client.c:1649
-#, fuzzy
-msgid "Authorisation could not be obtained"
-msgstr "Kunne ikke søke i gruppen"
-
-#: ../src/gpk-client.c:1384 ../src/gpk-client.c:1472 ../src/gpk-client.c:1651
-#, c-format
-msgid "The error was: %s"
-msgstr "Feilen var: %s"
-
-#. display and set
-#: ../src/gpk-client.c:1388 ../src/gpk-client.c:1389
-msgid "Failed to update system"
-msgstr "Klarte ikke å oppdatere systemet"
-
-#. do the bubble
-#: ../src/gpk-client.c:1402
-msgid "Updates are being installed"
-msgstr "Oppdateringer holder på å installeres"
-
-#: ../src/gpk-client.c:1403
-msgid "Updates are being automatically installed on your computer"
-msgstr ""
-
-#: ../src/gpk-client.c:1408
-msgid "Cancel update"
-msgstr "Avbryt oppdatering"
-
-#. set title
-#: ../src/gpk-client.c:1463
-#, fuzzy
-msgid "Refresh package lists"
-msgstr "Ingen filer"
-
-#. display and set
-#: ../src/gpk-client.c:1476 ../src/gpk-client.c:1477
-#, fuzzy
-msgid "Failed to update package lists"
-msgstr "Klarte ikke å finne pakke"
-
-#: ../src/gpk-client.c:1524
-#, fuzzy
-msgid "Failed to reset get-updates"
-msgstr "Klarte ikke å installere oppdatering"
-
-#. set title
-#: ../src/gpk-client.c:1531
-msgid "Getting update lists"
-msgstr "Henter liste med oppdateringer"
-
-#: ../src/gpk-client.c:1536
-#, fuzzy
-msgid "Getting update lists failed"
-msgstr "Henter detaljer om oppdatering"
-
-#: ../src/gpk-client.c:1536
-#, fuzzy
-msgid "Failed to get updates"
-msgstr "Klarte ikke å installere oppdatering"
-
-#: ../src/gpk-client.c:1576
-#, fuzzy
-msgid "Failed to reset get-file-list"
-msgstr "Klarte ikke å installere oppdatering"
-
-#. set title
-#: ../src/gpk-client.c:1583
-msgid "Getting file lists"
-msgstr "Henter filliste"
-
-#: ../src/gpk-client.c:1588
-#, fuzzy
-msgid "Getting file list failed"
-msgstr "Henter filliste"
-
-#: ../src/gpk-client.c:1588
-#, fuzzy
-msgid "Failed to get file list"
-msgstr "Kunne ikke lese på nytt"
-
-#. set title
-#: ../src/gpk-client.c:1642
-msgid "Update packages"
-msgstr "Oppdater pakker"
-
-#. display and set
-#: ../src/gpk-client.c:1655 ../src/gpk-client.c:1656
-msgid "Failed to update packages"
-msgstr "Klarte ikke å oppdatere pakker"
-
-#: ../src/gpk-client.c:1709 ../src/gpk-client.c:1720
-msgid "Failed to install signature"
-msgstr "Klarte ikke å installere signatur"
-
-#: ../src/gpk-client.c:1710 ../src/gpk-client.c:1752
-#, fuzzy
-msgid "The client could not be reset"
-msgstr "Kunne ikke søke i gruppen"
-
-#: ../src/gpk-client.c:1721 ../src/gpk-client.c:1763
-msgid "The method failed"
-msgstr "Metoden feilet"
-
-#: ../src/gpk-client.c:1751 ../src/gpk-client.c:1762
-msgid "Failed to accept EULA"
-msgstr ""
-
-#: ../src/gpk-client.c:1789
-msgid "Failed to install"
-msgstr "Klarte ikke å installere"
-
-#: ../src/gpk-client.c:1790
-#, fuzzy
-msgid "The install task could not be requeued"
-msgstr "Kunne ikke søke i gruppen"
-
-#. set the tooltip to where we are going
-#: ../src/gpk-application.c:323
-#, c-format
-msgid "Visit %s"
-msgstr "Besøk %s"
-
-#: ../src/gpk-application.c:344
-msgid "Installed size:"
-msgstr "Installert størrelse:"
-
-#: ../src/gpk-application.c:346
-msgid "Download size:"
-msgstr "Størrelse på nedlasting:"
-
-#. no information
-#: ../src/gpk-application.c:412
-msgid "No files"
-msgstr "Ingen filer"
-
-#: ../src/gpk-application.c:693
-msgid "No results were found"
-msgstr "Ingen resultater funnet"
-
-#: ../src/gpk-application.c:758
-msgid "Invalid search text"
-msgstr "Ugyldig søketekst"
-
-#: ../src/gpk-application.c:759
-msgid "The search text contains invalid characters"
-msgstr ""
-
-#: ../src/gpk-application.c:786
-msgid "The search could not be completed"
-msgstr ""
-
-#: ../src/gpk-application.c:787 ../src/gpk-application.c:854
-#, fuzzy
-msgid "Running the transaction failed"
-msgstr "Forbereder transaksjon"
-
-#: ../src/gpk-application.c:853
-msgid "The group could not be queried"
-msgstr "Kunne ikke søke i gruppen"
-
-#: ../src/gpk-application.c:1050
-#, fuzzy
-msgid "There are already packages queued to be removed."
-msgstr "Følgende oppdateringer er tilgjengelig:"
-
-#: ../src/gpk-application.c:1051
+#: ../src/gpk-consolekit.c:176
+msgid "Failed to restart"
+msgstr "Klarte ikke å starte på nytt"
+
+#: ../src/gpk-consolekit.c:177
 msgid ""
-"Click 'Clear list' to remove the previous selection or 'Remove packages' to "
-"complete the previous action."
+"You are not allowed to restart the computer because multiple users are "
+"logged in"
 msgstr ""
-
-#: ../src/gpk-application.c:1053
-msgid ""
-"After completing the action new packages can be selected to be installed."
-msgstr ""
-
-#: ../src/gpk-application.c:1055
-#, fuzzy
-msgid "Already selected packages to be removed"
-msgstr "Følgende oppdateringer er tilgjengelig:"
-
-#: ../src/gpk-application.c:1070
-#, fuzzy
-msgid "There are already packages queued to be installed."
-msgstr "Kildekodepakken kan ikke installeres"
-
-#: ../src/gpk-application.c:1071
-msgid ""
-"Click 'Clear list' to remove the previous selection or 'Install packages' to "
-"complete the previous action."
-msgstr ""
-
-#: ../src/gpk-application.c:1073
-msgid "After completing the action new packages can be selected to be removed."
-msgstr ""
-
-#: ../src/gpk-application.c:1075
-#, fuzzy
-msgid "Already selected packages to be installed"
-msgstr "Kildekodepakken kan ikke installeres"
-
-#: ../src/gpk-application.c:1166
-#, fuzzy
-msgid "Cannot add package"
-msgstr "Installert pakke"
-
-#: ../src/gpk-application.c:1166
-msgid "There is no package selected"
-msgstr ""
-
-#: ../src/gpk-application.c:1306 ../src/gpk-application.c:1327
-msgid "Name"
-msgstr "Navn"
-
-#: ../src/gpk-application.c:1674
-msgid "Searching by name"
-msgstr "Søker etter navn"
-
-#: ../src/gpk-application.c:1695
-msgid "Searching by description"
-msgstr "Søker etter beskrivelse"
-
-#: ../src/gpk-application.c:1716
-msgid "Searching by file"
-msgstr "Søker etter fil"
-
-#: ../src/gpk-application.c:1741
-msgid "Search by name"
-msgstr "Søk etter navn:"
-
-#: ../src/gpk-application.c:1750
-msgid "Search by description"
-msgstr "Søk etter beskrivelse"
-
-#: ../src/gpk-application.c:1759
-msgid "Search by file name"
-msgstr "Søk på filnavn"
-
-#: ../src/gpk-application.c:1842 ../src/gpk-check-update.c:159
-msgid "Failed to show url"
-msgstr ""
-
-#: ../src/gpk-application.c:1881 ../src/gpk-check-update.c:185
-#: ../src/gpk-watch.c:543
-msgid "Licensed under the GNU General Public License Version 2"
-msgstr ""
-
-#: ../src/gpk-application.c:1882 ../src/gpk-check-update.c:186
-#: ../src/gpk-watch.c:544
-msgid ""
-"PackageKit is free software; you can redistribute it and/or\n"
-"modify it under the terms of the GNU General Public License\n"
-"as published by the Free Software Foundation; either version 2\n"
-"of the License, or (at your option) any later version."
-msgstr ""
-
-#: ../src/gpk-application.c:1886 ../src/gpk-check-update.c:190
-#: ../src/gpk-watch.c:548
-msgid ""
-"PackageKit is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details."
-msgstr ""
-
-#: ../src/gpk-application.c:1890 ../src/gpk-check-update.c:194
-#: ../src/gpk-watch.c:552
-msgid ""
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
-"02110-1301, USA."
-msgstr ""
-
-#: ../src/gpk-application.c:1895 ../src/gpk-check-update.c:199
-#: ../src/gpk-watch.c:557
-msgid "translator-credits"
-msgstr "Kjartan Maraas <kmaraas@gnome.org>"
-
-#: ../src/gpk-application.c:1920 ../src/gpk-check-update.c:222
-#: ../src/gpk-watch.c:580
-msgid "PackageKit Website"
-msgstr "Nettsted for PackageKit"
-
-#: ../src/gpk-application.c:1922
-msgid "Package Manager for GNOME"
-msgstr "Pakkehåndtering for GNOME"
-
-#: ../src/gpk-application.c:2469
-msgid "Visit homepage for selected package"
-msgstr "Besøk pakkens hjemmeside"
-
-#: ../src/gpk-application.c:2475
-msgid "Add current selection"
-msgstr ""
-
-#: ../src/gpk-application.c:2482
-msgid "Clear current selection"
-msgstr ""
-
-#: ../src/gpk-application.c:2488
-msgid "Install current selection"
-msgstr ""
-
-#: ../src/gpk-application.c:2494
-msgid "Remove current selection"
-msgstr ""
-
-#: ../src/gpk-application.c:2649
-msgid "Find packages"
-msgstr "Finn pakker"
-
-#: ../src/gpk-application.c:2655
-msgid "Cancel search"
-msgstr "Avbryt søk"
-
-#: ../src/gpk-application.c:2795
-msgid "All packages"
-msgstr "Alle pakker"
-
-#: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:81
-#: ../src/gpk-install-local-file.c:49 ../src/gpk-install-package-name.c:49
-#: ../src/gpk-install-provide-file.c:48 ../src/gpk-install-mime-type.c:48
-#: ../src/gpk-log.c:340 ../src/gpk-prefs.c:284 ../src/gpk-repo.c:303
-#: ../src/gpk-update-icon.c:126 ../src/gpk-update-viewer.c:1687
-msgid "Show extra debugging information"
-msgstr "Vis ekstra feilsøkingsinformasjon"
-
-#: ../src/gpk-application-main.c:79 ../src/gpk-backend-status.c:83
-#: ../src/gpk-log.c:342 ../src/gpk-prefs.c:286 ../src/gpk-update-icon.c:128
-#: ../src/gpk-update-viewer.c:1689
-msgid "Show the program version and exit"
-msgstr "Vis versjon og avslutt"
-
-#. are we running privileged
-#: ../src/gpk-application-main.c:110
-msgid "Package installer"
-msgstr "Pakkeinstallering"
-
-#: ../src/gpk-backend-status.c:100
-msgid "PackageKit Backend Details Viewer"
-msgstr ""
-
-#: ../src/gpk-backend-status.c:122
-#, fuzzy
-msgid "Exiting as backend details could not be retrieved"
-msgstr "Kunne ikke søke i gruppen"
-
-#: ../src/gpk-inhibit.c:98
-msgid "Software Update Applet"
-msgstr "Panelprogram for programvareoppdatering"
-
-#: ../src/gpk-inhibit.c:99
-msgid "A transaction that cannot be interrupted is running"
-msgstr ""
+"Du kan ikke starte datamaskinen på nytt fordi flere brukere er logget inn."
 
 #: ../src/gpk-firmware.c:108
 msgid ""
@@ -2109,8 +2400,37 @@ msgstr ""
 msgid "Install firmware"
 msgstr "Installer fastvare"
 
-#: ../src/gpk-install-local-file.c:64 ../src/gpk-install-local-file.c:66
+#: ../src/gpk-inhibit.c:98
+msgid "Software Update Applet"
+msgstr "Panelprogram for programvareoppdatering"
+
+#: ../src/gpk-inhibit.c:99
+msgid "A transaction that cannot be interrupted is running"
+msgstr ""
+
+#: ../src/gpk-install-catalog.c:64
+#, fuzzy
+msgid "PackageKit Catalog Installer"
+msgstr "Pakkeinstallering"
+
+#: ../src/gpk-install-catalog.c:66 ../src/gpk-install-local-file.c:64
+#: ../src/gpk-install-local-file.c:66
 msgid "PackageKit File Installer"
+msgstr ""
+
+#. are we running privileged
+#: ../src/gpk-install-catalog.c:75
+#, fuzzy
+msgid "Catalog installer"
+msgstr "Pakkeinstallering"
+
+#: ../src/gpk-install-catalog.c:81
+#, fuzzy
+msgid "Failed to install catalog"
+msgstr "Klarte ikke å installere pakke"
+
+#: ../src/gpk-install-catalog.c:82 ../src/gpk-install-local-file.c:82
+msgid "You need to specify a file to install"
 msgstr ""
 
 #. are we running privileged
@@ -2124,9 +2444,26 @@ msgstr "Lokal installasjon feilet"
 msgid "Failed to install local file"
 msgstr "Filliste"
 
-#: ../src/gpk-install-local-file.c:82
-msgid "You need to specify a file to install"
+#: ../src/gpk-install-mime-type.c:63 ../src/gpk-install-mime-type.c:65
+msgid "PackageKit MimeType Installer"
 msgstr ""
+
+#. are we running privileged
+#: ../src/gpk-install-mime-type.c:74
+msgid "Mime type installer"
+msgstr ""
+
+#: ../src/gpk-install-mime-type.c:80 ../src/gpk-install-mime-type.c:85
+msgid "Failed to install file handler"
+msgstr ""
+
+#: ../src/gpk-install-mime-type.c:81
+msgid "You need to specify a mime-type to install"
+msgstr "Du må oppgi en MIME-type som skal installeres"
+
+#: ../src/gpk-install-mime-type.c:86
+msgid "You can only specify one mime-type to install"
+msgstr "Du kan kun oppgi en MIME-type som skal installeres"
 
 #: ../src/gpk-install-package-name.c:64 ../src/gpk-install-package-name.c:66
 msgid "PackageKit Package Installer"
@@ -2172,27 +2509,6 @@ msgstr ""
 msgid "You can only specify one filename to install"
 msgstr ""
 
-#: ../src/gpk-install-mime-type.c:63 ../src/gpk-install-mime-type.c:65
-msgid "PackageKit MimeType Installer"
-msgstr ""
-
-#. are we running privileged
-#: ../src/gpk-install-mime-type.c:74
-msgid "Mime type installer"
-msgstr ""
-
-#: ../src/gpk-install-mime-type.c:80 ../src/gpk-install-mime-type.c:85
-msgid "Failed to install file handler"
-msgstr ""
-
-#: ../src/gpk-install-mime-type.c:81
-msgid "You need to specify a mime-type to install"
-msgstr "Du må oppgi en MIME-type som skal installeres"
-
-#: ../src/gpk-install-mime-type.c:86
-msgid "You can only specify one mime-type to install"
-msgstr "Du kan kun oppgi en MIME-type som skal installeres"
-
 #: ../src/gpk-log.c:106
 msgid "%A, %d %B %Y"
 msgstr "%A, %d %B %Y"
@@ -2213,72 +2529,6 @@ msgstr "Tilbake_rulling"
 #: ../src/gpk-log.c:373
 msgid "Log viewer"
 msgstr "Loggvisning"
-
-#. Preferences
-#: ../src/gpk-check-update.c:248
-msgid "_Preferences"
-msgstr "_Brukervalg"
-
-#. About
-#: ../src/gpk-check-update.c:268 ../src/gpk-watch.c:610
-msgid "_About"
-msgstr "_Om"
-
-#. show updates
-#: ../src/gpk-check-update.c:357
-msgid "_Show Updates"
-msgstr "Vi_s oppdateringer"
-
-#. update system
-#: ../src/gpk-check-update.c:365
-msgid "_Update System Now"
-msgstr "_Oppdater systemet nå"
-
-#. format title
-#: ../src/gpk-check-update.c:461
-msgid "Security update available"
-msgid_plural "Security updates available"
-msgstr[0] "Sikkerhetsoppdatering tilgjengelig"
-msgstr[1] "Sikkerhetsoppdateringer tilgjengelig"
-
-#: ../src/gpk-check-update.c:465
-msgid "The following important update is available for your computer:"
-msgid_plural "The following important updates are available for your computer:"
-msgstr[0] "Følgende viktige oppdatering er tilgjengelig for din datamaskin:"
-msgstr[1] "Følgende viktige oppdateringer er tilgjengelig for din datamaskin:"
-
-#: ../src/gpk-check-update.c:485
-msgid "Install important updates"
-msgstr "Installer viktige oppdateringer"
-
-#: ../src/gpk-check-update.c:487
-msgid "Install all updates"
-msgstr "Installer alle oppdateringene"
-
-#. do the bubble
-#: ../src/gpk-check-update.c:599
-msgid ""
-"Automatic updates are not being installed as the computer is on battery power"
-msgstr ""
-
-#: ../src/gpk-check-update.c:600
-msgid "Will not install updates"
-msgstr "Vil ikke installere oppdateringer"
-
-#: ../src/gpk-check-update.c:604
-msgid "Do not show this warning again"
-msgstr "Ikke vis denne meldingen igjen"
-
-#: ../src/gpk-check-update.c:606
-msgid "Do the updates anyway"
-msgstr "Utfør oppdateringen likevel"
-
-#: ../src/gpk-check-update.c:731
-#, c-format
-msgid "There is %d update pending"
-msgid_plural "There are %d updates pending"
-msgstr[0] "%d oppdatering er utestående"
-msgstr[1] "%d oppdateringer er utestående"
 
 #: ../src/gpk-prefs.c:45
 msgid "Hourly"
@@ -2308,185 +2558,201 @@ msgstr "Kun sikkerhetsoppdateringer"
 msgid "Nothing"
 msgstr "Ingenting"
 
-#: ../src/gpk-repo.c:159
+#: ../src/gpk-repo.c:158
 msgid "Enabled"
 msgstr "Aktivert"
 
-#: ../src/gpk-repo.c:166
+#: ../src/gpk-repo.c:165
 msgid "Software Source"
 msgstr "Programvarekilde"
 
-#: ../src/gpk-repo.c:219
+#: ../src/gpk-repo.c:238
 msgid "Failed to change status"
 msgstr "Klarte ikke å endre status"
 
 #. are we running privileged
-#: ../src/gpk-repo.c:329
+#: ../src/gpk-repo.c:363
 #, fuzzy
 msgid "Software source viewer"
 msgstr "Programvarekilde:"
 
-#: ../src/gpk-repo.c:415
+#: ../src/gpk-repo.c:447
 msgid "Getting software source list not supported by backend"
 msgstr ""
 
-#: ../src/gpk-statusbar.c:211
-#, c-format
-msgid "Remaining time: %s"
-msgstr "Gjenstående tid: %s"
-
-#: ../src/gpk-update-icon.c:147
+#: ../src/gpk-update-icon.c:148
 msgid "PackageKit Update Icon"
 msgstr "Oppdateringsikon for PackageKit"
 
 #. are we running privileged
-#: ../src/gpk-update-icon.c:161
+#: ../src/gpk-update-icon.c:162
 msgid "Update applet"
 msgstr "Panelprogram for oppdatering"
 
-#: ../src/gpk-update-viewer.c:244
+#: ../src/gpk-update-viewer.c:243
 msgid "No updates selected"
 msgstr "Ingen oppdateringer valgt"
 
-#: ../src/gpk-update-viewer.c:245
+#: ../src/gpk-update-viewer.c:244
 msgid "No updates are selected"
 msgstr "Ingen oppdateringer valgt"
 
-#: ../src/gpk-update-viewer.c:338
+#: ../src/gpk-update-viewer.c:337
 msgid "Getting Description..."
 msgstr "Henter beskrivelse..."
 
-#: ../src/gpk-update-viewer.c:405
+#: ../src/gpk-update-viewer.c:404
 msgid "Failed to launch"
 msgstr "Klarte ikke å starte"
 
-#: ../src/gpk-update-viewer.c:406
+#: ../src/gpk-update-viewer.c:405
 msgid "The file was not found"
 msgstr "Filen ble ikke funnet"
 
-#: ../src/gpk-update-viewer.c:470
+#: ../src/gpk-update-viewer.c:469
 msgid "There are no updates available!"
 msgstr "Det er ingen oppdateringer tilgjengelig!"
 
 #. translators: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:792
+#: ../src/gpk-update-viewer.c:808
 msgid "Type"
 msgstr "Type"
 
 #. translators: this is the package version
-#: ../src/gpk-update-viewer.c:796
+#: ../src/gpk-update-viewer.c:812
 msgid "New version"
 msgstr "Ny versjon"
 
 #. translators: this is a list of packages that are updated
-#: ../src/gpk-update-viewer.c:803
+#: ../src/gpk-update-viewer.c:819
 msgid "Updates"
 msgstr "Oppdateringer"
 
 #. translators: this is a list of packages that are obsoleted
-#: ../src/gpk-update-viewer.c:811
+#: ../src/gpk-update-viewer.c:827
 msgid "Obsoletes"
 msgstr ""
 
 #. translators: this is the repository the package has come from
-#: ../src/gpk-update-viewer.c:817
+#: ../src/gpk-update-viewer.c:833
 msgid "Repository"
 msgstr "Lager"
 
+#. translators: this is the package description
+#: ../src/gpk-update-viewer.c:842
+msgid "Description"
+msgstr "Beskrivelse"
+
 #. translators: this is a list of vendor URLs
-#: ../src/gpk-update-viewer.c:834
+#: ../src/gpk-update-viewer.c:850
 msgid "Vendor"
 msgstr ""
 
 #. translators: this is a list of bugzilla URLs
-#: ../src/gpk-update-viewer.c:838
+#: ../src/gpk-update-viewer.c:854
 msgid "Bugzilla"
 msgstr "Bugzilla"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:842
+#: ../src/gpk-update-viewer.c:858
 msgid "CVE"
 msgstr "CVE"
 
-#: ../src/gpk-update-viewer.c:913
+#. translators: this is a notice a restart might be required
+#: ../src/gpk-update-viewer.c:866
+#, fuzzy
+msgid "Notice"
+msgstr "Ingenting"
+
+#: ../src/gpk-update-viewer.c:927
 msgid "Severity"
 msgstr "Alvorlighetsgrad"
 
-#: ../src/gpk-update-viewer.c:920
+#: ../src/gpk-update-viewer.c:934
 msgid "Software"
 msgstr "Programvare"
 
-#: ../src/gpk-update-viewer.c:960
-msgid "Text"
-msgstr "Tekst"
-
-#: ../src/gpk-update-viewer.c:1084
+#: ../src/gpk-update-viewer.c:1093
 msgid "Less than a minute ago"
 msgstr "Mindre enn et minutt siden"
 
-#: ../src/gpk-update-viewer.c:1086
+#: ../src/gpk-update-viewer.c:1095
 msgid "Less than an hour ago"
 msgstr "Mindre enn en time siden"
 
-#: ../src/gpk-update-viewer.c:1088
+#: ../src/gpk-update-viewer.c:1097
 msgid "A few hours ago"
 msgstr "Noen få timer siden"
 
-#: ../src/gpk-update-viewer.c:1090
+#: ../src/gpk-update-viewer.c:1099
 msgid "A few days ago"
 msgstr "Noen få dager siden"
 
-#: ../src/gpk-update-viewer.c:1092
+#: ../src/gpk-update-viewer.c:1101
 msgid "Over a week ago"
 msgstr "Over en uke siden"
 
-#: ../src/gpk-update-viewer.c:1186
+#: ../src/gpk-update-viewer.c:1195
 msgid "Some updates were not installed"
 msgstr "Noen oppdateringer ble ikke installert"
 
-#: ../src/gpk-update-viewer.c:1195
+#: ../src/gpk-update-viewer.c:1204
 msgid "System update completed"
 msgstr "Systemoppdatering fullført"
 
-#: ../src/gpk-update-viewer.c:1320
+#: ../src/gpk-update-viewer.c:1329
 msgid "A system update is already in progress"
 msgstr "En systemoppdatering pågår allerede."
 
-#: ../src/gpk-update-viewer.c:1607
+#: ../src/gpk-update-viewer.c:1467
+msgid "Select all"
+msgstr ""
+
+#: ../src/gpk-update-viewer.c:1474
+#, fuzzy
+msgid "Unselect all"
+msgstr "Installer"
+
+#: ../src/gpk-update-viewer.c:1480
+#, fuzzy
+msgid "Ignore this package"
+msgstr "Tvungen installasjon av pakke"
+
+#: ../src/gpk-update-viewer.c:1616
 msgid "Refresh"
 msgstr "Les på nytt"
 
-#: ../src/gpk-update-viewer.c:1608
+#: ../src/gpk-update-viewer.c:1617
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
 msgstr ""
 
-#: ../src/gpk-update-viewer.c:1616
+#: ../src/gpk-update-viewer.c:1625
 msgid "_Restart computer now"
 msgstr "Sta_rt datamaskinen på nytt nå"
 
-#: ../src/gpk-update-viewer.c:1631
+#: ../src/gpk-update-viewer.c:1640
 msgid "_Apply Updates"
 msgstr "Innstaller oppd_ateringer"
 
-#: ../src/gpk-update-viewer.c:1632
+#: ../src/gpk-update-viewer.c:1641
 msgid "Apply the selected updates"
 msgstr "Innstaller valgte oppdateringer"
 
-#: ../src/gpk-update-viewer.c:1645
+#: ../src/gpk-update-viewer.c:1654
 msgid "_Update System"
 msgstr "_Oppdater systemet"
 
-#: ../src/gpk-update-viewer.c:1646
+#: ../src/gpk-update-viewer.c:1655
 msgid "Apply all updates"
 msgstr "Innstaller alle oppdateringer"
 
-#: ../src/gpk-update-viewer.c:1825
+#: ../src/gpk-update-viewer.c:1830
 msgid "Review the update list"
 msgstr "Se gjennom listen med oppdateringer"
 
-#: ../src/gpk-update-viewer.c:1830 ../src/gpk-update-viewer.c:1835
+#: ../src/gpk-update-viewer.c:1835 ../src/gpk-update-viewer.c:1840
 msgid "Back to overview"
 msgstr "Tilbake til oversikt"
 
@@ -2523,115 +2789,3 @@ msgstr "S_kjul dette ikonet"
 #: ../src/gpk-watch.c:1124
 msgid "_Restart computer"
 msgstr "Sta_rt datamaskinen på nytt"
-
-#: ../src/gpk-consolekit.c:176
-msgid "Failed to restart"
-msgstr "Klarte ikke å starte på nytt"
-
-#: ../src/gpk-consolekit.c:177
-msgid ""
-"You are not allowed to restart the computer because multiple users are "
-"logged in"
-msgstr "Du kan ikke starte datamaskinen på nytt fordi flere brukere er logget inn."
-
-#: ../src/gpk-client-depends.c:73
-msgid "Failed to get depends"
-msgstr "Klarte ikke å finne avhengigheter"
-
-#: ../src/gpk-client-depends.c:74
-msgid "Could not work out what packages would be also installed"
-msgstr "Klarte ikke å finne ut hvilke pakker som vil installeres i tillegg"
-
-#. process package list
-#: ../src/gpk-client-depends.c:131
-msgid "The following packages also have to be downloaded:"
-msgstr "Følgende pakker vil også måtte lastes ned:"
-
-#: ../src/gpk-client-depends.c:153
-msgid "Install additional packages?"
-msgstr "Vil du installere flere pakker?"
-
-#. add a specialist button
-#: ../src/gpk-client-depends.c:155
-msgid "Install"
-msgstr "Installer"
-
-#. add a checkbutton for deps screen
-#: ../src/gpk-client-depends.c:158
-msgid "Do not show me this again"
-msgstr "Ikke vis meg dette igjen"
-
-#: ../src/gpk-client-resolve.c:64
-msgid "Failed to resolve package"
-msgstr "Klarte ikke å løse avhengigheter for pakke"
-
-#: ../src/gpk-client-resolve.c:75
-#, c-format
-msgid "Could not find %s"
-msgstr "Fant ikke %s"
-
-#: ../src/gpk-client-resolve.c:76
-msgid "The package could not be found in any software sources"
-msgstr "Pakken ble ikke funnet i noen programvarekilder"
-
-#: ../src/gpk-client-resolve.c:100
-#, c-format
-msgid "Failed to install %s"
-msgstr "Klarte ikke å installere %s"
-
-#: ../src/gpk-client-requires.c:58
-msgid "Failed to get requires"
-msgstr "Kunne ikke lese pakker denne er avhengig av"
-
-#: ../src/gpk-client-requires.c:59
-msgid "Could not work out what packages would also be removed"
-msgstr "Klarte ikke å finne ut hvilke pakker som også ville bli fjernet"
-
-#. process package list
-#: ../src/gpk-client-requires.c:110
-msgid "The following packages have to be removed:"
-msgstr "Følgende pakker må fjernes:"
-
-#: ../src/gpk-client-requires.c:129
-#, c-format
-msgid "%i other packages depends on %s"
-msgstr "%i andre pakker er avhengig av %s"
-
-#: ../src/gpk-client-requires.c:132
-#, c-format
-msgid "%i other packages depends on these packages"
-msgstr "%i andre pakker er avhengige av disse pakkene"
-
-#. add a specialist button
-#: ../src/gpk-client-requires.c:138
-msgid "Remove all packages"
-msgstr "Fjern alle pakker"
-
-#: ../src/gpk-client-untrusted.c:91
-msgid "Malicious software can damage your computer or cause other harm."
-msgstr ""
-"Ondsinnet programvare kan skade din datamaskin eller forårsake annen skade."
-
-#: ../src/gpk-client-untrusted.c:92
-msgid "Are you <b>sure</b> you want to install this package?"
-msgstr "Er du <b>sikker</b> på at du vil installere denne pakken?"
-
-#: ../src/gpk-client-untrusted.c:105
-msgid "_Force install"
-msgstr "_Tvungen installering"
-
-#: ../src/gpk-client-untrusted.c:106
-msgid "Force installing package"
-msgstr "Tvungen installasjon av pakke"
-
-#: ../src/gpk-client-chooser.c:129
-msgid "Icon"
-msgstr "Ikon"
-
-#: ../src/gpk-client-chooser.c:135
-msgid "Package"
-msgstr "Pakke"
-
-#: ../src/gpk-client-chooser.c:153
-msgid "_Install"
-msgstr "_Installer"
