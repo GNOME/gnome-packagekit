@@ -3008,10 +3008,21 @@ gpk_application_init (GpkApplication *application)
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ICON, icon_name, -1);
+	}
+
+	/* only if we can do both */
+	if (pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) &&
+	    pk_enums_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+		GtkTreeIter iter;
+
 		/* add a separator */
 		gtk_list_store_append (application->priv->groups_store, &iter);
 		gtk_list_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_ID, "separator", -1);
+
+		/* use the seporator */
+		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+						      gpk_application_group_row_separator_func, NULL, NULL);
 	}
 
 	/* create group tree view if we can search by group */
@@ -3034,10 +3045,6 @@ gpk_application_init (GpkApplication *application)
 			}
 		}
 	}
-
-	/* use a seporator */
-	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
-					      gpk_application_group_row_separator_func, NULL, NULL);
 
 	/* get repos, so we can show the full name in the software source box */
 	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
