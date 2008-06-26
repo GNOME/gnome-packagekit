@@ -848,7 +848,6 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	GtkWidget *widget;
 	gchar *text;
 	gchar *value;
-	PkPackageId *ident;
 	const gchar *repo_name;
 	const gchar *icon;
 	const gchar *group;
@@ -858,15 +857,10 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ident = pk_package_id_new_from_string (details->package_id);
-	if (ident == NULL) {
-		pk_warning ("failed to get PkPackageId for %s", details->package_id);
-		return;
-	}
-	installed = pk_strequal (ident->data, "installed");
+	installed = pk_strequal (details->id->data, "installed");
 
 	/* get the icon */
-	icon = pk_extra_get_icon_name (application->priv->extra, ident->name);
+	icon = pk_extra_get_icon_name (application->priv->extra, details->id->name);
 
 	/* check icon actually exists and is valid in this theme */
 	valid = gpk_check_icon_valid (icon);
@@ -940,10 +934,9 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	/* set the repo text, or hide if installed */
 	if (!installed) {
 		/* see if we can get the full name of the repo from the repo_id */
-		repo_name = gpk_application_get_full_repo_name (application, ident->data);
+		repo_name = gpk_application_get_full_repo_name (application, details->id->data);
 		gpk_application_add_detail_item (application, _("Source"), repo_name, NULL);
 	}
-	pk_package_id_free (ident);
 }
 
 /**

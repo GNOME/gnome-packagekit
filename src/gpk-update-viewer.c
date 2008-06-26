@@ -760,7 +760,7 @@ out:
  * gpk_update_viewer_update_detail_cb:
  **/
 static void
-gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *detail, gpointer data)
+gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *obj, gpointer data)
 {
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
@@ -769,7 +769,6 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	gchar *package_pretty;
 	const gchar *info_text;
 	PkInfoEnum info;
-	PkPackageId *id;
 
 	/* clear existing list */
 	gpk_update_viewer_description_animation_stop ();
@@ -793,14 +792,13 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	/* translators: this is the update type, e.g. security */
 	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
 
-	id = pk_package_id_new_from_string (detail->package_id);
-	package_pretty = gpk_package_id_name_version (id);
+	package_pretty = gpk_package_id_name_version (obj->id);
 	/* translators: this is the package version */
 	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
 	g_free (package_pretty);
 
 	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (detail->updates);
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
 	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are updated */
 		gpk_update_viewer_add_description_item (_("Updates"), package_pretty, NULL);
@@ -808,7 +806,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	g_free (package_pretty);
 
 	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (detail->obsoletes);
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
 	if (package_pretty != NULL) {
 		/* translators: this is a list of packages that are obsoleted */
 		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
@@ -816,12 +814,12 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	g_free (package_pretty);
 
 	/* translators: this is the repository the package has come from */
-	gpk_update_viewer_add_description_item (_("Repository"), id->data, NULL);
+	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data, NULL);
 
-	if (!pk_strzero (detail->update_text)) {
+	if (!pk_strzero (obj->update_text)) {
 		gchar *first;
 		gchar *second;
-		first = pk_strreplace (detail->update_text, "\n- ", "\n• ");
+		first = pk_strreplace (obj->update_text, "\n- ", "\n• ");
 		second = pk_strreplace (first, "\n* ", "\n• ");
 		/* translators: this is the package description */
 		gpk_update_viewer_add_description_item (_("Description"), second, NULL);
@@ -830,27 +828,26 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *d
 	}
 
 	/* add all the links */
-	if (!pk_strzero (detail->vendor_url)) {
+	if (!pk_strzero (obj->vendor_url)) {
 		/* translators: this is a list of vendor URLs */
-		gpk_update_viewer_add_description_link_item (_("Vendor"), detail->vendor_url);
+		gpk_update_viewer_add_description_link_item (_("Vendor"), obj->vendor_url);
 	}
-	if (!pk_strzero (detail->bugzilla_url)) {
+	if (!pk_strzero (obj->bugzilla_url)) {
 		/* translators: this is a list of bugzilla URLs */
-		gpk_update_viewer_add_description_link_item (_("Bugzilla"), detail->bugzilla_url);
+		gpk_update_viewer_add_description_link_item (_("Bugzilla"), obj->bugzilla_url);
 	}
-	if (!pk_strzero (detail->cve_url)) {
+	if (!pk_strzero (obj->cve_url)) {
 		/* translators: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_link_item (_("CVE"), detail->cve_url);
+		gpk_update_viewer_add_description_link_item (_("CVE"), obj->cve_url);
 	}
 
 	/* reboot */
-	if (detail->restart == PK_RESTART_ENUM_SESSION ||
-	    detail->restart == PK_RESTART_ENUM_SYSTEM) {
-		info_text = gpk_restart_enum_to_localised_text (detail->restart);
+	if (obj->restart == PK_RESTART_ENUM_SESSION ||
+	    obj->restart == PK_RESTART_ENUM_SYSTEM) {
+		info_text = gpk_restart_enum_to_localised_text (obj->restart);
 		/* translators: this is a notice a restart might be required */
 		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
 	}
-	pk_package_id_free (id);
 }
 
 /**
