@@ -150,6 +150,12 @@ gpk_update_viewer_set_page (PkPageEnum page)
 	}
 	gtk_widget_show (widget);
 
+	/* clear */
+	if (page == PAGE_DETAILS) {
+		widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
+		gtk_widget_hide (widget);
+	}
+
 	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
 	for (l=list, i=0; l; l=l->next, i++) {
@@ -548,6 +554,9 @@ gpk_update_viewer_get_new_update_list (void)
 	GtkTreeIter iter;
 	gboolean ret;
 
+	/* spin */
+	gpk_update_viewer_description_animation_start ();
+
 	/* clear existing list */
 	gtk_list_store_clear (list_store_details);
 
@@ -614,6 +623,9 @@ gpk_update_viewer_get_new_update_list (void)
 		g_error_free (error);
 		goto out;
 	}
+
+	/* don't spin */
+	gpk_update_viewer_description_animation_stop ();
 
 out:
 	g_object_unref (list);
@@ -1272,7 +1284,6 @@ pk_button_more_installs_cb (GtkWidget *button, gpointer data)
 {
 	/* set correct view */
 	gpk_update_viewer_set_page (PAGE_DETAILS);
-
 	gpk_update_viewer_get_new_update_list ();
 }
 
