@@ -475,7 +475,8 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	if (notification == NULL) {
-		pk_error ("moo");
+		pk_warning ("failed to get bubble");
+		return;
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
@@ -801,6 +802,7 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 
 	/* ignore our own updates */
 	if (!cupdate->priv->get_updates_in_progress) {
+		cupdate->priv->get_updates_in_progress = TRUE;
 		g_idle_add ((GSourceFunc) gpk_check_update_query_updates, cupdate);
 	}
 }
@@ -851,8 +853,6 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 {
 	gboolean ret;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-
-	pk_debug ("refresh cache");
 
 	/* got a cache, no need to poll */
 	if (cupdate->priv->cache_okay) {
