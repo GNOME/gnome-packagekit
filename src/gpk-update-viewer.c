@@ -445,6 +445,16 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 {
 	GtkWidget *widget;
 	guint length;
+	const PkPackageObj *obj;
+	guint i;
+	guint num_low = 0;
+	guint num_normal = 0;
+	guint num_important = 0;
+	guint num_security = 0;
+	guint num_bugfix = 0;
+	guint num_enhancement = 0;
+	const gchar *icon;
+	gchar *text;
 
 	length = pk_package_list_get_size (list);
 	if (length == 0) {
@@ -452,16 +462,6 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 		widget = glade_xml_get_widget (glade_xml, "button_close3");
 		gtk_widget_grab_default (widget);
 	} else {
-		const PkPackageObj *obj;
-		guint i;
-		guint num_low = 0;
-		guint num_normal = 0;
-		guint num_important = 0;
-		guint num_security = 0;
-		guint num_bugfix = 0;
-		guint num_enhancement = 0;
-		const gchar *icon;
-		gchar *text;
 
 		for (i=0;i<length;i++) {
 			obj = pk_package_list_get_obj (list, i);
