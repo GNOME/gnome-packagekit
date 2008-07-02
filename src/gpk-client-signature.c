@@ -49,8 +49,8 @@ gpk_client_signature_button_yes_cb (GtkWidget *widget_button, gpointer data)
 static void
 gpk_client_signature_button_help_cb (GtkWidget *widget, gpointer data)
 {
-	/* FIXME: need a whole section on this! */
-	gpk_gnome_help (NULL);
+	/* show the help */
+	gpk_gnome_help ("gpg-signature");
 }
 
 /**

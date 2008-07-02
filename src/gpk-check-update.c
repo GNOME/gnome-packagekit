@@ -174,7 +174,6 @@ out:
 static void
 gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 {
-	static gboolean been_here = FALSE;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
 		NULL};
@@ -207,12 +206,8 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
-	/* FIXME: unnecessary with libgnomeui >= 2.16.0 */
-	if (!been_here) {
-		been_here = TRUE;
-		gtk_about_dialog_set_url_hook (gpk_check_update_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, "mailto:", NULL);
-	}
+	gtk_about_dialog_set_url_hook (gpk_check_update_about_dialog_url_cb, NULL, NULL);
+	gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, "mailto:", NULL);
 
 	gtk_window_set_default_icon_name ("system-software-installer");
 	gtk_show_about_dialog (NULL,
