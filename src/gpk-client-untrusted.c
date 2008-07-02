@@ -51,7 +51,6 @@ gpk_client_untrusted_button_cb (PolKitGnomeAction *action, gpointer data)
  * gpk_client_untrusted_show:
  *
  * Return value: if we agreed
- * TODO: Add in gconf checks to see if we've already agreed
  **/
 gboolean
 gpk_client_untrusted_show (PkErrorCodeEnum code)
