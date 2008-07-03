@@ -120,8 +120,7 @@ enum {
 	LAST_SIGNAL
 };
 
-enum
-{
+enum {
 	PACKAGES_COLUMN_IMAGE,
 	PACKAGES_COLUMN_STATE,  /* state of the  */
 	PACKAGES_COLUMN_CHECKBOX,  /* what we show in the checkbox */
@@ -131,8 +130,7 @@ enum
 	PACKAGES_COLUMN_LAST
 };
 
-enum
-{
+enum {
 	GROUPS_COLUMN_ICON,
 	GROUPS_COLUMN_NAME,
 	GROUPS_COLUMN_ID,
