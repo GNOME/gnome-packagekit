@@ -780,8 +780,17 @@ out:
 	g_string_free (status_security, TRUE);
 	g_string_free (status_tooltip, TRUE);
 	g_ptr_array_free (security_array, TRUE);
-
 	return ret;
+}
+
+/**
+ * gpk_check_update_query_updates_idle_cb:
+ **/
+static gboolean
+gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
+{
+	gpk_check_update_query_updates (cupdate);
+	return FALSE;
 }
 
 /**
@@ -797,7 +806,7 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 
 	/* ignore our own updates */
 	if (!cupdate->priv->get_updates_in_progress) {
-		g_idle_add ((GSourceFunc) gpk_check_update_query_updates, cupdate);
+		g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 	}
 }
 
