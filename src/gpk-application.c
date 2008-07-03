@@ -1661,6 +1661,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gboolean show_remove = TRUE;
 	GpkPackageState state;
 	gchar **package_ids;
+	gchar *image;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1680,6 +1681,15 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 		/* hide details */
 		gpk_application_clear_details (application);
+		return;
+	}
+
+	/* check we aren't a help line */
+	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_IMAGE, &image, -1);
+	ret = pk_strequal (image, "search");
+	g_free (image);
+	if (ret) {
+		pk_debug ("ignoring help click");
 		return;
 	}
 
