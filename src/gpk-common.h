@@ -102,6 +102,7 @@ gboolean	 gpk_check_icon_valid			(const gchar	*icon);
 gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
 							 PkStatusEnum	 status,
 							 GtkIconSize	 size);
+gchar		*gpk_strv_join_locale			(gchar		**array);
 
 G_END_DECLS
 

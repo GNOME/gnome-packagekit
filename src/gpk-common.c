@@ -1462,6 +1462,44 @@ gpk_convert_argv_to_strv (gchar *argv[])
 	return array;
 }
 
+/**
+ * gpk_strv_join_locale:
+ *
+ * Return value: "dave" or "dave and john" or "dave, john and alice",
+ * or %NULL for no match
+ **/
+gchar *
+gpk_strv_join_locale (gchar **array)
+{
+	guint length;
+
+	/* trivial case */
+	length = g_strv_length (array);
+	if (length == 0) {
+		return g_strdup ("none");
+	}
+
+	/* try and get a print format */
+	if (length == 1) {
+		return g_strdup (array[0]);
+	} else if (length == 2) {
+		return g_strdup_printf (_("%s and %s"),
+					array[0], array[1]);
+	} else if (length == 3) {
+		return g_strdup_printf (_("%s, %s and %s"),
+					array[0], array[1], array[2]);
+	} else if (length == 4) {
+		return g_strdup_printf (_("%s, %s, %s and %s"),
+					array[0], array[1],
+					array[2], array[3]);
+	} else if (length == 5) {
+		return g_strdup_printf (_("%s, %s, %s, %s and %s"),
+					array[0], array[1], array[2],
+					array[3], array[4]);
+	}
+	return NULL;
+}
+
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
