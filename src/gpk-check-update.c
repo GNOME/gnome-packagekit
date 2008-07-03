@@ -470,7 +470,8 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	if (notification == NULL) {
-		pk_error ("moo");
+		pk_warning ("failed to get bubble");
+		return;
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
