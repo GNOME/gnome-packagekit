@@ -476,7 +476,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (notification, "update-just-security",
-					_("Install these updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Install security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
 					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-notify-critical",
@@ -637,6 +637,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	PkPackageItem *item;
 	guint length;
 	guint i;
+	guint more;
 	gboolean ret = FALSE;
 	GString *status_security;
 	GString *status_tooltip;
@@ -693,8 +694,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* find the security updates */
 	for (i=0; i<length; i++) {
 		item = pk_package_list_get_item (list, i);
-		pk_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
-			  item->package_id, item->summary);
 		ident = pk_package_id_new_from_string (item->package_id);
 		if (item->info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
@@ -703,6 +702,15 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 						ident->name, item->summary);
 		}
 		pk_package_id_free (ident);
+
+		/* don't have a huge notification that won't fit on the screen */
+		if (security_array->len > 10) {
+			more = length - security_array->len;
+			g_string_append_printf (status_security, ngettext ("and %d other security update",
+									   "and %d other security updates", more), more);
+			g_string_append (status_security, "...\n");
+			break;
+		}
 	}
 
 	/* do we do the automatic updates? */
