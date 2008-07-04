@@ -115,6 +115,10 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	/* these are the new packages */
 	list = pk_client_get_package_list (client);
 	length = pk_package_list_get_size (list);
+	if (length == 0) {
+		ret = TRUE;
+		goto out;
+	}
 
 	/* title */
 	title = g_strdup_printf (ngettext ("%i other package also have to be installed",
