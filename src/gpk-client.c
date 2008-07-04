@@ -1446,7 +1446,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 
 	/* populate a chooser */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, 0, _("Applications that can open this type of file"));
+	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {
@@ -1514,7 +1514,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 
 	/* populate a chooser */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, 0, _("Available fonts for this document"));
+	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, _("Available fonts for this document"));
 
 	/* selected nothing */
 	if (package_id == NULL) {

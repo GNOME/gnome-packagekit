@@ -167,7 +167,7 @@ gpk_update_viewer_setup_policykit (void)
  * Return value: the package_id of the selected package, or NULL
  **/
 gchar *
-gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role, const gchar *title)
+gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *title)
 {
 	GladeXML *glade_xml;
 	GtkWidget *widget;
@@ -215,13 +215,6 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, PkRoleEnum role
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_client_chooser_button_action_cb), NULL);
-
-	/* no point showing install button */
-	if (role == PK_ROLE_ENUM_GET_DEPENDS ||
-	    role == PK_ROLE_ENUM_GET_REQUIRES) {
-		widget = glade_xml_get_widget (glade_xml, "button_action");
-		gtk_widget_hide (widget);
-	}
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_CHOOSER_COLUMN_LAST, G_TYPE_STRING,

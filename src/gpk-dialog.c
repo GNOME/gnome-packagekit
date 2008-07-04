@@ -59,6 +59,10 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	array = g_ptr_array_new ();
 	for (i=0; i<length; i++) {
 		ident = pk_package_id_new_from_string (package_ids[i]);
+		if (ident == NULL) {
+			pk_warning ("failed to split %s", package_ids[i]);
+			continue;
+		}
 		g_ptr_array_add (array, g_strdup (ident->name));
 		pk_package_id_free (ident);
 	}

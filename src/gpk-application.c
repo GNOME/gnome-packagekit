@@ -53,6 +53,7 @@
 #include "gpk-application.h"
 #include "gpk-application-state.h"
 #include "gpk-animated-icon.h"
+#include "gpk-dialog.h"
 #include "gpk-client-run.h"
 #include "gpk-client-chooser.h"
 #include "gpk-cell-renderer-uri.h"
@@ -680,7 +681,6 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	package_ids = pk_package_ids_from_id (application->priv->package);
 	ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
 				      package_ids, TRUE, &error);
-	g_strfreev (package_ids);
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
@@ -695,9 +695,36 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No packages"),
 					_("This package does not require any others"), NULL);
 	} else {
-		gpk_client_chooser_show (GTK_WINDOW (widget), list, PK_ROLE_ENUM_GET_REQUIRES, _("Required by"));
+		gchar *name;
+		gchar *title;
+		gchar *message;
+		guint length;
+		GtkWidget *dialog;
+
+		length = pk_package_list_get_size (list);
+		name = gpk_dialog_package_id_name_join_locale (package_ids);
+		title = g_strdup_printf (ngettext ("%i other package requires %s",
+						   "%i other packages require %s",
+						   length), length, name);
+
+		message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
+						     "Packages listed below require %s to function correctly.",
+						     length), name);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+		gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
+
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+
+		g_free (name);
+		g_free (title);
+		g_free (message);
 	}
 
+	g_strfreev (package_ids);
 	g_object_unref (list);
 }
 
@@ -726,7 +753,6 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	package_ids = pk_package_ids_from_id (application->priv->package);
 	ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
 				     package_ids, TRUE, &error);
-	g_strfreev (package_ids);
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
@@ -741,9 +767,36 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No packages"),
 					_("This package does not depends on any others"), NULL);
 	} else {
-		gpk_client_chooser_show (GTK_WINDOW (widget), list, PK_ROLE_ENUM_GET_DEPENDS, _("Depends on"));
+		gchar *name;
+		gchar *title;
+		gchar *message;
+		guint length;
+		GtkWidget *dialog;
+
+		length = pk_package_list_get_size (list);
+		name = gpk_dialog_package_id_name_join_locale (package_ids);
+		title = g_strdup_printf (ngettext ("%i other package depends on %s",
+						   "%i other packages depends on %s",
+						   length), length, name);
+
+		message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
+						     "Packages listed below are required for %s to function correctly.",
+						     length), name);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+		gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
+
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+
+		g_free (name);
+		g_free (title);
+		g_free (message);
 	}
 
+	g_strfreev (package_ids);
 	g_object_unref (list);
 }
 
