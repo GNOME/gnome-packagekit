@@ -192,6 +192,9 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll), widget);
 	gtk_widget_show (scroll);
 
+	/* add some spacing to conform to the GNOME HIG */
+	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
+
 	length = pk_package_list_get_size (list);
 	if (length > 5) {
 		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 300);
