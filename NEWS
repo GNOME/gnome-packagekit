@@ -1,3 +1,37 @@
+Version 0.2.3
+~~~~~~~~~~~~~~
+Released: 2008-07-04
+
+* Translations
+ - Added Czech translation (Honza Steuer)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Brazilian Portuguese translation (Igor Soares)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Catalan translation (Gil Forcada)
+
+* New features:
+ - Add a gpk-install-catalog binary to install .catalog files (Richard Hughes)
+ - Add an InstallFont method into the session API (Richard Hughes)
+ - Add a run program menu item (Richard Hughes)
+ - Convert the toolbutton buttons to menuitems as suggested by Matthias (Richard Hughes)
+ - Convert the add/remove->install/remove list model we used before to an install/remove->apply model (Richard Hughes)
+ - Remove the three pane layout in gpk-application, nobody likes it (Richard Hughes)
+
+* Bugfixes:
+ - Don't segfault when the ident data is NULL for a packageID in gpk-application. (Patrick Niklaus)
+ - Remove packages we have already selected in the depends UI (Richard Hughes)
+ - Audit the use of FIXME and TODO and fix up some of the issues (Richard Hughes)
+ - Stop a never ending scheduling of query-updates (Richard Hughes)
+ - Don't crash if we click the help text in gpk-application (Richard Hughes)
+ - Limit the size of the balloon about security updates. fixes rh#453817  (Richard Hughes)
+ - Don't crash when the network comes online (Richard Hughes)
+ - Pulse progressbar when we are monitoring unknown TIDs (Richard Hughes)
+ - Don't crash the applet when we use the session methods (Richard Hughes)
+ - Show a spinning animation when we go back to the details list, fixes rh#453250 (Richard Hughes)
+ - Correct some string typos found by Andre Klapper (Richard Hughes)
+ - Fix the get_updates_in_progress check (Scott Reeves)
+
 Version 0.2.2
 ~~~~~~~~~~~~~~
 Released: 2008-06-05
