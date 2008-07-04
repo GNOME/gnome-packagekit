@@ -476,7 +476,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (notification, "update-just-security",
-					_("Install these updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Install security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
 					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-notify-critical",
@@ -637,6 +637,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	const PkPackageObj *obj;
 	guint length;
 	guint i;
+	guint more;
 	gboolean ret = FALSE;
 	GString *status_security;
 	GString *status_tooltip;
@@ -693,14 +694,21 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* find the security updates */
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
-			  obj->id->name, obj->summary);
 		if (obj->info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
 			package_id = pk_package_id_to_string (obj->id);
 			g_ptr_array_add (security_array, package_id);
 			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
 						obj->id->name, obj->summary);
+		}
+
+		/* don't have a huge notification that won't fit on the screen */
+		if (security_array->len > 10) {
+			more = length - security_array->len;
+			g_string_append_printf (status_security, ngettext ("and %d other security update",
+									   "and %d other security updates", more), more);
+			g_string_append (status_security, "...\n");
+			break;
 		}
 	}
 
