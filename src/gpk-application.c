@@ -3082,6 +3082,7 @@ gpk_application_init (GpkApplication *application)
 				    GROUPS_COLUMN_ID, "separator", -1);
 
 		/* use the seporator */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
 						      gpk_application_group_row_separator_func, NULL, NULL);
 	}
