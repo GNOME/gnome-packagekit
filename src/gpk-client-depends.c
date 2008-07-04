@@ -121,8 +121,8 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	}
 
 	/* title */
-	title = g_strdup_printf (ngettext ("%i other package also have to be installed",
-					   "%i other packages also have to be installed",
+	title = g_strdup_printf (ngettext ("%i additional package also has to be installed",
+					   "%i additional packages also have to be installed",
 					   length), length);
 
 	/* button */

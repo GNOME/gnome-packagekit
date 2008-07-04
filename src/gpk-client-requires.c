@@ -98,8 +98,8 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	pk_package_list_sort (list);
 
 	/* title */
-	title = g_strdup_printf (ngettext ("%i other package also has to be removed",
-					   "%i other packages also have to be removed",
+	title = g_strdup_printf (ngettext ("%i additional package also has to be removed",
+					   "%i additional packages also have to be removed",
 					   length), length);
 
 	/* button */
