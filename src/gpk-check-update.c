@@ -909,7 +909,7 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* show the icon at login time */
-	gpk_check_update_query_updates (cupdate);
+	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
 /**
