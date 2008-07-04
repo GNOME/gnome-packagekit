@@ -703,8 +703,8 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 
 		length = pk_package_list_get_size (list);
 		name = gpk_dialog_package_id_name_join_locale (package_ids);
-		title = g_strdup_printf (ngettext ("%i other package requires %s",
-						   "%i other packages require %s",
+		title = g_strdup_printf (ngettext ("%i additional package require %s",
+						   "%i additional packages require %s",
 						   length), length, name);
 
 		message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
@@ -775,8 +775,8 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 
 		length = pk_package_list_get_size (list);
 		name = gpk_dialog_package_id_name_join_locale (package_ids);
-		title = g_strdup_printf (ngettext ("%i other package depends on %s",
-						   "%i other packages depends on %s",
+		title = g_strdup_printf (ngettext ("%i additional package is required for %s",
+						   "%i additional packages are required for %s",
 						   length), length, name);
 
 		message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
