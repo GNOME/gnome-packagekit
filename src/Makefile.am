@@ -56,6 +56,8 @@ shared_SOURCES =					\
 	gpk-animated-icon.h				\
 	gpk-consolekit.c				\
 	gpk-consolekit.h				\
+	gpk-dialog.c					\
+	gpk-dialog.h					\
 	gpk-client.c					\
 	gpk-client.h					\
 	gpk-client-private.h				\

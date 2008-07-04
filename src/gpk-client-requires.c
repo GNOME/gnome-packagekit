@@ -28,45 +28,17 @@
 #include <glade/glade.h>
 
 #include <pk-debug.h>
+#include <pk-common.h>
 #include <pk-client.h>
+#include <pk-extra.h>
 #include <pk-package-id.h>
 #include <pk-package-list.h>
 #include "gpk-gnome.h"
 #include "gpk-error.h"
 #include "gpk-common.h"
+#include "gpk-dialog.h"
 
 static PkClient *client = NULL;
-
-/**
- * gpk_client_requires_get_package_ids_name:
- **/
-gchar *
-gpk_client_requires_get_package_ids_name (gchar **package_ids)
-{
-	guint i;
-	guint length;
-	gchar *text;
-	GString *string;
-	PkPackageId *ident;
-
-	string = g_string_new ("");
-	length = g_strv_length (package_ids);
-
-	/* for each name */
-	for (i=0; i<length; i++) {
-		ident = pk_package_id_new_from_string (package_ids[i]);
-		g_string_append_printf (string, "%s, ", ident->name);
-		pk_package_id_free (ident);
-	}
-
-	/* remove last ', ' */
-	if (string->len > 2) {
-		g_string_set_size (string, string->len - 2);
-	}
-
-	text = g_string_free (string, FALSE);
-	return text;
-}
 
 /**
  * gpk_client_requires_show:
@@ -81,10 +53,9 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	PkPackageList *list;
 	gboolean ret;
 	guint length;
-	guint i;
-	GString *string;
-	const PkPackageObj *obj;
-	gchar *text;
+	gchar *title;
+	gchar *message;
+	gchar *button_text;
 	gchar *name;
 	GError *error = NULL;
 
@@ -117,43 +88,44 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	/* these are the new packages */
 	list = pk_client_get_package_list (client);
 
-	/* sort by package_id */
-	pk_package_list_sort (list);
-
-	/* process package list */
-	string = g_string_new (_("The following packages have to be removed:"));
-	g_string_append (string, "\n\n");
+	/* no deps */
 	length = pk_package_list_get_size (list);
-	/* shortcut */
 	if (length == 0) {
 		goto out;
 	}
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->id, obj->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
 
-	name = gpk_client_requires_get_package_ids_name (package_ids);
-	text = g_strdup_printf (ngettext ("%i other package depends on %s", "%i other packages depend on %s", length), length, name);
+	/* sort by package_id */
+	pk_package_list_sort (list);
+
+	/* title */
+	title = g_strdup_printf (ngettext ("%i other package also has to be removed",
+					   "%i other packages also have to be removed",
+					   length), length);
+
+	/* button */
+	button_text = g_strdup_printf (ngettext ("Remove package", "Remove packages", length));
+
+	/* message */
+	name = gpk_dialog_package_id_name_join_locale (package_ids);
+	length = g_strv_length (package_ids);
+	message = g_strdup_printf (ngettext ("To remove %s other packages that depend on it must also be removed.",
+					     "To remove %s other packages that depend on them must also be removed.",
+					     length), name);
 	g_free (name);
 
 	/* show UI */
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", text);
-	g_free (text);
-	/* add a specialist button */
-	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Remove all packages"), GTK_RESPONSE_OK);
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), button_text, GTK_RESPONSE_OK);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
 
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
+	g_free (button_text);
+	g_free (title);
+	g_free (message);
+
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (text);
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {

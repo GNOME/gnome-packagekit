@@ -35,23 +35,11 @@
 #include "gpk-gnome.h"
 #include "gpk-error.h"
 #include "gpk-common.h"
+#include "gpk-dialog.h"
 #include "gpk-client-private.h"
 
 static PkClient *client = NULL;
 static GConfClient *gconf_client = NULL;
-
-/**
- * gpk_client_checkbutton_show_depends_cb:
- **/
-static void
-gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, gpointer data)
-{
-	gboolean checked;
-	/* set the policy */
-	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-	pk_debug ("Changing %s to %i", GPK_CONF_SHOW_DEPENDS, checked);
-	gconf_client_set_bool (gconf_client, GPK_CONF_SHOW_DEPENDS, checked, NULL);
-}
 
 /**
  * gpk_client_status_changed_cb:
@@ -70,17 +58,16 @@ gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *
 gboolean
 gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 {
-	GtkWidget *widget;
 	GtkWidget *dialog;
 	GtkWindow *window;
 	GtkResponseType button;
 	PkPackageList *list;
 	gboolean ret;
 	guint length;
-	guint i;
-	GString *string;
-	const PkPackageObj *obj;
-	gchar *text;
+	gchar *name;
+	gchar *title;
+	gchar *message;
+	gchar *button_text;
 	GError *error = NULL;
 
 	list = pk_package_list_new ();
@@ -127,45 +114,39 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 
 	/* these are the new packages */
 	list = pk_client_get_package_list (client);
-
-	/* process package list */
-	string = g_string_new (_("The following packages also have to be downloaded:"));
-	g_string_append (string, "\n\n");
 	length = pk_package_list_get_size (list);
-	/* shortcut */
-	if (length == 0) {
-		goto out;
-	}
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->id, obj->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
 
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
+	/* title */
+	title = g_strdup_printf (ngettext ("%i other package also have to be installed",
+					   "%i other packages also have to be installed",
+					   length), length);
+
+	/* button */
+	button_text = g_strdup_printf (ngettext ("Install package",
+						 "Install packages", length));
+
+	/* message */
+	name = gpk_dialog_package_id_name_join_locale (package_ids);
+	message = g_strdup_printf (ngettext ("To install %s, an additional package also has to be downloaded.",
+					     "To install %s, additional packages also have to be downloaded.",
+					     length), name);
+	g_free (name);
 
 	/* show UI */
 	window = gpk_client_get_window (gclient);
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
-					 "%s", _("Install additional packages?"));
-	/* add a specialist button */
-	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), button_text, GTK_RESPONSE_OK);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
+	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG (dialog), GPK_CONF_SHOW_DEPENDS);
 
-	/* add a checkbutton for deps screen */
-	widget = gtk_check_button_new_with_label (_("Do not show me this again"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), NULL);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), widget);
-	gtk_widget_show (widget);
+	g_free (button_text);
+	g_free (title);
+	g_free (message);
 
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
-	g_free (text);
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
