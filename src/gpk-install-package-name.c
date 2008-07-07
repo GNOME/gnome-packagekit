@@ -85,6 +85,7 @@ main (int argc, char *argv[])
 
 	error = NULL;
 	gclient = gpk_client_new ();
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	packages = gpk_convert_argv_to_strv (argv);
 	ret = gpk_client_install_package_names (gclient, packages, NULL);
 	g_strfreev (packages);
