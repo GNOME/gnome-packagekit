@@ -85,6 +85,7 @@ main (int argc, char *argv[])
 
 	error = NULL;
 	gclient = gpk_client_new ();
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	files = gpk_convert_argv_to_strv (argv);
 	ret = gpk_client_install_local_files (gclient, files, NULL);
 	g_strfreev (files);

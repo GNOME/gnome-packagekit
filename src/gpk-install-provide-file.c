@@ -89,6 +89,7 @@ main (int argc, char *argv[])
 
 	error = NULL;
 	gclient = gpk_client_new ();
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	ret = gpk_client_install_provide_file (gclient, argv[1], NULL);
 	g_object_unref (gclient);
 
