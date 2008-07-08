@@ -1092,7 +1092,6 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gboolean ret;
 	GError *error_local = NULL;
 	gchar *text = NULL;
-	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -1106,14 +1105,17 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* set title */
 	gpk_client_setup_window (gclient, _("Remove packages"));
 
+	/* setup the UI */
+	gpk_client_set_progress_files (gclient, FALSE);
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
 	/* are we dumb and can't check for depends? */
 	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
 
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	ret = gpk_client_requires_show (GTK_WINDOW (widget), package_ids);
+	ret = gpk_client_requires_show (gclient, package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"), NULL);
@@ -1133,6 +1135,7 @@ skip_checks:
 	}
 
 	/* try to remove the package_ids */
+	gpk_client_set_progress_files (gclient, TRUE);
 	ret = pk_client_remove_packages (gclient->priv->client_action, package_ids, TRUE, FALSE, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
@@ -1204,7 +1207,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_setup_window (gclient, _("Install packages"));
 
 	/* setup the UI */
-	gpk_client_set_progress_files (gclient, TRUE);
+	gpk_client_set_progress_files (gclient, FALSE);
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
@@ -1234,6 +1237,7 @@ skip_checks:
 
 	/* try to install the package_id */
 	gpk_client_set_title (gclient, _("Installing packages"));
+	gpk_client_set_progress_files (gclient, TRUE);
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */

@@ -37,8 +37,18 @@
 #include "gpk-error.h"
 #include "gpk-common.h"
 #include "gpk-dialog.h"
+#include "gpk-client-private.h"
 
 static PkClient *client = NULL;
+
+/**
+ * gpk_client_status_changed_cb:
+ **/
+static void
+gpk_client_status_changed_cb (PkClient *client, PkStatusEnum status, GpkClient *gclient)
+{
+	gpk_client_set_status (gclient, status);
+}
 
 /**
  * gpk_client_requires_show:
@@ -46,9 +56,10 @@ static PkClient *client = NULL;
  * Return value: if we agreed to remove the deps
  **/
 gboolean
-gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
+gpk_client_requires_show (GpkClient *gclient, gchar **package_ids)
 {
 	GtkWidget *dialog;
+	GtkWindow *window;
 	GtkResponseType button;
 	PkPackageList *list;
 	gboolean ret;
@@ -64,10 +75,16 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	client = pk_client_new ();
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	pk_client_set_synchronous (client, TRUE, NULL);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (gpk_client_status_changed_cb), gclient);
+
+	/* get the packages we depend on */
+	gpk_client_set_title (gclient, _("Finding packages we require"));
 
 	/* reset */
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
+		window = gpk_client_get_window (gclient);
 		gpk_error_dialog_modal (window, _("Failed to reset client"), NULL, error->message);
 		g_error_free (error);
 		ret = FALSE;
@@ -77,6 +94,7 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	/* find out if this would force removal of other packages */
 	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, package_ids, TRUE, &error);
 	if (!ret) {
+		window = gpk_client_get_window (gclient);
 		gpk_error_dialog_modal (window, _("Failed to get requires"),
 					_("Could not work out what packages would also be removed"),
 					error->message);
@@ -114,6 +132,7 @@ gpk_client_requires_show (GtkWindow *window, gchar **package_ids)
 	g_free (name);
 
 	/* show UI */
+	window = gpk_client_get_window (gclient);
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
