@@ -115,7 +115,6 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	button = polkit_gnome_action_create_button (update_system_action);
 	widget = glade_xml_get_widget (glade_xml, "hbuttonbox2");
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
-	gtk_box_reorder_child (GTK_BOX (widget), button, 0);
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
