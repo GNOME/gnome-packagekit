@@ -208,53 +208,6 @@ gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean f
 }
 
 /**
- * gpk_application_treeview_sort_none:
- **/
-static gint
-gpk_application_treeview_sort_none (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data)
-{
-	return 0;
-}
-
-/**
- * gpk_application_treeview_sort_text:
- **/
-static gint
-gpk_application_treeview_sort_text (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data)
-{
-	gchar *a_txt;
-	gchar *b_txt;
-	gint ret;
-	gtk_tree_model_get (model, a, PACKAGES_COLUMN_ID, &a_txt, -1);
-	gtk_tree_model_get (model, b, PACKAGES_COLUMN_ID, &b_txt, -1);
-	ret = strcmp (a_txt, b_txt);
-	g_free (a_txt);
-	g_free (b_txt);
-	return ret;
-}
-
-/**
- * gpk_application_treeview_set_sorted:
- **/
-static void
-gpk_application_treeview_set_sorted (GpkApplication *application, gboolean sorted)
-{
-	if (sorted) {
-		pk_debug ("sorted");
-		gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
-						 PACKAGES_COLUMN_ID, gpk_application_treeview_sort_text, NULL, NULL);
-		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
-						      PACKAGES_COLUMN_ID, GTK_SORT_ASCENDING);
-	} else {
-		pk_debug ("unsorted");
-		gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (application->priv->packages_store),
-							 gpk_application_treeview_sort_none, NULL, NULL);
-		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
-						      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-	}
-}
-
-/**
  * gpk_application_set_text_buffer:
  **/
 static void
@@ -882,9 +835,6 @@ gpk_application_clear_details (GpkApplication *application)
 static void
 gpk_application_clear_packages (GpkApplication *application)
 {
-	/* unsorted */
-	gpk_application_treeview_set_sorted (application, FALSE);
-
 	/* clear existing list */
 	gtk_list_store_clear (application->priv->packages_store);
 	application->priv->has_package = FALSE;
@@ -1006,6 +956,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	gboolean checkbox;
 	gboolean enabled;
 	GpkPackageState state = 0;
+	static guint package_cnt = 0;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1062,8 +1013,11 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	g_free (package_id);
 	g_free (text);
 
-	while (gtk_events_pending ()) {
-		gtk_main_iteration ();
+	/* only process every n events else we re-order too many times */
+	if (package_cnt++ % 200 == 0) {
+		while (gtk_events_pending ()) {
+			gtk_main_iteration ();
+		}
 	}
 }
 
@@ -1185,8 +1139,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 		/* focus back to the text extry */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 		gtk_widget_grab_focus (widget);
-
-		gpk_application_treeview_set_sorted (application, TRUE);
 	}
 
 	/* do we need to update the search? */
@@ -3035,8 +2987,9 @@ gpk_application_init (GpkApplication *application)
 	/* add columns to the tree view */
 	gpk_application_treeview_add_columns_description (application);
 
-	/* unsorted */
-//	gpk_application_treeview_set_sorted (application, FALSE);
+	/* sorted */
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (application->priv->packages_store),
+					      PACKAGES_COLUMN_ID, GTK_SORT_ASCENDING);
 
 	/* create package tree view */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
