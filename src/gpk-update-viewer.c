@@ -767,6 +767,50 @@ out:
 	return pretty;
 }
 
+/**
+ * gpk_update_viewer_pretty_description:
+ **/
+static gchar *
+gpk_update_viewer_pretty_description (const gchar *description)
+{
+	gchar **lines;
+	GString *string;
+	gchar *line;
+	gchar *line2;
+	guint len;
+	guint i;
+
+	/* process each line */
+	lines = g_strsplit (description, "\n", 0);
+	string = g_string_new ("");
+	len = g_strv_length (lines);
+	for (i=0; i<len; i++) {
+		/* do not free this */
+		line = g_strstrip (lines[i]);
+
+		/* common prefixes */
+		if (g_str_has_prefix (line, "- ") ||
+		    g_str_has_prefix (line, "* ")) {
+			line2 = g_strdup_printf ("• %s", line+2);
+		} else {
+			line2 = g_strdup (line);
+		}
+
+		/* if not null then append back */
+		if (!pk_strzero (line2)) {
+			g_string_append_printf (string, "%s\n", line2);
+		}
+		g_free (line2);
+	}
+	/* remove trailing \n */
+	if (string->len > 0) {
+		g_string_set_size (string, string->len - 1);
+	}
+	line = g_string_free (string, FALSE);
+	g_strfreev (lines);
+
+	return line;
+}
 
 /**
  * gpk_update_viewer_update_detail_cb:
@@ -781,6 +825,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	gchar *package_pretty;
 	const gchar *info_text;
 	PkInfoEnum info;
+	gchar *line;
 
 	/* clear existing list */
 	gpk_update_viewer_description_animation_stop ();
@@ -829,14 +874,11 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data, NULL);
 
 	if (!pk_strzero (obj->update_text)) {
-		gchar *first;
-		gchar *second;
-		first = pk_strreplace (obj->update_text, "\n- ", "\n• ");
-		second = pk_strreplace (first, "\n* ", "\n• ");
+		/* convert the bullets */
+		line = gpk_update_viewer_pretty_description (obj->update_text);
 		/* translators: this is the package description */
-		gpk_update_viewer_add_description_item (_("Description"), second, NULL);
-		g_free (first);
-		g_free (second);
+		gpk_update_viewer_add_description_item (_("Description"), line, NULL);
+		g_free (line);
 	}
 
 	/* add all the links */
