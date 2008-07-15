@@ -284,7 +284,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	PkRoleEnum role;
 	PkRestartEnum restart;
 	GError *error = NULL;
-	gchar *package_id;
+	gchar *package_id = NULL;
 	gchar *message = NULL;
 	gchar *package;
 	const gchar *restart_message;
@@ -297,7 +297,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	ret = pk_client_get_role (client, &role, &package_id, NULL);
 	if (!ret) {
 		pk_warning ("cannot get role");
-		return;
+		goto out;
 	}
 	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
 
@@ -318,20 +318,20 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	/* is it worth showing a UI? */
 	if (runtime < 3000) {
 		pk_debug ("no notification, too quick");
-		return;
+		goto out;
 	}
 
 	/* is it worth showing a UI? */
 	if (exit != PK_EXIT_ENUM_SUCCESS) {
 		pk_debug ("not notifying, as didn't complete okay");
-		return;
+		goto out;
 	}
 
 	/* are we accepting notifications */
 	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
 	if (!value) {
 		pk_debug ("not showing notification as prevented in gconf");
-		return;
+		goto out;
 	}
 
 	/* is caller able to handle the messages itself? */
@@ -339,11 +339,11 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	if (!ret) {
 		pk_warning ("could not get caller active status: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
 	if (value) {
 		pk_debug ("not showing notification as caller is still present");
-		return;
+		goto out;
 	}
 
 	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
@@ -360,7 +360,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 
 	/* nothing of interest */
 	if (message == NULL) {
-		return;
+		goto out;
 	}
 
 	/* do the bubble */
@@ -375,6 +375,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 		g_error_free (error);
 	}
 
+out:
 	g_free (message);
 	g_free (package_id);
 }
