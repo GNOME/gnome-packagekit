@@ -286,6 +286,10 @@ static gboolean
 gpk_check_update_get_updates_post_update_cb (GpkCheckUpdate *cupdate)
 {
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
+
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	gpk_check_update_query_updates (cupdate);
 	return FALSE;
 }

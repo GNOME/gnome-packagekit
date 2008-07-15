@@ -123,6 +123,9 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 static gboolean
 gpk_animated_icon_update (GpkAnimatedIcon *icon)
 {
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	/* have we loaded a file */
 	if (icon->frames == NULL) {
 		pk_warning ("no frames to process");

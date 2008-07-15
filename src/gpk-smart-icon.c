@@ -112,6 +112,9 @@ gpk_smart_icon_pulse_timeout_cb (gpointer data)
 
 	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
 
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	/* have we hidden the icon already? */
 	if (sicon->priv->current == NULL || sicon->priv->new == NULL) {
 		pk_debug ("not pulsing as icon cleared");
@@ -173,6 +176,9 @@ static gboolean
 gpk_smart_icon_set_icon_name_cb (gpointer data)
 {
 	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
+
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
 
 	/* no point setting the same */
 	if (sicon->priv->new != NULL &&

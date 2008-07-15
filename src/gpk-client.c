@@ -258,6 +258,9 @@ gpk_install_finished_timeout (gpointer data)
 	GtkWidget *widget;
 	GpkClient *gclient = (GpkClient *) data;
 
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	/* hide window manually to get it out of the way */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_hide (widget);
@@ -495,6 +498,9 @@ gpk_client_pulse_progress (GpkClient *gclient)
 	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
