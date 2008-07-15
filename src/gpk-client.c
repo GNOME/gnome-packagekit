@@ -61,6 +61,7 @@
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
 static void     gpk_client_finalize	(GObject	*object);
+static void	gpk_client_done		(GpkClient	*gclient);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))
 #define PK_STOCK_WINDOW_ICON		"system-software-installer"
@@ -223,6 +224,7 @@ gpk_client_updates_button_close_cb (GtkWidget *widget_button, GpkClient *gclient
 	/* go! */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_hide (widget);
+	gpk_client_done (gclient);
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 }
 
@@ -455,6 +457,9 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	/* save this so we can return a proper error value */
 	gclient->priv->exit = exit;
+
+	/* stop timers, animations and that sort of thing */
+	gpk_client_done (gclient);
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	/* do nothing */
@@ -904,7 +909,11 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 static void
 gpk_client_done (GpkClient *gclient)
 {
+	GtkWidget *widget;
+
 	/* we're done */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "image_status");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
 	if (gclient->priv->pulse_timer_id != 0) {
 		g_source_remove (gclient->priv->pulse_timer_id);
 		gclient->priv->pulse_timer_id = 0;
