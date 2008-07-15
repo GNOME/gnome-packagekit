@@ -325,12 +325,6 @@ gpk_client_run_show (gchar **package_ids)
 		goto out;
 	}
 
-	/* just one, so shortcut the UI */
-	if (len == 1) {
-		full_path = g_strdup (last_tryexec);
-		goto out;
-	}
-
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_widget_show (widget);
