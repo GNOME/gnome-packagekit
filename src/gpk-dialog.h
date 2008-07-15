@@ -30,6 +30,8 @@ G_BEGIN_DECLS
 
 gboolean	 gpk_dialog_embed_package_list_widget	(GtkDialog	*dialog,
 							 PkPackageList	*list);
+gboolean	 gpk_dialog_embed_file_list_widget	(GtkDialog	*dialog,
+							 GPtrArray	*files);
 gboolean	 gpk_dialog_embed_do_not_show_widget	(GtkDialog	*dialog,
 							 const gchar	*key);
 gchar		*gpk_dialog_package_id_name_join_locale	(gchar		**package_ids);

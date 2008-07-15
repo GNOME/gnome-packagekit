@@ -212,6 +212,56 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 }
 
 /**
+ * gpk_dialog_embed_file_list_widget:
+ **/
+gboolean
+gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
+{
+	GtkWidget *scroll;
+	GtkWidget *widget;
+	GtkTextBuffer *buffer;
+	gchar **array;
+	gchar *text;
+
+	/* split and show */
+	array = pk_ptr_array_to_argv (files);
+	text = g_strjoinv ("\n", array);
+
+	if (pk_strzero (text)) {
+		g_free (text);
+		text = g_strdup (_("No files"));
+	}
+
+	/* create a text view to hold the store */
+	widget = gtk_text_view_new ();
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (widget), 5);
+	gtk_text_view_set_right_margin (GTK_TEXT_VIEW (widget), 5);
+
+	/* scroll the treeview */
+	scroll = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll), widget);
+	gtk_widget_show (scroll);
+
+	/* set in buffer */
+	buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_set_text (buffer, text, -1);
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
+	gtk_widget_show (widget);
+
+	/* add some spacing to conform to the GNOME HIG */
+	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
+	gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 300);
+
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), scroll);
+	g_free (text);
+
+	return TRUE;
+}
+
+/**
  * gpk_client_checkbutton_show_depends_cb:
  **/
 static void

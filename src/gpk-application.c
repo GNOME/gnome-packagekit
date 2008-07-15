@@ -423,34 +423,12 @@ gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application
 }
 
 /**
- * gpk_application_modal_info:
+ * gpk_application_strcmp_indirect:
  **/
-static void
-gpk_application_modal_info (GpkApplication *application, const gchar *title, const gchar *text)
+gint
+gpk_application_strcmp_indirect (gchar **a, gchar **b)
 {
-	GtkWidget *dialog;
-	GtkWidget *widget;
-	GtkWidget *main_window;
-	GtkWidget *scrolled_window;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	widget = gtk_text_view_new ();
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_widget_set_size_request (scrolled_window, 400, 200);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), widget);
-
-	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-	dialog = gtk_dialog_new_with_buttons (title, GTK_WINDOW (main_window),
-					      GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
-					      GTK_RESPONSE_NONE, NULL);
-
-	gpk_application_set_text_buffer (widget, text);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), scrolled_window);
-
-	/* ensure that the dialog box is destroyed when the user responds. */
-	g_signal_connect_swapped (dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
-	gtk_widget_show_all (dialog);
+	return strcmp (*a, *b);
 }
 
 /**
@@ -459,9 +437,13 @@ gpk_application_modal_info (GpkApplication *application, const gchar *title, con
 static void
 gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 {
+	GPtrArray *array;
 	GError *error = NULL;
 	gchar **files;
-	gchar *text;
+	gchar *title;
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	PkPackageId *id;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -472,18 +454,28 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 		return;
 	}
 
-	/* split and show */
-	text = g_strjoinv ("\n", files);
+	/* convert to pointer array */
+	array = pk_argv_to_ptr_array (files);
+	g_ptr_array_sort (array, (GCompareFunc) gpk_application_strcmp_indirect);
 
-	if (pk_strzero (text)) {
-		g_free (text);
-		text = g_strdup (_("No files"));
-	}
+	/* title */
+	id = pk_package_id_new_from_string (application->priv->package);
+	title = g_strdup_printf (ngettext ("%i file installed by %s",
+					   "%i files installed by %s",
+					   array->len), array->len, id->name);
 
-	gpk_application_modal_info (application, _("File list"), text);
+	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gpk_dialog_embed_file_list_widget (GTK_DIALOG (dialog), array);
 
-	g_free (text);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+	g_free (title);
+	g_ptr_array_free (array, TRUE);
 	g_strfreev (files);
+	pk_package_id_free (id);
 }
 
 /**
