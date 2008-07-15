@@ -380,6 +380,9 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	/* triggered once an hour */
 	gpk_auto_refresh_change_state (arefresh);
 
@@ -396,6 +399,9 @@ gpk_auto_refresh_check_delay_cb (gpointer user_data)
 	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
 
 	/* we have waited enough */
 	if (arefresh->priv->session_delay == FALSE) {

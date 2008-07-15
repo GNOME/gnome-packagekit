@@ -105,6 +105,9 @@ gpk_firmware_timeout_cb (gpointer data)
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 	NotifyNotification *notification;
 
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
 	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);

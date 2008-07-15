@@ -1003,6 +1003,9 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
+	/* debug so we can catch polling */
+	pk_debug ("polling check");
+
 	proxy_http = gpk_watch_get_proxy_http (watch);
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
