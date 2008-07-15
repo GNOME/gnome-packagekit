@@ -1081,9 +1081,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
-	/* we're done */
-	gpk_client_done (gclient);
 out:
+	gpk_client_done (gclient);
 	return ret;
 }
 
@@ -1168,9 +1167,8 @@ skip_checks:
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
-	/* we're done */
-	gpk_client_done (gclient);
 out:
+	gpk_client_done (gclient);
 	return ret;
 }
 
@@ -1265,9 +1263,8 @@ skip_checks:
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
-	/* we're done */
-	gpk_client_done (gclient);
 out:
+	gpk_client_done (gclient);
 	return ret;
 }
 
@@ -2286,6 +2283,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	gpk_client_main_wait (gclient);
+	gpk_client_done (gclient);
 
 	return TRUE;
 }
