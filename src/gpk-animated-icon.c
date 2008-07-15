@@ -194,11 +194,11 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 }
 
 /**
- * gpk_image_finalize:
- * @object: The object to finalize
+ * gpk_animated_icon_destroy:
+ * @object: The object to destroy
  **/
 static void
-gpk_image_finalize (GObject *object)
+gpk_animated_icon_destroy (GtkObject *object)
 {
 	GpkAnimatedIcon *icon;
 	icon = GPK_ANIMATED_ICON (object);
@@ -210,15 +210,15 @@ gpk_image_finalize (GObject *object)
 	g_free (icon->filename);
 	gpk_animated_icon_free_pixbufs (icon);
 
-	G_OBJECT_CLASS (parent_class)->finalize (object);
+	GTK_OBJECT_CLASS (parent_class)->destroy (object);
 }
 
 static void
 gpk_animated_icon_class_init (GpkAnimatedIconClass *class)
 {
 	GtkImageClass *image_class;
-	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	object_class->finalize = gpk_image_finalize;
+	GtkObjectClass *object_class = GTK_OBJECT_CLASS (class);
+	object_class->destroy = gpk_animated_icon_destroy;
 
 	parent_class = g_type_class_peek_parent (class);
 	image_class = GTK_IMAGE_CLASS (class);
