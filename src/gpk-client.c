@@ -451,7 +451,7 @@ static void
 gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
 {
 	GtkWidget *widget;
-	PkRoleEnum role;
+	PkRoleEnum role = PK_ROLE_ENUM_UNKNOWN;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
