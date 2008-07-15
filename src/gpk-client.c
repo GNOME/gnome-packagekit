@@ -2210,6 +2210,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	gboolean ret;
 	gboolean allow_cancel;
 	gchar *text;
+	gchar *package_id = NULL;
 	guint percentage;
 	guint subpercentage;
 	guint elapsed;
@@ -2259,18 +2260,19 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	}
 
 	/* do the best we can */
-	ret = pk_client_get_package (gclient->priv->client_action, &text, NULL);
-
-	PkPackageId *id;
-	PkPackageObj *obj;
-
-	id = pk_package_id_new_from_string (text);
-	obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
-	pk_package_id_free (id);
+	ret = pk_client_get_package (gclient->priv->client_action, &package_id, NULL);
 	if (ret) {
-		gpk_client_package_cb (gclient->priv->client_action, obj, gclient);
+		PkPackageId *id;
+		PkPackageObj *obj;
+
+		id = pk_package_id_new_from_string (package_id);
+		if (id != NULL) {
+			obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
+			gpk_client_package_cb (gclient->priv->client_action, obj, gclient);
+			pk_package_obj_free (obj);
+		}
+		pk_package_id_free (id);
 	}
-	pk_package_obj_free (obj);
 
 	/* get the role */
 	ret = pk_client_get_role (gclient->priv->client_action, &role, NULL, &error);
