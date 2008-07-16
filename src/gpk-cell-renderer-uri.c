@@ -73,7 +73,7 @@ gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 			        GdkRectangle *background_area,
 			        GdkRectangle *cell_area, GtkCellRendererState flags)
 {
-	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (g_object_get_data (G_OBJECT (cell), "cru"));
+	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
 	/* nothing to do */
 	if (cru->uri == NULL) {
@@ -169,9 +169,6 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 
 	/* we can click */
 	g_object_set (G_OBJECT (cru), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
-
-	/* save this */
-	g_object_set_data (G_OBJECT (cell), "cru", cru);
 
 	GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, window, widget, background_area, cell_area, expose_area, flags);
 }
