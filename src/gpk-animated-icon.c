@@ -208,6 +208,7 @@ gpk_animated_icon_destroy (GtkObject *object)
 		g_source_remove (icon->animation_id);
 	}
 	g_free (icon->filename);
+	icon->filename = NULL;
 	gpk_animated_icon_free_pixbufs (icon);
 
 	GTK_OBJECT_CLASS (parent_class)->destroy (object);
