@@ -2169,15 +2169,14 @@ static gchar *
 pk_common_get_role_text (PkClient *client)
 {
 	const gchar *role_text;
-	gchar *package_id;
 	gchar *text;
-	gchar *package;
+	gchar *message;
 	PkRoleEnum role;
 	GError *error = NULL;
 	gboolean ret;
 
 	/* get role and text */
-	ret = pk_client_get_role (client, &role, &package_id, &error);
+	ret = pk_client_get_role (client, &role, &text, &error);
 	if (!ret) {
 		pk_warning ("failed to get role: %s", error->message);
 		g_error_free (error);
@@ -2187,16 +2186,14 @@ pk_common_get_role_text (PkClient *client)
 	/* backup */
 	role_text = gpk_role_enum_to_localised_present (role);
 
-	if (!pk_strzero (package_id) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		package = gpk_package_get_name (package_id);
-		text = g_strdup_printf ("%s: %s", role_text, package);
-		g_free (package);
+	if (!pk_strzero (text) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		message = g_strdup_printf ("%s: %s", role_text, text);
 	} else {
-		text = g_strdup_printf ("%s", role_text);
+		message = g_strdup_printf ("%s", role_text);
 	}
-	g_free (package_id);
+	g_free (text);
 
-	return text;
+	return message;
 }
 
 /**

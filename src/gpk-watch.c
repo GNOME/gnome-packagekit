@@ -107,7 +107,6 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	PkTaskListItem *item;
 	guint length;
 	GString *status;
-	gchar *text;
 	const gchar *localised_status;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
@@ -129,13 +128,11 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 
 		/* should we display the text */
 		if (item->role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-		    pk_strzero (item->package_id)) {
+		    pk_strzero (item->text)) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
-			text = gpk_package_get_name (item->package_id);
-			g_string_append_printf (status, "%s: %s\n", localised_status, text);
-			g_free (text);
+			g_string_append_printf (status, "%s: %s\n", localised_status, item->text);
 		}
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
@@ -290,9 +287,8 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	PkRoleEnum role;
 	PkRestartEnum restart;
 	GError *error = NULL;
-	gchar *package_id = NULL;
+	gchar *text = NULL;
 	gchar *message = NULL;
-	gchar *package;
 	const gchar *restart_message;
 	const gchar *icon_name;
 	NotifyNotification *notification;
@@ -300,12 +296,12 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* get the role */
-	ret = pk_client_get_role (client, &role, &package_id, NULL);
+	ret = pk_client_get_role (client, &role, &text, NULL);
 	if (!ret) {
 		pk_warning ("cannot get role");
 		goto out;
 	}
-	pk_debug ("role=%s, package=%s", pk_role_enum_to_text (role), package_id);
+	pk_debug ("role=%s, text=%s", pk_role_enum_to_text (role), text);
 
 	/* show an icon if the user needs to reboot */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
@@ -353,13 +349,9 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	}
 
 	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
-		package = gpk_package_get_name (package_id);
-		message = g_strdup_printf (_("Package '%s' has been removed"), package);
-		g_free (package);
+		message = g_strdup_printf (_("Package '%s' has been removed"), text);
 	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
-		package = gpk_package_get_name (package_id);
-		message = g_strdup_printf (_("Package '%s' has been installed"), package);
-		g_free (package);
+		message = g_strdup_printf (_("Package '%s' has been installed"), text);
 	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		message = g_strdup ("System has been updated");
 	}
@@ -383,7 +375,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 
 out:
 	g_free (message);
-	g_free (package_id);
+	g_free (text);
 }
 
 /**
@@ -707,7 +699,6 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 	const gchar *localised_status;
 	const gchar *localised_role;
 	const gchar *icon_name;
-	gchar *package;
 	gchar *text;
 	guint length;
 
@@ -729,11 +720,9 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		localised_status = gpk_status_enum_to_localised_text (item->status);
 
 		icon_name = gpk_status_enum_to_icon_name (item->status);
-		if (!pk_strzero (item->package_id) &&
+		if (!pk_strzero (item->text) &&
 		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
-			package = gpk_package_get_name (item->package_id);
-			text = g_strdup_printf ("%s %s (%s)", localised_role, package, localised_status);
-			g_free (package);
+			text = g_strdup_printf ("%s %s (%s)", localised_role, item->text, localised_status);
 		} else {
 			text = g_strdup_printf ("%s (%s)", localised_role, localised_status);
 		}
