@@ -217,6 +217,8 @@ gpk_package_id_format_twoline (const PkPackageId *id, const gchar *summary)
 	gchar *text;
 	GString *string;
 
+	g_return_val_if_fail (id != NULL, NULL);
+
 	/* optional */
 	if (pk_strzero (summary)) {
 		string = g_string_new (id->name);
@@ -288,6 +290,10 @@ gpk_package_get_name (const gchar *package_id)
 	gchar *package = NULL;
 	PkPackageId *id;
 
+	/* pk_package_id_new_from_string can't accept NULL */
+	if (package_id == NULL) {
+		return NULL;
+	}
 	id = pk_package_id_new_from_string (package_id);
 	if (id == NULL) {
 		package = g_strdup (package_id);
@@ -989,6 +995,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_ACCEPT_EULA:
 		text = _("Accepting EULA");
 		break;
+	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
+		text = _("Downloading packages");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1088,6 +1097,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_ACCEPT_EULA:
 		text = _("Accepted EULA");
+		break;
+	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
+		text = _("Downloaded packages");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
@@ -1667,15 +1679,6 @@ gpk_common_self_test (gpointer data)
 	/************************************************************
 	 ****************     package name text        **************
 	 ************************************************************/
-	libst_title (test, "package id pretty null");
-	text = gpk_package_id_format_twoline (NULL, NULL);
-	if (text == NULL) {
-		libst_success (test, NULL);
-	} else {
-		libst_failed (test, "failed, got %s", text);
-	}
-
-	/************************************************************/
 	libst_title (test, "package id pretty valid package id, no summary");
 	id = pk_package_id_new_from_string ("simon;0.0.1;i386;data");
 	text = gpk_package_id_format_twoline (id, NULL);
