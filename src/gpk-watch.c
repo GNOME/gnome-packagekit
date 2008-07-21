@@ -50,6 +50,7 @@
 #include <pk-package-id.h>
 
 #include "gpk-common.h"
+#include "gpk-error.h"
 #include "gpk-watch.h"
 #include "gpk-client.h"
 #include "gpk-inhibit.h"
@@ -79,6 +80,7 @@ struct GpkWatchPrivate
 	gboolean		 show_refresh_in_menu;
 	PolKitGnomeAction	*restart_action;
 	guint			 set_proxy_timeout;
+	gchar			*error_details;
 };
 
 G_DEFINE_TYPE (GpkWatch, gpk_watch, G_TYPE_OBJECT)
@@ -268,6 +270,10 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	if (pk_strequal (action, "do-not-show-notify-complete")) {
 		pk_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
+
+	} else if (pk_strequal (action, "show-error-details")) {
+		gpk_error_dialog (_("Error details"), NULL, watch->priv->error_details);
+
 	} else {
 		pk_warning ("unknown action id: %s", action);
 	}
@@ -388,8 +394,8 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 {
 	gboolean ret;
 	GError *error = NULL;
-	gchar *escaped_details;
 	const gchar *title;
+	const gchar *message;
 	gboolean is_active;
 	gboolean value;
 	NotifyNotification *notification;
@@ -424,19 +430,24 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
         }
 
 	/* we need to format this */
-	escaped_details = g_markup_escape_text (details, -1);
+	message = gpk_error_enum_to_localised_message (error_code);
+
+	/* save this globally */
+	g_free (watch->priv->error_details);
+	watch->priv->error_details = g_markup_escape_text (details, -1);
 
 	/* do the bubble */
-	notification = notify_notification_new (title, escaped_details, "help-browser", NULL);
+	notification = notify_notification_new (title, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "show-error-details",
+					_("Show details"), gpk_watch_libnotify_cb, watch, NULL);
+
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		pk_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
-
-	g_free (escaped_details);
 }
 
 /**
@@ -491,7 +502,6 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	gboolean ret;
 	char *cmdline;
 	GdkScreen *gscreen;
-	GtkWidget *error_dialog;
 	gchar *url;
 	gchar *protocol = (gchar*) data;
 
@@ -517,9 +527,7 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	g_free (cmdline);
         
 	if (!ret) {
-		error_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Failed to show url %s", error->message); 
-		gtk_dialog_run (GTK_DIALOG (error_dialog));
-		gtk_widget_destroy (error_dialog);
+		gpk_error_dialog (_("Internal error"), _("Failed to show url"), error->message);
 		g_error_free (error);
 	}
 
@@ -1064,6 +1072,7 @@ gpk_watch_init (GpkWatch *watch)
 	PolKitGnomeAction *restart_action;
 
 	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
+	watch->priv->error_details = NULL;
 
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
@@ -1166,6 +1175,7 @@ gpk_watch_finalize (GObject *object)
 		g_source_remove (watch->priv->set_proxy_timeout);
 	}
 
+	g_free (watch->priv->error_details);
 	g_object_unref (watch->priv->sicon);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
