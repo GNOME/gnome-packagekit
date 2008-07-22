@@ -120,8 +120,8 @@ touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
     gtk-update-icon-cache -q %{_datadir}/icons/hicolor
 fi
-update-desktop-database %{_datadir}/applications
-update-mime-database %{_datadir}/mime
+update-desktop-database %{_datadir}/applications > /dev/null || :
+update-mime-database %{_datadir}/mime > /dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
