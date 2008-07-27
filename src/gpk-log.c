@@ -300,7 +300,7 @@ gpk_update_viewer_setup_policykit (void)
 {
 	PolKitAction *pk_action;
 	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.rollback");
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-rollback");
 	button_action = polkit_gnome_action_new_default ("rollback", pk_action, _("_Rollback"), NULL);
 	g_object_set (button_action,
 		      "no-icon-name", "gtk-go-back-ltr",

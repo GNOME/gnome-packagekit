@@ -99,8 +99,8 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 
 	/* add the extra button and connect up to a Policykit action */
 	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.localinstall-untrusted");
-	update_system_action = polkit_gnome_action_new_default ("localinstall-untrusted", pk_action,
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.package-install-untrusted");
+	update_system_action = polkit_gnome_action_new_default ("package-install-untrusted", pk_action,
 								_("_Force install"),
 								_("Force installing package"));
 	g_object_set (update_system_action,

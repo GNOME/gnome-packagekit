@@ -1658,7 +1658,7 @@ gpk_update_viewer_setup_policykit (void)
 
 	/* refresh */
 	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.refresh-cache");
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-sources-refresh");
 	refresh_action = polkit_gnome_action_new_default ("refresh", pk_action,
 							  _("Refresh"),
 							  _("Refreshing is not normally required but will retrieve the latest application and update lists"));
@@ -1682,7 +1682,7 @@ gpk_update_viewer_setup_policykit (void)
 
 	/* update-package */
 	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-package");
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-update");
 	update_packages_action = polkit_gnome_action_new_default ("update-package", pk_action,
 								  _("_Apply Updates"),
 								  _("Apply the selected updates"));
@@ -1696,7 +1696,7 @@ gpk_update_viewer_setup_policykit (void)
 
 	/* update-system */
 	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.update-system");
+	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-update");
 	update_system_action = polkit_gnome_action_new_default ("update-system", pk_action,
 								_("_Update System"),
 								_("Apply all updates"));
