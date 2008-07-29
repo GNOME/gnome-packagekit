@@ -28,9 +28,13 @@
 
 #include "config.h"
 
+#include <unistd.h>
+#include <sys/stat.h>
 #include <string.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
+#include <glib/gstdio.h>
+
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <gconf/gconf-client.h>
@@ -1003,33 +1007,245 @@ gpk_client_set_progress_files (GpkClient *gclient, gboolean enabled)
 }
 
 /**
- * gpk_client_install_local_file:
- * @gclient: a valid #GpkClient instance
- * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
- * @error: a %GError to put the error code and message in, or %NULL
+ * gpk_client_check_permissions:
+ * @filename: a filename to check
+ * @euid: the effective user ID to check for, or the output of geteuid()
+ * @egid: the effective group ID to check for, or the output of getegid()
+ * @mode: bitfield of R_OK, W_OK, XOK
  *
- * Install a file locally, and get the deps from the repositories.
- * This is useful for double clicking on a .rpm or .deb file.
+ * Like, access but a bit more accurate - access will let root do anything.
+ * Does not get read-only or no-exec filesystems right.
+ *
+ * Return value: %TRUE if the file has access perms
+ **/
+static gboolean
+gpk_client_check_permissions (gchar *filename, guint euid, guint egid, guint mode)
+{
+	struct stat statbuf;
+
+	if (stat (filename, &statbuf) == 0) {
+		if ((mode & R_OK) &&
+		    !((statbuf.st_mode & S_IROTH) ||
+		      ((statbuf.st_mode & S_IRUSR) && euid == statbuf.st_uid) ||
+		      ((statbuf.st_mode & S_IRGRP) && egid == statbuf.st_gid)))
+			return FALSE;
+		if ((mode & W_OK) &&
+		    !((statbuf.st_mode & S_IWOTH) ||
+		      ((statbuf.st_mode & S_IWUSR) && euid == statbuf.st_uid) ||
+		      ((statbuf.st_mode & S_IWGRP) && egid == statbuf.st_gid)))
+			return FALSE;
+		if ((mode & X_OK) &&
+		    !((statbuf.st_mode & S_IXOTH) ||
+		      ((statbuf.st_mode & S_IXUSR) && euid == statbuf.st_uid) ||
+		      ((statbuf.st_mode & S_IXGRP) && egid == statbuf.st_gid)))
+			return FALSE;
+
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gpk_client_file_array_to_list:
+ *
+ * splits the files up nicely
+ *
+ * Return value: a newly allocated string
+ **/
+static gchar *
+gpk_client_file_array_to_list (GPtrArray *array, const gchar *prefix)
+{
+	GString *string;
+	guint i;
+	gchar *text;
+
+	string = g_string_new (prefix);
+	if (prefix != NULL) {
+		g_string_append_c (string, '\n');
+	}
+
+	/* prefix with bullet and suffix with newline */
+	for (i=0; i<array->len; i++) {
+		text = (gchar *) g_ptr_array_index (array, i);
+		g_string_append_printf (string, "• %s\n", text);
+	}
+
+	/* remove last \n */
+	g_string_set_size (string, string->len - 1);
+
+	text = g_string_free (string, FALSE);
+	return text;
+}
+
+/**
+ * _g_ptr_array_copy_deep:
+ *
+ * Deep copy a GPtrArray of strings
+ *
+ * Return value: A new GPtrArray
+ **/
+static GPtrArray *
+_g_ptr_array_copy_deep (GPtrArray *array)
+{
+	guint i;
+	const gchar *data;
+	GPtrArray *array_new;
+
+	array_new = g_ptr_array_new ();
+	for (i=0; i<array->len; i++) {
+		data = (const gchar *) g_ptr_array_index (array, i);
+		g_ptr_array_add (array_new, g_strdup (data));
+	}
+	return array_new;
+}
+
+/**
+ * gpk_client_install_local_files_copy_private:
+ *
+ * Allow the user to confirm the package copy to /tmp
  *
  * Return value: %TRUE if the method succeeded
  **/
-gboolean
-gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **error)
+static gboolean
+gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *array, GError **error)
+{
+	guint i;
+	gchar *data;
+	gboolean ret;
+	GPtrArray *array_new;
+	GPtrArray *array_missing;
+	const gchar *message_part;
+	const gchar *title;
+	gchar *message;
+	GtkWidget *dialog;
+	GtkResponseType button;
+
+	/* see if root has access to this file, in case we have to copy it
+	 * somewhere where it does.
+	 * See https://bugzilla.redhat.com/show_bug.cgi?id=456094 */
+	array_missing = g_ptr_array_new ();
+	for (i=0; i<array->len; i++) {
+		data = (gchar *) g_ptr_array_index (array, i);
+		ret = gpk_client_check_permissions (data, 0, 0, R_OK);
+		if (!ret)
+			g_ptr_array_add (array_missing, g_strdup (data));
+	}
+
+	if (array_missing->len > 0) {
+		title = ngettext (_("Do you want to copy this file?"),
+				  _("Do you want to copy these files?"), array_missing->len);
+		message_part = ngettext (_("One package file has to be copied to a non-private location so it can be installed:"),
+					 _("Some package files have to be copied to a non-private location so they can be installed:"),
+					 array_missing->len);
+		message = gpk_client_file_array_to_list (array_missing, message_part);
+
+		/* show UI */
+		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
+						 "%s", title);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+		g_free (message);
+
+		button = gtk_dialog_run (GTK_DIALOG (dialog));
+
+		/* did we click no or exit the window? */
+		if (button != GTK_RESPONSE_OK) {
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted the copy");
+			ret = FALSE;
+			goto out;
+		}
+	}
+
+	/* copy, and re-allocate so we can pass back the same array */
+	array_new = _g_ptr_array_copy_deep (array);
+	g_ptr_array_remove_range (array, 0, array->len);
+
+	/* now we have the okay to copy the files, do so */
+	ret = TRUE;
+	for (i=0; i<array_new->len; i++) {
+		gchar *command;
+		gchar *dest;
+		gchar *dest_path;
+		gint retval;
+		GError *error = NULL;
+
+		data = (gchar *) g_ptr_array_index (array_new, i);
+		ret = gpk_client_check_permissions (data, 0, 0, R_OK);
+		if (ret) {
+			/* just copy over the name */
+			g_ptr_array_add (array, g_strdup (data));
+		} else {
+			/* get the final location */
+			dest = g_path_get_basename (data);
+			dest_path = g_strdup_printf ("/tmp/%s", dest);
+
+			command = g_strdup_printf ("cp \"%s\" \"%s\"", data, dest_path);
+			pk_debug ("command=%s", command);
+			ret = g_spawn_command_line_sync (command, NULL, NULL, NULL, &error);
+
+			/* we failed */
+			if (!ret) {
+				pk_warning ("failed to copy %s: %s", data, error->message);
+				g_error_free (error);
+				break;
+			}
+
+			/* make this readable by root */
+			retval = g_chmod (dest_path, 0644);
+			if (retval < 0) {
+				ret = FALSE;
+				pk_warning ("failed to chmod %s", dest_path);
+				break;
+			}
+
+			/* add the modified file item */
+			g_ptr_array_add (array, g_strdup (dest_path));
+
+			g_free (dest);
+			g_free (dest_path);
+			g_free (command);
+		}
+	}
+
+	/* did we fail to copy the files */
+	if (!ret) {
+		title = ngettext (_("The file could not be copied"),
+				  _("The files could not be copied"), array_missing->len);
+		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+						 "%s", title);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "files not copied");
+		ret = FALSE;
+		goto out;
+	}
+out:
+	g_ptr_array_free (array_missing, TRUE);
+	return ret;
+}
+
+/**
+ * gpk_client_install_local_files_verify:
+ *
+ * Allow the user to confirm the action
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+static gboolean
+gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GError **error)
 {
 	GtkWidget *dialog;
 	GtkResponseType button;
 	const gchar *title;
 	gchar *message;
-	guint length;
-	gboolean ret;
+	gboolean ret = TRUE;
 
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (files_rel != NULL, FALSE);
-
-	length = g_strv_length (files_rel);
 	title = ngettext (_("Do you want to install this file?"),
-			  _("Do you want to install these files?"), length);
-	message = g_strjoinv ("\n", files_rel);
+			  _("Do you want to install these files?"), array->len);
+	message = gpk_client_file_array_to_list (array, NULL);
 
 	/* show UI */
 	dialog = gtk_message_dialog_new (gclient->priv->parent_window,
@@ -1045,7 +1261,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		title = ngettext (_("The file was not installed"),
-				  _("The files were not installed"), length);
+				  _("The files were not installed"), array->len);
 		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
@@ -1056,9 +1272,113 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		ret = FALSE;
 		goto out;
 	}
+out:
+	return ret;
+}
 
+/**
+ * gpk_client_install_local_files_check_exists:
+ *
+ * Skip files that are not present
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+static gboolean
+gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *array, GError **error)
+{
+	guint i;
+	gchar *data;
+	gboolean ret;
+	GPtrArray *array_missing;
+	const gchar *message_part;
+	const gchar *title;
+	gchar *message;
+	GtkWidget *dialog;
+
+	array_missing = g_ptr_array_new ();
+
+	/* find missing */
+	for (i=0; i<array->len; i++) {
+		data = (gchar *) g_ptr_array_index (array, i);
+		ret = g_file_test (data, G_FILE_TEST_EXISTS);
+		if (!ret)
+			g_ptr_array_add (array_missing, g_strdup (data));
+	}
+
+	/* warn, set error and quit */
+	ret = TRUE;
+	if (array_missing->len > 0) {
+		title = ngettext (_("File was not found!"),
+				  _("Files were not found!"), array_missing->len);
+
+		message_part = ngettext (_("The following file was not found:"),
+					 _("The following files were not found:"), array_missing->len);
+		message = gpk_client_file_array_to_list (array_missing, message_part);
+
+		/* show UI */
+		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK,
+						 "%s", title);
+		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+		g_free (message);
+
+		/* run */
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		ret = FALSE;
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "some files did not exist");
+		goto out;
+	}
+
+out:
+	g_ptr_array_free (array_missing, TRUE);
+	return ret;
+}
+
+/**
+ * gpk_client_install_local_files:
+ * @gclient: a valid #GpkClient instance
+ * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a file locally, and get the deps from the repositories.
+ * This is useful for double clicking on a .rpm or .deb file.
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+gboolean
+gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **error)
+{
+	gboolean ret;
+	gchar **files = NULL;
+	GPtrArray *array;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (files_rel != NULL, FALSE);
+
+	array = pk_argv_to_ptr_array (files_rel);
+
+	/* check the user wanted to call this method */
+	ret = gpk_client_install_local_files_verify (gclient, array, error);
+	if (!ret) {
+		goto out;
+	}
+
+	/* check all files exist and are readable by the local user */
+	ret = gpk_client_install_local_files_check_exists (gclient, array, error);
+	if (!ret) {
+		goto out;
+	}
+
+	/* check all files exist and are readable by the local user */
+	ret = gpk_client_install_local_files_copy_private (gclient, array, error);
+	if (!ret) {
+		goto out;
+	}
+
+	files = pk_ptr_array_to_argv (array);
 	gclient->priv->retry_untrusted_value = FALSE;
-	ret = gpk_client_install_local_files_internal (gclient, TRUE, files_rel, error);
+	ret = gpk_client_install_local_files_internal (gclient, TRUE, files, error);
 	if (!ret) {
 		goto out;
 	}
@@ -1074,7 +1394,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 
 	/* do we need to try again with better auth? */
 	if (gclient->priv->retry_untrusted_value) {
-		ret = gpk_client_install_local_files_internal (gclient, FALSE, files_rel, error);
+		ret = gpk_client_install_local_files_internal (gclient, FALSE, files, error);
 		if (!ret) {
 			goto out;
 		}
@@ -1088,6 +1408,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
+	g_strfreev (files);
+	g_ptr_array_free (array, TRUE);
 	gpk_client_done (gclient);
 	return ret;
 }
