@@ -2894,12 +2894,14 @@ gpk_application_init (GpkApplication *application)
 
 		/* create a tree model and use it as the completion model */
 		completion_model = gpk_application_create_completion_model ();
-		gtk_entry_completion_set_model (completion, completion_model);
-		g_object_unref (completion_model);
+		if (completion_model != NULL) {
+			gtk_entry_completion_set_model (completion, completion_model);
+			g_object_unref (completion_model);
 
-		/* use model column 0 as the text column */
-		gtk_entry_completion_set_text_column (completion, 0);
-		gtk_entry_completion_set_inline_completion (completion, TRUE);
+			/* use model column 0 as the text column */
+			gtk_entry_completion_set_text_column (completion, 0);
+			gtk_entry_completion_set_inline_completion (completion, TRUE);
+		}
 	}
 
 	/* set focus on entry text */
