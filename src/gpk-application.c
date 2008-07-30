@@ -896,7 +896,7 @@ gpk_application_details_cb (PkClient *client, const gchar *package_id,
 	}
 
 	/* group */
-	if (TRUE || group_enum != PK_GROUP_ENUM_UNKNOWN) {
+	if (group_enum != PK_GROUP_ENUM_UNKNOWN) {
 		group = gpk_group_enum_to_localised_text (group_enum);
 		gpk_application_add_detail_item (application, _("Group"), group, NULL);
 	}
