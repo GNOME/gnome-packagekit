@@ -456,7 +456,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Package is corrupt");
 		break;
 	default:
-		g_warning ("Unknown error");
+		pk_warning ("Unknown error");
 	}
 	return text;
 }
@@ -613,8 +613,8 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("The package that was downloaded is corrupt and needs to be downloaded again.");
 		break;
 	default:
-		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
-			   "More information is available in the detailed report.");
+		pk_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
+			    "More information is available in the detailed report.");
 	}
 	return text;
 }
