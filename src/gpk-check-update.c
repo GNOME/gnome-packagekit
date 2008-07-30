@@ -209,7 +209,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 	gtk_about_dialog_set_url_hook (gpk_check_update_about_dialog_url_cb, NULL, NULL);
 	gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, "mailto:", NULL);
 
-	gtk_window_set_default_icon_name ("system-software-installer");
+	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_UPDATE);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
@@ -220,7 +220,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "authors", authors,
 			       "documenters", documenters,
 			       "translator-credits", translators,
-			       "logo-icon-name", "system-software-installer",
+			       "logo-icon-name", GPK_ICON_SOFTWARE_UPDATE,
 			       NULL);
 	g_free (license_trans);
 }
@@ -353,7 +353,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 
 	/* show updates */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Show Updates"));
-	image = gtk_image_new_from_icon_name ("system-software-update", GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (gpk_check_update_menuitem_show_updates_cb), icon);
@@ -361,7 +361,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 
 	/* update system */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Update System Now"));
-	image = gtk_image_new_from_icon_name ("software-update-available", GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE_AVAILABLE, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (gpk_check_update_menuitem_update_system_cb), icon);

@@ -30,6 +30,7 @@
 #include <pk-debug.h>
 #include <pk-package-id.h>
 #include "gpk-gnome.h"
+#include "gpk-common.h"
 
 static gboolean has_agreed_eula = FALSE;
 
@@ -84,7 +85,7 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_eula");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_agree");

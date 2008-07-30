@@ -72,7 +72,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
 	widget = glade_xml_get_widget (glade_xml, "button_close");

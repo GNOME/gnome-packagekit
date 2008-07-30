@@ -27,8 +27,10 @@ icons_DATA = 				\
 	pk-wait.svg
 
 install-data-hook:
-	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/status;
-	ln -fs $(iconsdir)/pk-package-sources.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/status/;
+	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps;
+	ln -fs $(iconsdir)/pk-package-sources.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-sources.svg;
+	ln -fs $(iconsdir)/pk-package-info.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-log.svg
+	ln -fs $(iconsdir)/pk-update-high.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-update-preferences.svg;
 
 EXTRA_DIST =				\
 	$(icons_DATA)

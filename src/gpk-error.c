@@ -30,7 +30,7 @@
 #include <pk-debug.h>
 #include <pk-common.h>
 
-#define PK_STOCK_WINDOW_ICON		"system-software-installer"
+#include "gpk-common.h"
 
 /**
  * gpk_error_dialog_modal:
@@ -61,7 +61,7 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	}
 
 	/* set icon name */
-	gtk_window_set_icon_name (GTK_WINDOW (widget), PK_STOCK_WINDOW_ICON);
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
 	widget = glade_xml_get_widget (glade_xml, "button_close");

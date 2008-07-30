@@ -63,7 +63,6 @@ static void     gpk_application_init       (GpkApplication      *application);
 static void     gpk_application_finalize   (GObject	    *object);
 
 #define GPK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_APPLICATION, GpkApplicationPrivate))
-#define PK_STOCK_APP_ICON		"system-software-installer"
 
 typedef enum {
 	PK_SEARCH_NAME,
@@ -2088,7 +2087,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 	/* use parent */
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
-	gtk_window_set_default_icon_name (PK_STOCK_APP_ICON);
+	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_show_about_dialog (GTK_WINDOW (main_window),
 			       "version", PACKAGE_VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
@@ -2100,7 +2099,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 			       "documenters", documenters,
 			       "artists", artists,
 			       "translator-credits", translators,
-			       "logo-icon-name", PK_STOCK_APP_ICON,
+			       "logo-icon-name", GPK_ICON_SOFTWARE_INSTALLER,
 			       NULL);
 	g_free (license_trans);
 }
@@ -2700,7 +2699,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), PK_STOCK_APP_ICON);
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",

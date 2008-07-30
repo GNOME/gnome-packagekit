@@ -408,7 +408,7 @@ main (int argc, char *argv[])
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-log.glade", NULL, NULL);
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-update");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 	gtk_widget_set_size_request (widget, 500, 400);
 
 	/* Get the main window quit */

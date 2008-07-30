@@ -568,7 +568,7 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 	gtk_about_dialog_set_url_hook (gpk_watch_about_dialog_url_cb, NULL, NULL);
 	gtk_about_dialog_set_email_hook (gpk_watch_about_dialog_url_cb, "mailto:", NULL);
 
-	gtk_window_set_default_icon_name ("system-software-installer");
+	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_LOG);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
@@ -579,7 +579,7 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "authors", authors,
 			       "documenters", documenters,
 			       "translator-credits", translators,
-			       "logo-icon-name", "system-software-installer",
+			       "logo-icon-name", GPK_ICON_SOFTWARE_LOG,
 			       NULL);
 	g_free (license_trans);
 }

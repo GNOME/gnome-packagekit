@@ -205,7 +205,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
 	/* make modal if window set */

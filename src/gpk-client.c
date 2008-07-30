@@ -69,7 +69,6 @@ static void     gpk_client_finalize	(GObject	*object);
 static void	gpk_client_done		(GpkClient	*gclient);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))
-#define PK_STOCK_WINDOW_ICON		"system-software-installer"
 #define GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY	10 /* seconds */
 /**
  * GpkClientPrivate:

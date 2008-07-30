@@ -54,6 +54,13 @@ G_BEGIN_DECLS
 
 #define GPK_BUGZILLA_URL			"https://bugs.freedesktop.org/"
 
+#define GPK_ICON_SOFTWARE_UPDATE		"system-software-update"
+#define GPK_ICON_SOFTWARE_SOURCES		"x-system-software-sources"
+#define GPK_ICON_SOFTWARE_INSTALLER		"system-software-install"
+#define GPK_ICON_SOFTWARE_LOG			"x-system-software-log"
+#define GPK_ICON_SOFTWARE_UPDATE_PREFS		"x-system-software-update-preferences"
+#define GPK_ICON_SOFTWARE_UPDATE_AVAILABLE	"software-update-available"
+
 void		 gpk_common_self_test			(gpointer	 data);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,

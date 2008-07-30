@@ -30,6 +30,7 @@
 #include <pk-debug.h>
 #include <pk-package-id.h>
 #include "gpk-gnome.h"
+#include "gpk-common.h"
 
 static gboolean has_imported_signature = FALSE;
 
@@ -78,7 +79,7 @@ gpk_client_signature_show (const gchar *package_id, const gchar *repository_name
 
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_gpg");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), "system-software-installer");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_yes");
