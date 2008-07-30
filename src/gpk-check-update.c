@@ -869,8 +869,6 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	gboolean ret;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
-	pk_debug ("refresh cache");
-
 	/* got a cache, no need to poll */
 	if (cupdate->priv->cache_okay) {
 		return;
