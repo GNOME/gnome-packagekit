@@ -1,3 +1,21 @@
+Version 0.2.4
+~~~~~~~~~~~~~~
+Released: 2008-07-30
+
+* Bugfixes:
+ - Set the interaction of the GClient when we are using a helper (Richard Hughes)
+ - HIG specifies the affermative action should be on the right (Richard Hughes)
+ - Don't autolaunch new programs if there are only one (Richard Hughes)
+ - Always do gpk_client_done() even if we hit an error state (Richard Hughes)
+ - Handle GpkAnimatedIcon as a widget, not a GObject (Richard Hughes)
+ - Cancel timers and animations when cancelling a monitored tid (Richard Hughes)
+ - Fix 'jump depends on uninitialised value' in GpkClient (Richard Hughes)
+ - Fix up some error handling in GpkWatch to fix a memory leak (Richard Hughes)
+ - Don't show Unknown for the group enum (Richard Hughes)
+ - If we don't get a completion model, don't try to set it (Richard Hughes)
+ - Use a better formatter to properly display descriptions (Richard Hughes)
+ - Make the sorting quicker in gpk-application (Richard Hughes)
+
 Version 0.2.3
 ~~~~~~~~~~~~~~
 Released: 2008-07-04
