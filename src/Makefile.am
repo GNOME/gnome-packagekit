@@ -26,6 +26,10 @@ INCLUDES =						\
 	-I$(top_srcdir)/libselftest			\
 	$(NULL)
 
+GBUS_LIBS =						\
+	$(top_builddir)/libgbus/libgbus.la		\
+	$(NULL)
+
 SELFTEST_LIBS =						\
 	$(top_builddir)/libselftest/libselftest.la	\
 	$(NULL)
@@ -92,6 +96,7 @@ shared_LIBS =						\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
+	$(GBUS_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
 	$(LIBUNIQUE_LIBS)				\
