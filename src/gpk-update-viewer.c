@@ -849,6 +849,29 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	/* translators: this is the update type, e.g. security */
 	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
 
+	/* state */
+	if (obj->state != PK_UPDATE_STATE_ENUM_UNKNOWN) {
+		info_text = gpk_update_state_enum_to_localised_text (obj->state);
+		/* translators: this is a notice a restart might be required */
+		gpk_update_viewer_add_description_item (_("State"), info_text, NULL);
+	}
+
+	/* issued */
+	if (obj->issued != NULL) {
+		line = pk_iso8601_from_date (obj->issued);
+		/* translators: this is a notice a restart might be required */
+		gpk_update_viewer_add_description_item (_("Issued"), line, NULL);
+		g_free (line);
+	}
+
+	/* updated */
+	if (obj->updated != NULL) {
+		line = pk_iso8601_from_date (obj->updated);
+		/* translators: this is a notice a restart might be required */
+		gpk_update_viewer_add_description_item (_("Updated"), line, NULL);
+		g_free (line);
+	}
+
 	package_pretty = gpk_package_id_name_version (obj->id);
 	/* translators: this is the package version */
 	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
@@ -879,6 +902,12 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 		/* translators: this is the package description */
 		gpk_update_viewer_add_description_item (_("Description"), line, NULL);
 		g_free (line);
+	}
+
+	/* changelog */
+	if (!pk_strzero (obj->changelog)) {
+		/* translators: this is a list of CVE (security) URLs */
+		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog, NULL);
 	}
 
 	/* add all the links */

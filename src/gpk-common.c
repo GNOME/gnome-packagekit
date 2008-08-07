@@ -646,6 +646,29 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 }
 
 /**
+ * gpk_update_state_enum_to_localised_text:
+ **/
+const gchar *
+gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
+{
+	const gchar *text = NULL;
+	switch (state) {
+	case PK_UPDATE_STATE_ENUM_STABLE:
+		text = _("Stable");
+		break;
+	case PK_UPDATE_STATE_ENUM_UNSTABLE:
+		text = _("Unstable");
+		break;
+	case PK_UPDATE_STATE_ENUM_TESTING:
+		text = _("Testing");
+		break;
+	default:
+		pk_warning ("state unrecognised: %i", state);
+	}
+	return text;
+}
+
+/**
  * gpk_message_enum_to_localised_text:
  **/
 const gchar *
