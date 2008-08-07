@@ -32,7 +32,7 @@
 #include <locale.h>
 #include <libnotify/notify.h>
 
-#include <libgbus.h>
+#include <pk-dbus-monitor.h>
 
 #include <pk-debug.h>
 #include <pk-common.h>
@@ -98,7 +98,7 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
  * pk_dbus_connection_replaced_cb:
  **/
 static void
-pk_dbus_connection_replaced_cb (LibGBus *libgbus, gpointer data)
+pk_dbus_connection_replaced_cb (PkDbusMonitor *monitor, gpointer data)
 {
 	pk_warning ("exiting as we have been replaced");
 	gtk_main_quit ();
@@ -120,7 +120,7 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	gboolean ret;
 	DBusGConnection *connection;
-	LibGBus *libgbus;
+	PkDbusMonitor *monitor;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -175,9 +175,9 @@ main (int argc, char *argv[])
 	firmware = gpk_firmware_new ();
 
 	/* find out when we are replaced */
-	libgbus = libgbus_new ();
-	libgbus_assign (libgbus, LIBGBUS_SESSION, PK_DBUS_SERVICE);
-	g_signal_connect (libgbus, "connection-replaced",
+	monitor = pk_dbus_monitor_new ();
+	pk_dbus_monitor_assign (monitor, PK_DBUS_MONITOR_SESSION, PK_DBUS_SERVICE);
+	g_signal_connect (monitor, "connection-replaced",
 			  G_CALLBACK (pk_dbus_connection_replaced_cb), NULL);
 
 	/* get the bus */
@@ -203,7 +203,7 @@ out:
 	g_object_unref (cupdate);
 	g_object_unref (watch);
 	g_object_unref (firmware);
-	g_object_unref (libgbus);
+	g_object_unref (monitor);
 
 	return 0;
 }

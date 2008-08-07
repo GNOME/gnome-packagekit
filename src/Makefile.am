@@ -21,13 +21,8 @@ INCLUDES =						\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
-	-I$(top_srcdir)/libgbus				\
 	-I$(top_srcdir)/libunique			\
 	-I$(top_srcdir)/libselftest			\
-	$(NULL)
-
-GBUS_LIBS =						\
-	$(top_builddir)/libgbus/libgbus.la		\
 	$(NULL)
 
 SELFTEST_LIBS =						\
@@ -98,7 +93,6 @@ shared_LIBS =						\
 	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
-	$(GBUS_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(POLKIT_GNOME_LIBS)				\
 	$(LIBUNIQUE_LIBS)				\

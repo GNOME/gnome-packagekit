@@ -210,7 +210,6 @@ dnl ---------------------------------------------------------------------------
 AC_OUTPUT([
 Makefile
 libselftest/Makefile
-libgbus/Makefile
 libunique/Makefile
 src/Makefile
 help/Makefile
