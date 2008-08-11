@@ -132,6 +132,37 @@ gpk_cell_renderer_uri_set_property (GObject *object, guint param_id,
 	}
 }
 
+/* we can't hardcode colours, so just make blue-er and purple-er */
+static void
+gpk_cell_renderer_uri_set_link_color (GdkColor *color, gboolean visited)
+{
+	const guint color_half = 65535/2;
+	const guint offset = 65535/3;
+
+	if (visited) {
+		if (color->red < color_half && color->blue < color_half) {
+			color->red += offset;
+			color->blue += offset;
+			return;
+		}
+		if (color->green > color_half) {
+			color->green -= offset;
+			return;
+		}
+	} else {
+		if (color->blue < color_half) {
+			color->blue += offset;
+			return;
+		}
+		if (color->red > color_half && color->green > color_half) {
+			color->red -= offset;
+			color->green -= offset;
+			return;
+		}
+	}
+	pk_debug ("cannot get color for %i,%i,%i", color->red, color->blue, color->green);
+}
+
 static void
 gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			     GdkWindow *window,
@@ -143,6 +174,9 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 {
 	gboolean ret;
 	GdkCursor *cursor;
+	GtkStyle *style;
+	GdkColor *color;
+	gchar *color_string;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
 	/* set cursor */
@@ -155,17 +189,29 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	gdk_cursor_destroy (cursor);
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
+	/* get a copy of the widget color */
+	style = gtk_rc_get_style (GTK_WIDGET (widget));
+	color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
+
 	/* set colour */
 	if (cru->uri == NULL) {
-		g_object_set (G_OBJECT (cell), "foreground", "#000000", NULL);
+		color_string = gdk_color_to_string (color);
+		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
 	} else if (ret) {
-		g_object_set (G_OBJECT (cell), "foreground", "#840084", NULL);
+		gpk_cell_renderer_uri_set_link_color (color, TRUE);
+		color_string = gdk_color_to_string (color);
+		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {
-		g_object_set (G_OBJECT (cell), "foreground", "#0000ff", NULL);
+		gpk_cell_renderer_uri_set_link_color (color, FALSE);
+		color_string = gdk_color_to_string (color);
+		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	}
+
+	gdk_color_free (color);
+	g_free (color_string);
 
 	/* we can click */
 	g_object_set (G_OBJECT (cru), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
