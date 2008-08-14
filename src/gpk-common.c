@@ -815,6 +815,9 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 	case PK_INFO_ENUM_ENHANCEMENT:
 		text = g_strdup_printf (ngettext ("%i enhancement update", "%i enhancement updates", number), number);
 		break;
+	case PK_INFO_ENUM_BLOCKED:
+		text = g_strdup_printf (ngettext ("%i bloked update", "%i blocked updates", number), number);
+		break;
 	default:
 		pk_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
 	}
