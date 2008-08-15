@@ -190,21 +190,32 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
 	/* get a copy of the widget color */
+	gtk_widget_ensure_style (GTK_WIDGET (widget));
 	style = gtk_rc_get_style (GTK_WIDGET (widget));
-	color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
 
 	/* set colour */
 	if (cru->uri == NULL) {
+		color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
 		color_string = gdk_color_to_string (color);
 		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
 	} else if (ret) {
-		gpk_cell_renderer_uri_set_link_color (color, TRUE);
+		/* if we defined this in our theme, else find a compromise */
+		gtk_widget_style_get (GTK_WIDGET (widget), "visited-link-color", &color, NULL);
+		if (color == NULL) {
+			color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
+			gpk_cell_renderer_uri_set_link_color (color, TRUE);
+		}
 		color_string = gdk_color_to_string (color);
 		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {
-		gpk_cell_renderer_uri_set_link_color (color, FALSE);
+		/* if we defined this in our theme, else find a compromise */
+		gtk_widget_style_get (GTK_WIDGET (widget), "link-color", &color, NULL);
+		if (color == NULL) {
+			color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
+			gpk_cell_renderer_uri_set_link_color (color, FALSE);
+		}
 		color_string = gdk_color_to_string (color);
 		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
