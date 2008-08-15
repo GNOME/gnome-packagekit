@@ -29,7 +29,6 @@
 #include "config.h"
 
 #include <unistd.h>
-#include <sys/stat.h>
 #include <string.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
@@ -1006,45 +1005,6 @@ gpk_client_set_progress_files (GpkClient *gclient, gboolean enabled)
 }
 
 /**
- * gpk_client_check_permissions:
- * @filename: a filename to check
- * @euid: the effective user ID to check for, or the output of geteuid()
- * @egid: the effective group ID to check for, or the output of getegid()
- * @mode: bitfield of R_OK, W_OK, XOK
- *
- * Like, access but a bit more accurate - access will let root do anything.
- * Does not get read-only or no-exec filesystems right.
- *
- * Return value: %TRUE if the file has access perms
- **/
-static gboolean
-gpk_client_check_permissions (gchar *filename, guint euid, guint egid, guint mode)
-{
-	struct stat statbuf;
-
-	if (stat (filename, &statbuf) == 0) {
-		if ((mode & R_OK) &&
-		    !((statbuf.st_mode & S_IROTH) ||
-		      ((statbuf.st_mode & S_IRUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IRGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-		if ((mode & W_OK) &&
-		    !((statbuf.st_mode & S_IWOTH) ||
-		      ((statbuf.st_mode & S_IWUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IWGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-		if ((mode & X_OK) &&
-		    !((statbuf.st_mode & S_IXOTH) ||
-		      ((statbuf.st_mode & S_IXUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IXGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-
-		return TRUE;
-	}
-	return FALSE;
-}
-
-/**
  * gpk_client_file_array_to_list:
  *
  * splits the files up nicely
@@ -1125,7 +1085,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 	array_missing = g_ptr_array_new ();
 	for (i=0; i<array->len; i++) {
 		data = (gchar *) g_ptr_array_index (array, i);
-		ret = gpk_client_check_permissions (data, 0, 0, R_OK);
+		ret = pk_check_permissions (data, 0, 0, R_OK);
 		if (!ret)
 			g_ptr_array_add (array_missing, g_strdup (data));
 	}
@@ -1170,7 +1130,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		GError *error = NULL;
 
 		data = (gchar *) g_ptr_array_index (array_new, i);
-		ret = gpk_client_check_permissions (data, 0, 0, R_OK);
+		ret = pk_check_permissions (data, 0, 0, R_OK);
 		if (ret) {
 			/* just copy over the name */
 			g_ptr_array_add (array, g_strdup (data));
