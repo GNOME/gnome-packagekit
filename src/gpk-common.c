@@ -150,9 +150,9 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
 	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
 	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
-	{PK_GROUP_ENUM_SCIENCE			"application-certificate"},
-	{PK_GROUP_ENUM_DOCUMENTATION		"x-office-address-book"},
-	{PK_GROUP_ENUM_ELECTRONICS		"video-display"},
+	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
+	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
+	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
 	{0, NULL}
 };
 
