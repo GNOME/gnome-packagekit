@@ -1,3 +1,51 @@
+Version 0.3.0
+~~~~~~~~~~~~~~
+Released: 2008-08-18
+
+* Translations
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updates Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Russian translation (Leonid Kanter)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updates German Translation (Patrick Niklaus)
+ - Updated Polish translation (Piotr Drąg)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Polish translation (Wadim Dziedzic)
+ - Updated Occitan translation (Yannig Marchegay)
+
+New:
+ - Change the client tools to the updated 0.3.x API (Richard Hughes)
+ - Force a pre-cache of all the update detail at startup (Richard Hughes)
+ - Populate the package auto-completion box in gpk-application (Richard Hughes)
+ - Support the new fields in the update details (Richard Hughes)
+ - Allow gpk-install-file to install .pack files (Shishir Goel)
+
+Bugfix:
+ - Add a blocked update handler (Daniel Nicoletti)
+ - Make some of the glade labels non-translatable (Kjartan Maraas)
+ - Correct some typos found by Andre Klapper (Richard Hughes)
+ - Hide the refresh text if there was less than a day elapsed (Richard Hughes)
+ - Show a the spinner when return to the details, fixes rh#453250 (Richard Hughes)
+ - Stop repeat schedule of query-updates if policy is security (Richard Hughes)
+ - Don't crash if we click the help text in gpk-application (Richard Hughes)
+ - Unify the scrolling UI when installing and removing. Fixes rh#453917 (Richard Hughes)
+ - Limit the size of the balloon at startup about security updates. Fixes rh#453817 (Richard Hughes)
+ - Don't show the depends window when we have no depends (Richard Hughes)
+ - Set the interaction of the UI to always when we are using a helper (Richard Hughes)
+ - Sort the listview as the packages come in to avoid the double flicker (Richard Hughes)
+ - Don't put a window title on a GpkError dialog window (Richard Hughes)
+ - When dep resolving when removing, show the UI. Fixes rh#454399 (Richard Hughes)
+ - Properly parse the update detail so we bullet many more descriptions (Richard Hughes)
+ - Make the file list widget more HIG friendly (Richard Hughes)
+ - Handle GpkAnimatedIcon as a widget, not a GObject (Richard Hughes)
+ - Be more proactive about cancelling timers and animations (Richard Hughes)
+ - Fix 'move depends on uninitialised value' in gpk_client_finished_cb() (Richard Hughes)
+ - Don't show the error details in the libnotify popup (Richard Hughes)
+ - Copy files not readable by root into a shared location. Fixed rh#45609 (Richard Hughes)
+ - Sort out the icons, and use defines for the common ones (Richard Hughes)
+ - Don't hardcode the active, link and clicked-link colour. Fixes rh#458533 (Richard Hughes)
+
 Version 0.2.2
 ~~~~~~~~~~~~~~
 Released: 2008-06-05
