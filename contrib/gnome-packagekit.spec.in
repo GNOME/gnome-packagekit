@@ -95,7 +95,7 @@ gconftool-2 --makefile-install-rule \
 scrollkeeper-update -q
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    gtk-update-icon-cache -q %{_datadir}/icons/hicolor
+    gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
 fi
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
