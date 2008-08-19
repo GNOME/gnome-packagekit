@@ -1761,7 +1761,7 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	PkRoleEnum roles;
+	PkBitfield roles;
 	gboolean ret;
 	GError *error = NULL;
 	LibUnique *libunique;

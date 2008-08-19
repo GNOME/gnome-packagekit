@@ -333,7 +333,7 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	PkRoleEnum roles;
+	PkBitfield roles;
 	PkControl *control;
 	LibUnique *libunique;
 	gboolean ret;
@@ -426,7 +426,7 @@ main (int argc, char *argv[])
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_log_button_rollback_cb), NULL);
 
 	/* hide the rollback button if we can't do the action */
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_ROLLBACK)) {
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_ROLLBACK)) {
 		polkit_gnome_action_set_visible (button_action, TRUE);
 	} else {
 		polkit_gnome_action_set_visible (button_action, FALSE);

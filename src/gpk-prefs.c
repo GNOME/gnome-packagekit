@@ -273,7 +273,7 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
-	PkRoleEnum roles;
+	PkBitfield roles;
 	PkClient *client;
 	PkControl *control;
 	LibUnique *libunique;

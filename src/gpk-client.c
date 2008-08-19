@@ -84,7 +84,7 @@ struct _GpkClientPrivate
 	guint			 pulse_timer_id;
 	guint			 finished_timer_id;
 	PkControl		*control;
-	PkRoleEnum		 roles;
+	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
@@ -1405,7 +1405,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
+	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
@@ -1505,7 +1505,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
+	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}

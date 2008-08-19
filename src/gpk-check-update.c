@@ -497,14 +497,14 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 }
 
 /**
- * gpk_check_update_client_info_to_enums:
+ * gpk_check_update_client_info_to_bitfield:
  **/
-static PkInfoEnum
-gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *list)
+static PkBitfield
+gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, PkPackageList *list)
 {
 	guint i;
 	guint length;
-	PkInfoEnum infos = 0;
+	PkBitfield infos = 0;
 	const PkPackageObj *obj;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), PK_INFO_ENUM_UNKNOWN);
@@ -523,7 +523,7 @@ gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *l
 			break;
 		}
 		pk_debug ("%s %s", obj->id->name, pk_info_enum_to_text (obj->info));
-		pk_enums_add (infos, obj->info);
+		pk_bitfield_add (infos, obj->info);
 	}
 	return infos;
 }
@@ -535,16 +535,16 @@ static const gchar *
 gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, PkPackageList *list)
 {
 	gint value;
-	PkInfoEnum infos;
+	PkBitfield infos;
 	const gchar *icon;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), NULL);
 
 	/* get an enumerated list with all the update types */
-	infos = gpk_check_update_client_info_to_enums (cupdate, list);
+	infos = gpk_check_update_client_info_to_bitfield (cupdate, list);
 
 	/* get the most important icon */
-	value = pk_enums_contain_priority (infos,
+	value = pk_bitfield_contain_priority (infos,
 					   PK_INFO_ENUM_SECURITY,
 					   PK_INFO_ENUM_IMPORTANT,
 					   PK_INFO_ENUM_BUGFIX,

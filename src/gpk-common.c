@@ -1768,7 +1768,7 @@ gpk_common_self_test (gpointer data)
 	 ****************     localised enums          **************
 	 ************************************************************/
 	libst_title (test, "check we convert all the localised past role enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1779,7 +1779,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised present role enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1790,7 +1790,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the role icon name enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1801,7 +1801,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the info icon names enums");
-	for (i=1; i<PK_INFO_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1812,7 +1812,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised status enums");
-	for (i=1; i<PK_STATUS_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1823,7 +1823,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the status icon names enums");
-	for (i=1; i<PK_STATUS_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1911,7 +1911,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised group enums");
-	for (i=1; i<PK_GROUP_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1922,7 +1922,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the group icon name enums");
-	for (i=1; i<PK_GROUP_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
