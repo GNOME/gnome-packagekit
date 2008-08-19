@@ -167,9 +167,17 @@ static PkEnumMatch enum_restart_icon_name[] = {
 
 static PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_MESSAGE_ENUM_NOTICE,		"dialog-information"},
-	{PK_MESSAGE_ENUM_WARNING,		"dialog-warning"},
-	{PK_MESSAGE_ENUM_DAEMON,		"dialog-error"},
+	{PK_MESSAGE_ENUM_BROKEN_MIRROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_CONNECTION_REFUSED,	"dialog-error"},
+	{PK_MESSAGE_ENUM_PARAMETER_INVALID,	"dialog-error"},
+	{PK_MESSAGE_ENUM_PRIORITY_INVALID,	"dialog-error"},
+	{PK_MESSAGE_ENUM_BACKEND_ERROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_DAEMON_ERROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_CACHE_BEING_REBUILT,	"dialog-information"},
+	{PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE,	"dialog-warning"},
+	{PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,	"dialog-information"},
+	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
+	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
 	{0, NULL}
 };
 
@@ -679,14 +687,38 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 {
 	const gchar *text = NULL;
 	switch (message) {
-	case PK_MESSAGE_ENUM_NOTICE:
-		text = _("PackageKit notice");
+	case PK_MESSAGE_ENUM_BROKEN_MIRROR:
+		text = _("A mirror is possibly broken");
 		break;
-	case PK_MESSAGE_ENUM_WARNING:
-		text = _("PackageKit warning");
+	case PK_MESSAGE_ENUM_CONNECTION_REFUSED:
+		text = _("The connection was refused");
 		break;
-	case PK_MESSAGE_ENUM_DAEMON:
-		text = _("PackageKit daemon");
+	case PK_MESSAGE_ENUM_PARAMETER_INVALID:
+		text = _("The parameter was invalid");
+		break;
+	case PK_MESSAGE_ENUM_PRIORITY_INVALID:
+		text = _("The priority was invalid");
+		break;
+	case PK_MESSAGE_ENUM_BACKEND_ERROR:
+		text = _("Generic backend error");
+		break;
+	case PK_MESSAGE_ENUM_DAEMON_ERROR:
+		text = _("Generic daemon error");
+		break;
+	case PK_MESSAGE_ENUM_CACHE_BEING_REBUILT:
+		text = _("The package list cache is being rebuilt");
+		break;
+	case PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE:
+		text = _("An untrusted package was installed");
+		break;
+	case PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS:
+		text = _("A newer package exists");
+		break;
+	case PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE:
+		text = _("Could not find package");
+		break;
+	case PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED:
+		text = _("Configuration files were changed");
 		break;
 	default:
 		pk_warning ("message unrecognised: %i", message);
