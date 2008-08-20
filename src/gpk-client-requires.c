@@ -92,7 +92,7 @@ gpk_client_requires_show (GpkClient *gclient, gchar **package_ids)
 	}
 
 	/* find out if this would force removal of other packages */
-	ret = pk_client_get_requires (client, PK_FILTER_ENUM_INSTALLED, package_ids, TRUE, &error);
+	ret = pk_client_get_requires (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error);
 	if (!ret) {
 		window = gpk_client_get_window (gclient);
 		gpk_error_dialog_modal (window, _("Failed to get requires"),
