@@ -83,10 +83,10 @@ pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_freq_combo_changed:
+ * pk_prefs_update_freq_combo_changed:
  **/
 static void
-pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
+pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
@@ -110,6 +110,36 @@ pk_prefs_freq_combo_changed (GtkWidget *widget, gpointer data)
 	action = pk_freq_enum_to_text (freq);
 	pk_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
 	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
+	g_free (value);
+	g_object_unref (client);
+}
+
+/**
+ * pk_prefs_upgrade_freq_combo_changed:
+ **/
+static void
+pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
+{
+	gchar *value;
+	const gchar *action;
+	PkFreqEnum freq = PK_FREQ_ENUM_UNKNOWN;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_DAILY;
+	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_WEEKLY;
+	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
+		freq = PK_FREQ_ENUM_NEVER;
+	} else {
+		g_assert (FALSE);
+	}
+
+	action = pk_freq_enum_to_text (freq);
+	pk_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
+	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, action, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -154,10 +184,10 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_freq_combo_setup:
+ * pk_prefs_update_freq_combo_setup:
  **/
 static void
-pk_prefs_freq_combo_setup (void)
+pk_prefs_update_freq_combo_setup (void)
 {
 	gchar *value;
 	gboolean is_writable;
@@ -190,14 +220,53 @@ pk_prefs_freq_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_freq_combo_changed), NULL);
+			  G_CALLBACK (pk_prefs_update_freq_combo_changed), NULL);
 }
 
 /**
- * pk_prefs_update_combo_setup:
+ * pk_prefs_upgrade_freq_combo_setup:
  **/
 static void
-pk_prefs_update_combo_setup (void)
+pk_prefs_upgrade_freq_combo_setup (void)
+{
+	gchar *value;
+	gboolean is_writable;
+	GtkWidget *widget;
+	PkFreqEnum freq;
+	GConfClient *client;
+
+	client = gconf_client_get_default ();
+	widget = glade_xml_get_widget (glade_xml, "combobox_upgrade");
+	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
+	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
+	if (value == NULL) {
+		pk_warning ("invalid schema, please re-install");
+		return;
+	}
+	pk_debug ("value from gconf %s", value);
+	freq = pk_freq_enum_from_text (value);
+	g_free (value);
+	g_object_unref (client);
+
+	/* do we have permission to write? */
+	gtk_widget_set_sensitive (widget, is_writable);
+
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
+	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
+	/* don't do daily */
+	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), freq - 1);
+
+	/* only do this after else we redraw the window */
+	g_signal_connect (G_OBJECT (widget), "changed",
+			  G_CALLBACK (pk_prefs_upgrade_freq_combo_changed), NULL);
+}
+
+/**
+ * pk_prefs_auto_update_combo_setup:
+ **/
+static void
+pk_prefs_auto_update_combo_setup (void)
 {
 	gchar *value;
 	gboolean is_writable;
@@ -352,8 +421,17 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_help_cb), NULL);
 
 	/* update the combo boxes */
-	pk_prefs_freq_combo_setup ();
-	pk_prefs_update_combo_setup ();
+	pk_prefs_update_freq_combo_setup ();
+	pk_prefs_upgrade_freq_combo_setup ();
+	pk_prefs_auto_update_combo_setup ();
+
+	/* hide if not supported */
+	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
+		widget = glade_xml_get_widget (glade_xml, "label_upgrade");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "combobox_upgrade");
+		gtk_widget_hide (widget);
+	}
 
 	gtk_widget_show (main_window);
 
