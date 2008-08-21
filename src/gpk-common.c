@@ -1036,7 +1036,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Setting repository data");
 		break;
 	case PK_ROLE_ENUM_RESOLVE:
-		text = _("Resolved");
+		text = _("Resolving");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
 		text = _("Getting file list");
