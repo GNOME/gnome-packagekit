@@ -915,6 +915,25 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 }
 
 /**
+ * gpk_check_update_auto_get_upgrades_cb:
+ **/
+static void
+gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
+{
+	GError *error = NULL;
+	const GPtrArray	*array;
+	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+
+	/* get updates */
+	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient, &error);
+	if (array == NULL) {
+		pk_warning ("failed to get upgrades: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -935,6 +954,8 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_check_update_auto_refresh_cache_cb), cupdate);
 	g_signal_connect (cupdate->priv->arefresh, "get-updates",
 			  G_CALLBACK (gpk_check_update_auto_get_updates_cb), cupdate);
+	g_signal_connect (cupdate->priv->arefresh, "get-upgrades",
+			  G_CALLBACK (gpk_check_update_auto_get_upgrades_cb), cupdate);
 
 	/* right click actions are common */
 	status_icon = GTK_STATUS_ICON (cupdate->priv->sicon);
