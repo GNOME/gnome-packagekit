@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 
 #define GPK_CONF_NOTIFY_COMPLETED		"/apps/gnome-packagekit/notify_complete"
 #define GPK_CONF_NOTIFY_AVAILABLE		"/apps/gnome-packagekit/notify_available"
+#define GPK_CONF_NOTIFY_DISTRO_UPGRADES		"/apps/gnome-packagekit/notify_distro_upgrades"
 #define GPK_CONF_NOTIFY_CRITICAL		"/apps/gnome-packagekit/notify_critical"
 #define GPK_CONF_NOTIFY_ERROR			"/apps/gnome-packagekit/notify_errors"
 #define GPK_CONF_NOTIFY_MESSAGE			"/apps/gnome-packagekit/notify_message"

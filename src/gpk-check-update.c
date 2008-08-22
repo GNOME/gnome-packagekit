@@ -914,6 +914,8 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
+#include <pk-distro-upgrade-obj.h>
+
 /**
  * gpk_check_update_auto_get_upgrades_cb:
  **/
@@ -922,6 +924,12 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 {
 	GError *error = NULL;
 	const GPtrArray	*array;
+	gboolean ret;
+	guint i;
+	PkDistroUpgradeObj *obj;
+	const gchar *title;
+	NotifyNotification *notification;
+	GString *string = NULL;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* get updates */
@@ -930,7 +938,53 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	if (array == NULL) {
 		pk_warning ("failed to get upgrades: %s", error->message);
 		g_error_free (error);
+		goto out;
 	}
+
+	/* any updates? */
+	if (array->len == 0) {
+		pk_debug ("no upgrades");
+		goto out;
+	}
+
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, NULL);
+	if (!ret) {
+		pk_debug ("ignoring due to GConf");
+		goto out;
+	}
+
+	/* find the upgrade string */
+	string = g_string_new ("");
+	for (i=0; i < array->len; i++) {
+		obj = (PkDistroUpgradeObj *) g_ptr_array_index (array, i);
+		g_string_append_printf (string, "%s (%s)\n", obj->name, pk_distro_upgrade_enum_to_text (obj->state));
+	}
+	if (string->len != 0) {
+		g_string_set_size (string, string->len-1);
+	}
+
+	/* do the bubble */
+	title = _("Distribution upgrades available");
+	notification = notify_notification_new (title, string->str, "help-browser", NULL);
+	if (notification == NULL) {
+		pk_warning ("failed to get bubble");
+		return;
+	}
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
+	notify_notification_add_action (notification, "upgrade-info",
+					_("More information"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	notify_notification_add_action (notification, "do-not-show-upgrade-available",
+					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	if (string != NULL)
+		g_string_free (string, TRUE);
 }
 
 /**

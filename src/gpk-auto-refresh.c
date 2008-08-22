@@ -319,7 +319,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
-		pk_warning ("not when policy is to never refresh");
+		pk_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
@@ -327,13 +327,13 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time, NULL);
 	if (ret == FALSE) {
-		pk_warning ("failed to get last time");
+		pk_debug ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_warning ("not before timeout, thresh=%u, now=%u", thresh, time);
+		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
