@@ -429,6 +429,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PACKAGE_CORRUPT:
 		text = _("Package is corrupt");
 		break;
+	case PK_ERROR_ENUM_ALL_PACKAGES_ALREADY_INSTALLED:
+		text = _("All packages are already installed");
+		break;
 	default:
 		pk_warning ("Unknown error");
 	}
@@ -585,6 +588,9 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_PACKAGE_CORRUPT:
 		text = _("The package that was downloaded is corrupt and needs to be downloaded again.");
+		break;
+	case PK_ERROR_ENUM_ALL_PACKAGES_ALREADY_INSTALLED:
+		text = _("All of the packages selected for install are already installed on the system.");
 		break;
 	default:
 		pk_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
