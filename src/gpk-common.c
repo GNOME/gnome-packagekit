@@ -178,6 +178,7 @@ static PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,	"dialog-information"},
 	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
 	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
+	{PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,	"dialog-information"},
 	{0, NULL}
 };
 
@@ -726,6 +727,10 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 	case PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED:
 		text = _("Configuration files were changed");
 		break;
+	case PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED:
+		text = _("Package is already installed");
+		break;
+
 	default:
 		pk_warning ("message unrecognised: %i", message);
 	}
