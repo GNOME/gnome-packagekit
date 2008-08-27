@@ -1059,6 +1059,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
 		text = _("Downloading packages");
 		break;
+	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		text = _("Getting distribution upgrade information");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1162,6 +1165,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
 		text = _("Downloaded packages");
 		break;
+	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		text = _("Got distribution upgrades");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1260,15 +1266,15 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_REPOS:
 		text = _("Software sources");
 		break;
-//	case PK_GROUP_ENUM_SCIENCE:
-//		text = _("Science");
-//		break;
-//	case PK_GROUP_ENUM_DOCUMENTATION:
-//		text = _("Documentation");
-//		break;
-//	case PK_GROUP_ENUM_ELECTRONICS:
-//		text = _("Electronics");
-//		break;
+	case PK_GROUP_ENUM_SCIENCE:
+		text = _("Science");
+		break;
+	case PK_GROUP_ENUM_DOCUMENTATION:
+		text = _("Documentation");
+		break;
+	case PK_GROUP_ENUM_ELECTRONICS:
+		text = _("Electronics");
+		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");
 		break;
