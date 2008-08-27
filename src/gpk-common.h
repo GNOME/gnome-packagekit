@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 
 #define GPK_CONF_NOTIFY_COMPLETED		"/apps/gnome-packagekit/notify_complete"
 #define GPK_CONF_NOTIFY_AVAILABLE		"/apps/gnome-packagekit/notify_available"
+#define GPK_CONF_NOTIFY_DISTRO_UPGRADES		"/apps/gnome-packagekit/notify_distro_upgrades"
 #define GPK_CONF_NOTIFY_CRITICAL		"/apps/gnome-packagekit/notify_critical"
 #define GPK_CONF_NOTIFY_ERROR			"/apps/gnome-packagekit/notify_errors"
 #define GPK_CONF_NOTIFY_MESSAGE			"/apps/gnome-packagekit/notify_message"
@@ -42,6 +43,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_AUTOCOMPLETE			"/apps/gnome-packagekit/autocomplete"
 #define GPK_CONF_SESSION_STARTUP_TIMEOUT	"/apps/gnome-packagekit/session_startup_timeout"
 #define GPK_CONF_FREQUENCY_GET_UPDATES		"/apps/gnome-packagekit/frequency_get_updates"
+#define GPK_CONF_FREQUENCY_GET_UPGRADES		"/apps/gnome-packagekit/frequency_get_upgrades"
 #define GPK_CONF_FREQUENCY_REFRESH_CACHE	"/apps/gnome-packagekit/frequency_refresh_cache"
 #define GPK_CONF_AUTO_UPDATE			"/apps/gnome-packagekit/auto_update"
 #define GPK_CONF_UPDATE_BATTERY			"/apps/gnome-packagekit/update_battery"

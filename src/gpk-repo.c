@@ -49,7 +49,7 @@
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
-static PkRoleEnum roles;
+static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
 
@@ -82,7 +82,7 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	GError *error = NULL;
 
 	/* do we have the capability? */
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		pk_debug ("can't change state");
 		return;
 	}
@@ -247,7 +247,7 @@ gpk_repo_repo_list_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
-	PkFilterEnum filter;
+	PkBitfield filters;
 
 	pk_debug ("refreshing list");
 	gtk_list_store_clear (list_store);
@@ -259,11 +259,11 @@ gpk_repo_repo_list_refresh (void)
 	}
 
 	if (!show_details) {
-		filter = PK_FILTER_ENUM_NOT_DEVELOPMENT;
+		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	} else {
-		filter = PK_FILTER_ENUM_NONE;
+		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
 	}
-	ret = pk_client_get_repo_list (client, filter, &error);
+	ret = pk_client_get_repo_list (client, filters, &error);
 	if (!ret) {
 		pk_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
@@ -439,7 +439,7 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	gtk_widget_grab_focus (widget);
 
-	if (pk_enums_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
 		/* get the update list */
 		gpk_repo_repo_list_refresh ();
 	} else {

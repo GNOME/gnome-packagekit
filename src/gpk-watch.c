@@ -153,14 +153,14 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 }
 
 /**
- * gpk_watch_task_list_to_status_enums:
+ * gpk_watch_task_list_to_status_bitfield:
  **/
-static PkStatusEnum
-gpk_watch_task_list_to_status_enums (GpkWatch *watch)
+static PkBitfield
+gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 {
 	guint i;
 	guint length;
-	PkStatusEnum status = 0;
+	PkBitfield status = 0;
 	PkTaskListItem *item;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), PK_STATUS_ENUM_UNKNOWN);
@@ -179,7 +179,7 @@ gpk_watch_task_list_to_status_enums (GpkWatch *watch)
 			break;
 		}
 		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
-		pk_enums_add (status, item->status);
+		pk_bitfield_add (status, item->status);
 	}
 out:
 	return status;
@@ -192,13 +192,13 @@ static gboolean
 gpk_watch_refresh_icon (GpkWatch *watch)
 {
 	const gchar *icon;
-	PkStatusEnum status;
+	PkBitfield status;
 	gint value;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	pk_debug ("rescan");
-	status = gpk_watch_task_list_to_status_enums (watch);
+	status = gpk_watch_task_list_to_status_bitfield (watch);
 
 	/* nothing in the list */
 	if (status == 0) {
@@ -208,7 +208,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	}
 
 	/* get the most important icon */
-	value = pk_enums_contain_priority (status,
+	value = pk_bitfield_contain_priority (status,
 					   PK_STATUS_ENUM_REFRESH_CACHE,
 					   PK_STATUS_ENUM_CANCEL,
 					   PK_STATUS_ENUM_INSTALL,

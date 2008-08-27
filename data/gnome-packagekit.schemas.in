@@ -134,6 +134,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnome-packagekit/notify_distro_upgrades</key>
+      <applyto>/apps/gnome-packagekit/notify_distro_upgrades</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Notify the user when distribution upgrades are available</short>
+        <long>Notify the user when distribution upgrades are available</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnome-packagekit/notify_critical</key>
       <applyto>/apps/gnome-packagekit/notify_critical</applyto>
       <owner>gnome-packagekit</owner>
@@ -178,6 +190,18 @@
       <locale name="C">
         <short>How often we should check for updates</short>
         <long>How often we should check for updates. Options are "hourly", "daily", "weekly", "never"</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/frequency_get_upgrades</key>
+      <applyto>/apps/gnome-packagekit/frequency_get_upgrades</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>weekly</default>
+      <locale name="C">
+        <short>How often we should check for distribution upgrades</short>
+        <long>How often we should check for distribution upgrades. Options are "daily", "weekly", "never"</long>
       </locale>
     </schema>
 

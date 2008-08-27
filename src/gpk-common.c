@@ -150,6 +150,9 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
 	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
 	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
+//	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
+//	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
+//	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
 	{0, NULL}
 };
 
@@ -164,9 +167,17 @@ static PkEnumMatch enum_restart_icon_name[] = {
 
 static PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_MESSAGE_ENUM_NOTICE,		"dialog-information"},
-	{PK_MESSAGE_ENUM_WARNING,		"dialog-warning"},
-	{PK_MESSAGE_ENUM_DAEMON,		"dialog-error"},
+	{PK_MESSAGE_ENUM_BROKEN_MIRROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_CONNECTION_REFUSED,	"dialog-error"},
+	{PK_MESSAGE_ENUM_PARAMETER_INVALID,	"dialog-error"},
+	{PK_MESSAGE_ENUM_PRIORITY_INVALID,	"dialog-error"},
+	{PK_MESSAGE_ENUM_BACKEND_ERROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_DAEMON_ERROR,		"dialog-error"},
+	{PK_MESSAGE_ENUM_CACHE_BEING_REBUILT,	"dialog-information"},
+	{PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE,	"dialog-warning"},
+	{PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,	"dialog-information"},
+	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
+	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
 	{0, NULL}
 };
 
@@ -682,14 +693,38 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 {
 	const gchar *text = NULL;
 	switch (message) {
-	case PK_MESSAGE_ENUM_NOTICE:
-		text = _("PackageKit notice");
+	case PK_MESSAGE_ENUM_BROKEN_MIRROR:
+		text = _("A mirror is possibly broken");
 		break;
-	case PK_MESSAGE_ENUM_WARNING:
-		text = _("PackageKit warning");
+	case PK_MESSAGE_ENUM_CONNECTION_REFUSED:
+		text = _("The connection was refused");
 		break;
-	case PK_MESSAGE_ENUM_DAEMON:
-		text = _("PackageKit daemon");
+	case PK_MESSAGE_ENUM_PARAMETER_INVALID:
+		text = _("The parameter was invalid");
+		break;
+	case PK_MESSAGE_ENUM_PRIORITY_INVALID:
+		text = _("The priority was invalid");
+		break;
+	case PK_MESSAGE_ENUM_BACKEND_ERROR:
+		text = _("Generic backend error");
+		break;
+	case PK_MESSAGE_ENUM_DAEMON_ERROR:
+		text = _("Generic daemon error");
+		break;
+	case PK_MESSAGE_ENUM_CACHE_BEING_REBUILT:
+		text = _("The package list cache is being rebuilt");
+		break;
+	case PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE:
+		text = _("An untrusted package was installed");
+		break;
+	case PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS:
+		text = _("A newer package exists");
+		break;
+	case PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE:
+		text = _("Could not find package");
+		break;
+	case PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED:
+		text = _("Configuration files were changed");
 		break;
 	default:
 		pk_warning ("message unrecognised: %i", message);
@@ -1007,7 +1042,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Setting repository data");
 		break;
 	case PK_ROLE_ENUM_RESOLVE:
-		text = _("Resolved");
+		text = _("Resolving");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
 		text = _("Getting file list");
@@ -1029,6 +1064,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
 		text = _("Downloading packages");
+		break;
+	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		text = _("Getting distribution upgrade information");
 		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
@@ -1133,6 +1171,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
 		text = _("Downloaded packages");
 		break;
+	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		text = _("Got distribution upgrades");
+		break;
 	default:
 		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1230,6 +1271,15 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_REPOS:
 		text = _("Software sources");
+		break;
+	case PK_GROUP_ENUM_SCIENCE:
+		text = _("Science");
+		break;
+	case PK_GROUP_ENUM_DOCUMENTATION:
+		text = _("Documentation");
+		break;
+	case PK_GROUP_ENUM_ELECTRONICS:
+		text = _("Electronics");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");
@@ -1762,7 +1812,7 @@ gpk_common_self_test (gpointer data)
 	 ****************     localised enums          **************
 	 ************************************************************/
 	libst_title (test, "check we convert all the localised past role enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1773,7 +1823,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised present role enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1784,7 +1834,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the role icon name enums");
-	for (i=1; i<PK_ROLE_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1795,7 +1845,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the info icon names enums");
-	for (i=1; i<PK_INFO_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1806,7 +1856,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised status enums");
-	for (i=1; i<PK_STATUS_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1817,7 +1867,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the status icon names enums");
-	for (i=1; i<PK_STATUS_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1905,7 +1955,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the localised group enums");
-	for (i=1; i<PK_GROUP_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);
@@ -1916,7 +1966,7 @@ gpk_common_self_test (gpointer data)
 
 	/************************************************************/
 	libst_title (test, "check we convert all the group icon name enums");
-	for (i=1; i<PK_GROUP_ENUM_UNKNOWN; i*=2) {
+	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL) {
 			libst_failed (test, "failed to get %i", i);

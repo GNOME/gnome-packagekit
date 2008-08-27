@@ -497,14 +497,14 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 }
 
 /**
- * gpk_check_update_client_info_to_enums:
+ * gpk_check_update_client_info_to_bitfield:
  **/
-static PkInfoEnum
-gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *list)
+static PkBitfield
+gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, PkPackageList *list)
 {
 	guint i;
 	guint length;
-	PkInfoEnum infos = 0;
+	PkBitfield infos = 0;
 	const PkPackageObj *obj;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), PK_INFO_ENUM_UNKNOWN);
@@ -523,7 +523,7 @@ gpk_check_update_client_info_to_enums (GpkCheckUpdate *cupdate, PkPackageList *l
 			break;
 		}
 		pk_debug ("%s %s", obj->id->name, pk_info_enum_to_text (obj->info));
-		pk_enums_add (infos, obj->info);
+		pk_bitfield_add (infos, obj->info);
 	}
 	return infos;
 }
@@ -535,16 +535,16 @@ static const gchar *
 gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, PkPackageList *list)
 {
 	gint value;
-	PkInfoEnum infos;
+	PkBitfield infos;
 	const gchar *icon;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), NULL);
 
 	/* get an enumerated list with all the update types */
-	infos = gpk_check_update_client_info_to_enums (cupdate, list);
+	infos = gpk_check_update_client_info_to_bitfield (cupdate, list);
 
 	/* get the most important icon */
-	value = pk_enums_contain_priority (infos,
+	value = pk_bitfield_contain_priority (infos,
 					   PK_INFO_ENUM_SECURITY,
 					   PK_INFO_ENUM_IMPORTANT,
 					   PK_INFO_ENUM_BUGFIX,
@@ -914,6 +914,79 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
+#include <pk-distro-upgrade-obj.h>
+
+/**
+ * gpk_check_update_auto_get_upgrades_cb:
+ **/
+static void
+gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
+{
+	GError *error = NULL;
+	const GPtrArray	*array;
+	gboolean ret;
+	guint i;
+	PkDistroUpgradeObj *obj;
+	const gchar *title;
+	NotifyNotification *notification;
+	GString *string = NULL;
+	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+
+	/* get updates */
+	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient, &error);
+	if (array == NULL) {
+		pk_warning ("failed to get upgrades: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* any updates? */
+	if (array->len == 0) {
+		pk_debug ("no upgrades");
+		goto out;
+	}
+
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, NULL);
+	if (!ret) {
+		pk_debug ("ignoring due to GConf");
+		goto out;
+	}
+
+	/* find the upgrade string */
+	string = g_string_new ("");
+	for (i=0; i < array->len; i++) {
+		obj = (PkDistroUpgradeObj *) g_ptr_array_index (array, i);
+		g_string_append_printf (string, "%s (%s)\n", obj->name, pk_distro_upgrade_enum_to_text (obj->state));
+	}
+	if (string->len != 0) {
+		g_string_set_size (string, string->len-1);
+	}
+
+	/* do the bubble */
+	title = _("Distribution upgrades available");
+	notification = notify_notification_new (title, string->str, "help-browser", NULL);
+	if (notification == NULL) {
+		pk_warning ("failed to get bubble");
+		return;
+	}
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
+	notify_notification_add_action (notification, "upgrade-info",
+					_("More information"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	notify_notification_add_action (notification, "do-not-show-upgrade-available",
+					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		pk_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	if (string != NULL)
+		g_string_free (string, TRUE);
+}
+
 /**
  * gpk_check_update_init:
  * @cupdate: This class instance
@@ -935,6 +1008,8 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_check_update_auto_refresh_cache_cb), cupdate);
 	g_signal_connect (cupdate->priv->arefresh, "get-updates",
 			  G_CALLBACK (gpk_check_update_auto_get_updates_cb), cupdate);
+	g_signal_connect (cupdate->priv->arefresh, "get-upgrades",
+			  G_CALLBACK (gpk_check_update_auto_get_upgrades_cb), cupdate);
 
 	/* right click actions are common */
 	status_icon = GTK_STATUS_ICON (cupdate->priv->sicon);

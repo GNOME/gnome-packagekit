@@ -85,6 +85,7 @@ struct GpkAutoRefreshPrivate
 enum {
 	REFRESH_CACHE,
 	GET_UPDATES,
+	GET_UPGRADES,
 	LAST_SIGNAL
 };
 
@@ -109,6 +110,11 @@ gpk_auto_refresh_class_init (GpkAutoRefreshClass *klass)
 			      G_TYPE_NONE, 0);
 	signals [GET_UPDATES] =
 		g_signal_new ("get-updates",
+			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
+			      0, NULL, NULL, g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	signals [GET_UPGRADES] =
+		g_signal_new ("get-upgrades",
 			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
 			      0, NULL, NULL, g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -137,6 +143,19 @@ gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 
 	pk_debug ("emitting get-updates");
 	g_signal_emit (arefresh, signals [GET_UPDATES], 0);
+	return TRUE;
+}
+
+/**
+ * gpk_auto_refresh_signal_get_upgrades:
+ **/
+static gboolean
+gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
+{
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	pk_debug ("emitting get-upgrades");
+	g_signal_emit (arefresh, signals [GET_UPGRADES], 0);
 	return TRUE;
 }
 
@@ -203,6 +222,13 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	gboolean ret;
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* if we don't want to auto check for updates, don't do this either */
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (thresh == 0) {
+		pk_debug ("not when policy is to never refresh");
+		return FALSE;
+	}
 
 	/* not on battery */
 	if (arefresh->priv->on_battery) {
@@ -279,13 +305,48 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_maybe_get_upgrades:
+ **/
+static gboolean
+gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
+{
+	guint time;
+	guint thresh;
+	gboolean ret;
+
+	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+
+	/* get this each time, as it may have changed behind out back */
+	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
+	if (thresh == 0) {
+		pk_debug ("not when policy is to never refresh");
+		return FALSE;
+	}
+
+	/* get the time since the last refresh */
+	ret = pk_control_get_time_since_action (arefresh->priv->control,
+						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time, NULL);
+	if (ret == FALSE) {
+		pk_debug ("failed to get last time");
+		return FALSE;
+	}
+
+	/* have we passed the timout? */
+	if (time < thresh) {
+		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+		return FALSE;
+	}
+
+	gpk_auto_refresh_signal_get_upgrades (arefresh);
+	return TRUE;
+}
+
+/**
  * gpk_auto_refresh_change_state:
  **/
 static gboolean
 gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
-	guint thresh;
-
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we shouldn't do this early in the session startup */
@@ -300,16 +361,10 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 		return FALSE;
 	}
 
-	/* have we been told to never check for updates? */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
-	if (thresh == 0) {
-		pk_debug ("not when policy is to never refresh");
-		return FALSE;
-	}
-
 	/* we do this to get an icon at startup */
 	if (arefresh->priv->sent_get_updates == FALSE) {
 		gpk_auto_refresh_signal_get_updates (arefresh);
+		gpk_auto_refresh_maybe_get_upgrades (arefresh);
 		arefresh->priv->sent_get_updates = TRUE;
 		return TRUE;
 	}
@@ -317,6 +372,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* try to do both */
 	gpk_auto_refresh_maybe_refresh_cache (arefresh);
 	gpk_auto_refresh_maybe_get_updates (arefresh);
+	gpk_auto_refresh_maybe_get_upgrades (arefresh);
 
 	return TRUE;
 }
@@ -365,7 +421,7 @@ gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	arefresh->priv->network_active = pk_enums_contain (state, PK_NETWORK_ENUM_ONLINE);
+	arefresh->priv->network_active = (state == PK_NETWORK_ENUM_ONLINE);
 	pk_debug ("setting online %i", arefresh->priv->network_active);
 	gpk_auto_refresh_change_state (arefresh);
 }
@@ -536,7 +592,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	g_signal_connect (arefresh->priv->control, "network-state-changed",
 			  G_CALLBACK (gpk_auto_refresh_network_status_changed_cb), arefresh);
 	state = pk_control_get_network_state (arefresh->priv->control);
-	if (pk_enums_contain (state, PK_NETWORK_ENUM_ONLINE)) {
+	if (state == PK_NETWORK_ENUM_ONLINE) {
 		arefresh->priv->network_active = TRUE;
 	}
 

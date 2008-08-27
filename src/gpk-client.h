@@ -115,6 +115,8 @@ void		 gpk_client_set_interaction		(GpkClient	*gclient,
 							 GpkClientInteract interact);
 PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
+const GPtrArray	*gpk_client_get_distro_upgrades		(GpkClient	*gclient,
+							 GError		**error);
 gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
 							 const gchar	*package_id,
 							 GError		**error);

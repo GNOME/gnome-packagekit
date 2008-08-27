@@ -47,6 +47,7 @@
 #include <pk-common.h>
 #include <pk-control.h>
 #include <pk-catalog.h>
+#include <pk-distro-upgrade-obj.h>
 
 #include <gpk-client.h>
 #include <gpk-client-eula.h>
@@ -84,7 +85,7 @@ struct _GpkClientPrivate
 	guint			 pulse_timer_id;
 	guint			 finished_timer_id;
 	PkControl		*control;
-	PkRoleEnum		 roles;
+	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
 	gboolean		 retry_untrusted_value;
 	gboolean		 show_finished;
@@ -95,6 +96,7 @@ struct _GpkClientPrivate
 	gchar			**files_array;
 	PkExitEnum		 exit;
 	GtkWindow		*parent_window;
+	GPtrArray		*upgrade_array;
 };
 
 typedef enum {
@@ -734,6 +736,19 @@ gpk_client_package_cb (PkClient *client, const PkPackageObj *obj, GpkClient *gcl
 	text = gpk_package_id_format_twoline (obj->id, obj->summary);
 	gpk_client_set_package_label (gclient, text);
 	g_free (text);
+}
+
+/**
+ * pk_client_distro_upgrade_cb:
+ **/
+static void
+pk_client_distro_upgrade_cb (PkClient *client, const PkDistroUpgradeObj *obj, GpkClient *gclient)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	/* copy into array */
+	g_ptr_array_add (gclient->priv->upgrade_array, pk_distro_upgrade_obj_copy (obj));
+	pk_debug ("%s, %s, %s", obj->name, pk_update_state_enum_to_text (obj->state), obj->summary);
 }
 
 /**
@@ -1405,7 +1420,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
+	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
@@ -1505,7 +1520,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 
 	/* are we dumb and can't check for depends? */
-	if (!pk_enums_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
+	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
 		pk_warning ("skipping depends check");
 		goto skip_checks;
 	}
@@ -2195,6 +2210,63 @@ out:
 }
 
 /**
+ * gpk_client_get_distro_upgrades:
+ **/
+const GPtrArray *
+gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* check if we are already waiting */
+	if (gclient->priv->gtk_main_waiting) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Already waiting on this GpkClient");
+		return FALSE;
+	}
+
+	/* are we not able to do this? */
+	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Backend does not support GetDistroUpgrades");
+		return FALSE;
+	}
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-upgrades"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		return FALSE;
+	}
+
+	/* set title */
+	gpk_client_setup_window (gclient, _("Getting distribution upgrade information"));
+
+	/* clear old data */
+	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
+	g_ptr_array_remove_range (gclient->priv->upgrade_array, 0, gclient->priv->upgrade_array->len);
+
+	/* wrap update, but handle all the GPG and EULA stuff */
+	ret = pk_client_get_distro_upgrades (gclient->priv->client_action, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Getting update lists failed"),
+				      _("Getting the list of distribution upgrades failed"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
+
+	/* setup the UI */
+	gpk_client_set_progress_files (gclient, FALSE);
+	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
+
+	gpk_client_main_wait (gclient);
+out:
+	return gclient->priv->upgrade_array;
+}
+
+/**
  * gpk_client_get_file_list:
  **/
 gchar **
@@ -2684,6 +2756,8 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "files",
 			  G_CALLBACK (gpk_client_files_cb), gclient);
+	g_signal_connect (gclient->priv->client_action, "distro-upgrade",
+			  G_CALLBACK (pk_client_distro_upgrade_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -2723,6 +2797,9 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_client_button_help_cb), gclient);
 
+	/* cache the upgrade array */
+	gclient->priv->upgrade_array = g_ptr_array_new ();
+
 	/* set the label blank initially */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progress_part_label");
 	gtk_label_set_label (GTK_LABEL (widget), "");
@@ -2750,6 +2827,8 @@ gpk_client_finalize (GObject *object)
 		g_source_remove (gclient->priv->pulse_timer_id);
 	}
 
+	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
+	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);
 	g_strfreev (gclient->priv->files_array);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
