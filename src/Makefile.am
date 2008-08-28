@@ -52,6 +52,10 @@ bin_PROGRAMS =						\
 shared_SOURCES =					\
 	egg-debug.c					\
 	egg-debug.h					\
+	egg-string.c					\
+	egg-string.h					\
+	egg-dbus-monitor.c				\
+	egg-dbus-monitor.h				\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
 	gpk-animated-icon.c				\

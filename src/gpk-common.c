@@ -32,10 +32,12 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-#include "egg-debug.h"
 #include <pk-package-id.h>
 #include <pk-enum.h>
 #include <pk-common.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-error.h"
@@ -232,7 +234,7 @@ gpk_package_id_format_twoline (const PkPackageId *id, const gchar *summary)
 	g_return_val_if_fail (id != NULL, NULL);
 
 	/* optional */
-	if (pk_strzero (summary)) {
+	if (egg_strzero (summary)) {
 		string = g_string_new (id->name);
 	} else {
 		string = g_string_new ("");
@@ -264,7 +266,7 @@ gpk_package_id_format_oneline (const PkPackageId *id, const gchar *summary)
 	gchar *summary_safe;
 	gchar *text;
 
-	if (pk_strzero (summary)) {
+	if (egg_strzero (summary)) {
 		/* just have name */
 		text = g_strdup (id->name);
 	} else {
@@ -1391,7 +1393,7 @@ gpk_check_icon_valid (const gchar *icon)
 	gboolean ret = TRUE;
 
 	/* trivial case */
-	if (pk_strzero (icon)) {
+	if (egg_strzero (icon)) {
 		return FALSE;
 	}
 

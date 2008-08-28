@@ -36,14 +36,16 @@
 /* local .la */
 #include <libunique.h>
 
-#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-package-id.h>
 #include <pk-common.h>
 
-#include <gpk-common.h>
-#include <gpk-gnome.h>
+#include "egg-debug.h"
+#include "egg-string.h"
+
+#include "gpk-common.h"
+#include "gpk-gnome.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;
@@ -283,7 +285,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gchar *string1, gchar *string2,
 				        gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "button_action")) {
+	if (egg_strequal (name, "button_action")) {
 		return polkit_gnome_action_create_button (button_action);
 	}
 	egg_warning ("name unknown=%s", name);

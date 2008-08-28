@@ -34,6 +34,8 @@
 #include <polkit-gnome/polkit-gnome.h>
 
 #include "egg-debug.h"
+#include "egg-string.h"
+
 #include <pk-enum.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -215,7 +217,7 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_buffer_new (NULL);
 	/* ITS4: ignore, not used for allocation */
-	if (pk_strzero (text) == FALSE) {
+	if (egg_strzero (text) == FALSE) {
 		gtk_text_buffer_set_text (buffer, text, -1);
 	} else {
 		/* no information */
@@ -753,7 +755,7 @@ gpk_application_get_full_repo_name (GpkApplication *application, const gchar *da
 	const gchar *repo_name;
 
 	/* if no data, we can't look up in the hash table */
-	if (pk_strzero (data)) {
+	if (egg_strzero (data)) {
 		egg_warning ("no ident data");
 		return _("Invalid");
 	}
@@ -849,7 +851,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	installed = pk_strequal (details->id->data, "installed");
+	installed = egg_strequal (details->id->data, "installed");
 
 	/* get the icon */
 	icon = pk_extra_get_icon_name (application->priv->extra, details->id->name);
@@ -874,7 +876,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	/* homepage */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
-	if (pk_strzero (details->url) == FALSE) {
+	if (egg_strzero (details->url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
 
 		/* set the tooltip to where we are going */
@@ -899,7 +901,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	}
 
 	/* group */
-	if (!pk_strzero (details->license)) {
+	if (!egg_strzero (details->license)) {
 		/* This should be a licence enum value - bad API, bad.
 		 * license = pk_license_enum_to_text (license_enum); */
 		gpk_application_add_detail_item (application, _("License"), details->license, NULL);
@@ -1175,7 +1177,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	package = gtk_entry_get_text (GTK_ENTRY (widget));
 
 	/* have we got input? */
-	if (pk_strzero (package)) {
+	if (egg_strzero (package)) {
 		egg_debug ("no input");
 		return FALSE;
 	}
@@ -1385,7 +1387,7 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	if (valid == FALSE || pk_strzero (package)) {
+	if (valid == FALSE || egg_strzero (package)) {
 		gtk_widget_set_sensitive (widget, FALSE);
 	} else {
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -1629,7 +1631,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 		egg_debug ("selected row is: %s", application->priv->group);
 
 		/* GetPackages? */
-		if (pk_strequal (application->priv->group, "all-packages")) {
+		if (egg_strequal (application->priv->group, "all-packages")) {
 			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
 		} else {
 			application->priv->search_mode = PK_MODE_GROUP;
@@ -1680,7 +1682,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* check we aren't a help line */
 	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_IMAGE, &image, -1);
-	ret = pk_strequal (image, "search");
+	ret = egg_strequal (image, "search");
 	g_free (image);
 	if (ret) {
 		egg_debug ("ignoring help click");
@@ -1776,10 +1778,10 @@ gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *na
 				      gchar *string1, gchar *string2,
 				      gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "entry_text")) {
+	if (egg_strequal (name, "entry_text")) {
 		return sexy_icon_entry_new ();
 	}
-	if (pk_strequal (name, "image_status")) {
+	if (egg_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
 	}
 	egg_warning ("name unknown='%s'", name);
@@ -2474,7 +2476,7 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 	gchar *name = NULL;
 	gboolean ret;
 	gtk_tree_model_get (model, iter, GROUPS_COLUMN_ID, &name, -1);
-	ret = pk_strequal (name, "separator");
+	ret = egg_strequal (name, "separator");
 	g_free (name);
 	return ret;
 }

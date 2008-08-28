@@ -27,11 +27,14 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-enum.h>
 #include <pk-package-id.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
+
 #include "gpk-gnome.h"
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -107,7 +110,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gchar *string1, gchar *string2,
 				        gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "button_action")) {
+	if (egg_strequal (name, "button_action")) {
 		return gtk_button_new_with_mnemonic (_("_Run"));
 	}
 	egg_warning ("name unknown=%s", name);
@@ -174,7 +177,7 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 		/* have we the same executable name?
 		 * this helps when there's "f-spot", "fspot --import %f", and "f-spot --view" in 3
 		 * different desktop files */
-		if (pk_strequal (exec, last_tryexec)) {
+		if (egg_strequal (exec, last_tryexec)) {
 			egg_debug ("same as the last exec '%s' so skipping", exec);
 			goto out;
 		}

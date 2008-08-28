@@ -24,8 +24,10 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "egg-debug.h"
 #include <pk-common.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-animated-icon.h"
 
@@ -73,7 +75,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	g_return_val_if_fail (name != NULL, FALSE);
 
 	/* have we already set the same icon */
-	if (pk_strequal (icon->filename, name)) {
+	if (egg_strequal (icon->filename, name)) {
 		egg_debug ("already set the same icon name %s, ignoring", name);
 		return FALSE;
 	}

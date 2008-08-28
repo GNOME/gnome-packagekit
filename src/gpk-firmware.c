@@ -37,14 +37,15 @@
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 
-#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 
-#include <gpk-client.h>
-#include <gpk-common.h>
+#include "egg-debug.h"
+#include "egg-string.h"
 
+#include "gpk-client.h"
+#include "gpk-common.h"
 #include "gpk-firmware.h"
 
 static void     gpk_firmware_class_init	(GpkFirmwareClass *klass);
@@ -86,9 +87,9 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 {
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 
-	if (pk_strequal (action, "install-firmware")) {
+	if (egg_strequal (action, "install-firmware")) {
 		gpk_firmware_install_file (firmware);
-	} else if (pk_strequal (action, "do-not-show-prompt-firmware")) {
+	} else if (egg_strequal (action, "do-not-show-prompt-firmware")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
 		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, FALSE, NULL);
 	} else {

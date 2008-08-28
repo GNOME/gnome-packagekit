@@ -35,15 +35,17 @@
 /* local .la */
 #include <libunique.h>
 
-#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-connection.h>
 
-#include <gpk-gnome.h>
-#include <gpk-common.h>
-#include <gpk-error.h>
+#include "egg-debug.h"
+#include "egg-string.h"
+
+#include "gpk-gnome.h"
+#include "gpk-common.h"
+#include "gpk-error.h"
 #include "gpk-animated-icon.h"
 
 static GladeXML *glade_xml = NULL;
@@ -310,7 +312,7 @@ gpk_repo_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 			       gchar *string1, gchar *string2,
 			       gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "image_animation")) {
+	if (egg_strequal (name, "image_animation")) {
 		return gpk_animated_icon_new ();
 	}
 	egg_warning ("name unknown='%s'", name);

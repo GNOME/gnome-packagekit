@@ -38,7 +38,6 @@
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 
-#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
@@ -48,9 +47,11 @@
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
 
-#include <gpk-common.h>
-#include <gpk-gnome.h>
+#include "egg-debug.h"
+#include "egg-string.h"
 
+#include "gpk-common.h"
+#include "gpk-gnome.h"
 #include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
 #include "gpk-client.h"
@@ -395,9 +396,9 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	gchar **package_ids;
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
-	if (pk_strequal (action, "update-all-packages")) {
+	if (egg_strequal (action, "update-all-packages")) {
 		gpk_check_update_update_system (cupdate);
-	} else if (pk_strequal (action, "update-just-security")) {
+	} else if (egg_strequal (action, "update-just-security")) {
 
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
@@ -409,10 +410,10 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 		}
 		g_strfreev (package_ids);
 
-	} else if (pk_strequal (action, "do-not-show-notify-critical")) {
+	} else if (egg_strequal (action, "do-not-show-notify-critical")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
-	} else if (pk_strequal (action, "do-not-show-update-not-battery")) {
+	} else if (egg_strequal (action, "do-not-show-update-not-battery")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
 	} else {

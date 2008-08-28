@@ -40,7 +40,6 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-#include "egg-debug.h"
 #include <pk-control.h>
 #include <pk-client.h>
 #include <pk-task-list.h>
@@ -48,6 +47,9 @@
 #include <pk-task-list.h>
 #include <pk-connection.h>
 #include <pk-package-id.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-error.h"
@@ -128,7 +130,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 
 		/* should we display the text */
 		if (item->role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-		    pk_strzero (item->text)) {
+		    egg_strzero (item->text)) {
 			g_string_append_printf (status, "%s\n", localised_status);
 		} else {
 			/* display the package name, not the package_id */
@@ -264,11 +266,11 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 {
 	GpkWatch *watch = GPK_WATCH (data);
 
-	if (pk_strequal (action, "do-not-show-notify-complete")) {
+	if (egg_strequal (action, "do-not-show-notify-complete")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
-	} else if (pk_strequal (action, "show-error-details")) {
+	} else if (egg_strequal (action, "show-error-details")) {
 		gpk_error_dialog (_("Error details"), NULL, watch->priv->error_details);
 
 	} else {
@@ -674,7 +676,7 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 
 	/* find the job we should bind to */
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
-	if (pk_strzero(tid) || tid[0] != '/') {
+	if (egg_strzero(tid) || tid[0] != '/') {
 		egg_warning ("invalid job, maybe transaction already removed");
 		return;
 	}
@@ -720,7 +722,7 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		localised_status = gpk_status_enum_to_localised_text (item->status);
 
 		icon_name = gpk_status_enum_to_icon_name (item->status);
-		if (!pk_strzero (item->text) &&
+		if (!egg_strzero (item->text) &&
 		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			text = g_strdup_printf ("%s %s (%s)", localised_role, item->text, localised_status);
 		} else {
@@ -884,13 +886,13 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
-	if (pk_strequal (mode, "none")) {
+	if (egg_strequal (mode, "none")) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}
 
 	host = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/ftp_host", NULL);
-	if (pk_strzero (host)) {
+	if (egg_strzero (host)) {
 		egg_debug ("no hostname for ftp proxy");
 		goto out;
 	}
@@ -927,7 +929,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
-	if (pk_strequal (mode, "none")) {
+	if (egg_strequal (mode, "none")) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}
@@ -941,7 +943,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 
 	/* http has 4 parameters */
 	host = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/host", NULL);
-	if (pk_strzero (host)) {
+	if (egg_strzero (host)) {
 		egg_debug ("no hostname for http proxy");
 		goto out;
 	}
@@ -976,7 +978,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 	}
 
 	/* the whole auth section is optional */
-	if (pk_strzero (auth)) {
+	if (egg_strzero (auth)) {
 		proxy_http = g_strdup (connection);
 	} else {
 		proxy_http = g_strdup_printf ("%s@%s", auth, connection);

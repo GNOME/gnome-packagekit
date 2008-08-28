@@ -25,12 +25,14 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-enum.h>
 #include <pk-extra.h>
 #include <pk-package-id.h>
 #include <gconf/gconf-client.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-dialog.h"
@@ -227,7 +229,7 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	array = pk_ptr_array_to_argv (files);
 	text = g_strjoinv ("\n", array);
 
-	if (pk_strzero (text)) {
+	if (egg_strzero (text)) {
 		g_free (text);
 		text = g_strdup (_("No files"));
 	}

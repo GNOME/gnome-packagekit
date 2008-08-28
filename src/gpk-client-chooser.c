@@ -28,12 +28,15 @@
 #include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-enum.h>
 #include <pk-extra.h>
 #include <pk-package-id.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
+
 #include "gpk-gnome.h"
 #include "gpk-common.h"
 
@@ -108,7 +111,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gchar *string1, gchar *string2,
 				        gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "button_action")) {
+	if (egg_strequal (name, "button_action")) {
 		return polkit_gnome_action_create_button (button_action);
 	}
 	egg_warning ("name unknown=%s", name);

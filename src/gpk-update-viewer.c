@@ -37,7 +37,6 @@
 /* local .la */
 #include <libunique.h>
 
-#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
@@ -46,10 +45,12 @@
 #include <pk-package-ids.h>
 #include <pk-update-detail-obj.h>
 
-#include <gpk-common.h>
-#include <gpk-gnome.h>
-#include <gpk-error.h>
+#include "egg-debug.h"
+#include "egg-string.h"
 
+#include "gpk-common.h"
+#include "gpk-gnome.h"
+#include "gpk-error.h"
 #include "gpk-consolekit.h"
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-animated-icon.h"
@@ -712,7 +713,7 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 	for (i=0; i<length; i+=2) {
 		uri = urls[i];
 		text = urls[i+1];
-		if (pk_strzero (text)) {
+		if (egg_strzero (text)) {
 			text = uri;
 		}
 		/* no suffix needed */
@@ -743,7 +744,7 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 	PkPackageId *id;
 
 	/* do we have any data? */
-	if (pk_strzero (package_ids_delimit)) {
+	if (egg_strzero (package_ids_delimit)) {
 		goto out;
 	}
 
@@ -797,7 +798,7 @@ gpk_update_viewer_pretty_description (const gchar *description)
 		}
 
 		/* if not null then append back */
-		if (!pk_strzero (line2)) {
+		if (!egg_strzero (line2)) {
 			g_string_append_printf (string, "%s\n", line2);
 		}
 		g_free (line2);
@@ -896,7 +897,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	/* translators: this is the repository the package has come from */
 	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data, NULL);
 
-	if (!pk_strzero (obj->update_text)) {
+	if (!egg_strzero (obj->update_text)) {
 		/* convert the bullets */
 		line = gpk_update_viewer_pretty_description (obj->update_text);
 		/* translators: this is the package description */
@@ -905,21 +906,21 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	}
 
 	/* changelog */
-	if (!pk_strzero (obj->changelog)) {
+	if (!egg_strzero (obj->changelog)) {
 		/* translators: this is a list of CVE (security) URLs */
 		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog, NULL);
 	}
 
 	/* add all the links */
-	if (!pk_strzero (obj->vendor_url)) {
+	if (!egg_strzero (obj->vendor_url)) {
 		/* translators: this is a list of vendor URLs */
 		gpk_update_viewer_add_description_link_item (_("Vendor"), obj->vendor_url);
 	}
-	if (!pk_strzero (obj->bugzilla_url)) {
+	if (!egg_strzero (obj->bugzilla_url)) {
 		/* translators: this is a list of bugzilla URLs */
 		gpk_update_viewer_add_description_link_item (_("Bugzilla"), obj->bugzilla_url);
 	}
-	if (!pk_strzero (obj->cve_url)) {
+	if (!egg_strzero (obj->cve_url)) {
 		/* translators: this is a list of CVE (security) URLs */
 		gpk_update_viewer_add_description_link_item (_("CVE"), obj->cve_url);
 	}
@@ -1653,22 +1654,22 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "button_refresh")) {
+	if (egg_strequal (name, "button_refresh")) {
 		return polkit_gnome_action_create_button (refresh_action);
 	}
-	if (pk_strequal (name, "button_restart")) {
+	if (egg_strequal (name, "button_restart")) {
 		return polkit_gnome_action_create_button (restart_action);
 	}
-	if (pk_strequal (name, "button_update_system")) {
+	if (egg_strequal (name, "button_update_system")) {
 		return polkit_gnome_action_create_button (update_system_action);
 	}
-	if (pk_strequal (name, "button_update_packages")) {
+	if (egg_strequal (name, "button_update_packages")) {
 		return polkit_gnome_action_create_button (update_packages_action);
 	}
-	if (pk_strequal (name, "image_animation_preview")) {
+	if (egg_strequal (name, "image_animation_preview")) {
 		return gpk_animated_icon_new ();
 	}
-	if (pk_strequal (name, "image_animation_description")) {
+	if (egg_strequal (name, "image_animation_description")) {
 		return gpk_animated_icon_new ();
 	}
 	egg_warning ("name unknown=%s", name);

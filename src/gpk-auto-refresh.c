@@ -34,11 +34,12 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
-#include <pk-dbus-monitor.h>
 #include <gconf/gconf-client.h>
+#include <pk-control.h>
 
 #include "egg-debug.h"
-#include <pk-control.h>
+#include "egg-dbus-monitor.h"
+
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
 
@@ -73,8 +74,8 @@ struct GpkAutoRefreshPrivate
 	gboolean		 network_active;
 	gboolean		 session_delay;
 	gboolean		 sent_get_updates;
-	PkDbusMonitor		*monitor_gs;
-	PkDbusMonitor		*monitor_gpm;
+	EggDbusMonitor		*monitor_gs;
+	EggDbusMonitor		*monitor_gpm;
 	GConfClient		*gconf_client;
 	DBusGProxy		*proxy_gs;
 	DBusGProxy		*proxy_gpm;
@@ -476,7 +477,7 @@ gpk_auto_refresh_check_delay_cb (gpointer user_data)
  * pk_connection_gpm_changed_cb:
  **/
 static void
-pk_connection_gpm_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
+pk_connection_gpm_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
 {
 	GError *error = NULL;
 	gboolean on_battery;
@@ -529,7 +530,7 @@ pk_connection_gpm_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected
  * pk_connection_gs_changed_cb:
  **/
 static void
-pk_connection_gs_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
+pk_connection_gs_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
 {
 	GError *error = NULL;
 
@@ -605,16 +606,16 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	}
 
 	/* watch gnome-screensaver */
-	arefresh->priv->monitor_gs = pk_dbus_monitor_new ();
+	arefresh->priv->monitor_gs = egg_dbus_monitor_new ();
 	g_signal_connect (arefresh->priv->monitor_gs, "connection-changed",
 			  G_CALLBACK (pk_connection_gs_changed_cb), arefresh);
-	pk_dbus_monitor_assign (arefresh->priv->monitor_gs, PK_DBUS_MONITOR_SESSION, GS_DBUS_SERVICE);
+	egg_dbus_monitor_assign (arefresh->priv->monitor_gs, EGG_DBUS_MONITOR_SESSION, GS_DBUS_SERVICE);
 
 	/* watch gnome-power-manager */
-	arefresh->priv->monitor_gpm = pk_dbus_monitor_new ();
+	arefresh->priv->monitor_gpm = egg_dbus_monitor_new ();
 	g_signal_connect (arefresh->priv->monitor_gpm, "connection-changed",
 			  G_CALLBACK (pk_connection_gpm_changed_cb), arefresh);
-	pk_dbus_monitor_assign (arefresh->priv->monitor_gpm, PK_DBUS_MONITOR_SESSION, GPM_DBUS_SERVICE);
+	egg_dbus_monitor_assign (arefresh->priv->monitor_gpm, EGG_DBUS_MONITOR_SESSION, GPM_DBUS_SERVICE);
 
 	/* we check this in case we miss one of the async signals */
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);

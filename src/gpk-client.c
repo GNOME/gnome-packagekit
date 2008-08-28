@@ -40,7 +40,6 @@
 #include <polkit-gnome/polkit-gnome.h>
 #include <libnotify/notify.h>
 
-#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
@@ -48,6 +47,9 @@
 #include <pk-control.h>
 #include <pk-catalog.h>
 #include <pk-distro-upgrade-obj.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include <gpk-client.h>
 #include <gpk-client-eula.h>
@@ -320,23 +322,23 @@ gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpoint
 	GError *error = NULL;
 	GpkClient *gclient = GPK_CLIENT (data);
 
-	if (pk_strequal (action, "do-not-show-complete-restart")) {
+	if (egg_strequal (action, "do-not-show-complete-restart")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
-	} else if (pk_strequal (action, "do-not-show-complete")) {
+	} else if (egg_strequal (action, "do-not-show-complete")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
-	} else if (pk_strequal (action, "do-not-show-update-started")) {
+	} else if (egg_strequal (action, "do-not-show-update-started")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
-	} else if (pk_strequal (action, "cancel")) {
+	} else if (egg_strequal (action, "cancel")) {
 		/* try to cancel */
 		ret = pk_client_cancel (gclient->priv->client_action, &error);
 		if (!ret) {
 			egg_warning ("failed to cancel client: %s", error->message);
 			g_error_free (error);
 		}
-	} else if (pk_strequal (action, "restart-computer")) {
+	} else if (egg_strequal (action, "restart-computer")) {
 		/* restart using gnome-power-manager */
 		ret = gpk_restart_system ();
 		if (!ret) {
@@ -764,7 +766,7 @@ gpk_client_files_cb (PkClient *client, const gchar *package_id,
 	g_strfreev (gclient->priv->files_array);
 
 	/* no data, eugh */
-	if (pk_strzero (filelist)) {
+	if (egg_strzero (filelist)) {
 		gclient->priv->files_array = NULL;
 		return;
 	}
@@ -1184,7 +1186,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		GError *error = NULL;
 
 		data = (gchar *) g_ptr_array_index (array_new, i);
-		ret = pk_check_permissions (data, 0, 0, R_OK);
+		ret = gpk_check_permissions (data, 0, 0, R_OK);
 		if (ret) {
 			/* just copy over the name */
 			g_ptr_array_add (array, g_strdup (data));
@@ -2578,7 +2580,7 @@ pk_common_get_role_text (PkClient *client)
 	/* backup */
 	role_text = gpk_role_enum_to_localised_present (role);
 
-	if (!pk_strzero (text) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
+	if (!egg_strzero (text) && role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		message = g_strdup_printf ("%s: %s", role_text, text);
 	} else {
 		message = g_strdup_printf ("%s", role_text);
@@ -2711,7 +2713,7 @@ gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 				 gchar *string1, gchar *string2,
 				 gint int1, gint int2, gpointer user_data)
 {
-	if (pk_strequal (name, "image_status")) {
+	if (egg_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
 	}
 	egg_warning ("name unknown=%s", name);

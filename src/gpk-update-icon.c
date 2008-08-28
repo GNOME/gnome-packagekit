@@ -32,10 +32,10 @@
 #include <locale.h>
 #include <libnotify/notify.h>
 
-#include <pk-dbus-monitor.h>
+#include <pk-common.h>
 
 #include "egg-debug.h"
-#include <pk-common.h>
+#include "egg-dbus-monitor.h"
 
 #include "gpk-check-update.h"
 #include "gpk-watch.h"
@@ -98,7 +98,7 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
  * pk_dbus_connection_replaced_cb:
  **/
 static void
-pk_dbus_connection_replaced_cb (PkDbusMonitor *monitor, gpointer data)
+pk_dbus_connection_replaced_cb (EggDbusMonitor *monitor, gpointer data)
 {
 	egg_warning ("exiting as we have been replaced");
 	gtk_main_quit ();
@@ -120,7 +120,7 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	gboolean ret;
 	DBusGConnection *connection;
-	PkDbusMonitor *monitor;
+	EggDbusMonitor *monitor;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -175,8 +175,8 @@ main (int argc, char *argv[])
 	firmware = gpk_firmware_new ();
 
 	/* find out when we are replaced */
-	monitor = pk_dbus_monitor_new ();
-	pk_dbus_monitor_assign (monitor, PK_DBUS_MONITOR_SESSION, PK_DBUS_SERVICE);
+	monitor = egg_dbus_monitor_new ();
+	egg_dbus_monitor_assign (monitor, EGG_DBUS_MONITOR_SESSION, PK_DBUS_SERVICE);
 	g_signal_connect (monitor, "connection-replaced",
 			  G_CALLBACK (pk_dbus_connection_replaced_cb), NULL);
 

@@ -27,8 +27,10 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "egg-debug.h"
 #include <pk-common.h>
+
+#include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-common.h"
 
@@ -78,7 +80,7 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	gtk_label_set_label (GTK_LABEL (widget), message);
 
 	/* show text in the expander */
-	if (pk_strzero (details)) {
+	if (egg_strzero (details)) {
 		widget = glade_xml_get_widget (glade_xml, "expander_details");
 		gtk_widget_hide (widget);
 	} else {
