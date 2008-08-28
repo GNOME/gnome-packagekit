@@ -35,7 +35,7 @@
 /* local .la */
 #include <libunique.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -83,7 +83,7 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
-		pk_debug ("can't change state");
+		egg_debug ("can't change state");
 		return;
 	}
 
@@ -97,16 +97,16 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	installed ^= 1;
 
 	/* do this to the repo */
-	pk_debug ("setting %s to %i", repo_id, installed);
+	egg_debug ("setting %s to %i", repo_id, installed);
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 	ret = pk_client_repo_enable (client, repo_id, installed, &error);
 	if (!ret) {
-		pk_warning ("could not set repo enabled state: %s", error->message);
+		egg_warning ("could not set repo enabled state: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -129,7 +129,7 @@ gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
 {
 	GtkTreeIter iter;
 
-	pk_debug ("repo = %s:%s:%i", repo_id, description, enabled);
+	egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
 
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
@@ -182,10 +182,10 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter,
 				    REPO_COLUMN_ID, &repo_id, -1);
-		pk_debug ("selected row is: %s", repo_id);
+		egg_debug ("selected row is: %s", repo_id);
 		g_free (repo_id);
 	} else {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 	}
 }
 
@@ -249,11 +249,11 @@ gpk_repo_repo_list_refresh (void)
 	GError *error = NULL;
 	PkBitfield filters;
 
-	pk_debug ("refreshing list");
+	egg_debug ("refreshing list");
 	gtk_list_store_clear (list_store);
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -265,7 +265,7 @@ gpk_repo_repo_list_refresh (void)
 	}
 	ret = pk_client_get_repo_list (client, filters, &error);
 	if (!ret) {
-		pk_warning ("failed to get repo list: %s", error->message);
+		egg_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -286,7 +286,7 @@ static void
 gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 {
 	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-	pk_debug ("Changing %s to %i", GPK_CONF_REPO_SHOW_DETAILS, show_details);
+	egg_debug ("Changing %s to %i", GPK_CONF_REPO_SHOW_DETAILS, show_details);
 	gconf_client_set_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, show_details, NULL);
 	gpk_repo_repo_list_refresh ();
 }
@@ -313,7 +313,7 @@ gpk_repo_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 	if (pk_strequal (name, "image_animation")) {
 		return gpk_animated_icon_new ();
 	}
-	pk_warning ("name unknown='%s'", name);
+	egg_warning ("name unknown='%s'", name);
 	return NULL;
 }
 
@@ -356,7 +356,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */

@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <gpk-common.h>
 #include <gpk-client.h>
 #include <gpk-error.h>
@@ -68,7 +68,7 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */

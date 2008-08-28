@@ -37,7 +37,7 @@
 /* local .la */
 #include <libunique.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
@@ -176,7 +176,7 @@ gpk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	GtkWidget *widget;
 	gboolean ret;
 
-	pk_debug ("Doing the system update");
+	egg_debug ("Doing the system update");
 
 	widget = glade_xml_get_widget (glade_xml, "button_overview2");
 	gtk_widget_hide (widget);
@@ -212,7 +212,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	GPtrArray *array;
 	gchar **package_ids;
 
-	pk_debug ("Doing the package updates");
+	egg_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
 
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -234,7 +234,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 		/* do something with the data */
 		if (update) {
-			pk_debug ("%s", package_id);
+			egg_debug ("%s", package_id);
 			g_ptr_array_add (array, package_id);
 		} else {
 			/* need to free the one in the array later */
@@ -388,7 +388,7 @@ gpk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	ret = gpk_client_refresh_cache (gclient, &error);
 	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
 	if (ret == FALSE) {
-		pk_warning ("failed: %s", error->message);
+		egg_warning ("failed: %s", error->message);
 		g_error_free (error);
 	}
 	/* get new list */
@@ -407,7 +407,7 @@ gpk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 	/* we might have a transaction running */
 	ret = pk_client_cancel (client_action, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -563,7 +563,7 @@ gpk_update_viewer_get_new_update_list (void)
 	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
 	list = gpk_client_get_updates (gclient, &error);
 	if (list == NULL) {
-		pk_warning ("failed: %s", error->message);
+		egg_warning ("failed: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -609,7 +609,7 @@ gpk_update_viewer_get_new_update_list (void)
 	/* reset */
 	ret = pk_client_reset (client_query, &error);
 	if (!ret) {
-		pk_warning ("failed to reset: %s", error->message);
+		egg_warning ("failed to reset: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -619,7 +619,7 @@ gpk_update_viewer_get_new_update_list (void)
 	ret = pk_client_get_update_detail (client_query, package_ids, &error);
 	g_strfreev (package_ids);
 	if (!ret) {
-		pk_warning ("failed to cache update detail: %s", error->message);
+		egg_warning ("failed to cache update detail: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -653,7 +653,7 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 	PkRoleEnum role;
 
 	pk_client_get_role (client, &role, NULL, NULL);
-	pk_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
+	egg_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
 		  pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 }
 
@@ -671,7 +671,7 @@ gpk_update_viewer_add_description_item (const gchar *title, const gchar *text, c
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
 
-	pk_debug ("%s %s %s", markup, text, uri);
+	egg_debug ("%s %s %s", markup, text, uri);
 	gtk_list_store_append (list_store_description, &iter);
 	gtk_list_store_set (list_store_description, &iter,
 			    DESC_COLUMN_TITLE, markup,
@@ -705,7 +705,7 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 
 	/* could we have malformed descriptions with ';' in them? */
 	if (length % 2 != 0) {
-		pk_warning ("length not correct, correcting");
+		egg_warning ("length not correct, correcting");
 		length--;
 	}
 
@@ -968,7 +968,7 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 	/* unstage */
 	update ^= 1;
 
-	pk_debug ("update %s[%i]", package_id, update);
+	egg_debug ("update %s[%i]", package_id, update);
 	g_free (package_id);
 
 	/* set new value */
@@ -1009,7 +1009,7 @@ gpk_update_viewer_treeview_add_columns (GtkTreeView *treeview)
 static void
 gpk_update_viewer_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer data)
 {
-	pk_debug ("clicked %s", uri);
+	egg_debug ("clicked %s", uri);
 	gpk_gnome_open (uri);
 }
 
@@ -1097,12 +1097,12 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		/* clear and display animation until new details come in */
 		gpk_update_viewer_description_animation_start ();
 
-		pk_debug ("selected row is: %s", cached_package_id);
+		egg_debug ("selected row is: %s", cached_package_id);
 
 		/* reset */
 		ret = pk_client_reset (client_query, &error);
 		if (!ret) {
-			pk_warning ("failed to reset: %s", error->message);
+			egg_warning ("failed to reset: %s", error->message);
 			g_error_free (error);
 		}
 
@@ -1112,11 +1112,11 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		ret = pk_client_get_update_detail (client_query, package_ids, &error);
 		g_strfreev (package_ids);
 		if (!ret) {
-			pk_warning ("failed to get update detail: %s", error->message);
+			egg_warning ("failed to get update detail: %s", error->message);
 			g_error_free (error);
 		}
 	} else {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 	}
 }
 
@@ -1333,7 +1333,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 			restart = pk_client_get_require_restart (client);
 			if (restart == PK_RESTART_ENUM_SYSTEM ||
 			    restart == PK_RESTART_ENUM_SESSION) {
-				pk_debug ("showing reboot widgets");
+				egg_debug ("showing reboot widgets");
 				widget = glade_xml_get_widget (glade_xml, "hbox_restart");
 				gtk_widget_show (widget);
 				polkit_gnome_action_set_visible (restart_action, TRUE);
@@ -1432,7 +1432,7 @@ gpk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const g
 	/* ignore some errors */
 	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		pk_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		egg_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}
 
@@ -1579,7 +1579,7 @@ gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *ev
 		return FALSE;
 	}
 
-	pk_debug ("Single right click on the tree view");
+	egg_debug ("Single right click on the tree view");
 
 	/* select the row */
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
@@ -1623,10 +1623,10 @@ gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, Pk
 	/* get the role */
 	ret = pk_client_get_role (client, &role, NULL, NULL);
 	if (!ret) {
-		pk_warning ("cannot get role");
+		egg_warning ("cannot get role");
 		return;
 	}
-	pk_debug ("%s", pk_role_enum_to_text (role));
+	egg_debug ("%s", pk_role_enum_to_text (role));
 
 	/* update last time in the UI */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
@@ -1640,7 +1640,7 @@ gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, Pk
 	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	    role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_debug ("getting new");
+		egg_debug ("getting new");
 		//gpk_update_viewer_get_new_update_list ();
 	}
 }
@@ -1671,7 +1671,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 	if (pk_strequal (name, "image_animation_description")) {
 		return gpk_animated_icon_new ();
 	}
-	pk_warning ("name unknown=%s", name);
+	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
 
@@ -1797,7 +1797,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* add application specific icons to search path */
@@ -1993,7 +1993,7 @@ main (int argc, char *argv[])
 	/* we might have visual stuff running, close it down */
 	ret = pk_client_cancel (client_query, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
 

@@ -36,7 +36,7 @@
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include "gpk-inhibit.h"
 #include "gpk-common.h"
@@ -83,13 +83,13 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy_gpm == NULL) {
-		pk_debug ("no connection to g-p-m");
+		egg_debug ("no connection to g-p-m");
 		return FALSE;
 	}
 
 	/* check we are not trying to do this twice... */
 	if (inhibit->priv->cookie != 0) {
-		pk_debug ("cookie already set as %i", inhibit->priv->cookie);
+		egg_debug ("cookie already set as %i", inhibit->priv->cookie);
 		return FALSE;
 	}
 
@@ -119,13 +119,13 @@ gpk_inhibit_remove (GpkInhibit *inhibit)
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy_gpm == NULL) {
-		pk_debug ("no connection to g-p-m");
+		egg_debug ("no connection to g-p-m");
 		return FALSE;
 	}
 
 	/* check we are not trying to do this twice... */
 	if (inhibit->priv->cookie == 0) {
-		pk_debug ("cookie not already set");
+		egg_debug ("cookie not already set");
 		return FALSE;
 	}
 
@@ -157,7 +157,7 @@ gpk_inhibit_init (GpkInhibit *inhibit)
 	/* connect to session bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to session bus: %s", error->message);
+		egg_warning ("Cannot connect to session bus: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -167,7 +167,7 @@ gpk_inhibit_init (GpkInhibit *inhibit)
 				  GPM_DBUS_SERVICE, GPM_DBUS_PATH_INHIBIT,
 				  GPM_DBUS_INTERFACE_INHIBIT, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		egg_warning ("Cannot connect to gnome-power-manager: %s", error->message);
 		g_error_free (error);
 	}
 }

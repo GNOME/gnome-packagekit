@@ -40,7 +40,7 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-control.h>
 #include <pk-client.h>
 #include <pk-task-list.h>
@@ -112,7 +112,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	length = pk_task_list_get_size (watch->priv->tlist);
-	pk_debug ("refresh tooltip %i", length);
+	egg_debug ("refresh tooltip %i", length);
 	if (length == 0) {
 		gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), "Doing nothing...");
 		return TRUE;
@@ -121,7 +121,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = pk_task_list_get_item (watch->priv->tlist, i);
 		if (item == NULL) {
-			pk_warning ("not found item %i", i);
+			egg_warning ("not found item %i", i);
 			break;
 		}
 		localised_status = gpk_status_enum_to_localised_text (item->status);
@@ -175,10 +175,10 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 	for (i=0; i<length; i++) {
 		item = pk_task_list_get_item (watch->priv->tlist, i);
 		if (item == NULL) {
-			pk_warning ("not found item %i", i);
+			egg_warning ("not found item %i", i);
 			break;
 		}
-		pk_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
+		egg_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
 		pk_bitfield_add (status, item->status);
 	}
 out:
@@ -197,12 +197,12 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
-	pk_debug ("rescan");
+	egg_debug ("rescan");
 	status = gpk_watch_task_list_to_status_bitfield (watch);
 
 	/* nothing in the list */
 	if (status == 0) {
-		pk_debug ("no activity");
+		egg_debug ("no activity");
 		gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
 		return TRUE;
 	}
@@ -265,14 +265,14 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	GpkWatch *watch = GPK_WATCH (data);
 
 	if (pk_strequal (action, "do-not-show-notify-complete")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
+		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
 	} else if (pk_strequal (action, "show-error-details")) {
 		gpk_error_dialog (_("Error details"), NULL, watch->priv->error_details);
 
 	} else {
-		pk_warning ("unknown action id: %s", action);
+		egg_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -298,10 +298,10 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	/* get the role */
 	ret = pk_client_get_role (client, &role, &text, NULL);
 	if (!ret) {
-		pk_warning ("cannot get role");
+		egg_warning ("cannot get role");
 		goto out;
 	}
-	pk_debug ("role=%s, text=%s", pk_role_enum_to_text (role), text);
+	egg_debug ("role=%s, text=%s", pk_role_enum_to_text (role), text);
 
 	/* show an icon if the user needs to reboot */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
@@ -319,32 +319,32 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 
 	/* is it worth showing a UI? */
 	if (runtime < 3000) {
-		pk_debug ("no notification, too quick");
+		egg_debug ("no notification, too quick");
 		goto out;
 	}
 
 	/* is it worth showing a UI? */
 	if (exit != PK_EXIT_ENUM_SUCCESS) {
-		pk_debug ("not notifying, as didn't complete okay");
+		egg_debug ("not notifying, as didn't complete okay");
 		goto out;
 	}
 
 	/* are we accepting notifications */
 	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
 	if (!value) {
-		pk_debug ("not showing notification as prevented in gconf");
+		egg_debug ("not showing notification as prevented in gconf");
 		goto out;
 	}
 
 	/* is caller able to handle the messages itself? */
 	ret = pk_client_is_caller_active (client, &value, &error);
 	if (!ret) {
-		pk_warning ("could not get caller active status: %s", error->message);
+		egg_warning ("could not get caller active status: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 	if (value) {
-		pk_debug ("not showing notification as caller is still present");
+		egg_debug ("not showing notification as caller is still present");
 		goto out;
 	}
 
@@ -369,7 +369,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 					_("Do not show this again"), gpk_watch_libnotify_cb, watch, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -401,7 +401,7 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 
 	/* do we ignore this error? */
 	if (is_active) {
-		pk_debug ("client active so leaving error %s\n%s", title, details);
+		egg_debug ("client active so leaving error %s\n%s", title, details);
 		return;
 	}
 
@@ -410,14 +410,14 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
 	    error_code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    error_code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		pk_debug ("error ignored %s\n%s", title, details);
+		egg_debug ("error ignored %s\n%s", title, details);
 		return;
 	}
 
         /* are we accepting notifications */
         value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
         if (!value) {
-                pk_debug ("not showing notification as prevented in gconf");
+                egg_debug ("not showing notification as prevented in gconf");
                 return;
         }
 
@@ -437,7 +437,7 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -461,7 +461,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
         /* are we accepting notifications */
         value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
         if (!value) {
-                pk_debug ("not showing notification as prevented in gconf");
+                egg_debug ("not showing notification as prevented in gconf");
                 return;
         }
 
@@ -477,7 +477,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -600,7 +600,7 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	GtkWidget *image;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
-	pk_debug ("icon right clicked");
+	egg_debug ("icon right clicked");
 
 	/* About */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_About"));
@@ -641,12 +641,12 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	pk_debug ("refresh cache");
+	egg_debug ("refresh cache");
 	gpk_client_set_interaction (watch->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	gpk_client_show_finished (watch->priv->gclient, FALSE);
 	ret = gpk_client_refresh_cache (watch->priv->gclient, &error);
 	if (!ret) {
-		pk_warning ("%s", error->message);
+		egg_warning ("%s", error->message);
 		g_error_free (error);
 	}
 }
@@ -675,7 +675,7 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 	/* find the job we should bind to */
 	tid = (gchar *) g_object_get_data (G_OBJECT (item), "tid");
 	if (pk_strzero(tid) || tid[0] != '/') {
-		pk_warning ("invalid job, maybe transaction already removed");
+		egg_warning ("invalid job, maybe transaction already removed");
 		return;
 	}
 
@@ -713,7 +713,7 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 	for (i=0; i<length; i++) {
 		item = pk_task_list_get_item (watch->priv->tlist, i);
 		if (item == NULL) {
-			pk_warning ("not found item %i", i);
+			egg_warning ("not found item %i", i);
 			break;
 		}
 		localised_role = gpk_role_enum_to_localised_present (item->role);
@@ -758,7 +758,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	pk_debug ("icon left clicked");
+	egg_debug ("icon left clicked");
 
 	/* add jobs as drop down */
 	gpk_watch_populate_menu_with_jobs (watch, menu);
@@ -815,7 +815,7 @@ gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watc
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	pk_debug ("icon left clicked");
+	egg_debug ("icon left clicked");
 
 	/* restart computer */
 	widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
@@ -843,7 +843,7 @@ static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
 {
 	g_return_if_fail (GPK_IS_WATCH (watch));
-	pk_debug ("connected=%i", connected);
+	egg_debug ("connected=%i", connected);
 	if (connected) {
 		gpk_watch_refresh_icon (watch);
 		gpk_watch_refresh_tooltip (watch);
@@ -860,7 +860,7 @@ gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 {
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	pk_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
+	egg_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
 	if (is_locked) {
 		gpk_inhibit_create (watch->priv->inhibit);
 	} else {
@@ -885,13 +885,13 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
 	if (pk_strequal (mode, "none")) {
-		pk_debug ("not using session proxy");
+		egg_debug ("not using session proxy");
 		goto out;
 	}
 
 	host = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/ftp_host", NULL);
 	if (pk_strzero (host)) {
-		pk_debug ("no hostname for ftp proxy");
+		egg_debug ("no hostname for ftp proxy");
 		goto out;
 	}
 	port = gconf_client_get_int (watch->priv->gconf_client, "/system/proxy/ftp_port", NULL);
@@ -928,21 +928,21 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
 	if (pk_strequal (mode, "none")) {
-		pk_debug ("not using session proxy");
+		egg_debug ("not using session proxy");
 		goto out;
 	}
 
 	/* do we use this? */
 	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_http_proxy", NULL);
 	if (!ret) {
-		pk_debug ("not using http proxy");
+		egg_debug ("not using http proxy");
 		goto out;
 	}
 
 	/* http has 4 parameters */
 	host = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/host", NULL);
 	if (pk_strzero (host)) {
-		pk_debug ("no hostname for http proxy");
+		egg_debug ("no hostname for http proxy");
 		goto out;
 	}
 
@@ -1002,15 +1002,15 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	proxy_http = gpk_watch_get_proxy_http (watch);
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
-	pk_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
+	egg_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
 	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp);
 	if (!ret) {
-		pk_warning ("setting proxy failed");
+		egg_warning ("setting proxy failed");
 	}
 
 	g_free (proxy_http);
@@ -1028,7 +1028,7 @@ static gboolean
 gpk_watch_set_proxies (GpkWatch *watch)
 {
 	if (watch->priv->set_proxy_timeout != 0) {
-		pk_debug ("already scheduled");
+		egg_debug ("already scheduled");
 		return FALSE;
 	}
 	watch->priv->set_proxy_timeout = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
@@ -1044,7 +1044,7 @@ gpk_watch_set_proxies (GpkWatch *watch)
 static void
 gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkWatch *watch)
 {
-	pk_debug ("keys have changed");
+	egg_debug ("keys have changed");
 	/* set the proxy */
 	gpk_watch_set_proxies (watch);
 }

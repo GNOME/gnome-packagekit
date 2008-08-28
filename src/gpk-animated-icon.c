@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 
 #include "gpk-animated-icon.h"
@@ -45,7 +45,7 @@ gpk_animated_icon_free_pixbufs (GpkAnimatedIcon *icon)
 
 	/* none loaded */
 	if (icon->frames == NULL) {
-		pk_debug ("nothing to free");
+		egg_debug ("nothing to free");
 		return FALSE;
 	}
 
@@ -74,7 +74,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 
 	/* have we already set the same icon */
 	if (pk_strequal (icon->filename, name)) {
-		pk_debug ("already set the same icon name %s, ignoring", name);
+		egg_debug ("already set the same icon name %s, ignoring", name);
 		return FALSE;
 	}
 
@@ -90,13 +90,13 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 		gpk_animated_icon_free_pixbufs (icon);
 	}
 
-	pk_debug ("loading from %s", name);
+	egg_debug ("loading from %s", name);
 	gtk_icon_size_lookup (size, &w, &h);
 
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), name, w, 0, NULL);
 	/* can't load from gnome-icon-theme */
 	if (pixbuf == NULL) {
-		pk_warning ("can't load %s", name);
+		egg_warning ("can't load %s", name);
 		return FALSE;
 	}
 
@@ -124,11 +124,11 @@ static gboolean
 gpk_animated_icon_update (GpkAnimatedIcon *icon)
 {
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* have we loaded a file */
 	if (icon->frames == NULL) {
-		pk_warning ("no frames to process");
+		egg_warning ("no frames to process");
 		return FALSE;
 	}
 
@@ -149,7 +149,7 @@ gpk_animated_icon_set_frame_delay (GpkAnimatedIcon *icon, guint delay_ms)
 {
 	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
 
-	pk_debug ("frame delay set to %ims", delay_ms);
+	egg_debug ("frame delay set to %ims", delay_ms);
 	icon->frame_delay = delay_ms;
 
 	/* do we have to change a running icon? */
@@ -171,7 +171,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 
 	if (!enabled) {
 		if (icon->animation_id == 0) {
-			pk_debug ("ignoring stop on stopped icon");
+			egg_debug ("ignoring stop on stopped icon");
 			return FALSE;
 		}
 
@@ -182,7 +182,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 
 	/* don't double queue */
 	if (icon->animation_id != 0) {
-		pk_debug ("ignoring start on started icon");
+		egg_debug ("ignoring start on started icon");
 		return FALSE;
 	}
 

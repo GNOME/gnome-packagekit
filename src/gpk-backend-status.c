@@ -33,7 +33,7 @@
 #include <pk-control.h>
 #include <locale.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 
 /**
  * pk_updates_close_cb:
@@ -42,7 +42,7 @@ static void
 pk_updates_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
-	pk_debug ("emitting action-close");
+	egg_debug ("emitting action-close");
 	g_main_loop_quit (loop);
 }
 
@@ -107,7 +107,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	loop = g_main_loop_new (NULL, FALSE);
@@ -119,7 +119,7 @@ main (int argc, char *argv[])
 	/* general stuff */
 	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
 	if (FALSE == retval) {
-		pk_warning (_("Exiting as backend details could not be retrieved"));
+		egg_warning (_("Exiting as backend details could not be retrieved"));
 		return 1;
 	}
 

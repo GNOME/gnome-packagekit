@@ -32,7 +32,7 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-package-id.h>
 #include <pk-enum.h>
 #include <pk-common.h>
@@ -213,7 +213,7 @@ gpk_size_to_si_size_text (guint64 size)
 		return g_strdup_printf ("%.1lf GB", frac);
 	}
 	/* no way.... */
-	pk_warning ("cannot have a file this large!");
+	egg_warning ("cannot have a file this large!");
 	return NULL;
 }
 
@@ -445,7 +445,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("All packages are already installed");
 		break;
 	default:
-		pk_warning ("Unknown error");
+		egg_warning ("Unknown error");
 	}
 	return text;
 }
@@ -605,7 +605,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("All of the packages selected for install are already installed on the system.");
 		break;
 	default:
-		pk_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
+		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
 			    "More information is available in the detailed report.");
 	}
 	return text;
@@ -632,7 +632,7 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("A system restart is required after this update");
 		break;
 	default:
-		pk_warning ("restart unrecognised: %i", restart);
+		egg_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -658,7 +658,7 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("You need to restart the application");
 		break;
 	default:
-		pk_warning ("restart unrecognised: %i", restart);
+		egg_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -681,7 +681,7 @@ gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 		text = _("Testing");
 		break;
 	default:
-		pk_warning ("state unrecognised: %i", state);
+		egg_warning ("state unrecognised: %i", state);
 	}
 	return text;
 }
@@ -732,7 +732,7 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		break;
 
 	default:
-		pk_warning ("message unrecognised: %i", message);
+		egg_warning ("message unrecognised: %i", message);
 	}
 	return text;
 }
@@ -830,7 +830,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Repackaging files");
 		break;
 	default:
-		pk_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
+		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
 }
@@ -865,7 +865,7 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i bloked update", "%i blocked updates", number), number);
 		break;
 	default:
-		pk_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
+		egg_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -906,7 +906,7 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Available");
 		break;
 	default:
-		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -938,7 +938,7 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		text = _("Obsoleting");
 		break;
 	default:
-		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -970,7 +970,7 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 		text = _("Obsoleted");
 		break;
 	default:
-		pk_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -1074,7 +1074,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Getting distribution upgrade information");
 		break;
 	default:
-		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
@@ -1180,7 +1180,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Got distribution upgrades");
 		break;
 	default:
-		pk_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
@@ -1290,7 +1290,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Unknown group");
 		break;
 	default:
-		pk_warning ("group unrecognised: %i", group);
+		egg_warning ("group unrecognised: %i", group);
 	}
 	return text;
 }
@@ -1372,7 +1372,7 @@ gpk_check_privileged_user (const gchar *application_name)
 		gpk_error_dialog (title, message, "");
 		g_free (title);
 		g_free (message);
-		pk_warning ("uid=%i so closing", uid);
+		egg_warning ("uid=%i so closing", uid);
 		return FALSE;
 	}
 	return TRUE;
@@ -1403,7 +1403,7 @@ gpk_check_icon_valid (const gchar *icon)
 	/* default to 32x32 */
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
 	if (icon_info == NULL) {
-		pk_debug ("ignoring broken icon %s", icon);
+		egg_debug ("ignoring broken icon %s", icon);
 		ret = FALSE;
 	} else {
 		/* we only used this to see if it was valid */
@@ -1555,7 +1555,7 @@ gpk_convert_argv_to_strv (gchar *argv[])
 	for (i=0; i<length; i++) {
 		/* we miss out argv[0] as it's the program name */
 		array[i] = g_strdup (argv[i+1]);
-		pk_debug ("array[%i]=%s", i, array[i]);
+		egg_debug ("array[%i]=%s", i, array[i]);
 	}
 	array[i] = NULL;
 	return array;

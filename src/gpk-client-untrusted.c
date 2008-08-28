@@ -28,7 +28,7 @@
 #include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-enum.h>
 #include <pk-package-id.h>
 #include "gpk-gnome.h"
@@ -42,7 +42,7 @@ static gboolean retry_untrusted = FALSE;
 static void
 gpk_client_untrusted_button_cb (PolKitGnomeAction *action, gpointer data)
 {
-	pk_debug ("need to retry...");
+	egg_debug ("need to retry...");
 	retry_untrusted = TRUE;
 	gtk_main_quit ();
 }

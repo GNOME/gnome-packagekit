@@ -27,7 +27,7 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 
 #include "gpk-common.h"

@@ -27,7 +27,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-common.h>
 #include <pk-package-id.h>
@@ -97,7 +97,7 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 		if (obj->info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved", obj->id->name);
+			egg_debug ("package '%s' resolved", obj->id->name);
 			id = obj->id;
 			//TODO: we need to list these in a gpk-client-chooser
 		}

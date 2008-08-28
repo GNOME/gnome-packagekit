@@ -37,7 +37,7 @@
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
@@ -89,10 +89,10 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	if (pk_strequal (action, "install-firmware")) {
 		gpk_firmware_install_file (firmware);
 	} else if (pk_strequal (action, "do-not-show-prompt-firmware")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
+		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
 		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, FALSE, NULL);
 	} else {
-		pk_warning ("unknown action id: %s", action);
+		egg_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -106,7 +106,7 @@ gpk_firmware_timeout_cb (gpointer data)
 	NotifyNotification *notification;
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
 	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
@@ -118,7 +118,7 @@ gpk_firmware_timeout_cb (gpointer data)
 					_("Do not show this again"), gpk_firmware_libnotify_cb, firmware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -156,20 +156,20 @@ gpk_firmware_init (GpkFirmware *firmware)
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, NULL);
 	if (!ret) {
-		pk_debug ("not showing thanks to GConf");
+		egg_debug ("not showing thanks to GConf");
 		return;
 	}
 
 	/* file exists? */
 	ret = g_file_test (GPK_FIRMWARE_STATE_FILE, G_FILE_TEST_EXISTS);
 	if (!ret) {
-		pk_debug ("file '%s' not found", GPK_FIRMWARE_STATE_FILE);
+		egg_debug ("file '%s' not found", GPK_FIRMWARE_STATE_FILE);
 		return;
 	}
 	/* can we get the contents */
 	ret = g_file_get_contents (GPK_FIRMWARE_STATE_FILE, &files, NULL, &error);
 	if (!ret) {
-		pk_warning ("can't open file %s, %s", GPK_FIRMWARE_STATE_FILE, error->message);
+		egg_warning ("can't open file %s, %s", GPK_FIRMWARE_STATE_FILE, error->message);
 		g_error_free (error);
 		return;
 	}
@@ -180,7 +180,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	/* file already exists */
 	ret = g_file_test (firmware->priv->files[0], G_FILE_TEST_EXISTS);
 	if (ret) {
-		pk_debug ("file '%s' already exists", firmware->priv->files[0]);
+		egg_debug ("file '%s' already exists", firmware->priv->files[0]);
 		return;
 	}
 

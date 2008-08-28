@@ -28,7 +28,7 @@
 #include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-enum.h>
@@ -94,9 +94,9 @@ gpk_client_chooser_treeview_clicked_cb (GtkTreeSelection *selection, gboolean da
 		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_ID, &package_id, -1);
 
 		/* show package_id */
-		pk_debug ("selected row is: %s", package_id);
+		egg_debug ("selected row is: %s", package_id);
 	} else {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 	}
 }
 
@@ -111,7 +111,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 	if (pk_strequal (name, "button_action")) {
 		return polkit_gnome_action_create_button (button_action);
 	}
-	pk_warning ("name unknown=%s", name);
+	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
 
@@ -240,7 +240,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		pk_debug ("package '%s' got:", obj->id->name);
+		egg_debug ("package '%s' got:", obj->id->name);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (list_store, &iter);

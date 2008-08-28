@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 
 /**
  * gpk_gnome_open:
@@ -42,7 +42,7 @@ gpk_gnome_open (const gchar *url)
 	data = g_strconcat ("gnome-open ", url, NULL);
 	ret = g_spawn_command_line_async (data, NULL);
 	if (ret == FALSE) {
-		pk_warning ("spawn of '%s' failed", data);
+		egg_warning ("spawn of '%s' failed", data);
 	}
 	g_free (data);
 	return ret;
@@ -83,7 +83,7 @@ gpk_gnome_help (const gchar *link_id)
 	} else {
 		command = g_strconcat ("gnome-open ghelp://", uri,  NULL);
 	}
-	pk_debug ("using command %s", command);
+	egg_debug ("using command %s", command);
 
 	gscreen = gdk_screen_get_default();
 	gdk_spawn_command_line_on_screen (gscreen, command, &error);

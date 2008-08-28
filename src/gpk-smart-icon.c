@@ -37,7 +37,7 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkstatusicon.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-enum.h>
 #include "gpk-marshal.h"
 #include "gpk-common.h"
@@ -113,11 +113,11 @@ gpk_smart_icon_pulse_timeout_cb (gpointer data)
 	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* have we hidden the icon already? */
 	if (sicon->priv->current == NULL || sicon->priv->new == NULL) {
-		pk_debug ("not pulsing as icon cleared");
+		egg_debug ("not pulsing as icon cleared");
 		return FALSE;
 	}
 
@@ -162,7 +162,7 @@ gpk_smart_icon_pulse (GpkSmartIcon *sicon)
 	sicon->priv->icon_opacity = 0.9;
 	sicon->priv->going_down = TRUE;
 	if (sicon->priv->pulse_source != 0) {
-		pk_debug ("already pulsing");
+		egg_debug ("already pulsing");
 		return FALSE;
 	}
 	sicon->priv->pulse_source = g_timeout_add (20, gpk_smart_icon_pulse_timeout_cb, sicon);
@@ -178,7 +178,7 @@ gpk_smart_icon_set_icon_name_cb (gpointer data)
 	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* no point setting the same */
 	if (sicon->priv->new != NULL &&
@@ -220,7 +220,7 @@ gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 	}
 	/* tell us what we -want- */
 	g_free (sicon->priv->new);
-	pk_debug ("setting icon name %s", icon_name);
+	egg_debug ("setting icon name %s", icon_name);
 	sicon->priv->new = g_strdup (icon_name);
 
 	/* wait a little while to see if it's worth displaying the icon */
@@ -236,7 +236,7 @@ gpk_smart_icon_set_priority (GpkSmartIcon *sicon, guint number)
 {
 	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
 
-	pk_debug ("set priority %i", number);
+	egg_debug ("set priority %i", number);
 	return TRUE;
 }
 

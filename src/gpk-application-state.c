@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-enum.h>
 #include <pk-common.h>
 

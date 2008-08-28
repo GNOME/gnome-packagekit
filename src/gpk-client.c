@@ -40,7 +40,7 @@
 #include <polkit-gnome/polkit-gnome.h>
 #include <libnotify/notify.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
@@ -187,7 +187,7 @@ static gboolean
 gpk_client_main_wait (GpkClient *gclient)
 {
 	if (gclient->priv->gtk_main_waiting) {
-		pk_warning ("already started!");
+		egg_warning ("already started!");
 		return FALSE;
 	}
 	/* wait for completion */
@@ -204,7 +204,7 @@ static gboolean
 gpk_client_main_quit (GpkClient *gclient)
 {
 	if (!gclient->priv->gtk_main_waiting) {
-		pk_warning ("not already started!");
+		egg_warning ("not already started!");
 		return FALSE;
 	}
 	gtk_main_quit ();
@@ -250,7 +250,7 @@ gpk_client_updates_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, G
 	/* go! */
 	gtk_widget_hide (widget);
 
-	pk_debug ("quitting due to window close");
+	egg_debug ("quitting due to window close");
 	gpk_client_main_quit (gclient);
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
@@ -266,7 +266,7 @@ gpk_install_finished_timeout (gpointer data)
 	GpkClient *gclient = (GpkClient *) data;
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* hide window manually to get it out of the way */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
@@ -275,7 +275,7 @@ gpk_install_finished_timeout (gpointer data)
 	/* the timer will be done */
 	gclient->priv->finished_timer_id = 0;
 
-	pk_debug ("quitting due to timeout");
+	egg_debug ("quitting due to timeout");
 	gpk_client_main_quit (gclient);
 	g_signal_emit (gclient, signals [GPK_CLIENT_QUIT], 0);
 	return FALSE;
@@ -321,29 +321,29 @@ gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpoint
 	GpkClient *gclient = GPK_CLIENT (data);
 
 	if (pk_strequal (action, "do-not-show-complete-restart")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
 	} else if (pk_strequal (action, "do-not-show-complete")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
 	} else if (pk_strequal (action, "do-not-show-update-started")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
 	} else if (pk_strequal (action, "cancel")) {
 		/* try to cancel */
 		ret = pk_client_cancel (gclient->priv->client_action, &error);
 		if (!ret) {
-			pk_warning ("failed to cancel client: %s", error->message);
+			egg_warning ("failed to cancel client: %s", error->message);
 			g_error_free (error);
 		}
 	} else if (pk_strequal (action, "restart-computer")) {
 		/* restart using gnome-power-manager */
 		ret = gpk_restart_system ();
 		if (!ret) {
-			pk_warning ("failed to reboot");
+			egg_warning ("failed to reboot");
 		}
 	} else {
-		pk_warning ("unknown action id: %s", action);
+		egg_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -370,9 +370,9 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	/* check we got some packages */
 	list = pk_client_get_package_list (client);
 	length = pk_package_list_get_size (list);
-	pk_debug ("length=%i", length);
+	egg_debug ("length=%i", length);
 	if (length == 0) {
-		pk_debug ("no updates");
+		egg_debug ("no updates");
 		return;
 	}
 
@@ -381,7 +381,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	/* find any we skipped */
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
-		pk_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
+		egg_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
 			  obj->id->name, obj->summary);
 		if (obj->info == PK_INFO_ENUM_BLOCKED) {
 			skipped_number++;
@@ -421,7 +421,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	/* do we do the notification? */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, NULL);
 	if (!ret) {
-		pk_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GConf");
 		return;
 	}
 
@@ -440,7 +440,7 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	}
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	g_string_free (message_text, TRUE);
@@ -491,7 +491,7 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 out:
 	/* only quit if there is not another transaction scheduled to be finished */
 	if (!gclient->priv->using_secondary_client) {
-		pk_debug ("quitting due to finished");
+		egg_debug ("quitting due to finished");
 		gpk_client_main_quit (gclient);
 	}
 }
@@ -507,7 +507,7 @@ gpk_client_pulse_progress (GpkClient *gclient)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
@@ -676,16 +676,16 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
 	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
 		if (gclient->priv->using_secondary_client) {
-			pk_debug ("ignoring error as handled");
+			egg_debug ("ignoring error as handled");
 			return;
 		}
-		pk_warning ("did not auth");
+		egg_warning ("did not auth");
 	}
 
 	/* have we handled? */
 	if (code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
 	    code == PK_ERROR_ENUM_MISSING_GPG_SIGNATURE) {
-		pk_debug ("handle and requeue");
+		egg_debug ("handle and requeue");
 		gclient->priv->retry_untrusted_value = gpk_client_untrusted_show (code);
 		return;
 	}
@@ -693,11 +693,11 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	/* ignore some errors */
 	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		pk_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		egg_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}
 
-	pk_debug ("code was %s", pk_error_enum_to_text (code));
+	egg_debug ("code was %s", pk_error_enum_to_text (code));
 
 	/* use a modal dialog if showing progress, else use libnotify */
 	title = gpk_error_enum_to_localised_text (code);
@@ -714,7 +714,7 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -748,7 +748,7 @@ pk_client_distro_upgrade_cb (PkClient *client, const PkDistroUpgradeObj *obj, Gp
 
 	/* copy into array */
 	g_ptr_array_add (gclient->priv->upgrade_array, pk_distro_upgrade_obj_copy (obj));
-	pk_debug ("%s, %s, %s", obj->name, pk_update_state_enum_to_text (obj->state), obj->summary);
+	egg_debug ("%s, %s, %s", obj->name, pk_update_state_enum_to_text (obj->state), obj->summary);
 }
 
 /**
@@ -809,7 +809,7 @@ pk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
 	/* we might have a transaction running */
 	ret = pk_client_cancel (gclient->priv->client_action, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -847,14 +847,14 @@ gpk_client_error_set (GError **error, gint code, const gchar *format, ...)
 
 	/* dumb */
 	if (error == NULL) {
-		pk_warning ("No error set, so can't set: %s", buffer);
+		egg_warning ("No error set, so can't set: %s", buffer);
 		ret = FALSE;
 		goto out;
 	}
 
 	/* already set */
 	if (*error != NULL) {
-		pk_warning ("not NULL error!");
+		egg_warning ("not NULL error!");
 		g_clear_error (error);
 	}
 
@@ -996,7 +996,7 @@ gpk_client_set_error_from_exit_enum (PkExitEnum exit, GError **error)
 	} else if (exit == PK_EXIT_ENUM_KILLED) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "The transaction was killed");
 	} else {
-		pk_error ("unknown exit code");
+		egg_error ("unknown exit code");
 	}
 	return FALSE;
 }
@@ -1155,12 +1155,12 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 			dest_path = g_strdup_printf ("/tmp/%s", dest);
 
 			command = g_strdup_printf ("cp \"%s\" \"%s\"", data, dest_path);
-			pk_debug ("command=%s", command);
+			egg_debug ("command=%s", command);
 			ret = g_spawn_command_line_sync (command, NULL, NULL, NULL, &error);
 
 			/* we failed */
 			if (!ret) {
-				pk_warning ("failed to copy %s: %s", data, error->message);
+				egg_warning ("failed to copy %s: %s", data, error->message);
 				g_error_free (error);
 				break;
 			}
@@ -1169,7 +1169,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 			retval = g_chmod (dest_path, 0644);
 			if (retval < 0) {
 				ret = FALSE;
-				pk_warning ("failed to chmod %s", dest_path);
+				egg_warning ("failed to chmod %s", dest_path);
 				break;
 			}
 
@@ -1421,7 +1421,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
-		pk_warning ("skipping depends check");
+		egg_warning ("skipping depends check");
 		goto skip_checks;
 	}
 
@@ -1521,7 +1521,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
-		pk_warning ("skipping depends check");
+		egg_warning ("skipping depends check");
 		goto skip_checks;
 	}
 
@@ -1676,7 +1676,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 			already_installed = TRUE;
 			id = obj->id;
 		} else if (obj->info == PK_INFO_ENUM_AVAILABLE) {
-			pk_debug ("package '%s' resolved to:", obj->id->name);
+			egg_debug ("package '%s' resolved to:", obj->id->name);
 			id = obj->id;
 		}
 	}
@@ -2075,7 +2075,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
 		ret = notify_notification_show (notification, &error_local);
 		if (!ret) {
-			pk_warning ("error: %s", error_local->message);
+			egg_warning ("error: %s", error_local->message);
 			g_error_free (error_local);
 		}
 	}
@@ -2412,7 +2412,7 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	}
 
 	/* install signature */
-	pk_debug ("install signature %s", key_id);
+	egg_debug ("install signature %s", key_id);
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
@@ -2454,7 +2454,7 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	}
 
 	/* install signature */
-	pk_debug ("accept EULA %s", eula_id);
+	egg_debug ("accept EULA %s", eula_id);
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
@@ -2492,7 +2492,7 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 	gpk_client_set_page (gclient, GPK_CLIENT_PAGE_PROGRESS);
 	gclient->priv->using_secondary_client = FALSE;
 
-	pk_debug ("trying to requeue install");
+	egg_debug ("trying to requeue install");
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
@@ -2531,7 +2531,7 @@ pk_common_get_role_text (PkClient *client)
 	/* get role and text */
 	ret = pk_client_get_role (client, &role, &text, &error);
 	if (!ret) {
-		pk_warning ("failed to get role: %s", error->message);
+		egg_warning ("failed to get role: %s", error->message);
 		g_error_free (error);
 		return NULL;
 	}
@@ -2572,7 +2572,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 
 	ret = pk_client_set_tid (gclient->priv->client_action, tid, &error);
 	if (!ret) {
-		pk_warning ("could not set tid: %s", error->message);
+		egg_warning ("could not set tid: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -2586,7 +2586,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	ret = pk_client_get_status (gclient->priv->client_action, &status, NULL);
 	/* no such transaction? */
 	if (!ret) {
-		pk_warning ("could not get status");
+		egg_warning ("could not get status");
 		return FALSE;
 	}
 	gpk_client_set_status (gclient, status);
@@ -2603,7 +2603,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		gpk_client_progress_changed_cb (gclient->priv->client_action, percentage,
 						subpercentage, elapsed, remaining, gclient);
 	} else {
-		pk_warning ("GetProgress failed");
+		egg_warning ("GetProgress failed");
 		gpk_client_progress_changed_cb (gclient->priv->client_action,
 						PK_CLIENT_PERCENTAGE_INVALID,
 						PK_CLIENT_PERCENTAGE_INVALID, 0, 0, gclient);
@@ -2627,7 +2627,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	/* get the role */
 	ret = pk_client_get_role (gclient->priv->client_action, &role, NULL, &error);
 	if (!ret) {
-		pk_warning ("failed to get role: %s", error->message);
+		egg_warning ("failed to get role: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -2675,7 +2675,7 @@ gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 	if (pk_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
 	}
-	pk_warning ("name unknown=%s", name);
+	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
 

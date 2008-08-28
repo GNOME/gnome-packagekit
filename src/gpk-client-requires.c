@@ -27,7 +27,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-extra.h>

@@ -35,12 +35,13 @@
 /* local .la */
 #include <libunique.h>
 
-#include <pk-debug.h>
 #include <pk-control.h>
 #include <pk-client.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
+
+#include "egg-debug.h"
 
 #define PK_FREQ_HOURLY_TEXT		N_("Hourly")
 #define PK_FREQ_DAILY_TEXT		N_("Daily")
@@ -76,7 +77,7 @@ pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
 	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
 	gconf_key = (const char *) g_object_get_data (G_OBJECT (widget), "gconf_key");
-	pk_debug ("Changing %s to %i", gconf_key, checked);
+	egg_debug ("Changing %s to %i", gconf_key, checked);
 	gconf_client_set_bool (client, gconf_key, checked, NULL);
 
 	g_object_unref (client);
@@ -108,7 +109,7 @@ pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_freq_enum_to_text (freq);
-	pk_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
+	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
 	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
 	g_free (value);
 	g_object_unref (client);
@@ -138,7 +139,7 @@ pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_freq_enum_to_text (freq);
-	pk_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
+	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
 	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, action, NULL);
 	g_free (value);
 	g_object_unref (client);
@@ -159,7 +160,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (value == NULL) {
-		pk_warning ("value NULL");
+		egg_warning ("value NULL");
 		return;
 	}
 	notify_widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
@@ -177,7 +178,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = pk_update_enum_to_text (update);
-	pk_debug ("Changing %s to %s", GPK_CONF_AUTO_UPDATE, action);
+	egg_debug ("Changing %s to %s", GPK_CONF_AUTO_UPDATE, action);
 	gconf_client_set_string (client, GPK_CONF_AUTO_UPDATE, action, NULL);
 	g_free (value);
 	g_object_unref (client);
@@ -200,10 +201,10 @@ pk_prefs_update_freq_combo_setup (void)
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (value == NULL) {
-		pk_warning ("invalid schema, please re-install");
+		egg_warning ("invalid schema, please re-install");
 		return;
 	}
-	pk_debug ("value from gconf %s", value);
+	egg_debug ("value from gconf %s", value);
 	freq = pk_freq_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
@@ -240,10 +241,10 @@ pk_prefs_upgrade_freq_combo_setup (void)
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
 	if (value == NULL) {
-		pk_warning ("invalid schema, please re-install");
+		egg_warning ("invalid schema, please re-install");
 		return;
 	}
-	pk_debug ("value from gconf %s", value);
+	egg_debug ("value from gconf %s", value);
 	freq = pk_freq_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
@@ -279,10 +280,10 @@ pk_prefs_auto_update_combo_setup (void)
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_AUTO_UPDATE, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_AUTO_UPDATE, NULL);
 	if (value == NULL) {
-		pk_warning ("invalid schema, please re-install");
+		egg_warning ("invalid schema, please re-install");
 		return;
 	}
-	pk_debug ("value from gconf %s", value);
+	egg_debug ("value from gconf %s", value);
 	update = pk_update_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
@@ -312,7 +313,7 @@ pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
 
 	client = gconf_client_get_default ();
 	value = gconf_client_get_bool (client, gconf_key, NULL);
-	pk_debug ("value from gconf %i for %s", value, gconf_key);
+	egg_debug ("value from gconf %i for %s", value, gconf_key);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), value);
 
 	g_object_set_data (G_OBJECT (widget), "gconf_key", (gpointer) gconf_key);
@@ -379,7 +380,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */

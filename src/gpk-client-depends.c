@@ -28,7 +28,7 @@
 #include <glade/glade.h>
 #include <gconf/gconf-client.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-package-id.h>
 #include <pk-package-list.h>
@@ -82,7 +82,7 @@ gpk_client_depends_show (GpkClient *gclient, gchar **package_ids)
 	/* have we previously said we don't want to be shown the confirmation */
 	ret = gconf_client_get_bool (gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
 	if (!ret) {
-		pk_debug ("we've said we don't want the dep dialog");
+		egg_debug ("we've said we don't want the dep dialog");
 		ret = TRUE;
 		goto out;
 	}

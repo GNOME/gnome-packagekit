@@ -28,7 +28,7 @@
 #include <dbus/dbus-glib.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <gpk-common.h>
 #include <gpk-error.h>
 
@@ -97,7 +97,7 @@ gpk_consolekit_system_restart_auth_cb (PolKitAction *action, gboolean gained_pri
 
 	if (!gained_privilege) {
 		if (error != NULL) {
-			pk_warning ("Not privileged to restart system: %s", error->message);
+			egg_warning ("Not privileged to restart system: %s", error->message);
 		}
 		return;
 	}
@@ -105,7 +105,7 @@ gpk_consolekit_system_restart_auth_cb (PolKitAction *action, gboolean gained_pri
         local_error = NULL;
         res = gpk_consolekit_try_system_restart (proxy, &local_error);
         if (!res) {
-                pk_warning ("Unable to restart system: %s", local_error->message);
+                egg_warning ("Unable to restart system: %s", local_error->message);
                 g_error_free (local_error);
         }
 }
@@ -146,7 +146,7 @@ gpk_restart_system (void)
 	/* check dbus connections, exit if not valid */
 	connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 	if (error != NULL) {
-		pk_warning ("cannot acccess the system bus: %s", error->message);
+		egg_warning ("cannot acccess the system bus: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -157,7 +157,7 @@ gpk_restart_system (void)
 					   "/org/freedesktop/ConsoleKit/Manager",
 					   "org.freedesktop.ConsoleKit.Manager");
 	if (proxy == NULL) {
-		pk_warning ("Cannot connect to ConsoleKit");
+		egg_warning ("Cannot connect to ConsoleKit");
 		return FALSE;
 	}
 
@@ -190,7 +190,7 @@ gpk_restart_system (void)
 			polkit_action_unref (action);
 		}
 		if (!ret) {
-			pk_warning ("Unable to restart system: %s", error->message);
+			egg_warning ("Unable to restart system: %s", error->message);
 			g_error_free (error);
 		}
 	}

@@ -34,7 +34,7 @@
 /* local .la */
 #include <libunique.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include "gpk-application.h"
 #include "gpk-common.h"
 
@@ -103,7 +103,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */

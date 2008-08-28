@@ -37,7 +37,7 @@
 #include <pk-dbus-monitor.h>
 #include <gconf/gconf-client.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-control.h>
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
@@ -128,7 +128,7 @@ gpk_auto_refresh_signal_refresh_cache (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_debug ("emitting refresh-cache");
+	egg_debug ("emitting refresh-cache");
 	g_signal_emit (arefresh, signals [REFRESH_CACHE], 0);
 	return TRUE;
 }
@@ -141,7 +141,7 @@ gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_debug ("emitting get-updates");
+	egg_debug ("emitting get-updates");
 	g_signal_emit (arefresh, signals [GET_UPDATES], 0);
 	return TRUE;
 }
@@ -154,7 +154,7 @@ gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	pk_debug ("emitting get-upgrades");
+	egg_debug ("emitting get-upgrades");
 	g_signal_emit (arefresh, signals [GET_UPGRADES], 0);
 	return TRUE;
 }
@@ -169,7 +169,7 @@ static guint
 gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 {
 	if (freq == PK_FREQ_ENUM_UNKNOWN) {
-		pk_warning ("no schema");
+		egg_warning ("no schema");
 		return 0;
 	}
 	if (freq == PK_FREQ_ENUM_NEVER) {
@@ -184,7 +184,7 @@ gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 	if (freq == PK_FREQ_ENUM_WEEKLY) {
 		return 60*60*24*7;
 	}
-	pk_warning ("unknown frequency enum");
+	egg_warning ("unknown frequency enum");
 	return 0;
 }
 
@@ -202,7 +202,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 	/* get from gconf */
 	freq_text = gconf_client_get_string (arefresh->priv->gconf_client, key, NULL);
 	if (freq_text == NULL) {
-		pk_warning ("no schema for %s", key);
+		egg_warning ("no schema for %s", key);
 		return 0;
 	}
 
@@ -226,26 +226,26 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	/* if we don't want to auto check for updates, don't do this either */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		pk_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
 	/* not on battery */
 	if (arefresh->priv->on_battery) {
-		pk_debug ("not when on battery");
+		egg_debug ("not when on battery");
 		return FALSE;
 	}
 
 	/* only do the refresh cache when the user is idle */
 	if (arefresh->priv->session_idle == FALSE) {
-		pk_debug ("not when session active");
+		egg_debug ("not when session active");
 		return FALSE;
 	}
 
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
 	if (thresh == 0) {
-		pk_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
@@ -253,13 +253,13 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
 	if (ret == FALSE) {
-		pk_warning ("failed to get last time");
+		egg_warning ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
@@ -282,7 +282,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		pk_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
@@ -290,13 +290,13 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
 	if (ret == FALSE) {
-		pk_warning ("failed to get last time");
+		egg_warning ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
@@ -319,7 +319,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
-		pk_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is to never refresh");
 		return FALSE;
 	}
 
@@ -327,13 +327,13 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time, NULL);
 	if (ret == FALSE) {
-		pk_debug ("failed to get last time");
+		egg_debug ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
 	if (time < thresh) {
-		pk_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
 		return FALSE;
 	}
 
@@ -351,13 +351,13 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 
 	/* we shouldn't do this early in the session startup */
 	if (arefresh->priv->session_delay == FALSE) {
-		pk_debug ("not when this early in the session");
+		egg_debug ("not when this early in the session");
 		return FALSE;
 	}
 
 	/* no point continuing if we have no network */
 	if (arefresh->priv->network_active == FALSE) {
-		pk_debug ("not when no network");
+		egg_debug ("not when no network");
 		return FALSE;
 	}
 
@@ -385,7 +385,7 @@ gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *a
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	pk_debug ("setting is_idle %i", is_idle);
+	egg_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
 	gpk_auto_refresh_change_state (arefresh);
 }
@@ -398,7 +398,7 @@ gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoR
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	pk_debug ("setting on_battery %i", on_battery);
+	egg_debug ("setting on_battery %i", on_battery);
 	arefresh->priv->on_battery = on_battery;
 	gpk_auto_refresh_change_state (arefresh);
 }
@@ -422,7 +422,7 @@ gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	arefresh->priv->network_active = (state == PK_NETWORK_ENUM_ONLINE);
-	pk_debug ("setting online %i", arefresh->priv->network_active);
+	egg_debug ("setting online %i", arefresh->priv->network_active);
 	gpk_auto_refresh_change_state (arefresh);
 }
 
@@ -437,7 +437,7 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* triggered once an hour */
 	gpk_auto_refresh_change_state (arefresh);
@@ -457,11 +457,11 @@ gpk_auto_refresh_check_delay_cb (gpointer user_data)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	/* we have waited enough */
 	if (arefresh->priv->session_delay == FALSE) {
-		pk_debug ("setting session delay TRUE");
+		egg_debug ("setting session delay TRUE");
 		arefresh->priv->session_delay = TRUE;
 	}
 
@@ -484,7 +484,7 @@ pk_connection_gpm_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected
 
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	pk_debug ("gnome-power-manager connection-changed: %i", connected);
+	egg_debug ("gnome-power-manager connection-changed: %i", connected);
 
 	/* is this valid? */
 	if (connected == FALSE) {
@@ -499,7 +499,7 @@ pk_connection_gpm_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected
 	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
 					  GPM_DBUS_SERVICE, GPM_DBUS_PATH, GPM_DBUS_INTERFACE, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		egg_warning ("Cannot connect to gnome-power-manager: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -521,7 +521,7 @@ pk_connection_gpm_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected
 	}
 	if (ret) {
 		arefresh->priv->on_battery = on_battery;
-		pk_debug ("setting on battery %i", on_battery);
+		egg_debug ("setting on battery %i", on_battery);
 	}
 }
 
@@ -535,7 +535,7 @@ pk_connection_gs_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected,
 
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	pk_debug ("gnome-screensaver connection-changed: %i", connected);
+	egg_debug ("gnome-screensaver connection-changed: %i", connected);
 
 	/* is this valid? */
 	if (connected == FALSE) {
@@ -550,7 +550,7 @@ pk_connection_gs_changed_cb (PkDbusMonitor *pk_dbus_monitor, gboolean connected,
 	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
 					  GS_DBUS_SERVICE, GS_DBUS_PATH, GS_DBUS_INTERFACE, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to gnome-screensaver: %s", error->message);
+		egg_warning ("Cannot connect to gnome-screensaver: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -599,7 +599,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	/* connect to session bus */
 	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		pk_warning ("Cannot connect to session bus: %s", error->message);
+		egg_warning ("Cannot connect to session bus: %s", error->message);
 		g_error_free (error);
 		return;
 	}

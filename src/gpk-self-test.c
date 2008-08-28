@@ -22,7 +22,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <libselftest.h>
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include "gpk-common.h"
 
 int
@@ -35,7 +35,7 @@ main (int argc, char **argv)
 	}
 	g_type_init ();
 	libst_init (&test);
-	pk_debug_init (TRUE);
+	egg_debug_init (TRUE);
 
 	/* tests go here */
 	gpk_common_self_test (&test);

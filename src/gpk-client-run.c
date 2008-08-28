@@ -27,7 +27,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-enum.h>
@@ -93,9 +93,9 @@ gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &full_path, -1);
 
 		/* show full_path */
-		pk_debug ("selected row is: %s", full_path);
+		egg_debug ("selected row is: %s", full_path);
 	} else {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 	}
 }
 
@@ -110,7 +110,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 	if (pk_strequal (name, "button_action")) {
 		return gtk_button_new_with_mnemonic (_("_Run"));
 	}
-	pk_warning ("name unknown=%s", name);
+	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
 
@@ -175,7 +175,7 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 		 * this helps when there's "f-spot", "fspot --import %f", and "f-spot --view" in 3
 		 * different desktop files */
 		if (pk_strequal (exec, last_tryexec)) {
-			pk_debug ("same as the last exec '%s' so skipping", exec);
+			egg_debug ("same as the last exec '%s' so skipping", exec);
 			goto out;
 		}
 
@@ -245,10 +245,10 @@ gpk_client_add_package_ids (gchar **package_ids)
 
 	for (i=0; i<length; i++) {
 		package_id = package_ids[i];
-		pk_debug ("package_id=%s", package_id);
+		egg_debug ("package_id=%s", package_id);
 		files = gpk_client_get_file_list (gclient, package_ids[0], &error);
 		if (files == NULL) {
-			pk_warning ("could not get file list: %s", error->message);
+			egg_warning ("could not get file list: %s", error->message);
 			g_error_free (error);
 			error = NULL;
 			continue;
@@ -256,7 +256,7 @@ gpk_client_add_package_ids (gchar **package_ids)
 		files_len = g_strv_length (files);
 		for (j=0; j<files_len; j++) {
 			if (g_str_has_suffix (files[j], ".desktop")) {
-				pk_debug ("package=%s, file=%s", package_id, files[j]);
+				egg_debug ("package=%s, file=%s", package_id, files[j]);
 				gpk_client_add_executable (package_id, files[j]);
 				added++;
 			}

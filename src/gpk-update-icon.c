@@ -34,7 +34,7 @@
 
 #include <pk-dbus-monitor.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-common.h>
 
 #include "gpk-check-update.h"
@@ -74,7 +74,7 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 				 G_TYPE_INVALID);
 	if (ret == FALSE) {
 		/* abort as the DBUS method failed */
-		pk_warning ("RequestName failed: %s", error->message);
+		egg_warning ("RequestName failed: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -100,7 +100,7 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 static void
 pk_dbus_connection_replaced_cb (PkDbusMonitor *monitor, gpointer data)
 {
-	pk_warning ("exiting as we have been replaced");
+	egg_warning ("exiting as we have been replaced");
 	gtk_main_quit ();
 }
 
@@ -155,7 +155,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */
@@ -183,7 +183,7 @@ main (int argc, char *argv[])
 	/* get the bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error) {
-		pk_warning ("%s", error->message);
+		egg_warning ("%s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -191,7 +191,7 @@ main (int argc, char *argv[])
 	/* try to register */
 	ret = gpk_object_register (connection, G_OBJECT (dbus));
 	if (!ret) {
-		pk_warning ("failed to replace running instance.");
+		egg_warning ("failed to replace running instance.");
 		goto out;
 	}
 

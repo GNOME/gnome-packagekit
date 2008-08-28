@@ -21,6 +21,7 @@ INCLUDES =						\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
+	-DEGG_LOG_FILE=\"\"				\
 	-I$(top_srcdir)/libunique			\
 	-I$(top_srcdir)/libselftest			\
 	$(NULL)
@@ -49,6 +50,8 @@ bin_PROGRAMS =						\
 	$(NULL)
 
 shared_SOURCES =					\
+	egg-debug.c					\
+	egg-debug.h					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
 	gpk-animated-icon.c				\
@@ -181,6 +184,8 @@ gpk_application_LDADD =					\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\
+	egg-debug.c					\
+	egg-debug.h					\
 	gpk-prefs.c					\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
@@ -220,6 +225,8 @@ gpk_log_LDADD =						\
 	$(NULL)
 
 gpk_backend_status_SOURCES =				\
+	egg-debug.c					\
+	egg-debug.h					\
 	gpk-backend-status.c				\
 	$(NULL)
 

@@ -38,7 +38,7 @@
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
@@ -112,7 +112,7 @@ gpk_check_update_show_preferences_cb (GtkMenuItem *item, GpkCheckUpdate *cupdate
 {
 	const gchar *command = "gpk-prefs";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
-		pk_warning ("Couldn't execute command: %s", command);
+		egg_warning ("Couldn't execute command: %s", command);
 	}
 }
 
@@ -237,7 +237,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 	GtkWidget *item;
 	GtkWidget *image;
 
-	pk_debug ("icon right clicked");
+	egg_debug ("icon right clicked");
 
 	/* Preferences */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Preferences"));
@@ -288,7 +288,7 @@ gpk_check_update_get_updates_post_update_cb (GpkCheckUpdate *cupdate)
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
 	/* debug so we can catch polling */
-	pk_debug ("polling check");
+	egg_debug ("polling check");
 
 	gpk_check_update_query_updates (cupdate);
 	return FALSE;
@@ -332,7 +332,7 @@ gpk_check_update_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 {
 	const gchar *command = "gpk-update-viewer";
 	if (g_spawn_command_line_async (command, NULL) == FALSE) {
-		pk_warning ("Couldn't execute command: %s", command);
+		egg_warning ("Couldn't execute command: %s", command);
 	}
 }
 
@@ -349,7 +349,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	GtkWidget *item;
 	GtkWidget *image;
 
-	pk_debug ("icon left clicked");
+	egg_debug ("icon left clicked");
 
 	/* show updates */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Show Updates"));
@@ -381,7 +381,7 @@ static void
 pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkCheckUpdate *cupdate)
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	pk_debug ("connected=%i", connected);
+	egg_debug ("connected=%i", connected);
 }
 
 /**
@@ -404,19 +404,19 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
 		if (!ret) {
-			pk_warning ("Individual updates failed: %s", error->message);
+			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
 		}
 		g_strfreev (package_ids);
 
 	} else if (pk_strequal (action, "do-not-show-notify-critical")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
 	} else if (pk_strequal (action, "do-not-show-update-not-battery")) {
-		pk_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
 	} else {
-		pk_warning ("unknown action id: %s", action);
+		egg_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -440,7 +440,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* do we do the notification? */
 	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
 	if (!ret) {
-		pk_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GConf");
 		return;
 	}
 
@@ -474,7 +474,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	if (notification == NULL) {
-		pk_warning ("failed to get bubble");
+		egg_warning ("failed to get bubble");
 		return;
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
@@ -487,7 +487,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	/* track so we can prevent doubled notifications */
@@ -519,10 +519,10 @@ gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, PkPackageList
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		if (obj == NULL) {
-			pk_warning ("not found obj %i", i);
+			egg_warning ("not found obj %i", i);
 			break;
 		}
-		pk_debug ("%s %s", obj->id->name, pk_info_enum_to_text (obj->info));
+		egg_debug ("%s %s", obj->id->name, pk_info_enum_to_text (obj->info));
 		pk_bitfield_add (infos, obj->info);
 	}
 	return infos;
@@ -552,7 +552,7 @@ gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, PkPackageList *l
 					   PK_INFO_ENUM_ENHANCEMENT,
 					   PK_INFO_ENUM_LOW, -1);
 	if (value == -1) {
-		pk_warning ("should not be possible!");
+		egg_warning ("should not be possible!");
 		value = PK_INFO_ENUM_LOW;
 	}
 
@@ -576,20 +576,20 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 
 	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_UPDATE_BATTERY, NULL);
 	if (ret) {
-		pk_debug ("okay to update due to policy");
+		egg_debug ("okay to update due to policy");
 		return TRUE;
 	}
 
 	ret = gpk_auto_refresh_get_on_battery (cupdate->priv->arefresh);
 	if (!ret) {
-		pk_debug ("okay to update as on AC");
+		egg_debug ("okay to update as on AC");
 		return TRUE;
 	}
 
 	/* do we do the notification? */
 	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, NULL);
 	if (!ret) {
-		pk_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GConf");
 		return FALSE;
 	}
 
@@ -604,7 +604,7 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 					_("Do the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -624,7 +624,7 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 
 	updates = gconf_client_get_string (cupdate->priv->gconf_client, GPK_CONF_AUTO_UPDATE, NULL);
 	if (updates == NULL) {
-		pk_warning ("'%s' gconf key is null!", GPK_CONF_AUTO_UPDATE);
+		egg_warning ("'%s' gconf key is null!", GPK_CONF_AUTO_UPDATE);
 		return PK_UPDATE_ENUM_UNKNOWN;
 	}
 	update = pk_update_enum_from_text (updates);
@@ -657,14 +657,14 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* are we already called */
 	if (cupdate->priv->get_updates_in_progress) {
-		pk_debug ("GetUpdate already in progress");
+		egg_debug ("GetUpdate already in progress");
 		return FALSE;
 	}
 
 	/* No point if we are already updating */
 	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		pk_debug ("Not checking for updates as already in progress");
+		egg_debug ("Not checking for updates as already in progress");
 		return FALSE;
 	}
 
@@ -674,7 +674,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	list = gpk_client_get_updates (cupdate->priv->gclient, &error);
 	cupdate->priv->get_updates_in_progress = FALSE;
 	if (list == NULL) {
-		pk_warning ("failed to get updates: %s", error->message);
+		egg_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -686,11 +686,11 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* find packages */
 	length = pk_package_list_get_size (list);
-	pk_debug ("length=%i", length);
+	egg_debug ("length=%i", length);
 
 	/* we have no updates */
 	if (length == 0) {
-		pk_debug ("no updates");
+		egg_debug ("no updates");
 		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
 		goto out;
 	}
@@ -719,7 +719,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* do we do the automatic updates? */
 	update = gpk_check_update_get_update_policy (cupdate);
 	if (update == PK_UPDATE_ENUM_UNKNOWN) {
-		pk_warning ("policy unknown");
+		egg_warning ("policy unknown");
 		goto out;
 	}
 
@@ -738,7 +738,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* is policy none? */
 	if (update == PK_UPDATE_ENUM_NONE) {
-		pk_debug ("not updating as policy NONE");
+		egg_debug ("not updating as policy NONE");
 
 		/* do we warn the user? */
 		if (security_array->len > 0) {
@@ -750,7 +750,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* are we on battery and configured to skip the action */
 	ret = gpk_check_update_check_on_battery (cupdate);
 	if (!ret) {
-		pk_debug ("on battery so not doing update");
+		egg_debug ("on battery so not doing update");
 		/* do we warn the user? */
 		if (security_array->len > 0) {
 			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
@@ -761,7 +761,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* just do security updates */
 	if (update == PK_UPDATE_ENUM_SECURITY) {
 		if (security_array->len == 0) {
-			pk_debug ("policy security, but none available");
+			egg_debug ("policy security, but none available");
 			goto out;
 		}
 
@@ -770,7 +770,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
 		if (!ret) {
-			pk_warning ("Individual updates failed: %s", error->message);
+			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
 		}
 		g_strfreev (package_ids);
@@ -779,14 +779,14 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* just do everything */
 	if (update == PK_UPDATE_ENUM_ALL) {
-		pk_debug ("we should do the update automatically!");
+		egg_debug ("we should do the update automatically!");
 		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
 		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
 		goto out;
 	}
 
 	/* shouldn't happen */
-	pk_warning ("unknown update mode");
+	egg_warning ("unknown update mode");
 out:
 	g_object_unref (list);
 	g_string_free (status_security, TRUE);
@@ -814,7 +814,7 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* now try to get newest update list */
-	pk_debug ("updates changed");
+	egg_debug ("updates changed");
 
 	/* ignore our own updates */
 	if (!cupdate->priv->get_updates_in_progress) {
@@ -838,10 +838,10 @@ gpk_check_update_restart_schedule_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	g_usleep (2*G_USEC_PER_SEC);
 
 	file = BINDIR "/gpk-update-icon";
-	pk_debug ("trying to spawn: %s", file);
+	egg_debug ("trying to spawn: %s", file);
 	ret = g_spawn_command_line_async (file, &error);
 	if (!ret) {
-		pk_warning ("failed to spawn new instance: %s", error->message);
+		egg_warning ("failed to spawn new instance: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -887,7 +887,7 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	ret = gpk_client_refresh_cache (cupdate->priv->gclient, NULL);
 	if (!ret) {
 		/* we failed to get the cache */
-		pk_warning ("failed to refresh cache");
+		egg_warning ("failed to refresh cache");
 
 		/* try again in a few minutes */
 		cupdate->priv->cache_okay = FALSE;
@@ -896,7 +896,7 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 		cupdate->priv->cache_okay = TRUE;
 
 		/* now try to get updates */
-		pk_debug ("get updates");
+		egg_debug ("get updates");
 		gpk_check_update_query_updates (cupdate);
 	}
 	cupdate->priv->cache_update_in_progress = FALSE;
@@ -936,21 +936,21 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
 	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient, &error);
 	if (array == NULL) {
-		pk_warning ("failed to get upgrades: %s", error->message);
+		egg_warning ("failed to get upgrades: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 
 	/* any updates? */
 	if (array->len == 0) {
-		pk_debug ("no upgrades");
+		egg_debug ("no upgrades");
 		goto out;
 	}
 
 	/* do we do the notification? */
 	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, NULL);
 	if (!ret) {
-		pk_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GConf");
 		goto out;
 	}
 
@@ -968,7 +968,7 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	title = _("Distribution upgrades available");
 	notification = notify_notification_new (title, string->str, "help-browser", NULL);
 	if (notification == NULL) {
-		pk_warning ("failed to get bubble");
+		egg_warning ("failed to get bubble");
 		return;
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
@@ -979,7 +979,7 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		pk_warning ("error: %s", error->message);
+		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:

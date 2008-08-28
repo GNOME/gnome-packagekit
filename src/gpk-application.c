@@ -33,7 +33,7 @@
 #include <locale.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-enum.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -268,7 +268,7 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		pk_warning ("no selection");
+		egg_warning ("no selection");
 		return;
 	}
 
@@ -370,7 +370,7 @@ gpk_application_install (GpkApplication *application)
 
 	/* shouldn't be possible */
 	if (application->priv->package == NULL) {
-		pk_warning ("no package");
+		egg_warning ("no package");
 		return FALSE;
 	}
 
@@ -378,7 +378,7 @@ gpk_application_install (GpkApplication *application)
 	if (application->priv->action == PK_ACTION_REMOVE) {
 		ret = pk_package_list_remove (application->priv->package_list, application->priv->package);
 		if (ret) {
-			pk_debug ("removed %s from package list", application->priv->package);
+			egg_debug ("removed %s from package list", application->priv->package);
 
 			/* correct buttons */
 			gpk_application_allow_install (application, FALSE);
@@ -387,14 +387,14 @@ gpk_application_install (GpkApplication *application)
 			gpk_application_set_buttons_apply_clear (application);
 			return TRUE;
 		}
-		pk_warning ("wrong mode and not in list");
+		egg_warning ("wrong mode and not in list");
 		return FALSE;
 	}
 
 	/* already added */
 	ret = pk_package_list_contains (application->priv->package_list, application->priv->package);
 	if (ret) {
-		pk_warning ("already added");
+		egg_warning ("already added");
 		return FALSE;
 	}
 
@@ -448,7 +448,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 
 	files = gpk_client_get_file_list (application->priv->gclient, application->priv->package, &error);
 	if (files == NULL) {
-		pk_warning ("could not get file list: %s", error->message);
+		egg_warning ("could not get file list: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -490,7 +490,7 @@ gpk_application_remove (GpkApplication *application)
 
 	/* shouldn't be possible */
 	if (application->priv->package == NULL) {
-		pk_warning ("no package");
+		egg_warning ("no package");
 		return FALSE;
 	}
 
@@ -498,7 +498,7 @@ gpk_application_remove (GpkApplication *application)
 	if (application->priv->action == PK_ACTION_INSTALL) {
 		ret = pk_package_list_remove (application->priv->package_list, application->priv->package);
 		if (ret) {
-			pk_debug ("removed %s from package list", application->priv->package);
+			egg_debug ("removed %s from package list", application->priv->package);
 
 			/* correct buttons */
 			gpk_application_allow_install (application, TRUE);
@@ -507,14 +507,14 @@ gpk_application_remove (GpkApplication *application)
 			gpk_application_set_buttons_apply_clear (application);
 			return TRUE;
 		}
-		pk_warning ("wrong mode and not in list");
+		egg_warning ("wrong mode and not in list");
 		return FALSE;
 	}
 
 	/* already added */
 	ret = pk_package_list_contains (application->priv->package_list, application->priv->package);
 	if (ret) {
-		pk_warning ("already added");
+		egg_warning ("already added");
 		return FALSE;
 	}
 
@@ -573,7 +573,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		pk_warning ("no selection");
+		egg_warning ("no selection");
 		return;
 	}
 
@@ -590,7 +590,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 		if (exec != NULL) {
 			ret = g_spawn_command_line_async (exec, &error);
 			if (!ret) {
-				pk_warning ("failed to run: %s", error->message);
+				egg_warning ("failed to run: %s", error->message);
 				g_error_free (error);
 			}
 		}
@@ -615,7 +615,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_files, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -628,7 +628,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
-		pk_warning ("failed to get requires: %s", error->message);
+		egg_warning ("failed to get requires: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -687,7 +687,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_files, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -700,7 +700,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
 
 	if (!ret) {
-		pk_warning ("failed to get depends: %s", error->message);
+		egg_warning ("failed to get depends: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -754,14 +754,14 @@ gpk_application_get_full_repo_name (GpkApplication *application, const gchar *da
 
 	/* if no data, we can't look up in the hash table */
 	if (pk_strzero (data)) {
-		pk_warning ("no ident data");
+		egg_warning ("no ident data");
 		return _("Invalid");
 	}
 
 	/* try to find in cached repo list */
 	repo_name = (const gchar *) g_hash_table_lookup (application->priv->repos, data);
 	if (repo_name == NULL) {
-		pk_warning ("no repo name, falling back to %s", data);
+		egg_warning ("no repo name, falling back to %s", data);
 		return data;
 	}
 	return repo_name;
@@ -781,7 +781,7 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
 
-	pk_debug ("%s %s %s", markup, text, uri);
+	egg_debug ("%s %s %s", markup, text, uri);
 	gtk_list_store_append (application->priv->details_store, &iter);
 	gtk_list_store_set (application->priv->details_store, &iter,
 			    DETAIL_COLUMN_TITLE, markup,
@@ -951,7 +951,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
+	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
 	/* ignore progress */
 	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE) {
@@ -1044,7 +1044,7 @@ gpk_application_refresh_search_results (GpkApplication *application)
 	/* get role -- do we actually need to do anything */
 	pk_client_get_role (application->priv->client_search, &role, NULL, NULL);
 	if (role == PK_ROLE_ENUM_UNKNOWN) {
-		pk_debug ("no defined role, no not requeuing");
+		egg_debug ("no defined role, no not requeuing");
 		return FALSE;
 	}
 
@@ -1054,7 +1054,7 @@ gpk_application_refresh_search_results (GpkApplication *application)
 
 	ret = pk_client_requeue (application->priv->client_search, &error);
 	if (!ret) {
-		pk_warning ("failed to requeue the search: %s", error->message);
+		egg_warning ("failed to requeue the search: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -1151,7 +1151,7 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	ret = pk_client_cancel (application->priv->client_search, NULL);
-	pk_debug ("canceled? %i", ret);
+	egg_debug ("canceled? %i", ret);
 
 	/* switch buttons around */
 	if (ret) {
@@ -1176,25 +1176,25 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* have we got input? */
 	if (pk_strzero (package)) {
-		pk_debug ("no input");
+		egg_debug ("no input");
 		return FALSE;
 	}
 
 	ret = pk_strvalidate (package);
 	if (!ret) {
-		pk_debug ("invalid input text, will fail");
+		egg_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Invalid search text"),
 					_("The search text contains invalid characters"), NULL);
 		return FALSE;
 	}
-	pk_debug ("find %s", package);
+	egg_debug ("find %s", package);
 
 	/* reset */
 	ret = pk_client_reset (application->priv->client_search, &error);
 	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -1207,7 +1207,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
 		ret = pk_client_search_file (application->priv->client_search, application->priv->filters_current, package, &error);
 	} else {
-		pk_warning ("invalid search type");
+		egg_warning ("invalid search type");
 		return FALSE;
 	}
 
@@ -1238,7 +1238,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 	/* cancel this, we don't care about old results that are pending */
 	ret = pk_client_reset (application->priv->client_search, &error);
 	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -1282,7 +1282,7 @@ gpk_application_perform_search (GpkApplication *application)
 		   application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
 		ret = gpk_application_perform_search_others (application);
 	} else {
-		pk_debug ("doing nothing");
+		egg_debug ("doing nothing");
 	}
 	if (!ret) {
 		return ret;
@@ -1321,24 +1321,24 @@ gpk_application_quit (GpkApplication *application)
 	/* we might have visual stuff running, close them down */
 	ret = pk_client_cancel (application->priv->client_search, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 	ret = pk_client_cancel (application->priv->client_details, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 	ret = pk_client_cancel (application->priv->client_files, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel client: %s", error->message);
+		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 
-	pk_debug ("emitting action-close");
+	egg_debug ("emitting action-close");
 	g_signal_emit (application, signals [ACTION_CLOSE], 0);
 	return TRUE;
 }
@@ -1521,7 +1521,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 			if (exec != NULL) {
 				ret = g_spawn_command_line_async (exec, &error);
 				if (!ret) {
-					pk_warning ("failed to run: %s", error->message);
+					egg_warning ("failed to run: %s", error->message);
 					g_error_free (error);
 				}
 			}
@@ -1626,7 +1626,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (application->priv->group);
 		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &application->priv->group, -1);
-		pk_debug ("selected row is: %s", application->priv->group);
+		egg_debug ("selected row is: %s", application->priv->group);
 
 		/* GetPackages? */
 		if (pk_strequal (application->priv->group, "all-packages")) {
@@ -1665,7 +1665,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* This will only work in single or browse selection mode! */
 	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 
 		/* we cannot now add it */
 		gpk_application_allow_install (application, FALSE);
@@ -1683,7 +1683,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	ret = pk_strequal (image, "search");
 	g_free (image);
 	if (ret) {
-		pk_debug ("ignoring help click");
+		egg_debug ("ignoring help click");
 		return;
 	}
 
@@ -1721,7 +1721,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_details, &error);
 	if (!ret) {
-		pk_warning ("failed to cancel, and adding to queue: %s", error->message);
+		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -1731,7 +1731,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	ret = pk_client_get_details (application->priv->client_details, package_ids, &error);
 	g_strfreev (package_ids);
 	if (!ret) {
-		pk_warning ("failed to get details: %s", error->message);
+		egg_warning ("failed to get details: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -1744,7 +1744,7 @@ gpk_application_connection_changed_cb (PkConnection *pconnection, gboolean conne
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("connected=%i", connected);
+	egg_debug ("connected=%i", connected);
 }
 
 /**
@@ -1782,7 +1782,7 @@ gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *na
 	if (pk_strequal (name, "image_status")) {
 		return gpk_animated_icon_new ();
 	}
-	pk_warning ("name unknown='%s'", name);
+	egg_warning ("name unknown='%s'", name);
 	return NULL;
 }
 
@@ -1821,7 +1821,7 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 
 	/* change type */
 	application->priv->search_type = PK_SEARCH_NAME;
-	pk_debug ("set search type=%i", application->priv->search_type);
+	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1842,7 +1842,7 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 
 	/* set type */
 	application->priv->search_type = PK_SEARCH_DETAILS;
-	pk_debug ("set search type=%i", application->priv->search_type);
+	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1863,7 +1863,7 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 
 	/* set type */
 	application->priv->search_type = PK_SEARCH_FILE;
-	pk_debug ("set search type=%i", application->priv->search_type);
+	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -1889,7 +1889,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	if (button != 1) {
 		return;
 	}
-	pk_debug ("icon_pos=%i", icon_pos);
+	egg_debug ("icon_pos=%i", icon_pos);
 
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
@@ -1949,7 +1949,7 @@ gpk_application_create_completion_model (void)
 	list = pk_package_list_new ();
 	ret = pk_package_list_add_file (list, PK_PACKAGE_LIST_LOCATION);
 	if (!ret) {
-		pk_warning ("no package list, try running pk-generate-package-list as root");
+		egg_warning ("no package list, try running pk-generate-package-list as root");
 		return NULL;
 	}
 
@@ -1957,7 +1957,7 @@ gpk_application_create_completion_model (void)
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		if (obj == NULL || obj->id == NULL || obj->id->name == NULL) {
-			pk_warning ("obj invalid!");
+			egg_warning ("obj invalid!");
 			break;
 		}
 		data = g_hash_table_lookup (hash, (gpointer) obj->id->name);
@@ -2116,7 +2116,7 @@ gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 
 	ret = g_spawn_command_line_async ("gpk-repo", NULL);
 	if (!ret) {
-		pk_warning ("spawn of pk-repo failed");
+		egg_warning ("spawn of pk-repo failed");
 	}
 }
 
@@ -2450,7 +2450,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	model = gtk_tree_view_get_model (treeview);
 	ret = gtk_tree_model_get_iter (model, &iter, path);
 	if (!ret) {
-		pk_warning ("failed to get selection");
+		egg_warning ("failed to get selection");
 		return;
 	}
 
@@ -2489,7 +2489,7 @@ pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
 {
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	pk_debug ("repo = %s:%s", repo_id, description);
+	egg_debug ("repo = %s:%s", repo_id, description);
 	/* no problem, just no point adding as we will fallback to the repo_id */
 	if (description == NULL) {
 		return;
@@ -2503,7 +2503,7 @@ pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
 static void
 gpk_application_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, GpkApplication *application)
 {
-	pk_debug ("clicked %s", uri);
+	egg_debug ("clicked %s", uri);
 	gpk_gnome_open (uri);
 }
 
@@ -2681,7 +2681,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->extra = pk_extra_new ();
 	ret = pk_extra_set_database (application->priv->extra, NULL);
 	if (!ret) {
-		pk_warning ("Failure setting database");
+		egg_warning ("Failure setting database");
 	}
 
 	/* set the locale */
@@ -3071,7 +3071,7 @@ gpk_application_init (GpkApplication *application)
 	/* get repos, so we can show the full name in the software source box */
 	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
 	if (!ret) {
-		pk_warning ("failed to get repo list: %s", error->message);
+		egg_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
 	}
 

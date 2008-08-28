@@ -36,7 +36,7 @@
 /* local .la */
 #include <libunique.h>
 
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-package-id.h>
@@ -80,7 +80,7 @@ gpk_log_button_rollback_cb (PolKitGnomeAction *action, gpointer data)
 	/* rollback */
 	ret = pk_client_rollback (client, transaction_id, &error);
 	if (!ret) {
-		pk_warning ("failed to reset client: %s", error->message);
+		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 	}
 	gtk_main_quit ();
@@ -211,7 +211,7 @@ gpk_log_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespe
 
 	/* only show transactions that succeeded */
 	if (!succeeded) {
-		pk_debug ("tid %s did not succeed, so not adding", tid);
+		egg_debug ("tid %s did not succeed, so not adding", tid);
 		return;
 	}
 
@@ -268,10 +268,10 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 		gtk_tree_model_get (model, &iter, GPK_LOG_COLUMN_ID, &id, -1);
 
 		/* show transaction_id */
-		pk_debug ("selected row is: %s", id);
+		egg_debug ("selected row is: %s", id);
 		g_free (id);
 	} else {
-		pk_debug ("no row selected");
+		egg_debug ("no row selected");
 	}
 }
 
@@ -286,7 +286,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 	if (pk_strequal (name, "button_action")) {
 		return polkit_gnome_action_create_button (button_action);
 	}
-	pk_warning ("name unknown=%s", name);
+	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
 
@@ -369,7 +369,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	pk_debug_init (verbose);
+	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */

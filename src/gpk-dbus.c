@@ -43,7 +43,7 @@
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
 #include <pk-enum.h>
-#include <pk-debug.h>
+#include "egg-debug.h"
 #include <pk-package-list.h>
 
 #include "gpk-dbus.h"
@@ -110,11 +110,11 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallLocalFile method called: %s", full_path);
+	egg_debug ("InstallLocalFile method called: %s", full_path);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
+	egg_warning ("sender=%s", sender);
 
 	/* just convert from char* to char** */
 	full_paths = g_strsplit (full_path, "|", 1);
@@ -144,11 +144,11 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallProvideFile method called: %s", full_path);
+	egg_debug ("InstallProvideFile method called: %s", full_path);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
+	egg_warning ("sender=%s", sender);
 
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
@@ -176,11 +176,11 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallPackageName method called: %s", package_name);
+	egg_debug ("InstallPackageName method called: %s", package_name);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
+	egg_warning ("sender=%s", sender);
 
 	/* just convert from char* to char** */
 	package_names = g_strsplit (package_name, "|", 1);
@@ -211,11 +211,11 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallMimeType method called: %s", mime_type);
+	egg_debug ("InstallMimeType method called: %s", mime_type);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
+	egg_warning ("sender=%s", sender);
 
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
@@ -242,11 +242,11 @@ gpk_dbus_install_font (GpkDbus *dbus, const gchar *font_desc, DBusGMethodInvocat
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	pk_debug ("InstallFont method called: %s", font_desc);
+	egg_debug ("InstallFont method called: %s", font_desc);
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	pk_warning ("sender=%s", sender);
+	egg_warning ("sender=%s", sender);
 
 	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
 	if (!ret) {
