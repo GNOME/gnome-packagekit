@@ -446,6 +446,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_ALL_PACKAGES_ALREADY_INSTALLED:
 		text = _("All packages are already installed");
 		break;
+	case PK_ERROR_ENUM_FILE_NOT_FOUND:
+		text = _("The specified file could not be found");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -605,6 +608,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_ALL_PACKAGES_ALREADY_INSTALLED:
 		text = _("All of the packages selected for install are already installed on the system.");
+		break;
+	case PK_ERROR_ENUM_FILE_NOT_FOUND:
+		text = _("The specified file could not be found on the system.\n"
+			 "Check the file still exists and has not been deleted.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
