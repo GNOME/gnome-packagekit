@@ -1157,8 +1157,11 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		/* show UI */
 		dialog = gtk_message_dialog_new (gclient->priv->parent_window,
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
+						 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
 						 "%s", title);
+		/* add a specialist button */
+		gtk_dialog_add_button (GTK_DIALOG (dialog), _("Copy file"), GTK_RESPONSE_OK);
+
 		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 		g_free (message);
 
@@ -1265,8 +1268,11 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 	/* show UI */
 	dialog = gtk_message_dialog_new (gclient->priv->parent_window,
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
 					 "%s", title);
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -1947,7 +1953,11 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 
 	/* show UI */
 	dialog = gtk_message_dialog_new (gclient->priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", title);
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL, "%s", title);
+
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
+
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
