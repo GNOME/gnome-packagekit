@@ -212,6 +212,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	/* get the most important icon */
 	value = pk_bitfield_contain_priority (status,
 					   PK_STATUS_ENUM_REFRESH_CACHE,
+					   PK_STATUS_ENUM_LOADING_CACHE,
 					   PK_STATUS_ENUM_CANCEL,
 					   PK_STATUS_ENUM_INSTALL,
 					   PK_STATUS_ENUM_REMOVE,

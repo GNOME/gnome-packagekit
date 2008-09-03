@@ -90,6 +90,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-refresh-cache"},
 	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-refresh-cache"},
 	{0, NULL}
 };
 
@@ -845,6 +846,9 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 	case PK_STATUS_ENUM_REPACKAGING:
 		text = _("Repackaging files");
 		break;
+	case PK_STATUS_ENUM_LOADING_CACHE:
+		text = _("Loading cache");
+		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
@@ -1445,6 +1449,7 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
+	    status == PK_STATUS_ENUM_LOADING_CACHE ||
 	    status == PK_STATUS_ENUM_REPACKAGING) {
 		name = "pk-action-refresh-cache";
 		delay = 150;
