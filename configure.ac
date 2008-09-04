@@ -209,7 +209,6 @@ dnl - Makefiles, etc.
 dnl ---------------------------------------------------------------------------
 AC_OUTPUT([
 Makefile
-libselftest/Makefile
 libunique/Makefile
 src/Makefile
 help/Makefile

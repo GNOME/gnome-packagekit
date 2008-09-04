@@ -1,5 +1,4 @@
 SUBDIRS =						\
-	libselftest					\
 	libunique					\
 	docs						\
 	man						\

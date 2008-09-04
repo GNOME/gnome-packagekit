@@ -63,7 +63,7 @@ G_BEGIN_DECLS
 #define GPK_ICON_SOFTWARE_UPDATE_PREFS		"x-system-software-update-preferences"
 #define GPK_ICON_SOFTWARE_UPDATE_AVAILABLE	"software-update-available"
 
-void		 gpk_common_self_test			(gpointer	 data);
+void		 gpk_common_test			(gpointer	 data);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,
 							 const gchar	*summary);

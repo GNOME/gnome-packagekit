@@ -160,18 +160,18 @@ out:
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
-#ifdef PK_BUILD_TESTS
-#include <libselftest.h>
+#ifdef EGG_TEST
+#include "egg-test.h"
 
 void
 gpk_client_requires_self_test (gpointer data)
 {
-	LibSelfTest *test = (LibSelfTest *) data;
+	EggTest *test = (EggTest *) data;
 
-	if (libst_start (test, "GpkClientRequires", CLASS_AUTO) == FALSE) {
+	if (egg_test_start (test, "GpkClientRequires") == FALSE) {
 		return;
 	}
-	libst_end (test);
+	egg_test_end (test);
 }
 #endif
 

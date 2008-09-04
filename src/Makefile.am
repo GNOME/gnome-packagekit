@@ -23,11 +23,6 @@ INCLUDES =						\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-DEGG_LOG_FILE=\"\"				\
 	-I$(top_srcdir)/libunique			\
-	-I$(top_srcdir)/libselftest			\
-	$(NULL)
-
-SELFTEST_LIBS =						\
-	$(top_builddir)/libselftest/libselftest.la	\
 	$(NULL)
 
 LIBUNIQUE_LIBS =					\
@@ -266,6 +261,8 @@ noinst_PROGRAMS =					\
 
 gpk_self_test_SOURCES =					\
 	gpk-self-test.c					\
+	egg-test.h					\
+	egg-test.c					\
 	$(shared_SOURCES)				\
 	$(NULL)
 
@@ -274,7 +271,7 @@ gpk_self_test_LDADD =					\
 	$(SELFTEST_LIBS)				\
 	$(NULL)
 
-gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
+gpk_self_test_CFLAGS = -DEGG_TEST $(AM_CFLAGS)
 
 TESTS = gpk-self-test
 

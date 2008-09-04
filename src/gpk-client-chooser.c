@@ -288,18 +288,18 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
-#ifdef PK_BUILD_TESTS
-#include <libselftest.h>
+#ifdef EGG_TEST
+#include "egg-test.h"
 
 void
 gpk_client_chooser_self_test (gpointer data)
 {
-	LibSelfTest *test = (LibSelfTest *) data;
+	EggTest *test = (EggTest *) data;
 
-	if (libst_start (test, "GpkClientEula", CLASS_AUTO) == FALSE) {
+	if (egg_test_start (test, "GpkClientEula") == FALSE) {
 		return;
 	}
-	libst_end (test);
+	egg_test_end (test);
 }
 #endif
 

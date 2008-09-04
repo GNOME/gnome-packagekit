@@ -316,33 +316,33 @@ gpk_dbus_new (void)
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
-#ifdef PK_BUILD_TESTS
-#include <libselftest.h>
+#ifdef EGG_TEST
+#include "egg-test.h"
 
 void
-libst_dbus (LibSelfTest *test)
+egg_test_dbus (EggTest *test)
 {
 	GpkDbus *dbus = NULL;
 	gboolean ret;
 	const gchar *temp;
 	GError *error = NULL;
 
-	if (libst_start (test, "GpkDbus", CLASS_AUTO) == FALSE) {
+	if (egg_test_start (test, "GpkDbus") == FALSE) {
 		return;
 	}
 
 	/************************************************************/
-	libst_title (test, "get GpkDbus object");
+	egg_test_title (test, "get GpkDbus object");
 	dbus = gpk_dbus_new ();
 	if (dbus != NULL) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, NULL);
+		egg_test_failed (test, NULL);
 	}
 
 	g_object_unref (dbus);
 
-	libst_end (test);
+	egg_test_end (test);
 }
 #endif
 

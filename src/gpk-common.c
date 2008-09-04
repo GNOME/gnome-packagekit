@@ -1623,385 +1623,384 @@ gpk_strv_join_locale (gchar **array)
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
-#ifdef PK_BUILD_TESTS
-#include <libselftest.h>
+#ifdef EGG_TEST
+#include "egg-test.h"
 
 void
-gpk_common_self_test (gpointer data)
+gpk_common_test (gpointer data)
 {
 	gchar *text;
 	guint i;
 	const gchar *string;
 	PkPackageId *id;
-	LibSelfTest *test = (LibSelfTest *) data;
+	EggTest *test = (EggTest *) data;
 
-	if (libst_start (test, "GpkCommon", CLASS_AUTO) == FALSE) {
+	if (!egg_test_start (test, "GpkCommon"))
 		return;
-	}
 
 	/************************************************************
 	 ****************        time text             **************
 	 ************************************************************/
-	libst_title (test, "time zero");
+	egg_test_title (test, "time zero");
 	text = gpk_time_to_localised_string (0);
 	if (text != NULL && strcmp (text, _("Now")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 1s");
+	egg_test_title (test, "time 1s");
 	text = gpk_time_to_localised_string (1);
 	if (text != NULL && strcmp (text, _("1 second")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 1m");
+	egg_test_title (test, "time 1m");
 	text = gpk_time_to_localised_string (1*60);
 	if (text != NULL && strcmp (text, _("1 minute")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 1h");
+	egg_test_title (test, "time 1h");
 	text = gpk_time_to_localised_string (1*60*60);
 	if (text != NULL && strcmp (text, _("1 hour")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 30s");
+	egg_test_title (test, "time 30s");
 	text = gpk_time_to_localised_string (30);
 	if (text != NULL && strcmp (text, _("30 seconds")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 30m");
+	egg_test_title (test, "time 30m");
 	text = gpk_time_to_localised_string (30*60);
 	if (text != NULL && strcmp (text, _("30 minutes")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 30m1s");
+	egg_test_title (test, "time 30m1s");
 	text = gpk_time_to_localised_string (30*60+1);
 	if (text != NULL && strcmp (text, _("30 minutes 1 second")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "time 30m10s");
+	egg_test_title (test, "time 30m10s");
 	text = gpk_time_to_localised_string (30*60+10);
 	if (text != NULL && strcmp (text, _("30 minutes 10 seconds")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************
 	 ****************        size text             **************
 	 ************************************************************/
-	libst_title (test, "size zero");
+	egg_test_title (test, "size zero");
 	text = gpk_size_to_si_size_text (0);
 	if (text != NULL && strcmp (text, _("0 bytes")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "size 512 bytes");
+	egg_test_title (test, "size 512 bytes");
 	text = gpk_size_to_si_size_text (512);
 	if (text != NULL && strcmp (text, _("512 bytes")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "size 256.2 MB");
+	egg_test_title (test, "size 256.2 MB");
 	text = gpk_size_to_si_size_text (256*1025*1024);
 	if (text != NULL && strcmp (text, _("256.2 MB")) == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************
 	 ****************     package name text        **************
 	 ************************************************************/
-	libst_title (test, "get name null");
+	egg_test_title (test, "get name null");
 	text = gpk_package_get_name (NULL);
 	if (text == NULL) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 
 	/************************************************************/
-	libst_title (test, "get name not id");
+	egg_test_title (test, "get name not id");
 	text = gpk_package_get_name ("ania");
 	if (text != NULL && strcmp (text, "ania") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "get name just id");
+	egg_test_title (test, "get name just id");
 	text = gpk_package_get_name ("simon;1.0.0;i386;moo");
 	if (text != NULL && strcmp (text, "simon") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************
 	 ****************     package name text        **************
 	 ************************************************************/
-	libst_title (test, "package id pretty valid package id, no summary");
+	egg_test_title (test, "package id pretty valid package id, no summary");
 	id = pk_package_id_new_from_string ("simon;0.0.1;i386;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "package id pretty valid package id, no summary 2");
+	egg_test_title (test, "package id pretty valid package id, no summary 2");
 	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon-0.0.1") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "package id pretty valid package id, no summary 3");
+	egg_test_title (test, "package id pretty valid package id, no summary 3");
 	id = pk_package_id_new_from_string ("simon;;;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "simon") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************/
-	libst_title (test, "package id pretty valid package id, no summary 4");
+	egg_test_title (test, "package id pretty valid package id, no summary 4");
 	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
 	text = gpk_package_id_format_twoline (id, "dude");
 	pk_package_id_free (id);
 	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0) {
-		libst_success (test, NULL);
+		egg_test_success (test, NULL);
 	} else {
-		libst_failed (test, "failed, got %s", text);
+		egg_test_failed (test, "failed, got %s", text);
 	}
 	g_free (text);
 
 	/************************************************************
 	 ****************     localised enums          **************
 	 ************************************************************/
-	libst_title (test, "check we convert all the localised past role enums");
+	egg_test_title (test, "check we convert all the localised past role enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised present role enums");
+	egg_test_title (test, "check we convert all the localised present role enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the role icon name enums");
+	egg_test_title (test, "check we convert all the role icon name enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the info icon names enums");
+	egg_test_title (test, "check we convert all the info icon names enums");
 	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised status enums");
+	egg_test_title (test, "check we convert all the localised status enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the status icon names enums");
+	egg_test_title (test, "check we convert all the status icon names enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the restart icon names enums");
+	egg_test_title (test, "check we convert all the restart icon names enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised error enums");
+	egg_test_title (test, "check we convert all the localised error enums");
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
 		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %s", pk_error_enum_to_text(i));
+			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised error messages");
+	egg_test_title (test, "check we convert all the localised error messages");
 	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
 		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %s", pk_error_enum_to_text(i));
+			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised restart enums");
+	egg_test_title (test, "check we convert all the localised restart enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
 		string = gpk_restart_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the message icon name enums");
+	egg_test_title (test, "check we convert all the message icon name enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
 		string = gpk_message_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised message enums");
+	egg_test_title (test, "check we convert all the localised message enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
 		string = gpk_message_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised restart future enums");
+	egg_test_title (test, "check we convert all the localised restart future enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
 		string = gpk_restart_enum_to_localised_text_future (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the localised group enums");
+	egg_test_title (test, "check we convert all the localised group enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
 	/************************************************************/
-	libst_title (test, "check we convert all the group icon name enums");
+	egg_test_title (test, "check we convert all the group icon name enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL) {
-			libst_failed (test, "failed to get %i", i);
+			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
-	libst_success (test, NULL);
+	egg_test_success (test, NULL);
 
-	libst_end (test);
+	egg_test_end (test);
 }
 #endif
 

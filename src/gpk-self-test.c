@@ -21,25 +21,24 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <libselftest.h>
+#include "egg-test.h"
 #include "egg-debug.h"
 #include "gpk-common.h"
 
 int
 main (int argc, char **argv)
 {
-	LibSelfTest test;
+	EggTest *test;
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	g_type_init ();
-	libst_init (&test);
+	test = egg_test_init ();
 	egg_debug_init (TRUE);
 
 	/* tests go here */
-	gpk_common_self_test (&test);
+	gpk_common_test (test);
 
-	return (libst_finish (&test));
+	return egg_test_finish (test);
 }
 
