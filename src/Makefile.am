@@ -275,13 +275,6 @@ gpk_self_test_CFLAGS = -DEGG_TEST $(AM_CFLAGS)
 
 TESTS = gpk-self-test
 
-if PK_BUILD_GPROF
-clean-gprof:
-	rm -f *.out
-gprof: clean-gprof all check
-	gprof ./gpk-self-test > gprof.txt
-endif
-
 EXTRA_DIST =						\
 	gpk-marshal.list				\
 	gpk-interface.xml				\
