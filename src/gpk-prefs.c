@@ -33,7 +33,7 @@
 #include <gconf/gconf-client.h>
 
 /* local .la */
-#include <libunique.h>
+#include <egg-unique.h>
 
 #include <pk-control.h>
 #include <pk-client.h>
@@ -325,7 +325,7 @@ pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
  * gpk_prefs_activated_cb
  **/
 static void
-gpk_prefs_activated_cb (LibUnique *libunique, gpointer data)
+gpk_prefs_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "window_prefs");
@@ -346,7 +346,7 @@ main (int argc, char *argv[])
 	PkBitfield roles;
 	PkClient *client;
 	PkControl *control;
-	LibUnique *libunique;
+	EggUnique *egg_unique;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -384,12 +384,12 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
-	libunique = libunique_new ();
-	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Prefs");
+	egg_unique = egg_unique_new ();
+	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Prefs");
 	if (!ret) {
 		goto unique_out;
 	}
-	g_signal_connect (libunique, "activated",
+	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_prefs_activated_cb), NULL);
 
 	client = pk_client_new ();
@@ -442,7 +442,7 @@ main (int argc, char *argv[])
 	g_object_unref (glade_xml);
 	g_object_unref (client);
 unique_out:
-	g_object_unref (libunique);
+	g_object_unref (egg_unique);
 
 	return 0;
 }

@@ -11,6 +11,7 @@ INCLUDES =						\
 	$(LIBNOTIFY_CFLAGS)				\
 	$(LIBSEXY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
+	$(UNIQUE_CFLAGS)				\
 	$(POLKIT_GNOME_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	-DBINDIR=\"$(bindir)\"			 	\
@@ -22,11 +23,6 @@ INCLUDES =						\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-DEGG_LOG_FILE=\"\"				\
-	-I$(top_srcdir)/libunique			\
-	$(NULL)
-
-LIBUNIQUE_LIBS =					\
-	$(top_builddir)/libunique/libunique.la		\
 	$(NULL)
 
 bin_PROGRAMS =						\
@@ -49,6 +45,8 @@ shared_SOURCES =					\
 	egg-debug.h					\
 	egg-string.c					\
 	egg-string.h					\
+	egg-unique.c					\
+	egg-unique.h					\
 	egg-dbus-monitor.c				\
 	egg-dbus-monitor.h				\
 	gpk-marshal.c					\
@@ -96,8 +94,8 @@ shared_LIBS =						\
 	$(GTK_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
+	$(UNIQUE_LIBS)					\
 	$(POLKIT_GNOME_LIBS)				\
-	$(LIBUNIQUE_LIBS)				\
 	$(NULL)
 
 gpk_install_provide_file_SOURCES =			\
@@ -185,6 +183,8 @@ gpk_application_LDADD =					\
 gpk_prefs_SOURCES =					\
 	egg-debug.c					\
 	egg-debug.h					\
+	egg-unique.c					\
+	egg-unique.h					\
 	gpk-prefs.c					\
 	gpk-gnome.c					\
 	gpk-gnome.h					\

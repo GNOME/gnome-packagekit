@@ -32,7 +32,7 @@
 #include <locale.h>
 
 /* local .la */
-#include <libunique.h>
+#include <egg-unique.h>
 
 #include "egg-debug.h"
 #include "gpk-application.h"
@@ -54,7 +54,7 @@ gpk_application_close_cb (GpkApplication *application)
  * gpk_application_activated_cb
  **/
 static void
-gpk_application_activated_cb (LibUnique *libunique, GpkApplication *application)
+gpk_application_activated_cb (EggUnique *egg_unique, GpkApplication *application)
 {
 	gpk_application_show (application);
 }
@@ -69,7 +69,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkApplication *application = NULL;
 	GOptionContext *context;
-	LibUnique *libunique;
+	EggUnique *egg_unique;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -113,15 +113,15 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	libunique = libunique_new ();
-	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Application");
+	egg_unique = egg_unique_new ();
+	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Application");
 	if (!ret) {
 		goto unique_out;
 	}
 
 	/* create a new application object */
 	application = gpk_application_new ();
-	g_signal_connect (libunique, "activated",
+	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_application_activated_cb), application);
 	g_signal_connect (application, "action-close",
 			  G_CALLBACK (gpk_application_close_cb), NULL);
@@ -131,7 +131,7 @@ main (int argc, char *argv[])
 
 	g_object_unref (application);
 unique_out:
-	g_object_unref (libunique);
+	g_object_unref (egg_unique);
 	return 0;
 }
 

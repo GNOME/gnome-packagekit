@@ -1,5 +1,4 @@
 SUBDIRS =						\
-	libunique					\
 	docs						\
 	man						\
 	src						\

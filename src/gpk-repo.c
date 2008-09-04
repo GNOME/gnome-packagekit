@@ -33,7 +33,7 @@
 #include <gconf/gconf-client.h>
 
 /* local .la */
-#include <libunique.h>
+#include <egg-unique.h>
 
 #include <pk-common.h>
 #include <pk-client.h>
@@ -297,7 +297,7 @@ gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
  * gpk_repo_activated_cb
  **/
 static void
-gpk_repo_activated_cb (LibUnique *libunique, gpointer data)
+gpk_repo_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "window_repo");
@@ -331,7 +331,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkControl *control;
-	LibUnique *libunique;
+	EggUnique *egg_unique;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -368,12 +368,12 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	libunique = libunique_new ();
-	ret = libunique_assign (libunique, "org.freedesktop.PackageKit.Repo");
+	egg_unique = egg_unique_new ();
+	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Repo");
 	if (!ret) {
 		goto unique_out;
 	}
-	g_signal_connect (libunique, "activated",
+	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_repo_activated_cb), NULL);
 
 	gconf_client = gconf_client_get_default ();
@@ -462,7 +462,7 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_object_unref (control);
 unique_out:
-	g_object_unref (libunique);
+	g_object_unref (egg_unique);
 
 	return 0;
 }
