@@ -51,6 +51,9 @@ typedef struct
 	void		(* connection_replaced)		(EggDbusMonitor	*watch);
 } EggDbusMonitorClass;
 
+typedef EggDbusMonitor GpkDbusMonitor;
+typedef EggDbusMonitorClass GpkDbusMonitorClass;
+
 typedef enum {
         EGG_DBUS_MONITOR_SESSION,
         EGG_DBUS_MONITOR_SYSTEM
@@ -58,7 +61,7 @@ typedef enum {
 
 GType		 egg_dbus_monitor_get_type	  	(void) G_GNUC_CONST;
 EggDbusMonitor	*egg_dbus_monitor_new			(void);
-gboolean	 egg_dbus_monitor_assign			(EggDbusMonitor	*monitor,
+gboolean	 egg_dbus_monitor_assign		(EggDbusMonitor	*monitor,
 							 EggDbusMonitorType bus_type,
 							 const gchar	*service);
 gboolean	 egg_dbus_monitor_is_connected		(EggDbusMonitor	*monitor);

@@ -55,7 +55,7 @@ enum {
 
 static guint signals [EGG_DBUS_MONITOR_LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE (EggDbusMonitor, egg_dbus_monitor, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GpkDbusMonitor, egg_dbus_monitor, G_TYPE_OBJECT)
 
 /**
  * egg_dbus_monitor_name_owner_changed_cb:
