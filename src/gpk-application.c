@@ -1095,7 +1095,7 @@ gpk_application_suggest_better_search (GpkApplication *application)
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
 			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_IMAGE, "search",
+			    PACKAGES_COLUMN_IMAGE, "system-search",
 			    -1);
 	g_free (text);
 }
@@ -1682,7 +1682,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* check we aren't a help line */
 	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_IMAGE, &image, -1);
-	ret = egg_strequal (image, "search");
+	ret = egg_strequal (image, "system-search");
 	g_free (image);
 	if (ret) {
 		egg_debug ("ignoring help click");
@@ -2561,7 +2561,7 @@ gpk_application_add_welcome (GpkApplication *application)
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
 			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, welcome,
-			    PACKAGES_COLUMN_IMAGE, "search", -1);
+			    PACKAGES_COLUMN_IMAGE, "system-search", -1);
 }
 
 /**
