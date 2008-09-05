@@ -25,6 +25,8 @@
 #include "egg-debug.h"
 #include "gpk-common.h"
 
+void egg_string_test (EggTest *test);
+
 int
 main (int argc, char **argv)
 {
@@ -37,6 +39,7 @@ main (int argc, char **argv)
 	egg_debug_init (TRUE);
 
 	/* tests go here */
+	egg_string_test (test);
 	gpk_common_test (test);
 
 	return egg_test_finish (test);
