@@ -54,7 +54,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))
 #define GPK_FIRMWARE_STATE_FILE		"/var/run/PackageKit/udev-firmware"
-#define GPK_FIRMWARE_LOGIN_DELAY	20 /* seconds */
+#define GPK_FIRMWARE_LOGIN_DELAY	60 /* seconds */
 
 struct GpkFirmwarePrivate
 {
@@ -101,13 +101,40 @@ static gboolean
 gpk_firmware_timeout_cb (gpointer data)
 {
 	gboolean ret;
+	PkClient *client = NULL;
+	PkPackageList *list = NULL;
 	GError *error = NULL;
+	guint length;
 	const gchar *message;
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 	NotifyNotification *notification;
 
 	/* debug so we can catch polling */
 	egg_debug ("polling check");
+
+	/* actually check we can provide the firmware */
+	client = pk_client_new ();
+	pk_client_set_synchronous (client, TRUE, NULL);
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	ret = pk_client_search_file (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+				     firmware->priv->files[0], &error);
+	if (!ret) {
+		egg_warning ("failed to search file %s: %s", firmware->priv->files[0], error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* make sure we have one package */
+	list = pk_client_get_package_list (client);
+	length = pk_package_list_get_size (list);
+	if (length == 0) {
+		egg_debug ("no package providing %s found", firmware->priv->files[0]);
+		goto out;
+	}
+	if (length != 1) {
+		egg_warning ("not one package providing %s found (%i)", firmware->priv->files[0], length);
+		goto out;
+	}
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
 	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
@@ -123,6 +150,11 @@ gpk_firmware_timeout_cb (gpointer data)
 		g_error_free (error);
 	}
 
+out:
+	if (list != NULL)
+		g_object_unref (list);
+	if (client != NULL)
+		g_object_unref (client);
 	/* never repeat */
 	return FALSE;
 }
