@@ -43,6 +43,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-string-list.h"
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -58,8 +59,8 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 struct GpkFirmwarePrivate
 {
-	GPtrArray		*array_found;
-	GPtrArray		*array_requested;
+	EggStrList		*array_found;
+	EggStrList		*array_requested;
 	GConfClient		*gconf_client;
 };
 
@@ -83,7 +84,7 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 
 	/* try to install each firmware file */
 	for (i=0; i<array->len; i++) {
-		filename = (const gchar *) g_ptr_array_index (array, i);
+		filename = egg_str_list_index (array, i);
 		ret = gpk_client_install_provide_file (gclient, filename, &error);
 		if (!ret) {
 			egg_warning ("failed to open directory: %s", error->message);
@@ -154,29 +155,6 @@ out:
 }
 
 /**
- * gpk_firmware_array_remove_duplicate:
- * @array: A GPtrArray instance
- **/
-static void
-gpk_firmware_array_remove_duplicate (GPtrArray *array)
-{
-	guint i, j;
-	const gchar *data1;
-	const gchar *data2;
-
-	for (i=0; i<array->len; i++) {
-		data1 = (const gchar *) g_ptr_array_index (array, i);
-		for (j=0; j<array->len; j++) {
-			if (i == j)
-				break;
-			data2 = (const gchar *) g_ptr_array_index (array, j);
-			if (egg_strequal (data1, data2))
-				g_ptr_array_remove_index (array, i);
-		}
-	}
-}
-
-/**
  * gpk_firmware_timeout_cb:
  * @data: This class instance
  **/
@@ -198,11 +176,11 @@ gpk_firmware_timeout_cb (gpointer data)
 	/* try to find each firmware file in an available package */
 	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
-		filename = (const gchar *) g_ptr_array_index (array, i);
+		filename = egg_str_list_index (array, i);
 		/* save to new array if we found one package for this file */
 		ret = gpk_firmware_check_available (firmware, filename);
 		if (ret)
-			g_ptr_array_add (firmware->priv->array_found, g_strdup (filename));
+			egg_str_list_add (firmware->priv->array_found, filename);
 	}
 
 	/* nothing to do */
@@ -213,13 +191,11 @@ gpk_firmware_timeout_cb (gpointer data)
 	}
 
 	/* check we don't want the same package more than once */
-	gpk_firmware_array_remove_duplicate (array);
+	egg_str_list_remove_duplicate (array);
 
 	/* debugging */
-	for (i=0; i<array->len; i++) {
-		filename = (const gchar *) g_ptr_array_index (array, i);
-		egg_debug ("need to install: %s", filename);
-	}
+	egg_debug ("need to install:");
+	egg_str_list_print (array);
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
 	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
@@ -271,8 +247,8 @@ gpk_firmware_init (GpkFirmware *firmware)
 	GPtrArray *array;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
-	firmware->priv->array_found = g_ptr_array_new ();
-	firmware->priv->array_requested = g_ptr_array_new ();
+	firmware->priv->array_found = egg_str_list_new ();
+	firmware->priv->array_requested = egg_str_list_new ();
 	firmware->priv->gconf_client = gconf_client_get_default ();
 
 	/* should we check and show the user */
@@ -314,7 +290,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 				/* file still doesn't exist */
 				ret = g_file_test (firmware_files[i], G_FILE_TEST_EXISTS);
 				if (!ret)
-					g_ptr_array_add (array, g_strdup (firmware_files[i]));
+					egg_str_list_add (array, firmware_files[i]);
 			}
 		}
 skip_file:
@@ -325,11 +301,11 @@ skip_file:
 	g_dir_close (dir);
 
 	/* don't request duplicates */
-	gpk_firmware_array_remove_duplicate (array);
+	egg_str_list_remove_duplicate (array);
 
 	/* debugging */
 	for (i=0; i<array->len; i++) {
-		filename = (const gchar *) g_ptr_array_index (array, i);
+		filename = egg_str_list_index (array, i);
 		egg_debug ("requested: %s", filename);
 	}
 
@@ -352,10 +328,8 @@ gpk_firmware_finalize (GObject *object)
 	firmware = GPK_FIRMWARE (object);
 
 	g_return_if_fail (firmware->priv != NULL);
-	g_ptr_array_foreach (firmware->priv->array_found, (GFunc) g_free, NULL);
-	g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) g_free, NULL);
-	g_ptr_array_free (firmware->priv->array_found, TRUE);
-	g_ptr_array_free (firmware->priv->array_requested, TRUE);
+	egg_str_list_free (firmware->priv->array_found);
+	egg_str_list_free (firmware->priv->array_requested);
 	g_object_unref (firmware->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);

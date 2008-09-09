@@ -45,6 +45,8 @@ shared_SOURCES =					\
 	egg-debug.h					\
 	egg-string.c					\
 	egg-string.h					\
+	egg-string-list.c				\
+	egg-string-list.h				\
 	egg-unique.c					\
 	egg-unique.h					\
 	egg-dbus-monitor.c				\
