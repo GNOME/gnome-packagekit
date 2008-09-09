@@ -9,6 +9,7 @@ icons_DATA = 				\
 	pk-package-available.png	\
 	pk-package-add.png		\
 	pk-package-cleanup.png		\
+	pk-package-blocked.png		\
 	pk-package-delete.png		\
 	pk-package-download.png		\
 	pk-package-search.png		\

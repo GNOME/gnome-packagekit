@@ -9,6 +9,7 @@ icons_DATA = 				\
 	pk-package-available.svg	\
 	pk-package-add.svg		\
 	pk-package-cleanup.svg		\
+	pk-package-blocked.svg		\
 	pk-package-delete.svg		\
 	pk-package-download.svg		\
 	pk-package-search.svg		\

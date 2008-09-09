@@ -53,7 +53,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_SECURITY,			"pk-update-security"},
 	{PK_INFO_ENUM_BUGFIX,			"pk-update-bugfix"},
 	{PK_INFO_ENUM_ENHANCEMENT,		"pk-update-enhancement"},
-	{PK_INFO_ENUM_BLOCKED,			"pk-setup"},
+	{PK_INFO_ENUM_BLOCKED,			"pk-package-blocked"},
 	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
 	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},
 	{PK_INFO_ENUM_INSTALLING,		"pk-package-add"},
