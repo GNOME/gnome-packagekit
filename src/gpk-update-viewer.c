@@ -600,7 +600,6 @@ gpk_update_viewer_get_new_update_list (void)
 		gtk_list_store_append (list_store_details, &iter);
 		package_id = pk_package_id_to_string (obj->id);
 		selected = (obj->info != PK_INFO_ENUM_BLOCKED);
-		egg_warning ("selected=%i", selected);
 		gtk_list_store_set (list_store_details, &iter,
 				    PACKAGES_COLUMN_TEXT, text,
 				    PACKAGES_COLUMN_ID, package_id,

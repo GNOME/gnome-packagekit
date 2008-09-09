@@ -53,12 +53,13 @@ static void     gpk_firmware_init	(GpkFirmware      *firmware);
 static void     gpk_firmware_finalize	(GObject	  *object);
 
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))
-#define GPK_FIRMWARE_STATE_FILE		"/var/run/PackageKit/udev-firmware"
+#define GPK_FIRMWARE_STATE_DIR		"/var/run/PackageKit/udev"
 #define GPK_FIRMWARE_LOGIN_DELAY	60 /* seconds */
 
 struct GpkFirmwarePrivate
 {
-	gchar			**files;
+	GPtrArray		*array_found;
+	GPtrArray		*array_requested;
 	GConfClient		*gconf_client;
 };
 
@@ -70,11 +71,26 @@ G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
 static gboolean
 gpk_firmware_install_file (GpkFirmware *firmware)
 {
-	GpkClient *gclient;
+	guint i;
 	gboolean ret;
+	GpkClient *gclient;
+	GPtrArray *array;
+	GError *error = NULL;
+	const gchar *filename;
 
 	gclient = gpk_client_new ();
-	ret = gpk_client_install_provide_file (gclient, firmware->priv->files[0], NULL);
+	array = firmware->priv->array_found;
+
+	/* try to install each firmware file */
+	for (i=0; i<array->len; i++) {
+		filename = (const gchar *) g_ptr_array_index (array, i);
+		ret = gpk_client_install_provide_file (gclient, filename, &error);
+		if (!ret) {
+			egg_warning ("failed to open directory: %s", error->message);
+			g_error_free (error);
+			error = NULL;
+		}
+	}
 	g_object_unref (gclient);
 	return ret;
 }
@@ -97,43 +113,112 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	}
 }
 
+/**
+ * gpk_firmware_check_available:
+ * @firmware: This class instance
+ * @filename: Firmware to search for
+ **/
 static gboolean
-gpk_firmware_timeout_cb (gpointer data)
+gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 {
 	gboolean ret;
+	guint length;
 	PkClient *client = NULL;
 	PkPackageList *list = NULL;
 	GError *error = NULL;
-	guint length;
-	const gchar *message;
-	GpkFirmware *firmware = GPK_FIRMWARE (data);
-	NotifyNotification *notification;
-
-	/* debug so we can catch polling */
-	egg_debug ("polling check");
 
 	/* actually check we can provide the firmware */
 	client = pk_client_new ();
 	pk_client_set_synchronous (client, TRUE, NULL);
 	pk_client_set_use_buffer (client, TRUE, NULL);
-	ret = pk_client_search_file (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
-				     firmware->priv->files[0], &error);
+	ret = pk_client_search_file (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), filename, &error);
 	if (!ret) {
-		egg_warning ("failed to search file %s: %s", firmware->priv->files[0], error->message);
+		egg_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);
+		error = NULL;
 		goto out;
 	}
 
 	/* make sure we have one package */
 	list = pk_client_get_package_list (client);
 	length = pk_package_list_get_size (list);
-	if (length == 0) {
-		egg_debug ("no package providing %s found", firmware->priv->files[0]);
+	g_object_unref (list);
+	if (length == 0)
+		egg_debug ("no package providing %s found", filename);
+	else if (length != 1)
+		egg_warning ("not one package providing %s found (%i)", filename, length);
+
+out:
+	g_object_unref (client);
+	return (length == 1);
+}
+
+/**
+ * gpk_firmware_array_remove_duplicate:
+ * @array: A GPtrArray instance
+ **/
+static void
+gpk_firmware_array_remove_duplicate (GPtrArray *array)
+{
+	guint i, j;
+	const gchar *data1;
+	const gchar *data2;
+
+	for (i=0; i<array->len; i++) {
+		data1 = (const gchar *) g_ptr_array_index (array, i);
+		for (j=0; j<array->len; j++) {
+			if (i == j)
+				break;
+			data2 = (const gchar *) g_ptr_array_index (array, j);
+			if (egg_strequal (data1, data2))
+				g_ptr_array_remove_index (array, i);
+		}
+	}
+}
+
+/**
+ * gpk_firmware_timeout_cb:
+ * @data: This class instance
+ **/
+static gboolean
+gpk_firmware_timeout_cb (gpointer data)
+{
+	guint i;
+	gboolean ret;
+	const gchar *filename;
+	const gchar *message;
+	GpkFirmware *firmware = GPK_FIRMWARE (data);
+	NotifyNotification *notification;
+	GPtrArray *array;
+	GError *error = NULL;
+
+	/* debug so we can catch polling */
+	egg_debug ("polling check");
+
+	/* try to find each firmware file in an available package */
+	array = firmware->priv->array_requested;
+	for (i=0; i<array->len; i++) {
+		filename = (const gchar *) g_ptr_array_index (array, i);
+		/* save to new array if we found one package for this file */
+		ret = gpk_firmware_check_available (firmware, filename);
+		if (ret)
+			g_ptr_array_add (firmware->priv->array_found, g_strdup (filename));
+	}
+
+	/* nothing to do */
+	array = firmware->priv->array_found;
+	if (array->len == 0) {
+		egg_debug ("no packages providing any of the missing firmware");
 		goto out;
 	}
-	if (length != 1) {
-		egg_warning ("not one package providing %s found (%i)", firmware->priv->files[0], length);
-		goto out;
+
+	/* check we don't want the same package more than once */
+	gpk_firmware_array_remove_duplicate (array);
+
+	/* debugging */
+	for (i=0; i<array->len; i++) {
+		filename = (const gchar *) g_ptr_array_index (array, i);
+		egg_debug ("need to install: %s", filename);
 	}
 
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
@@ -151,10 +236,6 @@ gpk_firmware_timeout_cb (gpointer data)
 	}
 
 out:
-	if (list != NULL)
-		g_object_unref (list);
-	if (client != NULL)
-		g_object_unref (client);
 	/* never repeat */
 	return FALSE;
 }
@@ -179,11 +260,19 @@ static void
 gpk_firmware_init (GpkFirmware *firmware)
 {
 	gboolean ret;
-	gchar *files;
+	gchar *contents;
 	GError *error = NULL;
+	GDir *dir;
+	const gchar *filename;
+	gchar *filename_path;
+	gchar **firmware_files;
+	guint i;
+	guint length;
+	GPtrArray *array;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
-	firmware->priv->files = NULL;
+	firmware->priv->array_found = g_ptr_array_new ();
+	firmware->priv->array_requested = g_ptr_array_new ();
 	firmware->priv->gconf_client = gconf_client_get_default ();
 
 	/* should we check and show the user */
@@ -193,32 +282,60 @@ gpk_firmware_init (GpkFirmware *firmware)
 		return;
 	}
 
-	/* file exists? */
-	ret = g_file_test (GPK_FIRMWARE_STATE_FILE, G_FILE_TEST_EXISTS);
-	if (!ret) {
-		egg_debug ("file '%s' not found", GPK_FIRMWARE_STATE_FILE);
-		return;
-	}
-	/* can we get the contents */
-	ret = g_file_get_contents (GPK_FIRMWARE_STATE_FILE, &files, NULL, &error);
-	if (!ret) {
-		egg_warning ("can't open file %s, %s", GPK_FIRMWARE_STATE_FILE, error->message);
+	/* open the directory of requests */
+	dir = g_dir_open (GPK_FIRMWARE_STATE_DIR, 0, &error);
+	if (dir == NULL) {
+		egg_warning ("failed to open directory: %s", error->message);
 		g_error_free (error);
 		return;
 	}
 
-	/* split, as we can use multiple lines */
-	firmware->priv->files = g_strsplit (files, "\n", 0);
+	/* find all the firmware requests */
+	filename = g_dir_read_name (dir);
+	array = firmware->priv->array_requested;
+	while (filename != NULL) {
 
-	/* file already exists */
-	ret = g_file_test (firmware->priv->files[0], G_FILE_TEST_EXISTS);
-	if (ret) {
-		egg_debug ("file '%s' already exists", firmware->priv->files[0]);
-		return;
+		/* can we get the contents */
+		filename_path = g_build_filename (GPK_FIRMWARE_STATE_DIR, filename, NULL);
+		egg_debug ("opening %s", filename_path);
+		ret = g_file_get_contents (filename_path, &contents, NULL, &error);
+		if (!ret) {
+			egg_warning ("can't open file %s, %s", filename, error->message);
+			g_error_free (error);
+			error = NULL;
+			goto skip_file;
+		}
+
+		/* split, as we can use multiple requests in one file */
+		firmware_files = g_strsplit (contents, "\n", 0);
+		length = g_strv_length (firmware_files);
+		for (i=0; i<length; i++) {
+			if (!egg_strzero (firmware_files[i])) {
+				/* file still doesn't exist */
+				ret = g_file_test (firmware_files[i], G_FILE_TEST_EXISTS);
+				if (!ret)
+					g_ptr_array_add (array, g_strdup (firmware_files[i]));
+			}
+		}
+skip_file:
+		g_free (filename_path);
+		/* next file */
+		filename = g_dir_read_name (dir);
+	}
+	g_dir_close (dir);
+
+	/* don't request duplicates */
+	gpk_firmware_array_remove_duplicate (array);
+
+	/* debugging */
+	for (i=0; i<array->len; i++) {
+		filename = (const gchar *) g_ptr_array_index (array, i);
+		egg_debug ("requested: %s", filename);
 	}
 
-	/* don't spam the user at startup */
-	g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, gpk_firmware_timeout_cb, firmware);
+	/* don't spam the user at startup, so wait a little delay */
+	if (array->len > 0)
+		g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, gpk_firmware_timeout_cb, firmware);
 }
 
 /**
@@ -235,7 +352,10 @@ gpk_firmware_finalize (GObject *object)
 	firmware = GPK_FIRMWARE (object);
 
 	g_return_if_fail (firmware->priv != NULL);
-	g_strfreev (firmware->priv->files);
+	g_ptr_array_foreach (firmware->priv->array_found, (GFunc) g_free, NULL);
+	g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) g_free, NULL);
+	g_ptr_array_free (firmware->priv->array_found, TRUE);
+	g_ptr_array_free (firmware->priv->array_requested, TRUE);
 	g_object_unref (firmware->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
