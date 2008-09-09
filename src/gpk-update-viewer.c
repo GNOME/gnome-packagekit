@@ -104,6 +104,8 @@ enum {
 	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_INFO,
 	PACKAGES_COLUMN_SELECT,
+	PACKAGES_COLUMN_SENSITIVE,
+	PACKAGES_COLUMN_CLICKABLE,
 	PACKAGES_COLUMN_LAST
 };
 
@@ -460,6 +462,7 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 	guint num_security = 0;
 	guint num_bugfix = 0;
 	guint num_enhancement = 0;
+	guint num_blocked = 0;
 	const gchar *icon;
 	gchar *text;
 
@@ -482,6 +485,8 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 				num_bugfix++;
 			} else if (obj->info == PK_INFO_ENUM_ENHANCEMENT) {
 				num_enhancement++;
+			} else if (obj->info == PK_INFO_ENUM_BLOCKED) {
+				num_blocked++;
 			} else {
 				num_normal++;
 			}
@@ -512,6 +517,12 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 		if (num_enhancement > 0) {
 			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
 			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
+			gpk_update_viewer_add_preview_item (icon, text, FALSE);
+			g_free (text);
+		}
+		if (num_blocked > 0) {
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_BLOCKED);
+			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_BLOCKED, num_blocked);
 			gpk_update_viewer_add_preview_item (icon, text, FALSE);
 			g_free (text);
 		}
@@ -554,6 +565,7 @@ gpk_update_viewer_get_new_update_list (void)
 	gchar **package_ids;
 	GtkTreeIter iter;
 	gboolean ret;
+	gboolean selected;
 
 	/* spin */
 	gpk_update_viewer_description_animation_start ();
@@ -587,12 +599,16 @@ gpk_update_viewer_get_new_update_list (void)
 		icon_name = gpk_info_enum_to_icon_name (obj->info);
 		gtk_list_store_append (list_store_details, &iter);
 		package_id = pk_package_id_to_string (obj->id);
+		selected = (obj->info != PK_INFO_ENUM_BLOCKED);
+		egg_warning ("selected=%i", selected);
 		gtk_list_store_set (list_store_details, &iter,
 				    PACKAGES_COLUMN_TEXT, text,
 				    PACKAGES_COLUMN_ID, package_id,
 				    PACKAGES_COLUMN_ICON, icon_name,
 				    PACKAGES_COLUMN_INFO, obj->info,
-				    PACKAGES_COLUMN_SELECT, TRUE,
+				    PACKAGES_COLUMN_SELECT, selected,
+				    PACKAGES_COLUMN_SENSITIVE, selected,
+				    PACKAGES_COLUMN_CLICKABLE, selected,
 				    -1);
 		g_free (package_id);
 		g_free (text);
@@ -1053,7 +1069,10 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_toggle_new ();
 	model = gtk_tree_view_get_model (treeview);
 	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_update_viewer_treeview_update_toggled), model);
-	column = gtk_tree_view_column_new_with_attributes ("Update", renderer, "active", PACKAGES_COLUMN_SELECT, NULL);
+	column = gtk_tree_view_column_new_with_attributes ("Update", renderer,
+							   "active", PACKAGES_COLUMN_SELECT,
+							   "activatable", PACKAGES_COLUMN_CLICKABLE,
+							   "sensitive", PACKAGES_COLUMN_SENSITIVE, NULL);
 
 	/* set this column to a fixed sizing (of 50 pixels) */
 	gtk_tree_view_column_set_sizing (GTK_TREE_VIEW_COLUMN (column), GTK_TREE_VIEW_COLUMN_FIXED);
@@ -1461,14 +1480,16 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 	gboolean valid;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	PkStatusEnum info;
 
 	/* get the first iter in the list */
 	model = gtk_tree_view_get_model (treeview);
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 	while (valid) {
-		gtk_tree_model_get (model, &iter, -1);
-		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-				    PACKAGES_COLUMN_SELECT, TRUE, -1);
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_INFO, &info, -1);
+		if (info != PK_INFO_ENUM_BLOCKED)
+			gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+					    PACKAGES_COLUMN_SELECT, TRUE, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 }
@@ -1925,7 +1946,8 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
-						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
+						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
+						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
