@@ -51,6 +51,9 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	GtkTextBuffer *buffer = NULL;
 	gchar *text;
 
+	g_return_val_if_fail (title != NULL, FALSE);
+	g_return_val_if_fail (message != NULL, FALSE);
+
 	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
@@ -58,9 +61,8 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* make modal if window set */
-	if (window != NULL) {
+	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
-	}
 
 	/* set icon name */
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
@@ -99,13 +101,11 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	gtk_main ();
 
 	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
+	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	}
 	g_object_unref (glade_xml);
-	if (buffer != NULL) {
+	if (buffer != NULL)
 		g_object_unref (buffer);
-	}
 	return TRUE;
 }
 

@@ -46,6 +46,7 @@
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
 #include <pk-package-list.h>
+#include <pk-distro-upgrade-obj.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -914,8 +915,6 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	/* show the icon at login time */
 	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
-
-#include <pk-distro-upgrade-obj.h>
 
 /**
  * gpk_check_update_auto_get_upgrades_cb:

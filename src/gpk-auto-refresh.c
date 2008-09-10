@@ -173,18 +173,14 @@ gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 		egg_warning ("no schema");
 		return 0;
 	}
-	if (freq == PK_FREQ_ENUM_NEVER) {
+	if (freq == PK_FREQ_ENUM_NEVER)
 		return 0;
-	}
-	if (freq == PK_FREQ_ENUM_HOURLY) {
+	if (freq == PK_FREQ_ENUM_HOURLY)
 		return 60*60;
-	}
-	if (freq == PK_FREQ_ENUM_DAILY) {
+	if (freq == PK_FREQ_ENUM_DAILY)
 		return 60*60*24;
-	}
-	if (freq == PK_FREQ_ENUM_WEEKLY) {
+	if (freq == PK_FREQ_ENUM_WEEKLY)
 		return 60*60*24*7;
-	}
 	egg_warning ("unknown frequency enum");
 	return 0;
 }
