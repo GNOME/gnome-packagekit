@@ -152,6 +152,16 @@
     Access to all privileged operations is controlled via
     <ulink url="http://en.wikipedia.org/wiki/PolicyKit">PolicyKit</ulink>.
   </para>
+  <figure>
+    <title>PolicyKit Permissions UI</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-repo-auth.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
 
 </section>
 
@@ -257,6 +267,16 @@
     Before installing a package, you also can visit the home page of the
     software projects easily for getting any additional details.
   </para>
+  <figure>
+    <title>Searching for a group with filters</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-application-groups.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
   <para>
     Typically, you can find several thousands of software packages under
     different groups available.
@@ -331,6 +351,16 @@
     additional software for many Linux distributions - check your
     distribution-specific documentation for more information.
   </para>
+  <figure>
+    <title>Software Sources UI</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-repo.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
   <para>
     At this time, PackageKit does not offer a way to add new repositories to
     your system. It only allows you to enable or disable known repositories.
@@ -356,47 +386,57 @@
 
 <section id="update-viewer">
   <title>Update Viewer</title>
-   <para>
-     You can update your system via <menuchoice><guimenu>System</guimenu>
-     <guisubmenu>Administration</guisubmenu>
-     <guimenuitem>Update System</guimenuitem></menuchoice>
-     or by selecting <menuchoice><guimenuitem>Show Updates</guimenuitem></menuchoice>
-     from the update icon in the notification area.
-     When you do this, the update viewer application launches and immediately
-     starts checking for updates. Once this check completes, it shows you an
-     overview of available updates, grouped by severity. The severities range
-     from security updates over important updates to bug fix updates and
-     finally enhancements.
-   </para>
-   <note><para>
-     Note that the severity information must be provided by the software
-     repositories where the software packages originate. This information may not
-     be available for development branches of distributions.
-   </para></note>
-   <para>
-     Below the summary of available updates, the update viewer gives and
-     indication how long ago the last check (or <quote>refresh</quote>)
-     for new updates happened, and when updates where last installed.
-   </para>
-   <para>
-     You can choose to manually refresh and verify the presence of
-     updates by clicking the <guibutton>Refresh</guibutton> button.
-   </para>
-   <tip><para>
-     You can change how often PackageKit refreshes on its own in
-     the <link linkend="prefs">Software Update Preferences</link>.
-   </para></tip>
-   <para>
-     There is a option to view the history of updates including
-     previous installations, removal or updates of software.
-   </para>
-   <para>
-     Use the <guibutton>Update System</guibutton> button to install
-     all available updates or use the <guibutton>Review</guibutton>
-     button to review and select individual updates.
-     If you do not want to install updates at this time, you can just
-     close the window.
-   </para>
+  <para>
+    You can update your system via <menuchoice><guimenu>System</guimenu>
+    <guisubmenu>Administration</guisubmenu>
+    <guimenuitem>Update System</guimenuitem></menuchoice>
+    or by selecting <menuchoice><guimenuitem>Show Updates</guimenuitem></menuchoice>
+    from the update icon in the notification area.
+    When you do this, the update viewer application launches and immediately
+    starts checking for updates. Once this check completes, it shows you an
+    overview of available updates, grouped by severity. The severities range
+    from security updates over important updates to bug fix updates and
+    finally enhancements.
+  </para>
+  <note><para>
+    Note that the severity information must be provided by the software
+    repositories where the software packages originate. This information may not
+    be available for development branches of distributions.
+  </para></note>
+  <figure>
+    <title>Updates overview</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-updates-overview.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
+  <para>
+    Below the summary of available updates, the update viewer gives and
+    indication how long ago the last check (or <quote>refresh</quote>)
+    for new updates happened, and when updates where last installed.
+  </para>
+  <para>
+    You can choose to manually refresh and verify the presence of
+    updates by clicking the <guibutton>Refresh</guibutton> button.
+  </para>
+  <tip><para>
+    You can change how often PackageKit refreshes on its own in
+    the <link linkend="prefs">Software Update Preferences</link>.
+  </para></tip>
+  <para>
+    There is a option to view the history of updates including
+    previous installations, removal or updates of software.
+  </para>
+  <para>
+    Use the <guibutton>Update System</guibutton> button to install
+    all available updates or use the <guibutton>Review</guibutton>
+    button to review and select individual updates.
+    If you do not want to install updates at this time, you can just
+    close the window.
+  </para>
 
   <section id="update-viewer-details">
     <title>Detailed information about updates</title>
@@ -419,6 +459,16 @@
       If you do not want to install updates at this time, you can just
       close the window.
     </para>
+    <figure>
+      <title>Update viewer tool</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-updates.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
     <note><para>
       You can uncheck all the updates quickly by right clicking on the list and
       selecting the menu item <guibutton>Unselect all</guibutton>.
@@ -428,6 +478,16 @@
 
 <section id="prefs">
   <title>Software Updates Preferences</title>
+  <figure>
+    <title>Preferences tool</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-prefs.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
   <para>
     Preferences can be configured via <menuchoice><guimenu>System</guimenu>
     <guisubmenu>Preferences</guisubmenu><guisubmenu>System</guisubmenu>
@@ -465,6 +525,16 @@
      information about the available updates before installing them. See
      <xref linkend="update-viewer"/> for more information.
   </para>
+  <figure>
+    <title>Preferences tool</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-updates-warning.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
 </section>
 
 <section id="eula">
@@ -483,6 +553,16 @@
     Some software also includes limitations if the user can be held liable for
     damage that arises through improper use of the software.
   </para>
+  <figure>
+    <title>Example EULA</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-eula.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
   <para>
     Be sure to carefully read and accept the EULA text before continuing with
     the install or update.
@@ -504,6 +584,16 @@
     The other benefit is that signed packages can be installed without using the
     administrator password, assuming your admin has enabled this option.
   </para>
+  <figure>
+    <title>Example signature prompt</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-signature.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
   <para>
     To trust a repository, you should very the details of the signing key.
     Normally the best way to do this is to go to the web page of the software
