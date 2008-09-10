@@ -453,6 +453,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_FILE_NOT_FOUND:
 		text = _("The specified file could not be found");
 		break;
+	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
+		text = _("No more mirrors are available");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -620,6 +623,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_FILE_NOT_FOUND:
 		text = _("The specified file could not be found on the system.\n"
 			 "Check the file still exists and has not been deleted.");
+		break;
+	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
+		text = _("Required data could not be found on any of the configured software sources.\n"
+			 "There were no more download mirrors that could be tried.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
