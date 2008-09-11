@@ -153,9 +153,10 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
 	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
 	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
-//	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
-//	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
-//	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
+	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
+	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
+	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
+	{PK_GROUP_ENUM_META_PACKAGES,		"emblem-system"},	// need better icon
 	{0, NULL}
 };
 
@@ -1312,6 +1313,9 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_ELECTRONICS:
 		text = _("Electronics");
+		break;
+	case PK_GROUP_ENUM_META_PACKAGES:
+		text = _("Package collections");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");
