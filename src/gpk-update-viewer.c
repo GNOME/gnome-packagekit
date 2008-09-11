@@ -34,9 +34,6 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-/* local .la */
-#include <egg-unique.h>
-
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-common.h>
@@ -47,6 +44,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-unique.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
@@ -67,6 +65,7 @@ static PkTaskList *tlist = NULL;
 static gchar *cached_package_id = NULL;
 static GpkClient *gclient = NULL;
 static gboolean are_updates_available = FALSE;
+static guint description_event_id = 0;
 
 static PolKitGnomeAction *refresh_action = NULL;
 static PolKitGnomeAction *update_system_action = NULL;
@@ -329,10 +328,10 @@ gpk_update_viewer_preview_animation_stop (void)
 }
 
 /**
- * gpk_update_viewer_description_animation_start:
+ * gpk_update_viewer_description_animation_start_really:
  **/
-static void
-gpk_update_viewer_description_animation_start (void)
+static gboolean
+gpk_update_viewer_description_animation_start_really (void)
 {
 	GtkWidget *widget;
 	gchar *text_bold;
@@ -353,6 +352,25 @@ gpk_update_viewer_description_animation_start (void)
 
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 	gtk_widget_hide (widget);
+
+	/* we've done the event */
+	description_event_id = 0;
+
+	/* never repeat */
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_description_animation_start:
+ **/
+static void
+gpk_update_viewer_description_animation_start (void)
+{
+	/* only clear the last data and show the spinner if it takes a little
+	 * while, else we flicker the display too much */
+	if (description_event_id > 0)
+		g_source_remove (description_event_id);
+	description_event_id = g_timeout_add (100, (GSourceFunc) gpk_update_viewer_description_animation_start_really, NULL);
 }
 
 /**
@@ -362,6 +380,13 @@ static void
 gpk_update_viewer_description_animation_stop (void)
 {
 	GtkWidget *widget;
+
+	/* if we are not showing, clear timeout and return */
+	if (description_event_id > 0) {
+		g_source_remove (description_event_id);
+		description_event_id = 0;
+		return;
+	}
 
 	widget = glade_xml_get_widget (glade_xml, "image_animation_description");
 	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
@@ -1091,12 +1116,9 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gchar *package_id;
-	GtkWidget *widget;
 	GError *error = NULL;
 	gboolean ret;
 	gchar **package_ids;
-
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
