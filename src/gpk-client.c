@@ -1760,6 +1760,24 @@ out:
 }
 
 /**
+ * gpk_client_install_gstreamer_codecs:
+ * @gclient: a valid #GpkClient instance
+ * @mime_type: a mime_type such as <literal>application/text</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a application to handle a mime type
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+gboolean
+gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_strings, GError **error)
+{
+	gpk_client_error_msg (gclient, _("Failed to install codecs"), _("Not yet supported"), NULL);
+	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+	return FALSE;
+}
+
+/**
  * gpk_client_install_mime_type:
  * @gclient: a valid #GpkClient instance
  * @mime_type: a mime_type such as <literal>application/text</literal>

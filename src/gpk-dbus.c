@@ -114,7 +114,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	egg_warning ("sender=%s", sender);
+	egg_debug ("sender=%s", sender);
 
 	/* just convert from char* to char** */
 	full_paths = g_strsplit (full_path, "|", 1);
@@ -148,7 +148,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	egg_warning ("sender=%s", sender);
+	egg_debug ("sender=%s", sender);
 
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
@@ -180,7 +180,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	egg_warning ("sender=%s", sender);
+	egg_debug ("sender=%s", sender);
 
 	/* just convert from char* to char** */
 	package_names = g_strsplit (package_name, "|", 1);
@@ -215,9 +215,40 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	egg_warning ("sender=%s", sender);
+	egg_debug ("sender=%s", sender);
 
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_install_gstreamer_codecs:
+ **/
+void
+gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, gchar **codec_name_strings, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+	gchar *sender;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallGStreamerCodecs method called: %s", codec_name_strings[0]);
+
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+	egg_debug ("sender=%s", sender);
+
+	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_name_strings, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
@@ -246,7 +277,7 @@ gpk_dbus_install_font (GpkDbus *dbus, const gchar *font_desc, DBusGMethodInvocat
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
-	egg_warning ("sender=%s", sender);
+	egg_debug ("sender=%s", sender);
 
 	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
 	if (!ret) {
