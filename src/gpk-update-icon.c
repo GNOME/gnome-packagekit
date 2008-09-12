@@ -83,9 +83,8 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 	g_object_unref (G_OBJECT (bus_proxy));
 
 	/* already running */
-	if (request_name_result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) {
+	if (request_name_result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER)
 		return FALSE;
-	}
 
 	dbus_g_object_type_install_info (GPK_TYPE_DBUS, &dbus_glib_gpk_dbus_object_info);
 	dbus_g_error_domain_register (GPK_DBUS_ERROR, NULL, GPK_DBUS_TYPE_ERROR);
@@ -112,6 +111,7 @@ main (int argc, char *argv[])
 {
 	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
+	gboolean timed_exit = FALSE;
 	GpkCheckUpdate *cupdate = NULL;
 	GpkWatch *watch = NULL;
 	GpkDbus *dbus = NULL;
@@ -124,9 +124,11 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  N_("Show extra debugging information"), NULL },
+		  _("Show extra debugging information"), NULL },
+		{ "timed-exit", '\0', 0, G_OPTION_ARG_NONE, &timed_exit,
+		  _("Exit after a small delay"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  N_("Show the program version and exit"), NULL },
+		  _("Show the program version and exit"), NULL },
 		{ NULL}
 	};
 
@@ -136,9 +138,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	dbus_g_thread_init ();
 	g_type_init ();
 	notify_init ("gpk-update-icon");
@@ -160,9 +161,8 @@ main (int argc, char *argv[])
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Update applet"));
-	if (!ret) {
+	if (!ret)
 		return 1;
-	}
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -195,6 +195,10 @@ main (int argc, char *argv[])
 		goto out;
 	}
 
+	/* Only timeout if we have specified iton the command line */
+	if (timed_exit)
+		g_timeout_add_seconds (120, (GSourceFunc) gtk_main_quit, NULL);
+
 	/* wait */
 	gtk_main ();
 
@@ -207,3 +211,4 @@ out:
 
 	return 0;
 }
+
