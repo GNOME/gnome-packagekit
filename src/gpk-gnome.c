@@ -41,9 +41,8 @@ gpk_gnome_open (const gchar *url)
 
 	data = g_strconcat ("gnome-open ", url, NULL);
 	ret = g_spawn_command_line_async (data, NULL);
-	if (ret == FALSE) {
+	if (!ret)
 		egg_warning ("spawn of '%s' failed", data);
-	}
 	g_free (data);
 	return ret;
 }
@@ -66,26 +65,21 @@ gpk_gnome_help (const gchar *link_id)
 
 	for (i = 0; langs[i]; i++) {
 		lang = langs[i];
-		if (strchr (lang, '.')) {
+		if (strchr (lang, '.'))
 			continue;
-		}
-		uri = g_build_filename(DATADIR,
-				       "/gnome/help/gnome-packagekit/",
-					lang,
-				       "/gnome-packagekit.xml",
-					NULL);
-		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
-                    break;
-		}
+		uri = g_build_filename (DATADIR, "/gnome/help/gnome-packagekit/",
+					lang, "/gnome-packagekit.xml", NULL);
+		if (g_file_test (uri, G_FILE_TEST_EXISTS))
+			break;
+		g_free (uri);
 	}
-	if (link_id) {
+	if (link_id)
 		command = g_strconcat ("gnome-open ghelp://", uri, "?", link_id, NULL);
-	} else {
-		command = g_strconcat ("gnome-open ghelp://", uri,  NULL);
-	}
+	else
+		command = g_strconcat ("gnome-open ghelp://", uri, NULL);
 	egg_debug ("using command %s", command);
 
-	gscreen = gdk_screen_get_default();
+	gscreen = gdk_screen_get_default ();
 	gdk_spawn_command_line_on_screen (gscreen, command, &error);
 	if (error != NULL) {
 		GtkWidget *d;

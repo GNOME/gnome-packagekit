@@ -191,7 +191,7 @@ gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
 static guint
 gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *key)
 {
-	const gchar *freq_text;
+	gchar *freq_text;
 	PkFreqEnum freq;
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), 0);
@@ -205,6 +205,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 
 	/* convert to enum and get seconds */
 	freq = pk_freq_enum_from_text (freq_text);
+	g_free (freq_text);
 	return gpk_auto_refresh_convert_frequency (freq);
 }
 

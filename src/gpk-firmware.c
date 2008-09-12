@@ -293,6 +293,8 @@ gpk_firmware_init (GpkFirmware *firmware)
 					egg_str_list_add (array, firmware_files[i]);
 			}
 		}
+		g_free (contents);
+		g_strfreev (firmware_files);
 skip_file:
 		g_free (filename_path);
 		/* next file */
