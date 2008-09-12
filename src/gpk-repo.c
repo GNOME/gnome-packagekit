@@ -32,14 +32,12 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 
-/* local .la */
-#include <egg-unique.h>
-
 #include <pk-common.h>
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-connection.h>
 
+#include "egg-unique.h"
 #include "egg-debug.h"
 #include "egg-string.h"
 
@@ -336,7 +334,7 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  N_("Show extra debugging information"), NULL },
+		  _("Show extra debugging information"), NULL },
 		{ NULL}
 	};
 

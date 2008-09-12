@@ -32,9 +32,6 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 
-/* local .la */
-#include <egg-unique.h>
-
 #include <pk-control.h>
 #include <pk-client.h>
 
@@ -42,15 +39,16 @@
 #include <gpk-gnome.h>
 
 #include "egg-debug.h"
+#include "egg-unique.h"
 
-#define PK_FREQ_HOURLY_TEXT		N_("Hourly")
-#define PK_FREQ_DAILY_TEXT		N_("Daily")
-#define PK_FREQ_WEEKLY_TEXT		N_("Weekly")
-#define PK_FREQ_NEVER_TEXT		N_("Never")
+#define PK_FREQ_HOURLY_TEXT		_("Hourly")
+#define PK_FREQ_DAILY_TEXT		_("Daily")
+#define PK_FREQ_WEEKLY_TEXT		_("Weekly")
+#define PK_FREQ_NEVER_TEXT		_("Never")
 
-#define PK_UPDATE_ALL_TEXT		N_("All updates")
-#define PK_UPDATE_SECURITY_TEXT		N_("Only security updates")
-#define PK_UPDATE_NONE_TEXT		N_("Nothing")
+#define PK_UPDATE_ALL_TEXT		_("All updates")
+#define PK_UPDATE_SECURITY_TEXT		_("Only security updates")
+#define PK_UPDATE_NONE_TEXT		_("Nothing")
 
 static GladeXML *glade_xml = NULL;
 
@@ -351,9 +349,9 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  N_("Show extra debugging information"), NULL },
+		  _("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  N_("Show the program version and exit"), NULL },
+		  _("Show the program version and exit"), NULL },
 		{ NULL}
 	};
 
