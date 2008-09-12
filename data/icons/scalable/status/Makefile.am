@@ -5,6 +5,8 @@ context = status
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = 				\
+	pk-collection-installed.svg	\
+	pk-collection-available.svg	\
 	pk-package-installed.svg	\
 	pk-package-available.svg	\
 	pk-package-add.svg		\

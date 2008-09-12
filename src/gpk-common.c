@@ -156,7 +156,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
 	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
 	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
-	{PK_GROUP_ENUM_META_PACKAGES,		"emblem-system"},	// need better icon
+	{PK_GROUP_ENUM_META_PACKAGES,		"pk-collection-installed"},
 	{0, NULL}
 };
 
