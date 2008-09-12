@@ -956,15 +956,13 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
 	/* ignore progress */
-	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE) {
+	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE)
 		return;
-	}
 
+	/* use the localised summary if available */
 	summary_new = pk_extra_get_summary (application->priv->extra, obj->id->name);
-	if (summary_new == NULL) {
-		/* use the non-localised one */
+	if (summary_new == NULL)
 		summary_new = obj->summary;
-	}
 
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
@@ -973,17 +971,20 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	in_queue = pk_package_list_contains_obj (application->priv->package_list, obj);
 	installed = (obj->info == PK_INFO_ENUM_INSTALLED);
 
-	if (installed && in_queue) {
+	if (installed && in_queue)
 		state = GPK_STATE_INSTALLED_TO_BE_REMOVED;
-	} else if (installed && !in_queue) {
+	else if (installed && !in_queue)
 		state = GPK_STATE_INSTALLED;
-	} else if (!installed && in_queue) {
+	else if (!installed && in_queue)
 		state = GPK_STATE_AVAILABLE_TO_BE_INSTALLED;
-	} else if (!installed && !in_queue) {
+	else if (!installed && !in_queue)
 		state = GPK_STATE_AVAILABLE;
-	}
 
-	icon = gpk_application_state_get_icon (state);
+	/* use the application icon if available */
+	icon = pk_extra_get_icon_name (application->priv->extra, obj->id->name);
+	if (icon == NULL)
+		icon = gpk_application_state_get_icon (state);
+
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* use two lines */
@@ -1008,9 +1009,8 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 
 	/* only process every n events else we re-order too many times */
 	if (package_cnt++ % 200 == 0) {
-		while (gtk_events_pending ()) {
+		while (gtk_events_pending ())
 			gtk_main_iteration ();
-		}
 	}
 }
 
