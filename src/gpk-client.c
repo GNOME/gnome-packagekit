@@ -174,11 +174,10 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
 	for (l=list, i=0; l; l=l->next, i++) {
-		if (i == page) {
+		if (i == page)
 			gtk_widget_show (l->data);
-		} else {
+		else
 			gtk_widget_hide (l->data);
-		}
 	}
 }
 
@@ -307,9 +306,8 @@ gpk_client_set_interaction (GpkClient *gclient, GpkClientInteract interact)
 	gclient->priv->show_progress = (interact == GPK_CLIENT_INTERACT_ALWAYS);
 
 	/* normally, if we don't want to show progress then we don't want finished */
-	if (gclient->priv->show_progress) {
+	if (gclient->priv->show_progress)
 		gclient->priv->show_finished = FALSE;
-	}
 }
 
 /**
@@ -1801,7 +1799,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
 
-	ret = pk_client_what_provides (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED,
+	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), _("Incorrect response from search"), error_local->message);
@@ -1837,9 +1835,8 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	package_ids = g_strsplit (package_id, "|", 1);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
-	if (list != NULL) {
+	if (list != NULL)
 		g_object_unref (list);
-	}
 	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
@@ -1869,7 +1866,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (font_desc != NULL, FALSE);
 
-	ret = pk_client_what_provides (gclient->priv->client_resolve, PK_FILTER_ENUM_NOT_INSTALLED,
+	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), _("Incorrect response from search"), error_local->message);
