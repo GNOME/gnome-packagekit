@@ -35,7 +35,7 @@
 #include "gpk-common.h"
 
 /**
- * gpk_error_dialog_modal:
+ * gpk_error_dialog_modal_with_time:
  * @window: the parent dialog
  * @title: the localised text to put in bold as a title
  * @message: the localised text to put as a message
@@ -44,7 +44,7 @@
  * Shows a modal error, and blocks until the user clicks close
  **/
 gboolean
-gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details)
+gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details, guint timestamp)
 {
 	GtkWidget *widget;
 	GladeXML *glade_xml;
@@ -97,6 +97,10 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	widget = glade_xml_get_widget (glade_xml, "window_error");
 	gtk_widget_show (widget);
 
+	/* focus stealing */
+	if (timestamp != 0)
+		gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
+
 	/* wait for button press */
 	gtk_main ();
 
@@ -107,6 +111,21 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 	if (buffer != NULL)
 		g_object_unref (buffer);
 	return TRUE;
+}
+
+/**
+ * gpk_error_dialog_modal:
+ * @window: the parent dialog
+ * @title: the localised text to put in bold as a title
+ * @message: the localised text to put as a message
+ * @details: the geeky text to in the expander, or %NULL if nothing
+ *
+ * Shows a modal error, and blocks until the user clicks close
+ **/
+gboolean
+gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details)
+{
+	return gpk_error_dialog_modal_with_time (window, title, message, details, 0);
 }
 
 /**
