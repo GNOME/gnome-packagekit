@@ -60,6 +60,8 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_REMOVING,			"pk-package-delete"},
 	{PK_INFO_ENUM_OBSOLETING,		"pk-package-cleanup"},
 	{PK_INFO_ENUM_CLEANUP,			"pk-package-cleanup"},
+	{PK_INFO_ENUM_COLLECTION_INSTALLED,	"pk-collection-installed"},
+	{PK_INFO_ENUM_COLLECTION_AVAILABLE,	"pk-collection-available"},
 	{0, NULL}
 };
 
@@ -928,9 +930,11 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Blocked update");
 		break;
 	case PK_INFO_ENUM_INSTALLED:
+	case PK_INFO_ENUM_COLLECTION_INSTALLED:
 		text = _("Installed");
 		break;
 	case PK_INFO_ENUM_AVAILABLE:
+	case PK_INFO_ENUM_COLLECTION_AVAILABLE:
 		text = _("Available");
 		break;
 	default:
