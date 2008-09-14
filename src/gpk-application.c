@@ -30,7 +30,6 @@
 #include <libsexy/sexy-icon-entry.h>
 #include <math.h>
 #include <string.h>
-#include <locale.h>
 #include <polkit-gnome/polkit-gnome.h>
 
 #include "egg-debug.h"
@@ -2577,7 +2576,6 @@ gpk_application_init (GpkApplication *application)
 	GtkTreeSelection *selection;
 	gboolean autocomplete;
 	gboolean enabled;
-	gchar *locale; /* does not need to be freed */
 	guint i;
 	gboolean ret;
 	GError *error = NULL;
@@ -2686,9 +2684,8 @@ gpk_application_init (GpkApplication *application)
 		egg_warning ("Failure setting database");
 	}
 
-	/* set the locale */
-	locale = setlocale (LC_ALL, NULL);
-	pk_extra_set_locale (application->priv->extra, locale);
+	/* set the locale to default */
+	pk_extra_set_locale (application->priv->extra, NULL);
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
