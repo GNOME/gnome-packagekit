@@ -156,7 +156,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
 	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
 	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
-	{PK_GROUP_ENUM_META_PACKAGES,		"pk-collection-installed"},
+	{PK_GROUP_ENUM_COLLECTIONS,		"pk-collection-installed"},
 	{0, NULL}
 };
 
@@ -1314,7 +1314,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_ELECTRONICS:
 		text = _("Electronics");
 		break;
-	case PK_GROUP_ENUM_META_PACKAGES:
+	case PK_GROUP_ENUM_COLLECTIONS:
 		text = _("Package collections");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
