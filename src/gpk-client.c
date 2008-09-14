@@ -100,6 +100,7 @@ struct _GpkClientPrivate
 	GtkWindow		*parent_window;
 	GPtrArray		*upgrade_array;
 	guint			 timestamp;
+	gchar			*application;
 };
 
 typedef enum {
@@ -2725,6 +2726,22 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 }
 
 /**
+ * gpk_client_set_application:
+ *
+ * This sets the package name of the application that is trying to install
+ * software, e.g. "totem" and is used for the PkExtra lookup to provide
+ * a translated name and icon.
+ **/
+gboolean
+gpk_client_set_application (GpkClient *gclient, const gchar *application)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_free (gclient->priv->application);
+	gclient->priv->application = g_strdup (application);
+	return TRUE;
+}
+
+/**
  * gpk_client_set_parent:
  **/
 gboolean
@@ -2825,6 +2842,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->glade_xml = NULL;
 	gclient->priv->files_array = NULL;
 	gclient->priv->parent_window = NULL;
+	gclient->priv->application = NULL;
 	gclient->priv->pulse_timer_id = 0;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->gtk_main_waiting = FALSE;
@@ -2939,6 +2957,7 @@ gpk_client_finalize (GObject *object)
 	if (gclient->priv->pulse_timer_id != 0)
 		g_source_remove (gclient->priv->pulse_timer_id);
 
+	g_free (gclient->priv->application);
 	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
 	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);
 	g_strfreev (gclient->priv->files_array);
