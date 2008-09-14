@@ -241,7 +241,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
@@ -284,7 +284,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
@@ -329,7 +329,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
@@ -373,7 +373,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
@@ -415,7 +415,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
@@ -457,7 +457,7 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 
 	/* get the program name and set */
 	application = gpk_dbus_get_application_for_sender (dbus, sender);
-	gpk_client_set_application (dbus->priv->gclient, sender);
+	gpk_client_set_application (dbus->priv->gclient, application);
 	g_free (sender);
 	g_free (application);
 
