@@ -44,6 +44,7 @@
 #include <pk-common.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
+#include <pk-client.h>
 #include <pk-enum.h>
 #include "egg-debug.h"
 #include <pk-package-list.h>
@@ -59,6 +60,7 @@ static void     gpk_dbus_finalize	(GObject	*object);
 
 struct GpkDbusPrivate
 {
+	PkClient		*client;
 	GpkClient		*gclient;
 };
 
@@ -150,17 +152,65 @@ out:
  * gpk_dbus_get_application_for_sender:
  **/
 static gchar *
-gpk_dbus_get_application_for_sender (const gchar *sender)
+gpk_dbus_get_application_for_sender (GpkDbus *dbus, const gchar *sender)
 {
 	gchar *exec;
+	gchar *application = NULL;
+	gboolean ret;
+	GError *error = NULL;
+	guint length;
+	PkPackageList *list = NULL;
+	const PkPackageObj *obj;
+
 	exec = gpk_dbus_get_exec_for_sender (sender);
 	if (exec == NULL) {
-		egg_warning ("could not get application name for %s", sender);
-		return NULL;
+		egg_warning ("could not get exec name for %s", sender);
+		goto out;
 	}
-	/* TODO: find the package name */
 	egg_debug ("got application path %s", exec);
-	return exec;
+
+	/* reset client */
+	ret = pk_client_reset (dbus->priv->client, &error);
+	if (!ret) {
+		egg_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* find the package name */
+	ret = pk_client_search_file (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), exec, &error);
+	if (!ret) {
+		egg_warning ("failed to search file: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get the list of packages */
+	list = pk_client_get_package_list (dbus->priv->client);
+	length = pk_package_list_get_size (list);
+
+	/* nothing found */
+	if (length == 0) {
+		egg_debug ("cannot find installed package that provides : %s", exec);
+		goto out;
+	}
+
+	/* check we have one */
+	if (length != 1)
+		egg_warning ("not one return, using first");
+
+	/* copy name */
+	obj = pk_package_list_get_obj (list, 0);
+	application = g_strdup (obj->id->name);
+	egg_debug ("got application package %s", application);
+
+out:
+	/* use the exec name if we can't find an installed package */
+	if (application == NULL && exec != NULL)
+		application = g_strdup (exec);
+	if (list != NULL)
+		g_object_unref (list);
+	return application;
 }
 
 /**
@@ -190,7 +240,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -233,7 +283,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -278,7 +328,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -322,7 +372,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -364,7 +414,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -406,7 +456,7 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 
 	/* get the program name and set */
-	application = gpk_dbus_get_application_for_sender (sender);
+	application = gpk_dbus_get_application_for_sender (dbus, sender);
 	gpk_client_set_application (dbus->priv->gclient, sender);
 	g_free (sender);
 	g_free (application);
@@ -445,6 +495,10 @@ gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->gclient = gpk_client_new ();
+	dbus->priv->client = pk_client_new ();
+	pk_client_set_synchronous (dbus->priv->client, TRUE, NULL);
+	pk_client_set_use_buffer (dbus->priv->client, TRUE, NULL);
+
 }
 
 /**
@@ -459,6 +513,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
+	g_object_unref (dbus->priv->client);
 	g_object_unref (dbus->priv->gclient);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
