@@ -95,11 +95,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
-	gtk_widget_show (widget);
-
-	/* focus stealing */
-	if (timestamp != 0)
-		gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
+	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 
 	/* wait for button press */
 	gtk_main ();

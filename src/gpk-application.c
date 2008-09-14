@@ -2680,9 +2680,8 @@ gpk_application_init (GpkApplication *application)
 	/* get localised data from sqlite database */
 	application->priv->extra = pk_extra_new ();
 	ret = pk_extra_set_database (application->priv->extra, NULL);
-	if (!ret) {
+	if (!ret)
 		egg_warning ("Failure setting database");
-	}
 
 	/* set the locale to default */
 	pk_extra_set_locale (application->priv->extra, NULL);

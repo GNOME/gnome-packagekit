@@ -837,7 +837,7 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, const gchar *messa
 	/* hide the main window */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_widget_hide (widget);
-	gpk_error_dialog_modal (GTK_WINDOW (widget), title, message, details);
+	gpk_error_dialog_modal_with_time (GTK_WINDOW (widget), title, message, details, gclient->priv->timestamp);
 }
 
 /**
@@ -1174,6 +1174,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 		g_free (message);
 
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		button = gtk_dialog_run (GTK_DIALOG (dialog));
 
 		/* did we click no or exit the window? */
@@ -1284,6 +1285,7 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 
+	gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	g_free (message);
@@ -1760,18 +1762,77 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	package_ids = pk_package_ids_from_id (package_id);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
-	if (list != NULL) {
+	if (list != NULL)
 		g_object_unref (list);
-	}
 	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
 }
 
 /**
+ * gpk_client_confirm_action:
+ * @gclient: a valid #GpkClient instance
+ **/
+static gboolean
+gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *message)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	GtkResponseType button;
+	gchar *title_name;
+	const gchar *icon = NULL;
+	const gchar *application_localised = NULL;
+
+	/* get localised name and icon if available */
+	if (gclient->priv->application != NULL) {
+		application_localised = pk_extra_get_summary (gclient->priv->extra, gclient->priv->application);
+		if (application_localised == NULL)
+			application_localised = gclient->priv->application;
+		icon = pk_extra_get_icon_name (gclient->priv->extra, gclient->priv->application);
+	}
+
+	/* fallbacks */
+	if (application_localised == NULL)
+		application_localised = _("A program");
+	if (icon == NULL)
+		icon = "emblem-system";
+
+	/* quick hack */
+	if (egg_strequal (application_localised, "dbus"))
+		application_localised = "Movie player for GNOME";
+
+	title_name = g_strdup_printf ("%s %s", application_localised, title);
+
+	/* show UI */
+	dialog = gtk_message_dialog_new (gclient->priv->parent_window,
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_CANCEL,
+					 "%s", title_name);
+	/* add window icon */
+	gtk_window_set_icon_name (GTK_WINDOW (dialog), "pk-package-installed");
+
+	/* add a specialist button */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Search"), GTK_RESPONSE_OK);
+
+	/* add a custom icon */
+	widget = gtk_image_new_from_icon_name (icon, GTK_ICON_SIZE_DIALOG);
+	gtk_message_dialog_set_image (GTK_MESSAGE_DIALOG (dialog), widget);
+	gtk_widget_show (widget);
+
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+
+	gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
+	button = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+	/* did we click no or exit the window? */
+	return (button == GTK_RESPONSE_OK);
+}
+
+/**
  * gpk_client_install_gstreamer_codecs:
  * @gclient: a valid #GpkClient instance
- * @mime_type: a mime_type such as <literal>application/text</literal>
+ * @codecs: a codec_type such as <literal>application/text</literal>
  * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a application to handle a mime type
@@ -1781,8 +1842,9 @@ out:
 gboolean
 gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_strings, GError **error)
 {
+	gpk_client_confirm_action (gclient, _("requires codecs to be installed"), "<i>Windows Media Video 9 decoder</i>");
 	gpk_client_error_msg (gclient, _("Failed to install codecs"), _("Not yet supported"), NULL);
-	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "NYI");
 	return FALSE;
 }
 
@@ -1810,6 +1872,23 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
 
+	/* make sure the user wants to do action */
+	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), mime_type);
+	if (!ret) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		ret = FALSE;
+		goto out;
+	}
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
+
+	/* action */
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
 	if (!ret) {
@@ -1825,7 +1904,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	if (len == 0) {
 		gpk_client_error_msg (gclient, _("Failed to find software"),
 				      _("No new applications can be found to handle this type of file"), NULL);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "nothing was found to handle mime type");
 		ret = FALSE;
 		goto out;
 	}
@@ -1877,6 +1956,15 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (font_desc != NULL, FALSE);
 
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		goto out;
+	}
+
+	/* action */
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
 	if (!ret) {
@@ -1913,9 +2001,8 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	package_ids = g_strsplit (package_id, "|", 1);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
-	if (list != NULL) {
+	if (list != NULL)
 		g_object_unref (list);
-	}
 	g_strfreev (package_ids);
 	g_free (package_id);
 	return ret;
@@ -1986,6 +2073,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 
+	gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	g_free (message);
@@ -2054,6 +2142,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_OK);
 
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", text);
+	gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 	button = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	g_free (text);
@@ -2108,7 +2197,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2909,7 +2998,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->extra = pk_extra_new ();
 	ret = pk_extra_set_database (gclient->priv->extra, NULL);
 	if (!ret)
-		egg_error ("failed to set");
+		egg_warning ("failed to set extra database");
 	pk_extra_set_locale (gclient->priv->extra, NULL);
 
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
