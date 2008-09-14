@@ -43,6 +43,7 @@
 #include <pk-client.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
+#include <pk-extra.h>
 #include <pk-common.h>
 #include <pk-control.h>
 #include <pk-catalog.h>
@@ -86,6 +87,7 @@ struct _GpkClientPrivate
 	GConfClient		*gconf_client;
 	guint			 pulse_timer_id;
 	guint			 finished_timer_id;
+	PkExtra			*extra;
 	PkControl		*control;
 	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
@@ -2835,6 +2837,7 @@ gpk_client_class_init (GpkClientClass *klass)
 static void
 gpk_client_init (GpkClient *gclient)
 {
+	gboolean ret;
 	GtkWidget *widget;
 
 	gclient->priv = GPK_CLIENT_GET_PRIVATE (gclient);
@@ -2902,6 +2905,13 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->client_secondary, "finished",
 			  G_CALLBACK (gpk_client_secondary_finished_cb), gclient);
 
+	/* used for icons and translations */
+	gclient->priv->extra = pk_extra_new ();
+	ret = pk_extra_set_database (gclient->priv->extra, NULL);
+	if (!ret)
+		egg_error ("failed to set");
+	pk_extra_set_locale (gclient->priv->extra, NULL);
+
 	gclient->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
 
 	/* common stuff */
@@ -2965,6 +2975,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_secondary);
 	g_object_unref (gclient->priv->control);
+	g_object_unref (gclient->priv->extra);
 	g_object_unref (gclient->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);
