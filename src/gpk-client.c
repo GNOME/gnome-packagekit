@@ -1244,6 +1244,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 						 "%s", title);
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "files not copied");
@@ -1298,6 +1299,7 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 						 "%s", title);
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted");
@@ -1356,6 +1358,7 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 		g_free (message);
 
 		/* run */
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		ret = FALSE;
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "some files did not exist");
@@ -2084,6 +2087,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 				  _("The catalogs were not installed"), len);
 		dialog = gtk_message_dialog_new (gclient->priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return FALSE;
@@ -2111,6 +2115,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("No packages need to be installed"));
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "No packages need to be installed");
@@ -2156,6 +2161,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
 		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "Action was cancelled");
+		gtk_window_present_with_time (GTK_WINDOW (dialog), gclient->priv->timestamp);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Action was cancelled");
