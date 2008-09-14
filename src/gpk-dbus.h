@@ -61,21 +61,33 @@ GType		 gpk_dbus_get_type			(void) G_GNUC_CONST;
 GpkDbus		*gpk_dbus_new				(void);
 
 void		 gpk_dbus_install_local_file		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 const gchar	*full_path,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_provide_file		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 const gchar	*full_path,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 const gchar	*package_name,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 const gchar	*mime_type,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_gstreamer_codecs	(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 gchar		**codec_name_strings,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_font			(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
 							 const gchar	*font_desc,
 							 DBusGMethodInvocation *context);
 

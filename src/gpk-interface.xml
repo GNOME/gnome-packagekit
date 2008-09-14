@@ -3,26 +3,38 @@
   <interface name="org.freedesktop.PackageKit">
     <method name="InstallLocalFile">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="full_path" direction="in"/>
     </method>
     <method name="InstallProvideFile">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="full_path" direction="in"/>
     </method>
     <method name="InstallPackageName">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="package_name" direction="in"/>
     </method>
     <method name="InstallMimeType">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="mime_type" direction="in"/>
     </method>
     <method name="InstallGStreamerCodecs">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="as" name="codec_name_strings" direction="in"/>
     </method>
     <method name="InstallFont">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="font_desc" direction="in"/>
     </method>
   </interface>

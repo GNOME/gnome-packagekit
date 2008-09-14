@@ -70,9 +70,8 @@ GQuark
 gpk_dbus_error_quark (void)
 {
 	static GQuark quark = 0;
-	if (!quark) {
+	if (!quark)
 		quark = g_quark_from_static_string ("gpk_dbus_error");
-	}
 	return quark;
 }
 
@@ -100,7 +99,7 @@ gpk_dbus_error_get_type (void)
  * gpk_dbus_install_local_file:
  **/
 void
-gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodInvocation *context)
+gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *full_path, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -118,6 +117,8 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
 
 	/* just convert from char* to char** */
 	full_paths = g_strsplit (full_path, "|", 1);
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
 	g_strfreev (full_paths);
 	if (!ret) {
@@ -135,7 +136,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodI
  * gpk_dbus_install_provide_file:
  **/
 void
-gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMethodInvocation *context)
+gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *full_path, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -150,6 +151,8 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
 	sender = dbus_g_method_get_sender (context);
 	egg_debug ("sender=%s", sender);
 
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -166,7 +169,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, const gchar *full_path, DBusGMetho
  * gpk_dbus_install_package_name:
  **/
 void
-gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMethodInvocation *context)
+gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *package_name, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -184,6 +187,8 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
 
 	/* just convert from char* to char** */
 	package_names = g_strsplit (package_name, "|", 1);
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	g_strfreev (package_names);
 
@@ -202,7 +207,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, const gchar *package_name, DBusGMe
  * gpk_dbus_install_mime_type:
  **/
 void
-gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodInvocation *context)
+gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *mime_type, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -217,6 +222,8 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
 	sender = dbus_g_method_get_sender (context);
 	egg_debug ("sender=%s", sender);
 
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -233,7 +240,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, const gchar *mime_type, DBusGMethodIn
  * gpk_dbus_install_gstreamer_codecs:
  **/
 void
-gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, gchar **codec_name_strings, DBusGMethodInvocation *context)
+gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **codec_name_strings, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -248,6 +255,8 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, gchar **codec_name_strings, DB
 	sender = dbus_g_method_get_sender (context);
 	egg_debug ("sender=%s", sender);
 
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_name_strings, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -264,7 +273,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, gchar **codec_name_strings, DB
  * gpk_dbus_install_font:
  **/
 void
-gpk_dbus_install_font (GpkDbus *dbus, const gchar *font_desc, DBusGMethodInvocation *context)
+gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *font_desc, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -279,6 +288,8 @@ gpk_dbus_install_font (GpkDbus *dbus, const gchar *font_desc, DBusGMethodInvocat
 	sender = dbus_g_method_get_sender (context);
 	egg_debug ("sender=%s", sender);
 
+	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
+	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
 	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -365,11 +376,10 @@ egg_test_dbus (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "get GpkDbus object");
 	dbus = gpk_dbus_new ();
-	if (dbus != NULL) {
+	if (dbus != NULL)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, NULL);
-	}
 
 	g_object_unref (dbus);
 
