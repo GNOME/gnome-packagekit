@@ -99,6 +99,7 @@ struct _GpkClientPrivate
 	PkExitEnum		 exit;
 	GtkWindow		*parent_window;
 	GPtrArray		*upgrade_array;
+	guint			 timestamp;
 };
 
 typedef enum {
@@ -159,6 +160,7 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 	GList *list, *l;
 	GtkWidget *widget;
 	guint i;
+	guint timestamp;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
@@ -168,9 +170,7 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 		return;
 	}
 
-	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
-	gtk_widget_show (widget);
-
+	/* show the right page */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
 	for (l=list, i=0; l; l=l->next, i++) {
@@ -179,6 +179,15 @@ gpk_client_set_page (GpkClient *gclient, GpkClientPageEnum page)
 		else
 			gtk_widget_hide (l->data);
 	}
+
+	/* if we didn't set a timestamp, just work round focus stealing prevention */
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gtk_widget_realize (widget);
+	timestamp = gclient->priv->timestamp;
+	if (timestamp == 0)
+		gtk_window_present (GTK_WINDOW (widget));
+	else
+		gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 }
 
 /**
@@ -1011,11 +1020,10 @@ gpk_client_set_progress_files (GpkClient *gclient, gboolean enabled)
 
 	/* if we're never going to show it, hide the allocation */
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "label_package");
-	if (!enabled) {
+	if (!enabled)
 		gtk_widget_hide (widget);
-	} else {
+	else
 		gtk_widget_show (widget);
-	}
 	gclient->priv->show_progress_files = enabled;
 }
 
@@ -2723,10 +2731,49 @@ gboolean
 gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
 {
 	GtkWidget *widget;
+
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
 	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
 	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 	gclient->priv->parent_window = window;
+	return TRUE;
+}
+
+/**
+ * gpk_client_set_parent_xid:
+ **/
+gboolean
+gpk_client_set_parent_xid (GpkClient *gclient, guint32 xid)
+{
+	GdkWindow *foreign_window;
+	GtkWidget *widget;
+
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* sentinel for "don't know" */
+	if (xid == 0)
+		return FALSE;
+
+	foreign_window = gdk_window_foreign_new (xid);
+
+	/* window invalid */
+	if (foreign_window == NULL)
+		return FALSE;
+
+	widget = glade_xml_get_widget (gclient->priv->glade_xml, "window_updates");
+	gdk_window_set_transient_for (widget->window, foreign_window);
+	return TRUE;
+}
+
+/**
+ * gpk_client_update_timestamp:
+ **/
+gboolean
+gpk_client_update_timestamp (GpkClient *gclient, guint32 timestamp)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	gclient->priv->timestamp = timestamp;
 	return TRUE;
 }
 
@@ -2787,6 +2834,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->show_progress_files = TRUE;
 	gclient->priv->finished_timer_id = 0;
+	gclient->priv->timestamp = 0;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -2886,12 +2934,10 @@ gpk_client_finalize (GObject *object)
 	g_return_if_fail (gclient->priv != NULL);
 
 	/* stop the timers if running */
-	if (gclient->priv->finished_timer_id != 0) {
+	if (gclient->priv->finished_timer_id != 0)
 		g_source_remove (gclient->priv->finished_timer_id);
-	}
-	if (gclient->priv->pulse_timer_id != 0) {
+	if (gclient->priv->pulse_timer_id != 0)
 		g_source_remove (gclient->priv->pulse_timer_id);
-	}
 
 	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
 	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);

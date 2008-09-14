@@ -127,6 +127,10 @@ gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
 							 const gchar	*tid);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
 							 GtkWindow	*window);
+gboolean	 gpk_client_set_parent_xid		(GpkClient	*gclient,
+							 guint		 xid);
+gboolean	 gpk_client_update_timestamp		(GpkClient	*gclient,
+							 guint		 timestamp);
 
 G_END_DECLS
 
