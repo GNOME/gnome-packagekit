@@ -38,6 +38,8 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
+#include <polkit/polkit.h>
+#include <polkit-dbus/polkit-dbus.h>
 
 #include <pk-common.h>
 #include <pk-package-id.h>
@@ -96,6 +98,72 @@ gpk_dbus_error_get_type (void)
 }
 
 /**
+ * gpk_dbus_get_exec_for_sender:
+ **/
+static gchar *
+gpk_dbus_get_exec_for_sender (const gchar *sender)
+{
+	pid_t pid;
+	gchar exec[128];
+	PolKitCaller *caller = NULL;
+	DBusError dbus_error;
+	gboolean ret = FALSE;
+	gint retval;
+	DBusConnection *connection;
+	gchar *sender_exe = NULL;
+
+	/* get a connection */
+	connection = dbus_bus_get (DBUS_BUS_SESSION, NULL);
+	if (connection == NULL)
+		egg_error ("fatal, no system dbus");
+
+	dbus_error_init (&dbus_error);
+	caller = polkit_caller_new_from_dbus_name (connection, sender, &dbus_error);
+	if (caller == NULL) {
+		egg_warning ("cannot get caller from sender %s: %s", sender, dbus_error.message);
+		dbus_error_free (&dbus_error);
+		goto out;
+	}
+
+	ret = polkit_caller_get_pid (caller, &pid);
+	if (!ret) {
+		egg_warning ("cannot get pid from sender %p", sender);
+		goto out;
+	}
+
+	retval = polkit_sysdeps_get_exe_for_pid (pid, exec, 128);
+	if (retval == -1) {
+		egg_warning ("cannot get exec for pid %i", pid);
+		goto out;
+	}
+
+	/* make a copy */
+	sender_exe = g_strdup (exec);
+
+out:
+	if (caller != NULL)
+		polkit_caller_unref (caller);
+	return sender_exe;
+}
+
+/**
+ * gpk_dbus_get_application_for_sender:
+ **/
+static gchar *
+gpk_dbus_get_application_for_sender (const gchar *sender)
+{
+	gchar *exec;
+	exec = gpk_dbus_get_exec_for_sender (sender);
+	if (exec == NULL) {
+		egg_warning ("could not get application name for %s", sender);
+		return NULL;
+	}
+	/* TODO: find the package name */
+	egg_debug ("got application path %s", exec);
+	return exec;
+}
+
+/**
  * gpk_dbus_install_local_file:
  **/
 void
@@ -106,6 +174,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	GError *error_local = NULL;
 	gchar *sender;
 	gchar **full_paths;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -119,6 +188,14 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	full_paths = g_strsplit (full_path, "|", 1);
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
 	g_strfreev (full_paths);
 	if (!ret) {
@@ -142,6 +219,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	GError *error;
 	GError *error_local = NULL;
 	gchar *sender;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -153,6 +231,14 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -176,6 +262,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	GError *error_local = NULL;
 	gchar *sender;
 	gchar **package_names;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -189,6 +276,14 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	package_names = g_strsplit (package_name, "|", 1);
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	g_strfreev (package_names);
 
@@ -213,6 +308,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 	GError *error;
 	GError *error_local = NULL;
 	gchar *sender;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -224,6 +320,14 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -246,6 +350,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	GError *error;
 	GError *error_local = NULL;
 	gchar *sender;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -257,6 +362,14 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_name_strings, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -279,6 +392,7 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 	GError *error;
 	GError *error_local = NULL;
 	gchar *sender;
+	gchar *application;
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
@@ -290,6 +404,14 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
+
+	/* get the program name and set */
+	application = gpk_dbus_get_application_for_sender (sender);
+	gpk_client_set_application (dbus->priv->gclient, sender);
+	g_free (sender);
+	g_free (application);
+
+	/* do the action */
 	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
