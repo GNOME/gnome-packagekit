@@ -1396,11 +1396,10 @@ gpk_check_privileged_user (const gchar *application_name)
 
 	uid = getuid ();
 	if (uid == 0) {
-		if (application_name == NULL) {
+		if (application_name == NULL)
 			title = g_strdup (_("This application is running as a privileged user"));
-		} else {
+		else
 			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
-		}
 		message = g_strjoin ("\n",
 				     _("Running graphical applications as a privileged user should be avoided for security reasons."),
 				     _("PackageKit applications are security sensitive and therefore this application will now close."), NULL);
@@ -1426,14 +1425,12 @@ gpk_check_icon_valid (const gchar *icon)
 	gboolean ret = TRUE;
 
 	/* trivial case */
-	if (egg_strzero (icon)) {
+	if (egg_strzero (icon))
 		return FALSE;
-	}
 
 	/* no unref required */
-	if (icon_theme == NULL) {
+	if (icon_theme == NULL)
 		icon_theme = gtk_icon_theme_get_default ();
-	}
 
 	/* default to 32x32 */
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
@@ -1499,9 +1496,8 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	}
 
 	/* stop spinning */
-	if (status == PK_STATUS_ENUM_FINISHED) {
+	if (status == PK_STATUS_ENUM_FINISHED)
 		gpk_animated_icon_enable_animation (icon, FALSE);
-	}
 	return TRUE;
 }
 
@@ -1610,9 +1606,8 @@ gpk_strv_join_locale (gchar **array)
 
 	/* trivial case */
 	length = g_strv_length (array);
-	if (length == 0) {
+	if (length == 0)
 		return g_strdup ("none");
-	}
 
 	/* try and get a print format */
 	if (length == 1) {
