@@ -955,7 +955,8 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
 	/* ignore progress */
-	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE)
+	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE &&
+	    obj->info != PK_INFO_ENUM_COLLECTION_INSTALLED && obj->info != PK_INFO_ENUM_COLLECTION_AVAILABLE)
 		return;
 
 	/* use the localised summary if available */
@@ -968,7 +969,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 
 	/* are we in the package list? */
 	in_queue = pk_package_list_contains_obj (application->priv->package_list, obj);
-	installed = (obj->info == PK_INFO_ENUM_INSTALLED);
+	installed = (obj->info == PK_INFO_ENUM_INSTALLED) || (obj->info == PK_INFO_ENUM_COLLECTION_INSTALLED);
 
 	if (installed && in_queue)
 		state = GPK_STATE_INSTALLED_TO_BE_REMOVED;
