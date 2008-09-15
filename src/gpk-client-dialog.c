@@ -95,9 +95,9 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
 		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
+		gtk_widget_show (widget);
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
 		gtk_widget_show (widget);
 		gtk_widget_grab_focus (widget);
@@ -265,6 +265,12 @@ gpk_client_dialog_pulse_progress (GpkClientDialog *dialog)
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
+
+	/* if there's no slider, optimise out the polling */
+	if (!GTK_WIDGET_VISIBLE (widget)) {
+		dialog->priv->pulse_timer_id = 0;
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -321,6 +327,7 @@ gpk_client_dialog_set_image (GpkClientDialog *dialog, const gchar *image)
 
 	egg_debug ("setting image: %s", image);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), image, GTK_ICON_SIZE_DIALOG);
 	return TRUE;
 }
@@ -383,7 +390,7 @@ gpk_client_dialog_set_show_message (GpkClientDialog *dialog, gboolean show_messa
 	egg_debug ("showing message: %i", show_message);
 
 	/* if we're never going to show it, hide the allocation */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "hbox_message");
 	if (!show_message)
 		gtk_widget_hide (widget);
 	else
@@ -438,7 +445,8 @@ gpk_client_dialog_window_delete_cb (GtkWidget *widget, GdkEvent *event, GpkClien
 {
 	dialog->priv->response = GTK_RESPONSE_DELETE_EVENT;
 	gpk_client_dialog_close (dialog);
-	g_main_loop_quit (dialog->priv->loop);
+	if (g_main_loop_is_running (dialog->priv->loop))
+		g_main_loop_quit (dialog->priv->loop);
 	/* do not destroy the window */
 	return TRUE;
 }
@@ -461,7 +469,10 @@ gpk_client_dialog_button_close_cb (GtkWidget *widget_button, GpkClientDialog *di
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
-	g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_CLOSE], 0);
+	if (g_main_loop_is_running (dialog->priv->loop))
+		g_main_loop_quit (dialog->priv->loop);
+	else
+		g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_CLOSE], 0);
 }
 
 /**
@@ -482,7 +493,10 @@ gpk_client_dialog_button_action_cb (GtkWidget *widget_button, GpkClientDialog *d
 {
 	dialog->priv->response = GTK_RESPONSE_OK;
 	g_main_loop_quit (dialog->priv->loop);
-	g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_ACTION], 0);
+	if (g_main_loop_is_running (dialog->priv->loop))
+		g_main_loop_quit (dialog->priv->loop);
+	else
+		g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_ACTION], 0);
 }
 
 /**
@@ -492,8 +506,10 @@ static void
 gpk_client_dialog_button_cancel_cb (GtkWidget *widget_button, GpkClientDialog *dialog)
 {
 	dialog->priv->response = GTK_RESPONSE_CANCEL;
-	g_main_loop_quit (dialog->priv->loop);
-	g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_CANCEL], 0);
+	if (g_main_loop_is_running (dialog->priv->loop))
+		g_main_loop_quit (dialog->priv->loop);
+	else
+		g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_CANCEL], 0);
 }
 
 /**
@@ -557,7 +573,6 @@ gpk_client_dialog_class_init (GpkClientDialogClass *klass)
 static void
 gpk_client_dialog_init (GpkClientDialog *dialog)
 {
-	GtkRequisition requisition;
 	GtkWidget *widget;
 
 	dialog->priv = GPK_CLIENT_DIALOG_GET_PRIVATE (dialog);
@@ -584,22 +599,9 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_cancel_cb), dialog);
 
 	/* clear status and progress text */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_title");
-	gtk_label_set_label (GTK_LABEL (widget), "The Linux kernel (the Linux operating system)");
-	gtk_widget_realize (widget);
-
-	/* set the correct width of the label to stop the window jumping around */
-	gtk_widget_size_request (widget, &requisition);
-	gtk_widget_set_size_request (widget, requisition.width * 1.1f, -1);
-	gtk_label_set_label (GTK_LABEL (widget), "");
-
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
-	gtk_label_set_label (GTK_LABEL (widget), "The Linux kernel (the core of the Linux operating system)\n\n\n");
-	gtk_widget_realize (widget);
-
-	/* set the correct height of the label to stop the window jumping around */
-	gtk_widget_size_request (widget, &requisition);
-	gtk_widget_set_size_request (widget, requisition.width, requisition.height);
+	gpk_client_dialog_set_window_title (dialog, "");
+	gpk_client_dialog_set_title (dialog, "");
+	gpk_client_dialog_set_message (dialog, "");
 }
 
 /**
@@ -674,7 +676,7 @@ gpk_client_dialog_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "confirm button");
 	gpk_client_dialog_set_title (dialog, "Button press test with a really really long title");
-	gpk_client_dialog_set_message (dialog, "Please press Uninstall\nThis is a really reall, really, really long title <i>with formatting</i>");
+	gpk_client_dialog_set_message (dialog, "Please press Uninstall\n\nThis is a really really, really,\nreally long title <i>with formatting</i>");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
 	gpk_client_dialog_set_action (dialog, _("Uninstall"));
 	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
