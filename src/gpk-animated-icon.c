@@ -52,9 +52,8 @@ gpk_animated_icon_free_pixbufs (GpkAnimatedIcon *icon)
 	}
 
 	/* free each frame */
-	for (i=0; i<icon->number_frames; i++) {
+	for (i=0; i<icon->number_frames; i++)
 		g_object_unref (icon->frames[i]);
-	}
 	g_free (icon->frames);
 	icon->frames = NULL;
 	return TRUE;
