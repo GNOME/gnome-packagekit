@@ -62,6 +62,8 @@ shared_SOURCES =					\
 	gpk-client.c					\
 	gpk-client.h					\
 	gpk-client-private.h				\
+	gpk-client-dialog.c				\
+	gpk-client-dialog.h				\
 	gpk-client-eula.c				\
 	gpk-client-eula.h				\
 	gpk-client-resolve.c				\
@@ -265,6 +267,8 @@ gpk_self_test_SOURCES =					\
 	gpk-self-test.c					\
 	egg-test.h					\
 	egg-test.c					\
+	gpk-dbus.c					\
+	gpk-dbus.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 

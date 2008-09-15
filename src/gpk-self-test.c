@@ -26,6 +26,8 @@
 #include "gpk-common.h"
 
 void egg_string_test (EggTest *test);
+void gpk_dbus_test (EggTest *test);
+void gpk_client_dialog_test (EggTest *test);
 
 int
 main (int argc, char **argv)
@@ -35,12 +37,15 @@ main (int argc, char **argv)
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
 	g_type_init ();
+	gtk_init (&argc, &argv);
 	test = egg_test_init ();
 	egg_debug_init (TRUE);
 
 	/* tests go here */
 	egg_string_test (test);
 	gpk_common_test (test);
+	gpk_dbus_test (test);
+	gpk_client_dialog_test (test);
 
 	return egg_test_finish (test);
 }
