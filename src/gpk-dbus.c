@@ -539,16 +539,12 @@ gpk_dbus_new (void)
 #include "egg-test.h"
 
 void
-egg_test_dbus (EggTest *test)
+gpk_dbus_test (EggTest *test)
 {
 	GpkDbus *dbus = NULL;
-	gboolean ret;
-	const gchar *temp;
-	GError *error = NULL;
 
-	if (egg_test_start (test, "GpkDbus") == FALSE) {
+	if (!egg_test_start (test, "GpkDbus"))
 		return;
-	}
 
 	/************************************************************/
 	egg_test_title (test, "get GpkDbus object");
