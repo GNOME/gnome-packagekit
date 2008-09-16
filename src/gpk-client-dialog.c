@@ -146,10 +146,11 @@ gboolean
 gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 {
 	GtkWidget *widget;
-
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+	g_return_val_if_fail (GDK_WINDOW (window), FALSE);
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	gtk_widget_realize (widget);
 	gdk_window_set_transient_for (GTK_WIDGET(widget)->window, window);
 	return TRUE;
 }
