@@ -1,3 +1,38 @@
+Version 0.3.3
+~~~~~~~~~~~~~~
+Released: 2008-09-16
+
+* Translations
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+
+* New
+ - Add two new icons, pk-collection-available and pk-collection-installed (Mike Langlie)
+ - Add pk-package-blocked icon for blocked packages (Richard Hughes)
+ - Add a --timed-exit parameter so we can do memory profiling (Richard Hughes)
+ - If the installed applications have an application icon, use it in gpk-application (Richard Hughes)
+ - Add InstallGStreamerCodecs to the session interface (Richard Hughes)
+ - Change the session dbus interface to support sending a xid and timestamp so
+   we can do focus stealing and modal windows correctly (Richard Hughes)
+ - Add a new GObject to GpkClient to abstract out the window interactions (Richard Hughes)
+ - Add a test script to install codecs with a XID and timestamp (Richard Hughes)
+
+* Bugfix:
+ - Don't make blocked selectable in the gpk-update-viewer tool (Richard Hughes)
+ - Add some images into the help file to make it more interesting (Richard Hughes)
+ - Only clear the last data details and show the spinner if it takes a little while,
+   else we flicker the display too much (Richard Hughes)
+ - Convert the codec installer dbus interface from as to a(ss) as suggested by davidz (Richard Hughes)
+ - Add a function gpk_error_dialog_modal_with_time so we can deal with focus stealing (Richard Hughes)
+ - Don't ignore collection packages in gpk-application (Richard Hughes)
+ - Fix a number of memory leaks in the client tools (Richard Hughes)
+ - Add two new methods: gpk_client_set_parent_xid() and gpk_client_update_timestamp() so
+   we can fix focus stealing and modal windows (Richard Hughes)
+ - Support INFO_ENUM_COLLECTION_INSTALLED and INFO_ENUM_COLLECTION_AVAILABLE (Richard Hughes)
+ - Add a new confirm dialog for the codec and mime type searching (Richard Hughes)
+ - Don't show the finshed UI when using gpk-application (Richard Hughes)
+
 Version 0.3.2
 ~~~~~~~~~~~~~~
 Released: 2008-09-08
@@ -7,7 +42,7 @@ Released: 2008-09-08
  - Brazilian Portuguese translation updated (Igor Pires Soares)
  - Updated Finnish translation (Ville-Pekka Vainio)
 
-Bugfix:
+* Bugfix:
  - Don't present the user with ok/cancel dialogs, instead use the verb (Richard Hughes)
  - Use the correct system-search icon name in gpk-application (Richard Hughes)
  - Correct the orientation of the shadow in the pk-update-high icons (Richard Hughes)
@@ -19,12 +54,12 @@ Version 0.3.1
 ~~~~~~~~~~~~~~
 Released: 2008-08-27
 
-New:
+* New:
  - Support all the PkMessage types (Richard Hughes)
  - Add UI to set the interval for checking for distro upgrades (Richard Hughes)
  - Detect when we need a distro upgrade (Richard Hughes)
 
-Bugfix:
+* Bugfix:
  - Fix a spelling error from Resolved to Resolving (Daniel Nicoletti)
  - Fix the shadow in the refresh cache animation. Fixes fd#17236 (Michael Monreal)
  - Add some new text for GetDistroUpgrades and the new group enums (Richard Hughes)
@@ -45,14 +80,14 @@ Released: 2008-08-18
  - Updated Polish translation (Wadim Dziedzic)
  - Updated Occitan translation (Yannig Marchegay)
 
-New:
+* New:
  - Change the client tools to the updated 0.3.x API (Richard Hughes)
  - Force a pre-cache of all the update detail at startup (Richard Hughes)
  - Populate the package auto-completion box in gpk-application (Richard Hughes)
  - Support the new fields in the update details (Richard Hughes)
  - Allow gpk-install-file to install .pack files (Shishir Goel)
 
-Bugfix:
+* Bugfix:
  - Add a blocked update handler (Daniel Nicoletti)
  - Make some of the glade labels non-translatable (Kjartan Maraas)
  - Correct some typos found by Andre Klapper (Richard Hughes)
