@@ -1091,9 +1091,8 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* obvious message, don't tell the user */
-	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED)
 		return;
-	}
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
@@ -1147,11 +1146,10 @@ gpk_application_suggest_better_search (GpkApplication *application)
 		message = _("Try entering a package name in the search bar.");
 	} else {
 		if (application->priv->search_type == PK_SEARCH_NAME ||
-		    application->priv->search_type == PK_SEARCH_FILE) {
+		    application->priv->search_type == PK_SEARCH_FILE)
 			message = _("Try searching package descriptions by clicking the icon next to the search text.");
-		} else {
+		else
 			message = _("Try again with a different search term.");
-		}
 	}
 
 	text = g_strdup_printf ("%s\n%s", title, message);
@@ -1352,9 +1350,8 @@ gpk_application_perform_search (GpkApplication *application)
 	} else {
 		egg_debug ("doing nothing");
 	}
-	if (!ret) {
+	if (!ret)
 		return ret;
-	}
 
 	/* switch around buttons */
 	gpk_application_set_find_cancel_buttons (application, FALSE);
@@ -1453,11 +1450,10 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 	valid = pk_strvalidate (package);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
-	if (valid == FALSE || egg_strzero (package)) {
+	if (valid == FALSE || egg_strzero (package))
 		gtk_widget_set_sensitive (widget, FALSE);
-	} else {
+	else
 		gtk_widget_set_sensitive (widget, TRUE);
-	}
 	return FALSE;
 }
 
@@ -2559,9 +2555,8 @@ pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
 
 	egg_debug ("repo = %s:%s", repo_id, description);
 	/* no problem, just no point adding as we will fallback to the repo_id */
-	if (description == NULL) {
+	if (description == NULL)
 		return;
-	}
 	g_hash_table_insert (application->priv->repos, g_strdup (repo_id), g_strdup (description));
 }
 
@@ -3106,8 +3101,13 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
 
+	/* add this at the top of the list */
+	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
+		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
+
 	/* only if we can do both */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) &&
+	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
+	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
 	    pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		GtkTreeIter iter;
 
@@ -3127,11 +3127,11 @@ gpk_application_init (GpkApplication *application)
 		/* add columns to the tree view */
 		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
 
-		/* add all the groups supported */
+		/* add all the groups supported (except collections, which we handled above */
 		for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
-			if (pk_bitfield_contain (application->priv->groups, i)) {
+			if (pk_bitfield_contain (application->priv->groups, i) &&
+			    i != PK_GROUP_ENUM_COLLECTIONS)
 				gpk_application_group_add_data (application, i);
-			}
 		}
 	}
 
