@@ -950,6 +950,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		goto out;
 	}
 out:
+	g_ptr_array_foreach (array_missing, (GFunc) g_free, NULL);
 	g_ptr_array_free (array_missing, TRUE);
 	return ret;
 }
@@ -1052,6 +1053,7 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 	}
 
 out:
+	g_ptr_array_foreach (array_missing, (GFunc) g_free, NULL);
 	g_ptr_array_free (array_missing, TRUE);
 	return ret;
 }
@@ -1169,6 +1171,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 
 out:
 	g_strfreev (files);
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
 	return ret;
 }

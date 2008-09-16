@@ -473,6 +473,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	g_free (title);
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
 	g_strfreev (files);
 	pk_package_id_free (id);

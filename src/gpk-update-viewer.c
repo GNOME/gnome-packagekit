@@ -276,6 +276,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	}
 
 	/* get rid of the array, and free the contents */
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
 }
 

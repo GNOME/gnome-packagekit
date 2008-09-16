@@ -448,6 +448,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 
 	/* save for later */
 	if (cupdate->priv->important_updates_array != NULL) {
+		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
 	}
 	cupdate->priv->important_updates_array = g_ptr_array_new ();
@@ -793,6 +794,7 @@ out:
 	g_object_unref (list);
 	g_string_free (status_security, TRUE);
 	g_string_free (status_tooltip, TRUE);
+	g_ptr_array_foreach (security_array, (GFunc) g_free, NULL);
 	g_ptr_array_free (security_array, TRUE);
 	return ret;
 }
@@ -1072,6 +1074,7 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->control);
 	g_object_unref (cupdate->priv->gclient);
 	if (cupdate->priv->important_updates_array != NULL) {
+		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
 	}
 

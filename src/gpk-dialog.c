@@ -71,9 +71,9 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	array_strv = pk_ptr_array_to_argv (array);
 	text = gpk_strv_join_locale (array_strv);
 	g_strfreev (array_strv);
-	if (text == NULL) {
+	if (text == NULL)
 		text = g_strdup (_("many packages"));
-	}
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
 	return text;
 }
