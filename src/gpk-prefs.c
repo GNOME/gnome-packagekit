@@ -394,7 +394,7 @@ main (int argc, char *argv[])
 
 	/* get actions */
 	control = pk_control_new ();
-	roles = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control, NULL);
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (PK_DATA "/gpk-prefs.glade", NULL, NULL);

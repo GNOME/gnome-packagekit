@@ -1894,7 +1894,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_update_viewer_error_code_cb), NULL);
 
 	/* get actions */
-	roles = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control, NULL);
 
 	/* monitor for other updates in progress */
 	tlist = pk_task_list_new ();

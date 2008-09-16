@@ -589,10 +589,9 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->control = pk_control_new ();
 	g_signal_connect (arefresh->priv->control, "network-state-changed",
 			  G_CALLBACK (gpk_auto_refresh_network_status_changed_cb), arefresh);
-	state = pk_control_get_network_state (arefresh->priv->control);
-	if (state == PK_NETWORK_ENUM_ONLINE) {
+	state = pk_control_get_network_state (arefresh->priv->control, NULL);
+	if (state == PK_NETWORK_ENUM_ONLINE)
 		arefresh->priv->network_active = TRUE;
-	}
 
 	/* connect to session bus */
 	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);

@@ -1000,6 +1000,7 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 	gchar *proxy_http;
 	gchar *proxy_ftp;
 	gboolean ret;
+	GError *error = NULL;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
@@ -1010,9 +1011,10 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
 	egg_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
-	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp);
+	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp, &error);
 	if (!ret) {
-		egg_warning ("setting proxy failed");
+		egg_warning ("setting proxy failed: %s", error->message);
+		g_error_free (error);
 	}
 
 	g_free (proxy_http);

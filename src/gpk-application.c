@@ -2671,9 +2671,9 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
 
 	/* get bitfield */
-	application->priv->roles = pk_control_get_actions (application->priv->control);
-	application->priv->filters = pk_control_get_filters (application->priv->control);
-	application->priv->groups = pk_control_get_groups (application->priv->control);
+	application->priv->roles = pk_control_get_actions (application->priv->control, NULL);
+	application->priv->filters = pk_control_get_filters (application->priv->control, NULL);
+	application->priv->groups = pk_control_get_groups (application->priv->control, NULL);
 
 	application->priv->pconnection = pk_connection_new ();
 	g_signal_connect (application->priv->pconnection, "connection-changed",

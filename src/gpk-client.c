@@ -2231,8 +2231,10 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	}
 
 	/* clear old data */
-	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
-	g_ptr_array_remove_range (gclient->priv->upgrade_array, 0, gclient->priv->upgrade_array->len);
+	if (gclient->priv->upgrade_array->len > 0) {
+		g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
+		g_ptr_array_remove_range (gclient->priv->upgrade_array, 0, gclient->priv->upgrade_array->len);
+	}
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_distro_upgrades (gclient->priv->client_action, &error_local);
@@ -2722,7 +2724,7 @@ gpk_client_init (GpkClient *gclient)
 
 	/* get actions */
 	gclient->priv->control = pk_control_new ();
-	gclient->priv->roles = pk_control_get_actions (gclient->priv->control);
+	gclient->priv->roles = pk_control_get_actions (gclient->priv->control, NULL);
 
 	gclient->priv->client_action = pk_client_new ();
 	pk_client_set_use_buffer (gclient->priv->client_action, TRUE, NULL);

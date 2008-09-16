@@ -389,7 +389,7 @@ main (int argc, char *argv[])
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_repo_repo_list_changed_cb), NULL);
-	roles = pk_control_get_actions (control);
+	roles = pk_control_get_actions (control, NULL);
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_repo_create_custom_widget, NULL);

@@ -113,8 +113,8 @@ main (int argc, char *argv[])
 	loop = g_main_loop_new (NULL, FALSE);
 
 	control = pk_control_new ();
-	roles = pk_control_get_actions (control);
-	filters = pk_control_get_filters (control);
+	roles = pk_control_get_actions (control, NULL);
+	filters = pk_control_get_filters (control, NULL);
 
 	/* general stuff */
 	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
