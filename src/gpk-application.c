@@ -455,7 +455,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	}
 
 	/* convert to pointer array */
-	array = pk_argv_to_ptr_array (files);
+	array = pk_strv_to_ptr_array (files);
 	g_ptr_array_sort (array, (GCompareFunc) gpk_application_strcmp_indirect);
 
 	/* title */

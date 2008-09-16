@@ -444,7 +444,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	}
 
 	/* convert to an strv */
-	codec_strings = pk_ptr_array_to_argv (array);
+	codec_strings = pk_ptr_array_to_strv (array);
 	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
 

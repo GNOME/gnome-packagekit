@@ -1126,7 +1126,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (files_rel != NULL, FALSE);
 
-	array = pk_argv_to_ptr_array (files_rel);
+	array = pk_strv_to_ptr_array (files_rel);
 
 	/* check the user wanted to call this method */
 	ret = gpk_client_install_local_files_verify (gclient, array, error);
@@ -1143,7 +1143,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	if (!ret)
 		goto out;
 
-	files = pk_ptr_array_to_argv (array);
+	files = pk_ptr_array_to_strv (array);
 	gclient->priv->retry_untrusted_value = FALSE;
 	ret = gpk_client_install_local_files_internal (gclient, TRUE, files, error);
 	if (!ret)

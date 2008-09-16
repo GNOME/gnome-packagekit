@@ -68,7 +68,7 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 		g_ptr_array_add (array, g_strdup (ident->name));
 		pk_package_id_free (ident);
 	}
-	array_strv = pk_ptr_array_to_argv (array);
+	array_strv = pk_ptr_array_to_strv (array);
 	text = gpk_strv_join_locale (array_strv);
 	g_strfreev (array_strv);
 	if (text == NULL)
@@ -226,7 +226,7 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	gchar *text;
 
 	/* split and show */
-	array = pk_ptr_array_to_argv (files);
+	array = pk_ptr_array_to_strv (files);
 	text = g_strjoinv ("\n", array);
 
 	if (egg_strzero (text)) {
