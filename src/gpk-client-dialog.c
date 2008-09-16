@@ -59,6 +59,7 @@ struct _GpkClientDialogPrivate
 	GladeXML		*glade_xml;
 	guint			 pulse_timer_id;
 	gboolean		 show_progress_files;
+	gboolean		 has_parent;
 	GMainLoop		*loop;
 	GtkResponseType		 response;
 };
@@ -147,11 +148,27 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 {
 	GtkWidget *widget;
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
-	g_return_val_if_fail (GDK_WINDOW (window), FALSE);
+
+	/* never set, and nothing now */
+	if (window == NULL && !dialog->priv->has_parent)
+		return TRUE;
+
+	/* not sure what to do here, should probably unparent somehow */
+	if (window == NULL) {
+		egg_warning ("parent set NULL when already modal with another window!");
+		return FALSE;
+	}
+
+	/* check we are a valid window */
+	if (!GDK_WINDOW (window)) {
+		egg_warning ("not a valid GdkWindow!");
+		return FALSE;
+	}
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
 	gtk_widget_realize (widget);
 	gdk_window_set_transient_for (GTK_WIDGET(widget)->window, window);
+	dialog->priv->has_parent = TRUE;
 	return TRUE;
 }
 
@@ -586,6 +603,7 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->response = GTK_RESPONSE_NONE;
 	dialog->priv->pulse_timer_id = 0;
 	dialog->priv->show_progress_files = TRUE;
+	dialog->priv->has_parent = FALSE;
 
 	/* common stuff */
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
