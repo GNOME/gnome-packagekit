@@ -71,7 +71,10 @@ struct GpkCheckUpdatePrivate
 	PkTaskList		*tlist;
 	PkControl		*control;
 	GpkAutoRefresh		*arefresh;
-	GpkClient		*gclient;
+	GpkClient		*gclient_refresh_cache;
+	GpkClient		*gclient_update_system;
+	GpkClient		*gclient_get_updates;
+	GpkClient		*gclient_get_distro_upgrades;
 	GConfClient		*gconf_client;
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
@@ -303,7 +306,7 @@ static gboolean
 gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 {
 	gboolean ret;
-	ret = gpk_client_update_system (cupdate->priv->gclient, NULL);
+	ret = gpk_client_update_system (cupdate->priv->gclient_update_system, NULL);
 
 	/* we failed, show the icon */
 	if (!ret) {
@@ -322,7 +325,7 @@ gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_ALWAYS);
 	gpk_check_update_update_system (cupdate);
 }
 
@@ -403,8 +406,8 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
-		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
-		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
+		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
@@ -672,9 +675,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	}
 
 	/* get updates */
-	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
+	gpk_client_set_interaction (cupdate->priv->gclient_get_updates, GPK_CLIENT_INTERACT_NEVER);
 	cupdate->priv->get_updates_in_progress = TRUE;
-	list = gpk_client_get_updates (cupdate->priv->gclient, &error);
+	list = gpk_client_get_updates (cupdate->priv->gclient_get_updates, &error);
 	cupdate->priv->get_updates_in_progress = FALSE;
 	if (list == NULL) {
 		egg_warning ("failed to get updates: %s", error->message);
@@ -770,8 +773,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
-		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
-		ret = gpk_client_update_packages (cupdate->priv->gclient, package_ids, &error);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
+		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
@@ -783,7 +786,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* just do everything */
 	if (update == PK_UPDATE_ENUM_ALL) {
 		egg_debug ("we should do the update automatically!");
-		gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
 		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
 		goto out;
 	}
@@ -887,8 +890,8 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	cupdate->priv->cache_okay = TRUE;
 
 	/* use the gnome helper to refresh the cache */
-	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_NEVER);
-	ret = gpk_client_refresh_cache (cupdate->priv->gclient, NULL);
+	gpk_client_set_interaction (cupdate->priv->gclient_refresh_cache, GPK_CLIENT_INTERACT_NEVER);
+	ret = gpk_client_refresh_cache (cupdate->priv->gclient_refresh_cache, NULL);
 	if (!ret) {
 		/* we failed to get the cache */
 		egg_warning ("failed to refresh cache");
@@ -935,8 +938,8 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* get updates */
-	gpk_client_set_interaction (cupdate->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient, &error);
+	gpk_client_set_interaction (cupdate->priv->gclient_get_distro_upgrades, GPK_CLIENT_INTERACT_NEVER);
+	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient_get_distro_upgrades, &error);
 	if (array == NULL) {
 		egg_warning ("failed to get upgrades: %s", error->message);
 		g_error_free (error);
@@ -1025,7 +1028,10 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 				 cupdate, 0);
 
 	/* install stuff using the gnome helpers */
-	cupdate->priv->gclient = gpk_client_new ();
+	cupdate->priv->gclient_refresh_cache = gpk_client_new ();
+	cupdate->priv->gclient_update_system = gpk_client_new ();
+	cupdate->priv->gclient_get_updates = gpk_client_new ();
+	cupdate->priv->gclient_get_distro_upgrades = gpk_client_new ();
 
 	cupdate->priv->pconnection = pk_connection_new ();
 	g_signal_connect (cupdate->priv->pconnection, "connection-changed",
@@ -1072,7 +1078,10 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->arefresh);
 	g_object_unref (cupdate->priv->gconf_client);
 	g_object_unref (cupdate->priv->control);
-	g_object_unref (cupdate->priv->gclient);
+	g_object_unref (cupdate->priv->gclient_refresh_cache);
+	g_object_unref (cupdate->priv->gclient_update_system);
+	g_object_unref (cupdate->priv->gclient_get_updates);
+	g_object_unref (cupdate->priv->gclient_get_distro_upgrades);
 	if (cupdate->priv->important_updates_array != NULL) {
 		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
