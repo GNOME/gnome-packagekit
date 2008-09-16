@@ -1674,7 +1674,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		goto out;
 
 	/* process package list */
-	string = g_string_new (_("The following packages can installed:"));
+	string = g_string_new (_("The following packages can be installed:"));
 	g_string_append (string, "\n\n");
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
