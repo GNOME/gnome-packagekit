@@ -121,7 +121,7 @@ gpk_check_update_show_preferences_cb (GtkMenuItem *item, GpkCheckUpdate *cupdate
 /**
  * gpk_check_update_about_dialog_url_cb:
  **/
-static void 
+static void
 gpk_check_update_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
 {
 	GError *error = NULL;

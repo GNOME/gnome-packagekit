@@ -42,7 +42,6 @@
 
 #include <pk-control.h>
 #include <pk-client.h>
-#include <pk-task-list.h>
 #include <pk-common.h>
 #include <pk-task-list.h>
 #include <pk-connection.h>
@@ -490,7 +489,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 /**
  * gpk_watch_about_dialog_url_cb:
  **/
-static void 
+static void
 gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
 {
 	GError *error = NULL;
@@ -520,7 +519,7 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	cmdline = g_strconcat ("gnome-open ", url, NULL);
 	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
 	g_free (cmdline);
-        
+
 	if (!ret) {
 		gpk_error_dialog (_("Internal error"), _("Failed to show url"), error->message);
 		g_error_free (error);
