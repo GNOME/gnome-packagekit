@@ -1574,14 +1574,18 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	gboolean ret;
 	GString *string;
 
-	string = g_string_new (_("The following codecs are required:"));
-	g_string_append (string, "\n\n");
+	string = g_string_new ("");
+	g_string_append_printf (string, "%s\n%s\n\n", _("Additional plugins are required to play this content."), _("The following codecs are required:"));
 	len = g_strv_length (codec_name_strings);
 	for (i=0; i<len; i++) {
 		parts = g_strsplit (codec_name_strings[i], "|", 2);
 		g_string_append_printf (string, "• <i>%s</i>\n", parts[0]);
 		g_strfreev (parts);
 	}
+
+	/* trailer */
+	g_string_append_printf (string, "\n%s\n", _("Do you want to search for these now?"));
+
 	/* remove last \n */
 	g_string_set_size (string, string->len - 1);
 
@@ -1670,7 +1674,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		goto out;
 
 	/* process package list */
-	string = g_string_new (_("The following packages will be installed:"));
+	string = g_string_new (_("The following packages can installed:"));
 	g_string_append (string, "\n\n");
 	len = pk_package_list_get_size (list);
 	for (i=0; i<len; i++) {
@@ -1679,6 +1683,9 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		g_string_append_printf (string, "%s\n", text);
 		g_free (text);
 	}
+
+	g_string_append_printf (string, "\n%s\n", _("Do you want to install these now?"));
+
 	/* remove last \n */
 	g_string_set_size (string, string->len - 1);
 
