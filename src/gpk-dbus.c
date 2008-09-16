@@ -450,6 +450,8 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 
 	/* do the action */
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_strings, &error_local);
+	g_strfreev (codec_strings);
+
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
@@ -458,7 +460,6 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 		return;
 	}
 
-	g_strfreev (codec_strings);
 	dbus_g_method_return (context);
 }
 
