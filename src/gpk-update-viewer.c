@@ -894,14 +894,14 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	/* state */
 	if (obj->state != PK_UPDATE_STATE_ENUM_UNKNOWN) {
 		info_text = gpk_update_state_enum_to_localised_text (obj->state);
-		/* translators: this is a notice a restart might be required */
+		/* translators: this is the stability status of the update */
 		gpk_update_viewer_add_description_item (_("State"), info_text, NULL);
 	}
 
 	/* issued */
 	if (obj->issued != NULL) {
 		line = pk_iso8601_from_date (obj->issued);
-		/* translators: this is a notice a restart might be required */
+		/* translators: this is when the update was issued */
 		gpk_update_viewer_add_description_item (_("Issued"), line, NULL);
 		g_free (line);
 	}
@@ -909,7 +909,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	/* updated */
 	if (obj->updated != NULL) {
 		line = pk_iso8601_from_date (obj->updated);
-		/* translators: this is a notice a restart might be required */
+		/* translators: this is when (if?) the update was updated */
 		gpk_update_viewer_add_description_item (_("Updated"), line, NULL);
 		g_free (line);
 	}
