@@ -867,7 +867,6 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	const gchar *group;
 	gboolean valid;
 	gboolean installed;
-	PkInfoEnum info;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -881,15 +880,6 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	/* hide to start */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
-	gtk_widget_show (widget);
-
-	/* nothing in the detail database or invalid */
-	if (valid == FALSE) {
-		info = installed ? PK_INFO_ENUM_INSTALLED : PK_INFO_ENUM_AVAILABLE;
-		icon = gpk_info_enum_to_icon_name (info);
-	}
-	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
-	gtk_image_set_from_icon_name (GTK_IMAGE (widget), icon, GTK_ICON_SIZE_DIALOG);
 	gtk_widget_show (widget);
 
 	gtk_list_store_clear (application->priv->details_store);
