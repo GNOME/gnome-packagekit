@@ -87,7 +87,7 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 		filename = egg_str_list_index (array, i);
 		ret = gpk_client_install_provide_file (gclient, filename, &error);
 		if (!ret) {
-			egg_warning ("failed to open directory: %s", error->message);
+			egg_warning ("failed to install provide file: %s", error->message);
 			g_error_free (error);
 			error = NULL;
 		}

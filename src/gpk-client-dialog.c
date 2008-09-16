@@ -635,10 +635,22 @@ gpk_client_dialog_finalize (GObject *object)
 
 	dialog = GPK_CLIENT_DIALOG (object);
 	g_return_if_fail (dialog->priv != NULL);
-	g_object_unref (dialog->priv->glade_xml);
-	g_main_loop_unref (dialog->priv->loop);
+
+	/* no updates, we're about to rip the glade file up  */
 	if (dialog->priv->pulse_timer_id != 0)
 		g_source_remove (dialog->priv->pulse_timer_id);
+
+	/* if it's closed, then hide */
+	gpk_client_dialog_close (dialog);
+
+	/* shouldn't be, but just in case */
+	if (g_main_loop_is_running (dialog->priv->loop)) {
+		egg_warning ("mainloop running on exit");
+		g_main_loop_quit (dialog->priv->loop);
+	}
+
+	g_object_unref (dialog->priv->glade_xml);
+	g_main_loop_unref (dialog->priv->loop);
 
 	G_OBJECT_CLASS (gpk_client_dialog_parent_class)->finalize (object);
 }
