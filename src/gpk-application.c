@@ -104,6 +104,7 @@ struct GpkApplicationPrivate
 	gchar			*package;
 	gchar			*group;
 	gchar			*url;
+	guint			 details_event_id;
 	GHashTable		*repos;
 	PkBitfield		 roles;
 	PkBitfield		 filters;
@@ -780,6 +781,12 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
 
+	/* we don't need to clear anymore */
+	if (application->priv->details_event_id > 0) {
+		g_source_remove (application->priv->details_event_id);
+		application->priv->details_event_id = 0;
+	}
+
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
 
@@ -799,11 +806,12 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
 }
 
+
 /**
- * gpk_application_clear_details:
+ * gpk_application_clear_details_really:
  **/
-static void
-gpk_application_clear_details (GpkApplication *application)
+static gboolean
+gpk_application_clear_details_really (GpkApplication *application)
 {
 	GtkWidget *widget;
 
@@ -815,11 +823,23 @@ gpk_application_clear_details (GpkApplication *application)
 	gpk_application_set_text_buffer (widget, NULL);
 
 	/* hide dead widgets */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "image_icon");
-	gtk_widget_hide (widget);
-
 	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
 	gtk_widget_hide (widget);
+
+	/* never repeat */
+	return FALSE;
+}
+
+/**
+ * gpk_application_clear_details:
+ **/
+static void
+gpk_application_clear_details (GpkApplication *application)
+{
+	/* only clear the last data if it takes a little while, else we flicker the display */
+	if (application->priv->details_event_id > 0)
+		g_source_remove (application->priv->details_event_id);
+	application->priv->details_event_id = g_timeout_add (100, (GSourceFunc) gpk_application_clear_details_really, application);
 }
 
 /**
@@ -2587,6 +2607,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->group = NULL;
 	application->priv->url = NULL;
 	application->priv->has_package = FALSE;
+	application->priv->details_event_id = 0;
 	application->priv->package_list = pk_package_list_new ();
 
 	application->priv->gconf_client = gconf_client_get_default ();
@@ -3101,6 +3122,9 @@ gpk_application_finalize (GObject *object)
 
 	application = GPK_APPLICATION (object);
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
+
+	if (application->priv->details_event_id > 0)
+		g_source_remove (application->priv->details_event_id);
 
 	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
