@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-12 14:52+0000\n"
+"POT-Creation-Date: 2008-09-16 17:41+0100\n"
 "PO-Revision-Date: 2008-09-13 12:03+0200\n"
 "Last-Translator: Mark Krapivner <mark125@gmail.com>\n"
 "Language-Team: \n"
@@ -182,9 +182,9 @@ msgstr "הצגת רשימת קבצים"
 msgid "Help with this software"
 msgstr "עזרה עבור תוכנה זו"
 
-#. add a specialist button
-#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:1274
-#: ../src/gpk-client.c:1959 ../src/gpk-client.c:2028
+#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:981
+#: ../src/gpk-client.c:1375 ../src/gpk-client.c:1438 ../src/gpk-client.c:1698
+#: ../src/gpk-client.c:1948 ../src/gpk-client.c:2004
 msgid "Install"
 msgstr "התקנה"
 
@@ -229,7 +229,7 @@ msgid "Project homepage"
 msgstr "דף הבית"
 
 #. set title
-#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:2176
+#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:2130
 msgid "Refresh package lists"
 msgstr "רענון רשימת חבילות"
 
@@ -249,7 +249,7 @@ msgstr "נדרש על ידי"
 msgid "Run program"
 msgstr "הרץ תוכנה"
 
-#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1306
+#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1310
 msgid "Software sources"
 msgstr "מקורות תוכנה"
 
@@ -339,20 +339,21 @@ msgid "Backend name:"
 msgstr "שם המנוע:"
 
 #: ../data/gpk-client.glade.h:1
-msgid "<b>Installation Complete</b>"
-msgstr "<b>התקנה הושלמה</b>"
+msgid " "
+msgstr ""
 
 #: ../data/gpk-client.glade.h:2
-msgid "<b>More details:</b>"
-msgstr "<b>פרטים נוספים:</b>"
-
-#: ../data/gpk-client.glade.h:3 ../data/gpk-update-viewer.glade.h:1
-msgid "A system restart is recommended"
-msgstr "מומלץ לאתחל את המחשב"
-
-#: ../data/gpk-client.glade.h:4
 msgid "Install Package"
 msgstr "התקן חבילה"
+
+#: ../data/gpk-client.glade.h:3
+msgid "gtk-cancel"
+msgstr "gtk-cancel"
+
+#: ../data/gpk-client.glade.h:4
+#, fuzzy
+msgid "gtk-close"
+msgstr "gtk-cancel"
 
 #: ../data/gpk-error.glade.h:1
 msgid "<b>More details</b>"
@@ -419,7 +420,7 @@ msgstr "בדי_קת עדכונים:"
 msgid "Check for major _upgrades:"
 msgstr "בדיקת _שדרוגים עיקריים:"
 
-#: ../data/gpk-prefs.glade.h:6 ../src/gpk-prefs.c:373
+#: ../data/gpk-prefs.glade.h:6 ../src/gpk-prefs.c:371
 msgid "Software Update Preferences"
 msgstr "העדפות עדכוני תוכנה"
 
@@ -484,8 +485,8 @@ msgstr "נדרשת חתימת תוכנה"
 msgid "PackageKit Update Applet"
 msgstr "יישומון העדכונים של PackageKit"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:356
-#: ../src/gpk-update-viewer.c:1833
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:354
+#: ../src/gpk-update-viewer.c:1834
 msgid "Software Update Viewer"
 msgstr "מציג עדכון תכונה"
 
@@ -497,6 +498,10 @@ msgstr "עדכון מערכת"
 #: ../data/gpk-update-viewer.desktop.in.h:3
 msgid "Update software installed on the system"
 msgstr "עדכון תכנות המותקנות על המערכת"
+
+#: ../data/gpk-update-viewer.glade.h:1
+msgid "A system restart is recommended"
+msgstr "מומלץ לאתחל את המחשב"
 
 #: ../data/gpk-update-viewer.glade.h:2
 msgid "Last refresh:"
@@ -522,178 +527,178 @@ msgstr "_התקנת עוד עדכונים"
 msgid "_Review"
 msgstr "_סקירה"
 
-#: ../src/gpk-application.c:464
+#: ../src/gpk-application.c:520
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
 msgstr[0] "%i קבצים הותקנו על ידי %s"
 msgstr[1] "%i קבצים הותקנו על ידי %s"
 
-#: ../src/gpk-application.c:641 ../src/gpk-application.c:713
+#: ../src/gpk-application.c:698 ../src/gpk-application.c:770
 msgid "No packages"
 msgstr "אין חבילות"
 
-#: ../src/gpk-application.c:642
+#: ../src/gpk-application.c:699
 msgid "This package does not require any others"
 msgstr "החבילה לא דורשת חבילות אחרות"
 
-#: ../src/gpk-application.c:652
+#: ../src/gpk-application.c:709
 #, c-format
 msgid "%i additional package require %s"
 msgid_plural "%i additional packages require %s"
 msgstr[0] "%i חבילות נוספות דורשות %s"
 msgstr[1] "%i חבילות נוספות דורשות %s"
 
-#: ../src/gpk-application.c:656
+#: ../src/gpk-application.c:713
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
 msgstr[0] "החבילות הרשומות למטה דורשות את %s כדי לתפקד כראוי."
 msgstr[1] "החבילות הרשומות מטה דורשות את %s כדי לתפקד כראוי."
 
-#: ../src/gpk-application.c:714
+#: ../src/gpk-application.c:771
 msgid "This package does not depends on any others"
 msgstr "החבילה לא תלויה בחבילות אחרות"
 
-#: ../src/gpk-application.c:724
+#: ../src/gpk-application.c:781
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
 msgstr[0] "%i חבילות נוספות נדרשות עבור %s"
 msgstr[1] "%i חבילות נוספות נדרשות עבור %s"
 
-#: ../src/gpk-application.c:728
+#: ../src/gpk-application.c:785
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
 msgstr[0] "החבילות הרשומות למטה נדרשות עבור %s כדי לתפקד כראוי."
 msgstr[1] "החבילות הרשומות למטה נדרשות עבור %s כדי לתפקד כראוי."
 
-#: ../src/gpk-application.c:760
+#: ../src/gpk-application.c:817
 msgid "Invalid"
 msgstr "שגוי"
 
 #. set the tooltip to where we are going
-#: ../src/gpk-application.c:883
+#: ../src/gpk-application.c:949
 #, c-format
 msgid "Visit %s"
 msgstr "בקר בכתובת %s"
 
-#: ../src/gpk-application.c:887
+#: ../src/gpk-application.c:953
 msgid "Project"
 msgstr "פרויקט"
 
-#: ../src/gpk-application.c:887
+#: ../src/gpk-application.c:953
 msgid "Homepage"
 msgstr "דף הבית"
 
-#: ../src/gpk-application.c:900
+#: ../src/gpk-application.c:966
 msgid "Group"
 msgstr "קבוצה"
 
 #. This should be a licence enum value - bad API, bad.
 #. * license = pk_license_enum_to_text (license_enum);
-#: ../src/gpk-application.c:907
+#: ../src/gpk-application.c:973
 msgid "License"
 msgstr "רישיון"
 
-#: ../src/gpk-application.c:921
+#: ../src/gpk-application.c:987
 msgid "Installed size"
 msgstr "גודל מותקן"
 
-#: ../src/gpk-application.c:923
+#: ../src/gpk-application.c:989
 msgid "Download size"
 msgstr "גודל ההורדה"
 
-#: ../src/gpk-application.c:932
+#: ../src/gpk-application.c:998
 msgid "Source"
 msgstr "מקור"
 
-#: ../src/gpk-application.c:1073
+#: ../src/gpk-application.c:1139
 msgid "No results were found."
 msgstr "לא נמצאו תוצאות."
 
 #. this shouldn't happen
-#: ../src/gpk-application.c:1080
+#: ../src/gpk-application.c:1146
 msgid "Try entering a package name in the search bar."
 msgstr "נסה להקליד שם של חבילה בתיבת החיפוש."
 
-#: ../src/gpk-application.c:1084
+#: ../src/gpk-application.c:1150
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
 msgstr "נסה לחפש בתיאור החבילה על ידי לחיצה על הסמל ליד טקסט החיפוש."
 
-#: ../src/gpk-application.c:1086
+#: ../src/gpk-application.c:1152
 msgid "Try again with a different search term."
 msgstr "נסה מילת חיפוש שונה."
 
-#: ../src/gpk-application.c:1190
+#: ../src/gpk-application.c:1254
 msgid "Invalid search text"
 msgstr "טקסט חיפוש שגוי"
 
-#: ../src/gpk-application.c:1191
+#: ../src/gpk-application.c:1255
 msgid "The search text contains invalid characters"
 msgstr "החיפוש מכיל תווים לא חוקיים"
 
-#: ../src/gpk-application.c:1218
+#: ../src/gpk-application.c:1282
 msgid "The search could not be completed"
 msgstr "לא ניתן להשלים את החיפוש"
 
-#: ../src/gpk-application.c:1219 ../src/gpk-application.c:1260
+#: ../src/gpk-application.c:1283 ../src/gpk-application.c:1324
 msgid "Running the transaction failed"
 msgstr "הרצת הפעולה נכשלה"
 
-#: ../src/gpk-application.c:1259
+#: ../src/gpk-application.c:1323
 msgid "The group could not be queried"
 msgstr "לא ניתן לעבור על הקבוצה"
 
-#: ../src/gpk-application.c:1564 ../src/gpk-common.c:931
-#: ../src/gpk-common.c:989
+#: ../src/gpk-application.c:1627 ../src/gpk-common.c:934
+#: ../src/gpk-common.c:993
 msgid "Installed"
 msgstr "מותקן"
 
-#: ../src/gpk-application.c:1579 ../src/gpk-application.c:1600
+#: ../src/gpk-application.c:1642 ../src/gpk-application.c:1663
 #: ../src/gpk-dialog.c:149
 msgid "Name"
 msgstr "שם"
 
-#: ../src/gpk-application.c:1830
+#: ../src/gpk-application.c:1893
 msgid "Searching by name"
 msgstr "מחפש לפי שם"
 
-#: ../src/gpk-application.c:1851
+#: ../src/gpk-application.c:1914
 msgid "Searching by description"
 msgstr "מחפש לפי תיאור"
 
-#: ../src/gpk-application.c:1872
+#: ../src/gpk-application.c:1935
 msgid "Searching by file"
 msgstr "מחפש לפי קובץ"
 
-#: ../src/gpk-application.c:1897
+#: ../src/gpk-application.c:1960
 msgid "Search by name"
 msgstr "חיפוש לפי שם"
 
-#: ../src/gpk-application.c:1906
+#: ../src/gpk-application.c:1969
 msgid "Search by description"
 msgstr "חיפוש לפי תיאור"
 
-#: ../src/gpk-application.c:1915
+#: ../src/gpk-application.c:1978
 msgid "Search by file name"
 msgstr "חיפוש לפי שם קובץ"
 
-#: ../src/gpk-application.c:2019 ../src/gpk-check-update.c:161
-#: ../src/gpk-watch.c:525
+#: ../src/gpk-application.c:2082 ../src/gpk-check-update.c:161
+#: ../src/gpk-watch.c:524
 msgid "Failed to show url"
 msgstr "נכשל בהצגת כתובת"
 
-#: ../src/gpk-application.c:2058 ../src/gpk-check-update.c:186
-#: ../src/gpk-watch.c:546
+#: ../src/gpk-application.c:2121 ../src/gpk-check-update.c:186
+#: ../src/gpk-watch.c:545
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licensed under the GNU General Public License Version 2"
 
-#: ../src/gpk-application.c:2059 ../src/gpk-check-update.c:187
-#: ../src/gpk-watch.c:547
+#: ../src/gpk-application.c:2122 ../src/gpk-check-update.c:187
+#: ../src/gpk-watch.c:546
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -705,8 +710,8 @@ msgstr ""
 "as published by the Free Software Foundation; either version 2\n"
 "of the License, or (at your option) any later version."
 
-#: ../src/gpk-application.c:2063 ../src/gpk-check-update.c:191
-#: ../src/gpk-watch.c:551
+#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:191
+#: ../src/gpk-watch.c:550
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -718,8 +723,8 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details."
 
-#: ../src/gpk-application.c:2067 ../src/gpk-check-update.c:195
-#: ../src/gpk-watch.c:555
+#: ../src/gpk-application.c:2130 ../src/gpk-check-update.c:195
+#: ../src/gpk-watch.c:554
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -731,8 +736,8 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 "02110-1301, USA."
 
-#: ../src/gpk-application.c:2072 ../src/gpk-check-update.c:200
-#: ../src/gpk-watch.c:560
+#: ../src/gpk-application.c:2135 ../src/gpk-check-update.c:200
+#: ../src/gpk-watch.c:559
 msgid "translator-credits"
 msgstr ""
 "מארק קרפיבנר <mark125@gmail.com>\n"
@@ -740,45 +745,45 @@ msgstr ""
 "פרוייקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../src/gpk-application.c:2097 ../src/gpk-check-update.c:219
-#: ../src/gpk-watch.c:579
+#: ../src/gpk-application.c:2160 ../src/gpk-check-update.c:219
+#: ../src/gpk-watch.c:578
 msgid "PackageKit Website"
 msgstr "אתר הבית של PackageKit"
 
-#: ../src/gpk-application.c:2099
+#: ../src/gpk-application.c:2162
 msgid "Package Manager for GNOME"
 msgstr "מנהל חבילות עבור GNOME"
 
-#: ../src/gpk-application.c:2534 ../src/gpk-update-viewer.c:1076
+#: ../src/gpk-application.c:2595 ../src/gpk-update-viewer.c:1077
 msgid "Text"
 msgstr "טקסט"
 
-#: ../src/gpk-application.c:2555
+#: ../src/gpk-application.c:2617
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr "כדי להתחיל את השימוש חפש שם של חבילה או לחץ על קבוצה."
 
-#: ../src/gpk-application.c:2557
+#: ../src/gpk-application.c:2619
 msgid "Enter a package name and then click find to get started."
 msgstr "כדי להתחיל את השימוש הכנס שם של חבילה לחפש."
 
-#: ../src/gpk-application.c:2714
+#: ../src/gpk-application.c:2774
 msgid "Clear current selection"
 msgstr "נקה בחירה נוכחית"
 
-#: ../src/gpk-application.c:2745
+#: ../src/gpk-application.c:2805
 msgid "Visit homepage for selected package"
 msgstr "ביקור בדף הבית של החבילה המסומנת"
 
-#: ../src/gpk-application.c:2890
+#: ../src/gpk-application.c:2950
 msgid "Find packages"
 msgstr "חפש חבילות"
 
-#: ../src/gpk-application.c:2896
+#: ../src/gpk-application.c:2956
 msgid "Cancel search"
 msgstr "ביטול חיפוש"
 
-#: ../src/gpk-application.c:3030
+#: ../src/gpk-application.c:3090
 msgid "All packages"
 msgstr "כל החבילות"
 
@@ -786,19 +791,20 @@ msgstr "כל החבילות"
 #: ../src/gpk-install-catalog.c:49 ../src/gpk-install-local-file.c:49
 #: ../src/gpk-install-mime-type.c:48 ../src/gpk-install-package-name.c:49
 #: ../src/gpk-install-provide-file.c:48 ../src/gpk-log.c:345
-#: ../src/gpk-prefs.c:354 ../src/gpk-repo.c:339 ../src/gpk-update-icon.c:127
-#: ../src/gpk-update-viewer.c:1814
+#: ../src/gpk-prefs.c:352 ../src/gpk-repo.c:337 ../src/gpk-update-icon.c:127
+#: ../src/gpk-update-viewer.c:1815
 msgid "Show extra debugging information"
 msgstr "הצג נתוני ניפוי שגיאות נוספים"
 
 #: ../src/gpk-application-main.c:79 ../src/gpk-backend-status.c:83
-#: ../src/gpk-log.c:347 ../src/gpk-prefs.c:356 ../src/gpk-update-icon.c:131
-#: ../src/gpk-update-viewer.c:1816
+#: ../src/gpk-log.c:347 ../src/gpk-prefs.c:354 ../src/gpk-update-icon.c:131
+#: ../src/gpk-update-viewer.c:1817
 msgid "Show the program version and exit"
 msgstr "הצג את גרסאת התוכנה וצא"
 
 #. are we running privileged
-#: ../src/gpk-application-main.c:110
+#. check user wanted operation
+#: ../src/gpk-application-main.c:110 ../src/gpk-client.c:1374
 msgid "Package installer"
 msgstr "מתקין חבילות"
 
@@ -816,7 +822,7 @@ msgid "_Preferences"
 msgstr "_העדפות"
 
 #. About
-#: ../src/gpk-check-update.c:265 ../src/gpk-watch.c:609
+#: ../src/gpk-check-update.c:265 ../src/gpk-watch.c:608
 msgid "_About"
 msgstr "_אודות"
 
@@ -831,59 +837,59 @@ msgid "_Update System Now"
 msgstr "_עדכון המערכת עכשיו"
 
 #. format title
-#: ../src/gpk-check-update.c:460
+#: ../src/gpk-check-update.c:461
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "עדכון אבטחה זמין"
 msgstr[1] "עדכוני אבטחה זמינים"
 
-#: ../src/gpk-check-update.c:464
+#: ../src/gpk-check-update.c:465
 msgid "The following important update is available for your computer:"
 msgid_plural "The following important updates are available for your computer:"
 msgstr[0] "העדכון החשוב הבא זמין עבור המחשב שלך:"
 msgstr[1] "העדכונים החשובים הבאים זמינים עבור המחשב שלך:"
 
-#: ../src/gpk-check-update.c:485
+#: ../src/gpk-check-update.c:486
 msgid "Install security updates"
 msgstr "התקן עדכוני אבטחה"
 
-#: ../src/gpk-check-update.c:487
+#: ../src/gpk-check-update.c:488
 msgid "Install all updates"
 msgstr "התקן את כל העדכונים"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-check-update.c:489 ../src/gpk-check-update.c:979
-#: ../src/gpk-client.c:438 ../src/gpk-client.c:441 ../src/gpk-client.c:2126
-#: ../src/gpk-dialog.c:292 ../src/gpk-firmware.c:207 ../src/gpk-watch.c:372
+#: ../src/gpk-check-update.c:490 ../src/gpk-check-update.c:981
+#: ../src/gpk-client.c:318 ../src/gpk-client.c:321 ../src/gpk-client.c:2086
+#: ../src/gpk-dialog.c:292 ../src/gpk-firmware.c:207 ../src/gpk-watch.c:371
 msgid "Do not show this again"
 msgstr "אל תציג זאת שוב"
 
 #. do the bubble
-#: ../src/gpk-check-update.c:599
+#: ../src/gpk-check-update.c:600
 msgid ""
 "Automatic updates are not being installed as the computer is on battery power"
 msgstr "עדכונים אוטומטיים לא יותקנו מכיוון שהמחשב פועל על כוח סוללה"
 
-#: ../src/gpk-check-update.c:600
+#: ../src/gpk-check-update.c:601
 msgid "Will not install updates"
 msgstr "לא יתקין עדכונים"
 
-#: ../src/gpk-check-update.c:604
+#: ../src/gpk-check-update.c:605
 msgid "Do not show this warning again"
 msgstr "אל תציג התרעה זאת שוב"
 
-#: ../src/gpk-check-update.c:606
+#: ../src/gpk-check-update.c:607
 msgid "Do the updates anyway"
 msgstr "בצע עדכונים בכל זאת"
 
-#: ../src/gpk-check-update.c:714
+#: ../src/gpk-check-update.c:715
 #, c-format
 msgid "and %d other security update"
 msgid_plural "and %d other security updates"
 msgstr[0] "ו-%d עדכוני אבטחה אחרים"
 msgstr[1] "ו-%d עדכוני אבטחה אחרים"
 
-#: ../src/gpk-check-update.c:737
+#: ../src/gpk-check-update.c:738
 #, c-format
 msgid "There is %d update pending"
 msgid_plural "There are %d updates pending"
@@ -891,219 +897,319 @@ msgstr[0] "יש %d עדכונים ממתינים"
 msgstr[1] "יש %d עדכונים ממתינים"
 
 #. do the bubble
-#: ../src/gpk-check-update.c:968
+#: ../src/gpk-check-update.c:970
 msgid "Distribution upgrades available"
-msgstr ""
-"שדרוגי הפצה זמינים"
+msgstr "שדרוגי הפצה זמינים"
 
-#: ../src/gpk-check-update.c:977
+#: ../src/gpk-check-update.c:979
 msgid "More information"
 msgstr "מידע נוסף"
 
-#: ../src/gpk-client.c:398
+#: ../src/gpk-client.c:279
 msgid "One package was skipped:"
 msgstr "דולגה חבילה אחת:"
 
-#: ../src/gpk-client.c:399
+#: ../src/gpk-client.c:280
 msgid "Some packages were skipped:"
 msgstr "חלק מהחבילות דולגו:"
 
 #. do the bubble
-#: ../src/gpk-client.c:431
+#: ../src/gpk-client.c:311
 msgid "The system update has completed"
 msgstr "עדכון המערכת הושלם"
 
-#: ../src/gpk-client.c:436
+#: ../src/gpk-client.c:316
 msgid "Restart computer now"
 msgstr "אתחול המחשב עכשיו"
 
-#: ../src/gpk-client.c:893 ../src/gpk-client.c:1488 ../src/gpk-client.c:1588
-#: ../src/gpk-client.c:2085 ../src/gpk-client.c:2170 ../src/gpk-client.c:2234
-#: ../src/gpk-client.c:2289 ../src/gpk-client.c:2341 ../src/gpk-client.c:2400
+#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
+#: ../src/gpk-client.c:1762 ../src/gpk-client.c:1848 ../src/gpk-client.c:2045
+#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2182 ../src/gpk-client.c:2234
+#: ../src/gpk-client.c:2281 ../src/gpk-client.c:2333
 #: ../src/gpk-client-depends.c:97 ../src/gpk-client-requires.c:88
 #: ../src/gpk-client-resolve.c:68
 #, fuzzy
 msgid "Failed to reset client"
 msgstr "נכשל בהתקנה"
 
-#: ../src/gpk-client.c:893 ../src/gpk-client.c:1488 ../src/gpk-client.c:1588
-#: ../src/gpk-client.c:2085 ../src/gpk-client.c:2170 ../src/gpk-client.c:2400
+#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
+#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2333
 #, fuzzy
 msgid "Failed to reset resolve"
 msgstr "נכשל בהתקנה"
 
-#: ../src/gpk-client.c:907
+#: ../src/gpk-client.c:696
 msgid "Failed to install files"
 msgstr "נכשל בהתקנת קבצים"
 
-#: ../src/gpk-client.c:908
+#: ../src/gpk-client.c:697
 msgid "You don't have the necessary privileges to install local files"
 msgstr "אין לך הרשאות מתאימות כדי להתקין קבצים מקומיים"
 
-#: ../src/gpk-client.c:913 ../src/gpk-client.c:1734 ../src/gpk-client.c:1743
+#: ../src/gpk-client.c:702 ../src/gpk-client.c:1481 ../src/gpk-client.c:1490
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "נכשל בהתקנת קובץ"
 msgstr[1] "נכשל בהתקנת קבצים"
 
-#: ../src/gpk-client.c:1150
+#: ../src/gpk-client.c:861
 msgid "Do you want to copy this file?"
 msgstr "להעתיק את קובץ זה?"
 
-#: ../src/gpk-client.c:1151
+#: ../src/gpk-client.c:862
 msgid "Do you want to copy these files?"
 msgstr "להעתיק את קבצים אילו?"
 
-#: ../src/gpk-client.c:1152
+#: ../src/gpk-client.c:863
 msgid ""
 "One package file has to be copied to a non-private location so it can be "
 "installed:"
 msgstr ""
 
-#: ../src/gpk-client.c:1153
+#: ../src/gpk-client.c:864
 msgid ""
 "Some package files have to be copied to a non-private location so they can "
 "be installed:"
 msgstr ""
 
-#. add a specialist button
-#: ../src/gpk-client.c:1163
+#: ../src/gpk-client.c:872
 msgid "Copy file"
 msgstr "העתקת קובץ"
 
-#: ../src/gpk-client.c:1231
+#: ../src/gpk-client.c:939
 msgid "The file could not be copied"
 msgstr "לא ניתן להעתיק את הקובץ"
 
-#: ../src/gpk-client.c:1232
+#: ../src/gpk-client.c:940
 msgid "The files could not be copied"
 msgstr "לא ניתן להעתיק את הקבצים"
 
-#: ../src/gpk-client.c:1264
+#: ../src/gpk-client.c:973
 msgid "Do you want to install this file?"
 msgstr "ברצונך להתקין את הקובץ?"
 
-#: ../src/gpk-client.c:1265
+#: ../src/gpk-client.c:974
 msgid "Do you want to install these files?"
 msgstr "האם ברצונך להתקין את החבילות האלו?"
 
-#: ../src/gpk-client.c:1284
+#: ../src/gpk-client.c:988
 msgid "The file was not installed"
 msgstr "הקובץ לא הותקן"
 
-#: ../src/gpk-client.c:1285
+#: ../src/gpk-client.c:989
 msgid "The files were not installed"
 msgstr "הקבצים לא הותקנו"
 
-#: ../src/gpk-client.c:1332
+#: ../src/gpk-client.c:1034
 msgid "File was not found!"
 msgstr "קובץ לא נמצא!"
 
-#: ../src/gpk-client.c:1333
+#: ../src/gpk-client.c:1035
 msgid "Files were not found!"
 msgstr "קבצים לא נמצאו!"
 
-#: ../src/gpk-client.c:1335
+#: ../src/gpk-client.c:1037
 msgid "The following file was not found:"
 msgstr "הקובץ הבא לא נמצא:"
 
-#: ../src/gpk-client.c:1336
+#: ../src/gpk-client.c:1038
 msgid "The following files were not found:"
 msgstr "הקבצים הבאים לא נמצאו:"
 
+#: ../src/gpk-client.c:1083
+#, fuzzy
+msgid "A program"
+msgstr "הרץ תוכנה"
+
 #. set title
-#: ../src/gpk-client.c:1408
+#: ../src/gpk-client.c:1153
 msgid "Install local file"
 msgstr "התקנת קובץ מקומי"
 
 #. set title
-#: ../src/gpk-client.c:1463
+#: ../src/gpk-client.c:1198
 msgid "Remove packages"
 msgstr "הסרת חבילות"
 
-#: ../src/gpk-client.c:1478 ../src/gpk-client.c:1500 ../src/gpk-client.c:1505
+#: ../src/gpk-client.c:1213 ../src/gpk-client.c:1235 ../src/gpk-client.c:1240
 msgid "Failed to remove package"
 msgstr "נכשל בהסרת חבילה"
 
-#: ../src/gpk-client.c:1478
+#: ../src/gpk-client.c:1213
 msgid "Additional packages were also not removed"
 msgstr "חבילות נוספות גם לא הוסרו"
 
-#: ../src/gpk-client.c:1501
+#: ../src/gpk-client.c:1236
 msgid "You don't have the necessary privileges to remove packages"
 msgstr "אין לך את ההרשאות המתאימות כדי להסיר חבילות"
 
 #. set title
-#: ../src/gpk-client.c:1563
-msgid "Install packages"
-msgstr "התקנת חבילות"
-
-#: ../src/gpk-client.c:1578 ../src/gpk-client.c:1601 ../src/gpk-client.c:1606
-msgid "Failed to install package"
-msgstr "נכשל בהתקנת חבילה"
-
-#: ../src/gpk-client.c:1578
-msgid "Additional packages were not downloaded"
-msgstr "חבילות נוספות לא ירדו"
-
 #. try to install the package_id
-#: ../src/gpk-client.c:1595
+#: ../src/gpk-client.c:1292 ../src/gpk-client.c:1323
 msgid "Installing packages"
 msgstr "מתקין חבילות"
 
-#: ../src/gpk-client.c:1602
+#: ../src/gpk-client.c:1329 ../src/gpk-client.c:1334
+msgid "Failed to install package"
+msgstr "נכשל בהתקנת חבילה"
+
+#: ../src/gpk-client.c:1330
 msgid "You don't have the necessary privileges to install packages"
 msgstr "אין לך את ההרשאות המתאימות כדי להתקין חבילות"
 
-#: ../src/gpk-client.c:1701 ../src/gpk-client.c:1789 ../src/gpk-client.c:1857
+#: ../src/gpk-client.c:1376
+#, fuzzy
+msgid "wants to install packages"
+msgstr "נכשל בהתקנת חבילה"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:1437
+#, fuzzy
+msgid "File installer"
+msgstr "נכשל בהתקנה"
+
+#: ../src/gpk-client.c:1439
+#, fuzzy
+msgid "wants to install a file"
+msgstr "נכשל בהתקנת קובץ"
+
+#: ../src/gpk-client.c:1448 ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
 #: ../src/gpk-client-resolve.c:77 ../src/gpk-client-resolve.c:118
 msgid "Incorrect response from search"
 msgstr "תגובה שגויה מתהליך החיפוש"
 
-#: ../src/gpk-client.c:1702
+#: ../src/gpk-client.c:1449
 msgid "Failed to search for file"
 msgstr "נכשל בחיפוש אחר קובץ"
 
-#: ../src/gpk-client.c:1713 ../src/gpk-client-resolve.c:118
+#: ../src/gpk-client.c:1460 ../src/gpk-client-resolve.c:118
 msgid "Failed to find package"
 msgstr "נחשל במציאת חבילה"
 
-#: ../src/gpk-client.c:1713
+#: ../src/gpk-client.c:1460
 msgid "The file could not be found in any packages"
 msgstr "לא ניתן למצוא את הקובץ באף חבילה"
 
-#: ../src/gpk-client.c:1733
+#: ../src/gpk-client.c:1480
 #, c-format
 msgid "The %s package already provides the file %s"
 msgstr "החבילה %s כבר כבר מספקת את הקובץ %s"
 
-#: ../src/gpk-client.c:1743
+#: ../src/gpk-client.c:1490
 msgid "Incorrect response from file search"
 msgstr "תגובה שגויה מתהליך חיפוש קובץ"
 
-#: ../src/gpk-client.c:1789 ../src/gpk-client.c:1857
+#: ../src/gpk-client.c:1528
+#, fuzzy, c-format
+msgid "Searching for codec: %s"
+msgstr "מחפש קובץ"
+
+#: ../src/gpk-client.c:1578
+#, fuzzy
+msgid "Additional plugins are required to play this content."
+msgstr "נדרשת קושחה נוספת כדי לגרום לחומרה על המחשב הזה לתפקד כראוי."
+
+#: ../src/gpk-client.c:1578
+#, fuzzy
+msgid "The following codecs are required:"
+msgstr "העדכונים הבאים זמינים:"
+
+#. trailer
+#: ../src/gpk-client.c:1587
+#, fuzzy
+msgid "Do you want to search for these now?"
+msgstr "להעתיק את קבצים אילו?"
+
+#: ../src/gpk-client.c:1595
+#, fuzzy
+msgid "Codec installer"
+msgstr "מתקין קטלוגים"
+
+#: ../src/gpk-client.c:1596 ../src/gpk-client.c:1751 ../src/gpk-client.c:1837
+#, fuzzy
+msgid "Search"
+msgstr "חיפוש קובץ:"
+
+#: ../src/gpk-client.c:1597
+msgid "requires additional plugins"
+msgstr ""
+
+#. set title
+#: ../src/gpk-client.c:1638
+#, fuzzy
+msgid "Searching for codecs"
+msgstr "מחפש קובץ"
+
+#: ../src/gpk-client.c:1659
+#, fuzzy
+msgid "Failed to search for codec"
+msgstr "נכשל בחיפוש אחר מה שמסופק"
+
+#: ../src/gpk-client.c:1659
+#, fuzzy
+msgid "Could not find codec in any configured software source"
+msgstr "לא ניתן למצוא את החבילה באף מקור תוכנה"
+
+#. process package list
+#: ../src/gpk-client.c:1677
+#, fuzzy
+msgid "The following packages can be installed:"
+msgstr "צריך להסיר את החבילות הבאות:"
+
+#: ../src/gpk-client.c:1687
+#, fuzzy
+msgid "Do you want to install these now?"
+msgstr "האם ברצונך להתקין את החבילות האלו?"
+
+#: ../src/gpk-client.c:1695
+msgid "Install the following codecs"
+msgstr ""
+
+#. make sure the user wants to do action
+#. are we running privileged
+#: ../src/gpk-client.c:1750 ../src/gpk-install-mime-type.c:74
+#, fuzzy
+msgid "Mime type installer"
+msgstr "נכשל בהתקנה"
+
+#: ../src/gpk-client.c:1752
+msgid "requires a new mime type"
+msgstr ""
+
+#: ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
 msgid "Failed to search for provides"
 msgstr "נכשל בחיפוש אחר מה שמסופק"
 
-#: ../src/gpk-client.c:1799
+#: ../src/gpk-client.c:1781
 msgid "Failed to find software"
 msgstr "נכשל בחיפוש תוכנה"
 
-#: ../src/gpk-client.c:1800
+#: ../src/gpk-client.c:1782
 msgid "No new applications can be found to handle this type of file"
 msgstr "לא נמצאו יישומים חדשים המסוגלים לטפל בקבצים מסוג זה"
 
-#: ../src/gpk-client.c:1808
+#: ../src/gpk-client.c:1790
 msgid "Applications that can open this type of file"
 msgstr "יישומים היכולים לפתוח קבצים מסוג זה"
 
-#: ../src/gpk-client.c:1812
+#: ../src/gpk-client.c:1794
 msgid "Failed to install software"
 msgstr "נכשל בהתקנת תוכנה"
 
-#: ../src/gpk-client.c:1812
+#: ../src/gpk-client.c:1794
 msgid "No applications were chosen to be installed"
 msgstr "לא נבחרו יישומים להתקנה"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:1836
+#, fuzzy
+msgid "Font installer"
+msgstr "_הכרח התקנה"
+
+#: ../src/gpk-client.c:1838
+#, fuzzy
+msgid "wants to install a font"
+msgstr "נכשל בהתקנת גופנים"
 
 #: ../src/gpk-client.c:1867
 msgid "Failed to find font"
@@ -1125,175 +1231,165 @@ msgstr "נכשל בהתקנת גופנים"
 msgid "No fonts were chosen to be installed"
 msgstr "לא נבחרו גופנים להתקנה"
 
-#: ../src/gpk-client.c:1909
+#: ../src/gpk-client.c:1908
 #, c-format
 msgid "Finding package name: %s"
 msgstr "מוצא חבילה בשם: %s"
 
-#: ../src/gpk-client.c:1911
+#: ../src/gpk-client.c:1910
 #, c-format
 msgid "Finding file name: %s"
 msgstr "מוצא שם קובץ: %s"
 
-#: ../src/gpk-client.c:1913
+#: ../src/gpk-client.c:1912
 #, c-format
 msgid "Finding a package to provide: %s"
 msgstr "מוצא חבילה כדי לספק: %s"
 
-#: ../src/gpk-client.c:1950
+#: ../src/gpk-client.c:1940
 msgid "Do you want to install this catalog?"
 msgstr "להתקין את הקטלוג?"
 
-#: ../src/gpk-client.c:1951
+#: ../src/gpk-client.c:1941
 msgid "Do you want to install these catalogs?"
 msgstr "להתקין את הקטלוגים?"
 
-#: ../src/gpk-client.c:1969 ../src/gpk-client.c:2038
-msgid "The catalog was not installed"
-msgstr "הקטלוג לא הותקן"
-
-#: ../src/gpk-client.c:1970 ../src/gpk-client.c:2039
-msgid "The catalogs were not installed"
-msgstr "הקטלוגים לא הותקנו"
-
 #. set title
-#: ../src/gpk-client.c:1979
+#: ../src/gpk-client.c:1958
 msgid "Install catalogs"
 msgstr "התקנת קטלוג"
 
-#: ../src/gpk-client.c:1999
+#. show UI
+#: ../src/gpk-client.c:1975
 msgid "No packages need to be installed"
 msgstr "אין צורך בהתקנת חבילות"
 
 #. process package list
-#: ../src/gpk-client.c:2008
+#: ../src/gpk-client.c:1986
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "החבילות הבאות סומנו להתקנה מהקטלוג:"
 
-#: ../src/gpk-client.c:2026
+#. show UI
+#: ../src/gpk-client.c:2001
 msgid "Install packages in catalog?"
 msgstr "התקנת חבילות מהקטלוג?"
 
 #. set title
-#: ../src/gpk-client.c:2091
+#: ../src/gpk-client.c:2051
 msgid "System update"
 msgstr "עדכון מערכת"
 
-#: ../src/gpk-client.c:2098
+#: ../src/gpk-client.c:2058
 msgid "Authorization could not be obtained"
 msgstr "לא ניתן להשיג אימות"
 
-#: ../src/gpk-client.c:2100 ../src/gpk-client.c:2185 ../src/gpk-client.c:2415
+#: ../src/gpk-client.c:2060 ../src/gpk-client.c:2139 ../src/gpk-client.c:2345
 #, c-format
 msgid "The error was: %s"
 msgstr "השגיאה הייתה: %s"
 
 #. display and set
-#: ../src/gpk-client.c:2104 ../src/gpk-client.c:2105
+#: ../src/gpk-client.c:2064 ../src/gpk-client.c:2065
 msgid "Failed to update system"
 msgstr "נכשל בעדכון מערכת"
 
 #. do the bubble
-#: ../src/gpk-client.c:2118
+#: ../src/gpk-client.c:2078
 msgid "Updates are being installed"
 msgstr "העדכונים בתהליך התקנה"
 
-#: ../src/gpk-client.c:2119
+#: ../src/gpk-client.c:2079
 msgid "Updates are being automatically installed on your computer"
 msgstr "עדכונים מותקנים אוטומטית על המחשב שלך"
 
-#: ../src/gpk-client.c:2124
+#: ../src/gpk-client.c:2084
 msgid "Cancel update"
 msgstr "בטל עדכון"
 
-#: ../src/gpk-client.c:2183 ../src/gpk-client.c:2413
+#: ../src/gpk-client.c:2137 ../src/gpk-client.c:2343
 msgid "Authorisation could not be obtained"
 msgstr "לא ניתן להשיג אימות"
 
 #. display and set
-#: ../src/gpk-client.c:2189 ../src/gpk-client.c:2190
+#: ../src/gpk-client.c:2143 ../src/gpk-client.c:2144
 msgid "Failed to update package lists"
 msgstr "נכשל בעדכון רשימת חבילות עדכונים"
 
-#: ../src/gpk-client.c:2234
+#: ../src/gpk-client.c:2182
 msgid "Failed to reset get-updates"
 msgstr "נכשל בקבלת עדכונים"
 
-#. set title
-#: ../src/gpk-client.c:2241
-msgid "Getting update lists"
-msgstr "מקבל רשימות עדכונים"
-
-#: ../src/gpk-client.c:2246 ../src/gpk-client.c:2305
+#: ../src/gpk-client.c:2191 ../src/gpk-client.c:2249
 msgid "Getting update lists failed"
 msgstr "קבלת רשימת עדכונים נכשלה"
 
-#: ../src/gpk-client.c:2246
+#: ../src/gpk-client.c:2191
 msgid "Failed to get updates"
 msgstr "נכשל בקבלת עדכונים"
 
-#: ../src/gpk-client.c:2289
+#: ../src/gpk-client.c:2201
+msgid "Getting update lists"
+msgstr "מקבל רשימות עדכונים"
+
+#: ../src/gpk-client.c:2234
 msgid "Failed to reset get-upgrades"
 msgstr "נכשל באיפוס קבלת שדרוגים"
 
-#. set title
-#: ../src/gpk-client.c:2296 ../src/gpk-common.c:1102
-msgid "Getting distribution upgrade information"
-msgstr "מקבל נתוני שדרוג הפצה"
-
-#: ../src/gpk-client.c:2306
+#: ../src/gpk-client.c:2250
 msgid "Getting the list of distribution upgrades failed"
 msgstr "קבלת רשימת שדרוגי ההפצה נכשלה"
 
-#: ../src/gpk-client.c:2341
+#: ../src/gpk-client.c:2257 ../src/gpk-common.c:1106
+msgid "Getting distribution upgrade information"
+msgstr "מקבל נתוני שדרוג הפצה"
+
+#: ../src/gpk-client.c:2281
 msgid "Failed to reset get-file-list"
 msgstr ""
 
-#. set title
-#: ../src/gpk-client.c:2348
-msgid "Getting file lists"
-msgstr "מקבל רשימת קבצים"
-
-#: ../src/gpk-client.c:2355
+#: ../src/gpk-client.c:2292
 msgid "Getting file list failed"
 msgstr "קבלת רשימת קבצים נכשלה"
 
-#: ../src/gpk-client.c:2355
+#: ../src/gpk-client.c:2292
 msgid "Failed to get file list"
 msgstr "נכשל בקבלת רשימת קבצים"
 
-#. set title
-#: ../src/gpk-client.c:2406
-msgid "Update packages"
-msgstr "עדכון חבילות"
+#: ../src/gpk-client.c:2299
+msgid "Getting file lists"
+msgstr "מקבל רשימת קבצים"
 
 #. display and set
-#: ../src/gpk-client.c:2419 ../src/gpk-client.c:2420
+#: ../src/gpk-client.c:2349 ../src/gpk-client.c:2350
 msgid "Failed to update packages"
 msgstr "נכשל בעדכון חבילות"
 
-#: ../src/gpk-client.c:2470 ../src/gpk-client.c:2481
+#: ../src/gpk-client.c:2357
+msgid "Update packages"
+msgstr "עדכון חבילות"
+
+#: ../src/gpk-client.c:2400 ../src/gpk-client.c:2411
 msgid "Failed to install signature"
 msgstr "נכשל בהתקנת חתימה"
 
-#: ../src/gpk-client.c:2471 ../src/gpk-client.c:2513
+#: ../src/gpk-client.c:2401 ../src/gpk-client.c:2441
 msgid "The client could not be reset"
 msgstr "לא ניתן לאפס את הלקוח"
 
-#: ../src/gpk-client.c:2482 ../src/gpk-client.c:2524
+#: ../src/gpk-client.c:2412 ../src/gpk-client.c:2450
 #, fuzzy
 msgid "The method failed"
 msgstr "הורדת החבילה נכשלה"
 
-#: ../src/gpk-client.c:2512 ../src/gpk-client.c:2523
+#: ../src/gpk-client.c:2440 ../src/gpk-client.c:2449
 msgid "Failed to accept EULA"
 msgstr "נכשל בקבלת רישיון"
 
-#: ../src/gpk-client.c:2550
+#: ../src/gpk-client.c:2476
 msgid "Failed to install"
 msgstr "נכשל בהתקנה"
 
-#: ../src/gpk-client.c:2551
+#: ../src/gpk-client.c:2477
 msgid "The install task could not be requeued"
 msgstr "לא ניתן לבצע שוב את פעולת ההתקנה"
 
@@ -1344,6 +1440,11 @@ msgid "To install %s, an additional package also has to be downloaded."
 msgid_plural "To install %s, additional packages also have to be downloaded."
 msgstr[0] "כדי להתקין את %s, נדרשת התקנה של חבילה נוספת."
 msgstr[1] "כדי להתקין את %s, נדרשת התקנה של חבילות נוספות."
+
+#: ../src/gpk-client-dialog.c:712
+#, fuzzy
+msgid "Uninstall"
+msgstr "התקנה"
 
 #. get the packages we depend on
 #: ../src/gpk-client-requires.c:82
@@ -1401,7 +1502,7 @@ msgstr "לא ניתן למצוא את החבילה באף מקור תוכנה"
 msgid "Failed to install %s"
 msgstr "נכשל בהתקנת %s"
 
-#: ../src/gpk-client-resolve.c:111 ../src/gpk-common.c:359
+#: ../src/gpk-client-resolve.c:111 ../src/gpk-common.c:361
 msgid "The package is already installed"
 msgstr "החבילה כבר מותקנת"
 
@@ -1429,176 +1530,176 @@ msgstr "_הכרח התקנה"
 msgid "Force installing package"
 msgstr "הכרח התקנת חבילה"
 
-#: ../src/gpk-common.c:332
+#: ../src/gpk-common.c:334
 msgid "No network connection available"
 msgstr "אין חיבור רשת פעיל"
 
-#: ../src/gpk-common.c:335
+#: ../src/gpk-common.c:337
 msgid "No package cache is available."
 msgstr "אין מטמון חבילות זמין."
 
-#: ../src/gpk-common.c:338
+#: ../src/gpk-common.c:340
 msgid "Out of memory"
 msgstr "אין מספיק זיכרון"
 
-#: ../src/gpk-common.c:341
+#: ../src/gpk-common.c:343
 msgid "Failed to create a thread"
 msgstr "נכשל ביצירת תהליכון"
 
-#: ../src/gpk-common.c:344
+#: ../src/gpk-common.c:346
 msgid "Not supported by this backend"
 msgstr "לא נתמך על ידי המנוע"
 
-#: ../src/gpk-common.c:347
+#: ../src/gpk-common.c:349
 msgid "An internal system error has occurred"
 msgstr "התרחשה שגיאה מערכת פנימית"
 
-#: ../src/gpk-common.c:350
+#: ../src/gpk-common.c:352
 msgid "A security trust relationship is not present"
 msgstr ""
 
-#: ../src/gpk-common.c:353
+#: ../src/gpk-common.c:355
 msgid "The package is not installed"
 msgstr "החבילה לא מותקנת"
 
-#: ../src/gpk-common.c:356
+#: ../src/gpk-common.c:358
 msgid "The package was not found"
 msgstr "החבילה לא נמצא"
 
-#: ../src/gpk-common.c:362
+#: ../src/gpk-common.c:364
 msgid "The package download failed"
 msgstr "הורדת החבילה נכשלה"
 
-#: ../src/gpk-common.c:365
+#: ../src/gpk-common.c:367
 msgid "The group was not found"
 msgstr "הקבוצה לא נמצאה"
 
-#: ../src/gpk-common.c:368
+#: ../src/gpk-common.c:370
 msgid "The group list was invalid"
 msgstr "רשימת הקבוצות לא תקינה"
 
-#: ../src/gpk-common.c:371
+#: ../src/gpk-common.c:373
 msgid "Dependency resolution failed"
 msgstr "טיפול בתלויות נכשל"
 
-#: ../src/gpk-common.c:374
+#: ../src/gpk-common.c:376
 msgid "Search filter was invalid"
 msgstr "מסנן החיפוש לא תקין"
 
-#: ../src/gpk-common.c:377
+#: ../src/gpk-common.c:379
 msgid "The package identifier was not well formed"
 msgstr "מזהה חבילה לא נוצר כראוי"
 
-#: ../src/gpk-common.c:380
+#: ../src/gpk-common.c:382
 msgid "Transaction error"
 msgstr "שגיאה בפעולה"
 
-#: ../src/gpk-common.c:383
+#: ../src/gpk-common.c:385
 msgid "Repository name was not found"
 msgstr "שם המאגר לא נמצא"
 
-#: ../src/gpk-common.c:386
+#: ../src/gpk-common.c:388
 msgid "Could not remove a protected system package"
 msgstr "לא ניתן להסיר חבילה המוגנת על ידי המערכת"
 
-#: ../src/gpk-common.c:389
+#: ../src/gpk-common.c:391
 msgid "The task was canceled"
 msgstr "הפעולה בוטלה"
 
-#: ../src/gpk-common.c:392
+#: ../src/gpk-common.c:394
 msgid "The task was forcibly canceled"
 msgstr "הפעולה בוטלה בכוח"
 
-#: ../src/gpk-common.c:395
+#: ../src/gpk-common.c:397
 msgid "Reading the config file failed"
 msgstr "קריאת קובץ הגדרות נכשלה"
 
-#: ../src/gpk-common.c:398
+#: ../src/gpk-common.c:400
 msgid "The task cannot be canceled"
 msgstr "לא ניתן לבטל את הפעולה"
 
-#: ../src/gpk-common.c:401
+#: ../src/gpk-common.c:403
 msgid "Source packages cannot be installed"
 msgstr "לא ניתן להתקין חבילות מקור"
 
-#: ../src/gpk-common.c:404
+#: ../src/gpk-common.c:406
 msgid "The license agreement failed"
 msgstr "הסכמה לרישיון נכשלה"
 
-#: ../src/gpk-common.c:407
+#: ../src/gpk-common.c:409
 msgid "Local file conflict between packages"
 msgstr "התנגשות קבצים מקומיים בין חבילות"
 
-#: ../src/gpk-common.c:410
+#: ../src/gpk-common.c:412
 msgid "Packages are not compatible"
 msgstr "החבילות לא תואמות"
 
-#: ../src/gpk-common.c:413
+#: ../src/gpk-common.c:415
 msgid "Problem connecting to a software source"
 msgstr "בעיה בהתחברות למקור תוכנה"
 
-#: ../src/gpk-common.c:416
+#: ../src/gpk-common.c:418
 msgid "Failed to initialize"
 msgstr "נכשל באתחול"
 
-#: ../src/gpk-common.c:419
+#: ../src/gpk-common.c:421
 #, fuzzy
 msgid "Failed to finalise"
 msgstr "נכשל בהתקנה"
 
-#: ../src/gpk-common.c:422
+#: ../src/gpk-common.c:424
 msgid "Cannot get lock"
 msgstr "לא ניתן להשיג נעילה"
 
-#: ../src/gpk-common.c:425
+#: ../src/gpk-common.c:427
 msgid "No packages to update"
 msgstr "אין חבילות לעדכן"
 
-#: ../src/gpk-common.c:428
+#: ../src/gpk-common.c:430
 msgid "Cannot write repository configuration"
 msgstr "לא ניתן לכתוב את תצורת המאגר"
 
-#: ../src/gpk-common.c:431
+#: ../src/gpk-common.c:433
 msgid "Local install failed"
 msgstr "התקנה מקומית נכשלה"
 
-#: ../src/gpk-common.c:434
+#: ../src/gpk-common.c:436
 msgid "Bad GPG signature"
 msgstr "חתימת GPG לא תקינה"
 
-#: ../src/gpk-common.c:437
+#: ../src/gpk-common.c:439
 msgid "Missing GPG signature"
 msgstr "חסרה חתימת GPG"
 
-#: ../src/gpk-common.c:440
+#: ../src/gpk-common.c:442
 msgid "Repository configuration invalid"
 msgstr "תצורת המאגר לא תקינה"
 
-#: ../src/gpk-common.c:443
+#: ../src/gpk-common.c:445
 msgid "Invalid package file"
 msgstr "קובץ חבילה לא תקין"
 
-#: ../src/gpk-common.c:446
+#: ../src/gpk-common.c:448
 msgid "Package install blocked"
 msgstr "התקנת חבילה נחסמה"
 
-#: ../src/gpk-common.c:449
+#: ../src/gpk-common.c:451
 msgid "Package is corrupt"
 msgstr "החבילה פגומה"
 
-#: ../src/gpk-common.c:452
+#: ../src/gpk-common.c:454
 msgid "All packages are already installed"
 msgstr "כל החבילות כבר מותקנות"
 
-#: ../src/gpk-common.c:455
+#: ../src/gpk-common.c:457
 msgid "The specified file could not be found"
 msgstr "הקובץ שצויין לא נמצא"
 
-#: ../src/gpk-common.c:458
+#: ../src/gpk-common.c:460
 msgid "No more mirrors are available"
 msgstr "אין עוד שרתי מראה זמינים"
 
-#: ../src/gpk-common.c:475
+#: ../src/gpk-common.c:477
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
@@ -1606,7 +1707,7 @@ msgstr ""
 "לא נמצא חיבור רשת.\n"
 "אנא בדוק את הגדרות החיבור ונסה שוב"
 
-#: ../src/gpk-common.c:479
+#: ../src/gpk-common.c:481
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1614,7 +1715,7 @@ msgstr ""
 "צריך לבנות את רשימת החבילות מחדש.\n"
 "פעולה זו צריכה להתבצע על ידי המנוע אוטומטית."
 
-#: ../src/gpk-common.c:483
+#: ../src/gpk-common.c:485
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1623,11 +1724,11 @@ msgstr ""
 "לשירות המטפל בבקשות משתמש נגמר הזיכרון.\n"
 "נא לאתחל את המחשב."
 
-#: ../src/gpk-common.c:487
+#: ../src/gpk-common.c:489
 msgid "A thread could not be created to service the user request."
 msgstr ""
 
-#: ../src/gpk-common.c:490
+#: ../src/gpk-common.c:492
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug at "
@@ -1635,7 +1736,7 @@ msgstr ""
 "הפעולה הזאת לא נתמכת על ידי המנוע.\n"
 "נא לדווח על באג ב-"
 
-#: ../src/gpk-common.c:494
+#: ../src/gpk-common.c:496
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug at "
@@ -1643,7 +1744,7 @@ msgstr ""
 "התרחשה בעיה שלא ציפינו לה.\n"
 "נא לדווח על הבאג ב-"
 
-#: ../src/gpk-common.c:498
+#: ../src/gpk-common.c:500
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -1651,22 +1752,22 @@ msgstr ""
 "לא ניתן לבצע אימות אבטחה עם מקור תוכנה.\n"
 "אנא בדוק את הגדרות האבטחה שלך."
 
-#: ../src/gpk-common.c:502
+#: ../src/gpk-common.c:504
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr "החבילה שאתה מנסה להסיר או לעדכן כבר לא מותקנת."
 
-#: ../src/gpk-common.c:505
+#: ../src/gpk-common.c:507
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
 msgstr "החבילה שעוברת שינויים לא נמצאה במערכת או באף מקור תוכנה."
 
-#: ../src/gpk-common.c:508
+#: ../src/gpk-common.c:510
 msgid "The package that is trying to be installed is already installed."
 msgstr "החבילה כבר מותקנת."
 
-#: ../src/gpk-common.c:511
+#: ../src/gpk-common.c:513
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1674,7 +1775,7 @@ msgstr ""
 "הורדת החבילה נכשלה.\n"
 "אנא בדוק את החיבור האינטרנט שלך."
 
-#: ../src/gpk-common.c:515
+#: ../src/gpk-common.c:517
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1682,7 +1783,7 @@ msgstr ""
 "הקבוצה לא נמצאה.\n"
 "אנא בדוק את רשימת הקבוצות ונסה שוב."
 
-#: ../src/gpk-common.c:519
+#: ../src/gpk-common.c:521
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1691,7 +1792,7 @@ msgstr ""
 "לא ניתן לטעון את רשימת קבוצות.\n"
 "רענון מטמון החבילות יכול לעזור, אבל בדרך כלל זו שגיאה של מקור התוכנה."
 
-#: ../src/gpk-common.c:524
+#: ../src/gpk-common.c:526
 msgid ""
 "A package could not be found that allows the task to complete.\n"
 "More information is available in the detailed report."
@@ -1699,11 +1800,11 @@ msgstr ""
 "לא נמצאה חבילה המאפשרת את השלמת הפעולה.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-common.c:528
+#: ../src/gpk-common.c:530
 msgid "The search filter was not correctly formed."
 msgstr "מסנן החיפוש לא נוצר כראוי."
 
-#: ../src/gpk-common.c:531
+#: ../src/gpk-common.c:533
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1711,7 +1812,7 @@ msgstr ""
 "מזהה החבילה לא נוצר כראוי כשהוא נשלח לשרת.\n"
 "זה בדרך כלל מצביע על שגיאה פנימית ויש לדווח עליה."
 
-#: ../src/gpk-common.c:535
+#: ../src/gpk-common.c:537
 msgid ""
 "An unspecified task error has occurred.\n"
 "More information is available in the detailed report."
@@ -1719,7 +1820,7 @@ msgstr ""
 "התרחשה שגיאת פעולה לא מוגדרת.\n"
 "פרטים נוספים זמינים בדו\"ח המפורט."
 
-#: ../src/gpk-common.c:539
+#: ../src/gpk-common.c:541
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources"
@@ -1727,15 +1828,15 @@ msgstr ""
 "מקור התוכנה המרוחק לא נמצא.\n"
 "יתכן ותצטרך להפעילו במקורות תוכנה"
 
-#: ../src/gpk-common.c:543
+#: ../src/gpk-common.c:545
 msgid "Removing a protected system package is not allowed."
 msgstr "הסרת חבילה המוגנת על ידי המערכת לא מורשית."
 
-#: ../src/gpk-common.c:546
+#: ../src/gpk-common.c:548
 msgid "The task was canceled successfully and no packages were changed."
 msgstr "הפעולה בוטלה בהצלחה ואף חבילה לא שונתה."
 
-#: ../src/gpk-common.c:549
+#: ../src/gpk-common.c:551
 msgid ""
 "The task was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1743,17 +1844,17 @@ msgstr ""
 "הפעולה בוטלה בהצלחה ואף חבילה לא שונתה.\n"
 "המנוע לא יצא בצורה נקייה."
 
-#: ../src/gpk-common.c:553
+#: ../src/gpk-common.c:555
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
 msgstr ""
 
-#: ../src/gpk-common.c:557
+#: ../src/gpk-common.c:559
 msgid "The task is not safe to be canceled at this time."
 msgstr "לא בטוח לבטל את הפעולה כרגע."
 
-#: ../src/gpk-common.c:560
+#: ../src/gpk-common.c:562
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1761,7 +1862,7 @@ msgstr ""
 "חבילות מקור בדרך כלל לא מותקנות כך.\n"
 "בדוק את סיומת הקובץ שאתה מנסה להתקין."
 
-#: ../src/gpk-common.c:564
+#: ../src/gpk-common.c:566
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -1769,23 +1870,25 @@ msgstr ""
 "לא בוצע הסכמה לרישיון.\n"
 "כדי להשתמש בתוכנה זו עליך להסכים לרישיון."
 
-#: ../src/gpk-common.c:568
+#: ../src/gpk-common.c:570
+#, fuzzy
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages for different software sources."
+"This is usually due to mixing packages from different software sources."
 msgstr ""
 "שתי חבילות המספקות את אותו הקובץ.\n"
 "זה בדרך כלל בגלל ערוב חבילות עבור מאגרי חבילות שונים."
 
-#: ../src/gpk-common.c:572
+#: ../src/gpk-common.c:574
+#, fuzzy
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages for different software sources."
+"This is usually due to mixing packages from different software sources."
 msgstr ""
 "קיימות חבילות מרובות שלא תואמות.\n"
 "בדרך כלל זה מתרחש כתוצאה מעירוב חבילות ממאגרי חבילות שונים."
 
-#: ../src/gpk-common.c:576
+#: ../src/gpk-common.c:578
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source\n"
 "Please check the detailed error for further details."
@@ -1793,7 +1896,7 @@ msgstr ""
 "התרחשה בעיה (יתכן זמנית) בהתחברות למקור תוכנה\n"
 "בדוק בשגיאה מפורטת מידע נוסף."
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:582
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1801,7 +1904,7 @@ msgstr ""
 "נכשל באתחול מנוע ניהול החבילות.\n"
 "יתכן וזה התרחש בגלל שמספר כלי ניהול חבילות פועלים בו זמנית."
 
-#: ../src/gpk-common.c:584
+#: ../src/gpk-common.c:586
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1809,7 +1912,7 @@ msgstr ""
 "נכשל בסגירת מופע המנוע.\n"
 "ניתן להתעלם משגיאה זו."
 
-#: ../src/gpk-common.c:588
+#: ../src/gpk-common.c:590
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1817,15 +1920,15 @@ msgstr ""
 "לא ניתן להשיג נעילה בלעדית על מנוע ניהול החבילות.\n"
 "נא לסגור מנהלי חבילות מיושנים שעלולים להיות פתוחים."
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:594
 msgid "None of the selected packages could be updated."
 msgstr "לא ניתן לעדכן אף אחת מהחבילות הנבחרות."
 
-#: ../src/gpk-common.c:595
+#: ../src/gpk-common.c:597
 msgid "The repository configuration could not be modified."
 msgstr "תצורת המאגר לא ניתנת לשינוי."
 
-#: ../src/gpk-common.c:598
+#: ../src/gpk-common.c:600
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1833,11 +1936,11 @@ msgstr ""
 "התקנת הקובץ המקומי נכשלה.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-common.c:602
+#: ../src/gpk-common.c:604
 msgid "The package signature could not be verified."
 msgstr "לא ניתן לוודא את חתימת החבילה."
 
-#: ../src/gpk-common.c:605
+#: ../src/gpk-common.c:607
 msgid ""
 "The package signature was missing and this package is untrusted.\n"
 "This package was not signed with a GPG key when created."
@@ -1845,11 +1948,11 @@ msgstr ""
 "חתימת החבילה חסרה ולכן לא ניתן לבטוח בה.\n"
 "החבילה לא נחתמה במפתח GPG בעת יצירתה."
 
-#: ../src/gpk-common.c:609
+#: ../src/gpk-common.c:611
 msgid "Repository configuration was invalid and could not be read."
 msgstr "תצורת המאגר לא תקינה ולא ניתנת לקריאה."
 
-#: ../src/gpk-common.c:612
+#: ../src/gpk-common.c:614
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -1857,23 +1960,23 @@ msgstr ""
 "החבילה שאתה מנסה להתקין לא תקינה.\n"
 "יתכן וקובץ החבילה פגום, או לא בחילה ראויה."
 
-#: ../src/gpk-common.c:616
+#: ../src/gpk-common.c:618
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "התקנת החבילה נמנעה על ידי תצורת מערכת החבילות שלך."
 
-#: ../src/gpk-common.c:619
+#: ../src/gpk-common.c:621
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "החבילה שהורדה פגומה ויש והוריד אותה שוב"
 
-#: ../src/gpk-common.c:622
+#: ../src/gpk-common.c:624
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "כל החבילות שנבחרו להתקנה כבר מותקנות על המערכת."
 
-#: ../src/gpk-common.c:625
+#: ../src/gpk-common.c:627
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -1881,7 +1984,7 @@ msgstr ""
 "הקובץ שצוין לא נמצא במערכת.\n"
 "בדוק אם הקובץ עדיין קיים ולא נמחק."
 
-#: ../src/gpk-common.c:629
+#: ../src/gpk-common.c:631
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -1889,682 +1992,682 @@ msgstr ""
 "המידע הנדרש לא נמצא על אף אחד ממקורות התוכנה המוגדרים.\n"
 "אין עוד מקורות תוכנה לנסות."
 
-#: ../src/gpk-common.c:648
+#: ../src/gpk-common.c:650
 msgid "No restart is necessary for this update"
 msgstr "לא נדרש אתחול עבור העדכון"
 
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:653
 msgid "An application restart is required after this update"
 msgstr "נדרש אתחול יישום אחרי העדכון"
 
-#: ../src/gpk-common.c:654
+#: ../src/gpk-common.c:656
 msgid "You will be required to log off and back on after this update"
 msgstr "תצטרך להתנתק ולהתחבר בחזרה אחרי העדכון"
 
-#: ../src/gpk-common.c:657
+#: ../src/gpk-common.c:659
 msgid "A system restart is required after this update"
 msgstr "נדרש אתחול מערכת אחרי העדכון"
 
-#: ../src/gpk-common.c:674
+#: ../src/gpk-common.c:676
 msgid "No restart is required"
 msgstr "לא נדרש אתחול"
 
-#: ../src/gpk-common.c:677
+#: ../src/gpk-common.c:679
 msgid "A system restart is required"
 msgstr "נדרש אתחול מערכת"
 
-#: ../src/gpk-common.c:680
+#: ../src/gpk-common.c:682
 msgid "You will need to log off and log back on"
 msgstr "יהיה עליך להתנתק ולהתחבר חזרה"
 
-#: ../src/gpk-common.c:683
+#: ../src/gpk-common.c:685
 msgid "You need to restart the application"
 msgstr "עליך לאתחל את היישום"
 
-#: ../src/gpk-common.c:700
+#: ../src/gpk-common.c:702
 msgid "Stable"
 msgstr "יציב"
 
-#: ../src/gpk-common.c:703
+#: ../src/gpk-common.c:705
 msgid "Unstable"
 msgstr "לא יציב"
 
-#: ../src/gpk-common.c:706
+#: ../src/gpk-common.c:708
 msgid "Testing"
 msgstr "בדיקות"
 
-#: ../src/gpk-common.c:723
+#: ../src/gpk-common.c:725
 msgid "A mirror is possibly broken"
 msgstr "יתכן ששרת מראה שבור"
 
-#: ../src/gpk-common.c:726
+#: ../src/gpk-common.c:728
 msgid "The connection was refused"
 msgstr "החיבור נדחה"
 
-#: ../src/gpk-common.c:729
+#: ../src/gpk-common.c:731
 msgid "The parameter was invalid"
 msgstr "המשתנה לא תקין"
 
-#: ../src/gpk-common.c:732
+#: ../src/gpk-common.c:734
 msgid "The priority was invalid"
 msgstr "העדיפות לא תקינה"
 
-#: ../src/gpk-common.c:735
+#: ../src/gpk-common.c:737
 msgid "Generic backend error"
 msgstr "שגיאת מנוע כללית"
 
-#: ../src/gpk-common.c:738
+#: ../src/gpk-common.c:740
 msgid "Generic daemon error"
 msgstr "שגיאת מנוע כללית"
 
-#: ../src/gpk-common.c:741
+#: ../src/gpk-common.c:743
 msgid "The package list cache is being rebuilt"
 msgstr "מטמון רשימת החבילות נבנה מחדש"
 
-#: ../src/gpk-common.c:744
+#: ../src/gpk-common.c:746
 msgid "An untrusted package was installed"
 msgstr "הותקנה חבילה לא בטוחה"
 
-#: ../src/gpk-common.c:747
+#: ../src/gpk-common.c:749
 msgid "A newer package exists"
 msgstr "קיימת חבילה עדכנית יותר"
 
-#: ../src/gpk-common.c:750
+#: ../src/gpk-common.c:752
 msgid "Could not find package"
 msgstr "לא ניתן למצוא חבילה"
 
-#: ../src/gpk-common.c:753
+#: ../src/gpk-common.c:755
 msgid "Configuration files were changed"
 msgstr "קבצי תצורה שונו"
 
-#: ../src/gpk-common.c:756
+#: ../src/gpk-common.c:758
 msgid "Package is already installed"
 msgstr "החבילה כבר מותקנת"
 
-#: ../src/gpk-common.c:774
+#: ../src/gpk-common.c:776
 msgid "Unknown state"
 msgstr "מצב לא ידוע"
 
-#: ../src/gpk-common.c:777
+#: ../src/gpk-common.c:779
 msgid "Waiting for service to start"
 msgstr "ממתין להתחלת השירות"
 
-#: ../src/gpk-common.c:780
+#: ../src/gpk-common.c:782
 msgid "Waiting for other tasks"
 msgstr "ממתין לפעולות אחרות"
 
-#: ../src/gpk-common.c:783
+#: ../src/gpk-common.c:785
 msgid "Running task"
 msgstr "מבצע פעולה"
 
-#: ../src/gpk-common.c:786
+#: ../src/gpk-common.c:788
 msgid "Querying"
 msgstr "עיון בנתונים"
 
-#: ../src/gpk-common.c:789
+#: ../src/gpk-common.c:791
 msgid "Getting information"
 msgstr "מקבל נתונים"
 
-#: ../src/gpk-common.c:792 ../src/gpk-common.c:960 ../src/gpk-common.c:1045
+#: ../src/gpk-common.c:794 ../src/gpk-common.c:964 ../src/gpk-common.c:1049
 msgid "Removing"
 msgstr "מסיר"
 
-#: ../src/gpk-common.c:795 ../src/gpk-common.c:951
+#: ../src/gpk-common.c:797 ../src/gpk-common.c:955
 msgid "Downloading"
 msgstr "מוריד"
 
-#: ../src/gpk-common.c:798 ../src/gpk-common.c:957 ../src/gpk-common.c:1048
+#: ../src/gpk-common.c:800 ../src/gpk-common.c:961 ../src/gpk-common.c:1052
 msgid "Installing"
 msgstr "מתקין"
 
-#: ../src/gpk-common.c:801
+#: ../src/gpk-common.c:803
 msgid "Refreshing software list"
 msgstr "מרענן רשימת תוכנה"
 
-#: ../src/gpk-common.c:804 ../src/gpk-common.c:954
+#: ../src/gpk-common.c:806 ../src/gpk-common.c:958
 msgid "Updating"
 msgstr "מעדכן"
 
-#: ../src/gpk-common.c:807 ../src/gpk-common.c:963
+#: ../src/gpk-common.c:809 ../src/gpk-common.c:967
 msgid "Cleaning up"
 msgstr "מנקה"
 
-#: ../src/gpk-common.c:810 ../src/gpk-common.c:966
+#: ../src/gpk-common.c:812 ../src/gpk-common.c:970
 msgid "Obsoleting"
 msgstr "מיישן"
 
-#: ../src/gpk-common.c:813
+#: ../src/gpk-common.c:815
 msgid "Resolving dependencies"
 msgstr "מטפל בתלויות"
 
-#: ../src/gpk-common.c:816
+#: ../src/gpk-common.c:818
 msgid "Checking signatures"
 msgstr "בודק חתימות"
 
-#: ../src/gpk-common.c:819 ../src/gpk-common.c:1066
+#: ../src/gpk-common.c:821 ../src/gpk-common.c:1070
 msgid "Rolling back"
 msgstr "מחזיר אחורה"
 
-#: ../src/gpk-common.c:822
+#: ../src/gpk-common.c:824
 msgid "Testing changes"
 msgstr "בודק שינויים"
 
-#: ../src/gpk-common.c:825
+#: ../src/gpk-common.c:827
 msgid "Committing changes"
 msgstr "מבצע שינויים"
 
-#: ../src/gpk-common.c:828
+#: ../src/gpk-common.c:830
 msgid "Requesting data"
 msgstr "מבקש נתונים"
 
-#: ../src/gpk-common.c:831
+#: ../src/gpk-common.c:833
 msgid "Finished"
 msgstr "הסתיים"
 
-#: ../src/gpk-common.c:834
+#: ../src/gpk-common.c:836
 msgid "Cancelling"
 msgstr "מבטל"
 
-#: ../src/gpk-common.c:837
+#: ../src/gpk-common.c:839
 msgid "Downloading repository information"
 msgstr "מורד נתוני מאגר"
 
-#: ../src/gpk-common.c:840
+#: ../src/gpk-common.c:842
 msgid "Downloading list of packages"
 msgstr "מוריד רשימת חבילות"
 
-#: ../src/gpk-common.c:843
+#: ../src/gpk-common.c:845
 msgid "Downloading file lists"
 msgstr "מוריד רשימות קבצים"
 
-#: ../src/gpk-common.c:846
+#: ../src/gpk-common.c:848
 msgid "Downloading lists of changes"
 msgstr "מוריד רשימת שינויים"
 
-#: ../src/gpk-common.c:849
+#: ../src/gpk-common.c:851
 msgid "Downloading groups"
 msgstr "מוריד קבוצות"
 
-#: ../src/gpk-common.c:852
+#: ../src/gpk-common.c:854
 msgid "Downloading update information"
 msgstr "מוריד נתוני עדכון"
 
-#: ../src/gpk-common.c:855
+#: ../src/gpk-common.c:857
 msgid "Repackaging files"
 msgstr "אורז קבצים מחדש"
 
-#: ../src/gpk-common.c:858
+#: ../src/gpk-common.c:860
 msgid "Loading cache"
 msgstr "טוען את המטמון"
 
-#: ../src/gpk-common.c:875
+#: ../src/gpk-common.c:877
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
 msgstr[0] "%i עדכונים שטחיים"
 msgstr[1] "%i עדכונים שטחיים"
 
-#: ../src/gpk-common.c:878
+#: ../src/gpk-common.c:880
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
 msgstr[0] "%i עדכונים"
 msgstr[1] "%i עדכונים"
 
-#: ../src/gpk-common.c:881
+#: ../src/gpk-common.c:883
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
 msgstr[0] "עדכון חשוב אחד"
 msgstr[1] "%i עדכונים חשובים"
 
-#: ../src/gpk-common.c:884
+#: ../src/gpk-common.c:886
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
 msgstr[0] "עדכון אבטחה אחד"
 msgstr[1] "%i עדכוני אבטחה"
 
-#: ../src/gpk-common.c:887
+#: ../src/gpk-common.c:889
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
 msgstr[0] "תיקון באג אחד"
 msgstr[1] "%i תיקוני באגים"
 
-#: ../src/gpk-common.c:890
+#: ../src/gpk-common.c:892
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
 msgstr[0] "%i שיפורים"
 msgstr[1] "%i שיפורים"
 
-#: ../src/gpk-common.c:893
+#: ../src/gpk-common.c:895
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
 msgstr[0] "עדכון חסום"
 msgstr[1] "%i עדכונים חסומים"
 
-#: ../src/gpk-common.c:910
+#: ../src/gpk-common.c:912
 msgid "Trivial update"
 msgstr "עדכון שטחי"
 
-#: ../src/gpk-common.c:913
+#: ../src/gpk-common.c:915
 msgid "Update"
 msgstr "עדכון"
 
-#: ../src/gpk-common.c:916
+#: ../src/gpk-common.c:918
 msgid "Important update"
 msgstr "עדכון חשוב"
 
-#: ../src/gpk-common.c:919
+#: ../src/gpk-common.c:921
 msgid "Security update"
 msgstr "עדכון אבטחה"
 
-#: ../src/gpk-common.c:922
+#: ../src/gpk-common.c:924
 msgid "Bug fix update"
 msgstr "תיקון באג"
 
-#: ../src/gpk-common.c:925
+#: ../src/gpk-common.c:927
 msgid "Enhancement update"
 msgstr "שיפור"
 
-#: ../src/gpk-common.c:928
+#: ../src/gpk-common.c:930
 msgid "Blocked update"
 msgstr "עדכון חסום"
 
-#: ../src/gpk-common.c:934
+#: ../src/gpk-common.c:938
 msgid "Available"
 msgstr "זמין"
 
-#: ../src/gpk-common.c:983
+#: ../src/gpk-common.c:987
 msgid "Downloaded"
 msgstr "ירד"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-common.c:986 ../src/gpk-update-viewer.c:912
+#: ../src/gpk-common.c:990 ../src/gpk-update-viewer.c:913
 msgid "Updated"
 msgstr "עודכן"
 
-#: ../src/gpk-common.c:992
+#: ../src/gpk-common.c:996
 msgid "Removed"
 msgstr "הוסר"
 
-#: ../src/gpk-common.c:995
+#: ../src/gpk-common.c:999
 msgid "Cleaned up"
 msgstr "נוקה"
 
-#: ../src/gpk-common.c:998
+#: ../src/gpk-common.c:1002
 msgid "Obsoleted"
 msgstr "לא עדכני"
 
-#: ../src/gpk-common.c:1015 ../src/gpk-common.c:1121
+#: ../src/gpk-common.c:1019 ../src/gpk-common.c:1125
 msgid "Unknown role type"
 msgstr ""
 
-#: ../src/gpk-common.c:1018
+#: ../src/gpk-common.c:1022
 msgid "Getting dependencies"
 msgstr "קורא תלויות"
 
-#: ../src/gpk-common.c:1021
+#: ../src/gpk-common.c:1025
 msgid "Getting update detail"
 msgstr "מקבל פרטי עדכון"
 
-#: ../src/gpk-common.c:1024
+#: ../src/gpk-common.c:1028
 msgid "Getting details"
 msgstr "מקבל פרטים"
 
-#: ../src/gpk-common.c:1027
+#: ../src/gpk-common.c:1031
 msgid "Getting requires"
 msgstr "מקבל דרישות"
 
-#: ../src/gpk-common.c:1030 ../src/gpk-update-viewer.c:1449
+#: ../src/gpk-common.c:1034 ../src/gpk-update-viewer.c:1450
 msgid "Getting updates"
 msgstr "מקבל עדכונים"
 
-#: ../src/gpk-common.c:1033
+#: ../src/gpk-common.c:1037
 msgid "Searching details"
 msgstr "מחפש פרטים"
 
-#: ../src/gpk-common.c:1036
+#: ../src/gpk-common.c:1040
 msgid "Searching for file"
 msgstr "מחפש קובץ"
 
-#: ../src/gpk-common.c:1039
+#: ../src/gpk-common.c:1043
 msgid "Searching groups"
 msgstr "מחפש קבוצות"
 
-#: ../src/gpk-common.c:1042
+#: ../src/gpk-common.c:1046
 msgid "Searching for package name"
 msgstr "מחפש חבילה בשם"
 
-#: ../src/gpk-common.c:1051
+#: ../src/gpk-common.c:1055
 msgid "Installing file"
 msgstr "מתקין קובץ"
 
-#: ../src/gpk-common.c:1054 ../src/gpk-update-viewer.c:1452
+#: ../src/gpk-common.c:1058 ../src/gpk-update-viewer.c:1453
 msgid "Refreshing package cache"
 msgstr "מרענן מטמון חבילות"
 
-#: ../src/gpk-common.c:1057
+#: ../src/gpk-common.c:1061
 msgid "Updating packages"
 msgstr "מעדכן חבילות"
 
-#: ../src/gpk-common.c:1060
+#: ../src/gpk-common.c:1064
 msgid "Updating system"
 msgstr "מעדכן את המערכת"
 
-#: ../src/gpk-common.c:1063
+#: ../src/gpk-common.c:1067
 msgid "Canceling"
 msgstr "מבטל"
 
-#: ../src/gpk-common.c:1069
+#: ../src/gpk-common.c:1073
 msgid "Getting list of repositories"
 msgstr "מקבל את רשימת המאגרים"
 
-#: ../src/gpk-common.c:1072
+#: ../src/gpk-common.c:1076
 msgid "Enabling repository"
 msgstr "מאפשר מאגר"
 
-#: ../src/gpk-common.c:1075
+#: ../src/gpk-common.c:1079
 msgid "Setting repository data"
 msgstr "קובע נתוני מאגר"
 
-#: ../src/gpk-common.c:1078
+#: ../src/gpk-common.c:1082
 msgid "Resolving"
 msgstr "פותר"
 
-#: ../src/gpk-common.c:1081
+#: ../src/gpk-common.c:1085
 msgid "Getting file list"
 msgstr "מקבל רשימת קבצים"
 
-#: ../src/gpk-common.c:1084
+#: ../src/gpk-common.c:1088
 msgid "Getting what provides"
 msgstr "מקבל מה מספק"
 
-#: ../src/gpk-common.c:1087
+#: ../src/gpk-common.c:1091
 msgid "Service pack"
 msgstr "חבילת שירות"
 
-#: ../src/gpk-common.c:1090
+#: ../src/gpk-common.c:1094
 msgid "Installing signature"
 msgstr "מתקין חתימה"
 
-#: ../src/gpk-common.c:1093
+#: ../src/gpk-common.c:1097
 msgid "Getting package lists"
 msgstr "מקבל רשימות חבילה"
 
-#: ../src/gpk-common.c:1096
+#: ../src/gpk-common.c:1100
 msgid "Accepting EULA"
 msgstr "מקבל רישיון"
 
-#: ../src/gpk-common.c:1099
+#: ../src/gpk-common.c:1103
 msgid "Downloading packages"
 msgstr "מוריד חבילות"
 
-#: ../src/gpk-common.c:1124
+#: ../src/gpk-common.c:1128
 msgid "Got dependencies"
 msgstr "התקבלו תלויות"
 
-#: ../src/gpk-common.c:1127
+#: ../src/gpk-common.c:1131
 msgid "Got update detail"
 msgstr "התקבל פרטי עדכון"
 
-#: ../src/gpk-common.c:1130 ../src/gpk-common.c:1139
+#: ../src/gpk-common.c:1134 ../src/gpk-common.c:1143
 msgid "Got details"
 msgstr "התקבלו פרטים"
 
-#: ../src/gpk-common.c:1133
+#: ../src/gpk-common.c:1137
 msgid "Got requires"
 msgstr "התקבלו דרישות"
 
-#: ../src/gpk-common.c:1136
+#: ../src/gpk-common.c:1140
 msgid "Got updates"
 msgstr "התקבלו עדכונים"
 
-#: ../src/gpk-common.c:1142
+#: ../src/gpk-common.c:1146
 msgid "Searched for file"
 msgstr "חיפוש קובץ"
 
-#: ../src/gpk-common.c:1145
+#: ../src/gpk-common.c:1149
 msgid "Searched groups"
 msgstr "חיפוש קבוצות"
 
-#: ../src/gpk-common.c:1148
+#: ../src/gpk-common.c:1152
 msgid "Searched for package name"
 msgstr "חיפוש שם חבילה"
 
-#: ../src/gpk-common.c:1151
+#: ../src/gpk-common.c:1155
 msgid "Removed package"
 msgstr "חבילה הוסרה"
 
-#: ../src/gpk-common.c:1154
+#: ../src/gpk-common.c:1158
 msgid "Installed package"
 msgstr "חבילות מותקנות"
 
-#: ../src/gpk-common.c:1157
+#: ../src/gpk-common.c:1161
 msgid "Installed local file"
 msgstr "קובץ מקומי הותקן"
 
-#: ../src/gpk-common.c:1160
+#: ../src/gpk-common.c:1164
 msgid "Updating from service pack"
 msgstr "מעדכן מחבילת שירות"
 
-#: ../src/gpk-common.c:1163
+#: ../src/gpk-common.c:1167
 msgid "Refreshed package cache"
 msgstr "מטמון חבילות רוענן"
 
-#: ../src/gpk-common.c:1166
+#: ../src/gpk-common.c:1170
 msgid "Updated package"
 msgstr "חבילה עודכנה"
 
-#: ../src/gpk-common.c:1169
+#: ../src/gpk-common.c:1173
 msgid "Updated system"
 msgstr "המערכת עודכנה"
 
-#: ../src/gpk-common.c:1172
+#: ../src/gpk-common.c:1176
 msgid "Canceled"
 msgstr "בוטל"
 
-#: ../src/gpk-common.c:1175
+#: ../src/gpk-common.c:1179
 msgid "Rolled back"
 msgstr "הוחזר אחורה"
 
-#: ../src/gpk-common.c:1178
+#: ../src/gpk-common.c:1182
 msgid "Got list of repositories"
 msgstr "התקבלה רשימת מאגרים"
 
-#: ../src/gpk-common.c:1181
+#: ../src/gpk-common.c:1185
 msgid "Enabled repository"
 msgstr "מאגר פעיל"
 
-#: ../src/gpk-common.c:1184
+#: ../src/gpk-common.c:1188
 msgid "Set repository data"
 msgstr "קביעת נתוני מאגר"
 
-#: ../src/gpk-common.c:1187
+#: ../src/gpk-common.c:1191
 msgid "Resolved"
 msgstr "נפתר"
 
-#: ../src/gpk-common.c:1190
+#: ../src/gpk-common.c:1194
 msgid "Got file list"
 msgstr "התקבלה רשימת קבצים"
 
-#: ../src/gpk-common.c:1193
+#: ../src/gpk-common.c:1197
 msgid "Got what provides"
 msgstr "התקבל מה מסופק"
 
-#: ../src/gpk-common.c:1196
+#: ../src/gpk-common.c:1200
 msgid "Installed signature"
 msgstr "חתימה מותקנת"
 
-#: ../src/gpk-common.c:1199
+#: ../src/gpk-common.c:1203
 msgid "Got package lists"
 msgstr "התקבלו רשימות חבילות"
 
-#: ../src/gpk-common.c:1202
+#: ../src/gpk-common.c:1206
 msgid "Accepted EULA"
 msgstr "הרישיון אושר"
 
-#: ../src/gpk-common.c:1205
+#: ../src/gpk-common.c:1209
 msgid "Downloaded packages"
 msgstr "חבילות שירדו"
 
-#: ../src/gpk-common.c:1208
+#: ../src/gpk-common.c:1212
 msgid "Got distribution upgrades"
 msgstr "התקבלו שדרוגי הפצה"
 
-#: ../src/gpk-common.c:1225
+#: ../src/gpk-common.c:1229
 msgid "Accessibility"
 msgstr "נגישות"
 
-#: ../src/gpk-common.c:1228
+#: ../src/gpk-common.c:1232
 msgid "Accessories"
 msgstr "עזרים"
 
-#: ../src/gpk-common.c:1231
+#: ../src/gpk-common.c:1235
 msgid "Education"
 msgstr "חינוך"
 
-#: ../src/gpk-common.c:1234
+#: ../src/gpk-common.c:1238
 msgid "Games"
 msgstr "משחקים"
 
-#: ../src/gpk-common.c:1237
+#: ../src/gpk-common.c:1241
 msgid "Graphics"
 msgstr "גרפיקה"
 
-#: ../src/gpk-common.c:1240
+#: ../src/gpk-common.c:1244
 msgid "Internet"
 msgstr "אינטרנט"
 
-#: ../src/gpk-common.c:1243
+#: ../src/gpk-common.c:1247
 msgid "Office"
 msgstr "משרד"
 
-#: ../src/gpk-common.c:1246
+#: ../src/gpk-common.c:1250
 msgid "Other"
 msgstr "אחר"
 
-#: ../src/gpk-common.c:1249
+#: ../src/gpk-common.c:1253
 msgid "Programming"
 msgstr "תכנות"
 
-#: ../src/gpk-common.c:1252
+#: ../src/gpk-common.c:1256
 msgid "Multimedia"
 msgstr "מולטימדיה"
 
-#: ../src/gpk-common.c:1255
+#: ../src/gpk-common.c:1259
 msgid "System"
 msgstr "מערכת"
 
-#: ../src/gpk-common.c:1258
+#: ../src/gpk-common.c:1262
 msgid "GNOME desktop"
 msgstr "שולחן העבודה GNOME"
 
-#: ../src/gpk-common.c:1261
+#: ../src/gpk-common.c:1265
 msgid "KDE desktop"
 msgstr "שולחן העבודה KDE"
 
-#: ../src/gpk-common.c:1264
+#: ../src/gpk-common.c:1268
 msgid "XFCE desktop"
 msgstr "שולחן העבודה XFCE"
 
-#: ../src/gpk-common.c:1267
+#: ../src/gpk-common.c:1271
 msgid "Other desktops"
 msgstr "שולחנות עבודה אחרים"
 
-#: ../src/gpk-common.c:1270
+#: ../src/gpk-common.c:1274
 msgid "Publishing"
 msgstr "הוצאה לאור"
 
-#: ../src/gpk-common.c:1273
+#: ../src/gpk-common.c:1277
 msgid "Servers"
 msgstr "שרתים"
 
-#: ../src/gpk-common.c:1276
+#: ../src/gpk-common.c:1280
 msgid "Fonts"
 msgstr "גופנים"
 
-#: ../src/gpk-common.c:1279
+#: ../src/gpk-common.c:1283
 msgid "Admin tools"
 msgstr "כלי ניהול"
 
-#: ../src/gpk-common.c:1282
+#: ../src/gpk-common.c:1286
 msgid "Legacy"
 msgstr "מיושן"
 
-#: ../src/gpk-common.c:1285
+#: ../src/gpk-common.c:1289
 msgid "Localization"
 msgstr "לוקליזציה"
 
-#: ../src/gpk-common.c:1288
+#: ../src/gpk-common.c:1292
 msgid "Virtualization"
 msgstr "הדמייה"
 
-#: ../src/gpk-common.c:1291
+#: ../src/gpk-common.c:1295
 msgid "Security"
 msgstr "אבטחה"
 
-#: ../src/gpk-common.c:1294
+#: ../src/gpk-common.c:1298
 msgid "Power management"
 msgstr "ניהול חשמל"
 
-#: ../src/gpk-common.c:1297
+#: ../src/gpk-common.c:1301
 msgid "Communication"
 msgstr "תקשורת"
 
-#: ../src/gpk-common.c:1300
+#: ../src/gpk-common.c:1304
 msgid "Network"
 msgstr "רשת"
 
-#: ../src/gpk-common.c:1303
+#: ../src/gpk-common.c:1307
 msgid "Maps"
 msgstr "מפות"
 
-#: ../src/gpk-common.c:1309
+#: ../src/gpk-common.c:1313
 msgid "Science"
 msgstr "מדע"
 
-#: ../src/gpk-common.c:1312
+#: ../src/gpk-common.c:1316
 msgid "Documentation"
 msgstr "תיעוד"
 
-#: ../src/gpk-common.c:1315
+#: ../src/gpk-common.c:1319
 msgid "Electronics"
 msgstr "אלקטרוניקה"
 
-#: ../src/gpk-common.c:1318
+#: ../src/gpk-common.c:1322
 msgid "Package collections"
 msgstr "אוספי חבילות"
 
-#: ../src/gpk-common.c:1321
+#: ../src/gpk-common.c:1325
 msgid "Unknown group"
 msgstr "קבוצה לא ידועה"
 
-#: ../src/gpk-common.c:1396
+#: ../src/gpk-common.c:1400
 msgid "This application is running as a privileged user"
 msgstr "תצורת ההפעלה הנוכחית רצה כמשתמש בעל הרשאות"
 
-#: ../src/gpk-common.c:1398
+#: ../src/gpk-common.c:1402
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s פועל כמשתמש מורשה"
 
-#: ../src/gpk-common.c:1401
+#: ../src/gpk-common.c:1404
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
 msgstr "יש להתחמק מהרצת יישומים גרפיים כמשתמש מורשה הסיבות אבטחה."
 
-#: ../src/gpk-common.c:1402
+#: ../src/gpk-common.c:1405
 msgid ""
 "PackageKit applications are security sensitive and therefore this "
 "application will now close."
 msgstr "יישומי PackageKit רגישים לאבטחה לכן היישום הזה יסגר."
 
-#: ../src/gpk-common.c:1522 ../src/gpk-common.c:1657
+#: ../src/gpk-common.c:1522 ../src/gpk-common.c:1656
 #, c-format
 msgid "Now"
 msgstr "עכשיו"
@@ -2617,63 +2720,63 @@ msgid_plural "hours"
 msgstr[0] "שעה"
 msgstr[1] "שעות"
 
-#: ../src/gpk-common.c:1617
+#: ../src/gpk-common.c:1616
 #, c-format
 msgid "%s and %s"
 msgstr "%s ו-%s"
 
-#: ../src/gpk-common.c:1620
+#: ../src/gpk-common.c:1619
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s ו-%s"
 
-#: ../src/gpk-common.c:1623
+#: ../src/gpk-common.c:1622
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s ו-%s"
 
-#: ../src/gpk-common.c:1627
+#: ../src/gpk-common.c:1626
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ו-%s"
 
-#: ../src/gpk-common.c:1667
+#: ../src/gpk-common.c:1666
 msgid "1 second"
 msgstr "שניה אחת"
 
-#: ../src/gpk-common.c:1677
+#: ../src/gpk-common.c:1676
 msgid "1 minute"
 msgstr "דקה אחת"
 
-#: ../src/gpk-common.c:1687
+#: ../src/gpk-common.c:1686
 msgid "1 hour"
 msgstr "שעה אחת"
 
-#: ../src/gpk-common.c:1697
+#: ../src/gpk-common.c:1696
 msgid "30 seconds"
 msgstr "30 שניות"
 
-#: ../src/gpk-common.c:1707
+#: ../src/gpk-common.c:1706
 msgid "30 minutes"
 msgstr "30 דקות"
 
-#: ../src/gpk-common.c:1717
+#: ../src/gpk-common.c:1716
 msgid "30 minutes 1 second"
 msgstr "30 דקות 1 שניות"
 
-#: ../src/gpk-common.c:1727
+#: ../src/gpk-common.c:1726
 msgid "30 minutes 10 seconds"
 msgstr "30 דקות 10 שניות"
 
-#: ../src/gpk-common.c:1739
+#: ../src/gpk-common.c:1738
 msgid "0 bytes"
 msgstr "0 בתים"
 
-#: ../src/gpk-common.c:1749
+#: ../src/gpk-common.c:1748
 msgid "512 bytes"
 msgstr "512 בתים"
 
-#: ../src/gpk-common.c:1759
+#: ../src/gpk-common.c:1758
 msgid "256.2 MB"
 msgstr "256.2 MB"
 
@@ -2752,12 +2855,6 @@ msgstr "נכשל בהתקנת קובץ מקומי"
 #, fuzzy
 msgid "PackageKit MimeType Installer"
 msgstr "מתקין קבצים של PackageKit"
-
-#. are we running privileged
-#: ../src/gpk-install-mime-type.c:74
-#, fuzzy
-msgid "Mime type installer"
-msgstr "נכשל בהתקנה"
 
 #: ../src/gpk-install-mime-type.c:80 ../src/gpk-install-mime-type.c:85
 #, fuzzy
@@ -2840,52 +2937,52 @@ msgstr "_החזר אחורה"
 msgid "Log viewer"
 msgstr "מציג יומן"
 
-#: ../src/gpk-prefs.c:46
+#: ../src/gpk-prefs.c:44
 msgid "Hourly"
 msgstr "כל שעה"
 
-#: ../src/gpk-prefs.c:47
+#: ../src/gpk-prefs.c:45
 msgid "Daily"
 msgstr "כל יום"
 
-#: ../src/gpk-prefs.c:48
+#: ../src/gpk-prefs.c:46
 msgid "Weekly"
 msgstr "כל שבוע"
 
-#: ../src/gpk-prefs.c:49
+#: ../src/gpk-prefs.c:47
 msgid "Never"
 msgstr "אף פעם"
 
-#: ../src/gpk-prefs.c:51
+#: ../src/gpk-prefs.c:49
 msgid "All updates"
 msgstr "כל העדכונים"
 
-#: ../src/gpk-prefs.c:52
+#: ../src/gpk-prefs.c:50
 msgid "Only security updates"
 msgstr "רק עדכוני אבטחה"
 
-#: ../src/gpk-prefs.c:53
+#: ../src/gpk-prefs.c:51
 msgid "Nothing"
 msgstr "כלום"
 
-#: ../src/gpk-repo.c:160
+#: ../src/gpk-repo.c:158
 msgid "Enabled"
 msgstr "מופעל"
 
-#: ../src/gpk-repo.c:167
+#: ../src/gpk-repo.c:165
 msgid "Software Source"
 msgstr "מקור תוכנה"
 
-#: ../src/gpk-repo.c:240
+#: ../src/gpk-repo.c:238
 msgid "Failed to change status"
 msgstr "נכשל בשינוי מצב"
 
 #. are we running privileged
-#: ../src/gpk-repo.c:365
+#: ../src/gpk-repo.c:363
 msgid "Software source viewer"
 msgstr "מציג מקורות תוכנה"
 
-#: ../src/gpk-repo.c:449
+#: ../src/gpk-repo.c:447
 msgid "Getting software source list not supported by backend"
 msgstr "קריאת רשימת מאגרים לא נתמכת על ידי המנוע"
 
@@ -2910,215 +3007,233 @@ msgstr "לא נבחרו עדכונים"
 msgid "No updates are selected"
 msgstr "לא נבחרו עדכונים"
 
-#: ../src/gpk-update-viewer.c:345
+#: ../src/gpk-update-viewer.c:346
 msgid "Getting Description..."
 msgstr "מקבל תיאור..."
 
-#: ../src/gpk-update-viewer.c:496
+#: ../src/gpk-update-viewer.c:497
 msgid "There are no updates available!"
 msgstr "אין עדכונים זמינים!"
 
 #. translators: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:891
+#: ../src/gpk-update-viewer.c:892
 msgid "Type"
 msgstr "סוג"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:897
+#: ../src/gpk-update-viewer.c:898
 msgid "State"
 msgstr "מצב"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:904
+#: ../src/gpk-update-viewer.c:905
 msgid "Issued"
 msgstr "התבקש"
 
 #. translators: this is the package version
-#: ../src/gpk-update-viewer.c:918
+#: ../src/gpk-update-viewer.c:919
 msgid "New version"
 msgstr "גירסה חדשה"
 
 #. translators: this is a list of packages that are updated
-#: ../src/gpk-update-viewer.c:925
+#: ../src/gpk-update-viewer.c:926
 msgid "Updates"
 msgstr "עדכונים"
 
 #. translators: this is a list of packages that are obsoleted
-#: ../src/gpk-update-viewer.c:933
+#: ../src/gpk-update-viewer.c:934
 msgid "Obsoletes"
 msgstr "לא עדכני"
 
 #. translators: this is the repository the package has come from
-#: ../src/gpk-update-viewer.c:938
+#: ../src/gpk-update-viewer.c:939
 msgid "Repository"
 msgstr "מאגר"
 
 #. translators: this is the package description
-#: ../src/gpk-update-viewer.c:944
+#: ../src/gpk-update-viewer.c:945
 msgid "Description"
 msgstr "תיאור"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:951
+#: ../src/gpk-update-viewer.c:952
 msgid "Changes"
 msgstr "שינויים"
 
 #. translators: this is a list of vendor URLs
-#: ../src/gpk-update-viewer.c:957
+#: ../src/gpk-update-viewer.c:958
 msgid "Vendor"
 msgstr "ספק"
 
 #. translators: this is a list of bugzilla URLs
-#: ../src/gpk-update-viewer.c:961
+#: ../src/gpk-update-viewer.c:962
 msgid "Bugzilla"
 msgstr "Bugzilla"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:965
+#: ../src/gpk-update-viewer.c:966
 msgid "CVE"
 msgstr "CVE"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:973
+#: ../src/gpk-update-viewer.c:974
 msgid "Notice"
 msgstr "הערה"
 
-#: ../src/gpk-update-viewer.c:1034
+#: ../src/gpk-update-viewer.c:1035
 msgid "Severity"
 msgstr "חומרה"
 
-#: ../src/gpk-update-viewer.c:1041
+#: ../src/gpk-update-viewer.c:1042
 msgid "Software"
 msgstr "תוכנה"
 
-#: ../src/gpk-update-viewer.c:1200
+#: ../src/gpk-update-viewer.c:1201
 msgid "Less than a minute ago"
 msgstr "לפני פחות מדקה"
 
-#: ../src/gpk-update-viewer.c:1202
+#: ../src/gpk-update-viewer.c:1203
 msgid "Less than an hour ago"
 msgstr "לפני פחות משעה"
 
-#: ../src/gpk-update-viewer.c:1204
+#: ../src/gpk-update-viewer.c:1205
 msgid "A few hours ago"
 msgstr "לפני כמה שעות"
 
-#: ../src/gpk-update-viewer.c:1206
+#: ../src/gpk-update-viewer.c:1207
 msgid "A few days ago"
 msgstr "לפני כמה ימים"
 
-#: ../src/gpk-update-viewer.c:1208
+#: ../src/gpk-update-viewer.c:1209
 msgid "Over a week ago"
 msgstr "לפני יותר משבוע"
 
-#: ../src/gpk-update-viewer.c:1313
+#: ../src/gpk-update-viewer.c:1314
 msgid "Some updates were not installed"
 msgstr "חלק מהעדכונים לא הותקנו"
 
-#: ../src/gpk-update-viewer.c:1322
+#: ../src/gpk-update-viewer.c:1323
 msgid "System update completed"
 msgstr "עדכון מערכת הושלם"
 
-#: ../src/gpk-update-viewer.c:1446
+#: ../src/gpk-update-viewer.c:1447
 msgid "A system update is already in progress"
 msgstr "עדכון מערכת כבר פעיל"
 
-#: ../src/gpk-update-viewer.c:1586
+#: ../src/gpk-update-viewer.c:1587
 msgid "Select all"
 msgstr "בחר הכל"
 
-#: ../src/gpk-update-viewer.c:1593
+#: ../src/gpk-update-viewer.c:1594
 msgid "Unselect all"
 msgstr "בטל בחירה"
 
-#: ../src/gpk-update-viewer.c:1599
+#: ../src/gpk-update-viewer.c:1600
 msgid "Ignore this package"
 msgstr "התעלם מהחבילה"
 
-#: ../src/gpk-update-viewer.c:1735
+#: ../src/gpk-update-viewer.c:1736
 msgid "Refresh"
 msgstr "רענן"
 
-#: ../src/gpk-update-viewer.c:1736
+#: ../src/gpk-update-viewer.c:1737
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
 msgstr ""
 "רענון בדרך כלל לא נחוץ אבל זה יוריד רשימת היישומים העדכנית ואת רשימת העדכונים"
 
-#: ../src/gpk-update-viewer.c:1744
+#: ../src/gpk-update-viewer.c:1745
 msgid "_Restart computer now"
 msgstr "_אתחול המחשב עכשיו"
 
-#: ../src/gpk-update-viewer.c:1759
+#: ../src/gpk-update-viewer.c:1760
 msgid "_Apply Updates"
 msgstr "החל _עדכונים"
 
-#: ../src/gpk-update-viewer.c:1760
+#: ../src/gpk-update-viewer.c:1761
 msgid "Apply the selected updates"
 msgstr "החל את העדכונים שנבחרו"
 
-#: ../src/gpk-update-viewer.c:1773
+#: ../src/gpk-update-viewer.c:1774
 msgid "_Update System"
 msgstr "_עדכון המערכת"
 
-#: ../src/gpk-update-viewer.c:1774
+#: ../src/gpk-update-viewer.c:1775
 msgid "Apply all updates"
 msgstr "החל את כל העדכונים"
 
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1949
 msgid "Review the update list"
 msgstr "צפייה ברשימת העדכונים"
 
-#: ../src/gpk-update-viewer.c:1953 ../src/gpk-update-viewer.c:1958
+#: ../src/gpk-update-viewer.c:1954 ../src/gpk-update-viewer.c:1959
 msgid "Back to overview"
 msgstr "חזרה לסקירה כללית"
 
-#: ../src/gpk-watch.c:141
+#: ../src/gpk-watch.c:140
 #, c-format
 msgid "(%i more tasks)"
 msgstr "(עוד %i פעולות)"
 
-#: ../src/gpk-watch.c:275
+#: ../src/gpk-watch.c:274
 msgid "Error details"
 msgstr "פרטי השגיאה"
 
-#: ../src/gpk-watch.c:355
+#: ../src/gpk-watch.c:354
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr "החבילה '%s' הוסרה"
 
-#: ../src/gpk-watch.c:357
+#: ../src/gpk-watch.c:356
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr "החבילה '%s' הותקנה"
 
 #. do the bubble
-#: ../src/gpk-watch.c:368
+#: ../src/gpk-watch.c:367
 msgid "Task completed"
 msgstr "פעולה הושלמה"
 
-#: ../src/gpk-watch.c:439
+#: ../src/gpk-watch.c:438
 msgid "Show details"
 msgstr "הצג פרטים"
 
-#: ../src/gpk-watch.c:525
+#: ../src/gpk-watch.c:524
 msgid "Internal error"
 msgstr "שגיאה פנימית"
 
 #. don't know if we want this
-#: ../src/gpk-watch.c:777
+#: ../src/gpk-watch.c:776
 msgid "_Refresh Software List"
 msgstr "_רענן רשימת תוכנות"
 
 #. hide this option
-#: ../src/gpk-watch.c:828
+#: ../src/gpk-watch.c:827
 msgid "_Hide this icon"
 msgstr "_הסתר את האיקון"
 
-#: ../src/gpk-watch.c:1124
+#: ../src/gpk-watch.c:1125
 msgid "_Restart computer"
 msgstr "_אתחול המחשב"
+
+#~ msgid "<b>Installation Complete</b>"
+#~ msgstr "<b>התקנה הושלמה</b>"
+
+#~ msgid "<b>More details:</b>"
+#~ msgstr "<b>פרטים נוספים:</b>"
+
+#~ msgid "Install packages"
+#~ msgstr "התקנת חבילות"
+
+#~ msgid "Additional packages were not downloaded"
+#~ msgstr "חבילות נוספות לא ירדו"
+
+#~ msgid "The catalog was not installed"
+#~ msgstr "הקטלוג לא הותקן"
+
+#~ msgid "The catalogs were not installed"
+#~ msgstr "הקטלוגים לא הותקנו"
 
 #~ msgid "PackageKit notice"
 #~ msgstr "הערת PackageKit"
@@ -3161,9 +3276,6 @@ msgstr "_אתחול המחשב"
 
 #~ msgid "View History"
 #~ msgstr "הצג היסטוריה"
-
-#~ msgid "gtk-cancel"
-#~ msgstr "gtk-cancel"
 
 #~ msgid "gtk-help"
 #~ msgstr "gtk-help"
@@ -3242,9 +3354,6 @@ msgstr "_אתחול המחשב"
 
 #~ msgid "Do not show me this again"
 #~ msgstr "אל תציג שוב"
-
-#~ msgid "The following packages have to be removed:"
-#~ msgstr "צריך להסיר את החבילות הבאות:"
 
 #~ msgid "%i other packages depends on these packages"
 #~ msgstr "%i חבילות נוספות תלויות בחבילות האלו"
@@ -3400,9 +3509,6 @@ msgstr "_אתחול המחשב"
 
 #~ msgid "SearchDetails:"
 #~ msgstr "חיפוש פרטים:"
-
-#~ msgid "SearchFile:"
-#~ msgstr "חיפוש קובץ:"
 
 #~ msgid "SearchGroup:"
 #~ msgstr "חיפוש קבוצה:"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-14 12:25+0300\n"
+"POT-Creation-Date: 2008-09-16 17:41+0100\n"
 "PO-Revision-Date: 2008-09-14 12:00+0300\n"
 "Last-Translator: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>\n"
 "Language-Team: Finnish <laatu@lokalisointi.org>\n"
@@ -189,9 +189,9 @@ msgstr "Hae tiedostoluettelo"
 msgid "Help with this software"
 msgstr "Ohjeita tästä ohjelmistosta"
 
-#. add a specialist button
-#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:1274
-#: ../src/gpk-client.c:1959 ../src/gpk-client.c:2028
+#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:981
+#: ../src/gpk-client.c:1375 ../src/gpk-client.c:1438 ../src/gpk-client.c:1698
+#: ../src/gpk-client.c:1948 ../src/gpk-client.c:2004
 msgid "Install"
 msgstr "Asenna"
 
@@ -237,7 +237,7 @@ msgid "Project homepage"
 msgstr "Projektin kotisivu"
 
 #. set title
-#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:2176
+#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:2130
 msgid "Refresh package lists"
 msgstr "Virkistä pakettiluettelot"
 
@@ -257,7 +257,7 @@ msgstr "Vaatija"
 msgid "Run program"
 msgstr "Suorita ohjelma"
 
-#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1306
+#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1310
 msgid "Software sources"
 msgstr "Ohjelmistolähteet"
 
@@ -347,20 +347,21 @@ msgid "Backend name:"
 msgstr "Taustajärjestelmän nimi:"
 
 #: ../data/gpk-client.glade.h:1
-msgid "<b>Installation Complete</b>"
-msgstr "<b>Asennus on valmistunut</b>"
+msgid " "
+msgstr ""
 
 #: ../data/gpk-client.glade.h:2
-msgid "<b>More details:</b>"
-msgstr "<b>Lisää tietoja:</b>"
-
-#: ../data/gpk-client.glade.h:3 ../data/gpk-update-viewer.glade.h:1
-msgid "A system restart is recommended"
-msgstr "Järjestelmä on suositeltavaa käynnistää uudelleen"
-
-#: ../data/gpk-client.glade.h:4
 msgid "Install Package"
 msgstr "Asenna paketti"
+
+#: ../data/gpk-client.glade.h:3
+msgid "gtk-cancel"
+msgstr "gtk-cancel"
+
+#: ../data/gpk-client.glade.h:4
+#, fuzzy
+msgid "gtk-close"
+msgstr "gtk-cancel"
 
 #: ../data/gpk-error.glade.h:1
 msgid "<b>More details</b>"
@@ -494,7 +495,7 @@ msgid "PackageKit Update Applet"
 msgstr "PackageKit-päivityssovelma"
 
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:354
-#: ../src/gpk-update-viewer.c:1833
+#: ../src/gpk-update-viewer.c:1834
 msgid "Software Update Viewer"
 msgstr "Ohjelmistopäivitysten katselin"
 
@@ -506,6 +507,10 @@ msgstr "Päivitä järjestelmä"
 #: ../data/gpk-update-viewer.desktop.in.h:3
 msgid "Update software installed on the system"
 msgstr "Päivitä järjestelmään asennettuja ohjelmistoja"
+
+#: ../data/gpk-update-viewer.glade.h:1
+msgid "A system restart is recommended"
+msgstr "Järjestelmä on suositeltavaa käynnistää uudelleen"
 
 #: ../data/gpk-update-viewer.glade.h:2
 msgid "Last refresh:"
@@ -532,104 +537,104 @@ msgid "_Review"
 msgstr "_Katso"
 
 # TODO what's %s, a package?
-#: ../src/gpk-application.c:464
+#: ../src/gpk-application.c:520
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
 msgstr[0] "%i tiedosto asennettu paketista %s"
 msgstr[1] "%i tiedostoa asennettu paketista %s"
 
-#: ../src/gpk-application.c:641 ../src/gpk-application.c:713
+#: ../src/gpk-application.c:698 ../src/gpk-application.c:770
 msgid "No packages"
 msgstr "Ei paketteja"
 
-#: ../src/gpk-application.c:642
+#: ../src/gpk-application.c:699
 msgid "This package does not require any others"
 msgstr "Tämä paketti ei vaadi muita paketteja"
 
 # TODO check
-#: ../src/gpk-application.c:652
+#: ../src/gpk-application.c:709
 #, c-format
 msgid "%i additional package require %s"
 msgid_plural "%i additional packages require %s"
 msgstr[0] "%i lisäpaketti vaatii paketin %s"
 msgstr[1] "%i lisäpakettia vaatii paketin %s"
 
-#: ../src/gpk-application.c:656
+#: ../src/gpk-application.c:713
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
 msgstr[0] "Alla oleva paketti vaatii paketin %s toimiakseen oikein."
 msgstr[1] "Alla olevat paketit vaativat paketin %s toimiakseen oikein."
 
-#: ../src/gpk-application.c:714
+#: ../src/gpk-application.c:771
 msgid "This package does not depends on any others"
 msgstr "Tämä paketti ei riipu mistään toisesta paketista"
 
-#: ../src/gpk-application.c:724
+#: ../src/gpk-application.c:781
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
 msgstr[0] "%i lisäpaketti vaaditaan paketin %s asennukseen"
 msgstr[1] "%i lisäpakettia vaaditaan paketin %s asennukseen"
 
-#: ../src/gpk-application.c:728
+#: ../src/gpk-application.c:785
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
 msgstr[0] "Paketti %s vaatii alla olevan paketin toimiakseen oikein."
 msgstr[1] "Paketti %s vaatii alla olevat paketit toimiakseen oikein."
 
-#: ../src/gpk-application.c:760
+#: ../src/gpk-application.c:817
 msgid "Invalid"
 msgstr "Virheellinen"
 
 #. set the tooltip to where we are going
-#: ../src/gpk-application.c:883
+#: ../src/gpk-application.c:949
 #, c-format
 msgid "Visit %s"
 msgstr "Vieraile osoitteessa %s"
 
-#: ../src/gpk-application.c:887
+#: ../src/gpk-application.c:953
 msgid "Project"
 msgstr "Projekti"
 
-#: ../src/gpk-application.c:887
+#: ../src/gpk-application.c:953
 msgid "Homepage"
 msgstr "Kotisivu"
 
-#: ../src/gpk-application.c:900
+#: ../src/gpk-application.c:966
 msgid "Group"
 msgstr "Ryhmä"
 
 #. This should be a licence enum value - bad API, bad.
 #. * license = pk_license_enum_to_text (license_enum);
-#: ../src/gpk-application.c:907
+#: ../src/gpk-application.c:973
 msgid "License"
 msgstr "Lisenssi"
 
-#: ../src/gpk-application.c:921
+#: ../src/gpk-application.c:987
 msgid "Installed size"
 msgstr "Koko asennettuna"
 
-#: ../src/gpk-application.c:923
+#: ../src/gpk-application.c:989
 msgid "Download size"
 msgstr "Latauksen koko"
 
-#: ../src/gpk-application.c:932
+#: ../src/gpk-application.c:998
 msgid "Source"
 msgstr "Lähde"
 
-#: ../src/gpk-application.c:1073
+#: ../src/gpk-application.c:1139
 msgid "No results were found."
 msgstr "Ei tuloksia."
 
 #. this shouldn't happen
-#: ../src/gpk-application.c:1080
+#: ../src/gpk-application.c:1146
 msgid "Try entering a package name in the search bar."
 msgstr "Kokeile paketin nimen syöttämistä hakupalkkiin."
 
-#: ../src/gpk-application.c:1084
+#: ../src/gpk-application.c:1150
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -637,77 +642,77 @@ msgstr ""
 "Kokeile pakettikuvauksista hakemista napsauttamalla hakutekstin vieressä "
 "olevaa kuvaketta."
 
-#: ../src/gpk-application.c:1086
+#: ../src/gpk-application.c:1152
 msgid "Try again with a different search term."
 msgstr "Kokeile uudestaan eri hakutekstillä."
 
-#: ../src/gpk-application.c:1190
+#: ../src/gpk-application.c:1254
 msgid "Invalid search text"
 msgstr "Virheellinen hakuteksti"
 
 # ”virheellinen” merkki, no joo
-#: ../src/gpk-application.c:1191
+#: ../src/gpk-application.c:1255
 msgid "The search text contains invalid characters"
 msgstr "Hakuteksti sisältää virheellisiä merkkejä"
 
-#: ../src/gpk-application.c:1218
+#: ../src/gpk-application.c:1282
 msgid "The search could not be completed"
 msgstr "Hakua ei voitu tehdä"
 
-#: ../src/gpk-application.c:1219 ../src/gpk-application.c:1260
+#: ../src/gpk-application.c:1283 ../src/gpk-application.c:1324
 msgid "Running the transaction failed"
 msgstr "Toimenpiteen suorittaminen epäonnistui"
 
-#: ../src/gpk-application.c:1259
+#: ../src/gpk-application.c:1323
 msgid "The group could not be queried"
 msgstr "Ryhmäkyselyä ei voitu tehdä"
 
-#: ../src/gpk-application.c:1564 ../src/gpk-common.c:931
-#: ../src/gpk-common.c:989
+#: ../src/gpk-application.c:1627 ../src/gpk-common.c:934
+#: ../src/gpk-common.c:993
 msgid "Installed"
 msgstr "Asennettu"
 
-#: ../src/gpk-application.c:1579 ../src/gpk-application.c:1600
+#: ../src/gpk-application.c:1642 ../src/gpk-application.c:1663
 #: ../src/gpk-dialog.c:149
 msgid "Name"
 msgstr "Nimi"
 
-#: ../src/gpk-application.c:1830
+#: ../src/gpk-application.c:1893
 msgid "Searching by name"
 msgstr "Etsitään nimen perusteella"
 
-#: ../src/gpk-application.c:1851
+#: ../src/gpk-application.c:1914
 msgid "Searching by description"
 msgstr "Etsitään kuvauksen perusteella"
 
-#: ../src/gpk-application.c:1872
+#: ../src/gpk-application.c:1935
 msgid "Searching by file"
 msgstr "Etsitään tiedoston perusteella"
 
-#: ../src/gpk-application.c:1897
+#: ../src/gpk-application.c:1960
 msgid "Search by name"
 msgstr "Etsi nimen perusteella"
 
-#: ../src/gpk-application.c:1906
+#: ../src/gpk-application.c:1969
 msgid "Search by description"
 msgstr "Etsi kuvauksen perusteella"
 
-#: ../src/gpk-application.c:1915
+#: ../src/gpk-application.c:1978
 msgid "Search by file name"
 msgstr "Etsi tiedostonimen perusteella"
 
-#: ../src/gpk-application.c:2019 ../src/gpk-check-update.c:161
-#: ../src/gpk-watch.c:525
+#: ../src/gpk-application.c:2082 ../src/gpk-check-update.c:161
+#: ../src/gpk-watch.c:524
 msgid "Failed to show url"
 msgstr "Osoitteen näyttäminen epäonnistui"
 
-#: ../src/gpk-application.c:2058 ../src/gpk-check-update.c:186
-#: ../src/gpk-watch.c:546
+#: ../src/gpk-application.c:2121 ../src/gpk-check-update.c:186
+#: ../src/gpk-watch.c:545
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Lisensoitu GNU General Public Licensen versiolla 2"
 
-#: ../src/gpk-application.c:2059 ../src/gpk-check-update.c:187
-#: ../src/gpk-watch.c:547
+#: ../src/gpk-application.c:2122 ../src/gpk-check-update.c:187
+#: ../src/gpk-watch.c:546
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -720,8 +725,8 @@ msgstr ""
 "julkaissut; joko lisenssin version 2, tai (valinnan mukaan) minkä\n"
 "tahansa myöhemmän version mukaisesti."
 
-#: ../src/gpk-application.c:2063 ../src/gpk-check-update.c:191
-#: ../src/gpk-watch.c:551
+#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:191
+#: ../src/gpk-watch.c:550
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -733,8 +738,8 @@ msgstr ""
 "hyväksyttävästä laadusta tai soveltuvuudesta tiettyyn tarkoitukseen.\n"
 "Katso General Public Licensestä lisää yksityiskohtia."
 
-#: ../src/gpk-application.c:2067 ../src/gpk-check-update.c:195
-#: ../src/gpk-watch.c:555
+#: ../src/gpk-application.c:2130 ../src/gpk-check-update.c:195
+#: ../src/gpk-watch.c:554
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -745,54 +750,54 @@ msgstr ""
 "ei ole, kirjoita osoitteeseen Free Software Foundation Inc., 51 Franklin\n"
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: ../src/gpk-application.c:2072 ../src/gpk-check-update.c:200
-#: ../src/gpk-watch.c:560
+#: ../src/gpk-application.c:2135 ../src/gpk-check-update.c:200
+#: ../src/gpk-watch.c:559
 msgid "translator-credits"
 msgstr ""
 "Ville-Pekka Vainio, 2008.\n"
 "\n"
 "http://www.gnome.fi/"
 
-#: ../src/gpk-application.c:2097 ../src/gpk-check-update.c:219
-#: ../src/gpk-watch.c:579
+#: ../src/gpk-application.c:2160 ../src/gpk-check-update.c:219
+#: ../src/gpk-watch.c:578
 msgid "PackageKit Website"
 msgstr "PackageKitin verkkosivu"
 
-#: ../src/gpk-application.c:2099
+#: ../src/gpk-application.c:2162
 msgid "Package Manager for GNOME"
 msgstr "Gnomen paketinhallitsin"
 
-#: ../src/gpk-application.c:2534 ../src/gpk-update-viewer.c:1076
+#: ../src/gpk-application.c:2595 ../src/gpk-update-viewer.c:1077
 msgid "Text"
 msgstr "Teksti"
 
-#: ../src/gpk-application.c:2555
+#: ../src/gpk-application.c:2617
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
 "Syötä paketin nimi ja napsauta ”Etsi” tai napsauta ryhmän nimeä aloitaaksesi."
 
-#: ../src/gpk-application.c:2557
+#: ../src/gpk-application.c:2619
 msgid "Enter a package name and then click find to get started."
 msgstr "Syötä paketin nimi ja napsauta ”Etsi” aloittaaksesi."
 
-#: ../src/gpk-application.c:2714
+#: ../src/gpk-application.c:2774
 msgid "Clear current selection"
 msgstr "Poista nykyinen valinta"
 
-#: ../src/gpk-application.c:2745
+#: ../src/gpk-application.c:2805
 msgid "Visit homepage for selected package"
 msgstr "Avaa valitun paketin kotisivu"
 
-#: ../src/gpk-application.c:2890
+#: ../src/gpk-application.c:2950
 msgid "Find packages"
 msgstr "Etsi paketteja"
 
-#: ../src/gpk-application.c:2896
+#: ../src/gpk-application.c:2956
 msgid "Cancel search"
 msgstr "Peru haku"
 
-#: ../src/gpk-application.c:3030
+#: ../src/gpk-application.c:3090
 msgid "All packages"
 msgstr "Kaikki paketit"
 
@@ -801,18 +806,19 @@ msgstr "Kaikki paketit"
 #: ../src/gpk-install-mime-type.c:48 ../src/gpk-install-package-name.c:49
 #: ../src/gpk-install-provide-file.c:48 ../src/gpk-log.c:345
 #: ../src/gpk-prefs.c:352 ../src/gpk-repo.c:337 ../src/gpk-update-icon.c:127
-#: ../src/gpk-update-viewer.c:1814
+#: ../src/gpk-update-viewer.c:1815
 msgid "Show extra debugging information"
 msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 
 #: ../src/gpk-application-main.c:79 ../src/gpk-backend-status.c:83
 #: ../src/gpk-log.c:347 ../src/gpk-prefs.c:354 ../src/gpk-update-icon.c:131
-#: ../src/gpk-update-viewer.c:1816
+#: ../src/gpk-update-viewer.c:1817
 msgid "Show the program version and exit"
 msgstr "Näytä ohjelman versio ja lopeta"
 
 #. are we running privileged
-#: ../src/gpk-application-main.c:110
+#. check user wanted operation
+#: ../src/gpk-application-main.c:110 ../src/gpk-client.c:1374
 msgid "Package installer"
 msgstr "Pakettien asennin"
 
@@ -830,7 +836,7 @@ msgid "_Preferences"
 msgstr "_Asetukset"
 
 #. About
-#: ../src/gpk-check-update.c:265 ../src/gpk-watch.c:609
+#: ../src/gpk-check-update.c:265 ../src/gpk-watch.c:608
 msgid "_About"
 msgstr "_Tietoja"
 
@@ -845,59 +851,59 @@ msgid "_Update System Now"
 msgstr "_Päivitä järjestelmä nyt"
 
 #. format title
-#: ../src/gpk-check-update.c:460
+#: ../src/gpk-check-update.c:461
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Turvallisuuspäivitys saatavilla"
 msgstr[1] "Turvallisuuspäivityksiä saatavilla"
 
-#: ../src/gpk-check-update.c:464
+#: ../src/gpk-check-update.c:465
 msgid "The following important update is available for your computer:"
 msgid_plural "The following important updates are available for your computer:"
 msgstr[0] "Seuraava tärkeä päivitys on saatavilla tietokoneeseesi:"
 msgstr[1] "Seuraavat tärkeät päivitykset ovat saatavilla tietokoneeseesi:"
 
-#: ../src/gpk-check-update.c:485
+#: ../src/gpk-check-update.c:486
 msgid "Install security updates"
 msgstr "Asenna turvallisuuspäivitykset"
 
-#: ../src/gpk-check-update.c:487
+#: ../src/gpk-check-update.c:488
 msgid "Install all updates"
 msgstr "Asenna kaikki päivitykset"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-check-update.c:489 ../src/gpk-check-update.c:979
-#: ../src/gpk-client.c:438 ../src/gpk-client.c:441 ../src/gpk-client.c:2126
-#: ../src/gpk-dialog.c:292 ../src/gpk-firmware.c:207 ../src/gpk-watch.c:372
+#: ../src/gpk-check-update.c:490 ../src/gpk-check-update.c:981
+#: ../src/gpk-client.c:318 ../src/gpk-client.c:321 ../src/gpk-client.c:2086
+#: ../src/gpk-dialog.c:292 ../src/gpk-firmware.c:207 ../src/gpk-watch.c:371
 msgid "Do not show this again"
 msgstr "Älä näytä tätä uudelleen"
 
 #. do the bubble
-#: ../src/gpk-check-update.c:599
+#: ../src/gpk-check-update.c:600
 msgid ""
 "Automatic updates are not being installed as the computer is on battery power"
 msgstr "Automaattisia päivityksiä ei asenneta, koska kone käyttää akkua"
 
-#: ../src/gpk-check-update.c:600
+#: ../src/gpk-check-update.c:601
 msgid "Will not install updates"
 msgstr "Päivityksiä ei asenneta"
 
-#: ../src/gpk-check-update.c:604
+#: ../src/gpk-check-update.c:605
 msgid "Do not show this warning again"
 msgstr "Älä näytä tätä varoitusta uudelleen"
 
-#: ../src/gpk-check-update.c:606
+#: ../src/gpk-check-update.c:607
 msgid "Do the updates anyway"
 msgstr "Päivitä silti"
 
-#: ../src/gpk-check-update.c:714
+#: ../src/gpk-check-update.c:715
 #, c-format
 msgid "and %d other security update"
 msgid_plural "and %d other security updates"
 msgstr[0] "ja %d muu turvallisuuspäivitys"
 msgstr[1] "ja %d muuta turvallisuuspäivitystä"
 
-#: ../src/gpk-check-update.c:737
+#: ../src/gpk-check-update.c:738
 #, c-format
 msgid "There is %d update pending"
 msgid_plural "There are %d updates pending"
@@ -905,68 +911,69 @@ msgstr[0] "%d päivitetty paketti saatavilla"
 msgstr[1] "%d päivitettyä pakettia saatavilla"
 
 #. do the bubble
-#: ../src/gpk-check-update.c:968
+#: ../src/gpk-check-update.c:970
 msgid "Distribution upgrades available"
 msgstr "Jakelupäivityksiä saatavilla"
 
-#: ../src/gpk-check-update.c:977
+#: ../src/gpk-check-update.c:979
 msgid "More information"
 msgstr "Lisätietoja"
 
-#: ../src/gpk-client.c:398
+#: ../src/gpk-client.c:279
 msgid "One package was skipped:"
 msgstr "Yksi paketti ohitettiin:"
 
-#: ../src/gpk-client.c:399
+#: ../src/gpk-client.c:280
 msgid "Some packages were skipped:"
 msgstr "Joitakin paketteja ohitettiin:"
 
 #. do the bubble
-#: ../src/gpk-client.c:431
+#: ../src/gpk-client.c:311
 msgid "The system update has completed"
 msgstr "Järjestelmän päivitys on valmis"
 
-#: ../src/gpk-client.c:436
+#: ../src/gpk-client.c:316
 msgid "Restart computer now"
 msgstr "Käynnistä tietokone nyt uudelleen"
 
-#: ../src/gpk-client.c:893 ../src/gpk-client.c:1488 ../src/gpk-client.c:1588
-#: ../src/gpk-client.c:2085 ../src/gpk-client.c:2170 ../src/gpk-client.c:2234
-#: ../src/gpk-client.c:2289 ../src/gpk-client.c:2341 ../src/gpk-client.c:2400
+#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
+#: ../src/gpk-client.c:1762 ../src/gpk-client.c:1848 ../src/gpk-client.c:2045
+#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2182 ../src/gpk-client.c:2234
+#: ../src/gpk-client.c:2281 ../src/gpk-client.c:2333
 #: ../src/gpk-client-depends.c:97 ../src/gpk-client-requires.c:88
 #: ../src/gpk-client-resolve.c:68
 msgid "Failed to reset client"
 msgstr "Asiakasohjelman palauttaminen alkutilaan epäonnistui"
 
-#: ../src/gpk-client.c:893 ../src/gpk-client.c:1488 ../src/gpk-client.c:1588
-#: ../src/gpk-client.c:2085 ../src/gpk-client.c:2170 ../src/gpk-client.c:2400
+#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
+#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2333
 msgid "Failed to reset resolve"
 msgstr "Ratkaisijan palauttaminen alkutilaan epäonnistui"
 
-#: ../src/gpk-client.c:907
+#: ../src/gpk-client.c:696
 msgid "Failed to install files"
 msgstr "Tiedostojen asennus epäonnistui"
 
-#: ../src/gpk-client.c:908
+#: ../src/gpk-client.c:697
 msgid "You don't have the necessary privileges to install local files"
 msgstr ""
 "Sinulla ei ole tarvittavia oikeuksia paikallisten tiedostojen asentamiseen"
 
-#: ../src/gpk-client.c:913 ../src/gpk-client.c:1734 ../src/gpk-client.c:1743
+#: ../src/gpk-client.c:702 ../src/gpk-client.c:1481 ../src/gpk-client.c:1490
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Tiedoston asennus epäonnistui"
 msgstr[1] "Tiedostojen asennus epäonnistui"
 
-#: ../src/gpk-client.c:1150
+#: ../src/gpk-client.c:861
 msgid "Do you want to copy this file?"
 msgstr "Haluatko kopioida tämän tiedoston?"
 
-#: ../src/gpk-client.c:1151
+#: ../src/gpk-client.c:862
 msgid "Do you want to copy these files?"
 msgstr "Haluatko kopioida nämä tiedostot?"
 
-#: ../src/gpk-client.c:1152
+#: ../src/gpk-client.c:863
 msgid ""
 "One package file has to be copied to a non-private location so it can be "
 "installed:"
@@ -974,7 +981,7 @@ msgstr ""
 "Yksi pakettitiedosto on kopioitava julkiseen sijaintiin, jotta se voidaan "
 "asentaa:"
 
-#: ../src/gpk-client.c:1153
+#: ../src/gpk-client.c:864
 msgid ""
 "Some package files have to be copied to a non-private location so they can "
 "be installed:"
@@ -982,145 +989,245 @@ msgstr ""
 "Pakettitiedostoja on kopioitava julkiseen sijaintiin, jotta ne voidaan "
 "asentaa:"
 
-#. add a specialist button
-#: ../src/gpk-client.c:1163
+#: ../src/gpk-client.c:872
 msgid "Copy file"
 msgstr "Kopioi tiedosto"
 
-#: ../src/gpk-client.c:1231
+#: ../src/gpk-client.c:939
 msgid "The file could not be copied"
 msgstr "Tiedostoa ei voitu kopioida"
 
-#: ../src/gpk-client.c:1232
+#: ../src/gpk-client.c:940
 msgid "The files could not be copied"
 msgstr "Tiedostoja ei voitu kopioida"
 
-#: ../src/gpk-client.c:1264
+#: ../src/gpk-client.c:973
 msgid "Do you want to install this file?"
 msgstr "Haluatko asentaa tämän tiedoston?"
 
-#: ../src/gpk-client.c:1265
+#: ../src/gpk-client.c:974
 msgid "Do you want to install these files?"
 msgstr "Haluatko asentaa nämä tiedostot?"
 
-#: ../src/gpk-client.c:1284
+#: ../src/gpk-client.c:988
 msgid "The file was not installed"
 msgstr "Tiedostoa ei asennettu"
 
-#: ../src/gpk-client.c:1285
+#: ../src/gpk-client.c:989
 msgid "The files were not installed"
 msgstr "Tiedostoja ei asennettu"
 
-#: ../src/gpk-client.c:1332
+#: ../src/gpk-client.c:1034
 msgid "File was not found!"
 msgstr "Tiedostoa ei löytynyt!"
 
-#: ../src/gpk-client.c:1333
+#: ../src/gpk-client.c:1035
 msgid "Files were not found!"
 msgstr "Tiedostoja ei löytynyt!"
 
-#: ../src/gpk-client.c:1335
+#: ../src/gpk-client.c:1037
 msgid "The following file was not found:"
 msgstr "Seuraavaa tiedostoa ei löytynyt"
 
-#: ../src/gpk-client.c:1336
+#: ../src/gpk-client.c:1038
 msgid "The following files were not found:"
 msgstr "Seuraavia tiedostoja ei löytynyt"
 
+#: ../src/gpk-client.c:1083
+#, fuzzy
+msgid "A program"
+msgstr "Suorita ohjelma"
+
 #. set title
-#: ../src/gpk-client.c:1408
+#: ../src/gpk-client.c:1153
 msgid "Install local file"
 msgstr "Asennetaan paikallinen tiedosto"
 
 #. set title
-#: ../src/gpk-client.c:1463
+#: ../src/gpk-client.c:1198
 msgid "Remove packages"
 msgstr "Poistetaan paketteja"
 
-#: ../src/gpk-client.c:1478 ../src/gpk-client.c:1500 ../src/gpk-client.c:1505
+#: ../src/gpk-client.c:1213 ../src/gpk-client.c:1235 ../src/gpk-client.c:1240
 msgid "Failed to remove package"
 msgstr "Paketin poistaminen epäonnistui"
 
 # ”also not”, ei myöskään?
-#: ../src/gpk-client.c:1478
+#: ../src/gpk-client.c:1213
 msgid "Additional packages were also not removed"
 msgstr "Lisäpaketteja ei poistettu"
 
-#: ../src/gpk-client.c:1501
+#: ../src/gpk-client.c:1236
 msgid "You don't have the necessary privileges to remove packages"
 msgstr "Sinulla ei ole tarvittavia oikeuksia pakettien poistamiseen"
 
 #. set title
-#: ../src/gpk-client.c:1563
-msgid "Install packages"
-msgstr "Asennetaan paketteja"
-
-#: ../src/gpk-client.c:1578 ../src/gpk-client.c:1601 ../src/gpk-client.c:1606
-msgid "Failed to install package"
-msgstr "Paketin asennus epäonnistui"
-
-#: ../src/gpk-client.c:1578
-msgid "Additional packages were not downloaded"
-msgstr "Lisäpaketteja ei ladattu"
-
 #. try to install the package_id
-#: ../src/gpk-client.c:1595
+#: ../src/gpk-client.c:1292 ../src/gpk-client.c:1323
 msgid "Installing packages"
 msgstr "Asennetaan paketteja"
 
-#: ../src/gpk-client.c:1602
+#: ../src/gpk-client.c:1329 ../src/gpk-client.c:1334
+msgid "Failed to install package"
+msgstr "Paketin asennus epäonnistui"
+
+#: ../src/gpk-client.c:1330
 msgid "You don't have the necessary privileges to install packages"
 msgstr "Sinulla ei ole tarvittavia oikeuksia pakettien asentamiseen"
 
-#: ../src/gpk-client.c:1701 ../src/gpk-client.c:1789 ../src/gpk-client.c:1857
+#: ../src/gpk-client.c:1376
+#, fuzzy
+msgid "wants to install packages"
+msgstr "Paketin asennus epäonnistui"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:1437
+#, fuzzy
+msgid "File installer"
+msgstr "Asennus epäonnistui"
+
+#: ../src/gpk-client.c:1439
+#, fuzzy
+msgid "wants to install a file"
+msgstr "Tiedoston asennus epäonnistui"
+
+#: ../src/gpk-client.c:1448 ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
 #: ../src/gpk-client-resolve.c:77 ../src/gpk-client-resolve.c:118
 msgid "Incorrect response from search"
 msgstr "Virheellinen vastaus hakuun"
 
-#: ../src/gpk-client.c:1702
+#: ../src/gpk-client.c:1449
 msgid "Failed to search for file"
 msgstr "Tiedoston etsiminen epäonnistui"
 
-#: ../src/gpk-client.c:1713 ../src/gpk-client-resolve.c:118
+#: ../src/gpk-client.c:1460 ../src/gpk-client-resolve.c:118
 msgid "Failed to find package"
 msgstr "Pakettia ei löytynyt"
 
-#: ../src/gpk-client.c:1713
+#: ../src/gpk-client.c:1460
 msgid "The file could not be found in any packages"
 msgstr "Tiedostoa ei löytynyt mistään paketista"
 
-#: ../src/gpk-client.c:1733
+#: ../src/gpk-client.c:1480
 #, c-format
 msgid "The %s package already provides the file %s"
 msgstr "Paketti %s tarjoaa jo tiedoston %s"
 
-#: ../src/gpk-client.c:1743
+#: ../src/gpk-client.c:1490
 msgid "Incorrect response from file search"
 msgstr "Virheellinen vastaus tiedostohakuun"
 
-#: ../src/gpk-client.c:1789 ../src/gpk-client.c:1857
+#: ../src/gpk-client.c:1528
+#, fuzzy, c-format
+msgid "Searching for codec: %s"
+msgstr "Etsitään tiedostoa"
+
+#: ../src/gpk-client.c:1578
+#, fuzzy
+msgid "Additional plugins are required to play this content."
+msgstr ""
+"Laiteohjelmistoa tarvitaan, jotta tämän tietokoneen laitteisto toimisi "
+"oikein."
+
+#: ../src/gpk-client.c:1578
+#, fuzzy
+msgid "The following codecs are required:"
+msgstr "Seuraavat päivitykset ovat saatavilla:"
+
+#. trailer
+#: ../src/gpk-client.c:1587
+#, fuzzy
+msgid "Do you want to search for these now?"
+msgstr "Haluatko kopioida nämä tiedostot?"
+
+#: ../src/gpk-client.c:1595
+#, fuzzy
+msgid "Codec installer"
+msgstr "Katalogiasennin"
+
+#: ../src/gpk-client.c:1596 ../src/gpk-client.c:1751 ../src/gpk-client.c:1837
+msgid "Search"
+msgstr "Etsi"
+
+#: ../src/gpk-client.c:1597
+msgid "requires additional plugins"
+msgstr ""
+
+#. set title
+#: ../src/gpk-client.c:1638
+#, fuzzy
+msgid "Searching for codecs"
+msgstr "Etsitään tiedostoa"
+
+#: ../src/gpk-client.c:1659
+#, fuzzy
+msgid "Failed to search for codec"
+msgstr "Tarjoajien etsiminen epäonnistui"
+
+#: ../src/gpk-client.c:1659
+#, fuzzy
+msgid "Could not find codec in any configured software source"
+msgstr "Paketteja ei löytynyt mistään ohjelmistolähteestä"
+
+#. process package list
+#: ../src/gpk-client.c:1677
+#, fuzzy
+msgid "The following packages can be installed:"
+msgstr "Seuraavat paketit on poistettava:"
+
+#: ../src/gpk-client.c:1687
+#, fuzzy
+msgid "Do you want to install these now?"
+msgstr "Haluatko asentaa nämä tiedostot?"
+
+#: ../src/gpk-client.c:1695
+msgid "Install the following codecs"
+msgstr ""
+
+#. make sure the user wants to do action
+#. are we running privileged
+#: ../src/gpk-client.c:1750 ../src/gpk-install-mime-type.c:74
+msgid "Mime type installer"
+msgstr "MIME-tyyppiasennin"
+
+#: ../src/gpk-client.c:1752
+msgid "requires a new mime type"
+msgstr ""
+
+#: ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
 msgid "Failed to search for provides"
 msgstr "Tarjoajien etsiminen epäonnistui"
 
-#: ../src/gpk-client.c:1799
+#: ../src/gpk-client.c:1781
 msgid "Failed to find software"
 msgstr "Ohjelmistoa ei löytynyt"
 
-#: ../src/gpk-client.c:1800
+#: ../src/gpk-client.c:1782
 msgid "No new applications can be found to handle this type of file"
 msgstr "Tämän tiedostotyypin käsittelyyn sopivia uusia ohjelmia ei löydetty"
 
-#: ../src/gpk-client.c:1808
+#: ../src/gpk-client.c:1790
 msgid "Applications that can open this type of file"
 msgstr "Ohjelmat, jotka voivat avata tämän tyyppisiä tiedostoja"
 
-#: ../src/gpk-client.c:1812
+#: ../src/gpk-client.c:1794
 msgid "Failed to install software"
 msgstr "Ohjelmiston asennus epäonnistui"
 
-#: ../src/gpk-client.c:1812
+#: ../src/gpk-client.c:1794
 msgid "No applications were chosen to be installed"
 msgstr "Mitään ohjelmaa ei valittu asennettavaksi"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:1836
+#, fuzzy
+msgid "Font installer"
+msgstr "_Pakota asennus"
+
+#: ../src/gpk-client.c:1838
+#, fuzzy
+msgid "wants to install a font"
+msgstr "Kirjasinten asennus epäonnistui"
 
 #: ../src/gpk-client.c:1867
 msgid "Failed to find font"
@@ -1142,176 +1249,166 @@ msgstr "Kirjasinten asennus epäonnistui"
 msgid "No fonts were chosen to be installed"
 msgstr "Yhtään kirjasinta ei valittu asennettavaksi"
 
-#: ../src/gpk-client.c:1909
+#: ../src/gpk-client.c:1908
 #, c-format
 msgid "Finding package name: %s"
 msgstr "Etsitään pakettia nimeltä: %s"
 
-#: ../src/gpk-client.c:1911
+#: ../src/gpk-client.c:1910
 #, c-format
 msgid "Finding file name: %s"
 msgstr "Etsitään tiedostoa nimeltä: %s"
 
-#: ../src/gpk-client.c:1913
+#: ../src/gpk-client.c:1912
 #, c-format
 msgid "Finding a package to provide: %s"
 msgstr "Etsitään pakettia, joka tarjoaa tiedoston: %s"
 
 # TODO better translation?
-#: ../src/gpk-client.c:1950
+#: ../src/gpk-client.c:1940
 msgid "Do you want to install this catalog?"
 msgstr "Haluatko asentaa tämän katalogin?"
 
-#: ../src/gpk-client.c:1951
+#: ../src/gpk-client.c:1941
 msgid "Do you want to install these catalogs?"
 msgstr "Haluatko asentaa nämä katalogit?"
 
-#: ../src/gpk-client.c:1969 ../src/gpk-client.c:2038
-msgid "The catalog was not installed"
-msgstr "Katalogia ei asennettu"
-
-#: ../src/gpk-client.c:1970 ../src/gpk-client.c:2039
-msgid "The catalogs were not installed"
-msgstr "Katalogeja ei asennettu"
-
 #. set title
-#: ../src/gpk-client.c:1979
+#: ../src/gpk-client.c:1958
 msgid "Install catalogs"
 msgstr "Asennetaan katalogeja"
 
-#: ../src/gpk-client.c:1999
+#. show UI
+#: ../src/gpk-client.c:1975
 msgid "No packages need to be installed"
 msgstr "Mitään paketteja ei tarvitse asentaa"
 
 #. process package list
-#: ../src/gpk-client.c:2008
+#: ../src/gpk-client.c:1986
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Seuraavat paketit on merkitty asennettaviksi katalogista:"
 
-#: ../src/gpk-client.c:2026
+#. show UI
+#: ../src/gpk-client.c:2001
 msgid "Install packages in catalog?"
 msgstr "Asennetaanko katalogin paketit?"
 
 #. set title
-#: ../src/gpk-client.c:2091
+#: ../src/gpk-client.c:2051
 msgid "System update"
 msgstr "Järjestelmäpäivitys"
 
-#: ../src/gpk-client.c:2098
+#: ../src/gpk-client.c:2058
 msgid "Authorization could not be obtained"
 msgstr "Valtuutusta ei voitu hankkia"
 
-#: ../src/gpk-client.c:2100 ../src/gpk-client.c:2185 ../src/gpk-client.c:2415
+#: ../src/gpk-client.c:2060 ../src/gpk-client.c:2139 ../src/gpk-client.c:2345
 #, c-format
 msgid "The error was: %s"
 msgstr "Virhe oli: %s"
 
 #. display and set
-#: ../src/gpk-client.c:2104 ../src/gpk-client.c:2105
+#: ../src/gpk-client.c:2064 ../src/gpk-client.c:2065
 msgid "Failed to update system"
 msgstr "Järjestelmän päivitys epäonnistui"
 
 #. do the bubble
-#: ../src/gpk-client.c:2118
+#: ../src/gpk-client.c:2078
 msgid "Updates are being installed"
 msgstr "Päivityksiä asennetaan"
 
-#: ../src/gpk-client.c:2119
+#: ../src/gpk-client.c:2079
 msgid "Updates are being automatically installed on your computer"
 msgstr "Päivityksiä asennetaan automaattisesti tietokoneellesi"
 
-#: ../src/gpk-client.c:2124
+#: ../src/gpk-client.c:2084
 msgid "Cancel update"
 msgstr "Peruuta päivitys"
 
-#: ../src/gpk-client.c:2183 ../src/gpk-client.c:2413
+#: ../src/gpk-client.c:2137 ../src/gpk-client.c:2343
 msgid "Authorisation could not be obtained"
 msgstr "Valtuutusta ei saatu"
 
 #. display and set
-#: ../src/gpk-client.c:2189 ../src/gpk-client.c:2190
+#: ../src/gpk-client.c:2143 ../src/gpk-client.c:2144
 msgid "Failed to update package lists"
 msgstr "Pakettiluetteloiden päivitys epäonnistui"
 
-#: ../src/gpk-client.c:2234
+#: ../src/gpk-client.c:2182
 msgid "Failed to reset get-updates"
 msgstr "Get-updatesia ei voitu palauttaa alkutilaan"
 
-#. set title
-#: ../src/gpk-client.c:2241
-msgid "Getting update lists"
-msgstr "Haetaan päivitysluetteloita"
-
-#: ../src/gpk-client.c:2246 ../src/gpk-client.c:2305
+#: ../src/gpk-client.c:2191 ../src/gpk-client.c:2249
 msgid "Getting update lists failed"
 msgstr "Päivitysluetteloiden hakeminen epäonnistui"
 
-#: ../src/gpk-client.c:2246
+#: ../src/gpk-client.c:2191
 msgid "Failed to get updates"
 msgstr "Päivitysten hakeminen epäonnistui"
 
-#: ../src/gpk-client.c:2289
+#: ../src/gpk-client.c:2201
+msgid "Getting update lists"
+msgstr "Haetaan päivitysluetteloita"
+
+#: ../src/gpk-client.c:2234
 msgid "Failed to reset get-upgrades"
 msgstr "Get-upgradesia ei voitu palauttaa alkutilaan"
 
-#. set title
-#: ../src/gpk-client.c:2296 ../src/gpk-common.c:1102
-msgid "Getting distribution upgrade information"
-msgstr "Haetaan jakelupäivitystietoja"
-
-#: ../src/gpk-client.c:2306
+#: ../src/gpk-client.c:2250
 msgid "Getting the list of distribution upgrades failed"
 msgstr "Jakelupäivitysluetteloiden hakeminen epäonnistui"
 
-#: ../src/gpk-client.c:2341
+#: ../src/gpk-client.c:2257 ../src/gpk-common.c:1106
+msgid "Getting distribution upgrade information"
+msgstr "Haetaan jakelupäivitystietoja"
+
+#: ../src/gpk-client.c:2281
 msgid "Failed to reset get-file-list"
 msgstr "Get-file-listiä ei voitu palauttaa alkutilaan"
 
-#. set title
-#: ../src/gpk-client.c:2348
-msgid "Getting file lists"
-msgstr "Haetaan tiedostoluetteloita"
-
-#: ../src/gpk-client.c:2355
+#: ../src/gpk-client.c:2292
 msgid "Getting file list failed"
 msgstr "Tiedostoluetteloiden hakeminen epäonnistui"
 
-#: ../src/gpk-client.c:2355
+#: ../src/gpk-client.c:2292
 msgid "Failed to get file list"
 msgstr "Tiedostoluettelon hakeminen epäonnistui"
 
-#. set title
-#: ../src/gpk-client.c:2406
-msgid "Update packages"
-msgstr "Päivitetään paketteja"
+#: ../src/gpk-client.c:2299
+msgid "Getting file lists"
+msgstr "Haetaan tiedostoluetteloita"
 
 #. display and set
-#: ../src/gpk-client.c:2419 ../src/gpk-client.c:2420
+#: ../src/gpk-client.c:2349 ../src/gpk-client.c:2350
 msgid "Failed to update packages"
 msgstr "Pakettien päivitys epäonnistui"
 
-#: ../src/gpk-client.c:2470 ../src/gpk-client.c:2481
+#: ../src/gpk-client.c:2357
+msgid "Update packages"
+msgstr "Päivitetään paketteja"
+
+#: ../src/gpk-client.c:2400 ../src/gpk-client.c:2411
 msgid "Failed to install signature"
 msgstr "Allekirjoituksen asennus epäonnistui"
 
-#: ../src/gpk-client.c:2471 ../src/gpk-client.c:2513
+#: ../src/gpk-client.c:2401 ../src/gpk-client.c:2441
 msgid "The client could not be reset"
 msgstr "Asiakasohjelmaa ei voitu palauttaa alkutilaan"
 
 # TODO ohjelmointikielen "method"? src-tiedostoa ei ollut olemassa...
-#: ../src/gpk-client.c:2482 ../src/gpk-client.c:2524
+#: ../src/gpk-client.c:2412 ../src/gpk-client.c:2450
 msgid "The method failed"
 msgstr "Toimenpide epäonnistui"
 
-#: ../src/gpk-client.c:2512 ../src/gpk-client.c:2523
+#: ../src/gpk-client.c:2440 ../src/gpk-client.c:2449
 msgid "Failed to accept EULA"
 msgstr "Käyttöoikeussopimuksen hyväksyminen epäonnistui"
 
-#: ../src/gpk-client.c:2550
+#: ../src/gpk-client.c:2476
 msgid "Failed to install"
 msgstr "Asennus epäonnistui"
 
-#: ../src/gpk-client.c:2551
+#: ../src/gpk-client.c:2477
 msgid "The install task could not be requeued"
 msgstr "Asennustehtävää ei voitu asettaa uudelleen jonoon"
 
@@ -1363,6 +1460,11 @@ msgid "To install %s, an additional package also has to be downloaded."
 msgid_plural "To install %s, additional packages also have to be downloaded."
 msgstr[0] "Paketin %s asentamiseksi on ladattava myös lisäpaketti."
 msgstr[1] "Paketin %s asentamiseksi on ladattava myös lisäpaketteja."
+
+#: ../src/gpk-client-dialog.c:712
+#, fuzzy
+msgid "Uninstall"
+msgstr "Asenna"
 
 #. get the packages we depend on
 #: ../src/gpk-client-requires.c:82
@@ -1424,7 +1526,7 @@ msgstr "Paketteja ei löytynyt mistään ohjelmistolähteestä"
 msgid "Failed to install %s"
 msgstr "Paketin %s asennus epäonnistui"
 
-#: ../src/gpk-client-resolve.c:111 ../src/gpk-common.c:359
+#: ../src/gpk-client-resolve.c:111 ../src/gpk-common.c:361
 msgid "The package is already installed"
 msgstr "Paketti on jo asennettu"
 
@@ -1453,176 +1555,176 @@ msgstr "_Pakota asennus"
 msgid "Force installing package"
 msgstr "Pakota paketin asennus"
 
-#: ../src/gpk-common.c:332
+#: ../src/gpk-common.c:334
 msgid "No network connection available"
 msgstr "Verkkoyhteyttä ei ole käytettävissä"
 
-#: ../src/gpk-common.c:335
+#: ../src/gpk-common.c:337
 msgid "No package cache is available."
 msgstr "Pakettivälimuistia ei ole käytettävissä"
 
-#: ../src/gpk-common.c:338
+#: ../src/gpk-common.c:340
 msgid "Out of memory"
 msgstr "Muisti lopussa"
 
-#: ../src/gpk-common.c:341
+#: ../src/gpk-common.c:343
 msgid "Failed to create a thread"
 msgstr "Säikeen luominen epäonnistui"
 
-#: ../src/gpk-common.c:344
+#: ../src/gpk-common.c:346
 msgid "Not supported by this backend"
 msgstr "Ei tukea taustajärjestelmässä"
 
-#: ../src/gpk-common.c:347
+#: ../src/gpk-common.c:349
 msgid "An internal system error has occurred"
 msgstr "On tapahtunut sisäinen järjestelmävirhe"
 
-#: ../src/gpk-common.c:350
+#: ../src/gpk-common.c:352
 msgid "A security trust relationship is not present"
 msgstr "Luottamussuhdetta ei ole"
 
-#: ../src/gpk-common.c:353
+#: ../src/gpk-common.c:355
 msgid "The package is not installed"
 msgstr "Pakettia ei ole asennettu"
 
-#: ../src/gpk-common.c:356
+#: ../src/gpk-common.c:358
 msgid "The package was not found"
 msgstr "Pakettia ei löytynyt"
 
-#: ../src/gpk-common.c:362
+#: ../src/gpk-common.c:364
 msgid "The package download failed"
 msgstr "Paketin lataus epäonnistui"
 
-#: ../src/gpk-common.c:365
+#: ../src/gpk-common.c:367
 msgid "The group was not found"
 msgstr "Ryhmää ei löytynyt"
 
-#: ../src/gpk-common.c:368
+#: ../src/gpk-common.c:370
 msgid "The group list was invalid"
 msgstr "Ryhmäluettelo oli virheellinen"
 
-#: ../src/gpk-common.c:371
+#: ../src/gpk-common.c:373
 msgid "Dependency resolution failed"
 msgstr "Riippuvuuksien ratkaisu epäonnistui"
 
-#: ../src/gpk-common.c:374
+#: ../src/gpk-common.c:376
 msgid "Search filter was invalid"
 msgstr "Hakusuodin oli virheellinen"
 
-#: ../src/gpk-common.c:377
+#: ../src/gpk-common.c:379
 msgid "The package identifier was not well formed"
 msgstr "Paketin tunniste ei ollut hyvin muodostettu"
 
-#: ../src/gpk-common.c:380
+#: ../src/gpk-common.c:382
 msgid "Transaction error"
 msgstr "Toimenpidevirhe"
 
-#: ../src/gpk-common.c:383
+#: ../src/gpk-common.c:385
 msgid "Repository name was not found"
 msgstr "Asennuslähteen nimeä ei löytynyt"
 
-#: ../src/gpk-common.c:386
+#: ../src/gpk-common.c:388
 msgid "Could not remove a protected system package"
 msgstr "Suojattua järjestelmäpakettia ei voitu poistaa"
 
-#: ../src/gpk-common.c:389
+#: ../src/gpk-common.c:391
 msgid "The task was canceled"
 msgstr "Tehtävä peruutettiin"
 
-#: ../src/gpk-common.c:392
+#: ../src/gpk-common.c:394
 msgid "The task was forcibly canceled"
 msgstr "Tehtävä peruttiin väkisin"
 
-#: ../src/gpk-common.c:395
+#: ../src/gpk-common.c:397
 msgid "Reading the config file failed"
 msgstr "Asetustiedoston lukeminen epäonnistui"
 
-#: ../src/gpk-common.c:398
+#: ../src/gpk-common.c:400
 msgid "The task cannot be canceled"
 msgstr "Tehtävää ei voida peruuttaa"
 
-#: ../src/gpk-common.c:401
+#: ../src/gpk-common.c:403
 msgid "Source packages cannot be installed"
 msgstr "Lähdepaketteja ei voida asentaa"
 
-#: ../src/gpk-common.c:404
+#: ../src/gpk-common.c:406
 msgid "The license agreement failed"
 msgstr "Käyttöoikeussopimus epäonnistui"
 
-#: ../src/gpk-common.c:407
+#: ../src/gpk-common.c:409
 msgid "Local file conflict between packages"
 msgstr "Paikallisten tiedostojen ristiriita pakettien välillä"
 
-#: ../src/gpk-common.c:410
+#: ../src/gpk-common.c:412
 msgid "Packages are not compatible"
 msgstr "Paketit eivät ole yhteensopivia"
 
-#: ../src/gpk-common.c:413
+#: ../src/gpk-common.c:415
 msgid "Problem connecting to a software source"
 msgstr "Ongelma ohjelmistolähteeseen yhdistettäessä"
 
-#: ../src/gpk-common.c:416
+#: ../src/gpk-common.c:418
 msgid "Failed to initialize"
 msgstr "Alustus epäonnistui"
 
-#: ../src/gpk-common.c:419
+#: ../src/gpk-common.c:421
 msgid "Failed to finalise"
 msgstr "Viimeistely epäonnistui"
 
-#: ../src/gpk-common.c:422
+#: ../src/gpk-common.c:424
 msgid "Cannot get lock"
 msgstr "Lukkoa ei saada"
 
-#: ../src/gpk-common.c:425
+#: ../src/gpk-common.c:427
 msgid "No packages to update"
 msgstr "Ei yhtään päivitettävää pakettia"
 
-#: ../src/gpk-common.c:428
+#: ../src/gpk-common.c:430
 msgid "Cannot write repository configuration"
 msgstr "Asennuslähteen asetuksia ei voida kirjoittaa"
 
-#: ../src/gpk-common.c:431
+#: ../src/gpk-common.c:433
 msgid "Local install failed"
 msgstr "Paikallinen asennus epäonnistui"
 
-#: ../src/gpk-common.c:434
+#: ../src/gpk-common.c:436
 msgid "Bad GPG signature"
 msgstr "Virheellinen GPG-allekirjoitus"
 
-#: ../src/gpk-common.c:437
+#: ../src/gpk-common.c:439
 msgid "Missing GPG signature"
 msgstr "GPG-allekirjoitus puuttuu"
 
-#: ../src/gpk-common.c:440
+#: ../src/gpk-common.c:442
 msgid "Repository configuration invalid"
 msgstr "Virheelliset asennuslähteen asetukset"
 
-#: ../src/gpk-common.c:443
+#: ../src/gpk-common.c:445
 msgid "Invalid package file"
 msgstr "Virheellinen pakettitiedosto"
 
-#: ../src/gpk-common.c:446
+#: ../src/gpk-common.c:448
 msgid "Package install blocked"
 msgstr "Paketin asennus on estetty"
 
-#: ../src/gpk-common.c:449
+#: ../src/gpk-common.c:451
 msgid "Package is corrupt"
 msgstr "Paketti on viallinen"
 
-#: ../src/gpk-common.c:452
+#: ../src/gpk-common.c:454
 msgid "All packages are already installed"
 msgstr "Kaikki paketit on jo asennettu"
 
 # tarkista
-#: ../src/gpk-common.c:455
+#: ../src/gpk-common.c:457
 msgid "The specified file could not be found"
 msgstr "Tiedostoa ei löytynyt"
 
-#: ../src/gpk-common.c:458
+#: ../src/gpk-common.c:460
 msgid "No more mirrors are available"
 msgstr "Peilipalvelimia ei ole enempää saatavilla"
 
-#: ../src/gpk-common.c:475
+#: ../src/gpk-common.c:477
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
@@ -1630,7 +1732,7 @@ msgstr ""
 "Verkkoyhteyttä ei ole käytettävissä.\n"
 "Tarkista yhteysasetukset ja yritä uudelleen"
 
-#: ../src/gpk-common.c:479
+#: ../src/gpk-common.c:481
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1638,7 +1740,7 @@ msgstr ""
 "Pakettiluettelo on luotava uudelleen.\n"
 "Taustajärjestelmän olisi pitänyt tehdä tämä automaattisesti."
 
-#: ../src/gpk-common.c:483
+#: ../src/gpk-common.c:485
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1647,11 +1749,11 @@ msgstr ""
 "Käyttäjäpyyntöjä käsittelevältä palvelulta on loppunut muisti.\n"
 "Käynnistä tietokone uudelleen."
 
-#: ../src/gpk-common.c:487
+#: ../src/gpk-common.c:489
 msgid "A thread could not be created to service the user request."
 msgstr "Käyttäjän pyyntöä toteuttamaan ei voitu luoda säiettä."
 
-#: ../src/gpk-common.c:490
+#: ../src/gpk-common.c:492
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug at "
@@ -1659,7 +1761,7 @@ msgstr ""
 "Tämä taustajärjestelmä ei tue kyseistä toimintoa.\n"
 "Tee vikailmoitus osoitteessai "
 
-#: ../src/gpk-common.c:494
+#: ../src/gpk-common.c:496
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug at "
@@ -1667,7 +1769,7 @@ msgstr ""
 "On ilmennyt odottamaton ongelma.\n"
 "Ilmoita tämä ohjelmavika osoitteessa "
 
-#: ../src/gpk-common.c:498
+#: ../src/gpk-common.c:500
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -1675,23 +1777,23 @@ msgstr ""
 "Ohjelmalähteen kanssa ei voitu luoda luottamussuhdetta.\n"
 "Tarkista turvallisuusasetukset."
 
-#: ../src/gpk-common.c:502
+#: ../src/gpk-common.c:504
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr "Pakettia, jota yritetään poistaa tai päivittää, ei ole asennettu."
 
-#: ../src/gpk-common.c:505
+#: ../src/gpk-common.c:507
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
 msgstr ""
 "Muokattavaa pakettia ei löytynyt järjestelmästä tai mistään ohjelmalähteestä."
 
-#: ../src/gpk-common.c:508
+#: ../src/gpk-common.c:510
 msgid "The package that is trying to be installed is already installed."
 msgstr "Paketti, jota yritetään asentaa, on jo asennettu."
 
-#: ../src/gpk-common.c:511
+#: ../src/gpk-common.c:513
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1699,7 +1801,7 @@ msgstr ""
 "Paketin lataus epäonnistui.\n"
 "Tarkista verkkoyhteys."
 
-#: ../src/gpk-common.c:515
+#: ../src/gpk-common.c:517
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1707,7 +1809,7 @@ msgstr ""
 "Ryhmän tyyppiä ei löytynyt.\n"
 "Tarkista ryhmäluettelo ja yritä uudelleen."
 
-#: ../src/gpk-common.c:519
+#: ../src/gpk-common.c:521
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1717,7 +1819,7 @@ msgstr ""
 "Välimuistin virkistäminen saattaa auttaa, mutta yleensä tämä on "
 "ohjelmistolähdevirhe."
 
-#: ../src/gpk-common.c:524
+#: ../src/gpk-common.c:526
 msgid ""
 "A package could not be found that allows the task to complete.\n"
 "More information is available in the detailed report."
@@ -1725,11 +1827,11 @@ msgstr ""
 "Tehtävän onnistumiseen tarvittavaa pakettia ei löytynyt.\n"
 "Lisätietoja on tarkemmassa raportissa."
 
-#: ../src/gpk-common.c:528
+#: ../src/gpk-common.c:530
 msgid "The search filter was not correctly formed."
 msgstr "Hakusuodin oli virheellinen."
 
-#: ../src/gpk-common.c:531
+#: ../src/gpk-common.c:533
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1738,7 +1840,7 @@ msgstr ""
 "Tämä yleensä tarkoittaa, että on tapahtunut sisäinen virhe ja tilanne "
 "pitäisi raportoida."
 
-#: ../src/gpk-common.c:535
+#: ../src/gpk-common.c:537
 msgid ""
 "An unspecified task error has occurred.\n"
 "More information is available in the detailed report."
@@ -1746,7 +1848,7 @@ msgstr ""
 "On tapahtunut määrittelemätön tehtävävirhe.\n"
 "Lisätietoja on tarkemmassa raportissa."
 
-#: ../src/gpk-common.c:539
+#: ../src/gpk-common.c:541
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources"
@@ -1754,15 +1856,15 @@ msgstr ""
 "Ohjelmistolähteen nimeä ei löytynyt.\n"
 "Ohjelmistolähde on ehkä otettava käyttöön Ohjelmistolähteet-valinnoista."
 
-#: ../src/gpk-common.c:543
+#: ../src/gpk-common.c:545
 msgid "Removing a protected system package is not allowed."
 msgstr "Suojatun järjestelmäpaketin poisto ei ole sallittua."
 
-#: ../src/gpk-common.c:546
+#: ../src/gpk-common.c:548
 msgid "The task was canceled successfully and no packages were changed."
 msgstr "Tehtävän peruutus onnistui, eikä mitään paketteja muutettu."
 
-#: ../src/gpk-common.c:549
+#: ../src/gpk-common.c:551
 msgid ""
 "The task was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1770,7 +1872,7 @@ msgstr ""
 "Tehtävä peruutettiin, eikä paketteja muutettu.\n"
 "Taustajärjestelmä ei lopettanut siististi."
 
-#: ../src/gpk-common.c:553
+#: ../src/gpk-common.c:555
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -1778,11 +1880,11 @@ msgstr ""
 "Paketinhallinnan asetustiedostoa ei voitu avata.\n"
 "Varmista, ettei asetuksissa ole virheitä."
 
-#: ../src/gpk-common.c:557
+#: ../src/gpk-common.c:559
 msgid "The task is not safe to be canceled at this time."
 msgstr "Tehtävää ei voi turvallisesti peruuttaa tällä hetkellä."
 
-#: ../src/gpk-common.c:560
+#: ../src/gpk-common.c:562
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1790,7 +1892,7 @@ msgstr ""
 "Lähdepaketteja ei tavallisesti asenneta näin.\n"
 "Tarkista tiedostopääte tiedostosta, jota yrität asentaa."
 
-#: ../src/gpk-common.c:564
+#: ../src/gpk-common.c:566
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -1798,26 +1900,28 @@ msgstr ""
 "Käyttöoikeussopimusta ei hyväksytty.\n"
 "Sopimus on hyväksyttävä tämän ohjelmiston käyttämiseksi."
 
-#: ../src/gpk-common.c:568
+#: ../src/gpk-common.c:570
+#, fuzzy
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages for different software sources."
+"This is usually due to mixing packages from different software sources."
 msgstr ""
 "Kaksi pakettia tarjoaa saman tiedoston.\n"
 "Tämä johtuu yleensä eri ohjelmistolähteistä tulevien pakettien "
 "sekoittamisesta."
 
 # paremmin?
-#: ../src/gpk-common.c:572
+#: ../src/gpk-common.c:574
+#, fuzzy
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages for different software sources."
+"This is usually due to mixing packages from different software sources."
 msgstr ""
 "Useita yhteensopimattomia paketteja.\n"
 "Tämä johtuu yleensä eri ohjelmistolähteistä tulevien pakettien "
 "sekoittamisesta."
 
-#: ../src/gpk-common.c:576
+#: ../src/gpk-common.c:578
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source\n"
 "Please check the detailed error for further details."
@@ -1826,7 +1930,7 @@ msgstr ""
 "tilapäinen.\n"
 "Lisätietoja on yksityiskohtaisessa virheilmoituksessa."
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:582
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1834,7 +1938,7 @@ msgstr ""
 "Paketinhallinnan taustajärjestelmän alustaminen epäonnistui.\n"
 "Näin voi käydä, jos muita paketinhallintatyökaluja käytetään samaan aikaan."
 
-#: ../src/gpk-common.c:584
+#: ../src/gpk-common.c:586
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1842,7 +1946,7 @@ msgstr ""
 "Taustajärjestelmän sulkeminen epäonnistui.\n"
 "Tämän virheen voi yleensä jättää huomiotta."
 
-#: ../src/gpk-common.c:588
+#: ../src/gpk-common.c:590
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1851,15 +1955,15 @@ msgstr ""
 "onnistu.\n"
 "Sulje muut mahdollisesti avoinna olevat paketinhallintatyökalut."
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:594
 msgid "None of the selected packages could be updated."
 msgstr "Yhtäkään valituista paketeista ei voitu päivittää."
 
-#: ../src/gpk-common.c:595
+#: ../src/gpk-common.c:597
 msgid "The repository configuration could not be modified."
 msgstr "Asennuslähdeasetuksia ei voitu muuttaa."
 
-#: ../src/gpk-common.c:598
+#: ../src/gpk-common.c:600
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1867,11 +1971,11 @@ msgstr ""
 "Paikallisen tiedoston asentaminen epäonnistui.\n"
 "Lisätietoja on tarkemmassa raportissa."
 
-#: ../src/gpk-common.c:602
+#: ../src/gpk-common.c:604
 msgid "The package signature could not be verified."
 msgstr "Paketin allekirjoitusta ei voitu varmentaa."
 
-#: ../src/gpk-common.c:605
+#: ../src/gpk-common.c:607
 msgid ""
 "The package signature was missing and this package is untrusted.\n"
 "This package was not signed with a GPG key when created."
@@ -1879,11 +1983,11 @@ msgstr ""
 "Paketin allekirjoitus puuttuu, joten tähän pakettiin ei luoteta.\n"
 "Tätä pakettia ei luotaessa allekirjoitettu GPG-avaimella."
 
-#: ../src/gpk-common.c:609
+#: ../src/gpk-common.c:611
 msgid "Repository configuration was invalid and could not be read."
 msgstr "Asennuslähdeasetukset olivat virheelliset eikä niitä voitu lukea."
 
-#: ../src/gpk-common.c:612
+#: ../src/gpk-common.c:614
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -1891,23 +1995,23 @@ msgstr ""
 "Paketti, jota yritetään asentaa, on viallinen.\n"
 "Pakettitiedosto voi olla viallinen tai se ei ole oikea paketti."
 
-#: ../src/gpk-common.c:616
+#: ../src/gpk-common.c:618
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "Pakettijärjestelmän asetukset estävät tämän paketin asentamisen."
 
-#: ../src/gpk-common.c:619
+#: ../src/gpk-common.c:621
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "Ladattu paketti on virheellinen ja se on ladattava uudelleen."
 
-#: ../src/gpk-common.c:622
+#: ../src/gpk-common.c:624
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "Kaikki asennettavaksi valitut paketit on jo asennettu järjestelmään."
 
-#: ../src/gpk-common.c:625
+#: ../src/gpk-common.c:627
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -1915,7 +2019,7 @@ msgstr ""
 "Annettua tiedostoa ei löytynyt järjestelmästä.\n"
 "Tarkista että tiedosto on yhä olemassa eikä sitä ole poistettu."
 
-#: ../src/gpk-common.c:629
+#: ../src/gpk-common.c:631
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -1923,245 +2027,245 @@ msgstr ""
 "Vaadittuja tiedostoja ei löytynyt määritellyistä ohjelmistolähteistä.\n"
 "Toimivia peilipalvelimia ei löytynyt enempää."
 
-#: ../src/gpk-common.c:648
+#: ../src/gpk-common.c:650
 msgid "No restart is necessary for this update"
 msgstr "Tämä päivitys ei vaadi uudelleenkäynnistämistä"
 
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:653
 msgid "An application restart is required after this update"
 msgstr "Sovellus on käynnistettävä uudelleen tämän päivityksen jälkeen"
 
-#: ../src/gpk-common.c:654
+#: ../src/gpk-common.c:656
 msgid "You will be required to log off and back on after this update"
 msgstr ""
 "Istunnosta on kirjauduttava ulos ja takaisin sisään tämän päivityksen jälkeen"
 
-#: ../src/gpk-common.c:657
+#: ../src/gpk-common.c:659
 msgid "A system restart is required after this update"
 msgstr "Järjestelmä on käynnistettävä uudelleen tämän päivityksen jälkeen"
 
-#: ../src/gpk-common.c:674
+#: ../src/gpk-common.c:676
 msgid "No restart is required"
 msgstr "Uudelleenkäynnistystä ei vaadita"
 
-#: ../src/gpk-common.c:677
+#: ../src/gpk-common.c:679
 msgid "A system restart is required"
 msgstr "Järjestelmä on käynnistettävä uudelleen"
 
-#: ../src/gpk-common.c:680
+#: ../src/gpk-common.c:682
 msgid "You will need to log off and log back on"
 msgstr "On kirjauduttava ulos ja takaisin sisään"
 
-#: ../src/gpk-common.c:683
+#: ../src/gpk-common.c:685
 msgid "You need to restart the application"
 msgstr "Sovellus on käynnistettävä uudelleen"
 
-#: ../src/gpk-common.c:700
+#: ../src/gpk-common.c:702
 msgid "Stable"
 msgstr "Vakaa"
 
-#: ../src/gpk-common.c:703
+#: ../src/gpk-common.c:705
 msgid "Unstable"
 msgstr "Epävakaa"
 
-#: ../src/gpk-common.c:706
+#: ../src/gpk-common.c:708
 msgid "Testing"
 msgstr "Testaus"
 
-#: ../src/gpk-common.c:723
+#: ../src/gpk-common.c:725
 msgid "A mirror is possibly broken"
 msgstr "Peilipalvelimessa saattaa olla vikaa"
 
-#: ../src/gpk-common.c:726
+#: ../src/gpk-common.c:728
 msgid "The connection was refused"
 msgstr "Yhteydestä kieltäydyttiin"
 
-#: ../src/gpk-common.c:729
+#: ../src/gpk-common.c:731
 msgid "The parameter was invalid"
 msgstr "Parametri oli virheellinen"
 
-#: ../src/gpk-common.c:732
+#: ../src/gpk-common.c:734
 msgid "The priority was invalid"
 msgstr "Prioriteetti oli virheellinen"
 
-#: ../src/gpk-common.c:735
+#: ../src/gpk-common.c:737
 msgid "Generic backend error"
 msgstr "Yleinen taustajärjestelmän virhe"
 
-#: ../src/gpk-common.c:738
+#: ../src/gpk-common.c:740
 msgid "Generic daemon error"
 msgstr "Yleinen palvelun virhe"
 
-#: ../src/gpk-common.c:741
+#: ../src/gpk-common.c:743
 msgid "The package list cache is being rebuilt"
 msgstr "Pakettiluettelovälimuisti luodaan uudelleen"
 
-#: ../src/gpk-common.c:744
+#: ../src/gpk-common.c:746
 msgid "An untrusted package was installed"
 msgstr "Asennettiin paketti, johon ei luoteta"
 
-#: ../src/gpk-common.c:747
+#: ../src/gpk-common.c:749
 msgid "A newer package exists"
 msgstr "Uudempi paketti on olemassa"
 
-#: ../src/gpk-common.c:750
+#: ../src/gpk-common.c:752
 msgid "Could not find package"
 msgstr "Pakettia ei löytynyt"
 
-#: ../src/gpk-common.c:753
+#: ../src/gpk-common.c:755
 msgid "Configuration files were changed"
 msgstr "Asetustiedostoja muutettiin"
 
-#: ../src/gpk-common.c:756
+#: ../src/gpk-common.c:758
 msgid "Package is already installed"
 msgstr "Paketti on jo asennettu"
 
-#: ../src/gpk-common.c:774
+#: ../src/gpk-common.c:776
 msgid "Unknown state"
 msgstr "Tuntematon tila"
 
-#: ../src/gpk-common.c:777
+#: ../src/gpk-common.c:779
 msgid "Waiting for service to start"
 msgstr "Odotetaan palvelun käynnistymistä"
 
-#: ../src/gpk-common.c:780
+#: ../src/gpk-common.c:782
 msgid "Waiting for other tasks"
 msgstr "Odotetaan muiden tehtävien valmistumista"
 
-#: ../src/gpk-common.c:783
+#: ../src/gpk-common.c:785
 msgid "Running task"
 msgstr "Suoritetaan tehtävää"
 
-#: ../src/gpk-common.c:786
+#: ../src/gpk-common.c:788
 msgid "Querying"
 msgstr "Kysellään"
 
-#: ../src/gpk-common.c:789
+#: ../src/gpk-common.c:791
 msgid "Getting information"
 msgstr "Haetaan tietoja"
 
-#: ../src/gpk-common.c:792 ../src/gpk-common.c:960 ../src/gpk-common.c:1045
+#: ../src/gpk-common.c:794 ../src/gpk-common.c:964 ../src/gpk-common.c:1049
 msgid "Removing"
 msgstr "Poistetaan"
 
-#: ../src/gpk-common.c:795 ../src/gpk-common.c:951
+#: ../src/gpk-common.c:797 ../src/gpk-common.c:955
 msgid "Downloading"
 msgstr "Ladataan"
 
-#: ../src/gpk-common.c:798 ../src/gpk-common.c:957 ../src/gpk-common.c:1048
+#: ../src/gpk-common.c:800 ../src/gpk-common.c:961 ../src/gpk-common.c:1052
 msgid "Installing"
 msgstr "Asennetaan"
 
-#: ../src/gpk-common.c:801
+#: ../src/gpk-common.c:803
 msgid "Refreshing software list"
 msgstr "Virkistetään ohjelmaluetteloa"
 
-#: ../src/gpk-common.c:804 ../src/gpk-common.c:954
+#: ../src/gpk-common.c:806 ../src/gpk-common.c:958
 msgid "Updating"
 msgstr "Päivitetään"
 
-#: ../src/gpk-common.c:807 ../src/gpk-common.c:963
+#: ../src/gpk-common.c:809 ../src/gpk-common.c:967
 msgid "Cleaning up"
 msgstr "Siivotaan"
 
-#: ../src/gpk-common.c:810 ../src/gpk-common.c:966
+#: ../src/gpk-common.c:812 ../src/gpk-common.c:970
 msgid "Obsoleting"
 msgstr "Vanhennetaan"
 
-#: ../src/gpk-common.c:813
+#: ../src/gpk-common.c:815
 msgid "Resolving dependencies"
 msgstr "Ratkaistaan riippuvuuksia"
 
-#: ../src/gpk-common.c:816
+#: ../src/gpk-common.c:818
 msgid "Checking signatures"
 msgstr "Tarkistetaan allekirjoituksia"
 
 # TODO tarkista, MOT sanoo ”takaisinkierto”
-#: ../src/gpk-common.c:819 ../src/gpk-common.c:1066
+#: ../src/gpk-common.c:821 ../src/gpk-common.c:1070
 msgid "Rolling back"
 msgstr "Peruutetaan"
 
-#: ../src/gpk-common.c:822
+#: ../src/gpk-common.c:824
 msgid "Testing changes"
 msgstr "Testataan muutoksia"
 
-#: ../src/gpk-common.c:825
+#: ../src/gpk-common.c:827
 msgid "Committing changes"
 msgstr "Toteutetaan muutoksia"
 
-#: ../src/gpk-common.c:828
+#: ../src/gpk-common.c:830
 msgid "Requesting data"
 msgstr "Pyydetään dataa"
 
-#: ../src/gpk-common.c:831
+#: ../src/gpk-common.c:833
 msgid "Finished"
 msgstr "Valmis"
 
-#: ../src/gpk-common.c:834
+#: ../src/gpk-common.c:836
 msgid "Cancelling"
 msgstr "Peruutetaan"
 
-#: ../src/gpk-common.c:837
+#: ../src/gpk-common.c:839
 msgid "Downloading repository information"
 msgstr "Ladataan asennuslähdetietoja"
 
-#: ../src/gpk-common.c:840
+#: ../src/gpk-common.c:842
 msgid "Downloading list of packages"
 msgstr "Ladataan pakettiluetteloa"
 
-#: ../src/gpk-common.c:843
+#: ../src/gpk-common.c:845
 msgid "Downloading file lists"
 msgstr "Ladataan tiedostoluetteloita"
 
-#: ../src/gpk-common.c:846
+#: ../src/gpk-common.c:848
 msgid "Downloading lists of changes"
 msgstr "Ladataan muutosluetteloja"
 
-#: ../src/gpk-common.c:849
+#: ../src/gpk-common.c:851
 msgid "Downloading groups"
 msgstr "Ladataan ryhmiä"
 
-#: ../src/gpk-common.c:852
+#: ../src/gpk-common.c:854
 msgid "Downloading update information"
 msgstr "Ladataan päivitystietoja"
 
-#: ../src/gpk-common.c:855
+#: ../src/gpk-common.c:857
 msgid "Repackaging files"
 msgstr "Paketoidaan tiedostoja uudelleen"
 
-#: ../src/gpk-common.c:858
+#: ../src/gpk-common.c:860
 msgid "Loading cache"
 msgstr "Ladataan välimuistia"
 
-#: ../src/gpk-common.c:875
+#: ../src/gpk-common.c:877
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
 msgstr[0] "%i vähäpätöinen päivitys"
 msgstr[1] "%i vähäpätöistä päivitystä"
 
-#: ../src/gpk-common.c:878
+#: ../src/gpk-common.c:880
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
 msgstr[0] "%i päivitys"
 msgstr[1] "%i päivitystä"
 
-#: ../src/gpk-common.c:881
+#: ../src/gpk-common.c:883
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
 msgstr[0] "%i tärkeä päivitys"
 msgstr[1] "%i tärkeää päivitystä"
 
-#: ../src/gpk-common.c:884
+#: ../src/gpk-common.c:886
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
 msgstr[0] "%i turvallisuuspäivitys"
 msgstr[1] "%i turvallisuuspäivitystä"
 
-#: ../src/gpk-common.c:887
+#: ../src/gpk-common.c:889
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2169,434 +2273,434 @@ msgstr[0] "%i ohjelmavirheitä korjaava päivitys"
 msgstr[1] "%i ohjelmavirheitä korjaavaa päivitystä"
 
 # parempi käännös?
-#: ../src/gpk-common.c:890
+#: ../src/gpk-common.c:892
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
 msgstr[0] "%i kehittävä päivitys"
 msgstr[1] "%i kehittävää päivitystä"
 
-#: ../src/gpk-common.c:893
+#: ../src/gpk-common.c:895
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
 msgstr[0] "%i estetty päivitys"
 msgstr[1] "%i estettyä päivitystä"
 
-#: ../src/gpk-common.c:910
+#: ../src/gpk-common.c:912
 msgid "Trivial update"
 msgstr "Vähäpätöinen päivitys"
 
 # Voitanee olettaa, että kyse ei ole verbistä (vrt. edellinen ja seuraava
 # msg)
-#: ../src/gpk-common.c:913
+#: ../src/gpk-common.c:915
 msgid "Update"
 msgstr "Päivitys"
 
-#: ../src/gpk-common.c:916
+#: ../src/gpk-common.c:918
 msgid "Important update"
 msgstr "Tärkeä päivitys"
 
-#: ../src/gpk-common.c:919
+#: ../src/gpk-common.c:921
 msgid "Security update"
 msgstr "Turvallisuuspäivitys"
 
-#: ../src/gpk-common.c:922
+#: ../src/gpk-common.c:924
 msgid "Bug fix update"
 msgstr "Ohjelmavirheen korjaava päivitys"
 
-#: ../src/gpk-common.c:925
+#: ../src/gpk-common.c:927
 msgid "Enhancement update"
 msgstr "Kehittävä päivitys"
 
-#: ../src/gpk-common.c:928
+#: ../src/gpk-common.c:930
 msgid "Blocked update"
 msgstr "Estetty päivitys"
 
-#: ../src/gpk-common.c:934
+#: ../src/gpk-common.c:938
 msgid "Available"
 msgstr "Saatavilla"
 
-#: ../src/gpk-common.c:983
+#: ../src/gpk-common.c:987
 msgid "Downloaded"
 msgstr "Ladattu"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-common.c:986 ../src/gpk-update-viewer.c:912
+#: ../src/gpk-common.c:990 ../src/gpk-update-viewer.c:913
 msgid "Updated"
 msgstr "Päivitetty"
 
-#: ../src/gpk-common.c:992
+#: ../src/gpk-common.c:996
 msgid "Removed"
 msgstr "Poistettu"
 
-#: ../src/gpk-common.c:995
+#: ../src/gpk-common.c:999
 msgid "Cleaned up"
 msgstr "Siivottu"
 
 # voisi olla parempikin
-#: ../src/gpk-common.c:998
+#: ../src/gpk-common.c:1002
 msgid "Obsoleted"
 msgstr "Vanhennettu"
 
-#: ../src/gpk-common.c:1015 ../src/gpk-common.c:1121
+#: ../src/gpk-common.c:1019 ../src/gpk-common.c:1125
 msgid "Unknown role type"
 msgstr "Tuntematon roolityyppi"
 
-#: ../src/gpk-common.c:1018
+#: ../src/gpk-common.c:1022
 msgid "Getting dependencies"
 msgstr "Haetaan riippuvuuksia"
 
-#: ../src/gpk-common.c:1021
+#: ../src/gpk-common.c:1025
 msgid "Getting update detail"
 msgstr "Haetaan päivitystietoja"
 
-#: ../src/gpk-common.c:1024
+#: ../src/gpk-common.c:1028
 msgid "Getting details"
 msgstr "Haetaan tietoja"
 
-#: ../src/gpk-common.c:1027
+#: ../src/gpk-common.c:1031
 msgid "Getting requires"
 msgstr "Haetaan vaatimuksia"
 
-#: ../src/gpk-common.c:1030 ../src/gpk-update-viewer.c:1449
+#: ../src/gpk-common.c:1034 ../src/gpk-update-viewer.c:1450
 msgid "Getting updates"
 msgstr "Haetaan päivityksiä"
 
-#: ../src/gpk-common.c:1033
+#: ../src/gpk-common.c:1037
 msgid "Searching details"
 msgstr "Etsitään tietoja"
 
-#: ../src/gpk-common.c:1036
+#: ../src/gpk-common.c:1040
 msgid "Searching for file"
 msgstr "Etsitään tiedostoa"
 
-#: ../src/gpk-common.c:1039
+#: ../src/gpk-common.c:1043
 msgid "Searching groups"
 msgstr "Etsitään ryhmiä"
 
-#: ../src/gpk-common.c:1042
+#: ../src/gpk-common.c:1046
 msgid "Searching for package name"
 msgstr "Etsitään pakettinimeä"
 
-#: ../src/gpk-common.c:1051
+#: ../src/gpk-common.c:1055
 msgid "Installing file"
 msgstr "Asennetaan tiedostoa"
 
-#: ../src/gpk-common.c:1054 ../src/gpk-update-viewer.c:1452
+#: ../src/gpk-common.c:1058 ../src/gpk-update-viewer.c:1453
 msgid "Refreshing package cache"
 msgstr "Virkistetään pakettivälimuistia"
 
-#: ../src/gpk-common.c:1057
+#: ../src/gpk-common.c:1061
 msgid "Updating packages"
 msgstr "Päivitetään paketteja"
 
-#: ../src/gpk-common.c:1060
+#: ../src/gpk-common.c:1064
 msgid "Updating system"
 msgstr "Päivitetään järjestelmää"
 
-#: ../src/gpk-common.c:1063
+#: ../src/gpk-common.c:1067
 msgid "Canceling"
 msgstr "Perutaan"
 
-#: ../src/gpk-common.c:1069
+#: ../src/gpk-common.c:1073
 msgid "Getting list of repositories"
 msgstr "Haetaan asennuslähdeluetteloa"
 
-#: ../src/gpk-common.c:1072
+#: ../src/gpk-common.c:1076
 msgid "Enabling repository"
 msgstr "Otetaan asennuslähde käyttöön"
 
-#: ../src/gpk-common.c:1075
+#: ../src/gpk-common.c:1079
 msgid "Setting repository data"
 msgstr "Asetetaan asennuslähteen tietoja"
 
 # mitä, riippuvuuksiako?
-#: ../src/gpk-common.c:1078
+#: ../src/gpk-common.c:1082
 msgid "Resolving"
 msgstr "Ratkaistaan"
 
-#: ../src/gpk-common.c:1081
+#: ../src/gpk-common.c:1085
 msgid "Getting file list"
 msgstr "Haetaan tiedostoluetteloa"
 
 # tarkista
-#: ../src/gpk-common.c:1084
+#: ../src/gpk-common.c:1088
 msgid "Getting what provides"
 msgstr "Haetaan tarjoajia"
 
-#: ../src/gpk-common.c:1087
+#: ../src/gpk-common.c:1091
 msgid "Service pack"
 msgstr "Palvelupaketti"
 
-#: ../src/gpk-common.c:1090
+#: ../src/gpk-common.c:1094
 msgid "Installing signature"
 msgstr "Asennetaan allekirjoitusta"
 
-#: ../src/gpk-common.c:1093
+#: ../src/gpk-common.c:1097
 msgid "Getting package lists"
 msgstr "Haetaan pakettiluetteloita"
 
-#: ../src/gpk-common.c:1096
+#: ../src/gpk-common.c:1100
 msgid "Accepting EULA"
 msgstr "Hyväksytään käyttöoikeussopimusta"
 
-#: ../src/gpk-common.c:1099
+#: ../src/gpk-common.c:1103
 msgid "Downloading packages"
 msgstr "Ladataan paketteja"
 
-#: ../src/gpk-common.c:1124
+#: ../src/gpk-common.c:1128
 msgid "Got dependencies"
 msgstr "Saatiin riippuvuudet"
 
-#: ../src/gpk-common.c:1127
+#: ../src/gpk-common.c:1131
 msgid "Got update detail"
 msgstr "Saatiin päivitystiedot"
 
-#: ../src/gpk-common.c:1130 ../src/gpk-common.c:1139
+#: ../src/gpk-common.c:1134 ../src/gpk-common.c:1143
 msgid "Got details"
 msgstr "Saatiin tiedot"
 
-#: ../src/gpk-common.c:1133
+#: ../src/gpk-common.c:1137
 msgid "Got requires"
 msgstr "Saatiin vaatimukset"
 
-#: ../src/gpk-common.c:1136
+#: ../src/gpk-common.c:1140
 msgid "Got updates"
 msgstr "Saatiin päivitykset"
 
-#: ../src/gpk-common.c:1142
+#: ../src/gpk-common.c:1146
 msgid "Searched for file"
 msgstr "Etsittiin tiedostoa"
 
-#: ../src/gpk-common.c:1145
+#: ../src/gpk-common.c:1149
 msgid "Searched groups"
 msgstr "Etsittiin ryhmiä"
 
-#: ../src/gpk-common.c:1148
+#: ../src/gpk-common.c:1152
 msgid "Searched for package name"
 msgstr "Etsittiin pakettinimeä"
 
-#: ../src/gpk-common.c:1151
+#: ../src/gpk-common.c:1155
 msgid "Removed package"
 msgstr "Poistettiin paketti"
 
-#: ../src/gpk-common.c:1154
+#: ../src/gpk-common.c:1158
 msgid "Installed package"
 msgstr "Asennettiin paketti"
 
-#: ../src/gpk-common.c:1157
+#: ../src/gpk-common.c:1161
 msgid "Installed local file"
 msgstr "Asennettiin paikallinen tiedosto"
 
-#: ../src/gpk-common.c:1160
+#: ../src/gpk-common.c:1164
 msgid "Updating from service pack"
 msgstr "Päivitetään palvelupaketista"
 
-#: ../src/gpk-common.c:1163
+#: ../src/gpk-common.c:1167
 msgid "Refreshed package cache"
 msgstr "Virkistettiin pakettivälimuisti"
 
-#: ../src/gpk-common.c:1166
+#: ../src/gpk-common.c:1170
 msgid "Updated package"
 msgstr "Päivitettiin paketti"
 
-#: ../src/gpk-common.c:1169
+#: ../src/gpk-common.c:1173
 msgid "Updated system"
 msgstr "Päivitettiin järjestelmä"
 
-#: ../src/gpk-common.c:1172
+#: ../src/gpk-common.c:1176
 msgid "Canceled"
 msgstr "Peruttiin"
 
-#: ../src/gpk-common.c:1175
+#: ../src/gpk-common.c:1179
 msgid "Rolled back"
 msgstr "Peruutettiin"
 
-#: ../src/gpk-common.c:1178
+#: ../src/gpk-common.c:1182
 msgid "Got list of repositories"
 msgstr "Saatiin asennuslähdeluettelo"
 
-#: ../src/gpk-common.c:1181
+#: ../src/gpk-common.c:1185
 msgid "Enabled repository"
 msgstr "Otettiin asennuslähde käyttöön"
 
-#: ../src/gpk-common.c:1184
+#: ../src/gpk-common.c:1188
 msgid "Set repository data"
 msgstr "Aseta asennuslähdetiedot"
 
-#: ../src/gpk-common.c:1187
+#: ../src/gpk-common.c:1191
 msgid "Resolved"
 msgstr "Ratkaistu"
 
-#: ../src/gpk-common.c:1190
+#: ../src/gpk-common.c:1194
 msgid "Got file list"
 msgstr "Saatiin tiedostoluettelo"
 
 # tarkista
-#: ../src/gpk-common.c:1193
+#: ../src/gpk-common.c:1197
 msgid "Got what provides"
 msgstr "Saatiin tarjoajat"
 
-#: ../src/gpk-common.c:1196
+#: ../src/gpk-common.c:1200
 msgid "Installed signature"
 msgstr "Asennetut allekirjoitukset"
 
-#: ../src/gpk-common.c:1199
+#: ../src/gpk-common.c:1203
 msgid "Got package lists"
 msgstr "Saatiin pakettiluettelot"
 
-#: ../src/gpk-common.c:1202
+#: ../src/gpk-common.c:1206
 msgid "Accepted EULA"
 msgstr "Hyväksyttiin käyttöoikeussopimus"
 
-#: ../src/gpk-common.c:1205
+#: ../src/gpk-common.c:1209
 msgid "Downloaded packages"
 msgstr "Ladatut paketit"
 
-#: ../src/gpk-common.c:1208
+#: ../src/gpk-common.c:1212
 msgid "Got distribution upgrades"
 msgstr "Saatiin jakelupäivityksiä"
 
-#: ../src/gpk-common.c:1225
+#: ../src/gpk-common.c:1229
 msgid "Accessibility"
 msgstr "Esteettömyys"
 
-#: ../src/gpk-common.c:1228
+#: ../src/gpk-common.c:1232
 msgid "Accessories"
 msgstr "Apuohjelmat"
 
-#: ../src/gpk-common.c:1231
+#: ../src/gpk-common.c:1235
 msgid "Education"
 msgstr "Koulutus"
 
-#: ../src/gpk-common.c:1234
+#: ../src/gpk-common.c:1238
 msgid "Games"
 msgstr "Pelit"
 
-#: ../src/gpk-common.c:1237
+#: ../src/gpk-common.c:1241
 msgid "Graphics"
 msgstr "Grafiikka"
 
-#: ../src/gpk-common.c:1240
+#: ../src/gpk-common.c:1244
 msgid "Internet"
 msgstr "Internet"
 
-#: ../src/gpk-common.c:1243
+#: ../src/gpk-common.c:1247
 msgid "Office"
 msgstr "Toimisto"
 
-#: ../src/gpk-common.c:1246
+#: ../src/gpk-common.c:1250
 msgid "Other"
 msgstr "Muu"
 
-#: ../src/gpk-common.c:1249
+#: ../src/gpk-common.c:1253
 msgid "Programming"
 msgstr "Ohjelmointi"
 
-#: ../src/gpk-common.c:1252
+#: ../src/gpk-common.c:1256
 msgid "Multimedia"
 msgstr "Multimedia"
 
-#: ../src/gpk-common.c:1255
+#: ../src/gpk-common.c:1259
 msgid "System"
 msgstr "Järjestelmä"
 
-#: ../src/gpk-common.c:1258
+#: ../src/gpk-common.c:1262
 msgid "GNOME desktop"
 msgstr "Gnome-työpöytä"
 
-#: ../src/gpk-common.c:1261
+#: ../src/gpk-common.c:1265
 msgid "KDE desktop"
 msgstr "KDE-työpöytä"
 
-#: ../src/gpk-common.c:1264
+#: ../src/gpk-common.c:1268
 msgid "XFCE desktop"
 msgstr "XFCE-työpöytä"
 
-#: ../src/gpk-common.c:1267
+#: ../src/gpk-common.c:1271
 msgid "Other desktops"
 msgstr "Muut työpöydät"
 
-#: ../src/gpk-common.c:1270
+#: ../src/gpk-common.c:1274
 msgid "Publishing"
 msgstr "Julkaisu"
 
-#: ../src/gpk-common.c:1273
+#: ../src/gpk-common.c:1277
 msgid "Servers"
 msgstr "Palvelimet"
 
-#: ../src/gpk-common.c:1276
+#: ../src/gpk-common.c:1280
 msgid "Fonts"
 msgstr "Kirjasimet"
 
-#: ../src/gpk-common.c:1279
+#: ../src/gpk-common.c:1283
 msgid "Admin tools"
 msgstr "Ylläpitotyökalut"
 
-#: ../src/gpk-common.c:1282
+#: ../src/gpk-common.c:1286
 msgid "Legacy"
 msgstr "Vanhojen ohjelmistojen tuki"
 
-#: ../src/gpk-common.c:1285
+#: ../src/gpk-common.c:1289
 msgid "Localization"
 msgstr "Kotoistus"
 
-#: ../src/gpk-common.c:1288
+#: ../src/gpk-common.c:1292
 msgid "Virtualization"
 msgstr "Virtualisointi"
 
-#: ../src/gpk-common.c:1291
+#: ../src/gpk-common.c:1295
 msgid "Security"
 msgstr "Turvallisuus"
 
-#: ../src/gpk-common.c:1294
+#: ../src/gpk-common.c:1298
 msgid "Power management"
 msgstr "Virranhallinta"
 
-#: ../src/gpk-common.c:1297
+#: ../src/gpk-common.c:1301
 msgid "Communication"
 msgstr "Yhteydet"
 
-#: ../src/gpk-common.c:1300
+#: ../src/gpk-common.c:1304
 msgid "Network"
 msgstr "Verkko"
 
-#: ../src/gpk-common.c:1303
+#: ../src/gpk-common.c:1307
 msgid "Maps"
 msgstr "Kartat"
 
 # Vai pelkästään luonnontiede?
-#: ../src/gpk-common.c:1309
+#: ../src/gpk-common.c:1313
 msgid "Science"
 msgstr "Tiede"
 
-#: ../src/gpk-common.c:1312
+#: ../src/gpk-common.c:1316
 msgid "Documentation"
 msgstr "Dokumentaatio"
 
-#: ../src/gpk-common.c:1315
+#: ../src/gpk-common.c:1319
 msgid "Electronics"
 msgstr "Elektroniikka"
 
-#: ../src/gpk-common.c:1318
+#: ../src/gpk-common.c:1322
 msgid "Package collections"
 msgstr "Pakettikokoelmat"
 
-#: ../src/gpk-common.c:1321
+#: ../src/gpk-common.c:1325
 msgid "Unknown group"
 msgstr "Tuntematon ryhmä"
 
-#: ../src/gpk-common.c:1396
+#: ../src/gpk-common.c:1400
 msgid "This application is running as a privileged user"
 msgstr "Tämä ohjelma suoritetaan etuoikeutettuna käyttäjänä"
 
-#: ../src/gpk-common.c:1398
+#: ../src/gpk-common.c:1402
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s suoritetaan etuoikeutettuna käyttäjänä"
 
-#: ../src/gpk-common.c:1401
+#: ../src/gpk-common.c:1404
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -2605,7 +2709,7 @@ msgstr ""
 "välttää turvallisuussyistä."
 
 # paremmin?
-#: ../src/gpk-common.c:1402
+#: ../src/gpk-common.c:1405
 msgid ""
 "PackageKit applications are security sensitive and therefore this "
 "application will now close."
@@ -2613,7 +2717,7 @@ msgstr ""
 "PackageKit-ohjelmat liittyvät järjestelmän turvallisuuteen ja siksi tämä "
 "ohjelma sulkeutuu nyt."
 
-#: ../src/gpk-common.c:1522 ../src/gpk-common.c:1657
+#: ../src/gpk-common.c:1522 ../src/gpk-common.c:1656
 #, c-format
 msgid "Now"
 msgstr "Nyt"
@@ -2666,63 +2770,63 @@ msgid_plural "hours"
 msgstr[0] "tunti"
 msgstr[1] "tuntia"
 
-#: ../src/gpk-common.c:1617
+#: ../src/gpk-common.c:1616
 #, c-format
 msgid "%s and %s"
 msgstr "%s ja %s"
 
-#: ../src/gpk-common.c:1620
+#: ../src/gpk-common.c:1619
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s ja %s"
 
-#: ../src/gpk-common.c:1623
+#: ../src/gpk-common.c:1622
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s ja %s"
 
-#: ../src/gpk-common.c:1627
+#: ../src/gpk-common.c:1626
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ja %s"
 
-#: ../src/gpk-common.c:1667
+#: ../src/gpk-common.c:1666
 msgid "1 second"
 msgstr "1 sekunti"
 
-#: ../src/gpk-common.c:1677
+#: ../src/gpk-common.c:1676
 msgid "1 minute"
 msgstr "1 minuutti"
 
-#: ../src/gpk-common.c:1687
+#: ../src/gpk-common.c:1686
 msgid "1 hour"
 msgstr "1 tunti"
 
-#: ../src/gpk-common.c:1697
+#: ../src/gpk-common.c:1696
 msgid "30 seconds"
 msgstr "30 sekuntia"
 
-#: ../src/gpk-common.c:1707
+#: ../src/gpk-common.c:1706
 msgid "30 minutes"
 msgstr "30 minuuttia"
 
-#: ../src/gpk-common.c:1717
+#: ../src/gpk-common.c:1716
 msgid "30 minutes 1 second"
 msgstr "30 minuuttia 1 sekunti"
 
-#: ../src/gpk-common.c:1727
+#: ../src/gpk-common.c:1726
 msgid "30 minutes 10 seconds"
 msgstr "30 minuuttia 10 sekuntia"
 
-#: ../src/gpk-common.c:1739
+#: ../src/gpk-common.c:1738
 msgid "0 bytes"
 msgstr "0 tavua"
 
-#: ../src/gpk-common.c:1749
+#: ../src/gpk-common.c:1748
 msgid "512 bytes"
 msgstr "512 tavua"
 
-#: ../src/gpk-common.c:1759
+#: ../src/gpk-common.c:1758
 msgid "256.2 MB"
 msgstr "256,2 MB"
 
@@ -2805,11 +2909,6 @@ msgstr "Paikallisen tiedoston asennus epäonnistui"
 #: ../src/gpk-install-mime-type.c:63 ../src/gpk-install-mime-type.c:65
 msgid "PackageKit MimeType Installer"
 msgstr "PackageKitin MIME-tyyppiasennin"
-
-#. are we running privileged
-#: ../src/gpk-install-mime-type.c:74
-msgid "Mime type installer"
-msgstr "MIME-tyyppiasennin"
 
 #: ../src/gpk-install-mime-type.c:80 ../src/gpk-install-mime-type.c:85
 msgid "Failed to install file handler"
@@ -2959,138 +3058,138 @@ msgstr "Ei päivityksiä valittuna"
 msgid "No updates are selected"
 msgstr "Yhtään päivitystä ei ole valittu"
 
-#: ../src/gpk-update-viewer.c:345
+#: ../src/gpk-update-viewer.c:346
 msgid "Getting Description..."
 msgstr "Haetaan kuvausta..."
 
-#: ../src/gpk-update-viewer.c:496
+#: ../src/gpk-update-viewer.c:497
 msgid "There are no updates available!"
 msgstr "Yhtään päivitystä ei ole saatavilla!"
 
 #. translators: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:891
+#: ../src/gpk-update-viewer.c:892
 msgid "Type"
 msgstr "Tyyppi"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:897
+#: ../src/gpk-update-viewer.c:898
 msgid "State"
 msgstr "Tila"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:904
+#: ../src/gpk-update-viewer.c:905
 msgid "Issued"
 msgstr "Julkaistu"
 
 #. translators: this is the package version
-#: ../src/gpk-update-viewer.c:918
+#: ../src/gpk-update-viewer.c:919
 msgid "New version"
 msgstr "Uusi versio"
 
 #. translators: this is a list of packages that are updated
-#: ../src/gpk-update-viewer.c:925
+#: ../src/gpk-update-viewer.c:926
 msgid "Updates"
 msgstr "Päivitykset"
 
 # tarkista
 #. translators: this is a list of packages that are obsoleted
-#: ../src/gpk-update-viewer.c:933
+#: ../src/gpk-update-viewer.c:934
 msgid "Obsoletes"
 msgstr "Vanhentuvat"
 
 #. translators: this is the repository the package has come from
-#: ../src/gpk-update-viewer.c:938
+#: ../src/gpk-update-viewer.c:939
 msgid "Repository"
 msgstr "Asennuslähde"
 
 #. translators: this is the package description
-#: ../src/gpk-update-viewer.c:944
+#: ../src/gpk-update-viewer.c:945
 msgid "Description"
 msgstr "Kuvaus"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:951
+#: ../src/gpk-update-viewer.c:952
 msgid "Changes"
 msgstr "Muutokset"
 
 #. translators: this is a list of vendor URLs
-#: ../src/gpk-update-viewer.c:957
+#: ../src/gpk-update-viewer.c:958
 msgid "Vendor"
 msgstr "Valmistaja"
 
 #. translators: this is a list of bugzilla URLs
-#: ../src/gpk-update-viewer.c:961
+#: ../src/gpk-update-viewer.c:962
 msgid "Bugzilla"
 msgstr "Bugzilla"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:965
+#: ../src/gpk-update-viewer.c:966
 msgid "CVE"
 msgstr "CVE"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:973
+#: ../src/gpk-update-viewer.c:974
 msgid "Notice"
 msgstr "Ilmoitus"
 
-#: ../src/gpk-update-viewer.c:1034
+#: ../src/gpk-update-viewer.c:1035
 msgid "Severity"
 msgstr "Vakavuus"
 
-#: ../src/gpk-update-viewer.c:1041
+#: ../src/gpk-update-viewer.c:1042
 msgid "Software"
 msgstr "Ohjelmisto"
 
-#: ../src/gpk-update-viewer.c:1200
+#: ../src/gpk-update-viewer.c:1201
 msgid "Less than a minute ago"
 msgstr "Alle minuutti sitten"
 
-#: ../src/gpk-update-viewer.c:1202
+#: ../src/gpk-update-viewer.c:1203
 msgid "Less than an hour ago"
 msgstr "Alle tunti sitten"
 
-#: ../src/gpk-update-viewer.c:1204
+#: ../src/gpk-update-viewer.c:1205
 msgid "A few hours ago"
 msgstr "Muutama tunti sitten"
 
-#: ../src/gpk-update-viewer.c:1206
+#: ../src/gpk-update-viewer.c:1207
 msgid "A few days ago"
 msgstr "Muutama päivä sitten"
 
-#: ../src/gpk-update-viewer.c:1208
+#: ../src/gpk-update-viewer.c:1209
 msgid "Over a week ago"
 msgstr "Yli viikko sitten"
 
-#: ../src/gpk-update-viewer.c:1313
+#: ../src/gpk-update-viewer.c:1314
 msgid "Some updates were not installed"
 msgstr "Joitakin päivityksiä ei asennettu"
 
-#: ../src/gpk-update-viewer.c:1322
+#: ../src/gpk-update-viewer.c:1323
 msgid "System update completed"
 msgstr "Järjestelmän päivitys on valmistunut"
 
-#: ../src/gpk-update-viewer.c:1446
+#: ../src/gpk-update-viewer.c:1447
 msgid "A system update is already in progress"
 msgstr "Järjestelmän päivitys on jo meneillään"
 
-#: ../src/gpk-update-viewer.c:1586
+#: ../src/gpk-update-viewer.c:1587
 msgid "Select all"
 msgstr "Valitse kaikki"
 
-#: ../src/gpk-update-viewer.c:1593
+#: ../src/gpk-update-viewer.c:1594
 msgid "Unselect all"
 msgstr "Poista valinta kaikista"
 
 # TODO check
-#: ../src/gpk-update-viewer.c:1599
+#: ../src/gpk-update-viewer.c:1600
 msgid "Ignore this package"
 msgstr "Jätä tämä paketti huomiotta"
 
-#: ../src/gpk-update-viewer.c:1735
+#: ../src/gpk-update-viewer.c:1736
 msgid "Refresh"
 msgstr "Virkistä"
 
-#: ../src/gpk-update-viewer.c:1736
+#: ../src/gpk-update-viewer.c:1737
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
@@ -3098,79 +3197,97 @@ msgstr ""
 "Virkistämistä ei yleensä vaadita, mutta se hakee uusimmat sovellus- ja "
 "päivitysluettelot"
 
-#: ../src/gpk-update-viewer.c:1744
+#: ../src/gpk-update-viewer.c:1745
 msgid "_Restart computer now"
 msgstr "_Käynnistä tietokone uudelleen nyt"
 
-#: ../src/gpk-update-viewer.c:1759
+#: ../src/gpk-update-viewer.c:1760
 msgid "_Apply Updates"
 msgstr "_Asenna päivitykset"
 
-#: ../src/gpk-update-viewer.c:1760
+#: ../src/gpk-update-viewer.c:1761
 msgid "Apply the selected updates"
 msgstr "Asenna kaikki valitut päivitykset"
 
-#: ../src/gpk-update-viewer.c:1773
+#: ../src/gpk-update-viewer.c:1774
 msgid "_Update System"
 msgstr "_Päivitä järjestelmä"
 
-#: ../src/gpk-update-viewer.c:1774
+#: ../src/gpk-update-viewer.c:1775
 msgid "Apply all updates"
 msgstr "Asenna kaikki päivitykset"
 
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1949
 msgid "Review the update list"
 msgstr "Katso päivitysluettelo"
 
-#: ../src/gpk-update-viewer.c:1953 ../src/gpk-update-viewer.c:1958
+#: ../src/gpk-update-viewer.c:1954 ../src/gpk-update-viewer.c:1959
 msgid "Back to overview"
 msgstr "Takaisin yleiskatsaukseen"
 
-#: ../src/gpk-watch.c:141
+#: ../src/gpk-watch.c:140
 #, c-format
 msgid "(%i more tasks)"
 msgstr "(%i tehtävää jäljellä)"
 
-#: ../src/gpk-watch.c:275
+#: ../src/gpk-watch.c:274
 msgid "Error details"
 msgstr "Virheen tiedot"
 
-#: ../src/gpk-watch.c:355
+#: ../src/gpk-watch.c:354
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr "Paketti ”%s” on poistettu"
 
-#: ../src/gpk-watch.c:357
+#: ../src/gpk-watch.c:356
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr "Paketti ”%s” on asennettu"
 
 #. do the bubble
-#: ../src/gpk-watch.c:368
+#: ../src/gpk-watch.c:367
 msgid "Task completed"
 msgstr "Tehtävä on valmis"
 
-#: ../src/gpk-watch.c:439
+#: ../src/gpk-watch.c:438
 msgid "Show details"
 msgstr "Näytä yksityiskohtaiset tiedot"
 
-#: ../src/gpk-watch.c:525
+#: ../src/gpk-watch.c:524
 msgid "Internal error"
 msgstr "Sisäinen virhe"
 
 #. don't know if we want this
-#: ../src/gpk-watch.c:777
+#: ../src/gpk-watch.c:776
 msgid "_Refresh Software List"
 msgstr "_Virkistä ohjelmistoluettelo"
 
 #. hide this option
-#: ../src/gpk-watch.c:828
+#: ../src/gpk-watch.c:827
 msgid "_Hide this icon"
 msgstr "_Piilota tämä kuvake"
 
-#: ../src/gpk-watch.c:1124
+#: ../src/gpk-watch.c:1125
 msgid "_Restart computer"
 msgstr "_Käynnistä tietokone uudelleen"
+
+#~ msgid "<b>Installation Complete</b>"
+#~ msgstr "<b>Asennus on valmistunut</b>"
+
+#~ msgid "<b>More details:</b>"
+#~ msgstr "<b>Lisää tietoja:</b>"
+
+#~ msgid "Install packages"
+#~ msgstr "Asennetaan paketteja"
+
+#~ msgid "Additional packages were not downloaded"
+#~ msgstr "Lisäpaketteja ei ladattu"
+
+#~ msgid "The catalog was not installed"
+#~ msgstr "Katalogia ei asennettu"
+
+#~ msgid "The catalogs were not installed"
+#~ msgstr "Katalogeja ei asennettu"
 
 #~ msgid "PackageKit notice"
 #~ msgstr "PackageKit-ilmoitus"
@@ -3216,9 +3333,6 @@ msgstr "_Käynnistä tietokone uudelleen"
 
 #~ msgid "View History"
 #~ msgstr "Näytä historia"
-
-#~ msgid "gtk-cancel"
-#~ msgstr "gtk-cancel"
 
 #~ msgid "gtk-help"
 #~ msgstr "gtk-help"
@@ -3293,9 +3407,6 @@ msgstr "_Käynnistä tietokone uudelleen"
 
 #~ msgid "Do not show me this again"
 #~ msgstr "Älä näytä tätä  uudelleen"
-
-#~ msgid "The following packages have to be removed:"
-#~ msgstr "Seuraavat paketit on poistettava:"
 
 #~ msgid "%i other packages depends on these packages"
 #~ msgstr "%i muuta pakettia riippuu näistä paketeista"
@@ -3624,9 +3735,6 @@ msgstr "_Käynnistä tietokone uudelleen"
 #~ "mutta TAKUUTA EI OLE; ei edes KAUPALLISESTI HYVÄKSYTTÄVÄSTÄ LAADUSTA\n"
 #~ "tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN. Katso lisätietoja GNU\n"
 #~ "General Public Licensestä."
-
-#~ msgid "Search"
-#~ msgstr "Etsi"
 
 #~ msgid "Time since last updated:"
 #~ msgstr "Aikaa edellisestä päivityksestä:"
