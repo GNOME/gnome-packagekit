@@ -32,7 +32,9 @@ class CodecInstall:
 
             #xid = 0
             timespec = gtk.get_current_event_time()
-            codecs = ("Windows Media Video 9 decoder|gstreamer0.10(decoder-video/x-wma)(wmaversion=3)", "Windows Media Audio 9 decoder|gstreamer0.10(decoder-audio/x-wma)(wmaversion=3)")
+            video = ("Windows Media Video 9 decoder", "gstreamer0.10(decoder-video/x-wma)(wmaversion=3)")
+            audio = ("Windows Media Audio 9 decoder", "gstreamer0.10(decoder-audio/x-wma)(wmaversion=3)")
+            codecs = (video, audio)
             print "xid",xid
             print "timespec",timespec
             print "codecs",codecs

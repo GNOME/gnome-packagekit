@@ -395,7 +395,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
  * gpk_dbus_install_gstreamer_codecs:
  **/
 void
-gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **codec_name_strings, DBusGMethodInvocation *context)
+gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp, GPtrArray *codecs, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -405,7 +405,16 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	egg_debug ("InstallGStreamerCodecs method called: %s", codec_name_strings[0]);
+	guint i;
+	GValue *value;
+	gchar *description;
+	gchar *detail;
+	gchar *encoded;
+	GPtrArray *array;
+	GValueArray *varray;
+	gchar **codec_strings;
+
+	egg_debug ("InstallGStreamerCodecs method called");
 
 	/* check sender */
 	sender = dbus_g_method_get_sender (context);
@@ -420,8 +429,27 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	g_free (sender);
 	g_free (application);
 
+	/* unwrap and turn into a GPtrArray */
+	array = g_ptr_array_new ();
+	for (i=0; i<codecs->len; i++) {
+		varray = (GValueArray *) g_ptr_array_index (codecs, 0);
+		value = g_value_array_get_nth (varray, 0);
+		description = g_value_dup_string (value);
+		value = g_value_array_get_nth (varray, 1);
+		detail = g_value_dup_string (value);
+		encoded = g_strdup_printf ("%s|%s", description, detail);
+		g_ptr_array_add (array, encoded);
+		g_free (description);
+		g_free (detail);
+	}
+
+	/* convert to an strv */
+	codec_strings = pk_ptr_array_to_argv (array);
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+	g_ptr_array_free (array, TRUE);
+
 	/* do the action */
-	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_name_strings, &error_local);
+	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_strings, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
@@ -430,6 +458,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 		return;
 	}
 
+	g_strfreev (codec_strings);
 	dbus_g_method_return (context);
 }
 

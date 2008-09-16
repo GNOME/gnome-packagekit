@@ -83,7 +83,7 @@ void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
 void		 gpk_dbus_install_gstreamer_codecs	(GpkDbus	*dbus,
 							 guint32	 xid,
 							 guint32	 timestamp,
-							 gchar		**codec_name_strings,
+							 GPtrArray	*codecs,
 							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_font			(GpkDbus	*dbus,
 							 guint32	 xid,
