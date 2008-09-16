@@ -210,6 +210,7 @@ out:
 		application = g_strdup (exec);
 	if (list != NULL)
 		g_object_unref (list);
+	g_free (exec);
 	return application;
 }
 

@@ -1090,6 +1090,8 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	gpk_client_dialog_set_image (gclient->priv->dialog, icon);
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, gclient->priv->timestamp);
 
+	g_free (title_name);
+
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
@@ -1685,6 +1687,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, gclient->priv->timestamp);
+	g_free (text);
 
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
