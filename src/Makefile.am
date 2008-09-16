@@ -172,8 +172,6 @@ gpk_application_SOURCES =				\
 	gpk-application-main.c				\
 	gpk-application.c				\
 	gpk-application.h				\
-	gpk-application-state.c				\
-	gpk-application-state.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(shared_SOURCES)				\

@@ -52,7 +52,6 @@
 #include <gpk-error.h>
 
 #include "gpk-application.h"
-#include "gpk-application-state.h"
 #include "gpk-animated-icon.h"
 #include "gpk-dialog.h"
 #include "gpk-client-run.h"
@@ -118,13 +117,20 @@ struct GpkApplicationPrivate
 };
 
 enum {
+	GPK_STATE_INSTALLED,
+	GPK_STATE_IN_LIST,
+	GPK_STATE_COLLECTION,
+	GPK_STATE_UNKNOWN
+};
+
+enum {
 	ACTION_CLOSE,
 	LAST_SIGNAL
 };
 
 enum {
 	PACKAGES_COLUMN_IMAGE,
-	PACKAGES_COLUMN_STATE,  /* state of the  */
+	PACKAGES_COLUMN_STATE,  /* state of the item */
 	PACKAGES_COLUMN_CHECKBOX,  /* what we show in the checkbox */
 	PACKAGES_COLUMN_CHECKBOX_ENABLE, /* sensitive */
 	PACKAGES_COLUMN_TEXT,
@@ -183,6 +189,58 @@ gpk_application_show (GpkApplication *application)
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	gtk_window_present (GTK_WINDOW (widget));
+}
+
+/**
+ * gpk_application_state_get_icon:
+ **/
+const gchar *
+gpk_application_state_get_icon (PkBitfield state)
+{
+	if (state == 0)
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE);
+
+	if (state == pk_bitfield_value (GPK_STATE_INSTALLED))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
+
+	if (state == pk_bitfield_value (GPK_STATE_IN_LIST))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLING);
+
+	if (state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_IN_LIST, -1))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_REMOVING);
+
+	if (state == pk_bitfield_value (GPK_STATE_COLLECTION))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_COLLECTION_AVAILABLE);
+
+	if (state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_COLLECTION, -1))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_COLLECTION_INSTALLED);
+
+	if (state == pk_bitfield_from_enums (GPK_STATE_IN_LIST, GPK_STATE_INSTALLED, GPK_STATE_COLLECTION, -1))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_REMOVING); // need new icon
+
+	if (state == pk_bitfield_from_enums (GPK_STATE_IN_LIST, GPK_STATE_COLLECTION, -1))
+		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLING); // need new icon
+
+	return NULL;
+}
+
+/**
+ * gpk_application_state_get_checkbox:
+ **/
+gboolean
+gpk_application_state_get_checkbox (PkBitfield state)
+{
+	PkBitfield state_local;
+
+	/* remove any we don't care about */
+	state_local = state;
+	pk_bitfield_remove (state_local, GPK_STATE_COLLECTION);
+
+	/* installed or in list */
+	if (state_local == pk_bitfield_value (GPK_STATE_INSTALLED) ||
+	    state_local == pk_bitfield_value (GPK_STATE_IN_LIST))
+		return TRUE;
+	return FALSE;
 }
 
 /**
@@ -261,7 +319,7 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	GtkWidget *widget;
 	const gchar *icon;
 	gboolean checkbox;
-	GpkPackageState state;
+	PkBitfield state;
 	gboolean ret;
 
 	/* get the selection and add */
@@ -277,7 +335,7 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
 
 	/* do something with the value */
-	gpk_application_state_invert (&state);
+	pk_bitfield_invert (state, GPK_STATE_IN_LIST);
 
 	/* get the new icon */
 	icon = gpk_application_state_get_icon (state);
@@ -295,20 +353,18 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
  * gpk_application_get_checkbox_enable:
  **/
 static gboolean
-gpk_application_get_checkbox_enable (GpkApplication *application, GpkPackageState state)
+gpk_application_get_checkbox_enable (GpkApplication *application, PkBitfield state)
 {
 	gboolean enable_installed = TRUE;
 	gboolean enable_available = TRUE;
 
-	if (application->priv->action == PK_ACTION_INSTALL) {
+	if (application->priv->action == PK_ACTION_INSTALL)
 		enable_installed = FALSE;
-	} else if (application->priv->action == PK_ACTION_REMOVE) {
+	else if (application->priv->action == PK_ACTION_REMOVE)
 		enable_available = FALSE;
-	}
 
-	if (gpk_application_state_installed (state)) {
+	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED))
 		return enable_installed;
-	}
 	return enable_available;
 }
 
@@ -323,7 +379,7 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	gboolean valid;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	GpkPackageState state;
+	PkBitfield state;
 	gboolean enabled;
 	guint length;
 
@@ -566,7 +622,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
 	GtkWidget *widget;
-	GpkPackageState state;
+	PkBitfield state;
 	gboolean ret;
 	gchar *package_id = NULL;
 
@@ -586,7 +642,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 			    PACKAGES_COLUMN_STATE, &state, -1);
 
 	/* only if installed */
-	if (gpk_application_state_installed (state)) {
+	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
 		/* run this single package id */
 		array = g_strsplit (package_id, "|", 1);
 		exec = gpk_client_run_show (array);
@@ -958,7 +1014,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	gboolean installed;
 	gboolean checkbox;
 	gboolean enabled;
-	GpkPackageState state = 0;
+	PkBitfield state = 0;
 	static guint package_cnt = 0;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -982,14 +1038,14 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	in_queue = pk_package_list_contains_obj (application->priv->package_list, obj);
 	installed = (obj->info == PK_INFO_ENUM_INSTALLED) || (obj->info == PK_INFO_ENUM_COLLECTION_INSTALLED);
 
-	if (installed && in_queue)
-		state = GPK_STATE_INSTALLED_TO_BE_REMOVED;
-	else if (installed && !in_queue)
-		state = GPK_STATE_INSTALLED;
-	else if (!installed && in_queue)
-		state = GPK_STATE_AVAILABLE_TO_BE_INSTALLED;
-	else if (!installed && !in_queue)
-		state = GPK_STATE_AVAILABLE;
+	if (installed)
+		pk_bitfield_add (state, GPK_STATE_INSTALLED);
+	if (in_queue)
+		pk_bitfield_add (state, GPK_STATE_IN_LIST);
+
+	/* special icon */
+	if (obj->info == PK_INFO_ENUM_COLLECTION_INSTALLED || obj->info == PK_INFO_ENUM_COLLECTION_AVAILABLE)
+		pk_bitfield_add (state, GPK_STATE_COLLECTION);
 
 	/* use the application icon if available */
 	icon = pk_extra_get_icon_name (application->priv->extra, obj->id->name);
@@ -1099,7 +1155,6 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	}
 
 	text = g_strdup_printf ("%s\n%s", title, message);
-
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, FALSE,
@@ -1419,7 +1474,7 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
-	GpkPackageState state;
+	PkBitfield state;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1472,7 +1527,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	const gchar *icon;
-	GpkPackageState state;
+	PkBitfield state;
 	gboolean ret;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
@@ -1486,8 +1541,9 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	/* for all current items, reset the state if in the list */
 	while (valid) {
 		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
-		ret = gpk_application_state_unselect (&state);
+		ret = pk_bitfield_contain (state, GPK_STATE_IN_LIST);
 		if (ret) {
+			pk_bitfield_remove (state, GPK_STATE_IN_LIST);
 			/* get the new icon */
 			icon = gpk_application_state_get_icon (state);
 			checkbox = gpk_application_state_get_checkbox (state);
@@ -1666,7 +1722,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	GError *error = NULL;
 	gboolean show_install = TRUE;
 	gboolean show_remove = TRUE;
-	GpkPackageState state;
+	PkBitfield state;
 	gchar **package_ids;
 	gchar *image;
 
@@ -1709,15 +1765,15 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 			    PACKAGES_COLUMN_STATE, &state,
 			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
 
-	show_install = (state == GPK_STATE_AVAILABLE || state == GPK_STATE_INSTALLED_TO_BE_REMOVED);
-	show_remove = (state == GPK_STATE_INSTALLED || state == GPK_STATE_AVAILABLE_TO_BE_INSTALLED);
+	show_install = (state == 0 ||
+			state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_IN_LIST, -1));
+	show_remove = (state == pk_bitfield_value (GPK_STATE_INSTALLED) ||
+		       state == pk_bitfield_value (GPK_STATE_IN_LIST));
 
-	if (application->priv->action == PK_ACTION_INSTALL && !gpk_application_state_in_queue (state)) {
+	if (application->priv->action == PK_ACTION_INSTALL && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
 		show_remove = FALSE;
-	}
-	if (application->priv->action == PK_ACTION_REMOVE && !gpk_application_state_in_queue (state)) {
+	if (application->priv->action == PK_ACTION_REMOVE && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
 		show_install = FALSE;
-	}
 
 	/* only show buttons if we are in the correct mode */
 	gpk_application_allow_install (application, show_install);
@@ -1727,7 +1783,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gpk_application_clear_details (application);
 
 	/* only show run menuitem for installed programs */
-	ret = gpk_application_state_installed (state);
+	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_run");
 	gtk_widget_set_sensitive (widget, ret);
 
@@ -2455,7 +2511,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean ret;
-	GpkPackageState state;
+	PkBitfield state;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -2471,11 +2527,10 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
 			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
-	if (gpk_application_state_get_checkbox (state)) {
+	if (gpk_application_state_get_checkbox (state))
 		gpk_application_remove (application);
-	} else {
+	else
 		gpk_application_install (application);
-	}
 }
 
 /**
@@ -2557,6 +2612,7 @@ gpk_application_add_welcome (GpkApplication *application)
 {
 	GtkTreeIter iter;
 	const gchar *welcome;
+	PkBitfield state = 0;
 
 	gpk_application_clear_packages (application);
 	gtk_list_store_append (application->priv->packages_store, &iter);
@@ -2568,7 +2624,7 @@ gpk_application_add_welcome (GpkApplication *application)
 		welcome = _("Enter a package name and then click find to get started.");
 	}
 	gtk_list_store_set (application->priv->packages_store, &iter,
-			    PACKAGES_COLUMN_STATE, FALSE,
+			    PACKAGES_COLUMN_STATE, state,
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
 			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, welcome,
@@ -2610,7 +2666,7 @@ gpk_application_init (GpkApplication *application)
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
 							        G_TYPE_STRING,
-							        G_TYPE_UINT,
+								G_TYPE_UINT64,
 							        G_TYPE_BOOLEAN,
 							        G_TYPE_BOOLEAN,
 							        G_TYPE_STRING,
