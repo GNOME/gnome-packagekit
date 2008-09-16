@@ -1199,7 +1199,8 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_REQUIRES)) {
@@ -1247,7 +1248,8 @@ skip_checks:
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -1293,7 +1295,8 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* are we dumb and can't check for depends? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
@@ -1640,7 +1643,8 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* save the objects to download in a list */
 	list = pk_package_list_new ();
@@ -1960,7 +1964,8 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* get files to be installed */
 	catalog = pk_catalog_new ();
@@ -2069,7 +2074,8 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
@@ -2148,7 +2154,8 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -2231,7 +2238,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-upgrades"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-distro-upgrades"), error_local->message);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -2255,7 +2262,8 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting distribution upgrade information"));
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -2355,7 +2363,8 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* setup the UI */
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
