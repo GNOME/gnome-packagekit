@@ -38,6 +38,8 @@
 
 #include <pk-common.h>
 #include <pk-client.h>
+#include <pk-package-list.h>
+#include <pk-extra.h>
 #include <pk-enum.h>
 
 #include "egg-debug.h"
@@ -62,6 +64,7 @@ struct _GpkClientDialogPrivate
 	gboolean		 has_parent;
 	GMainLoop		*loop;
 	GtkResponseType		 response;
+	GtkListStore		*store;
 };
 
 enum {
@@ -71,6 +74,13 @@ enum {
 	GPK_CLIENT_DIALOG_HELP,
 	GPK_CLIENT_DIALOG_CANCEL,
 	LAST_SIGNAL
+};
+
+enum {
+	GPK_CLIENT_DIALOG_STORE_IMAGE,
+	GPK_CLIENT_DIALOG_STORE_ID,
+	GPK_CLIENT_DIALOG_STORE_TEXT,
+	GPK_CLIENT_DIALOG_STORE_LAST
 };
 
 static guint signals [LAST_SIGNAL] = { 0 };
@@ -90,6 +100,8 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
+	gtk_widget_hide (widget);
 
 	/* helper */
 	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM)
@@ -551,6 +563,102 @@ gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 }
 
 /**
+ * gpk_client_dialog_set_package_list:
+ **/
+gboolean
+gpk_client_dialog_set_package_list (GpkClientDialog *dialog, PkPackageList *list)
+{
+	GtkTreeIter iter;
+	const PkPackageObj *obj;
+	PkExtra *extra;
+	const gchar *icon;
+	gchar *package_id;
+	gchar *text;
+	guint length;
+	guint i;
+	gboolean valid;
+	GtkWidget *widget;
+
+	gtk_list_store_clear (dialog->priv->store);
+
+	length = pk_package_list_get_size (list);
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
+	if (length > 5)
+		gtk_widget_set_size_request (widget, -1, 300);
+	else if (length > 1)
+		gtk_widget_set_size_request (widget, -1, 150);
+
+	extra = pk_extra_new ();
+	length = pk_package_list_get_size (list);
+
+	/* add each well */
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (list, i);
+		text = gpk_package_id_format_twoline (obj->id, obj->summary);
+		package_id = pk_package_id_to_string (obj->id);
+
+		/* get the icon */
+		icon = pk_extra_get_icon_name (extra, obj->id->name);
+		valid = gpk_check_icon_valid (icon);
+		if (!valid)
+			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
+
+		gtk_list_store_append (dialog->priv->store, &iter);
+		gtk_list_store_set (dialog->priv->store, &iter,
+				    GPK_CLIENT_DIALOG_STORE_IMAGE, icon,
+				    GPK_CLIENT_DIALOG_STORE_ID, package_id,
+				    GPK_CLIENT_DIALOG_STORE_TEXT, text,
+				    -1);
+		g_free (text);
+		g_free (package_id);
+	}
+
+	g_object_unref (extra);
+
+	return TRUE;
+}
+
+
+/**
+ * gpk_dialog_treeview_for_package_list:
+ **/
+static gboolean
+gpk_dialog_treeview_for_package_list (GpkClientDialog *dialog)
+{
+	GtkTreeView *treeview;
+	GtkWidget *widget;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *selection;
+
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "treeview_packages");
+	treeview = GTK_TREE_VIEW (widget);
+
+	/* column for images */
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DND, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "icon-name", GPK_CLIENT_DIALOG_STORE_IMAGE);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* column for name */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
+							   "markup", GPK_CLIENT_DIALOG_STORE_TEXT, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_CLIENT_DIALOG_STORE_TEXT);
+	gtk_tree_view_append_column (treeview, column);
+
+	/* set some common options */
+	gtk_tree_view_set_headers_visible (treeview, FALSE);
+	selection = gtk_tree_view_get_selection (treeview);
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
+	gtk_tree_selection_unselect_all (selection);
+
+	return TRUE;
+}
+
+/**
  * gpk_client_dialog_class_init:
  * @klass: The GpkClientDialogClass
  **/
@@ -611,6 +719,15 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->show_progress_files = TRUE;
 	dialog->priv->has_parent = FALSE;
 
+	dialog->priv->store = gtk_list_store_new (GPK_CLIENT_DIALOG_STORE_LAST,
+						  G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+
+	gpk_dialog_treeview_for_package_list (dialog);
+
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "treeview_packages");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
+				 GTK_TREE_MODEL (dialog->priv->store));
+
 	/* common stuff */
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_dialog_window_delete_cb), dialog);
@@ -655,6 +772,7 @@ gpk_client_dialog_finalize (GObject *object)
 		g_main_loop_quit (dialog->priv->loop);
 	}
 
+	g_object_unref (dialog->priv->store);
 	g_object_unref (dialog->priv->glade_xml);
 	g_main_loop_unref (dialog->priv->loop);
 
@@ -685,6 +803,8 @@ gpk_client_dialog_test (EggTest *test)
 {
 	GtkResponseType button;
 	GpkClientDialog *dialog = NULL;
+	PkPackageList *list;
+	PkPackageId *id;
 
 	if (!egg_test_start (test, "GpkClientDialog"))
 		return;
@@ -696,6 +816,15 @@ gpk_client_dialog_test (EggTest *test)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, NULL);
+
+	/* set some packages */
+	list = pk_package_list_new ();
+	id = pk_package_id_new_from_list ("totem", "0.0.1", "i386", "fedora-newkey");
+	pk_package_list_add (list, PK_INFO_ENUM_INSTALLED, id, "Totem is a music player for GNOME");
+	pk_package_list_add (list, PK_INFO_ENUM_AVAILABLE, id, "Amarok is a music player for KDE");
+	gpk_client_dialog_set_package_list (dialog, list);
+	pk_package_id_free (id);
+	g_object_unref (list);
 
 	/************************************************************/
 	egg_test_title (test, "help button");

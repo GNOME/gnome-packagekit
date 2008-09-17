@@ -25,6 +25,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <pk-enum.h>
+#include <pk-package-list.h>
 
 G_BEGIN_DECLS
 
@@ -71,6 +72,8 @@ GpkClientDialog	*gpk_client_dialog_new			(void);
 gboolean	 gpk_client_dialog_show_page		(GpkClientDialog	*dialog,
 							 GpkClientDialogPage	 page,
 							 guint32		 timestamp);
+gboolean	 gpk_client_dialog_set_package_list	(GpkClientDialog	*dialog,
+							 PkPackageList		*list);
 gboolean	 gpk_client_dialog_set_parent		(GpkClientDialog	*dialog,
 							 GdkWindow		*window);
 gboolean	 gpk_client_dialog_set_window_title	(GpkClientDialog	*dialog,
