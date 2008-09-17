@@ -33,6 +33,7 @@
 #include <locale.h>
 
 #include <polkit-gnome/polkit-gnome.h>
+#include <gconf/gconf-client.h>
 
 #include <pk-client.h>
 #include <pk-control.h>
@@ -574,6 +575,47 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 }
 
 /**
+ * gpk_update_viewer_do_precache:
+ **/
+static gboolean
+gpk_update_viewer_do_precache (const PkPackageList *list)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gchar **package_ids;
+	GConfClient *client;
+	gboolean precache;
+
+	client = gconf_client_get_default ();
+	precache = gconf_client_get_bool (client, GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS, NULL);
+	g_object_unref (client);
+
+	if (!precache)
+		return FALSE;
+
+	egg_debug ("doing precache");
+
+	/* reset */
+	ret = pk_client_reset (client_query, &error);
+	if (!ret) {
+		egg_warning ("failed to reset: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* pre-cache the update detail if we can */
+	package_ids = pk_package_list_to_argv (list);
+	ret = pk_client_get_update_detail (client_query, package_ids, &error);
+	g_strfreev (package_ids);
+	if (!ret) {
+		egg_warning ("failed to cache update detail: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
  * gpk_update_viewer_get_new_update_list:
  **/
 static void
@@ -588,9 +630,7 @@ gpk_update_viewer_get_new_update_list (void)
 	gchar *text;
 	gchar *package_id;
 	const gchar *icon_name;
-	gchar **package_ids;
 	GtkTreeIter iter;
-	gboolean ret;
 	gboolean selected;
 
 	/* spin */
@@ -613,11 +653,10 @@ gpk_update_viewer_get_new_update_list (void)
 
 	/* do we have updates? */
 	length = pk_package_list_get_size (list);
-	if (length == 0) {
+	if (length == 0)
 		are_updates_available = FALSE;
-	} else {
+	else
 		are_updates_available = TRUE;
-	}
 
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
@@ -647,24 +686,7 @@ gpk_update_viewer_get_new_update_list (void)
 	gtk_widget_set_sensitive (widget, are_updates_available);
 
 	gpk_update_viewer_populate_preview (list);
-
-	/* reset */
-	ret = pk_client_reset (client_query, &error);
-	if (!ret) {
-		egg_warning ("failed to reset: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-
-	/* pre-cache the update detail if we can */
-	package_ids = pk_package_list_to_argv (list);
-	ret = pk_client_get_update_detail (client_query, package_ids, &error);
-	g_strfreev (package_ids);
-	if (!ret) {
-		egg_warning ("failed to cache update detail: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
+	gpk_update_viewer_do_precache (list);
 
 	/* don't spin */
 	gpk_update_viewer_description_animation_stop ();
