@@ -614,9 +614,22 @@ pk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
  * gpk_client_error_msg:
  **/
 static void
-gpk_client_error_msg (GpkClient *gclient, const gchar *title, const gchar *message, const gchar *details)
+gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 {
 	GtkWindow *window;
+	const gchar *message = _("Unknown error. Please refer to the detailed report and report in bugzilla.");
+	const gchar *details = NULL;
+
+	/* print a proper error if we have it */
+	if (error != NULL) {
+		if (error->code == PK_CLIENT_ERROR_FAILED_AUTH ||
+		    g_str_has_prefix (error->message, "org.freedesktop.packagekit."))
+			message = _("You don't have the necessary privileges to perform this action");
+		else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON)
+			message = _("The packagekitd service could not be started");
+		else
+			details = error->message;
+	}
 
 	/* hide the main window */
 	window = gpk_client_dialog_get_window (gclient->priv->dialog);
@@ -670,14 +683,13 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 {
 	gboolean ret;
 	GError *error_local = NULL;
-	gchar *text;
 	guint length;
 	const gchar *title;
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -691,19 +703,10 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
 
-	/* check if we got a permission denied */
-	if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
-		gpk_client_error_msg (gclient, _("Failed to install files"),
-				      _("You don't have the necessary privileges to install local files"), NULL);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-	} else {
-		text = g_markup_escape_text (error_local->message, -1);
-		length = g_strv_length (files_rel);
-		title = ngettext ("Failed to install file", "Failed to install files", length);
-		gpk_client_error_msg (gclient, title, text, error_local->message);
-		g_free (text);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-	}
+	length = g_strv_length (files_rel);
+	title = ngettext ("Failed to install file", "Failed to install files", length);
+	gpk_client_error_msg (gclient, title, error_local);
+	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 	g_error_free (error_local);
 	return FALSE;
 }
@@ -1191,7 +1194,6 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 {
 	gboolean ret;
 	GError *error_local = NULL;
-	gchar *text = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -1213,7 +1215,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	ret = gpk_client_requires_show (gclient, package_ids);
 	/* did we click no or exit the window? */
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to remove package"), _("Additional packages were also not removed"), NULL);
+		gpk_client_error_msg (gclient, _("Failed to remove package"), NULL);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user did not agree to additional requires");
 		ret = FALSE;
 		goto out;
@@ -1223,7 +1225,7 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
@@ -1233,17 +1235,8 @@ skip_checks:
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
 	ret = pk_client_remove_packages (gclient->priv->client_action, package_ids, TRUE, FALSE, &error_local);
 	if (!ret) {
-		/* check if we got a permission denied */
-		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
-			gpk_client_error_msg (gclient, _("Failed to remove package"),
-						_("You don't have the necessary privileges to remove packages"), NULL);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		} else {
-			text = g_markup_escape_text (error_local->message, -1);
-			gpk_client_error_msg (gclient, _("Failed to remove package"), text, error_local->message);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-			g_free (text);
-		}
+		gpk_client_error_msg (gclient, _("Failed to remove package"), error_local);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1287,7 +1280,6 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 {
 	gboolean ret;
 	GError *error_local = NULL;
-	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
@@ -1318,7 +1310,7 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -1330,16 +1322,8 @@ skip_checks:
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
 		/* check if we got a permission denied */
-		if (g_str_has_prefix (error_local->message, "org.freedesktop.packagekit.")) {
-			gpk_client_error_msg (gclient, _("Failed to install package"),
-					      _("You don't have the necessary privileges to install packages"), NULL);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		} else {
-			text = g_markup_escape_text (error_local->message, -1);
-			gpk_client_error_msg (gclient, _("Failed to install package"), text, error_local->message);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-			g_free (text);
-		}
+		gpk_client_error_msg (gclient, _("Failed to install package"), error_local);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1458,10 +1442,8 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
-		text = g_strdup_printf ("%s: %s", _("Incorrect response from search"), error_local->message);
-		gpk_client_error_msg (gclient, _("Failed to search for file"), text, NULL);
+		gpk_client_error_msg (gclient, _("Failed to search for file"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_free (text);
 		ret = FALSE;
 		goto out;
 	}
@@ -1470,8 +1452,10 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_error_msg (gclient, _("Failed to find package"), _("The file could not be found in any packages"), NULL);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files found");
 		ret = FALSE;
 		goto out;
 	}
@@ -1491,17 +1475,11 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	/* already installed? */
 	if (already_installed) {
 		text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
-		gpk_client_error_msg (gclient, _("Failed to install file"), text, NULL);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install file"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, text);
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "already provided");
 		g_free (text);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* got junk? */
-	if (id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to install file"), _("Incorrect response from file search"), NULL);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
 	}
@@ -1670,7 +1648,9 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		egg_debug ("codec description=%s", parts[1]);
 		obj_new = gpk_client_install_gstreamer_codec_part (gclient, parts[0], parts[1], &error_local);
 		if (obj_new == NULL) {
-			gpk_client_error_msg (gclient, _("Failed to search for codec"), _("Could not find codec in any configured software source"), error_local->message);
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for codec"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find codec in any configured software source"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 			ret = FALSE;
 		}
@@ -1778,7 +1758,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -1787,7 +1767,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to search for provides"), _("Incorrect response from search"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
@@ -1797,8 +1777,9 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_error_msg (gclient, _("Failed to find software"),
-				      _("No new applications can be found to handle this type of file"), NULL);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "nothing was found to handle mime type");
 		ret = FALSE;
 		goto out;
@@ -1810,7 +1791,9 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 
 	/* selected nothing */
 	if (package_id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to install software"), _("No applications were chosen to be installed"), NULL);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install software"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("No applications were chosen to be installed"));
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
@@ -1868,7 +1851,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -1877,7 +1860,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to search for provides"), _("Incorrect response from search"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		ret = FALSE;
 		goto out;
@@ -1887,8 +1870,9 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_error_msg (gclient, _("Failed to find font"),
-				      _("No new fonts can be found for this document"), NULL);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
 		ret = FALSE;
 		goto out;
@@ -1900,7 +1884,9 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 
 	/* selected nothing */
 	if (package_id == NULL) {
-		gpk_client_error_msg (gclient, _("Failed to install fonts"), _("No fonts were chosen to be installed"), NULL);
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install fonts"));
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("No fonts were chosen to be installed"));
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
@@ -2066,7 +2052,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset client"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2077,16 +2063,9 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		/* print a proper error if we have it */
-		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
-			message = g_strdup (_("Authorization could not be obtained"));
-		} else {
-			message = g_strdup_printf (_("The error was: %s"), error_local->message);
-		}
-
 		/* display and set */
 		text = g_strdup_printf ("%s: %s", _("Failed to update system"), message);
-		gpk_client_error_msg (gclient, _("Failed to update system"), text, error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to update system"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
 		goto out;
 	}
@@ -2146,7 +2125,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2157,16 +2136,8 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_refresh_cache (gclient->priv->client_action, TRUE, &error_local);
 	if (!ret) {
-		/* print a proper error if we have it */
-		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
-			message = g_strdup (_("Authorisation could not be obtained"));
-		} else {
-			message = g_strdup_printf (_("The error was: %s"), error_local->message);
-		}
-
 		/* display and set */
-		text = g_strdup_printf ("%s: %s", _("Failed to update package lists"), message);
-		gpk_client_error_msg (gclient, _("Failed to update package lists"), text, NULL);
+		gpk_client_error_msg (gclient, _("Failed to update package lists"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
 		goto out;
 	}
@@ -2205,7 +2176,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-updates"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -2214,7 +2185,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Getting update lists failed"), _("Failed to get updates"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to get updates"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2257,7 +2228,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-distro-upgrades"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -2272,8 +2243,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_distro_upgrades (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Getting update lists failed"),
-				      _("Getting the list of distribution upgrades failed"), error_local->message);
+		gpk_client_error_msg (gclient, _("Getting update lists failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2305,7 +2275,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset get-file-list"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -2316,7 +2286,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	ret = pk_client_get_files (gclient->priv->client_action, package_ids, &error_local);
 	g_strfreev (package_ids);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Getting file list failed"), _("Failed to get file list"), error_local->message);
+		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2349,7 +2319,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 {
 	gboolean ret = TRUE;
 	GError *error_local = NULL;
-	gchar *text = NULL;
 	gchar *message = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -2357,7 +2326,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset client"), _("Failed to reset resolve"), error_local->message);
+		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		goto out;
 	}
@@ -2365,16 +2334,8 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
-		/* print a proper error if we have it */
-		if (error_local->code == PK_CLIENT_ERROR_FAILED_AUTH) {
-			message = g_strdup (_("Authorisation could not be obtained"));
-		} else {
-			message = g_strdup_printf (_("The error was: %s"), error_local->message);
-		}
-
 		/* display and set */
-		text = g_strdup_printf ("%s: %s", _("Failed to update packages"), message);
-		gpk_client_error_msg (gclient, _("Failed to update packages"), text, NULL);
+		gpk_client_error_msg (gclient, _("Failed to update packages"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
 		goto out;
 	}
@@ -2395,7 +2356,6 @@ out:
 	if (error_local != NULL)
 		g_error_free (error_local);
 	g_free (message);
-	g_free (text);
 	return ret;
 }
 
