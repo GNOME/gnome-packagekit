@@ -266,7 +266,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	GpkWatch *watch = GPK_WATCH (data);
 
 	if (egg_strequal (action, "do-not-show-notify-complete")) {
-		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_COMPLETED);
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
 	} else if (egg_strequal (action, "show-error-details")) {
