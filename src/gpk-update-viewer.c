@@ -642,6 +642,7 @@ gpk_update_viewer_get_new_update_list (void)
 	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
 	list = gpk_client_get_updates (gclient, &error);
 	if (list == NULL) {
+		gpk_update_viewer_description_animation_stop ();
 		egg_warning ("failed: %s", error->message);
 		g_error_free (error);
 		goto out;
@@ -692,7 +693,8 @@ gpk_update_viewer_get_new_update_list (void)
 	gpk_update_viewer_description_animation_stop ();
 
 out:
-	g_object_unref (list);
+	if (list != NULL)
+		g_object_unref (list);
 }
 
 /**
