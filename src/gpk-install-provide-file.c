@@ -60,9 +60,9 @@ main (int argc, char *argv[])
 	}
 	g_type_init ();
 
-	g_set_application_name (_("PackageKit Filename Installer"));
+	g_set_application_name (_("Filename Installer"));
 	context = g_option_context_new ("gpk-install-filename");
-	g_option_context_set_summary (context, _("PackageKit Filename Installer"));
+	g_option_context_set_summary (context, _("Filename Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

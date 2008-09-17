@@ -60,9 +60,9 @@ main (int argc, char *argv[])
 	}
 	g_type_init ();
 
-	g_set_application_name (_("PackageKit MimeType Installer"));
+	g_set_application_name (_("Mime Type Installer"));
 	context = g_option_context_new ("gpk-install-mime-type");
-	g_option_context_set_summary (context, _("PackageKit MimeType Installer"));
+	g_option_context_set_summary (context, _("Mime Type Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

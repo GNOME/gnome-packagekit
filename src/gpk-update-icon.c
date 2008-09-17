@@ -144,9 +144,9 @@ main (int argc, char *argv[])
 	g_type_init ();
 	notify_init ("gpk-update-icon");
 
-	g_set_application_name (_("PackageKit Update Applet"));
+	g_set_application_name (_("Update Applet"));
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("PackageKit Update Icon"));
+	g_option_context_set_summary (context, _("Update Applet"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
