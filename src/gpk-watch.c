@@ -64,8 +64,8 @@ static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
 #define GPK_WATCH_MAXIMUM_TOOLTIP_LINES		10
-#define GPK_WATCH_GCONF_PROXY_HTTP 		"/system/http_proxy"
-#define GPK_WATCH_GCONF_PROXY_FTP 		"/system/proxy"
+#define GPK_WATCH_GCONF_PROXY_HTTP		"/system/http_proxy"
+#define GPK_WATCH_GCONF_PROXY_FTP		"/system/proxy"
 #define GPK_WATCH_SET_PROXY_RATE_LIMIT		200 /* ms */
 
 struct GpkWatchPrivate
@@ -143,11 +143,11 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 			break;
 		}
 	}
-	if (status->len == 0) {
+	if (status->len == 0)
 		g_string_append (status, "Doing something...");
-	} else {
+	else
 		g_string_set_size (status, status->len-1);
-	}
+
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), status->str);
 	g_string_free (status, TRUE);
 	return TRUE;
@@ -168,9 +168,8 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 
 	/* shortcut */
 	length = pk_task_list_get_size (watch->priv->tlist);
-	if (length == 0) {
+	if (length == 0)
 		goto out;
-	}
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
@@ -350,18 +349,16 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 		goto out;
 	}
 
-	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
+	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES)
 		message = g_strdup_printf (_("Package '%s' has been removed"), text);
-	} else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
+	else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES)
 		message = g_strdup_printf (_("Package '%s' has been installed"), text);
-	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+	else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM)
 		message = g_strdup ("System has been updated");
-	}
 
 	/* nothing of interest */
-	if (message == NULL) {
+	if (message == NULL)
 		goto out;
-	}
 
 	/* do the bubble */
 	notification = notify_notification_new (_("Task completed"), message, "help-browser", NULL);
@@ -556,13 +553,12 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 		   "02110-1301, USA.")
 	};
-  	const char  *translators = _("translator-credits");
-	char	    *license_trans;
+	const char *translators = _("translator-credits");
+	char *license_trans;
 
 	/* Translators comment: put your own name here to appear in the about dialog. */
-  	if (!strcmp (translators, "translator-credits")) {
+	if (!strcmp (translators, "translator-credits"))
 		translators = NULL;
-	}
 
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
@@ -617,9 +613,8 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			gtk_status_icon_position_menu, status_icon,
 			button, timestamp);
-	if (button == 0) {
+	if (button == 0)
 		gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
-	}
 }
 
 /**
@@ -707,9 +702,8 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	length = pk_task_list_get_size (watch->priv->tlist);
-	if (length == 0) {
+	if (length == 0)
 		return;
-	}
 
 	/* do a menu item for each job */
 	for (i=0; i<length; i++) {
@@ -723,11 +717,10 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 
 		icon_name = gpk_status_enum_to_icon_name (item->status);
 		if (!egg_strzero (item->text) &&
-		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES)
 			text = g_strdup_printf ("%s %s (%s)", localised_role, item->text, localised_status);
-		} else {
+		else
 			text = g_strdup_printf ("%s (%s)", localised_role, localised_status);
-		}
 
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);
@@ -863,11 +856,10 @@ gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	egg_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
-	if (is_locked) {
+	if (is_locked)
 		gpk_inhibit_create (watch->priv->inhibit);
-	} else {
+	else
 		gpk_inhibit_remove (watch->priv->inhibit);
-	}
 }
 
 /**
@@ -899,11 +891,10 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 	port = gconf_client_get_int (watch->priv->gconf_client, "/system/proxy/ftp_port", NULL);
 
 	/* ftp has no username or password */
-	if (port == 0) {
+	if (port == 0)
 		connection = g_strdup (host);
-	} else {
+	else
 		connection = g_strdup_printf ("%s:%i", host, port);
-	}
 out:
 	g_free (mode);
 	g_free (host);
@@ -957,13 +948,12 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 		user = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_user", NULL);
 		password = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_password", NULL);
 
-		if (user != NULL && password != NULL) {
+		if (user != NULL && password != NULL)
 			auth = g_strdup_printf ("%s:%s", user, password);
-		} else if (user != NULL) {
+		else if (user != NULL)
 			auth = g_strdup (user);
-		} else if (password != NULL) {
+		else if (password != NULL)
 			auth = g_strdup_printf (":%s", user);
-		}
 
 		g_free (user);
 		g_free (password);
@@ -978,11 +968,10 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 	}
 
 	/* the whole auth section is optional */
-	if (egg_strzero (auth)) {
+	if (egg_strzero (auth))
 		proxy_http = g_strdup (connection);
-	} else {
+	else
 		proxy_http = g_strdup_printf ("%s@%s", auth, connection);
-	}
 out:
 	g_free (mode);
 	g_free (connection);
@@ -1114,9 +1103,8 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->pconnection = pk_connection_new ();
 	g_signal_connect (watch->priv->pconnection, "connection-changed",
 			  G_CALLBACK (pk_connection_changed_cb), watch);
-	if (pk_connection_valid (watch->priv->pconnection)) {
+	if (pk_connection_valid (watch->priv->pconnection))
 		pk_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
-	}
 
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
@@ -1164,9 +1152,8 @@ gpk_watch_finalize (GObject *object)
 	g_return_if_fail (watch->priv != NULL);
 
 	/* we might we waiting for a proxy update */
-	if (watch->priv->set_proxy_timeout != 0) {
+	if (watch->priv->set_proxy_timeout != 0)
 		g_source_remove (watch->priv->set_proxy_timeout);
-	}
 
 	g_free (watch->priv->error_details);
 	g_object_unref (watch->priv->sicon);
