@@ -111,9 +111,8 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gchar *string1, gchar *string2,
 				        gint int1, gint int2, gpointer user_data)
 {
-	if (egg_strequal (name, "button_action")) {
+	if (egg_strequal (name, "button_action"))
 		return polkit_gnome_action_create_button (button_action);
-	}
 	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
@@ -212,9 +211,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
 	/* make modal if window set */
-	if (window != NULL) {
+	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
-	}
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_client_chooser_button_action_cb), NULL);
@@ -254,9 +252,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 
 		/* check icon actually exists and is valid in this theme */
 		ret = gpk_check_icon_valid (icon_name);
-		if (!ret) {
+		if (!ret)
 			icon_name = gpk_info_enum_to_icon_name (obj->info);
-		}
 
 		package_id = pk_package_id_to_string (obj->id);
 		gtk_list_store_set (list_store, &iter,
@@ -277,9 +274,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	gtk_main ();
 
 	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
+	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	}
 	g_object_unref (glade_xml);
 
 	return package_id;
@@ -296,9 +292,8 @@ gpk_client_chooser_self_test (gpointer data)
 {
 	EggTest *test = (EggTest *) data;
 
-	if (egg_test_start (test, "GpkClientEula") == FALSE) {
+	if (egg_test_start (test, "GpkClientChooser") == FALSE)
 		return;
-	}
 	egg_test_end (test);
 }
 #endif
