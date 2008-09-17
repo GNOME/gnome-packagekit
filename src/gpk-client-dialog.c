@@ -92,6 +92,8 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_show (widget);
 
 	/* helper */
+	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM)
+		gpk_client_dialog_set_image (dialog, "dialog-question");
 	if (page == GPK_CLIENT_DIALOG_PAGE_WARNING)
 		gpk_client_dialog_set_image (dialog, "dialog-warning");
 
