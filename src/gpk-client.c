@@ -1762,6 +1762,15 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 		goto out;
 	}
 
+	/* set title */
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file handlers"));
+	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
+
+	/* setup the UI */
+	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
@@ -1854,6 +1863,13 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 		ret = FALSE;
 		goto out;
 	}
+
+	/* set title */
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for fonts"));
+	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
+
+	/* setup the UI */
+	gpk_client_dialog_set_show_message (gclient->priv->dialog, FALSE);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
