@@ -114,8 +114,6 @@ gpk_dbus_get_exec_for_sender (const gchar *sender)
 	DBusConnection *connection;
 	gchar *sender_exe = NULL;
 
-	return g_strdup ("/usr/bin/totem");
-
 	/* get a connection */
 	connection = dbus_bus_get (DBUS_BUS_SESSION, NULL);
 	if (connection == NULL)
@@ -434,7 +432,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	/* unwrap and turn into a GPtrArray */
 	array = g_ptr_array_new ();
 	for (i=0; i<codecs->len; i++) {
-		varray = (GValueArray *) g_ptr_array_index (codecs, 0);
+		varray = (GValueArray *) g_ptr_array_index (codecs, i);
 		value = g_value_array_get_nth (varray, 0);
 		description = g_value_dup_string (value);
 		value = g_value_array_get_nth (varray, 1);
