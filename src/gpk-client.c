@@ -429,7 +429,7 @@ gpk_client_set_status (GpkClient *gclient, PkStatusEnum status)
 gboolean
 gpk_client_set_title (GpkClient *gclient, const gchar *title)
 {
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, title);
+	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	return TRUE;
 }
 
@@ -988,7 +988,6 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 	/* show UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
-	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-question");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
@@ -1161,6 +1160,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		goto out;
 
 	/* set title */
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing files"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0);
@@ -1205,6 +1205,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Removing packages"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Remove packages"));
 
 	/* setup the UI */
@@ -1291,6 +1292,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing packages"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
 
 	/* setup the UI */
@@ -1958,7 +1960,6 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	/* show UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
-	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-question");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
