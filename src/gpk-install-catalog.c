@@ -61,9 +61,9 @@ main (int argc, char *argv[])
 	}
 	g_type_init ();
 
-	g_set_application_name (_("PackageKit Catalog Installer"));
+	g_set_application_name (_("Catalog Installer"));
 	context = g_option_context_new ("gpk-install-catalog");
-	g_option_context_set_summary (context, _("PackageKit File Installer"));
+	g_option_context_set_summary (context, _("Catalog Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

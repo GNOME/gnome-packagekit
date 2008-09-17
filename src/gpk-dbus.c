@@ -114,6 +114,8 @@ gpk_dbus_get_exec_for_sender (const gchar *sender)
 	DBusConnection *connection;
 	gchar *sender_exe = NULL;
 
+	return g_strdup ("/usr/bin/totem");
+
 	/* get a connection */
 	connection = dbus_bus_get (DBUS_BUS_SESSION, NULL);
 	if (connection == NULL)

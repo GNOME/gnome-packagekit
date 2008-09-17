@@ -1402,7 +1402,7 @@ gpk_check_privileged_user (const gchar *application_name)
 			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
 		message = g_strjoin ("\n",
 				     _("Running graphical applications as a privileged user should be avoided for security reasons."),
-				     _("PackageKit applications are security sensitive and therefore this application will now close."), NULL);
+				     _("Package management applications are security sensitive and therefore this application will now close."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
 		g_free (message);
