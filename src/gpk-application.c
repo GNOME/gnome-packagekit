@@ -1577,7 +1577,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	package_ids = pk_package_list_to_argv (application->priv->package_list);
+	package_ids = pk_package_list_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
 		gpk_client_show_finished (application->priv->gclient, FALSE);
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);

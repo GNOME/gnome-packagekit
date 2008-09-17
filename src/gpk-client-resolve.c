@@ -120,7 +120,7 @@ gpk_client_resolve_show (GtkWindow *window, gchar **packages)
 	}
 
 	/* convert to data */
-	package_ids = pk_package_list_to_argv (list);
+	package_ids = pk_package_list_to_strv (list);
 	g_object_unref (list);
 
 out:

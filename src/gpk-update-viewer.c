@@ -604,7 +604,7 @@ gpk_update_viewer_do_precache (const PkPackageList *list)
 	}
 
 	/* pre-cache the update detail if we can */
-	package_ids = pk_package_list_to_argv (list);
+	package_ids = pk_package_list_to_strv (list);
 	ret = pk_client_get_update_detail (client_query, package_ids, &error);
 	g_strfreev (package_ids);
 	if (!ret) {

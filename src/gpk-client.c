@@ -1714,7 +1714,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	}
 
 	/* convert to list of package id's */
-	package_ids = pk_package_list_to_argv (list);
+	package_ids = pk_package_list_to_strv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 
 out:
@@ -2020,7 +2020,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	}
 
 	/* convert to list of package id's */
-	package_ids = pk_package_list_to_argv (list);
+	package_ids = pk_package_list_to_strv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 
 out:
