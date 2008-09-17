@@ -100,8 +100,6 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
-	gtk_widget_hide (widget);
 
 	/* helper */
 	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM)
@@ -110,7 +108,7 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 		gpk_client_dialog_set_image (dialog, "dialog-warning");
 
 	egg_debug ("setting page: %i", page);
-	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
+	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM || page == GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES) {
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
@@ -149,6 +147,12 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	} else {
 		egg_error ("unknown contant");
 	}
+
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
+	if (page == GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES)
+		gtk_widget_show (widget);
+	else
+		gtk_widget_hide (widget);
 
 	/* show */
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
@@ -566,7 +570,7 @@ gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
  * gpk_client_dialog_set_package_list:
  **/
 gboolean
-gpk_client_dialog_set_package_list (GpkClientDialog *dialog, PkPackageList *list)
+gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList *list)
 {
 	GtkTreeIter iter;
 	const PkPackageObj *obj;
@@ -884,6 +888,19 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "got id %i", button);
+
+	/************************************************************/
+	egg_test_title (test, "confirm install button");
+	gpk_client_dialog_set_title (dialog, "Button press test");
+	gpk_client_dialog_set_message (dialog, "Please press Install");
+	gpk_client_dialog_set_image (dialog, "dialog-information");
+	gpk_client_dialog_set_action (dialog, _("Install"));
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES, 0);
+	button = gpk_client_dialog_run (dialog);
+	if (button == GTK_RESPONSE_OK)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "got id %i", button);

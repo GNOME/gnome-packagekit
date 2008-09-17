@@ -47,6 +47,7 @@ typedef enum
 	GPK_CLIENT_DIALOG_PAGE_PROGRESS,
 	GPK_CLIENT_DIALOG_PAGE_FINISHED,
 	GPK_CLIENT_DIALOG_PAGE_WARNING,
+	GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES,
 	GPK_CLIENT_DIALOG_PAGE_UNKNOWN
 } GpkClientDialogPage;
 
@@ -73,7 +74,7 @@ gboolean	 gpk_client_dialog_show_page		(GpkClientDialog	*dialog,
 							 GpkClientDialogPage	 page,
 							 guint32		 timestamp);
 gboolean	 gpk_client_dialog_set_package_list	(GpkClientDialog	*dialog,
-							 PkPackageList		*list);
+							 const PkPackageList	*list);
 gboolean	 gpk_client_dialog_set_parent		(GpkClientDialog	*dialog,
 							 GdkWindow		*window);
 gboolean	 gpk_client_dialog_set_window_title	(GpkClientDialog	*dialog,

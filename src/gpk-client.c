@@ -1613,15 +1613,12 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 {
 	guint i;
 	guint len;
-	const PkPackageObj *obj;
 	PkPackageObj *obj_new;
 	gboolean ret = TRUE;
 	gchar **parts;
 	GError *error_local = NULL;
 	GtkResponseType button;
 	PkPackageList *list = NULL;
-	GString *string;
-	gchar *text;
 	gchar **package_ids = NULL;
 
 	/* confirm */
@@ -1663,6 +1660,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		}
 		if (obj_new != NULL)
 			pk_package_list_add_obj (list, obj_new);
+
 		pk_package_obj_free (obj_new);
 		g_strfreev (parts);
 		if (!ret)
@@ -1674,32 +1672,12 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	if (!ret)
 		goto out;
 
-	/* process package list */
-	string = g_string_new (_("The following packages can be installed:"));
-	g_string_append (string, "\n\n");
-	len = pk_package_list_get_size (list);
-	for (i=0; i<len; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->id, obj->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-
-	g_string_append_printf (string, "\n%s\n", _("Do you want to install these now?"));
-
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
-
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-
+	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install the following codecs"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, text);
+	gpk_client_dialog_set_message (gclient->priv->dialog, _("Do you want to install these packages now?"));
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, gclient->priv->timestamp);
-	g_free (text);
-
+	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
