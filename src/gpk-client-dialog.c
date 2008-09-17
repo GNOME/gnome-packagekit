@@ -91,6 +91,10 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gtk_widget_show (widget);
 
+	/* helper */
+	if (page == GPK_CLIENT_DIALOG_PAGE_WARNING)
+		gpk_client_dialog_set_image (dialog, "dialog-warning");
+
 	egg_debug ("setting page: %i", page);
 	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");

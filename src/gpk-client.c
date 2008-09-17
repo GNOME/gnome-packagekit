@@ -631,6 +631,15 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 			details = error->message;
 	}
 
+	/* it's a normal UI, not a backtrace so keep in the UI */
+	if (details == NULL) {
+		gpk_client_dialog_set_title (gclient->priv->dialog, title);
+		gpk_client_dialog_set_message (gclient->priv->dialog, message);
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, gclient->priv->timestamp);
+		gpk_client_dialog_run (gclient->priv->dialog);
+		return;
+	}
+
 	/* hide the main window */
 	window = gpk_client_dialog_get_window (gclient->priv->dialog);
 	gpk_error_dialog_modal_with_time (window, title, message, details, gclient->priv->timestamp);
@@ -945,7 +954,6 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "files not copied");
@@ -992,7 +1000,6 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 				  _("The files were not installed"), array->len);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted");
@@ -1044,7 +1051,6 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
-		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 
@@ -1321,7 +1327,6 @@ skip_checks:
 	gpk_client_dialog_set_show_message (gclient->priv->dialog, TRUE);
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
-		/* check if we got a permission denied */
 		gpk_client_error_msg (gclient, _("Failed to install package"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1984,7 +1989,6 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, _("No packages need to be installed"));
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "No packages need to be installed");
