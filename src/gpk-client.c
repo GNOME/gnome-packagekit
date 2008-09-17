@@ -1902,7 +1902,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	gchar *package_id = NULL;
 	gchar **package_ids = NULL;
 	guint len;
-	GtkWidget *widget;
+	GtkWindow *window;
 	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -1962,8 +1962,8 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* populate a chooser */
-	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
-	package_id = gpk_client_chooser_show (GTK_WINDOW (widget), list, _("Applications that can open this type of file"));
+	window = gpk_client_dialog_get_window (gclient->priv->dialog);
+	package_id = gpk_client_chooser_show (window, list, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {

@@ -211,8 +211,10 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
 	/* make modal if window set */
-	if (window != NULL)
+	if (window != NULL) {
+		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	}
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_client_chooser_button_action_cb), NULL);
