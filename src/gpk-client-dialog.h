@@ -25,6 +25,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <pk-enum.h>
+#include <pk-bitfield.h>
 #include <pk-package-list.h>
 
 G_BEGIN_DECLS
@@ -47,9 +48,29 @@ typedef enum
 	GPK_CLIENT_DIALOG_PAGE_PROGRESS,
 	GPK_CLIENT_DIALOG_PAGE_FINISHED,
 	GPK_CLIENT_DIALOG_PAGE_WARNING,
-	GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES,
+	GPK_CLIENT_DIALOG_PAGE_CUSTOM,
 	GPK_CLIENT_DIALOG_PAGE_UNKNOWN
 } GpkClientDialogPage;
+
+/**
+ * GpkClientDialogWidgets:
+ */
+typedef enum
+{
+	GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
+	GPK_CLIENT_DIALOG_WIDGET_BUTTON_CANCEL,
+	GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+	GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION,
+	GPK_CLIENT_DIALOG_WIDGET_PADDING,
+	GPK_CLIENT_DIALOG_WIDGET_PACKAGE_LIST,
+	GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR,
+	GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
+	GPK_CLIENT_DIALOG_WIDGET_UNKNOWN
+} GpkClientDialogWidgets;
+
+/* helpers */
+#define GPK_CLIENT_DIALOG_PACKAGE_PADDING	pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_PADDING, GPK_CLIENT_DIALOG_WIDGET_MESSAGE, -1)
+#define GPK_CLIENT_DIALOG_PACKAGE_LIST		pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PACKAGE_LIST)
 
 typedef struct _GpkClientDialogPrivate	 GpkClientDialogPrivate;
 typedef struct _GpkClientDialog		 GpkClientDialog;
@@ -72,6 +93,7 @@ GpkClientDialog	*gpk_client_dialog_new			(void);
 
 gboolean	 gpk_client_dialog_show_page		(GpkClientDialog	*dialog,
 							 GpkClientDialogPage	 page,
+							 PkBitfield		 options,
 							 guint32		 timestamp);
 gboolean	 gpk_client_dialog_set_package_list	(GpkClientDialog	*dialog,
 							 const PkPackageList	*list);
@@ -95,8 +117,6 @@ gboolean	 gpk_client_dialog_set_image_status	(GpkClientDialog	*dialog,
 							 PkStatusEnum		 status);
 gboolean	 gpk_client_dialog_set_allow_cancel	(GpkClientDialog	*dialog,
 							 gboolean		 can_cancel);
-gboolean	 gpk_client_dialog_set_show_message	(GpkClientDialog	*dialog,
-							 gboolean		 show_message);
 GtkWindow	*gpk_client_dialog_get_window		(GpkClientDialog	*dialog);
 GtkResponseType	 gpk_client_dialog_run			(GpkClientDialog	*dialog);
 gboolean	 gpk_client_dialog_close		(GpkClientDialog	*dialog);

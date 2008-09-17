@@ -61,17 +61,10 @@ shared_SOURCES =					\
 	gpk-dialog.h					\
 	gpk-client.c					\
 	gpk-client.h					\
-	gpk-client-private.h				\
 	gpk-client-dialog.c				\
 	gpk-client-dialog.h				\
 	gpk-client-eula.c				\
 	gpk-client-eula.h				\
-	gpk-client-resolve.c				\
-	gpk-client-resolve.h				\
-	gpk-client-depends.c				\
-	gpk-client-depends.h				\
-	gpk-client-requires.c				\
-	gpk-client-requires.h				\
 	gpk-client-signature.c				\
 	gpk-client-signature.h				\
 	gpk-client-untrusted.c				\

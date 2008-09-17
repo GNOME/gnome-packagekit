@@ -42,9 +42,9 @@ main (int argc, char **argv)
 	egg_debug_init (TRUE);
 
 	/* tests go here */
-	egg_string_test (test);
-	gpk_common_test (test);
-	gpk_dbus_test (test);
+//	egg_string_test (test);
+//	gpk_common_test (test);
+//	gpk_dbus_test (test);
 	gpk_client_dialog_test (test);
 
 	return egg_test_finish (test);

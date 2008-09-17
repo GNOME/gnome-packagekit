@@ -87,12 +87,27 @@ static guint signals [LAST_SIGNAL] = { 0 };
 G_DEFINE_TYPE (GpkClientDialog, gpk_client_dialog, G_TYPE_OBJECT)
 
 /**
+ * gpk_client_dialog_show_widget:
+ **/
+static void
+gpk_client_dialog_show_widget (GpkClientDialog *dialog, const gchar *name, gboolean enabled)
+{
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, name);
+	if (enabled)
+		gtk_widget_show (widget);
+	else
+		gtk_widget_hide (widget);
+}
+
+/**
  * gpk_client_dialog_show_page:
  **/
 gboolean
-gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, guint32 timestamp)
+gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, PkBitfield options, guint32 timestamp)
 {
 	GtkWidget *widget;
+	PkBitfield bitfield = 0;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
@@ -102,57 +117,51 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_show (widget);
 
 	/* helper */
-	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM)
+	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
 		gpk_client_dialog_set_image (dialog, "dialog-question");
-	if (page == GPK_CLIENT_DIALOG_PAGE_WARNING)
+		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
+						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
+						   -1);
+	} else if (page == GPK_CLIENT_DIALOG_PAGE_FINISHED) {
+		gpk_client_dialog_set_image (dialog, "dialog-information");
+		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
+						   -1);
+	} else if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
+		gpk_client_dialog_set_image (dialog, "dialog-question");
+		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
+						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
+						   -1);
+	} else if (page == GPK_CLIENT_DIALOG_PAGE_WARNING) {
 		gpk_client_dialog_set_image (dialog, "dialog-warning");
-
-	egg_debug ("setting page: %i", page);
-	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM || page == GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES) {
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
-		gtk_widget_show (widget);
-		gtk_widget_grab_focus (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_help");
-		gtk_widget_show (widget);
+		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
+						   -1);
 	} else if (page == GPK_CLIENT_DIALOG_PAGE_PROGRESS) {
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
-		gtk_widget_show (widget);
-		gtk_widget_grab_focus (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_help");
-		gtk_widget_show (widget);
-	} else if (page == GPK_CLIENT_DIALOG_PAGE_FINISHED || page == GPK_CLIENT_DIALOG_PAGE_WARNING) {
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
-		gtk_widget_show (widget);
-		gtk_widget_grab_focus (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_help");
-		gtk_widget_hide (widget);
-	} else {
-		egg_error ("unknown contant");
+		gpk_client_dialog_set_image (dialog, "dialog-warning");
+		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_CANCEL,
+						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
+						   GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR,
+						   -1);
 	}
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
-	if (page == GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES)
-		gtk_widget_show (widget);
-	else
-		gtk_widget_hide (widget);
+	/* we can specify extras */
+	bitfield += options;
+
+	gpk_client_dialog_show_widget (dialog, "button_help", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP));
+	gpk_client_dialog_show_widget (dialog, "button_cancel", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_CANCEL));
+	gpk_client_dialog_show_widget (dialog, "button_close", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE));
+	gpk_client_dialog_show_widget (dialog, "button_action", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION));
+	gpk_client_dialog_show_widget (dialog, "progressbar_percent", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR));
+	gpk_client_dialog_show_widget (dialog, "label_message", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_MESSAGE));
+	gpk_client_dialog_show_widget (dialog, "scrolledwindow_packages", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PACKAGE_LIST));
+	gpk_client_dialog_show_widget (dialog, "label_force_width", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PADDING));
+	gpk_client_dialog_show_widget (dialog, "label_force_height", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PADDING));
 
 	/* show */
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
@@ -258,10 +267,6 @@ gpk_client_dialog_set_message (GpkClientDialog *dialog, const gchar *message)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (message != NULL, FALSE);
-
-	/* infer we want to show by setting this */
-	if (!egg_strzero (message))
-		gpk_client_dialog_set_show_message (dialog, TRUE);
 
 	/* ignore this if it's uninteresting */
 	if (!dialog->priv->show_progress_files)
@@ -413,29 +418,6 @@ gpk_client_dialog_set_allow_cancel (GpkClientDialog *dialog, gboolean can_cancel
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, can_cancel);
-
-	return TRUE;
-}
-
-/**
- * gpk_client_dialog_set_show_message:
- **/
-gboolean
-gpk_client_dialog_set_show_message (GpkClientDialog *dialog, gboolean show_message)
-{
-	GtkWidget *widget;
-
-	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
-
-	egg_debug ("showing message: %i", show_message);
-
-	/* if we're never going to show it, hide the allocation */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "hbox_message");
-	if (!show_message)
-		gtk_widget_hide (widget);
-	else
-		gtk_widget_show (widget);
-	dialog->priv->show_progress_files = show_message;
 
 	return TRUE;
 }
@@ -836,7 +818,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press close");
 	gpk_client_dialog_set_image (dialog, "dialog-warning");
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)
 		egg_test_success (test, NULL);
@@ -849,7 +831,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_message (dialog, "Please press Uninstall\n\nThis is a really really, really,\nreally long title <i>with formatting</i>");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
 	gpk_client_dialog_set_action (dialog, _("Uninstall"));
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
 		egg_test_success (test, NULL);
@@ -860,9 +842,8 @@ gpk_client_dialog_test (EggTest *test)
 	egg_test_title (test, "no message");
 	gpk_client_dialog_set_title (dialog, "Refresh cache");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_REFRESH_CACHE);
-	gpk_client_dialog_set_show_message (dialog, FALSE);
 	gpk_client_dialog_set_percentage (dialog, 101);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
 	gpk_client_dialog_run (dialog);
 	egg_test_success (test, NULL);
 
@@ -872,7 +853,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_message (dialog, "Please press cancel");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_RUNNING);
 	gpk_client_dialog_set_percentage (dialog, 50);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CANCEL)
 		egg_test_success (test, NULL);
@@ -885,7 +866,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_message (dialog, "Please press close");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_INSTALL);
 	gpk_client_dialog_set_percentage (dialog, 101);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_MESSAGE, -1), 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)
 		egg_test_success (test, NULL);
@@ -895,10 +876,10 @@ gpk_client_dialog_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "confirm install button");
 	gpk_client_dialog_set_title (dialog, "Button press test");
-	gpk_client_dialog_set_message (dialog, "Please press Install");
+	gpk_client_dialog_set_message (dialog, "Please press Install if you can see the package list");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
 	gpk_client_dialog_set_action (dialog, _("Install"));
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_SHOW_PACKAGES, 0);
+	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
 		egg_test_success (test, NULL);
