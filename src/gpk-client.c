@@ -1073,8 +1073,10 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	/* get localised name and icon if available */
 	if (gclient->priv->application != NULL) {
 		application_localised = pk_extra_get_summary (gclient->priv->extra, gclient->priv->application);
-		if (application_localised == NULL)
+		if (application_localised == NULL) {
+			egg_debug ("did not get localised description for %s", gclient->priv->application);
 			application_localised = gclient->priv->application;
+		}
 		icon = pk_extra_get_icon_name (gclient->priv->extra, gclient->priv->application);
 	}
 
@@ -1369,14 +1371,18 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	GError *error_local = NULL;
 	gchar **package_ids = NULL;
 	GtkWidget *widget;
+	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (packages != NULL, FALSE);
 
 	/* check user wanted operation */
+	message = g_strdup_printf ("%s\n\n• %s\n\n%s", _("An additional file is required"),
+				   package_ids[0], _("Do you want to search for this file now?"));
 	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Package installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	ret = gpk_client_confirm_action (gclient, _("wants to install packages"), package_ids[0]);
+	ret = gpk_client_confirm_action (gclient, _("wants to install packages"), message);
+	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
 		ret = FALSE;
@@ -1432,14 +1438,18 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	PkPackageId *id = NULL;
 	gchar **package_ids = NULL;
 	gchar *text;
+	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (full_path != NULL, FALSE);
 
 	/* check user wanted operation */
+	message = g_strdup_printf ("%s\n\n• %s\n\n%s", _("The following file is required:"),
+				   full_path, _("Do you want to search for this now?"));
 	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("File installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), full_path);
+	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), message);
+	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
 		ret = FALSE;
@@ -1746,14 +1756,19 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	gchar **package_ids = NULL;
 	guint len;
 	GtkWidget *widget;
+	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
 
 	/* make sure the user wants to do action */
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Mime type installer"));
+	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+				   _("An additional program is required to open this type of file:"),
+				   mime_type, _("Do you want to search for a program to open this file type now?"));
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("File type installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
-	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), mime_type);
+	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), message);
+	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
 		ret = FALSE;
@@ -1832,14 +1847,18 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	gchar **package_ids = NULL;
 	guint len;
 	GtkWidget *widget;
+	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (font_desc != NULL, FALSE);
 
 	/* check user wanted operation */
+	message = g_strdup_printf ("%s\n\n%s", _("An additional font is required to view this file correctly"),
+				   _("Do you want to search for a suitable font now?"));
 	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Font installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
-	ret = gpk_client_confirm_action (gclient, _("wants to install a font"), font_desc);
+	ret = gpk_client_confirm_action (gclient, _("wants to install a font"), message);
+	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
 		ret = FALSE;
