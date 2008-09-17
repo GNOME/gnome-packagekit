@@ -260,6 +260,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 				    GPK_CHOOSER_COLUMN_TEXT, text,
 				    GPK_CHOOSER_COLUMN_ID, package_id, -1);
 		g_free (package_id);
+		package_id = NULL;
 		gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}
