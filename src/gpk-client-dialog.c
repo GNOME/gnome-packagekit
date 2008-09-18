@@ -186,7 +186,9 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 
 	/* not sure what to do here, should probably unparent somehow */
 	if (window == NULL) {
-		egg_warning ("parent set NULL when already modal with another window!");
+		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
+		widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+		gtk_window_set_modal (GTK_WINDOW(widget), FALSE);
 		return FALSE;
 	}
 
