@@ -55,6 +55,10 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 #define GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS	"/apps/gnome-packagekit/update_viewer/precache_details"
 
+#define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/interface/enable_font_helper"
+#define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/interface/enable_codec_helper"
+#define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/interface/enable_mime_type_helper"
+
 #define GPK_BUGZILLA_URL			"https://bugs.freedesktop.org/"
 
 #define GPK_ICON_SOFTWARE_UPDATE		"system-software-update"

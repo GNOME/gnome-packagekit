@@ -1803,6 +1803,14 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	PkPackageList *list = NULL;
 	gchar **package_ids = NULL;
 
+	/* check it's not session wide banned in gconf */
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
+	if (!ret) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_CODEC_HELPER);
+		ret = FALSE;
+		goto out;
+	}
+
 	/* confirm */
 	ret = gpk_client_install_gstreamer_codecs_confirm (gclient, codec_name_strings);
 	if (!ret) {
@@ -1908,6 +1916,14 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
 
+	/* check it's not session wide banned in gconf */
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_MIME_TYPE_HELPER, NULL);
+	if (!ret) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_MIME_TYPE_HELPER);
+		ret = FALSE;
+		goto out;
+	}
+
 	/* make sure the user wants to do action */
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
 				   _("An additional program is required to open this type of file:"),
@@ -2010,6 +2026,14 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (font_desc != NULL, FALSE);
+
+	/* check it's not session wide banned in gconf */
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);
+	if (!ret) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_FONT_HELPER);
+		ret = FALSE;
+		goto out;
+	}
 
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s", _("An additional font is required to view this file correctly"),
