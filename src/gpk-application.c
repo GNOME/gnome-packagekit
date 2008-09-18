@@ -940,6 +940,10 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	gtk_list_store_clear (application->priv->details_store);
 
+	/* if a collection, mark as such */
+	if (egg_strequal (details->id->data, "meta"))
+		gpk_application_add_detail_item (application, _("Type"), _("Collection"), NULL);
+
 	/* homepage */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 	if (egg_strzero (details->url) == FALSE) {
@@ -983,17 +987,18 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	if (details->size > 0) {
 		/* set the size */
 		value = gpk_size_to_si_size_text (details->size);
-		if (installed) {
+		if (egg_strequal (details->id->data, "meta"))
+			gpk_application_add_detail_item (application, _("Size"), value, NULL);
+		else if (installed)
 			gpk_application_add_detail_item (application, _("Installed size"), value, NULL);
-		} else {
+		else
 			gpk_application_add_detail_item (application, _("Download size"), value, NULL);
-		}
 		g_free (value);
 	}
 
 	/* set the repo text, or hide if installed */
-	if (!installed) {
-		/* see if we can get the full name of the repo from the repo_id */
+	if (!installed && !egg_strequal (details->id->data, "meta")) {
+		/* get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (application, details->id->data);
 		gpk_application_add_detail_item (application, _("Source"), repo_name, NULL);
 	}
