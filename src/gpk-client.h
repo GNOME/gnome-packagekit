@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <pk-bitfield.h>
 #include <pk-package-list.h>
 
 G_BEGIN_DECLS
@@ -53,11 +54,18 @@ typedef enum
  */
 typedef enum
 {
-	GPK_CLIENT_INTERACT_ALWAYS,
-	GPK_CLIENT_INTERACT_SOMETIMES,
-	GPK_CLIENT_INTERACT_NEVER,
+	GPK_CLIENT_INTERACT_CONFIRM,
+	GPK_CLIENT_INTERACT_PROGRESS,
+	GPK_CLIENT_INTERACT_FINISHED,
+	GPK_CLIENT_INTERACT_WARNING,
 	GPK_CLIENT_INTERACT_UNKNOWN
 } GpkClientInteract;
+
+#define GPK_CLIENT_INTERACT_NEVER			0
+#define GPK_CLIENT_INTERACT_ALWAYS			pk_bitfield_from_enums (GPK_CLIENT_INTERACT_WARNING, GPK_CLIENT_INTERACT_CONFIRM, GPK_CLIENT_INTERACT_PROGRESS, GPK_CLIENT_INTERACT_FINISHED, -1)
+#define GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS	pk_bitfield_from_enums (GPK_CLIENT_INTERACT_WARNING, GPK_CLIENT_INTERACT_CONFIRM, GPK_CLIENT_INTERACT_PROGRESS, -1)
+#define GPK_CLIENT_INTERACT_WARNING			pk_bitfield_from_enums (GPK_CLIENT_INTERACT_WARNING, -1)
+#define GPK_CLIENT_INTERACT_WARNING_PROGRESS		pk_bitfield_from_enums (GPK_CLIENT_INTERACT_WARNING, GPK_CLIENT_INTERACT_PROGRESS, -1)
 
 typedef struct _GpkClientPrivate	 GpkClientPrivate;
 typedef struct _GpkClient		 GpkClient;
@@ -112,10 +120,8 @@ gboolean	 gpk_client_refresh_cache		(GpkClient	*gclient,
 gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
 							 gchar		**package_ids,
 							 GError		**error);
-void		 gpk_client_show_finished		(GpkClient	*gclient,
-							 gboolean	 enabled);
 void		 gpk_client_set_interaction		(GpkClient	*gclient,
-							 GpkClientInteract interact);
+							 PkBitfield	 interact);
 PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
 const GPtrArray	*gpk_client_get_distro_upgrades		(GpkClient	*gclient,

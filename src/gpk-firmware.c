@@ -85,6 +85,7 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 	/* try to install each firmware file */
 	for (i=0; i<array->len; i++) {
 		filename = egg_str_list_index (array, i);
+		gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
 		ret = gpk_client_install_provide_file (gclient, filename, &error);
 		if (!ret) {
 			egg_warning ("failed to install provide file: %s", error->message);

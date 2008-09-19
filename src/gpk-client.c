@@ -89,9 +89,10 @@ struct _GpkClientPrivate
 	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
 	gboolean		 retry_untrusted_value;
-	gboolean		 show_finished;
+	gboolean		 show_confirm;
 	gboolean		 show_progress;
-	GpkClientInteract	 interact;
+	gboolean		 show_finished;
+	gboolean		 show_warning;
 	gchar			**files_array;
 	PkExitEnum		 exit;
 	GdkWindow		*parent_window;
@@ -166,31 +167,16 @@ gpk_install_finished_timeout (gpointer data)
 }
 
 /**
- * gpk_client_show_finished:
- *
- * You probably don't need to use this function, use gpk_client_set_interaction() instead
- **/
-void
-gpk_client_show_finished (GpkClient *gclient, gboolean enabled)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gclient->priv->show_finished = enabled;
-}
-
-/**
  * gpk_client_set_interaction:
  **/
 void
-gpk_client_set_interaction (GpkClient *gclient, GpkClientInteract interact)
+gpk_client_set_interaction (GpkClient *gclient, PkBitfield interact)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gclient->priv->interact = interact;
-	/* only start showing if we always show */
-	gclient->priv->show_progress = (interact == GPK_CLIENT_INTERACT_ALWAYS);
-
-	/* normally, if we don't want to show progress then we don't want finished */
-	if (gclient->priv->show_progress)
-		gclient->priv->show_finished = FALSE;
+	gclient->priv->show_confirm = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_CONFIRM);
+	gclient->priv->show_progress = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_PROGRESS);
+	gclient->priv->show_finished = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_FINISHED);
+	gclient->priv->show_warning = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_WARNING);
 }
 
 /**
@@ -355,8 +341,7 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 		goto out;
 	}
 
-	if (exit == PK_EXIT_ENUM_SUCCESS &&
-	    gclient->priv->show_finished) {
+	if (exit == PK_EXIT_ENUM_SUCCESS && gclient->priv->show_finished) {
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0, 0);
 		gclient->priv->finished_timer_id = g_timeout_add_seconds (GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY,
@@ -383,7 +368,7 @@ gpk_client_set_status (GpkClient *gclient, PkStatusEnum status)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* do we force progress? */
-	if (gclient->priv->interact == GPK_CLIENT_INTERACT_SOMETIMES) {
+	if (!gclient->priv->show_progress) {
 		if (status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
 		    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
 		    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
@@ -391,7 +376,6 @@ gpk_client_set_status (GpkClient *gclient, PkStatusEnum status)
 		    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 		    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
 		    status == PK_STATUS_ENUM_REFRESH_CACHE) {
-			gclient->priv->show_progress = TRUE;
 			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
 		}
 	}
@@ -607,6 +591,9 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 	GtkWindow *window;
 	const gchar *message = _("Unknown error. Please refer to the detailed report and report in bugzilla.");
 	const gchar *details = NULL;
+
+	if (!gclient->priv->show_warning)
+		return;
 
 	/* print a proper error if we have it */
 	if (error != NULL) {
@@ -856,7 +843,8 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 			g_ptr_array_add (array_missing, g_strdup (data));
 	}
 
-	if (array_missing->len > 0) {
+	/* optional */
+	if (gclient->priv->show_confirm && array_missing->len > 0) {
 		title = ngettext (_("Do you want to copy this file?"),
 				  _("Do you want to copy these files?"), array_missing->len);
 		message_part = ngettext (_("One package file has to be copied to a non-private location so it can be installed:"),
@@ -869,12 +857,11 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
 		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		gpk_client_dialog_set_action (gclient->priv->dialog, _("Copy file"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
-
 		g_free (message);
 
-		/* did we click no or exit the window? */
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
 		button = gpk_client_dialog_run (gclient->priv->dialog);
+		/* did we click no or exit the window? */
 		if (button != GTK_RESPONSE_OK) {
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted the copy");
 			ret = FALSE;
@@ -1126,9 +1113,11 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	array = pk_strv_to_ptr_array (files_rel);
 
 	/* check the user wanted to call this method */
-	ret = gpk_client_install_local_files_verify (gclient, array, error);
-	if (!ret)
-		goto out;
+	if (gclient->priv->show_confirm) {
+		ret = gpk_client_install_local_files_verify (gclient, array, error);
+		if (!ret)
+			goto out;
+	}
 
 	/* check all files exist and are readable by the local user */
 	ret = gpk_client_install_local_files_check_exists (gclient, array, error);
@@ -1149,7 +1138,8 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	/* set title */
 	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing files"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0, 0);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
 
 	/* wait */
 	g_main_loop_run (gclient->priv->loop);
@@ -1210,6 +1200,12 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto skip_checks;
 	}
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	/* get the packages we depend on */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding packages we require"));
 
@@ -1219,7 +1215,6 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		ret = FALSE;
 		goto out;
 	}
 
@@ -1229,7 +1224,6 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		gpk_client_error_msg (gclient, _("Could not work out what packages would also be removed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		ret = FALSE;
 		goto out;
 	}
 
@@ -1263,9 +1257,9 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Remove"));
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
-	button = gpk_client_dialog_run (gclient->priv->dialog);
 	g_free (title);
 	g_free (message);
+	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
@@ -1281,7 +1275,7 @@ skip_checks:
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1295,8 +1289,10 @@ skip_checks:
 	}
 
 	/* setup the UI */
-	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+	if (gclient->priv->show_progress) {
+		gpk_client_dialog_set_message (gclient->priv->dialog, "");
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+	}
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -1349,6 +1345,12 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
 	if (!ret) {
 		egg_debug ("we've said we don't want the dep dialog");
+		goto skip_checks;
+	}
+
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -1413,13 +1415,15 @@ skip_checks:
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		return FALSE;
+		goto out;
 	}
 
 	/* try to install the package_id */
 	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing packages"));
-	if (gclient->priv->show_progress)
+	if (gclient->priv->show_progress) {
+		gpk_client_dialog_set_message (gclient->priv->dialog, "");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+	}
 
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
@@ -1469,6 +1473,12 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (packages != NULL, FALSE);
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	string = g_string_new ("");
 	len = g_strv_length (packages);
 	for (i=0; i<len; i++)
@@ -1491,6 +1501,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 		goto out;
 	}
 
+skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for packages"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
@@ -1502,6 +1513,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1510,6 +1522,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Incorrect response from search"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1517,15 +1530,18 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		text = pk_package_ids_to_text (packages, ",");
-		title = g_strdup_printf (_("Could not find %s"), text);
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			text = pk_package_ids_to_text (packages, ",");
+			title = g_strdup_printf (_("Could not find %s"), text);
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+			g_free (text);
+			g_free (title);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no package found");
-		g_free (text);
-		g_free (title);
+		ret = FALSE;
 		goto out;
 	}
 
@@ -1543,25 +1559,31 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 
 	/* already installed? */
 	if (already_installed) {
-		text = pk_package_ids_to_text (packages, ",");
-		title = g_strdup_printf (_("Failed to install %s"), text);
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("The package is already installed"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			text = pk_package_ids_to_text (packages, ",");
+			title = g_strdup_printf (_("Failed to install %s"), text);
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("The package is already installed"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+			g_free (text);
+			g_free (title);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package already found");
-		g_free (text);
-		g_free (title);
+		ret = FALSE;
 		goto out;
 	}
 
 	/* got junk? */
 	if (id == NULL) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("Incorrect response from search"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("Incorrect response from search"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package already found");
+		ret = FALSE;
 		goto out;
 	}
 
@@ -1574,12 +1596,11 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	if (!ret) {
 		/* copy error message */
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
 out:
-	if (error_local != NULL)
-		g_error_free (error_local);
 	g_strfreev (package_ids);
 	return ret;
 }
@@ -1613,6 +1634,12 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (full_path != NULL, FALSE);
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s", _("The following file is required:"),
 				   full_path, _("Do you want to search for this now?"));
@@ -1626,11 +1653,26 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 		goto out;
 	}
 
+skip_checks:
+	/* set title */
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file"));
+	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
+
+	/* reset */
+	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
+	if (!ret) {
+		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* do search */
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to search for file"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1638,10 +1680,12 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files found");
 		ret = FALSE;
 		goto out;
@@ -1661,13 +1705,15 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 
 	/* already installed? */
 	if (already_installed) {
-		text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install file"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, text);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install file"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, text);
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+			g_free (text);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "already provided");
-		g_free (text);
 		ret = FALSE;
 		goto out;
 	}
@@ -1810,6 +1856,12 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		goto out;
 	}
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	/* confirm */
 	ret = gpk_client_install_gstreamer_codecs_confirm (gclient, codec_name_strings);
 	if (!ret) {
@@ -1818,6 +1870,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		goto out;
 	}
 
+skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for codecs"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
@@ -1840,11 +1893,14 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		egg_debug ("codec description=%s", parts[1]);
 		obj_new = gpk_client_install_gstreamer_codec_part (gclient, parts[0], parts[1], &error_local);
 		if (obj_new == NULL) {
-			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for codec"));
-			gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find codec in any configured software source"));
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-			gpk_client_dialog_run (gclient->priv->dialog);
+			if (gclient->priv->show_warning) {
+				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for codec"));
+				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find codec in any configured software source"));
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+				gpk_client_dialog_run (gclient->priv->dialog);
+			}
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			g_error_free (error_local);
 			ret = FALSE;
 		}
 		if (obj_new != NULL)
@@ -1860,6 +1916,12 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	//TODO: install partial
 	if (!ret)
 		goto out;
+
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks2;
+	}
 
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install the following codecs"));
@@ -1877,6 +1939,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 		goto out;
 	}
 
+skip_checks2:
 	/* convert to list of package id's */
 	package_ids = pk_package_list_to_strv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
@@ -1923,6 +1986,12 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 		goto out;
 	}
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	/* make sure the user wants to do action */
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
 				   _("An additional program is required to open this type of file:"),
@@ -1937,6 +2006,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 		goto out;
 	}
 
+skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file handlers"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
@@ -1950,6 +2020,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1959,7 +2030,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -1967,10 +2038,12 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "nothing was found to handle mime type");
 		ret = FALSE;
 		goto out;
@@ -1982,10 +2055,12 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 
 	/* selected nothing */
 	if (package_id == NULL) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install software"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("No applications were chosen to be installed"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install software"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("No applications were chosen to be installed"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
 		ret = FALSE;
 		goto out;
@@ -2034,6 +2109,12 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 		goto out;
 	}
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s", _("An additional font is required to view this file correctly"),
 				   _("Do you want to search for a suitable font now?"));
@@ -2047,6 +2128,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 		goto out;
 	}
 
+skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for fonts"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
@@ -2060,6 +2142,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2069,7 +2152,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		ret = FALSE;
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2077,13 +2160,21 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-		gpk_client_dialog_run (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, NULL);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to find font");
 		ret = FALSE;
 		goto out;
+	}
+
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks2;
 	}
 
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
@@ -2102,6 +2193,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 		goto out;
 	}
 
+skip_checks2:
 	/* convert to list of package id's */
 	package_ids = pk_package_list_to_strv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
@@ -2158,6 +2250,12 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 
 	len = g_strv_length (filenames);
 
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
 	title = ngettext (_("Do you want to install this catalog?"),
 			  _("Do you want to install these catalogs?"), len);
 	message = g_strjoinv ("\n", filenames);
@@ -2174,6 +2272,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	if (button != GTK_RESPONSE_OK)
 		return FALSE;
 
+skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install catalogs"));
 	gpk_client_set_status (gclient, PK_STATUS_ENUM_WAIT);
@@ -2192,13 +2291,21 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		/* show UI */
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("No packages need to be installed"));
-		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
-		gpk_client_dialog_run (gclient->priv->dialog);
+		if (gclient->priv->show_warning) {
+			gpk_client_dialog_set_title (gclient->priv->dialog, _("No packages need to be installed"));
+			gpk_client_dialog_set_message (gclient->priv->dialog, "");
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+			gpk_client_dialog_run (gclient->priv->dialog);
+		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "No packages need to be installed");
 		ret = FALSE;
 		goto out;
+	}
+
+	/* optional */
+	if (!gclient->priv->show_confirm) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks2;
 	}
 
 	/* process package list */
@@ -2221,7 +2328,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	gpk_client_dialog_set_message (gclient->priv->dialog, text);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-question");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	g_free (text);
@@ -2233,6 +2340,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		goto out;
 	}
 
+skip_checks2:
 	/* convert to list of package id's */
 	package_ids = pk_package_list_to_strv (list);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
@@ -2263,6 +2371,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2273,9 +2382,9 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
 	if (!ret) {
 		/* display and set */
-		text = g_strdup_printf ("%s: %s", _("Failed to update system"), message);
 		gpk_client_error_msg (gclient, _("Failed to update system"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2310,8 +2419,6 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
-	if (error_local != NULL)
-		g_error_free (error_local);
 	g_free (message);
 	g_free (text);
 	return ret;
@@ -2335,6 +2442,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2346,7 +2454,8 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* display and set */
 		gpk_client_error_msg (gclient, _("Failed to update package lists"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2361,8 +2470,6 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
-	if (error_local != NULL)
-		g_error_free (error_local);
 	g_free (message);
 	g_free (text);
 	return ret;
@@ -2386,7 +2493,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		return FALSE;
+		goto out;
 	}
 
 	/* wrap update, but handle all the GPG and EULA stuff */
@@ -2394,6 +2501,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to get updates"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2428,7 +2536,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* are we not able to do this? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Backend does not support GetDistroUpgrades");
-		return FALSE;
+		return NULL;
 	}
 
 	/* reset */
@@ -2437,7 +2545,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		return FALSE;
+		return NULL;
 	}
 
 	/* clear old data */
@@ -2451,6 +2559,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Getting update lists failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2493,6 +2602,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2508,9 +2618,6 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
-	if (error_local != NULL)
-		g_error_free (error_local);
-
 	/* return the file list */
 	return g_strdupv (gclient->priv->files_array);
 }
@@ -2523,7 +2630,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 {
 	gboolean ret = TRUE;
 	GError *error_local = NULL;
-	gchar *message = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -2532,6 +2638,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	if (!ret) {
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2540,7 +2647,8 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	if (!ret) {
 		/* display and set */
 		gpk_client_error_msg (gclient, _("Failed to update packages"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
@@ -2556,9 +2664,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 out:
-	if (error_local != NULL)
-		g_error_free (error_local);
-	g_free (message);
 	return ret;
 }
 
@@ -2657,7 +2762,7 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* go back to the UI */
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
 	gclient->priv->using_secondary_client = FALSE;
 
 	egg_debug ("trying to requeue install");
@@ -2898,9 +3003,10 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->application = NULL;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
-	gclient->priv->interact = GPK_CLIENT_INTERACT_NEVER;
-	gclient->priv->show_finished = TRUE;
+	gclient->priv->show_confirm = TRUE;
 	gclient->priv->show_progress = TRUE;
+	gclient->priv->show_finished = TRUE;
+	gclient->priv->show_warning = TRUE;
 	gclient->priv->finished_timer_id = 0;
 	gclient->priv->timestamp = 0;
 	gclient->priv->loop = g_main_loop_new (NULL, FALSE);

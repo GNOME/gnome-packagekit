@@ -323,7 +323,7 @@ gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_ALWAYS);
+	gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	gpk_check_update_update_system (cupdate);
 }
 
@@ -398,12 +398,13 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (egg_strequal (action, "update-all-packages")) {
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
 		gpk_check_update_update_system (cupdate);
 	} else if (egg_strequal (action, "update-just-security")) {
 
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
 		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
@@ -767,7 +768,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
 		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
@@ -780,7 +781,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* just do everything */
 	if (update == GPK_UPDATE_ENUM_ALL) {
 		egg_debug ("we should do the update automatically!");
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
+		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
 		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
 		goto out;
 	}

@@ -244,8 +244,7 @@ gpk_client_add_package_ids (gchar **package_ids)
 	length = g_strv_length (package_ids);
 	gclient = gpk_client_new ();
 	/* only show if we need to download a cache */
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_SOMETIMES);
-	gpk_client_show_finished (gclient, FALSE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
 
 	for (i=0; i<length; i++) {
 		package_id = package_ids[i];

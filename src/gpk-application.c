@@ -1584,7 +1584,6 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	package_ids = pk_package_list_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
-		gpk_client_show_finished (application->priv->gclient, FALSE);
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
 		/* can we show the user the new application? */
 		if (ret) {
@@ -2686,7 +2685,6 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->control = pk_control_new ();
 	application->priv->gclient = gpk_client_new ();
-	gpk_client_show_finished (application->priv->gclient, FALSE);
 
 	application->priv->client_search = pk_client_new ();
 	g_signal_connect (application->priv->client_search, "package",

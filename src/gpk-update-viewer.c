@@ -186,7 +186,7 @@ gpk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	gtk_widget_hide (widget);
 
 	gpk_update_viewer_set_page (PAGE_LAST);
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
 	ret = gpk_client_update_system (gclient, NULL);
 
 	/* did we succeed updating the system */
@@ -265,7 +265,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	/* set correct view */
 	gpk_update_viewer_set_page (PAGE_LAST);
 	package_ids = pk_package_ids_from_array (array);
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
 	ret = gpk_client_update_packages (gclient, package_ids, NULL);
 	g_strfreev (package_ids);
 
@@ -414,7 +414,7 @@ gpk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
 	GError *error = NULL;
 
 	/* refresh the cache */
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
 	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
 	ret = gpk_client_refresh_cache (gclient, &error);
 	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
@@ -1926,7 +1926,6 @@ main (int argc, char *argv[])
 
 	/* install stuff using the gnome helpers */
 	gclient = gpk_client_new ();
-	gpk_client_show_finished (gclient, FALSE);
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);

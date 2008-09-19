@@ -651,7 +651,6 @@ gpk_watch_refresh_cache_cb (GtkMenuItem *item, gpointer data)
 
 	egg_debug ("refresh cache");
 	gpk_client_set_interaction (watch->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	gpk_client_show_finished (watch->priv->gclient, FALSE);
 	ret = gpk_client_refresh_cache (watch->priv->gclient, &error);
 	if (!ret) {
 		egg_warning ("%s", error->message);
@@ -689,7 +688,7 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 
 	/* launch the UI */
 	gclient = gpk_client_new ();
-	gpk_client_show_finished (gclient, FALSE);
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
 	g_signal_connect (gclient, "quit", G_CALLBACK (pk_monitor_action_unref_cb), watch);
 	gpk_client_monitor_tid (gclient, tid);
 }
