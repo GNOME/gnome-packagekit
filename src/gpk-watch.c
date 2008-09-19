@@ -210,24 +210,35 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 
 	/* get the most important icon */
 	value = pk_bitfield_contain_priority (status,
-					   PK_STATUS_ENUM_REFRESH_CACHE,
-					   PK_STATUS_ENUM_LOADING_CACHE,
-					   PK_STATUS_ENUM_CANCEL,
-					   PK_STATUS_ENUM_INSTALL,
-					   PK_STATUS_ENUM_REMOVE,
-					   PK_STATUS_ENUM_CLEANUP,
-					   PK_STATUS_ENUM_OBSOLETE,
-					   PK_STATUS_ENUM_SETUP,
-					   PK_STATUS_ENUM_UPDATE,
-					   PK_STATUS_ENUM_DOWNLOAD,
-					   PK_STATUS_ENUM_QUERY,
-					   PK_STATUS_ENUM_INFO,
-					   PK_STATUS_ENUM_WAIT,
-					   PK_STATUS_ENUM_DEP_RESOLVE,
-					   PK_STATUS_ENUM_ROLLBACK,
-					   PK_STATUS_ENUM_COMMIT,
-					   PK_STATUS_ENUM_REQUEST,
-					   PK_STATUS_ENUM_FINISHED, -1);
+					      PK_STATUS_ENUM_REFRESH_CACHE,
+					      PK_STATUS_ENUM_LOADING_CACHE,
+					      PK_STATUS_ENUM_CANCEL,
+					      PK_STATUS_ENUM_INSTALL,
+					      PK_STATUS_ENUM_REMOVE,
+					      PK_STATUS_ENUM_CLEANUP,
+					      PK_STATUS_ENUM_OBSOLETE,
+					      PK_STATUS_ENUM_SETUP,
+					      PK_STATUS_ENUM_RUNNING,
+					      PK_STATUS_ENUM_UPDATE,
+					      PK_STATUS_ENUM_DOWNLOAD,
+					      PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,
+					      PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,
+					      PK_STATUS_ENUM_DOWNLOAD_FILELIST,
+					      PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,
+					      PK_STATUS_ENUM_DOWNLOAD_GROUP,
+					      PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,
+					      PK_STATUS_ENUM_QUERY,
+					      PK_STATUS_ENUM_INFO,
+					      PK_STATUS_ENUM_DEP_RESOLVE,
+					      PK_STATUS_ENUM_ROLLBACK,
+					      PK_STATUS_ENUM_TEST_COMMIT,
+					      PK_STATUS_ENUM_COMMIT,
+					      PK_STATUS_ENUM_REQUEST,
+					      PK_STATUS_ENUM_SIG_CHECK,
+					      PK_STATUS_ENUM_CLEANUP,
+					      PK_STATUS_ENUM_REPACKAGING,
+					      PK_STATUS_ENUM_WAIT,
+					      PK_STATUS_ENUM_FINISHED, -1);
 
 	/* only set if in the list and not unknown */
 	if (value != PK_STATUS_ENUM_UNKNOWN && value != -1) {
@@ -248,11 +259,10 @@ gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
 
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
 	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM))
 		watch->priv->show_refresh_in_menu = FALSE;
-	} else {
+	else
 		watch->priv->show_refresh_in_menu = TRUE;
-	}
 
 	gpk_watch_refresh_icon (watch);
 	gpk_watch_refresh_tooltip (watch);
