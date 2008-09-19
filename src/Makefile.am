@@ -152,6 +152,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-watch.h					\
 	gpk-firmware.c					\
 	gpk-firmware.h					\
+	gpk-hardware.c					\
+	gpk-hardware.h					\
 	gpk-inhibit.c					\
 	gpk-inhibit.h					\
 	gpk-dbus.c					\
