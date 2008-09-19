@@ -295,9 +295,8 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 	}
 
 	/* trim off extra newlines */
-	if (message_text->len != 0) {
+	if (message_text->len != 0)
 		g_string_set_size (message_text, message_text->len-1);
-	}
 
 	/* do we do the notification? */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, NULL);
@@ -821,7 +820,6 @@ gpk_check_permissions (const gchar *filename, guint euid, guint egid, guint mode
 		      ((statbuf.st_mode & S_IXUSR) && euid == statbuf.st_uid) ||
 		      ((statbuf.st_mode & S_IXGRP) && egid == statbuf.st_gid)))
 			return FALSE;
-
 		return TRUE;
 	}
 	return FALSE;
