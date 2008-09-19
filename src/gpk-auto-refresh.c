@@ -363,7 +363,6 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* we do this to get an icon at startup */
 	if (!arefresh->priv->sent_get_updates) {
 		gpk_auto_refresh_signal_get_updates (arefresh);
-		gpk_auto_refresh_maybe_get_upgrades (arefresh);
 		arefresh->priv->sent_get_updates = TRUE;
 		return TRUE;
 	}
