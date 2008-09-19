@@ -319,6 +319,7 @@ static void
 gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkClient *gclient)
 {
 	PkRoleEnum role = PK_ROLE_ENUM_UNKNOWN;
+	PkPackageList *list;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
@@ -342,8 +343,11 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	}
 
 	if (exit == PK_EXIT_ENUM_SUCCESS && gclient->priv->show_finished) {
-		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0, 0);
+		list = pk_client_get_package_list (client);
+		gpk_client_dialog_set_message (gclient->priv->dialog, _("The following packages were installed:"));
+		gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, GPK_CLIENT_DIALOG_PACKAGE_LIST, 0);
+		g_object_unref (list);
 		gclient->priv->finished_timer_id = g_timeout_add_seconds (GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY,
 									  gpk_install_finished_timeout, gclient);
 	} else {
