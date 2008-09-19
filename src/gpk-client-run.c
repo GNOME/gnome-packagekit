@@ -111,9 +111,8 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gchar *string1, gchar *string2,
 				        gint int1, gint int2, gpointer user_data)
 {
-	if (egg_strequal (name, "button_action")) {
+	if (egg_strequal (name, "button_action"))
 		return gtk_button_new_with_mnemonic (_("_Run"));
-	}
 	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
@@ -166,14 +165,11 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 	if (ret) {
 		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "TryExec", NULL);
 		/* try harder */
-		if (exec == NULL) {
+		if (exec == NULL)
 			exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
-		}
-		/* try harder */
-		if (exec == NULL) {
-			/* abandon attempt */
+		/* abandon attempt */
+		if (exec == NULL)
 			goto out;
-		}
 
 		/* have we the same executable name?
 		 * this helps when there's "f-spot", "fspot --import %f", and "f-spot --view" in 3
@@ -208,9 +204,8 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 		g_free (icon);
 		icon = NULL;
 	}
-	if (icon == NULL) {
+	if (icon == NULL)
 		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
-	}
 	gtk_list_store_set (list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, text,
 			    GPK_CHOOSER_COLUMN_FULL_PATH, exec, -1);
@@ -328,6 +323,7 @@ gpk_client_run_show (gchar **package_ids)
 	/* add all the apps */
 	len = gpk_client_add_package_ids (package_ids);
 	if (len == 0) {
+		egg_debug ("no executable file for %s", package_ids[0]);
 		goto out;
 	}
 
@@ -343,9 +339,8 @@ out:
 
 	/* hide window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
-	if (GTK_IS_WIDGET (widget)) {
+	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	}
 
 	g_object_unref (glade_xml);
 
@@ -363,9 +358,8 @@ gpk_client_run_self_test (gpointer data)
 {
 	EggTest *test = (EggTest *) data;
 
-	if (egg_test_start (test, "GpkClientRun") == FALSE) {
+	if (!egg_test_start (test, "GpkClientRun"))
 		return;
-	}
 	egg_test_end (test);
 }
 #endif
