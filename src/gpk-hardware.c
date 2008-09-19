@@ -62,9 +62,9 @@ static void     gpk_hardware_finalize	(GObject	  *object);
 struct GpkHardwarePrivate
 {
 	GConfClient		*gconf_client;
-	DBusGConnection *connection;
-	DBusGProxy      *proxy;
-	gchar **        package_ids;
+	DBusGConnection		*connection;
+	DBusGProxy		*proxy;
+	gchar			**package_ids;
 };
 
 G_DEFINE_TYPE (GpkHardware, gpk_hardware, G_TYPE_OBJECT)
@@ -126,11 +126,8 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	PkClient *client = NULL;
 
 	client = pk_client_new ();
-	ret = pk_client_what_provides (client,
-			pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
-			PK_PROVIDES_ENUM_HARDWARE_DRIVER,
-			"unused",
-			&error);
+	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, "unused", &error);
 	if (!ret) {
 		egg_warning ("Error calling pk_client_what_provides :%s", error->message);
 		g_error_free (error);
@@ -141,17 +138,16 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	/* If there are no driver packages available just return */
 	list = pk_client_get_package_list (client);
 	length = pk_package_list_get_size (list);
-	if (length == 0)
-	{
+	if (length == 0) {
 		egg_debug ("no drivers available");
 		goto out;
 	}
 
 	package_name = pk_package_list_to_string (list);
-	if (hardware->priv->package_ids)
+	if (hardware->priv->package_ids != NULL)
 		g_strfreev (hardware->priv->package_ids);
 	hardware->priv->package_ids = pk_package_list_to_strv (list);
-	
+
 	message = g_strdup_printf ("%s %s", package_name, _("is needed for this hardware"));
 	notification = notify_notification_new (_("Install package?"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
@@ -169,7 +165,7 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 out:
 	g_free (package_name);
 	g_free (message);
-	if (list)
+	if (list != NULL)
 		g_object_unref (list);
 	g_object_unref (client);
 }
@@ -222,14 +218,12 @@ gpk_hardware_init (GpkHardware *hardware)
 		g_error_free (error);
 		return;
 	}
-	hardware->priv->proxy = dbus_g_proxy_new_for_name (
-			hardware->priv->connection,
-			"org.freedesktop.Hal",
-			"/org/freedesktop/Hal/Manager",
-			"org.freedesktop.Hal.Manager");
+	hardware->priv->proxy = dbus_g_proxy_new_for_name (hardware->priv->connection,
+							   "org.freedesktop.Hal",
+							   "/org/freedesktop/Hal/Manager",
+							   "org.freedesktop.Hal.Manager");
 	dbus_g_proxy_connect_signal (hardware->priv->proxy, "DeviceAdded",
-					 G_CALLBACK (gpk_hardware_device_added_cb),
-					 hardware, NULL);
+				     G_CALLBACK (gpk_hardware_device_added_cb), hardware, NULL);
 
 	/* check at startup (plus delay) and see if there is cold plugged hardware needing drivers */
 	g_timeout_add_seconds (GPK_HARDWARE_LOGIN_DELAY, gpk_hardware_timeout_cb, hardware);
@@ -262,9 +256,7 @@ gpk_hardware_finalize (GObject *object)
 
 	g_return_if_fail (hardware->priv != NULL);
 	g_object_unref (hardware->priv->gconf_client);
-	
-	if (hardware->priv->package_ids)
-        g_strfreev (hardware->priv->package_ids);
+	g_strfreev (hardware->priv->package_ids);
 
 	G_OBJECT_CLASS (gpk_hardware_parent_class)->finalize (object);
 }
