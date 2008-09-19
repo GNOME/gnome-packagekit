@@ -1584,6 +1584,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	package_ids = pk_package_list_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
+		gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
 		/* can we show the user the new application? */
 		if (ret) {
@@ -1598,8 +1599,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 			g_free (exec);
 		}
 	}
-	if (application->priv->action == PK_ACTION_REMOVE)
+	if (application->priv->action == PK_ACTION_REMOVE) {
+		gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 		ret = gpk_client_remove_package_ids (application->priv->gclient, package_ids, NULL);
+	}
 	g_strfreev (package_ids);
 
 	/* refresh the search as the items may have changed and the filter has not changed */
