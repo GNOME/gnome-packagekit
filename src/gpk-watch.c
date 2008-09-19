@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -570,7 +570,7 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_LOG);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
-			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
+			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
 			       "license", license_trans,
 			       "website-label", _("PackageKit Website"),
 			       "website", "www.packagekit.org",

@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -200,8 +200,8 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 		   "02110-1301, USA.")
 	};
-	const char  *translators = _("translator-credits");
-	char	    *license_trans;
+	const char *translators = _("translator-credits");
+	char *license_trans;
 
 	/* Translators comment: put your own name here to appear in the about dialog. */
 	if (!strcmp (translators, "translator-credits"))
@@ -216,7 +216,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_UPDATE);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
-			       "copyright", "Copyright \xc2\xa9 2007 Richard Hughes",
+			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
 			       "license", license_trans,
 			       "website-label", _("PackageKit Website"),
 			       "website", "www.packagekit.org",
