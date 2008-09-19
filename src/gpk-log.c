@@ -33,19 +33,18 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 
-/* local .la */
-#include <egg-unique.h>
-
 #include <pk-client.h>
 #include <pk-control.h>
 #include <pk-package-id.h>
 #include <pk-common.h>
 
+#include "egg-unique.h"
 #include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
+#include "gpk-enum.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;

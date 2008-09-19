@@ -36,6 +36,7 @@
 
 #include "gpk-common.h"
 #include "gpk-dialog.h"
+#include "gpk-enum.h"
 
 enum {
 	GPK_DIALOG_STORE_IMAGE,

@@ -51,18 +51,19 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 
-#include <gpk-client.h>
-#include <gpk-client-eula.h>
-#include <gpk-client-signature.h>
-#include <gpk-client-untrusted.h>
-#include <gpk-client-chooser.h>
-#include <gpk-common.h>
-#include <gpk-gnome.h>
-#include <gpk-error.h>
+#include "gpk-client.h"
+#include "gpk-client-eula.h"
+#include "gpk-client-signature.h"
+#include "gpk-client-untrusted.h"
+#include "gpk-client-chooser.h"
+#include "gpk-common.h"
+#include "gpk-gnome.h"
+#include "gpk-error.h"
 #include "gpk-consolekit.h"
 #include "gpk-animated-icon.h"
 #include "gpk-client-dialog.h"
 #include "gpk-dialog.h"
+#include "gpk-enum.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);

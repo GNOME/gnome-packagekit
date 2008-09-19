@@ -42,6 +42,7 @@
 
 #include "gpk-common.h"
 #include "gpk-auto-refresh.h"
+#include "gpk-enum.h"
 
 static void     gpk_auto_refresh_class_init	(GpkAutoRefreshClass *klass);
 static void     gpk_auto_refresh_init		(GpkAutoRefresh      *arefresh);
@@ -167,19 +168,19 @@ gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
  * or zero for never or no schema
  **/
 static guint
-gpk_auto_refresh_convert_frequency (PkFreqEnum freq)
+gpk_auto_refresh_convert_frequency (GpkFreqEnum freq)
 {
-	if (freq == PK_FREQ_ENUM_UNKNOWN) {
+	if (freq == GPK_FREQ_ENUM_UNKNOWN) {
 		egg_warning ("no schema");
 		return 0;
 	}
-	if (freq == PK_FREQ_ENUM_NEVER)
+	if (freq == GPK_FREQ_ENUM_NEVER)
 		return 0;
-	if (freq == PK_FREQ_ENUM_HOURLY)
+	if (freq == GPK_FREQ_ENUM_HOURLY)
 		return 60*60;
-	if (freq == PK_FREQ_ENUM_DAILY)
+	if (freq == GPK_FREQ_ENUM_DAILY)
 		return 60*60*24;
-	if (freq == PK_FREQ_ENUM_WEEKLY)
+	if (freq == GPK_FREQ_ENUM_WEEKLY)
 		return 60*60*24*7;
 	egg_warning ("unknown frequency enum");
 	return 0;
@@ -192,7 +193,7 @@ static guint
 gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *key)
 {
 	gchar *freq_text;
-	PkFreqEnum freq;
+	GpkFreqEnum freq;
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), 0);
 
@@ -204,7 +205,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 	}
 
 	/* convert to enum and get seconds */
-	freq = pk_freq_enum_from_text (freq_text);
+	freq = gpk_freq_enum_from_text (freq_text);
 	g_free (freq_text);
 	return gpk_auto_refresh_convert_frequency (freq);
 }
@@ -235,7 +236,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* only do the refresh cache when the user is idle */
-	if (arefresh->priv->session_idle == FALSE) {
+	if (!arefresh->priv->session_idle) {
 		egg_debug ("not when session active");
 		return FALSE;
 	}
@@ -250,7 +251,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		egg_warning ("failed to get last time");
 		return FALSE;
 	}
@@ -287,7 +288,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		egg_warning ("failed to get last time");
 		return FALSE;
 	}
@@ -324,7 +325,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
 						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time, NULL);
-	if (ret == FALSE) {
+	if (!ret) {
 		egg_debug ("failed to get last time");
 		return FALSE;
 	}
@@ -348,19 +349,19 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we shouldn't do this early in the session startup */
-	if (arefresh->priv->session_delay == FALSE) {
+	if (!arefresh->priv->session_delay) {
 		egg_debug ("not when this early in the session");
 		return FALSE;
 	}
 
 	/* no point continuing if we have no network */
-	if (arefresh->priv->network_active == FALSE) {
+	if (!arefresh->priv->network_active) {
 		egg_debug ("not when no network");
 		return FALSE;
 	}
 
 	/* we do this to get an icon at startup */
-	if (arefresh->priv->sent_get_updates == FALSE) {
+	if (!arefresh->priv->sent_get_updates) {
 		gpk_auto_refresh_signal_get_updates (arefresh);
 		gpk_auto_refresh_maybe_get_upgrades (arefresh);
 		arefresh->priv->sent_get_updates = TRUE;
@@ -458,7 +459,7 @@ gpk_auto_refresh_check_delay_cb (gpointer user_data)
 	egg_debug ("polling check");
 
 	/* we have waited enough */
-	if (arefresh->priv->session_delay == FALSE) {
+	if (!arefresh->priv->session_delay) {
 		egg_debug ("setting session delay TRUE");
 		arefresh->priv->session_delay = TRUE;
 	}
@@ -485,7 +486,7 @@ pk_connection_gpm_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connect
 	egg_debug ("gnome-power-manager connection-changed: %i", connected);
 
 	/* is this valid? */
-	if (connected == FALSE) {
+	if (!connected) {
 		if (arefresh->priv->proxy_gpm != NULL) {
 			g_object_unref (arefresh->priv->proxy_gpm);
 			arefresh->priv->proxy_gpm = NULL;
@@ -536,7 +537,7 @@ pk_connection_gs_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connecte
 	egg_debug ("gnome-screensaver connection-changed: %i", connected);
 
 	/* is this valid? */
-	if (connected == FALSE) {
+	if (!connected) {
 		if (arefresh->priv->proxy_gs != NULL) {
 			g_object_unref (arefresh->priv->proxy_gs);
 			arefresh->priv->proxy_gs = NULL;
@@ -641,12 +642,10 @@ gpk_auto_refresh_finalize (GObject *object)
 	g_object_unref (arefresh->priv->gconf_client);
 
 	/* only unref the proxies if they were ever set */
-	if (arefresh->priv->proxy_gs != NULL) {
+	if (arefresh->priv->proxy_gs != NULL)
 		g_object_unref (arefresh->priv->proxy_gs);
-	}
-	if (arefresh->priv->proxy_gpm != NULL) {
+	if (arefresh->priv->proxy_gpm != NULL)
 		g_object_unref (arefresh->priv->proxy_gpm);
-	}
 
 	G_OBJECT_CLASS (gpk_auto_refresh_parent_class)->finalize (object);
 }

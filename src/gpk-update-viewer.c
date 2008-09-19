@@ -54,6 +54,7 @@
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-animated-icon.h"
 #include "gpk-client.h"
+#include "gpk-enum.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;

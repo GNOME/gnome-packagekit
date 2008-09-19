@@ -45,6 +45,7 @@
 #include "gpk-common.h"
 #include "gpk-error.h"
 #include "gpk-animated-icon.h"
+#include "gpk-enum.h"
 
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store = NULL;

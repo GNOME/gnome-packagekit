@@ -57,6 +57,7 @@
 #include "gpk-auto-refresh.h"
 #include "gpk-client.h"
 #include "gpk-check-update.h"
+#include "gpk-enum.h"
 
 static void     gpk_check_update_class_init	(GpkCheckUpdateClass *klass);
 static void     gpk_check_update_init		(GpkCheckUpdate      *cupdate);
@@ -116,9 +117,8 @@ static void
 gpk_check_update_show_preferences_cb (GtkMenuItem *item, GpkCheckUpdate *cupdate)
 {
 	const gchar *command = "gpk-prefs";
-	if (g_spawn_command_line_async (command, NULL) == FALSE) {
+	if (!g_spawn_command_line_async (command, NULL))
 		egg_warning ("Couldn't execute command: %s", command);
-	}
 }
 
 /**
@@ -200,13 +200,12 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 		   "02110-1301, USA.")
 	};
-  	const char  *translators = _("translator-credits");
+	const char  *translators = _("translator-credits");
 	char	    *license_trans;
 
 	/* Translators comment: put your own name here to appear in the about dialog. */
-  	if (!strcmp (translators, "translator-credits")) {
+	if (!strcmp (translators, "translator-credits"))
 		translators = NULL;
-	}
 
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
@@ -277,9 +276,8 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			gtk_status_icon_position_menu, status_icon,
 			button, timestamp);
-	if (button == 0) {
+	if (button == 0)
 		gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
-	}
 }
 
 static gboolean gpk_check_update_query_updates (GpkCheckUpdate *cupdate);
@@ -336,9 +334,8 @@ static void
 gpk_check_update_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 {
 	const gchar *command = "gpk-update-viewer";
-	if (g_spawn_command_line_async (command, NULL) == FALSE) {
+	if (!g_spawn_command_line_async (command, NULL))
 		egg_warning ("Couldn't execute command: %s", command);
-	}
 }
 
 /**
@@ -517,9 +514,8 @@ gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, PkPackageList
 
 	/* shortcut */
 	length = pk_package_list_get_size (list);
-	if (length == 0) {
+	if (length == 0)
 		return PK_INFO_ENUM_UNKNOWN;
-	}
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
@@ -620,10 +616,10 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 /**
  * gpk_check_update_get_update_policy:
  **/
-static PkUpdateEnum
+static GpkUpdateEnum
 gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 {
-	PkUpdateEnum update;
+	GpkUpdateEnum update;
 	gchar *updates;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
@@ -631,9 +627,9 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 	updates = gconf_client_get_string (cupdate->priv->gconf_client, GPK_CONF_AUTO_UPDATE, NULL);
 	if (updates == NULL) {
 		egg_warning ("'%s' gconf key is null!", GPK_CONF_AUTO_UPDATE);
-		return PK_UPDATE_ENUM_UNKNOWN;
+		return GPK_UPDATE_ENUM_UNKNOWN;
 	}
-	update = pk_update_enum_from_text (updates);
+	update = gpk_update_enum_from_text (updates);
 	g_free (updates);
 	return update;
 }
@@ -651,7 +647,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	gboolean ret = FALSE;
 	GString *status_security;
 	GString *status_tooltip;
-	PkUpdateEnum update;
+	GpkUpdateEnum update;
 	GPtrArray *security_array;
 	const gchar *icon;
 	gchar *package_id;
@@ -724,7 +720,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 
 	/* do we do the automatic updates? */
 	update = gpk_check_update_get_update_policy (cupdate);
-	if (update == PK_UPDATE_ENUM_UNKNOWN) {
+	if (update == GPK_UPDATE_ENUM_UNKNOWN) {
 		egg_warning ("policy unknown");
 		goto out;
 	}
@@ -743,13 +739,12 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
 
 	/* is policy none? */
-	if (update == PK_UPDATE_ENUM_NONE) {
+	if (update == GPK_UPDATE_ENUM_NONE) {
 		egg_debug ("not updating as policy NONE");
 
 		/* do we warn the user? */
-		if (security_array->len > 0) {
+		if (security_array->len > 0)
 			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
-		}
 		goto out;
 	}
 
@@ -758,14 +753,13 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	if (!ret) {
 		egg_debug ("on battery so not doing update");
 		/* do we warn the user? */
-		if (security_array->len > 0) {
+		if (security_array->len > 0)
 			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
-		}
 		goto out;
 	}
 
 	/* just do security updates */
-	if (update == PK_UPDATE_ENUM_SECURITY) {
+	if (update == GPK_UPDATE_ENUM_SECURITY) {
 		if (security_array->len == 0) {
 			egg_debug ("policy security, but none available");
 			goto out;
@@ -784,7 +778,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	}
 
 	/* just do everything */
-	if (update == PK_UPDATE_ENUM_ALL) {
+	if (update == GPK_UPDATE_ENUM_ALL) {
 		egg_debug ("we should do the update automatically!");
 		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_NEVER);
 		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
@@ -824,9 +818,8 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	egg_debug ("updates changed");
 
 	/* ignore our own updates */
-	if (!cupdate->priv->get_updates_in_progress) {
+	if (!cupdate->priv->get_updates_in_progress)
 		g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
-	}
 }
 
 /**
@@ -877,14 +870,12 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* got a cache, no need to poll */
-	if (cupdate->priv->cache_okay) {
+	if (cupdate->priv->cache_okay)
 		return;
-	}
 
 	/* already in progress, but not yet certified okay */
-	if (cupdate->priv->cache_update_in_progress) {
+	if (cupdate->priv->cache_update_in_progress)
 		return;
-	}
 
 	cupdate->priv->cache_update_in_progress = TRUE;
 	cupdate->priv->cache_okay = TRUE;
@@ -965,9 +956,8 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 		obj = (PkDistroUpgradeObj *) g_ptr_array_index (array, i);
 		g_string_append_printf (string, "%s (%s)\n", obj->name, pk_distro_upgrade_enum_to_text (obj->state));
 	}
-	if (string->len != 0) {
+	if (string->len != 0)
 		g_string_set_size (string, string->len-1);
-	}
 
 	/* do the bubble */
 	title = _("Distribution upgrades available");

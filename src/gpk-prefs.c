@@ -40,6 +40,7 @@
 
 #include "egg-debug.h"
 #include "egg-unique.h"
+#include "gpk-enum.h"
 
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
 #define PK_FREQ_DAILY_TEXT		_("Daily")
@@ -89,24 +90,24 @@ pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
-	PkFreqEnum freq = PK_FREQ_ENUM_UNKNOWN;
+	GpkFreqEnum freq = GPK_FREQ_ENUM_UNKNOWN;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_HOURLY;
+		freq = GPK_FREQ_ENUM_HOURLY;
 	} else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_DAILY;
+		freq = GPK_FREQ_ENUM_DAILY;
 	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_WEEKLY;
+		freq = GPK_FREQ_ENUM_WEEKLY;
 	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_NEVER;
+		freq = GPK_FREQ_ENUM_NEVER;
 	} else {
 		g_assert (FALSE);
 	}
 
-	action = pk_freq_enum_to_text (freq);
+	action = gpk_freq_enum_to_text (freq);
 	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
 	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
 	g_free (value);
@@ -121,22 +122,22 @@ pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
-	PkFreqEnum freq = PK_FREQ_ENUM_UNKNOWN;
+	GpkFreqEnum freq = GPK_FREQ_ENUM_UNKNOWN;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_DAILY;
+		freq = GPK_FREQ_ENUM_DAILY;
 	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_WEEKLY;
+		freq = GPK_FREQ_ENUM_WEEKLY;
 	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
-		freq = PK_FREQ_ENUM_NEVER;
+		freq = GPK_FREQ_ENUM_NEVER;
 	} else {
 		g_assert (FALSE);
 	}
 
-	action = pk_freq_enum_to_text (freq);
+	action = gpk_freq_enum_to_text (freq);
 	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
 	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, action, NULL);
 	g_free (value);
@@ -151,7 +152,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
-	PkUpdateEnum update = PK_UPDATE_ENUM_UNKNOWN;
+	GpkUpdateEnum update = GPK_UPDATE_ENUM_UNKNOWN;
 	GConfClient *client;
 	GtkWidget *notify_widget;
 
@@ -163,19 +164,19 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	}
 	notify_widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
-		update = PK_UPDATE_ENUM_ALL;
+		update = GPK_UPDATE_ENUM_ALL;
 		gtk_widget_set_sensitive (notify_widget, FALSE);
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
-		update = PK_UPDATE_ENUM_SECURITY;
+		update = GPK_UPDATE_ENUM_SECURITY;
 		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
-		update = PK_UPDATE_ENUM_NONE;
+		update = GPK_UPDATE_ENUM_NONE;
 		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else {
 		g_assert (FALSE);
 	}
 
-	action = pk_update_enum_to_text (update);
+	action = gpk_update_enum_to_text (update);
 	egg_debug ("Changing %s to %s", GPK_CONF_AUTO_UPDATE, action);
 	gconf_client_set_string (client, GPK_CONF_AUTO_UPDATE, action, NULL);
 	g_free (value);
@@ -191,7 +192,7 @@ pk_prefs_update_freq_combo_setup (void)
 	gchar *value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	PkFreqEnum freq;
+	GpkFreqEnum freq;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
@@ -203,7 +204,7 @@ pk_prefs_update_freq_combo_setup (void)
 		return;
 	}
 	egg_debug ("value from gconf %s", value);
-	freq = pk_freq_enum_from_text (value);
+	freq = gpk_freq_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
 
@@ -231,7 +232,7 @@ pk_prefs_upgrade_freq_combo_setup (void)
 	gchar *value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	PkFreqEnum freq;
+	GpkFreqEnum freq;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
@@ -243,7 +244,7 @@ pk_prefs_upgrade_freq_combo_setup (void)
 		return;
 	}
 	egg_debug ("value from gconf %s", value);
-	freq = pk_freq_enum_from_text (value);
+	freq = gpk_freq_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
 
@@ -270,7 +271,7 @@ pk_prefs_auto_update_combo_setup (void)
 	gchar *value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	PkUpdateEnum update;
+	GpkUpdateEnum update;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
@@ -282,7 +283,7 @@ pk_prefs_auto_update_combo_setup (void)
 		return;
 	}
 	egg_debug ("value from gconf %s", value);
-	update = pk_update_enum_from_text (value);
+	update = gpk_update_enum_from_text (value);
 	g_free (value);
 	g_object_unref (client);
 

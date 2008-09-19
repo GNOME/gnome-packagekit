@@ -24,6 +24,7 @@
 #include "egg-test.h"
 #include "egg-debug.h"
 #include "gpk-common.h"
+#include "gpk-enum.h"
 
 void egg_string_test (EggTest *test);
 void gpk_dbus_test (EggTest *test);
@@ -42,8 +43,9 @@ main (int argc, char **argv)
 	egg_debug_init (TRUE);
 
 	/* tests go here */
-//	egg_string_test (test);
-//	gpk_common_test (test);
+	egg_string_test (test);
+	gpk_enum_test (test);
+	gpk_common_test (test);
 //	gpk_dbus_test (test);
 	gpk_client_dialog_test (test);
 

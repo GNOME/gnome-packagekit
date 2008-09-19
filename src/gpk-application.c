@@ -32,9 +32,6 @@
 #include <string.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include "egg-debug.h"
-#include "egg-string.h"
-
 #include <pk-enum.h>
 #include <pk-client.h>
 #include <pk-control.h>
@@ -46,11 +43,14 @@
 #include <pk-extra.h>
 #include <pk-details-obj.h>
 
-#include <gpk-client.h>
-#include <gpk-common.h>
-#include <gpk-gnome.h>
-#include <gpk-error.h>
+#include "egg-debug.h"
+#include "egg-string.h"
 
+#include "gpk-client.h"
+#include "gpk-common.h"
+#include "gpk-gnome.h"
+#include "gpk-error.h"
+#include "gpk-enum.h"
 #include "gpk-application.h"
 #include "gpk-animated-icon.h"
 #include "gpk-dialog.h"

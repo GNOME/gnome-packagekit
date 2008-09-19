@@ -57,6 +57,7 @@
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
+#include "gpk-enum.h"
 
 static void     gpk_watch_class_init	(GpkWatchClass *klass);
 static void     gpk_watch_init		(GpkWatch      *watch);
@@ -961,11 +962,10 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 
 	/* port is optional too */
 	port = gconf_client_get_int (watch->priv->gconf_client, "/system/http_proxy/port", NULL);
-	if (port == 0) {
+	if (port == 0)
 		connection = g_strdup (host);
-	} else {
+	else
 		connection = g_strdup_printf ("%s:%i", host, port);
-	}
 
 	/* the whole auth section is optional */
 	if (egg_strzero (auth))

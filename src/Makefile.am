@@ -51,6 +51,8 @@ shared_SOURCES =					\
 	egg-unique.h					\
 	egg-dbus-monitor.c				\
 	egg-dbus-monitor.h				\
+	gpk-enum.c					\
+	gpk-enum.h					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
 	gpk-animated-icon.c				\
@@ -183,6 +185,8 @@ gpk_prefs_SOURCES =					\
 	gpk-prefs.c					\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
+	gpk-enum.c					\
+	gpk-enum.h					\
 	$(NULL)
 
 gpk_prefs_LDADD =					\

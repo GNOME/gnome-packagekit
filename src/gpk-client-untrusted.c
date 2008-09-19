@@ -28,11 +28,14 @@
 #include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 
-#include "egg-debug.h"
 #include <pk-enum.h>
 #include <pk-package-id.h>
+
+#include "egg-debug.h"
+
 #include "gpk-gnome.h"
 #include "gpk-common.h"
+#include "gpk-enum.h"
 
 static gboolean retry_untrusted = FALSE;
 
