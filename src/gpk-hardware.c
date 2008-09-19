@@ -58,6 +58,8 @@ static void     gpk_hardware_finalize	(GObject	  *object);
 
 #define GPK_HARDWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_HARDWARE, GpkHardwarePrivate))
 #define GPK_HARDWARE_LOGIN_DELAY	50 /* seconds */
+#define GPK_HARDWARE_INSTALL_ACTION  "GpkHardware - install this package"
+#define GPK_HARDWARE_DONT_PROMPT_ACTION  "GpkHardware - dont prompt again"
 
 struct GpkHardwarePrivate
 {
@@ -100,9 +102,9 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 {
 	GpkHardware *hardware = GPK_HARDWARE (data);
 
-	if (egg_strequal (action, "install-driver")) {
+	if (egg_strequal (action, GPK_HARDWARE_INSTALL_ACTION)) {
 		gpk_hardware_install_package (hardware);
-	} else if (egg_strequal (action, "do-not-show-prompt-hardware")) {
+	} else if (egg_strequal (action, GPK_HARDWARE_DONT_PROMPT_ACTION)) {
 		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_HARDWARE);
 		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_PROMPT_HARDWARE, FALSE, NULL);
 	} else {
@@ -121,11 +123,14 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	gchar *message = NULL;
 	NotifyNotification *notification;
 	GError *error = NULL;
-	gchar *package_name = NULL;
+	gchar *package = NULL;
 	PkPackageList *list = NULL;
+	const PkPackageObj *obj = NULL;
 	PkClient *client = NULL;
 
 	client = pk_client_new ();
+	pk_client_set_synchronous (client, TRUE, NULL);
+	pk_client_set_use_buffer (client, TRUE, NULL);
 	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, "unused", &error);
 	if (!ret) {
@@ -143,18 +148,19 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 		goto out;
 	}
 
-	package_name = pk_package_list_to_string (list);
+	obj = pk_package_list_get_obj (list, 0);
+	package = g_strdup_printf ("%s-%s", obj->id->name, obj->id->version);
 	if (hardware->priv->package_ids != NULL)
 		g_strfreev (hardware->priv->package_ids);
 	hardware->priv->package_ids = pk_package_list_to_strv (list);
 
-	message = g_strdup_printf ("%s %s", package_name, _("is needed for this hardware"));
-	notification = notify_notification_new (_("Install package?"), message, "help-browser", NULL);
+	message = g_strdup_printf ("%s%s%s", _("Do you want to install needed drivers?"), "\n\t", package);
+	notification = notify_notification_new (_("New hardware has been attached."), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-	notify_notification_add_action (notification, "install-package",
+	notify_notification_add_action (notification, GPK_HARDWARE_INSTALL_ACTION,
 			_("Install package"), gpk_hardware_libnotify_cb, hardware, NULL);
-	notify_notification_add_action (notification, "do-not-show-prompt-hardware",
+	notify_notification_add_action (notification, GPK_HARDWARE_DONT_PROMPT_ACTION,
 					_("Do not show this again"), gpk_hardware_libnotify_cb, hardware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
@@ -163,7 +169,7 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	}
 
 out:
-	g_free (package_name);
+	g_free (package);
 	g_free (message);
 	if (list != NULL)
 		g_object_unref (list);
