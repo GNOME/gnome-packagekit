@@ -32,7 +32,7 @@
 #include "gpk-common.h"
 
 /* icon names */
-static PkEnumMatch enum_info_icon_name[] = {
+static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_INFO_ENUM_INSTALLED,		"pk-package-installed"},
 	{PK_INFO_ENUM_AVAILABLE,		"pk-package-available"},
@@ -54,7 +54,7 @@ static PkEnumMatch enum_info_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_status_icon_name[] = {
+static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
 	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
@@ -85,7 +85,7 @@ static PkEnumMatch enum_status_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_role_icon_name[] = {
+static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_CANCEL,			"process-stop.svg"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
@@ -114,7 +114,7 @@ static PkEnumMatch enum_role_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_group_icon_name[] = {
+static const PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_GROUP_ENUM_ACCESSIBILITY,		"preferences-desktop-accessibility"},
 	{PK_GROUP_ENUM_ACCESSORIES,		"applications-accessories"},
@@ -151,7 +151,7 @@ static PkEnumMatch enum_group_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_restart_icon_name[] = {
+static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_RESTART_ENUM_NONE,			"dialog-information"},
 	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
@@ -160,7 +160,7 @@ static PkEnumMatch enum_restart_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_message_icon_name[] = {
+static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_MESSAGE_ENUM_BROKEN_MIRROR,		"dialog-error"},
 	{PK_MESSAGE_ENUM_CONNECTION_REFUSED,	"dialog-error"},
@@ -177,7 +177,7 @@ static PkEnumMatch enum_message_icon_name[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_freq[] = {
+static const PkEnumMatch enum_freq[] = {
 	{GPK_FREQ_ENUM_UNKNOWN,			"unknown"},	/* fall though value */
 	{GPK_FREQ_ENUM_HOURLY,			"hourly"},
 	{GPK_FREQ_ENUM_DAILY,			"daily"},
@@ -186,7 +186,7 @@ static PkEnumMatch enum_freq[] = {
 	{0, NULL}
 };
 
-static PkEnumMatch enum_update[] = {
+static const PkEnumMatch enum_update[] = {
 	{GPK_UPDATE_ENUM_UNKNOWN,		"unknown"},	/* fall though value */
 	{GPK_UPDATE_ENUM_ALL,			"all"},
 	{GPK_UPDATE_ENUM_SECURITY,		"security"},
