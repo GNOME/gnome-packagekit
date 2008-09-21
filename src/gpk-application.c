@@ -2788,6 +2788,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_apply_cb), application);
+	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_about");
 	g_signal_connect (widget, "activate",
