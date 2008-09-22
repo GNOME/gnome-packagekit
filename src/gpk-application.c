@@ -1144,6 +1144,7 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	const gchar *title = _("No results were found.");
 	GtkTreeIter iter;
 	gchar *text;
+	PkBitfield state = 0;
 
 	if (application->priv->search_mode == PK_MODE_GROUP ||
 	    application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
@@ -1160,7 +1161,7 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	text = g_strdup_printf ("%s\n%s", title, message);
 	gtk_list_store_append (application->priv->packages_store, &iter);
 	gtk_list_store_set (application->priv->packages_store, &iter,
-			    PACKAGES_COLUMN_STATE, FALSE,
+			    PACKAGES_COLUMN_STATE, state,
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
 			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, text,
