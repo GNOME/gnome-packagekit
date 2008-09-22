@@ -82,6 +82,8 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-refresh-cache"},
+	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-package-search"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-refresh-cache"}, /* TODO: need better icon */
 	{0, NULL}
 };
 
@@ -786,6 +788,12 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_LOADING_CACHE:
 		text = _("Loading cache");
+		break;
+	case PK_STATUS_ENUM_SCAN_APPLICATIONS:
+		text = _("Scanning installed applications");
+		break;
+	case PK_STATUS_ENUM_GENERATE_PACKAGE_LIST:
+		text = _("Generating package lists");
 		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));

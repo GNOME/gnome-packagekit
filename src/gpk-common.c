@@ -245,6 +245,7 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
+	    status == PK_STATUS_ENUM_GENERATE_PACKAGE_LIST ||
 	    status == PK_STATUS_ENUM_LOADING_CACHE ||
 	    status == PK_STATUS_ENUM_REPACKAGING) {
 		name = "pk-action-refresh-cache";
@@ -256,7 +257,8 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 		   status == PK_STATUS_ENUM_UPDATE) {
 		name = "pk-action-installing";
 		delay = 150;
-	} else if (status == PK_STATUS_ENUM_QUERY) {
+	} else if (status == PK_STATUS_ENUM_QUERY ||
+		   status == PK_STATUS_ENUM_SCAN_APPLICATIONS) {
 		name = "pk-action-searching";
 		delay = 150;
 	} else if (status == PK_STATUS_ENUM_WAIT) {
