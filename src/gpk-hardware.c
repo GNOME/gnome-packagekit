@@ -116,11 +116,12 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
  * gpk_hardware_check_for_driver_available:
  **/
 static void
-gpk_hardware_check_for_driver_available (GpkHardware *hardware)
+gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi)
 {
 	gboolean ret;
 	guint length;
 	gchar *message = NULL;
+	gchar *body = NULL;
 	NotifyNotification *notification;
 	GError *error = NULL;
 	gchar *package = NULL;
@@ -132,7 +133,7 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	pk_client_set_synchronous (client, TRUE, NULL);
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
-				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, "unused", &error);
+				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, udi, &error);
 	if (!ret) {
 		egg_warning ("Error calling pk_client_what_provides :%s", error->message);
 		g_error_free (error);
@@ -155,7 +156,8 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 	hardware->priv->package_ids = pk_package_list_to_strv (list);
 
 	message = g_strdup_printf ("%s%s%s", _("Do you want to install needed drivers?"), "\n\t", package);
-	notification = notify_notification_new (_("New hardware has been attached."), message, "help-browser", NULL);
+	body = g_strdup_printf ("%s %s", _("New hardware attached -"), udi);
+	notification = notify_notification_new (body, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, GPK_HARDWARE_INSTALL_ACTION,
@@ -171,6 +173,7 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware)
 out:
 	g_free (package);
 	g_free (message);
+	g_free (body);
 	if (list != NULL)
 		g_object_unref (list);
 	g_object_unref (client);
@@ -181,9 +184,10 @@ out:
  * FIXME - not sure about this method signature
  **/
 static void
-gpk_hardware_device_added_cb (DBusGProxy *proxy, GObject *object, GpkHardware *hardware)
+gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *hardware)
 {
-	gpk_hardware_check_for_driver_available (hardware);
+	egg_debug ("hardware added. udi=%s", udi);
+	gpk_hardware_check_for_driver_available (hardware, udi);
 }
 
 /**
@@ -193,7 +197,8 @@ gpk_hardware_device_added_cb (DBusGProxy *proxy, GObject *object, GpkHardware *h
 static gboolean
 gpk_hardware_timeout_cb (gpointer data)
 {
-	gpk_hardware_check_for_driver_available (GPK_HARDWARE (data));
+	egg_debug ("hardware timout callback");
+	gpk_hardware_check_for_driver_available (GPK_HARDWARE (data), "unavailable");
 	return FALSE;
 }
 
@@ -228,6 +233,8 @@ gpk_hardware_init (GpkHardware *hardware)
 							   "org.freedesktop.Hal",
 							   "/org/freedesktop/Hal/Manager",
 							   "org.freedesktop.Hal.Manager");
+	dbus_g_proxy_add_signal (hardware->priv->proxy, "DeviceAdded",
+				 G_TYPE_STRING, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (hardware->priv->proxy, "DeviceAdded",
 				     G_CALLBACK (gpk_hardware_device_added_cb), hardware, NULL);
 
