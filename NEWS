@@ -1,3 +1,35 @@
+Version 0.3.4
+~~~~~~~~~~~~~~
+Released: 2008-09-22
+
+* Translations
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Arabic Translation (Djihed Afifi)
+ - Updated Welsh translation (Iestyn Pryce)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+
+* New
+ - Provide a GConf key that turns on or off precaching of update details (Richard Hughes)
+ - Provide a session-wide way of turning off the intervidual helpers (Richard Hughes)
+ - Add support for prompting the user about needed hardware drivers (Scott Reeves)
+
+* Bugfix:
+ - gtk-cancel and gtk-close should not be marked as translatable (Bob Mauchin)
+ - Pay more attention to the interaction setting when showing dialogs (Richard Hughes)
+ - Use seporate GpkClient GObjects in GpkCheckUpdate (Richard Hughes)
+ - Use the new CANNOT_START_DAEMON error code (Richard Hughes)
+ - Use GpkClientDialog in more places, and get rid of some modal windows (Richard Hughes)
+ - Fix up the PolicyKit name in GpkClientChooser (Richard Hughes)
+ - Fix an invalid free in GpkClientChooser (Richard Hughes)
+ - Make the run chooser modal over the underlying window (Richard Hughes)
+ - Don't automatically get a distro upgrade at startup (Richard Hughes)
+ - Detect all the status enums when selecting an icon (Richard Hughes)
+ - Make gpk_client_set_interaction more powerful by allowing a bitfield to set
+   what dialogs should be shown (Richard Hughes)
+ - Fix notify action for hardware callback (Scott Reeves)
+ - Show device udi in notification (Scott Reeves)
+
 Version 0.3.3
 ~~~~~~~~~~~~~~
 Released: 2008-09-16
