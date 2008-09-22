@@ -2381,6 +2381,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("System update"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
