@@ -2855,6 +2855,7 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	/* fill in role */
 	text = pk_common_get_role_text (gclient->priv->client_action);
 	gpk_client_dialog_set_title (gclient->priv->dialog, text);
+	gpk_client_dialog_set_window_title (gclient->priv->dialog, text);
 	g_free (text);
 
 	/* coldplug */
