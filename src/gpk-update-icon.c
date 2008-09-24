@@ -117,9 +117,7 @@ main (int argc, char *argv[])
 	GpkWatch *watch = NULL;
 	GpkDbus *dbus = NULL;
 	GpkFirmware *firmware = NULL;
-	/*
 	GpkHardware *hardware = NULL;
-	*/
 	GOptionContext *context;
 	GError *error = NULL;
 	gboolean ret;
@@ -177,9 +175,7 @@ main (int argc, char *argv[])
 	cupdate = gpk_check_update_new ();
 	watch = gpk_watch_new ();
 	firmware = gpk_firmware_new ();
-	/*
 	hardware = gpk_hardware_new ();
-	*/
 
 	/* find out when we are replaced */
 	monitor = egg_dbus_monitor_new ();
@@ -214,9 +210,7 @@ out:
 	g_object_unref (cupdate);
 	g_object_unref (watch);
 	g_object_unref (firmware);
-	/*
 	g_object_unref (hardware);
-	*/
 	g_object_unref (monitor);
 
 	return 0;

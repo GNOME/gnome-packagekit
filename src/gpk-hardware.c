@@ -132,8 +132,10 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi
 	client = pk_client_new ();
 	pk_client_set_synchronous (client, TRUE, NULL);
 	pk_client_set_use_buffer (client, TRUE, NULL);
+	egg_debug ("start - trying to call pk_client_what_provides");
 	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, udi, &error);
+	egg_debug ("done - trying to call pk_client_what_provides");
 	if (!ret) {
 		egg_warning ("Error calling pk_client_what_provides :%s", error->message);
 		g_error_free (error);
