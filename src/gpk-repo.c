@@ -352,7 +352,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Software Update Viewer"));
+	g_option_context_set_summary (context, _("Software Source Viewer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
