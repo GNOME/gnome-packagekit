@@ -32,10 +32,18 @@ EggStrList	*egg_str_list_new			(void);
 void		 egg_str_list_free			(EggStrList	*list);
 void		 egg_str_list_add			(EggStrList	*list,
 							 const gchar	*data);
+void		 egg_str_list_add_strv			(EggStrList	*list,
+							 gchar		**data);
 const gchar	*egg_str_list_index			(EggStrList	*list,
 							 guint		 index);
 void		 egg_str_list_print			(EggStrList	*list);
+gboolean	 egg_str_list_remove			(EggStrList	*list,
+							 const gchar	*data);
 void		 egg_str_list_remove_duplicate		(EggStrList	*list);
+void		 egg_str_list_add_list			(EggStrList	*list,
+							 EggStrList	*add);
+void		 egg_str_list_remove_list		(EggStrList	*list,
+							 EggStrList	*remove);
 
 G_END_DECLS
 
