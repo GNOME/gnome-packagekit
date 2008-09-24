@@ -218,6 +218,46 @@ out:
 }
 
 /**
+ * gpk_firmware_remove_banned:
+ * @data: This class instance
+ **/
+static void
+gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
+{
+	gchar *banned_str;
+	gchar **banned = NULL;
+	EggStrList *banned_list = NULL;
+
+	/* get from gconf */
+	banned_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_BANNED_FIRMWARE, NULL);
+	if (banned_str == NULL) {
+		egg_warning ("could not read banned list");
+		goto out;
+	}
+
+	/* nothing in list, common case */
+	if (egg_strzero (banned_str)) {
+		egg_debug ("nothing in banned list");
+		goto out;
+	}
+
+	/* split using "," */
+	banned = g_strsplit (banned_str, ",", 0);
+
+	/* add to string list */
+	banned_list = egg_str_list_new ();
+	egg_str_list_add_strv (banned_list, banned);
+
+	/* remove all entries in banned list from main list */
+	egg_str_list_remove_list (array, banned_list);
+out:
+	g_free (banned_str);
+	g_strfreev (banned);
+	if (banned_list != NULL)
+		g_object_unref (banned_list);
+}
+
+/**
  * gpk_firmware_class_init:
  * @klass: The GpkFirmwareClass
  **/
@@ -310,6 +350,15 @@ skip_file:
 	for (i=0; i<array->len; i++) {
 		filename = egg_str_list_index (array, i);
 		egg_debug ("requested: %s", filename);
+	}
+
+	/* remove banned files */
+	gpk_firmware_remove_banned (firmware, array);
+
+	/* debugging */
+	for (i=0; i<array->len; i++) {
+		filename = egg_str_list_index (array, i);
+		egg_debug ("searching for: %s", filename);
 	}
 
 	/* don't spam the user at startup, so wait a little delay */
