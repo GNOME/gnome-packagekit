@@ -50,6 +50,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_SHOW_DEPENDS			"/apps/gnome-packagekit/show_depends"
 #define GPK_CONF_PROMPT_FIRMWARE		"/apps/gnome-packagekit/prompt_firmware"
 #define GPK_CONF_PROMPT_HARDWARE		"/apps/gnome-packagekit/prompt_hardware"
+#define GPK_CONF_BANNED_FIRMWARE		"/apps/gnome-packagekit/banned_firmware"
 
 #define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
