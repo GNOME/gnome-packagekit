@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+import os
 import dbus
 import pygtk
 pygtk.require('2.0')
@@ -58,6 +59,15 @@ class SessionInstall:
         except Exception, e:
             print "Unable to install: %s" % str(e)
 
+    def use_helper(self, widget, data=None):
+        xid = widget.window.xid
+
+        codecs = ""
+        codecs = codecs + "\"" + "gstreamer|0.10|totem|Windows Media Video 9 decoder|decoder-video/x-wmv, wmvversion=(int)3, fourcc=(fourcc)WVC1, format=(fourcc)WVC1" + "\""
+        codecs = codecs + "\"" + "gstreamer|0.10|totem|Windows Media Audio 9 decoder|decoder-audio/x-wma, wmaversion=(int)3, bitrate=(int)192000, depth=(int)16" + "\""
+        codecs = codecs + "\"" + "gstreamer|0.10|totem|FOOBAR protocol source|urisource-foobar (FOOBAR protocol source)" + "\""
+        os.system("/home/hughsie/Desktop/gst-rpm-install --transient-for=%i %s" % (xid, codecs));
+
     def delete_event(self, widget, event, data=None):
         return False
 
@@ -69,6 +79,7 @@ class SessionInstall:
         window.connect("delete_event", self.delete_event)
         window.connect("destroy", self.destroy)
         window.set_border_width(10)
+        window.add_events (gtk.gdk.PROPERTY_CHANGE_MASK);
 
         hbox = gtk.VBox(homogeneous=True, spacing=9)
 
@@ -82,6 +93,10 @@ class SessionInstall:
 
         button = gtk.Button("Install Mime Type")
         button.connect("clicked", self.install_mime_type, None)
+        hbox.add(button)
+
+        button = gtk.Button("Use helper")
+        button.connect("clicked", self.use_helper, None)
         hbox.add(button)
 
         window.add(hbox);
