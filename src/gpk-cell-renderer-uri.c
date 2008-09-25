@@ -173,6 +173,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			     GtkCellRendererState flags)
 {
 	gboolean ret;
+	GdkDisplay *display;
 	GdkCursor *cursor;
 	GtkStyle *style;
 	GdkColor *color;
@@ -180,13 +181,13 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
 	/* set cursor */
-	if (cru->uri == NULL) {
-		cursor = gdk_cursor_new (GDK_XTERM);
-	} else {
-		cursor = gdk_cursor_new (GDK_HAND2);
-	}
+	display = gdk_display_get_default ();
+	if (cru->uri == NULL)
+		cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
+	else
+		cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
 	gdk_window_set_cursor (widget->window, cursor);
-	gdk_cursor_destroy (cursor);
+	gdk_cursor_unref (cursor);
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
 	/* get a copy of the widget color */

@@ -69,6 +69,8 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	gint rows, cols;
 	gint r, c, i;
 	GdkPixbuf *pixbuf;
+	GdkScreen *screen;
+	GtkSettings *settings;
 
 	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
@@ -92,7 +94,9 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	}
 
 	egg_debug ("loading from %s", name);
-	gtk_icon_size_lookup (size, &w, &h);
+	screen = gdk_screen_get_default ();
+	settings = gtk_settings_get_for_screen (screen);
+	gtk_icon_size_lookup_for_settings (settings, size, &w, &h);
 
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), name, w, 0, NULL);
 	/* can't load from gnome-icon-theme */

@@ -2958,8 +2958,11 @@ gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
 gboolean
 gpk_client_set_parent_xid (GpkClient *gclient, guint32 xid)
 {
+	GdkDisplay *display;
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	gclient->priv->parent_window = gdk_window_foreign_new (xid);
+
+	display = gdk_display_get_default ();
+	gclient->priv->parent_window = gdk_window_foreign_new_for_display (display, xid);
 	return TRUE;
 }
 
