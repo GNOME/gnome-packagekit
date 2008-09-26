@@ -132,10 +132,8 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi
 	client = pk_client_new ();
 	pk_client_set_synchronous (client, TRUE, NULL);
 	pk_client_set_use_buffer (client, TRUE, NULL);
-	egg_debug ("start - trying to call pk_client_what_provides");
 	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, udi, &error);
-	egg_debug ("done - trying to call pk_client_what_provides");
 	if (!ret) {
 		egg_warning ("Error calling pk_client_what_provides :%s", error->message);
 		g_error_free (error);
@@ -151,14 +149,18 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi
 		goto out;
 	}
 
+	/* only install the first one? */
 	obj = pk_package_list_get_obj (list, 0);
-	package = g_strdup_printf ("%s-%s", obj->id->name, obj->id->version);
+	package = gpk_package_id_format_oneline (obj->id, obj->summary);
+
+	/* save list */
 	if (hardware->priv->package_ids != NULL)
 		g_strfreev (hardware->priv->package_ids);
 	hardware->priv->package_ids = pk_package_list_to_strv (list);
 
-	message = g_strdup_printf ("%s%s%s", _("Do you want to install needed drivers?"), "\n\t", package);
-	body = g_strdup_printf ("%s %s", _("New hardware attached -"), udi);
+	/* TODO: tell the user what hardware, NOT JUST A UDI */
+	message = g_strdup_printf ("%s\n\t%s", _("Do you want to install needed drivers?"), package);
+	body = g_strdup_printf ("%s", _("New hardware attached"));
 	notification = notify_notification_new (body, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
@@ -200,6 +202,7 @@ static gboolean
 gpk_hardware_timeout_cb (gpointer data)
 {
 	egg_debug ("hardware timout callback");
+	/* TODO: need to coldplug for any hardware without drivers */
 	gpk_hardware_check_for_driver_available (GPK_HARDWARE (data), "unavailable");
 	return FALSE;
 }
