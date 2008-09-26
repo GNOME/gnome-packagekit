@@ -2764,6 +2764,7 @@ gpk_application_init (GpkApplication *application)
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	/* make GpkClient windows modal */
+	gtk_widget_realize (main_window);
 	gpk_client_set_parent (application->priv->gclient, GTK_WINDOW (main_window));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */

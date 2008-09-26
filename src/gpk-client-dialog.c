@@ -190,6 +190,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
 		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
+		dialog->priv->has_parent = FALSE;
 		return FALSE;
 	}
 
@@ -210,7 +211,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 /**
  * gpk_client_dialog_set_window_title:
  **/
-gboolean
+static gboolean
 gpk_client_dialog_set_window_title (GpkClientDialog *dialog, const gchar *title)
 {
 	GtkWidget *widget;
@@ -252,6 +253,10 @@ gpk_client_dialog_set_title (GpkClientDialog *dialog, const gchar *title)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (title != NULL, FALSE);
+
+	/* only set the window title if we are non-modal */
+	if (!dialog->priv->has_parent)
+		gpk_client_dialog_set_window_title (dialog, title);
 
 	title_bold = g_strdup_printf ("<b><big>%s</big></b>", title);
 	egg_debug ("setting title: %s", title_bold);

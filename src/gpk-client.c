@@ -1138,7 +1138,6 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		goto out;
 
 	/* set title */
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing files"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
@@ -1189,7 +1188,6 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Removing packages"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Remove packages"));
 
 	/* setup the UI */
@@ -1330,7 +1328,6 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	g_return_val_if_fail (package_ids != NULL, FALSE);
 
 	/* set title */
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing packages"));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
 
 	/* setup the UI */
@@ -1421,7 +1418,7 @@ skip_checks:
 	}
 
 	/* try to install the package_id */
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Installing packages"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
 	if (gclient->priv->show_progress) {
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
@@ -1492,7 +1489,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s\n%s", _("An additional file is required"),
 				   text, _("Do you want to search for this file now?"));
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Package installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Package installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	ret = gpk_client_confirm_action (gclient, _("wants to install packages"), message);
 	g_free (text);
@@ -1645,7 +1642,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s", _("The following file is required:"),
 				   full_path, _("Do you want to search for this now?"));
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("File installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("File installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), message);
 	g_free (message);
@@ -1819,7 +1816,7 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Codec installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Codec installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
 	ret = gpk_client_confirm_action (gclient, _("requires additional plugins"), text);
 	g_free (text);
@@ -1998,7 +1995,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
 				   _("An additional program is required to open this type of file:"),
 				   mime_type, _("Do you want to search for a program to open this file type now?"));
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("File type installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("File type installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
 	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), message);
 	g_free (message);
@@ -2120,7 +2117,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s", _("An additional font is required to view this file correctly"),
 				   _("Do you want to search for a suitable font now?"));
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("Font installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Font installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
 	ret = gpk_client_confirm_action (gclient, _("wants to install a font"), message);
 	g_free (message);
@@ -2379,7 +2376,6 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, _("System update"));
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
@@ -2854,7 +2850,6 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	/* fill in role */
 	text = pk_common_get_role_text (gclient->priv->client_action);
 	gpk_client_dialog_set_title (gclient->priv->dialog, text);
-	gpk_client_dialog_set_window_title (gclient->priv->dialog, text);
 	g_free (text);
 
 	/* coldplug */

@@ -99,8 +99,6 @@ gboolean	 gpk_client_dialog_set_package_list	(GpkClientDialog	*dialog,
 							 const PkPackageList	*list);
 gboolean	 gpk_client_dialog_set_parent		(GpkClientDialog	*dialog,
 							 GdkWindow		*window);
-gboolean	 gpk_client_dialog_set_window_title	(GpkClientDialog	*dialog,
-							 const gchar		*title);
 gboolean	 gpk_client_dialog_set_window_icon	(GpkClientDialog	*dialog,
 							 const gchar		*icon);
 gboolean	 gpk_client_dialog_set_title		(GpkClientDialog	*dialog,
