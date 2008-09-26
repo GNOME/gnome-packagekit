@@ -1530,7 +1530,8 @@ skip_checks:
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
-			text = pk_package_ids_to_text (packages, ",");
+			//FIXME: shows package_id in UI
+			text = pk_package_ids_to_text (packages);
 			title = g_strdup_printf (_("Could not find %s"), text);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
@@ -1559,7 +1560,8 @@ skip_checks:
 	/* already installed? */
 	if (already_installed) {
 		if (gclient->priv->show_warning) {
-			text = pk_package_ids_to_text (packages, ",");
+			//FIXME: shows package_id in UI
+			text = pk_package_ids_to_text (packages);
 			title = g_strdup_printf (_("Failed to install %s"), text);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The package is already installed"));
