@@ -272,7 +272,7 @@ gpk_dbus_get_user_time_for_xid (guint xid)
 				&format_return, &nitems_return, &bytes_after_return,
 				&data) == Success) {
 		if ((type_return == XA_CARDINAL) && (format_return == 32) && (data)) {
-			timestamp = (guint32 )data;
+			timestamp = (guint32) *data;
 			g_message ("got timestamp %i", timestamp);
 		}
 	}
