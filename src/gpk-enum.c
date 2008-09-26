@@ -56,63 +56,70 @@ static const PkEnumMatch enum_info_icon_name[] = {
 
 static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
-	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
-	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
-	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
+	{PK_STATUS_ENUM_CANCEL,			"pk-package-cleanup"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_CLEANUP,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_COMMIT,			"pk-setup"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_FILELIST,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
+	{PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
+	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-refresh-cache"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_INFO,			"pk-package-info"},
+	{PK_STATUS_ENUM_INSTALL,		"pk-package-add"},
+	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-refresh-cache"},
+	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_QUERY,			"pk-package-search"},
 	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
-	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
-	{PK_STATUS_ENUM_INSTALL,		"pk-package-add"},
-	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
-	{PK_STATUS_ENUM_CLEANUP,		"pk-package-cleanup"},
-	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
-	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-package-info"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_COMMIT,			"pk-setup"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
-	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_CANCEL,			"pk-package-cleanup"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,	"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,	"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_FILELIST,	"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-cleanup"},
-	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-refresh-cache"},
+	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
+	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
 	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-package-search"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-refresh-cache"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
+	{PK_STATUS_ENUM_SIG_CHECK,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_TEST_COMMIT,		"pk-package-info"}, /* TODO: need better icon */
+	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
+	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
 	{0, NULL}
 };
 
 static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
-	{PK_ROLE_ENUM_CANCEL,			"process-stop.svg"},
+	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
+	{PK_ROLE_ENUM_CANCEL,			"process-stop"},
+	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-info"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
+	{PK_ROLE_ENUM_GET_FILES,		"pk-package-search"},
+	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
+	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
+	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
+	{PK_ROLE_ENUM_GET_UPDATES,		"pk-package-info"},
+	{PK_ROLE_ENUM_INSTALL_FILES,		"pk-package-add"},
+	{PK_ROLE_ENUM_INSTALL_PACKAGES,		"pk-package-add"},
+	{PK_ROLE_ENUM_INSTALL_SIGNATURE,	"emblem-system"},
+	{PK_ROLE_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
+	{PK_ROLE_ENUM_REMOVE_PACKAGES,		"pk-package-delete"},
+	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
+	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
 	{PK_ROLE_ENUM_ROLLBACK,			"pk-rollback"},
-	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
-	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
-	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
-	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
-	{PK_ROLE_ENUM_GET_UPDATES,		"pk-package-info"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
-	{PK_ROLE_ENUM_REFRESH_CACHE,		"pk-refresh-cache"},
-	{PK_ROLE_ENUM_REMOVE_PACKAGES,		"pk-package-delete"},
-	{PK_ROLE_ENUM_INSTALL_PACKAGES,		"pk-package-add"},
-	{PK_ROLE_ENUM_INSTALL_FILES,		"pk-package-add"},
-	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_SERVICE_PACK,		"pk-package-update"},
+	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
-	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
-	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
-	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
-	{PK_ROLE_ENUM_INSTALL_SIGNATURE,	"emblem-system"},
-	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
+	{PK_ROLE_ENUM_WHAT_PROVIDES,		"pk-package-search"},
 	{0, NULL}
 };
 
@@ -120,36 +127,36 @@ static const PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_GROUP_ENUM_ACCESSIBILITY,		"preferences-desktop-accessibility"},
 	{PK_GROUP_ENUM_ACCESSORIES,		"applications-accessories"},
+	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
+	{PK_GROUP_ENUM_COLLECTIONS,		"pk-collection-installed"},
+	{PK_GROUP_ENUM_COMMUNICATION,		"folder-remote"},
+	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
+	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
+	{PK_GROUP_ENUM_DESKTOP_OTHER,		"user-desktop"},
+	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
+	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
 	{PK_GROUP_ENUM_EDUCATION,		"utilities-system-monitor"},
+	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
+	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
 	{PK_GROUP_ENUM_GAMES,			"applications-games"},
 	{PK_GROUP_ENUM_GRAPHICS,		"applications-graphics"},
 	{PK_GROUP_ENUM_INTERNET,		"applications-internet"},
-	{PK_GROUP_ENUM_OFFICE,			"applications-office"},
-	{PK_GROUP_ENUM_OTHER,			"applications-other"},
-	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
-	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
-	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
-	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
-	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
-	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
-	{PK_GROUP_ENUM_DESKTOP_OTHER,		"user-desktop"},
-	{PK_GROUP_ENUM_PUBLISHING,		"accessories-dictionary"},
-	{PK_GROUP_ENUM_SERVERS,			"network-server"},
-	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
-	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
 	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
 	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
-	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
-	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
-	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
-	{PK_GROUP_ENUM_COMMUNICATION,		"folder-remote"},
-	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
 	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
+	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
+	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
+	{PK_GROUP_ENUM_OFFICE,			"applications-office"},
+	{PK_GROUP_ENUM_OTHER,			"applications-other"},
+	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
+	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
+	{PK_GROUP_ENUM_PUBLISHING,		"accessories-dictionary"},
 	{PK_GROUP_ENUM_REPOS,			"system-file-manager"},
 	{PK_GROUP_ENUM_SCIENCE,			"application-certificate"},
-	{PK_GROUP_ENUM_DOCUMENTATION,		"x-office-address-book"},
-	{PK_GROUP_ENUM_ELECTRONICS,		"video-display"},
-	{PK_GROUP_ENUM_COLLECTIONS,		"pk-collection-installed"},
+	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
+	{PK_GROUP_ENUM_SERVERS,			"network-server"},
+	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
+	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
 	{0, NULL}
 };
 
@@ -1364,8 +1371,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the role icon name enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
 			break;
 		}
 	}
@@ -1375,8 +1382,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the info icon names enums");
 	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
 		string = gpk_info_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_info_enum_to_text (i));
 			break;
 		}
 	}
@@ -1397,8 +1404,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the status icon names enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_status_enum_to_text (i));
 			break;
 		}
 	}
@@ -1408,8 +1415,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the restart icon names enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_text (i));
 			break;
 		}
 	}
@@ -1452,8 +1459,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the message icon name enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
 		string = gpk_message_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_message_enum_to_text (i));
 			break;
 		}
 	}
@@ -1496,8 +1503,8 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the group icon name enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_icon_name (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
+		if (string == NULL || egg_strequal (string, "help-browser")) {
+			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
 			break;
 		}
 	}
