@@ -72,6 +72,7 @@ const gchar	*gpk_info_enum_to_icon_name		(PkInfoEnum	 info);
 const gchar	*gpk_status_enum_to_localised_text	(PkStatusEnum	 status)
 							 G_GNUC_CONST;
 const gchar	*gpk_status_enum_to_icon_name		(PkStatusEnum	 status);
+const gchar	*gpk_status_enum_to_animation		(PkStatusEnum	 status);
 const gchar	*gpk_restart_enum_to_icon_name		(PkRestartEnum	 restart);
 const gchar	*gpk_error_enum_to_localised_text	(PkErrorCodeEnum code)
 							 G_GNUC_CONST;

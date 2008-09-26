@@ -237,42 +237,14 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	const gchar *name = NULL;
 	guint delay = 0;
 
-	/* choose icon */
-	if (status == PK_STATUS_ENUM_REFRESH_CACHE ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
-	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
-	    status == PK_STATUS_ENUM_GENERATE_PACKAGE_LIST ||
-	    status == PK_STATUS_ENUM_LOADING_CACHE ||
-	    status == PK_STATUS_ENUM_REPACKAGING) {
-		name = "pk-action-refresh-cache";
+	/* see if there is an animation */
+	name = gpk_status_enum_to_animation (status);
+
+	/* get the timing */
+	if (g_str_has_prefix (name, "pk-action-"))
 		delay = 150;
-	} else if (status == PK_STATUS_ENUM_DOWNLOAD) {
-		name = "pk-action-download";
-		delay = 150;
-	} else if (status == PK_STATUS_ENUM_INSTALL ||
-		   status == PK_STATUS_ENUM_UPDATE) {
-		name = "pk-action-installing";
-		delay = 150;
-	} else if (status == PK_STATUS_ENUM_QUERY ||
-		   status == PK_STATUS_ENUM_SCAN_APPLICATIONS) {
-		name = "pk-action-searching";
-		delay = 150;
-	} else if (status == PK_STATUS_ENUM_WAIT) {
-		name = "pk-action-waiting";
-		delay = 150;
-	} else if (status == PK_STATUS_ENUM_TEST_COMMIT) {
-		name = "pk-action-testing";
-		delay = 150;
-	} else if (status == PK_STATUS_ENUM_INFO) {
-		name = "process-working";
+	else if (g_str_has_prefix (name, "process-working"))
 		delay = 50;
-	} else {
-		name = gpk_status_enum_to_icon_name (status);
-	}
 
 	/* animate or set static */
 	if (delay != 0) {
