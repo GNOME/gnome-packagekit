@@ -128,7 +128,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
 	{PK_ROLE_ENUM_CANCEL,			"process-stop"},
-	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-info"}, /* TODO: need better icon */
+	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-download"},
 	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
