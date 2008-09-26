@@ -264,6 +264,9 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 	} else if (status == PK_STATUS_ENUM_WAIT) {
 		name = "pk-action-waiting";
 		delay = 150;
+	} else if (status == PK_STATUS_ENUM_TEST_COMMIT) {
+		name = "pk-action-testing";
+		delay = 150;
 	} else if (status == PK_STATUS_ENUM_INFO) {
 		name = "process-working";
 		delay = 50;
