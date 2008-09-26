@@ -1073,8 +1073,6 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 		icon = "emblem-system";
 
 	title_name = g_strdup_printf ("%s %s", application_localised, title);
-
-	gpk_client_dialog_set_parent (gclient->priv->dialog, gclient->priv->parent_window);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title_name);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_image (gclient->priv->dialog, icon);
@@ -2949,6 +2947,8 @@ gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
 {
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	gclient->priv->parent_window = GTK_WIDGET (window)->window;
+	egg_debug ("parent_window=%p", gclient->priv->parent_window);
+	gpk_client_dialog_set_parent (gclient->priv->dialog, gclient->priv->parent_window);
 	return TRUE;
 }
 
@@ -2963,6 +2963,8 @@ gpk_client_set_parent_xid (GpkClient *gclient, guint32 xid)
 
 	display = gdk_display_get_default ();
 	gclient->priv->parent_window = gdk_window_foreign_new_for_display (display, xid);
+	egg_debug ("parent_window=%p", gclient->priv->parent_window);
+	gpk_client_dialog_set_parent (gclient->priv->dialog, gclient->priv->parent_window);
 	return TRUE;
 }
 

@@ -1934,6 +1934,7 @@ main (int argc, char *argv[])
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
 	/* make GpkClient windows modal */
+	gtk_widget_realize (main_window);
 	gpk_client_set_parent (gclient, GTK_WINDOW (main_window));
 
 	/* hide from finished page until we have updates */

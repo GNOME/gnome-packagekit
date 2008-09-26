@@ -189,7 +189,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 	if (window == NULL) {
 		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
-		gtk_window_set_modal (GTK_WINDOW(widget), FALSE);
+		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
 		return FALSE;
 	}
 
@@ -201,7 +201,8 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
 	gtk_widget_realize (widget);
-	gdk_window_set_transient_for (GTK_WIDGET(widget)->window, window);
+	gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
+	gdk_window_set_transient_for (GTK_WIDGET (widget)->window, window);
 	dialog->priv->has_parent = TRUE;
 	return TRUE;
 }
