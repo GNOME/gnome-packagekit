@@ -58,6 +58,7 @@ static void     gpk_hardware_finalize	(GObject	  *object);
 
 #define GPK_HARDWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_HARDWARE, GpkHardwarePrivate))
 #define GPK_HARDWARE_LOGIN_DELAY	50 /* seconds */
+#define GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY	5 /* seconds */
 #define GPK_HARDWARE_INSTALL_ACTION  "GpkHardware - install this package"
 #define GPK_HARDWARE_DONT_PROMPT_ACTION  "GpkHardware - dont prompt again"
 
@@ -67,6 +68,7 @@ struct GpkHardwarePrivate
 	DBusGConnection		*connection;
 	DBusGProxy		*proxy;
 	gchar			**package_ids;
+	gchar			*udi;
 };
 
 G_DEFINE_TYPE (GpkHardware, gpk_hardware, G_TYPE_OBJECT)
@@ -183,15 +185,34 @@ out:
 	g_object_unref (client);
 }
 
+static gboolean
+gpk_hardware_device_added_timeout (gpointer data)
+{
+	GpkHardware *hardware = GPK_HARDWARE (data);
+	egg_debug ("multiple signal timeout callback");
+	gpk_hardware_check_for_driver_available (hardware, hardware->priv->udi);
+
+	g_free (hardware->priv->udi);
+	hardware->priv->udi = NULL;
+	return FALSE;
+}
+
 /**
  * gpk_hardware_device_added_cb:
- * FIXME - not sure about this method signature
  **/
 static void
 gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *hardware)
 {
 	egg_debug ("hardware added. udi=%s", udi);
-	gpk_hardware_check_for_driver_available (hardware, udi);
+	/* we get multiple hal signals for one device plugin. Ignore all but first one.
+	   TODO: should we act on a different one ?
+	*/
+	if (hardware->priv->udi == NULL)
+	{
+		hardware->priv->udi = g_strdup (udi);
+		g_timeout_add_seconds (GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY,
+				       gpk_hardware_device_added_timeout, hardware);
+	}
 }
 
 /**
@@ -220,6 +241,7 @@ gpk_hardware_init (GpkHardware *hardware)
 	hardware->priv = GPK_HARDWARE_GET_PRIVATE (hardware);
 	hardware->priv->gconf_client = gconf_client_get_default ();
 	hardware->priv->package_ids = NULL;
+	hardware->priv->udi = NULL;
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (hardware->priv->gconf_client, GPK_CONF_PROMPT_HARDWARE, NULL);
