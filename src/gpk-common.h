@@ -48,8 +48,6 @@ G_BEGIN_DECLS
 #define GPK_CONF_AUTO_UPDATE			"/apps/gnome-packagekit/auto_update"
 #define GPK_CONF_UPDATE_BATTERY			"/apps/gnome-packagekit/update_battery"
 #define GPK_CONF_SHOW_DEPENDS			"/apps/gnome-packagekit/show_depends"
-#define GPK_CONF_PROMPT_FIRMWARE		"/apps/gnome-packagekit/prompt_firmware"
-#define GPK_CONF_PROMPT_HARDWARE		"/apps/gnome-packagekit/prompt_hardware"
 #define GPK_CONF_BANNED_FIRMWARE		"/apps/gnome-packagekit/banned_firmware"
 
 #define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
@@ -57,9 +55,11 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 #define GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS	"/apps/gnome-packagekit/update_viewer/precache_details"
 
-#define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/interface/enable_font_helper"
-#define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/interface/enable_codec_helper"
-#define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/interface/enable_mime_type_helper"
+#define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/enable_font_helper"
+#define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/enable_codec_helper"
+#define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/enable_mime_type_helper"
+#define GPK_CONF_ENABLE_CHECK_FIRMWARE		"/apps/gnome-packagekit/enable_check_firmware"
+#define GPK_CONF_ENABLE_CHECK_HARDWARE		"/apps/gnome-packagekit/enable_check_hardware"
 
 #define GPK_BUGZILLA_URL			"https://bugs.freedesktop.org/"
 

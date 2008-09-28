@@ -108,8 +108,8 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	if (egg_strequal (action, "install-firmware")) {
 		gpk_firmware_install_file (firmware);
 	} else if (egg_strequal (action, "do-not-show-prompt-firmware")) {
-		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_FIRMWARE);
-		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_FIRMWARE);
+		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, FALSE, NULL);
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
@@ -293,7 +293,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	firmware->priv->gconf_client = gconf_client_get_default ();
 
 	/* should we check and show the user */
-	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_PROMPT_FIRMWARE, NULL);
+	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
 	if (!ret) {
 		egg_debug ("not showing thanks to GConf");
 		return;

@@ -107,8 +107,8 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	if (egg_strequal (action, GPK_HARDWARE_INSTALL_ACTION)) {
 		gpk_hardware_install_package (hardware);
 	} else if (egg_strequal (action, GPK_HARDWARE_DONT_PROMPT_ACTION)) {
-		egg_debug ("set %s to FALSE", GPK_CONF_PROMPT_HARDWARE);
-		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_PROMPT_HARDWARE, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_HARDWARE);
+		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, FALSE, NULL);
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
@@ -244,7 +244,7 @@ gpk_hardware_init (GpkHardware *hardware)
 	hardware->priv->udi = NULL;
 
 	/* should we check and show the user */
-	ret = gconf_client_get_bool (hardware->priv->gconf_client, GPK_CONF_PROMPT_HARDWARE, NULL);
+	ret = gconf_client_get_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, NULL);
 	if (!ret) {
 		egg_debug ("hardware driver checking disabled in GConf");
 		return;
