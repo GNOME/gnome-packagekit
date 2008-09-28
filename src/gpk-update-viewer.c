@@ -144,14 +144,12 @@ gpk_update_viewer_set_page (PkPageEnum page)
 	}
 
 	/* some pages are resizeable */
-	if (page == PAGE_DETAILS) {
+	if (page == PAGE_DETAILS)
 		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
-	} else {
+	else
 		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-	}
-	if (page == PAGE_CONFIRM) {
+	if (page == PAGE_CONFIRM)
 		gtk_window_unmaximize (GTK_WINDOW (widget));
-	}
 	gtk_widget_show (widget);
 
 	/* clear */
@@ -163,11 +161,10 @@ gpk_update_viewer_set_page (PkPageEnum page)
 	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
 	list = gtk_container_get_children (GTK_CONTAINER (widget));
 	for (l=list, i=0; l; l=l->next, i++) {
-		if (i == page) {
+		if (i == page)
 			gtk_widget_show (l->data);
-		} else {
+		else
 			gtk_widget_hide (l->data);
-		}
 	}
 }
 
@@ -190,12 +187,10 @@ gpk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
 	ret = gpk_client_update_system (gclient, NULL);
 
 	/* did we succeed updating the system */
-	if (!ret) {
-		/* show the preview page */
+	if (!ret)
 		gpk_update_viewer_set_page (PAGE_PREVIEW);
-	} else {
+	else
 		gpk_update_viewer_set_page (PAGE_CONFIRM);
-	}
 }
 
 /**
@@ -230,11 +225,10 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update,
 				    PACKAGES_COLUMN_ID, &package_id, -1);
 
-		if (!update) {
+		if (!update)
 			selected_all = FALSE;
-		} else {
+		else
 			selected_any = TRUE;
-		}
 
 		/* do something with the data */
 		if (update) {
@@ -256,11 +250,10 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	}
 
 	widget = glade_xml_get_widget (glade_xml, "button_overview2");
-	if (selected_all) {
+	if (selected_all)
 		gtk_widget_hide (widget);
-	} else {
+	else
 		gtk_widget_show (widget);
-	}
 
 	/* set correct view */
 	gpk_update_viewer_set_page (PAGE_LAST);
@@ -270,12 +263,10 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 	g_strfreev (package_ids);
 
 	/* did we succeed updating the system */
-	if (!ret) {
-		/* show the preview page */
+	if (!ret)
 		gpk_update_viewer_set_page (PAGE_PREVIEW);
-	} else {
+	else
 		gpk_update_viewer_set_page (PAGE_CONFIRM);
-	}
 
 	/* get rid of the array, and free the contents */
 	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
@@ -503,21 +494,20 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 
 		for (i=0;i<length;i++) {
 			obj = pk_package_list_get_obj (list, i);
-			if (obj->info == PK_INFO_ENUM_LOW) {
+			if (obj->info == PK_INFO_ENUM_LOW)
 				num_low++;
-			} else if (obj->info == PK_INFO_ENUM_IMPORTANT) {
+			else if (obj->info == PK_INFO_ENUM_IMPORTANT)
 				num_important++;
-			} else if (obj->info == PK_INFO_ENUM_SECURITY) {
+			else if (obj->info == PK_INFO_ENUM_SECURITY)
 				num_security++;
-			} else if (obj->info == PK_INFO_ENUM_BUGFIX) {
+			else if (obj->info == PK_INFO_ENUM_BUGFIX)
 				num_bugfix++;
-			} else if (obj->info == PK_INFO_ENUM_ENHANCEMENT) {
+			else if (obj->info == PK_INFO_ENUM_ENHANCEMENT)
 				num_enhancement++;
-			} else if (obj->info == PK_INFO_ENUM_BLOCKED) {
+			else if (obj->info == PK_INFO_ENUM_BLOCKED)
 				num_blocked++;
-			} else {
+			else
 				num_normal++;
-			}
 		}
 
 		/* clear existing list */
@@ -796,8 +786,6 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 
 /**
  * gpk_update_viewer_get_pretty_from_composite:
- *
- * NOTE: Split using ^, because \t was already taken.
  **/
 static gchar *
 gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
@@ -810,9 +798,8 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 	PkPackageId *id;
 
 	/* do we have any data? */
-	if (egg_strzero (package_ids_delimit)) {
+	if (egg_strzero (package_ids_delimit))
 		goto out;
-	}
 
 	string = g_string_new ("");
 	package_ids = pk_package_ids_from_text (package_ids_delimit);
@@ -857,22 +844,19 @@ gpk_update_viewer_pretty_description (const gchar *description)
 
 		/* common prefixes */
 		if (g_str_has_prefix (line, "- ") ||
-		    g_str_has_prefix (line, "* ")) {
+		    g_str_has_prefix (line, "* "))
 			line2 = g_strdup_printf ("• %s", line+2);
-		} else {
+		else
 			line2 = g_strdup (line);
-		}
 
 		/* if not null then append back */
-		if (!egg_strzero (line2)) {
+		if (!egg_strzero (line2))
 			g_string_append_printf (string, "%s\n", line2);
-		}
 		g_free (line2);
 	}
 	/* remove trailing \n */
-	if (string->len > 0) {
+	if (string->len > 0)
 		g_string_set_size (string, string->len - 1);
-	}
 	line = g_string_free (string, FALSE);
 	g_strfreev (lines);
 
@@ -905,12 +889,11 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	/* get info  */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-	if (gtk_tree_selection_get_selected (selection, &model, &treeiter)) {
+	if (gtk_tree_selection_get_selected (selection, &model, &treeiter))
 		gtk_tree_model_get (model, &treeiter,
 				    PACKAGES_COLUMN_INFO, &info, -1);
-	} else {
+	else
 		info = PK_INFO_ENUM_NORMAL;
-	}
 
 	info_text = gpk_info_enum_to_localised_text (info);
 	/* translators: this is the update type, e.g. security */
@@ -1222,15 +1205,14 @@ gpk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gbo
 static const gchar *
 pk_update_get_approx_time (guint time)
 {
-	if (time < 60) {
+	if (time < 60)
 		return _("Less than a minute ago");
-	} else if (time < 60*60) {
+	else if (time < 60*60)
 		return _("Less than an hour ago");
-	} else if (time < 24*60*60) {
+	else if (time < 24*60*60)
 		return _("A few hours ago");
-	} else if (time < 7*24*60*60) {
+	else if (time < 7*24*60*60)
 		return _("A few days ago");
-	}
 	return _("Over a week ago");
 }
 
@@ -1279,9 +1261,8 @@ pk_update_viewer_set_last_updated_time (void)
 	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
 
 	/* always use the shortest time */
-	if (time_new < time) {
+	if (time_new < time)
 		time = time_new;
-	}
 	time_text = pk_update_get_approx_time (time);
 	widget = glade_xml_get_widget (glade_xml, "label_last_update");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
@@ -1326,9 +1307,8 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 	}
 
 	/* trim off extra newlines */
-	if (string->len != 0) {
+	if (string->len != 0)
 		g_string_set_size (string, string->len-1);
-	}
 
 	/* convert to a normal gchar */
 	text = g_string_free (string, FALSE);
@@ -1435,9 +1415,8 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
 
-	if (percentage != PK_CLIENT_PERCENTAGE_INVALID) {
+	if (percentage != PK_CLIENT_PERCENTAGE_INVALID)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-	}
 }
 
 /**
@@ -1583,11 +1562,10 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 	*none_checked = TRUE;
 	while (valid) {
 		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update, -1);
-		if (update) {
+		if (update)
 			*none_checked = FALSE;
-		} else {
+		else
 			*all_checked = FALSE;
-		}
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 }
@@ -1722,24 +1700,18 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				     gchar *string1, gchar *string2,
 				     gint int1, gint int2, gpointer user_data)
 {
-	if (egg_strequal (name, "button_refresh")) {
+	if (egg_strequal (name, "button_refresh"))
 		return polkit_gnome_action_create_button (refresh_action);
-	}
-	if (egg_strequal (name, "button_restart")) {
+	if (egg_strequal (name, "button_restart"))
 		return polkit_gnome_action_create_button (restart_action);
-	}
-	if (egg_strequal (name, "button_update_system")) {
+	if (egg_strequal (name, "button_update_system"))
 		return polkit_gnome_action_create_button (update_system_action);
-	}
-	if (egg_strequal (name, "button_update_packages")) {
+	if (egg_strequal (name, "button_update_packages"))
 		return polkit_gnome_action_create_button (update_packages_action);
-	}
-	if (egg_strequal (name, "image_animation_preview")) {
+	if (egg_strequal (name, "image_animation_preview"))
 		return gpk_animated_icon_new ();
-	}
-	if (egg_strequal (name, "image_animation_description")) {
+	if (egg_strequal (name, "image_animation_description"))
 		return gpk_animated_icon_new ();
-	}
 	egg_warning ("name unknown=%s", name);
 	return NULL;
 }
@@ -1849,9 +1821,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	dbus_g_thread_init ();
 	g_type_init ();
 
@@ -1876,9 +1847,9 @@ main (int argc, char *argv[])
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
 	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.UpdateViewer");
-	if (!ret) {
+	if (!ret)
 		goto unique_out;
-	}
+
 	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_update_viewer_activated_cb), NULL);
 
