@@ -42,11 +42,13 @@ main (int argc, char *argv[])
 	gboolean verbose = FALSE;
 	GError *error;
 	GpkClient *gclient;
-	gchar **files;
+	gchar **files = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
+		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &files,
+		  "files to install", NULL },
 		{ NULL}
 	};
 
@@ -56,9 +58,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	g_type_init ();
 
 	g_set_application_name (_("PackageKit File Installer"));
@@ -73,11 +74,10 @@ main (int argc, char *argv[])
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Local file installer"));
-	if (!ret) {
+	if (!ret)
 		return 1;
-	}
 
-	if (argc < 2) {
+	if (files == NULL) {
 		gpk_error_dialog (_("Failed to install local file"),
 				  _("You need to specify a file to install"), NULL);
 		return 1;
@@ -86,7 +86,6 @@ main (int argc, char *argv[])
 	error = NULL;
 	gclient = gpk_client_new ();
 	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	files = gpk_convert_argv_to_strv (argv);
 	ret = gpk_client_install_local_files (gclient, files, NULL);
 	g_strfreev (files);
 	g_object_unref (gclient);

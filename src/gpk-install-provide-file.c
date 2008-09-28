@@ -55,9 +55,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	g_type_init ();
 
 	g_set_application_name (_("Filename Installer"));
@@ -72,9 +71,8 @@ main (int argc, char *argv[])
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Provide file installer"));
-	if (!ret) {
+	if (!ret)
 		return 1;
-	}
 
 	if (argc < 2) {
 		gpk_error_dialog (_("Failed to install a package to provide a file"),

@@ -303,27 +303,6 @@ gpk_time_to_localised_string (guint time_secs)
 }
 
 /**
- * gpk_convert_argv_to_strv:
- **/
-gchar **
-gpk_convert_argv_to_strv (gchar *argv[])
-{
-	gchar **array;
-	guint length;
-	guint i;
-
-	length = g_strv_length (argv) - 1;
-	array = g_new0 (gchar *, length+1);
-	for (i=0; i<length; i++) {
-		/* we miss out argv[0] as it's the program name */
-		array[i] = g_strdup (argv[i+1]);
-		egg_debug ("array[%i]=%s", i, array[i]);
-	}
-	array[i] = NULL;
-	return array;
-}
-
-/**
  * gpk_strv_join_locale:
  *
  * Return value: "dave" or "dave and john" or "dave, john and alice",
