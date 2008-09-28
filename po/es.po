@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 16:48+0000\n"
-"PO-Revision-Date: 2008-09-16 20:57+0200\n"
+"POT-Creation-Date: 2008-09-18 14:05+0000\n"
+"PO-Revision-Date: 2008-09-20 13:30+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -82,15 +82,15 @@ msgstr "Si se debe usar autocmpletado al buscar"
 
 #: ../data/gnome-packagekit.schemas.in.h:12
 msgid "If we should allow applications to invoke the codec installer"
-msgstr ""
+msgstr "Si se debe permitir que las aplicaciones invoquen al instalador de códecs"
 
 #: ../data/gnome-packagekit.schemas.in.h:13
 msgid "If we should allow applications to invoke the font installer"
-msgstr ""
+msgstr "Si se debe permitir que las aplicaciones invoquen al instalador de tipografías"
 
 #: ../data/gnome-packagekit.schemas.in.h:14
 msgid "If we should allow applications to invoke the mime type installer"
-msgstr ""
+msgstr "Si se debe permitir que las aplicaciones invoquen al instalador de tipos MIME"
 
 #: ../data/gnome-packagekit.schemas.in.h:15
 msgid "If we should filter package lists using basename in gpk-application"
@@ -118,11 +118,9 @@ msgstr ""
 "modo batería"
 
 #: ../data/gnome-packagekit.schemas.in.h:20
-#, fuzzy
 msgid "If we should precache all update details in the update viewer"
-msgstr ""
-"Si se deben mostrar todos los repositorios en el visor de repositorios de "
-"software"
+msgstr "Si se deben precargar todos los detalles de las actualizaciones en el visor de "
+"actualizaciones"
 
 #: ../data/gnome-packagekit.schemas.in.h:21
 msgid "If we should show all repositories in the software source viewer"
@@ -384,14 +382,6 @@ msgstr " "
 msgid "Install Package"
 msgstr "Instalar el paquete:"
 
-#: ../data/gpk-client.glade.h:3
-msgid "gtk-cancel"
-msgstr "gtk-cancel"
-
-#: ../data/gpk-client.glade.h:4
-msgid "gtk-close"
-msgstr "gtk-close"
-
 #: ../data/gpk-error.glade.h:1
 msgid "<b>More details</b>"
 msgstr "<b>Más detalles</b>"
@@ -625,52 +615,65 @@ msgstr[1] ""
 msgid "Invalid"
 msgstr "No válido"
 
+#. translators: this is the update type, e.g. security
+#: ../src/gpk-application.c:945 ../src/gpk-update-viewer.c:916
+msgid "Type"
+msgstr "Tipo"
+
+#: ../src/gpk-application.c:945
+msgid "Collection"
+msgstr "Colección"
+
 #. set the tooltip to where we are going
-#: ../src/gpk-application.c:949
+#: ../src/gpk-application.c:953
 #, c-format
 msgid "Visit %s"
 msgstr "Visite %s"
 
-#: ../src/gpk-application.c:953
+#: ../src/gpk-application.c:957
 msgid "Project"
 msgstr "Proyecto"
 
-#: ../src/gpk-application.c:953
+#: ../src/gpk-application.c:957
 msgid "Homepage"
 msgstr "Página de inicio"
 
-#: ../src/gpk-application.c:966
+#: ../src/gpk-application.c:970
 msgid "Group"
 msgstr "Grupo"
 
 #. This should be a licence enum value - bad API, bad.
 #. * license = pk_license_enum_to_text (license_enum);
-#: ../src/gpk-application.c:973
+#: ../src/gpk-application.c:977
 msgid "License"
 msgstr "Licencia"
 
-#: ../src/gpk-application.c:987
+#: ../src/gpk-application.c:991
+msgid "Size"
+msgstr "Tamaño"
+
+#: ../src/gpk-application.c:993
 msgid "Installed size"
 msgstr "Tamaño instalado"
 
-#: ../src/gpk-application.c:989
+#: ../src/gpk-application.c:995
 msgid "Download size"
 msgstr "Tamaño de la descarga"
 
-#: ../src/gpk-application.c:998
+#: ../src/gpk-application.c:1003
 msgid "Source"
 msgstr "Repositorio"
 
-#: ../src/gpk-application.c:1139
+#: ../src/gpk-application.c:1144
 msgid "No results were found."
 msgstr "No se han encontrado resultados"
 
 #. this shouldn't happen
-#: ../src/gpk-application.c:1146
+#: ../src/gpk-application.c:1151
 msgid "Try entering a package name in the search bar."
 msgstr "Pruebe a introducir el nombre del paquete en la barra de búsqueda."
 
-#: ../src/gpk-application.c:1150
+#: ../src/gpk-application.c:1155
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -678,75 +681,75 @@ msgstr ""
 "Pruebe a buscar descripciones de paquetes pulsando el icono cercano al texto "
 "a buscar."
 
-#: ../src/gpk-application.c:1152
+#: ../src/gpk-application.c:1157
 msgid "Try again with a different search term."
 msgstr "Pruebe de nuevo con otro término para buscar."
 
-#: ../src/gpk-application.c:1254
+#: ../src/gpk-application.c:1259
 msgid "Invalid search text"
 msgstr "El texto que buscar no es válido"
 
-#: ../src/gpk-application.c:1255
+#: ../src/gpk-application.c:1260
 msgid "The search text contains invalid characters"
 msgstr "El texto que buscar contiene caracteres no válidos"
 
-#: ../src/gpk-application.c:1282
+#: ../src/gpk-application.c:1287
 msgid "The search could not be completed"
 msgstr "No se pudo completar la búsqueda"
 
-#: ../src/gpk-application.c:1283 ../src/gpk-application.c:1324
+#: ../src/gpk-application.c:1288 ../src/gpk-application.c:1329
 msgid "Running the transaction failed"
 msgstr "Falló la ejecución de la transacción"
 
-#: ../src/gpk-application.c:1323
+#: ../src/gpk-application.c:1328
 msgid "The group could not be queried"
 msgstr "No se pudo consultar el grupo"
 
-#: ../src/gpk-application.c:1627 ../src/gpk-common.c:934
+#: ../src/gpk-application.c:1632 ../src/gpk-common.c:934
 #: ../src/gpk-common.c:993
 msgid "Installed"
 msgstr "Instalado"
 
-#: ../src/gpk-application.c:1642 ../src/gpk-application.c:1663
+#: ../src/gpk-application.c:1647 ../src/gpk-application.c:1668
 #: ../src/gpk-client-dialog.c:635 ../src/gpk-dialog.c:149
 msgid "Name"
 msgstr "Nombre"
 
-#: ../src/gpk-application.c:1893
+#: ../src/gpk-application.c:1898
 msgid "Searching by name"
 msgstr "Buscando por nombre"
 
-#: ../src/gpk-application.c:1914
+#: ../src/gpk-application.c:1919
 msgid "Searching by description"
 msgstr "Buscando por descripción"
 
-#: ../src/gpk-application.c:1935
+#: ../src/gpk-application.c:1940
 msgid "Searching by file"
 msgstr "Buscando por archivo"
 
-#: ../src/gpk-application.c:1960
+#: ../src/gpk-application.c:1965
 msgid "Search by name"
 msgstr "Buscar por nombre"
 
-#: ../src/gpk-application.c:1969
+#: ../src/gpk-application.c:1974
 msgid "Search by description"
 msgstr "Buscar por descripción"
 
-#: ../src/gpk-application.c:1978
+#: ../src/gpk-application.c:1983
 msgid "Search by file name"
 msgstr "Buscar por nombre de archivo"
 
-#: ../src/gpk-application.c:2082 ../src/gpk-check-update.c:164
+#: ../src/gpk-application.c:2087 ../src/gpk-check-update.c:164
 #: ../src/gpk-watch.c:521
 msgid "Failed to show url"
 msgstr "Falló al mostrar la url"
 
-#: ../src/gpk-application.c:2121 ../src/gpk-check-update.c:189
+#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:189
 #: ../src/gpk-watch.c:542
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licenciado bajo la Licencia Pública General GNU Versión 2"
 
-#: ../src/gpk-application.c:2122 ../src/gpk-check-update.c:190
+#: ../src/gpk-application.c:2127 ../src/gpk-check-update.c:190
 #: ../src/gpk-watch.c:543
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
@@ -759,7 +762,7 @@ msgstr ""
 "tal como la publica la Free Software Foundation; tanto en la versión 2\n"
 "de la Licencia como (a su elección) cualquier versión posterior."
 
-#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:194
+#: ../src/gpk-application.c:2131 ../src/gpk-check-update.c:194
 #: ../src/gpk-watch.c:547
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
@@ -772,7 +775,7 @@ msgstr ""
 "MERCANTIBILIDAD o ADECUACIÓN PARAUN PROPÓSITO PARTICULAR. Vea la\n"
 "Licencia Pública General de GNU para más detalles."
 
-#: ../src/gpk-application.c:2130 ../src/gpk-check-update.c:198
+#: ../src/gpk-application.c:2135 ../src/gpk-check-update.c:198
 #: ../src/gpk-watch.c:551
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
@@ -784,7 +787,7 @@ msgstr ""
 "junto con este programa; si no, escriba a la Free Software Foundation,\n"
 "Inc., 51 Franklin Street, Fifth Floor, Boston,MA, 02110-1301, EE. UU."
 
-#: ../src/gpk-application.c:2135 ../src/gpk-check-update.c:203
+#: ../src/gpk-application.c:2140 ../src/gpk-check-update.c:203
 #: ../src/gpk-watch.c:556
 msgid "translator-credits"
 msgstr ""
@@ -792,47 +795,47 @@ msgstr ""
 "Javier Mazorra <mazi.debian@gmail.com>, 2007\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2007"
 
-#: ../src/gpk-application.c:2160 ../src/gpk-check-update.c:222
+#: ../src/gpk-application.c:2165 ../src/gpk-check-update.c:222
 #: ../src/gpk-watch.c:574
 msgid "PackageKit Website"
 msgstr "Página web de PackageKit"
 
-#: ../src/gpk-application.c:2162
+#: ../src/gpk-application.c:2167
 msgid "Package Manager for GNOME"
 msgstr "Gestor de paquetes para GNOME"
 
-#: ../src/gpk-application.c:2595 ../src/gpk-update-viewer.c:1101
+#: ../src/gpk-application.c:2600 ../src/gpk-update-viewer.c:1101
 msgid "Text"
 msgstr "Texto"
 
-#: ../src/gpk-application.c:2617
+#: ../src/gpk-application.c:2622
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
 "Introduzca el nombre de un paquete y pulse buscar o pulse en un grupo para "
 "comenzar."
 
-#: ../src/gpk-application.c:2619
+#: ../src/gpk-application.c:2624
 msgid "Enter a package name and then click find to get started."
 msgstr "Introduzca el nombre de un paquete y pulse buscar para comenzar."
 
-#: ../src/gpk-application.c:2774
+#: ../src/gpk-application.c:2779
 msgid "Clear current selection"
 msgstr "Limpiar selección actual"
 
-#: ../src/gpk-application.c:2805
+#: ../src/gpk-application.c:2810
 msgid "Visit homepage for selected package"
 msgstr "Visitar la página web del paquete seleccionado"
 
-#: ../src/gpk-application.c:2950
+#: ../src/gpk-application.c:2955
 msgid "Find packages"
 msgstr "Buscar paquetes"
 
-#: ../src/gpk-application.c:2956
+#: ../src/gpk-application.c:2961
 msgid "Cancel search"
 msgstr "Cancelar búsqueda"
 
-#: ../src/gpk-application.c:3090
+#: ../src/gpk-application.c:3095
 msgid "All packages"
 msgstr "Todos los paquetes"
 
@@ -978,6 +981,7 @@ msgstr "Reinicie el equipo ahora"
 msgid ""
 "Unknown error. Please refer to the detailed report and report in bugzilla."
 msgstr ""
+"Error desconocido. Consulte el informe detallado e informe en bugzilla."
 
 #: ../src/gpk-client.c:615
 msgid "You don't have the necessary privileges to perform this action"
@@ -990,9 +994,8 @@ msgstr "No se pudo iniciar el servicio packagekitd"
 #: ../src/gpk-client.c:689 ../src/gpk-client.c:1283 ../src/gpk-client.c:1414
 #: ../src/gpk-client.c:2265 ../src/gpk-client.c:2337 ../src/gpk-client.c:2387
 #: ../src/gpk-client.c:2438 ../src/gpk-client.c:2484 ../src/gpk-client.c:2534
-#, fuzzy
 msgid "Failed to reset action client"
-msgstr "Falló al reiniciar el cliente"
+msgstr "Falló al reiniciar la acción del cliente"
 
 #: ../src/gpk-client.c:704 ../src/gpk-client.c:1666
 msgid "Failed to install file"
@@ -1097,9 +1100,8 @@ msgstr "Buscando paquetes necesarios"
 
 #: ../src/gpk-client.c:1220 ../src/gpk-client.c:1362 ../src/gpk-client.c:1504
 #: ../src/gpk-client.c:1952 ../src/gpk-client.c:2062
-#, fuzzy
 msgid "Failed to reset resolve client"
-msgstr "Falló al reiniciar la resolución"
+msgstr "Falló al reiniciar la resolución del cliente"
 
 #: ../src/gpk-client.c:1230
 msgid "Could not work out what packages would also be removed"
@@ -1165,14 +1167,12 @@ msgstr "Falló al instalar el paquete"
 
 #. check user wanted operation
 #: ../src/gpk-client.c:1482
-#, fuzzy
 msgid "An additional file is required"
-msgstr "Se necesita firmware adicional"
+msgstr "Se necesita un archivo adicional"
 
 #: ../src/gpk-client.c:1483
-#, fuzzy
 msgid "Do you want to search for this file now?"
-msgstr "¿Quiere copiar estos archivos?"
+msgstr "¿Quiere buscar este archivo ahora?"
 
 #: ../src/gpk-client.c:1486
 msgid "wants to install packages"
@@ -1180,9 +1180,8 @@ msgstr "necesita instalar paquetes"
 
 #. set title
 #: ../src/gpk-client.c:1496
-#, fuzzy
 msgid "Searching for packages"
-msgstr "Buscando por el nombre del paquete"
+msgstr "Buscando paquetes"
 
 #: ../src/gpk-client.c:1512 ../src/gpk-client.c:1562
 msgid "Incorrect response from search"
@@ -1213,24 +1212,20 @@ msgstr "El paquete ya está instalado"
 
 #. check user wanted operation
 #: ../src/gpk-client.c:1618
-#, fuzzy
 msgid "The following file is required:"
-msgstr "Las siguientes actualizaciones están disponibles:"
+msgstr "Se necesita el siguiente archivo:"
 
 #: ../src/gpk-client.c:1619
-#, fuzzy
 msgid "Do you want to search for this now?"
-msgstr "¿Quiere copiar estos archivos?"
+msgstr "¿Quiere buscarlo ahora?"
 
 #: ../src/gpk-client.c:1620
-#, fuzzy
 msgid "File installer"
-msgstr "Falló al instalar"
+msgstr "Instalador de archivos"
 
 #: ../src/gpk-client.c:1622
-#, fuzzy
 msgid "wants to install a file"
-msgstr "Falló al instalar el archivo"
+msgstr "quiere instalar un archivo"
 
 #: ../src/gpk-client.c:1632
 msgid "Failed to search for file"
@@ -1246,94 +1241,77 @@ msgid "The %s package already provides the file %s"
 msgstr "El paquete %s ya proporciona el archivo %s"
 
 #: ../src/gpk-client.c:1708
-#, fuzzy, c-format
+#, c-format
 msgid "Searching for codec: %s"
-msgstr "Buscando un archivo"
+msgstr "Buscando el códec: %s"
 
 #: ../src/gpk-client.c:1758
-#, fuzzy
 msgid "Additional plugins are required to play this content."
-msgstr ""
-"Se necesita firmware adicional para que el hardware de este equipo funcione "
-"correctamente."
+msgstr "Se necesitan complementos adicionales para reproducir este contenido."
 
 #: ../src/gpk-client.c:1758
-#, fuzzy
 msgid "The following codecs are required:"
-msgstr "Las siguientes actualizaciones están disponibles:"
+msgstr "Se necesitan los siguientes códecs:"
 
 #. trailer
 #: ../src/gpk-client.c:1767
-#, fuzzy
 msgid "Do you want to search for these now?"
-msgstr "¿Quiere copiar estos archivos?"
+msgstr "¿Quiere buscarlos ahora?"
 
 #: ../src/gpk-client.c:1775
-#, fuzzy
 msgid "Codec installer"
-msgstr "Instalador de catálogos"
+msgstr "Instalador de códecs"
 
 #: ../src/gpk-client.c:1776 ../src/gpk-client.c:1932 ../src/gpk-client.c:2042
-#, fuzzy
 msgid "Search"
-msgstr "Buscar por nombre"
+msgstr "Buscar"
 
 #: ../src/gpk-client.c:1777
 msgid "requires additional plugins"
-msgstr ""
+msgstr "requiere complementos adicionales"
 
 #. set title
 #: ../src/gpk-client.c:1823
-#, fuzzy
 msgid "Searching for codecs"
-msgstr "Buscando un archivo"
+msgstr "Buscando códecs"
 
 #: ../src/gpk-client.c:1844
-#, fuzzy
 msgid "Failed to search for codec"
-msgstr "Falló al buscar proveedores"
+msgstr "Falló al buscar el códec"
 
 #: ../src/gpk-client.c:1845
-#, fuzzy
 msgid "Could not find codec in any configured software source"
-msgstr ""
-"No se pudieron encontrar los paquetes en ningún repositorio de software"
+msgstr "No se pudo encontrar el códec en ninguno de los repositorios de software configurados"
 
 #: ../src/gpk-client.c:1866
 msgid "Install the following codecs"
-msgstr ""
+msgstr "Instalar los siguientes códecs"
 
 #: ../src/gpk-client.c:1867 ../src/gpk-client.c:2092
-#, fuzzy
 msgid "Do you want to install these packages now?"
-msgstr "¿Quiere instalar estos archivos?"
+msgstr "¿Quiere instalar estos paquetes ahora?"
 
 #: ../src/gpk-client.c:1929
-#, fuzzy
 msgid "An additional program is required to open this type of file:"
 msgstr ""
-"Se necesita firmware adicional para que el hardware de este equipo funcione "
-"correctamente."
+"Se necesita un programa adicional adicional para abrir este tipo de archivo:"
 
 #: ../src/gpk-client.c:1930
-#, fuzzy
 msgid "Do you want to search for a program to open this file type now?"
-msgstr "¿Quiere copiar estos archivos?"
+msgstr "¿Quiere buscar un programa para abrir este tipo de archivo ahora?"
 
 #: ../src/gpk-client.c:1931
-#, fuzzy
 msgid "File type installer"
-msgstr "Instalador de tipos MIME"
+msgstr "Instalador de tipos de archivo"
 
 #: ../src/gpk-client.c:1933
 msgid "requires a new mime type"
-msgstr ""
+msgstr "requiere un tipo MIME nuevo"
 
 #. set title
 #: ../src/gpk-client.c:1942
-#, fuzzy
 msgid "Searching for file handlers"
-msgstr "Buscando un archivo"
+msgstr "Buscando manejadores de archivos"
 
 #: ../src/gpk-client.c:1961 ../src/gpk-client.c:2071
 msgid "Failed to search for provides"
@@ -1362,32 +1340,25 @@ msgstr "No se eligió ninguna aplicación para instalar"
 
 #. check user wanted operation
 #: ../src/gpk-client.c:2039
-#, fuzzy
 msgid "An additional font is required to view this file correctly"
-msgstr ""
-"Se necesita firmware adicional para que el hardware de este equipo funcione "
-"correctamente."
+msgstr "Se necesita una tipografía adicional para ver este archivo correctamente"
 
 #: ../src/gpk-client.c:2040
-#, fuzzy
 msgid "Do you want to search for a suitable font now?"
-msgstr "¿Quiere copiar estos archivos?"
+msgstr "¿Quiere buscar una tipografía adecuada ahora?"
 
 #: ../src/gpk-client.c:2041
-#, fuzzy
 msgid "Font installer"
-msgstr "_Forzar instalación"
+msgstr "Instalador de tipografías"
 
 #: ../src/gpk-client.c:2043
-#, fuzzy
 msgid "wants to install a font"
-msgstr "Falló al instalar las tipografías"
+msgstr "quiere instalar una tipografía"
 
 #. set title
 #: ../src/gpk-client.c:2052
-#, fuzzy
 msgid "Searching for fonts"
-msgstr "Buscando un archivo"
+msgstr "Buscando tipografías"
 
 #: ../src/gpk-client.c:2081
 msgid "Failed to find font"
@@ -1398,9 +1369,8 @@ msgid "No new fonts can be found for this document"
 msgstr "No se pueden encontrar tipografías nuevas para este documento"
 
 #: ../src/gpk-client.c:2091
-#, fuzzy
 msgid "Install the following fonts"
-msgstr "Instalar catálogos"
+msgstr "Instalar las siguientes tipografías"
 
 #: ../src/gpk-client.c:2130
 #, c-format
@@ -1547,9 +1517,8 @@ msgid "_Install"
 msgstr "_Instalar"
 
 #: ../src/gpk-client-dialog.c:835
-#, fuzzy
 msgid "Uninstall"
-msgstr "_Instalar"
+msgstr "Desinstalar"
 
 #: ../src/gpk-client-run.c:114
 msgid "_Run"
@@ -1924,17 +1893,15 @@ msgstr ""
 "Para utilizar este software, debe aceptar la licencia."
 
 #: ../src/gpk-common.c:570
-#, fuzzy
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
 "Dos paquetes proporcionan el mismo archivo.\n"
-"Habitualmente esto sucede al mezclar paquetes de diferentes "
-"repositorios de software"
+"Habitualmente esto sucede al mezclar paquetes de diferentes repositorios de "
+"software"
 
 #: ../src/gpk-common.c:574
-#, fuzzy
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2731,12 +2698,11 @@ msgstr ""
 "gráficas como usuario privilegiado."
 
 #: ../src/gpk-common.c:1405
-#, fuzzy
 msgid ""
 "Package management applications are security sensitive and therefore this "
 "application will now close."
 msgstr ""
-"Las aplicaciones de PackageKit son sensibles a la seguridad y por lo tanto "
+"Las aplicaciones de administración de paquetes son sensibles a la seguridad y por lo tanto "
 "esta aplicación se cerrará ahora."
 
 #: ../src/gpk-common.c:1522 ../src/gpk-common.c:1656
@@ -2957,9 +2923,8 @@ msgid "You need to specify a package to install"
 msgstr "Debe especificar un paquete para instalar"
 
 #: ../src/gpk-install-provide-file.c:63 ../src/gpk-install-provide-file.c:65
-#, fuzzy
 msgid "Filename Installer"
-msgstr "Falló al instalar"
+msgstr "Instalador de nombres de archivo"
 
 #. are we running privileged
 #: ../src/gpk-install-provide-file.c:74
@@ -3081,11 +3046,6 @@ msgstr "Obteniendo descripción…"
 #: ../src/gpk-update-viewer.c:498
 msgid "There are no updates available!"
 msgstr "No hay actualizaciones disponibles."
-
-#. translators: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:916
-msgid "Type"
-msgstr "Tipo"
 
 #. translators: this is the stability status of the update
 #: ../src/gpk-update-viewer.c:922
@@ -3284,6 +3244,12 @@ msgstr "_Ocultar este icono"
 #: ../src/gpk-watch.c:1113
 msgid "_Restart computer"
 msgstr "_Reiniciar el equipo"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
+
+#~ msgid "gtk-close"
+#~ msgstr "gtk-close"
 
 #~ msgid "<b>Installation Complete</b>"
 #~ msgstr "<b>Instalación finalizada</b>"
