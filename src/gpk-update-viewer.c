@@ -815,7 +815,7 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 	}
 
 	string = g_string_new ("");
-	package_ids = g_strsplit (package_ids_delimit, "^", 0);
+	package_ids = pk_package_ids_from_text (package_ids_delimit);
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
 		id = pk_package_id_new_from_string (package_ids[i]);
