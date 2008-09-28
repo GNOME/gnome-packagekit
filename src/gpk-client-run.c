@@ -244,7 +244,7 @@ gpk_client_add_package_ids (gchar **package_ids)
 	for (i=0; i<length; i++) {
 		package_id = package_ids[i];
 		egg_debug ("package_id=%s", package_id);
-		files = gpk_client_get_file_list (gclient, package_ids[0], &error);
+		files = gpk_client_get_file_list (gclient, package_id, &error);
 		if (files == NULL) {
 			egg_warning ("could not get file list: %s", error->message);
 			g_error_free (error);
