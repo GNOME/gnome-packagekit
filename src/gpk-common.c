@@ -44,37 +44,6 @@
 #include "gpk-error.h"
 
 /**
- * gpk_size_to_si_size_text:
- **/
-gchar *
-gpk_size_to_si_size_text (guint64 size)
-{
-	gdouble frac;
-
-	/* double cast, not sure why, but it works */
-	frac = (gdouble) (long int) size;
-
-	/* first chunk */
-	if (frac < 1024)
-		return g_strdup_printf ("%li bytes", (long int) size);
-	/* next chunk */
-	frac /= 1024.0;
-	if (frac < 1024)
-		return g_strdup_printf ("%.1lf kB", frac);
-	/* next chunk */
-	frac /= 1024.0;
-	if (frac < 1024)
-		return g_strdup_printf ("%.1lf MB", frac);
-	/* next chunk */
-	frac /= 1024.0;
-	if (frac < 1024)
-		return g_strdup_printf ("%.1lf GB", frac);
-	/* no way.... */
-	egg_warning ("cannot have a file this large!");
-	return NULL;
-}
-
-/**
  * gpk_package_id_format_twoline:
  *
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"

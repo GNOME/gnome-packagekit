@@ -986,7 +986,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	/* if non-zero, set the size */
 	if (details->size > 0) {
 		/* set the size */
-		value = gpk_size_to_si_size_text (details->size);
+		value = g_format_size_for_display (details->size);
 		if (egg_strequal (details->id->data, "meta"))
 			gpk_application_add_detail_item (application, _("Size"), value, NULL);
 		else if (installed)

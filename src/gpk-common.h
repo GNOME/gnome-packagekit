@@ -71,7 +71,6 @@ G_BEGIN_DECLS
 #define GPK_ICON_SOFTWARE_UPDATE_AVAILABLE	"software-update-available"
 
 void		 gpk_common_test			(gpointer	 data);
-gchar		*gpk_size_to_si_size_text		(guint64	 size);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,
 							 const gchar	*summary);
