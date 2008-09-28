@@ -2070,7 +2070,7 @@ skip_checks:
 	}
 
 	/* install this specific package */
-	package_ids = g_strsplit (package_id, "|", 1);
+	package_ids = pk_package_ids_from_id (package_id);
 	ret = gpk_client_install_package_ids (gclient, package_ids, error);
 out:
 	if (list != NULL)

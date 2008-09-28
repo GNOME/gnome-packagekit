@@ -616,7 +616,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 {
 	gchar *exec;
 	GError *error = NULL;
-	gchar **array;
+	gchar **package_ids;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -644,8 +644,8 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	/* only if installed */
 	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
 		/* run this single package id */
-		array = g_strsplit (package_id, "|", 1);
-		exec = gpk_client_run_show (array);
+		package_ids = pk_package_ids_from_id (package_id);
+		exec = gpk_client_run_show (package_ids);
 		if (exec != NULL) {
 			ret = g_spawn_command_line_async (exec, &error);
 			if (!ret) {
@@ -654,7 +654,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 			}
 		}
 		g_free (exec);
-		g_strfreev (array);
+		g_strfreev (package_ids);
 	}
 	g_free (package_id);
 }
