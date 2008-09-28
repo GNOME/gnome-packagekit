@@ -1329,6 +1329,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
@@ -1875,6 +1876,7 @@ skip_checks:
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for codecs"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
@@ -2378,6 +2380,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
@@ -2655,6 +2658,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 
 	/* setup the UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
 
