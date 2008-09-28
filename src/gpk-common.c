@@ -436,38 +436,6 @@ gpk_common_test (gpointer data)
 	g_free (text);
 
 	/************************************************************
-	 ****************        size text             **************
-	 ************************************************************/
-	egg_test_title (test, "size zero");
-	text = gpk_size_to_si_size_text (0);
-	if (text != NULL && strcmp (text, _("0 bytes")) == 0) {
-		egg_test_success (test, NULL);
-	} else {
-		egg_test_failed (test, "failed, got %s", text);
-	}
-	g_free (text);
-
-	/************************************************************/
-	egg_test_title (test, "size 512 bytes");
-	text = gpk_size_to_si_size_text (512);
-	if (text != NULL && strcmp (text, _("512 bytes")) == 0) {
-		egg_test_success (test, NULL);
-	} else {
-		egg_test_failed (test, "failed, got %s", text);
-	}
-	g_free (text);
-
-	/************************************************************/
-	egg_test_title (test, "size 256.2 MB");
-	text = gpk_size_to_si_size_text (256*1025*1024);
-	if (text != NULL && strcmp (text, _("256.2 MB")) == 0) {
-		egg_test_success (test, NULL);
-	} else {
-		egg_test_failed (test, "failed, got %s", text);
-	}
-	g_free (text);
-
-	/************************************************************
 	 ****************     package name text        **************
 	 ************************************************************/
 	egg_test_title (test, "get name null");
