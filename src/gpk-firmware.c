@@ -124,7 +124,7 @@ static gboolean
 gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 {
 	gboolean ret;
-	guint length;
+	guint length = 0;
 	PkClient *client = NULL;
 	PkPackageList *list = NULL;
 	GError *error = NULL;
