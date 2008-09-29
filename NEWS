@@ -1,3 +1,32 @@
+Version 0.3.5
+~~~~~~~~~~~~~~
+Released: 2008-09-29
+
+* Translations
+ - Updated Polish translation (Tomasz Dominikowski)
+ - Updated Polish documentation (Tomasz Dominikowski)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated French translation (Ivan Buresi and Robert-André Mauchin)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+
+* New
+ - Add an animated icon for the testing phase (Mike Langlie)
+ - Add a new GConf key to enable certain firmware files to be skipped (Richard Hughes)
+
+* Bugfix:
+ - Set the window title when we do update-system (Richard Hughes)
+ - Define a GConf key that contains a list of banned firmware that will never be
+   searched for (Richard Hughes)
+ - Don't use functions deprecated from GTK (Richard Hughes)
+ - Provide functionality to find the user_time when not set on the DBUS interface (Richard Hughes)
+ - Add the missing role and status icons, and fix the self checks that missed them (Richard Hughes)
+ - Fix setting modality from gpk-update-viewer (Richard Hughes)
+ - When we install multiple applications, make sure we search for all the applications (Richard Hughes)
+ - Set the dialog message to be blank in more places (Richard Hughes)
+ - Don't run interactive self tests when doing make distcheck (Richard Hughes)
+ - Call hardware check in gpk-update-icon (Scott Reeves)
+ - Try to handle multiple hal DeviceAdded events for single plug (Scott Reeves)
+
 Version 0.3.4
 ~~~~~~~~~~~~~~
 Released: 2008-09-22
