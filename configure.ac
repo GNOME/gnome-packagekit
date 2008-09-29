@@ -174,6 +174,16 @@ fi
 AM_CONDITIONAL([HAVE_UNIQUE], [test $have_unique = yes])
 
 dnl ---------------------------------------------------------------------------
+dnl - Build self tests
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(tests, AS_HELP_STRING([--enable-tests],[enable unit test code]),
+	      enable_tests=$enableval,enable_tests=no)
+AM_CONDITIONAL(EGG_BUILD_TESTS, test x$enable_tests = xyes)
+if test x$enable_tests = xyes; then
+	AC_DEFINE(EGG_BUILD_TESTS,1,[Build test code])
+fi
+
+dnl ---------------------------------------------------------------------------
 dnl - Other tests
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(gcov, AS_HELP_STRING([--enable-gcov],[compile with coverage profiling instrumentation (gcc only)]),

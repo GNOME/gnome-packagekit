@@ -254,6 +254,8 @@ gpk-interface.h: gpk-interface.xml
 		--output=gpk-interface.h		\
 		$(srcdir)/gpk-interface.xml
 
+if EGG_BUILD_TESTS
+
 check_PROGRAMS =					\
 	gpk-self-test
 
@@ -277,6 +279,7 @@ gpk_self_test_LDADD =					\
 gpk_self_test_CFLAGS = -DEGG_TEST $(AM_CFLAGS)
 
 TESTS = gpk-self-test
+endif
 
 EXTRA_DIST =						\
 	gpk-marshal.list				\
