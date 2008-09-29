@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(gnome-packagekit, 0.3.5)
+AC_INIT(gnome-packagekit, 0.3.6)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -48,7 +48,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.3.3
+PACKAGEKIT_REQUIRED=0.3.5
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.12.0
 DBUS_REQUIRED=1.1.2
