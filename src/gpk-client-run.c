@@ -104,6 +104,30 @@ gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 }
 
 /**
+ * gpk_client_run_row_activated_cb:
+ **/
+void
+gpk_client_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
+				 GtkTreeViewColumn *col, gpointer user_data)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean ret;
+
+	/* get selection */
+	model = gtk_tree_view_get_model (treeview);
+	ret = gtk_tree_model_get_iter (model, &iter, path);
+	if (!ret) {
+		egg_warning ("failed to get selection");
+		return;
+	}
+
+	g_free (full_path);
+	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &full_path, -1);
+	gtk_main_quit ();
+}
+
+/**
  * gpk_update_viewer_create_custom_widget:
  **/
 static GtkWidget *
@@ -311,6 +335,8 @@ gpk_client_run_show (gchar **package_ids)
 	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store));
+	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
+			  G_CALLBACK (gpk_client_run_row_activated_cb), NULL);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
