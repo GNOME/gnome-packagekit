@@ -1752,7 +1752,7 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 		return NULL;
 
 	codec_name_formatted = g_strdup_printf ("<i>%s</i>", codec_name);
-	title = g_strdup_printf (_("Searching for codec: %s"), codec_name_formatted);
+	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name_formatted);
 	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	g_free (title);
 	g_free (codec_name_formatted);
@@ -1771,7 +1771,7 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 		goto out;
 	}
 
-	/* gstreamer-ffmpeg and gstreamer-plugins-ugly both provice mp3 playback, choose one */
+	/* gstreamer-ffmpeg and gstreamer-plugins-ugly both provide mp3 playback, choose one */
 	if (len > 1)
 		egg_warning ("choosing one of the provides as more than one match");
 
@@ -1800,10 +1800,15 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	gchar **parts;
 	gboolean ret;
 	GString *string;
+	const gchar *title;
+	const gchar *message;
+
+	len = g_strv_length (codec_name_strings);
+	title = ngettext ("An additional plugin is required to play this content", "Additional plugins are required to play this content", len);
+	message = ngettext ("The following plugin is required:", "The following plugins are required:", len);
 
 	string = g_string_new ("");
-	g_string_append_printf (string, "%s\n%s\n\n", _("Additional plugins are required to play this content."), _("The following codecs are required:"));
-	len = g_strv_length (codec_name_strings);
+	g_string_append_printf (string, "%s\n%s\n\n", title, message);
 	for (i=0; i<len; i++) {
 		parts = g_strsplit (codec_name_strings[i], "|", 2);
 		g_string_append_printf (string, "• <i>%s</i>\n", parts[0]);
@@ -1811,7 +1816,8 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	}
 
 	/* trailer */
-	g_string_append_printf (string, "\n%s\n", _("Do you want to search for these now?"));
+	message = ngettext ("Do you want to search for this now?", "Do you want to search for these now?", len);
+	g_string_append_printf (string, "\n%s\n", message);
 
 	/* remove last \n */
 	g_string_set_size (string, string->len - 1);
@@ -1819,7 +1825,7 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Codec installer"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Plugin installer"));
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
 	ret = gpk_client_confirm_action (gclient, _("requires additional plugins"), text);
 	g_free (text);
@@ -1849,6 +1855,8 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	GtkResponseType button;
 	PkPackageList *list = NULL;
 	gchar **package_ids = NULL;
+	const gchar *title;
+	const gchar *message;
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
@@ -1874,7 +1882,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 
 skip_checks:
 	/* set title */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for codecs"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for plugins"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 
@@ -1892,13 +1900,11 @@ skip_checks:
 			egg_warning ("invalid line '%s', expecting a | delimiter", codec_name_strings[i]);
 			continue;
 		}
-		egg_debug ("codec name=%s", parts[0]);
-		egg_debug ("codec description=%s", parts[1]);
 		obj_new = gpk_client_install_gstreamer_codec_part (gclient, parts[0], parts[1], &error_local);
 		if (obj_new == NULL) {
 			if (gclient->priv->show_warning) {
-				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for codec"));
-				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find codec in any configured software source"));
+				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for plugin"));
+				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find plugin in any configured software source"));
 				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
 				gpk_client_dialog_run (gclient->priv->dialog);
 			}
@@ -1926,9 +1932,12 @@ skip_checks:
 		goto skip_checks2;
 	}
 
+	title = ngettext ("Install the following plugin", "Install the following plugins", len);
+	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", len);
+
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install the following codecs"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, _("Do you want to install these packages now?"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, title);
+	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
