@@ -239,7 +239,7 @@ gpk_dbus_get_user_time_for_xid (guint xid)
 
 	/* check we have a foreign window */
 	if (xid == 0) {
-		g_message ("no XID, so cannot work with focus stealing prevention");
+		egg_debug ("no XID, so cannot work with focus stealing prevention");
 		goto out;
 	}
 
