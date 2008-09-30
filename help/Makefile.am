@@ -6,6 +6,7 @@ DOC_ENTITIES = legal.xml
 DOC_INCLUDES = 
 DOC_FIGURES = \
 	figures/gpk-application-groups.png \
+	figures/gpk-client-copy-local.png \
 	figures/gpk-eula.png \
 	figures/gpk-prefs.png \
 	figures/gpk-repo-auth.png \
