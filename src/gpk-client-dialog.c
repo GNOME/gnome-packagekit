@@ -66,6 +66,7 @@ struct _GpkClientDialogPrivate
 	GMainLoop		*loop;
 	GtkResponseType		 response;
 	GtkListStore		*store;
+	gchar			*help_id;
 };
 
 enum {
@@ -507,12 +508,24 @@ gpk_client_dialog_button_close_cb (GtkWidget *widget_button, GpkClientDialog *di
 }
 
 /**
+ * gpk_client_dialog_set_help_id:
+ **/
+gboolean
+gpk_client_dialog_set_help_id (GpkClientDialog *dialog, const gchar *help_id)
+{
+	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+	g_free (dialog->priv->help_id);
+	dialog->priv->help_id = g_strdup (help_id);
+	return TRUE;
+}
+
+/**
  * gpk_client_dialog_button_help_cb:
  **/
 static void
 gpk_client_dialog_button_help_cb (GtkWidget *widget_button, GpkClientDialog *dialog)
 {
-	gpk_gnome_help (NULL);
+	gpk_gnome_help (dialog->priv->help_id);
 	g_signal_emit (dialog, signals [GPK_CLIENT_DIALOG_HELP], 0);
 }
 
@@ -691,6 +704,13 @@ gpk_client_dialog_class_init (GpkClientDialogClass *klass)
 			      0, NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
+	signals [GPK_CLIENT_DIALOG_HELP] =
+		g_signal_new ("help",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      0, NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 }
 
 /**
@@ -713,6 +733,7 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->pulse_timer_id = 0;
 	dialog->priv->show_progress_files = TRUE;
 	dialog->priv->has_parent = FALSE;
+	dialog->priv->help_id = NULL;
 
 	dialog->priv->store = gtk_list_store_new (GPK_CLIENT_DIALOG_STORE_LAST,
 						  G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -770,6 +791,7 @@ gpk_client_dialog_finalize (GObject *object)
 	g_object_unref (dialog->priv->store);
 	g_object_unref (dialog->priv->glade_xml);
 	g_main_loop_unref (dialog->priv->loop);
+	g_free (dialog->priv->help_id);
 
 	G_OBJECT_CLASS (gpk_client_dialog_parent_class)->finalize (object);
 }

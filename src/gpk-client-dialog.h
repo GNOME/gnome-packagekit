@@ -115,6 +115,8 @@ gboolean	 gpk_client_dialog_set_image_status	(GpkClientDialog	*dialog,
 							 PkStatusEnum		 status);
 gboolean	 gpk_client_dialog_set_allow_cancel	(GpkClientDialog	*dialog,
 							 gboolean		 can_cancel);
+gboolean	 gpk_client_dialog_set_help_id		(GpkClientDialog	*dialog,
+							 const gchar		*help_id);
 GtkWindow	*gpk_client_dialog_get_window		(GpkClientDialog	*dialog);
 GtkResponseType	 gpk_client_dialog_run			(GpkClientDialog	*dialog);
 gboolean	 gpk_client_dialog_close		(GpkClientDialog	*dialog);
