@@ -13,9 +13,9 @@ DOC_FIGURES = \
 	figures/gpk-repo.png \
 	figures/gpk-signature.png \
 	figures/gpk-updates-overview.png \
-	figures/gpk-client-codecs \
-	figures/gpk-added-deps \
-	figures/gpk-remove-confirm \
+	figures/gpk-client-codecs.png \
+	figures/gpk-added-deps.png \
+	figures/gpk-remove-confirm.png \
 	figures/gpk-updates.png \
 	figures/gpk-updates-warning.png
 
