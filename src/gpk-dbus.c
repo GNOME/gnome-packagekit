@@ -41,10 +41,6 @@
 #include <polkit/polkit.h>
 #include <polkit-dbus/polkit-dbus.h>
 
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#include <X11/Xatom.h>
-
 #include <pk-common.h>
 #include <pk-package-id.h>
 #include <pk-package-ids.h>
@@ -55,6 +51,7 @@
 #include "egg-debug.h"
 
 #include "gpk-dbus.h"
+#include "gpk-x11.h"
 #include "gpk-client.h"
 
 static void     gpk_dbus_class_init	(GpkDbusClass	*klass);
@@ -220,79 +217,23 @@ out:
 }
 
 /**
- * gpk_dbus_get_user_time_for_xid:
- **/
-static guint32
-gpk_dbus_get_user_time_for_xid (guint xid)
-{
-	guint32 timestamp = 0;
-	GdkWindow *window;
-	GdkDisplay *display;
-	Atom atom_window = None;
-	Atom atom_time = None;
-	guchar *data;
-	Atom type_return;
-	gint format_return;
-	gulong nitems_return;
-	gulong bytes_after_return;
-	Window *win = NULL;
-
-	/* check we have a foreign window */
-	if (xid == 0) {
-		egg_debug ("no XID, so cannot work with focus stealing prevention");
-		goto out;
-	}
-
-	/* use gdk where possible */
-	display = gdk_display_get_default ();
-	window = gdk_window_foreign_new_for_display (display, xid);
-
-	/* get _NET_WM_USER_TIME_WINDOW which points to a window on which you can find the _NET_WM_USER_TIME property */
-	atom_window = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_USER_TIME_WINDOW");
-	if (XGetWindowProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (window), atom_window,
-				0, G_MAXLONG, False, XA_WINDOW, &type_return,
-				&format_return, &nitems_return, &bytes_after_return,
-				&data) == Success) {
-		if ((type_return == XA_WINDOW) && (format_return == 32) && (data)) {
-			win = (Window *)data;
-			g_message ("got window %p", win);
-		}
-	}
-
-	/* nothing found */
-	if (win == NULL) {
-		g_warning ("could not find window");
-		goto out;
-	}
-
-	/* get _NET_WM_USER_TIME so we can get the user time */
-	atom_time = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_USER_TIME");
-	if (XGetWindowProperty (GDK_DISPLAY_XDISPLAY (display), *win, atom_time,
-				0, G_MAXLONG, False, XA_CARDINAL, &type_return,
-				&format_return, &nitems_return, &bytes_after_return,
-				&data) == Success) {
-		if ((type_return == XA_CARDINAL) && (format_return == 32) && (data)) {
-			timestamp = (guint32) *data;
-			g_message ("got timestamp %i", timestamp);
-		}
-	}
-
-out:
-	return timestamp;
-}
-
-/**
  * gpk_dbus_set_parent_window:
  **/
 void
 gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid, guint32 timestamp)
 {
+	GpkX11 *x11;
+
 	/* set the parent window */
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 
 	/* try to get the user time of the window if not provided */
-	if (timestamp == 0)
-		timestamp = gpk_dbus_get_user_time_for_xid (xid);
+	if (timestamp == 0 && xid != 0) {
+		x11 = gpk_x11_new ();
+		gpk_x11_set_xid (x11, xid);
+		timestamp = gpk_x11_get_user_time (x11);
+		g_object_unref (x11);
+	}
 
 	/* set the last interaction */
 	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
