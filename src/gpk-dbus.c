@@ -467,6 +467,7 @@ gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->gclient = gpk_client_new ();
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 }
 
 /**
