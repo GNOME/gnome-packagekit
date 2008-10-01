@@ -67,6 +67,7 @@ struct _GpkClientDialogPrivate
 	GtkResponseType		 response;
 	GtkListStore		*store;
 	gchar			*help_id;
+	gchar			*title;
 };
 
 enum {
@@ -192,6 +193,11 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 		widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
 		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
 		dialog->priv->has_parent = FALSE;
+
+		/* use the saved title if it exists */
+		if (dialog->priv->title != NULL)
+			gpk_client_dialog_set_title (dialog, dialog->priv->title);
+
 		return FALSE;
 	}
 
@@ -258,6 +264,10 @@ gpk_client_dialog_set_title (GpkClientDialog *dialog, const gchar *title)
 	/* only set the window title if we are non-modal */
 	if (!dialog->priv->has_parent)
 		gpk_client_dialog_set_window_title (dialog, title);
+
+	/* we save this in case we are non-modal and have to use a title */
+	g_free (dialog->priv->title);
+	dialog->priv->title = g_strdup (title);
 
 	title_bold = g_strdup_printf ("<b><big>%s</big></b>", title);
 	egg_debug ("setting title: %s", title_bold);
@@ -734,6 +744,7 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->show_progress_files = TRUE;
 	dialog->priv->has_parent = FALSE;
 	dialog->priv->help_id = NULL;
+	dialog->priv->title = NULL;
 
 	dialog->priv->store = gtk_list_store_new (GPK_CLIENT_DIALOG_STORE_LAST,
 						  G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -792,6 +803,7 @@ gpk_client_dialog_finalize (GObject *object)
 	g_object_unref (dialog->priv->glade_xml);
 	g_main_loop_unref (dialog->priv->loop);
 	g_free (dialog->priv->help_id);
+	g_free (dialog->priv->title);
 
 	G_OBJECT_CLASS (gpk_client_dialog_parent_class)->finalize (object);
 }
