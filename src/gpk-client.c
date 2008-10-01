@@ -3015,8 +3015,6 @@ gpk_client_get_package_for_exec (GpkClient *gclient, const gchar *exec)
 
 out:
 	/* use the exec name if we can't find an installed package */
-	if (package == NULL)
-		package = g_strdup (exec);
 	if (list != NULL)
 		g_object_unref (list);
 	return package;
@@ -3090,8 +3088,8 @@ gpk_client_set_parent_exec (GpkClient *gclient, const gchar *exec)
 
 	/* fallback to exec - eugh... */
 	if (gclient->priv->parent_title == NULL) {
-		egg_debug ("did not get package for %s, using exec", package);
-		gclient->priv->parent_title = g_strdup (exec);
+		egg_debug ("did not get package for %s, using exec basename", package);
+		gclient->priv->parent_title = g_path_get_basename (exec);
 	}
 out:
 	egg_debug ("got name=%s, icon=%s", gclient->priv->parent_title, gclient->priv->parent_icon_name);
