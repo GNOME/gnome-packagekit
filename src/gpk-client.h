@@ -131,12 +131,12 @@ gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
 							 const gchar	*tid);
-gboolean	 gpk_client_set_application		(GpkClient	*gclient,
-							 const gchar	*application);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
 							 GtkWindow	*window);
 gboolean	 gpk_client_set_parent_xid		(GpkClient	*gclient,
 							 guint		 xid);
+gboolean	 gpk_client_set_parent_exec		(GpkClient	*gclient,
+							 const gchar	*exec);
 gboolean	 gpk_client_update_timestamp		(GpkClient	*gclient,
 							 guint		 timestamp);
 

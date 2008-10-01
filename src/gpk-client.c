@@ -64,6 +64,7 @@
 #include "gpk-client-dialog.h"
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
+#include "gpk-x11.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);
@@ -98,7 +99,8 @@ struct _GpkClientPrivate
 	GdkWindow		*parent_window;
 	GPtrArray		*upgrade_array;
 	guint			 timestamp;
-	gchar			*application;
+	gchar			*parent_title;
+	gchar			*parent_icon_name;
 	GMainLoop		*loop;
 };
 
@@ -1064,34 +1066,27 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 {
 	GtkResponseType button;
 	gchar *title_name;
-	const gchar *icon = NULL;
-	const gchar *application_localised = NULL;
 
-	/* get localised name and icon if available */
-	if (gclient->priv->application != NULL) {
-		application_localised = pk_extra_get_summary (gclient->priv->extra, gclient->priv->application);
-		if (application_localised == NULL) {
-			egg_debug ("did not get localised description for %s", gclient->priv->application);
-			application_localised = gclient->priv->application;
-		}
-		icon = pk_extra_get_icon_name (gclient->priv->extra, gclient->priv->application);
+	/* make title */
+	if (gclient->priv->parent_title != NULL)
+		title_name = g_strdup_printf ("%s %s", gclient->priv->parent_title, title);
+	else {
+		/* translator comment -- string is an action, e.g. "wants to install a codec" */
+		title_name = g_strdup_printf (_("A program %s"), title);
 	}
 
-	/* fallbacks */
-	if (application_localised == NULL)
-		application_localised = _("A program");
-	if (icon == NULL)
-		icon = "emblem-system";
+	/* set icon */
+	if (gclient->priv->parent_icon_name != NULL)
+		gpk_client_dialog_set_image (gclient->priv->dialog, gclient->priv->parent_icon_name);
+	else
+		gpk_client_dialog_set_image (gclient->priv->dialog, "emblem-system");
 
-	title_name = g_strdup_printf ("%s %s", application_localised, title);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title_name);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
-	gpk_client_dialog_set_image (gclient->priv->dialog, icon);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-application-confirm");
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
 
 	g_free (title_name);
-
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
@@ -2971,18 +2966,135 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 }
 
 /**
- * gpk_client_set_application:
+ * gpk_client_get_package_for_exec:
+ **/
+static gchar *
+gpk_client_get_package_for_exec (GpkClient *gclient, const gchar *exec)
+{
+	gchar *package = NULL;
+	gboolean ret;
+	GError *error = NULL;
+	guint length;
+	PkPackageList *list = NULL;
+	const PkPackageObj *obj;
+
+	/* reset client */
+	ret = pk_client_reset (gclient->priv->client_resolve, &error);
+	if (!ret) {
+		egg_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* find the package name */
+	ret = pk_client_search_file (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), exec, &error);
+	if (!ret) {
+		egg_warning ("failed to search file: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get the list of packages */
+	list = pk_client_get_package_list (gclient->priv->client_resolve);
+	length = pk_package_list_get_size (list);
+
+	/* nothing found */
+	if (length == 0) {
+		egg_debug ("cannot find installed package that provides : %s", exec);
+		goto out;
+	}
+
+	/* check we have one */
+	if (length != 1)
+		egg_warning ("not one return, using first");
+
+	/* copy name */
+	obj = pk_package_list_get_obj (list, 0);
+	package = g_strdup (obj->id->name);
+	egg_debug ("got package %s", package);
+
+out:
+	/* use the exec name if we can't find an installed package */
+	if (package == NULL)
+		package = g_strdup (exec);
+	if (list != NULL)
+		g_object_unref (list);
+	return package;
+}
+
+/**
+ * gpk_client_path_is_trusted:
+ **/
+static gboolean
+gpk_client_path_is_trusted (const gchar *exec)
+{
+#if 1
+	/* special case the plugin helper -- it's trusted */
+	return egg_strequal (exec, "/usr/libexec/gst-install-plugins-helper");
+#else
+	/* debugging code, should never be run... */
+	if (egg_strequal (exec, "/usr/libexec/gst-install-plugins-helper") ||
+	    egg_strequal (exec, "/usr/bin/python") ||
+	    egg_strequal (exec, "/home/hughsie/Code/PackageKit/contrib/gstreamer-plugin/pk-gstreamer-install"))
+		return TRUE;
+	return FALSE;
+#endif
+}
+
+/**
+ * gpk_client_set_parent_exec:
  *
  * This sets the package name of the application that is trying to install
  * software, e.g. "totem" and is used for the PkExtra lookup to provide
  * a translated name and icon.
  **/
 gboolean
-gpk_client_set_application (GpkClient *gclient, const gchar *application)
+gpk_client_set_parent_exec (GpkClient *gclient, const gchar *exec)
 {
+	GpkX11 *x11;
+	gchar *package;
+
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_free (gclient->priv->application);
-	gclient->priv->application = g_strdup (application);
+
+	/* old values invalid */
+	g_free (gclient->priv->parent_title);
+	g_free (gclient->priv->parent_icon_name);
+	gclient->priv->parent_title = NULL;
+	gclient->priv->parent_icon_name = NULL;
+
+	/* is the binary trusted, i.e. can we probe it's window properties */
+	if (gpk_client_path_is_trusted (exec)) {
+		egg_debug ("using application window properties");
+		/* get from window properties */
+		x11 = gpk_x11_new ();
+		gpk_x11_set_window (x11, gclient->priv->parent_window);
+		gclient->priv->parent_title = gpk_x11_get_title (x11);
+		g_object_unref (x11);
+		goto out;
+	}
+
+	/* get from installed database */
+	package = gpk_client_get_package_for_exec (gclient, exec);
+	egg_debug ("got package %s", package);
+
+	/* try to get from PkExtra */
+	if (package != NULL) {
+		gclient->priv->parent_title = g_strdup (pk_extra_get_summary (gclient->priv->extra, package));
+		gclient->priv->parent_icon_name = g_strdup (pk_extra_get_icon_name (gclient->priv->extra, package));
+		/* fallback to package name */
+		if (gclient->priv->parent_title == NULL) {
+			egg_debug ("did not get localised description for %s", package);
+			gclient->priv->parent_title = g_strdup (package);
+		}
+	}
+
+	/* fallback to exec - eugh... */
+	if (gclient->priv->parent_title == NULL) {
+		egg_debug ("did not get package for %s, using exec", package);
+		gclient->priv->parent_title = g_strdup (exec);
+	}
+out:
+	egg_debug ("got name=%s, icon=%s", gclient->priv->parent_title, gclient->priv->parent_icon_name);
 	return TRUE;
 }
 
@@ -3058,7 +3170,8 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv->files_array = NULL;
 	gclient->priv->parent_window = NULL;
-	gclient->priv->application = NULL;
+	gclient->priv->parent_title = NULL;
+	gclient->priv->parent_icon_name = NULL;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
 	gclient->priv->show_confirm = TRUE;
@@ -3150,7 +3263,8 @@ gpk_client_finalize (GObject *object)
 	if (gclient->priv->finished_timer_id != 0)
 		g_source_remove (gclient->priv->finished_timer_id);
 
-	g_free (gclient->priv->application);
+	g_free (gclient->priv->parent_title);
+	g_free (gclient->priv->parent_icon_name);
 	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
 	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);
 	g_strfreev (gclient->priv->files_array);
