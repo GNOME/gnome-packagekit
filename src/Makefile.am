@@ -53,6 +53,8 @@ shared_SOURCES =					\
 	egg-dbus-monitor.h				\
 	gpk-enum.c					\
 	gpk-enum.h					\
+	gpk-x11.c					\
+	gpk-x11.h					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
 	gpk-animated-icon.c				\
