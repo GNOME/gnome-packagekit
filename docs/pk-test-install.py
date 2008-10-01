@@ -79,7 +79,9 @@ class SessionInstall:
         window.connect("delete_event", self.delete_event)
         window.connect("destroy", self.destroy)
         window.set_border_width(10)
-        window.add_events (gtk.gdk.PROPERTY_CHANGE_MASK);
+        window.add_events(gtk.gdk.PROPERTY_CHANGE_MASK);
+        window.set_title("PackageKit Session Interface Tester")
+        window.set_icon_name("help")
 
         hbox = gtk.VBox(homogeneous=True, spacing=9)
 
