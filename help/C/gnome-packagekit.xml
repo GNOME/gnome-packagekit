@@ -102,7 +102,7 @@
       <para>
         To report a bug or make a suggestion regarding the &app; application or
         this manual, follow the directions in the
-        <ulink url="http://live.gnome.org/PackageKit/"
+        <ulink url="http://www.packagekit.org//"
           type="http">&application; Contact Page</ulink>.
       </para>
 <!-- Translators may also add here feedback address for translations -->
@@ -371,7 +371,7 @@
 </section>
 
 <section id="mime-types">
-  <title>File handler helper</title>
+  <title>File Handler Helper</title>
   <para>
     Sometimes you will not have the software on your system to open a particular
     file. If the file type is not recognised, then applications that can open
@@ -606,18 +606,264 @@
   </para>
 </section>
 
+<section id="dialogs">
+  <title>Common Dialogs Explained</title>
+  <para>
+    This application tries to reuse dialogs as much as possible, so that there
+    is a repeatable and consistent user interface when managing packages.
+    In the following subsections, some of the dialogs will be explained further,
+    often with examples or Internet links.
+  </para>
+
+  <section id="dialog-installing-private-files">
+    <title>Copying Files To Another Location</title>
+    <figure>
+      <title>Example dialog</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-client-copy-local.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      If a file has been downloaded to your home directory, it is usually
+      downloaded to a location similar to <literal>/home/hughsie/Downloads</literal>.
+      The PackageKit service is not run as the same user as the the normal
+      desktop user, and so the daemon would not normally be able to access this file.
+      If the download folder cannot be read by the root user then it is copied to a
+      temporary directory so it can be accessed.
+    </para>
+  </section>
+
+  <section id="dialog-install-files">
+    <title>Installing Local Files</title>
+    <para>
+      An application has asked to install local files on your system.
+      If you initiated the action, please click the install button.
+    </para>
+  </section>
+
+  <section id="dialog-install-catalogs">
+    <title>Installing Catalogs</title>
+    <para>
+      A package catalog is a simple file that indicates that other packages should
+      be installed.
+      There are no optional packages, as a catalog file is designed to be simple
+      and need no user interaction.
+      Using a catalog file allows you to install different packages quickly and easily.
+    </para>
+    <note><para>
+      To find more information about catalogs, please visit the
+      <ulink url="http://www.packagekit.org/pk-faq.html#catalogs" type="http">FAQ</ulink>.
+    </para></note>
+  </section>
+
+  <section id="dialog-catalog-none-required">
+    <title>No Packages Required</title>
+    <para>
+      The catalog that you tried to install made no changes to your system as
+      you already have the required packages installed.
+      No further actions are required.
+    </para>
+    <note><para>
+      To find more information about catalogs, please visit the
+      <ulink url="http://www.packagekit.org/pk-faq.html#catalogs" type="http">FAQ</ulink>.
+    </para></note>
+  </section>
+
+  <section id="dialog-application-confirm">
+    <title>Confirmation Required</title>
+    <figure>
+      <title>Example plugin dialog</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-client-codecs.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      An application needs your permission before modifying packages on your system.
+      The program name and the icon is from the application asking for permission.
+    </para>
+  </section>
+
+  <section id="dialog-finding-requires">
+    <title>Finding Other Required Packages</title>
+    <para>
+      Other packages may depend on this package to operate correctly.
+      This application is searching for other packages that require the package
+      you are trying to remove.
+      No changes are being made, and you will be prompted later if this is required.
+    </para>
+  </section>
+
+  <section id="dialog-finding-depends">
+    <title>Finding Other Dependent Packages</title>
+    <para>
+      This package may require resources in other packages to operate correctly.
+      This application is searching for other required packages of the package
+      you are trying to install.
+    </para>
+  </section>
+
+  <section id="dialog-remove-other-packages">
+    <title>Removing Other Packages</title>
+    <figure>
+      <title>Example dialog when removing rarian</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-remove-confirm.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      Other packages need to be removed if this package is to be removed.
+      If you remove these packages you may loose functionality in other
+      applications.
+    </para>
+    <caution><para>
+      If you are unsure you should not remove the package.
+    </para></caution>
+  </section>
+
+  <section id="dialog-install-other-packages">
+    <title>Installing Other Packages</title>
+    <figure>
+      <title>Example dialog when installing xfce-utils</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-added-deps.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      Other packages need to be installed if this package is to be installed.
+      If you remove these packages you may loose functionality in other
+      applications.
+      Downloading and installing extra packages will increase the time it
+      takes to install this package.
+    </para>
+  </section>
+
+  <section id="dialog-finding-packages">
+    <title>Finding Packages</title>
+    <para>
+      The package database is being searched for your query.
+      This may take some time if new package lists need to be downloaded from
+      the Internet.
+    </para>
+  </section>
+
+  <section id="dialog-package-not-found">
+    <title>Package Not Found</title>
+    <para>
+      No packages could be found in any remote software source.
+      This normally means that you do not have any third party repositories
+      enabled or installed.
+      These extra repositories can often be found using search engines or forums.
+    </para>
+    <caution><para>
+      Only install packages from reputable software sources.
+    </para></caution>
+  </section>
+
+  <section id="dialog-progress">
+    <title>Progress Window</title>
+    <para>
+      If we start an action automatically, we typically do it non-interactively.
+      If this task starts doing something using the network, or that will take a
+      long time, then a new dialog will appear.
+      This gives you the opportunity to cancel the task if this is not desired.
+    </para>
+  </section>
+
+  <section id="dialog-permissions">
+    <title>No Privileges</title>
+    <figure>
+      <title>PolicyKit Permissions UI</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gpk-repo-auth.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      You don't have the necessary privileges to perform this action.
+      This can happen when you fail to authenticate correctly, for instance
+      by entering your password correctly twice in a row.
+      NOTE: you also need to enter the root password on some distributions,
+      not your own password.
+    </para>
+    <note><para>
+      If you cannot authenticate, you need to speak to your systems administrator.
+    </para></note>
+  </section>
+
+  <section id="dialog-no-service">
+    <title>No PackageKit Service Running</title>
+    <para>
+      The core PackageKit service could not be started.
+      This will only happen when you have a serious system error.
+      You can get more information about the error by running (as the root user):
+      <literal>/usr/sbin/packagekitd --verbose</literal>
+    </para>
+  </section>
+
+  <section id="dialog-update-system">
+    <title>Update System</title>
+    <para>
+      All the packages that can be updated on your system are now being updated.
+      You can cancel the update if the cancel button is not insensitive.
+    </para>
+  </section>
+
+  <section id="dialog-update-packages">
+    <title>Update Packages</title>
+    <para>
+      Some packages on your system are now being upgraded.
+      You can cancel the update if the cancel button is not insensitive.
+    </para>
+  </section>
+
+  <section id="dialog-refresh">
+    <title>Refreshing Package Lists</title>
+    <para>
+      Once a week (although this can be changed in the preferences)
+      you will automatically have the latest package lists downloaded.
+      This means that when you search for a package you do not have installed,
+      you will get any new software that was added to a software source.
+    </para>
+    <para>
+      Once the package lists are downloaded, the installed and available packages
+      will be cached so client tools can auto-complete.
+      When this is completed, any new applications are scanned and added to a
+      client database.
+    </para>
+  </section>
+</section>
+
 <section id="about">
   <title>About</title>
   <para>
     &app; is maintained Richard Hughes <email>richard@hughsie.com</email> and developed along with
     several others.
     To find more information about &app;, please visit the
-    <ulink url="http://live.gnome.org/PackageKit" type="http">&application; web page</ulink>.
+    <ulink url="http://www.packagekit.org/" type="http">&application; web page</ulink>.
   </para>
   <para>
     To report a bug or make a suggestion regarding this application or
     this manual, follow the directions at the
-    <ulink url="http://live.gnome.org/PackageKit" type="http">
+    <ulink url="http://www.packagekit.org/" type="http">
     &application; Bug Page</ulink>.
   </para>
   <para>This program is distributed under the terms of the GNU
