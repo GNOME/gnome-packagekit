@@ -3028,17 +3028,17 @@ out:
 static gboolean
 gpk_client_path_is_trusted (const gchar *exec)
 {
-#if 1
 	/* special case the plugin helper -- it's trusted */
-	return egg_strequal (exec, "/usr/libexec/gst-install-plugins-helper");
-#else
-	/* debugging code, should never be run... */
 	if (egg_strequal (exec, "/usr/libexec/gst-install-plugins-helper") ||
-	    egg_strequal (exec, "/usr/bin/python") ||
+	    egg_strequal (exec, "/usr/libexec/pk-gstreamer-install"))
+		return TRUE;
+#if 0
+	/* debugging code, should never be run... */
+	if (egg_strequal (exec, "/usr/bin/python") ||
 	    egg_strequal (exec, "/home/hughsie/Code/PackageKit/contrib/gstreamer-plugin/pk-gstreamer-install"))
 		return TRUE;
-	return FALSE;
 #endif
+	return FALSE;
 }
 
 /**
