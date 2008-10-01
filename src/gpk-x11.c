@@ -118,7 +118,7 @@ gpk_x11_get_user_time (GpkX11 *x11)
 
 	/* nothing found */
 	if (win == NULL) {
-		egg_warning ("could not find window");
+		egg_warning ("could not find window %i", (gint) x11->priv->window);
 		goto out;
 	}
 
@@ -180,7 +180,7 @@ gpk_x11_get_title (GpkX11 *x11)
 		XFree (data);
 		goto out;
 	}
-	egg_warning ("failed to get X11 title");
+	egg_warning ("failed to get X11 name for window %i", (gint) x11->priv->window);
 out:
 	return title;
 }
