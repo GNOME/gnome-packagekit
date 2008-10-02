@@ -5,6 +5,8 @@ context = animations
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = 				\
+	pk-action-cleanup.png		\
+	pk-action-removing.png		\
 	pk-action-testing.png		\
 	pk-action-download.png		\
 	pk-action-refresh-cache.png	\

@@ -91,8 +91,8 @@ static const PkEnumMatch enum_status_icon_name[] = {
 
 static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},
-	{PK_STATUS_ENUM_CANCEL,			"pk-package-cleanup"},
-	{PK_STATUS_ENUM_CLEANUP,		"pk-package-cleanup"},
+	{PK_STATUS_ENUM_CANCEL,			"pk-action-cleanup"},
+	{PK_STATUS_ENUM_CLEANUP,		"pk-action-cleanup"},
 	{PK_STATUS_ENUM_COMMIT,			"pk-setup"},
 	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-action-testing"},
 	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-action-refresh-cache"},
@@ -110,10 +110,10 @@ static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_QUERY,			"pk-action-searching"},
 	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
+	{PK_STATUS_ENUM_REMOVE,			"pk-action-removing"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-info"},
 	{PK_STATUS_ENUM_REQUEST,		"process-working"},
-	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"},
+	{PK_STATUS_ENUM_ROLLBACK,		"pk-action-removing"},
 	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
 	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-action-searching"},
 	{PK_STATUS_ENUM_SETUP,			"pk-package-info"},
