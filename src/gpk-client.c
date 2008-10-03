@@ -609,10 +609,10 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 	if (error != NULL) {
 		if (error->code == PK_CLIENT_ERROR_FAILED_AUTH ||
 		    g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
-			message = _("You don't have the necessary privileges to perform this action");
+			message = _("You don't have the necessary privileges to perform this action.");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-permissions");
 		} else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON) {
-			message = _("The packagekitd service could not be started");
+			message = _("The packagekitd service could not be started.");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-no-service");
 		} else {
 			details = error->message;
