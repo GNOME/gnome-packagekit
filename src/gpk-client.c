@@ -63,6 +63,7 @@
 #include "gpk-animated-icon.h"
 #include "gpk-client-dialog.h"
 #include "gpk-dialog.h"
+#include "gpk-vendor.h"
 #include "gpk-enum.h"
 #include "gpk-x11.h"
 
@@ -84,6 +85,7 @@ struct _GpkClientPrivate
 	PkClient		*client_secondary;
 	GConfClient		*gconf_client;
 	GpkClientDialog		*dialog;
+	GpkVendor		*vendor;
 	guint			 finished_timer_id;
 	PkExtra			*extra;
 	PkControl		*control;
@@ -1467,6 +1469,8 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 {
 	gboolean ret;
 	GError *error_local = NULL;
+	GtkResponseType button;
+	gchar *info_url;
 	gchar **package_ids = NULL;
 	gchar *message;
 	const PkPackageObj *obj;
@@ -1544,11 +1548,21 @@ skip_checks:
 			//FIXME: shows package_id in UI
 			text = pk_package_ids_to_text (packages);
 			title = g_strdup_printf (_("Could not find %s"), text);
+			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-			gpk_client_dialog_run (gclient->priv->dialog);
+			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
+
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
+			else
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			button = gpk_client_dialog_run (gclient->priv->dialog);
+			if (button == GTK_RESPONSE_OK)
+				gpk_gnome_open (info_url);
+			g_free (info_url);
 			g_free (text);
 			g_free (title);
 		}
@@ -1641,6 +1655,8 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	gchar *package_id = NULL;
 	PkPackageList *list = NULL;
 	const PkPackageObj *obj;
+	GtkResponseType button;
+	gchar *info_url;
 	PkPackageId *id = NULL;
 	gchar **package_ids = NULL;
 	gchar *text;
@@ -1696,11 +1712,19 @@ skip_checks:
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
+			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-			gpk_client_dialog_run (gclient->priv->dialog);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
+			else
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			button = gpk_client_dialog_run (gclient->priv->dialog);
+			if (button == GTK_RESPONSE_OK)
+				gpk_gnome_open (info_url);
+			g_free (info_url);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files found");
 		ret = FALSE;
@@ -1868,6 +1892,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	gchar **parts;
 	GError *error_local = NULL;
 	GtkResponseType button;
+	gchar *info_url;
 	PkPackageList *list = NULL;
 	gchar **package_ids = NULL;
 	const gchar *title;
@@ -1919,11 +1944,19 @@ skip_checks:
 		obj_new = gpk_client_install_gstreamer_codec_part (gclient, parts[0], parts[1], &error_local);
 		if (obj_new == NULL) {
 			if (gclient->priv->show_warning) {
+				info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_CODEC);
 				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for plugin"));
 				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find plugin in any configured software source"));
 				gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-				gpk_client_dialog_run (gclient->priv->dialog);
+				/* only show the "more info" button if there is a valid link */
+				if (info_url != NULL)
+					gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
+				else
+					gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+				button = gpk_client_dialog_run (gclient->priv->dialog);
+				if (button == GTK_RESPONSE_OK)
+					gpk_gnome_open (info_url);
+				g_free (info_url);
 			}
 			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 			g_error_free (error_local);
@@ -2003,6 +2036,8 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	gchar **package_ids = NULL;
 	guint len;
 	GtkWindow *window;
+	GtkResponseType button;
+	gchar *info_url;
 	gchar *message;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
@@ -2070,11 +2105,19 @@ skip_checks:
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
+			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_MIME);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-			gpk_client_dialog_run (gclient->priv->dialog);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
+			else
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			button = gpk_client_dialog_run (gclient->priv->dialog);
+			if (button == GTK_RESPONSE_OK)
+				gpk_gnome_open (info_url);
+			g_free (info_url);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "nothing was found to handle mime type");
 		ret = FALSE;
@@ -2126,6 +2169,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	gboolean ret;
 	PkPackageList *list = NULL;
 	GtkResponseType button;
+	gchar *info_url;
 	GError *error_local = NULL;
 	gchar **package_ids = NULL;
 	guint len;
@@ -2195,11 +2239,19 @@ skip_checks:
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
+			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_FONT);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
-			gpk_client_dialog_run (gclient->priv->dialog);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
+			else
+				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			button = gpk_client_dialog_run (gclient->priv->dialog);
+			if (button == GTK_RESPONSE_OK)
+				gpk_gnome_open (info_url);
+			g_free (info_url);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to find font");
 		ret = FALSE;
@@ -3184,6 +3236,7 @@ gpk_client_init (GpkClient *gclient)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PK_DATA G_DIR_SEPARATOR_S "icons");
 
+	gclient->priv->vendor = gpk_vendor_new ();
 	gclient->priv->dialog = gpk_client_dialog_new ();
 	gpk_client_dialog_set_window_icon (gclient->priv->dialog, "pk-package-installed");
 	g_signal_connect (gclient->priv->dialog, "cancel",
@@ -3273,6 +3326,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->extra);
 	g_object_unref (gclient->priv->gconf_client);
 	g_object_unref (gclient->priv->dialog);
+	g_object_unref (gclient->priv->vendor);
 	g_main_loop_unref (gclient->priv->loop);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);

@@ -71,6 +71,7 @@ typedef enum
 /* helpers */
 #define GPK_CLIENT_DIALOG_PACKAGE_PADDING	pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_PADDING, GPK_CLIENT_DIALOG_WIDGET_MESSAGE, -1)
 #define GPK_CLIENT_DIALOG_PACKAGE_LIST		pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PACKAGE_LIST)
+#define GPK_CLIENT_DIALOG_BUTTON_ACTION		pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION)
 
 typedef struct _GpkClientDialogPrivate	 GpkClientDialogPrivate;
 typedef struct _GpkClientDialog		 GpkClientDialog;
