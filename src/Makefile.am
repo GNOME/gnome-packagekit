@@ -63,6 +63,8 @@ shared_SOURCES =					\
 	gpk-consolekit.h				\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
+	gpk-vendor.c					\
+	gpk-vendor.h					\
 	gpk-client.c					\
 	gpk-client.h					\
 	gpk-client-dialog.c				\
