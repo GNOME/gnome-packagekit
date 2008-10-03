@@ -769,6 +769,12 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_cancel_cb), dialog);
 
+	/* set the message text an absolute width so it's forced to wrap */
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "hbox_message");
+	gtk_widget_set_size_request (widget, 400, -1);
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
+	gtk_widget_set_size_request (widget, 400, -1);
+
 	/* clear status and progress text */
 	gpk_client_dialog_set_window_title (dialog, "");
 	gpk_client_dialog_set_title (dialog, "");
