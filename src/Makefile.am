@@ -23,6 +23,9 @@ INCLUDES =						\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DPK_DATA=\"$(pkgdatadir)\"			\
 	-DEGG_LOG_FILE=\"\"				\
+	-DEGG_VERBOSE="\"GPK_VERBOSE\""			\
+	-DEGG_LOGGING="\"GPK_LOGGING\""			\
+	-DEGG_CONSOLE="\"GPK_CONSOLE\""			\
 	$(NULL)
 
 bin_PROGRAMS =						\
