@@ -163,8 +163,10 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gpk_client_dialog_show_widget (dialog, "progressbar_percent", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR));
 	gpk_client_dialog_show_widget (dialog, "label_message", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_MESSAGE));
 	gpk_client_dialog_show_widget (dialog, "scrolledwindow_packages", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PACKAGE_LIST));
-	gpk_client_dialog_show_widget (dialog, "label_force_width", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PADDING));
 	gpk_client_dialog_show_widget (dialog, "label_force_height", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_PADDING));
+
+	/* always force width */
+	gpk_client_dialog_show_widget (dialog, "label_force_width", TRUE);
 
 	/* show */
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
