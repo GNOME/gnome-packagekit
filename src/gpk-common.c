@@ -108,6 +108,10 @@ gpk_package_id_name_version (const PkPackageId *id)
 	gchar *text;
 	GString *string;
 
+	if (id == NULL) {
+		return g_strdup("");
+	}
+
 	string = g_string_new (id->name);
 	if (id->version != NULL)
 		g_string_append_printf (string, "-%s", id->version);
