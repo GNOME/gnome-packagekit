@@ -696,7 +696,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	if (pk_package_list_get_size (list) == 0) {
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No packages"),
-					_("This package does not require any others"), NULL);
+					_("No other packages require this package"), NULL);
 	} else {
 		gchar *name;
 		gchar *title;
