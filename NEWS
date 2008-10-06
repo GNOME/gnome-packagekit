@@ -1,3 +1,30 @@
+Version 0.3.6
+~~~~~~~~~~~~~~
+Released: 2008-10-06
+
+* Translations
+ - Updated Finnish translation (Ilkka Tuohela)
+
+* New
+ - Add pk-action-removing and pk-action-cleanup animated icons (Mike Langlie)
+ - Show vendor specific 'More information' when we fail to find packages (Richard Hughes)
+ - Turn off hardware HAL integration by default (Richard Hughes)
+
+* Bugfix:
+ - Correctly pluralise the codec installer dialogs (Richard Hughes)
+ - Allow double clicking on an application in the run dialog. Fixes fd#17845 (Richard Hughes)
+ - Set the window title if we go from being modal to non-modal (Richard Hughes)
+ - Pass up the exec name, not the application name to GpkClient so we can special case the
+   gstreamer plugin installer, and use window properties instead (Richard Hughes)
+ - Set an interaction mode for the client used in GpkDbus so we don't get a finished dialog (Richard Hughes)
+ - Menu item tooltips should be phrased as imperative verbs (Richard Hughes)
+ - Always force width to avoid the dialog width changing between phases (Richard Hughes)
+ - Mark some more text translatable to fix fd#17899 (Richard Hughes)
+ - Make the search button much smaller (without the icon) to fix fd#17874 (Richard Hughes)
+ - Now we set the locale, don't use PkExtra to set the translation summary (Richard Hughes)
+ - Fix segfault in gpk_package_id_name_version if id was null (Ville-Pekka Vainio)
+ - Fix message in gpk-application if the required query returns no packages (Ville-Pekka Vainio)
+
 Version 0.3.5
 ~~~~~~~~~~~~~~
 Released: 2008-09-29
