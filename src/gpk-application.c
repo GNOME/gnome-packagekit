@@ -1033,7 +1033,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 
 	/* use the localised summary if available */
 	summary_new = pk_extra_get_summary (application->priv->extra, obj->id->name);
-	if (summary_new == NULL)
+	if (TRUE || summary_new == NULL)
 		summary_new = obj->summary;
 
 	/* mark as got so we don't warn */
