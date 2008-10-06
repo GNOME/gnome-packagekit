@@ -13,6 +13,10 @@ Source0:   http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
 Source1:   system-install-packages
 Source2:   system-install-packages.1.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+# Not upstream, as f9 uses broken icon names
+Patch1:    pk-f9-icons.patch
+
 Requires:  gtk2 >= 2.12.0
 Requires:  gnome-icon-theme
 Requires:  libnotify >= 0.4.3
@@ -59,6 +63,7 @@ removing packages on your system.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 %configure --disable-scrollkeeper --disable-schemas-install
