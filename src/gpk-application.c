@@ -2635,6 +2635,57 @@ gpk_application_add_welcome (GpkApplication *application)
 }
 
 /**
+ * gpk_application_create_group_list_simple:
+ **/
+static gboolean
+gpk_application_create_group_list_simple (GpkApplication *application)
+{
+	GtkWidget *widget;
+	guint i;
+
+	/* no group information */
+	if (application->priv->groups == 0)
+		return FALSE;
+
+	/* add this at the top of the list */
+	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
+		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
+
+	/* only if we can do both */
+	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
+	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
+	     pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+		GtkTreeIter iter;
+
+		/* add a separator */
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_ID, "separator", -1);
+
+		/* use the seporator */
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+						      gpk_application_group_row_separator_func, NULL, NULL);
+	}
+
+	/* create group tree view if we can search by group */
+	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+		/* add columns to the tree view */
+		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
+
+		/* add all the groups supported (except collections, which we handled above */
+		for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
+			if (pk_bitfield_contain (application->priv->groups, i) &&
+			    i != PK_GROUP_ENUM_COLLECTIONS)
+				gpk_application_group_add_data (application, i);
+		}
+	}
+
+	/* we populated the menu  */
+	return TRUE;
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2647,7 +2698,6 @@ gpk_application_init (GpkApplication *application)
 	GtkTreeSelection *selection;
 	gboolean autocomplete;
 	gboolean enabled;
-	guint i;
 	gboolean ret;
 	GError *error = NULL;
 
@@ -3112,39 +3162,8 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
 
-	/* add this at the top of the list */
-	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
-		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
-
-	/* only if we can do both */
-	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
-	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
-	    pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		GtkTreeIter iter;
-
-		/* add a separator */
-		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
-		gtk_tree_store_set (application->priv->groups_store, &iter,
-				    GROUPS_COLUMN_ID, "separator", -1);
-
-		/* use the seporator */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
-						      gpk_application_group_row_separator_func, NULL, NULL);
-	}
-
-	/* create group tree view if we can search by group */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		/* add columns to the tree view */
-		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
-
-		/* add all the groups supported (except collections, which we handled above */
-		for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
-			if (pk_bitfield_contain (application->priv->groups, i) &&
-			    i != PK_GROUP_ENUM_COLLECTIONS)
-				gpk_application_group_add_data (application, i);
-		}
-	}
+	/* simple list */
+	gpk_application_create_group_list_simple (application);
 
 	/* get repos, so we can show the full name in the software source box */
 	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
