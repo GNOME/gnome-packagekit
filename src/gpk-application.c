@@ -90,7 +90,7 @@ struct GpkApplicationPrivate
 	GladeXML		*glade_xml;
 	GConfClient		*gconf_client;
 	GtkListStore		*packages_store;
-	GtkListStore		*groups_store;
+	GtkTreeStore		*groups_store;
 	GtkListStore		*details_store;
 	PkControl		*control;
 	PkClient		*client_search;
@@ -1830,11 +1830,11 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 	const gchar *icon_name;
 	const gchar *text;
 
-	gtk_list_store_append (application->priv->groups_store, &iter);
+	gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 
 	text = gpk_group_enum_to_localised_text (group);
 	icon_name = gpk_group_enum_to_icon_name (group);
-	gtk_list_store_set (application->priv->groups_store, &iter,
+	gtk_tree_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
 			    GROUPS_COLUMN_ICON, icon_name,
@@ -2674,7 +2674,7 @@ gpk_application_init (GpkApplication *application)
 							        G_TYPE_BOOLEAN,
 							        G_TYPE_STRING,
 							        G_TYPE_STRING);
-	application->priv->groups_store = gtk_list_store_new (GROUPS_COLUMN_LAST,
+	application->priv->groups_store = gtk_tree_store_new (GROUPS_COLUMN_LAST,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING);
@@ -3093,9 +3093,9 @@ gpk_application_init (GpkApplication *application)
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		GtkTreeIter iter;
 		const gchar *icon_name;
-		gtk_list_store_append (application->priv->groups_store, &iter);
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
-		gtk_list_store_set (application->priv->groups_store, &iter,
+		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ICON, icon_name, -1);
@@ -3103,6 +3103,8 @@ gpk_application_init (GpkApplication *application)
 
 	/* set up the groups checkbox */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), FALSE);
+	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 9);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (application->priv->groups_store));
 
@@ -3121,8 +3123,8 @@ gpk_application_init (GpkApplication *application)
 		GtkTreeIter iter;
 
 		/* add a separator */
-		gtk_list_store_append (application->priv->groups_store, &iter);
-		gtk_list_store_set (application->priv->groups_store, &iter,
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_ID, "separator", -1);
 
 		/* use the seporator */
