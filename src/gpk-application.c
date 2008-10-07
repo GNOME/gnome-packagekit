@@ -42,9 +42,11 @@
 #include <pk-package-list.h>
 #include <pk-extra.h>
 #include <pk-details-obj.h>
+#include <pk-category-obj.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-obj-list.h"
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -2635,10 +2637,10 @@ gpk_application_add_welcome (GpkApplication *application)
 }
 
 /**
- * gpk_application_create_group_list_simple:
+ * gpk_application_create_group_list_enum:
  **/
 static gboolean
-gpk_application_create_group_list_simple (GpkApplication *application)
+gpk_application_create_group_list_enum (GpkApplication *application)
 {
 	GtkWidget *widget;
 	guint i;
@@ -2670,9 +2672,6 @@ gpk_application_create_group_list_simple (GpkApplication *application)
 
 	/* create group tree view if we can search by group */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		/* add columns to the tree view */
-		gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
-
 		/* add all the groups supported (except collections, which we handled above */
 		for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 			if (pk_bitfield_contain (application->priv->groups, i) &&
@@ -2683,6 +2682,106 @@ gpk_application_create_group_list_simple (GpkApplication *application)
 
 	/* we populated the menu  */
 	return TRUE;
+}
+
+/**
+ * gpk_application_categories_finished_cb:
+ **/
+static void
+gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
+{
+	const GPtrArray	*categories;
+	EggObjList *list;
+	const PkCategoryObj *obj;
+	const PkCategoryObj *obj2;
+	GtkTreeIter iter;
+	GtkTreeIter iter2;
+	guint i, j;
+	GtkWidget *widget;
+
+	/* get return values */
+	categories = pk_client_get_cached_objects (client);
+	if (categories->len == 0) {
+		egg_warning ("no results from GetCategories");
+		goto out;
+	}
+
+	/* copy the categories into a list so we can remove then */
+	list = egg_obj_list_new ();
+	egg_obj_list_set_copy (list, (EggObjListCopyFunc) pk_category_obj_copy);
+	egg_obj_list_set_free (list, (EggObjListFreeFunc) pk_category_obj_free);
+	egg_obj_list_add_array (list, categories);
+
+	for (i=0; i < list->len; i++) {
+		obj = egg_obj_list_index (list, i);
+
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_NAME, obj->name,
+				    GROUPS_COLUMN_ID, obj->cat_id,
+				    GROUPS_COLUMN_ICON, obj->icon, -1);
+		j = 0;
+		do {
+			/* only allows groups two layers deep */
+			obj2 = egg_obj_list_index (list, j);
+			if (egg_strequal (obj2->parent_id, obj->cat_id)) {
+				egg_debug ("%s is child to %s", obj2->name, obj->name);
+				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
+				gtk_tree_store_set (application->priv->groups_store, &iter2,
+						    GROUPS_COLUMN_NAME, obj2->name,
+						    GROUPS_COLUMN_ID, obj2->cat_id,
+						    GROUPS_COLUMN_ICON, obj2->icon, -1);
+				egg_obj_list_remove (list, obj2);
+			} else
+				j++;
+		} while (j < list->len);
+	}
+
+	/* open all expanders */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (widget));
+
+	g_object_unref (list);
+out:
+	g_object_unref (client);
+}
+
+/**
+ * gpk_application_create_group_list_categories:
+ **/
+static gboolean
+gpk_application_create_group_list_categories (GpkApplication *application)
+{
+	GError *error = NULL;
+	PkClient *client;
+	gboolean ret;
+
+	/* check we can do this */
+	if (!pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES)) {
+		egg_warning ("backend does not support complex groups");
+		return FALSE;
+	}
+
+	/* async */
+	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (gpk_application_categories_finished_cb), application);
+	g_signal_connect (client, "finished",
+			  G_CALLBACK (gpk_application_finished_cb), application);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
+
+	/* get categories supported */
+	ret = pk_client_get_categories (client, &error);
+	if (!ret) {
+		egg_warning ("failed to get categories: %s", error->message);
+		g_error_free (error);
+		g_object_unref (client);
+	}
+
+	/* client will be unreff'd in finished handler */
+	return ret;
 }
 
 /**
@@ -2736,6 +2835,8 @@ gpk_application_init (GpkApplication *application)
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+					   "/usr/share/PackageKit/icons");
 
 	application->priv->control = pk_control_new ();
 	application->priv->gclient = gpk_client_new ();
@@ -3153,6 +3254,9 @@ gpk_application_init (GpkApplication *application)
 
 	/* set up the groups checkbox */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+
+	/* add columns to the tree view */
+	gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), FALSE);
 	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 9);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
@@ -3162,8 +3266,14 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
 
-	/* simple list */
-	gpk_application_create_group_list_simple (application);
+	/* simple list or category tree? */
+	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
+	if (ret)
+		ret = gpk_application_create_group_list_categories (application);
+
+	/* fallback to creating a simple list if we can't do category list */
+	if (!ret)
+		gpk_application_create_group_list_enum (application);
 
 	/* get repos, so we can show the full name in the software source box */
 	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
