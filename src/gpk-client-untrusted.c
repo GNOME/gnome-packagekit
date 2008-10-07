@@ -67,7 +67,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	gchar *message;
 	PolKitGnomeAction *update_system_action;
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "window_error");

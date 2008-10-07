@@ -168,7 +168,7 @@ main (int argc, char *argv[])
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* create new objects */
 	dbus = gpk_dbus_new ();

@@ -306,7 +306,7 @@ gpk_client_run_show (gchar **package_ids)
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-log.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");

@@ -390,7 +390,7 @@ main (int argc, char *argv[])
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* we have to do this before we connect up the glade file */
 	gpk_update_viewer_setup_policykit ();
@@ -407,7 +407,7 @@ main (int argc, char *argv[])
 	roles = pk_control_get_actions (control, NULL);
 	g_object_unref (control);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-log.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 	gtk_widget_set_size_request (widget, 500, 400);

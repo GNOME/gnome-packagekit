@@ -395,7 +395,7 @@ main (int argc, char *argv[])
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_repo_create_custom_widget, NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-repo.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-repo.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_repo");
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
 

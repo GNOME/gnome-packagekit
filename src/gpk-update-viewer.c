@@ -1842,7 +1842,7 @@ main (int argc, char *argv[])
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   PK_DATA G_DIR_SEPARATOR_S "icons");
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
@@ -1901,7 +1901,7 @@ main (int argc, char *argv[])
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-update-viewer.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-update-viewer.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_updates");
 
 	/* make GpkClient windows modal */

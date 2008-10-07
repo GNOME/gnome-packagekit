@@ -69,7 +69,7 @@ gpk_client_signature_show (const gchar *package_id, const gchar *repository_name
 
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-signature.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-signature.glade", NULL, NULL);
 
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_gpg");

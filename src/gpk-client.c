@@ -3234,7 +3234,7 @@ gpk_client_init (GpkClient *gclient)
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   PK_DATA G_DIR_SEPARATOR_S "icons");
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	gclient->priv->vendor = gpk_vendor_new ();
 	gclient->priv->dialog = gpk_client_dialog_new ();

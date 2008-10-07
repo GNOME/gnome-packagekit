@@ -54,7 +54,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	g_return_val_if_fail (title != NULL, FALSE);
 	g_return_val_if_fail (message != NULL, FALSE);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-error.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "window_error");

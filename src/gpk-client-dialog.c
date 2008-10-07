@@ -739,7 +739,7 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_client_create_custom_widget, dialog);
 
-	dialog->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-client.glade", NULL, NULL);
+	dialog->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-client.glade", NULL, NULL);
 	dialog->priv->loop = g_main_loop_new (NULL, FALSE);
 	dialog->priv->response = GTK_RESPONSE_NONE;
 	dialog->priv->pulse_timer_id = 0;

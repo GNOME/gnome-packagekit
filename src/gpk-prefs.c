@@ -398,7 +398,7 @@ main (int argc, char *argv[])
 	roles = pk_control_get_actions (control, NULL);
 	g_object_unref (control);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-prefs.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-prefs.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_prefs");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */

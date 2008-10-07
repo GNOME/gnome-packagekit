@@ -75,7 +75,7 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 	g_return_val_if_fail (vendor_name != NULL, FALSE);
 	g_return_val_if_fail (license_agreement != NULL, FALSE);
 
-	glade_xml = glade_xml_new (PK_DATA "/gpk-eula.glade", NULL, NULL);
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-eula.glade", NULL, NULL);
 
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_eula");

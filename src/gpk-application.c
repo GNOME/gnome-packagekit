@@ -2735,7 +2735,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           PK_DATA G_DIR_SEPARATOR_S "icons");
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	application->priv->control = pk_control_new ();
 	application->priv->gclient = gpk_client_new ();
@@ -2810,7 +2810,7 @@ gpk_application_init (GpkApplication *application)
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
 
-	application->priv->glade_xml = glade_xml_new (PK_DATA "/gpk-application.glade", NULL, NULL);
+	application->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-application.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 
 	/* make GpkClient windows modal */
