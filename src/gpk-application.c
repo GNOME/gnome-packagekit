@@ -143,6 +143,7 @@ enum {
 enum {
 	GROUPS_COLUMN_ICON,
 	GROUPS_COLUMN_NAME,
+	GROUPS_COLUMN_SUMMARY,
 	GROUPS_COLUMN_ID,
 	GROUPS_COLUMN_LAST
 };
@@ -1671,7 +1672,8 @@ gpk_application_groups_add_columns (GtkTreeView *treeview)
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
-							   "text", GROUPS_COLUMN_NAME, NULL);
+							   "text", GROUPS_COLUMN_NAME,
+							   "text", GROUPS_COLUMN_SUMMARY, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
@@ -1838,6 +1840,7 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 	icon_name = gpk_group_enum_to_icon_name (group);
 	gtk_tree_store_set (application->priv->groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
+			    GROUPS_COLUMN_SUMMARY, NULL,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
 			    GROUPS_COLUMN_ICON, icon_name,
 			    -1);
@@ -2658,6 +2661,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_NAME, _("All packages"),
+				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
@@ -2723,6 +2727,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_NAME, _("All packages"),
+				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
@@ -2761,6 +2766,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_NAME, obj->name,
+				    GROUPS_COLUMN_SUMMARY, obj->summary,
 				    GROUPS_COLUMN_ID, obj->cat_id,
 				    GROUPS_COLUMN_ICON, obj->icon, -1);
 		j = 0;
@@ -2771,6 +2777,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
 				gtk_tree_store_set (application->priv->groups_store, &iter2,
 						    GROUPS_COLUMN_NAME, obj2->name,
+						    GROUPS_COLUMN_SUMMARY, obj2->summary,
 						    GROUPS_COLUMN_ID, obj2->cat_id,
 						    GROUPS_COLUMN_ICON, obj2->icon, -1);
 				egg_obj_list_remove (list, obj2);
@@ -2896,6 +2903,7 @@ gpk_application_init (GpkApplication *application)
 							        G_TYPE_STRING,
 							        G_TYPE_STRING);
 	application->priv->groups_store = gtk_tree_store_new (GROUPS_COLUMN_LAST,
+							      G_TYPE_STRING,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING);
@@ -3317,6 +3325,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* add columns to the tree view */
 	gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
+	gtk_tree_view_set_tooltip_column (GTK_TREE_VIEW (widget), GROUPS_COLUMN_SUMMARY);
 	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), FALSE);
 	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 9);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
