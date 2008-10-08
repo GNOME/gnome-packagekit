@@ -145,6 +145,7 @@ enum {
 	GROUPS_COLUMN_NAME,
 	GROUPS_COLUMN_SUMMARY,
 	GROUPS_COLUMN_ID,
+	GROUPS_COLUMN_ACTIVE,
 	GROUPS_COLUMN_LAST
 };
 
@@ -1688,6 +1689,9 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkWidget *widget;
+	GtkTreeView *treeview;
+	GtkTreePath *path;
+	gboolean active;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1702,15 +1706,27 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		g_free (application->priv->group);
-		gtk_tree_model_get (model, &iter, GROUPS_COLUMN_ID, &application->priv->group, -1);
-		egg_debug ("selected row is: %s", application->priv->group);
+		gtk_tree_model_get (model, &iter,
+				     GROUPS_COLUMN_ID, &application->priv->group,
+				     GROUPS_COLUMN_ACTIVE, &active, -1);
+		egg_debug ("selected row is: %s (%i)", application->priv->group, active);
+
+		/* don't search parent groups */
+		if (!active) {
+			treeview = GTK_TREE_VIEW (glade_xml_get_widget (application->priv->glade_xml, "treeview_detail"));
+			path = gtk_tree_model_get_path (model, &iter);
+
+			/* select the parent group */
+			gtk_tree_selection_select_path (selection, path);
+			gtk_tree_path_free (path);
+			return;
+		}
 
 		/* GetPackages? */
-		if (egg_strequal (application->priv->group, "all-packages")) {
+		if (egg_strequal (application->priv->group, "all-packages"))
 			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
-		} else {
+		else
 			application->priv->search_mode = PK_MODE_GROUP;
-		}
 
 		/* actually do the search */
 		gpk_application_perform_search (application);
@@ -1843,6 +1859,7 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 			    GROUPS_COLUMN_SUMMARY, NULL,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
 			    GROUPS_COLUMN_ICON, icon_name,
+			    GROUPS_COLUMN_ACTIVE, TRUE,
 			    -1);
 }
 
@@ -2663,6 +2680,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
+				    GROUPS_COLUMN_ACTIVE, TRUE,
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
 
@@ -2719,7 +2737,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	/* set to expanders with indent */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), TRUE);
-	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 9);
+	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 3);
 
 	/* add an "all" entry if we can GetPackages */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
@@ -2729,6 +2747,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
+				    GROUPS_COLUMN_ACTIVE, TRUE,
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
 
@@ -2768,7 +2787,9 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 				    GROUPS_COLUMN_NAME, obj->name,
 				    GROUPS_COLUMN_SUMMARY, obj->summary,
 				    GROUPS_COLUMN_ID, obj->cat_id,
-				    GROUPS_COLUMN_ICON, obj->icon, -1);
+				    GROUPS_COLUMN_ICON, obj->icon,
+				    GROUPS_COLUMN_ACTIVE, FALSE,
+				    -1);
 		j = 0;
 		do {
 			/* only allows groups two layers deep */
@@ -2779,7 +2800,9 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 						    GROUPS_COLUMN_NAME, obj2->name,
 						    GROUPS_COLUMN_SUMMARY, obj2->summary,
 						    GROUPS_COLUMN_ID, obj2->cat_id,
-						    GROUPS_COLUMN_ICON, obj2->icon, -1);
+						    GROUPS_COLUMN_ICON, obj2->icon,
+						    GROUPS_COLUMN_ACTIVE, TRUE,
+						    -1);
 				egg_obj_list_remove (list, obj2);
 			} else
 				j++;
@@ -2906,7 +2929,8 @@ gpk_application_init (GpkApplication *application)
 							      G_TYPE_STRING,
 							      G_TYPE_STRING,
 							      G_TYPE_STRING,
-							      G_TYPE_STRING);
+							      G_TYPE_STRING,
+							      G_TYPE_BOOLEAN);
 	application->priv->details_store = gtk_list_store_new (DETAIL_COLUMN_LAST,
 							       G_TYPE_STRING,
 							       G_TYPE_STRING,
