@@ -2647,6 +2647,11 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	GtkTreeIter iter;
 	const gchar *icon_name;
 
+	/* set to no indent */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), FALSE);
+	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 0);
+
 	/* add an "all" entry if we can GetPackages */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
@@ -2707,6 +2712,11 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	GtkWidget *widget;
 	const gchar *icon_name;
 
+	/* set to expanders with indent */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), TRUE);
+	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 9);
+
 	/* add an "all" entry if we can GetPackages */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
@@ -2758,7 +2768,6 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 			/* only allows groups two layers deep */
 			obj2 = egg_obj_list_index (list, j);
 			if (egg_strequal (obj2->parent_id, obj->cat_id)) {
-				egg_debug ("%s is child to %s", obj2->name, obj->name);
 				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
 				gtk_tree_store_set (application->priv->groups_store, &iter2,
 						    GROUPS_COLUMN_NAME, obj2->name,
@@ -2771,8 +2780,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	}
 
 	/* open all expanders */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-	gtk_tree_view_expand_all (GTK_TREE_VIEW (widget));
+	gtk_tree_view_collapse_all (GTK_TREE_VIEW (widget));
 
 	g_object_unref (list);
 out:
