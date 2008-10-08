@@ -698,9 +698,6 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 	if (ret)
 		return TRUE;
 
-	/* wait for an answer */
-	g_main_loop_run (gclient->priv->loop);
-
 	length = g_strv_length (files_rel);
 	title = ngettext ("Failed to install file", "Failed to install files", length);
 	gpk_client_error_msg (gclient, title, error_local);
@@ -1140,17 +1137,17 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	if (!ret)
 		goto out;
 
-	files = pk_ptr_array_to_strv (array);
-	gclient->priv->retry_untrusted_value = FALSE;
-	ret = gpk_client_install_local_files_internal (gclient, TRUE, files, error);
-	if (!ret)
-		goto out;
-
 	/* set title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+
+	files = pk_ptr_array_to_strv (array);
+	gclient->priv->retry_untrusted_value = FALSE;
+	ret = gpk_client_install_local_files_internal (gclient, TRUE, files, error);
+	if (!ret)
+		goto out;
 
 	/* wait */
 	g_main_loop_run (gclient->priv->loop);
