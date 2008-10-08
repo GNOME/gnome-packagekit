@@ -151,7 +151,6 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
-	{PK_ROLE_ENUM_SERVICE_PACK,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
 	{PK_ROLE_ENUM_WHAT_PROVIDES,		"pk-package-search"},
@@ -1066,9 +1065,6 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_WHAT_PROVIDES:
 		text = _("Getting what provides");
 		break;
-	case PK_ROLE_ENUM_SERVICE_PACK:
-		text = _("Service pack");
-		break;
 	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
 		text = _("Installing signature");
 		break;
@@ -1138,9 +1134,6 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_INSTALL_FILES:
 		text = _("Installed local file");
-		break;
-	case PK_ROLE_ENUM_SERVICE_PACK:
-		text = _("Updating from service pack");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshed package cache");
