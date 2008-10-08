@@ -29,6 +29,7 @@
 
 G_BEGIN_DECLS
 
+#define GPK_CONF_DIR				"/apps/gnome-packagekit"
 #define GPK_CONF_NOTIFY_COMPLETED		"/apps/gnome-packagekit/notify_complete"
 #define GPK_CONF_NOTIFY_AVAILABLE		"/apps/gnome-packagekit/notify_available"
 #define GPK_CONF_NOTIFY_DISTRO_UPGRADES		"/apps/gnome-packagekit/notify_distro_upgrades"

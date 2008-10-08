@@ -2644,6 +2644,18 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 {
 	GtkWidget *widget;
 	guint i;
+	GtkTreeIter iter;
+	const gchar *icon_name;
+
+	/* add an "all" entry if we can GetPackages */
+	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_NAME, _("All packages"),
+				    GROUPS_COLUMN_ID, "all-packages",
+				    GROUPS_COLUMN_ICON, icon_name, -1);
+	}
 
 	/* no group information */
 	if (application->priv->groups == 0)
@@ -2653,18 +2665,13 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
 		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
 
-	/* only if we can do both */
+	/* add a separator only if we can do both */
 	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
 	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
 	     pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		GtkTreeIter iter;
-
-		/* add a separator */
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_ID, "separator", -1);
-
-		/* use the seporator */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
 		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
 						      gpk_application_group_row_separator_func, NULL, NULL);
@@ -2698,6 +2705,32 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	GtkTreeIter iter2;
 	guint i, j;
 	GtkWidget *widget;
+	const gchar *icon_name;
+
+	/* add an "all" entry if we can GetPackages */
+	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_NAME, _("All packages"),
+				    GROUPS_COLUMN_ID, "all-packages",
+				    GROUPS_COLUMN_ICON, icon_name, -1);
+	}
+
+	/* add this at the top of the list */
+	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
+		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
+
+	/* add a separator only if we can do both */
+	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
+	    pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) {
+		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    GROUPS_COLUMN_ID, "separator", -1);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+						      gpk_application_group_row_separator_func, NULL, NULL);
+	}
 
 	/* get return values */
 	categories = pk_client_get_cached_objects (client);
@@ -2785,6 +2818,30 @@ gpk_application_create_group_list_categories (GpkApplication *application)
 }
 
 /**
+ * gpk_application_gconf_key_changed_cb:
+ *
+ * We might have to do things when the gconf keys change; do them here.
+ **/
+static void
+gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkApplication *application)
+{
+	GConfValue *value;
+	gboolean ret;
+	value = gconf_entry_get_value (entry);
+	if (value == NULL)
+		return;
+
+	if (egg_strequal (entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS)) {
+		ret = gconf_value_get_bool (value);
+		gtk_tree_store_clear (application->priv->groups_store);
+		if (ret)
+			gpk_application_create_group_list_categories (application);
+		else
+			gpk_application_create_group_list_enum (application);
+	}
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -2814,6 +2871,13 @@ gpk_application_init (GpkApplication *application)
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
 	application->priv->filters_current = PK_FILTER_ENUM_NONE;
+
+	/* watch gnome-power-manager keys */
+	gconf_client_add_dir (application->priv->gconf_client, GPK_CONF_DIR,
+			      GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (application->priv->gconf_client, GPK_CONF_DIR,
+				 (GConfClientNotifyFunc) gpk_application_gconf_key_changed_cb,
+				 application, NULL, NULL);
 
 	/* create list stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
@@ -3239,18 +3303,6 @@ gpk_application_init (GpkApplication *application)
 
 	/* add columns to the tree view */
 	gpk_application_packages_add_columns (application);
-
-	/* add an "all" entry if we can GetPackages */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
-		GtkTreeIter iter;
-		const gchar *icon_name;
-		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
-		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
-		gtk_tree_store_set (application->priv->groups_store, &iter,
-				    GROUPS_COLUMN_NAME, _("All packages"),
-				    GROUPS_COLUMN_ID, "all-packages",
-				    GROUPS_COLUMN_ICON, icon_name, -1);
-	}
 
 	/* set up the groups checkbox */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
