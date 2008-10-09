@@ -96,6 +96,8 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_error");
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
+	gtk_window_set_title (GTK_WINDOW (widget), "");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* wait for button press */
 	gtk_main ();

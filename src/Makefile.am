@@ -32,6 +32,7 @@ bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-repo					\
 	gpk-prefs					\
+	gpk-service-pack				\
 	gpk-install-catalog				\
 	gpk-install-local-file				\
 	gpk-install-mime-type				\
@@ -186,6 +187,15 @@ gpk_application_SOURCES =				\
 gpk_application_LDADD =					\
 	$(shared_LIBS)					\
 	$(LIBSEXY_LIBS)					\
+	$(NULL)
+
+gpk_service_pack_SOURCES =				\
+	gpk-service-pack.c				\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_service_pack_LDADD =				\
+	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\

@@ -504,6 +504,71 @@
  </para>
 </section>
 
+<section id="service-pack">
+  <title>Service Pack Creator</title>
+  <figure>
+    <title>Service pack creator</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-service-pack.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
+  <para>
+    This tool can be opened using <menuchoice><guimenu>Applications</guimenu>
+    <guisubmenu>System Tools</guisubmenu>
+    <guimenuitem>Service Pack Creator</guimenuitem></menuchoice>.
+  </para>
+  <para>
+    A service pack is a tarball which contains a set of packages and their dependencies.
+    To explain better what a service pack is, it is best to show a few use-cases.
+  </para>
+  <orderedlist numeration="arabic">
+    <listitem>
+      <para>
+        You have seven desktops you've just installed with Fedora 9.
+        Each one needs to have 204Mb of updates installed.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        You have a laptop that needs network drivers before it can download updates,
+        and you have a similar up to date laptop with internet access nearby.
+        The network drivers require a few dependencies, and other packages to be
+        upgraded before they will install.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        You frequently install Linux on other peoples computers.
+        You carry around a live-cd and a pendrive with a single 204Mb file
+        <filename>Fedora-updates-SP1.servicepack</filename> which contains all the
+        updates since last week.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        A free software magazine wants to distribute patent encumbered multimedia
+        plugins and programs with the latest Fedora release DVD.
+        They want a way in which even the most lazy user can get the things
+        installed without much fuss.
+      </para>
+    </listitem>
+  </orderedlist>
+  <para>
+    Internally, the pack file is just an uncompressed tarball, with the packages
+    and a single metadata.conf file inside.
+    The metadata file is just the distribution identifier and the time of creation.
+    This ensures you don't try installing a <filename>fedora-9-i386</filename>
+    service pack on a <filename>ubuntu-intrepid-ppc</filename> machine.
+  </para>
+  <para>
+    <command>pkgenpack</command> is a command line tool for creating service pack files.
+  </para>
+</section>
+
 <section id="auto-updates">
   <title>Automatic Updates</title>
   <para>

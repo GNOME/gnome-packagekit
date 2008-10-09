@@ -12,6 +12,7 @@ desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-file.desktop.in			\
 	gpk-install-catalog.desktop.in			\
+	gpk-service-pack.desktop.in			\
 	gpk-prefs.desktop.in				\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
@@ -32,6 +33,7 @@ pkgdata_DATA =						\
 	gpk-application.glade				\
 	gpk-update-viewer.glade				\
 	gpk-prefs.glade					\
+	gpk-service-pack.glade				\
 	gpk-signature.glade				\
 	gpk-error.glade					\
 	gpk-log.glade					\
@@ -64,6 +66,7 @@ clean-local :
 DISTCLEANFILES =					\
 	gpk-repo.desktop				\
 	gpk-prefs.desktop				\
+	gpk-service-pack.desktop			\
 	gpk-update-viewer.desktop			\
 	gpk-install-catalog.desktop			\
 	gpk-install-file.desktop			\
