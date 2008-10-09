@@ -23,8 +23,11 @@
 #define __GPK_COMMON_H
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
+
 #include <pk-enum.h>
 #include <pk-package-id.h>
+
 #include "gpk-animated-icon.h"
 
 G_BEGIN_DECLS
@@ -87,6 +90,7 @@ gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
 							 PkStatusEnum	 status,
 							 GtkIconSize	 size);
 gchar		*gpk_strv_join_locale			(gchar		**array);
+GtkEntryCompletion	*gpk_package_entry_completion_new	(void);
 
 G_END_DECLS
 

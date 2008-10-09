@@ -2019,56 +2019,6 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 			1, gtk_get_current_event_time());
 }
 
-#define PK_PACKAGE_LIST_LOCATION	"/var/lib/PackageKit/package-list.txt"
-
-/**
- * gpk_application_create_completion_model:
- *
- * Creates a tree model containing the completions
- **/
-static GtkTreeModel *
-gpk_application_create_completion_model (void)
-{
-	PkPackageList *list;
-	guint i;
-	guint length;
-	gboolean ret;
-	const PkPackageObj *obj;
-	GHashTable *hash;
-	gpointer data;
-	GtkListStore *store;
-	GtkTreeIter iter;
-
-	store = gtk_list_store_new (1, G_TYPE_STRING);
-	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-	list = pk_package_list_new ();
-	ret = pk_package_list_add_file (list, PK_PACKAGE_LIST_LOCATION);
-	if (!ret) {
-		egg_warning ("no package list, try running pk-generate-package-list as root");
-		return NULL;
-	}
-
-	length = pk_package_list_get_size (list);
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		if (obj == NULL || obj->id == NULL || obj->id->name == NULL) {
-			egg_warning ("obj invalid!");
-			break;
-		}
-		data = g_hash_table_lookup (hash, (gpointer) obj->id->name);
-		if (data == NULL) {
-			/* append just the name */
-			g_hash_table_insert (hash, g_strdup (obj->id->name), GINT_TO_POINTER (1));
-			gtk_list_store_append (store, &iter);
-			gtk_list_store_set (store, &iter, 0, obj->id->name, -1);
-		}
-	}
-	g_hash_table_unref (hash);
-	g_object_unref (list);
-
-	return GTK_TREE_MODEL (store);
-}
-
 /**
  *  * gpk_application_about_dialog_url_cb:
  *   **/
@@ -2888,9 +2838,7 @@ gpk_application_init (GpkApplication *application)
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkEntryCompletion *completion;
-	GtkTreeModel *completion_model;
 	GtkTreeSelection *selection;
-	gboolean autocomplete;
 	gboolean enabled;
 	gboolean ret;
 	GError *error = NULL;
@@ -3223,25 +3171,12 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 
 	/* autocompletion can be turned off as it's slow */
-	autocomplete = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
-	if (autocomplete) {
+	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
+	if (ret) {
 		/* create the completion object */
-		completion = gtk_entry_completion_new ();
-
-		/* assign the completion to the entry */
+		completion = gpk_package_entry_completion_new ();
 		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
 		g_object_unref (completion);
-
-		/* create a tree model and use it as the completion model */
-		completion_model = gpk_application_create_completion_model ();
-		if (completion_model != NULL) {
-			gtk_entry_completion_set_model (completion, completion_model);
-			g_object_unref (completion_model);
-
-			/* use model column 0 as the text column */
-			gtk_entry_completion_set_text_column (completion, 0);
-			gtk_entry_completion_set_inline_completion (completion, TRUE);
-		}
 	}
 
 	/* set focus on entry text */
