@@ -33,7 +33,6 @@
 #include <gconf/gconf-client.h>
 
 #include <pk-control.h>
-#include <pk-client.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
@@ -57,7 +56,7 @@ static GladeXML *glade_xml = NULL;
  * pk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget, gboolean  data)
+pk_button_help_cb (GtkWidget *widget, gpointer data)
 {
 	gpk_gnome_help ("prefs");
 }
@@ -343,7 +342,6 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkBitfield roles;
-	PkClient *client;
 	PkControl *control;
 	EggUnique *egg_unique;
 	gboolean ret;
@@ -391,8 +389,6 @@ main (int argc, char *argv[])
 	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_prefs_activated_cb), NULL);
 
-	client = pk_client_new ();
-
 	/* get actions */
 	control = pk_control_new ();
 	roles = pk_control_get_actions (control, NULL);
@@ -439,7 +435,6 @@ main (int argc, char *argv[])
 	gtk_main ();
 
 	g_object_unref (glade_xml);
-	g_object_unref (client);
 unique_out:
 	g_object_unref (egg_unique);
 
