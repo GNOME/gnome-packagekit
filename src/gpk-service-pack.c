@@ -250,7 +250,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	gchar *directory;
 	gchar *filename;
 	gchar *exclude;
-	gchar *package_id;
+	gchar *package_id = NULL;
 	PkServicePack *pack;
 	PkPackageList *list = NULL;
 	GError *error = NULL;
@@ -275,9 +275,11 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	gtk_widget_show (widget);
 
 	/* resolve name to ID */
-	package_id = gpk_pack_resolve (package);
-	if (package_id == NULL)
-		goto back;
+	if (!updates) {
+		package_id = gpk_pack_resolve (package);
+		if (package_id == NULL)
+			goto back;
+	}
 
 	/* get the exclude list */
 	list = pk_package_list_new ();
