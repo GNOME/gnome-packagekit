@@ -1127,19 +1127,19 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Searched for package name");
 		break;
 	case PK_ROLE_ENUM_REMOVE_PACKAGES:
-		text = _("Removed package");
+		text = _("Removed packages");
 		break;
 	case PK_ROLE_ENUM_INSTALL_PACKAGES:
-		text = _("Installed package");
+		text = _("Installed packages");
 		break;
 	case PK_ROLE_ENUM_INSTALL_FILES:
-		text = _("Installed local file");
+		text = _("Installed local files");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
 		text = _("Refreshed package cache");
 		break;
 	case PK_ROLE_ENUM_UPDATE_PACKAGES:
-		text = _("Updated package");
+		text = _("Updated packages");
 		break;
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
 		text = _("Updated system");

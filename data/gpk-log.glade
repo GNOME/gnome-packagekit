@@ -3,15 +3,42 @@
 <!--*- mode: xml -*-->
 <glade-interface>
   <widget class="GtkWindow" id="window_simple">
-    <property name="title" translatable="yes">Update History</property>
+    <property name="title" translatable="yes">Software Log Viewer</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="icon_name">gtk-info</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="border_width">10</property>
-        <property name="spacing">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <widget class="GtkEntry" id="entry_package">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkButton" id="button_filter">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Filter</property>
+                <property name="response_id">0</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
         <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow_simple">
             <property name="visible">True</property>
@@ -23,11 +50,15 @@
               <widget class="GtkTreeView" id="treeview_simple">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="headers_visible">False</property>
+                <property name="headers_clickable">True</property>
                 <property name="rules_hint">True</property>
+                <property name="show_expanders">False</property>
               </widget>
             </child>
           </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkHButtonBox" id="buttonbox">
@@ -56,11 +87,11 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button_close">
+              <widget class="GtkButton" id="button_refresh">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="label">gtk-close</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-refresh</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>
@@ -68,11 +99,25 @@
                 <property name="position">2</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkButton" id="button_close">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="is_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="label">gtk-close</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </widget>
