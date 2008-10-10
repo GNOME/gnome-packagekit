@@ -597,6 +597,7 @@ main (int argc, char *argv[])
 		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
 		g_object_unref (completion);
 	}
+	g_object_unref (client);
 
 	gtk_widget_show (main_window);
 
