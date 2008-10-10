@@ -123,7 +123,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 {
 	guint i;
 	guint size;
-	guint len;
 	PkInfoEnum info_local;
 	const gchar *info_text;
 	GString *string;
@@ -136,9 +135,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	size = g_strv_length (array);
 	info_text = gpk_info_enum_to_localised_past (info);
 
-	/* preset the new line logic */
-	len = strlen (info_text) - 3;
-
 	/* find all of this type */
 	for (i=0; i<size; i++) {
 		sections = g_strsplit (array[i], "\t", 0);
@@ -146,14 +142,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 		if (info_local == info) {
 			id = pk_package_id_new_from_string (sections[1]);
 			text = gpk_package_id_format_oneline (id, NULL);
-
-			/* if longer than a set limit of chars, new line */
-			len += strlen (text);
-			if (len > 40) {
-				g_string_append_printf (string, "\n   ");
-				len = 0;
-			}
-
 			g_string_append_printf (string, "%s, ", text);
 			g_free (text);
 			pk_package_id_free (id);
@@ -331,29 +319,40 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	/* column for date */
+	/* --- column for date --- */
 	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Date"), renderer,
 							   "markup", GPK_LOG_COLUMN_DATE, NULL);
 	gtk_tree_view_append_column (treeview, column);
-	gtk_tree_view_column_set_expand (column, TRUE);
+	gtk_tree_view_column_set_expand (column, FALSE);
+
+	/* --- column for image and text --- */
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (column, _("Action"));
 
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
-	column = gtk_tree_view_column_new_with_attributes ("", renderer,
-							   "icon-name", GPK_LOG_COLUMN_ICON, NULL);
-	gtk_tree_view_append_column (treeview, column);
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	g_object_set (renderer, "yalign", 0.0, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "icon-name", GPK_LOG_COLUMN_ICON);
 
-	/* column for role */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Role"), renderer,
-							   "markup", GPK_LOG_COLUMN_ROLE, NULL);
-	gtk_tree_view_append_column (treeview, column);
-	gtk_tree_view_column_set_expand (column, TRUE);
+	g_object_set (renderer, "yalign", 0.0, NULL);
 
-	/* column for details */
+	/* text */
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer, "markup", GPK_LOG_COLUMN_ROLE);
+	gtk_tree_view_column_set_expand (column, FALSE);
+
+	gtk_tree_view_append_column (treeview, GTK_TREE_VIEW_COLUMN(column));
+
+	/* --- column for details --- */
 	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
+	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set(renderer, "wrap-width", 400, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
