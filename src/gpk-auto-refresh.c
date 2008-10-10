@@ -38,6 +38,7 @@
 #include <pk-control.h>
 
 #include "egg-debug.h"
+#include "egg-string.h"
 #include "egg-dbus-monitor.h"
 
 #include "gpk-common.h"
@@ -383,6 +384,25 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_gconf_key_changed_cb:
+ *
+ * We might have to do things when the gconf keys change; do them here.
+ **/
+static void
+gpk_auto_refresh_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkAutoRefresh *arefresh)
+{
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
+	if (egg_strequal (entry->key, GPK_CONF_SESSION_STARTUP_TIMEOUT) ||
+	    egg_strequal (entry->key, GPK_CONF_FORCE_GET_UPDATES_LOGIN) ||
+	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_GET_UPDATES) ||
+	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_GET_UPGRADES) ||
+	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_REFRESH_CACHE) ||
+	    egg_strequal (entry->key, GPK_CONF_AUTO_UPDATE) ||
+	    egg_strequal (entry->key, GPK_CONF_UPDATE_BATTERY))
+		gpk_auto_refresh_change_state (arefresh);
+}
+
+/**
  * gpk_auto_refresh_idle_cb:
  **/
 static void
@@ -591,6 +611,13 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 
 	/* we need to know the updates frequency */
 	arefresh->priv->gconf_client = gconf_client_get_default ();
+
+	/* watch gnome-packagekit keys */
+	gconf_client_add_dir (arefresh->priv->gconf_client, GPK_CONF_DIR,
+			      GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_notify_add (arefresh->priv->gconf_client, GPK_CONF_DIR,
+				 (GConfClientNotifyFunc) gpk_auto_refresh_gconf_key_changed_cb,
+				 arefresh, NULL, NULL);
 
 	/* we need to query the last cache refresh time */
 	arefresh->priv->control = pk_control_new ();

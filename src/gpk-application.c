@@ -2858,7 +2858,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->search_mode = PK_MODE_UNKNOWN;
 	application->priv->filters_current = PK_FILTER_ENUM_NONE;
 
-	/* watch gnome-power-manager keys */
+	/* watch gnome-packagekit keys */
 	gconf_client_add_dir (application->priv->gconf_client, GPK_CONF_DIR,
 			      GCONF_CLIENT_PRELOAD_NONE, NULL);
 	gconf_client_notify_add (application->priv->gconf_client, GPK_CONF_DIR,
