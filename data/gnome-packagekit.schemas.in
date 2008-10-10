@@ -206,6 +206,21 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnome-packagekit/force_get_updates_login</key>
+      <applyto>/apps/gnome-packagekit/force_get_updates_login</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>If we should get the update list when the session starts</short>
+        <long>
+          If we should get the update list when the session starts, even if we are not scheduled to.
+          This ensures the user has up to date and valid data in the tray at startup.
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnome-packagekit/frequency_get_updates</key>
       <applyto>/apps/gnome-packagekit/frequency_get_updates</applyto>
       <owner>gnome-packagekit</owner>

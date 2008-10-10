@@ -46,6 +46,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART	"/apps/gnome-packagekit/notify_update_complete_restart"
 #define GPK_CONF_AUTOCOMPLETE			"/apps/gnome-packagekit/autocomplete"
 #define GPK_CONF_SESSION_STARTUP_TIMEOUT	"/apps/gnome-packagekit/session_startup_timeout"
+#define GPK_CONF_FORCE_GET_UPDATES_LOGIN	"/apps/gnome-packagekit/force_get_updates_login"
 #define GPK_CONF_FREQUENCY_GET_UPDATES		"/apps/gnome-packagekit/frequency_get_updates"
 #define GPK_CONF_FREQUENCY_GET_UPGRADES		"/apps/gnome-packagekit/frequency_get_upgrades"
 #define GPK_CONF_FREQUENCY_REFRESH_CACHE	"/apps/gnome-packagekit/frequency_refresh_cache"

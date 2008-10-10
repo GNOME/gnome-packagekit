@@ -74,7 +74,7 @@ struct GpkAutoRefreshPrivate
 	gboolean		 on_battery;
 	gboolean		 network_active;
 	gboolean		 session_delay;
-	gboolean		 sent_get_updates;
+	gboolean		 force_get_updates_login;
 	EggDbusMonitor		*monitor_gs;
 	EggDbusMonitor		*monitor_gpm;
 	GConfClient		*gconf_client;
@@ -346,6 +346,8 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 static gboolean
 gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
+	gboolean force;
+
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* we shouldn't do this early in the session startup */
@@ -360,11 +362,16 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 		return FALSE;
 	}
 
-	/* we do this to get an icon at startup */
-	if (!arefresh->priv->sent_get_updates) {
-		gpk_auto_refresh_signal_get_updates (arefresh);
-		arefresh->priv->sent_get_updates = TRUE;
-		return TRUE;
+	/* only force a check if the user REALLY, REALLY wants to break
+	 * set policy and have an update at startup */
+	if (!arefresh->priv->force_get_updates_login) {
+		arefresh->priv->force_get_updates_login = TRUE;
+		force = gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL);
+		if (force) {
+			egg_debug ("forcing get update due to GConf");
+			gpk_auto_refresh_signal_get_updates (arefresh);
+			return TRUE;
+		}
 	}
 
 	/* try to do both */
@@ -577,7 +584,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->session_delay = FALSE;
-	arefresh->priv->sent_get_updates = FALSE;
+	arefresh->priv->force_get_updates_login = FALSE;
 
 	arefresh->priv->proxy_gs = NULL;
 	arefresh->priv->proxy_gpm = NULL;
