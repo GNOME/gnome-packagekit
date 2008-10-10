@@ -508,6 +508,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	files = gpk_client_get_file_list (application->priv->gclient, application->priv->package, &error);
 	if (files == NULL) {
 		egg_warning ("could not get file list: %s", error->message);
