@@ -565,7 +565,64 @@
     service pack on a <filename>ubuntu-intrepid-ppc</filename> machine.
   </para>
   <para>
-    <command>pkgenpack</command> is a command line tool for creating service pack files.
+    We need a destination file list because we not know what packages are
+    installed on the destination computer.
+    For example:
+  </para>
+  <figure>
+    <title>Two example computers</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/gpk-service-pack-example.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </figure>
+  <para>
+    Computer A has the following packages installed, and has internet access.
+  </para>
+  <itemizedlist>
+    <listitem><literal>glib</literal></listitem>
+    <listitem><literal>dbus</literal></listitem>
+    <listitem><literal>dbus-glib</literal></listitem>
+    <listitem><literal>libgnome</literal></listitem>
+  </itemizedlist>
+  <para>
+    Computer B has the following packages installed, and does not have internet access.
+  </para>
+  <itemizedlist>
+    <listitem><literal>glib</literal></listitem>
+    <listitem><literal>dbus</literal></listitem>
+    <listitem><literal>kdebase</literal></listitem>
+    <listitem><literal>kdeapps</literal></listitem>
+  </itemizedlist>
+  <para>
+    Computer B wants to have a service pack containing a new version of
+    <literal>k3b</literal> so that it can burn DVD-RWs.
+  </para>
+  <para>
+    The <literal>k3b</literal> program has dependancies of <literal>dbus</literal>,
+    <literal>dbus-glib</literal> and <literal>kdebase</literal>.
+    Now, if we asked computer A to download <literal>k3b</literal>, it would download
+    <literal>k3b</literal> <emphasis>and</emphasis> <literal>kdebase</literal> but
+    <emphasis>not</emphasis> <literal>dbus-glib</literal>.
+    We need to provide computer A with the information about what packages computer B
+    has got installed before we can create the service pack.
+  </para>
+  <para>
+    If we generate a package list on computer B, and the transfer it to
+    computer A on a USB pendrive or CDRW we can download the correct packages.
+    In this case we would download <literal>k3b</literal> and
+    <literal>dbus-glib</literal> and pack it into the new service pack.
+  </para>
+  <para>
+    The service pack can now be transferred from computer A to computer B on
+    the USB pendrive.
+  </para>
+  <para>
+    The <command>pkgenpack</command> command line tool can also be used for
+    creating service pack files.
   </para>
 </section>
 
@@ -576,7 +633,7 @@
     PackageKit-cron package.
     This package contains a cron job that as well as a configuration file.
     The settings are controlled via the configuration file at
-    <command>/etc/sysconfig/packagekit-background</command>.
+    <filename>/etc/sysconfig/packagekit-background</filename>.
     You can set it to just check for updates or perform the updates
     automatically and notify any email address.
   </para>

@@ -18,6 +18,7 @@ DOC_FIGURES = \
 	figures/gpk-remove-confirm.png \
 	figures/gpk-updates.png \
 	figures/gpk-service-pack.png \
+	figures/gpk-service-pack-example.png \
 	figures/gpk-updates-warning.png
 
 DOC_LINGUAS = el es oc pl sv
