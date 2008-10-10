@@ -10,6 +10,7 @@ DOC_FIGURES = \
 	figures/gpk-eula.png \
 	figures/gpk-prefs.png \
 	figures/gpk-repo-auth.png \
+	figures/gpk-log.png \
 	figures/gpk-repo.png \
 	figures/gpk-signature.png \
 	figures/gpk-updates-overview.png \

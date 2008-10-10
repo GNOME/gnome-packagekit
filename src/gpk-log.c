@@ -72,7 +72,7 @@ enum
 static void
 gpk_log_button_help_cb (GtkWidget *widget, gpointer data)
 {
-	gpk_gnome_help ("update-log");
+	gpk_gnome_help ("software-log");
 }
 
 /**
