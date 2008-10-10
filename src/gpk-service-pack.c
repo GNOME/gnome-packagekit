@@ -29,6 +29,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
+#include <sys/utsname.h>
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 
@@ -39,35 +40,66 @@
 
 #include "egg-debug.h"
 #include "egg-unique.h"
+#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-error.h"
 #include "gpk-gnome.h"
 #include "gpk-enum.h"
 
+typedef enum {
+	GPK_ACTION_ENUM_COPY,
+	GPK_ACTION_ENUM_PACKAGE,
+	GPK_ACTION_ENUM_UPDATES
+} GpkActionEnum;
+
 static GladeXML *glade_xml = NULL;
-static gboolean updates = TRUE;
-guint pulse_id = 0;
+static GpkActionEnum action;
+static guint pulse_id = 0;
+
+/**
+ * pk_get_node_name:
+ **/
+static gchar *
+pk_get_node_name (void)
+{
+	gint retval;
+	struct utsname buf;
+
+	retval = uname (&buf);
+	if (retval != 0)
+		return g_strdup ("localhost");
+	return g_strdup (buf.nodename);
+}
 
 /**
  * gpk_pack_get_default_filename:
  **/
 static gchar *
-gpk_pack_get_default_filename (const gchar *name, const gchar *directory)
+gpk_pack_get_default_filename (const gchar *directory)
 {
+	GtkWidget *widget;
 	gchar *filename = NULL;
 	gchar *distro_id;
 	gchar *iso_time = NULL;
+	gchar *nodename = NULL;
+	const gchar *package;
 
 	distro_id = pk_get_distro_id ();
-	if (name != NULL) {
-		filename = g_strdup_printf ("%s/%s-%s.servicepack", directory, name, distro_id);
-	} else {
+	if (action == GPK_ACTION_ENUM_PACKAGE) {
+		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		package = gtk_entry_get_text (GTK_ENTRY(widget));
+		filename = g_strdup_printf ("%s/%s-%s.servicepack", directory, package, distro_id);
+	} else if (action == GPK_ACTION_ENUM_COPY) {
+		nodename = pk_get_node_name ();
+		filename = g_strdup_printf ("%s/%s.package-list", directory, nodename);
+	} else if (action == GPK_ACTION_ENUM_UPDATES) {
 		iso_time = pk_iso8601_present ();
 		/* don't include the time, just use the date prefix */
 		iso_time[10] = '\0';
 		filename = g_strdup_printf ("%s/updates-%s-%s.servicepack", directory, iso_time, distro_id);
 	}
+	g_free (nodename);
 	g_free (distro_id);
 	g_free (iso_time);
 	return filename;
@@ -88,18 +120,18 @@ static void
 gpk_pack_widgets_activate (gboolean enable)
 {
 	GtkWidget *widget;
-	if (!updates) {
-		widget = glade_xml_get_widget (glade_xml, "entry_package");
-		gtk_widget_set_sensitive (widget, enable);
-	}
+	widget = glade_xml_get_widget (glade_xml, "entry_package");
+	gtk_widget_set_sensitive (widget, enable && action == GPK_ACTION_ENUM_PACKAGE);
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_updates");
 	gtk_widget_set_sensitive (widget, enable);
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_package");
 	gtk_widget_set_sensitive (widget, enable);
+	widget = glade_xml_get_widget (glade_xml, "radiobutton_copy");
+	gtk_widget_set_sensitive (widget, enable);
 	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_directory");
 	gtk_widget_set_sensitive (widget, enable);
 	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
-	gtk_widget_set_sensitive (widget, enable);
+	gtk_widget_set_sensitive (widget, enable && action != GPK_ACTION_ENUM_COPY);
 	widget = glade_xml_get_widget (glade_xml, "button_create");
 	gtk_widget_set_sensitive (widget, enable);
 	widget = glade_xml_get_widget (glade_xml, "button_close");
@@ -240,6 +272,61 @@ out:
 }
 
 /**
+ * gpk_pack_copy_package_lists:
+ **/
+static gboolean
+gpk_pack_copy_package_lists (const gchar *filename, GError **error)
+{
+	gboolean ret = FALSE;
+	PkPackageList *system = NULL;
+	PkPackageList *installed = NULL;
+	guint i;
+	guint length;
+	const PkPackageObj *obj;
+
+	/* no feedback */
+	gpk_pack_set_percentage (101);
+
+	if (!g_file_test (PK_SYSTEM_PACKAGE_LIST_FILENAME, G_FILE_TEST_EXISTS)) {
+		*error = g_error_new (0, 0, _("The file does not exists"));
+		goto out;
+	}
+
+	/* open the list */
+	system = pk_package_list_new ();
+	ret = pk_package_list_add_file (system, PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	if (!ret) {
+		*error = g_error_new (0, 0, _("Could not read package list"));
+		goto out;
+	}
+
+	/* get all the installed entries */
+	installed = pk_package_list_new ();
+	length = pk_package_list_get_size (system);
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (system, i);
+		if (obj->info == PK_INFO_ENUM_INSTALLED)
+			pk_package_list_add_obj (installed, obj);
+		/* don't hang the GUI */
+		while (gtk_events_pending ())
+			gtk_main_iteration ();
+	}
+
+	/* write new file */
+	ret = pk_package_list_to_file (installed, filename);
+	if (!ret) {
+		*error = g_error_new (0, 0, _("Could not write package list"));
+		goto out;
+	}
+out:
+	if (system != NULL)
+		g_object_unref (system);
+	if (installed != NULL)
+		g_object_unref (installed);
+	return ret;
+}
+
+/**
  * gpk_pack_button_create_cb:
  **/
 static void
@@ -249,7 +336,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	const gchar *package = NULL;
 	gchar *directory;
 	gchar *filename;
-	gchar *exclude;
+	gchar *exclude = NULL;
 	gchar *package_id = NULL;
 	PkServicePack *pack;
 	PkPackageList *list = NULL;
@@ -258,30 +345,47 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 
 	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_directory");
 	directory = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
-	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
-	exclude = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
 
-	/* fall back to the system copy */
-	if (exclude == NULL)
-		exclude = g_strdup (PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	/* use a default filename */
+	filename = gpk_pack_get_default_filename (directory);
 
-	if (!updates) {
-		widget = glade_xml_get_widget (glade_xml, "entry_package");
-		package = gtk_entry_get_text (GTK_ENTRY(widget));
-	}
-
+	/* start the action */
 	gpk_pack_widgets_activate (FALSE);
 	widget = glade_xml_get_widget (glade_xml, "frame_progress");
 	gtk_widget_show (widget);
 
-	/* resolve name to ID */
-	if (!updates) {
-		package_id = gpk_pack_resolve (package);
-		if (package_id == NULL)
-			goto back;
+	/* copy the system package list */
+	if (action == GPK_ACTION_ENUM_COPY) {
+		ret = gpk_pack_copy_package_lists (filename, &error);
+		if (!ret) {
+			widget = glade_xml_get_widget (glade_xml, "window_pack");
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot copy system package list"), error->message);
+			g_error_free (error);
+		}
+		goto out;
 	}
 
-	/* get the exclude list */
+	/* get the exclude list, and fall back to the system copy */
+	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
+	exclude = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
+	if (exclude == NULL)
+		exclude = g_strdup (PK_SYSTEM_PACKAGE_LIST_FILENAME);
+
+	/* get the package to download */
+	if (action == GPK_ACTION_ENUM_PACKAGE) {
+		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		package = gtk_entry_get_text (GTK_ENTRY(widget));
+		if (egg_strzero (package)) {
+			widget = glade_xml_get_widget (glade_xml, "window_pack");
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("No package name selected"), NULL);
+			goto out;
+		}
+		package_id = gpk_pack_resolve (package);
+		if (package_id == NULL)
+			goto out;
+	}
+
+	/* add the exclude list */
 	list = pk_package_list_new ();
 	ret = pk_package_list_add_file (list, exclude);
 	if (!ret) {
@@ -289,9 +393,6 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot read destination package list"), NULL);
 		goto out;
 	}
-
-	/* use a default filename */
-	filename = gpk_pack_get_default_filename (package, directory);
 
 	/* create pack and set initial values */
 	pack = pk_service_pack_new ();
@@ -301,10 +402,10 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	pk_service_pack_set_temp_directory (pack, NULL);
 	pk_service_pack_set_exclude_list (pack, list);
 
-	if (updates)
+	if (action == GPK_ACTION_ENUM_UPDATES)
 		ret = pk_service_pack_create_for_updates (pack, &error);
-	else
-		ret = pk_service_pack_create_for_package_id (pack, package_id, &error);
+	else if (action == GPK_ACTION_ENUM_PACKAGE)
+		ret = pk_service_pack_create_for_package_id (pack, directory, &error);
 	if (!ret) {
 		widget = glade_xml_get_widget (glade_xml, "window_pack");
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot create service pack"), error->message);
@@ -312,12 +413,13 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	}
 	g_object_unref (pack);
 
-back:
+out:
+	/* stop the action */
 	gpk_pack_widgets_activate (TRUE);
 	widget = glade_xml_get_widget (glade_xml, "frame_progress");
 	gtk_widget_hide (widget);
+	gpk_pack_set_percentage (100);
 
-out:
 	if (list != NULL)
 		g_object_unref (list);
 	g_free (package_id);
@@ -346,7 +448,9 @@ ggpk_pack_radio_updates_cb (GtkWidget *widget2, gpointer data)
 	egg_debug ("got updates");
 	widget = glade_xml_get_widget (glade_xml, "entry_package");
 	gtk_widget_set_sensitive (widget, FALSE);
-	updates = TRUE;
+	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
+	gtk_widget_set_sensitive (widget, TRUE);
+	action = GPK_ACTION_ENUM_UPDATES;
 }
 
 /**
@@ -359,7 +463,24 @@ ggpk_pack_radio_package_cb (GtkWidget *widget2, gpointer data)
 	egg_debug ("got package");
 	widget = glade_xml_get_widget (glade_xml, "entry_package");
 	gtk_widget_set_sensitive (widget, TRUE);
-	updates = FALSE;
+	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
+	gtk_widget_set_sensitive (widget, TRUE);
+	action = GPK_ACTION_ENUM_PACKAGE;
+}
+
+/**
+ * ggpk_pack_radio_copy_cb:
+ **/
+static void
+ggpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
+{
+	GtkWidget *widget;
+	egg_debug ("got copy");
+	widget = glade_xml_get_widget (glade_xml, "entry_package");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
+	gtk_widget_set_sensitive (widget, FALSE);
+	action = GPK_ACTION_ENUM_COPY;
 }
 
 /**
@@ -453,6 +574,8 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_updates_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_package");
 	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_package_cb), NULL);
+	widget = glade_xml_get_widget (glade_xml, "radiobutton_copy");
+	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_copy_cb), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
