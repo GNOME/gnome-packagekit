@@ -123,7 +123,9 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 {
 	guint i;
 	guint size;
+	guint len;
 	PkInfoEnum info_local;
+	const gchar *info_text;
 	GString *string;
 	gchar *text;
 	gchar *whole;
@@ -132,12 +134,26 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 
 	string = g_string_new ("");
 	size = g_strv_length (array);
+	info_text = gpk_info_enum_to_localised_past (info);
+
+	/* preset the new line logic */
+	len = strlen (info_text) - 3;
+
+	/* find all of this type */
 	for (i=0; i<size; i++) {
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_text (sections[0]);
 		if (info_local == info) {
 			id = pk_package_id_new_from_string (sections[1]);
 			text = gpk_package_id_format_oneline (id, NULL);
+
+			/* if longer than a set limit of chars, new line */
+			len += strlen (text);
+			if (len > 40) {
+				g_string_append_printf (string, "\n   ");
+				len = 0;
+			}
+
 			g_string_append_printf (string, "%s, ", text);
 			g_free (text);
 			pk_package_id_free (id);
@@ -156,7 +172,7 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 
 	/* add a nice header, and make text italic */
 	text = g_string_free (string, FALSE);
-	whole = g_strdup_printf ("%s: %s\n", gpk_info_enum_to_localised_past (info), text);
+	whole = g_strdup_printf ("<b>%s</b>: %s\n", info_text, text);
 	g_free (text);
 	return whole;
 }
