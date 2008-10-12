@@ -54,7 +54,7 @@ typedef enum {
 } GpkActionEnum;
 
 static GladeXML *glade_xml = NULL;
-static GpkActionEnum action;
+static GpkActionEnum action = GPK_ACTION_ENUM_UPDATES;
 static guint pulse_id = 0;
 
 /**
@@ -210,10 +210,10 @@ gpk_pack_progress_changed_cb (PkClient *client, guint percentage, guint subperce
 }
 
 /**
- * gpk_pack_resolve:
+ * gpk_pack_resolve_package_id:
  **/
 static gchar *
-gpk_pack_resolve (const gchar *package)
+gpk_pack_resolve_package_id (const gchar *package)
 {
 	GtkWidget *widget;
 	PkPackageList *list = NULL;
@@ -269,6 +269,38 @@ out:
 	g_object_unref (client);
 	g_strfreev (packages);
 	return package_id;
+}
+
+/**
+ * gpk_pack_resolve_package_ids:
+ **/
+static gchar **
+gpk_pack_resolve_package_ids (gchar **package)
+{
+	gchar **package_ids;
+	guint i, length;
+	gboolean ret = TRUE;
+
+	length = g_strv_length (package);
+	package_ids = g_strdupv (package);
+
+	/* for each package, resolve to a package_id */
+	for (i=0; i<length; i++) {
+		g_free (package_ids[i]);
+		package_ids[i] = gpk_pack_resolve_package_id (package[i]);
+		if (package_ids[i] == NULL) {
+			egg_warning ("failed to resolve %s", package[i]);
+			ret = FALSE;
+			break;
+		}
+	}
+
+	/* we failed at least one resolve */
+	if (!ret) {
+		g_strfreev (package_ids);
+		package_ids = NULL;
+	}
+	return package_ids;
 }
 
 /**
@@ -337,7 +369,8 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	gchar *directory;
 	gchar *filename;
 	gchar *exclude = NULL;
-	gchar *package_id = NULL;
+	gchar **packages = NULL;
+	gchar **package_ids = NULL;
 	PkServicePack *pack;
 	PkPackageList *list = NULL;
 	GError *error = NULL;
@@ -380,8 +413,9 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("No package name selected"), NULL);
 			goto out;
 		}
-		package_id = gpk_pack_resolve (package);
-		if (package_id == NULL)
+		packages = g_strsplit (package, ",", 0);
+		package_ids = gpk_pack_resolve_package_ids (packages);
+		if (package_ids == NULL)
 			goto out;
 	}
 
@@ -405,7 +439,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	if (action == GPK_ACTION_ENUM_UPDATES)
 		ret = pk_service_pack_create_for_updates (pack, &error);
 	else if (action == GPK_ACTION_ENUM_PACKAGE)
-		ret = pk_service_pack_create_for_package_id (pack, directory, &error);
+		ret = pk_service_pack_create_for_package_ids (pack, package_ids, &error);
 	if (!ret) {
 		widget = glade_xml_get_widget (glade_xml, "window_pack");
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot create service pack"), error->message);
@@ -420,9 +454,14 @@ out:
 	gtk_widget_hide (widget);
 	gpk_pack_set_percentage (100);
 
+	/* blank */
+	widget = glade_xml_get_widget (glade_xml, "progressbar_percentage");
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR(widget), "");
+
 	if (list != NULL)
 		g_object_unref (list);
-	g_free (package_id);
+	g_strfreev (packages);
+	g_strfreev (package_ids);
 	g_free (directory);
 	g_free (exclude);
 }
