@@ -487,7 +487,7 @@ gpk_update_viewer_populate_preview (PkPackageList *list)
 
 	length = pk_package_list_get_size (list);
 	if (length == 0) {
-		gpk_update_viewer_add_preview_item ("dialog-information", _("There are no updates available!"), TRUE);
+		gpk_update_viewer_add_preview_item ("dialog-information", _("There are no updates available"), TRUE);
 		widget = glade_xml_get_widget (glade_xml, "button_close3");
 		gtk_widget_grab_default (widget);
 	} else {
