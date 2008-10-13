@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:41+0100\n"
+"POT-Creation-Date: 2008-10-13 16:41+0100\n"
 "PO-Revision-Date: 2008-07-23 23:04+0300\n"
 "Last-Translator:  <leon@asplinux.ru>\n"
 "Language-Team: Russian <en@li.org>\n"
@@ -27,15 +27,22 @@ msgstr ""
 "микропрограммы"
 
 #: ../data/gnome-packagekit.schemas.in.h:2
+#, fuzzy
+msgid "Ask the user if additional hardware drivers should be installed"
+msgstr ""
+"Запрашивать пользователя, должны ли быть установлены дополнительные "
+"микропрограммы"
+
+#: ../data/gnome-packagekit.schemas.in.h:3
 msgid "Ask the user if additional packages should be installed"
 msgstr ""
 "Запрашивать пользователя, должны ли быть установлены дополнительные пакеты"
 
-#: ../data/gnome-packagekit.schemas.in.h:3
+#: ../data/gnome-packagekit.schemas.in.h:4
 msgid "Auto update these types of updates"
 msgstr "Автоматически устанавливать указанные типы обновлений"
 
-#: ../data/gnome-packagekit.schemas.in.h:4
+#: ../data/gnome-packagekit.schemas.in.h:5
 msgid ""
 "Auto update these types of updates. Options are \"all\", \"security\", or "
 "\"none\""
@@ -43,12 +50,21 @@ msgstr ""
 "Автоматическая установка указанных типов обновлений. Возможные значения: "
 "\"all\", \"security\",  \"none\""
 
-#: ../data/gnome-packagekit.schemas.in.h:5
+#: ../data/gnome-packagekit.schemas.in.h:6
+#, fuzzy
+msgid "Firmware files that should not be searched for"
+msgstr "Поиск не может быть завершён"
+
+#: ../data/gnome-packagekit.schemas.in.h:7
+msgid "Firmware files that should not be searched for, separated by comma"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:8
 #, fuzzy
 msgid "How often we should check for distribution upgrades"
 msgstr "Как часто проверять обновления"
 
-#: ../data/gnome-packagekit.schemas.in.h:6
+#: ../data/gnome-packagekit.schemas.in.h:9
 #, fuzzy
 msgid ""
 "How often we should check for distribution upgrades. Options are \"daily\", "
@@ -57,11 +73,11 @@ msgstr ""
 "Как часто должно проверяться наличие обновлений. Параметры: \"ежечастноy\", "
 "\"ежедневно\", \"еженедельно\", \"никогда\""
 
-#: ../data/gnome-packagekit.schemas.in.h:7
+#: ../data/gnome-packagekit.schemas.in.h:10
 msgid "How often we should check for updates"
 msgstr "Как часто проверять обновления"
 
-#: ../data/gnome-packagekit.schemas.in.h:8
+#: ../data/gnome-packagekit.schemas.in.h:11
 msgid ""
 "How often we should check for updates. Options are \"hourly\", \"daily\", "
 "\"weekly\", \"never\""
@@ -69,11 +85,11 @@ msgstr ""
 "Как часто должно проверяться наличие обновлений. Параметры: \"ежечастноy\", "
 "\"ежедневно\", \"еженедельно\", \"никогда\""
 
-#: ../data/gnome-packagekit.schemas.in.h:9
+#: ../data/gnome-packagekit.schemas.in.h:12
 msgid "How often we should refresh the package cache"
 msgstr "Как часто мы должны обновлять кеш пакетов"
 
-#: ../data/gnome-packagekit.schemas.in.h:10
+#: ../data/gnome-packagekit.schemas.in.h:13
 msgid ""
 "How often we should refresh the package cache. Options are \"daily\", "
 "\"weekly\", \"never\""
@@ -81,84 +97,122 @@ msgstr ""
 "Как часто должно обновляться кеш пакетов. Параметры: \"ежечастноy\", "
 "\"ежедневно\", \"еженедельно\", \"никогда\""
 
-#: ../data/gnome-packagekit.schemas.in.h:11
+#: ../data/gnome-packagekit.schemas.in.h:14
 msgid "If autocompletion should be used when searching"
 msgstr "Должно ли при поиске использоваться автодополнение"
 
-#: ../data/gnome-packagekit.schemas.in.h:12
+#: ../data/gnome-packagekit.schemas.in.h:15
+msgid "If we should allow applications to invoke the codec installer"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:16
+msgid "If we should allow applications to invoke the font installer"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:17
+msgid "If we should allow applications to invoke the mime type installer"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:18
 msgid "If we should filter package lists using basename in gpk-application"
 msgstr "Фильтровать ли в gpk-application пакеты по имени"
 
-#: ../data/gnome-packagekit.schemas.in.h:13
+#: ../data/gnome-packagekit.schemas.in.h:19
 msgid "If we should filter package lists using newest in gpk-application"
 msgstr "Фильтровать ли пакеты по степени новизны в gpk-application"
 
-#: ../data/gnome-packagekit.schemas.in.h:14
+#: ../data/gnome-packagekit.schemas.in.h:20
 msgid "If we should filter using basename in gpk-application"
 msgstr "Фильтровать ли пакеты по имени"
 
-#: ../data/gnome-packagekit.schemas.in.h:15
+#: ../data/gnome-packagekit.schemas.in.h:21
 msgid "If we should filter using newest in gpk-application"
 msgstr "Фильтровать ли "
 
-#: ../data/gnome-packagekit.schemas.in.h:16
+#: ../data/gnome-packagekit.schemas.in.h:22
+msgid "If we should get the update list when the session starts"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:23
+msgid ""
+"If we should get the update list when the session starts, even if we are not "
+"scheduled to. This ensures the user has up to date and valid data in the "
+"tray at startup."
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:24
 msgid "If we should install updates automatically when on battery power"
 msgstr "Устанавливать ли апдейты автоматически при питании от батареи"
 
-#: ../data/gnome-packagekit.schemas.in.h:17
+#: ../data/gnome-packagekit.schemas.in.h:25
+#, fuzzy
+msgid "If we should precache all update details in the update viewer"
+msgstr "Показывать ли все репозитории в обзоре списка программ"
+
+#: ../data/gnome-packagekit.schemas.in.h:26
 msgid "If we should show all repositories in the software source viewer"
 msgstr "Показывать ли все репозитории в обзоре списка программ"
 
-#: ../data/gnome-packagekit.schemas.in.h:18
+#: ../data/gnome-packagekit.schemas.in.h:27
+msgid "If we should show the category group menu"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:28
+msgid ""
+"If we should show the category group menu. This is more complete and custom "
+"to the distribution, but takes longer to populate"
+msgstr ""
+
+#: ../data/gnome-packagekit.schemas.in.h:29
 #, fuzzy
 msgid "Notify the user when distribution upgrades are available"
 msgstr "Информировать пользователя когда доступнообновления безопасности"
 
-#: ../data/gnome-packagekit.schemas.in.h:19
+#: ../data/gnome-packagekit.schemas.in.h:30
 msgid "Notify the user when security updates are available"
 msgstr "Информировать пользователя когда доступнообновления безопасности"
 
-#: ../data/gnome-packagekit.schemas.in.h:20
+#: ../data/gnome-packagekit.schemas.in.h:31
 msgid "Notify the user when the task is complete"
 msgstr "Информировать пользователя когда задание завершенно"
 
-#: ../data/gnome-packagekit.schemas.in.h:21
+#: ../data/gnome-packagekit.schemas.in.h:32
 msgid "Notify the user when updates are available"
 msgstr "Информировать пользователя когда обновление завершенно"
 
-#: ../data/gnome-packagekit.schemas.in.h:22
+#: ../data/gnome-packagekit.schemas.in.h:33
 msgid "Notify the user when we have completed an update"
 msgstr "Информировать пользователя о завершении обновления"
 
-#: ../data/gnome-packagekit.schemas.in.h:23
+#: ../data/gnome-packagekit.schemas.in.h:34
 msgid "Notify the user when we have completed an update and need to restart"
 msgstr ""
 "Информировать пользователя о завершении обновления и необходимости "
 "перезагрузки"
 
-#: ../data/gnome-packagekit.schemas.in.h:24
+#: ../data/gnome-packagekit.schemas.in.h:35
 msgid "Notify the user when we have errors"
 msgstr "Информировать пользователя когда произошла ошибка"
 
-#: ../data/gnome-packagekit.schemas.in.h:25
+#: ../data/gnome-packagekit.schemas.in.h:36
 msgid "Notify the user when we have failed an update"
 msgstr "Информировать пользователя об ошибке обновления"
 
-#: ../data/gnome-packagekit.schemas.in.h:26
+#: ../data/gnome-packagekit.schemas.in.h:37
 msgid "Notify the user when we have messages"
 msgstr "Информировать пользователя о наличии сообщений"
 
-#: ../data/gnome-packagekit.schemas.in.h:27
+#: ../data/gnome-packagekit.schemas.in.h:38
 msgid "Notify the user when we have not started an auto-update on battery"
 msgstr ""
 "Информировать пользователя когда автообновление не запускается при питании "
 "от батареи"
 
-#: ../data/gnome-packagekit.schemas.in.h:28
+#: ../data/gnome-packagekit.schemas.in.h:39
 msgid "Notify the user when we have started an update"
 msgstr "Информировать пользователя о запуске задания"
 
-#: ../data/gnome-packagekit.schemas.in.h:29
+#: ../data/gnome-packagekit.schemas.in.h:40
 msgid ""
 "The number of seconds at session startup to wait before we check for updates"
 msgstr ""
@@ -191,158 +245,170 @@ msgid "Execute graphical applications"
 msgstr "Выполнять графические приложения"
 
 #: ../data/gpk-application.glade.h:6
+#, fuzzy
+msgid "Fi_nd"
+msgstr "Готово"
+
+#: ../data/gpk-application.glade.h:7
 msgid "Get file list"
 msgstr "Получить список файлов"
 
-#: ../data/gpk-application.glade.h:7
+#: ../data/gpk-application.glade.h:8
 msgid "Help with this software"
 msgstr "Справка по этой программе"
 
-#: ../data/gpk-application.glade.h:8 ../src/gpk-client.c:981
-#: ../src/gpk-client.c:1375 ../src/gpk-client.c:1438 ../src/gpk-client.c:1698
-#: ../src/gpk-client.c:1948 ../src/gpk-client.c:2004
+#: ../data/gpk-application.glade.h:9 ../src/gpk-client.c:987
+#: ../src/gpk-client.c:1415 ../src/gpk-client.c:1513 ../src/gpk-client.c:1684
+#: ../src/gpk-client.c:1998 ../src/gpk-client.c:2277 ../src/gpk-client.c:2360
+#: ../src/gpk-client.c:2426 ../src/gpk-client-dialog.c:932
 msgid "Install"
 msgstr "Установить"
 
-#: ../data/gpk-application.glade.h:9
+#: ../data/gpk-application.glade.h:10
 msgid "Only _available"
 msgstr "Только доступные"
 
-#: ../data/gpk-application.glade.h:10
+#: ../data/gpk-application.glade.h:11
 msgid "Only _development"
 msgstr "Только пакеты _разработки"
 
-#: ../data/gpk-application.glade.h:11
+#: ../data/gpk-application.glade.h:12
 msgid "Only _end user files"
 msgstr "Только _пользовательские файлы"
 
-#: ../data/gpk-application.glade.h:12
+#: ../data/gpk-application.glade.h:13
 msgid "Only _installed"
 msgstr "Только _установленные"
 
-#: ../data/gpk-application.glade.h:13
+#: ../data/gpk-application.glade.h:14
 msgid "Only _newest packages"
 msgstr "Только _новые пакеты"
 
-#: ../data/gpk-application.glade.h:14
+#: ../data/gpk-application.glade.h:15
 msgid "Only _non-free software"
 msgstr "Только _несвободные программы"
 
-#: ../data/gpk-application.glade.h:15
+#: ../data/gpk-application.glade.h:16
 msgid "Only _non-sourcecode"
 msgstr "Только _бинарные"
 
-#: ../data/gpk-application.glade.h:16
+#: ../data/gpk-application.glade.h:17
 msgid "Only show one package, not subpackages"
 msgstr "Показывать только один пакет, без субпакетов"
 
-#: ../data/gpk-application.glade.h:17
+#: ../data/gpk-application.glade.h:18
 msgid "Only show the newest available package"
 msgstr "Показывать только новейшие доступные пакеты"
 
-#: ../data/gpk-application.glade.h:18
+#: ../data/gpk-application.glade.h:19
 msgid "Project homepage"
 msgstr "Домашняя страница проекта"
 
 #. set title
-#: ../data/gpk-application.glade.h:19 ../src/gpk-client.c:2130
+#: ../data/gpk-application.glade.h:20 ../src/gpk-client.c:2549
 msgid "Refresh package lists"
 msgstr "Обновить списки пакетов"
 
-#: ../data/gpk-application.glade.h:20
+#: ../data/gpk-application.glade.h:21
 msgid "Refresh the list of packages on the system"
 msgstr "Обновить список пакетов в системе"
 
-#: ../data/gpk-application.glade.h:21
+#: ../data/gpk-application.glade.h:22 ../src/gpk-client.c:1272
 msgid "Remove"
 msgstr "Удалить"
 
-#: ../data/gpk-application.glade.h:22
+#: ../data/gpk-application.glade.h:23
 msgid "Required by"
 msgstr "Требуется пакетами"
 
-#: ../data/gpk-application.glade.h:23
+#: ../data/gpk-application.glade.h:24
 msgid "Run program"
 msgstr "Выполнить программу"
 
-#: ../data/gpk-application.glade.h:24 ../src/gpk-common.c:1310
+#: ../data/gpk-application.glade.h:25 ../src/gpk-enum.c:1282
 msgid "Software sources"
 msgstr "Источники программ"
 
-#: ../data/gpk-application.glade.h:25
+#: ../data/gpk-application.glade.h:26
 msgid "Visit the project homepage"
 msgstr "Посетить домашнюю страницу проекта"
 
-#: ../data/gpk-application.glade.h:26
+#: ../data/gpk-application.glade.h:27
 msgid "_Architectures"
 msgstr "_Архитектуры"
 
-#: ../data/gpk-application.glade.h:27
+# cancel button label
+#: ../data/gpk-application.glade.h:28
+#, fuzzy
+msgid "_Cancel"
+msgstr "Отменено"
+
+#: ../data/gpk-application.glade.h:29
 msgid "_Development"
 msgstr "Средства _разработки"
 
-#: ../data/gpk-application.glade.h:28
+#: ../data/gpk-application.glade.h:30
 msgid "_Filters"
 msgstr "_Фильтры"
 
-#: ../data/gpk-application.glade.h:29
+#: ../data/gpk-application.glade.h:31
 msgid "_Free"
 msgstr "_Свободные программы"
 
-#: ../data/gpk-application.glade.h:30
+#: ../data/gpk-application.glade.h:32
 msgid "_Graphical"
 msgstr "_Графические программы"
 
 #. No help yet
-#: ../data/gpk-application.glade.h:31 ../src/gpk-check-update.c:257
+#: ../data/gpk-application.glade.h:33 ../src/gpk-check-update.c:259
 msgid "_Help"
 msgstr "_Справка"
 
-#: ../data/gpk-application.glade.h:32
+#: ../data/gpk-application.glade.h:34
 msgid "_Hide subpackages"
 msgstr "С_крыть субпакеты"
 
-#: ../data/gpk-application.glade.h:33
+#: ../data/gpk-application.glade.h:35
 msgid "_Installed"
 msgstr "_Установленые программы"
 
-#: ../data/gpk-application.glade.h:34
+#: ../data/gpk-application.glade.h:36
 msgid "_No filter"
 msgstr "_Без фильтра"
 
-#: ../data/gpk-application.glade.h:35
+#: ../data/gpk-application.glade.h:37
 msgid "_Only free software"
 msgstr "Только _свободные программы"
 
-#: ../data/gpk-application.glade.h:36
+#: ../data/gpk-application.glade.h:38
 msgid "_Only graphical"
 msgstr "Только _графические"
 
-#: ../data/gpk-application.glade.h:37
+#: ../data/gpk-application.glade.h:39
 msgid "_Only native architectures"
 msgstr "_Только родные архитектуры"
 
-#: ../data/gpk-application.glade.h:38
+#: ../data/gpk-application.glade.h:40
 msgid "_Only non-native architectures"
 msgstr "_Только неродные архитектуры"
 
-#: ../data/gpk-application.glade.h:39
+#: ../data/gpk-application.glade.h:41
 msgid "_Only sourcecode"
 msgstr "_Только исходные тексты"
 
-#: ../data/gpk-application.glade.h:40
+#: ../data/gpk-application.glade.h:42
 msgid "_Only text"
 msgstr "Только _текстовые"
 
-#: ../data/gpk-application.glade.h:41
+#: ../data/gpk-application.glade.h:43
 msgid "_Selection"
 msgstr "_Выбор"
 
-#: ../data/gpk-application.glade.h:42
+#: ../data/gpk-application.glade.h:44
 msgid "_Source"
 msgstr "_Источник"
 
-#: ../data/gpk-application.glade.h:43
+#: ../data/gpk-application.glade.h:45
 msgid "_System"
 msgstr "С_истема"
 
@@ -362,14 +428,6 @@ msgstr ""
 msgid "Install Package"
 msgstr "Установить пакеты"
 
-#: ../data/gpk-client.glade.h:3
-msgid "gtk-cancel"
-msgstr ""
-
-#: ../data/gpk-client.glade.h:4
-msgid "gtk-close"
-msgstr ""
-
 #: ../data/gpk-error.glade.h:1
 msgid "<b>More details</b>"
 msgstr "<b>Дополнительные сведения</b>"
@@ -382,7 +440,8 @@ msgstr "Требуется лицензионное соглашение"
 msgid "_Accept Agreement"
 msgstr "_Принять соглашение"
 
-#: ../data/gpk-install-catalog.desktop.in.h:1
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:65
+#: ../src/gpk-install-catalog.c:67
 msgid "Catalog Installer"
 msgstr "Установка каталогов"
 
@@ -395,22 +454,30 @@ msgid "Install selected software on the system"
 msgstr "Установить в систему выбранные программы"
 
 #: ../data/gpk-install-file.desktop.in.h:2
+#: ../src/gpk-install-package-name.c:65 ../src/gpk-install-package-name.c:67
 msgid "Package Installer"
 msgstr "Установка пакетов"
 
-#: ../data/gpk-log.desktop.in.h:1
-msgid "Log viewer showing past package management tasks"
-msgstr "Просмотр последних заданий по управлению пакетами"
-
 # /usr/share/applications/YaST2/sw_single.desktop
-#: ../data/gpk-log.desktop.in.h:2 ../src/gpk-log.c:364
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.glade.h:2
+#: ../src/gpk-log.c:525
 msgid "Software Log Viewer"
 msgstr "Просмотр журнала управления программами"
 
-# error box title
+#: ../data/gpk-log.desktop.in.h:2
+#, fuzzy
+msgid "View past package management tasks"
+msgstr "Просмотр последних заданий по управлению пакетами"
+
 #: ../data/gpk-log.glade.h:1
-msgid "Update History"
-msgstr "История обновления"
+#, fuzzy
+msgid "Filter"
+msgstr "_Фильтры"
+
+#: ../data/gpk-log.glade.h:3
+#, fuzzy
+msgid "gtk-refresh"
+msgstr "Последняя проверка:"
 
 #: ../data/gpk-prefs.desktop.in.h:1
 msgid "Change software update preferences"
@@ -438,7 +505,8 @@ msgstr "Проверять _наличие обновлений:"
 msgid "Check for major _upgrades:"
 msgstr "Проверять _наличие обновлений:"
 
-#: ../data/gpk-prefs.glade.h:6 ../src/gpk-prefs.c:371
+#: ../data/gpk-prefs.glade.h:6 ../src/gpk-prefs.c:370
+#: ../src/gpk-service-pack.c:573
 msgid "Software Update Preferences"
 msgstr "Свойства обновления программ"
 
@@ -471,6 +539,73 @@ msgstr "Отображает дополнительные источники п�
 msgid "_Show debug and development software sources"
 msgstr "_Отображать источники программ для отладки и разработки"
 
+#: ../data/gpk-service-pack.desktop.in.h:1
+msgid "Create service packs for sharing with other computers"
+msgstr ""
+
+#: ../data/gpk-service-pack.desktop.in.h:2 ../data/gpk-service-pack.glade.h:12
+#, fuzzy
+msgid "Service Pack Creator"
+msgstr "Сервис-пак"
+
+#: ../data/gpk-service-pack.glade.h:1
+#, fuzzy
+msgid "<b>Action</b>"
+msgstr "<b>Отображать уведомления</b>"
+
+#: ../data/gpk-service-pack.glade.h:2
+#, fuzzy
+msgid "<b>Details</b>"
+msgstr "<b>Дополнительные сведения</b>"
+
+#: ../data/gpk-service-pack.glade.h:3
+#, fuzzy
+msgid "<b>Progress</b>"
+msgstr "<b>Дополнительные сведения</b>"
+
+#: ../data/gpk-service-pack.glade.h:4
+msgid "Create"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:5
+msgid "Create a copy of this computers package list"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:6
+msgid "Create an archive of a specific package"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:7
+msgid "Create an archive of all the pending updates"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:8
+#, fuzzy
+msgid "Destination package list:"
+msgstr "Получение списка пакетов"
+
+#: ../data/gpk-service-pack.glade.h:9
+msgid "Output directory:"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:10
+#, fuzzy
+msgid "Save New Service Pack"
+msgstr "Сервис-пак"
+
+#: ../data/gpk-service-pack.glade.h:11
+#, fuzzy
+msgid "Select A Package List File"
+msgstr "Установка пакетов"
+
+#: ../data/gpk-service-pack.glade.h:13
+msgid "gtk-close"
+msgstr ""
+
+#: ../data/gpk-service-pack.glade.h:14
+msgid "gtk-help"
+msgstr ""
+
 #: ../data/gpk-signature.glade.h:1
 msgid "<big><b>Do you trust the source of the packages?</b></big>"
 msgstr "<big><b>Доверяете ли вы источнику пакетов?</b></big>"
@@ -499,17 +634,16 @@ msgstr "Идентификатор подписи пользователя:"
 msgid "Software signature is required"
 msgstr "Программа должна быть подписана"
 
-#: ../data/gpk-update-icon.desktop.in.h:1 ../src/gpk-update-icon.c:147
+#: ../data/gpk-update-icon.desktop.in.h:1
 msgid "PackageKit Update Applet"
 msgstr "Апплет обновлений PackageKit"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-repo.c:354
-#: ../src/gpk-update-viewer.c:1834
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../src/gpk-update-viewer.c:1830
 msgid "Software Update Viewer"
 msgstr "Просмотр обновлений программ"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
-#: ../data/gpk-update-viewer.glade.h:5
+#: ../data/gpk-update-viewer.glade.h:8
 msgid "Update System"
 msgstr "Обновление системы"
 
@@ -518,34 +652,48 @@ msgid "Update software installed on the system"
 msgstr "Обновление программ, установленных в системе"
 
 #: ../data/gpk-update-viewer.glade.h:1
+#, fuzzy
+msgid "<b>Another system update is in progress</b>"
+msgstr "В текущий момент уже идёт обновление"
+
+#: ../data/gpk-update-viewer.glade.h:2
+#, fuzzy
+msgid "<b>System Update Completed</b>"
+msgstr "Обновление системы завершено"
+
+#: ../data/gpk-update-viewer.glade.h:3
 msgid "A system restart is recommended"
 msgstr "Рекомендуется перезагрузить систему"
 
-#: ../data/gpk-update-viewer.glade.h:2
+#: ../data/gpk-update-viewer.glade.h:4
+msgid "All selected updates have been successfully installed"
+msgstr ""
+
+#: ../data/gpk-update-viewer.glade.h:5
 msgid "Last refresh:"
 msgstr "Последняя проверка:"
 
-#: ../data/gpk-update-viewer.glade.h:3
+#: ../data/gpk-update-viewer.glade.h:6
 msgid "Last update:"
 msgstr "Последнее обновление:"
 
-#: ../data/gpk-update-viewer.glade.h:4
+#: ../data/gpk-update-viewer.glade.h:7
 msgid "The following updates are available:"
 msgstr "Доступны следующие обновления:"
 
-#: ../data/gpk-update-viewer.glade.h:6
+#: ../data/gpk-update-viewer.glade.h:9
 msgid "_Back to overview"
 msgstr "_Назад к обзору"
 
-#: ../data/gpk-update-viewer.glade.h:7
+#: ../data/gpk-update-viewer.glade.h:10
 msgid "_Install more updates"
 msgstr "_Установить дополнительные обновления"
 
-#: ../data/gpk-update-viewer.glade.h:8
+#: ../data/gpk-update-viewer.glade.h:11
 msgid "_Review"
 msgstr "_Обзор"
 
-#: ../src/gpk-application.c:520
+#: ../src/gpk-application.c:525
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -554,16 +702,16 @@ msgstr[1] "%i файла установлены %s"
 msgstr[2] "%i файлов установлены %s"
 
 #  summary information texts
-#: ../src/gpk-application.c:698 ../src/gpk-application.c:770
+#: ../src/gpk-application.c:703 ../src/gpk-application.c:775
 msgid "No packages"
 msgstr "Нет пакетов"
 
-#: ../src/gpk-application.c:699
-msgid "This package does not require any others"
-msgstr "Этот пакет не требует никаких других"
+#: ../src/gpk-application.c:704
+msgid "No other packages require this package"
+msgstr ""
 
 #  summary information texts
-#: ../src/gpk-application.c:709
+#: ../src/gpk-application.c:714
 #, c-format
 msgid "%i additional package require %s"
 msgid_plural "%i additional packages require %s"
@@ -571,7 +719,7 @@ msgstr[0] "%i дополнительный пакет требуется пак�
 msgstr[1] "%i дополнительных пакета требуются пакетом %s"
 msgstr[2] "%i дополнительных пакетов требуются пакетом %s"
 
-#: ../src/gpk-application.c:713
+#: ../src/gpk-application.c:718
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -579,11 +727,11 @@ msgstr[0] "Для нормальной работы пакетов, перечи
 msgstr[1] "Для нормальной работы пакетов, перечисленных ниже, требуется %s"
 msgstr[2] "Для нормальной работы пакетов, перечисленных ниже, требуется %s"
 
-#: ../src/gpk-application.c:771
+#: ../src/gpk-application.c:776
 msgid "This package does not depends on any others"
 msgstr "Этот пакет не зависит ни от каких других"
 
-#: ../src/gpk-application.c:781
+#: ../src/gpk-application.c:786
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -591,7 +739,7 @@ msgstr[0] "%i дополнительный пакет требуется пак�
 msgstr[1] "%i дополнительных пакета требуется пакетом %s"
 msgstr[2] "%i дополнительных пакетов требуется пакетом %s"
 
-#: ../src/gpk-application.c:785
+#: ../src/gpk-application.c:790
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -599,133 +747,162 @@ msgstr[0] "Для нормальной работы %s требуются пак
 msgstr[1] "Для нормальной работы %s требуются пакеты, перечисленные ниже."
 msgstr[2] "Для нормальной работы %s требуются пакеты, перечисленные ниже."
 
-#: ../src/gpk-application.c:817
+#: ../src/gpk-application.c:822
 msgid "Invalid"
 msgstr "Неверно"
 
+#. translators: this is the update type, e.g. security
+#: ../src/gpk-application.c:950 ../src/gpk-update-viewer.c:900
+msgid "Type"
+msgstr "Тип"
+
+#: ../src/gpk-application.c:950
+#, fuzzy
+msgid "Collection"
+msgstr "_Выбор"
+
 #. set the tooltip to where we are going
-#: ../src/gpk-application.c:949
+#: ../src/gpk-application.c:958
 #, c-format
 msgid "Visit %s"
 msgstr "Перейти к %s"
 
-#: ../src/gpk-application.c:953
+#: ../src/gpk-application.c:962
 msgid "Project"
 msgstr "Проект"
 
-#: ../src/gpk-application.c:953
+#: ../src/gpk-application.c:962
 msgid "Homepage"
 msgstr "Домашняя страница"
 
-#: ../src/gpk-application.c:966
+#: ../src/gpk-application.c:975
 msgid "Group"
 msgstr "Группа"
 
 #. This should be a licence enum value - bad API, bad.
 #. * license = pk_license_enum_to_text (license_enum);
-#: ../src/gpk-application.c:973
+#: ../src/gpk-application.c:982
 msgid "License"
 msgstr "Лицензия"
 
-#: ../src/gpk-application.c:987
+#: ../src/gpk-application.c:996
+msgid "Size"
+msgstr ""
+
+#: ../src/gpk-application.c:998
 msgid "Installed size"
 msgstr "Объем на диске"
 
-#: ../src/gpk-application.c:989
+#: ../src/gpk-application.c:1000
 msgid "Download size"
 msgstr "Объем загрузки"
 
-#: ../src/gpk-application.c:998
+#: ../src/gpk-application.c:1008
 msgid "Source"
 msgstr "Источник"
 
-#: ../src/gpk-application.c:1139
+#: ../src/gpk-application.c:1149
 msgid "No results were found."
 msgstr "Результатов не найдено."
 
 #. this shouldn't happen
-#: ../src/gpk-application.c:1146
+#: ../src/gpk-application.c:1157
 msgid "Try entering a package name in the search bar."
 msgstr "Попробуйте ввести имя пакета в строке поиска."
 
-#: ../src/gpk-application.c:1150
+#: ../src/gpk-application.c:1161
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
 msgstr ""
 "Попробуйте поискать описания пакетов, нажав значок рядом с текстом поиска."
 
-#: ../src/gpk-application.c:1152
+#: ../src/gpk-application.c:1163
 msgid "Try again with a different search term."
 msgstr "Попробуйте еще раз с другим критерием поиска."
 
-#: ../src/gpk-application.c:1254
+#: ../src/gpk-application.c:1265
 msgid "Invalid search text"
 msgstr "Неверный текст поиска"
 
-#: ../src/gpk-application.c:1255
+#: ../src/gpk-application.c:1266
 msgid "The search text contains invalid characters"
 msgstr "Текст поиска содержит неверные символы"
 
-#: ../src/gpk-application.c:1282
+#: ../src/gpk-application.c:1293
 msgid "The search could not be completed"
 msgstr "Поиск не может быть завершён"
 
-#: ../src/gpk-application.c:1283 ../src/gpk-application.c:1324
+#: ../src/gpk-application.c:1294 ../src/gpk-application.c:1335
 msgid "Running the transaction failed"
 msgstr "Сбой выполнения транзакции"
 
-#: ../src/gpk-application.c:1323
+#: ../src/gpk-application.c:1334
 msgid "The group could not be queried"
 msgstr "Не удаётся поставить группу в очереди"
 
-#: ../src/gpk-application.c:1627 ../src/gpk-common.c:934
-#: ../src/gpk-common.c:993
+#: ../src/gpk-application.c:1407
+msgid "Changes not applied"
+msgstr ""
+
+#: ../src/gpk-application.c:1408
+msgid "Close Anyway"
+msgstr ""
+
+#: ../src/gpk-application.c:1410
+msgid "You have made changes that have not yet been applied."
+msgstr ""
+
+#: ../src/gpk-application.c:1411
+msgid "These changes will be lost if you close this window."
+msgstr ""
+
+#: ../src/gpk-application.c:1663 ../src/gpk-enum.c:912 ../src/gpk-enum.c:971
 msgid "Installed"
 msgstr "Установлено"
 
-#: ../src/gpk-application.c:1642 ../src/gpk-application.c:1663
-#: ../src/gpk-dialog.c:149
+#: ../src/gpk-application.c:1678 ../src/gpk-application.c:1699
+#: ../src/gpk-client-dialog.c:667 ../src/gpk-dialog.c:150
 msgid "Name"
 msgstr "Имя"
 
-#: ../src/gpk-application.c:1893
+#: ../src/gpk-application.c:1947
 msgid "Searching by name"
 msgstr "Поиск по имени"
 
-#: ../src/gpk-application.c:1914
+#: ../src/gpk-application.c:1968
 msgid "Searching by description"
 msgstr "Поиск по описанию"
 
-#: ../src/gpk-application.c:1935
+#: ../src/gpk-application.c:1989
 msgid "Searching by file"
 msgstr "Поиск по файлу"
 
-#: ../src/gpk-application.c:1960
+#: ../src/gpk-application.c:2014
 msgid "Search by name"
 msgstr "Поиск по имени"
 
-#: ../src/gpk-application.c:1969
+#: ../src/gpk-application.c:2023
 msgid "Search by description"
 msgstr "Поиск по описанию"
 
-#: ../src/gpk-application.c:1978
+#: ../src/gpk-application.c:2032
 msgid "Search by file name"
 msgstr "Поиск по имени файла"
 
-#: ../src/gpk-application.c:2082 ../src/gpk-check-update.c:161
-#: ../src/gpk-watch.c:524
+#: ../src/gpk-application.c:2086 ../src/gpk-check-update.c:164
+#: ../src/gpk-watch.c:534
 msgid "Failed to show url"
 msgstr "Не удалось показать url"
 
-#: ../src/gpk-application.c:2121 ../src/gpk-check-update.c:186
-#: ../src/gpk-watch.c:545
+#: ../src/gpk-application.c:2125 ../src/gpk-check-update.c:189
+#: ../src/gpk-watch.c:555
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr ""
 "Лицензируется на условиях Универсальной Общественной Лицензии GNU версии 2"
 
-#: ../src/gpk-application.c:2122 ../src/gpk-check-update.c:187
-#: ../src/gpk-watch.c:546
+#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:190
+#: ../src/gpk-watch.c:556
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -737,8 +914,8 @@ msgstr ""
 "условиях Универсальной общественной лицензии GNU версии 2,\n"
 "либо (на ваше усмотрение) любой более поздней версии."
 
-#: ../src/gpk-application.c:2126 ../src/gpk-check-update.c:191
-#: ../src/gpk-watch.c:550
+#: ../src/gpk-application.c:2130 ../src/gpk-check-update.c:194
+#: ../src/gpk-watch.c:560
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -752,8 +929,8 @@ msgstr ""
 "Для получения дополнительных сведений обратитесь к Универсальной\n"
 "Общественной Лицензии GNU."
 
-#: ../src/gpk-application.c:2130 ../src/gpk-check-update.c:195
-#: ../src/gpk-watch.c:554
+#: ../src/gpk-application.c:2134 ../src/gpk-check-update.c:198
+#: ../src/gpk-watch.c:564
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -765,76 +942,85 @@ msgstr ""
 "программного обеспечения по адресу Free Software Foundation, Inc., 51\n"
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: ../src/gpk-application.c:2135 ../src/gpk-check-update.c:200
-#: ../src/gpk-watch.c:559
+#: ../src/gpk-application.c:2139 ../src/gpk-check-update.c:203
+#: ../src/gpk-watch.c:569
 msgid "translator-credits"
 msgstr ""
 "Алексей Осипов <aliks-os@yandex.ru>\n"
 "Николай Деркач <nderkach@gmail.com>\n"
 "Леонид Кантер <leon@asplinux.ru>"
 
-#: ../src/gpk-application.c:2160 ../src/gpk-check-update.c:219
-#: ../src/gpk-watch.c:578
+#: ../src/gpk-application.c:2164 ../src/gpk-check-update.c:221
+#: ../src/gpk-watch.c:587
 msgid "PackageKit Website"
 msgstr "Веб-сайт PackageKit"
 
-#: ../src/gpk-application.c:2162
+#: ../src/gpk-application.c:2166
 msgid "Package Manager for GNOME"
 msgstr "Менеджер пакетов для среды GNOME"
 
-#: ../src/gpk-application.c:2595 ../src/gpk-update-viewer.c:1077
+#: ../src/gpk-application.c:2599 ../src/gpk-update-viewer.c:1085
 msgid "Text"
 msgstr "Текст"
 
-#: ../src/gpk-application.c:2617
+#: ../src/gpk-application.c:2621
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr "Введите имя пакета и нажмите кнопку поиска, или нажмите на группу."
 
-#: ../src/gpk-application.c:2619
+#: ../src/gpk-application.c:2623
 msgid "Enter a package name and then click find to get started."
 msgstr "Введите имя пакета и нажмите кнопку поиска."
 
-#: ../src/gpk-application.c:2774
+#  summary information texts
+#: ../src/gpk-application.c:2654 ../src/gpk-application.c:2721
+msgid "All packages"
+msgstr "Все пакеты"
+
+#  summary information texts
+#: ../src/gpk-application.c:2655 ../src/gpk-application.c:2722
+#, fuzzy
+msgid "Show all packages"
+msgstr "Все пакеты"
+
+#: ../src/gpk-application.c:3009
 msgid "Clear current selection"
 msgstr "Очистить текущее выделение"
 
-#: ../src/gpk-application.c:2805
+#: ../src/gpk-application.c:3020
+msgid "Changes are not applied instantly, this button applies all changes"
+msgstr ""
+
+#: ../src/gpk-application.c:3041
 msgid "Visit homepage for selected package"
 msgstr "Посетить домашнюю страницу выбранного пакета"
 
 #  summary information texts
-#: ../src/gpk-application.c:2950
+#: ../src/gpk-application.c:3186
 msgid "Find packages"
 msgstr "Найти пакеты"
 
-#: ../src/gpk-application.c:2956
+#: ../src/gpk-application.c:3192
 msgid "Cancel search"
 msgstr "Отменить поиск"
-
-#  summary information texts
-#: ../src/gpk-application.c:3090
-msgid "All packages"
-msgstr "Все пакеты"
 
 #: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:81
 #: ../src/gpk-install-catalog.c:49 ../src/gpk-install-local-file.c:49
 #: ../src/gpk-install-mime-type.c:48 ../src/gpk-install-package-name.c:49
-#: ../src/gpk-install-provide-file.c:48 ../src/gpk-log.c:345
-#: ../src/gpk-prefs.c:352 ../src/gpk-repo.c:337 ../src/gpk-update-icon.c:127
-#: ../src/gpk-update-viewer.c:1815
+#: ../src/gpk-install-provide-file.c:48 ../src/gpk-log.c:507
+#: ../src/gpk-prefs.c:351 ../src/gpk-repo.c:338 ../src/gpk-service-pack.c:549
+#: ../src/gpk-update-icon.c:129 ../src/gpk-update-viewer.c:1812
 msgid "Show extra debugging information"
 msgstr "Показать дополнительную отладочную информацию"
 
 #: ../src/gpk-application-main.c:79 ../src/gpk-backend-status.c:83
-#: ../src/gpk-log.c:347 ../src/gpk-prefs.c:354 ../src/gpk-update-icon.c:131
-#: ../src/gpk-update-viewer.c:1817
+#: ../src/gpk-prefs.c:353 ../src/gpk-update-icon.c:133
+#: ../src/gpk-update-viewer.c:1814
 msgid "Show the program version and exit"
 msgstr "Показать версию программы и выйти"
 
 #. are we running privileged
-#. check user wanted operation
-#: ../src/gpk-application-main.c:110 ../src/gpk-client.c:1374
+#: ../src/gpk-application-main.c:110 ../src/gpk-client.c:1512
 msgid "Package installer"
 msgstr "Установка пакетов"
 
@@ -847,12 +1033,12 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "Закрывается, поскольку сведения о модуле не могут быть получены"
 
 #. Preferences
-#: ../src/gpk-check-update.c:245
+#: ../src/gpk-check-update.c:247
 msgid "_Preferences"
 msgstr "_Параметры"
 
 #. About
-#: ../src/gpk-check-update.c:265 ../src/gpk-watch.c:608
+#: ../src/gpk-check-update.c:267 ../src/gpk-watch.c:617
 msgid "_About"
 msgstr "_О программе"
 
@@ -867,32 +1053,33 @@ msgid "_Update System Now"
 msgstr "_Обновить систему"
 
 #. format title
-#: ../src/gpk-check-update.c:461
+#: ../src/gpk-check-update.c:462
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Доступно обновление безопасности"
 msgstr[1] "Доступны обновления безопасности"
 msgstr[2] "Доступны обновления безопасности"
 
-#: ../src/gpk-check-update.c:465
+#: ../src/gpk-check-update.c:466
 msgid "The following important update is available for your computer:"
 msgid_plural "The following important updates are available for your computer:"
 msgstr[0] "Следующее важное обновление доступно для вашего компьютера:"
 msgstr[1] "Следующие важные обновления доступны для вашего компьютера:"
 msgstr[2] "Следующие важные обновления доступны для вашего компьютера:"
 
-#: ../src/gpk-check-update.c:486
+#: ../src/gpk-check-update.c:487
 msgid "Install security updates"
 msgstr "Установить обновления безопасности"
 
-#: ../src/gpk-check-update.c:488
+#: ../src/gpk-check-update.c:489
 msgid "Install all updates"
 msgstr "Установить все обновления"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-check-update.c:490 ../src/gpk-check-update.c:981
-#: ../src/gpk-client.c:318 ../src/gpk-client.c:321 ../src/gpk-client.c:2086
-#: ../src/gpk-dialog.c:292 ../src/gpk-firmware.c:207 ../src/gpk-watch.c:371
+#: ../src/gpk-check-update.c:491 ../src/gpk-check-update.c:975
+#: ../src/gpk-client.c:309 ../src/gpk-client.c:312 ../src/gpk-client.c:2506
+#: ../src/gpk-dialog.c:293 ../src/gpk-firmware.c:208 ../src/gpk-hardware.c:172
+#: ../src/gpk-watch.c:381
 msgid "Do not show this again"
 msgstr "Не показывать больше это сообщение"
 
@@ -933,596 +1120,180 @@ msgstr[1] "Ожидают %d обновления"
 msgstr[2] "Ожидают %d обновлений"
 
 #. do the bubble
-#: ../src/gpk-check-update.c:970
+#: ../src/gpk-check-update.c:964
 #, fuzzy
 msgid "Distribution upgrades available"
 msgstr "Доступно обновление безопасности"
 
-#: ../src/gpk-check-update.c:979
+#: ../src/gpk-check-update.c:973 ../src/gpk-client.c:1561
 #, fuzzy
 msgid "More information"
 msgstr "Получение информации"
 
-#: ../src/gpk-client.c:279
+#: ../src/gpk-client.c:207 ../src/gpk-watch.c:286
+#, fuzzy
+msgid "Error details"
+msgstr "Сведения получены"
+
+#: ../src/gpk-client.c:271
 msgid "One package was skipped:"
 msgstr "Один пакет был пропущен:"
 
-#: ../src/gpk-client.c:280
+#: ../src/gpk-client.c:272
 msgid "Some packages were skipped:"
 msgstr "Некоторые пакеты были пропущены:"
 
 #. do the bubble
-#: ../src/gpk-client.c:311
+#: ../src/gpk-client.c:302
 msgid "The system update has completed"
 msgstr "Обновление системы завершено"
 
-#: ../src/gpk-client.c:316
+#: ../src/gpk-client.c:307
 msgid "Restart computer now"
 msgstr "Перезагрузить компьютер сейчас"
 
-#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
-#: ../src/gpk-client.c:1762 ../src/gpk-client.c:1848 ../src/gpk-client.c:2045
-#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2182 ../src/gpk-client.c:2234
-#: ../src/gpk-client.c:2281 ../src/gpk-client.c:2333
-#: ../src/gpk-client-depends.c:97 ../src/gpk-client-requires.c:88
-#: ../src/gpk-client-resolve.c:68
-msgid "Failed to reset client"
+#  summary text heading
+#: ../src/gpk-client.c:354
+#, fuzzy
+msgid "The following packages were installed:"
+msgstr "Пакеты с исходными текстами не могут быть установлены"
+
+#: ../src/gpk-client.c:504 ../src/gpk-watch.c:448
+#, fuzzy
+msgid "Show details"
+msgstr "Сведения получены"
+
+#: ../src/gpk-client.c:611
+msgid ""
+"Unknown error. Please refer to the detailed report and report in bugzilla."
+msgstr ""
+
+#: ../src/gpk-client.c:621
+#, fuzzy
+msgid "You don't have the necessary privileges to perform this action."
+msgstr "У вас недостаточно прав для удаления пакетов"
+
+#: ../src/gpk-client.c:624
+#, fuzzy
+msgid "The packagekitd service could not be started."
+msgstr "Не удаётся проверить подпись пакета."
+
+#: ../src/gpk-client.c:699 ../src/gpk-client.c:1300 ../src/gpk-client.c:1439
+#: ../src/gpk-client.c:2469 ../src/gpk-client.c:2542 ../src/gpk-client.c:2593
+#: ../src/gpk-client.c:2644 ../src/gpk-client.c:2692 ../src/gpk-client.c:2740
+#, fuzzy
+msgid "Failed to reset action client"
 msgstr "Не удаётся перезапустить клиент"
 
-#: ../src/gpk-client.c:680 ../src/gpk-client.c:1223 ../src/gpk-client.c:1316
-#: ../src/gpk-client.c:2124 ../src/gpk-client.c:2333
-msgid "Failed to reset resolve"
-msgstr "Не удаётся сбросить разрешение зависимостей"
-
-#: ../src/gpk-client.c:696
-msgid "Failed to install files"
-msgstr "Не удаётся установить файлы"
-
-#: ../src/gpk-client.c:697
-msgid "You don't have the necessary privileges to install local files"
-msgstr "У вас нет достаточно привилегий для установки локальных файлов"
-
-#: ../src/gpk-client.c:702 ../src/gpk-client.c:1481 ../src/gpk-client.c:1490
+#: ../src/gpk-client.c:711 ../src/gpk-client.c:1756
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Не удалось установить файл"
 msgstr[1] "Не удалось установить файлы"
 msgstr[2] "Не удалось установить файлы"
 
-#: ../src/gpk-client.c:861
+#: ../src/gpk-client.c:868
 #, fuzzy
 msgid "Do you want to copy this file?"
 msgstr "Установить этот файл?"
 
-#: ../src/gpk-client.c:862
+#: ../src/gpk-client.c:869
 #, fuzzy
 msgid "Do you want to copy these files?"
 msgstr "Установить эти файлы?"
 
-#: ../src/gpk-client.c:863
+#: ../src/gpk-client.c:870
 #, fuzzy
 msgid ""
 "One package file has to be copied to a non-private location so it can be "
 "installed:"
 msgstr "Пакет, который вы пытаетесь установить или обновить, уже установлен."
 
-#: ../src/gpk-client.c:864
+#: ../src/gpk-client.c:871
 msgid ""
 "Some package files have to be copied to a non-private location so they can "
 "be installed:"
 msgstr ""
 
-#: ../src/gpk-client.c:872
+#: ../src/gpk-client.c:879
 #, fuzzy
 msgid "Copy file"
 msgstr "Нет файлов"
 
-#: ../src/gpk-client.c:939
+#: ../src/gpk-client.c:946
 #, fuzzy
 msgid "The file could not be copied"
 msgstr "Поиск не может быть завершён"
 
-#: ../src/gpk-client.c:940
+#: ../src/gpk-client.c:947
 #, fuzzy
 msgid "The files could not be copied"
 msgstr "Поиск не может быть завершён"
 
-#: ../src/gpk-client.c:973
+#: ../src/gpk-client.c:980
 msgid "Do you want to install this file?"
 msgstr "Установить этот файл?"
 
-#: ../src/gpk-client.c:974
+#: ../src/gpk-client.c:981
 msgid "Do you want to install these files?"
 msgstr "Установить эти файлы?"
 
-#: ../src/gpk-client.c:988
+#: ../src/gpk-client.c:995
 msgid "The file was not installed"
 msgstr "Файл не был установлен"
 
-#: ../src/gpk-client.c:989
+#: ../src/gpk-client.c:996
 msgid "The files were not installed"
 msgstr "Файлы не были установлены"
 
-#: ../src/gpk-client.c:1034
+#: ../src/gpk-client.c:1041
 #, fuzzy
 msgid "File was not found!"
 msgstr "Группа не найдена"
 
-#: ../src/gpk-client.c:1035
+#: ../src/gpk-client.c:1042
 #, fuzzy
 msgid "Files were not found!"
 msgstr "Файлы не были установлены"
 
-#: ../src/gpk-client.c:1037
+#: ../src/gpk-client.c:1044
 #, fuzzy
 msgid "The following file was not found:"
 msgstr "Пакет не найден"
 
-#: ../src/gpk-client.c:1038
+#: ../src/gpk-client.c:1045
 #, fuzzy
 msgid "The following files were not found:"
 msgstr "Файлы не были установлены"
 
+#. translator comment -- string is an action, e.g. "wants to install a codec"
 #: ../src/gpk-client.c:1083
-#, fuzzy
-msgid "A program"
+#, fuzzy, c-format
+msgid "A program %s"
 msgstr "Выполнить программу"
 
 #. set title
-#: ../src/gpk-client.c:1153
+#: ../src/gpk-client.c:1150
 msgid "Install local file"
 msgstr "Установить локальный файл"
 
-#. set title
-#: ../src/gpk-client.c:1198
-msgid "Remove packages"
-msgstr "Удалить пакеты"
-
-#: ../src/gpk-client.c:1213 ../src/gpk-client.c:1235 ../src/gpk-client.c:1240
-msgid "Failed to remove package"
-msgstr "Не удаётся удалить пакет"
-
-#: ../src/gpk-client.c:1213
-msgid "Additional packages were also not removed"
-msgstr "Дополнительные пакеты также не были удалены"
-
-#: ../src/gpk-client.c:1236
-msgid "You don't have the necessary privileges to remove packages"
-msgstr "У вас недостаточно прав для удаления пакетов"
-
-#  summary information texts
-#. set title
-#. try to install the package_id
-#: ../src/gpk-client.c:1292 ../src/gpk-client.c:1323
-msgid "Installing packages"
-msgstr "Устанавливаются пакеты"
-
-#: ../src/gpk-client.c:1329 ../src/gpk-client.c:1334
-msgid "Failed to install package"
-msgstr "Не удалось установить пакет"
-
-#: ../src/gpk-client.c:1330
-msgid "You don't have the necessary privileges to install packages"
-msgstr "У вас недостаточно прав для установки обновлений"
-
-#: ../src/gpk-client.c:1376
-#, fuzzy
-msgid "wants to install packages"
-msgstr "Не удалось установить пакет"
-
-#. check user wanted operation
-#: ../src/gpk-client.c:1437
-#, fuzzy
-msgid "File installer"
-msgstr "Не удалось установить"
-
-#: ../src/gpk-client.c:1439
-#, fuzzy
-msgid "wants to install a file"
-msgstr "Не удалось установить файл"
-
-#: ../src/gpk-client.c:1448 ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
-#: ../src/gpk-client-resolve.c:77 ../src/gpk-client-resolve.c:118
-msgid "Incorrect response from search"
-msgstr "Неверный ответ модуля поиска"
-
-#: ../src/gpk-client.c:1449
-msgid "Failed to search for file"
-msgstr "Не удаётся найти файл"
-
-#: ../src/gpk-client.c:1460 ../src/gpk-client-resolve.c:118
-msgid "Failed to find package"
-msgstr "Не удаётся найти пакет"
-
-#: ../src/gpk-client.c:1460
-msgid "The file could not be found in any packages"
-msgstr "Не удалось найти файл ни в одном из пакетв"
-
-#: ../src/gpk-client.c:1480
-#, c-format
-msgid "The %s package already provides the file %s"
-msgstr "Пакет %s уже предоставляет файл %s"
-
-#: ../src/gpk-client.c:1490
-msgid "Incorrect response from file search"
-msgstr "Неверный ответ модуля поиска файлов"
-
-#: ../src/gpk-client.c:1528
-#, fuzzy, c-format
-msgid "Searching for codec: %s"
-msgstr "Поиск файла"
-
-#: ../src/gpk-client.c:1578
-#, fuzzy
-msgid "Additional plugins are required to play this content."
-msgstr ""
-"Для нормальной работы оборудования этого компьютера требуются дополнительные "
-"микропрограммы."
-
-#: ../src/gpk-client.c:1578
-#, fuzzy
-msgid "The following codecs are required:"
-msgstr "Доступны следующие обновления:"
-
-#. trailer
-#: ../src/gpk-client.c:1587
-#, fuzzy
-msgid "Do you want to search for these now?"
-msgstr "Установить эти файлы?"
-
-#: ../src/gpk-client.c:1595
-#, fuzzy
-msgid "Codec installer"
-msgstr "Установка каталогов"
-
-#: ../src/gpk-client.c:1596 ../src/gpk-client.c:1751 ../src/gpk-client.c:1837
-#, fuzzy
-msgid "Search"
-msgstr "Поиск по имени"
-
-#: ../src/gpk-client.c:1597
-msgid "requires additional plugins"
-msgstr ""
-
-#. set title
-#: ../src/gpk-client.c:1638
-#, fuzzy
-msgid "Searching for codecs"
-msgstr "Поиск файла"
-
-#: ../src/gpk-client.c:1659
-#, fuzzy
-msgid "Failed to search for codec"
-msgstr "Сбой поиска предоставляемых"
-
-#: ../src/gpk-client.c:1659
-#, fuzzy
-msgid "Could not find codec in any configured software source"
-msgstr "Не удаётся найти пакет ни в одном из источников программ"
-
-#  summary text heading
-#. process package list
-#: ../src/gpk-client.c:1677
-#, fuzzy
-msgid "The following packages can be installed:"
-msgstr "Пакеты с исходными текстами не могут быть установлены"
-
-#: ../src/gpk-client.c:1687
-#, fuzzy
-msgid "Do you want to install these now?"
-msgstr "Установить эти файлы?"
-
-#: ../src/gpk-client.c:1695
-msgid "Install the following codecs"
-msgstr ""
-
-#. make sure the user wants to do action
-#. are we running privileged
-#: ../src/gpk-client.c:1750 ../src/gpk-install-mime-type.c:74
-msgid "Mime type installer"
-msgstr "Установка типов mime"
-
-#: ../src/gpk-client.c:1752
-msgid "requires a new mime type"
-msgstr ""
-
-#: ../src/gpk-client.c:1771 ../src/gpk-client.c:1857
-msgid "Failed to search for provides"
-msgstr "Сбой поиска предоставляемых"
-
-#: ../src/gpk-client.c:1781
-msgid "Failed to find software"
-msgstr "Не удаётся найти программы"
-
-#: ../src/gpk-client.c:1782
-msgid "No new applications can be found to handle this type of file"
-msgstr "Нет новых приложений, которые могли бы работать с этим типом файла"
-
-#: ../src/gpk-client.c:1790
-msgid "Applications that can open this type of file"
-msgstr "Приложения, которые могут открывать файлы этого типа"
-
-#: ../src/gpk-client.c:1794
-msgid "Failed to install software"
-msgstr "Ошибка установки программ"
-
-#: ../src/gpk-client.c:1794
-msgid "No applications were chosen to be installed"
-msgstr "Приложения для установки не были выбраны"
-
-#. check user wanted operation
-#: ../src/gpk-client.c:1836
-#, fuzzy
-msgid "Font installer"
-msgstr "_Установить принудительно"
-
-#: ../src/gpk-client.c:1838
-#, fuzzy
-msgid "wants to install a font"
-msgstr "Ошибка установки шрифтов"
-
-#: ../src/gpk-client.c:1867
-msgid "Failed to find font"
-msgstr "Не удаётся найти шрифт"
-
-#: ../src/gpk-client.c:1868
-msgid "No new fonts can be found for this document"
-msgstr "Новые шрифты для этого документа не были найдены"
-
-#: ../src/gpk-client.c:1876
-msgid "Available fonts for this document"
-msgstr "Доступные для этого документа шрифты"
-
-#: ../src/gpk-client.c:1880
-msgid "Failed to install fonts"
-msgstr "Ошибка установки шрифтов"
-
-#: ../src/gpk-client.c:1880
-msgid "No fonts were chosen to be installed"
-msgstr "Шрифты для установки не были выбраны"
-
-#  summary information texts
-#: ../src/gpk-client.c:1908
-#, c-format
-msgid "Finding package name: %s"
-msgstr "Поиск имени пакета: %s"
-
-#: ../src/gpk-client.c:1910
-#, c-format
-msgid "Finding file name: %s"
-msgstr "Поиск имени файла: %s"
-
-#: ../src/gpk-client.c:1912
-#, c-format
-msgid "Finding a package to provide: %s"
-msgstr "Поиск пакета, предоставляющего: %s"
-
-#: ../src/gpk-client.c:1940
-msgid "Do you want to install this catalog?"
-msgstr "Установить этот каталог?"
-
-#: ../src/gpk-client.c:1941
-msgid "Do you want to install these catalogs?"
-msgstr "Установить эти каталоги?"
-
-#  summary information texts
-#. set title
-#: ../src/gpk-client.c:1958
-msgid "Install catalogs"
-msgstr "Установить каталоги"
-
-#  summary text heading
-#. show UI
-#: ../src/gpk-client.c:1975
-msgid "No packages need to be installed"
-msgstr "Нет пакетов для установки"
-
-#. process package list
-#: ../src/gpk-client.c:1986
-msgid "The following packages are marked to be installed from the catalog:"
-msgstr "Следующие пакеты отмечены к установке из каталога:"
-
-#  summary information texts
-#. show UI
-#: ../src/gpk-client.c:2001
-msgid "Install packages in catalog?"
-msgstr "Установить пакеты из каталога?"
-
-#. set title
-#: ../src/gpk-client.c:2051
-msgid "System update"
-msgstr "Обновление системы"
-
-# %s is either BOOTP or DHCP
-#: ../src/gpk-client.c:2058
-msgid "Authorization could not be obtained"
-msgstr "Не удаётся получить авторизацию"
-
-#: ../src/gpk-client.c:2060 ../src/gpk-client.c:2139 ../src/gpk-client.c:2345
-#, c-format
-msgid "The error was: %s"
-msgstr "Ошибка: %s"
-
-#. display and set
-#: ../src/gpk-client.c:2064 ../src/gpk-client.c:2065
-msgid "Failed to update system"
-msgstr "Не удалось обновить систему"
-
-#. do the bubble
-#: ../src/gpk-client.c:2078
-msgid "Updates are being installed"
-msgstr "Обновления устанавливаются"
-
-#: ../src/gpk-client.c:2079
-msgid "Updates are being automatically installed on your computer"
-msgstr "Обновления автоматически устанавливаются на вашем компьютере"
-
-#: ../src/gpk-client.c:2084
-msgid "Cancel update"
-msgstr "Отменить обновление"
-
-# %s is either BOOTP or DHCP
-#: ../src/gpk-client.c:2137 ../src/gpk-client.c:2343
-msgid "Authorisation could not be obtained"
-msgstr "Не удаётся получить авторизацию"
-
-#. display and set
-#: ../src/gpk-client.c:2143 ../src/gpk-client.c:2144
-msgid "Failed to update package lists"
-msgstr "Не удаётся обновить списки пакетов"
-
-#: ../src/gpk-client.c:2182
-msgid "Failed to reset get-updates"
-msgstr "Не удаётся сбросить модуль get-updates"
-
-#: ../src/gpk-client.c:2191 ../src/gpk-client.c:2249
-msgid "Getting update lists failed"
-msgstr "Сбой получения списка обновлений"
-
-#: ../src/gpk-client.c:2191
-msgid "Failed to get updates"
-msgstr "Сбой получения обновлений"
-
-#: ../src/gpk-client.c:2201
-msgid "Getting update lists"
-msgstr "Получение списка обновлений"
-
-#: ../src/gpk-client.c:2234
-#, fuzzy
-msgid "Failed to reset get-upgrades"
-msgstr "Не удаётся сбросить модуль get-updates"
-
-#: ../src/gpk-client.c:2250
-#, fuzzy
-msgid "Getting the list of distribution upgrades failed"
-msgstr "Сбой получения списка обновлений"
-
-#: ../src/gpk-client.c:2257 ../src/gpk-common.c:1106
-#, fuzzy
-msgid "Getting distribution upgrade information"
-msgstr "Получение информации"
-
-#: ../src/gpk-client.c:2281
-msgid "Failed to reset get-file-list"
-msgstr "Не удаётся сбросить модуль get-file-list"
-
-#: ../src/gpk-client.c:2292
-msgid "Getting file list failed"
-msgstr "Не удаётся получить список файлов"
-
-#: ../src/gpk-client.c:2292
-msgid "Failed to get file list"
-msgstr "Не удаётся получить список файлов"
-
-#: ../src/gpk-client.c:2299
-msgid "Getting file lists"
-msgstr "Получение списка файлов"
-
-#. display and set
-#: ../src/gpk-client.c:2349 ../src/gpk-client.c:2350
-msgid "Failed to update packages"
-msgstr "Не удаётся обновить пакеты"
-
-#: ../src/gpk-client.c:2357
-msgid "Update packages"
-msgstr "Обновление пакетов"
-
-#: ../src/gpk-client.c:2400 ../src/gpk-client.c:2411
-msgid "Failed to install signature"
-msgstr "Не удаётся установить подпись"
-
-#: ../src/gpk-client.c:2401 ../src/gpk-client.c:2441
-msgid "The client could not be reset"
-msgstr "Не удаётся сбросить клиент"
-
-#: ../src/gpk-client.c:2412 ../src/gpk-client.c:2450
-msgid "The method failed"
-msgstr "Сбой метода"
-
-#: ../src/gpk-client.c:2440 ../src/gpk-client.c:2449
-msgid "Failed to accept EULA"
-msgstr "Сбой принятия EULA"
-
-#: ../src/gpk-client.c:2476
-msgid "Failed to install"
-msgstr "Не удалось установить"
-
-#: ../src/gpk-client.c:2477
-msgid "The install task could not be requeued"
-msgstr ""
-
-#: ../src/gpk-client-chooser.c:133 ../src/gpk-client-run.c:132
-msgid "Icon"
-msgstr "Значок"
-
-#: ../src/gpk-client-chooser.c:139 ../src/gpk-client-run.c:138
-msgid "Package"
-msgstr "Пакет"
-
-#: ../src/gpk-client-chooser.c:157
-msgid "_Install"
-msgstr "_Установить"
-
 #. get the packages we depend on
-#: ../src/gpk-client-depends.c:91
-msgid "Finding packages we depend on"
-msgstr "Поиск зависимостей"
-
-#: ../src/gpk-client-depends.c:107
-msgid "Failed to get depends"
-msgstr "Ошибка получения зависимостей"
-
-#: ../src/gpk-client-depends.c:108
-msgid "Could not work out what packages would be also installed"
-msgstr "Не удаётся определить пакеты для установки"
-
-#. title
-#: ../src/gpk-client-depends.c:124
-#, c-format
-msgid "%i additional package also has to be installed"
-msgid_plural "%i additional packages also have to be installed"
-msgstr[0] "%i дополнительный пакет должен быть установлен"
-msgstr[1] "%i дополнительных пакета должны быть установлены"
-msgstr[2] "%i дополнительных пакетов должены быть установлены"
-
-#  summary information texts
-#. button
-#: ../src/gpk-client-depends.c:129
-#, c-format
-msgid "Install package"
-msgid_plural "Install packages"
-msgstr[0] "Установить пакет"
-msgstr[1] "Установить пакеты"
-msgstr[2] "Установить пакеты"
-
-#: ../src/gpk-client-depends.c:134
-#, c-format
-msgid "To install %s, an additional package also has to be downloaded."
-msgid_plural "To install %s, additional packages also have to be downloaded."
-msgstr[0] "Для установки %s должен быть установлен дополнительный пакет."
-msgstr[1] ""
-msgstr[2] "Для установки %s должны быть установлены дополнительные пакеты."
-
-#: ../src/gpk-client-dialog.c:712
-#, fuzzy
-msgid "Uninstall"
-msgstr "Установить"
-
-#. get the packages we depend on
-#: ../src/gpk-client-requires.c:82
+#: ../src/gpk-client.c:1219
 msgid "Finding packages we require"
 msgstr "Поиск требуемых пакетов"
 
-#: ../src/gpk-client-requires.c:98
-msgid "Failed to get requires"
-msgstr "Ошибка получения зависимостей"
+#: ../src/gpk-client.c:1229 ../src/gpk-client.c:1379 ../src/gpk-client.c:1534
+#: ../src/gpk-client.c:1701 ../src/gpk-client.c:2093 ../src/gpk-client.c:2227
+#, fuzzy
+msgid "Failed to reset resolve client"
+msgstr "Не удаётся сбросить разрешение зависимостей"
 
-#: ../src/gpk-client-requires.c:99
+#: ../src/gpk-client.c:1238
 msgid "Could not work out what packages would also be removed"
 msgstr "Не удаётся разобрать, какие пакеты должны быть удалены по зависимостям"
 
 #. title
-#: ../src/gpk-client-requires.c:119
+#: ../src/gpk-client.c:1256
 #, c-format
 msgid "%i additional package also has to be removed"
 msgid_plural "%i additional packages also have to be removed"
@@ -1530,16 +1301,7 @@ msgstr[0] "%i дополнительный пакет также будет уд
 msgstr[1] "%i дополнительных пакета также будут удалены"
 msgstr[2] "%i дополнительных пакетов также будут удалены"
 
-#. button
-#: ../src/gpk-client-requires.c:124
-#, c-format
-msgid "Remove package"
-msgid_plural "Remove packages"
-msgstr[0] "Удалить пакет"
-msgstr[1] "Удалить пакеты"
-msgstr[2] "Удалить пакеты"
-
-#: ../src/gpk-client-requires.c:129
+#: ../src/gpk-client.c:1263
 #, c-format
 msgid "To remove %s other packages that depend on it must also be removed."
 msgid_plural ""
@@ -1548,1219 +1310,501 @@ msgstr[0] "Вместе с %s должны быть удалены другие 
 msgstr[1] "Вместе с %s должны быть удалены другие зависящие от них пакеты."
 msgstr[2] "Вместе с %s должны быть удалены другие зависящие от них пакеты."
 
-#: ../src/gpk-client-resolve.c:76
-msgid "Failed to resolve package"
-msgstr "Не удаётся разобрать зависимости пакета"
+#. set title
+#: ../src/gpk-client.c:1289
+msgid "Remove packages"
+msgstr "Удалить пакеты"
 
-#: ../src/gpk-client-resolve.c:87
+#: ../src/gpk-client.c:1309
+msgid "Failed to remove package"
+msgstr "Не удаётся удалить пакет"
+
+#. set title
+#: ../src/gpk-client.c:1368
+msgid "Finding packages we depend on"
+msgstr "Поиск зависимостей"
+
+#: ../src/gpk-client.c:1388
+msgid "Could not work out what packages would be also installed"
+msgstr "Не удаётся определить пакеты для установки"
+
+#. title
+#: ../src/gpk-client.c:1401
+#, c-format
+msgid "%i additional package also has to be installed"
+msgid_plural "%i additional packages also have to be installed"
+msgstr[0] "%i дополнительный пакет должен быть установлен"
+msgstr[1] "%i дополнительных пакета должны быть установлены"
+msgstr[2] "%i дополнительных пакетов должены быть установлены"
+
+#: ../src/gpk-client.c:1407
+#, c-format
+msgid "To install %s, an additional package also has to be downloaded."
+msgid_plural "To install %s, additional packages also have to be downloaded."
+msgstr[0] "Для установки %s должен быть установлен дополнительный пакет."
+msgstr[1] ""
+msgstr[2] "Для установки %s должны быть установлены дополнительные пакеты."
+
+#  summary information texts
+#. try to install the package_id
+#: ../src/gpk-client.c:1430
+msgid "Installing packages"
+msgstr "Устанавливаются пакеты"
+
+#: ../src/gpk-client.c:1447 ../src/gpk-client.c:1598 ../src/gpk-client.c:1614
+msgid "Failed to install package"
+msgstr "Не удалось установить пакет"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:1510
+#, fuzzy
+msgid "An additional file is required"
+msgstr "Требуются дополнительные микропрограммы"
+
+#: ../src/gpk-client.c:1511
+#, fuzzy
+msgid "Do you want to search for this file now?"
+msgstr "Установить эти файлы?"
+
+#: ../src/gpk-client.c:1514
+#, fuzzy
+msgid "wants to install packages"
+msgstr "Не удалось установить пакет"
+
+#. set title
+#: ../src/gpk-client.c:1525
+#, fuzzy
+msgid "Searching for packages"
+msgstr "Поиск имени пакета"
+
+#: ../src/gpk-client.c:1543 ../src/gpk-client.c:1615
+msgid "Incorrect response from search"
+msgstr "Неверный ответ модуля поиска"
+
+#: ../src/gpk-client.c:1556
 #, c-format
 msgid "Could not find %s"
 msgstr "Не удаётся найти %s"
 
-#: ../src/gpk-client-resolve.c:89
+#: ../src/gpk-client.c:1558 ../src/gpk-client.c:1722
+msgid "Failed to find package"
+msgstr "Не удаётся найти пакет"
+
+#: ../src/gpk-client.c:1559
 msgid "The packages could not be found in any software source"
 msgstr "Не удаётся найти пакет ни в одном из источников программ"
 
-#: ../src/gpk-client-resolve.c:109
+#: ../src/gpk-client.c:1597
 #, c-format
 msgid "Failed to install %s"
 msgstr "Сбой установки %s"
 
-#: ../src/gpk-client-resolve.c:111 ../src/gpk-common.c:361
+#: ../src/gpk-client.c:1599 ../src/gpk-enum.c:333
 msgid "The package is already installed"
 msgstr "Пакет уже установлен"
 
-#: ../src/gpk-client-run.c:114
+#. check user wanted operation
+#: ../src/gpk-client.c:1681
+#, fuzzy
+msgid "The following file is required:"
+msgstr "Доступны следующие обновления:"
+
+#. trailer
+#: ../src/gpk-client.c:1682 ../src/gpk-client.c:1864
+#, fuzzy
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "Установить эти файлы?"
+msgstr[1] "Установить эти файлы?"
+msgstr[2] "Установить эти файлы?"
+
+#: ../src/gpk-client.c:1683
+#, fuzzy
+msgid "File installer"
+msgstr "Не удалось установить"
+
+#: ../src/gpk-client.c:1685
+#, fuzzy
+msgid "wants to install a file"
+msgstr "Не удалось установить файл"
+
+#. set title
+#: ../src/gpk-client.c:1695 ../src/gpk-enum.c:1018
+msgid "Searching for file"
+msgstr "Поиск файла"
+
+#: ../src/gpk-client.c:1710
+msgid "Failed to search for file"
+msgstr "Не удаётся найти файл"
+
+#: ../src/gpk-client.c:1723
+msgid "The file could not be found in any packages"
+msgstr "Не удалось найти файл ни в одном из пакетв"
+
+#: ../src/gpk-client.c:1755
+#, c-format
+msgid "The %s package already provides the file %s"
+msgstr "Пакет %s уже предоставляет файл %s"
+
+#: ../src/gpk-client.c:1800
+#, fuzzy, c-format
+msgid "Searching for plugin: %s"
+msgstr "Поиск файла"
+
+#: ../src/gpk-client.c:1852
+#, fuzzy
+msgid "An additional plugin is required to play this content"
+msgid_plural "Additional plugins are required to play this content"
+msgstr[0] ""
+"Для нормальной работы оборудования этого компьютера требуются дополнительные "
+"микропрограммы."
+msgstr[1] ""
+"Для нормальной работы оборудования этого компьютера требуются дополнительные "
+"микропрограммы."
+msgstr[2] ""
+"Для нормальной работы оборудования этого компьютера требуются дополнительные "
+"микропрограммы."
+
+#: ../src/gpk-client.c:1853
+#, fuzzy
+msgid "The following plugin is required:"
+msgid_plural "The following plugins are required:"
+msgstr[0] "Доступны следующие обновления:"
+msgstr[1] "Доступны следующие обновления:"
+msgstr[2] "Доступны следующие обновления:"
+
+#: ../src/gpk-client.c:1873
+#, fuzzy
+msgid "Plugin installer"
+msgstr "Не удалось установить"
+
+#: ../src/gpk-client.c:1874 ../src/gpk-client.c:2071 ../src/gpk-client.c:2205
+#, fuzzy
+msgid "Search"
+msgstr "Поиск по имени"
+
+#: ../src/gpk-client.c:1875
+msgid "requires additional plugins"
+msgstr ""
+
+#. set title
+#: ../src/gpk-client.c:1931
+#, fuzzy
+msgid "Searching for plugins"
+msgstr "Поиск файла"
+
+#: ../src/gpk-client.c:1954
+#, fuzzy
+msgid "Failed to search for plugin"
+msgstr "Не удаётся найти файл"
+
+#: ../src/gpk-client.c:1955
+#, fuzzy
+msgid "Could not find plugin in any configured software source"
+msgstr "Не удаётся найти пакет ни в одном из источников программ"
+
+#: ../src/gpk-client.c:1991
+msgid "Install the following plugin"
+msgid_plural "Install the following plugins"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../src/gpk-client.c:1992
+#, fuzzy
+msgid "Do you want to install this package now?"
+msgid_plural "Do you want to install these packages now?"
+msgstr[0] "Установить эти файлы?"
+msgstr[1] "Установить эти файлы?"
+msgstr[2] "Установить эти файлы?"
+
+#: ../src/gpk-client.c:2068
+#, fuzzy
+msgid "An additional program is required to open this type of file:"
+msgstr ""
+"Для нормальной работы оборудования этого компьютера требуются дополнительные "
+"микропрограммы."
+
+#: ../src/gpk-client.c:2069
+#, fuzzy
+msgid "Do you want to search for a program to open this file type now?"
+msgstr "Установить эти файлы?"
+
+#: ../src/gpk-client.c:2070
+#, fuzzy
+msgid "File type installer"
+msgstr "Установка типов mime"
+
+#: ../src/gpk-client.c:2072
+msgid "requires a new mime type"
+msgstr ""
+
+#. set title
+#: ../src/gpk-client.c:2082
+#, fuzzy
+msgid "Searching for file handlers"
+msgstr "Поиск файла"
+
+#: ../src/gpk-client.c:2103 ../src/gpk-client.c:2237
+msgid "Failed to search for provides"
+msgstr "Сбой поиска предоставляемых"
+
+#: ../src/gpk-client.c:2115
+msgid "Failed to find software"
+msgstr "Не удаётся найти программы"
+
+#: ../src/gpk-client.c:2116
+msgid "No new applications can be found to handle this type of file"
+msgstr "Нет новых приложений, которые могли бы работать с этим типом файла"
+
+#: ../src/gpk-client.c:2135
+msgid "Applications that can open this type of file"
+msgstr "Приложения, которые могут открывать файлы этого типа"
+
+#: ../src/gpk-client.c:2140
+msgid "Failed to install software"
+msgstr "Ошибка установки программ"
+
+#: ../src/gpk-client.c:2141
+msgid "No applications were chosen to be installed"
+msgstr "Приложения для установки не были выбраны"
+
+#. check user wanted operation
+#: ../src/gpk-client.c:2202
+#, fuzzy
+msgid "An additional font is required to view this file correctly"
+msgstr ""
+"Для нормальной работы оборудования этого компьютера требуются дополнительные "
+"микропрограммы."
+
+#: ../src/gpk-client.c:2203
+#, fuzzy
+msgid "Do you want to search for a suitable font now?"
+msgstr "Установить эти файлы?"
+
+#: ../src/gpk-client.c:2204
+#, fuzzy
+msgid "Font installer"
+msgstr "_Установить принудительно"
+
+#: ../src/gpk-client.c:2206
+#, fuzzy
+msgid "wants to install a font"
+msgstr "Ошибка установки шрифтов"
+
+#. set title
+#: ../src/gpk-client.c:2216
+#, fuzzy
+msgid "Searching for fonts"
+msgstr "Поиск файла"
+
+#: ../src/gpk-client.c:2249
+msgid "Failed to find font"
+msgstr "Не удаётся найти шрифт"
+
+#: ../src/gpk-client.c:2250
+msgid "No new fonts can be found for this document"
+msgstr "Новые шрифты для этого документа не были найдены"
+
+#  summary information texts
+#: ../src/gpk-client.c:2274
+#, fuzzy
+msgid "Install the following fonts"
+msgstr "Установить каталоги"
+
+#: ../src/gpk-client.c:2275
+#, fuzzy
+msgid "Do you want to install these packages now?"
+msgstr "Установить эти файлы?"
+
+#  summary information texts
+#: ../src/gpk-client.c:2315
+#, c-format
+msgid "Finding package name: %s"
+msgstr "Поиск имени пакета: %s"
+
+#: ../src/gpk-client.c:2317
+#, c-format
+msgid "Finding file name: %s"
+msgstr "Поиск имени файла: %s"
+
+#: ../src/gpk-client.c:2319
+#, c-format
+msgid "Finding a package to provide: %s"
+msgstr "Поиск пакета, предоставляющего: %s"
+
+#: ../src/gpk-client.c:2353
+msgid "Do you want to install this catalog?"
+msgstr "Установить этот каталог?"
+
+#: ../src/gpk-client.c:2354
+msgid "Do you want to install these catalogs?"
+msgstr "Установить эти каталоги?"
+
+#  summary information texts
+#. set title
+#: ../src/gpk-client.c:2372
+msgid "Install catalogs"
+msgstr "Установить каталоги"
+
+#  summary text heading
+#: ../src/gpk-client.c:2390
+msgid "No packages need to be installed"
+msgstr "Нет пакетов для установки"
+
+#. process package list
+#: ../src/gpk-client.c:2408
+msgid "The following packages are marked to be installed from the catalog:"
+msgstr "Следующие пакеты отмечены к установке из каталога:"
+
+#  summary information texts
+#. show UI
+#: ../src/gpk-client.c:2423
+msgid "Install packages in catalog?"
+msgstr "Установить пакеты из каталога?"
+
+#. set title
+#: ../src/gpk-client.c:2476
+msgid "System update"
+msgstr "Обновление системы"
+
+#. display and set
+#: ../src/gpk-client.c:2484
+msgid "Failed to update system"
+msgstr "Не удалось обновить систему"
+
+#. do the bubble
+#: ../src/gpk-client.c:2498
+msgid "Updates are being installed"
+msgstr "Обновления устанавливаются"
+
+#: ../src/gpk-client.c:2499
+msgid "Updates are being automatically installed on your computer"
+msgstr "Обновления автоматически устанавливаются на вашем компьютере"
+
+#: ../src/gpk-client.c:2504
+msgid "Cancel update"
+msgstr "Отменить обновление"
+
+#. display and set
+#: ../src/gpk-client.c:2556
+msgid "Failed to update package lists"
+msgstr "Не удаётся обновить списки пакетов"
+
+#: ../src/gpk-client.c:2602
+msgid "Failed to get updates"
+msgstr "Сбой получения обновлений"
+
+#: ../src/gpk-client.c:2610
+msgid "Getting update lists"
+msgstr "Получение списка обновлений"
+
+#: ../src/gpk-client.c:2659
+msgid "Getting update lists failed"
+msgstr "Сбой получения списка обновлений"
+
+#. setup the UI
+#: ../src/gpk-client.c:2666 ../src/gpk-enum.c:1081
+#, fuzzy
+msgid "Getting distribution upgrade information"
+msgstr "Получение информации"
+
+#: ../src/gpk-client.c:2703
+msgid "Getting file list failed"
+msgstr "Не удаётся получить список файлов"
+
+#. setup the UI
+#: ../src/gpk-client.c:2710
+msgid "Getting file lists"
+msgstr "Получение списка файлов"
+
+#. display and set
+#: ../src/gpk-client.c:2750
+msgid "Failed to update packages"
+msgstr "Не удаётся обновить пакеты"
+
+#. setup the UI
+#: ../src/gpk-client.c:2757
+msgid "Update packages"
+msgstr "Обновление пакетов"
+
+#: ../src/gpk-client.c:2799 ../src/gpk-client.c:2810
+msgid "Failed to install signature"
+msgstr "Не удаётся установить подпись"
+
+#: ../src/gpk-client.c:2800 ../src/gpk-client.c:2840
+msgid "The client could not be reset"
+msgstr "Не удаётся сбросить клиент"
+
+#: ../src/gpk-client.c:2811 ../src/gpk-client.c:2849
+msgid "The method failed"
+msgstr "Сбой метода"
+
+#: ../src/gpk-client.c:2839 ../src/gpk-client.c:2848
+msgid "Failed to accept EULA"
+msgstr "Сбой принятия EULA"
+
+#: ../src/gpk-client.c:2876
+msgid "Failed to install"
+msgstr "Не удалось установить"
+
+#: ../src/gpk-client.c:2877
+msgid "The install task could not be requeued"
+msgstr ""
+
+#: ../src/gpk-client-chooser.c:133 ../src/gpk-client-run.c:156
+msgid "Icon"
+msgstr "Значок"
+
+#: ../src/gpk-client-chooser.c:139 ../src/gpk-client-run.c:162
+msgid "Package"
+msgstr "Пакет"
+
+#: ../src/gpk-client-chooser.c:157
+msgid "_Install"
+msgstr "_Установить"
+
+#: ../src/gpk-client-dialog.c:884
+#, fuzzy
+msgid "Uninstall"
+msgstr "Установить"
+
+#: ../src/gpk-client-run.c:139
 msgid "_Run"
 msgstr "_Выполнить"
 
-#: ../src/gpk-client-run.c:309
+#: ../src/gpk-client-run.c:328
 msgid "Run new application?"
 msgstr "Выполнить новое приложение?"
 
-#: ../src/gpk-client-untrusted.c:90
+#: ../src/gpk-client-untrusted.c:93
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
 "Злонамеренные программы могут повредить ваш компьютер или причинить другой "
 "вред."
 
-#: ../src/gpk-client-untrusted.c:91
+#: ../src/gpk-client-untrusted.c:94
 msgid "Are you <b>sure</b> you want to install this package?"
 msgstr "Вы <b>действительно</b> хотите установить этот пакет?"
 
-#: ../src/gpk-client-untrusted.c:104
+#: ../src/gpk-client-untrusted.c:107
 msgid "_Force install"
 msgstr "_Установить принудительно"
 
-#: ../src/gpk-client-untrusted.c:105
+#: ../src/gpk-client-untrusted.c:108
 msgid "Force installing package"
 msgstr "Установить пакет принудительно"
 
-#: ../src/gpk-common.c:334
-msgid "No network connection available"
-msgstr "Нет сетевого соединения"
-
-#: ../src/gpk-common.c:337
-msgid "No package cache is available."
-msgstr "Кеш пакетов не доступен."
-
-#: ../src/gpk-common.c:340
-msgid "Out of memory"
-msgstr "Недостаточно памяти"
-
-#: ../src/gpk-common.c:343
-msgid "Failed to create a thread"
-msgstr "Сбой создания потока"
-
-#: ../src/gpk-common.c:346
-msgid "Not supported by this backend"
-msgstr "Не поддерживается этим модулем"
-
-#: ../src/gpk-common.c:349
-msgid "An internal system error has occurred"
-msgstr "Произошла внутренняя ошибка системы"
-
-#: ../src/gpk-common.c:352
-msgid "A security trust relationship is not present"
-msgstr "Отсутствуют отношения доверия безопасности"
-
-#: ../src/gpk-common.c:355
-msgid "The package is not installed"
-msgstr "Пакет не установлен"
-
-#: ../src/gpk-common.c:358
-msgid "The package was not found"
-msgstr "Пакет не найден"
-
-#: ../src/gpk-common.c:364
-msgid "The package download failed"
-msgstr "Не удалось загрузить пакет"
-
-#: ../src/gpk-common.c:367
-msgid "The group was not found"
-msgstr "Группа не найдена"
-
-#: ../src/gpk-common.c:370
-msgid "The group list was invalid"
-msgstr "Неверный список групп"
-
-#: ../src/gpk-common.c:373
-msgid "Dependency resolution failed"
-msgstr "Не удалась разрешить зависимости"
-
-#: ../src/gpk-common.c:376
-msgid "Search filter was invalid"
-msgstr "Неверный фильтр поиска"
-
-#: ../src/gpk-common.c:379
-msgid "The package identifier was not well formed"
-msgstr "Идентификатор пакета сформирован неверно"
-
-#: ../src/gpk-common.c:382
-msgid "Transaction error"
-msgstr "Ошибка транзакции"
-
-#: ../src/gpk-common.c:385
-msgid "Repository name was not found"
-msgstr "Имя репозитория не найдено"
-
-#: ../src/gpk-common.c:388
-msgid "Could not remove a protected system package"
-msgstr "Невозможно удалить защищенный системный пакет"
-
-#: ../src/gpk-common.c:391
-msgid "The task was canceled"
-msgstr "Задание было отменено"
-
-#: ../src/gpk-common.c:394
-msgid "The task was forcibly canceled"
-msgstr "Задание было принудительно отменено"
-
-#: ../src/gpk-common.c:397
-msgid "Reading the config file failed"
-msgstr "Сбой чтения файла конфигурации"
-
-#: ../src/gpk-common.c:400
-msgid "The task cannot be canceled"
-msgstr "Задание не может быть отменено"
-
-#  summary text heading
-#: ../src/gpk-common.c:403
-msgid "Source packages cannot be installed"
-msgstr "Пакеты с исходными текстами не могут быть установлены"
-
-#: ../src/gpk-common.c:406
-msgid "The license agreement failed"
-msgstr "Сбой принятия лицензионного соглашения"
-
-#: ../src/gpk-common.c:409
-msgid "Local file conflict between packages"
-msgstr "Локальный конфликт между пакетами"
-
-#: ../src/gpk-common.c:412
-#, fuzzy
-msgid "Packages are not compatible"
-msgstr "Установка пакета по имени"
-
-#: ../src/gpk-common.c:415
-msgid "Problem connecting to a software source"
-msgstr "Проблема при подключении к источнику программ"
-
-#: ../src/gpk-common.c:418
-msgid "Failed to initialize"
-msgstr "Сбой инициализации"
-
-#: ../src/gpk-common.c:421
-msgid "Failed to finalise"
-msgstr "Сбой завершения"
-
-#: ../src/gpk-common.c:424
-msgid "Cannot get lock"
-msgstr "Не удается получить блокировку"
-
-#: ../src/gpk-common.c:427
-msgid "No packages to update"
-msgstr "Нет пакетов для обновления"
-
-#: ../src/gpk-common.c:430
-msgid "Cannot write repository configuration"
-msgstr "Не удаётся записать конфигурацию репозитория"
-
-#: ../src/gpk-common.c:433
-msgid "Local install failed"
-msgstr "Сбой локальной установки"
-
-#: ../src/gpk-common.c:436
-msgid "Bad GPG signature"
-msgstr "Неверная подпись GPG"
-
-#: ../src/gpk-common.c:439
-msgid "Missing GPG signature"
-msgstr "Отсутствует подпись GPG"
-
-# %s is either BOOTP or DHCP
-#: ../src/gpk-common.c:442
-msgid "Repository configuration invalid"
-msgstr "Неверная конфигурация репозиториев"
-
-#  summary information texts
-#: ../src/gpk-common.c:445
-msgid "Invalid package file"
-msgstr "Неверный файл пакета"
-
-#: ../src/gpk-common.c:448
-msgid "Package install blocked"
-msgstr "Установка пакета заблокирована"
-
-#: ../src/gpk-common.c:451
-msgid "Package is corrupt"
-msgstr "Пакет повреждён"
-
-#: ../src/gpk-common.c:454
-#, fuzzy
-msgid "All packages are already installed"
-msgstr "Пакет уже установлен"
-
-#: ../src/gpk-common.c:457
-#, fuzzy
-msgid "The specified file could not be found"
-msgstr "Не удалось найти файл ни в одном из пакетв"
-
-#: ../src/gpk-common.c:460
-#, fuzzy
-msgid "No more mirrors are available"
-msgstr "Когда доступны _обновления"
-
-#: ../src/gpk-common.c:477
-msgid ""
-"There is no network connection available.\n"
-"Please check your connection settings and try again"
-msgstr ""
-"Нет сетевого соеднинения.\n"
-"Проверьте сетевое соединение и попробуйте заново"
-
-#: ../src/gpk-common.c:481
-msgid ""
-"The package list needs to be rebuilt.\n"
-"This should have been done by the backend automatically."
-msgstr ""
-"Необходимо перестроить список пакетов.\n"
-"Модуль должен выполнить эту процедуру автоматически."
-
-#: ../src/gpk-common.c:485
-msgid ""
-"The service that is responsible for handling user requests is out of "
-"memory.\n"
-"Please restart your computer."
-msgstr ""
-"Недостаточно памяти для работы службы, отвечающей за обработку запросов "
-"пользователей.\n"
-"Необходимо перезагрузить компьютер."
-
-#: ../src/gpk-common.c:489
-msgid "A thread could not be created to service the user request."
-msgstr "A thread could not be created to service the user request."
-
-#: ../src/gpk-common.c:492
-msgid ""
-"The action is not supported by this backend.\n"
-"Please report a bug at "
-msgstr ""
-"Действие не поддерживается этим модулем.\n"
-"Сообщите об ошибке по адресу "
-
-#: ../src/gpk-common.c:496
-msgid ""
-"A problem that we were not expecting has occurred.\n"
-"Please report this bug at "
-msgstr ""
-"Возникла неожиданная проблема.\n"
-"Сообщите об этой ошибке по адресу "
-
-#: ../src/gpk-common.c:500
-msgid ""
-"A security trust relationship could not be made with software source.\n"
-"Please check your security settings."
-msgstr ""
-"Не удаётся установить отношения безопасности с источником программ.\n"
-"Проверьте ваши параметры безопасности."
-
-#: ../src/gpk-common.c:504
-msgid ""
-"The package that is trying to be removed or updated is not already installed."
-msgstr "Пакет, который вы пытаетесь установить или обновить, уже установлен."
-
-#: ../src/gpk-common.c:507
-msgid ""
-"The package that is being modified was not found on your system or in any "
-"software source."
-msgstr ""
-"Пакет, который вы пытаетесь изменить, не найден ни в вашей системе, ни в "
-"каком-либо из источников программ."
-
-#: ../src/gpk-common.c:510
-msgid "The package that is trying to be installed is already installed."
-msgstr "Пакет, который вы пытаетесь установить, уже установлен."
-
-#: ../src/gpk-common.c:513
-msgid ""
-"The package download failed.\n"
-"Please check your network connectivity."
-msgstr ""
-"Сбой загрузки пакета.\n"
-"Проверьте подключение к сети."
-
-#: ../src/gpk-common.c:517
-msgid ""
-"The group type was not found.\n"
-"Please check your group list and try again."
-msgstr ""
-"Тип группы не был найден.\n"
-"Проверьте список групп и попробуйте еще раз."
-
-#: ../src/gpk-common.c:521
-msgid ""
-"The group list could not be loaded.\n"
-"Refreshing your cache may help, although this is normally a software source "
-"error."
-msgstr ""
-"Не удаётся загрузить список групп.\n"
-"Обновление кэша может помочь, но как правило это связано с ошибкой источника "
-"программ."
-
-#: ../src/gpk-common.c:526
-msgid ""
-"A package could not be found that allows the task to complete.\n"
-"More information is available in the detailed report."
-msgstr ""
-"Не удаётся найти пакет, позволяющий завершить задание.\n"
-"Дополнительная информация доступна в детальном отчете."
-
-#: ../src/gpk-common.c:530
-msgid "The search filter was not correctly formed."
-msgstr "Фильтр поиска сформирован некорректно."
-
-#: ../src/gpk-common.c:533
-msgid ""
-"The package identifier was not well formed when sent to the server.\n"
-"This normally indicates an internal error and should be reported."
-msgstr ""
-"Идентификато пакета сформирован неверно при отправке на сервер.\n"
-"Это ошибка, о которой необходимо сообщить разработчикам."
-
-#: ../src/gpk-common.c:537
-msgid ""
-"An unspecified task error has occurred.\n"
-"More information is available in the detailed report."
-msgstr ""
-"Произошла неуказанная ошибка.\n"
-"Дополнительная информация доступна в подробном отчете."
-
-#: ../src/gpk-common.c:541
-msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources"
-msgstr ""
-"Не удаётся найти удалённый источник программ.\n"
-"Включите элемент в списке источников программ"
-
-#: ../src/gpk-common.c:545
-msgid "Removing a protected system package is not allowed."
-msgstr "Удаление защищенных системных пакетов не разрешается."
-
-#: ../src/gpk-common.c:548
-msgid "The task was canceled successfully and no packages were changed."
-msgstr "Задание было прервано, никаких изменений не было сделано."
-
-#: ../src/gpk-common.c:551
-msgid ""
-"The task was canceled successfully and no packages were changed.\n"
-"The backend did not exit cleanly."
-msgstr ""
-"Задание было прервано, никаких изменений не было сделано.\n"
-"Работа модуля завершилась с ошибкой."
-
-#: ../src/gpk-common.c:555
-msgid ""
-"The native package configuration file could not be opened.\n"
-"Please make sure configuration is valid."
-msgstr ""
-"The native package configuration file could not be opened.\n"
-"Please make sure configuration is valid."
-
-#: ../src/gpk-common.c:559
-msgid "The task is not safe to be canceled at this time."
-msgstr "Небезопасно отменять это задание в текущий момент."
-
-#: ../src/gpk-common.c:562
-msgid ""
-"Source packages are not normally installed this way.\n"
-"Check the extension of the file you are trying to install."
-msgstr ""
-"Пакеты с исходными текстами, как правило, устанавливаются другим способом.\n"
-"Проверьте расширение файла, который вы пытаетесь установить."
-
-#: ../src/gpk-common.c:566
-msgid ""
-"The license agreement was not agreed to.\n"
-"To use this software you have to accept the license."
-msgstr ""
-"Не было принято лицензионное соглашение.\n"
-"Для использования этой программы вы должны принять лицензию."
-
-#: ../src/gpk-common.c:570
-#, fuzzy
-msgid ""
-"Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
-msgstr ""
-"Два пакета предоставляют один и тот же файл.\n"
-"Это может произойти при смешивании пакетов из разных источников."
-
-#: ../src/gpk-common.c:574
-#, fuzzy
-msgid ""
-"Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
-msgstr ""
-"Два пакета предоставляют один и тот же файл.\n"
-"Это может произойти при смешивании пакетов из разных источников."
-
-#: ../src/gpk-common.c:578
-msgid ""
-"There was a (possibly temporary) problem connecting to a software source\n"
-"Please check the detailed error for further details."
-msgstr ""
-"Существует (возможно временная) проблема с подключением к источнику "
-"программ\n"
-"Проверьте подробное сообщение об ошибке."
-
-#: ../src/gpk-common.c:582
-msgid ""
-"Failed to initialize packaging backend.\n"
-"This may occur if other packaging tools are being used simultaneously."
-msgstr ""
-"Не удаётся инициализировать модуль управления пакетами.\n"
-"Возможно, одновременно используется другое средство управления пакетами."
-
-#: ../src/gpk-common.c:586
-msgid ""
-"Failed to close down the backend instance.\n"
-"This error can normally be ignored."
-msgstr ""
-"Failed to close down the backend instance.\n"
-"This error can normally be ignored."
-
-#: ../src/gpk-common.c:590
-msgid ""
-"Cannot get the exclusive lock on the packaging backend.\n"
-"Please close any other legacy packaging tools that may be open."
-msgstr ""
-"Не удаётся получить исключительную блокировку модуля.\n"
-"Закройте все остальные утилиты управления пакетами."
-
-#: ../src/gpk-common.c:594
-msgid "None of the selected packages could be updated."
-msgstr "Ни один из выбранных пакетов не может быть обновлён."
-
-# %s is either BOOTP or DHCP
-#: ../src/gpk-common.c:597
-msgid "The repository configuration could not be modified."
-msgstr "Конфигурация репозитория не может быть изменена."
-
-#: ../src/gpk-common.c:600
-msgid ""
-"Installing the local file failed.\n"
-"More information is available in the detailed report."
-msgstr ""
-"Сбой установки локального файла.\n"
-"Дополнительная информация доступна в проблемном отчете."
-
-#: ../src/gpk-common.c:604
-msgid "The package signature could not be verified."
-msgstr "Не удаётся проверить подпись пакета."
-
-#: ../src/gpk-common.c:607
-msgid ""
-"The package signature was missing and this package is untrusted.\n"
-"This package was not signed with a GPG key when created."
-msgstr ""
-"Подпись пакета отсутствует, доверять этому пакету нельзя.\n"
-"Этот пакет при создании не был подписан ключом GPG."
-
-#: ../src/gpk-common.c:611
-msgid "Repository configuration was invalid and could not be read."
-msgstr "Настройка репозитория неверна, он не может быть прочитан."
-
-#: ../src/gpk-common.c:614
-msgid ""
-"The package you are attempting to install is not valid.\n"
-"The package file could be corrupt, or not a proper package."
-msgstr ""
-"Пакет, который вы пытаетесь установить, недействителен.\n"
-"Файл пакета может быть повреждён, или вообще не является пакетом."
-
-#: ../src/gpk-common.c:618
-msgid ""
-"Installation of this package prevented by your packaging system's "
-"configuration."
-msgstr "Установка этого пакета не допускается конфигурацией вашей системы."
-
-#: ../src/gpk-common.c:621
-msgid ""
-"The package that was downloaded is corrupt and needs to be downloaded again."
-msgstr "Загруженный пакет повреждён, необходимо загрузить его еще раз."
-
-#: ../src/gpk-common.c:624
-#, fuzzy
-msgid ""
-"All of the packages selected for install are already installed on the system."
-msgstr "Изменение программ, установленных в системе"
-
-#: ../src/gpk-common.c:627
-msgid ""
-"The specified file could not be found on the system.\n"
-"Check the file still exists and has not been deleted."
-msgstr ""
-
-#: ../src/gpk-common.c:631
-msgid ""
-"Required data could not be found on any of the configured software sources.\n"
-"There were no more download mirrors that could be tried."
-msgstr ""
-
-#: ../src/gpk-common.c:650
-msgid "No restart is necessary for this update"
-msgstr "Для этого обновления перезапуск не обязателен"
-
-#: ../src/gpk-common.c:653
-msgid "An application restart is required after this update"
-msgstr "После установки этого обновления требуется перезапуск приложения"
-
-#: ../src/gpk-common.c:656
-msgid "You will be required to log off and back on after this update"
-msgstr ""
-"Вам необходимо будет выйти из сеанса и зарегистрироваться в системе снова"
-
-#: ../src/gpk-common.c:659
-msgid "A system restart is required after this update"
-msgstr "После установки этого обновления потребуется перезапуск системы"
-
-#: ../src/gpk-common.c:676
-msgid "No restart is required"
-msgstr "Перезапуск системы не требуется"
-
-#: ../src/gpk-common.c:679
-msgid "A system restart is required"
-msgstr "Требуется перезапуск системы"
-
-#: ../src/gpk-common.c:682
-msgid "You will need to log off and log back on"
-msgstr "Вам необходимо выйти из системы и зарегистрироваться в системе снова"
-
-#: ../src/gpk-common.c:685
-msgid "You need to restart the application"
-msgstr "Вам необходимо перезапустить приложение"
-
-#: ../src/gpk-common.c:702
-#, fuzzy
-msgid "Stable"
-msgstr "Включено"
-
-#: ../src/gpk-common.c:705
-#, fuzzy
-msgid "Unstable"
-msgstr "Установлено"
-
-#: ../src/gpk-common.c:708
-#, fuzzy
-msgid "Testing"
-msgstr "Проверка изменений"
-
-#: ../src/gpk-common.c:725
-msgid "A mirror is possibly broken"
-msgstr ""
-
-#: ../src/gpk-common.c:728
-msgid "The connection was refused"
-msgstr ""
-
-#: ../src/gpk-common.c:731
-#, fuzzy
-msgid "The parameter was invalid"
-msgstr "Неверный фильтр поиска"
-
-#: ../src/gpk-common.c:734
-#, fuzzy
-msgid "The priority was invalid"
-msgstr "Неверный список групп"
-
-#: ../src/gpk-common.c:737
-msgid "Generic backend error"
-msgstr ""
-
-#: ../src/gpk-common.c:740
-msgid "Generic daemon error"
-msgstr ""
-
-#: ../src/gpk-common.c:743
-#, fuzzy
-msgid "The package list cache is being rebuilt"
-msgstr "Кеш пакетов не доступен."
-
-#: ../src/gpk-common.c:746
-#, fuzzy
-msgid "An untrusted package was installed"
-msgstr "Пакет не установлен"
-
-#: ../src/gpk-common.c:749
-#, fuzzy
-msgid "A newer package exists"
-msgstr "Обновить списки пакетов"
-
-#: ../src/gpk-common.c:752
-#, fuzzy
-msgid "Could not find package"
-msgstr "Не удаётся найти пакет"
-
-#: ../src/gpk-common.c:755
-msgid "Configuration files were changed"
-msgstr ""
-
-#: ../src/gpk-common.c:758
-#, fuzzy
-msgid "Package is already installed"
-msgstr "Пакет уже установлен"
-
-#: ../src/gpk-common.c:776
-msgid "Unknown state"
-msgstr "Неизвестное состояние"
-
-#: ../src/gpk-common.c:779
-msgid "Waiting for service to start"
-msgstr "Ожидание запуска службы"
-
-#: ../src/gpk-common.c:782
-msgid "Waiting for other tasks"
-msgstr "Ожидание выполонения других заданий"
-
-#: ../src/gpk-common.c:785
-msgid "Running task"
-msgstr "Выполняется задание"
-
-#: ../src/gpk-common.c:788
-msgid "Querying"
-msgstr "Выполняется запрос"
-
-#: ../src/gpk-common.c:791
-msgid "Getting information"
-msgstr "Получение информации"
-
-#: ../src/gpk-common.c:794 ../src/gpk-common.c:964 ../src/gpk-common.c:1049
-msgid "Removing"
-msgstr "Удаление"
-
-#: ../src/gpk-common.c:797 ../src/gpk-common.c:955
-msgid "Downloading"
-msgstr "Загрузка"
-
-#: ../src/gpk-common.c:800 ../src/gpk-common.c:961 ../src/gpk-common.c:1052
-msgid "Installing"
-msgstr "Установка"
-
-#: ../src/gpk-common.c:803
-msgid "Refreshing software list"
-msgstr "Обновление списка программ"
-
-#: ../src/gpk-common.c:806 ../src/gpk-common.c:958
-msgid "Updating"
-msgstr "Обновление"
-
-#: ../src/gpk-common.c:809 ../src/gpk-common.c:967
-msgid "Cleaning up"
-msgstr "Очистка"
-
-#: ../src/gpk-common.c:812 ../src/gpk-common.c:970
-msgid "Obsoleting"
-msgstr "Удаление устаревших пакетов"
-
-#: ../src/gpk-common.c:815
-msgid "Resolving dependencies"
-msgstr "Разрешение зависимостей"
-
-#: ../src/gpk-common.c:818
-msgid "Checking signatures"
-msgstr "Проверка подписей"
-
-#: ../src/gpk-common.c:821 ../src/gpk-common.c:1070
-msgid "Rolling back"
-msgstr "Откат"
-
-#: ../src/gpk-common.c:824
-msgid "Testing changes"
-msgstr "Проверка изменений"
-
-#: ../src/gpk-common.c:827
-msgid "Committing changes"
-msgstr "Сохранение изменений"
-
-#: ../src/gpk-common.c:830
-msgid "Requesting data"
-msgstr "Запрос данных"
-
-#: ../src/gpk-common.c:833
-msgid "Finished"
-msgstr "Готово"
-
-# cancel button label
-#: ../src/gpk-common.c:836
-msgid "Cancelling"
-msgstr "Отмена"
-
-#: ../src/gpk-common.c:839
-msgid "Downloading repository information"
-msgstr "Получение сведений репозитория"
-
-#: ../src/gpk-common.c:842
-msgid "Downloading list of packages"
-msgstr "Загружается список пакетов"
-
-#: ../src/gpk-common.c:845
-msgid "Downloading file lists"
-msgstr "Загружается список файлов"
-
-#: ../src/gpk-common.c:848
-msgid "Downloading lists of changes"
-msgstr "Загружается список изменений"
-
-#: ../src/gpk-common.c:851
-msgid "Downloading groups"
-msgstr "Загружаются группы"
-
-#: ../src/gpk-common.c:854
-msgid "Downloading update information"
-msgstr "Загружается информация об обновлениях"
-
-#: ../src/gpk-common.c:857
-msgid "Repackaging files"
-msgstr "Перепаковка файлов"
-
-#: ../src/gpk-common.c:860
-msgid "Loading cache"
-msgstr ""
-
-#: ../src/gpk-common.c:877
-#, c-format
-msgid "%i trivial update"
-msgid_plural "%i trivial updates"
-msgstr[0] "%i обычное обновление"
-msgstr[1] "%i обычных обновления"
-msgstr[2] "%i обычных обновлений"
-
-#: ../src/gpk-common.c:880
-#, c-format
-msgid "%i update"
-msgid_plural "%i updates"
-msgstr[0] "%i обновление"
-msgstr[1] "%i обновления"
-msgstr[2] "%i обновлений"
-
-#: ../src/gpk-common.c:883
-#, c-format
-msgid "%i important update"
-msgid_plural "%i important updates"
-msgstr[0] "%i важное обновление"
-msgstr[1] "%i важных обновления"
-msgstr[2] "%i важных обновлений"
-
-#: ../src/gpk-common.c:886
-#, c-format
-msgid "%i security update"
-msgid_plural "%i security updates"
-msgstr[0] "%i обновление безопасности"
-msgstr[1] "%i обновления безопасности"
-msgstr[2] "%i обновлений безопасности"
-
-#: ../src/gpk-common.c:889
-#, c-format
-msgid "%i bug fix update"
-msgid_plural "%i bug fix updates"
-msgstr[0] "%i исправление ошибки"
-msgstr[1] "%i исправления ошибок"
-msgstr[2] "%i исправлений ошибок"
-
-#: ../src/gpk-common.c:892
-#, c-format
-msgid "%i enhancement update"
-msgid_plural "%i enhancement updates"
-msgstr[0] "%i улучшение"
-msgstr[1] "%i улучшения"
-msgstr[2] "%i улучшений"
-
-#: ../src/gpk-common.c:895
-#, fuzzy, c-format
-msgid "%i blocked update"
-msgid_plural "%i blocked updates"
-msgstr[0] "Заблокированное обновление"
-msgstr[1] "Заблокированное обновление"
-msgstr[2] "Заблокированное обновление"
-
-#: ../src/gpk-common.c:912
-msgid "Trivial update"
-msgstr "Простое обновление"
-
-#: ../src/gpk-common.c:915
-msgid "Update"
-msgstr "Обновление"
-
-#: ../src/gpk-common.c:918
-msgid "Important update"
-msgstr "Важное обновление"
-
-#: ../src/gpk-common.c:921
-msgid "Security update"
-msgstr "Обновление безопасности"
-
-#: ../src/gpk-common.c:924
-msgid "Bug fix update"
-msgstr "Исправление ошибки"
-
-#: ../src/gpk-common.c:927
-msgid "Enhancement update"
-msgstr "Улучшение"
-
-#: ../src/gpk-common.c:930
-msgid "Blocked update"
-msgstr "Заблокированное обновление"
-
-#: ../src/gpk-common.c:938
-msgid "Available"
-msgstr "Доступно"
-
-#: ../src/gpk-common.c:987
-msgid "Downloaded"
-msgstr "Загружено"
-
-#. translators: this is a notice a restart might be required
-#: ../src/gpk-common.c:990 ../src/gpk-update-viewer.c:913
-msgid "Updated"
-msgstr "Обновлено"
-
-#: ../src/gpk-common.c:996
-msgid "Removed"
-msgstr "Удалено"
-
-#: ../src/gpk-common.c:999
-msgid "Cleaned up"
-msgstr "Очищено"
-
-#: ../src/gpk-common.c:1002
-msgid "Obsoleted"
-msgstr "Устаревшие"
-
-#: ../src/gpk-common.c:1019 ../src/gpk-common.c:1125
-msgid "Unknown role type"
-msgstr "Неизвестный ролевой тип"
-
-#: ../src/gpk-common.c:1022
-msgid "Getting dependencies"
-msgstr "Получение зависимостей"
-
-#: ../src/gpk-common.c:1025
-msgid "Getting update detail"
-msgstr "Получение сведений об обновлениях"
-
-#: ../src/gpk-common.c:1028
-msgid "Getting details"
-msgstr "Получение сведений"
-
-#: ../src/gpk-common.c:1031
-msgid "Getting requires"
-msgstr "Получение зависимостей"
-
-#: ../src/gpk-common.c:1034 ../src/gpk-update-viewer.c:1450
-msgid "Getting updates"
-msgstr "Получение обновлений"
-
-#: ../src/gpk-common.c:1037
-msgid "Searching details"
-msgstr "Поиск сведений"
-
-#: ../src/gpk-common.c:1040
-msgid "Searching for file"
-msgstr "Поиск файла"
-
-#: ../src/gpk-common.c:1043
-msgid "Searching groups"
-msgstr "Поиск групп"
-
-#: ../src/gpk-common.c:1046
-msgid "Searching for package name"
-msgstr "Поиск имени пакета"
-
-#: ../src/gpk-common.c:1055
-msgid "Installing file"
-msgstr "Установка файла"
-
-#: ../src/gpk-common.c:1058 ../src/gpk-update-viewer.c:1453
-msgid "Refreshing package cache"
-msgstr "Обновление кэша пакетов"
-
-#: ../src/gpk-common.c:1061
-msgid "Updating packages"
-msgstr "Обновление пакетов"
-
-#: ../src/gpk-common.c:1064
-msgid "Updating system"
-msgstr "Обновление системы"
-
-# cancel button label
-#: ../src/gpk-common.c:1067
-msgid "Canceling"
-msgstr "Отмена"
-
-#: ../src/gpk-common.c:1073
-msgid "Getting list of repositories"
-msgstr "Получение списка репозиториев"
-
-#: ../src/gpk-common.c:1076
-msgid "Enabling repository"
-msgstr "Включение репозитория"
-
-#: ../src/gpk-common.c:1079
-msgid "Setting repository data"
-msgstr "Восстановление данных репозитория"
-
-#: ../src/gpk-common.c:1082
-#, fuzzy
-msgid "Resolving"
-msgstr "Удаление"
-
-#: ../src/gpk-common.c:1085
-msgid "Getting file list"
-msgstr "Получение списка файлов"
-
-#: ../src/gpk-common.c:1088
-msgid "Getting what provides"
-msgstr "Предоставления получены"
-
-#: ../src/gpk-common.c:1091
-msgid "Service pack"
-msgstr "Сервис-пак"
-
-#: ../src/gpk-common.c:1094
-msgid "Installing signature"
-msgstr "Установка подписи"
-
-#: ../src/gpk-common.c:1097
-msgid "Getting package lists"
-msgstr "Получение списка пакетов"
-
-#: ../src/gpk-common.c:1100
-msgid "Accepting EULA"
-msgstr "Лицензионное соглашение принято"
-
-#: ../src/gpk-common.c:1103
-#, fuzzy
-msgid "Downloading packages"
-msgstr "Загружается список пакетов"
-
-#: ../src/gpk-common.c:1128
-msgid "Got dependencies"
-msgstr "Зависимости получены"
-
-#: ../src/gpk-common.c:1131
-msgid "Got update detail"
-msgstr "Сведения об обновлении получены"
-
-#: ../src/gpk-common.c:1134 ../src/gpk-common.c:1143
-msgid "Got details"
-msgstr "Сведения получены"
-
-#: ../src/gpk-common.c:1137
-msgid "Got requires"
-msgstr "Зависимости получены"
-
-#: ../src/gpk-common.c:1140
-msgid "Got updates"
-msgstr "Обновления получены"
-
-#: ../src/gpk-common.c:1146
-msgid "Searched for file"
-msgstr "Поиск файла"
-
-#: ../src/gpk-common.c:1149
-msgid "Searched groups"
-msgstr "Группы найдены"
-
-#: ../src/gpk-common.c:1152
-msgid "Searched for package name"
-msgstr "Имя пакета найдено"
-
-#: ../src/gpk-common.c:1155
-msgid "Removed package"
-msgstr "Удалены пакеты"
-
-#  summary information texts
-#: ../src/gpk-common.c:1158
-msgid "Installed package"
-msgstr "Установлены пакеты"
-
-#: ../src/gpk-common.c:1161
-msgid "Installed local file"
-msgstr "Установлен локальный файл"
-
-#: ../src/gpk-common.c:1164
-msgid "Updating from service pack"
-msgstr "Обновление из сервис-пака"
-
-#: ../src/gpk-common.c:1167
-msgid "Refreshed package cache"
-msgstr "Обновить кэш пакетов"
-
-#: ../src/gpk-common.c:1170
-msgid "Updated package"
-msgstr "Пакет обновлён"
-
-#: ../src/gpk-common.c:1173
-msgid "Updated system"
-msgstr "Система обновлена"
-
-# cancel button label
-#: ../src/gpk-common.c:1176
-msgid "Canceled"
-msgstr "Отменено"
-
-#: ../src/gpk-common.c:1179
-msgid "Rolled back"
-msgstr "Выполнен откат"
-
-#: ../src/gpk-common.c:1182
-msgid "Got list of repositories"
-msgstr "Получен список репозиториев"
-
-#: ../src/gpk-common.c:1185
-msgid "Enabled repository"
-msgstr "Включить репозиторий"
-
-#: ../src/gpk-common.c:1188
-msgid "Set repository data"
-msgstr "Установка данных репозитория"
-
-#: ../src/gpk-common.c:1191
-msgid "Resolved"
-msgstr "Зависимости разрешены"
-
-#: ../src/gpk-common.c:1194
-msgid "Got file list"
-msgstr "Получен список файлов"
-
-#: ../src/gpk-common.c:1197
-msgid "Got what provides"
-msgstr "Предоставления получены"
-
-#: ../src/gpk-common.c:1200
-msgid "Installed signature"
-msgstr "Установлена подпись"
-
-#: ../src/gpk-common.c:1203
-msgid "Got package lists"
-msgstr "Получен список пакетов"
-
-#: ../src/gpk-common.c:1206
-msgid "Accepted EULA"
-msgstr "Лицензионное соглашение принято"
-
-#: ../src/gpk-common.c:1209
-#, fuzzy
-msgid "Downloaded packages"
-msgstr "Загружается список пакетов"
-
-#: ../src/gpk-common.c:1212
-msgid "Got distribution upgrades"
-msgstr ""
-
-#: ../src/gpk-common.c:1229
-msgid "Accessibility"
-msgstr "Специальные возможности"
-
-#: ../src/gpk-common.c:1232
-msgid "Accessories"
-msgstr "Дополнения"
-
-#: ../src/gpk-common.c:1235
-msgid "Education"
-msgstr "Образование"
-
-#: ../src/gpk-common.c:1238
-msgid "Games"
-msgstr "Игры"
-
-#: ../src/gpk-common.c:1241
-msgid "Graphics"
-msgstr "Графика"
-
-#: ../src/gpk-common.c:1244
-msgid "Internet"
-msgstr "Интернет"
-
-#: ../src/gpk-common.c:1247
-msgid "Office"
-msgstr "Офис"
-
-#: ../src/gpk-common.c:1250
-msgid "Other"
-msgstr "Другое"
-
-#: ../src/gpk-common.c:1253
-msgid "Programming"
-msgstr "Программирование"
-
-#: ../src/gpk-common.c:1256
-msgid "Multimedia"
-msgstr "Мультимедиа"
-
-#: ../src/gpk-common.c:1259
-msgid "System"
-msgstr "Система"
-
-#: ../src/gpk-common.c:1262
-msgid "GNOME desktop"
-msgstr "Рабочая среда GNOME"
-
-#: ../src/gpk-common.c:1265
-msgid "KDE desktop"
-msgstr "Рабочая среда KDE"
-
-#: ../src/gpk-common.c:1268
-msgid "XFCE desktop"
-msgstr "Рабочая среда XFCE"
-
-# button label for other/more options
-#: ../src/gpk-common.c:1271
-msgid "Other desktops"
-msgstr "Другие рабочие среды"
-
-#: ../src/gpk-common.c:1274
-msgid "Publishing"
-msgstr "Публикация"
-
-#: ../src/gpk-common.c:1277
-msgid "Servers"
-msgstr "Серверы"
-
-#: ../src/gpk-common.c:1280
-msgid "Fonts"
-msgstr "Шрифты"
-
-#: ../src/gpk-common.c:1283
-msgid "Admin tools"
-msgstr "Средства администрирования"
-
-#: ../src/gpk-common.c:1286
-msgid "Legacy"
-msgstr "Устаревшие"
-
-#: ../src/gpk-common.c:1289
-msgid "Localization"
-msgstr "Локализация"
-
-#: ../src/gpk-common.c:1292
-msgid "Virtualization"
-msgstr "Виртуализация"
-
-#: ../src/gpk-common.c:1295
-msgid "Security"
-msgstr "Безопасность"
-
-#: ../src/gpk-common.c:1298
-msgid "Power management"
-msgstr "Управление питанием"
-
-#: ../src/gpk-common.c:1301
-msgid "Communication"
-msgstr "Связь"
-
-#: ../src/gpk-common.c:1304
-msgid "Network"
-msgstr "Сеть"
-
-#: ../src/gpk-common.c:1307
-msgid "Maps"
-msgstr "Карты"
-
-#: ../src/gpk-common.c:1313
-msgid "Science"
-msgstr ""
-
-#: ../src/gpk-common.c:1316
-#, fuzzy
-msgid "Documentation"
-msgstr "Связь"
-
-#: ../src/gpk-common.c:1319
-msgid "Electronics"
-msgstr ""
-
-#: ../src/gpk-common.c:1322
-#, fuzzy
-msgid "Package collections"
-msgstr "Установка пакетов"
-
-#: ../src/gpk-common.c:1325
-msgid "Unknown group"
-msgstr "Неизвестная группа"
-
-#: ../src/gpk-common.c:1400
+#: ../src/gpk-common.c:158
 msgid "This application is running as a privileged user"
 msgstr "Это приложение запущено от привилегированного пользователя"
 
-#: ../src/gpk-common.c:1402
+#: ../src/gpk-common.c:160
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "Приложение %s запущено от привилегированного пользователя"
 
-#: ../src/gpk-common.c:1404
+#: ../src/gpk-common.c:162
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -2768,20 +1812,21 @@ msgstr ""
 "Из соображений безопасности следует избегать запуска графических программ от "
 "имени привилегированного пользователя."
 
-#: ../src/gpk-common.c:1405
+#: ../src/gpk-common.c:163
+#, fuzzy
 msgid ""
-"PackageKit applications are security sensitive and therefore this "
+"Package management applications are security sensitive and therefore this "
 "application will now close."
 msgstr ""
 "Приложения PackageKit являются чувствительными к проблемам защиты, поэтому "
 "это приложение сейчас будет закрыто."
 
-#: ../src/gpk-common.c:1522 ../src/gpk-common.c:1656
+#: ../src/gpk-common.c:257 ../src/gpk-common.c:443
 #, c-format
 msgid "Now"
 msgstr "Сейчас"
 
-#: ../src/gpk-common.c:1531
+#: ../src/gpk-common.c:266
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -2789,7 +1834,7 @@ msgstr[0] "%i секунд"
 msgstr[1] "%i секунды"
 msgstr[2] "%i секунд"
 
-#: ../src/gpk-common.c:1544
+#: ../src/gpk-common.c:279
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -2801,26 +1846,26 @@ msgstr[2] " %i минут"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:1550 ../src/gpk-common.c:1568
+#: ../src/gpk-common.c:285 ../src/gpk-common.c:303
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:1551 ../src/gpk-common.c:1570
+#: ../src/gpk-common.c:286 ../src/gpk-common.c:305
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "минута"
 msgstr[1] "минуты"
 msgstr[2] "минут"
 
-#: ../src/gpk-common.c:1552
+#: ../src/gpk-common.c:287
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "секунда"
 msgstr[1] "секунды"
 msgstr[2] "секунд"
 
-#: ../src/gpk-common.c:1562
+#: ../src/gpk-common.c:297
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -2828,72 +1873,60 @@ msgstr[0] "%i час"
 msgstr[1] "%i часа"
 msgstr[2] "%i часов"
 
-#: ../src/gpk-common.c:1569
+#: ../src/gpk-common.c:304
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "час"
 msgstr[1] "часа"
 msgstr[2] "часов"
 
-#: ../src/gpk-common.c:1616
+#: ../src/gpk-common.c:330
 #, c-format
 msgid "%s and %s"
 msgstr "%s и %s"
 
-#: ../src/gpk-common.c:1619
+#: ../src/gpk-common.c:333
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s и %s"
 
-#: ../src/gpk-common.c:1622
+#: ../src/gpk-common.c:336
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s и %s"
 
-#: ../src/gpk-common.c:1626
+#: ../src/gpk-common.c:340
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s и %s"
 
-#: ../src/gpk-common.c:1666
+#: ../src/gpk-common.c:452
 msgid "1 second"
 msgstr "1 секунда"
 
-#: ../src/gpk-common.c:1676
+#: ../src/gpk-common.c:462
 msgid "1 minute"
 msgstr "1 минута"
 
-#: ../src/gpk-common.c:1686
+#: ../src/gpk-common.c:472
 msgid "1 hour"
 msgstr "1 час"
 
-#: ../src/gpk-common.c:1696
+#: ../src/gpk-common.c:482
 msgid "30 seconds"
 msgstr "30 секунд"
 
-#: ../src/gpk-common.c:1706
+#: ../src/gpk-common.c:492
 msgid "30 minutes"
 msgstr "30 минут"
 
-#: ../src/gpk-common.c:1716
+#: ../src/gpk-common.c:502
 msgid "30 minutes 1 second"
 msgstr "30 минут 1 секунда"
 
-#: ../src/gpk-common.c:1726
+#: ../src/gpk-common.c:512
 msgid "30 minutes 10 seconds"
 msgstr "30 минут 10 секунд"
-
-#: ../src/gpk-common.c:1738
-msgid "0 bytes"
-msgstr "0 байт"
-
-#: ../src/gpk-common.c:1748
-msgid "512 bytes"
-msgstr "512 байт"
-
-#: ../src/gpk-common.c:1758
-msgid "256.2 MB"
-msgstr "256.2 МБ"
 
 #: ../src/gpk-consolekit.c:176
 msgid "Failed to restart"
@@ -2908,15 +1941,1177 @@ msgstr ""
 "другие пользователи"
 
 #  summary information texts
-#: ../src/gpk-dialog.c:75
+#: ../src/gpk-dialog.c:76
 msgid "many packages"
 msgstr "много пакетов"
 
-#: ../src/gpk-dialog.c:234
+#: ../src/gpk-dialog.c:235
 msgid "No files"
 msgstr "Нет файлов"
 
-#: ../src/gpk-firmware.c:200
+#: ../src/gpk-enum.c:306
+msgid "No network connection available"
+msgstr "Нет сетевого соединения"
+
+#: ../src/gpk-enum.c:309
+msgid "No package cache is available."
+msgstr "Кеш пакетов не доступен."
+
+#: ../src/gpk-enum.c:312
+msgid "Out of memory"
+msgstr "Недостаточно памяти"
+
+#: ../src/gpk-enum.c:315
+msgid "Failed to create a thread"
+msgstr "Сбой создания потока"
+
+#: ../src/gpk-enum.c:318
+msgid "Not supported by this backend"
+msgstr "Не поддерживается этим модулем"
+
+#: ../src/gpk-enum.c:321
+msgid "An internal system error has occurred"
+msgstr "Произошла внутренняя ошибка системы"
+
+#: ../src/gpk-enum.c:324
+msgid "A security trust relationship is not present"
+msgstr "Отсутствуют отношения доверия безопасности"
+
+#: ../src/gpk-enum.c:327
+msgid "The package is not installed"
+msgstr "Пакет не установлен"
+
+#: ../src/gpk-enum.c:330
+msgid "The package was not found"
+msgstr "Пакет не найден"
+
+#: ../src/gpk-enum.c:336
+msgid "The package download failed"
+msgstr "Не удалось загрузить пакет"
+
+#: ../src/gpk-enum.c:339
+msgid "The group was not found"
+msgstr "Группа не найдена"
+
+#: ../src/gpk-enum.c:342
+msgid "The group list was invalid"
+msgstr "Неверный список групп"
+
+#: ../src/gpk-enum.c:345
+msgid "Dependency resolution failed"
+msgstr "Не удалась разрешить зависимости"
+
+#: ../src/gpk-enum.c:348
+msgid "Search filter was invalid"
+msgstr "Неверный фильтр поиска"
+
+#: ../src/gpk-enum.c:351
+msgid "The package identifier was not well formed"
+msgstr "Идентификатор пакета сформирован неверно"
+
+#: ../src/gpk-enum.c:354
+msgid "Transaction error"
+msgstr "Ошибка транзакции"
+
+#: ../src/gpk-enum.c:357
+msgid "Repository name was not found"
+msgstr "Имя репозитория не найдено"
+
+#: ../src/gpk-enum.c:360
+msgid "Could not remove a protected system package"
+msgstr "Невозможно удалить защищенный системный пакет"
+
+#: ../src/gpk-enum.c:363
+msgid "The task was canceled"
+msgstr "Задание было отменено"
+
+#: ../src/gpk-enum.c:366
+msgid "The task was forcibly canceled"
+msgstr "Задание было принудительно отменено"
+
+#: ../src/gpk-enum.c:369
+msgid "Reading the config file failed"
+msgstr "Сбой чтения файла конфигурации"
+
+#: ../src/gpk-enum.c:372
+msgid "The task cannot be canceled"
+msgstr "Задание не может быть отменено"
+
+#  summary text heading
+#: ../src/gpk-enum.c:375
+msgid "Source packages cannot be installed"
+msgstr "Пакеты с исходными текстами не могут быть установлены"
+
+#: ../src/gpk-enum.c:378
+msgid "The license agreement failed"
+msgstr "Сбой принятия лицензионного соглашения"
+
+#: ../src/gpk-enum.c:381
+msgid "Local file conflict between packages"
+msgstr "Локальный конфликт между пакетами"
+
+#: ../src/gpk-enum.c:384
+#, fuzzy
+msgid "Packages are not compatible"
+msgstr "Установка пакета по имени"
+
+#: ../src/gpk-enum.c:387
+msgid "Problem connecting to a software source"
+msgstr "Проблема при подключении к источнику программ"
+
+#: ../src/gpk-enum.c:390
+msgid "Failed to initialize"
+msgstr "Сбой инициализации"
+
+#: ../src/gpk-enum.c:393
+msgid "Failed to finalise"
+msgstr "Сбой завершения"
+
+#: ../src/gpk-enum.c:396
+msgid "Cannot get lock"
+msgstr "Не удается получить блокировку"
+
+#: ../src/gpk-enum.c:399
+msgid "No packages to update"
+msgstr "Нет пакетов для обновления"
+
+#: ../src/gpk-enum.c:402
+msgid "Cannot write repository configuration"
+msgstr "Не удаётся записать конфигурацию репозитория"
+
+#: ../src/gpk-enum.c:405
+msgid "Local install failed"
+msgstr "Сбой локальной установки"
+
+#: ../src/gpk-enum.c:408
+msgid "Bad GPG signature"
+msgstr "Неверная подпись GPG"
+
+#: ../src/gpk-enum.c:411
+msgid "Missing GPG signature"
+msgstr "Отсутствует подпись GPG"
+
+# %s is either BOOTP or DHCP
+#: ../src/gpk-enum.c:414
+msgid "Repository configuration invalid"
+msgstr "Неверная конфигурация репозиториев"
+
+#  summary information texts
+#: ../src/gpk-enum.c:417
+msgid "Invalid package file"
+msgstr "Неверный файл пакета"
+
+#: ../src/gpk-enum.c:420
+msgid "Package install blocked"
+msgstr "Установка пакета заблокирована"
+
+#: ../src/gpk-enum.c:423
+msgid "Package is corrupt"
+msgstr "Пакет повреждён"
+
+#: ../src/gpk-enum.c:426
+#, fuzzy
+msgid "All packages are already installed"
+msgstr "Пакет уже установлен"
+
+#: ../src/gpk-enum.c:429
+#, fuzzy
+msgid "The specified file could not be found"
+msgstr "Не удалось найти файл ни в одном из пакетв"
+
+#: ../src/gpk-enum.c:432
+#, fuzzy
+msgid "No more mirrors are available"
+msgstr "Когда доступны _обновления"
+
+#: ../src/gpk-enum.c:449
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"Нет сетевого соеднинения.\n"
+"Проверьте сетевое соединение и попробуйте заново"
+
+#: ../src/gpk-enum.c:453
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"Необходимо перестроить список пакетов.\n"
+"Модуль должен выполнить эту процедуру автоматически."
+
+#: ../src/gpk-enum.c:457
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please restart your computer."
+msgstr ""
+"Недостаточно памяти для работы службы, отвечающей за обработку запросов "
+"пользователей.\n"
+"Необходимо перезагрузить компьютер."
+
+#: ../src/gpk-enum.c:461
+msgid "A thread could not be created to service the user request."
+msgstr "A thread could not be created to service the user request."
+
+#: ../src/gpk-enum.c:464
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug at "
+msgstr ""
+"Действие не поддерживается этим модулем.\n"
+"Сообщите об ошибке по адресу "
+
+#: ../src/gpk-enum.c:468
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug at "
+msgstr ""
+"Возникла неожиданная проблема.\n"
+"Сообщите об этой ошибке по адресу "
+
+#: ../src/gpk-enum.c:472
+msgid ""
+"A security trust relationship could not be made with software source.\n"
+"Please check your security settings."
+msgstr ""
+"Не удаётся установить отношения безопасности с источником программ.\n"
+"Проверьте ваши параметры безопасности."
+
+#: ../src/gpk-enum.c:476
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr "Пакет, который вы пытаетесь установить или обновить, уже установлен."
+
+#: ../src/gpk-enum.c:479
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software source."
+msgstr ""
+"Пакет, который вы пытаетесь изменить, не найден ни в вашей системе, ни в "
+"каком-либо из источников программ."
+
+#: ../src/gpk-enum.c:482
+msgid "The package that is trying to be installed is already installed."
+msgstr "Пакет, который вы пытаетесь установить, уже установлен."
+
+#: ../src/gpk-enum.c:485
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"Сбой загрузки пакета.\n"
+"Проверьте подключение к сети."
+
+#: ../src/gpk-enum.c:489
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"Тип группы не был найден.\n"
+"Проверьте список групп и попробуйте еще раз."
+
+#: ../src/gpk-enum.c:493
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software source "
+"error."
+msgstr ""
+"Не удаётся загрузить список групп.\n"
+"Обновление кэша может помочь, но как правило это связано с ошибкой источника "
+"программ."
+
+#: ../src/gpk-enum.c:498
+msgid ""
+"A package could not be found that allows the task to complete.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Не удаётся найти пакет, позволяющий завершить задание.\n"
+"Дополнительная информация доступна в детальном отчете."
+
+#: ../src/gpk-enum.c:502
+msgid "The search filter was not correctly formed."
+msgstr "Фильтр поиска сформирован некорректно."
+
+#: ../src/gpk-enum.c:505
+msgid ""
+"The package identifier was not well formed when sent to the server.\n"
+"This normally indicates an internal error and should be reported."
+msgstr ""
+"Идентификато пакета сформирован неверно при отправке на сервер.\n"
+"Это ошибка, о которой необходимо сообщить разработчикам."
+
+#: ../src/gpk-enum.c:509
+msgid ""
+"An unspecified task error has occurred.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Произошла неуказанная ошибка.\n"
+"Дополнительная информация доступна в подробном отчете."
+
+#: ../src/gpk-enum.c:513
+msgid ""
+"The remote software source name was not found.\n"
+"You may need to enable an item in Software Sources"
+msgstr ""
+"Не удаётся найти удалённый источник программ.\n"
+"Включите элемент в списке источников программ"
+
+#: ../src/gpk-enum.c:517
+msgid "Removing a protected system package is not allowed."
+msgstr "Удаление защищенных системных пакетов не разрешается."
+
+#: ../src/gpk-enum.c:520
+msgid "The task was canceled successfully and no packages were changed."
+msgstr "Задание было прервано, никаких изменений не было сделано."
+
+#: ../src/gpk-enum.c:523
+msgid ""
+"The task was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"Задание было прервано, никаких изменений не было сделано.\n"
+"Работа модуля завершилась с ошибкой."
+
+#: ../src/gpk-enum.c:527
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure configuration is valid."
+msgstr ""
+"The native package configuration file could not be opened.\n"
+"Please make sure configuration is valid."
+
+#: ../src/gpk-enum.c:531
+msgid "The task is not safe to be canceled at this time."
+msgstr "Небезопасно отменять это задание в текущий момент."
+
+#: ../src/gpk-enum.c:534
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"Пакеты с исходными текстами, как правило, устанавливаются другим способом.\n"
+"Проверьте расширение файла, который вы пытаетесь установить."
+
+#: ../src/gpk-enum.c:538
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"Не было принято лицензионное соглашение.\n"
+"Для использования этой программы вы должны принять лицензию."
+
+#: ../src/gpk-enum.c:542
+#, fuzzy
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages from different software sources."
+msgstr ""
+"Два пакета предоставляют один и тот же файл.\n"
+"Это может произойти при смешивании пакетов из разных источников."
+
+#: ../src/gpk-enum.c:546
+#, fuzzy
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software sources."
+msgstr ""
+"Два пакета предоставляют один и тот же файл.\n"
+"Это может произойти при смешивании пакетов из разных источников."
+
+#: ../src/gpk-enum.c:550
+msgid ""
+"There was a (possibly temporary) problem connecting to a software source\n"
+"Please check the detailed error for further details."
+msgstr ""
+"Существует (возможно временная) проблема с подключением к источнику "
+"программ\n"
+"Проверьте подробное сообщение об ошибке."
+
+#: ../src/gpk-enum.c:554
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+"Не удаётся инициализировать модуль управления пакетами.\n"
+"Возможно, одновременно используется другое средство управления пакетами."
+
+#: ../src/gpk-enum.c:558
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+
+#: ../src/gpk-enum.c:562
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+"Не удаётся получить исключительную блокировку модуля.\n"
+"Закройте все остальные утилиты управления пакетами."
+
+#: ../src/gpk-enum.c:566
+msgid "None of the selected packages could be updated."
+msgstr "Ни один из выбранных пакетов не может быть обновлён."
+
+# %s is either BOOTP or DHCP
+#: ../src/gpk-enum.c:569
+msgid "The repository configuration could not be modified."
+msgstr "Конфигурация репозитория не может быть изменена."
+
+#: ../src/gpk-enum.c:572
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Сбой установки локального файла.\n"
+"Дополнительная информация доступна в проблемном отчете."
+
+#: ../src/gpk-enum.c:576
+msgid "The package signature could not be verified."
+msgstr "Не удаётся проверить подпись пакета."
+
+#: ../src/gpk-enum.c:579
+msgid ""
+"The package signature was missing and this package is untrusted.\n"
+"This package was not signed with a GPG key when created."
+msgstr ""
+"Подпись пакета отсутствует, доверять этому пакету нельзя.\n"
+"Этот пакет при создании не был подписан ключом GPG."
+
+#: ../src/gpk-enum.c:583
+msgid "Repository configuration was invalid and could not be read."
+msgstr "Настройка репозитория неверна, он не может быть прочитан."
+
+#: ../src/gpk-enum.c:586
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"Пакет, который вы пытаетесь установить, недействителен.\n"
+"Файл пакета может быть повреждён, или вообще не является пакетом."
+
+#: ../src/gpk-enum.c:590
+msgid ""
+"Installation of this package prevented by your packaging system's "
+"configuration."
+msgstr "Установка этого пакета не допускается конфигурацией вашей системы."
+
+#: ../src/gpk-enum.c:593
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "Загруженный пакет повреждён, необходимо загрузить его еще раз."
+
+#: ../src/gpk-enum.c:596
+#, fuzzy
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr "Изменение программ, установленных в системе"
+
+#: ../src/gpk-enum.c:599
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check the file still exists and has not been deleted."
+msgstr ""
+
+#: ../src/gpk-enum.c:603
+msgid ""
+"Required data could not be found on any of the configured software sources.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+
+#: ../src/gpk-enum.c:622
+msgid "No restart is necessary for this update"
+msgstr "Для этого обновления перезапуск не обязателен"
+
+#: ../src/gpk-enum.c:625
+msgid "An application restart is required after this update"
+msgstr "После установки этого обновления требуется перезапуск приложения"
+
+#: ../src/gpk-enum.c:628
+msgid "You will be required to log off and back on after this update"
+msgstr ""
+"Вам необходимо будет выйти из сеанса и зарегистрироваться в системе снова"
+
+#: ../src/gpk-enum.c:631
+msgid "A system restart is required after this update"
+msgstr "После установки этого обновления потребуется перезапуск системы"
+
+#: ../src/gpk-enum.c:648
+msgid "No restart is required"
+msgstr "Перезапуск системы не требуется"
+
+#: ../src/gpk-enum.c:651
+msgid "A system restart is required"
+msgstr "Требуется перезапуск системы"
+
+#: ../src/gpk-enum.c:654
+msgid "You will need to log off and log back on"
+msgstr "Вам необходимо выйти из системы и зарегистрироваться в системе снова"
+
+#: ../src/gpk-enum.c:657
+msgid "You need to restart the application"
+msgstr "Вам необходимо перезапустить приложение"
+
+#: ../src/gpk-enum.c:674
+#, fuzzy
+msgid "Stable"
+msgstr "Включено"
+
+#: ../src/gpk-enum.c:677
+#, fuzzy
+msgid "Unstable"
+msgstr "Установлено"
+
+#: ../src/gpk-enum.c:680
+#, fuzzy
+msgid "Testing"
+msgstr "Проверка изменений"
+
+#: ../src/gpk-enum.c:697
+msgid "A mirror is possibly broken"
+msgstr ""
+
+#: ../src/gpk-enum.c:700
+msgid "The connection was refused"
+msgstr ""
+
+#: ../src/gpk-enum.c:703
+#, fuzzy
+msgid "The parameter was invalid"
+msgstr "Неверный фильтр поиска"
+
+#: ../src/gpk-enum.c:706
+#, fuzzy
+msgid "The priority was invalid"
+msgstr "Неверный список групп"
+
+#: ../src/gpk-enum.c:709
+msgid "Generic backend error"
+msgstr ""
+
+#: ../src/gpk-enum.c:712
+msgid "Generic daemon error"
+msgstr ""
+
+#: ../src/gpk-enum.c:715
+#, fuzzy
+msgid "The package list cache is being rebuilt"
+msgstr "Кеш пакетов не доступен."
+
+#: ../src/gpk-enum.c:718
+#, fuzzy
+msgid "An untrusted package was installed"
+msgstr "Пакет не установлен"
+
+#: ../src/gpk-enum.c:721
+#, fuzzy
+msgid "A newer package exists"
+msgstr "Обновить списки пакетов"
+
+#: ../src/gpk-enum.c:724
+#, fuzzy
+msgid "Could not find package"
+msgstr "Не удаётся найти пакет"
+
+#: ../src/gpk-enum.c:727
+msgid "Configuration files were changed"
+msgstr ""
+
+#: ../src/gpk-enum.c:730
+#, fuzzy
+msgid "Package is already installed"
+msgstr "Пакет уже установлен"
+
+#: ../src/gpk-enum.c:748
+msgid "Unknown state"
+msgstr "Неизвестное состояние"
+
+#: ../src/gpk-enum.c:751
+msgid "Waiting for service to start"
+msgstr "Ожидание запуска службы"
+
+#: ../src/gpk-enum.c:754
+msgid "Waiting for other tasks"
+msgstr "Ожидание выполонения других заданий"
+
+#: ../src/gpk-enum.c:757
+msgid "Running task"
+msgstr "Выполняется задание"
+
+#: ../src/gpk-enum.c:760
+msgid "Querying"
+msgstr "Выполняется запрос"
+
+#: ../src/gpk-enum.c:763
+msgid "Getting information"
+msgstr "Получение информации"
+
+#: ../src/gpk-enum.c:766 ../src/gpk-enum.c:942 ../src/gpk-enum.c:1027
+msgid "Removing"
+msgstr "Удаление"
+
+#: ../src/gpk-enum.c:769 ../src/gpk-enum.c:933
+msgid "Downloading"
+msgstr "Загрузка"
+
+#: ../src/gpk-enum.c:772 ../src/gpk-enum.c:939 ../src/gpk-enum.c:1030
+msgid "Installing"
+msgstr "Установка"
+
+#: ../src/gpk-enum.c:775
+msgid "Refreshing software list"
+msgstr "Обновление списка программ"
+
+#: ../src/gpk-enum.c:778 ../src/gpk-enum.c:936
+msgid "Updating"
+msgstr "Обновление"
+
+#: ../src/gpk-enum.c:781 ../src/gpk-enum.c:945
+msgid "Cleaning up"
+msgstr "Очистка"
+
+#: ../src/gpk-enum.c:784 ../src/gpk-enum.c:948
+msgid "Obsoleting"
+msgstr "Удаление устаревших пакетов"
+
+#: ../src/gpk-enum.c:787
+msgid "Resolving dependencies"
+msgstr "Разрешение зависимостей"
+
+#: ../src/gpk-enum.c:790
+msgid "Checking signatures"
+msgstr "Проверка подписей"
+
+#: ../src/gpk-enum.c:793 ../src/gpk-enum.c:1048
+msgid "Rolling back"
+msgstr "Откат"
+
+#: ../src/gpk-enum.c:796
+msgid "Testing changes"
+msgstr "Проверка изменений"
+
+#: ../src/gpk-enum.c:799
+msgid "Committing changes"
+msgstr "Сохранение изменений"
+
+#: ../src/gpk-enum.c:802
+msgid "Requesting data"
+msgstr "Запрос данных"
+
+#: ../src/gpk-enum.c:805
+msgid "Finished"
+msgstr "Готово"
+
+# cancel button label
+#: ../src/gpk-enum.c:808
+msgid "Cancelling"
+msgstr "Отмена"
+
+#: ../src/gpk-enum.c:811
+msgid "Downloading repository information"
+msgstr "Получение сведений репозитория"
+
+#: ../src/gpk-enum.c:814
+msgid "Downloading list of packages"
+msgstr "Загружается список пакетов"
+
+#: ../src/gpk-enum.c:817
+msgid "Downloading file lists"
+msgstr "Загружается список файлов"
+
+#: ../src/gpk-enum.c:820
+msgid "Downloading lists of changes"
+msgstr "Загружается список изменений"
+
+#: ../src/gpk-enum.c:823
+msgid "Downloading groups"
+msgstr "Загружаются группы"
+
+#: ../src/gpk-enum.c:826
+msgid "Downloading update information"
+msgstr "Загружается информация об обновлениях"
+
+#: ../src/gpk-enum.c:829
+msgid "Repackaging files"
+msgstr "Перепаковка файлов"
+
+#: ../src/gpk-enum.c:832
+msgid "Loading cache"
+msgstr ""
+
+#: ../src/gpk-enum.c:835
+#, fuzzy
+msgid "Scanning installed applications"
+msgstr "Выполнить новое приложение?"
+
+#: ../src/gpk-enum.c:838
+#, fuzzy
+msgid "Generating package lists"
+msgstr "Получение списка пакетов"
+
+#: ../src/gpk-enum.c:855
+#, c-format
+msgid "%i trivial update"
+msgid_plural "%i trivial updates"
+msgstr[0] "%i обычное обновление"
+msgstr[1] "%i обычных обновления"
+msgstr[2] "%i обычных обновлений"
+
+#: ../src/gpk-enum.c:858
+#, c-format
+msgid "%i update"
+msgid_plural "%i updates"
+msgstr[0] "%i обновление"
+msgstr[1] "%i обновления"
+msgstr[2] "%i обновлений"
+
+#: ../src/gpk-enum.c:861
+#, c-format
+msgid "%i important update"
+msgid_plural "%i important updates"
+msgstr[0] "%i важное обновление"
+msgstr[1] "%i важных обновления"
+msgstr[2] "%i важных обновлений"
+
+#: ../src/gpk-enum.c:864
+#, c-format
+msgid "%i security update"
+msgid_plural "%i security updates"
+msgstr[0] "%i обновление безопасности"
+msgstr[1] "%i обновления безопасности"
+msgstr[2] "%i обновлений безопасности"
+
+#: ../src/gpk-enum.c:867
+#, c-format
+msgid "%i bug fix update"
+msgid_plural "%i bug fix updates"
+msgstr[0] "%i исправление ошибки"
+msgstr[1] "%i исправления ошибок"
+msgstr[2] "%i исправлений ошибок"
+
+#: ../src/gpk-enum.c:870
+#, c-format
+msgid "%i enhancement update"
+msgid_plural "%i enhancement updates"
+msgstr[0] "%i улучшение"
+msgstr[1] "%i улучшения"
+msgstr[2] "%i улучшений"
+
+#: ../src/gpk-enum.c:873
+#, fuzzy, c-format
+msgid "%i blocked update"
+msgid_plural "%i blocked updates"
+msgstr[0] "Заблокированное обновление"
+msgstr[1] "Заблокированное обновление"
+msgstr[2] "Заблокированное обновление"
+
+#: ../src/gpk-enum.c:890
+msgid "Trivial update"
+msgstr "Простое обновление"
+
+#: ../src/gpk-enum.c:893
+msgid "Update"
+msgstr "Обновление"
+
+#: ../src/gpk-enum.c:896
+msgid "Important update"
+msgstr "Важное обновление"
+
+#: ../src/gpk-enum.c:899
+msgid "Security update"
+msgstr "Обновление безопасности"
+
+#: ../src/gpk-enum.c:902
+msgid "Bug fix update"
+msgstr "Исправление ошибки"
+
+#: ../src/gpk-enum.c:905
+msgid "Enhancement update"
+msgstr "Улучшение"
+
+#: ../src/gpk-enum.c:908
+msgid "Blocked update"
+msgstr "Заблокированное обновление"
+
+#: ../src/gpk-enum.c:916
+msgid "Available"
+msgstr "Доступно"
+
+#: ../src/gpk-enum.c:965
+msgid "Downloaded"
+msgstr "Загружено"
+
+#. translators: this is when (if?) the update was updated
+#: ../src/gpk-enum.c:968 ../src/gpk-update-viewer.c:921
+msgid "Updated"
+msgstr "Обновлено"
+
+#: ../src/gpk-enum.c:974
+msgid "Removed"
+msgstr "Удалено"
+
+#: ../src/gpk-enum.c:977
+msgid "Cleaned up"
+msgstr "Очищено"
+
+#: ../src/gpk-enum.c:980
+msgid "Obsoleted"
+msgstr "Устаревшие"
+
+#: ../src/gpk-enum.c:997 ../src/gpk-enum.c:1100
+msgid "Unknown role type"
+msgstr "Неизвестный ролевой тип"
+
+#: ../src/gpk-enum.c:1000
+msgid "Getting dependencies"
+msgstr "Получение зависимостей"
+
+#: ../src/gpk-enum.c:1003
+msgid "Getting update detail"
+msgstr "Получение сведений об обновлениях"
+
+#: ../src/gpk-enum.c:1006
+msgid "Getting details"
+msgstr "Получение сведений"
+
+#: ../src/gpk-enum.c:1009
+msgid "Getting requires"
+msgstr "Получение зависимостей"
+
+#: ../src/gpk-enum.c:1012 ../src/gpk-update-viewer.c:1454
+msgid "Getting updates"
+msgstr "Получение обновлений"
+
+#: ../src/gpk-enum.c:1015
+msgid "Searching details"
+msgstr "Поиск сведений"
+
+#: ../src/gpk-enum.c:1021
+msgid "Searching groups"
+msgstr "Поиск групп"
+
+#: ../src/gpk-enum.c:1024
+msgid "Searching for package name"
+msgstr "Поиск имени пакета"
+
+#: ../src/gpk-enum.c:1033
+msgid "Installing file"
+msgstr "Установка файла"
+
+#: ../src/gpk-enum.c:1036 ../src/gpk-update-viewer.c:1457
+msgid "Refreshing package cache"
+msgstr "Обновление кэша пакетов"
+
+#: ../src/gpk-enum.c:1039
+msgid "Updating packages"
+msgstr "Обновление пакетов"
+
+#: ../src/gpk-enum.c:1042
+msgid "Updating system"
+msgstr "Обновление системы"
+
+# cancel button label
+#: ../src/gpk-enum.c:1045
+msgid "Canceling"
+msgstr "Отмена"
+
+#: ../src/gpk-enum.c:1051
+msgid "Getting list of repositories"
+msgstr "Получение списка репозиториев"
+
+#: ../src/gpk-enum.c:1054
+msgid "Enabling repository"
+msgstr "Включение репозитория"
+
+#: ../src/gpk-enum.c:1057
+msgid "Setting repository data"
+msgstr "Восстановление данных репозитория"
+
+#: ../src/gpk-enum.c:1060
+#, fuzzy
+msgid "Resolving"
+msgstr "Удаление"
+
+#: ../src/gpk-enum.c:1063
+msgid "Getting file list"
+msgstr "Получение списка файлов"
+
+#: ../src/gpk-enum.c:1066
+msgid "Getting what provides"
+msgstr "Предоставления получены"
+
+#: ../src/gpk-enum.c:1069
+msgid "Installing signature"
+msgstr "Установка подписи"
+
+#: ../src/gpk-enum.c:1072
+msgid "Getting package lists"
+msgstr "Получение списка пакетов"
+
+#: ../src/gpk-enum.c:1075
+msgid "Accepting EULA"
+msgstr "Лицензионное соглашение принято"
+
+#: ../src/gpk-enum.c:1078
+#, fuzzy
+msgid "Downloading packages"
+msgstr "Загружается список пакетов"
+
+#: ../src/gpk-enum.c:1103
+msgid "Got dependencies"
+msgstr "Зависимости получены"
+
+#: ../src/gpk-enum.c:1106
+msgid "Got update detail"
+msgstr "Сведения об обновлении получены"
+
+#: ../src/gpk-enum.c:1109 ../src/gpk-enum.c:1118
+msgid "Got details"
+msgstr "Сведения получены"
+
+#: ../src/gpk-enum.c:1112
+msgid "Got requires"
+msgstr "Зависимости получены"
+
+#: ../src/gpk-enum.c:1115
+msgid "Got updates"
+msgstr "Обновления получены"
+
+#: ../src/gpk-enum.c:1121
+msgid "Searched for file"
+msgstr "Поиск файла"
+
+#: ../src/gpk-enum.c:1124
+msgid "Searched groups"
+msgstr "Группы найдены"
+
+#: ../src/gpk-enum.c:1127
+msgid "Searched for package name"
+msgstr "Имя пакета найдено"
+
+#: ../src/gpk-enum.c:1130
+#, fuzzy
+msgid "Removed packages"
+msgstr "Удалить пакеты"
+
+#  summary information texts
+#: ../src/gpk-enum.c:1133
+#, fuzzy
+msgid "Installed packages"
+msgstr "Установлены пакеты"
+
+#: ../src/gpk-enum.c:1136
+#, fuzzy
+msgid "Installed local files"
+msgstr "Установлен локальный файл"
+
+#: ../src/gpk-enum.c:1139
+msgid "Refreshed package cache"
+msgstr "Обновить кэш пакетов"
+
+#: ../src/gpk-enum.c:1142
+#, fuzzy
+msgid "Updated packages"
+msgstr "Обновление пакетов"
+
+#: ../src/gpk-enum.c:1145
+msgid "Updated system"
+msgstr "Система обновлена"
+
+# cancel button label
+#: ../src/gpk-enum.c:1148
+msgid "Canceled"
+msgstr "Отменено"
+
+#: ../src/gpk-enum.c:1151
+msgid "Rolled back"
+msgstr "Выполнен откат"
+
+#: ../src/gpk-enum.c:1154
+msgid "Got list of repositories"
+msgstr "Получен список репозиториев"
+
+#: ../src/gpk-enum.c:1157
+msgid "Enabled repository"
+msgstr "Включить репозиторий"
+
+#: ../src/gpk-enum.c:1160
+msgid "Set repository data"
+msgstr "Установка данных репозитория"
+
+#: ../src/gpk-enum.c:1163
+msgid "Resolved"
+msgstr "Зависимости разрешены"
+
+#: ../src/gpk-enum.c:1166
+msgid "Got file list"
+msgstr "Получен список файлов"
+
+#: ../src/gpk-enum.c:1169
+msgid "Got what provides"
+msgstr "Предоставления получены"
+
+#: ../src/gpk-enum.c:1172
+msgid "Installed signature"
+msgstr "Установлена подпись"
+
+#: ../src/gpk-enum.c:1175
+msgid "Got package lists"
+msgstr "Получен список пакетов"
+
+#: ../src/gpk-enum.c:1178
+msgid "Accepted EULA"
+msgstr "Лицензионное соглашение принято"
+
+#: ../src/gpk-enum.c:1181
+#, fuzzy
+msgid "Downloaded packages"
+msgstr "Загружается список пакетов"
+
+#: ../src/gpk-enum.c:1184
+msgid "Got distribution upgrades"
+msgstr ""
+
+#: ../src/gpk-enum.c:1201
+msgid "Accessibility"
+msgstr "Специальные возможности"
+
+#: ../src/gpk-enum.c:1204
+msgid "Accessories"
+msgstr "Дополнения"
+
+#: ../src/gpk-enum.c:1207
+msgid "Education"
+msgstr "Образование"
+
+#: ../src/gpk-enum.c:1210
+msgid "Games"
+msgstr "Игры"
+
+#: ../src/gpk-enum.c:1213
+msgid "Graphics"
+msgstr "Графика"
+
+#: ../src/gpk-enum.c:1216
+msgid "Internet"
+msgstr "Интернет"
+
+#: ../src/gpk-enum.c:1219
+msgid "Office"
+msgstr "Офис"
+
+#: ../src/gpk-enum.c:1222
+msgid "Other"
+msgstr "Другое"
+
+#: ../src/gpk-enum.c:1225
+msgid "Programming"
+msgstr "Программирование"
+
+#: ../src/gpk-enum.c:1228
+msgid "Multimedia"
+msgstr "Мультимедиа"
+
+#: ../src/gpk-enum.c:1231
+msgid "System"
+msgstr "Система"
+
+#: ../src/gpk-enum.c:1234
+msgid "GNOME desktop"
+msgstr "Рабочая среда GNOME"
+
+#: ../src/gpk-enum.c:1237
+msgid "KDE desktop"
+msgstr "Рабочая среда KDE"
+
+#: ../src/gpk-enum.c:1240
+msgid "XFCE desktop"
+msgstr "Рабочая среда XFCE"
+
+# button label for other/more options
+#: ../src/gpk-enum.c:1243
+msgid "Other desktops"
+msgstr "Другие рабочие среды"
+
+#: ../src/gpk-enum.c:1246
+msgid "Publishing"
+msgstr "Публикация"
+
+#: ../src/gpk-enum.c:1249
+msgid "Servers"
+msgstr "Серверы"
+
+#: ../src/gpk-enum.c:1252
+msgid "Fonts"
+msgstr "Шрифты"
+
+#: ../src/gpk-enum.c:1255
+msgid "Admin tools"
+msgstr "Средства администрирования"
+
+#: ../src/gpk-enum.c:1258
+msgid "Legacy"
+msgstr "Устаревшие"
+
+#: ../src/gpk-enum.c:1261
+msgid "Localization"
+msgstr "Локализация"
+
+#: ../src/gpk-enum.c:1264
+msgid "Virtualization"
+msgstr "Виртуализация"
+
+#: ../src/gpk-enum.c:1267
+msgid "Security"
+msgstr "Безопасность"
+
+#: ../src/gpk-enum.c:1270
+msgid "Power management"
+msgstr "Управление питанием"
+
+#: ../src/gpk-enum.c:1273
+msgid "Communication"
+msgstr "Связь"
+
+#: ../src/gpk-enum.c:1276
+msgid "Network"
+msgstr "Сеть"
+
+#: ../src/gpk-enum.c:1279
+msgid "Maps"
+msgstr "Карты"
+
+#: ../src/gpk-enum.c:1285
+msgid "Science"
+msgstr ""
+
+#: ../src/gpk-enum.c:1288
+#, fuzzy
+msgid "Documentation"
+msgstr "Связь"
+
+#: ../src/gpk-enum.c:1291
+msgid "Electronics"
+msgstr ""
+
+#: ../src/gpk-enum.c:1294
+#, fuzzy
+msgid "Package collections"
+msgstr "Установка пакетов"
+
+#. translators: this is a list of vendor URLs
+#: ../src/gpk-enum.c:1297 ../src/gpk-update-viewer.c:966
+msgid "Vendor"
+msgstr "Производитель"
+
+#: ../src/gpk-enum.c:1300
+msgid "Unknown group"
+msgstr "Неизвестная группа"
+
+#: ../src/gpk-firmware.c:201
 msgid ""
 "Additional firmware is required to make hardware in this computer function "
 "correctly."
@@ -2924,13 +3119,29 @@ msgstr ""
 "Для нормальной работы оборудования этого компьютера требуются дополнительные "
 "микропрограммы."
 
-#: ../src/gpk-firmware.c:201
+#: ../src/gpk-firmware.c:202
 msgid "Additional firmware required"
 msgstr "Требуются дополнительные микропрограммы"
 
-#: ../src/gpk-firmware.c:205
+#: ../src/gpk-firmware.c:206
 msgid "Install firmware"
 msgstr "Установка микропрограмм"
+
+#. TODO: tell the user what hardware, NOT JUST A UDI
+#: ../src/gpk-hardware.c:164
+#, fuzzy
+msgid "Do you want to install needed drivers?"
+msgstr "Установить эти файлы?"
+
+#: ../src/gpk-hardware.c:165
+msgid "New hardware attached"
+msgstr ""
+
+#  summary information texts
+#: ../src/gpk-hardware.c:170
+#, fuzzy
+msgid "Install package"
+msgstr "Установить пакет"
 
 #: ../src/gpk-inhibit.c:98
 msgid "Software Update Applet"
@@ -2940,17 +3151,8 @@ msgstr "Апплет обновления программ"
 msgid "A transaction that cannot be interrupted is running"
 msgstr "Выполняется транзакция, которая не может быть прервана"
 
-#: ../src/gpk-install-catalog.c:64
-msgid "PackageKit Catalog Installer"
-msgstr "Установка каталогов"
-
-#: ../src/gpk-install-catalog.c:66 ../src/gpk-install-local-file.c:64
-#: ../src/gpk-install-local-file.c:66
-msgid "PackageKit File Installer"
-msgstr "Установка файлов"
-
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:75
+#: ../src/gpk-install-catalog.c:76
 msgid "Catalog installer"
 msgstr "Установка каталогов"
 
@@ -2962,8 +3164,12 @@ msgstr "Сбой установки каталога"
 msgid "You need to specify a file to install"
 msgstr "Вам необходимо указать файл"
 
+#: ../src/gpk-install-local-file.c:65 ../src/gpk-install-local-file.c:67
+msgid "PackageKit File Installer"
+msgstr "Установка файлов"
+
 #. are we running privileged
-#: ../src/gpk-install-local-file.c:75
+#: ../src/gpk-install-local-file.c:76
 msgid "Local file installer"
 msgstr "Установка локальных файлов"
 
@@ -2971,28 +3177,30 @@ msgstr "Установка локальных файлов"
 msgid "Failed to install local file"
 msgstr "Сбой установки локального файла"
 
-#: ../src/gpk-install-mime-type.c:63 ../src/gpk-install-mime-type.c:65
-msgid "PackageKit MimeType Installer"
-msgstr "Установка типов Mime"
+#: ../src/gpk-install-mime-type.c:62 ../src/gpk-install-mime-type.c:64
+#, fuzzy
+msgid "Mime Type Installer"
+msgstr "Установка типов mime"
 
-#: ../src/gpk-install-mime-type.c:80 ../src/gpk-install-mime-type.c:85
+#. are we running privileged
+#: ../src/gpk-install-mime-type.c:73
+msgid "Mime type installer"
+msgstr "Установка типов mime"
+
+#: ../src/gpk-install-mime-type.c:78 ../src/gpk-install-mime-type.c:83
 msgid "Failed to install file handler"
 msgstr "Не удаётся установить обработчик файла"
 
-#: ../src/gpk-install-mime-type.c:81
+#: ../src/gpk-install-mime-type.c:79
 msgid "You need to specify a mime-type to install"
 msgstr "Для установки необходимо указать тип mime"
 
-#: ../src/gpk-install-mime-type.c:86
+#: ../src/gpk-install-mime-type.c:84
 msgid "You can only specify one mime-type to install"
 msgstr "Вы можете указать только один тип mime для установки"
 
-#: ../src/gpk-install-package-name.c:64 ../src/gpk-install-package-name.c:66
-msgid "PackageKit Package Installer"
-msgstr "Установка пакетов"
-
 #. are we running privileged
-#: ../src/gpk-install-package-name.c:75
+#: ../src/gpk-install-package-name.c:76
 msgid "Package name installer"
 msgstr "Установка пакета по имени"
 
@@ -3004,50 +3212,67 @@ msgstr "Не удаётся установить пакет по имени"
 msgid "You need to specify a package to install"
 msgstr "Вы должны указать устанавливаемый пакет"
 
-#: ../src/gpk-install-provide-file.c:63 ../src/gpk-install-provide-file.c:65
-msgid "PackageKit Filename Installer"
-msgstr "Установка пакета по имени файла"
+#: ../src/gpk-install-provide-file.c:62 ../src/gpk-install-provide-file.c:64
+#, fuzzy
+msgid "Filename Installer"
+msgstr "Не удалось установить"
 
 #. are we running privileged
-#: ../src/gpk-install-provide-file.c:74
+#: ../src/gpk-install-provide-file.c:73
 msgid "Provide file installer"
 msgstr "Установка по предоставляемым"
 
-#: ../src/gpk-install-provide-file.c:80
+#: ../src/gpk-install-provide-file.c:78
 msgid "Failed to install a package to provide a file"
 msgstr "Не удаётся установить пакет, предоставляющий файл"
 
-#: ../src/gpk-install-provide-file.c:81
+#: ../src/gpk-install-provide-file.c:79
 msgid "You need to specify a filename to install"
 msgstr "Для установки необходимо указать имя файла"
 
-#: ../src/gpk-install-provide-file.c:85
+#: ../src/gpk-install-provide-file.c:83
 msgid "Failed to install packages to provide files"
 msgstr "Не удаётся установить пакеты, предоставляющие файлы"
 
-#: ../src/gpk-install-provide-file.c:86
+#: ../src/gpk-install-provide-file.c:84
 msgid "You can only specify one filename to install"
 msgstr "Для установки можно указать только одно имя файла"
 
-#: ../src/gpk-log.c:108
+#: ../src/gpk-log.c:113
 msgid "%A, %d %B %Y"
 msgstr "%A, %d %B %Y"
 
-#: ../src/gpk-log.c:244
-msgid "Role"
-msgstr "Роль"
+#: ../src/gpk-log.c:289
+msgid "No data"
+msgstr ""
 
-#: ../src/gpk-log.c:250
-msgid "Transaction"
-msgstr "Транзакция"
+#: ../src/gpk-log.c:325
+#, fuzzy
+msgid "Date"
+msgstr "Программы"
 
-#: ../src/gpk-log.c:306
+#: ../src/gpk-log.c:332
+#, fuzzy
+msgid "Action"
+msgstr "Образование"
+
+#: ../src/gpk-log.c:356
+#, fuzzy
+msgid "Details"
+msgstr "Сведения получены"
+
+#: ../src/gpk-log.c:410
 msgid "_Rollback"
 msgstr "_Откатить"
 
+#: ../src/gpk-log.c:509
+#, fuzzy
+msgid "Set the filter to this value"
+msgstr "Неверный фильтр поиска"
+
 # /usr/share/applications/YaST2/sw_single.desktop
 #. are we running privileged
-#: ../src/gpk-log.c:378
+#: ../src/gpk-log.c:534
 msgid "Log viewer"
 msgstr "Просмотр журналов"
 
@@ -3079,179 +3304,255 @@ msgstr "Только обновления безопасности"
 msgid "Nothing"
 msgstr "Ничего"
 
-#: ../src/gpk-repo.c:158
+#: ../src/gpk-repo.c:159
 msgid "Enabled"
 msgstr "Включено"
 
-#: ../src/gpk-repo.c:165
+#: ../src/gpk-repo.c:166
 msgid "Software Source"
 msgstr "Источник программ"
 
-#: ../src/gpk-repo.c:238
+#: ../src/gpk-repo.c:239
 msgid "Failed to change status"
 msgstr "Не удаётся изменить состояние"
 
+#: ../src/gpk-repo.c:355
+#, fuzzy
+msgid "Software Source Viewer"
+msgstr "Просмотр источника программ"
+
 #. are we running privileged
-#: ../src/gpk-repo.c:363
+#: ../src/gpk-repo.c:364
 msgid "Software source viewer"
 msgstr "Просмотр источника программ"
 
-#: ../src/gpk-repo.c:447
+#: ../src/gpk-repo.c:448
 msgid "Getting software source list not supported by backend"
 msgstr "Получение списка источников программ не поддерживается модулем"
 
-#: ../src/gpk-update-icon.c:129
+#: ../src/gpk-service-pack.c:250
+#, fuzzy, c-format
+msgid "No package '%s' found!"
+msgstr "Нет пакетов для обновления"
+
+#: ../src/gpk-service-pack.c:251 ../src/gpk-service-pack.c:257
+#: ../src/gpk-service-pack.c:395 ../src/gpk-service-pack.c:413
+#: ../src/gpk-service-pack.c:427 ../src/gpk-service-pack.c:445
+#, fuzzy
+msgid "Create error"
+msgstr "Ошибка транзакции"
+
+#: ../src/gpk-service-pack.c:256
+#, c-format
+msgid "More than one possible package '%s' found!"
+msgstr ""
+
+#: ../src/gpk-service-pack.c:323
+#, fuzzy, c-format
+msgid "The file does not exists"
+msgstr "Файл не был установлен"
+
+#: ../src/gpk-service-pack.c:331
+#, fuzzy, c-format
+msgid "Could not read package list"
+msgstr "Не удаётся найти пакет"
+
+#: ../src/gpk-service-pack.c:350
+#, fuzzy, c-format
+msgid "Could not write package list"
+msgstr "Не удаётся найти пакет"
+
+#: ../src/gpk-service-pack.c:395
+#, fuzzy
+msgid "Cannot copy system package list"
+msgstr "Получен список пакетов"
+
+#: ../src/gpk-service-pack.c:413
+#, fuzzy
+msgid "No package name selected"
+msgstr "Нет выбранных обновлений"
+
+#: ../src/gpk-service-pack.c:427
+#, fuzzy
+msgid "Cannot read destination package list"
+msgstr "Получение списка пакетов"
+
+#: ../src/gpk-service-pack.c:445
+#, fuzzy
+msgid "Cannot create service pack"
+msgstr "Обновление из сервис-пака"
+
+#: ../src/gpk-service-pack.c:551
+msgid "Preselect the option, allowable values are list, updates and package"
+msgstr ""
+
+#: ../src/gpk-service-pack.c:553
+msgid "Add the package name to the text entry box"
+msgstr ""
+
+#: ../src/gpk-service-pack.c:555
+#, fuzzy
+msgid "Set the remote package list filename"
+msgstr "Имя пакета найдено"
+
+#: ../src/gpk-service-pack.c:557
+msgid "Set the default output directory"
+msgstr ""
+
+#: ../src/gpk-service-pack.c:606
+#, fuzzy
+msgid "Package list files"
+msgstr "Установка пакетов"
+
+#: ../src/gpk-service-pack.c:612
+#, fuzzy
+msgid "Service pack files"
+msgstr "Сервис-пак"
+
+#: ../src/gpk-update-icon.c:131
 msgid "Exit after a small delay"
 msgstr ""
 
-#: ../src/gpk-update-icon.c:149
-msgid "PackageKit Update Icon"
-msgstr "Значок обновлений PackageKit"
+#: ../src/gpk-update-icon.c:149 ../src/gpk-update-icon.c:151
+#, fuzzy
+msgid "Update Applet"
+msgstr "Обновить апплет"
 
 #. are we running privileged
-#: ../src/gpk-update-icon.c:163
+#: ../src/gpk-update-icon.c:165
 msgid "Update applet"
 msgstr "Обновить апплет"
 
-#: ../src/gpk-update-viewer.c:251
+#: ../src/gpk-update-viewer.c:247
 msgid "No updates selected"
 msgstr "Нет выбранных обновлений"
 
-#: ../src/gpk-update-viewer.c:252
+#: ../src/gpk-update-viewer.c:248
 msgid "No updates are selected"
 msgstr "Нет выбранных обновлений"
 
-#: ../src/gpk-update-viewer.c:346
+#: ../src/gpk-update-viewer.c:339
 msgid "Getting Description..."
 msgstr "Получение описания..."
 
-#: ../src/gpk-update-viewer.c:497
-msgid "There are no updates available!"
+#: ../src/gpk-update-viewer.c:490
+#, fuzzy
+msgid "There are no updates available"
 msgstr "Нет доступных обновлений!"
 
-#. translators: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:892
-msgid "Type"
-msgstr "Тип"
-
-#. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:898
+#. translators: this is the stability status of the update
+#: ../src/gpk-update-viewer.c:906
 #, fuzzy
 msgid "State"
 msgstr "Программы"
 
-#. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:905
+#. translators: this is when the update was issued
+#: ../src/gpk-update-viewer.c:913
 msgid "Issued"
 msgstr ""
 
 #. translators: this is the package version
-#: ../src/gpk-update-viewer.c:919
+#: ../src/gpk-update-viewer.c:927
 msgid "New version"
 msgstr "Новая версия"
 
 #. translators: this is a list of packages that are updated
-#: ../src/gpk-update-viewer.c:926
+#: ../src/gpk-update-viewer.c:934
 msgid "Updates"
 msgstr "Обновления"
 
 #. translators: this is a list of packages that are obsoleted
-#: ../src/gpk-update-viewer.c:934
+#: ../src/gpk-update-viewer.c:942
 msgid "Obsoletes"
 msgstr "Устаревшие"
 
 #. translators: this is the repository the package has come from
-#: ../src/gpk-update-viewer.c:939
+#: ../src/gpk-update-viewer.c:947
 msgid "Repository"
 msgstr "Репозиторий"
 
 #. translators: this is the package description
-#: ../src/gpk-update-viewer.c:945
+#: ../src/gpk-update-viewer.c:953
 msgid "Description"
 msgstr "Описание"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:952
+#: ../src/gpk-update-viewer.c:960
 msgid "Changes"
 msgstr ""
 
-#. translators: this is a list of vendor URLs
-#: ../src/gpk-update-viewer.c:958
-msgid "Vendor"
-msgstr "Производитель"
-
 #. translators: this is a list of bugzilla URLs
-#: ../src/gpk-update-viewer.c:962
+#: ../src/gpk-update-viewer.c:970
 msgid "Bugzilla"
 msgstr "Bugzilla"
 
 #. translators: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:966
+#: ../src/gpk-update-viewer.c:974
 msgid "CVE"
 msgstr "CVE"
 
 #. translators: this is a notice a restart might be required
-#: ../src/gpk-update-viewer.c:974
+#: ../src/gpk-update-viewer.c:982
 msgid "Notice"
 msgstr "Примечание"
 
-#: ../src/gpk-update-viewer.c:1035
+#: ../src/gpk-update-viewer.c:1043
 msgid "Severity"
 msgstr "Важность"
 
-#: ../src/gpk-update-viewer.c:1042
+#: ../src/gpk-update-viewer.c:1050
 msgid "Software"
 msgstr "Программы"
 
-#: ../src/gpk-update-viewer.c:1201
+#: ../src/gpk-update-viewer.c:1209
 msgid "Less than a minute ago"
 msgstr "Меньше минуты назад"
 
-#: ../src/gpk-update-viewer.c:1203
+#: ../src/gpk-update-viewer.c:1211
 msgid "Less than an hour ago"
 msgstr "Меньше часа назад"
 
-#: ../src/gpk-update-viewer.c:1205
+#: ../src/gpk-update-viewer.c:1213
 msgid "A few hours ago"
 msgstr "Несколько часов назад"
 
-#: ../src/gpk-update-viewer.c:1207
+#: ../src/gpk-update-viewer.c:1215
 msgid "A few days ago"
 msgstr "Несколько дней назад"
 
-#: ../src/gpk-update-viewer.c:1209
+#: ../src/gpk-update-viewer.c:1216
 msgid "Over a week ago"
 msgstr "Более недели назад"
 
-#: ../src/gpk-update-viewer.c:1314
+#: ../src/gpk-update-viewer.c:1319
 msgid "Some updates were not installed"
 msgstr "Некоторые обновления не были установлены"
 
-#: ../src/gpk-update-viewer.c:1323
+#: ../src/gpk-update-viewer.c:1328
 msgid "System update completed"
 msgstr "Обновление системы завершено"
 
-#: ../src/gpk-update-viewer.c:1447
+#: ../src/gpk-update-viewer.c:1451
 msgid "A system update is already in progress"
 msgstr "В текущий момент уже идёт обновление"
 
-#: ../src/gpk-update-viewer.c:1587
+#: ../src/gpk-update-viewer.c:1590
 msgid "Select all"
 msgstr "Выделить все"
 
-#: ../src/gpk-update-viewer.c:1594
+#: ../src/gpk-update-viewer.c:1597
 msgid "Unselect all"
 msgstr "Отменить выделение"
 
-#: ../src/gpk-update-viewer.c:1600
+#: ../src/gpk-update-viewer.c:1603
 msgid "Ignore this package"
 msgstr "Игнорировать этот пакет"
 
-#: ../src/gpk-update-viewer.c:1736
+#: ../src/gpk-update-viewer.c:1733
 msgid "Refresh"
 msgstr "Обновить"
 
-#: ../src/gpk-update-viewer.c:1737
+#: ../src/gpk-update-viewer.c:1734
 msgid ""
 "Refreshing is not normally required but will retrieve the latest application "
 "and update lists"
@@ -3259,88 +3560,196 @@ msgstr ""
 "Обычно обновление не требуется, но после обновления вы получите последние "
 "списки обновлений и приложений"
 
-#: ../src/gpk-update-viewer.c:1745
+#: ../src/gpk-update-viewer.c:1742
 msgid "_Restart computer now"
 msgstr "_Перезапустить компьютер сейчас"
 
 #  frame label for global sharing check boxes
-#: ../src/gpk-update-viewer.c:1760
+#: ../src/gpk-update-viewer.c:1757
 msgid "_Apply Updates"
 msgstr "_Применить обновления"
 
 #  Proposal for backup during update
-#: ../src/gpk-update-viewer.c:1761
+#: ../src/gpk-update-viewer.c:1758
 msgid "Apply the selected updates"
 msgstr "Применить выбранные обновления"
 
-#: ../src/gpk-update-viewer.c:1774
+#: ../src/gpk-update-viewer.c:1771
 msgid "_Update System"
 msgstr "_Обновить систему"
 
 #  Proposal for backup during update
-#: ../src/gpk-update-viewer.c:1775
+#: ../src/gpk-update-viewer.c:1772
 msgid "Apply all updates"
 msgstr "Применить все обновления"
 
 # heading for a listing of updates
-#: ../src/gpk-update-viewer.c:1949
+#: ../src/gpk-update-viewer.c:1945
 msgid "Review the update list"
 msgstr "Просмотреть список обновлений"
 
-#: ../src/gpk-update-viewer.c:1954 ../src/gpk-update-viewer.c:1959
+#: ../src/gpk-update-viewer.c:1950 ../src/gpk-update-viewer.c:1955
 msgid "Back to overview"
 msgstr "Назад к обзору"
 
-#: ../src/gpk-watch.c:140
+#: ../src/gpk-watch.c:141
 #, c-format
 msgid "(%i more tasks)"
 msgstr "(ещё %i заданий)"
 
-#: ../src/gpk-watch.c:274
-#, fuzzy
-msgid "Error details"
-msgstr "Сведения получены"
-
-#: ../src/gpk-watch.c:354
+#: ../src/gpk-watch.c:366
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr "Пакет '%s' удалён"
 
 #  if installation failes
 #  Translators: The package name is stored in %1.
-#: ../src/gpk-watch.c:356
+#: ../src/gpk-watch.c:368
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr "Установлен пакет '%s' "
 
 #. do the bubble
-#: ../src/gpk-watch.c:367
+#: ../src/gpk-watch.c:377
 msgid "Task completed"
 msgstr "Задание выполнено"
 
-#: ../src/gpk-watch.c:438
-#, fuzzy
-msgid "Show details"
-msgstr "Сведения получены"
-
-#: ../src/gpk-watch.c:524
+#: ../src/gpk-watch.c:534
 #, fuzzy
 msgid "Internal error"
 msgstr "Интернет"
 
 #. don't know if we want this
-#: ../src/gpk-watch.c:776
+#: ../src/gpk-watch.c:781
 msgid "_Refresh Software List"
 msgstr "_Обновить список программ"
 
 #. hide this option
-#: ../src/gpk-watch.c:827
+#: ../src/gpk-watch.c:832
 msgid "_Hide this icon"
 msgstr "_Скрыть этот значок"
 
-#: ../src/gpk-watch.c:1125
+#: ../src/gpk-watch.c:1124
 msgid "_Restart computer"
 msgstr "_Перезагрузить компьютер"
+
+# error box title
+#~ msgid "Update History"
+#~ msgstr "История обновления"
+
+#~ msgid "This package does not require any others"
+#~ msgstr "Этот пакет не требует никаких других"
+
+#~ msgid "Failed to install files"
+#~ msgstr "Не удаётся установить файлы"
+
+#~ msgid "You don't have the necessary privileges to install local files"
+#~ msgstr "У вас нет достаточно привилегий для установки локальных файлов"
+
+#~ msgid "Additional packages were also not removed"
+#~ msgstr "Дополнительные пакеты также не были удалены"
+
+#~ msgid "You don't have the necessary privileges to install packages"
+#~ msgstr "У вас недостаточно прав для установки обновлений"
+
+#~ msgid "Incorrect response from file search"
+#~ msgstr "Неверный ответ модуля поиска файлов"
+
+#, fuzzy
+#~ msgid "Codec installer"
+#~ msgstr "Установка каталогов"
+
+#, fuzzy
+#~ msgid "Failed to search for codec"
+#~ msgstr "Сбой поиска предоставляемых"
+
+#~ msgid "Available fonts for this document"
+#~ msgstr "Доступные для этого документа шрифты"
+
+#~ msgid "Failed to install fonts"
+#~ msgstr "Ошибка установки шрифтов"
+
+#~ msgid "No fonts were chosen to be installed"
+#~ msgstr "Шрифты для установки не были выбраны"
+
+# %s is either BOOTP or DHCP
+#~ msgid "Authorization could not be obtained"
+#~ msgstr "Не удаётся получить авторизацию"
+
+#~ msgid "The error was: %s"
+#~ msgstr "Ошибка: %s"
+
+# %s is either BOOTP or DHCP
+#~ msgid "Authorisation could not be obtained"
+#~ msgstr "Не удаётся получить авторизацию"
+
+#~ msgid "Failed to reset get-updates"
+#~ msgstr "Не удаётся сбросить модуль get-updates"
+
+#, fuzzy
+#~ msgid "Failed to reset get-upgrades"
+#~ msgstr "Не удаётся сбросить модуль get-updates"
+
+#, fuzzy
+#~ msgid "Getting the list of distribution upgrades failed"
+#~ msgstr "Сбой получения списка обновлений"
+
+#~ msgid "Failed to reset get-file-list"
+#~ msgstr "Не удаётся сбросить модуль get-file-list"
+
+#~ msgid "Failed to get file list"
+#~ msgstr "Не удаётся получить список файлов"
+
+#~ msgid "Failed to get depends"
+#~ msgstr "Ошибка получения зависимостей"
+
+#~ msgid "Failed to get requires"
+#~ msgstr "Ошибка получения зависимостей"
+
+#~ msgid "Remove package"
+#~ msgid_plural "Remove packages"
+#~ msgstr[0] "Удалить пакет"
+#~ msgstr[1] "Удалить пакеты"
+#~ msgstr[2] "Удалить пакеты"
+
+#~ msgid "Failed to resolve package"
+#~ msgstr "Не удаётся разобрать зависимости пакета"
+
+#~ msgid "Removed package"
+#~ msgstr "Удалены пакеты"
+
+#~ msgid "Updated package"
+#~ msgstr "Пакет обновлён"
+
+#~ msgid "0 bytes"
+#~ msgstr "0 байт"
+
+#~ msgid "512 bytes"
+#~ msgstr "512 байт"
+
+#~ msgid "256.2 MB"
+#~ msgstr "256.2 МБ"
+
+#~ msgid "PackageKit Catalog Installer"
+#~ msgstr "Установка каталогов"
+
+#~ msgid "PackageKit MimeType Installer"
+#~ msgstr "Установка типов Mime"
+
+#~ msgid "PackageKit Package Installer"
+#~ msgstr "Установка пакетов"
+
+#~ msgid "PackageKit Filename Installer"
+#~ msgstr "Установка пакета по имени файла"
+
+#~ msgid "Role"
+#~ msgstr "Роль"
+
+#~ msgid "Transaction"
+#~ msgstr "Транзакция"
+
+#~ msgid "PackageKit Update Icon"
+#~ msgstr "Значок обновлений PackageKit"
 
 #~ msgid "<b>Installation Complete</b>"
 #~ msgstr "<b>Установка завершена</b>"
