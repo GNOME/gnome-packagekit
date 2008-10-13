@@ -1405,7 +1405,7 @@ gpk_application_quit (GpkApplication *application)
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
 						 "%s", _("Changes not applied"));
-		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_CLOSE);
+		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_OK);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 							  "%s\n%s", _("You have made changes that have not yet been applied."),
 							  _("These changes will be lost if you close this window."));
