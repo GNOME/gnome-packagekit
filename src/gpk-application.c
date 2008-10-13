@@ -1408,7 +1408,7 @@ gpk_application_quit (GpkApplication *application)
 		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_CLOSE);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 							  "%s\n%s", _("You have made changes that have not yet been applied."),
-							  _("These changes will be lost if you quit."));
+							  _("These changes will be lost if you close this window."));
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 		result = gtk_dialog_run (GTK_DIALOG(dialog));
 		gtk_widget_destroy (dialog);
