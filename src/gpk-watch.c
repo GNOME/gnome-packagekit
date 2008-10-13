@@ -283,7 +283,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
 	} else if (egg_strequal (action, "show-error-details")) {
-		gpk_error_dialog (_("Error details"), NULL, watch->priv->error_details);
+		gpk_error_dialog (_("Error details"), _("Package Manager error details"), watch->priv->error_details);
 
 	} else {
 		egg_warning ("unknown action id: %s", action);
