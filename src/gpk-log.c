@@ -492,7 +492,6 @@ int
 main (int argc, char *argv[])
 {
 	gboolean verbose = FALSE;
-	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GConfClient *gconf_client;
 	GtkWidget *widget;
@@ -506,8 +505,8 @@ main (int argc, char *argv[])
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  N_("Show extra debugging information"), NULL },
-		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  N_("Show the program version and exit"), NULL },
+		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
+		  N_("Set the filter to this value"), NULL },
 		{ NULL}
 	};
 
@@ -527,11 +526,6 @@ main (int argc, char *argv[])
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-
-	if (program_version) {
-		g_print (VERSION "\n");
-		return 0;
-	}
 
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
@@ -572,6 +566,12 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 	gtk_widget_set_size_request (widget, 750, 300);
+
+	/* if command line arguments are set, then setup UI */
+	if (filter != NULL) {
+		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		gtk_entry_set_text (GTK_ENTRY(widget), filter);
+	}
 
 	/* Get the main window quit */
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);

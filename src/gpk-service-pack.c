@@ -467,10 +467,10 @@ out:
 }
 
 /**
- * ggpk_pack_activated_cb
+ * gpk_pack_activated_cb
  **/
 static void
-ggpk_pack_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_pack_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "window_prefs");
@@ -478,10 +478,10 @@ ggpk_pack_activated_cb (EggUnique *egg_unique, gpointer data)
 }
 
 /**
- * ggpk_pack_radio_updates_cb:
+ * gpk_pack_radio_updates_cb:
  **/
 static void
-ggpk_pack_radio_updates_cb (GtkWidget *widget2, gpointer data)
+gpk_pack_radio_updates_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
 	egg_debug ("got updates");
@@ -493,10 +493,10 @@ ggpk_pack_radio_updates_cb (GtkWidget *widget2, gpointer data)
 }
 
 /**
- * ggpk_pack_radio_package_cb:
+ * gpk_pack_radio_package_cb:
  **/
 static void
-ggpk_pack_radio_package_cb (GtkWidget *widget2, gpointer data)
+gpk_pack_radio_package_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
 	egg_debug ("got package");
@@ -508,10 +508,10 @@ ggpk_pack_radio_package_cb (GtkWidget *widget2, gpointer data)
 }
 
 /**
- * ggpk_pack_radio_copy_cb:
+ * gpk_pack_radio_copy_cb:
  **/
 static void
-ggpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
+gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
 	egg_debug ("got copy");
@@ -529,7 +529,6 @@ int
 main (int argc, char *argv[])
 {
 	gboolean verbose = FALSE;
-	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
@@ -540,12 +539,22 @@ main (int argc, char *argv[])
 	EggUnique *egg_unique;
 	gboolean ret;
 	GConfClient *client;
+	gchar *option = NULL;
+	gchar *package = NULL;
+	gchar *with_list = NULL;
+	gchar *output = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
-		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  _("Show the program version and exit"), NULL },
+		{ "option", 'o', 0, G_OPTION_ARG_STRING, &option,
+		  _("Preselect the option, allowable values are list, updates and package"), NULL },
+		{ "package", 'p', 0, G_OPTION_ARG_STRING, &package,
+		  _("Add the package name to the text entry box"), NULL },
+		{ "with-list", 'p', 0, G_OPTION_ARG_STRING, &with_list,
+		  _("Set the remote package list filename"), NULL },
+		{ "output", 'p', 0, G_OPTION_ARG_STRING, &output,
+		  _("Set the default output directory"), NULL },
 		{ NULL}
 	};
 
@@ -566,11 +575,6 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	if (program_version) {
-		g_print (VERSION "\n");
-		return 0;
-	}
-
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
@@ -580,7 +584,7 @@ main (int argc, char *argv[])
 	if (!ret)
 		goto unique_out;
 	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (ggpk_pack_activated_cb), NULL);
+			  G_CALLBACK (gpk_pack_activated_cb), NULL);
 
 	/* get actions */
 	control = pk_control_new ();
@@ -610,11 +614,11 @@ main (int argc, char *argv[])
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER(widget), filter);
 
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_updates");
-	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_updates_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_radio_updates_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_package");
-	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_package_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_radio_package_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "radiobutton_copy");
-	g_signal_connect (widget, "clicked", G_CALLBACK (ggpk_pack_radio_copy_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_radio_copy_cb), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
@@ -638,6 +642,32 @@ main (int argc, char *argv[])
 	}
 	g_object_unref (client);
 
+	/* if command line arguments are set, then setup UI */
+	if (option != NULL) {
+		if (egg_strequal (option, "list")) {
+			widget = glade_xml_get_widget (glade_xml, "radiobutton_copy");
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
+		} else if (egg_strequal (option, "updates")) {
+			widget = glade_xml_get_widget (glade_xml, "radiobutton_updates");
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
+		} else if (egg_strequal (option, "package")) {
+			widget = glade_xml_get_widget (glade_xml, "radiobutton_package");
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
+		}
+	}
+	if (package != NULL) {
+		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		gtk_entry_set_text (GTK_ENTRY(widget), package);
+	}
+	if (with_list != NULL) {
+		widget = glade_xml_get_widget (glade_xml, "filechooserbutton_exclude");
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(widget), with_list);
+	}
+	if (output != NULL) {
+		widget = glade_xml_get_widget (glade_xml, "filechooserbutton_directory");
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(widget), output);
+	}
+
 	gtk_widget_show (main_window);
 
 	/* wait */
@@ -646,6 +676,10 @@ main (int argc, char *argv[])
 	g_object_unref (glade_xml);
 unique_out:
 	g_object_unref (egg_unique);
+	g_free (option);
+	g_free (package);
+	g_free (with_list);
+	g_free (output);
 
 	return 0;
 }
