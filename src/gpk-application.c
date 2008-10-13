@@ -1390,9 +1390,33 @@ static gboolean
 gpk_application_quit (GpkApplication *application)
 {
 	gboolean ret;
+	guint length;
+	GtkResponseType result;
 	GError *error = NULL;
+	GtkWidget *widget;
+	GtkWidget *dialog;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+
+	/* do we have any items queued for removal or installation? */
+	length = pk_package_list_get_size (application->priv->package_list);
+	if (length != 0) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
+						 "%s", _("Changes not applied"));
+		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_CLOSE);
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+							  "%s\n%s", _("You have made changes that have not yet been applied."),
+							  _("These changes will be lost if you quit."));
+		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+		result = gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_widget_destroy (dialog);
+
+		/* did not agree */
+		if (result != GTK_RESPONSE_OK)
+			return FALSE;
+	}
 
 	/* we might have visual stuff running, close them down */
 	ret = pk_client_cancel (application->priv->client_search, &error);
@@ -1430,8 +1454,7 @@ gpk_application_delete_event_cb (GtkWidget	*widget,
 {
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
-	gpk_application_quit (application);
-	return FALSE;
+	return !gpk_application_quit (application);
 }
 
 /**
