@@ -103,6 +103,7 @@ struct _GpkClientPrivate
 	guint			 timestamp;
 	gchar			*parent_title;
 	gchar			*parent_icon_name;
+	gchar			*error_details;
 	GMainLoop		*loop;
 };
 
@@ -202,6 +203,8 @@ gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpoint
 	} else if (egg_strequal (action, "do-not-show-update-started")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
+	} else if (egg_strequal (action, "show-error-details")) {
+		gpk_error_dialog (_("Error details"), NULL, gclient->priv->error_details);
 	} else if (egg_strequal (action, "cancel")) {
 		/* try to cancel */
 		ret = pk_client_cancel (gclient->priv->client_action, &error);
@@ -489,10 +492,16 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 		return;
 	}
 
+	/* save this globally */
+	g_free (gclient->priv->error_details);
+	gclient->priv->error_details = g_markup_escape_text (details, -1);
+
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "show-error-details",
+					_("Show details"), gpk_client_libnotify_cb, gclient, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -3219,6 +3228,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->parent_window = NULL;
 	gclient->priv->parent_title = NULL;
 	gclient->priv->parent_icon_name = NULL;
+	gclient->priv->error_details = NULL;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
 	gclient->priv->show_confirm = TRUE;
@@ -3313,6 +3323,7 @@ gpk_client_finalize (GObject *object)
 
 	g_free (gclient->priv->parent_title);
 	g_free (gclient->priv->parent_icon_name);
+	g_free (gclient->priv->error_details);
 	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
 	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);
 	g_strfreev (gclient->priv->files_array);
