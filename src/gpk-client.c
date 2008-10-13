@@ -204,7 +204,7 @@ gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpoint
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
 	} else if (egg_strequal (action, "show-error-details")) {
-		gpk_error_dialog (_("Error details"), NULL, gclient->priv->error_details);
+		gpk_error_dialog (_("Error details"), _("Package Manager error details"), gclient->priv->error_details);
 	} else if (egg_strequal (action, "cancel")) {
 		/* try to cancel */
 		ret = pk_client_cancel (gclient->priv->client_action, &error);
