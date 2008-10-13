@@ -1,3 +1,34 @@
+Version 0.3.7
+~~~~~~~~~~~~~~
+Released: 2008-10-13
+
+* Translations
+ - Updated Punjabi Translation (Amanpreet Singh Alam)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Spanish translation (Jorge Gonzalez)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Italian translation (Luca Ferretti)
+
+* New Features:
+ - Add the facility to get a custom group list using GetCategories (Richard Hughes)
+ - Show tooltips of the group descriptions if returned (Richard Hughes)
+ - Add gpk-service-pack application to enable the user to create service packs
+   without using the command line (Richard Hughes)
+ - Rework the gpk-log program so that it's useful and HIG compliant (Richard Hughes)
+ - Allow downloading more than one package to a service pack (Richard Hughes)
+ - Provide a confirmation dialog box when we make selections in Add/Remove programs,
+   but have not clicked apply when we quit (Richard Hughes)
+
+* Bugfix:
+ - Don't hang the GUI when we fail to install a service pack for some reason (Richard Hughes)
+ - Fix the bug where GetUpdates is unconditionally run at startup.
+   Provide an option in GConf for power users who want this. Fixes RH#461825 (Richard Hughes)
+ - Watch for GConf keys to change so we can reassess actions based on policy,
+   rather than waiting for a re-login to get settings (Richard Hughes)
+ - Set an interaction mode when using GpkClient to get the file list.
+   Fixes rh#466387 (Richard Hughes)
+ - The mime type of a service pack is x-servicepack, not x-pack (Richard Hughes)
+
 Version 0.3.6
 ~~~~~~~~~~~~~~
 Released: 2008-10-06
@@ -5,7 +36,7 @@ Released: 2008-10-06
 * Translations
  - Updated Finnish translation (Ilkka Tuohela)
 
-* New
+* New Features:
  - Add pk-action-removing and pk-action-cleanup animated icons (Mike Langlie)
  - Show vendor specific 'More information' when we fail to find packages (Richard Hughes)
  - Turn off hardware HAL integration by default (Richard Hughes)
@@ -36,7 +67,7 @@ Released: 2008-09-29
  - Updated French translation (Ivan Buresi and Robert-André Mauchin)
  - Updated Norwegian bokmål translation (Kjartan Maraas)
 
-* New
+* New Features:
  - Add an animated icon for the testing phase (Mike Langlie)
  - Add a new GConf key to enable certain firmware files to be skipped (Richard Hughes)
 
@@ -65,7 +96,7 @@ Released: 2008-09-22
  - Updated Hebrew translation (Mark Krapivner)
  - Updated Finnish translation (Ville-Pekka Vainio)
 
-* New
+* New Features:
  - Provide a GConf key that turns on or off precaching of update details (Richard Hughes)
  - Provide a session-wide way of turning off the intervidual helpers (Richard Hughes)
  - Add support for prompting the user about needed hardware drivers (Scott Reeves)
@@ -95,7 +126,7 @@ Released: 2008-09-16
  - Updated Hebrew translation (Mark Krapivner)
  - Updated Finnish translation (Ville-Pekka Vainio)
 
-* New
+* New Features:
  - Add two new icons, pk-collection-available and pk-collection-installed (Mike Langlie)
  - Add pk-package-blocked icon for blocked packages (Richard Hughes)
  - Add a --timed-exit parameter so we can do memory profiling (Richard Hughes)
