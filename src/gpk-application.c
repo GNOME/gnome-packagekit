@@ -2662,12 +2662,15 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	if (application->priv->groups == 0)
 		return FALSE;
 
-	/* add this at the top of the list */
+	/* add these at the top of the list */
 	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
 		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
+	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_NEWEST))
+		gpk_application_group_add_data (application, PK_GROUP_ENUM_NEWEST);
 
 	/* add a separator only if we can do both */
 	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
+	     pk_bitfield_contain (application->priv->roles, PK_GROUP_ENUM_NEWEST) ||
 	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
 	     pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
@@ -2683,7 +2686,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 		/* add all the groups supported (except collections, which we handled above */
 		for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 			if (pk_bitfield_contain (application->priv->groups, i) &&
-			    i != PK_GROUP_ENUM_COLLECTIONS)
+			    i != PK_GROUP_ENUM_COLLECTIONS && i != PK_GROUP_ENUM_NEWEST)
 				gpk_application_group_add_data (application, i);
 		}
 	}
@@ -2725,12 +2728,15 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
 
-	/* add this at the top of the list */
+	/* add these at the top of the list */
 	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS))
 		gpk_application_group_add_data (application, PK_GROUP_ENUM_COLLECTIONS);
+	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_NEWEST))
+		gpk_application_group_add_data (application, PK_GROUP_ENUM_NEWEST);
 
 	/* add a separator only if we can do both */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
+	    pk_bitfield_contain (application->priv->roles, PK_GROUP_ENUM_NEWEST) ||
 	    pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,

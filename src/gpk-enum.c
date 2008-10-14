@@ -192,6 +192,7 @@ static const PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
 	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
 	{PK_GROUP_ENUM_VENDOR,			"application-certificate"},
+	{PK_GROUP_ENUM_NEWEST,			"dialog-information"},
 	{0, NULL}
 };
 
@@ -1295,6 +1296,9 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_VENDOR:
 		text = _("Vendor");
+		break;
+	case PK_GROUP_ENUM_NEWEST:
+		text = _("Newest");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");
