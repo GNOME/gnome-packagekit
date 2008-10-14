@@ -183,7 +183,7 @@ gpk_check_privileged_user (const gchar *application_name)
 			title = g_strdup_printf (_("%s is running when the session is not local"), application_name);
 		message = g_strjoin ("\n",
 				     _("These applications should be run only when on local console."),
-				     _("This normally indicated a bug with ConsoleKit or with the way your session has started."), NULL);
+				     _("This normally indicates a bug with ConsoleKit or with the way your session has started."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
 		g_free (message);
@@ -200,7 +200,7 @@ gpk_check_privileged_user (const gchar *application_name)
 			title = g_strdup_printf (_("%s is running when the session is not active"), application_name);
 		message = g_strjoin ("\n",
 				     _("These applications should be run only when on active console."),
-				     _("This normally indicated a bug with your remote desktop implementation."), NULL);
+				     _("This normally indicates a bug with your remote desktop implementation."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
 		g_free (message);
