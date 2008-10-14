@@ -915,6 +915,41 @@ gpk_application_clear_packages (GpkApplication *application)
 }
 
 /**
+ * egg_strreplace_indirect:
+ **/
+static gboolean
+egg_strreplace_indirect (gchar **text, const gchar *find, const gchar *replace)
+{
+	gchar *new;
+
+	/* is needle even in string? */
+	if (g_strrstr (*text, find) == NULL)
+		return FALSE;
+
+	/* replace */
+	new = egg_strreplace (*text, find, replace);
+
+	/* replace old string with new string */
+	g_free (*text);
+	*text = new;
+	return TRUE;
+}
+
+/**
+ * gpk_application_text_format_display:
+ **/
+static gchar *
+gpk_application_text_format_display (const gchar *ascii)
+{
+	gchar *text;
+	text = g_strdup (ascii);
+	egg_strreplace_indirect (&text, "``", "“");
+	egg_strreplace_indirect (&text, "''", "”");
+	egg_strreplace_indirect (&text, "'", "’");
+	return text;
+}
+
+/**
  * gpk_application_details_cb:
  **/
 static void
@@ -975,7 +1010,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	}
 
 	/* set the description */
-	text = g_markup_escape_text (details->description, -1);
+	text = gpk_application_text_format_display (details->description);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
@@ -1008,7 +1043,7 @@ static void
 gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
 {
 	GtkTreeIter iter;
-	const gchar *summary_new;
+	gchar *summary;
 	const gchar *icon = NULL;
 	gchar *text;
 	gchar *package_id;
@@ -1028,10 +1063,8 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	    obj->info != PK_INFO_ENUM_COLLECTION_INSTALLED && obj->info != PK_INFO_ENUM_COLLECTION_AVAILABLE)
 		return;
 
-	/* use the localised summary if available */
-	summary_new = pk_extra_get_summary (application->priv->extra, obj->id->name);
-	if (TRUE || summary_new == NULL)
-		summary_new = obj->summary;
+	/* format if required */
+	summary = gpk_application_text_format_display (obj->summary);
 
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
@@ -1057,7 +1090,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* use two lines */
-	text = gpk_package_id_format_twoline (obj->id, summary_new);
+	text = gpk_package_id_format_twoline (obj->id, summary);
 
 	/* can we modify this? */
 	enabled = gpk_application_get_checkbox_enable (application, state);
@@ -1074,6 +1107,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 			    -1);
 
 	g_free (package_id);
+	g_free (summary);
 	g_free (text);
 
 	/* only process every n events else we re-order too many times */
