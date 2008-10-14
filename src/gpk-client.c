@@ -2692,7 +2692,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		return FALSE;
+		return NULL;
 	}
 
 	/* wrap get files */
@@ -2703,7 +2703,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
-		goto out;
+		return NULL;
 	}
 
 	/* setup the UI */
@@ -2717,8 +2717,15 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
+	if (!ret)
+		return NULL;
 
-out:
+	/* no files? */
+	if (gclient->priv->files_array == NULL) {
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files were found");
+		return NULL;
+	}
+
 	/* return the file list */
 	return g_strdupv (gclient->priv->files_array);
 }
