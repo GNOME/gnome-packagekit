@@ -924,20 +924,12 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	gchar *text;
 	gchar *value;
 	const gchar *repo_name;
-	const gchar *icon;
 	const gchar *group;
-	gboolean valid;
 	gboolean installed;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	installed = egg_strequal (details->id->data, "installed");
-
-	/* get the icon */
-	icon = pk_extra_get_icon_name (application->priv->extra, details->id->name);
-
-	/* check icon actually exists and is valid in this theme */
-	valid = gpk_check_icon_valid (icon);
 
 	/* hide to start */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
