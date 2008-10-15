@@ -27,7 +27,7 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <pk-common.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

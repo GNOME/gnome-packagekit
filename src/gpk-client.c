@@ -38,15 +38,7 @@
 #include <gconf/gconf-client.h>
 #include <polkit-gnome/polkit-gnome.h>
 #include <libnotify/notify.h>
-
-#include <pk-client.h>
-#include <pk-package-id.h>
-#include <pk-package-ids.h>
-#include <pk-extra.h>
-#include <pk-common.h>
-#include <pk-control.h>
-#include <pk-catalog.h>
-#include <pk-distro-upgrade-obj.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

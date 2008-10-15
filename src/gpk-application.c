@@ -31,18 +31,7 @@
 #include <math.h>
 #include <string.h>
 #include <polkit-gnome/polkit-gnome.h>
-
-#include <pk-enum.h>
-#include <pk-client.h>
-#include <pk-control.h>
-#include <pk-common.h>
-#include <pk-connection.h>
-#include <pk-package-id.h>
-#include <pk-package-ids.h>
-#include <pk-package-list.h>
-#include <pk-extra.h>
-#include <pk-details-obj.h>
-#include <pk-category-obj.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

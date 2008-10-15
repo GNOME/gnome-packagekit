@@ -23,7 +23,7 @@
 #define __GPK_CLIENT_RUN_H
 
 #include <glib-object.h>
-#include <pk-enum.h>
+#include <packagekit-glib/packagekit.h>
 
 G_BEGIN_DECLS
 

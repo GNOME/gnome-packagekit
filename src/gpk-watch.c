@@ -37,15 +37,8 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
-
 #include <polkit-gnome/polkit-gnome.h>
-
-#include <pk-control.h>
-#include <pk-client.h>
-#include <pk-common.h>
-#include <pk-task-list.h>
-#include <pk-connection.h>
-#include <pk-package-id.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

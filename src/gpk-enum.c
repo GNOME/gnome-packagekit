@@ -23,7 +23,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <pk-enum.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

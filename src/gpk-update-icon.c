@@ -31,8 +31,7 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 #include <libnotify/notify.h>
-
-#include <pk-common.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-dbus-monitor.h"

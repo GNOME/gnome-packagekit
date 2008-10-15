@@ -25,12 +25,13 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <locale.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
-#include <pk-common.h>
-#include <gpk-common.h>
-#include <gpk-error.h>
-#include <gpk-client.h>
+
+#include "gpk-common.h"
+#include "gpk-error.h"
+#include "gpk-client.h"
 
 /**
  * main:

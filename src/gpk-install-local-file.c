@@ -27,9 +27,10 @@
 #include <locale.h>
 
 #include "egg-debug.h"
-#include <gpk-common.h>
-#include <gpk-client.h>
-#include <gpk-error.h>
+
+#include "gpk-common.h"
+#include "gpk-client.h"
+#include "gpk-error.h"
 
 /**
  * main:

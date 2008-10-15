@@ -24,9 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-
-#include <pk-enum.h>
-#include <pk-package-id.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "gpk-animated-icon.h"
 

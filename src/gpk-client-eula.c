@@ -26,9 +26,10 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
-#include <pk-package-id.h>
+
 #include "gpk-gnome.h"
 #include "gpk-common.h"
 
