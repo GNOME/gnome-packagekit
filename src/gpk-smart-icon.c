@@ -33,12 +33,11 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
-
 #include <gtk/gtk.h>
 #include <gtk/gtkstatusicon.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
-#include <pk-enum.h>
 #include "gpk-marshal.h"
 #include "gpk-common.h"
 #include "gpk-smart-icon.h"

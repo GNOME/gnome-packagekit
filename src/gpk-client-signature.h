@@ -23,7 +23,6 @@
 #define __GPK_CLIENT_SIGNATURE_H
 
 #include <glib-object.h>
-#include <pk-enum.h>
 
 G_BEGIN_DECLS
 

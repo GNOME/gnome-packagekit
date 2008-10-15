@@ -30,7 +30,7 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <pk-control.h>
+#include <packagekit-glib/packagekit.h>
 #include <locale.h>
 
 #include "egg-debug.h"

@@ -35,12 +35,7 @@
 #include <fcntl.h>
 #include <glib/gi18n.h>
 #include <glade/glade.h>
-
-#include <pk-common.h>
-#include <pk-client.h>
-#include <pk-package-list.h>
-#include <pk-extra.h>
-#include <pk-enum.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

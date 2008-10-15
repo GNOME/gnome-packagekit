@@ -36,10 +36,7 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
-
-#include <pk-client.h>
-#include <pk-common.h>
-#include <pk-task-list.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

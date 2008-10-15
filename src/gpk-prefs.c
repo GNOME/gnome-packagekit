@@ -31,8 +31,7 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-
-#include <pk-control.h>
+#include <packagekit-glib/packagekit.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>

@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-#include <pk-control.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

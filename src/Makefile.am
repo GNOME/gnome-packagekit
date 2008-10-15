@@ -55,6 +55,8 @@ shared_SOURCES =					\
 	egg-unique.h					\
 	egg-obj-list.c					\
 	egg-obj-list.h					\
+	egg-console-kit.c				\
+	egg-console-kit.h				\
 	egg-dbus-monitor.c				\
 	egg-dbus-monitor.h				\
 	gpk-enum.c					\

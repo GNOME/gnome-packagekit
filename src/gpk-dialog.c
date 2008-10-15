@@ -24,11 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-
-#include <pk-common.h>
-#include <pk-enum.h>
-#include <pk-extra.h>
-#include <pk-package-id.h>
+#include <packagekit-glib/packagekit.h>
 #include <gconf/gconf-client.h>
 
 #include "egg-debug.h"

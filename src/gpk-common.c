@@ -29,16 +29,12 @@
 #include <sys/types.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
-
 #include <polkit-gnome/polkit-gnome.h>
-
-#include <pk-package-id.h>
-#include <pk-package-list.h>
-#include <pk-enum.h>
-#include <pk-common.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-console-kit.h"
 
 #include "gpk-enum.h"
 #include "gpk-common.h"
@@ -148,7 +144,9 @@ gpk_package_get_name (const gchar *package_id)
 gboolean
 gpk_check_privileged_user (const gchar *application_name)
 {
+	EggConsoleKit *ck = NULL;
 	guint uid;
+	gboolean ret = FALSE;
 	gchar *message;
 	gchar *title;
 
@@ -165,9 +163,49 @@ gpk_check_privileged_user (const gchar *application_name)
 		g_free (title);
 		g_free (message);
 		egg_warning ("uid=%i so closing", uid);
-		return FALSE;
+		goto out;
 	}
-	return TRUE;
+
+	/* talk to ConsoleKit */
+	ck = egg_console_kit_new ();
+
+	/* we are not local */
+	ret = egg_console_kit_is_local (ck);
+	if (!ret) {
+		if (application_name == NULL)
+			title = g_strdup (_("This application is running when the session is not local"));
+		else
+			title = g_strdup_printf (_("%s is running when the session is not local"), application_name);
+		message = g_strjoin ("\n",
+				     _("These applications should be run only when on local console."),
+				     _("This normally indicates a bug with ConsoleKit or with the way your session has started."), NULL);
+		gpk_error_dialog (title, message, "");
+		g_free (title);
+		g_free (message);
+		egg_warning ("not LOCAL so closing");
+		goto out;
+	}
+
+	/* we are not active */
+	ret = egg_console_kit_is_active (ck);
+	if (!ret) {
+		if (application_name == NULL)
+			title = g_strdup (_("This application is running when the session is not active"));
+		else
+			title = g_strdup_printf (_("%s is running when the session is not active"), application_name);
+		message = g_strjoin ("\n",
+				     _("These applications should be run only when on active console."),
+				     _("This normally indicates a bug with your remote desktop implementation."), NULL);
+		gpk_error_dialog (title, message, "");
+		g_free (title);
+		g_free (message);
+		egg_warning ("not ACTIVE so closing");
+		goto out;
+	}
+out:
+	if (ck != NULL)
+		g_object_unref (ck);
+	return ret;
 }
 
 /**

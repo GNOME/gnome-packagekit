@@ -33,11 +33,7 @@
 
 #include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
-
-#include <pk-client.h>
-#include <pk-control.h>
-#include <pk-package-id.h>
-#include <pk-common.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-unique.h"
 #include "egg-debug.h"

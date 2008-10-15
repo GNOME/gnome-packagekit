@@ -32,11 +32,7 @@
 #include <sys/utsname.h>
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-
-#include <pk-common.h>
-#include <pk-client.h>
-#include <pk-control.h>
-#include <pk-service-pack.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-unique.h"

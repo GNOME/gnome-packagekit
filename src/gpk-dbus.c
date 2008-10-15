@@ -40,12 +40,7 @@
 #include <dbus/dbus-glib-lowlevel.h>
 #include <polkit/polkit.h>
 #include <polkit-dbus/polkit-dbus.h>
-
-#include <pk-common.h>
-#include <pk-package-id.h>
-#include <pk-package-ids.h>
-#include <pk-enum.h>
-#include <pk-package-list.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
 
