@@ -402,7 +402,7 @@ gpk_package_entry_completion_model_new (void)
 	store = gtk_list_store_new (1, G_TYPE_STRING);
 	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	list = pk_package_list_new ();
-	ret = pk_package_list_add_file (list, PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	ret = pk_obj_list_from_file (PK_OBJ_LIST(list), PK_SYSTEM_PACKAGE_LIST_FILENAME);
 	if (!ret) {
 		egg_warning ("no package list, try refreshing");
 		return NULL;

@@ -1963,7 +1963,7 @@ skip_checks:
 			ret = FALSE;
 		}
 		if (obj_new != NULL)
-			pk_package_list_add_obj (list, obj_new);
+			pk_obj_list_add (PK_OBJ_LIST(list), obj_new);
 
 		pk_package_obj_free (obj_new);
 		g_strfreev (parts);

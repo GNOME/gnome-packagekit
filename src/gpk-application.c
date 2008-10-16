@@ -1061,7 +1061,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	application->priv->has_package = TRUE;
 
 	/* are we in the package list? */
-	in_queue = pk_package_list_contains_obj (application->priv->package_list, obj);
+	in_queue = pk_obj_list_exists (PK_OBJ_LIST(application->priv->package_list), obj);
 	installed = (obj->info == PK_INFO_ENUM_INSTALLED) || (obj->info == PK_INFO_ENUM_COLLECTION_INSTALLED);
 
 	if (installed)
@@ -1618,7 +1618,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
-	pk_package_list_clear (application->priv->package_list);
+	pk_obj_list_clear (PK_OBJ_LIST(application->priv->package_list));
 
 	/* force a button refresh */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
@@ -1667,7 +1667,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	/* refresh the search as the items may have changed and the filter has not changed */
 	if (ret) {
 		/* clear if success */
-		pk_package_list_clear (application->priv->package_list);
+		pk_obj_list_clear (PK_OBJ_LIST(application->priv->package_list));
 		application->priv->action = PK_ACTION_NONE;
 		gpk_application_set_buttons_apply_clear (application);
 		gpk_application_refresh_search_results (application);

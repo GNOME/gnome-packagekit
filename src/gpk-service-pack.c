@@ -322,7 +322,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 
 	/* open the list */
 	system = pk_package_list_new ();
-	ret = pk_package_list_add_file (system, PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	ret = pk_obj_list_from_file (PK_OBJ_LIST(system), PK_SYSTEM_PACKAGE_LIST_FILENAME);
 	if (!ret) {
 		*error = g_error_new (0, 0, _("Could not read package list"));
 		goto out;
@@ -334,14 +334,14 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (system, i);
 		if (obj->info == PK_INFO_ENUM_INSTALLED)
-			pk_package_list_add_obj (installed, obj);
+			pk_obj_list_add (PK_OBJ_LIST(installed), obj);
 		/* don't hang the GUI */
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
 	}
 
 	/* write new file */
-	ret = pk_package_list_to_file (installed, filename);
+	ret = pk_obj_list_to_file (PK_OBJ_LIST(installed), filename);
 	if (!ret) {
 		*error = g_error_new (0, 0, _("Could not write package list"));
 		goto out;
@@ -417,7 +417,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 
 	/* add the exclude list */
 	list = pk_package_list_new ();
-	ret = pk_package_list_add_file (list, exclude);
+	ret = pk_obj_list_from_file (PK_OBJ_LIST(list), exclude);
 	if (!ret) {
 		widget = glade_xml_get_widget (glade_xml, "window_pack");
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot read destination package list"), NULL);
