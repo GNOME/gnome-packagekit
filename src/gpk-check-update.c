@@ -56,6 +56,9 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 
 #define GPK_CHECK_UPDATE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CHECK_UPDATE, GpkCheckUpdatePrivate))
 
+/* the maximum number of lines of data on the libnotify widget */
+#define GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES	7
+
 struct GpkCheckUpdatePrivate
 {
 	GpkSmartIcon		*sicon;
@@ -71,6 +74,7 @@ struct GpkCheckUpdatePrivate
 	gboolean		 cache_okay;
 	gboolean		 cache_update_in_progress;
 	gboolean		 get_updates_in_progress;
+	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
 	GPtrArray		*important_updates_array;
 };
@@ -297,6 +301,10 @@ gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 	gboolean ret;
 	ret = gpk_client_update_system (cupdate->priv->gclient_update_system, NULL);
 
+	/* this isn't valid anymore */
+	if (ret)
+		cupdate->priv->number_updates_critical_last_shown = 0;
+
 	/* we failed, show the icon */
 	if (!ret) {
 		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
@@ -401,6 +409,9 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
 		}
+		/* this isn't valid anymore */
+		if (ret)
+			cupdate->priv->number_updates_critical_last_shown = 0;
 		g_strfreev (package_ids);
 
 	} else if (egg_strequal (action, "do-not-show-notify-critical")) {
@@ -437,6 +448,16 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 		egg_debug ("ignoring due to GConf");
 		return;
 	}
+
+	/* if the number of critical updates is the same as the last notification,
+	 * then skip the notifcation as we don't want to bombard the user every hour */
+	if (array->len == cupdate->priv->number_updates_critical_last_shown) {
+		egg_debug ("ignoring as user ignored last warning");
+		return;
+	}
+
+	/* save for comparison later */
+	cupdate->priv->number_updates_critical_last_shown = array->len;
 
 	/* save for later */
 	if (cupdate->priv->important_updates_array != NULL) {
@@ -701,7 +722,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		}
 
 		/* don't have a huge notification that won't fit on the screen */
-		if (security_array->len > 10) {
+		if (security_array->len > GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
 			more = length - security_array->len;
 			g_string_append_printf (status_security, ngettext ("and %d other security update",
 									   "and %d other security updates", more), more);
@@ -765,6 +786,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
 		}
+		/* this isn't valid anymore */
+		if (ret)
+			cupdate->priv->number_updates_critical_last_shown = 0;
 		g_strfreev (package_ids);
 		goto out;
 	}
@@ -986,6 +1010,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->important_updates_array = NULL;
+	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->sicon = gpk_smart_icon_new ();
 	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
 
