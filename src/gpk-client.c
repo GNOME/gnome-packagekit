@@ -1238,7 +1238,8 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 
 	/* no deps */
 	length = pk_package_list_get_size (list);
-	if (length == 0)
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SKIP_CONFIRM_NO_DEPS, NULL);
+	if (length == 0 && ret)
 		goto skip_checks;
 
 	/* sort by package_id */
@@ -1386,7 +1387,8 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	/* these are the new packages */
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	length = pk_package_list_get_size (list);
-	if (length == 0)
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SKIP_CONFIRM_NO_DEPS, NULL);
+	if (length == 0 && ret)
 		goto skip_checks;
 
 	/* title */
