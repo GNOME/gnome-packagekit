@@ -249,8 +249,7 @@ gpk_log_filter (const gchar *data)
  * gpk_log_transaction_cb:
  **/
 static void
-gpk_log_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespec,
-			gboolean succeeded, PkRoleEnum role, guint duration, const gchar *data, gpointer user_data)
+gpk_log_transaction_cb (PkClient *client, const PkTransactionObj *obj, gpointer user_data)
 {
 	GtkTreeIter iter;
 	gchar *details;
@@ -262,29 +261,29 @@ gpk_log_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespe
 	const gchar *role_text;
 
 	/* only show transactions that succeeded */
-	if (!succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", tid);
+	if (!obj->succeeded) {
+		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
 		return;
 	}
 
 	/* filter */
-	ret = gpk_log_filter (data);
+	ret = gpk_log_filter (obj->data);
 	if (!ret) {
-		egg_debug ("tid %s did not match, so not adding", tid);
+		egg_debug ("tid %s did not match, so not adding", obj->tid);
 		return;
 	}
 
 	/* put formatted text into treeview */
-	details = gpk_log_get_details_localised (timespec, data);
-	date = gpk_log_get_localised_date (timespec);
+	details = gpk_log_get_details_localised (obj->timespec, obj->data);
+	date = gpk_log_get_localised_date (obj->timespec);
 	date_part = g_strsplit (date, ", ", 2);
 
-	if (duration > 0)
-		time = gpk_time_to_localised_string (duration / 1000);
+	if (obj->duration > 0)
+		time = gpk_time_to_localised_string (obj->duration / 1000);
 	else
 		time = g_strdup (_("No data"));
-	icon_name = gpk_role_enum_to_icon_name (role);
-	role_text = gpk_role_enum_to_localised_past (role);
+	icon_name = gpk_role_enum_to_icon_name (obj->role);
+	role_text = gpk_role_enum_to_localised_past (obj->role);
 
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
@@ -294,7 +293,7 @@ gpk_log_transaction_cb (PkClient *client, const gchar *tid, const gchar *timespe
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DURATION, time,
 			    GPK_LOG_COLUMN_DETAILS, details,
-			    GPK_LOG_COLUMN_ID, tid, -1);
+			    GPK_LOG_COLUMN_ID, obj->tid, -1);
 
 	/* spin the gui */
 	while (gtk_events_pending ())
