@@ -2472,6 +2472,40 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 }
 
 /**
+ * gpk_application_menu_group_type_cb:
+ * @widget: The GtkWidget object
+ **/
+static void
+gpk_application_menu_group_type_cb (GtkWidget *widget, GpkApplication *application)
+{
+	gboolean enabled;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* save users preference to gconf */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	gconf_client_set_bool (application->priv->gconf_client,
+			       GPK_CONF_APPLICATION_CATEGORY_GROUPS, enabled, NULL);
+}
+
+/**
+ * gpk_application_menu_autocompletion_cb:
+ * @widget: The GtkWidget object
+ **/
+static void
+gpk_application_menu_autocompletion_cb (GtkWidget *widget, GpkApplication *application)
+{
+	gboolean enabled;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* save users preference to gconf */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	gconf_client_set_bool (application->priv->gconf_client,
+			       GPK_CONF_AUTOCOMPLETE, enabled, NULL);
+}
+
+/**
  * gpk_application_status_changed_cb:
  **/
 static void
@@ -2858,8 +2892,11 @@ gpk_application_create_group_list_categories (GpkApplication *application)
 static void
 gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkApplication *application)
 {
+	GtkEntryCompletion *completion;
 	GConfValue *value;
 	gboolean ret;
+	GtkWidget *widget;
+
 	value = gconf_entry_get_value (entry);
 	if (value == NULL)
 		return;
@@ -2871,6 +2908,16 @@ gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfE
 			gpk_application_create_group_list_categories (application);
 		else
 			gpk_application_create_group_list_enum (application);
+	} else if (egg_strequal (entry->key, GPK_CONF_AUTOCOMPLETE)) {
+		ret = gconf_value_get_bool (value);
+		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+		if (ret) {
+			completion = gpk_package_entry_completion_new ();
+			gtk_entry_set_completion (GTK_ENTRY (widget), completion);
+			g_object_unref (completion);
+		} else {
+			gtk_entry_set_completion (GTK_ENTRY (widget), NULL);
+		}
 	}
 }
 
@@ -3164,6 +3211,16 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_newest_cb), application);
 
+	/* category menu / simple menu */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_group_type");
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_group_type_cb), application);
+
+	/* autocompletion */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_autocomplete");
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_autocompletion_cb), application);
+
 	/* Remove description/file list if needed. */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow2");
@@ -3283,6 +3340,23 @@ gpk_application_init (GpkApplication *application)
 	} else {
 		gtk_widget_hide (widget);
 	}
+
+	/* Group type, set, or hide */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_group_type");
+	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES)) {
+		/* set from remembered state */
+		enabled = gconf_client_get_bool (application->priv->gconf_client,
+						 GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* Set autocompletion */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_autocomplete");
+	enabled = gconf_client_get_bool (application->priv->gconf_client,
+					 GPK_CONF_AUTOCOMPLETE, NULL);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",

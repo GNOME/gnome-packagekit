@@ -409,6 +409,7 @@ gpk_package_entry_completion_model_new (void)
 	}
 
 	length = pk_package_list_get_size (list);
+	egg_debug ("loading %i autocomplete items", length);
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		if (obj == NULL || obj->id == NULL || obj->id->name == NULL) {
