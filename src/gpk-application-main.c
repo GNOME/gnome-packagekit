@@ -31,10 +31,9 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 
-/* local .la */
-#include <egg-unique.h>
-
+#include "egg-unique.h"
 #include "egg-debug.h"
+
 #include "gpk-application.h"
 #include "gpk-common.h"
 

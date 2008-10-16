@@ -29,8 +29,8 @@
 #include <polkit-gnome/polkit-gnome.h>
 
 #include "egg-debug.h"
-#include <gpk-common.h>
-#include <gpk-error.h>
+#include "gpk-common.h"
+#include "gpk-error.h"
 
 /**
  * gpk_consolekit_try_system_restart:

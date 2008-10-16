@@ -35,7 +35,6 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
-#include "egg-obj-list.h"
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -2767,7 +2766,7 @@ static void
 gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
 {
 	const GPtrArray	*categories;
-	EggObjList *list;
+	PkObjList *list;
 	const PkCategoryObj *obj;
 	const PkCategoryObj *obj2;
 	GtkTreeIter iter;
@@ -2819,13 +2818,13 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	}
 
 	/* copy the categories into a list so we can remove then */
-	list = egg_obj_list_new ();
-	egg_obj_list_set_copy (list, (EggObjListCopyFunc) pk_category_obj_copy);
-	egg_obj_list_set_free (list, (EggObjListFreeFunc) pk_category_obj_free);
-	egg_obj_list_add_array (list, categories);
+	list = pk_obj_list_new ();
+	pk_obj_list_set_copy (list, (PkObjListCopyFunc) pk_category_obj_copy);
+	pk_obj_list_set_free (list, (PkObjListFreeFunc) pk_category_obj_free);
+	pk_obj_list_add_array (list, categories);
 
 	for (i=0; i < list->len; i++) {
-		obj = egg_obj_list_index (list, i);
+		obj = pk_obj_list_index (list, i);
 
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
@@ -2838,7 +2837,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 		j = 0;
 		do {
 			/* only allows groups two layers deep */
-			obj2 = egg_obj_list_index (list, j);
+			obj2 = pk_obj_list_index (list, j);
 			if (egg_strequal (obj2->parent_id, obj->cat_id)) {
 				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
 				gtk_tree_store_set (application->priv->groups_store, &iter2,
@@ -2848,7 +2847,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 						    GROUPS_COLUMN_ICON, obj2->icon,
 						    GROUPS_COLUMN_ACTIVE, TRUE,
 						    -1);
-				egg_obj_list_remove (list, obj2);
+				pk_obj_list_remove (list, obj2);
 			} else
 				j++;
 		} while (j < list->len);
