@@ -2765,7 +2765,6 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 static void
 gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
 {
-	const GPtrArray	*categories;
 	PkObjList *list;
 	const PkCategoryObj *obj;
 	const PkCategoryObj *obj2;
@@ -2811,17 +2810,11 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	}
 
 	/* get return values */
-	categories = pk_client_get_cached_objects (client);
-	if (categories->len == 0) {
+	list = pk_client_get_cached_objects (client);
+	if (list->len == 0) {
 		egg_warning ("no results from GetCategories");
 		goto out;
 	}
-
-	/* copy the categories into a list so we can remove then */
-	list = pk_obj_list_new ();
-	pk_obj_list_set_copy (list, (PkObjListCopyFunc) pk_category_obj_copy);
-	pk_obj_list_set_free (list, (PkObjListFreeFunc) pk_category_obj_free);
-	pk_obj_list_add_array (list, categories);
 
 	for (i=0; i < list->len; i++) {
 		obj = pk_obj_list_index (list, i);
