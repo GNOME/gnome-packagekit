@@ -94,6 +94,7 @@ struct GpkApplicationPrivate
 	gchar			*package;
 	gchar			*group;
 	gchar			*url;
+	gchar			*search_text;
 	guint			 details_event_id;
 	GHashTable		*repos;
 	PkBitfield		 roles;
@@ -1032,6 +1033,8 @@ static void
 gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
 {
 	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+	GtkWidget *widget;
 	gchar *summary;
 	const gchar *icon = NULL;
 	gchar *text;
@@ -1094,6 +1097,13 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
+
+	/* if it's an exact match, select it */
+	if (egg_strequal (obj->id->name, application->priv->search_text)) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+		gtk_tree_selection_select_iter (selection, &iter);
+	}
 
 	g_free (package_id);
 	g_free (summary);
@@ -1259,20 +1269,20 @@ static gboolean
 gpk_application_perform_search_name_details_file (GpkApplication *application)
 {
 	GtkWidget *widget;
-	const gchar *package;
 	GError *error = NULL;
 	gboolean ret;
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
-	package = gtk_entry_get_text (GTK_ENTRY (widget));
+	g_free (application->priv->search_text);
+	application->priv->search_text = g_strdup (gtk_entry_get_text (GTK_ENTRY (widget)));
 
 	/* have we got input? */
-	if (egg_strzero (package)) {
+	if (egg_strzero (application->priv->search_text)) {
 		egg_debug ("no input");
 		return FALSE;
 	}
 
-	ret = pk_strvalidate (package);
+	ret = pk_strvalidate (application->priv->search_text);
 	if (!ret) {
 		egg_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
@@ -1281,7 +1291,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 					_("The search text contains invalid characters"), NULL);
 		return FALSE;
 	}
-	egg_debug ("find %s", package);
+	egg_debug ("find %s", application->priv->search_text);
 
 	/* reset */
 	ret = pk_client_reset (application->priv->client_search, &error);
@@ -1293,11 +1303,17 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* do the search */
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		ret = pk_client_search_name (application->priv->client_search, application->priv->filters_current, package, &error);
+		ret = pk_client_search_name (application->priv->client_search,
+					     application->priv->filters_current,
+					     application->priv->search_text, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		ret = pk_client_search_details (application->priv->client_search, application->priv->filters_current, package, &error);
+		ret = pk_client_search_details (application->priv->client_search,
+					     application->priv->filters_current,
+					     application->priv->search_text, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		ret = pk_client_search_file (application->priv->client_search, application->priv->filters_current, package, &error);
+		ret = pk_client_search_file (application->priv->client_search,
+					     application->priv->filters_current,
+					     application->priv->search_text, &error);
 	} else {
 		egg_warning ("invalid search type");
 		return FALSE;
@@ -2939,6 +2955,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->package = NULL;
 	application->priv->group = NULL;
 	application->priv->url = NULL;
+	application->priv->search_text = NULL;
 	application->priv->has_package = FALSE;
 	application->priv->details_event_id = 0;
 	application->priv->package_list = pk_package_list_new ();
@@ -3476,6 +3493,7 @@ gpk_application_finalize (GObject *object)
 	g_free (application->priv->url);
 	g_free (application->priv->group);
 	g_free (application->priv->package);
+	g_free (application->priv->search_text);
 	g_hash_table_destroy (application->priv->repos);
 
 	G_OBJECT_CLASS (gpk_application_parent_class)->finalize (object);
