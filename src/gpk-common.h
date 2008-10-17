@@ -74,6 +74,7 @@ G_BEGIN_DECLS
 #define GPK_ICON_SOFTWARE_LOG			"x-system-software-log"
 #define GPK_ICON_SOFTWARE_UPDATE_PREFS		"x-system-software-update-preferences"
 #define GPK_ICON_SOFTWARE_UPDATE_AVAILABLE	"software-update-available"
+#define GPK_ICON_SERVICE_PACK			"x-system-software-servicepack"
 
 void		 gpk_common_test			(gpointer	 data);
 gchar		*gpk_package_get_name			(const gchar	*package_id);

@@ -592,7 +592,7 @@ main (int argc, char *argv[])
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SERVICE_PACK);
 
 	/* Get the main window quit */
 	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
