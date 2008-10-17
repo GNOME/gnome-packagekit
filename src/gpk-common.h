@@ -92,6 +92,9 @@ gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
 							 GtkIconSize	 size);
 gchar		*gpk_strv_join_locale			(gchar		**array);
 GtkEntryCompletion	*gpk_package_entry_completion_new	(void);
+gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
+							 guint		 width,
+							 guint		 height);
 
 G_END_DECLS
 

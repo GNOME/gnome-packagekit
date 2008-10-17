@@ -560,7 +560,9 @@ main (int argc, char *argv[])
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
-	gtk_widget_set_size_request (widget, 750, 300);
+
+	/* set a size, if the screen allows */
+	gpk_window_set_size_request (GTK_WINDOW (widget), 750, 300);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {

@@ -41,6 +41,30 @@
 #include "gpk-error.h"
 
 /**
+ * gpk_window_set_size_request:
+ **/
+gboolean
+gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
+{
+	GdkScreen *screen;
+
+	/* check for tiny screen, like for instance a OLPC or EEE */
+	screen = gdk_screen_get_default ();
+	if (gdk_screen_get_width (screen) < width ||
+	    gdk_screen_get_height (screen) < height) {
+		egg_debug ("using small form factor mode");
+		gtk_window_set_resizable (window, FALSE);
+		gtk_window_maximize (window);
+		return FALSE;
+	}
+
+	/* normal size laptop panel */
+	egg_debug ("using native mode: %ix%i", width, height);
+	gtk_widget_set_size_request (GTK_WIDGET(window), width, height);
+	return TRUE;
+}
+
+/**
  * gpk_package_id_format_twoline:
  *
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"

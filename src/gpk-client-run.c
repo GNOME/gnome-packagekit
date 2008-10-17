@@ -307,7 +307,9 @@ gpk_client_run_show (gchar **package_ids)
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-	gtk_widget_set_size_request (widget, 600, 300);
+
+	/* set a size, if the screen allows */
+	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_help");

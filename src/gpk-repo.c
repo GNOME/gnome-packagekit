@@ -410,7 +410,8 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_repo_checkbutton_details), NULL);
 
-	gtk_widget_set_size_request (main_window, 500, 300);
+	/* set a size, if the screen allows */
+	gpk_window_set_size_request (GTK_WINDOW (main_window), 500, 300);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (REPO_COLUMN_LAST, G_TYPE_BOOLEAN,

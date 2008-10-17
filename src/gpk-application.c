@@ -3376,8 +3376,15 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	gtk_widget_set_size_request (main_window, 1000, 500);
-	gtk_widget_show (main_window);
+	/* set a size, if the screen allows */
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 100000, 500);
+
+	/* we are small form factor */
+	if (!ret) {
+		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_packages");
+		gtk_box_set_homogeneous (GTK_BOX (widget), FALSE);
+	}
+	gtk_widget_show (GTK_WIDGET(main_window));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
