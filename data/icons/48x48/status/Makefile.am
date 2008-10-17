@@ -38,6 +38,8 @@ install-data-hook:
 	ln -fs $(iconsdir)/pk-update-high.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-prefs.png;
 	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-service-pack.png;
 	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-servicepack.png;
+	ln -fs $(iconsdir)/pk-package-info.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-package-list.png;
+	ln -fs $(iconsdir)/pk-collection-installed.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-catalog.png;
 
 EXTRA_DIST =				\
 	$(icons_DATA)
