@@ -1298,7 +1298,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Vendor");
 		break;
 	case PK_GROUP_ENUM_NEWEST:
-		text = _("Newest");
+		text = _("Newest packages");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		text = _("Unknown group");

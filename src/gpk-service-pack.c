@@ -306,51 +306,35 @@ static gboolean
 gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 {
 	gboolean ret = FALSE;
-	PkPackageList *system = NULL;
-	PkPackageList *installed = NULL;
-	guint i;
-	guint length;
-	const PkPackageObj *obj;
+	PkPackageList *list = NULL;
+	GError *error_local = NULL;
+	PkClient *client;
 
-	/* no feedback */
-	gpk_pack_set_percentage (101);
+	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_set_synchronous (client, TRUE, NULL);
+	g_signal_connect (client, "progress-changed", G_CALLBACK (gpk_pack_progress_changed_cb), NULL);
 
-	if (!g_file_test (PK_SYSTEM_PACKAGE_LIST_FILENAME, G_FILE_TEST_EXISTS)) {
-		*error = g_error_new (0, 0, _("The file does not exists"));
-		goto out;
-	}
-
-	/* open the list */
-	system = pk_package_list_new ();
-	ret = pk_obj_list_from_file (PK_OBJ_LIST(system), PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	ret = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), &error_local);
 	if (!ret) {
-		*error = g_error_new (0, 0, _("Could not read package list"));
+		*error = g_error_new (0, 0, _("Could not get package list: %s"), error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 
-	/* get all the installed entries */
-	installed = pk_package_list_new ();
-	length = pk_package_list_get_size (system);
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (system, i);
-		if (obj->info == PK_INFO_ENUM_INSTALLED)
-			pk_obj_list_add (PK_OBJ_LIST(installed), obj);
-		/* don't hang the GUI */
-		while (gtk_events_pending ())
-			gtk_main_iteration ();
-	}
+	/* get the deps */
+	list = pk_client_get_package_list (client);
 
 	/* write new file */
-	ret = pk_obj_list_to_file (PK_OBJ_LIST(installed), filename);
+	ret = pk_obj_list_to_file (PK_OBJ_LIST(list), filename);
 	if (!ret) {
 		*error = g_error_new (0, 0, _("Could not write package list"));
 		goto out;
 	}
 out:
-	if (system != NULL)
-		g_object_unref (system);
-	if (installed != NULL)
-		g_object_unref (installed);
+	g_object_unref (client);
+	if (list != NULL)
+		g_object_unref (list);
 	return ret;
 }
 
