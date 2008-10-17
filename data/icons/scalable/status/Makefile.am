@@ -31,9 +31,9 @@ icons_DATA = 				\
 
 install-data-hook:
 	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps;
-	ln -fs $(iconsdir)/pk-package-sources.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-sources.svg;
-	ln -fs $(iconsdir)/pk-package-info.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-log.svg
-	ln -fs $(iconsdir)/pk-update-high.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-update-preferences.svg;
+	ln -fs $(iconsdir)/pk-package-sources.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-repo.svg;
+	ln -fs $(iconsdir)/pk-package-info.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-log.svg
+	ln -fs $(iconsdir)/pk-update-high.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-prefs.svg;
 
 EXTRA_DIST =				\
 	$(icons_DATA)

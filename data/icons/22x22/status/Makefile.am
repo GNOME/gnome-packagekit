@@ -33,10 +33,10 @@ icons_DATA = 				\
 install-data-hook:
 	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps;
 	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes;
-	ln -fs $(iconsdir)/pk-package-sources.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-sources.png;
-	ln -fs $(iconsdir)/pk-package-info.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-log.png;
-	ln -fs $(iconsdir)/pk-update-high.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-update-preferences.png;
-	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-servicepack.png;
+	ln -fs $(iconsdir)/pk-package-sources.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-repo.png;
+	ln -fs $(iconsdir)/pk-package-info.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-log.png;
+	ln -fs $(iconsdir)/pk-update-high.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-prefs.png;
+	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-service-pack.png;
 	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-servicepack.png;
 
 EXTRA_DIST =				\
