@@ -26,14 +26,17 @@ icons_DATA = 				\
 	pk-update-security.png		\
 	pk-refresh-cache.png		\
 	pk-rollback.png			\
+	pk-service-pack.png		\
 	pk-setup.png			\
 	pk-wait.png
 
 install-data-hook:
 	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps;
+	mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes;
 	ln -fs $(iconsdir)/pk-package-sources.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-sources.png;
 	ln -fs $(iconsdir)/pk-package-info.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-log.png;
 	ln -fs $(iconsdir)/pk-update-high.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/x-system-software-update-preferences.png;
+	ln -fs $(iconsdir)/pk-service-pack.png $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-servicepack.png;
 
 EXTRA_DIST =				\
 	$(icons_DATA)
