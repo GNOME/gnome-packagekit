@@ -77,7 +77,7 @@ AC_SUBST(UNIQUE_REQUIRED)
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(PACKAGEKIT, packagekit >= $PACKAGEKIT_REQUIRED)
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib >= $PACKAGEKIT_REQUIRED)
 AC_SUBST(PACKAGEKIT_CFLAGS)
 AC_SUBST(PACKAGEKIT_LIBS)
 
