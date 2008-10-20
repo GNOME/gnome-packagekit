@@ -1,3 +1,42 @@
+Version 0.3.8
+~~~~~~~~~~~~~~
+Released: 2008-10-20
+
+* Translations
+ - Added Tamil Translation (I. Felix)
+ - Added Bengali India Translation (Runa Bhattacharjee)
+ - Added Gujarati Translation (Sweta Kothari)
+ - Added Hindi India Translation (Rajesh Ranjan)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Brazilian Portuguese translation (Djavan Fagundes and Vladimir Melo)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated Hebrew Translation (Mark Krapivner)
+ - Update Polish help file translation (Piotr Drąg)
+ - Update Polish translation (Piotr Drąg)
+
+* New Features:
+ - Add service pack icon (Mike Langlie)
+ - Check if the GUI programs are being used on local and active consoles (Richard Hughes)
+ - Add a GConf key to allow the user to force confirmation when there are no
+   dependencies. Default to not showing the UI like before (Richard Hughes)
+ - Add a view menu item to expose the autocomplete and menu type GConf settings (Richard Hughes)
+
+* Bugfix:
+ - Don't add an exclaimation mark when there are no updates. Fixes fd#17253 (Richard Hughes)
+ - When we get an error without a window in GpkClient, provide a link to
+   'Show details' so the user can get a half decent error report (Richard Hughes)
+ - Properly escape the quotes in gpk-application, rather than just converting it
+   to markup to fix rh#459155 (Richard Hughes)
+ - Don't crash gpk-application if a package contains no files (Richard Hughes)
+ - If the search term matched exactly, then select it in the package results (Richard Hughes)
+ - Don't continue to bug the user with libnotify popups if they are ignoring a
+   security update and the number of updates does not change (Richard Hughes)
+ - When getting the package list in gpk-service-pack, query the backend (Richard Hughes)
+ - Don't use a prefix icon names for icons, just use the executable name (Richard Hughes)
+ - Don't force large window sizes so we work on the eee and OLPC. Fixes rh#444198 (Richard Hughes)
+ - The upstream name is packagekit-glib now, not packagekit (Richard Hughes)
+ - Error dialog needs a non NULL message (Scott Reeves)
+
 Version 0.3.7
 ~~~~~~~~~~~~~~
 Released: 2008-10-13
