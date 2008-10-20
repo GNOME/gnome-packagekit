@@ -129,6 +129,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
 	{PK_ROLE_ENUM_CANCEL,			"process-stop"},
 	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-download"},
+	{PK_ROLE_ENUM_GET_CATEGORIES,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
@@ -1081,6 +1082,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
 		text = _("Getting distribution upgrade information");
 		break;
+	case PK_ROLE_ENUM_GET_CATEGORIES:
+		text = _("Getting categories");
+		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1183,6 +1187,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
 		text = _("Got distribution upgrades");
+		break;
+	case PK_ROLE_ENUM_GET_CATEGORIES:
+		text = _("Got categories");
 		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
