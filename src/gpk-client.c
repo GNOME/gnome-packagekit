@@ -615,6 +615,16 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 		} else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON) {
 			message = _("The packagekitd service could not be started.");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-no-service");
+		} else if (error->code == PK_CLIENT_ERROR_INVALID_INPUT) {
+			/* TRANSLATORS: the user tried to query for something invalid */
+			message = _("The query is not valid.");
+			details = error->message;
+			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
+		} else if (error->code == PK_CLIENT_ERROR_INVALID_FILE) {
+			/* TRANSLATORS: the user tried to install a file that was not compatable or broken */
+			message = _("The file is not valid.");
+			details = error->message;
+			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		} else {
 			details = error->message;
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
