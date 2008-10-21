@@ -49,14 +49,15 @@ static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
 static PolKitGnomeAction *button_action = NULL;
+static PkObjList *transactions = NULL;
+static PkObjList *tid_list = NULL;
 
 enum
 {
 	GPK_LOG_COLUMN_ICON,
-	GPK_LOG_COLUMN_DAY,
+	GPK_LOG_COLUMN_TIMESPEC,
 	GPK_LOG_COLUMN_DATE,
 	GPK_LOG_COLUMN_ROLE,
-	GPK_LOG_COLUMN_DURATION,
 	GPK_LOG_COLUMN_DETAILS,
 	GPK_LOG_COLUMN_ID,
 	GPK_LOG_COLUMN_LAST
@@ -197,122 +198,6 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 }
 
 /**
- * gpk_log_filter:
- **/
-static gboolean
-gpk_log_filter (const PkTransactionObj *obj)
-{
-	gboolean ret = FALSE;
-	guint i;
-	guint length;
-	gchar **sections;
-	gchar **packages;
-	PkPackageId *id;
-
-	/* only show transactions that succeeded */
-	if (!obj->succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
-		return FALSE;
-	}
-
-	if (filter == NULL)
-		return TRUE;
-
-	/* look in all the data for the filter string */
-	packages = g_strsplit (obj->data, "\n", 0);
-	length = g_strv_length (packages);
-	for (i=0; i<length; i++) {
-		sections = g_strsplit (packages[i], "\t", 0);
-
-		/* check if type matches filter */
-		if (g_strrstr (sections[0], filter) != NULL)
-			ret = TRUE;
-
-		/* check to see if package name, version or arch matches */
-		id = pk_package_id_new_from_string (sections[1]);
-		if (g_strrstr (id->name, filter) != NULL)
-			ret = TRUE;
-		if (id->version != NULL && g_strrstr (id->version, filter) != NULL)
-			ret = TRUE;
-		if (id->arch != NULL && g_strrstr (id->arch, filter) != NULL)
-			ret = TRUE;
-
-		pk_package_id_free (id);
-		g_strfreev (sections);
-
-		/* shortcut for speed */
-		if (ret)
-			break;
-	}
-
-	g_strfreev (packages);
-
-	return ret;
-}
-
-/**
- * gpk_log_add:
- **/
-static gboolean
-gpk_log_add (const PkTransactionObj *obj)
-{
-	GtkTreeIter iter;
-	gchar *details;
-	gchar *date;
-	gchar **date_part;
-	gchar *time;
-	const gchar *icon_name;
-	const gchar *role_text;
-
-	/* put formatted text into treeview */
-	details = gpk_log_get_details_localised (obj->timespec, obj->data);
-	date = gpk_log_get_localised_date (obj->timespec);
-	date_part = g_strsplit (date, ", ", 2);
-
-	if (obj->duration > 0)
-		time = gpk_time_to_localised_string (obj->duration / 1000);
-	else
-		time = g_strdup (_("No data"));
-	icon_name = gpk_role_enum_to_icon_name (obj->role);
-	role_text = gpk_role_enum_to_localised_past (obj->role);
-
-	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter,
-			    GPK_LOG_COLUMN_ICON, icon_name,
-			    GPK_LOG_COLUMN_DAY, date_part[0],
-			    GPK_LOG_COLUMN_DATE, date_part[1],
-			    GPK_LOG_COLUMN_ROLE, role_text,
-			    GPK_LOG_COLUMN_DURATION, time,
-			    GPK_LOG_COLUMN_DETAILS, details,
-			    GPK_LOG_COLUMN_ID, obj->tid, -1);
-
-	g_strfreev (date_part);
-	g_free (details);
-	g_free (date);
-	g_free (time);
-
-	return TRUE;
-}
-
-/**
- * gpk_log_transaction_cb:
- **/
-static void
-gpk_log_transaction_cb (PkClient *client, const PkTransactionObj *obj, gpointer user_data)
-{
-	gboolean ret;
-
-	/* filter */
-	ret = gpk_log_filter (obj);
-	if (ret)
-		gpk_log_add (obj);
-
-	/* spin the gui */
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-}
-
-/**
  * pk_treeview_add_general_columns:
  **/
 static void
@@ -328,6 +213,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 							   "markup", GPK_LOG_COLUMN_DATE, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_DATE);
 
 	/* --- column for image and text --- */
 	column = gtk_tree_view_column_new ();
@@ -347,6 +233,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", GPK_LOG_COLUMN_ROLE);
 	gtk_tree_view_column_set_expand (column, FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_ROLE);
 
 	gtk_tree_view_append_column (treeview, GTK_TREE_VIEW_COLUMN(column));
 
@@ -431,6 +318,169 @@ gpk_log_activated_cb (EggUnique *egg_unique, gpointer data)
 }
 
 /**
+ * gpk_log_filter:
+ **/
+static gboolean
+gpk_log_filter (const PkTransactionObj *obj)
+{
+	gboolean ret = FALSE;
+	guint i;
+	guint length;
+	gchar **sections;
+	gchar **packages;
+	PkPackageId *id;
+
+	/* only show transactions that succeeded */
+	if (!obj->succeeded) {
+		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
+		return FALSE;
+	}
+
+	if (filter == NULL)
+		return TRUE;
+
+	/* look in all the data for the filter string */
+	packages = g_strsplit (obj->data, "\n", 0);
+	length = g_strv_length (packages);
+	for (i=0; i<length; i++) {
+		sections = g_strsplit (packages[i], "\t", 0);
+
+		/* check if type matches filter */
+		if (g_strrstr (sections[0], filter) != NULL)
+			ret = TRUE;
+
+		/* check to see if package name, version or arch matches */
+		id = pk_package_id_new_from_string (sections[1]);
+		if (g_strrstr (id->name, filter) != NULL)
+			ret = TRUE;
+		if (id->version != NULL && g_strrstr (id->version, filter) != NULL)
+			ret = TRUE;
+		if (id->arch != NULL && g_strrstr (id->arch, filter) != NULL)
+			ret = TRUE;
+
+		pk_package_id_free (id);
+		g_strfreev (sections);
+
+		/* shortcut for speed */
+		if (ret)
+			break;
+	}
+
+	g_strfreev (packages);
+
+	return ret;
+}
+
+/**
+ * gpk_log_add_obj
+ **/
+static void
+gpk_log_add_obj (const PkTransactionObj *obj)
+{
+	GtkTreeIter iter;
+	gchar *details;
+	gchar *date;
+	gchar **date_part;
+	const gchar *icon_name;
+	const gchar *role_text;
+	static guint count;
+
+	/* put formatted text into treeview */
+	details = gpk_log_get_details_localised (obj->timespec, obj->data);
+	date = gpk_log_get_localised_date (obj->timespec);
+	date_part = g_strsplit (date, ", ", 2);
+
+	icon_name = gpk_role_enum_to_icon_name (obj->role);
+	role_text = gpk_role_enum_to_localised_past (obj->role);
+
+	gtk_list_store_append (list_store, &iter);
+	gtk_list_store_set (list_store, &iter,
+			    GPK_LOG_COLUMN_ICON, icon_name,
+			    GPK_LOG_COLUMN_TIMESPEC, obj->timespec,
+			    GPK_LOG_COLUMN_DATE, date_part[1],
+			    GPK_LOG_COLUMN_ROLE, role_text,
+			    GPK_LOG_COLUMN_DETAILS, details,
+			    GPK_LOG_COLUMN_ID, obj->tid, -1);
+
+	/* add to db */
+	pk_obj_list_add (tid_list, obj->tid);
+
+	/* spin the gui */
+	if (count++ % 10 == 0)
+		while (gtk_events_pending ())
+			gtk_main_iteration ();
+
+	g_strfreev (date_part);
+	g_free (details);
+	g_free (date);
+}
+
+/**
+ * gpk_log_remove_obj
+ **/
+static void
+gpk_log_remove_obj (const PkTransactionObj *obj)
+{
+	gchar *id;
+	GtkTreeIter iter;
+	gboolean ret;
+
+	/* remove from db */
+	pk_obj_list_remove (tid_list, obj->tid);
+
+	/* find the tid in the existing list */
+	ret = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter);
+	while (ret) {
+		gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, GPK_LOG_COLUMN_ID, &id, -1);
+		if (g_strcmp0 (id, obj->tid) == 0) {
+			gtk_list_store_remove (list_store, &iter);
+			g_free (id);
+			break;
+		}
+		g_free (id);
+		ret = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter);
+	}
+}
+
+/**
+ * gpk_log_refilter
+ **/
+static void
+gpk_log_refilter (void)
+{
+	guint i;
+	gboolean ret;
+	gboolean in_list;
+	const PkTransactionObj *obj;
+	GtkWidget *widget;
+	const gchar *package;
+
+	/* set the new filter */
+	g_free (filter);
+	widget = glade_xml_get_widget (glade_xml, "entry_package");
+	package = gtk_entry_get_text (GTK_ENTRY(widget));
+	if (!egg_strzero (package))
+		filter = g_strdup (package);
+	else
+		filter = NULL;
+
+	egg_debug ("len=%i", transactions->len);
+
+	/* go through the list, adding and removing the items as required */
+	for (i=0; i<transactions->len; i++) {
+		obj = pk_obj_list_index (transactions, i);
+
+		ret = gpk_log_filter (obj);
+		in_list = pk_obj_list_exists (tid_list, obj->tid);
+		if (ret && !in_list)
+			gpk_log_add_obj (obj);
+		if (!ret && in_list)
+			gpk_log_remove_obj (obj);
+	}
+
+}
+
+/**
  * gpk_log_refresh
  **/
 static gboolean
@@ -438,7 +488,11 @@ gpk_log_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
+
+	/* clear old list */
 	gtk_list_store_clear (list_store);
+	pk_obj_list_clear (tid_list);
+
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
 		egg_warning ("failed to reset client: %s", error->message);
@@ -451,6 +505,12 @@ gpk_log_refresh (void)
 		g_error_free (error);
 		goto out;
 	}
+
+	/* get the list */
+	if (transactions != NULL)
+		g_object_unref (transactions);
+	transactions = pk_client_get_cached_objects (client);
+	gpk_log_refilter ();
 out:
 	return ret;
 }
@@ -471,20 +531,17 @@ gpk_log_button_refresh_cb (GtkWidget *widget, gpointer data)
 static void
 gpk_log_button_filter_cb (GtkWidget *widget2, gpointer data)
 {
-	GtkWidget *widget;
-	const gchar *package;
+	gpk_log_refilter ();
+}
 
-	/* set the new filter */
-	g_free (filter);
-	widget = glade_xml_get_widget (glade_xml, "entry_package");
-	package = gtk_entry_get_text (GTK_ENTRY(widget));
-	if (!egg_strzero (package))
-		filter = g_strdup (package);
-	else
-		filter = NULL;
-
-	/* refresh */
-	gpk_log_refresh ();
+/**
+ * gpk_log_entry_filter_cb:
+ **/
+static gboolean
+gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+	gpk_log_refilter ();
+	return FALSE;
 }
 
 /**
@@ -529,6 +586,12 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
+	/* keep a list of added tid_list */
+	tid_list = pk_obj_list_new ();
+	pk_obj_list_set_compare (tid_list, (PkObjListCompareFunc) g_strcmp0);
+	pk_obj_list_set_copy (tid_list, (PkObjListCopyFunc) g_strdup);
+	pk_obj_list_set_free (tid_list, (PkObjListFreeFunc) g_free);
+
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
@@ -557,7 +620,8 @@ main (int argc, char *argv[])
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
 
 	client = pk_client_new ();
-	g_signal_connect (client, "transaction", G_CALLBACK (gpk_log_transaction_cb), NULL);
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_set_synchronous (client, TRUE, NULL);
 
 	/* get actions */
 	control = pk_control_new ();
@@ -604,6 +668,10 @@ main (int argc, char *argv[])
 		widget = glade_xml_get_widget (glade_xml, "entry_package");
 		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
 		g_object_unref (completion);
+	} else {
+		/* use search as you type */
+		g_signal_connect (widget, "key-press-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
+		g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 	}
 	g_object_unref (gconf_client);
 
@@ -617,7 +685,7 @@ main (int argc, char *argv[])
 		polkit_gnome_action_set_visible (button_action, FALSE);
 
 	/* create list stores */
-	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
 					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create transaction_id tree view */
@@ -633,6 +701,9 @@ main (int argc, char *argv[])
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store),
+					      GPK_LOG_COLUMN_TIMESPEC, GTK_SORT_DESCENDING);
+
 	/* get the update list */
 	gpk_log_refresh ();
 
@@ -646,6 +717,10 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_free (transaction_id);
 	g_free (filter);
+	if (transactions != NULL)
+		g_object_unref (transactions);
+	if (tid_list != NULL)
+		g_object_unref (tid_list);
 unique_out:
 	g_object_unref (egg_unique);
 	return 0;
