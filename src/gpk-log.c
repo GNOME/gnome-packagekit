@@ -200,7 +200,7 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
  * gpk_log_filter:
  **/
 static gboolean
-gpk_log_filter (const gchar *data)
+gpk_log_filter (const PkTransactionObj *obj)
 {
 	gboolean ret = FALSE;
 	guint i;
@@ -209,11 +209,17 @@ gpk_log_filter (const gchar *data)
 	gchar **packages;
 	PkPackageId *id;
 
+	/* only show transactions that succeeded */
+	if (!obj->succeeded) {
+		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
+		return FALSE;
+	}
+
 	if (filter == NULL)
 		return TRUE;
 
 	/* look in all the data for the filter string */
-	packages = g_strsplit (data, "\n", 0);
+	packages = g_strsplit (obj->data, "\n", 0);
 	length = g_strv_length (packages);
 	for (i=0; i<length; i++) {
 		sections = g_strsplit (packages[i], "\t", 0);
@@ -244,34 +250,19 @@ gpk_log_filter (const gchar *data)
 	return ret;
 }
 
-
 /**
- * gpk_log_transaction_cb:
+ * gpk_log_add:
  **/
-static void
-gpk_log_transaction_cb (PkClient *client, const PkTransactionObj *obj, gpointer user_data)
+static gboolean
+gpk_log_add (const PkTransactionObj *obj)
 {
 	GtkTreeIter iter;
 	gchar *details;
 	gchar *date;
 	gchar **date_part;
 	gchar *time;
-	gboolean ret;
 	const gchar *icon_name;
 	const gchar *role_text;
-
-	/* only show transactions that succeeded */
-	if (!obj->succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
-		return;
-	}
-
-	/* filter */
-	ret = gpk_log_filter (obj->data);
-	if (!ret) {
-		egg_debug ("tid %s did not match, so not adding", obj->tid);
-		return;
-	}
 
 	/* put formatted text into treeview */
 	details = gpk_log_get_details_localised (obj->timespec, obj->data);
@@ -295,14 +286,30 @@ gpk_log_transaction_cb (PkClient *client, const PkTransactionObj *obj, gpointer 
 			    GPK_LOG_COLUMN_DETAILS, details,
 			    GPK_LOG_COLUMN_ID, obj->tid, -1);
 
-	/* spin the gui */
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-
 	g_strfreev (date_part);
 	g_free (details);
 	g_free (date);
 	g_free (time);
+
+	return TRUE;
+}
+
+/**
+ * gpk_log_transaction_cb:
+ **/
+static void
+gpk_log_transaction_cb (PkClient *client, const PkTransactionObj *obj, gpointer user_data)
+{
+	gboolean ret;
+
+	/* filter */
+	ret = gpk_log_filter (obj);
+	if (ret)
+		gpk_log_add (obj);
+
+	/* spin the gui */
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
 }
 
 /**
