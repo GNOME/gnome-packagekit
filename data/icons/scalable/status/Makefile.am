@@ -26,6 +26,7 @@ icons_DATA = 				\
 	pk-update-security.svg		\
 	pk-refresh-cache.svg		\
 	pk-rollback.svg			\
+	pk-service-pack.svg		\
 	pk-setup.svg			\
 	pk-wait.svg
 
@@ -35,6 +36,8 @@ install-data-hook:
 	ln -fs $(iconsdir)/pk-package-sources.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-repo.svg;
 	ln -fs $(iconsdir)/pk-package-info.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-log.svg
 	ln -fs $(iconsdir)/pk-update-high.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-prefs.svg;
+	ln -fs $(iconsdir)/pk-service-pack.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/apps/gpk-service-pack.svg;
+	ln -fs $(iconsdir)/pk-service-pack.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-servicepack.svg;
 	ln -fs $(iconsdir)/pk-package-info.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-package-list.svg;
 	ln -fs $(iconsdir)/pk-collection-installed.svg $(DESTDIR)$(DATADIR)/icons/hicolor/$(size)/mimetypes/application-x-catalog.svg;
 
