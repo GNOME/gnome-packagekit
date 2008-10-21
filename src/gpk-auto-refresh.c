@@ -74,8 +74,8 @@ struct GpkAutoRefreshPrivate
 	gboolean		 session_idle;
 	gboolean		 on_battery;
 	gboolean		 network_active;
-	gboolean		 session_delay;
 	gboolean		 force_get_updates_login;
+	guint			 timeout_id;
 	EggDbusMonitor		*monitor_gs;
 	EggDbusMonitor		*monitor_gpm;
 	GConfClient		*gconf_client;
@@ -282,7 +282,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is set to never get updates");
 		return FALSE;
 	}
 
@@ -319,7 +319,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is set to never check for upgrades");
 		return FALSE;
 	}
 
@@ -342,20 +342,28 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_change_state_cb:
+ **/
+static gboolean
+gpk_auto_refresh_change_state_cb (GpkAutoRefresh *arefresh)
+{
+	/* check all actions */
+	gpk_auto_refresh_maybe_refresh_cache (arefresh);
+	gpk_auto_refresh_maybe_get_updates (arefresh);
+	gpk_auto_refresh_maybe_get_upgrades (arefresh);
+	return FALSE;
+}
+
+/**
  * gpk_auto_refresh_change_state:
  **/
 static gboolean
 gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 {
 	gboolean force;
+	guint value;
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
-
-	/* we shouldn't do this early in the session startup */
-	if (!arefresh->priv->session_delay) {
-		egg_debug ("not when this early in the session");
-		return FALSE;
-	}
 
 	/* no point continuing if we have no network */
 	if (!arefresh->priv->network_active) {
@@ -375,10 +383,12 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 		}
 	}
 
-	/* try to do both */
-	gpk_auto_refresh_maybe_refresh_cache (arefresh);
-	gpk_auto_refresh_maybe_get_updates (arefresh);
-	gpk_auto_refresh_maybe_get_upgrades (arefresh);
+	/* wait a little time for things to settle down */
+	if (arefresh->priv->timeout_id != 0)
+		g_source_remove (arefresh->priv->timeout_id);
+	value = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
+	egg_debug ("defering action for %i seconds", value);
+	arefresh->priv->timeout_id = g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
 
 	return TRUE;
 }
@@ -412,7 +422,8 @@ gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *a
 
 	egg_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
-	gpk_auto_refresh_change_state (arefresh);
+	if (arefresh->priv->session_idle)
+		gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
@@ -425,7 +436,8 @@ gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoR
 
 	egg_debug ("setting on_battery %i", on_battery);
 	arefresh->priv->on_battery = on_battery;
-	gpk_auto_refresh_change_state (arefresh);
+	if (!arefresh->priv->on_battery)
+		gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
@@ -448,7 +460,8 @@ gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 
 	arefresh->priv->network_active = (state == PK_NETWORK_ENUM_ONLINE);
 	egg_debug ("setting online %i", arefresh->priv->network_active);
-	gpk_auto_refresh_change_state (arefresh);
+	if (arefresh->priv->network_active)
+		gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
@@ -469,32 +482,6 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 
 	/* always return */
 	return TRUE;
-}
-
-/**
- * gpk_auto_refresh_check_delay_cb:
- **/
-static gboolean
-gpk_auto_refresh_check_delay_cb (gpointer user_data)
-{
-	GpkAutoRefresh *arefresh = GPK_AUTO_REFRESH (user_data);
-
-	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
-
-	/* debug so we can catch polling */
-	egg_debug ("polling check");
-
-	/* we have waited enough */
-	if (!arefresh->priv->session_delay) {
-		egg_debug ("setting session delay TRUE");
-		arefresh->priv->session_delay = TRUE;
-	}
-
-	/* if we failed to do the refresh cache at first boot, we'll pick up an event */
-	gpk_auto_refresh_change_state (arefresh);
-
-	/* we don't want to do this timer again as we sent the signal */
-	return FALSE;
 }
 
 /**
@@ -595,7 +582,6 @@ pk_connection_gs_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connecte
 static void
 gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 {
-	guint value;
 	GError *error = NULL;
 	PkNetworkEnum state;
 
@@ -603,8 +589,8 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->on_battery = FALSE;
 	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
-	arefresh->priv->session_delay = FALSE;
 	arefresh->priv->force_get_updates_login = FALSE;
+	arefresh->priv->timeout_id = 0;
 
 	arefresh->priv->proxy_gs = NULL;
 	arefresh->priv->proxy_gpm = NULL;
@@ -650,9 +636,8 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	/* we check this in case we miss one of the async signals */
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
 
-	/* wait a little bit for login to quiece, even if everything is okay */
-	value = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
-	g_timeout_add_seconds (value, gpk_auto_refresh_check_delay_cb, arefresh);
+	/* check system state */
+	gpk_auto_refresh_change_state (arefresh);
 }
 
 /**
@@ -668,6 +653,9 @@ gpk_auto_refresh_finalize (GObject *object)
 
 	arefresh = GPK_AUTO_REFRESH (object);
 	g_return_if_fail (arefresh->priv != NULL);
+
+	if (arefresh->priv->timeout_id != 0)
+		g_source_remove (arefresh->priv->timeout_id);
 
 	g_object_unref (arefresh->priv->control);
 	g_object_unref (arefresh->priv->monitor_gs);
