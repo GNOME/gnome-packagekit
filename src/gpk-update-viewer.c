@@ -133,8 +133,12 @@ gpk_update_viewer_set_page (PkPageEnum page)
 	widget = glade_xml_get_widget (glade_xml, "window_updates");
 	if (page == PAGE_LAST) {
 		gtk_widget_hide (widget);
+		gpk_client_set_parent (gclient, NULL);
 		return;
 	}
+
+	/* restore modalness */
+	gpk_client_set_parent (gclient, GTK_WINDOW (widget));
 
 	/* some pages are resizeable */
 	if (page == PAGE_DETAILS)

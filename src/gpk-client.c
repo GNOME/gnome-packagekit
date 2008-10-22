@@ -2754,6 +2754,11 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 		goto out;
 	}
 
+	/* set title */
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
+	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
+
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
@@ -3172,6 +3177,13 @@ gboolean
 gpk_client_set_parent (GpkClient *gclient, GtkWindow *window)
 {
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+
+	/* unparent */
+	if (window == NULL) {
+		gpk_client_dialog_set_parent (gclient->priv->dialog, NULL);
+		return TRUE;
+	}
+
 	gclient->priv->parent_window = GTK_WIDGET (window)->window;
 	egg_debug ("parent_window=%p", gclient->priv->parent_window);
 	gpk_client_dialog_set_parent (gclient->priv->dialog, gclient->priv->parent_window);
