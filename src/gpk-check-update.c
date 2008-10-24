@@ -694,6 +694,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		return FALSE;
 	}
 
+	/* sort by name */
+	pk_package_list_sort (list);
+
 	/* we have updates to process */
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
