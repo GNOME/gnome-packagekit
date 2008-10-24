@@ -49,10 +49,17 @@ static void     egg_console_kit_finalize	(GObject		*object);
 struct EggConsoleKitPrivate
 {
 	DBusGConnection		*connection;
-	DBusGProxy		*proxy;
+	DBusGProxy		*proxy_manager;
+	DBusGProxy		*proxy_session;
 	gchar			*session_id;
 };
 
+enum {
+	EGG_CONSOLE_KIT_ACTIVE_CHANGED,
+	EGG_CONSOLE_KIT_LAST_SIGNAL
+};
+
+static guint signals [EGG_CONSOLE_KIT_LAST_SIGNAL] = { 0 };
 G_DEFINE_TYPE (EggConsoleKit, egg_console_kit, G_TYPE_OBJECT)
 
 /**
@@ -63,23 +70,15 @@ G_DEFINE_TYPE (EggConsoleKit, egg_console_kit, G_TYPE_OBJECT)
 gboolean
 egg_console_kit_is_local (EggConsoleKit *console)
 {
-	gboolean ret = FALSE;
+	gboolean ret;
 	gboolean value = FALSE;
 	GError *error = NULL;
-	DBusGProxy *proxy;
 
 	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), FALSE);
-	g_return_val_if_fail (console->priv->connection != NULL, FALSE);
-	g_return_val_if_fail (console->priv->session_id != NULL, FALSE);
+	g_return_val_if_fail (console->priv->proxy_session != NULL, FALSE);
 
-	/* is our session active */
-	proxy = dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
-					   console->priv->session_id, CONSOLEKIT_SESSION_INTERFACE);
-	if (proxy == NULL) {
-		egg_warning ("cannot connect to: %s", console->priv->session_id);
-		goto out;
-	}
-	ret = dbus_g_proxy_call (proxy, "IsLocal", &error, G_TYPE_INVALID,
+	/* is our session local */
+	ret = dbus_g_proxy_call (console->priv->proxy_session, "IsLocal", &error, G_TYPE_INVALID,
 				 G_TYPE_BOOLEAN, &value, G_TYPE_INVALID);
 	if (!ret) {
 		g_warning ("IsLocal failed: %s", error->message);
@@ -90,8 +89,6 @@ egg_console_kit_is_local (EggConsoleKit *console)
 	/* return value only if we successed */
 	ret = value;
 out:
-	if (proxy != NULL)
-		g_object_unref (proxy);
 	return ret;
 }
 
@@ -106,20 +103,12 @@ egg_console_kit_is_active (EggConsoleKit *console)
 	gboolean ret = FALSE;
 	gboolean value = FALSE;
 	GError *error = NULL;
-	DBusGProxy *proxy;
 
 	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), FALSE);
-	g_return_val_if_fail (console->priv->connection != NULL, FALSE);
-	g_return_val_if_fail (console->priv->session_id != NULL, FALSE);
+	g_return_val_if_fail (console->priv->proxy_session != NULL, FALSE);
 
 	/* is our session active */
-	proxy = dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
-					   console->priv->session_id, CONSOLEKIT_SESSION_INTERFACE);
-	if (proxy == NULL) {
-		egg_warning ("cannot connect to: %s", console->priv->session_id);
-		goto out;
-	}
-	ret = dbus_g_proxy_call (proxy, "IsActive", &error, G_TYPE_INVALID,
+	ret = dbus_g_proxy_call (console->priv->proxy_session, "IsActive", &error, G_TYPE_INVALID,
 				 G_TYPE_BOOLEAN, &value, G_TYPE_INVALID);
 	if (!ret) {
 		g_warning ("IsActive failed: %s", error->message);
@@ -130,9 +119,17 @@ egg_console_kit_is_active (EggConsoleKit *console)
 	/* return value only if we successed */
 	ret = value;
 out:
-	if (proxy != NULL)
-		g_object_unref (proxy);
 	return ret;
+}
+
+/**
+ * egg_console_kit_active_changed_cb:
+ **/
+static void
+egg_console_kit_active_changed_cb (DBusGProxy *proxy, gboolean active, EggConsoleKit *console)
+{
+	egg_debug ("emitting active: %i", active);
+	g_signal_emit (console, signals [EGG_CONSOLE_KIT_ACTIVE_CHANGED], 0, active);
 }
 
 /**
@@ -145,11 +142,16 @@ egg_console_kit_class_init (EggConsoleKitClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = egg_console_kit_finalize;
 	g_type_class_add_private (klass, sizeof (EggConsoleKitPrivate));
+	signals [EGG_CONSOLE_KIT_ACTIVE_CHANGED] =
+		g_signal_new ("active-changed",
+			      G_TYPE_FROM_CLASS (object_class), G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EggConsoleKitClass, active_changed),
+			      NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN,
+			      G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 }
 
 /**
  * egg_console_kit_init:
- * @console: This class instance
  **/
 static void
 egg_console_kit_init (EggConsoleKit *console)
@@ -159,7 +161,7 @@ egg_console_kit_init (EggConsoleKit *console)
 	guint32 pid;
 
 	console->priv = EGG_CONSOLE_KIT_GET_PRIVATE (console);
-	console->priv->proxy = NULL;
+	console->priv->proxy_manager = NULL;
 	console->priv->session_id = NULL;
 
 	/* connect to D-Bus */
@@ -171,17 +173,17 @@ egg_console_kit_init (EggConsoleKit *console)
 	}
 
 	/* connect to ConsoleKit */
-	console->priv->proxy =
+	console->priv->proxy_manager =
 		dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
 					   CONSOLEKIT_MANAGER_PATH, CONSOLEKIT_MANAGER_INTERFACE);
-	if (console->priv->proxy == NULL) {
+	if (console->priv->proxy_manager == NULL) {
 		egg_warning ("cannot connect to ConsoleKit");
 		goto out;
 	}
 
 	/* get the session we are running in */
 	pid = getpid ();
-	ret = dbus_g_proxy_call (console->priv->proxy, "GetSessionForUnixProcess", &error,
+	ret = dbus_g_proxy_call (console->priv->proxy_manager, "GetSessionForUnixProcess", &error,
 				 G_TYPE_UINT, pid,
 				 G_TYPE_INVALID,
 				 DBUS_TYPE_G_OBJECT_PATH, &console->priv->session_id,
@@ -192,6 +194,18 @@ egg_console_kit_init (EggConsoleKit *console)
 		goto out;
 	}
 	egg_debug ("ConsoleKit session ID: %s", console->priv->session_id);
+
+	/* connect to session */
+	console->priv->proxy_session =
+		dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
+					   console->priv->session_id, CONSOLEKIT_SESSION_INTERFACE);
+	if (console->priv->proxy_session == NULL) {
+		egg_warning ("cannot connect to: %s", console->priv->session_id);
+		goto out;
+	}
+	dbus_g_proxy_add_signal (console->priv->proxy_session, "ActiveChanged", G_TYPE_BOOLEAN, G_TYPE_INVALID);
+	dbus_g_proxy_connect_signal (console->priv->proxy_session, "ActiveChanged",
+				     G_CALLBACK (egg_console_kit_active_changed_cb), console, NULL);
 
 out:
 	return;
@@ -211,8 +225,10 @@ egg_console_kit_finalize (GObject *object)
 	console = EGG_CONSOLE_KIT (object);
 
 	g_return_if_fail (console->priv != NULL);
-	if (console->priv->proxy != NULL)
-		g_object_unref (console->priv->proxy);
+	if (console->priv->proxy_manager != NULL)
+		g_object_unref (console->priv->proxy_manager);
+	if (console->priv->proxy_session != NULL)
+		g_object_unref (console->priv->proxy_session);
 	g_free (console->priv->session_id);
 
 	G_OBJECT_CLASS (egg_console_kit_parent_class)->finalize (object);

@@ -46,6 +46,8 @@ typedef struct
 typedef struct
 {
 	GObjectClass	parent_class;
+	void		(* active_changed)		(EggConsoleKit	*console,
+							 gboolean	 active);
 } EggConsoleKitClass;
 
 GType		 egg_console_kit_get_type	  	(void) G_GNUC_CONST;
