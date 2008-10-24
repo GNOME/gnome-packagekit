@@ -53,7 +53,6 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 	if (gdk_screen_get_width (screen) < width ||
 	    gdk_screen_get_height (screen) < height) {
 		egg_debug ("using small form factor mode");
-		gtk_window_set_resizable (window, FALSE);
 		gtk_window_maximize (window);
 		return FALSE;
 	}
