@@ -747,9 +747,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	gpk_smart_icon_pulse (cupdate->priv->sicon);
 
 	/* make tooltip */
-	if (status_security->len != 0) {
+	if (status_security->len != 0)
 		g_string_set_size (status_security, status_security->len-1);
-	}
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 							  "There are %d updates pending", length), length);
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
