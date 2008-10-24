@@ -697,6 +697,10 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* sort by name */
 	pk_package_list_sort (list);
 
+	/* filter out the same package with multiple architectures */
+	pk_package_list_set_fuzzy_arch (list, TRUE);
+	pk_obj_list_remove_duplicate (PK_OBJ_LIST(list));
+
 	/* we have updates to process */
 	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
