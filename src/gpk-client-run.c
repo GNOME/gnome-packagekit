@@ -320,6 +320,10 @@ gpk_client_run_show (gchar **package_ids)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_action_cb), NULL);
 	gtk_widget_show (widget);
 
+	/* hide the filter box */
+	widget = glade_xml_get_widget (glade_xml, "hbox_filter");
+	gtk_widget_hide (widget);
+
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
