@@ -3377,7 +3377,7 @@ gpk_application_init (GpkApplication *application)
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set a size, if the screen allows */
-	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 100000, 500);
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 1000, 500);
 
 	/* we are small form factor */
 	if (!ret) {
