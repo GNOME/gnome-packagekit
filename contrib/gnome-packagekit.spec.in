@@ -58,6 +58,15 @@ gnome-packagekit provides session applications for the PackageKit API.
 There are several utilities designed for installing, updating and
 removing packages on your system.
 
+%package extra
+Summary: GNOME PackageKit Client (extra bits)
+Group: Applications/System
+Requires: %{name} = %{version}-%{release}
+
+%description extra
+Extra GNOME applications for using PackageKit, for instance an advanced update
+viewer and a service pack creator.
+
 %prep
 %setup -q
 
@@ -127,20 +136,53 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_bindir}/gpk-*
+%{_bindir}/gpk-application
+%{_bindir}/gpk-install-*
+%{_bindir}/gpk-log
+%{_bindir}/gpk-prefs
+%{_bindir}/gpk-repo
+%{_bindir}/gpk-update-icon
+%{_bindir}/gpk-update-viewer
 %{_bindir}/system-install-packages
-%{_datadir}/gnome-packagekit
-%{_datadir}/icons/hicolor/16x16/*/*.png
-%{_datadir}/icons/hicolor/22x22/*/*.png
-%{_datadir}/icons/hicolor/24x24/*/*.png
-%{_datadir}/icons/hicolor/48x48/*/*.png
-%{_datadir}/icons/hicolor/scalable/*/*.svg
+%dir %{_datadir}/gnome-packagekit
+%{_datadir}/gnome-packagekit/gpk-application.glade
+%{_datadir}/gnome-packagekit/gpk-client.glade
+%{_datadir}/gnome-packagekit/gpk-eula.glade
+%{_datadir}/gnome-packagekit/gpk-prefs.glade
+%{_datadir}/gnome-packagekit/gpk-update-viewer.glade
+%{_datadir}/gnome-packagekit/gpk-error.glade
+%{_datadir}/gnome-packagekit/gpk-log.glade
+%{_datadir}/gnome-packagekit/gpk-repo.glade
+%{_datadir}/gnome-packagekit/gpk-signature.glade
+%dir %{_datadir}/gnome-packagekit/icons
+%dir %{_datadir}/gnome-packagekit/icons/hicolor
+%dir %{_datadir}/gnome-packagekit/icons/hicolor/*
+%dir %{_datadir}/gnome-packagekit/icons/hicolor/*/*
+%{_datadir}/gnome-packagekit/icons/hicolor/*/*/*.png
+%{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
+%{_datadir}/icons/hicolor/*/*/*.png
+%{_datadir}/icons/hicolor/scalable/*/*.svg*
 %config(noreplace) %{_sysconfdir}/gconf/schemas/*.schemas
 %{_datadir}/man/man1/*.1.gz
 %{_datadir}/gnome/help/gnome-packagekit
 %{_datadir}/omf/gnome-packagekit
 %{_sysconfdir}/xdg/autostart/gpk-update-icon.desktop
-%{_datadir}/applications/gpk-*.desktop
+%{_datadir}/applications/gpk-application.desktop
+%{_datadir}/applications/gpk-install-file.desktop
+%{_datadir}/applications/gpk-prefs.desktop
+%{_datadir}/applications/gpk-install-catalog.desktop
+%{_datadir}/applications/gpk-log.desktop
+%{_datadir}/applications/gpk-repo.desktop
+%{_datadir}/applications/gpk-update-viewer.desktop
+
+%files extra
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%{_bindir}/gpk-backend-status
+%{_bindir}/gpk-service-pack
+%{_datadir}/gnome-packagekit/gpk-service-pack.glade
+%{_datadir}/gnome-packagekit/gpk-backend-status.glade
+%{_datadir}/applications/gpk-service-pack.desktop
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#
