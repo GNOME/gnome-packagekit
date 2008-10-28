@@ -49,7 +49,7 @@ main (int argc, char *argv[])
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
 		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_STRING_ARRAY, &packages,
-		  "packages to install", NULL },
+		  _("Packages to install"), NULL },
 		{ NULL}
 	};
 
@@ -63,9 +63,10 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	g_type_init ();
 
-	g_set_application_name (_("Package Installer"));
+	/* TRANSLATORS: program name: installs a package (or packages) by name */
+	g_set_application_name (_("Package Name Installer"));
 	context = g_option_context_new ("gpk-install-package");
-	g_option_context_set_summary (context, _("Package Installer"));
+	g_option_context_set_summary (context, _("Package Name Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -73,13 +74,15 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Package name installer"));
 	if (!ret)
 		return 1;
 
 	if (packages == NULL) {
+		/* TRANSLATORS: failed */
 		gpk_error_dialog (_("Failed to install package from name"),
+				  /* TRANSLATORS: nothing was specified */
 				  _("You need to specify a package to install"), NULL);
 		return 1;
 	}

@@ -88,7 +88,9 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 
 	/* message */
 	message = g_strdup_printf ("%s\n%s",
+				   /* TRANSLATORS: this is untrusted -- warn the user */
 				   _("Malicious software can damage your computer or cause other harm."),
+				   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
 				   _("Are you <b>sure</b> you want to install this package?"));
 	widget = glade_xml_get_widget (glade_xml, "label_message");
 	gtk_label_set_markup (GTK_LABEL (widget), message);
@@ -102,7 +104,9 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.package-install-untrusted");
 	update_system_action = polkit_gnome_action_new_default ("package-install-untrusted", pk_action,
+								/* TRANSLATORS: button label, force the install, even though it's untrusted */
 								_("_Force install"),
+								/* TRANSLATORS: button tooltip */
 								_("Force installing package"));
 	g_object_set (update_system_action,
 		      "no-icon-name", GTK_STOCK_APPLY,

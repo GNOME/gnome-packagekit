@@ -119,6 +119,7 @@ main (int argc, char *argv[])
 	/* general stuff */
 	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
 	if (FALSE == retval) {
+		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
 		egg_warning (_("Exiting as backend details could not be retrieved"));
 		return 1;
 	}

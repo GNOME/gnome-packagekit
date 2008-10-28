@@ -196,6 +196,7 @@ gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpoint
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
 	} else if (egg_strequal (action, "show-error-details")) {
+		/* TRANSLATORS: detailed text about the error */
 		gpk_error_dialog (_("Error details"), _("Package Manager error details"), gclient->priv->error_details);
 	} else if (egg_strequal (action, "cancel")) {
 		/* try to cancel */
@@ -260,8 +261,9 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 
 	/* notify the user if there were skipped entries */
 	if (skipped_number > 0) {
-		message = ngettext (_("One package was skipped:"),
-				    _("Some packages were skipped:"), skipped_number);
+		/* TRANSLATORS: we did the update, but some updates were skipped and not applied */
+		message = ngettext ("One package was skipped:",
+				    "Some packages were skipped:", skipped_number);
 		g_string_prepend (message_text, message);
 		g_string_append_c (message_text, '\n');
 	}
@@ -290,17 +292,20 @@ gpk_client_finished_no_progress (PkClient *client, PkExitEnum exit_code, guint r
 		return;
 	}
 
-	/* do the bubble */
+	/* TRANSLATORS: title: system update completed all okay */
 	notification = notify_notification_new (_("The system update has completed"), message_text->str, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
 		notify_notification_add_action (notification, "restart",
+						/* TRANSLATORS: restart computer as system packages need update */
 						_("Restart computer now"), gpk_client_libnotify_cb, gclient, NULL);
 		notify_notification_add_action (notification, "do-not-show-complete-restart",
+						/* TRANSLATORS: don't show this option again (for restart) */
 						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
 	} else {
 		notify_notification_add_action (notification, "do-not-show-complete",
+						/* TRANSLATORS: don't show this option again (when finished)  */
 						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
 	}
 	ret = notify_notification_show (notification, &error);
@@ -343,6 +348,7 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 
 	if (exit == PK_EXIT_ENUM_SUCCESS && gclient->priv->show_finished) {
 		list = pk_client_get_package_list (client);
+		/* TRANSLATORS: list the packages we just installed */
 		gpk_client_dialog_set_message (gclient->priv->dialog, _("The following packages were installed:"));
 		gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
@@ -493,6 +499,7 @@ gpk_client_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *d
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
+					/* TRANSLATORS: button: show details about the error */
 					_("Show details"), gpk_client_libnotify_cb, gclient, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
@@ -600,7 +607,8 @@ static void
 gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 {
 	GtkWindow *window;
-	const gchar *message = _("Unknown error. Please refer to the detailed report and report in bugzilla.");
+	/* TRANSLATORS: default fallback error -- this should never happen */
+	const gchar *message = _("Unknown error. Please refer to the detailed report and report in your distribution bugtracker.");
 	const gchar *details = NULL;
 
 	if (!gclient->priv->show_warning)
@@ -610,9 +618,11 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 	if (error != NULL) {
 		if (error->code == PK_CLIENT_ERROR_FAILED_AUTH ||
 		    g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
+			/* TRANSLATORS: failed authentication */
 			message = _("You don't have the necessary privileges to perform this action.");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-permissions");
 		} else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON) {
+			/* TRANSLATORS: could not start system service */
 			message = _("The packagekitd service could not be started.");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-no-service");
 		} else if (error->code == PK_CLIENT_ERROR_INVALID_INPUT) {
@@ -698,7 +708,8 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
@@ -710,6 +721,7 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 		return TRUE;
 
 	length = g_strv_length (files_rel);
+	/* TRANSLATORS: title: detailed internal error why the file install failed */
 	title = ngettext ("Failed to install file", "Failed to install files", length);
 	gpk_client_error_msg (gclient, title, error_local);
 	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
@@ -867,10 +879,12 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 
 	/* optional */
 	if (gclient->priv->show_confirm && array_missing->len > 0) {
-		title = ngettext (_("Do you want to copy this file?"),
-				  _("Do you want to copy these files?"), array_missing->len);
-		message_part = ngettext (_("One package file has to be copied to a non-private location so it can be installed:"),
-					 _("Some package files have to be copied to a non-private location so they can be installed:"),
+		/* TRANSLATORS: title: we have to copy the private files to a public location */
+		title = ngettext ("Do you want to copy this file?",
+				  "Do you want to copy these files?", array_missing->len);
+		/* TRANSLATORS: message: explain to the user what we are doing */
+		message_part = ngettext ("One package file has to be copied to a non-private location so it can be installed:",
+					 "Some package files have to be copied to a non-private location so they can be installed:",
 					 array_missing->len);
 		message = _g_ptr_array_to_bullets (array_missing, message_part);
 
@@ -878,6 +892,7 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
 		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
+		/* TRANSLATORS: button: copy file from one directory to another */
 		gpk_client_dialog_set_action (gclient->priv->dialog, _("Copy file"));
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
 		g_free (message);
@@ -945,8 +960,9 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 
 	/* did we fail to copy the files */
 	if (!ret) {
-		title = ngettext (_("The file could not be copied"),
-				  _("The files could not be copied"), array_missing->len);
+		/* TRANSLATORS: title: tell the user we failed */
+		title = ngettext ("The file could not be copied",
+				  "The files could not be copied", array_missing->len);
 
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
@@ -979,13 +995,15 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 	gchar *message;
 	gboolean ret = TRUE;
 
-	title = ngettext (_("Do you want to install this file?"),
-			  _("Do you want to install these files?"), array->len);
+	/* TRANSLATORS: title: confirm the user want's to install a local file */
+	title = ngettext ("Do you want to install this file?",
+			  "Do you want to install these files?", array->len);
 	message = _g_ptr_array_to_bullets (array, NULL);
 
 	/* show UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
+	/* TRANSLATORS: title: installing local files */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-files");
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
@@ -994,8 +1012,9 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		title = ngettext (_("The file was not installed"),
-				  _("The files were not installed"), array->len);
+		/* TRANSLATORS: title: the user cancelled the action */
+		title = ngettext ("The file was not installed",
+				  "The files were not installed", array->len);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, "");
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
@@ -1040,11 +1059,13 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 	/* warn, set error and quit */
 	ret = TRUE;
 	if (array_missing->len > 0) {
-		title = ngettext (_("File was not found!"),
-				  _("Files were not found!"), array_missing->len);
+		/* TRANSLATORS: title: we couldn't find the file -- very hard to get this */
+		title = ngettext ("File was not found!",
+				  "Files were not found!", array_missing->len);
 
-		message_part = ngettext (_("The following file was not found:"),
-					 _("The following files were not found:"), array_missing->len);
+		/* TRANSLATORS: message: explain what went wrong */
+		message_part = ngettext ("The following file was not found:",
+					 "The following files were not found:", array_missing->len);
 		message = _g_ptr_array_to_bullets (array_missing, message_part);
 
 		/* show UI */
@@ -1081,7 +1102,7 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	if (gclient->priv->parent_title != NULL)
 		title_name = g_strdup_printf ("%s %s", gclient->priv->parent_title, title);
 	else {
-		/* translator comment -- string is an action, e.g. "wants to install a codec" */
+		/* TRANSLATORS: string is an action, e.g. "wants to install a codec" */
 		title_name = g_strdup_printf (_("A program %s"), title);
 	}
 
@@ -1148,7 +1169,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	if (!ret)
 		goto out;
 
-	/* set title */
+	/* TRANSLATORS: title: installing a local file */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
@@ -1217,7 +1238,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto skip_checks;
 	}
 
-	/* get the packages we depend on */
+	/* TRANSLATORS: title: getting a list of other packages that depend on this one */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding packages we require"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-requires");
 
@@ -1228,7 +1249,8 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1237,6 +1259,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* find out if this would force removal of other packages */
 	ret = pk_client_get_requires (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we could not work out what other packages have to be removed to remove this package */
 		gpk_client_error_msg (gclient, _("Could not work out what packages would also be removed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1255,7 +1278,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* sort by package_id */
 	pk_package_list_sort (list);
 
-	/* title */
+	/* TRANSLATORS: title: to remove this package we also have to remove others */
 	title = g_strdup_printf (ngettext ("%i additional package also has to be removed",
 					   "%i additional packages also have to be removed",
 					   length), length);
@@ -1263,6 +1286,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* message */
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 	length = g_strv_length (package_ids);
+	/* TRANSLATORS: message: describe in detail why it must happen */
 	message = g_strdup_printf (ngettext ("To remove %s other packages that depend on it must also be removed.",
 					     "To remove %s other packages that depend on them must also be removed.",
 					     length), name);
@@ -1272,6 +1296,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
+	/* TRANSLATORS: title: removing packages */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Remove"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-remove-other-packages");
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
@@ -1288,7 +1313,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: title removing packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Remove packages"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
@@ -1300,7 +1325,8 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1309,6 +1335,7 @@ skip_checks:
 	/* try to remove the package_ids */
 	ret = pk_client_remove_packages (gclient->priv->client_action, package_ids, TRUE, FALSE, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: error: failed to remove the package we tried to remove */
 		gpk_client_error_msg (gclient, _("Failed to remove package"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1367,8 +1394,8 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 		goto skip_checks;
 	}
 
-	/* set title */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding packages we depend on"));
+	/* TRANSLATORS: finding a list of packages that we would also need to download */
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding other packages we require"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-depends");
 
@@ -1379,7 +1406,8 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1388,6 +1416,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	/* find out if this would drag in other packages */
 	ret = pk_client_get_depends (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: error: could not get the extra package list when installing a package */
 		gpk_client_error_msg (gclient, _("Could not work out what packages would be also installed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1401,13 +1430,14 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	if (length == 0 && ret)
 		goto skip_checks;
 
-	/* title */
+	/* TRANSLATORS: title: tell the user we have to install additional packages */
 	title = g_strdup_printf (ngettext ("%i additional package also has to be installed",
 					   "%i additional packages also have to be installed",
 					   length), length);
 
 	/* message */
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
+	/* TRANSLATORS: message: explain to the user what we are doing in more detail */
 	message = g_strdup_printf (ngettext ("To install %s, an additional package also has to be downloaded.",
 					     "To install %s, additional packages also have to be downloaded.",
 					     length), name);
@@ -1416,6 +1446,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
+	/* TRANSLATORS: title: installing package */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-other-packages");
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
@@ -1430,7 +1461,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	}
 
 skip_checks:
-	/* try to install the package_id */
+	/* TRANSLATORS: title: installing packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
@@ -1440,7 +1471,8 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1448,6 +1480,7 @@ skip_checks:
 
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: error: failed to install, detailed error follows */
 		gpk_client_error_msg (gclient, _("Failed to install package"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1511,10 +1544,17 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	text = g_string_free (string, FALSE);
 
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n%s\n%s", _("An additional file is required"),
-				   text, _("Do you want to search for this file now?"));
+	message = g_strdup_printf ("%s\n\n%s\n%s",
+				   /* TRANSLATORS: a program needs a package, for instance openoffice-clipart */
+				   _("An additional package is required"),
+				   text,
+				   /* TRANSLATORS: ask the user if it's okay to search */
+				   _("Do you want to search for this file now?"));
+	/* TRANSLATORS: title:  */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Package installer"));
+	/* TRANSLATORS: title: we want to install a package */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
+	/* TRANSLATORS: generic confirm, use the application name if we can */
 	ret = gpk_client_confirm_action (gclient, _("wants to install packages"), message);
 	g_free (text);
 	g_free (message);
@@ -1525,7 +1565,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: title, searching */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for packages"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
@@ -1535,7 +1575,8 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1544,6 +1585,7 @@ skip_checks:
 	/* find out if we can find a package */
 	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, packages, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Incorrect response from search"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1557,11 +1599,14 @@ skip_checks:
 		if (gclient->priv->show_warning) {
 			//FIXME: shows package_id in UI
 			text = pk_package_ids_to_text (packages);
+			/* TRANSLATORS: couldn't resolve name to package */
 			title = g_strdup_printf (_("Could not find %s"), text);
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
-			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
+			gpk_client_dialog_set_title (gclient->priv->dialog, title);
+			/* TRANSLATORS: message: could not find */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
+			/* TRANSLATORS: button: a link to the help file */
 			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
 
 			/* only show the "more info" button if there is a valid link */
@@ -1598,8 +1643,10 @@ skip_checks:
 		if (gclient->priv->show_warning) {
 			//FIXME: shows package_id in UI
 			text = pk_package_ids_to_text (packages);
+			/* TRANSLATORS: title: package is already installed */
 			title = g_strdup_printf (_("Failed to install %s"), text);
-			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
+			gpk_client_dialog_set_title (gclient->priv->dialog, title);
+			/* TRANSLATORS: message: package is already installed */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The package is already installed"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
@@ -1615,7 +1662,9 @@ skip_checks:
 	/* got junk? */
 	if (id == NULL) {
 		if (gclient->priv->show_warning) {
+			/* TRANSLATORS: failed to install, shouldn't be shown */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
+			/* TRANSLATORS: the search gave us the wrong result. internal error. barf. */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("Incorrect response from search"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
@@ -1682,10 +1731,17 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n• %s\n\n%s", _("The following file is required:"),
-				   full_path, _("Do you want to search for this now?"));
+	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+				   /* TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so */
+				   _("The following file is required:"),
+				   full_path,
+				   /* TRANSLATORS: confirm with the user */
+				   _("Do you want to search for this now?"));
+	/* TRANSLATORS: title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("File installer"));
+	/* TRANSLATORS: button: install package that provides a file */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
+	/* TRANSLATORS: generic confirm, use the application name if we can */
 	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), message);
 	g_free (message);
 	if (!ret) {
@@ -1695,14 +1751,15 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: searching for the package that provides the file */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -1711,6 +1768,7 @@ skip_checks:
 	/* do search */
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to search for file"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -1723,7 +1781,9 @@ skip_checks:
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
+			/* TRANSLATORS: failed to fild the package for thefile */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
+			/* TRANSLATORS: nothing found */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* only show the "more info" button if there is a valid link */
@@ -1756,7 +1816,9 @@ skip_checks:
 	/* already installed? */
 	if (already_installed) {
 		if (gclient->priv->show_warning) {
+			/* TRANSLATORS: we've already got a package that provides this file */
 			text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
+			/* TRANSLATORS: title */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install file"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, text);
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
@@ -1801,6 +1863,7 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 		return NULL;
 
 	codec_name_formatted = g_strdup_printf ("<i>%s</i>", codec_name);
+	/* TRANSLATORS: title, searching for codecs */
 	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name_formatted);
 	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	g_free (title);
@@ -1853,7 +1916,9 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	const gchar *message;
 
 	len = g_strv_length (codec_name_strings);
+	/* TRANSLATORS: title: we need a codec */
 	title = ngettext ("An additional plugin is required to play this content", "Additional plugins are required to play this content", len);
+	/* TRANSLATORS: we are listing the plugins in a box */
 	message = ngettext ("The following plugin is required:", "The following plugins are required:", len);
 
 	string = g_string_new ("");
@@ -1864,7 +1929,7 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 		g_strfreev (parts);
 	}
 
-	/* trailer */
+	/* TRANSLATORS: ask for confirmation */
 	message = ngettext ("Do you want to search for this now?", "Do you want to search for these now?", len);
 	g_string_append_printf (string, "\n%s\n", message);
 
@@ -1874,8 +1939,11 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
+	/* TRANSLATORS: title: codec installer */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Plugin installer"));
+	/* TRANSLATORS: button: search for a codec */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
+	/* TRANSLATORS: generic confirm, use the application name if we can */
 	ret = gpk_client_confirm_action (gclient, _("requires additional plugins"), text);
 	g_free (text);
 
@@ -1931,7 +1999,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: search for codec */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for plugins"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
@@ -1955,7 +2023,9 @@ skip_checks:
 		if (obj_new == NULL) {
 			if (gclient->priv->show_warning) {
 				info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_CODEC);
+				/* TRANSLATORS: failed to search for codec */
 				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for plugin"));
+				/* TRANSLATORS: no software sources have the wanted codec */
 				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find plugin in any configured software source"));
 				gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 				/* only show the "more info" button if there is a valid link */
@@ -1999,6 +2069,7 @@ skip_checks:
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
+	/* TRANSLATORS: button: install codecs */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
@@ -2069,10 +2140,16 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 
 	/* make sure the user wants to do action */
 	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+				    /* TRANSLATORS: message: mime type opener required */
 				   _("An additional program is required to open this type of file:"),
-				   mime_type, _("Do you want to search for a program to open this file type now?"));
+				   mime_type,
+				   /* TRANSLATORS: message: confirm with the user */
+				   _("Do you want to search for a program to open this file type now?"));
+	/* TRANSLATORS: title */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("File type installer"));
+	/* TRANSLATORS: button: search for mime installer */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
+	/* TRANSLATORS: generic confirm, use the application name if we can */
 	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), message);
 	g_free (message);
 	if (!ret) {
@@ -2082,7 +2159,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: title: searching for mime type handlers */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file handlers"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
@@ -2094,7 +2171,8 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -2104,6 +2182,7 @@ skip_checks:
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -2116,7 +2195,9 @@ skip_checks:
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_MIME);
+			/* TRANSLATORS: title */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
+			/* TRANSLATORS: nothing found in the software sources that helps */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* only show the "more info" button if there is a valid link */
@@ -2136,12 +2217,15 @@ skip_checks:
 
 	/* populate a chooser */
 	window = gpk_client_dialog_get_window (gclient->priv->dialog);
+	/* TRANSLATORS: this is the list of packages that can open this file */
 	package_id = gpk_client_chooser_show (window, list, _("Applications that can open this type of file"));
 
 	/* selected nothing */
 	if (package_id == NULL) {
 		if (gclient->priv->show_warning) {
+			/* TRANSLATORS: we failed to install */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install software"));
+			/* TRANSLATORS: we didn't select any applications that were returned */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No applications were chosen to be installed"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
@@ -2203,10 +2287,16 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	}
 
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n%s", _("An additional font is required to view this file correctly"),
+	message = g_strdup_printf ("%s\n\n%s",
+				   /* TRANSLATORS: we need to download a new font package to display a document */
+				   _("An additional font is required to view this file correctly"),
+				   /* TRANSLATORS: confirm with user */
 				   _("Do you want to search for a suitable font now?"));
+	/* TRANSLATORS: title: font installer */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Font installer"));
+	/* TRANSLATORS: buttton: search for font */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Search"));
+	/* TRANSLATORS: generic confirm, use the application name if we can */
 	ret = gpk_client_confirm_action (gclient, _("wants to install a font"), message);
 	g_free (message);
 	if (!ret) {
@@ -2216,7 +2306,7 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	}
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: title: we are now searching */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for fonts"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
@@ -2228,7 +2318,8 @@ skip_checks:
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset resolve client"), error_local);
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -2238,6 +2329,7 @@ skip_checks:
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -2250,7 +2342,9 @@ skip_checks:
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_FONT);
+			/* TRANSLATORS: title: cannot find in sources */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
+			/* TRANSLATORS: message: tell the user we suck */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* only show the "more info" button if there is a valid link */
@@ -2275,9 +2369,12 @@ skip_checks:
 	}
 
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
+	/* TRANSLATORS: title: show a list of fonts */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install the following fonts"));
+	/* TRANSLATORS: confirm */
 	gpk_client_dialog_set_message (gclient->priv->dialog, _("Do you want to install these packages now?"));
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
+	/* TRANSLATORS: button: install a font */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
@@ -2315,13 +2412,16 @@ gpk_client_catalog_progress_cb (PkCatalog *catalog, PkCatalogProgress mode, cons
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	if (mode == PK_CATALOG_PROGRESS_PACKAGES)
+	if (mode == PK_CATALOG_PROGRESS_PACKAGES) {
+		/* TRANSLATORS: finding the package names for a catalog */
 		message = g_strdup_printf (_("Finding package name: %s"), text);
-	else if (mode == PK_CATALOG_PROGRESS_FILES)
+	} else if (mode == PK_CATALOG_PROGRESS_FILES) {
+		/* TRANSLATORS: finding a package for a file for a catalog */
 		message = g_strdup_printf (_("Finding file name: %s"), text);
-	else if (mode == PK_CATALOG_PROGRESS_PROVIDES)
+	} else if (mode == PK_CATALOG_PROGRESS_PROVIDES) {
+		/* TRANSLATORS: finding a package which can provide a virtual provide */
 		message = g_strdup_printf (_("Finding a package to provide: %s"), text);
-
+	}
 	gpk_client_set_status (gclient, PK_STATUS_ENUM_QUERY);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	g_free (message);
@@ -2354,13 +2454,14 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		goto skip_checks;
 	}
 
-	title = ngettext (_("Do you want to install this catalog?"),
-			  _("Do you want to install these catalogs?"), len);
+	title = ngettext ("Do you want to install this catalog?",
+			  "Do you want to install these catalogs?", len);
 	message = g_strjoinv ("\n", filenames);
 
 	/* show UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
+	/* TRANSLATORS: button: install catalog */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-catalogs");
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
@@ -2372,7 +2473,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		return FALSE;
 
 skip_checks:
-	/* set title */
+	/* TRANSLATORS: title: install package catalogs, that is, instructions for installing */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install catalogs"));
 	gpk_client_set_status (gclient, PK_STATUS_ENUM_WAIT);
 
@@ -2391,6 +2492,7 @@ skip_checks:
 	if (len == 0) {
 		/* show UI */
 		if (gclient->priv->show_warning) {
+			/* TRANSLATORS: title: we've already got all these packages installed */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("No packages need to be installed"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, "");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-catalog-none-required");
@@ -2408,9 +2510,11 @@ skip_checks:
 		goto skip_checks2;
 	}
 
-	/* process package list */
+	/* TRANSLATORS: display a list of packages to install */
 	string = g_string_new (_("The following packages are marked to be installed from the catalog:"));
 	g_string_append (string, "\n\n");
+
+	/* process package list */
 	for (i=0; i<len; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		text = gpk_package_id_format_oneline (obj->id, obj->summary);
@@ -2423,10 +2527,11 @@ skip_checks:
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
-	/* show UI */
+	/* TRANSLATORS: title: allow user to confirm */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install packages in catalog?"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, text);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-question");
+	/* TRANSLATORS: button: install packages in catalog */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
@@ -2470,13 +2575,14 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* set title */
+	/* TRANSLATORS: title: update all pending updates */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-system");
@@ -2484,7 +2590,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_system (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		/* display and set */
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update system"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -2499,13 +2605,17 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
 	if (!gclient->priv->show_progress && ret) {
 		/* do the bubble */
+		/* TRANSLATORS: title: notification when we scheduled an automatic update */
 		notification = notify_notification_new (_("Updates are being installed"),
+							/* TRANSLATORS: tell the user why the hard disk is grinding... */
 							_("Updates are being automatically installed on your computer"),
 							"software-update-urgent", NULL);
 		notify_notification_set_timeout (notification, 15000);
 		notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+		/* TRANSLATORS: button: cancel the update system */
 		notify_notification_add_action (notification, "cancel",
 						_("Cancel update"), gpk_client_libnotify_cb, gclient, NULL);
+		/* TRANSLATORS: button: don't show this again */
 		notify_notification_add_action (notification, "do-not-show-update-started",
 						_("Do not show this again"), gpk_client_libnotify_cb, gclient, NULL);
 		ret = notify_notification_show (notification, &error_local);
@@ -2543,20 +2653,21 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* set title */
+	/* TRANSLATORS: title: refresh the lists of packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Refresh package lists"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-refresh");
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_refresh_cache (gclient->priv->client_action, TRUE, &error_local);
 	if (!ret) {
-		/* display and set */
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update package lists"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -2594,7 +2705,8 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -2603,6 +2715,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to get updates"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
@@ -2611,7 +2724,8 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 
 	/* ignore this if it's uninteresting */
 	if (gclient->priv->show_progress) {
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting update lists"));
+		/* TRANSLATORS: title: getting the list of updates */
+		gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting list of updates"));
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
 	}
@@ -2645,7 +2759,8 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return NULL;
@@ -2660,13 +2775,14 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_distro_upgrades (gclient->priv->client_action, &error_local);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Getting update lists failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* setup the UI */
+	/* TRANSLATORS: get if we can go from one distro release to another */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting distribution upgrade information"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-get-upgrades");
 	if (gclient->priv->show_progress)
@@ -2693,7 +2809,8 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return NULL;
@@ -2704,13 +2821,14 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	ret = pk_client_get_files (gclient->priv->client_action, package_ids, &error_local);
 	g_strfreev (package_ids);
 	if (!ret) {
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		return NULL;
 	}
 
-	/* setup the UI */
+	/* TRANSLATORS: title: getting the files that are contained in a package */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting file lists"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
@@ -2748,30 +2866,27 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		gpk_client_error_msg (gclient, _("Failed to reset action client"), error_local);
+		/* TRANSLATORS: this should never happen, low level failure */
+		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* set title */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
-
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
-		/* display and set */
+		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update packages"), error_local);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* setup the UI */
+	/* TRANSLATORS: title: update specific packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
+	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
@@ -2812,7 +2927,10 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
 		widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install signature"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: failed to install package GPG signature */
+					_("Failed to install signature"),
+					/* TRANSLATORS: internal error */
 					_("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
@@ -2823,7 +2941,10 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	gclient->priv->using_secondary_client = ret;
 	if (!ret) {
 		widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install signature"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: failed to install package GPG signature */
+					_("Failed to install signature"),
+					/* TRANSLATORS: method: for some reason we refused this, error follows */
 					_("The method failed"), error->message);
 		g_error_free (error);
 	}
@@ -2848,11 +2969,14 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	if (!ret)
 		return;
 
-	/* install signature */
+	/* install EULA */
 	egg_debug ("accept EULA %s", eula_id);
 	ret = pk_client_reset (gclient->priv->client_secondary, &error);
 	if (!ret) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to accept EULA"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: failed to accept licence */
+					_("Failed to accept license agreement"),
+					/* TRANSLATORS: internal error */
 					_("The client could not be reset"), error->message);
 		g_error_free (error);
 		return;
@@ -2861,7 +2985,10 @@ gpk_client_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar
 	/* this is asynchronous, else we get into livelock */
 	ret = pk_client_accept_eula (gclient->priv->client_secondary, eula_id, &error);
 	if (!ret) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to accept EULA"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: failed to accept licence */
+					_("Failed to accept license agreement"),
+					/* TRANSLATORS: method: for some reason we refused this, error follows */
 					_("The method failed"), error->message);
 		g_error_free (error);
 	}
@@ -2889,8 +3016,11 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 	ret = pk_client_requeue (gclient->priv->client_action, &error);
 	if (!ret) {
 		widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to install"),
-					_("The install task could not be requeued"), error->message);
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: failed to do initial error */
+					_("Failed to install"),
+					/* TRANSLATORS: we could not requeue the transaction  */
+					_("The install task could not be repeated"), error->message);
 		g_error_free (error);
 	}
 

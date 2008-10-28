@@ -49,7 +49,8 @@ main (int argc, char *argv[])
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
 		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &files,
-		  "catalogs to install", NULL },
+		/* TRANSLATORS: command line option: a list of catalogs to install */
+		  _("Catalogs files to install"), NULL },
 		{ NULL}
 	};
 
@@ -63,6 +64,7 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	g_type_init ();
 
+	/* TRANSLATORS: program name: application to install a catalog of software */
 	g_set_application_name (_("Catalog Installer"));
 	context = g_option_context_new ("gpk-install-catalog");
 	g_option_context_set_summary (context, _("Catalog Installer"));
@@ -80,7 +82,8 @@ main (int argc, char *argv[])
 
 	if (files == NULL) {
 		gpk_error_dialog (_("Failed to install catalog"),
-				  _("You need to specify a file to install"), NULL);
+				  /* TRANSLATORS: no filename was supplied */
+				  _("You need to specify a file name to install"), NULL);
 		return 1;
 	}
 

@@ -152,6 +152,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_toggle_new ();
 	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
 
+	/* TRANSLATORS: column if the source is enabled */
 	column = gtk_tree_view_column_new_with_attributes (_("Enabled"), renderer,
 							   "active", REPO_COLUMN_ENABLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -159,6 +160,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for the source description */
 	column = gtk_tree_view_column_new_with_attributes (_("Software Source"), renderer,
 							   "markup", REPO_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, REPO_COLUMN_TEXT);
@@ -232,6 +234,7 @@ gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *det
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "window_repo");
+	/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to change status"),
 				gpk_error_enum_to_localised_text (code), details);
 }
@@ -356,7 +359,7 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Software source viewer"));
 	if (!ret) {
 		return 1;

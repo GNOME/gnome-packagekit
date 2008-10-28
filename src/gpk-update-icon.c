@@ -145,6 +145,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 	notify_init ("gpk-update-icon");
 
+	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
 	g_set_application_name (_("Update Applet"));
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Update Applet"));
@@ -160,7 +161,7 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Update applet"));
 	if (!ret)
 		return 1;

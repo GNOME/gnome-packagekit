@@ -195,11 +195,14 @@ gpk_firmware_timeout_cb (gpointer data)
 	egg_debug ("need to install:");
 	egg_str_list_print (array);
 
+	/* TRANSLATORS: we need another package to keep udev quiet */
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
+	/* TRANSLATORS: title of libnotify bubble */
 	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "install-firmware",
+					/* TRANSLATORS: button label */
 					_("Install firmware"), gpk_firmware_libnotify_cb, firmware, NULL);
 	notify_notification_add_action (notification, "do-not-show-prompt-firmware",
 					_("Do not show this again"), gpk_firmware_libnotify_cb, firmware, NULL);

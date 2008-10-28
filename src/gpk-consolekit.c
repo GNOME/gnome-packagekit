@@ -173,7 +173,9 @@ gpk_restart_system (void)
 				polkit_action_set_action_id (action2,
 							     "org.freedesktop.consolekit.system.restart-multiple-users");
 				if (polkit_action_equal (action, action2)) {
+					/* TRANSLATORS: could not restart the computer */
 					gpk_error_dialog (_("Failed to restart"),
+							  /* TRANSLATORS: more than one user is using this computer */
 							  _("You are not allowed to restart the computer "
 							    "because multiple users are logged in"), NULL);
 				}

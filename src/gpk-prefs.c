@@ -40,13 +40,20 @@
 #include "egg-unique.h"
 #include "gpk-enum.h"
 
+/* TRANSLATORS: check once an hour */
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
+/* TRANSLATORS: check once a day */
 #define PK_FREQ_DAILY_TEXT		_("Daily")
+/* TRANSLATORS: check once a week */
 #define PK_FREQ_WEEKLY_TEXT		_("Weekly")
+/* TRANSLATORS: never check for updates/upgrades */
 #define PK_FREQ_NEVER_TEXT		_("Never")
 
+/* TRANSLATORS: update everything */
 #define PK_UPDATE_ALL_TEXT		_("All updates")
+/* TRANSLATORS: update just security updates */
 #define PK_UPDATE_SECURITY_TEXT		_("Only security updates")
+/* TRANSLATORS: don't update anything */
 #define PK_UPDATE_NONE_TEXT		_("Nothing")
 
 static GladeXML *glade_xml = NULL;
@@ -366,6 +373,7 @@ main (int argc, char *argv[])
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
+	/* TRANSLATORS: program name, an application to set per-user policy for updates */
 	g_option_context_set_summary(context, _("Software Update Preferences"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);

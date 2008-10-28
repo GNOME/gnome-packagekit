@@ -60,6 +60,7 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	g_type_init ();
 
+	/* TRANSLATORS: program name: application to install a package to provide a mime type */
 	g_set_application_name (_("Mime Type Installer"));
 	context = g_option_context_new ("gpk-install-mime-type");
 	g_option_context_set_summary (context, _("Mime Type Installer"));
@@ -70,18 +71,22 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Mime type installer"));
 	if (!ret)
 		return 1;
 
 	if (argc < 2) {
-		gpk_error_dialog (_("Failed to install file handler"),
+		/* TRANSLATORS: could not install program supporting this type */
+		gpk_error_dialog (_("Failed to install a program to handle this file type"),
+				  /* TRANSLATORS: no type given */
 				  _("You need to specify a mime-type to install"), NULL);
 		return 1;
 	}
 	if (argc > 2) {
-		gpk_error_dialog (_("Failed to install file handler"),
+		/* TRANSLATORS: could not install program supporting this type */
+		gpk_error_dialog (_("Failed to install a program to handle this file type"),
+				  /* TRANSLATORS: more than one type given */
 				  _("You can only specify one mime-type to install"), NULL);
 		return 1;
 	}

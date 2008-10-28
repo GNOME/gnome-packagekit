@@ -95,7 +95,9 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 
 	/* coldplug the battery state */
 	ret = dbus_g_proxy_call (inhibit->priv->proxy_gpm, "Inhibit", &error,
+				/* TRANSLATORS: the program name that inhibited the suspend */
 				 G_TYPE_STRING, _("Software Update Applet"),
+				/* TRANSLATORS: the reason why we've inhibited it */
 				 G_TYPE_STRING, _("A transaction that cannot be interrupted is running"),
 				 G_TYPE_INVALID,
 				 G_TYPE_UINT, &inhibit->priv->cookie,

@@ -158,14 +158,18 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi
 	hardware->priv->package_ids = pk_package_list_to_strv (list);
 
 	/* TODO: tell the user what hardware, NOT JUST A UDI */
-	message = g_strdup_printf ("%s\n\t%s", _("Do you want to install needed drivers?"), package);
+	/* TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware */
+	message = g_strdup_printf ("%s\n\t%s", _("Additional packages can be installed to support this hardware"), package);
+	/* TRANSLATORS: a new bit of hardware has been plugged in */
 	body = g_strdup_printf ("%s", _("New hardware attached"));
 	notification = notify_notification_new (body, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, GPK_HARDWARE_INSTALL_ACTION,
+	/* TRANSLATORS: button text, install the packages needed for the hardware to work */
 			_("Install package"), gpk_hardware_libnotify_cb, hardware, NULL);
 	notify_notification_add_action (notification, GPK_HARDWARE_DONT_PROMPT_ACTION,
+					/* TRANSLATORS: don't pop-up the same message twice */
 					_("Do not show this again"), gpk_hardware_libnotify_cb, hardware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
@@ -204,8 +208,7 @@ gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *
 	/* we get multiple hal signals for one device plugin. Ignore all but first one.
 	   TODO: should we act on a different one ?
 	*/
-	if (hardware->priv->udi == NULL)
-	{
+	if (hardware->priv->udi == NULL) {
 		hardware->priv->udi = g_strdup (udi);
 		g_timeout_add_seconds (GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY,
 				       gpk_hardware_device_added_timeout, hardware);

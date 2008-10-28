@@ -125,12 +125,14 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
         g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
+	/* TRANSLATORS: column for the application icon */
 	column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer,
 							   "icon-name", GPK_CHOOSER_COLUMN_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for the application name */
 	column = gtk_tree_view_column_new_with_attributes (_("Package"), renderer,
 							   "markup", GPK_CHOOSER_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_CHOOSER_COLUMN_TEXT);
@@ -149,6 +151,7 @@ gpk_update_viewer_setup_policykit (void)
 	PolKitAction *pk_action;
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.package-install");
+	/* TRANSLATORS: button label, install the selected package */
 	button_action = polkit_gnome_action_new_default ("install", pk_action, _("_Install"), NULL);
 	g_object_set (button_action,
 		      "no-icon-name", GTK_STOCK_FLOPPY,

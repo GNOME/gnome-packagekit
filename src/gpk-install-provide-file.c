@@ -60,9 +60,10 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	g_type_init ();
 
-	g_set_application_name (_("Filename Installer"));
+	/* TRANSLATORS: program name, an application to install files that are provided by packages */
+	g_set_application_name (_("File Provide Installer"));
 	context = g_option_context_new ("gpk-install-filename");
-	g_option_context_set_summary (context, _("Filename Installer"));
+	g_option_context_set_summary (context, _("File Provide Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -70,18 +71,22 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Provide file installer"));
 	if (!ret)
 		return 1;
 
 	if (argc < 2) {
+		/* TRANSLATORS: nothing done */
 		gpk_error_dialog (_("Failed to install a package to provide a file"),
+				  /* TRANSLATORS: nothig was specified */
 				  _("You need to specify a filename to install"), NULL);
 		return 1;
 	}
 	if (argc > 2) {
+		/* TRANSLATORS: nothing done */
 		gpk_error_dialog (_("Failed to install packages to provide files"),
+				  /* TRANSLATORS: more than one thing was specified */
 				  _("You can only specify one filename to install"), NULL);
 		return 1;
 	}

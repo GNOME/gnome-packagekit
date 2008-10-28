@@ -49,7 +49,8 @@ main (int argc, char *argv[])
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
 		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &files,
-		  "files to install", NULL },
+		  /* TRANSLATORS: command line option: a list of files to install */
+		  _("Files to install"), NULL },
 		{ NULL}
 	};
 
@@ -63,6 +64,7 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	g_type_init ();
 
+	/* TRANSLATORS: program name: application to install a package to provide a file */
 	g_set_application_name (_("PackageKit File Installer"));
 	context = g_option_context_new ("gpk-install-file");
 	g_option_context_set_summary (context, _("PackageKit File Installer"));
@@ -73,13 +75,15 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* are we running privileged */
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Local file installer"));
 	if (!ret)
 		return 1;
 
 	if (files == NULL) {
-		gpk_error_dialog (_("Failed to install local file"),
+		/* TRANSLATORS: could not install a package that contained the file we wanted */
+		gpk_error_dialog (_("Failed to install a package to provide a file"),
+				  /* TRANSLATORS: nothing selected */
 				  _("You need to specify a file to install"), NULL);
 		return 1;
 	}

@@ -73,8 +73,10 @@ main (int argc, char *argv[])
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
+		  /* TRANSLATORS: show the debug data on the console */
 		  _("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
+		  /* TRANSLATORS: show the program version */
 		  _("Show the program version and exit"), NULL },
 		{ NULL}
 	};

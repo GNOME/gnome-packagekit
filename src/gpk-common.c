@@ -47,12 +47,16 @@ gboolean
 gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 {
 	GdkScreen *screen;
+	guint screen_w;
+	guint screen_h;
 
 	/* check for tiny screen, like for instance a OLPC or EEE */
 	screen = gdk_screen_get_default ();
-	if (gdk_screen_get_width (screen) < width ||
-	    gdk_screen_get_height (screen) < height) {
-		egg_debug ("using small form factor mode");
+	screen_w = gdk_screen_get_width (screen);
+	screen_h = gdk_screen_get_height (screen);
+	if (screen_w < width || screen_h < height) {
+		egg_error ("using small form factor mode as %ix%i and requested %ix%i",
+			   screen_w, screen_h, width, height);
 		gtk_window_maximize (window);
 		return FALSE;
 	}
@@ -176,11 +180,15 @@ gpk_check_privileged_user (const gchar *application_name)
 	uid = getuid ();
 	if (uid == 0) {
 		if (application_name == NULL)
+			/* TRANSLATORS: these tools cannot run as root (unknown name) */
 			title = g_strdup (_("This application is running as a privileged user"));
 		else
+			/* TRANSLATORS: cannot run as root user, and we display the applicaiton name */
 			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
 		message = g_strjoin ("\n",
+				     /* TRANSLATORS: tell the user off */
 				     _("Running graphical applications as a privileged user should be avoided for security reasons."),
+				     /* TRANSLATORS: and explain why */
 				     _("Package management applications are security sensitive and therefore this application will now close."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
@@ -196,11 +204,15 @@ gpk_check_privileged_user (const gchar *application_name)
 	ret = egg_console_kit_is_local (ck);
 	if (!ret) {
 		if (application_name == NULL)
+			/* TRANSLATORS: the user is not sitting in front of the keyboard */
 			title = g_strdup (_("This application is running when the session is not local"));
 		else
+			/* TRANSLATORS: same, but we know the application name */
 			title = g_strdup_printf (_("%s is running when the session is not local"), application_name);
 		message = g_strjoin ("\n",
+				     /* TRANSLATORS: tell the user off */
 				     _("These applications should be run only when on local console."),
+				     /* TRANSLATORS: explain what to do */
 				     _("This normally indicates a bug with ConsoleKit or with the way your session has started."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
@@ -213,11 +225,15 @@ gpk_check_privileged_user (const gchar *application_name)
 	ret = egg_console_kit_is_active (ck);
 	if (!ret) {
 		if (application_name == NULL)
+			/* TRANSLATORS: the user is not active, i.e. is idle */
 			title = g_strdup (_("This application is running when the session is not active"));
 		else
+			/* TRANSLATORS: same, but we know the application name */
 			title = g_strdup_printf (_("%s is running when the session is not active"), application_name);
 		message = g_strjoin ("\n",
+				     /* TRANSLATORS: tell the user off */
 				     _("These applications should be run only when on active console."),
+				     /* TRANSLATORS: explain what to do */
 				     _("This normally indicates a bug with your remote desktop implementation."), NULL);
 		gpk_error_dialog (title, message, "");
 		g_free (title);
@@ -315,6 +331,7 @@ gpk_time_to_localised_string (guint time_secs)
 
 	/* is valid? */
 	if (time_secs == 0) {
+		/* TRANSLATORS: The actions has just literally happened */
 		timestring = g_strdup_printf (_("Now"));
 		return timestring;
 	}
@@ -324,6 +341,7 @@ gpk_time_to_localised_string (guint time_secs)
 
 	/* less than a minute */
 	if (seconds < 60) {
+		/* TRANSLATORS: time */
 		timestring = g_strdup_printf (ngettext ("%i second",
 							"%i seconds",
 							seconds), seconds);
@@ -354,6 +372,7 @@ gpk_time_to_localised_string (guint time_secs)
 	hours = minutes / 60;
 	minutes = minutes % 60;
 	if (minutes == 0) {
+		/* TRANSLATORS: time */
 		timestring = g_strdup_printf (ngettext (
 				"%i hour",
 				"%i hours",
@@ -502,7 +521,7 @@ gpk_common_test (gpointer data)
 	 ************************************************************/
 	egg_test_title (test, "time zero");
 	text = gpk_time_to_localised_string (0);
-	if (text != NULL && strcmp (text, _("Now")) == 0)
+	if (text != NULL && strcmp (text, "Now") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -511,7 +530,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 1s");
 	text = gpk_time_to_localised_string (1);
-	if (text != NULL && strcmp (text, _("1 second")) == 0) {
+	if (text != NULL && strcmp (text, "1 second") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -521,7 +540,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 1m");
 	text = gpk_time_to_localised_string (1*60);
-	if (text != NULL && strcmp (text, _("1 minute")) == 0) {
+	if (text != NULL && strcmp (text, "1 minute") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -531,7 +550,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 1h");
 	text = gpk_time_to_localised_string (1*60*60);
-	if (text != NULL && strcmp (text, _("1 hour")) == 0) {
+	if (text != NULL && strcmp (text, "1 hour") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -541,7 +560,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 30s");
 	text = gpk_time_to_localised_string (30);
-	if (text != NULL && strcmp (text, _("30 seconds")) == 0) {
+	if (text != NULL && strcmp (text, "30 seconds") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -551,7 +570,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 30m");
 	text = gpk_time_to_localised_string (30*60);
-	if (text != NULL && strcmp (text, _("30 minutes")) == 0) {
+	if (text != NULL && strcmp (text, "30 minutes") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -561,7 +580,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 30m1s");
 	text = gpk_time_to_localised_string (30*60+1);
-	if (text != NULL && strcmp (text, _("30 minutes 1 second")) == 0) {
+	if (text != NULL && strcmp (text, "30 minutes 1 second") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);
@@ -571,7 +590,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 30m10s");
 	text = gpk_time_to_localised_string (30*60+10);
-	if (text != NULL && strcmp (text, _("30 minutes 10 seconds")) == 0) {
+	if (text != NULL && strcmp (text, "30 minutes 10 seconds") == 0) {
 		egg_test_success (test, NULL);
 	} else {
 		egg_test_failed (test, "failed, got %s", text);

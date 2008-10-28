@@ -854,24 +854,31 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 	gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_LOW:
+		/* TRANSLATORS: type of update */
 		text = g_strdup_printf (ngettext ("%i trivial update", "%i trivial updates", number), number);
 		break;
 	case PK_INFO_ENUM_NORMAL:
+		/* TRANSLATORS: type of update in the case that we don't have any data */
 		text = g_strdup_printf (ngettext ("%i update", "%i updates", number), number);
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
+		/* TRANSLATORS: type of update */
 		text = g_strdup_printf (ngettext ("%i important update", "%i important updates", number), number);
 		break;
 	case PK_INFO_ENUM_SECURITY:
+		/* TRANSLATORS: type of update */
 		text = g_strdup_printf (ngettext ("%i security update", "%i security updates", number), number);
 		break;
 	case PK_INFO_ENUM_BUGFIX:
+		/* TRANSLATORS: type of update */
 		text = g_strdup_printf (ngettext ("%i bug fix update", "%i bug fix updates", number), number);
 		break;
 	case PK_INFO_ENUM_ENHANCEMENT:
+		/* TRANSLATORS: type of update */
 		text = g_strdup_printf (ngettext ("%i enhancement update", "%i enhancement updates", number), number);
 		break;
 	case PK_INFO_ENUM_BLOCKED:
+		/* TRANSLATORS: number of updates that cannot be installed due to deps */
 		text = g_strdup_printf (ngettext ("%i blocked update", "%i blocked updates", number), number);
 		break;
 	default:

@@ -156,6 +156,7 @@ gpk_check_update_about_dialog_url_cb (GtkAboutDialog *about, const char *address
 						       GTK_DIALOG_MODAL,
 						       GTK_MESSAGE_INFO,
 						       GTK_BUTTONS_OK,
+						       /* TRANSLATORS: normally a packaging error, cannot launch link */
 						       _("Failed to show url"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
 							  "%s", error->message);
@@ -213,6 +214,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
 			       "license", license_trans,
+				/* TRANSLATORS: website label */
 			       "website-label", _("PackageKit Website"),
 			       "website", "www.packagekit.org",
 			       "comments", "PackageKit",
@@ -238,7 +240,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 
 	egg_debug ("icon right clicked");
 
-	/* Preferences */
+	/* TRANSLATORS: context menu to open the preferences */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Preferences"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -250,7 +252,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 	item = gtk_separator_menu_item_new ();
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-	/* No help yet */
+	/* TRANSLATORS: context menu to open the offline help file */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Help"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -258,7 +260,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 			  G_CALLBACK (gpk_check_update_show_help_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-	/* About */
+	/* TRANSLATORS: context menu to show the about screen */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_About"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -352,7 +354,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 
 	egg_debug ("icon left clicked");
 
-	/* show updates */
+	/* TRANSLATORS: context menu to execute the update viewer  */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Show Updates"));
 	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -360,7 +362,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 			  G_CALLBACK (gpk_check_update_menuitem_show_updates_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-	/* update system */
+	/* TRANSLATORS: context menu to update any pending updates */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Update System Now"));
 	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE_AVAILABLE, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -470,11 +472,12 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 		g_ptr_array_add (cupdate->priv->important_updates_array, g_strdup (package_id));
 	}
 
-	/* format title */
+	/* TRANSLATORS: title in the libnotify popup */
 	title = ngettext ("Security update available", "Security updates available", array->len);
 
 	/* format message text */
 	string = g_string_new ("");
+	/* TRANSLATORS: message when there are security updates */
 	g_string_append (string, ngettext ("The following important update is available for your computer:",
 					   "The following important updates are available for your computer:", array->len));
 	g_string_append (string, "\n\n");
@@ -496,10 +499,13 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (notification, "update-just-security",
-					_("Install security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					/* TRANSLATORS: button: only security updates */
+					_("Install only security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
+					/* TRANSLATORS: button: all pending updates */
 					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-notify-critical",
+					/* TRANSLATORS: button: hide forever */
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
@@ -608,14 +614,17 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 		return FALSE;
 	}
 
-	/* do the bubble */
+	/* TRANSLATORS: policy says update, but we are on battery and so prompt */
 	message = _("Automatic updates are not being installed as the computer is on battery power");
+	/* TRANSLATORS: informs user will not install by default */
 	notification = notify_notification_new (_("Will not install updates"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "do-not-show-update-not-battery",
+					/* TRANSLATORS: hide this warning type forever */
 					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
+					/* TRANSLATORS: to hell with my battery life, just do it */
 					_("Do the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
@@ -731,6 +740,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		/* don't have a huge notification that won't fit on the screen */
 		if (security_array->len > GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
 			more = length - security_array->len;
+			/* TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing */
 			g_string_append_printf (status_security, ngettext ("and %d other security update",
 									   "and %d other security updates", more), more);
 			g_string_append (status_security, "...\n");
@@ -753,6 +763,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* make tooltip */
 	if (status_security->len != 0)
 		g_string_set_size (status_security, status_security->len-1);
+	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 							  "There are %d updates pending", length), length);
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
@@ -981,7 +992,7 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	if (string->len != 0)
 		g_string_set_size (string, string->len-1);
 
-	/* do the bubble */
+	/* TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9 */
 	title = _("Distribution upgrades available");
 	notification = notify_notification_new (title, string->str, "help-browser", NULL);
 	if (notification == NULL) {
@@ -991,8 +1002,10 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
 	notify_notification_add_action (notification, "upgrade-info",
+					/* TRANSLATORS: provides more information about the upgrade */
 					_("More information"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "do-not-show-upgrade-available",
+					/* TRANSLATORS: hides forever */
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {

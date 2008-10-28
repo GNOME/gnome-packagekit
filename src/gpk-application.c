@@ -511,6 +511,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 
 	/* title */
 	id = pk_package_id_new_from_string (application->priv->package);
+	/* TRANSLATORS: title: how many files are installed by the application */
 	title = g_strdup_printf (ngettext ("%i file installed by %s",
 					   "%i files installed by %s",
 					   array->len), array->len, id->name);
@@ -689,7 +690,10 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	list = pk_client_get_package_list (application->priv->client_files);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No packages"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: no packages returned */
+					_("No packages"),
+					/* TRANSLATORS: this package is not required by any others */
 					_("No other packages require this package"), NULL);
 	} else {
 		gchar *name;
@@ -700,10 +704,12 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 
 		length = pk_package_list_get_size (list);
 		name = gpk_dialog_package_id_name_join_locale (package_ids);
+		/* TRANSLATORS: title: how many packages require this package */
 		title = g_strdup_printf (ngettext ("%i additional package require %s",
 						   "%i additional packages require %s",
 						   length), length, name);
 
+		/* TRANSLATORS: show a list of packages for the package */
 		message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
 						     "Packages listed below require %s to function correctly.",
 						     length), name);
@@ -761,7 +767,10 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	list = pk_client_get_package_list (application->priv->client_files);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("No packages"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: no packages returned */
+					_("No packages"),
+					/* TRANSLATORS: this package does not depend on any others */
 					_("This package does not depends on any others"), NULL);
 	} else {
 		gchar *name;
@@ -772,10 +781,12 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 
 		length = pk_package_list_get_size (list);
 		name = gpk_dialog_package_id_name_join_locale (package_ids);
+		/* TRANSLATORS: title: show the number of other packages we depend on */
 		title = g_strdup_printf (ngettext ("%i additional package is required for %s",
 						   "%i additional packages are required for %s",
 						   length), length, name);
 
+		/* TRANSLATORS: message: show the list of packages for this package */
 		message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
 						     "Packages listed below are required for %s to function correctly.",
 						     length), name);
@@ -808,6 +819,7 @@ gpk_application_get_full_repo_name (GpkApplication *application, const gchar *da
 	/* if no data, we can't look up in the hash table */
 	if (egg_strzero (data)) {
 		egg_warning ("no ident data");
+		/* TRANSLATORS: the repo name is invalid or not found, fall back to this */
 		return _("Invalid");
 	}
 
@@ -963,6 +975,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	/* if a collection, mark as such */
 	if (egg_strequal (details->id->data, "meta"))
+		/* TRANSLATORS: the type of package is a collection (metagroup) */
 		gpk_application_add_detail_item (application, _("Type"), _("Collection"), NULL);
 
 	/* homepage */
@@ -970,11 +983,12 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	if (egg_strzero (details->url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
 
-		/* set the tooltip to where we are going */
+		/* TRANSLATORS: tooltip: go to the web address */
 		text = g_strdup_printf (_("Visit %s"), details->url);
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
 
+		/* TRANSLATORS: add an entry to go to the project home page */
 		gpk_application_add_detail_item (application, _("Project"), _("Homepage"), details->url);
 
 		/* save the url for the button */
@@ -988,13 +1002,13 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	/* group */
 	if (details->group != PK_GROUP_ENUM_UNKNOWN) {
 		group = gpk_group_enum_to_localised_text (details->group);
+		/* TRANSLATORS: the group the package belongs in */
 		gpk_application_add_detail_item (application, _("Group"), group, NULL);
 	}
 
 	/* group */
 	if (!egg_strzero (details->license)) {
-		/* This should be a licence enum value - bad API, bad.
-		 * license = pk_license_enum_to_text (license_enum); */
+		/* TRANSLATORS: the licence string for the package */
 		gpk_application_add_detail_item (application, _("License"), details->license, NULL);
 	}
 
@@ -1009,10 +1023,13 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 		/* set the size */
 		value = g_format_size_for_display (details->size);
 		if (egg_strequal (details->id->data, "meta"))
+			/* TRANSLATORS: the size of the meta package */
 			gpk_application_add_detail_item (application, _("Size"), value, NULL);
 		else if (installed)
+			/* TRANSLATORS: the installed size in bytes of the package */
 			gpk_application_add_detail_item (application, _("Installed size"), value, NULL);
 		else
+			/* TRANSLATORS: the download size of the package */
 			gpk_application_add_detail_item (application, _("Download size"), value, NULL);
 		g_free (value);
 	}
@@ -1021,6 +1038,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	if (!installed && !egg_strequal (details->id->data, "meta")) {
 		/* get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (application, details->id->data);
+		/* TRANSLATORS: where the package came from, the software source name */
 		gpk_application_add_detail_item (application, _("Source"), repo_name, NULL);
 	}
 }
@@ -1170,6 +1188,7 @@ static void
 gpk_application_suggest_better_search (GpkApplication *application)
 {
 	const gchar *message = NULL;
+	/* TRANSLATORS: no results were found for this search */
 	const gchar *title = _("No results were found.");
 	GtkTreeIter iter;
 	gchar *text;
@@ -1177,13 +1196,15 @@ gpk_application_suggest_better_search (GpkApplication *application)
 
 	if (application->priv->search_mode == PK_MODE_GROUP ||
 	    application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
-		/* this shouldn't happen */
+		/* TRANSLATORS: be helpful, but this shouldn't happen */
 		message = _("Try entering a package name in the search bar.");
 	} else {
 		if (application->priv->search_type == PK_SEARCH_NAME ||
 		    application->priv->search_type == PK_SEARCH_FILE)
+			/* TRANSLATORS: tell the user to switch to details search mode */
 			message = _("Try searching package descriptions by clicking the icon next to the search text.");
 		else
+			/* TRANSLATORS: tell the user to try harder */
 			message = _("Try again with a different search term.");
 	}
 
@@ -1286,7 +1307,10 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 		egg_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Invalid search text"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: invlid text in the search bar */
+					_("Invalid search text"),
+					/* TRANSLATORS: message: tell the user that's not allowed */
 					_("The search text contains invalid characters"), NULL);
 		return FALSE;
 	}
@@ -1320,7 +1344,10 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	if (!ret) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("The search could not be completed"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: we failed to execute the mthod */
+					_("The search could not be completed"),
+					/* TRANSLATORS: low level failure, details to follow */
 					_("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return FALSE;
@@ -1361,7 +1388,10 @@ gpk_application_perform_search_others (GpkApplication *application)
 
 	if (!ret) {
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("The group could not be queried"),
+		gpk_error_dialog_modal (GTK_WINDOW (widget),
+					/* TRANSLATORS: title: could not get group data */
+					_("The group could not be queried"),
+					/* TRANSLATORS: low level failure */
 					_("Running the transaction failed"), error->message);
 		g_error_free (error);
 		return FALSE;
@@ -1434,10 +1464,13 @@ gpk_application_quit (GpkApplication *application)
 		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
+						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
 						 "%s", _("Changes not applied"));
 		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_OK);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
-							  "%s\n%s", _("You have made changes that have not yet been applied."),
+							  "%s\n%s",
+							  /* TRANSLATORS: tell the user the problem */
+							  _("You have made changes that have not yet been applied."),
 							  _("These changes will be lost if you close this window."));
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 		result = gtk_dialog_run (GTK_DIALOG(dialog));
@@ -1690,6 +1723,8 @@ gpk_application_packages_add_columns (GpkApplication *application)
 	/* column for installed toggles */
 	renderer = gtk_cell_renderer_toggle_new ();
 	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_application_packages_installed_clicked_cb), application);
+
+	/* TRANSLATORS: column for installed status */
 	column = gtk_tree_view_column_new_with_attributes (_("Installed"), renderer,
 							   "active", PACKAGES_COLUMN_CHECKBOX,
 							   "visible", PACKAGES_COLUMN_CHECKBOX_ENABLE, NULL);
@@ -1705,6 +1740,7 @@ gpk_application_packages_add_columns (GpkApplication *application)
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for package name */
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "markup", PACKAGES_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
@@ -1726,6 +1762,7 @@ gpk_application_groups_add_columns (GtkTreeView *treeview)
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for group name */
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "text", GROUPS_COLUMN_NAME,
 							   "text", GROUPS_COLUMN_SUMMARY, NULL);
@@ -1974,6 +2011,7 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	/* TRANSLATORS: entry tooltip: basic search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
@@ -1995,6 +2033,7 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	/* TRANSLATORS: entry tooltip: detailed search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
@@ -2016,6 +2055,7 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	/* TRANSLATORS: entry tooltip: file search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
@@ -2041,6 +2081,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	egg_debug ("icon_pos=%i", icon_pos);
 
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
+		/* TRANSLATORS: context menu item for the search type icon */
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -2050,6 +2091,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	}
 
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
+		/* TRANSLATORS: context menu item for the search type icon */
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -2059,6 +2101,7 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	}
 
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
+		/* TRANSLATORS: context menu item for the search type icon */
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -2113,6 +2156,7 @@ gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address,
 						       GTK_DIALOG_MODAL,
 						       GTK_MESSAGE_INFO,
 						       GTK_BUTTONS_OK,
+						       /* TRANSLATORS: packaging problem, failed to show link */
 						       _("Failed to show url"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
 							  "%s", error->message);
@@ -2166,6 +2210,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
 		   "02110-1301, USA.")
 	};
+	/* TRANSLATORS: put your own name here -- you deserve credit! */
 	const char  *translators = _("translator-credits");
 	char	    *license_trans;
 
@@ -2193,6 +2238,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 			       "license", license_trans,
 			       "website-label", _("PackageKit Website"),
 			       "website", "http://www.packagekit.org",
+				/* TRANSLATORS: description of application, gpk-application that is */
 			       "comments", _("Package Manager for GNOME"),
 			       "authors", authors,
 			       "documenters", documenters,
@@ -2660,6 +2706,7 @@ gpk_application_treeview_add_columns_description (GpkApplication *application)
 	/* column for uris */
 	renderer = gpk_cell_renderer_uri_new ();
 	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_application_treeview_renderer_clicked), application);
+	/* TRANSLATORS: single column for the package details, not visible at the moment */
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
 							   "text", DETAIL_COLUMN_TEXT,
 							   "uri", DETAIL_COLUMN_URI, NULL);
@@ -2682,8 +2729,10 @@ gpk_application_add_welcome (GpkApplication *application)
 
 	/* enter something nice */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+		/* TRANSLATORS: welcome text if we can click the group list */
 		welcome = _("Enter a package name and then click find, or click a group to get started.");
 	} else {
+		/* TRANSLATORS: welcome text if we have to search by name */
 		welcome = _("Enter a package name and then click find to get started.");
 	}
 	gtk_list_store_set (application->priv->packages_store, &iter,
@@ -2715,7 +2764,9 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    /* TRANSLATORS: title: all of the packages on the system and availble in sources */
 				    GROUPS_COLUMN_NAME, _("All packages"),
+				    /* TRANSLATORS: tooltip: all packages */
 				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ACTIVE, TRUE,
@@ -2784,7 +2835,9 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
+				    /* TRANSLATORS: title: all of the packages on the system and availble in sources */
 				    GROUPS_COLUMN_NAME, _("All packages"),
+				    /* TRANSLATORS: tooltip: all packages */
 				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
 				    GROUPS_COLUMN_ID, "all-packages",
 				    GROUPS_COLUMN_ACTIVE, TRUE,
@@ -3083,6 +3136,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_clear_cb), application);
+	/* TRANSLATORS: tooltip on the clear button */
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
 	/* help */
@@ -3094,6 +3148,7 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_apply_cb), application);
+	/* TRANSLATORS: tooltip on the apply button */
 	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_about");
@@ -3115,7 +3170,8 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_homepage_cb), application);
-	gtk_widget_set_tooltip_text (widget, _("Visit homepage for selected package"));
+	/* TRANSLATORS: tooltip on the homepage button */
+	gtk_widget_set_tooltip_text (widget, _("Visit home page for selected package"));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_files");
 	g_signal_connect (widget, "activate",
@@ -3270,12 +3326,14 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_find_cb), application);
+	/* TRANSLATORS: tooltip on the find button */
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	/* search cancel button */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), application);
+	/* TRANSLATORS: tooltip on the cancel button */
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 
 	/* the fancy text entry widget */

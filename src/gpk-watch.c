@@ -131,6 +131,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		}
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
+			/* TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting */
 			g_string_append_printf (status, _("(%i more tasks)"),
 						i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
 			g_string_append_c (status, '\n');
@@ -276,7 +277,8 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
 	} else if (egg_strequal (action, "show-error-details")) {
-		gpk_error_dialog (_("Error details"), _("Package Manager error details"), watch->priv->error_details);
+		/* TRANSLATORS: The detailed error if the user clicks "more info" */
+		gpk_error_dialog (_("Error details"), _("Package manager error details"), watch->priv->error_details);
 
 	} else {
 		egg_warning ("unknown action id: %s", action);
@@ -356,17 +358,20 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	}
 
 	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES)
+		/* TRANSLATORS: This is the message in the libnotify body */
 		message = g_strdup_printf (_("Package '%s' has been removed"), text);
 	else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES)
+		/* TRANSLATORS: This is the message in the libnotify body */
 		message = g_strdup_printf (_("Package '%s' has been installed"), text);
 	else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM)
-		message = g_strdup ("System has been updated");
+		/* TRANSLATORS: This is the message in the libnotify body */
+		message = g_strdup (_("System has been updated"));
 
 	/* nothing of interest */
 	if (message == NULL)
 		goto out;
 
-	/* do the bubble */
+	/* TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble */
 	notification = notify_notification_new (_("Task completed"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 5000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
@@ -438,6 +443,7 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
+					/* TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error */
 					_("Show details"), gpk_watch_libnotify_cb, watch, NULL);
 
 	ret = notify_notification_show (notification, &error);
@@ -524,6 +530,7 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 	g_free (cmdline);
 
 	if (!ret) {
+		/* TRANSLATORS: We couldn't launch the tool, normally a packaging problem */
 		gpk_error_dialog (_("Internal error"), _("Failed to show url"), error->message);
 		g_error_free (error);
 	}
@@ -606,7 +613,7 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon,
 	g_return_if_fail (GPK_IS_WATCH (watch));
 	egg_debug ("icon right clicked");
 
-	/* About */
+	/* TRANSLATORS: this is the right click menu item */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_About"));
 	image = gtk_image_new_from_icon_name (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
@@ -770,7 +777,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon,
 		widget = gtk_separator_menu_item_new ();
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
-		/* don't know if we want this */
+		/* TRANSLATORS: This is a right click menu item, and will refresh all the package lists */
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh Software List"));
 		image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
@@ -821,7 +828,7 @@ gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watc
 	widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 
-	/* hide this option */
+	/* TRANSLATORS: This hides the 'restart required' icon */
 	widget = gtk_image_menu_item_new_with_mnemonic (_("_Hide this icon"));
 	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
@@ -1114,6 +1121,7 @@ gpk_watch_init (GpkWatch *watch)
 	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
 
 	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
+							  /* TRANSLATORS: This button restarts the computer after an update */
 							  _("_Restart computer"), NULL);
 	g_object_set (restart_action,
 		      "no-icon-name", "gnome-shutdown",

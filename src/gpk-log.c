@@ -107,6 +107,7 @@ gpk_log_get_localised_date (const gchar *timespec)
 	date = g_date_new ();
 	g_date_set_time_val (date, &timeval);
 
+	/* TRANSLATORS: strftime formatted please */
 	g_date_strftime (buffer, 100, _("%A, %d %B %Y"), date);
 	g_date_free (date);
 	return g_strdup (buffer);
@@ -209,6 +210,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	/* --- column for date --- */
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (renderer, "yalign", 0.0, NULL);
+	/* TRANSLATORS: column for the date */
 	column = gtk_tree_view_column_new_with_attributes (_("Date"), renderer,
 							   "markup", GPK_LOG_COLUMN_DATE, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -217,6 +219,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 
 	/* --- column for image and text --- */
 	column = gtk_tree_view_column_new ();
+	/* TRANSLATORS: column for what was done, e.g. update-system */
 	gtk_tree_view_column_set_title (column, _("Action"));
 
 	/* image */
@@ -242,6 +245,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_object_set(renderer, "wrap-width", 400, NULL);
+	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -296,6 +300,7 @@ gpk_update_viewer_setup_policykit (void)
 	PolKitAction *pk_action;
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-rollback");
+	/* TRANSLATORS: button label, roll back to a previous system snapshot */
 	button_action = polkit_gnome_action_new_default ("rollback", pk_action, _("_Rollback"), NULL);
 	g_object_set (button_action,
 		      "no-icon-name", "gtk-go-back-ltr",
@@ -565,6 +570,7 @@ main (int argc, char *argv[])
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  N_("Show extra debugging information"), NULL },
 		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
+		  /* TRANSLATORS: preset the GtktextBox with this filter text */
 		  N_("Set the filter to this value"), NULL },
 		{ NULL}
 	};

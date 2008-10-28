@@ -132,6 +132,7 @@ gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *
 				        gint int1, gint int2, gpointer user_data)
 {
 	if (egg_strequal (name, "button_action"))
+		/* TRANSLATORS: button: execute the application */
 		return gtk_button_new_with_mnemonic (_("_Run"));
 	egg_warning ("name unknown=%s", name);
 	return NULL;
@@ -149,12 +150,14 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	/* image */
 	renderer = gtk_cell_renderer_pixbuf_new ();
         g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
+	/* TRANSLATORS: column for the application icon */
 	column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer,
 							   "icon-name", GPK_CHOOSER_COLUMN_ICON, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for the package name */
 	column = gtk_tree_view_column_new_with_attributes (_("Package"), renderer,
 							   "markup", GPK_CHOOSER_COLUMN_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_CHOOSER_COLUMN_TEXT);
@@ -327,6 +330,7 @@ gpk_client_run_show (gchar **package_ids)
 	/* set icon name */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
+	/* TRANSLATORS: window title: do we want to execute a program we just installed? */
 	gtk_window_set_title (GTK_WINDOW (widget), _("Run new application?"));
 
 	/* create list stores */

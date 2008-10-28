@@ -659,6 +659,7 @@ gpk_dialog_treeview_for_package_list (GpkClientDialog *dialog)
 
 	/* column for name */
 	renderer = gtk_cell_renderer_text_new ();
+	/* TRANSLATORS: column for the package name */
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "markup", GPK_CLIENT_DIALOG_STORE_TEXT, NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_CLIENT_DIALOG_STORE_TEXT);
@@ -876,7 +877,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_title (dialog, "Button press test with a really really long title");
 	gpk_client_dialog_set_message (dialog, "Please press Uninstall\n\nThis is a really really, really,\nreally long title <i>with formatting</i>");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
-	gpk_client_dialog_set_action (dialog, _("Uninstall"));
+	gpk_client_dialog_set_action (dialog, "Uninstall");
 	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
@@ -924,7 +925,7 @@ gpk_client_dialog_test (EggTest *test)
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press Install if you can see the package list");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
-	gpk_client_dialog_set_action (dialog, _("Install"));
+	gpk_client_dialog_set_action (dialog, "Install");
 	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, 0);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
