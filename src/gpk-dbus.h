@@ -75,6 +75,11 @@ void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
 							 guint32	 timestamp,
 							 const gchar	*package_name,
 							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_package_names		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
+							 gchar		**package_names,
+							 DBusGMethodInvocation *context);
 void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 guint32	 timestamp,

@@ -295,6 +295,46 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 }
 
 /**
+ * gpk_dbus_install_package_names:
+ **/
+void
+gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **package_names, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+	gchar *sender;
+	gchar *exec;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallPackageName method called: %s", package_names[0]);
+
+	gpk_dbus_set_parent_window (dbus, xid, timestamp);
+
+	/* get the program name and set */
+	sender = dbus_g_method_get_sender (context);
+	exec = gpk_dbus_get_exec_for_sender (sender);
+	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
+	g_free (sender);
+	g_free (exec);
+
+	/* do the action */
+	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
+	g_strfreev (package_names);
+
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
  * gpk_dbus_install_mime_type:
  **/
 void

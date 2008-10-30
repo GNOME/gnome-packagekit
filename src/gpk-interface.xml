@@ -19,6 +19,12 @@
       <arg type="u" name="timestamp" direction="in"/>
       <arg type="s" name="package_name" direction="in"/>
     </method>
+    <method name="InstallPackageNames">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
+      <arg type="as" name="package_names" direction="in"/>
+    </method>
     <method name="InstallMimeType">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
       <arg type="u" name="xid" direction="in"/>
