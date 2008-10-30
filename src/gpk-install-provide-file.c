@@ -71,8 +71,8 @@ main (int argc, char *argv[])
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
-	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
-	ret = gpk_check_privileged_user (_("Provide file installer"));
+	/* TRANSLATORS: application name to pass to to the user if there are not enough privs */
+	ret = gpk_check_privileged_user (_("Provide File Installer"));
 	if (!ret)
 		return 1;
 

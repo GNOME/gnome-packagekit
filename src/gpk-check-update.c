@@ -615,9 +615,9 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	}
 
 	/* TRANSLATORS: policy says update, but we are on battery and so prompt */
-	message = _("Automatic updates are not being installed as the computer is on battery power");
+	message = _("Automatic updates are not being installed as the computer is running on battery power");
 	/* TRANSLATORS: informs user will not install by default */
-	notification = notify_notification_new (_("Will not install updates"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Updates not installed"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "do-not-show-update-not-battery",
@@ -625,7 +625,7 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
 					/* TRANSLATORS: to hell with my battery life, just do it */
-					_("Do the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Install the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
