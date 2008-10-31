@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <node name="/">
   <interface name="org.freedesktop.PackageKit">
+    <method name="IsPackageInstalled">
+      <arg type="s" name="package_name" direction="in"/>
+      <arg type="b" name="installed" direction="out"/>
+    </method>
     <method name="InstallLocalFile">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
       <arg type="u" name="xid" direction="in"/>

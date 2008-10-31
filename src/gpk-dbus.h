@@ -100,6 +100,10 @@ void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
 							 guint32	 timestamp,
 							 const gchar	*catalog_file,
 							 DBusGMethodInvocation *context);
+gboolean	 gpk_dbus_is_package_installed		(GpkDbus	*dbus,
+							 const gchar	*package_name,
+							 gboolean	*installed,
+							 GError		**error);
 
 G_END_DECLS
 

@@ -57,6 +57,7 @@ static void     gpk_dbus_finalize	(GObject	*object);
 struct GpkDbusPrivate
 {
 	GpkClient		*gclient;
+	PkClient		*client;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -527,6 +528,46 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 }
 
 /**
+ * gpk_dbus_is_package_installed:
+ **/
+gboolean
+gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+	PkPackageList *list = NULL;
+	gchar **package_names = NULL;
+
+	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (dbus->priv->client, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* get the package list for the installed packages */
+	package_names = g_strsplit (package_name, "|", 1);
+	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* more than one entry? */
+	list = pk_client_get_package_list (dbus->priv->client);
+	*installed = (PK_OBJ_LIST(list)->len > 0);
+out:
+	if (list != NULL)
+		g_object_unref (list);
+	g_strfreev (package_names);
+	return ret;
+}
+
+/**
  * gpk_dbus_class_init:
  * @klass: The GpkDbusClass
  **/
@@ -546,6 +587,9 @@ static void
 gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
+	dbus->priv->client = pk_client_new ();
+	pk_client_set_use_buffer (dbus->priv->client, TRUE, NULL);
+	pk_client_set_synchronous (dbus->priv->client, TRUE, NULL);
 	dbus->priv->gclient = gpk_client_new ();
 	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 }
@@ -562,6 +606,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
+	g_object_unref (dbus->priv->client);
 	g_object_unref (dbus->priv->gclient);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
