@@ -27,6 +27,7 @@
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
@@ -100,17 +101,16 @@ pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
-	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0) {
+	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_HOURLY;
-	} else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
+	else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_DAILY;
-	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
+	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_WEEKLY;
-	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
+	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_NEVER;
-	} else {
+	else
 		g_assert (FALSE);
-	}
 
 	action = gpk_freq_enum_to_text (freq);
 	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
@@ -132,15 +132,14 @@ pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
-	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0) {
+	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_DAILY;
-	} else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0) {
+	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_WEEKLY;
-	} else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0) {
+	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
 		freq = GPK_FREQ_ENUM_NEVER;
-	} else {
+	else
 		g_assert (FALSE);
-	}
 
 	action = gpk_freq_enum_to_text (freq);
 	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
@@ -337,6 +336,21 @@ gpk_prefs_activated_cb (EggUnique *egg_unique, gpointer data)
 }
 
 /**
+ * gpk_prefs_key_event_cb
+ **/
+static gboolean
+gpk_prefs_key_event_cb (GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+	if (event->keyval == GDK_Escape) {
+		/* user pressed escape key, close the window */
+		gtk_main_quit ();
+		return TRUE;
+	}
+	/* returns FALSE to propagate event further */
+	return FALSE;
+}
+
+/**
  * main:
  **/
 int
@@ -366,9 +380,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	dbus_g_thread_init ();
 	g_type_init ();
 
@@ -390,9 +403,8 @@ main (int argc, char *argv[])
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
 	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Prefs");
-	if (!ret) {
+	if (!ret)
 		goto unique_out;
-	}
 	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_prefs_activated_cb), NULL);
 
@@ -403,6 +415,8 @@ main (int argc, char *argv[])
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-prefs.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "window_prefs");
+	g_signal_connect (main_window, "key_press_event",
+			  G_CALLBACK (gpk_prefs_key_event_cb), NULL);
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
