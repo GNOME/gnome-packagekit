@@ -482,6 +482,51 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 }
 
 /**
+ * gpk_dbus_install_catalog:
+ **/
+void
+gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *catalog_file, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+	gchar *sender;
+	gchar **catalog_files;
+	gchar *exec;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallCatalog method called: %s", catalog_file);
+
+	/* check sender */
+	sender = dbus_g_method_get_sender (context);
+
+	/* just convert from char* to char** */
+	catalog_files = g_strsplit (catalog_file, "|", 1);
+	gpk_dbus_set_parent_window (dbus, xid, timestamp);
+
+	/* get the program name and set */
+	exec = gpk_dbus_get_exec_for_sender (sender);
+	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
+	g_free (sender);
+	g_free (exec);
+
+	/* do the action */
+	ret = gpk_client_install_catalogs (dbus->priv->gclient, catalog_files, &error_local);
+	g_strfreev (catalog_files);
+
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
  * gpk_dbus_class_init:
  * @klass: The GpkDbusClass
  **/

@@ -95,6 +95,11 @@ void		 gpk_dbus_install_font			(GpkDbus	*dbus,
 							 guint32	 timestamp,
 							 const gchar	*font_desc,
 							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 guint32	 timestamp,
+							 const gchar	*catalog_file,
+							 DBusGMethodInvocation *context);
 
 G_END_DECLS
 
