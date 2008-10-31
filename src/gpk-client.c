@@ -756,14 +756,14 @@ gpk_client_set_error_from_exit_enum (PkExitEnum exit, GError **error)
 }
 
 /**
- * _g_ptr_array_to_bullets:
+ * gpk_client_ptr_array_to_bullets:
  *
  * splits the strings up nicely
  *
  * Return value: a newly allocated string
  **/
 static gchar *
-_g_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
+gpk_client_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 {
 	GString *string;
 	guint i;
@@ -771,7 +771,7 @@ _g_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 
 	string = g_string_new (prefix);
 	if (prefix != NULL)
-		g_string_append_c (string, '\n');
+		g_string_append (string, "\n\n");
 
 	/* prefix with bullet and suffix with newline */
 	for (i=0; i<array->len; i++) {
@@ -787,94 +787,135 @@ _g_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 }
 
 /**
- * _g_ptr_array_copy_deep:
+ * gpk_client_install_local_files_get_user_temp:
  *
- * Deep copy a GPtrArray of strings
+ * Return (and create if does not exist) a temporary directory
+ * that is writable only by the user, and readable by root.
  *
- * Return value: A new GPtrArray
+ * Return value: the temp directory, or %NULL for create error
  **/
-static GPtrArray *
-_g_ptr_array_copy_deep (GPtrArray *array)
+static gchar *
+gpk_client_install_local_files_get_user_temp (GpkClient *gclient, const gchar *subfolder, GError **error)
 {
-	guint i;
-	const gchar *data;
-	GPtrArray *array_new;
+	GFile *file;
+	gboolean ret;
+	gchar *path = NULL;
 
-	array_new = g_ptr_array_new ();
-	for (i=0; i<array->len; i++) {
-		data = (const gchar *) g_ptr_array_index (array, i);
-		g_ptr_array_add (array_new, g_strdup (data));
+	/* build path in home folder */
+	path = g_build_filename (g_get_home_dir (), ".PackageKit", subfolder, NULL);
+
+	/* find if exists */
+	file = g_file_new_for_path (path);
+	ret = g_file_query_exists (file, NULL);
+	if (ret)
+		goto out;
+
+	/* create as does not exist */
+	ret = g_file_make_directory_with_parents (file, NULL, error);
+	g_object_unref (file);
+	if (!ret) {
+		/* return nothing.. */
+		g_free (path);
+		path = NULL;
 	}
-	return array_new;
+out:
+	return path;
 }
 
 /**
- * gpk_check_permissions:
- * @filename: a filename to check
- * @euid: the effective user ID to check for, or the output of geteuid()
- * @egid: the effective group ID to check for, or the output of getegid()
- * @mode: bitfield of R_OK, W_OK, XOK
+ * gpk_client_install_local_files_copy_non_native:
  *
- * Like, access but a bit more accurate - access will let root do anything.
- * Does not get read-only or no-exec filesystems right.
+ * Copy the new file into a new file that can be read by packagekitd, and
+ * that can't be written into by other users.
  *
- * Return value: %TRUE if the file has access perms
+ * Return value: the new file path, or %NULL for copy error
  **/
-static gboolean
-gpk_check_permissions (const gchar *filename, guint euid, guint egid, guint mode)
+static gchar *
+gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar *filename, GError **error)
 {
-	struct stat statbuf;
+	GFile *file = NULL;
+	GFile *dest = NULL;
+	gchar *basename = NULL;
+	gchar *dest_path = NULL;
+	gchar *new_path = NULL;
+	gchar *cache_path = NULL;
+	gboolean ret;
+	GError *error_local = NULL;
 
-	if (stat (filename, &statbuf) == 0) {
-		if ((mode & R_OK) &&
-		    !((statbuf.st_mode & S_IROTH) ||
-		      ((statbuf.st_mode & S_IRUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IRGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-		if ((mode & W_OK) &&
-		    !((statbuf.st_mode & S_IWOTH) ||
-		      ((statbuf.st_mode & S_IWUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IWGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-		if ((mode & X_OK) &&
-		    !((statbuf.st_mode & S_IXOTH) ||
-		      ((statbuf.st_mode & S_IXUSR) && euid == statbuf.st_uid) ||
-		      ((statbuf.st_mode & S_IXGRP) && egid == statbuf.st_gid)))
-			return FALSE;
-		return TRUE;
+	/* create the non FUSE temp directory */
+	cache_path = gpk_client_install_local_files_get_user_temp (gclient, "native-cache", &error_local);
+	if (cache_path == NULL) {
+		*error = g_error_new (1, 0, "failed to create temp directory: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
 	}
-	return FALSE;
+
+	/* get the final location */
+	file = g_file_new_for_path (filename);
+	basename = g_file_get_basename (file);
+	dest_path = g_build_filename (cache_path, basename, NULL);
+
+	/* copy the file */
+	dest = g_file_new_for_path (dest_path);
+	ret = g_file_copy (file, dest, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error_local);
+	if (!ret) {
+		*error = g_error_new (1, 0, "failed to copy file '%s' to '%s': %s", filename, cache_path, error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* return the modified file item */
+	new_path = g_strdup (dest_path);
+
+out:
+	if (file != NULL)
+		g_object_unref (file);
+	if (dest != NULL)
+		g_object_unref (dest);
+	g_free (basename);
+	g_free (cache_path);
+	g_free (dest_path);
+	return new_path;
 }
 
 /**
- * gpk_client_install_local_files_copy_private:
+ * gpk_client_install_local_files_native_check:
  *
- * Allow the user to confirm the package copy to /tmp
+ * Allow the user to confirm the package copy to ~/.PackageKit/native-cache
+ * as we cannot access FUSE mounts as the root user.
  *
  * Return value: %TRUE if the method succeeded
  **/
 static gboolean
-gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *array, GError **error)
+gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *array, GError **error)
 {
 	guint i;
-	gchar *data;
+	const gchar *data;
+	gchar *cache_path = NULL;
+	gchar *filename;
 	gboolean ret;
-	GPtrArray *array_new;
+	gboolean native;
 	GPtrArray *array_missing;
 	const gchar *message_part;
 	const gchar *title;
 	gchar *message;
 	GtkResponseType button;
+	GError *error_local = NULL;
+	GFile *file;
 
-	/* see if root has access to this file, in case we have to copy it
-	 * somewhere where it does.
-	 * See https://bugzilla.redhat.com/show_bug.cgi?id=456094 */
+	/* check if any files are non-native and need to be copied */
 	array_missing = g_ptr_array_new ();
 	for (i=0; i<array->len; i++) {
-		data = (gchar *) g_ptr_array_index (array, i);
-		ret = gpk_check_permissions (data, 0, 0, R_OK);
-		if (!ret)
+		data = (const gchar *) g_ptr_array_index (array, i);
+		/* if file is non-native, it's on a FUSE mount (probably created by GVFS).
+		 * See https://bugzilla.redhat.com/show_bug.cgi?id=456094 */
+		file = g_file_new_for_path (data);
+		native = g_file_is_native (file);
+		g_object_unref (file);
+		if (!native) {
+			egg_debug ("%s is non-native", data);
 			g_ptr_array_add (array_missing, g_strdup (data));
+		}
 	}
 
 	/* optional */
@@ -883,17 +924,17 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		title = ngettext ("Do you want to copy this file?",
 				  "Do you want to copy these files?", array_missing->len);
 		/* TRANSLATORS: message: explain to the user what we are doing */
-		message_part = ngettext ("One package file has to be copied to a non-private location so it can be installed:",
-					 "Some package files have to be copied to a non-private location so they can be installed:",
+		message_part = ngettext ("This package file has to be copied from a private directory so it can be installed:",
+					 "Several package files have to be copied from a private directory so they can be installed:",
 					 array_missing->len);
-		message = _g_ptr_array_to_bullets (array_missing, message_part);
+		message = gpk_client_ptr_array_to_bullets (array_missing, message_part);
 
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
 		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
 		/* TRANSLATORS: button: copy file from one directory to another */
-		gpk_client_dialog_set_action (gclient->priv->dialog, _("Copy file"));
+		gpk_client_dialog_set_action (gclient->priv->dialog, ngettext ("Copy file", "Copy files", array_missing->len));
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
 		g_free (message);
 
@@ -907,54 +948,28 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 		}
 	}
 
-	/* copy, and re-allocate so we can pass back the same array */
-	array_new = _g_ptr_array_copy_deep (array);
-	g_ptr_array_remove_range (array, 0, array->len);
-
 	/* now we have the okay to copy the files, do so */
 	ret = TRUE;
-	for (i=0; i<array_new->len; i++) {
-		gchar *command;
-		gchar *dest;
-		gchar *dest_path;
-		gint retval;
-		GError *error = NULL;
+	for (i=0; i<array->len; i++) {
+		data = (const gchar *) g_ptr_array_index (array, i);
 
-		data = (gchar *) g_ptr_array_index (array_new, i);
-		ret = gpk_check_permissions (data, 0, 0, R_OK);
-		if (ret) {
-			/* just copy over the name */
-			g_ptr_array_add (array, g_strdup (data));
-		} else {
-			/* get the final location */
-			dest = g_path_get_basename (data);
-			dest_path = g_strdup_printf ("/tmp/%s", dest);
-
-			command = g_strdup_printf ("cp \"%s\" \"%s\"", data, dest_path);
-			egg_debug ("command=%s", command);
-			ret = g_spawn_command_line_sync (command, NULL, NULL, NULL, &error);
-
-			/* we failed */
-			if (!ret) {
-				egg_warning ("failed to copy %s: %s", data, error->message);
-				g_error_free (error);
-				break;
-			}
-
-			/* make this readable by root */
-			retval = g_chmod (dest_path, 0644);
-			if (retval < 0) {
+		/* check we are not on FUSE */
+		file = g_file_new_for_path (data);
+		native = g_file_is_native (file);
+		g_object_unref (file);
+		if (!native) {
+			/* copy the file */
+			filename = gpk_client_install_local_files_copy_non_native (gclient, data, &error_local);
+			if (filename == NULL) {
+				gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to copy file %s: %s", data, error_local->message);
 				ret = FALSE;
-				egg_warning ("failed to chmod %s", dest_path);
 				break;
 			}
 
-			/* add the modified file item */
-			g_ptr_array_add (array, g_strdup (dest_path));
-
-			g_free (dest);
-			g_free (dest_path);
-			g_free (command);
+			/* swap data in array */
+			g_free (array->pdata[i]);
+			array->pdata[i] = g_strdup (filename);
+			g_free (filename);
 		}
 	}
 
@@ -966,15 +981,17 @@ gpk_client_install_local_files_copy_private (GpkClient *gclient, GPtrArray *arra
 
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
-		gpk_client_dialog_set_message (gclient->priv->dialog, "");
+		gpk_client_dialog_set_message (gclient->priv->dialog, error_local->message);
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "files not copied");
 		ret = FALSE;
+		g_error_free (error_local);
 		goto out;
 	}
 out:
+	g_free (cache_path);
 	g_ptr_array_foreach (array_missing, (GFunc) g_free, NULL);
 	g_ptr_array_free (array_missing, TRUE);
 	return ret;
@@ -998,7 +1015,7 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 	/* TRANSLATORS: title: confirm the user want's to install a local file */
 	title = ngettext ("Do you want to install this file?",
 			  "Do you want to install these files?", array->len);
-	message = _g_ptr_array_to_bullets (array, NULL);
+	message = gpk_client_ptr_array_to_bullets (array, NULL);
 
 	/* show UI */
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
@@ -1039,7 +1056,7 @@ static gboolean
 gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *array, GError **error)
 {
 	guint i;
-	gchar *data;
+	const gchar *data;
 	gboolean ret;
 	GPtrArray *array_missing;
 	const gchar *message_part;
@@ -1050,7 +1067,7 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 
 	/* find missing */
 	for (i=0; i<array->len; i++) {
-		data = (gchar *) g_ptr_array_index (array, i);
+		data = (const gchar *) g_ptr_array_index (array, i);
 		ret = g_file_test (data, G_FILE_TEST_EXISTS);
 		if (!ret)
 			g_ptr_array_add (array_missing, g_strdup (data));
@@ -1066,7 +1083,7 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 		/* TRANSLATORS: message: explain what went wrong */
 		message_part = ngettext ("The following file was not found:",
 					 "The following files were not found:", array_missing->len);
-		message = _g_ptr_array_to_bullets (array_missing, message_part);
+		message = gpk_client_ptr_array_to_bullets (array_missing, message_part);
 
 		/* show UI */
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
@@ -1146,6 +1163,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	gboolean ret;
 	gchar **files = NULL;
 	GPtrArray *array;
+	const gchar *title;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (files_rel != NULL, FALSE);
@@ -1165,15 +1183,15 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		goto out;
 
 	/* check all files exist and are readable by the local user */
-	ret = gpk_client_install_local_files_copy_private (gclient, array, error);
+	ret = gpk_client_install_local_files_native_check (gclient, array, error);
 	if (!ret)
 		goto out;
 
 	/* TRANSLATORS: title: installing a local file */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install local file"));
+	gpk_client_dialog_set_title (gclient->priv->dialog, ngettext ("Install local file", "Install local files", array->len));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
 
 	files = pk_ptr_array_to_strv (array);
 	gclient->priv->retry_untrusted_value = FALSE;
@@ -1186,6 +1204,10 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 
 	/* do we need to try again with better auth? */
 	if (gclient->priv->retry_untrusted_value) {
+		/* TRANSLATORS: title: installing a local file that is not trusted */
+		gpk_client_dialog_set_title (gclient->priv->dialog, ngettext ("Install untrusted local file", "Install untrusted local files", array->len));
+		if (gclient->priv->show_progress)
+			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
 		ret = gpk_client_install_local_files_internal (gclient, FALSE, files, error);
 		if (!ret)
 			goto out;
@@ -1195,6 +1217,18 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
+
+	/* optional, and only when successfull */
+	if (ret && gclient->priv->show_confirm) {
+		/* TRANSLATORS: title: we have installed the local file OK */
+		title = ngettext ("File was installed successfully",
+				  "Files were installed successfully", array->len);
+		gpk_client_dialog_set_title (gclient->priv->dialog, title);
+		gpk_client_dialog_set_message (gclient->priv->dialog, "");
+		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-info");
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0, gclient->priv->timestamp);
+		gpk_client_dialog_run (gclient->priv->dialog);
+	}
 
 out:
 	g_strfreev (files);
