@@ -309,7 +309,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	egg_debug ("InstallPackageName method called: %s", package_names[0]);
+	egg_debug ("InstallPackageNames method called: %s", package_names[0]);
 
 	gpk_dbus_set_parent_window (dbus, xid, timestamp);
 
@@ -322,8 +322,6 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 
 	/* do the action */
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
-	g_strfreev (package_names);
-
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);
