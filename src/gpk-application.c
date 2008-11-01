@@ -2533,40 +2533,6 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 }
 
 /**
- * gpk_application_menu_group_type_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_group_type_cb (GtkWidget *widget, GpkApplication *application)
-{
-	gboolean enabled;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* save users preference to gconf */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	gconf_client_set_bool (application->priv->gconf_client,
-			       GPK_CONF_APPLICATION_CATEGORY_GROUPS, enabled, NULL);
-}
-
-/**
- * gpk_application_menu_autocompletion_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_autocompletion_cb (GtkWidget *widget, GpkApplication *application)
-{
-	gboolean enabled;
-
-	g_return_if_fail (PK_IS_APPLICATION (application));
-
-	/* save users preference to gconf */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	gconf_client_set_bool (application->priv->gconf_client,
-			       GPK_CONF_AUTOCOMPLETE, enabled, NULL);
-}
-
-/**
  * gpk_application_status_changed_cb:
  **/
 static void
@@ -3275,16 +3241,6 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_newest_cb), application);
-
-	/* category menu / simple menu */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_group_type");
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_group_type_cb), application);
-
-	/* autocompletion */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_autocomplete");
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_autocompletion_cb), application);
 
 	/* Remove description/file list if needed. */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
