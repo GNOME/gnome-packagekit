@@ -176,6 +176,8 @@ gpk_check_privileged_user (const gchar *application_name)
 	gboolean ret = FALSE;
 	gchar *message;
 	gchar *title;
+	GtkResponseType result;
+	GtkWidget *dialog;
 
 	uid = getuid ();
 	if (uid == 0) {
@@ -187,14 +189,28 @@ gpk_check_privileged_user (const gchar *application_name)
 			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
 		message = g_strjoin ("\n",
 				     /* TRANSLATORS: tell the user off */
-				     _("Running graphical applications as a privileged user should be avoided for security reasons."),
+				     _("Package management applications are security sensitive."),
 				     /* TRANSLATORS: and explain why */
-				     _("Package management applications are security sensitive and therefore this application will now close."), NULL);
-		gpk_error_dialog (title, message, "");
+				     _("Running graphical applications as a privileged user should be avoided for security reasons."), NULL);
+
+		/* give the user a choice */
+		dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, "%s", title);
+		/* TRANSLATORS: button: allow the user to run this, even when insecure */
+		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Continue Anyway"), GTK_RESPONSE_OK);
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
+		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+		result = gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_widget_destroy (dialog);
+
 		g_free (title);
 		g_free (message);
-		egg_warning ("uid=%i so closing", uid);
-		goto out;
+
+		/* user did not agree to run insecure */
+		if (result != GTK_RESPONSE_OK) {
+			egg_warning ("uid=%i so closing", uid);
+			goto out;
+		}
 	}
 
 	/* talk to ConsoleKit */
