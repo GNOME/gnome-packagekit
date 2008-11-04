@@ -61,7 +61,7 @@ gpk_client_signature_button_help_cb (GtkWidget *widget, gpointer data)
  * Return value: if we agreed
  **/
 gboolean
-gpk_client_signature_show (const gchar *package_id, const gchar *repository_name,
+gpk_client_signature_show (GtkWindow *window, const gchar *package_id, const gchar *repository_name,
 			   const gchar *key_url, const gchar *key_userid, const gchar *key_id,
 			   const gchar *key_fingerprint, const gchar *key_timestamp)
 {
@@ -98,6 +98,11 @@ gpk_client_signature_show (const gchar *package_id, const gchar *repository_name
 	widget = glade_xml_get_widget (glade_xml, "label_id");
 	gtk_label_set_label (GTK_LABEL (widget), key_id);
 
+	/* make modal if window set */
+	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	if (window != NULL)
+		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "window_gpg");
 	gtk_widget_show (widget);
@@ -107,9 +112,8 @@ gpk_client_signature_show (const gchar *package_id, const gchar *repository_name
 	gtk_main ();
 
 	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
+	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	}
 	g_object_unref (glade_xml);
 
 	return has_imported_signature;
@@ -126,9 +130,8 @@ gpk_client_signature_self_test (gpointer data)
 {
 	EggTest *test = (EggTest *) data;
 
-	if (egg_test_start (test, "GpkClientEula") == FALSE) {
+	if (egg_test_start (test, "GpkClientEula") == FALSE)
 		return;
-	}
 	egg_test_end (test);
 }
 #endif
