@@ -3364,23 +3364,6 @@ gpk_application_init (GpkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	/* Group type, set, or hide */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_group_type");
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES)) {
-		/* set from remembered state */
-		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* Set autocompletion */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_autocomplete");
-	enabled = gconf_client_get_bool (application->priv->gconf_client,
-					 GPK_CONF_AUTOCOMPLETE, NULL);
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",
 			  G_CALLBACK (gpk_application_text_changed_cb), application);
