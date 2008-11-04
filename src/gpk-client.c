@@ -2959,7 +2959,8 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	ret = gpk_client_signature_show (package_id, repository_name, key_url, key_userid,
+	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
+	ret = gpk_client_signature_show (GTK_WINDOW (widget), package_id, repository_name, key_url, key_userid,
 					 key_id, key_fingerprint, key_timestamp);
 	/* disagreed with auth */
 	if (!ret)
