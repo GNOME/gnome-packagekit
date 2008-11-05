@@ -834,6 +834,38 @@ out:
 }
 
 /**
+ * gpk_client_install_local_files_ready_callback:
+ **/
+static void
+gpk_client_install_local_files_ready_callback (GObject *source_object, GAsyncResult *res, GpkClient *gclient)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	ret = g_file_copy_finish (G_FILE (source_object), res, &error_local);
+	if (!ret) {
+		egg_warning ("failed to copy file: %s", error_local->message);
+		g_error_free (error_local);
+	}
+
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_install_local_files_progress_callback:
+ **/
+static void
+gpk_client_install_local_files_progress_callback (goffset current_num_bytes, goffset total_num_bytes, GpkClient *gclient)
+{
+	guint percentage;
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	percentage = (current_num_bytes * 100) / total_num_bytes;
+	gpk_client_dialog_set_percentage (gclient->priv->dialog, percentage);
+}
+
+/**
  * gpk_client_install_local_files_copy_non_native:
  *
  * Copy the new file into a new file that can be read by packagekitd, and
@@ -851,6 +883,7 @@ gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar 
 	gchar *new_path = NULL;
 	gchar *cache_path = NULL;
 	gboolean ret;
+	GAsyncResult *res;
 	GError *error_local = NULL;
 
 	/* create the non FUSE temp directory */
@@ -868,12 +901,10 @@ gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar 
 
 	/* copy the file */
 	dest = g_file_new_for_path (dest_path);
-	ret = g_file_copy (file, dest, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error_local);
-	if (!ret) {
-		*error = g_error_new (1, 0, "failed to copy file '%s' to '%s': %s", filename, cache_path, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
+	g_file_copy_async (file, dest, G_FILE_COPY_OVERWRITE, 0, NULL,
+			   (GFileProgressCallback) gpk_client_install_local_files_progress_callback, gclient,
+			   (GAsyncReadyCallback) gpk_client_install_local_files_ready_callback, gclient);
+	gtk_main ();
 
 	/* return the modified file item */
 	new_path = g_strdup (dest_path);
@@ -930,7 +961,8 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 	}
 
 	/* optional */
-	if (gclient->priv->show_confirm && array_missing->len > 0) {
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_COPY_CONFIRM, NULL);
+	if (ret && array_missing->len > 0) {
 		/* TRANSLATORS: title: we have to copy the private files to a public location */
 		title = ngettext ("Do you want to copy this file?",
 				  "Do you want to copy these files?", array_missing->len);
@@ -959,6 +991,16 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		}
 	}
 
+	/* setup UI */
+	if (array_missing->len > 0) {
+		/* TRANSLATORS: title: we are about to copy files, which may take a few seconds */
+		title = ngettext ("Copying file",
+				  "Copying files", array_missing->len);
+		gpk_client_dialog_set_title (gclient->priv->dialog, title);
+		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
+	}
+
 	/* now we have the okay to copy the files, do so */
 	ret = TRUE;
 	for (i=0; i<array->len; i++) {
@@ -976,6 +1018,9 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 				ret = FALSE;
 				break;
 			}
+
+			/* show progress */
+			gpk_client_dialog_set_message (gclient->priv->dialog, filename);
 
 			/* swap data in array */
 			g_free (array->pdata[i]);
