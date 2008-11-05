@@ -770,6 +770,14 @@ gpk_client_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 	guint i;
 	gchar *text;
 
+	/* don't use a bullet for one item */
+	if (array->len == 1) {
+		if (prefix != NULL)
+			return g_strdup_printf ("%s\n\n%s", prefix, g_ptr_array_index (array, 0));
+		else
+			return g_strdup (g_ptr_array_index (array, 0));
+	}
+
 	string = g_string_new (prefix);
 	if (prefix != NULL)
 		g_string_append (string, "\n\n");
@@ -1625,9 +1633,14 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 
 	string = g_string_new ("");
 	len = g_strv_length (packages);
-	for (i=0; i<len; i++)
-		g_string_append_printf (string, "• <i>%s</i>\n", packages[i]);
 
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		g_string_append_printf (string, "%s\n", packages[0]);
+	} else {
+		for (i=0; i<len; i++)
+			g_string_append_printf (string, "• %s\n", packages[i]);
+	}
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
@@ -1819,7 +1832,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+	message = g_strdup_printf ("%s\n\n%s\n\n%s",
 				   /* TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so */
 				   _("The following file is required:"),
 				   full_path,
@@ -1943,19 +1956,16 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 	const PkPackageObj *obj;
 	guint len;
 	gchar *title;
-	gchar *codec_name_formatted;
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, error);
 	if (!ret)
 		return NULL;
 
-	codec_name_formatted = g_strdup_printf ("<i>%s</i>", codec_name);
 	/* TRANSLATORS: title, searching for codecs */
-	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name_formatted);
+	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name);
 	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	g_free (title);
-	g_free (codec_name_formatted);
 
 	/* get codec packages */
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), PK_PROVIDES_ENUM_CODEC, codec_desc, error);
@@ -2011,10 +2021,18 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 
 	string = g_string_new ("");
 	g_string_append_printf (string, "%s\n%s\n\n", title, message);
-	for (i=0; i<len; i++) {
-		parts = g_strsplit (codec_name_strings[i], "|", 2);
-		g_string_append_printf (string, "• <i>%s</i>\n", parts[0]);
+
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		parts = g_strsplit (codec_name_strings[0], "|", 2);
+		g_string_append_printf (string, "%s\n", parts[0]);
 		g_strfreev (parts);
+	} else {
+		for (i=0; i<len; i++) {
+			parts = g_strsplit (codec_name_strings[i], "|", 2);
+			g_string_append_printf (string, "• %s\n", parts[0]);
+			g_strfreev (parts);
+		}
 	}
 
 	/* TRANSLATORS: ask for confirmation */
@@ -2227,7 +2245,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* make sure the user wants to do action */
-	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+	message = g_strdup_printf ("%s\n\n%s\n\n%s",
 				    /* TRANSLATORS: message: mime type opener required */
 				   _("An additional program is required to open this type of file:"),
 				   mime_type,
