@@ -1521,6 +1521,15 @@ gpk_application_delete_event_cb (GtkWidget	*widget,
 }
 
 /**
+ * gpk_application_menu_quit_cb:
+ **/
+static void
+gpk_application_menu_quit_cb (GtkAction *action, GpkApplication *application)
+{
+	gpk_application_quit (application);
+}
+
+/**
  * gpk_application_text_changed_cb:
  **/
 static gboolean
@@ -3162,6 +3171,10 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_run");
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_run_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_quit");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_quit_cb), application);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 	gtk_widget_hide (widget);
