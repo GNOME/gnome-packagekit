@@ -193,6 +193,19 @@ egg_dbus_monitor_is_connected (EggDbusMonitor *monitor)
 }
 
 /**
+ * egg_dbus_monitor_get_service:
+ * @monitor: This class instance
+ * Return value: the service name being monitored
+ **/
+const gchar *
+egg_dbus_monitor_get_service (EggDbusMonitor *monitor)
+{
+	g_return_val_if_fail (EGG_IS_DBUS_MONITOR (monitor), FALSE);
+
+	return monitor->priv->service;
+}
+
+/**
  * egg_dbus_monitor_class_init:
  * @klass: The EggDbusMonitorClass
  **/

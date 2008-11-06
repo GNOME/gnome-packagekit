@@ -64,6 +64,7 @@ EggDbusMonitor	*egg_dbus_monitor_new			(void);
 gboolean	 egg_dbus_monitor_assign		(EggDbusMonitor	*monitor,
 							 EggDbusMonitorType bus_type,
 							 const gchar	*service);
+const gchar	*egg_dbus_monitor_get_service		(EggDbusMonitor	*monitor);
 gboolean	 egg_dbus_monitor_is_connected		(EggDbusMonitor	*monitor);
 
 G_END_DECLS
