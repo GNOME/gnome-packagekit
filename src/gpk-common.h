@@ -85,7 +85,8 @@ gchar		*gpk_package_id_format_oneline		(const PkPackageId *id,
 gchar		*gpk_package_id_name_version		(const PkPackageId *id);
 
 gchar		*gpk_time_to_localised_string		(guint		 time_secs);
-gboolean	 gpk_check_privileged_user		(const gchar	*application_name);
+gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
+							 gboolean	 show_ui);
 gboolean	 gpk_check_icon_valid			(const gchar	*icon);
 gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
 							 PkStatusEnum	 status,

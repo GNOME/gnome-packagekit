@@ -169,7 +169,7 @@ gpk_package_get_name (const gchar *package_id)
  * gpk_check_privileged_user
  **/
 gboolean
-gpk_check_privileged_user (const gchar *application_name)
+gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 {
 	EggConsoleKit *ck = NULL;
 	guint uid;
@@ -181,6 +181,8 @@ gpk_check_privileged_user (const gchar *application_name)
 
 	uid = getuid ();
 	if (uid == 0) {
+		if (!show_ui)
+			goto out;
 		if (application_name == NULL)
 			/* TRANSLATORS: these tools cannot run as root (unknown name) */
 			title = g_strdup (_("This application is running as a privileged user"));
@@ -219,6 +221,8 @@ gpk_check_privileged_user (const gchar *application_name)
 	/* we are not local */
 	ret = egg_console_kit_is_local (ck);
 	if (!ret) {
+		if (!show_ui)
+			goto out;
 		if (application_name == NULL)
 			/* TRANSLATORS: the user is not sitting in front of the keyboard */
 			title = g_strdup (_("This application is running when the session is not local"));
@@ -240,6 +244,8 @@ gpk_check_privileged_user (const gchar *application_name)
 	/* we are not active */
 	ret = egg_console_kit_is_active (ck);
 	if (!ret) {
+		if (!show_ui)
+			goto out;
 		if (application_name == NULL)
 			/* TRANSLATORS: the user is not active, i.e. is idle */
 			title = g_strdup (_("This application is running when the session is not active"));

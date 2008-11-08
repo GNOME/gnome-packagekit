@@ -72,7 +72,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
-	ret = gpk_check_privileged_user (_("Mime type installer"));
+	ret = gpk_check_privileged_user (_("Mime type installer"), TRUE);
 	if (!ret)
 		return 1;
 

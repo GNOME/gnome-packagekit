@@ -602,7 +602,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */
-	ret = gpk_check_privileged_user (_("Log viewer"));
+	ret = gpk_check_privileged_user (_("Log viewer"), TRUE);
 	if (!ret)
 		return 1;
 
