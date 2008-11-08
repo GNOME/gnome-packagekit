@@ -1521,6 +1521,15 @@ gpk_application_delete_event_cb (GtkWidget	*widget,
 }
 
 /**
+ * gpk_application_menu_quit_cb:
+ **/
+static void
+gpk_application_menu_quit_cb (GtkAction *action, GpkApplication *application)
+{
+	gpk_application_quit (application);
+}
+
+/**
  * gpk_application_text_changed_cb:
  **/
 static gboolean
@@ -3163,6 +3172,10 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_run_cb), application);
 
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_quit");
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_quit_cb), application);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
 	gtk_widget_hide (widget);
 
@@ -3363,23 +3376,6 @@ gpk_application_init (GpkApplication *application)
 	} else {
 		gtk_widget_hide (widget);
 	}
-
-	/* Group type, set, or hide */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_group_type");
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES)) {
-		/* set from remembered state */
-		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* Set autocompletion */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_autocomplete");
-	enabled = gconf_client_get_bool (application->priv->gconf_client,
-					 GPK_CONF_AUTOCOMPLETE, NULL);
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	g_signal_connect (widget, "key-press-event",

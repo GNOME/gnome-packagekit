@@ -51,8 +51,8 @@ G_BEGIN_DECLS
 #define GPK_CONF_AUTO_UPDATE			"/apps/gnome-packagekit/auto_update"
 #define GPK_CONF_UPDATE_BATTERY			"/apps/gnome-packagekit/update_battery"
 #define GPK_CONF_SHOW_DEPENDS			"/apps/gnome-packagekit/show_depends"
+#define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
 #define GPK_CONF_BANNED_FIRMWARE		"/apps/gnome-packagekit/banned_firmware"
-#define GPK_CONF_SKIP_CONFIRM_NO_DEPS		"/apps/gnome-packagekit/skip_confirm_no_deps"
 
 #define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"

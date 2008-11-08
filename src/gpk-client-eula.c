@@ -112,9 +112,8 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 
 	/* make modal if window set */
 	widget = glade_xml_get_widget (glade_xml, "window_eula");
-	if (window != NULL) {
+	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
-	}
 
 	/* show window */
 	gtk_widget_show (widget);
@@ -124,9 +123,8 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 	gtk_main ();
 
 	/* hide window */
-	if (GTK_IS_WIDGET (widget)) {
+	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	}
 	g_object_unref (glade_xml);
 	g_object_unref (buffer);
 

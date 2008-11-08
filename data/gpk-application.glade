@@ -50,6 +50,20 @@
                         </child>
                       </widget>
                     </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem_quit">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Quit</property>
+                        <property name="use_underline">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image10">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-quit</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
                   </widget>
                 </child>
               </widget>
@@ -465,9 +479,14 @@
                       <widget class="GtkImageMenuItem" id="menuitem_help">
                         <property name="visible">True</property>
                         <property name="tooltip" translatable="yes">Help with this software</property>
-                        <property name="label">gtk-help</property>
+                        <property name="label" translatable="yes">_Contents</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image11">
+                            <property name="stock">gtk-help</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>

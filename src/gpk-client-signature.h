@@ -27,7 +27,8 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_signature_self_test		(gpointer	 data);
-gboolean	 gpk_client_signature_show		(const gchar	*package_id,
+gboolean	 gpk_client_signature_show		(GtkWindow	*window,
+							 const gchar	*package_id,
 							 const gchar	*repository_name,
 							 const gchar	*key_url,
 							 const gchar	*key_userid,

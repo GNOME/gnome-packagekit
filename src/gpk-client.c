@@ -770,6 +770,14 @@ gpk_client_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 	guint i;
 	gchar *text;
 
+	/* don't use a bullet for one item */
+	if (array->len == 1) {
+		if (prefix != NULL)
+			return g_strdup_printf ("%s\n\n%s", prefix, g_ptr_array_index (array, 0));
+		else
+			return g_strdup (g_ptr_array_index (array, 0));
+	}
+
 	string = g_string_new (prefix);
 	if (prefix != NULL)
 		g_string_append (string, "\n\n");
@@ -834,6 +842,38 @@ out:
 }
 
 /**
+ * gpk_client_install_local_files_ready_callback:
+ **/
+static void
+gpk_client_install_local_files_ready_callback (GObject *source_object, GAsyncResult *res, GpkClient *gclient)
+{
+	gboolean ret;
+	GError *error_local = NULL;
+
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	ret = g_file_copy_finish (G_FILE (source_object), res, &error_local);
+	if (!ret) {
+		egg_warning ("failed to copy file: %s", error_local->message);
+		g_error_free (error_local);
+	}
+
+	gtk_main_quit ();
+}
+
+/**
+ * gpk_client_install_local_files_progress_callback:
+ **/
+static void
+gpk_client_install_local_files_progress_callback (goffset current_num_bytes, goffset total_num_bytes, GpkClient *gclient)
+{
+	guint percentage;
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	percentage = (current_num_bytes * 100) / total_num_bytes;
+	gpk_client_dialog_set_percentage (gclient->priv->dialog, percentage);
+}
+
+/**
  * gpk_client_install_local_files_copy_non_native:
  *
  * Copy the new file into a new file that can be read by packagekitd, and
@@ -851,6 +891,7 @@ gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar 
 	gchar *new_path = NULL;
 	gchar *cache_path = NULL;
 	gboolean ret;
+	GAsyncResult *res;
 	GError *error_local = NULL;
 
 	/* create the non FUSE temp directory */
@@ -868,12 +909,10 @@ gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar 
 
 	/* copy the file */
 	dest = g_file_new_for_path (dest_path);
-	ret = g_file_copy (file, dest, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error_local);
-	if (!ret) {
-		*error = g_error_new (1, 0, "failed to copy file '%s' to '%s': %s", filename, cache_path, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
+	g_file_copy_async (file, dest, G_FILE_COPY_OVERWRITE, 0, NULL,
+			   (GFileProgressCallback) gpk_client_install_local_files_progress_callback, gclient,
+			   (GAsyncReadyCallback) gpk_client_install_local_files_ready_callback, gclient);
+	gtk_main ();
 
 	/* return the modified file item */
 	new_path = g_strdup (dest_path);
@@ -930,7 +969,8 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 	}
 
 	/* optional */
-	if (gclient->priv->show_confirm && array_missing->len > 0) {
+	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SHOW_COPY_CONFIRM, NULL);
+	if (ret && array_missing->len > 0) {
 		/* TRANSLATORS: title: we have to copy the private files to a public location */
 		title = ngettext ("Do you want to copy this file?",
 				  "Do you want to copy these files?", array_missing->len);
@@ -959,6 +999,16 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		}
 	}
 
+	/* setup UI */
+	if (array_missing->len > 0) {
+		/* TRANSLATORS: title: we are about to copy files, which may take a few seconds */
+		title = ngettext ("Copying file",
+				  "Copying files", array_missing->len);
+		gpk_client_dialog_set_title (gclient->priv->dialog, title);
+		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
+	}
+
 	/* now we have the okay to copy the files, do so */
 	ret = TRUE;
 	for (i=0; i<array->len; i++) {
@@ -976,6 +1026,9 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 				ret = FALSE;
 				break;
 			}
+
+			/* show progress */
+			gpk_client_dialog_set_message (gclient->priv->dialog, filename);
 
 			/* swap data in array */
 			g_free (array->pdata[i]);
@@ -1316,8 +1369,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 
 	/* no deps */
 	length = pk_package_list_get_size (list);
-	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SKIP_CONFIRM_NO_DEPS, NULL);
-	if (length == 0 && ret)
+	if (length == 0)
 		goto skip_checks;
 
 	/* sort by package_id */
@@ -1471,8 +1523,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	/* these are the new packages */
 	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	length = pk_package_list_get_size (list);
-	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_SKIP_CONFIRM_NO_DEPS, NULL);
-	if (length == 0 && ret)
+	if (length == 0)
 		goto skip_checks;
 
 	/* TRANSLATORS: title: tell the user we have to install additional packages */
@@ -1582,9 +1633,14 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 
 	string = g_string_new ("");
 	len = g_strv_length (packages);
-	for (i=0; i<len; i++)
-		g_string_append_printf (string, "• <i>%s</i>\n", packages[i]);
 
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		g_string_append_printf (string, "%s\n", packages[0]);
+	} else {
+		for (i=0; i<len; i++)
+			g_string_append_printf (string, "• %s\n", packages[i]);
+	}
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
@@ -1776,7 +1832,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	}
 
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+	message = g_strdup_printf ("%s\n\n%s\n\n%s",
 				   /* TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so */
 				   _("The following file is required:"),
 				   full_path,
@@ -1900,19 +1956,16 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 	const PkPackageObj *obj;
 	guint len;
 	gchar *title;
-	gchar *codec_name_formatted;
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, error);
 	if (!ret)
 		return NULL;
 
-	codec_name_formatted = g_strdup_printf ("<i>%s</i>", codec_name);
 	/* TRANSLATORS: title, searching for codecs */
-	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name_formatted);
+	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name);
 	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	g_free (title);
-	g_free (codec_name_formatted);
 
 	/* get codec packages */
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), PK_PROVIDES_ENUM_CODEC, codec_desc, error);
@@ -1968,10 +2021,18 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 
 	string = g_string_new ("");
 	g_string_append_printf (string, "%s\n%s\n\n", title, message);
-	for (i=0; i<len; i++) {
-		parts = g_strsplit (codec_name_strings[i], "|", 2);
-		g_string_append_printf (string, "• <i>%s</i>\n", parts[0]);
+
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		parts = g_strsplit (codec_name_strings[0], "|", 2);
+		g_string_append_printf (string, "%s\n", parts[0]);
 		g_strfreev (parts);
+	} else {
+		for (i=0; i<len; i++) {
+			parts = g_strsplit (codec_name_strings[i], "|", 2);
+			g_string_append_printf (string, "• %s\n", parts[0]);
+			g_strfreev (parts);
+		}
 	}
 
 	/* TRANSLATORS: ask for confirmation */
@@ -2184,7 +2245,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* make sure the user wants to do action */
-	message = g_strdup_printf ("%s\n\n• %s\n\n%s",
+	message = g_strdup_printf ("%s\n\n%s\n\n%s",
 				    /* TRANSLATORS: message: mime type opener required */
 				   _("An additional program is required to open this type of file:"),
 				   mime_type,
@@ -2961,7 +3022,8 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
-	ret = gpk_client_signature_show (package_id, repository_name, key_url, key_userid,
+	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
+	ret = gpk_client_signature_show (GTK_WINDOW (widget), package_id, repository_name, key_url, key_userid,
 					 key_id, key_fingerprint, key_timestamp);
 	/* disagreed with auth */
 	if (!ret)
