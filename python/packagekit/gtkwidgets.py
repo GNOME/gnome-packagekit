@@ -29,7 +29,6 @@ from gettext import gettext as _
 
 import dbus
 
-import packagekit.client
 from packagekit.misc import PackageKitPackage
 from packagekit.enums import *
 
@@ -505,6 +504,8 @@ class PackageListView(gtk.TreeView, gobject.GObject):
 
 def main():
     """Run a test application"""
+    import packagekit.client
+
     def on_exit(trans, exit, runtime):
         if exit == EXIT_FAILED:
             d = PackageKitMessageDialog(enum=trans._error_enum,
