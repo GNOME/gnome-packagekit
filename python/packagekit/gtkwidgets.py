@@ -53,6 +53,7 @@ class PackageKitStatusIcon(gtk.Image):
         self.icon_name = None
         self._transaction = None
         self._signals = []
+        self.set_alignment(0, 0)
         if transaction != None:
             self.set_transaction(transaction)
 
@@ -292,18 +293,23 @@ class PackageKitProgressDialog(gtk.Dialog):
         hbox.set_border_width(6)
         self.icon = PackageKitStatusAnimation()
         self.icon._on_status_changed(STATUS_WAIT)
-        hbox.add(self.icon)
+        hbox.pack_start(self.icon, False, True, 0)
         vbox = gtk.VBox()
         vbox.set_spacing(6)
         self.progress = PackageKitProgressBar()
-        vbox.add(self.progress)
+        vbox.pack_start(self.progress, False, True, 0)
         self.label = PackageKitStatusLabel()
         self.label._on_status_changed(STATUS_WAIT)
-        vbox.add(self.label)
-        hbox.add(vbox)
-        self.vbox.add(hbox)
+        vbox.pack_start(self.label, False, True, 0)
+        hbox.pack_start(vbox, True, True, 0)
+        self.vbox.pack_start(hbox, True, True, 0)
         self._transaction = None
         self._signals = []
+        self.set_title("")
+        self.realize()
+        self.progress.set_size_request(250, -1)
+        self.window.set_functions(gtk.gdk.FUNC_MOVE)
+
         if transaction != None:
             self.set_transaction(transaction)
 
