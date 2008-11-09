@@ -463,16 +463,12 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("A thread could not be created to service the user request.");
 		break;
 	case PK_ERROR_ENUM_NOT_SUPPORTED:
-		text = g_strdup_printf(
-			_("The action is not supported by this backend.\n"
-			  "Please report a bug at %s as this should not have "
-			  "happened."), GPK_BUGZILLA_URL);
+		text = _("The action is not supported by this backend.\n"
+			 "Please report a bug in your distribution bugtracker as this should not have happened.");
 		break;
 	case PK_ERROR_ENUM_INTERNAL_ERROR:
-		text = g_strdup_printf(
-			_("A problem that we were not expecting has occurred.\n"
-			  "Please report this bug at %s with the error "
-			  "description."), GPK_BUGZILLA_URL);
+		text = _("A problem that we were not expecting has occurred.\n"
+			 "Please report this bug in your distribution bugtracker with the error description.");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
 		text = _("A security trust relationship could not be made with software source.\n"

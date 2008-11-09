@@ -108,7 +108,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we running privileged */
-	ret = gpk_check_privileged_user (_("Package installer"));
+	ret = gpk_check_privileged_user (_("Package installer"), TRUE);
 	if (!ret) {
 		return 1;
 	}

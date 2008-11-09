@@ -72,7 +72,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: application name to pass to to the user if there are not enough privs */
-	ret = gpk_check_privileged_user (_("Provide File Installer"));
+	ret = gpk_check_privileged_user (_("Provide File Installer"), TRUE);
 	if (!ret)
 		return 1;
 
