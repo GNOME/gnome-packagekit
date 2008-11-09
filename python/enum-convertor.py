@@ -6,6 +6,8 @@ icons = compile("static const PkEnumMatch enum_([^\]]+)_icon_name\[\] = {(.*?)};
 animations = compile("static const PkEnumMatch enum_([^\]]+)_animation\[\] = {(.*?)};", DOTALL|MULTILINE)
 values = compile("PK_([A-Z_]+)_ENUM_([A-Z0-9_]+),\s+\"([^\"]+)\"")
 
+present = compile("gpk_([a-z]+?)_enum_to_localised_present \(Pk[A-Za-z]+? [a-z]+?\)(.*?)}", DOTALL|MULTILINE)
+past = compile("gpk_([a-z]+?)_enum_to_localised_past \(Pk[A-Za-z]+? [a-z]+?\)(.*?)}", DOTALL|MULTILINE)
 descs = compile("gpk_([a-z]+?)_enum_to_localised_message \(Pk[A-Za-z]+? [a-z]+?\)(.*?)}", DOTALL|MULTILINE)
 string_values = compile("case PK_([A-Z_]+?)_ENUM_([A-Z0-9_]+?):\n\s+text = (_\(\".+?\"\));\n", MULTILINE|DOTALL)
 strings = compile("gpk_([a-z]+?)_enum_to_localised_text \(Pk[A-Za-z]+? [a-z]+?\)(.*?)}", DOTALL|MULTILINE)
@@ -52,6 +54,35 @@ for (name, data) in animations.findall(inp):
     print "def get_%s_animation_name_from_enum(enum):" % name
     print "   if ANIMATIONS_%s.has_key(enum):" % name.upper()
     print "       return ANIMATIONS_%s[enum]" % name.upper()
+    print "   else:"
+    print "       return None\n"
+
+# Extract past messages
+for (name, data) in past.findall(inp):
+    print "PAST_%s = {" % name.upper()
+    for match in string_sub_values.findall(data):
+        print "    %s_%s:%s %% %s," % match
+    for match in string_values.findall(data):
+        print "    %s_%s:%s," % match
+    print "    }\n"
+    print "def get_%s_localised_past_from_enum(enum):" % name
+    print "   if PAST_%s.has_key(enum):" % name.upper()
+    print "       return PAST_%s[enum]" % name.upper()
+    print "   else:"
+    print "       return None\n"
+
+
+# Extract present messages
+for (name, data) in present.findall(inp):
+    print "PRESENT_%s = {" % name.upper()
+    for match in string_sub_values.findall(data):
+        print "    %s_%s:%s %% %s," % match
+    for match in string_values.findall(data):
+        print "    %s_%s:%s," % match
+    print "    }\n"
+    print "def get_%s_localised_present_from_enum(enum):" % name
+    print "   if PRESENT_%s.has_key(enum):" % name.upper()
+    print "       return PRESENT_%s[enum]" % name.upper()
     print "   else:"
     print "       return None\n"
 
