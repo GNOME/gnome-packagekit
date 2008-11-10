@@ -1,3 +1,47 @@
+Version 0.3.10
+~~~~~~~~~~~~~~
+Released: 2008-11-10
+
+* Translations
+ - Added Marathi Translation (Sandeep Shedmake)
+ - Added Oriya Translation (Manoj Kumar Giri)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Norwegian Bokmal translation (Kjartan Maraas)
+ - Updated Brazilian Portuguese translation (Leonardo Ferreira Fontenelle)
+ - Updated Hebrew Translation (Mark Krapivner)
+ - Updated Polish translation (Tomasz Dominikowski)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+
+* New Features:
+ - Add InstallCatalog for applications to use in the session (Jan Niklas Hasse)
+ - Add InstallPackageNames so we can install multiple packages in one call (Richard Hughes)
+ - Allow pressing escape to clear the preferences capplet (Richard Hughes)
+ - Add a IsPackageInstalled() method for Anjunta (Richard Hughes)
+ - Add Python GTK widgets (Sebastian Heinlein)
+
+* Bugfix:
+ - Use g_mkdir_with_parents when a new enough GIO is not available (Debarshi Ray)
+ - Fix up a few strings after a translation review (Nils Philippsen)
+ - Fix the size request of gpk-application to fix rh#467987 (Richard Hughes)
+ - Fix a lot of translations, and use translator comments where possible (Richard Hughes)
+ - Fix the interaction when installing local files by only showing the copy
+   dialog for non-native paths. Also add a confirm dialog when the files
+   were installed correctly. Fixes rh#469275 (Richard Hughes)
+ - Don't free the value when doing InstallPackageNames(). Fixes fd#18327 (Richard Hughes)
+ - Remove the autocompletion and menu choice GTK options in gpk-application (Richard Hughes)
+ - Don't print a critical warning when not on a session (Richard Hughes)
+ - Allow users to run tools as root after a stern security warning as just
+   closing is slightly rude. Fixes rh#469539 (Richard Hughes)
+ - Make the signature required window modal over the client dialog (Richard Hughes)
+ - Add a quit menu item under the system group in gpk-application (Richard Hughes)
+ - Don't use bullets when there is only one item in the list. Fixes rh#469966 (Richard Hughes)
+ - Don't show the non-local warning for the update icon on a terminal client,
+   just for other applications (Richard Hughes)
+ - Python widgets: Make the progress dialog wider by default (Sebastian Heinlein)
+ - Python widgets: Import the client module in the example only (Sebastian Heinlein)
+ - Python widgets: Show the role of the transaction in the progress window (Sebastian Heinlein)
+
 Version 0.3.9
 ~~~~~~~~~~~~~
 Released: 2008-10-27
