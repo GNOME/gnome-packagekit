@@ -542,9 +542,9 @@ def main():
         t.run()
     def on_toggled(view, pkg):
         if pkg.info == INFO_INSTALLED:
-            t = pk.RemovePackages([pkg.id], False, False, exit_handler=on_exit)
+            t = pk.RemovePackages(pkg, False, False, exit_handler=on_exit)
         else:
-            t = pk.InstallPackages([pkg.id], exit_handler=on_exit)
+            t = pk.InstallPackages(pkg, exit_handler=on_exit)
         dia = PackageKitProgressDialog(t, win)
         dia.run()
         dia.hide()
