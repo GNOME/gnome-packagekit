@@ -41,7 +41,7 @@
 #include "gpk-firmware.h"
 #include "gpk-hardware.h"
 #include "gpk-dbus.h"
-#include "gpk-interface.h"
+#include "org.freedesktop.PackageKit.h"
 #include "gpk-common.h"
 
 /**
