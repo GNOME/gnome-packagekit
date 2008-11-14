@@ -3021,6 +3021,14 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Signature required"));
+	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_SIG_CHECK);
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
+	gpk_client_dialog_set_percentage (gclient->priv->dialog, 101);
+	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CUSTOM, pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR), 0);
+
 	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
 	ret = gpk_client_signature_show (GTK_WINDOW (widget), package_id, repository_name, key_url, key_userid,
 					 key_id, key_fingerprint, key_timestamp);
