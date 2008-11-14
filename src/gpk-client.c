@@ -3503,6 +3503,10 @@ gpk_client_init (GpkClient *gclient)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
+	/* only initialise if the application didn't do it before */
+	if (!notify_is_initted ())
+		notify_init ("gpk-client");
+
 	gclient->priv->vendor = gpk_vendor_new ();
 	gclient->priv->dialog = gpk_client_dialog_new ();
 	gpk_client_dialog_set_window_icon (gclient->priv->dialog, "pk-package-installed");
