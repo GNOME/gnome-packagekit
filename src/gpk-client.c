@@ -2993,7 +2993,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
 
