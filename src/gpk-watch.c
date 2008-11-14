@@ -397,6 +397,7 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 	gboolean ret;
 	GError *error = NULL;
 	const gchar *title;
+	gchar *title_prefix;
 	const gchar *message;
 	gboolean is_active;
 	gboolean value;
@@ -438,8 +439,11 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 	g_free (watch->priv->error_details);
 	watch->priv->error_details = g_markup_escape_text (details, -1);
 
+	/* TRANSLATORS: Prefix to the title shown in the libnotify popup */
+	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
+
 	/* do the bubble */
-	notification = notify_notification_new (title, message, "help-browser", NULL);
+	notification = notify_notification_new (title_prefix, message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
@@ -451,6 +455,7 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
+	g_free (title_prefix);
 }
 
 /**
@@ -462,6 +467,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	gboolean ret;
 	GError *error = NULL;
 	const gchar *title;
+	gchar *title_prefix;
 	const gchar *filename;
 	gchar *escaped_details;
 	gboolean value;
@@ -477,13 +483,15 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
         }
 
 	title = gpk_message_enum_to_localised_text (message);
+	/* TRANSLATORS: Prefix to the title shown in the libnotify popup */
+	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
 	filename = gpk_message_enum_to_icon_name (message);
 
 	/* we need to format this */
 	escaped_details = g_markup_escape_text (details, -1);
 
 	/* do the bubble */
-	notification = notify_notification_new (title, escaped_details, "help-browser", NULL);
+	notification = notify_notification_new (title_prefix, escaped_details, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
@@ -493,6 +501,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	}
 
 	g_free (escaped_details);
+	g_free (title_prefix);
 }
 
 /**
