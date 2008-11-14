@@ -708,10 +708,10 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		text = _("The priority was invalid");
 		break;
 	case PK_MESSAGE_ENUM_BACKEND_ERROR:
-		text = _("Generic backend error");
+		text = _("Backend warning");
 		break;
 	case PK_MESSAGE_ENUM_DAEMON_ERROR:
-		text = _("Generic daemon error");
+		text = _("Daemon warning");
 		break;
 	case PK_MESSAGE_ENUM_CACHE_BEING_REBUILT:
 		text = _("The package list cache is being rebuilt");
