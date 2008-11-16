@@ -268,7 +268,7 @@ class PackageKitCancelButton(gtk.Button):
         self.set_sensitive(False)
 
     def _on_clicked(self, button, transaction):
-        transaction.Cancel()
+        transaction.cancel()
 
 
 class PackageKitProgressDialog(gtk.Dialog):
@@ -355,31 +355,46 @@ class PackageKitMessageDialog(gtk.MessageDialog):
     Dialog for PackageKit errors and messages with details in an expandable
     text view
     """
-    def __init__(self, enum, parent=None, type=gtk.MESSAGE_ERROR, details=None):
+    def __init__(self, enum, details=None, parent=None):
         gtk.MessageDialog.__init__(self, parent=parent,
-                                   type=type, buttons=gtk.BUTTONS_CLOSE)
-        if type == gtk.MESSAGE_INFO:
-            text = get_message_string_from_enum(enum)
-            self.set_markup("<big><b>%s</b></big>" % text)
-        else:
-            text = get_error_string_from_enum(enum)
-            desc = get_error_description_from_enum(enum)
-            self.set_markup("<big><b>%s</b></big>\n\n%s" % (text, desc))
-        if details:
-            #TRANSLATORS: expander label in the error dialog
-            expander = gtk.expander_new_with_mnemonic(_("_Details"))
-            expander.set_spacing(6)
-            scrolled = gtk.ScrolledWindow()
-            scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-            scrolled.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-            textview = gtk.TextView()
-            buffer = textview.get_buffer()
-            buffer.insert_at_cursor(details)
-            scrolled.add(textview)
-            expander.add(scrolled)
-            box = self.label.get_parent()
-            box.add(expander)
-            self.show_all()
+                                   type=gtk.MESSAGE_INFO,
+                                   buttons=gtk.BUTTONS_CLOSE)
+        text = get_message_string_from_enum(enum)
+        self.set_markup("<big><b>%s</b></big>" % text)
+        self.set_details(details)
+
+    def set_details(self, details):
+        if details == None:
+            return
+        #TRANSLATORS: expander label in the error dialog
+        expander = gtk.expander_new_with_mnemonic(_("_Details"))
+        expander.set_spacing(6)
+        scrolled = gtk.ScrolledWindow()
+        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        textview = gtk.TextView()
+        buffer = textview.get_buffer()
+        buffer.insert_at_cursor(details)
+        scrolled.add(textview)
+        expander.add(scrolled)
+        box = self.label.get_parent()
+        box.add(expander)
+        expander.show_all()
+
+
+class PackageKitErrorDialog(PackageKitMessageDialog):
+    """
+    Dialog for PackageKit errors and messages with details in an expandable
+    text view
+    """
+    def __init__(self, error=None, parent=None):
+        gtk.MessageDialog.__init__(self, parent=parent,
+                                   type=gtk.MESSAGE_ERROR,
+                                   buttons=gtk.BUTTONS_CLOSE)
+        text = get_error_string_from_enum(error.code)
+        desc = get_error_description_from_enum(error.code)
+        self.set_markup("<big><b>%s</b></big>\n\n%s" % (text, desc))
+        self.set_details(error.details)
 
 
 class PackageListStore(gtk.ListStore):
@@ -518,33 +533,34 @@ def main():
 
     def on_exit(trans, exit, runtime):
         if exit == EXIT_FAILED:
-            d = PackageKitMessageDialog(enum=trans._error_enum,
-                                        details=trans._error_desc,
-                                        parent=win)
+            import pdb
+            pdb.set_trace()
+            err = trans.get_error()
+            d = PackageKitErrorDialog(trans.get_error(), parent=win)
             d.run()
             d.hide()
     def refresh(*args):
-        t = pk.RefreshCache(exit_handler=on_exit)
+        t = pk.update_system(exit_handler=on_exit)
         dia = PackageKitProgressDialog(t, parent=win)
         dia.run()
         dia.hide()
     def search(*args):
-        t = pk.SearchName(FILTER_NONE, "xterm", exit_handler=on_exit)
+        t = pk.search_name(FILTER_NONE, "xterm", exit_handler=on_exit)
         label.set_transaction(t)
         icon.set_transaction(t)
         pkgstore.set_transaction(t)
         t.run()
     def update(*args):
-        t = pk.GetUpdates(FILTER_NONE, exit_handler=on_exit)
+        t = pk.get_updates(FILTER_NONE, exit_handler=on_exit)
         label.set_transaction(t)
         icon.set_transaction(t)
         pkgstore.set_transaction(t)
         t.run()
     def on_toggled(view, pkg):
         if pkg.info == INFO_INSTALLED:
-            t = pk.RemovePackages(pkg, False, False, exit_handler=on_exit)
+            t = pk.remove_packages(pkg, False, False, exit_handler=on_exit)
         else:
-            t = pk.InstallPackages(pkg, exit_handler=on_exit)
+            t = pk.install_packages(pkg, exit_handler=on_exit)
         dia = PackageKitProgressDialog(t, win)
         dia.run()
         dia.hide()
@@ -581,7 +597,7 @@ def main():
     listview.set_model(pkgstore)
     listview.connect("toggled", on_toggled)
     pk = packagekit.client.PackageKitClient()
-    print map(lambda p: p.id, pk.Resolve(FILTER_NONE, "xterm"))
+    print map(lambda p: p.id, pk.resolve(FILTER_NONE, "xterm"))
     loop.run()
 
 if __name__ == "__main__":
