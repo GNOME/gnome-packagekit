@@ -2993,7 +2993,6 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
 
@@ -3021,6 +3020,14 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 	GtkWidget *widget;
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
+
+	gpk_client_dialog_set_title (gclient->priv->dialog, _("Signature required"));
+	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_SIG_CHECK);
+	gpk_client_dialog_set_message (gclient->priv->dialog, "");
+	gpk_client_dialog_set_percentage (gclient->priv->dialog, 101);
+	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
+	if (gclient->priv->show_progress)
+		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CUSTOM, pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR), 0);
 
 	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
 	ret = gpk_client_signature_show (GTK_WINDOW (widget), package_id, repository_name, key_url, key_userid,
@@ -3502,6 +3509,10 @@ gpk_client_init (GpkClient *gclient)
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
+
+	/* only initialise if the application didn't do it before */
+	if (!notify_is_initted ())
+		notify_init ("gpk-client");
 
 	gclient->priv->vendor = gpk_vendor_new ();
 	gclient->priv->dialog = gpk_client_dialog_new ();

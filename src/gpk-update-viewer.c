@@ -35,6 +35,7 @@
 #include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
+#include <libnotify/notify.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -1859,6 +1860,7 @@ main (int argc, char *argv[])
 	}
 
 	egg_debug_init (verbose);
+	notify_init ("gpk-update-viewer");
 	gtk_init (&argc, &argv);
 
 	/* add application specific icons to search path */
