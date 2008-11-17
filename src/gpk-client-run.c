@@ -368,6 +368,7 @@ gpk_client_run_show (gchar **package_ids)
 
 out:
 	g_free (last_tryexec);
+	last_tryexec = NULL;
 
 	/* hide window */
 	widget = glade_xml_get_widget (glade_xml, "window_simple");
