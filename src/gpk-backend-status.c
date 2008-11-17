@@ -130,7 +130,7 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_close_cb), loop);
 
-	widget = glade_xml_get_widget (glade_xml, "window_backend");
+	widget = glade_xml_get_widget (glade_xml, "dialog_backend");
 	g_signal_connect (widget, "delete_event",
 			  G_CALLBACK (pk_updates_delete_event_cb), loop);
 	gtk_widget_show (GTK_WIDGET (widget));

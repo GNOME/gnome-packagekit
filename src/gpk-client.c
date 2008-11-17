@@ -1887,6 +1887,8 @@ skip_checks:
 			/* TRANSLATORS: nothing found */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The file could not be found in any packages"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
+			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
+			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
 			/* only show the "more info" button if there is a valid link */
 			if (info_url != NULL)
 				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
@@ -2306,6 +2308,8 @@ skip_checks:
 			/* TRANSLATORS: nothing found in the software sources that helps */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new applications can be found to handle this type of file"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
+			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
+			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
 			/* only show the "more info" button if there is a valid link */
 			if (info_url != NULL)
 				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
@@ -2453,6 +2457,8 @@ skip_checks:
 			/* TRANSLATORS: message: tell the user we suck */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
+			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
+			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
 			/* only show the "more info" button if there is a valid link */
 			if (info_url != NULL)
 				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);

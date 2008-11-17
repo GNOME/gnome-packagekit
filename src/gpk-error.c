@@ -57,7 +57,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* make modal if window set */
@@ -94,7 +94,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	}
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 	gtk_window_set_title (GTK_WINDOW (widget), "");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);

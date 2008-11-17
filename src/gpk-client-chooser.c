@@ -194,7 +194,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set a size, if the screen allows */
@@ -207,7 +207,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_chooser_button_close_cb), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
@@ -271,7 +271,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	g_object_unref (extra);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 
 	/* wait for button press */

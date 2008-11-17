@@ -318,7 +318,7 @@ static void
 gpk_log_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_present (GTK_WINDOW (widget));
 }
 
@@ -635,7 +635,7 @@ main (int argc, char *argv[])
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 
 	/* set a size, if the screen allows */
@@ -714,7 +714,7 @@ main (int argc, char *argv[])
 	gpk_log_refresh ();
 
 	/* show */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 	gtk_main ();
 

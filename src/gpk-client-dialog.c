@@ -164,7 +164,7 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gpk_client_dialog_show_widget (dialog, "label_force_width", TRUE);
 
 	/* show */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	gtk_widget_realize (widget);
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 
@@ -187,7 +187,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 	/* not sure what to do here, should probably unparent somehow */
 	if (window == NULL) {
 		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+		widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
 		dialog->priv->has_parent = FALSE;
 
@@ -204,7 +204,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 		return FALSE;
 	}
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	gtk_widget_realize (widget);
 	gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
 	gdk_window_set_transient_for (GTK_WIDGET (widget)->window, window);
@@ -224,7 +224,7 @@ gpk_client_dialog_set_window_title (GpkClientDialog *dialog, const gchar *title)
 	g_return_val_if_fail (title != NULL, FALSE);
 
 	egg_debug ("setting window title: %s", title);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 	return TRUE;
 }
@@ -241,7 +241,7 @@ gpk_client_dialog_set_window_icon (GpkClientDialog *dialog, const gchar *icon)
 	g_return_val_if_fail (icon != NULL, FALSE);
 
 	egg_debug ("setting window icon: %s", icon);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), icon);
 	return TRUE;
 }
@@ -419,7 +419,7 @@ gpk_client_dialog_get_window (GpkClientDialog *dialog)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), NULL);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	return GTK_WINDOW (widget);
 }
 
@@ -462,7 +462,7 @@ gpk_client_dialog_close (GpkClientDialog *dialog)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	gtk_widget_hide (widget);
 
 	if (dialog->priv->pulse_timer_id != 0) {
@@ -754,7 +754,7 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 				 GTK_TREE_MODEL (dialog->priv->store));
 
 	/* common stuff */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "window_client");
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_dialog_window_delete_cb), dialog);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_close_cb), dialog);

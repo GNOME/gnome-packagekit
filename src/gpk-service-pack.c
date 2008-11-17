@@ -242,7 +242,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 
 	/* display errors if not exactly one match */
 	if (len == 0) {
-		widget = glade_xml_get_widget (glade_xml, "window_pack");
+		widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 		/* TRANSLATORS: message details when there were no packages found of that name */
 		text = g_strdup_printf (_("No package '%s' found!"), package);
 		/* TRANSLATORS: did not create pack file */
@@ -250,7 +250,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 		g_free (text);
 		goto out;
 	} else if (len > 1) {
-		widget = glade_xml_get_widget (glade_xml, "window_pack");
+		widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 		/* TRANSLATORS: more than one match for the package name */
 		text = g_strdup_printf (_("More than one possible package '%s' found!"), package);
 		/* TRANSLATORS: did not create pack file */
@@ -376,7 +376,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	if (action == GPK_ACTION_ENUM_COPY) {
 		ret = gpk_pack_copy_package_lists (filename, &error);
 		if (!ret) {
-			widget = glade_xml_get_widget (glade_xml, "window_pack");
+			widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 			/* TRANSLATORS: Could not create package list */
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot copy system package list"), error->message);
 			g_error_free (error);
@@ -395,7 +395,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		widget = glade_xml_get_widget (glade_xml, "entry_package");
 		package = gtk_entry_get_text (GTK_ENTRY(widget));
 		if (egg_strzero (package)) {
-			widget = glade_xml_get_widget (glade_xml, "window_pack");
+			widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 			/* TRANSLATORS: Could not create package list */
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("No package name selected"), NULL);
 			goto out;
@@ -410,7 +410,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	list = pk_package_list_new ();
 	ret = pk_obj_list_from_file (PK_OBJ_LIST(list), exclude);
 	if (!ret) {
-		widget = glade_xml_get_widget (glade_xml, "window_pack");
+		widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 		/* TRANSLATORS: we could not read the file list for the destination computer */
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot read destination package list"), NULL);
 		goto out;
@@ -429,7 +429,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	else if (action == GPK_ACTION_ENUM_PACKAGE)
 		ret = pk_service_pack_create_for_package_ids (pack, package_ids, &error);
 	if (!ret) {
-		widget = glade_xml_get_widget (glade_xml, "window_pack");
+		widget = glade_xml_get_widget (glade_xml, "dialog_pack");
 		/* TRANSLATORS: we could not create the pack file, generic error */
 		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot create service pack"), error->message);
 		g_error_free (error);
@@ -586,7 +586,7 @@ main (int argc, char *argv[])
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-service-pack.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "window_pack");
+	main_window = glade_xml_get_widget (glade_xml, "dialog_pack");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);

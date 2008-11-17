@@ -308,7 +308,7 @@ gpk_client_run_show (gchar **package_ids)
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set a size, if the screen allows */
@@ -328,7 +328,7 @@ gpk_client_run_show (gchar **package_ids)
 	gtk_widget_hide (widget);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	/* TRANSLATORS: window title: do we want to execute a program we just installed? */
 	gtk_window_set_title (GTK_WINDOW (widget), _("Run new application?"));
@@ -360,7 +360,7 @@ gpk_client_run_show (gchar **package_ids)
 	}
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 
 	/* wait for button press */
@@ -371,7 +371,7 @@ out:
 	last_tryexec = NULL;
 
 	/* hide window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
 

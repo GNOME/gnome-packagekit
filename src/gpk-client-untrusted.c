@@ -68,11 +68,11 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
@@ -126,7 +126,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_widget_show (widget);
 
 	/* wait for button press */
