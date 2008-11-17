@@ -323,7 +323,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("An internal system error has occurred");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
-		text = _("A security trust relationship is not present");
+		text = _("A security signature is not present");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package is not installed");
@@ -407,10 +407,10 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Local install failed");
 		break;
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		text = _("Bad GPG signature");
+		text = _("Bad security signature");
 		break;
 	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
-		text = _("Missing GPG signature");
+		text = _("Missing security signature");
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration invalid");
@@ -575,11 +575,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		text = _("The package signature could not be verified.");
+		text = _("The package security signature could not be verified.");
 		break;
 	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
-		text = _("The package signature was missing and this package is untrusted.\n"
-			 "This package was not signed with a GPG key when created.");
+		text = _("The package security signature is missing and this package is untrusted.\n"
+			 "This package was not signed when created.");
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration was invalid and could not be read.");

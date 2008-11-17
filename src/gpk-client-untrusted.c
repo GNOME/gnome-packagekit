@@ -87,8 +87,12 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	g_free (text);
 
 	/* message */
-	message = g_strdup_printf ("%s\n%s",
-				   /* TRANSLATORS: this is untrusted -- warn the user */
+	message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
+				   /* TRANSLATORS: is not GPG signed */
+				   _("The package is not signed by a trusted provider."),
+				   /* TRANSLATORS: user has to trust provider -- I know, this sucks */
+				   _("Do not install this package unless you are sure it is safe to do so."),
+				   /* TRANSLATORS: warn the user that all bets are off */
 				   _("Malicious software can damage your computer or cause other harm."),
 				   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
 				   _("Are you <b>sure</b> you want to install this package?"));
