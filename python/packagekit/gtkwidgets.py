@@ -323,9 +323,6 @@ class PackageKitProgressDialog(gtk.Dialog):
     def run(self):
         """Run the transaction"""
         parent = self.get_transient_for()
-        if parent:
-            parent.set_sensitive(False)
-            parent.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
         self._transaction.run()
         role_enum = self._transaction._iface.GetRole()[0]
         role = get_role_localised_present_from_enum(role_enum)
@@ -333,9 +330,6 @@ class PackageKitProgressDialog(gtk.Dialog):
         self.label_role.set_markup("<big><b>%s</b></big>" % role)
         self.show_all()
         gtk.Dialog.run(self)
-        if parent:
-            parent.set_sensitive(True)
-            parent.window.set_cursor(None)
 
     def set_transaction(self, transaction):
         """Connect the dialog to the given PackageKit transaction"""
