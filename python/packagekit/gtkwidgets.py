@@ -598,7 +598,10 @@ class PackageKitInstaller:
             t_requires = self._client.get_requires(packages,
                                                    exit_handler=self._on_exit)
             self._progress.set_transaction(t_requires)
-            self._progress.run()
+            ret = self._progress.run()
+            if not ret == EXIT_SUCCESS:
+                self._progress.hide()
+                return False
             if t_requires.result:
                 dia = PackageKitPackageDialog(t_requires, parent=self._parent,
                                               buttons=gtk.BUTTONS_CANCEL)
@@ -621,8 +624,9 @@ class PackageKitInstaller:
         t_remove = self._client.remove_packages(packages,
                                                 exit_handler=self._on_exit)
         self._progress.set_transaction(t_remove)
-        self._progress.run()
+        ret = self._progress.run()
         self._progress.hide()
+        return (ret == EXIT_SUCCESS)
 
     def install(self, packages, confirm=True):
         '''Install packages'''
@@ -630,7 +634,10 @@ class PackageKitInstaller:
             t_depends = self._client.get_depends(packages,
                                                  exit_handler=self._on_exit)
             self._progress.set_transaction(t_depends)
-            self._progress.run()
+            ret = self._progress.run()
+            if not ret == EXIT_SUCCESS:
+                self._progress.hide()
+                return False
             if t_depends.result:
                 dia = PackageKitPackageDialog(t_depends.result,
                                               parent=self._parent,
@@ -648,27 +655,33 @@ class PackageKitInstaller:
                 ret = dia.run()
                 dia.hide()
                 if ret == gtk.RESPONSE_CANCEL:
-                    progress.hide()
+                    self._progress.hide()
                     return False
         t_remove = self._client.install_packages(packages,
                                                  exit_handler=self._on_exit)
         self._progress.set_transaction(t_remove)
-        self._progress.run()
+        ret = self._progress.run()
         self._progress.hide()
+        return (ret == EXIT_SUCCESS)
 
     def install_by_name(self, names, confirm=True):
         '''Install the packages with the given names'''
         t_resolve = self._client.resolve(names, exit_handler=self._on_exit)
         self._progress.set_transaction(t_resolve)
-        self._progress.run()
+        ret = self._progress.run()
+        if not ret == EXIT_SUCCESS:
+            self._progress.hide()
+            return False
         return self.install(t_resolve.result, confirm)
 
     def remove_by_name(self, names, confirm=True):
         '''Remove the packages with the given names'''
         t_resolve = self._client.resolve(names, exit_handler=self._on_exit)
         self._progress.set_transaction(t_resolve)
-        self._progress.run()
-        self.progress.hide()
+        ret = self._progress.run()
+        if not ret == EXIT_SUCCESS:
+            self.progress.hide()
+            return False
         return self.remove(t_resolve.result, confirm)
 
 
@@ -700,9 +713,9 @@ def main():
     def on_toggled(view, pkg):
         installer = PackageKitInstaller(client=pk, parent=win)
         if pkg.info == INFO_INSTALLED:
-            t = installer.remove_by_name([pkg.name])
+            print installer.remove_by_name([pkg.name])
         else:
-            t = installer.install_by_name([pkg.name])
+            print installer.install_by_name([pkg.name])
         search()
     win = gtk.Window()
     button_refresh = gtk.Button(label="Refresh")
