@@ -337,6 +337,7 @@ class PackageKitProgressDialog(gtk.Dialog):
         self.label_role.set_markup("<big><b>%s</b></big>" % role)
         self.show_all()
         gtk.Dialog.run(self)
+        return self._transaction._exit
 
     def set_transaction(self, transaction):
         """Connect the dialog to the given PackageKit transaction"""
