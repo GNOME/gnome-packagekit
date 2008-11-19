@@ -29,8 +29,10 @@ from gettext import gettext as _
 
 import dbus
 
+import packagekit.client
 from packagekit.misc import PackageKitPackage
 from packagekit.enums import *
+
 
 from genums import *
 
@@ -350,10 +352,49 @@ class PackageKitProgressDialog(gtk.Dialog):
     def _on_finished(self, status, runtime):
         self.response(gtk.RESPONSE_CLOSE)
 
+class PackageKitPackageDialog(gtk.MessageDialog):
+    """Dialog for showing a list of packages"""
+    def __init__(self, packages=[], parent=None, type=gtk.MESSAGE_QUESTION,
+                 buttons=gtk.BUTTONS_CLOSE):
+        gtk.MessageDialog.__init__(self, parent=parent, type=type,
+                                   buttons=buttons)
+        self.model = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+        scrolled = gtk.ScrolledWindow()
+        scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.listview = PackageListView(status_column=False)
+        self.listview.set_model(self.model)
+        self.listview.set_headers_visible(False)
+        scrolled.add(self.listview)
+        box = self.label.get_parent()
+        box.add(scrolled)
+        scrolled.show_all()
+        if packages:
+            self.set_packages(packages)
+
+    def get_model(self):
+        '''Get the model of the PackageListView of the dialog'''
+        return self.listview.get_model()
+
+    def set_model(self):
+        '''Set the model of the PackageListView of the dialog'''
+        return self.listview.set_model()
+
+    def set_packages(self, packages):
+        '''Show the given packages in the dialog'''
+        model = self.get_model()
+        for pkg in packages:
+            model.append((pkg.id, pkg))
+
+    def clear_packages(self):
+        '''Clear the shown packages'''
+        model = self.get_model()
+        model.clear()
+
+
 class PackageKitMessageDialog(gtk.MessageDialog):
     """
-    Dialog for PackageKit errors and messages with details in an expandable
-    text view
+    Dialog for PackageKit messages with details in an expandable text view
     """
     def __init__(self, enum, details=None, parent=None):
         gtk.MessageDialog.__init__(self, parent=parent,
@@ -384,8 +425,7 @@ class PackageKitMessageDialog(gtk.MessageDialog):
 
 class PackageKitErrorDialog(PackageKitMessageDialog):
     """
-    Dialog for PackageKit errors and messages with details in an expandable
-    text view
+    Dialog for PackageKit errors with details in an expandable text view
     """
     def __init__(self, error=None, parent=None):
         gtk.MessageDialog.__init__(self, parent=parent,
@@ -434,7 +474,7 @@ class PackageListView(gtk.TreeView, gobject.GObject):
     __gsignals__ = {"toggled":(gobject.SIGNAL_RUN_FIRST,
                                gobject.TYPE_NONE,
                                (gobject.TYPE_PYOBJECT,))}
-    def __init__(self):
+    def __init__(self, status_column=True):
         self.__gobject_init__()
         gtk.TreeView.__init__(self)
         self.set_rules_hint(True)
@@ -448,19 +488,21 @@ class PackageListView(gtk.TreeView, gobject.GObject):
         self.theme = gtk.icon_theme_get_default()
         self.theme.append_search_path("/usr/share/gnome-packagekit/icons")
 
-        # check boxes
-        renderer_status = gtk.CellRendererToggle()
-        renderer_status.connect('toggled', self._on_toggled)
-        renderer_status.set_property("xalign", 0.5)
-        renderer_status.set_property("yalign", 0.5)
-        column_status = gtk.TreeViewColumn("")
-        column_status.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-        column_status.pack_start(renderer_status, False)
-        column_status.set_cell_data_func (renderer_status, 
-                                          self._toggle_cell_func)
-        # FIXME: we need to react on theme changes
-        width = renderer_status.get_size(self)[2] + 8
-        column_status.set_fixed_width(width)
+        if status_column:
+            # check boxes
+            renderer_status = gtk.CellRendererToggle()
+            renderer_status.connect('toggled', self._on_toggled)
+            renderer_status.set_property("xalign", 0.5)
+            renderer_status.set_property("yalign", 0.5)
+            column_status = gtk.TreeViewColumn("")
+            column_status.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+            column_status.pack_start(renderer_status, False)
+            column_status.set_cell_data_func (renderer_status, 
+                                              self._toggle_cell_func)
+            # FIXME: we need to react on theme changes
+            width = renderer_status.get_size(self)[2] + 8
+            column_status.set_fixed_width(width)
+            self.append_column(column_status)
 
         # Application column (icon, name, description)
         column_pkg = gtk.TreeViewColumn(_("Package"))
@@ -479,7 +521,6 @@ class PackageListView(gtk.TreeView, gobject.GObject):
         column_pkg.set_cell_data_func(renderer_desc, 
                                       self._package_view_func)
 
-        self.append_column(column_status)
         self.append_column(column_pkg)
 
         self.set_fixed_height_mode(True)
@@ -527,14 +568,98 @@ class PackageListView(gtk.TreeView, gobject.GObject):
         self.emit("toggled", pkg)
 
 
+class PackageKitInstaller:
+    '''Provides a complete and easy solution to install and remove packages'''
+    def __init__(self, client=None, parent=None):
+        self._parent = parent
+        if not client:
+            client = packagekit.client.PackageKitClient()
+        self._client = client
+
+    def _on_exit(self, trans, exit, runtime):
+        '''Callback after a transaction is finished'''
+        if exit == EXIT_FAILED:
+            err = trans.get_error()
+            d = PackageKitErrorDialog(trans.get_error(), parent=self._parent)
+            d.run()
+            d.hide()
+        for msg in trans.messages:
+            dia_msg = PackageKitMessageDialog(msg.code, msg.details,
+                                              parent=self._parent)
+            dia.run()
+            dia.hide()
+
+    def remove(self, packages, confirm=True):
+        '''Remove packages'''
+        progress = PackageKitProgressDialog(parent=self._parent)
+        if confirm:
+            t_requires = self._client.get_requires(packages,
+                                                   exit_handler=self._on_exit)
+            progress.set_transaction(t_requires)
+            progress.run()
+            if t_requires.result:
+                dia = PackageKitPackageDialog(t_requires, parent=self._parent,
+                                              buttons=gtk.BUTTONS_CANCEL)
+                dia.set_default_response(gtk.RESPONSE_CANCEL)
+                dia.add_button(_("_Remove"), gtk.RESPONSE_OK)
+                msg = gettext.ngettext("Remove %i additional package?",
+                                       "Remove %i additional packages?",
+                                       len(t_requires.result)) % \
+                      len(t_requires.result)
+                dia.set_markup("<b><big>%s</big></b>" % msg)
+                dia.format_secondary_markup(_("The software which you want to "
+                                              "remove is required to run other "
+                                              "software, which will be removed "
+                                              "too."))
+                ret = dia.run()
+                dia.hide()
+                if ret == gtk.RESPONSE_CANCEL:
+                    progress.hide()
+                    return False
+        t_remove = self._client.remove_packages(packages,
+                                                exit_handler=self._on_exit)
+        progress.set_transaction(t_remove)
+        progress.run()
+        progress.hide()
+
+    def install(self, packages, confirm=True):
+        '''Install packages'''
+        progress = PackageKitProgressDialog(parent=self._parent)
+        if confirm:
+            t_depends = self._client.get_depends(packages,
+                                                 exit_handler=self._on_exit)
+            progress.set_transaction(t_depends)
+            progress.run()
+            if t_depends.result:
+                dia = PackageKitPackageDialog(t_depends.result,
+                                              parent=self._parent,
+                                              buttons=gtk.BUTTONS_CANCEL)
+                dia.set_default_response(gtk.RESPONSE_CANCEL)
+                dia.add_button(_("_Install"), gtk.RESPONSE_OK)
+                msg = gettext.ngettext("Install %i additional package?",
+                                       "Install %i additional packages?",
+                                       len(t_depends.result)) % \
+                      len(t_depends.result)
+                dia.set_markup("<b><big>%s</big></b>" % msg)
+                dia.format_secondary_markup(_("The software that you want to "
+                                              "install requires additional "
+                                              "software to run correctly."))
+                ret = dia.run()
+                dia.hide()
+                if ret == gtk.RESPONSE_CANCEL:
+                    progress.hide()
+                    return False
+        t_remove = self._client.install_packages(packages,
+                                                 exit_handler=self._on_exit)
+        progress.set_transaction(t_remove)
+        progress.run()
+        progress.hide()
+
+
 def main():
     """Run a test application"""
-    import packagekit.client
-
     def on_exit(trans, exit, runtime):
         if exit == EXIT_FAILED:
-            import pdb
-            pdb.set_trace()
             err = trans.get_error()
             d = PackageKitErrorDialog(trans.get_error(), parent=win)
             d.run()
@@ -545,25 +670,23 @@ def main():
         dia.run()
         dia.hide()
     def search(*args):
-        t = pk.search_name(FILTER_NONE, "xterm", exit_handler=on_exit)
+        t = pk.search_name("xterm", exit_handler=on_exit)
         label.set_transaction(t)
         icon.set_transaction(t)
         pkgstore.set_transaction(t)
         t.run()
     def update(*args):
-        t = pk.get_updates(FILTER_NONE, exit_handler=on_exit)
+        t = pk.get_updates(exit_handler=on_exit)
         label.set_transaction(t)
         icon.set_transaction(t)
         pkgstore.set_transaction(t)
         t.run()
     def on_toggled(view, pkg):
+        installer = PackageKitInstaller(client=pk, parent=win)
         if pkg.info == INFO_INSTALLED:
-            t = pk.remove_packages(pkg, False, False, exit_handler=on_exit)
+            t = installer.remove(pkg)
         else:
-            t = pk.install_packages(pkg, exit_handler=on_exit)
-        dia = PackageKitProgressDialog(t, win)
-        dia.run()
-        dia.hide()
+            t = installer.install(pkg)
         search()
     win = gtk.Window()
     button_refresh = gtk.Button(label="Refresh")
@@ -597,7 +720,7 @@ def main():
     listview.set_model(pkgstore)
     listview.connect("toggled", on_toggled)
     pk = packagekit.client.PackageKitClient()
-    print map(lambda p: p.id, pk.resolve(FILTER_NONE, "xterm"))
+    print map(lambda p: p.id, pk.resolve("xterm"))
     loop.run()
 
 if __name__ == "__main__":
