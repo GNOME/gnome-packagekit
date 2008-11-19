@@ -1099,7 +1099,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_CATEGORIES:
 		text = _("Getting categories");
 		break;
-	case: PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
 		text = _("Getting old transactions");
 		break;
 	default:
@@ -1208,7 +1208,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_CATEGORIES:
 		text = _("Got categories");
 		break;
-	case: PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
 		text = _("Got old transactions");
 		break;
 	default:
