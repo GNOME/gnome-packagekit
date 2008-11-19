@@ -3082,7 +3082,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* get localised data from sqlite database */
 	application->priv->desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (application->priv->desktop);
+	ret = pk_desktop_open_database (application->priv->desktop, NULL);
 	if (!ret)
 		egg_warning ("Failure opening database");
 

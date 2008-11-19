@@ -372,7 +372,7 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 	guint max_index = 0;
 	gint weight;
 
-	array = pk_desktop_get_files_for_package (desktop, package);
+	array = pk_desktop_get_files_for_package (desktop, package, NULL);
 	if (array == NULL)
 		goto out;
 	if (array->len == 0)

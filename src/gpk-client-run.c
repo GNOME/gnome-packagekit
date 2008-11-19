@@ -263,7 +263,7 @@ gpk_client_run_add_package_ids (gchar **package_ids)
 
 	/* open database */
 	desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (desktop);
+	ret = pk_desktop_open_database (desktop, NULL);
 	if (!ret) {
 		egg_debug ("failed to open desktop DB");
 		goto out;
@@ -273,7 +273,7 @@ gpk_client_run_add_package_ids (gchar **package_ids)
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
 		parts = g_strsplit (package_ids[i], ";", 0);
-		array = pk_desktop_get_files_for_package (desktop, parts[0]);
+		array = pk_desktop_get_files_for_package (desktop, parts[0], NULL);
 		if (array != NULL) {
 			for (j=0; j<array->len; j++) {
 				filename = g_ptr_array_index (array, j);

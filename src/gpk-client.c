@@ -3571,7 +3571,7 @@ gpk_client_init (GpkClient *gclient)
 
 	/* used for icons and translations */
 	gclient->priv->desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (gclient->priv->desktop);
+	ret = pk_desktop_open_database (gclient->priv->desktop, NULL);
 	if (!ret)
 		egg_warning ("failed to open desktop database");
 
