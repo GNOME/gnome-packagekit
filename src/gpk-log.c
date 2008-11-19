@@ -432,13 +432,19 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 			username = pw->pw_name;
 	}
 
-	/* get nice name for tool name, FIXME: use PkExtra to get localised names */
+	/* get nice name for tool name */
 	if (egg_strequal (obj->cmdline, "pkcon"))
-		tool = "Command line client";
+		/* TRANSLATORS: short name for pkcon */
+		tool = _("Command line client");
 	else if (egg_strequal (obj->cmdline, "gpk-application"))
-		tool = "Add/Remove Software";
+		/* TRANSLATORS: short name for gpk-update-viewer */
+		tool = _("Add/Remove Software");
 	else if (egg_strequal (obj->cmdline, "gpk-update-viewer"))
-		tool = "Update System";
+		/* TRANSLATORS: short name for gpk-update-viewer */
+		tool = _("Update System");
+	else if (egg_strequal (obj->cmdline, "gpk-update-icon"))
+		/* TRANSLATORS: short name for gpk-update-icon */
+		tool = _("Update Icon");
 	else
 		tool = obj->cmdline;
 
