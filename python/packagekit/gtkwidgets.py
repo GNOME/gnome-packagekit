@@ -203,6 +203,9 @@ class PackageKitProgressBar(gtk.ProgressBar):
             h.remove()
         self._signals = []
         self._signals.append(
+            transaction.connect_to_signal("Finished",
+                                          self._on_finished))
+        self._signals.append(
             transaction.connect_to_signal("ProgressChanged",
                                           self._on_progress_changed))
         self._transaction = transaction
@@ -231,6 +234,10 @@ class PackageKitProgressBar(gtk.ProgressBar):
         if self._show_time:
             #FIXME: should be nicer
             self.set_text("elapsed: %s - estimated: %s" % (elapsed, estimated))
+
+    def _on_finished(self, exit, runtime):
+        """Set the progress to 100% when the transaction is complete"""
+        self.set_fraction(1)
 
 
 class PackageKitCancelButton(gtk.Button):
