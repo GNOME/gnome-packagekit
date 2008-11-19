@@ -585,7 +585,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 {
 	GtkTreeIter iter;
 	const PkPackageObj *obj;
-	PkExtra *extra;
+	PkDesktop *desktop;
 	const gchar *icon;
 	gchar *package_id;
 	gchar *text;
@@ -603,7 +603,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 	else if (length > 1)
 		gtk_widget_set_size_request (widget, -1, 150);
 
-	extra = pk_extra_new ();
+	desktop = pk_desktop_new ();
 	length = pk_package_list_get_size (list);
 
 	/* add each well */
@@ -613,9 +613,8 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 		package_id = pk_package_id_to_string (obj->id);
 
 		/* get the icon */
-		icon = pk_extra_get_icon_name (extra, obj->id->name);
-		valid = gpk_check_icon_valid (icon);
-		if (!valid)
+		icon = gpk_desktop_guess_icon_name (desktop, obj->id->name);
+		if (icon == NULL)
 			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
 
 		gtk_list_store_append (dialog->priv->store, &iter);
@@ -628,7 +627,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 		g_free (package_id);
 	}
 
-	g_object_unref (extra);
+	g_object_unref (desktop);
 
 	return TRUE;
 }

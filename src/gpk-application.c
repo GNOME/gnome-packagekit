@@ -89,7 +89,7 @@ struct GpkApplicationPrivate
 	PkClient		*client_files;
 	GpkClient		*gclient;
 	PkConnection		*pconnection;
-	PkExtra			*extra;
+	PkDesktop		*desktop;
 	gchar			*package;
 	gchar			*group;
 	gchar			*url;
@@ -1092,7 +1092,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 		pk_bitfield_add (state, GPK_STATE_COLLECTION);
 
 	/* use the application icon if available */
-	icon = pk_extra_get_icon_name (application->priv->extra, obj->id->name);
+	icon = gpk_desktop_guess_icon_name (application->priv->desktop, obj->id->name);
 	if (icon == NULL)
 		icon = gpk_application_state_get_icon (state);
 
@@ -3081,13 +3081,10 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_connection_changed_cb), application);
 
 	/* get localised data from sqlite database */
-	application->priv->extra = pk_extra_new ();
-	ret = pk_extra_set_database (application->priv->extra, NULL);
+	application->priv->desktop = pk_desktop_new ();
+	ret = pk_desktop_open_database (application->priv->desktop);
 	if (!ret)
-		egg_warning ("Failure setting database");
-
-	/* set the locale to default */
-	pk_extra_set_locale (application->priv->extra, NULL);
+		egg_warning ("Failure opening database");
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_application_create_custom_widget, application);
@@ -3494,7 +3491,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->client_details);
 	g_object_unref (application->priv->client_files);
 	g_object_unref (application->priv->pconnection);
-	g_object_unref (application->priv->extra);
+	g_object_unref (application->priv->desktop);
 	g_object_unref (application->priv->gconf_client);
 	g_object_unref (application->priv->gclient);
 	g_object_unref (application->priv->package_list);

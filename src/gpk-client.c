@@ -80,7 +80,7 @@ struct _GpkClientPrivate
 	GpkClientDialog		*dialog;
 	GpkVendor		*vendor;
 	guint			 finished_timer_id;
-	PkExtra			*extra;
+	PkDesktop		*desktop;
 	PkControl		*control;
 	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
@@ -3367,7 +3367,7 @@ gpk_client_path_is_trusted (const gchar *exec)
  * gpk_client_set_parent_exec:
  *
  * This sets the package name of the application that is trying to install
- * software, e.g. "totem" and is used for the PkExtra lookup to provide
+ * software, e.g. "totem" and is used for the PkDesktop lookup to provide
  * a translated name and icon.
  **/
 gboolean
@@ -3399,10 +3399,10 @@ gpk_client_set_parent_exec (GpkClient *gclient, const gchar *exec)
 	package = gpk_client_get_package_for_exec (gclient, exec);
 	egg_debug ("got package %s", package);
 
-	/* try to get from PkExtra */
+	/* try to get from PkDesktop */
 	if (package != NULL) {
-		gclient->priv->parent_title = g_strdup (pk_extra_get_summary (gclient->priv->extra, package));
-		gclient->priv->parent_icon_name = g_strdup (pk_extra_get_icon_name (gclient->priv->extra, package));
+		gclient->priv->parent_title = gpk_desktop_guess_localised_name (gclient->priv->desktop, package);
+		gclient->priv->parent_icon_name = gpk_desktop_guess_icon_name (gclient->priv->desktop, package);
 		/* fallback to package name */
 		if (gclient->priv->parent_title == NULL) {
 			egg_debug ("did not get localised description for %s", package);
@@ -3570,11 +3570,10 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_secondary_finished_cb), gclient);
 
 	/* used for icons and translations */
-	gclient->priv->extra = pk_extra_new ();
-	ret = pk_extra_set_database (gclient->priv->extra, NULL);
+	gclient->priv->desktop = pk_desktop_new ();
+	ret = pk_desktop_open_database (gclient->priv->desktop);
 	if (!ret)
-		egg_warning ("failed to set extra database");
-	pk_extra_set_locale (gclient->priv->extra, NULL);
+		egg_warning ("failed to open desktop database");
 
 	/* cache the upgrade array */
 	gclient->priv->upgrade_array = g_ptr_array_new ();
@@ -3608,7 +3607,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_secondary);
 	g_object_unref (gclient->priv->control);
-	g_object_unref (gclient->priv->extra);
+	g_object_unref (gclient->priv->desktop);
 	g_object_unref (gclient->priv->gconf_client);
 	g_object_unref (gclient->priv->dialog);
 	g_object_unref (gclient->priv->vendor);

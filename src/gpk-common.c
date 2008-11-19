@@ -31,6 +31,7 @@
 #include <dbus/dbus-glib.h>
 #include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
+#include <locale.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -278,7 +279,7 @@ gboolean
 gpk_check_icon_valid (const gchar *icon)
 {
 	GtkIconInfo *icon_info;
-	static GtkIconTheme *icon_theme = NULL;
+	GtkIconTheme *icon_theme = NULL;
 	gboolean ret = TRUE;
 
 	/* trivial case */
@@ -286,8 +287,7 @@ gpk_check_icon_valid (const gchar *icon)
 		return FALSE;
 
 	/* no unref required */
-	if (icon_theme == NULL)
-		icon_theme = gtk_icon_theme_get_default ();
+	icon_theme = gtk_icon_theme_get_default ();
 
 	/* default to 32x32 */
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
@@ -299,6 +299,169 @@ gpk_check_icon_valid (const gchar *icon)
 		gtk_icon_info_free (icon_info);
 	}
 	return ret;
+}
+
+
+
+/**
+ * gpk_desktop_get_file_weight:
+ **/
+gint
+gpk_desktop_get_file_weight (const gchar *filename)
+{
+	GKeyFile *file;
+	gboolean ret;
+	gchar *value;
+	gint weight = 0;
+	const gchar *locale;
+
+	locale = setlocale (LC_ALL, NULL);
+	file = g_key_file_new ();
+	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_KEEP_TRANSLATIONS, NULL);
+	if (!ret) {
+		egg_debug ("failed to open %s", filename);
+		weight = G_MININT;
+		goto out;
+	}
+
+	/* application */
+	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, NULL);
+	if (egg_strequal (value, G_KEY_FILE_DESKTOP_TYPE_APPLICATION))
+		weight += 10;
+	g_free (value);
+
+	/* icon */
+	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
+	if (value != NULL && gpk_check_icon_valid (value))
+		weight += 50;
+	g_free (value);
+
+	/* hidden */
+	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_HIDDEN, NULL);
+	if (value != NULL)
+		weight -= 100;
+	g_free (value);
+
+	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, NULL);
+	if (egg_strequal (value, "true"))
+		weight -= 100;
+	g_free (value);
+
+	/* hidden */
+	value = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, locale, NULL);
+	if (value != NULL)
+		weight += 30;
+	g_free (value);
+
+out:
+	g_key_file_free (file);
+	return weight;
+}
+
+/**
+ * gpk_desktop_guess_best_file:
+ **/
+gchar *
+gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
+{
+	GPtrArray *array;
+	const gchar *filename;
+	gchar *best_file = NULL;
+	guint i;
+	guint max = G_MININT;
+	guint max_index = 0;
+	gint weight;
+
+	array = pk_desktop_get_files_for_package (desktop, package);
+	if (array == NULL)
+		goto out;
+	if (array->len == 0)
+		goto out;
+
+	/* go through each option, and weight each one */
+	for (i=0; i<array->len; i++) {
+		filename = g_ptr_array_index (array, i);
+		weight = gpk_desktop_get_file_weight (filename);
+		egg_debug ("file %s has weight %i", filename, weight);
+		if (weight > max) {
+			max = weight;
+			max_index = i;
+		}
+	}
+
+	/* we've got a best */
+	best_file = g_strdup (g_ptr_array_index (array, max_index));
+	egg_debug ("using %s", best_file);
+out:
+	if (array != NULL) {
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
+	return best_file;
+}
+
+/**
+ * gpk_desktop_guess_icon_name:
+ **/
+gchar *
+gpk_desktop_guess_icon_name (PkDesktop *desktop, const gchar *package)
+{
+	GKeyFile *file;
+	gchar *filename;
+	gchar *data = NULL;
+	gboolean ret;
+
+	filename = gpk_desktop_guess_best_file (desktop, package);
+	if (filename == NULL)
+		goto out;
+
+	/* get data from file */
+	file = g_key_file_new ();
+	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_NONE, NULL);
+	if (!ret) {
+		egg_warning ("failed to open %s", filename);
+		goto out;
+	}
+	data = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
+	g_key_file_free (file);
+
+	/* one final check */
+	if (data != NULL && !gpk_check_icon_valid (data)) {
+		g_free (data);
+		data = NULL;
+	}
+out:
+	g_free (filename);
+	return data;
+}
+
+/**
+ * gpk_desktop_guess_localised_name:
+ **/
+gchar *
+gpk_desktop_guess_localised_name (PkDesktop *desktop, const gchar *package)
+{
+	GKeyFile *file;
+	gchar *filename;
+	gchar *data = NULL;
+	gboolean ret;
+
+	filename = gpk_desktop_guess_best_file (desktop, package);
+	if (filename == NULL)
+		goto out;
+
+	/* get data from file */
+	file = g_key_file_new ();
+	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_KEEP_TRANSLATIONS, NULL);
+	if (!ret) {
+		egg_warning ("failed to open %s", filename);
+		goto out;
+	}
+	data = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL);
+	g_key_file_free (file);
+out:
+	g_free (filename);
+	return data;
 }
 
 /**
