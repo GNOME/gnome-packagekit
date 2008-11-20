@@ -271,12 +271,12 @@ out:
 }
 
 /**
- * gpk_check_icon_valid:
+ * gpk_desktop_check_icon_valid:
  *
  * Check icon actually exists and is valid in this theme
  **/
 gboolean
-gpk_check_icon_valid (const gchar *icon)
+gpk_desktop_check_icon_valid (const gchar *icon)
 {
 	GtkIconInfo *icon_info;
 	GtkIconTheme *icon_theme = NULL;
@@ -332,7 +332,7 @@ gpk_desktop_get_file_weight (const gchar *filename)
 
 	/* icon */
 	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
-	if (value != NULL && gpk_check_icon_valid (value))
+	if (value != NULL && gpk_desktop_check_icon_valid (value))
 		weight += 50;
 	g_free (value);
 
@@ -426,7 +426,7 @@ gpk_desktop_guess_icon_name (PkDesktop *desktop, const gchar *package)
 	g_key_file_free (file);
 
 	/* one final check */
-	if (data != NULL && !gpk_check_icon_valid (data)) {
+	if (data != NULL && !gpk_desktop_check_icon_valid (data)) {
 		g_free (data);
 		data = NULL;
 	}

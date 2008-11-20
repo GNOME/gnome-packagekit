@@ -223,7 +223,7 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	pk_package_id_free (id);
 
 	/* might not be valid */
-	if (!gpk_check_icon_valid (icon)) {
+	if (!gpk_desktop_check_icon_valid (icon)) {
 		g_free (icon);
 		icon = NULL;
 	}
