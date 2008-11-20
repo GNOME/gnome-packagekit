@@ -73,13 +73,13 @@ gpk_client_signature_show (GtkWindow *window, const gchar *package_id, const gch
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-signature.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_no");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
@@ -99,12 +99,12 @@ gpk_client_signature_show (GtkWindow *window, const gchar *package_id, const gch
 	gtk_label_set_label (GTK_LABEL (widget), key_id);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
 	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_gpg");
+	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
 	gtk_widget_show (widget);
 
 	/* wait for button press */

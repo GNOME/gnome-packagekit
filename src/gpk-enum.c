@@ -323,7 +323,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("An internal system error has occurred");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
-		text = _("A security trust relationship is not present");
+		text = _("A security signature is not present");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package is not installed");
@@ -407,10 +407,10 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		text = _("Local install failed");
 		break;
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		text = _("Bad GPG signature");
+		text = _("Bad security signature");
 		break;
 	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
-		text = _("Missing GPG signature");
+		text = _("Missing security signature");
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration invalid");
@@ -432,6 +432,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
 		text = _("No more mirrors are available");
+		break;
+	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
+		text = _("No distribution upgrade data is available");
 		break;
 	default:
 		egg_warning ("Unknown error");
@@ -575,11 +578,11 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		text = _("The package signature could not be verified.");
+		text = _("The package security signature could not be verified.");
 		break;
 	case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
-		text = _("The package signature was missing and this package is untrusted.\n"
-			 "This package was not signed with a GPG key when created.");
+		text = _("The package security signature is missing and this package is untrusted.\n"
+			 "This package was not signed when created.");
 		break;
 	case PK_ERROR_ENUM_REPO_CONFIGURATION_ERROR:
 		text = _("Repository configuration was invalid and could not be read.");
@@ -604,6 +607,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
 		text = _("Required data could not be found on any of the configured software sources.\n"
 			 "There were no more download mirrors that could be tried.");
+		break;
+	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
+		text = _("Required upgrade data could not be found in any of the configured software sources.\n"
+			 "The list of distribution upgrades will be unavailable.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
@@ -1092,6 +1099,9 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_CATEGORIES:
 		text = _("Getting categories");
 		break;
+	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+		text = _("Getting old transactions");
+		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1197,6 +1207,9 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_GET_CATEGORIES:
 		text = _("Got categories");
+		break;
+	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+		text = _("Got old transactions");
 		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));

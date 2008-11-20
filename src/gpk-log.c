@@ -30,6 +30,8 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <locale.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 #include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
@@ -60,6 +62,8 @@ enum
 	GPK_LOG_COLUMN_ROLE,
 	GPK_LOG_COLUMN_DETAILS,
 	GPK_LOG_COLUMN_ID,
+	GPK_LOG_COLUMN_USER,
+	GPK_LOG_COLUMN_TOOL,
 	GPK_LOG_COLUMN_LAST
 };
 
@@ -250,6 +254,20 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
+
+	/* TRANSLATORS: column for the username, e.g. Richard Hughes */
+	column = gtk_tree_view_column_new_with_attributes (_("Username"), renderer,
+							   "markup", GPK_LOG_COLUMN_USER, NULL);
+	gtk_tree_view_append_column (treeview, column);
+	gtk_tree_view_column_set_expand (column, FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_USER);
+
+	/* TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs */
+	column = gtk_tree_view_column_new_with_attributes (_("Application"), renderer,
+							   "markup", GPK_LOG_COLUMN_TOOL, NULL);
+	gtk_tree_view_append_column (treeview, column);
+	gtk_tree_view_column_set_expand (column, FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_TOOL);
 }
 
 /**
@@ -318,7 +336,7 @@ static void
 gpk_log_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_present (GTK_WINDOW (widget));
 }
 
@@ -343,6 +361,10 @@ gpk_log_filter (const PkTransactionObj *obj)
 
 	if (filter == NULL)
 		return TRUE;
+
+	/* matches cmdline */
+	if (obj->cmdline != NULL && g_strrstr (obj->cmdline, filter) != NULL)
+		ret = TRUE;
 
 	/* look in all the data for the filter string */
 	packages = g_strsplit (obj->data, "\n", 0);
@@ -388,7 +410,10 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	gchar **date_part;
 	const gchar *icon_name;
 	const gchar *role_text;
+	const gchar *username = NULL;
+	const gchar *tool;
 	static guint count;
+	struct passwd *pw;
 
 	/* put formatted text into treeview */
 	details = gpk_log_get_details_localised (obj->timespec, obj->data);
@@ -398,6 +423,31 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	icon_name = gpk_role_enum_to_icon_name (obj->role);
 	role_text = gpk_role_enum_to_localised_past (obj->role);
 
+	/* query real name */
+	pw = getpwuid(obj->uid);
+	if (pw != NULL) {
+		if (pw->pw_gecos != NULL)
+			username = pw->pw_gecos;
+		else if (pw->pw_name != NULL)
+			username = pw->pw_name;
+	}
+
+	/* get nice name for tool name */
+	if (egg_strequal (obj->cmdline, "pkcon"))
+		/* TRANSLATORS: short name for pkcon */
+		tool = _("Command line client");
+	else if (egg_strequal (obj->cmdline, "gpk-application"))
+		/* TRANSLATORS: short name for gpk-update-viewer */
+		tool = _("Add/Remove Software");
+	else if (egg_strequal (obj->cmdline, "gpk-update-viewer"))
+		/* TRANSLATORS: short name for gpk-update-viewer */
+		tool = _("Update System");
+	else if (egg_strequal (obj->cmdline, "gpk-update-icon"))
+		/* TRANSLATORS: short name for gpk-update-icon */
+		tool = _("Update Icon");
+	else
+		tool = obj->cmdline;
+
 	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
@@ -405,7 +455,9 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 			    GPK_LOG_COLUMN_DATE, date_part[1],
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DETAILS, details,
-			    GPK_LOG_COLUMN_ID, obj->tid, -1);
+			    GPK_LOG_COLUMN_ID, obj->tid,
+			    GPK_LOG_COLUMN_USER, username,
+			    GPK_LOG_COLUMN_TOOL, tool, -1);
 
 	/* add to db */
 	pk_obj_list_add (tid_list, obj->tid);
@@ -635,11 +687,11 @@ main (int argc, char *argv[])
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 
 	/* set a size, if the screen allows */
-	gpk_window_set_size_request (GTK_WINDOW (widget), 750, 300);
+	gpk_window_set_size_request (GTK_WINDOW (widget), 900, 300);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
@@ -692,7 +744,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create transaction_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
@@ -714,7 +766,7 @@ main (int argc, char *argv[])
 	gpk_log_refresh ();
 
 	/* show */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 	gtk_main ();
 

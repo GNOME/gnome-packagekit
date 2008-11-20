@@ -68,11 +68,11 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
 
 	/* connect up actions */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
@@ -87,8 +87,12 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	g_free (text);
 
 	/* message */
-	message = g_strdup_printf ("%s\n%s",
-				   /* TRANSLATORS: this is untrusted -- warn the user */
+	message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
+				   /* TRANSLATORS: is not GPG signed */
+				   _("The package is not signed by a trusted provider."),
+				   /* TRANSLATORS: user has to trust provider -- I know, this sucks */
+				   _("Do not install this package unless you are sure it is safe to do so."),
+				   /* TRANSLATORS: warn the user that all bets are off */
 				   _("Malicious software can damage your computer or cause other harm."),
 				   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
 				   _("Are you <b>sure</b> you want to install this package?"));
@@ -122,7 +126,7 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_error");
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_widget_show (widget);
 
 	/* wait for button press */

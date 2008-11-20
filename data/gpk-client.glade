@@ -2,21 +2,23 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!--*- mode: xml -*-->
 <glade-interface>
-  <widget class="GtkWindow" id="window_client">
+  <widget class="GtkDialog" id="dialog_client">
+    <property name="border_width">6</property>
     <property name="title" translatable="yes">Install Package</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
-    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="icon_name">system-software-update</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
-    <child>
-      <widget class="GtkVBox" id="vbox_check">
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="border_width">12</property>
-        <property name="spacing">9</property>
+        <property name="spacing">2</property>
         <child>
           <widget class="GtkHBox" id="hbox2">
             <property name="visible">True</property>
+            <property name="border_width">6</property>
             <property name="spacing">12</property>
             <child>
               <widget class="GtkVBox" id="vbox8">
@@ -28,6 +30,10 @@
                       <widget class="Custom" id="image_status">
                         <property name="visible">True</property>
                       </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
@@ -148,11 +154,13 @@
               </packing>
             </child>
           </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
         </child>
-        <child>
-          <widget class="GtkHButtonBox" id="buttonbox_main">
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
               <widget class="GtkButton" id="button_help">
@@ -208,8 +216,7 @@
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="pack_type">GTK_PACK_END</property>
           </packing>
         </child>
       </widget>

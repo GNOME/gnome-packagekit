@@ -38,7 +38,6 @@
 
 static GtkListStore *list_store = NULL;
 static gchar *full_path = NULL;
-static gchar *last_tryexec = NULL;
 
 enum
 {
@@ -166,10 +165,10 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 }
 
 /**
- * gpk_client_add_executable:
+ * gpk_client_run_add_desktop_file:
  **/
-static void
-gpk_client_add_executable (const gchar *package_id, const gchar *path)
+static gboolean
+gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 {
 	gboolean ret;
 	gchar *icon = NULL;
@@ -181,39 +180,40 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 	GtkTreeIter iter;
 	GKeyFile *file;
 	PkPackageId *id;
+	gint weight;
+
+	/* get weight */
+	weight = gpk_desktop_get_file_weight (filename);
+	if (weight < 0) {
+		egg_debug ("ignoring %s", filename);
+		goto out;
+	}
 
 	/* get some data from the desktop file */
 	file = g_key_file_new ();
-	ret = g_key_file_load_from_file (file, path, G_KEY_FILE_NONE, NULL);
-	if (ret) {
-		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "TryExec", NULL);
-		/* try harder */
-		if (exec == NULL)
-			exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
-		/* abandon attempt */
-		if (exec == NULL)
-			goto out;
-
-		/* have we the same executable name?
-		 * this helps when there's "f-spot", "fspot --import %f", and "f-spot --view" in 3
-		 * different desktop files */
-		if (egg_strequal (exec, last_tryexec)) {
-			egg_debug ("same as the last exec '%s' so skipping", exec);
-			goto out;
-		}
-
-		/* save for next time */
-		g_free (last_tryexec);
-		last_tryexec = g_strdup (exec);
-
-		name = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
-		icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
-		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
-		/* try harder */
-		if (summary == NULL) {
-			summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
-		}
+	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_NONE, NULL);
+	if (!ret) {
+		egg_debug ("failed to load %s", filename);
+		goto out;
 	}
+
+	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "TryExec", NULL);
+	/* try harder */
+	if (exec == NULL)
+		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
+
+	/* abandon attempt */
+	if (exec == NULL) {
+		ret = FALSE;
+		goto out;
+	}
+
+	name = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
+	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
+	summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
+	/* try harder */
+	if (summary == NULL)
+		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
 
 	/* put formatted text into treeview */
 	gtk_list_store_append (list_store, &iter);
@@ -231,59 +231,63 @@ gpk_client_add_executable (const gchar *package_id, const gchar *path)
 		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
 	gtk_list_store_set (list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, text,
-			    GPK_CHOOSER_COLUMN_FULL_PATH, exec, -1);
-	gtk_list_store_set (list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon, -1);
-
+			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
+			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
 out:
-	g_key_file_free (file);
+	if (file != NULL)
+		g_key_file_free (file);
 	g_free (exec);
 	g_free (icon);
 	g_free (name);
 	g_free (text);
 	g_free (joint);
 	g_free (summary);
+
+	return ret;
 }
 
 /**
- * gpk_client_add_package_ids:
+ * gpk_client_run_add_package_ids:
  **/
 static guint
-gpk_client_add_package_ids (gchar **package_ids)
+gpk_client_run_add_package_ids (gchar **package_ids)
 {
 	guint i, j;
 	guint length;
 	guint added = 0;
-	guint files_len;
-	gchar **files;
-	const gchar *package_id;
-	GError *error = NULL;
-	GpkClient *gclient;
+	const gchar *filename;
+	GPtrArray *array;
+	gchar **parts;
+	gboolean ret;
+	PkDesktop *desktop;
 
-	length = g_strv_length (package_ids);
-	gclient = gpk_client_new ();
-	/* only show if we need to download a cache */
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
-
-	for (i=0; i<length; i++) {
-		package_id = package_ids[i];
-		egg_debug ("package_id=%s", package_id);
-		files = gpk_client_get_file_list (gclient, package_id, &error);
-		if (files == NULL) {
-			egg_warning ("could not get file list: %s", error->message);
-			g_error_free (error);
-			error = NULL;
-			continue;
-		}
-		files_len = g_strv_length (files);
-		for (j=0; j<files_len; j++) {
-			if (g_str_has_suffix (files[j], ".desktop")) {
-				egg_debug ("package=%s, file=%s", package_id, files[j]);
-				gpk_client_add_executable (package_id, files[j]);
-				added++;
-			}
-		}
+	/* open database */
+	desktop = pk_desktop_new ();
+	ret = pk_desktop_open_database (desktop, NULL);
+	if (!ret) {
+		egg_debug ("failed to open desktop DB");
+		goto out;
 	}
-	g_object_unref (gclient);
+
+	/* add each package */
+	length = g_strv_length (package_ids);
+	for (i=0; i<length; i++) {
+		parts = g_strsplit (package_ids[i], ";", 0);
+		array = pk_desktop_get_files_for_package (desktop, parts[0], NULL);
+		if (array != NULL) {
+			for (j=0; j<array->len; j++) {
+				filename = g_ptr_array_index (array, j);
+				ret = gpk_client_run_add_desktop_file (package_ids[i], filename);
+				if (ret)
+					added++;
+			}
+			g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+			g_ptr_array_free (array, TRUE);
+		}
+		g_strfreev (parts);
+	}
+	g_object_unref (desktop);
+out:
 	return added;
 }
 
@@ -308,7 +312,7 @@ gpk_client_run_show (gchar **package_ids)
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set a size, if the screen allows */
@@ -328,7 +332,7 @@ gpk_client_run_show (gchar **package_ids)
 	gtk_widget_hide (widget);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	/* TRANSLATORS: window title: do we want to execute a program we just installed? */
 	gtk_window_set_title (GTK_WINDOW (widget), _("Run new application?"));
@@ -353,24 +357,22 @@ gpk_client_run_show (gchar **package_ids)
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* add all the apps */
-	len = gpk_client_add_package_ids (package_ids);
+	len = gpk_client_run_add_package_ids (package_ids);
 	if (len == 0) {
 		egg_debug ("no executable file for %s", package_ids[0]);
 		goto out;
 	}
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 
 	/* wait for button press */
 	gtk_main ();
 
 out:
-	g_free (last_tryexec);
-
 	/* hide window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
 

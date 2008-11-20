@@ -79,13 +79,13 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-eula.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
@@ -111,7 +111,7 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 	gtk_widget_set_size_request (widget, 100, 200);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (glade_xml, "window_eula");
+	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
 	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 

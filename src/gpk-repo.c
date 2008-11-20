@@ -233,7 +233,7 @@ static void
 gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_repo");
+	widget = glade_xml_get_widget (glade_xml, "dialog_repo");
 	/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to change status"),
 				gpk_error_enum_to_localised_text (code), details);
@@ -298,7 +298,7 @@ static void
 gpk_repo_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_repo");
+	widget = glade_xml_get_widget (glade_xml, "dialog_repo");
 	gtk_window_present (GTK_WINDOW (widget));
 }
 
@@ -395,7 +395,7 @@ main (int argc, char *argv[])
 	glade_set_custom_handler (gpk_repo_create_custom_widget, NULL);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-repo.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "window_repo");
+	main_window = glade_xml_get_widget (glade_xml, "dialog_repo");
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
 
 	/* Get the main window quit */

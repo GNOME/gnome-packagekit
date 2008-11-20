@@ -84,7 +84,7 @@ gpk_dialog_package_list_to_list_store (PkPackageList *list)
 	GtkListStore *store;
 	GtkTreeIter iter;
 	const PkPackageObj *obj;
-	PkExtra *extra;
+	PkDesktop *desktop;
 	const gchar *icon;
 	gchar *package_id;
 	gchar *text;
@@ -92,7 +92,7 @@ gpk_dialog_package_list_to_list_store (PkPackageList *list)
 	guint i;
 	gboolean valid;
 
-	extra = pk_extra_new ();
+	desktop = pk_desktop_new ();
 	store = gtk_list_store_new (GPK_DIALOG_STORE_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 	length = pk_package_list_get_size (list);
 
@@ -103,11 +103,9 @@ gpk_dialog_package_list_to_list_store (PkPackageList *list)
 		package_id = pk_package_id_to_string (obj->id);
 
 		/* get the icon */
-		icon = pk_extra_get_icon_name (extra, obj->id->name);
-		valid = gpk_check_icon_valid (icon);
-		if (!valid) {
+		icon = gpk_desktop_guess_icon_name (desktop, obj->id->name);
+		if (icon == NULL)
 			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
-		}
 
 		gtk_list_store_append (store, &iter);
 		gtk_list_store_set (store, &iter,
@@ -119,7 +117,7 @@ gpk_dialog_package_list_to_list_store (PkPackageList *list)
 		g_free (package_id);
 	}
 
-	g_object_unref (extra);
+	g_object_unref (desktop);
 	return store;
 }
 

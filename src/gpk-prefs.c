@@ -331,23 +331,8 @@ static void
 gpk_prefs_activated_cb (EggUnique *egg_unique, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_prefs");
+	widget = glade_xml_get_widget (glade_xml, "dialog_prefs");
 	gtk_window_present (GTK_WINDOW (widget));
-}
-
-/**
- * gpk_prefs_key_event_cb
- **/
-static gboolean
-gpk_prefs_key_event_cb (GtkWidget *widget, GdkEventKey *event, gpointer data)
-{
-	if (event->keyval == GDK_Escape) {
-		/* user pressed escape key, close the window */
-		gtk_main_quit ();
-		return TRUE;
-	}
-	/* returns FALSE to propagate event further */
-	return FALSE;
 }
 
 /**
@@ -414,9 +399,7 @@ main (int argc, char *argv[])
 	g_object_unref (control);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-prefs.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "window_prefs");
-	g_signal_connect (main_window, "key_press_event",
-			  G_CALLBACK (gpk_prefs_key_event_cb), NULL);
+	main_window = glade_xml_get_widget (glade_xml, "dialog_prefs");
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);

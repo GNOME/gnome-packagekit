@@ -175,7 +175,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	GtkTreeSelection *selection;
 	const PkPackageObj *obj;
 	GtkTreeIter iter;
-	PkExtra *extra;
+	PkDesktop *desktop;
 	gboolean ret;
 	const gchar *icon_name;
 	gchar *text;
@@ -194,7 +194,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set a size, if the screen allows */
@@ -207,7 +207,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_chooser_button_close_cb), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
@@ -237,8 +237,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
-	/* use PkExtra to get better icon */
-	extra = pk_extra_new ();
+	/* use PkDesktop to get better icon */
+	desktop = pk_desktop_new ();
 
 	/* see what we've got already */
 	len = pk_package_list_get_size (list);
@@ -251,11 +251,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 		text = gpk_package_id_format_twoline (obj->id, obj->summary);
 
 		/* get the icon */
-		icon_name = pk_extra_get_icon_name (extra, obj->id->name);
-
-		/* check icon actually exists and is valid in this theme */
-		ret = gpk_check_icon_valid (icon_name);
-		if (!ret)
+		icon_name = gpk_desktop_guess_icon_name (desktop, obj->id->name);
+		if (icon_name == NULL)
 			icon_name = gpk_info_enum_to_icon_name (obj->info);
 
 		package_id = pk_package_id_to_string (obj->id);
@@ -268,10 +265,10 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 		g_free (text);
 	}
 
-	g_object_unref (extra);
+	g_object_unref (desktop);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "window_simple");
+	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
 	gtk_widget_show (widget);
 
 	/* wait for button press */

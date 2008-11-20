@@ -87,12 +87,20 @@ gchar		*gpk_package_id_name_version		(const PkPackageId *id);
 gchar		*gpk_time_to_localised_string		(guint		 time_secs);
 gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
 							 gboolean	 show_ui);
+
+gchar		*gpk_desktop_guess_best_file		(PkDesktop	*desktop,
+							 const gchar	*package);
+gchar		*gpk_desktop_guess_icon_name		(PkDesktop	*desktop,
+							 const gchar	*package);
+gchar		*gpk_desktop_guess_localised_name	(PkDesktop	*desktop,
+							 const gchar	*package);
+gint		 gpk_desktop_get_file_weight		(const gchar	*filename);
 gboolean	 gpk_check_icon_valid			(const gchar	*icon);
 gboolean	 gpk_set_animated_icon_from_status	(GpkAnimatedIcon *icon,
 							 PkStatusEnum	 status,
 							 GtkIconSize	 size);
 gchar		*gpk_strv_join_locale			(gchar		**array);
-GtkEntryCompletion	*gpk_package_entry_completion_new	(void);
+GtkEntryCompletion *gpk_package_entry_completion_new	(void);
 gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
