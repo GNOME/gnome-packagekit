@@ -47,6 +47,7 @@
 #include "gpk-client-run.h"
 #include "gpk-client-chooser.h"
 #include "gpk-cell-renderer-uri.h"
+#include "gpk-desktop.h"
 
 static void     gpk_application_class_init (GpkApplicationClass *klass);
 static void     gpk_application_init       (GpkApplication      *application);

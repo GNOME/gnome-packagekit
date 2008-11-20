@@ -59,6 +59,7 @@
 #include "gpk-vendor.h"
 #include "gpk-enum.h"
 #include "gpk-x11.h"
+#include "gpk-desktop.h"
 
 static void     gpk_client_class_init	(GpkClientClass *klass);
 static void     gpk_client_init		(GpkClient      *gclient);

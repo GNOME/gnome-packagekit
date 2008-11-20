@@ -45,6 +45,7 @@
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-enum.h"
+#include "gpk-desktop.h"
 
 static void     gpk_client_dialog_class_init	(GpkClientDialogClass	*klass);
 static void     gpk_client_dialog_init		(GpkClientDialog	*dialog);

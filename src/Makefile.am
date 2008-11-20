@@ -63,6 +63,8 @@ shared_SOURCES =					\
 	gpk-x11.h					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
+	gpk-desktop.c					\
+	gpk-desktop.h					\
 	gpk-animated-icon.c				\
 	gpk-animated-icon.h				\
 	gpk-consolekit.c				\
