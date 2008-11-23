@@ -134,6 +134,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_FILES,		"pk-package-search"},
+	{PK_ROLE_ENUM_GET_OLD_TRANSACTIONS,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
 	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
