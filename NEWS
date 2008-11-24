@@ -1,3 +1,47 @@
+Version 0.3.11
+~~~~~~~~~~~~~~
+Released: 2008-11-24
+
+* Translations
+ - Added Danish translation (Jan Madsen)
+ - Updated Spanish help translation (Daniel Mustieles)
+ - Updated Hungarian translation (Gabor Kelemen)
+ - Updated Italian translation (Gianvito Cavasoli)
+ - Updated Spanish translation (Jorge Gonzalez)
+ - Updated Czech translation (Marek Lisy)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Polish translation (Tomasz Dominikowski)
+ - Updated Polish help translation (Tomasz Dominikowski)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+
+* New Features:
+ - Show the user and executable used for a transaction in gpk-log (Richard Hughes)
+ - Use PkDesktop rather than PkExtra so we can do cleverer things with the
+   desktop file results (Richard Hughes)
+
+* Bugfix:
+ - Prefix the libnotify widget title with a 'Package Manager' prefix so the
+   user has some idea what service it's coming from (Richard Hughes)
+ - Initialise the libnotify subsystem before it's attempted to create
+   notifications in GpkClient (Richard Hughes)
+ - Ensure we set the GpkClientDialog properly when doing a repo signature (Richard Hughes)
+ - Fix a crash if the user installs two bits of software in gpk-application and
+   runs neither of them (Richard Hughes)
+ - Don't show GPG in the client dialogs. Also make the unsigned packages UI less scary. (Richard Hughes)
+ - Make the root windows of the glade files be GtkDialog type, not GtkWindow (Richard Hughes)
+ - Don't overwrite CPPFLAGS in the configure check for g_file_make_directory_with_parents (Richard Hughes)
+ - Fix compile problem on x86_64 - missing header (Scott Reeves)
+ - Remove unused code (Scott Reeves)
+ - Adapt example to latest api (Sebastian Heinlein)
+ - Python widgets: Adapt latest API changes and introduce an error class (Sebastian Heinlein)
+ - Python widgets: Add a PackageKitPackageDialog and a high level PackageKitInstaller (Sebastian Heinlein)
+ - Python client: Do not make the window parent insensitive. This should be done
+   by the application (Sebastian Heinlein)
+ - Python widgets: Set the progress bar to 100% when the transaction is complete (Sebastian Heinlein)
+ - Python client: Add (install|remove)_by_name methods to the installer (Sebastian Heinlein)
+ - Python client: The progress dialog's run method returns the exit state of the transaction (Sebastian Heinlein)
+ - Python client: Handle return values correctly (Sebastian Heinlein)
+
 Version 0.3.10
 ~~~~~~~~~~~~~~
 Released: 2008-11-10
