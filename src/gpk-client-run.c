@@ -35,6 +35,7 @@
 #include "gpk-client.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
+#include "gpk-desktop.h"
 
 static GtkListStore *list_store = NULL;
 static gchar *full_path = NULL;

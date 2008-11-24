@@ -774,7 +774,7 @@ gpk_client_ptr_array_to_bullets (GPtrArray *array, const gchar *prefix)
 	/* don't use a bullet for one item */
 	if (array->len == 1) {
 		if (prefix != NULL)
-			return g_strdup_printf ("%s\n\n%s", prefix, g_ptr_array_index (array, 0));
+			return g_strdup_printf ("%s\n\n%s", prefix, (const gchar *) g_ptr_array_index (array, 0));
 		else
 			return g_strdup (g_ptr_array_index (array, 0));
 	}

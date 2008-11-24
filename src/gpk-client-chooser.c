@@ -177,7 +177,6 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	const PkPackageObj *obj;
 	GtkTreeIter iter;
 	PkDesktop *desktop;
-	gboolean ret;
 	const gchar *icon_name;
 	gchar *text;
 	guint len;

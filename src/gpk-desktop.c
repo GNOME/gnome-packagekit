@@ -27,6 +27,7 @@
 #include <locale.h>
 
 #include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-desktop.h"
 

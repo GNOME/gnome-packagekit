@@ -91,7 +91,6 @@ gpk_dialog_package_list_to_list_store (PkPackageList *list)
 	gchar *text;
 	guint length;
 	guint i;
-	gboolean valid;
 
 	desktop = pk_desktop_new ();
 	store = gtk_list_store_new (GPK_DIALOG_STORE_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
