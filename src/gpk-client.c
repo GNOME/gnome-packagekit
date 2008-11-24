@@ -891,8 +891,6 @@ gpk_client_install_local_files_copy_non_native (GpkClient *gclient, const gchar 
 	gchar *dest_path = NULL;
 	gchar *new_path = NULL;
 	gchar *cache_path = NULL;
-	gboolean ret;
-	GAsyncResult *res;
 	GError *error_local = NULL;
 
 	/* create the non FUSE temp directory */

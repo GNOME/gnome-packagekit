@@ -592,7 +592,6 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 	gchar *text;
 	guint length;
 	guint i;
-	gboolean valid;
 	GtkWidget *widget;
 
 	gtk_list_store_clear (dialog->priv->store);
