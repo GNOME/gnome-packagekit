@@ -97,9 +97,11 @@ PKG_CHECK_MODULES(GIO, gio-2.0)
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
 
+OLDCPPFLAGS=$CPPFLAGS
 CPPFLAGS=$GIO_CFLAGS
 LIBS=$GIO_LIBS
 AC_CHECK_FUNCS(g_file_make_directory_with_parents)
+CPPFLAGS=$OLDCPPFLAGS
 
 PKG_CHECK_MODULES(DBUS, \
  dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
@@ -276,6 +278,7 @@ echo "
         datadir:                   ${datadir}
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
-	gconf-schema dir:          $GCONF_SCHEMA_FILE_DIR
+        cppflags:                  ${CPPFLAGS}
+        gconf-schema dir:          $GCONF_SCHEMA_FILE_DIR
 "
 
