@@ -442,10 +442,10 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 }
 
 /**
- * gpk_dbus_install_font:
+ * gpk_dbus_install_fonts:
  **/
 void
-gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *font_desc, DBusGMethodInvocation *context)
+gpk_dbus_install_fonts (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **fonts, DBusGMethodInvocation *context)
 {
 	gboolean ret;
 	GError *error;
@@ -455,7 +455,46 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	egg_debug ("InstallFont method called: %s", font_desc);
+	egg_debug ("InstallPackageNames method called: %s", fonts[0]);
+
+	gpk_dbus_set_parent_window (dbus, xid, timestamp);
+
+	/* get the program name and set */
+	sender = dbus_g_method_get_sender (context);
+	exec = gpk_dbus_get_exec_for_sender (sender);
+	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
+	g_free (sender);
+	g_free (exec);
+
+	/* do the action */
+	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_install_font:
+ **/
+void
+gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *font, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+	gchar *sender;
+	gchar *exec;
+	gchar **fonts;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallFont method called: %s", font);
 
 	/* set modality */
 	gpk_dbus_set_parent_window (dbus, xid, timestamp);
@@ -468,7 +507,9 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 	g_free (exec);
 
 	/* do the action */
-	ret = gpk_client_install_font (dbus->priv->gclient, font_desc, &error_local);
+	fonts = g_strsplit (font, "|", 1);
+	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
+	g_strfreev (fonts);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
 				     "Method failed: %s", error_local->message);

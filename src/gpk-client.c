@@ -2357,9 +2357,22 @@ out:
 }
 
 /**
- * gpk_client_install_font:
+ * gpk_client_font_tag_to_localised_name:
+ **/
+static gchar *
+gpk_client_font_tag_to_localised_name (GpkClient *gclient, const gchar *tag)
+{
+	guint len;
+	len = strlen (tag);
+	if (len < 7)
+		return g_strdup_printf ("unknown: %s", tag);
+	return g_strdup (&tag[6]);
+}
+
+/**
+ * gpk_client_install_fonts:
  * @gclient: a valid #GpkClient instance
- * @font_desc: a font description such as <literal>lang:en_GB</literal>
+ * @fonts: font description such as <literal>lang:fr</literal>
  * @error: a %GError to put the error code and message in, or %NULL
  *
  * Install a application to handle a mime type
@@ -2367,19 +2380,28 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 gboolean
-gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **error)
+gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 {
 	gboolean ret;
 	PkPackageList *list = NULL;
+	PkPackageList *list_tmp = NULL;
 	GtkResponseType button;
 	gchar *info_url;
 	GError *error_local = NULL;
 	gchar **package_ids = NULL;
+	guint i;
 	guint len;
+	gchar *text;
 	gchar *message;
+	const gchar *title;
+	const gchar *title_part;
+	GString *string;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
-	g_return_val_if_fail (font_desc != NULL, FALSE);
+	g_return_val_if_fail (fonts != NULL, FALSE);
+
+	/* get number of fonts to install */
+	len = g_strv_length (fonts);
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);
@@ -2395,12 +2417,34 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 		goto skip_checks;
 	}
 
+	string = g_string_new ("");
+
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		text = gpk_client_font_tag_to_localised_name (gclient, fonts[0]);
+		g_string_append_printf (string, "%s\n", text);
+		g_free (text);
+	} else {
+		for (i=0; i<len; i++) {
+			text = gpk_client_font_tag_to_localised_name (gclient, fonts[i]);
+			g_string_append_printf (string, "• %s\n", text);
+			g_free (text);
+		}
+	}
+	/* display messagebox  */
+	text = g_string_free (string, FALSE);
+
+	/* TRANSLATORS: we need to download a new font package to display a document */
+	title = ngettext ("An additional font is required to view this document correctly.",
+			  "Additional fonts are required to view this document correctly.", len);
+
+	/* TRANSLATORS: we need to download a new font package to display a document */
+	title_part = ngettext ("Do you want to search for a suitable package now?",
+			       "Do you want to search for suitable packages now?", len);
+
 	/* check user wanted operation */
-	message = g_strdup_printf ("%s\n\n%s",
-				   /* TRANSLATORS: we need to download a new font package to display a document */
-				   _("An additional font is required to view this file correctly"),
-				   /* TRANSLATORS: confirm with user */
-				   _("Do you want to search for a suitable font now?"));
+	message = g_strdup_printf ("%s\n\n%s\n%s", title, text, title_part);
+
 	/* TRANSLATORS: title: font installer */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Font installer"));
 	/* TRANSLATORS: buttton: search for font */
@@ -2415,8 +2459,9 @@ gpk_client_install_font (GpkClient *gclient, const gchar *font_desc, GError **er
 	}
 
 skip_checks:
-	/* TRANSLATORS: title: we are now searching */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for fonts"));
+	/* TRANSLATORS: title to show when searching for font files */
+	title = ngettext ("Searching for font", "Searching for fonts", len);
+	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
 
@@ -2424,35 +2469,45 @@ skip_checks:
 	if (gclient->priv->show_progress)
 		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
 
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: this is an internal error, and should not be seen */
-		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
+	/* do each one */
+	list = pk_package_list_new ();
+	for (i=0; i<len; i++) {
 
-	/* action */
-	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
-				       PK_PROVIDES_ENUM_FONT, font_desc, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
-		g_error_free (error_local);
-		goto out;
+		/* reset */
+		ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
+		if (!ret) {
+			/* TRANSLATORS: this is an internal error, and should not be seen */
+			gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			g_error_free (error_local);
+			goto out;
+		}
+
+		/* action */
+		ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+					       PK_PROVIDES_ENUM_FONT, fonts[i], &error_local);
+		if (!ret) {
+			/* TRANSLATORS: we failed to find the package, this shouldn't happen */
+			gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			g_error_free (error_local);
+			goto out;
+		}
+
+		/* add to main list */
+		list_tmp = pk_client_get_package_list (gclient->priv->client_resolve);
+		pk_obj_list_add_list (PK_OBJ_LIST (list), PK_OBJ_LIST (list_tmp));
+		g_object_unref (list_tmp);
 	}
 
 	/* found nothing? */
-	list = pk_client_get_package_list (gclient->priv->client_resolve);
 	len = pk_package_list_get_size (list);
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_FONT);
 			/* TRANSLATORS: title: cannot find in sources */
-			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find font"));
+			title = ngettext ("Failed to find font", "Failed to find fonts", len);
+			gpk_client_dialog_set_title (gclient->priv->dialog, title);
 			/* TRANSLATORS: message: tell the user we suck */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
@@ -2479,11 +2534,15 @@ skip_checks:
 		goto skip_checks2;
 	}
 
-	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	/* TRANSLATORS: title: show a list of fonts */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install the following fonts"));
+	title = ngettext ("Install the following font", "Install the following fonts", len);
+	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
+	gpk_client_dialog_set_title (gclient->priv->dialog, title);
+
 	/* TRANSLATORS: confirm */
-	gpk_client_dialog_set_message (gclient->priv->dialog, _("Do you want to install these packages now?"));
+	title = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", len);
+
+	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	/* TRANSLATORS: button: install a font */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
@@ -2565,6 +2624,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		goto skip_checks;
 	}
 
+	/* TRANSLATORS: title to install package catalogs */
 	title = ngettext ("Do you want to install this catalog?",
 			  "Do you want to install these catalogs?", len);
 	message = g_strjoinv ("\n", filenames);

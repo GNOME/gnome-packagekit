@@ -97,8 +97,8 @@ gboolean	 gpk_client_install_mime_type		(GpkClient	*gclient,
 gboolean	 gpk_client_install_gstreamer_codecs	(GpkClient	*gclient,
 							 gchar		**codec_name_strings,
 							 GError		**error);
-gboolean	 gpk_client_install_font		(GpkClient	*gclient,
-							 const gchar	*font_desc,
+gboolean	 gpk_client_install_fonts		(GpkClient	*gclient,
+							 gchar		**fonts,
 							 GError		**error);
 gboolean	 gpk_client_install_package_names	(GpkClient	*gclient,
 							 gchar		**packages,
