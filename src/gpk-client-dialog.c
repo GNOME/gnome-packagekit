@@ -64,6 +64,9 @@ struct _GpkClientDialogPrivate
 	GtkListStore		*store;
 	gchar			*help_id;
 	gchar			*title;
+	gboolean		 set_image;
+	GpkClientDialogPage	 page;
+	PkBitfield		 options;
 };
 
 enum {
@@ -100,10 +103,30 @@ gpk_client_dialog_show_widget (GpkClientDialog *dialog, const gchar *name, gbool
 }
 
 /**
- * gpk_client_dialog_show_page:
+ * gpk_client_dialog_setup:
  **/
 gboolean
-gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, PkBitfield options, guint32 timestamp)
+gpk_client_dialog_setup (GpkClientDialog *dialog, GpkClientDialogPage page, PkBitfield options)
+{
+	GtkWidget *widget;
+	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+
+	/* reset state */
+	g_free (dialog->priv->help_id);
+	dialog->priv->help_id = NULL;
+	dialog->priv->set_image = FALSE;
+	dialog->priv->page = page;
+	dialog->priv->options = options;
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+	return TRUE;
+}
+
+/**
+ * gpk_client_dialog_present_with_time:
+ **/
+gboolean
+gpk_client_dialog_present_with_time (GpkClientDialog *dialog, guint32 timestamp)
 {
 	GtkWidget *widget;
 	PkBitfield bitfield = 0;
@@ -114,34 +137,38 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_show (widget);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gtk_widget_show (widget);
-
 	/* helper */
-	if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
-		gpk_client_dialog_set_image (dialog, "dialog-question");
+	if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
+		if (!dialog->priv->set_image)
+			gpk_client_dialog_set_image (dialog, "dialog-question");
 		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
 						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
 						   -1);
-	} else if (page == GPK_CLIENT_DIALOG_PAGE_FINISHED) {
-		gpk_client_dialog_set_image (dialog, "dialog-information");
+	} else if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_FINISHED) {
+		if (!dialog->priv->set_image)
+			gpk_client_dialog_set_image (dialog, "dialog-information");
 		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
 						   -1);
-	} else if (page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
-		gpk_client_dialog_set_image (dialog, "dialog-question");
+	} else if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
+		if (!dialog->priv->set_image)
+			gpk_client_dialog_set_image (dialog, "dialog-question");
 		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_ACTION,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
 						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
 						   -1);
-	} else if (page == GPK_CLIENT_DIALOG_PAGE_WARNING) {
-		gpk_client_dialog_set_image (dialog, "dialog-warning");
+	} else if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_WARNING) {
+		if (!dialog->priv->set_image)
+			gpk_client_dialog_set_image (dialog, "dialog-warning");
 		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_CLIENT_DIALOG_WIDGET_MESSAGE,
 						   -1);
-	} else if (page == GPK_CLIENT_DIALOG_PAGE_PROGRESS) {
-		gpk_client_dialog_set_image (dialog, "dialog-warning");
+	} else if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_PROGRESS) {
+		if (!dialog->priv->set_image)
+			gpk_client_dialog_set_image (dialog, "dialog-warning");
 		bitfield = pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_CANCEL,
 						   GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP,
@@ -150,7 +177,7 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	}
 
 	/* we can specify extras */
-	bitfield += options;
+	bitfield += dialog->priv->options;
 
 	gpk_client_dialog_show_widget (dialog, "button_help", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_HELP));
 	gpk_client_dialog_show_widget (dialog, "button_cancel", pk_bitfield_contain (bitfield, GPK_CLIENT_DIALOG_WIDGET_BUTTON_CANCEL));
@@ -169,7 +196,17 @@ gpk_client_dialog_show_page (GpkClientDialog *dialog, GpkClientDialogPage page, 
 	gtk_widget_realize (widget);
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 
+
 	return TRUE;
+}
+
+/**
+ * gpk_client_dialog_present:
+ **/
+gboolean
+gpk_client_dialog_present (GpkClientDialog *dialog)
+{
+	return gpk_client_dialog_present_with_time (dialog, 0);
 }
 
 /**
@@ -388,6 +425,9 @@ gpk_client_dialog_set_image (GpkClientDialog *dialog, const gchar *image)
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (image != NULL, FALSE);
 
+	/* set state */
+	dialog->priv->set_image = TRUE;
+
 	egg_debug ("setting image: %s", image);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
@@ -404,6 +444,9 @@ gpk_client_dialog_set_image_status (GpkClientDialog *dialog, PkStatusEnum status
 	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+
+	/* set state */
+	dialog->priv->set_image = TRUE;
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
 	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_DIALOG);
@@ -450,6 +493,7 @@ gpk_client_dialog_run (GpkClientDialog *dialog)
 
 	dialog->priv->response = GTK_RESPONSE_NONE;
 	g_main_loop_run (dialog->priv->loop);
+
 	return dialog->priv->response;
 }
 
@@ -522,7 +566,7 @@ gboolean
 gpk_client_dialog_set_help_id (GpkClientDialog *dialog, const gchar *help_id)
 {
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
-	g_free (dialog->priv->help_id);
+	g_return_val_if_fail (dialog->priv->help_id == NULL, FALSE);
 	dialog->priv->help_id = g_strdup (help_id);
 	return TRUE;
 }
@@ -740,6 +784,9 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->pulse_timer_id = 0;
 	dialog->priv->show_progress_files = TRUE;
 	dialog->priv->has_parent = FALSE;
+	dialog->priv->set_image = FALSE;
+	dialog->priv->page = GPK_CLIENT_DIALOG_PAGE_UNKNOWN;
+	dialog->priv->options = 0;
 	dialog->priv->help_id = NULL;
 	dialog->priv->title = NULL;
 
@@ -860,11 +907,12 @@ gpk_client_dialog_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "help button");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 	gpk_client_dialog_set_window_title (dialog, "PackageKit self test");
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press close");
 	gpk_client_dialog_set_image (dialog, "dialog-warning");
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+	gpk_client_dialog_present (dialog);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)
 		egg_test_success (test, NULL);
@@ -873,11 +921,12 @@ gpk_client_dialog_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "confirm button");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 	gpk_client_dialog_set_title (dialog, "Button press test with a really really long title");
 	gpk_client_dialog_set_message (dialog, "Please press Uninstall\n\nThis is a really really, really,\nreally long title <i>with formatting</i>");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
 	gpk_client_dialog_set_action (dialog, "Uninstall");
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, 0);
+	gpk_client_dialog_present (dialog);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
 		egg_test_success (test, NULL);
@@ -886,20 +935,22 @@ gpk_client_dialog_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "no message");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	gpk_client_dialog_set_title (dialog, "Refresh cache");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_REFRESH_CACHE);
 	gpk_client_dialog_set_percentage (dialog, 101);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+	gpk_client_dialog_present (dialog);
 	gpk_client_dialog_run (dialog);
 	egg_test_success (test, NULL);
 
 	/************************************************************/
 	egg_test_title (test, "progress");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press cancel");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_RUNNING);
 	gpk_client_dialog_set_percentage (dialog, 50);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+	gpk_client_dialog_present (dialog);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CANCEL)
 		egg_test_success (test, NULL);
@@ -908,11 +959,12 @@ gpk_client_dialog_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "progress");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_MESSAGE, -1));
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press close");
 	gpk_client_dialog_set_image_status (dialog, PK_STATUS_ENUM_INSTALL);
 	gpk_client_dialog_set_percentage (dialog, 101);
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, pk_bitfield_from_enums (GPK_CLIENT_DIALOG_WIDGET_MESSAGE, -1), 0);
+	gpk_client_dialog_present (dialog);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)
 		egg_test_success (test, NULL);
@@ -921,11 +973,12 @@ gpk_client_dialog_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "confirm install button");
+	gpk_client_dialog_setup (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 	gpk_client_dialog_set_title (dialog, "Button press test");
 	gpk_client_dialog_set_message (dialog, "Please press Install if you can see the package list");
 	gpk_client_dialog_set_image (dialog, "dialog-information");
 	gpk_client_dialog_set_action (dialog, "Install");
-	gpk_client_dialog_show_page (dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, 0);
+	gpk_client_dialog_present (dialog);
 	button = gpk_client_dialog_run (dialog);
 	if (button == GTK_RESPONSE_OK)
 		egg_test_success (test, NULL);

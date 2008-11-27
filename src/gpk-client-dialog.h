@@ -90,9 +90,8 @@ GQuark		 gpk_client_dialog_error_quark		(void);
 GType		 gpk_client_dialog_get_type		(void) G_GNUC_CONST;
 GpkClientDialog	*gpk_client_dialog_new			(void);
 
-gboolean	 gpk_client_dialog_show_page		(GpkClientDialog	*dialog,
-							 GpkClientDialogPage	 page,
-							 PkBitfield		 options,
+gboolean	 gpk_client_dialog_present		(GpkClientDialog	*dialog);
+gboolean	 gpk_client_dialog_present_with_time	(GpkClientDialog	*dialog,
 							 guint32		 timestamp);
 gboolean	 gpk_client_dialog_set_package_list	(GpkClientDialog	*dialog,
 							 const PkPackageList	*list);
@@ -119,6 +118,9 @@ gboolean	 gpk_client_dialog_set_help_id		(GpkClientDialog	*dialog,
 GtkWindow	*gpk_client_dialog_get_window		(GpkClientDialog	*dialog);
 GtkResponseType	 gpk_client_dialog_run			(GpkClientDialog	*dialog);
 gboolean	 gpk_client_dialog_close		(GpkClientDialog	*dialog);
+gboolean	 gpk_client_dialog_setup		(GpkClientDialog	*dialog,
+							 GpkClientDialogPage	 page,
+							 PkBitfield		 options);
 
 G_END_DECLS
 

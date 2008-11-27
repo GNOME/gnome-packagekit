@@ -351,10 +351,10 @@ gpk_client_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkCli
 	if (exit == PK_EXIT_ENUM_SUCCESS && gclient->priv->show_finished) {
 		list = pk_client_get_package_list (client);
 		/* TRANSLATORS: list the packages we just installed */
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 		gpk_client_dialog_set_message (gclient->priv->dialog, _("The following packages were installed:"));
 		gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
-		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, GPK_CLIENT_DIALOG_PACKAGE_LIST, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 		g_object_unref (list);
 		gclient->priv->finished_timer_id = g_timeout_add_seconds (GPK_CLIENT_FINISHED_AUTOCLOSE_DELAY,
 									  gpk_install_finished_timeout, gclient);
@@ -388,8 +388,9 @@ gpk_client_set_status (GpkClient *gclient, PkStatusEnum status)
 		    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 		    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
 		    status == PK_STATUS_ENUM_REFRESH_CACHE) {
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-progress");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+			gpk_client_dialog_present_with_time (gclient->priv->dialog, 0);
 		}
 	}
 
@@ -616,6 +617,9 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 	if (!gclient->priv->show_warning)
 		return;
 
+	/* setup UI */
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
+
 	/* print a proper error if we have it */
 	if (error != NULL) {
 		if (error->code == PK_CLIENT_ERROR_FAILED_AUTH ||
@@ -631,15 +635,12 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 			/* TRANSLATORS: the user tried to query for something invalid */
 			message = _("The query is not valid.");
 			details = error->message;
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		} else if (error->code == PK_CLIENT_ERROR_INVALID_FILE) {
 			/* TRANSLATORS: the user tried to install a file that was not compatable or broken */
 			message = _("The file is not valid.");
 			details = error->message;
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		} else {
 			details = error->message;
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 		}
 	}
 
@@ -647,7 +648,7 @@ gpk_client_error_msg (GpkClient *gclient, const gchar *title, GError *error)
 	if (details == NULL) {
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		return;
 	}
@@ -980,6 +981,7 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		message = gpk_client_ptr_array_to_bullets (array_missing, message_part);
 
 		/* show UI */
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
 		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-warning");
@@ -988,7 +990,7 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
 		g_free (message);
 
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		button = gpk_client_dialog_run (gclient->priv->dialog);
 		/* did we click no or exit the window? */
 		if (button != GTK_RESPONSE_OK) {
@@ -1003,9 +1005,10 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		/* TRANSLATORS: title: we are about to copy files, which may take a few seconds */
 		title = ngettext ("Copying file",
 				  "Copying files", array_missing->len);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-installing-private-files");
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	}
 
 	/* now we have the okay to copy the files, do so */
@@ -1043,10 +1046,10 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 				  "The files could not be copied", array_missing->len);
 
 		/* show UI */
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, error_local->message);
-		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "files not copied");
 		ret = FALSE;
@@ -1081,12 +1084,13 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 	message = gpk_client_ptr_array_to_bullets (array, NULL);
 
 	/* show UI */
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	/* TRANSLATORS: title: installing local files */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-files");
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 	g_free (message);
 
@@ -1095,10 +1099,9 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 		/* TRANSLATORS: title: the user cancelled the action */
 		title = ngettext ("The file was not installed",
 				  "The files were not installed", array->len);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
-		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted");
 		ret = FALSE;
@@ -1149,10 +1152,10 @@ gpk_client_install_local_files_check_exists (GpkClient *gclient, GPtrArray *arra
 		message = gpk_client_ptr_array_to_bullets (array_missing, message_part);
 
 		/* show UI */
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_set_message (gclient->priv->dialog, message);
-		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 
 		g_free (message);
@@ -1192,10 +1195,11 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	else
 		gpk_client_dialog_set_image (gclient->priv->dialog, "emblem-system");
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title_name);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-application-confirm");
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 
 	g_free (title_name);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
@@ -1250,11 +1254,11 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	if (!ret)
 		goto out;
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: installing a local file */
 	gpk_client_dialog_set_title (gclient->priv->dialog, ngettext ("Install local file", "Install local files", array->len));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 
 	files = pk_ptr_array_to_strv (array);
 	gclient->priv->retry_untrusted_value = FALSE;
@@ -1268,9 +1272,11 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	/* do we need to try again with better auth? */
 	if (gclient->priv->retry_untrusted_value) {
 		/* TRANSLATORS: title: installing a local file that is not trusted */
-		gpk_client_dialog_set_title (gclient->priv->dialog, ngettext ("Install untrusted local file", "Install untrusted local files", array->len));
+		title = ngettext ("Install untrusted local file", "Install untrusted local files", array->len);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		if (gclient->priv->show_progress)
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, gclient->priv->timestamp);
+			gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		ret = gpk_client_install_local_files_internal (gclient, FALSE, files, error);
 		if (!ret)
 			goto out;
@@ -1286,10 +1292,9 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 		/* TRANSLATORS: title: we have installed the local file OK */
 		title = ngettext ("File was installed successfully",
 				  "Files were installed successfully", array->len);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0);
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
-		gpk_client_dialog_set_message (gclient->priv->dialog, "");
-		gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-info");
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_FINISHED, 0, gclient->priv->timestamp);
+		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
 	}
 
@@ -1335,13 +1340,14 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto skip_checks;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: getting a list of other packages that depend on this one */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding packages we require"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-requires");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
@@ -1389,13 +1395,14 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	g_free (name);
 
 	/* show UI */
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	/* TRANSLATORS: title: removing packages */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Remove"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-remove-other-packages");
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	g_free (title);
 	g_free (message);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
@@ -1409,14 +1416,11 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	}
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title removing packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Remove packages"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
-
-	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
@@ -1490,14 +1494,14 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 		goto skip_checks;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: finding a list of packages that we would also need to download */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Finding other packages we require"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-depends");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
@@ -1538,13 +1542,14 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 					     length), name);
 	g_free (name);
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	/* TRANSLATORS: title: installing package */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-other-packages");
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* did we click no or exit the window? */
@@ -1556,12 +1561,11 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	}
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: installing packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Installing packages"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
@@ -1665,12 +1669,13 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	}
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title, searching */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for packages"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
@@ -1702,18 +1707,18 @@ skip_checks:
 			/* TRANSLATORS: couldn't resolve name to package */
 			title = g_strdup_printf (_("Could not find %s"), text);
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION);
+			else
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			gpk_client_dialog_set_title (gclient->priv->dialog, title);
 			/* TRANSLATORS: message: could not find */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The packages could not be found in any software source"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: a link to the help file */
 			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
-
-			/* only show the "more info" button if there is a valid link */
-			if (info_url != NULL)
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
-			else
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			button = gpk_client_dialog_run (gclient->priv->dialog);
 			if (button == GTK_RESPONSE_OK)
 				gpk_gnome_open (info_url);
@@ -1745,11 +1750,11 @@ skip_checks:
 			text = pk_package_ids_to_text (packages);
 			/* TRANSLATORS: title: package is already installed */
 			title = g_strdup_printf (_("Failed to install %s"), text);
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			gpk_client_dialog_set_title (gclient->priv->dialog, title);
 			/* TRANSLATORS: message: package is already installed */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("The package is already installed"));
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 			g_free (text);
 			g_free (title);
@@ -1762,12 +1767,12 @@ skip_checks:
 	/* got junk? */
 	if (id == NULL) {
 		if (gclient->priv->show_warning) {
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: failed to install, shouldn't be shown */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install package"));
 			/* TRANSLATORS: the search gave us the wrong result. internal error. barf. */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("Incorrect response from search"));
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package already found");
@@ -1881,6 +1886,11 @@ skip_checks:
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION);
+			else
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: failed to fild the package for thefile */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find package"));
 			/* TRANSLATORS: nothing found */
@@ -1888,11 +1898,7 @@ skip_checks:
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
-			/* only show the "more info" button if there is a valid link */
-			if (info_url != NULL)
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
-			else
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			button = gpk_client_dialog_run (gclient->priv->dialog);
 			if (button == GTK_RESPONSE_OK)
 				gpk_gnome_open (info_url);
@@ -1920,11 +1926,11 @@ skip_checks:
 		if (gclient->priv->show_warning) {
 			/* TRANSLATORS: we've already got a package that provides this file */
 			text = g_strdup_printf (_("The %s package already provides the file %s"), id->name, full_path);
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: title */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install file"));
 			gpk_client_dialog_set_message (gclient->priv->dialog, text);
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 			g_free (text);
 		}
@@ -2106,15 +2112,15 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	}
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: search for codec */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for plugins"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* save the objects to download in a list */
 	list = pk_package_list_new ();
@@ -2130,16 +2136,17 @@ skip_checks:
 		if (obj_new == NULL) {
 			if (gclient->priv->show_warning) {
 				info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_CODEC);
+				/* only show the "more info" button if there is a valid link */
+				if (info_url != NULL)
+					gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION);
+				else
+					gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 				/* TRANSLATORS: failed to search for codec */
 				gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to search for plugin"));
 				/* TRANSLATORS: no software sources have the wanted codec */
 				gpk_client_dialog_set_message (gclient->priv->dialog, _("Could not find plugin in any configured software source"));
 				gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
-				/* only show the "more info" button if there is a valid link */
-				if (info_url != NULL)
-					gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
-				else
-					gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+				gpk_client_dialog_present (gclient->priv->dialog);
 				button = gpk_client_dialog_run (gclient->priv->dialog);
 				if (button == GTK_RESPONSE_OK)
 					gpk_gnome_open (info_url);
@@ -2172,14 +2179,14 @@ skip_checks:
 	title = ngettext ("Install the following plugin", "Install the following plugins", len);
 	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", len);
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	/* TRANSLATORS: button: install codecs */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
@@ -2266,6 +2273,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: searching for mime type handlers */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Searching for file handlers"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
@@ -2273,7 +2281,7 @@ skip_checks:
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_resolve, &error_local);
@@ -2302,6 +2310,11 @@ skip_checks:
 	if (len == 0) {
 		if (gclient->priv->show_warning) {
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_MIME);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION);
+			else
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: title */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to find software"));
 			/* TRANSLATORS: nothing found in the software sources that helps */
@@ -2309,11 +2322,7 @@ skip_checks:
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
-			/* only show the "more info" button if there is a valid link */
-			if (info_url != NULL)
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
-			else
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			button = gpk_client_dialog_run (gclient->priv->dialog);
 			if (button == GTK_RESPONSE_OK)
 				gpk_gnome_open (info_url);
@@ -2332,12 +2341,12 @@ skip_checks:
 	/* selected nothing */
 	if (package_id == NULL) {
 		if (gclient->priv->show_warning) {
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: we failed to install */
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("Failed to install software"));
 			/* TRANSLATORS: we didn't select any applications that were returned */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No applications were chosen to be installed"));
-			gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
@@ -2461,13 +2470,14 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 skip_checks:
 	/* TRANSLATORS: title to show when searching for font files */
 	title = ngettext ("Searching for font", "Searching for fonts", len);
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_WAIT);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* do each one */
 	list = pk_package_list_new ();
@@ -2507,17 +2517,18 @@ skip_checks:
 			info_url = gpk_vendor_get_not_found_url (gclient->priv->vendor, GPK_VENDOR_URL_TYPE_FONT);
 			/* TRANSLATORS: title: cannot find in sources */
 			title = ngettext ("Failed to find font", "Failed to find fonts", len);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION);
+			else
+				gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			gpk_client_dialog_set_title (gclient->priv->dialog, title);
 			/* TRANSLATORS: message: tell the user we suck */
 			gpk_client_dialog_set_message (gclient->priv->dialog, _("No new fonts can be found for this document"));
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_client_dialog_set_action (gclient->priv->dialog, _("More information"));
-			/* only show the "more info" button if there is a valid link */
-			if (info_url != NULL)
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, GPK_CLIENT_DIALOG_BUTTON_ACTION, 0);
-			else
-				gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, 0);
+			gpk_client_dialog_present (gclient->priv->dialog);
 			button = gpk_client_dialog_run (gclient->priv->dialog);
 			if (button == GTK_RESPONSE_OK)
 				gpk_gnome_open (info_url);
@@ -2535,19 +2546,15 @@ skip_checks:
 	}
 
 	/* TRANSLATORS: title: show a list of fonts */
-	title = ngettext ("Install the following font", "Install the following fonts", len);
+	title = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", len);
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST);
 	gpk_client_dialog_set_package_list (gclient->priv->dialog, list);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
-
-	/* TRANSLATORS: confirm */
-	title = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", len);
-
 	gpk_client_dialog_set_message (gclient->priv->dialog, title);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-information");
 	/* TRANSLATORS: button: install a font */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, GPK_CLIENT_DIALOG_PACKAGE_LIST, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
@@ -2630,12 +2637,13 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	message = g_strjoinv ("\n", filenames);
 
 	/* show UI */
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	/* TRANSLATORS: button: install catalog */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-install-catalogs");
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 	g_free (message);
 
@@ -2644,13 +2652,14 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 		return FALSE;
 
 skip_checks:
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: install package catalogs, that is, instructions for installing */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install catalogs"));
 	gpk_client_set_status (gclient, PK_STATUS_ENUM_WAIT);
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* get files to be installed */
 	catalog = pk_catalog_new ();
@@ -2664,10 +2673,10 @@ skip_checks:
 		/* show UI */
 		if (gclient->priv->show_warning) {
 			/* TRANSLATORS: title: we've already got all these packages installed */
+			gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0);
 			gpk_client_dialog_set_title (gclient->priv->dialog, _("No packages need to be installed"));
-			gpk_client_dialog_set_message (gclient->priv->dialog, "");
 			gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-catalog-none-required");
-			gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_WARNING, 0, gclient->priv->timestamp);
+			gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 			gpk_client_dialog_run (gclient->priv->dialog);
 		}
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "No packages need to be installed");
@@ -2698,14 +2707,14 @@ skip_checks:
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
 	/* TRANSLATORS: title: allow user to confirm */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Install packages in catalog?"));
 	gpk_client_dialog_set_message (gclient->priv->dialog, text);
 	gpk_client_dialog_set_image (gclient->priv->dialog, "dialog-question");
 	/* TRANSLATORS: button: install packages in catalog */
 	gpk_client_dialog_set_action (gclient->priv->dialog, _("Install"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0, gclient->priv->timestamp);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	g_free (text);
@@ -2753,9 +2762,9 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 		goto out;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: update all pending updates */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-system");
 
 	/* wrap update, but handle all the GPG and EULA stuff */
@@ -2770,7 +2779,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* if we are not showing UI, then notify the user what we are doing (just on the active terminal) */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
@@ -2831,6 +2840,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 		goto out;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: refresh the lists of packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Refresh package lists"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-refresh");
@@ -2847,7 +2857,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 
 	/* setup the UI */
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -2895,10 +2905,10 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 
 	/* ignore this if it's uninteresting */
 	if (gclient->priv->show_progress) {
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 		/* TRANSLATORS: title: getting the list of updates */
 		gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting list of updates"));
-		gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 	}
 
 	/* wait for an answer */
@@ -2953,11 +2963,12 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 		goto out;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: get if we can go from one distro release to another */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting distribution upgrade information"));
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-get-upgrades");
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -2999,11 +3010,11 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 		return NULL;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: getting the files that are contained in a package */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting file lists"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -3054,12 +3065,12 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 		goto out;
 	}
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: update specific packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Update packages"));
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-update-packages");
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
@@ -3086,13 +3097,12 @@ gpk_client_repo_signature_required_cb (PkClient *client, const gchar *package_id
 
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
 
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CUSTOM, pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR));
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Signature required"));
 	gpk_client_dialog_set_image_status (gclient->priv->dialog, PK_STATUS_ENUM_SIG_CHECK);
-	gpk_client_dialog_set_message (gclient->priv->dialog, "");
 	gpk_client_dialog_set_percentage (gclient->priv->dialog, 101);
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 	if (gclient->priv->show_progress)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CUSTOM, pk_bitfield_value (GPK_CLIENT_DIALOG_WIDGET_PROGRESS_BAR), 0);
+		gpk_client_dialog_present (gclient->priv->dialog);
 
 	widget = GTK_WIDGET (gpk_client_dialog_get_window (gclient->priv->dialog));
 	ret = gpk_client_signature_show (GTK_WINDOW (widget), package_id, repository_name, key_url, key_userid,
@@ -3187,8 +3197,8 @@ gpk_client_secondary_now_requeue (GpkClient *gclient)
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
 	/* go back to the UI */
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
-	gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
+	gpk_client_dialog_present_with_time (gclient->priv->dialog, 0);
 	gclient->priv->using_secondary_client = FALSE;
 
 	egg_debug ("trying to requeue install");
@@ -3281,7 +3291,6 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	text = pk_common_get_role_text (gclient->priv->client_action);
 	gpk_client_dialog_set_title (gclient->priv->dialog, text);
 	g_free (text);
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, NULL);
 
 	/* coldplug */
 	ret = pk_client_get_status (gclient->priv->client_action, &status, NULL);
@@ -3338,9 +3347,10 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 	    role == PK_ROLE_ENUM_SEARCH_FILE ||
 	    role == PK_ROLE_ENUM_SEARCH_NAME ||
 	    role == PK_ROLE_ENUM_GET_UPDATES)
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0, 0);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	else
-		gpk_client_dialog_show_page (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING, 0);
+		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
+	gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
