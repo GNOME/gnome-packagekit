@@ -63,6 +63,7 @@ LIBNOTIFY_REQUIRED=0.4.3
 LIBSEXY_REQUIRED=0.1.10
 POLKIT_GNOME_REQUIRED=0.8
 UNIQUE_REQUIRED=0.9.4
+GNOME_MENUS_REQUIRED=2.24.1
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -77,6 +78,7 @@ AC_SUBST(LIBNOTIFY_REQUIRED)
 AC_SUBST(LIBSEXY_REQUIRED)
 AC_SUBST(POLKIT_GNOME_REQUIRED)
 AC_SUBST(UNIQUE_REQUIRED)
+AC_SUBST(GNOME_MENUS_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
@@ -134,6 +136,11 @@ PKG_CHECK_MODULES(LIBNOTIFY, \
  libnotify >= $LIBNOTIFY_REQUIRED)
 AC_SUBST(LIBNOTIFY_CFLAGS)
 AC_SUBST(LIBNOTIFY_LIBS)
+
+PKG_CHECK_MODULES(GNOME_MENUS, \
+ libgnome-menu >= $GNOME_MENUS_REQUIRED)
+AC_SUBST(GNOME_MENUS_CFLAGS)
+AC_SUBST(GNOME_MENUS_LIBS)
 
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2

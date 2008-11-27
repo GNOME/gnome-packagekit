@@ -37,6 +37,9 @@
 #include "gpk-enum.h"
 #include "gpk-desktop.h"
 
+#define GMENU_I_KNOW_THIS_IS_UNSTABLE
+#include "gnome-menus/gmenu-tree.h"
+
 static GtkListStore *list_store = NULL;
 static gchar *full_path = NULL;
 
@@ -165,6 +168,56 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_expand (column, TRUE);
 }
 
+/*
+ * gpk_client_directory_get_menu_path:
+ **/
+static gchar *
+gpk_client_directory_get_menu_path (GMenuTreeDirectory *directory, const gchar *path)
+{
+	GSList *tmp = gmenu_tree_directory_get_contents (directory);
+
+	while (tmp != NULL) {
+		GMenuTreeItem *item = tmp->data; 
+		const char * desktop_file_path;
+			
+		if (gmenu_tree_item_get_type (item) == GMENU_TREE_ITEM_DIRECTORY) {
+			gchar *menu_path = gpk_client_directory_get_menu_path (GMENU_TREE_DIRECTORY (item), path);
+
+			if (menu_path) {
+				gchar *tmp = g_strdup_printf("%s -> %s", gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item)), menu_path);
+				g_free (menu_path);
+				return tmp;
+			}
+
+			tmp = tmp->next;
+			continue;
+		}
+
+		if (gmenu_tree_item_get_type (item) == GMENU_TREE_ITEM_ENTRY) {
+			desktop_file_path = gmenu_tree_entry_get_desktop_file_path (GMENU_TREE_ENTRY (item));
+
+			if (!strcmp (path, desktop_file_path))
+				return g_strdup (gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item)));
+		}
+
+		tmp = tmp->next;
+	}
+
+	return NULL;
+}
+
+/**
+ * gpk_client_get_menu_path
+ **/
+static gchar *
+gpk_client_get_menu_path (const gchar *path)
+{
+	GMenuTree *tree = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_INCLUDE_EXCLUDED);
+	GMenuTreeDirectory *directory = gmenu_tree_get_root_directory (tree);
+	return gpk_client_directory_get_menu_path (directory, path);
+}
+
+
 /**
  * gpk_client_run_add_desktop_file:
  **/
@@ -174,10 +227,12 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	gboolean ret;
 	gchar *icon = NULL;
 	gchar *text = NULL;
+	gchar *fulltext = NULL;
 	gchar *name = NULL;
 	gchar *exec = NULL;
 	gchar *summary = NULL;
 	gchar *joint = NULL;
+	gchar *menu_path;
 	GtkTreeIter iter;
 	GKeyFile *file;
 	PkPackageId *id;
@@ -221,6 +276,13 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	joint = g_strdup_printf ("%s - %s", name, summary);
 	id = pk_package_id_new_from_string (package_id);
 	text = gpk_package_id_format_twoline (id, joint);
+	menu_path = gpk_client_get_menu_path (filename);
+	if (menu_path) {
+		fulltext = g_strdup_printf("%s\n\n<i>%s %s</i>", text,
+					   _("Shortcut : Applications -> "), menu_path);
+		g_free (text);
+		text = fulltext;
+	}
 	pk_package_id_free (id);
 
 	/* might not be valid */
@@ -231,7 +293,7 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	if (icon == NULL)
 		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
 	gtk_list_store_set (list_store, &iter,
-			    GPK_CHOOSER_COLUMN_TEXT, text,
+			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
 			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
 			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
 out:
@@ -241,6 +303,7 @@ out:
 	g_free (icon);
 	g_free (name);
 	g_free (text);
+	g_free (menu_path);
 	g_free (joint);
 	g_free (summary);
 
