@@ -70,9 +70,6 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-
-	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
@@ -122,7 +119,11 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	g_signal_connect (update_system_action, "activate",
 			  G_CALLBACK (gpk_client_untrusted_button_cb), NULL);
 	button = polkit_gnome_action_create_button (update_system_action);
-	widget = glade_xml_get_widget (glade_xml, "hbuttonbox2");
+	gtk_widget_show (button);
+
+	/* add to box */
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = gtk_dialog_get_action_area (GTK_DIALOG(widget));
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
 
 	/* show window */
