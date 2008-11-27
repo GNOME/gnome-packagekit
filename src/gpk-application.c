@@ -1013,6 +1013,18 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 		gpk_application_add_detail_item (application, _("License"), details->license, NULL);
 	}
 
+	/* menu path */
+	value = gpk_desktop_guess_best_file (application->priv->desktop, details->id->name);
+	if (value != NULL) {
+		text = gpk_desktop_get_menu_path (value);
+		if (text != NULL) {
+			/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
+			gpk_application_add_detail_item (application, _("Menu"), text, NULL);
+		}
+		g_free (text);
+	}
+	g_free (value);
+
 	/* set the description */
 	text = gpk_application_text_format_display (details->description);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");

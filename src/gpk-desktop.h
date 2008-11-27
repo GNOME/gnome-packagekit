@@ -34,6 +34,7 @@ gchar		*gpk_desktop_guess_icon_name		(PkDesktop	*desktop,
 gchar		*gpk_desktop_guess_localised_name	(PkDesktop	*desktop,
 							 const gchar	*package);
 gint		 gpk_desktop_get_file_weight		(const gchar	*filename);
+gchar		*gpk_desktop_get_menu_path		(const gchar	*filename);
 gboolean	 gpk_desktop_check_icon_valid		(const gchar	*icon);
 
 G_END_DECLS

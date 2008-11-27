@@ -22,14 +22,115 @@
 #include "config.h"
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <packagekit-glib/packagekit.h>
 #include <locale.h>
+#include <string.h>
+
+#define GMENU_I_KNOW_THIS_IS_UNSTABLE
+#include <gnome-menus/gmenu-tree.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-desktop.h"
+
+/*
+ * gpk_desktop_directory_get_menu_path:
+ **/
+static gchar *
+gpk_desktop_directory_get_menu_path (GMenuTreeDirectory *directory, const gchar *path)
+{
+	gchar *menu_path;
+	GMenuTreeItem *item;
+	gchar *data;
+	const gchar *desktop_file_path;
+	GSList *list;
+
+	/* recurse */
+	list = gmenu_tree_directory_get_contents (directory);
+	while (list != NULL) {
+		item = list->data;
+		if (gmenu_tree_item_get_type (item) == GMENU_TREE_ITEM_DIRECTORY) {
+			menu_path = gpk_desktop_directory_get_menu_path (GMENU_TREE_DIRECTORY (item), path);
+			if (menu_path != NULL) {
+				data = g_strdup_printf("%s \342\236\231 %s", gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item)), menu_path);
+				g_free (menu_path);
+				return data;
+			}
+			list = list->next;
+			continue;
+		}
+
+		if (gmenu_tree_item_get_type (item) == GMENU_TREE_ITEM_ENTRY) {
+			desktop_file_path = gmenu_tree_entry_get_desktop_file_path (GMENU_TREE_ENTRY (item));
+			if (strcmp (path, desktop_file_path) == 0)
+				return g_strdup (gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item)));
+		}
+		list = list->next;
+	}
+	return NULL;
+}
+
+/**
+ * gpk_desktop_get_menu_path_submenu
+ **/
+static gchar *
+gpk_desktop_get_menu_path_submenu (const gchar *filename, const gchar *menu_file, const gchar *label)
+{
+	gchar *text;
+	gchar *path = NULL;
+	GMenuTree *tree;
+	GMenuTreeDirectory *directory;
+
+	tree = gmenu_tree_lookup (menu_file, GMENU_TREE_FLAGS_INCLUDE_EXCLUDED);
+	if (tree == NULL) {
+		egg_warning ("no tree for %s", menu_file);
+		goto out;
+	}
+	directory = gmenu_tree_get_root_directory (tree);
+	text = gpk_desktop_directory_get_menu_path (directory, filename);
+	if (text == NULL) {
+		egg_debug ("no path for %s", filename);
+		goto out;
+	}
+	path = g_strdup_printf ("%s \342\236\231 %s", label, text);
+	g_free (text);
+out:
+	return path;
+}
+
+/**
+ * gpk_desktop_get_menu_path
+ **/
+gchar *
+gpk_desktop_get_menu_path (const gchar *filename)
+{
+	gchar *path = NULL;
+	gchar *text;
+
+	/* TRANSLATORS: the menu item, Applications, Places, System etc */
+	path = gpk_desktop_get_menu_path_submenu (filename, "applications.menu", _("Applications"));
+	if (path != NULL)
+		goto out;
+
+	/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
+	text = g_strdup_printf ("%s \342\236\231 %s",  _("System"), _("Preferences"));
+	path = gpk_desktop_get_menu_path_submenu (filename, "preferences.menu", text);
+	g_free (text);
+	if (path != NULL)
+		goto out;
+
+	/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
+	text = g_strdup_printf ("%s \342\236\231 %s",  _("System"), _("Administration"));
+	path = gpk_desktop_get_menu_path_submenu (filename, "system-settings.menu", text);
+	g_free (text);
+	if (path != NULL)
+		goto out;
+out:
+	return path;
+}
 
 /**
  * gpk_desktop_check_icon_valid:
