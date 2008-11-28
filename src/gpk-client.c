@@ -52,6 +52,7 @@
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-error.h"
+#include "gpk-language.h"
 #include "gpk-consolekit.h"
 #include "gpk-animated-icon.h"
 #include "gpk-client-dialog.h"
@@ -77,6 +78,7 @@ struct _GpkClientPrivate
 	PkClient		*client_action;
 	PkClient		*client_resolve;
 	PkClient		*client_secondary;
+	GpkLanguage		*language;
 	GConfClient		*gconf_client;
 	GpkClientDialog		*dialog;
 	GpkVendor		*vendor;
@@ -2372,10 +2374,29 @@ static gchar *
 gpk_client_font_tag_to_localised_name (GpkClient *gclient, const gchar *tag)
 {
 	guint len;
+	gchar *language = NULL;
+	gchar *name;
+
 	len = strlen (tag);
-	if (len < 7)
-		return g_strdup_printf ("unknown: %s", tag);
-	return g_strdup (&tag[6]);
+	if (len < 7) {
+		/* TRANSLATORS: the user specified an invalid ISO639 code */
+		name = g_strdup_printf ("%s: %s", _("Invalid language code"), tag);
+		goto out;
+	}
+	language = gpk_language_iso639_to_language (gclient->priv->language, &tag[6]);
+	if (language == NULL) {
+		/* TRANSLATORS: we could not find a valid ISO639 code */
+		name = g_strdup_printf ("%s: %s", _("Language code not matched"), tag);
+		goto out;
+	}
+
+	/* get translation, or return untranslated string */
+	name = g_strdup (dgettext("iso_639", language));
+	if (name == NULL)
+		name = g_strdup (language);
+out:
+	g_free (language);
+	return name;
 }
 
 /**
@@ -3597,6 +3618,10 @@ gpk_client_init (GpkClient *gclient)
 	g_signal_connect (gclient->priv->dialog, "close",
 			  G_CALLBACK (pk_client_button_close_cb), gclient);
 
+	/* map ISO639 to language names */
+	gclient->priv->language = gpk_language_new ();
+	gpk_language_populate (gclient->priv->language, NULL);
+
 	/* use gconf for session settings */
 	gclient->priv->gconf_client = gconf_client_get_default ();
 
@@ -3680,6 +3705,7 @@ gpk_client_finalize (GObject *object)
 	g_object_unref (gclient->priv->gconf_client);
 	g_object_unref (gclient->priv->dialog);
 	g_object_unref (gclient->priv->vendor);
+	g_object_unref (gclient->priv->language);
 	g_main_loop_unref (gclient->priv->loop);
 
 	G_OBJECT_CLASS (gpk_client_parent_class)->finalize (object);

@@ -74,6 +74,8 @@ shared_SOURCES =					\
 	gpk-dialog.h					\
 	gpk-vendor.c					\
 	gpk-vendor.h					\
+	gpk-language.c					\
+	gpk-language.h					\
 	gpk-client.c					\
 	gpk-client.h					\
 	gpk-client-dialog.c				\
