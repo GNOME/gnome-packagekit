@@ -119,6 +119,7 @@ gpk_client_dialog_setup (GpkClientDialog *dialog, GpkClientDialogPage page, PkBi
 	dialog->priv->options = options;
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
 	gtk_label_set_label (GTK_LABEL (widget), "");
+	gpk_client_dialog_set_action (dialog, NULL);
 	return TRUE;
 }
 
@@ -342,11 +343,13 @@ gpk_client_dialog_set_action (GpkClientDialog *dialog, const gchar *action)
 	GtkWidget *widget;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
-	g_return_val_if_fail (action != NULL, FALSE);
 
 	egg_debug ("setting action: %s", action);
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
-	gtk_button_set_label (GTK_BUTTON (widget), action);
+	if (action != NULL)
+		gtk_button_set_label (GTK_BUTTON (widget), action);
+	else
+		gtk_widget_hide (widget);
 	return TRUE;
 }
 
