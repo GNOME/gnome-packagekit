@@ -154,6 +154,7 @@ pk_button_help_cb (GtkWidget *widget, gboolean  data)
 static void
 pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
 {
+	GtkWidget *widget;
 	GtkTreeModel *model = (GtkTreeModel *)data;
 	GtkTreeIter iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
@@ -167,6 +168,10 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 		egg_debug ("can't change state");
 		return;
 	}
+
+	/* set insensitive until we've done this */
+	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
@@ -282,6 +287,11 @@ gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+	GtkWidget *widget;
+
+	/* set sensitive now we've done this */
+	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* remove the items that are not used */
 	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
