@@ -56,7 +56,7 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 	screen_w = gdk_screen_get_width (screen);
 	screen_h = gdk_screen_get_height (screen);
 	if (screen_w < width || screen_h < height) {
-		egg_error ("using small form factor mode as %ix%i and requested %ix%i",
+		egg_debug ("using small form factor mode as %ix%i and requested %ix%i",
 			   screen_w, screen_h, width, height);
 		gtk_window_maximize (window);
 		return FALSE;
