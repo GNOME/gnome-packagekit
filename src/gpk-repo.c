@@ -49,14 +49,98 @@ static PkClient *client = NULL;
 static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
+static GtkTreePath *path_global = NULL;
 
 enum
 {
 	REPO_COLUMN_ENABLED,
 	REPO_COLUMN_TEXT,
 	REPO_COLUMN_ID,
+	REPO_COLUMN_ACTIVE,
 	REPO_COLUMN_LAST
 };
+
+/**
+ * gpk_repo_find_iter_model_cb:
+ **/
+static gboolean
+gpk_repo_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *repo_id)
+{
+	gchar *repo_id_tmp = NULL;
+	gtk_tree_model_get (model, iter, REPO_COLUMN_ID, &repo_id_tmp, -1);
+	if (strcmp (repo_id_tmp, repo_id) == 0) {
+		path_global = gtk_tree_path_copy (path);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gpk_repo_mark_nonactive_cb:
+ **/
+static gboolean
+gpk_repo_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+	gtk_list_store_set (GTK_LIST_STORE(model), iter, REPO_COLUMN_ACTIVE, FALSE, -1);
+	return FALSE;
+}
+
+/**
+ * gpk_repo_mark_nonactive:
+ **/
+static void
+gpk_repo_mark_nonactive (GtkTreeModel *model)
+{
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_repo_mark_nonactive_cb, NULL);
+}
+
+/**
+ * gpk_repo_model_get_iter:
+ **/
+static gboolean
+gpk_repo_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
+{
+	gboolean ret = TRUE;
+	path_global = NULL;
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_repo_find_iter_model_cb, (gpointer) id);
+	if (path_global == NULL) {
+		gtk_list_store_append (GTK_LIST_STORE(model), iter);
+	} else {
+		ret = gtk_tree_model_get_iter (model, iter, path_global);
+		gtk_tree_path_free (path_global);
+	}
+	return ret;
+}
+
+/**
+ * gpk_repo_remove_nonactive_cb:
+ **/
+static gboolean
+gpk_repo_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
+{
+	gboolean active;
+	gtk_tree_model_get (model, iter, REPO_COLUMN_ACTIVE, &active, -1);
+	if (!active) {
+		*ret = TRUE;
+		gtk_list_store_remove (GTK_LIST_STORE(model), iter);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gpk_repo_remove_nonactive:
+ **/
+static void
+gpk_repo_remove_nonactive (GtkTreeModel *model)
+{
+	gboolean ret;
+	/* do this again and again as removing in gtk_tree_model_foreach causes errors */
+	do {
+		ret = FALSE;
+		gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_repo_remove_nonactive_cb, &ret);
+	} while (ret);
+}
 
 /**
  * pk_button_help_cb:
@@ -109,7 +193,7 @@ pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointe
 	}
 
 	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter, REPO_COLUMN_ENABLED, installed, -1);
+	gtk_list_store_set (GTK_LIST_STORE(model), &iter, REPO_COLUMN_ENABLED, installed, -1);
 
 out:
 	/* clean up */
@@ -125,15 +209,19 @@ gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
 		    const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
+	GtkTreeView *treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
 
-	gtk_list_store_append (list_store, &iter);
+	gpk_repo_model_get_iter (model, &iter, repo_id);
 	gtk_list_store_set (list_store, &iter,
 			    REPO_COLUMN_ENABLED, enabled,
 			    REPO_COLUMN_TEXT, description,
 			    REPO_COLUMN_ID, repo_id,
+			    REPO_COLUMN_ACTIVE, TRUE,
 			    -1);
+
 	/* sort after each entry, which is okay as there shouldn't be many */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
 }
@@ -157,7 +245,6 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 							   "active", REPO_COLUMN_ENABLED, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
-
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
 	/* TRANSLATORS: column for the source description */
@@ -179,8 +266,7 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gtk_tree_model_get (model, &iter,
-				    REPO_COLUMN_ID, &repo_id, -1);
+		gtk_tree_model_get (model, &iter, REPO_COLUMN_ID, &repo_id, -1);
 		egg_debug ("selected row is: %s", repo_id);
 		g_free (repo_id);
 	} else {
@@ -194,7 +280,13 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 static void
 gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
-	/* nothing? */
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+
+	/* remove the items that are not used */
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	model = gtk_tree_view_get_model (treeview);
+	gpk_repo_remove_nonactive (model);
 }
 
 /**
@@ -248,21 +340,25 @@ gpk_repo_repo_list_refresh (void)
 	gboolean ret;
 	GError *error = NULL;
 	PkBitfield filters;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+
+	/* mark the items as not used */
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	model = gtk_tree_view_get_model (treeview);
+	gpk_repo_mark_nonactive (model);
 
 	egg_debug ("refreshing list");
-	gtk_list_store_clear (list_store);
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
 		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
 		return;
 	}
-
-	if (!show_details) {
+	if (!show_details)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
-	} else {
+	else
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
-	}
 	ret = pk_client_get_repo_list (client, filters, &error);
 	if (!ret) {
 		egg_warning ("failed to get repo list: %s", error->message);
@@ -310,9 +406,8 @@ gpk_repo_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
 			       gchar *string1, gchar *string2,
 			       gint int1, gint int2, gpointer user_data)
 {
-	if (egg_strequal (name, "image_animation")) {
+	if (egg_strequal (name, "image_animation"))
 		return gpk_animated_icon_new ();
-	}
 	egg_warning ("name unknown='%s'", name);
 	return NULL;
 }
@@ -344,9 +439,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	dbus_g_thread_init ();
 	g_type_init ();
 
@@ -361,16 +455,14 @@ main (int argc, char *argv[])
 
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Software source viewer"), TRUE);
-	if (!ret) {
+	if (!ret)
 		return 1;
-	}
 
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
 	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Repo");
-	if (!ret) {
+	if (!ret)
 		goto unique_out;
-	}
 	g_signal_connect (egg_unique, "activated",
 			  G_CALLBACK (gpk_repo_activated_cb), NULL);
 
@@ -418,7 +510,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (REPO_COLUMN_LAST, G_TYPE_BOOLEAN,
-					 G_TYPE_STRING, G_TYPE_STRING);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	/* create repo tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_repo");

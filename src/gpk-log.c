@@ -52,7 +52,7 @@ static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
 static PolKitGnomeAction *button_action = NULL;
 static PkObjList *transactions = NULL;
-static PkObjList *tid_list = NULL;
+static GtkTreePath *path_global = NULL;
 
 enum
 {
@@ -64,8 +64,91 @@ enum
 	GPK_LOG_COLUMN_ID,
 	GPK_LOG_COLUMN_USER,
 	GPK_LOG_COLUMN_TOOL,
+	GPK_LOG_COLUMN_ACTIVE,
 	GPK_LOG_COLUMN_LAST
 };
+
+/**
+ * gpk_log_find_iter_model_cb:
+ **/
+static gboolean
+gpk_log_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *id)
+{
+	gchar *id_tmp = NULL;
+	gtk_tree_model_get (model, iter, GPK_LOG_COLUMN_ID, &id_tmp, -1);
+	if (strcmp (id_tmp, id) == 0) {
+		path_global = gtk_tree_path_copy (path);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gpk_log_mark_nonactive_cb:
+ **/
+static gboolean
+gpk_log_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+	gtk_list_store_set (GTK_LIST_STORE(model), iter, GPK_LOG_COLUMN_ACTIVE, FALSE, -1);
+	return FALSE;
+}
+
+/**
+ * gpk_log_mark_nonactive:
+ **/
+static void
+gpk_log_mark_nonactive (GtkTreeModel *model)
+{
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_mark_nonactive_cb, NULL);
+}
+
+/**
+ * gpk_log_remove_nonactive_cb:
+ **/
+static gboolean
+gpk_log_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
+{
+	gboolean active;
+	gtk_tree_model_get (model, iter, GPK_LOG_COLUMN_ACTIVE, &active, -1);
+	if (!active) {
+		*ret = TRUE;
+		gtk_list_store_remove (GTK_LIST_STORE(model), iter);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gpk_log_remove_nonactive:
+ **/
+static void
+gpk_log_remove_nonactive (GtkTreeModel *model)
+{
+	gboolean ret;
+	/* do this again and again as removing in gtk_tree_model_foreach causes errors */
+	do {
+		ret = FALSE;
+		gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_remove_nonactive_cb, &ret);
+	} while (ret);
+}
+
+/**
+ * gpk_log_model_get_iter:
+ **/
+static gboolean
+gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
+{
+	gboolean ret = TRUE;
+	path_global = NULL;
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_find_iter_model_cb, (gpointer) id);
+	if (path_global == NULL) {
+		gtk_list_store_append (GTK_LIST_STORE(model), iter);
+	} else {
+		ret = gtk_tree_model_get_iter (model, iter, path_global);
+		gtk_tree_path_free (path_global);
+	}
+	return ret;
+}
 
 /**
  * gpk_log_button_help_cb:
@@ -414,6 +497,8 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	const gchar *tool;
 	static guint count;
 	struct passwd *pw;
+	GtkTreeView *treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_simple"));
+	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* put formatted text into treeview */
 	details = gpk_log_get_details_localised (obj->timespec, obj->data);
@@ -448,7 +533,7 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	else
 		tool = obj->cmdline;
 
-	gtk_list_store_append (list_store, &iter);
+	gpk_log_model_get_iter (model, &iter, obj->tid);
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
 			    GPK_LOG_COLUMN_TIMESPEC, obj->timespec,
@@ -457,10 +542,8 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 			    GPK_LOG_COLUMN_DETAILS, details,
 			    GPK_LOG_COLUMN_ID, obj->tid,
 			    GPK_LOG_COLUMN_USER, username,
-			    GPK_LOG_COLUMN_TOOL, tool, -1);
-
-	/* add to db */
-	pk_obj_list_add (tid_list, obj->tid);
+			    GPK_LOG_COLUMN_TOOL, tool,
+			    GPK_LOG_COLUMN_ACTIVE, TRUE, -1);
 
 	/* spin the gui */
 	if (count++ % 10 == 0)
@@ -473,33 +556,6 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 }
 
 /**
- * gpk_log_remove_obj
- **/
-static void
-gpk_log_remove_obj (const PkTransactionObj *obj)
-{
-	gchar *id;
-	GtkTreeIter iter;
-	gboolean ret;
-
-	/* remove from db */
-	pk_obj_list_remove (tid_list, obj->tid);
-
-	/* find the tid in the existing list */
-	ret = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter);
-	while (ret) {
-		gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, GPK_LOG_COLUMN_ID, &id, -1);
-		if (g_strcmp0 (id, obj->tid) == 0) {
-			gtk_list_store_remove (list_store, &iter);
-			g_free (id);
-			break;
-		}
-		g_free (id);
-		ret = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter);
-	}
-}
-
-/**
  * gpk_log_refilter
  **/
 static void
@@ -507,10 +563,11 @@ gpk_log_refilter (void)
 {
 	guint i;
 	gboolean ret;
-	gboolean in_list;
 	const PkTransactionObj *obj;
 	GtkWidget *widget;
 	const gchar *package;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
 
 	/* set the new filter */
 	g_free (filter);
@@ -523,18 +580,21 @@ gpk_log_refilter (void)
 
 	egg_debug ("len=%i", transactions->len);
 
+	/* mark the items as not used */
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_simple"));
+	model = gtk_tree_view_get_model (treeview);
+	gpk_log_mark_nonactive (model);
+
 	/* go through the list, adding and removing the items as required */
 	for (i=0; i<transactions->len; i++) {
 		obj = pk_obj_list_index (transactions, i);
-
 		ret = gpk_log_filter (obj);
-		in_list = pk_obj_list_exists (tid_list, obj->tid);
-		if (ret && !in_list)
+		if (ret)
 			gpk_log_add_obj (obj);
-		if (!ret && in_list)
-			gpk_log_remove_obj (obj);
 	}
 
+	/* remove the items that are not used */
+	gpk_log_remove_nonactive (model);
 }
 
 /**
@@ -545,10 +605,6 @@ gpk_log_refresh (void)
 {
 	gboolean ret;
 	GError *error = NULL;
-
-	/* clear old list */
-	gtk_list_store_clear (list_store);
-	pk_obj_list_clear (tid_list);
 
 	ret = pk_client_reset (client, &error);
 	if (!ret) {
@@ -644,12 +700,6 @@ main (int argc, char *argv[])
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
-	/* keep a list of added tid_list */
-	tid_list = pk_obj_list_new ();
-	pk_obj_list_set_compare (tid_list, (PkObjListCompareFunc) g_strcmp0);
-	pk_obj_list_set_copy (tid_list, (PkObjListCopyFunc) g_strdup);
-	pk_obj_list_set_free (tid_list, (PkObjListFreeFunc) g_free);
-
 	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
@@ -744,7 +794,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	/* create transaction_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
@@ -777,8 +827,6 @@ main (int argc, char *argv[])
 	g_free (filter);
 	if (transactions != NULL)
 		g_object_unref (transactions);
-	if (tid_list != NULL)
-		g_object_unref (tid_list);
 unique_out:
 	g_object_unref (egg_unique);
 	return 0;
