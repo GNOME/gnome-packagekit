@@ -50,7 +50,8 @@ gpk_language_parser_start_element (GMarkupParseContext *context, const gchar *el
 				   gpointer user_data, GError **error)
 {
 	guint i, len;
-	const gchar *code = NULL;
+	const gchar *code1 = NULL;
+	const gchar *code2b = NULL;
 	const gchar *name = NULL;
 	GpkLanguage *language = user_data;
 
@@ -61,14 +62,22 @@ gpk_language_parser_start_element (GMarkupParseContext *context, const gchar *el
 	len = g_strv_length ((gchar**)attribute_names);
 	for (i=0; i<len; i++) {
 		if (strcmp (attribute_names[i], "iso_639_1_code") == 0)
-			code = attribute_values[i];
+			code1 = attribute_values[i];
+		if (strcmp (attribute_names[i], "iso_639_2B_code") == 0)
+			code2b = attribute_values[i];
 		if (strcmp (attribute_names[i], "name") == 0)
 			name = attribute_values[i];
 	}
 
-	/* add to hash */
-	if (code != NULL && name != NULL)
-		g_hash_table_insert (language->priv->hash, g_strdup (code), g_strdup (name));
+	/* not valid entry */
+	if (name == NULL)
+		return;
+
+	/* add both to hash */
+	if (code1 != NULL)
+		g_hash_table_insert (language->priv->hash, g_strdup (code1), g_strdup (name));
+	if (code2b != NULL)
+		g_hash_table_insert (language->priv->hash, g_strdup (code2b), g_strdup (name));
 }
 
 /* trivial parser */
