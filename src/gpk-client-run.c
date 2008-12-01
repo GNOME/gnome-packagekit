@@ -179,7 +179,7 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	gchar *exec = NULL;
 	gchar *summary = NULL;
 	gchar *joint = NULL;
-	gchar *menu_path;
+	gchar *menu_path = NULL;
 	GtkTreeIter iter;
 	GKeyFile *file;
 	PkPackageId *id;
@@ -200,8 +200,8 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 		goto out;
 	}
 
+	/* get exec */
 	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "TryExec", NULL);
-	/* try harder */
 	if (exec == NULL)
 		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
 
@@ -211,20 +211,39 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 		goto out;
 	}
 
-	name = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
+	/* get name */
+	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
+	if (text != NULL)
+		name = g_markup_escape_text (text, -1);
+	g_free (text);
+
+	/* get icon */
 	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
-	summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
-	/* try harder */
-	if (summary == NULL)
-		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
+	if (icon == NULL || !gpk_desktop_check_icon_valid (icon)) {
+		g_free (icon);
+		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
+	}
+
+	/* get summary */
+	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
+	if (text == NULL)
+		text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
+	if (text != NULL)
+		summary = g_markup_escape_text (text, -1);
+	g_free (text);
+
+	/* get application path */
+	text = gpk_desktop_get_menu_path (filename);
+	if (text != NULL)
+		menu_path = g_markup_escape_text (text, -1);
+	g_free (text);
 
 	/* put formatted text into treeview */
 	gtk_list_store_append (list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
 	id = pk_package_id_new_from_string (package_id);
 	text = gpk_package_id_format_twoline (id, joint);
-	menu_path = gpk_desktop_get_menu_path (filename);
-	if (menu_path) {
+	if (menu_path != NULL) {
 		/* TRANSLATORS: the path in the menu, e.g. Applications -> Games -> Dave */
 		fulltext = g_strdup_printf("%s\n\n<i>%s %s</i>", text, _("Menu:"), menu_path);
 		g_free (text);
@@ -232,13 +251,6 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	}
 	pk_package_id_free (id);
 
-	/* might not be valid */
-	if (!gpk_desktop_check_icon_valid (icon)) {
-		g_free (icon);
-		icon = NULL;
-	}
-	if (icon == NULL)
-		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
 	gtk_list_store_set (list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
 			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
