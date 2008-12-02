@@ -133,9 +133,8 @@ gpk_package_id_name_version (const PkPackageId *id)
 	gchar *text;
 	GString *string;
 
-	if (id == NULL) {
+	if (id == NULL)
 		return g_strdup("");
-	}
 
 	string = g_string_new (id->name);
 	if (id->version != NULL)
@@ -521,71 +520,64 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "time 1s");
 	text = gpk_time_to_localised_string (1);
-	if (text != NULL && strcmp (text, "1 second") == 0) {
+	if (text != NULL && strcmp (text, "1 second") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 1m");
 	text = gpk_time_to_localised_string (1*60);
-	if (text != NULL && strcmp (text, "1 minute") == 0) {
+	if (text != NULL && strcmp (text, "1 minute") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 1h");
 	text = gpk_time_to_localised_string (1*60*60);
-	if (text != NULL && strcmp (text, "1 hour") == 0) {
+	if (text != NULL && strcmp (text, "1 hour") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 30s");
 	text = gpk_time_to_localised_string (30);
-	if (text != NULL && strcmp (text, "30 seconds") == 0) {
+	if (text != NULL && strcmp (text, "30 seconds") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 30m");
 	text = gpk_time_to_localised_string (30*60);
-	if (text != NULL && strcmp (text, "30 minutes") == 0) {
+	if (text != NULL && strcmp (text, "30 minutes") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 30m1s");
 	text = gpk_time_to_localised_string (30*60+1);
-	if (text != NULL && strcmp (text, "30 minutes 1 second") == 0) {
+	if (text != NULL && strcmp (text, "30 minutes 1 second") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "time 30m10s");
 	text = gpk_time_to_localised_string (30*60+10);
-	if (text != NULL && strcmp (text, "30 minutes 10 seconds") == 0) {
+	if (text != NULL && strcmp (text, "30 minutes 10 seconds") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************
@@ -593,30 +585,27 @@ gpk_common_test (gpointer data)
 	 ************************************************************/
 	egg_test_title (test, "get name null");
 	text = gpk_package_get_name (NULL);
-	if (text == NULL) {
+	if (text == NULL)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 
 	/************************************************************/
 	egg_test_title (test, "get name not id");
 	text = gpk_package_get_name ("ania");
-	if (text != NULL && strcmp (text, "ania") == 0) {
+	if (text != NULL && strcmp (text, "ania") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
 	egg_test_title (test, "get name just id");
 	text = gpk_package_get_name ("simon;1.0.0;i386;moo");
-	if (text != NULL && strcmp (text, "simon") == 0) {
+	if (text != NULL && strcmp (text, "simon") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************
@@ -626,11 +615,10 @@ gpk_common_test (gpointer data)
 	id = pk_package_id_new_from_string ("simon;0.0.1;i386;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
-	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0) {
+	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
@@ -638,11 +626,10 @@ gpk_common_test (gpointer data)
 	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
-	if (text != NULL && strcmp (text, "simon-0.0.1") == 0) {
+	if (text != NULL && strcmp (text, "simon-0.0.1") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
@@ -650,11 +637,10 @@ gpk_common_test (gpointer data)
 	id = pk_package_id_new_from_string ("simon;;;data");
 	text = gpk_package_id_format_twoline (id, NULL);
 	pk_package_id_free (id);
-	if (text != NULL && strcmp (text, "simon") == 0) {
+	if (text != NULL && strcmp (text, "simon") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
 
 	/************************************************************/
@@ -662,14 +648,11 @@ gpk_common_test (gpointer data)
 	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
 	text = gpk_package_id_format_twoline (id, "dude");
 	pk_package_id_free (id);
-	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0) {
+	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0)
 		egg_test_success (test, NULL);
-	} else {
+	else
 		egg_test_failed (test, "failed, got %s", text);
-	}
 	g_free (text);
-
-	egg_test_success (test, NULL);
 
 	egg_test_end (test);
 }
