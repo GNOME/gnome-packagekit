@@ -222,7 +222,7 @@ egg_test_title (EggTest *test, const gchar *format, ...)
 	g_vasprintf (&va_args_buffer, format, args);
 	va_end (args);
 	g_print ("> check #%u\t%s: \t%s...", test->total+1, test->type, va_args_buffer);
-	g_free(va_args_buffer);
+	g_free (va_args_buffer);
 
 	test->titled = TRUE;
 	test->total++;
@@ -250,7 +250,7 @@ egg_test_success (EggTest *test, const gchar *format, ...)
 	g_vasprintf (&va_args_buffer, format, args);
 	va_end (args);
 	g_print ("...OK [%s]\n", va_args_buffer);
-	g_free(va_args_buffer);
+	g_free (va_args_buffer);
 finish:
 	test->titled = FALSE;
 	test->succeeded++;
@@ -278,7 +278,7 @@ egg_test_failed (EggTest *test, const gchar *format, ...)
 	g_vasprintf (&va_args_buffer, format, args);
 	va_end (args);
 	g_print ("FAILED [%s]\n", va_args_buffer);
-	g_free(va_args_buffer);
+	g_free (va_args_buffer);
 failed:
 	exit (1);
 }
