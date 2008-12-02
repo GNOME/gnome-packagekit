@@ -35,6 +35,7 @@
 #include <glib/gstdio.h>
 #include <gio/gio.h>
 
+#include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <polkit-gnome/polkit-gnome.h>
@@ -1182,6 +1183,10 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 {
 	GtkResponseType button;
 	gchar *title_name;
+
+	/* check the user wanted to call this method */
+	if (!gclient->priv->show_confirm)
+		return TRUE;
 
 	/* make title */
 	if (gclient->priv->parent_title != NULL)
@@ -2356,25 +2361,75 @@ out:
 }
 
 /**
+ * gpk_client_font_tag_to_lang:
+ **/
+static gchar *
+gpk_client_font_tag_to_lang (const gchar *tag)
+{
+	gchar *lang = NULL;
+#if 0
+	*** We do not yet enable this code due to a few bugs in fontconfig ***
+	http://bugs.freedesktop.org/show_bug.cgi?id=18846 and
+	http://bugs.freedesktop.org/show_bug.cgi?id=18847
+
+	FcPattern *pat = NULL;
+	FcChar8 *fclang;
+	FcResult res;
+
+	/* parse the tag */
+	pat = FcNameParse ((FcChar8 *) tag);
+	if (pat == NULL) {
+		egg_warning ("cannot parse: '%s'", tag);
+		goto out;
+	}
+	FcPatternPrint (pat);
+	res = FcPatternGetString (pat, FC_LANG, 0, &fclang);
+	if (res != FcResultMatch) {
+		egg_warning ("failed to get string for: '%s': %i", tag, res);
+		goto out;
+	}
+	lang = g_strdup ((gchar *) fclang);
+out:
+	if (pat != NULL)
+		FcPatternDestroy (pat);
+#else
+	guint len;
+
+	/* verify we have enough to remove prefix */
+	len = strlen (tag);
+	if (len < 7)
+		goto out;
+	/* this is a bodge */
+	lang = g_strdup (&tag[6]);
+out:
+#endif
+	return lang;
+}
+
+
+/**
  * gpk_client_font_tag_to_localised_name:
  **/
 static gchar *
 gpk_client_font_tag_to_localised_name (GpkClient *gclient, const gchar *tag)
 {
-	guint len;
+	gchar *lang;
 	gchar *language = NULL;
 	gchar *name;
 
-	len = strlen (tag);
-	if (len < 7) {
-		/* TRANSLATORS: the user specified an invalid ISO639 code */
-		name = g_strdup_printf ("%s: %s", _("Invalid language code"), tag);
+	/* use fontconfig to get the language code */
+	lang = gpk_client_font_tag_to_lang (tag);
+	if (lang == NULL) {
+		/* TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name */
+		name = g_strdup_printf ("%s: %s", _("Language tag not parsed"), tag);
 		goto out;
 	}
-	language = gpk_language_iso639_to_language (gclient->priv->language, &tag[6]);
+
+	/* convert to localisable name */
+	language = gpk_language_iso639_to_language (gclient->priv->language, lang);
 	if (language == NULL) {
-		/* TRANSLATORS: we could not find a valid ISO639 code */
-		name = g_strdup_printf ("%s: %s", _("Language code not matched"), tag);
+		/* TRANSLATORS: we could not find en_US string for ISO639 code */
+		name = g_strdup_printf ("%s: %s", _("Language code not matched"), lang);
 		goto out;
 	}
 
@@ -2383,6 +2438,7 @@ gpk_client_font_tag_to_localised_name (GpkClient *gclient, const gchar *tag)
 	if (name == NULL)
 		name = g_strdup (language);
 out:
+	g_free (lang);
 	g_free (language);
 	return name;
 }
@@ -3712,4 +3768,127 @@ gpk_client_new (void)
 	gclient = g_object_new (GPK_TYPE_CLIENT, NULL);
 	return GPK_CLIENT (gclient);
 }
+
+/***************************************************************************
+ ***                          MAKE CHECK TESTS                           ***
+ ***************************************************************************/
+#ifdef EGG_TEST
+#include "egg-test.h"
+
+void
+gpk_client_test (gpointer data)
+{
+	EggTest *test = (EggTest *) data;
+	GpkClient *gclient;
+	gchar *lang;
+	gchar *language;
+	gchar *package;
+	gboolean ret;
+	gchar *fonts[] = { ":lang=mn", NULL };
+	GError *error;
+
+	if (egg_test_start (test, "GpkChooser") == FALSE)
+		return;
+
+	/************************************************************/
+	egg_test_title (test, "get GpkClient object");
+	gclient = gpk_client_new ();
+	if (gclient != NULL)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, NULL);
+
+	/************************************************************/
+	egg_test_title (test, "convert tag to lang");
+	lang = gpk_client_font_tag_to_lang (":lang=mn");
+	if (egg_strequal (lang, "mn"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "lang '%s'", lang);
+	g_free (lang);
+
+	/************************************************************/
+	egg_test_title (test, "convert tag to language");
+	language = gpk_client_font_tag_to_localised_name (gclient, ":lang=mn");
+	if (egg_strequal (language, "Mongolian"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "language '%s'", language);
+	g_free (language);
+
+	/************************************************************/
+	egg_test_title (test, "test trusted path");
+	ret = gpk_client_path_is_trusted ("/usr/libexec/gst-install-plugins-helper");
+	if (ret)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed to identify trusted");
+
+	/************************************************************/
+	egg_test_title (test, "test trusted path");
+	ret = gpk_client_path_is_trusted ("/usr/bin/totem");
+	if (!ret)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "identify untrusted as trusted!");
+
+	/************************************************************/
+	egg_test_title (test, "get package for exec");
+	package = gpk_client_get_package_for_exec (gclient, "/usr/bin/totem");
+	if (egg_strequal (package, "totem"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "package '%s'", package);
+	g_free (package);
+
+	/************************************************************/
+	egg_test_title (test, "set exec");
+	ret = gpk_client_set_parent_exec (gclient, "/usr/bin/totem");
+	if (ret)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed to set exec");
+
+	/************************************************************/
+	egg_test_title (test, "install fonts (no UI)");
+	error = NULL;
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
+	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	if (ret)
+		egg_test_success (test, NULL);
+	else {
+		/* success until we can do the server parts */
+		egg_test_success (test, "failed to install font : %s", error->message);
+		g_error_free (error);
+	}
+
+	/************************************************************/
+	egg_test_title (test, "install fonts (if found)");
+	error = NULL;
+	gpk_client_set_interaction (gclient, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM, GPK_CLIENT_INTERACT_FINISHED, -1));
+	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	if (ret)
+		egg_test_success (test, NULL);
+	else {
+		/* success until we can do the server parts */
+		egg_test_success (test, "failed to install font : %s", error->message);
+		g_error_free (error);
+	}
+
+	/************************************************************/
+	egg_test_title (test, "install fonts (always)");
+	error = NULL;
+	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
+	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	if (ret)
+		egg_test_success (test, NULL);
+	else {
+		/* success until we can do the server parts */
+		egg_test_success (test, "failed to install font : %s", error->message);
+		g_error_free (error);
+	}
+
+	egg_test_end (test);
+}
+#endif
 

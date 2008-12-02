@@ -31,6 +31,7 @@ void egg_string_list_test (EggTest *test);
 void gpk_dbus_test (EggTest *test);
 void gpk_language_test (EggTest *test);
 void gpk_client_dialog_test (EggTest *test);
+void gpk_client_test (EggTest *test);
 
 int
 main (int argc, char **argv)
@@ -51,6 +52,7 @@ main (int argc, char **argv)
 	gpk_common_test (test);
 //	gpk_dbus_test (test);
 	gpk_language_test (test);
+	gpk_client_test (test);
 	gpk_client_dialog_test (test);
 
 	return egg_test_finish (test);
