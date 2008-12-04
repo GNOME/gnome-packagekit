@@ -75,6 +75,7 @@ struct GpkAutoRefreshPrivate
 	gboolean		 on_battery;
 	gboolean		 network_active;
 	gboolean		 force_get_updates_login;
+	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
 	EggDbusMonitor		*monitor_gs;
 	EggDbusMonitor		*monitor_gpm;
@@ -279,6 +280,15 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
+	if (!arefresh->priv->force_get_updates_login) {
+		arefresh->priv->force_get_updates_login = TRUE;
+		if (gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL)) {
+			egg_debug ("forcing get update due to GConf");
+			gpk_auto_refresh_signal_get_updates (arefresh);
+			return TRUE;
+		}
+	}
+	
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
@@ -374,12 +384,12 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* only force a check if the user REALLY, REALLY wants to break
 	 * set policy and have an update at startup */
 	if (!arefresh->priv->force_get_updates_login) {
-		arefresh->priv->force_get_updates_login = TRUE;
 		force = gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL);
 		if (force) {
-			egg_debug ("forcing get update due to GConf");
-			gpk_auto_refresh_signal_get_updates (arefresh);
-			return TRUE;
+			/* don't immediately send the signal, if we are called during object initialization
+			 * we need to wait until upper layers  finish hooking up to the signal first. */
+			if (arefresh->priv->force_get_updates_login_timeout_id == 0)
+				arefresh->priv->force_get_updates_login_timeout_id = g_timeout_add_seconds (3, (GSourceFunc) gpk_auto_refresh_maybe_get_updates, arefresh);
 		}
 	}
 
@@ -591,6 +601,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->force_get_updates_login = FALSE;
 	arefresh->priv->timeout_id = 0;
+	arefresh->priv->force_get_updates_login_timeout_id = 0;
 
 	arefresh->priv->proxy_gs = NULL;
 	arefresh->priv->proxy_gpm = NULL;
@@ -656,6 +667,8 @@ gpk_auto_refresh_finalize (GObject *object)
 
 	if (arefresh->priv->timeout_id != 0)
 		g_source_remove (arefresh->priv->timeout_id);
+	if (arefresh->priv->force_get_updates_login_timeout_id != 0)
+		g_source_remove (arefresh->priv->force_get_updates_login_timeout_id);
 
 	g_object_unref (arefresh->priv->control);
 	g_object_unref (arefresh->priv->monitor_gs);
