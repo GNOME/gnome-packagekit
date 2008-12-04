@@ -51,6 +51,7 @@ static void     gpk_auto_refresh_finalize	(GObject            *object);
 
 #define GPK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshPrivate))
 #define GPK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
+#define GPK_UPDATES_LOGIN_TIMEOUT		3	/* seconds */
 
 #define GS_DBUS_SERVICE				"org.gnome.ScreenSaver"
 #define GS_DBUS_PATH				"/org/gnome/ScreenSaver"
@@ -288,7 +289,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 			return TRUE;
 		}
 	}
-	
+
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
@@ -389,7 +390,8 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 			/* don't immediately send the signal, if we are called during object initialization
 			 * we need to wait until upper layers  finish hooking up to the signal first. */
 			if (arefresh->priv->force_get_updates_login_timeout_id == 0)
-				arefresh->priv->force_get_updates_login_timeout_id = g_timeout_add_seconds (3, (GSourceFunc) gpk_auto_refresh_maybe_get_updates, arefresh);
+				arefresh->priv->force_get_updates_login_timeout_id =
+					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT, (GSourceFunc) gpk_auto_refresh_maybe_get_updates, arefresh);
 		}
 	}
 
