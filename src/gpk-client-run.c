@@ -70,6 +70,19 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * gpk_client_run_delete_event_cb:
+ **/
+static gboolean
+gpk_client_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+	/* clear full_path */
+	g_free (full_path);
+	full_path = NULL;
+	gtk_main_quit ();
+	return FALSE;
+}
+
+/**
  * gpk_client_run_button_action_cb:
  **/
 static void
@@ -314,7 +327,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_run_delete_event_cb), NULL);
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
@@ -330,6 +343,10 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 
 	/* hide the filter box */
 	widget = glade_xml_get_widget (glade_xml, "hbox_filter");
+	gtk_widget_hide (widget);
+
+	/* hide the refresh button */
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
 	gtk_widget_hide (widget);
 
 	/* set icon name */
@@ -356,6 +373,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	/* add columns to the tree view */
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (widget), FALSE);
 
 	/* add all the apps */
 	len = gpk_client_run_add_package_ids (package_ids);
@@ -383,7 +401,7 @@ out:
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
 
-	g_object_unref (glade_xml);
+	//g_object_unref (glade_xml);
 
 	return full_path;
 }
