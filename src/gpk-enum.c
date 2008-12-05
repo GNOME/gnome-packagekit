@@ -437,6 +437,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
 		text = _("No distribution upgrade data is available");
 		break;
+	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
+		text = _("Package is incompatible with this system");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -612,6 +615,9 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
 		text = _("Required upgrade data could not be found in any of the configured software sources.\n"
 			 "The list of distribution upgrades will be unavailable.");
+		break;
+	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
+		text = _("The package that is trying to be installed is incompatible with this system.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
