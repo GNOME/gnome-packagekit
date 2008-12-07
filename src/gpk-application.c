@@ -2295,6 +2295,7 @@ gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 static void
 gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
+	gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	gpk_client_refresh_cache (application->priv->gclient, NULL);
 }
 
