@@ -641,8 +641,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
 		/* run this single package id */
 		package_ids = pk_package_ids_from_id (package_id);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		exec = gpk_client_run_show (GTK_WINDOW (widget), package_ids);
+		exec = gpk_client_run_show (package_ids);
 		if (exec != NULL) {
 			ret = g_spawn_command_line_async (exec, &error);
 			if (!ret) {
@@ -1703,8 +1702,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
 		/* can we show the user the new application? */
 		if (ret) {
-			widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-			exec = gpk_client_run_show (GTK_WINDOW (widget), package_ids);
+			exec = gpk_client_run_show (package_ids);
 			if (exec != NULL) {
 				ret = g_spawn_command_line_async (exec, &error);
 				if (!ret) {

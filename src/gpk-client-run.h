@@ -28,8 +28,7 @@
 G_BEGIN_DECLS
 
 void		 gpk_client_run_self_test		(gpointer	 data);
-gchar		*gpk_client_run_show			(GtkWindow	*window,
-							 gchar		**package_ids);
+gchar		*gpk_client_run_show			(gchar		**package_ids);
 
 G_END_DECLS
 
