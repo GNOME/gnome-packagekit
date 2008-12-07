@@ -298,7 +298,7 @@ out:
  * Return value: the package_id of the selected package, or NULL
  **/
 gchar *
-gpk_client_run_show (gchar **package_ids)
+gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 {
 	GladeXML *glade_xml;
 	GtkWidget *widget;
@@ -364,8 +364,14 @@ gpk_client_run_show (gchar **package_ids)
 		goto out;
 	}
 
-	/* show window */
+	/* make modal if window set */
 	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	if (window != NULL) {
+		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
+		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	}
+
+	/* show window */
 	gtk_widget_show (widget);
 
 	/* wait for button press */
