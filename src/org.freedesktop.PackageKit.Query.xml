@@ -1,0 +1,85 @@
+<!DOCTYPE node PUBLIC
+"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd" [
+  <!ENTITY ERROR_GENERAL "org.freedesktop.PackageKit.Denied">
+]>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name="org.freedesktop.PackageKit.Query">
+    <doc:doc>
+      <doc:description>
+        <doc:para>
+          The interface used for quering the package database.
+        </doc:para>
+      </doc:description>
+    </doc:doc>
+
+    <!--*****************************************************************************************-->
+    <method name="IsPackageInstalled">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Finds out if the package is installed.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type="s" name="package_name" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              A package name, e.g. <doc:tt>hal-info</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="b" name="installed" direction="out">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              If the package is installed.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+    <!--*****************************************************************************************-->
+    <method name="SearchFile">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Finds the package name for an installed or available file
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type="s" name="file_name" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              A package name, e.g. <doc:tt>/usr/share/help/gimp/index.html</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="b" name="installed" direction="out">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              If the package is installed.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="s" name="package_name" direction="out">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              The package name of the file, e.g. <doc:tt>hal-info</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+  </interface>
+</node>
+

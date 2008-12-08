@@ -41,6 +41,11 @@ CPPFLAGS="$CPPFLAGS -g"
 CPPFLAGS="$CPPFLAGS -fexceptions"
 
 dnl ---------------------------------------------------------------------------
+dnl - xsltproc
+dnl ---------------------------------------------------------------------------
+AC_PATH_PROG([XSLTPROC], [xsltproc])
+
+dnl ---------------------------------------------------------------------------
 dnl - gettext stuff
 dnl ---------------------------------------------------------------------------
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
@@ -249,6 +254,7 @@ man/Makefile
 po/Makefile.in
 data/Makefile
 docs/Makefile
+docs/dbus/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile
