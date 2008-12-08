@@ -75,11 +75,13 @@ void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
 							 guint32	 timestamp,
 							 const gchar	*package_name,
 							 DBusGMethodInvocation *context);
+#if 0
 void		 gpk_dbus_install_package_names		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 guint32	 timestamp,
 							 gchar		**package_names,
 							 DBusGMethodInvocation *context);
+#endif
 void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 guint32	 timestamp,
@@ -105,44 +107,51 @@ void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
 							 guint32	 timestamp,
 							 const gchar	*catalog_file,
 							 DBusGMethodInvocation *context);
+#if 0
 gboolean	 gpk_dbus_is_package_installed		(GpkDbus	*dbus,
 							 const gchar	*package_name,
 							 gboolean	*installed,
 							 GError		**error);
+#endif
 
 /* org.freedesktop.PackageKit.Query */
-gboolean	 gpk_dbus_query_is_package_installed	(GpkDbus	*dbus,
+gboolean	 gpk_dbus_is_installed			(GpkDbus	*dbus,
 							 const gchar	*package_name,
 							 gboolean	*installed,
 							 GError		**error);
-gboolean	 gpk_dbus_query_search_file		(GpkDbus	*dbus,
+gboolean	 gpk_dbus_search_file			(GpkDbus	*dbus,
 							 const gchar	*file_name,
 							 gboolean	*installed,
 							 gchar		**package_name,
 							 GError		**error);
 
 /* org.freedesktop.PackageKit.Modify */
-void		 gpk_dbus_modify_install_files		(GpkDbus	*dbus,
+void		 gpk_dbus_install_provide_files		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 gchar		**files,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
-void		 gpk_dbus_modify_install_packages	(GpkDbus	*dbus,
+void		 gpk_dbus_install_package_files		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**files,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_package_names		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 gchar		**packages,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
-void		 gpk_dbus_modify_install_mime_types	(GpkDbus	*dbus,
+void		 gpk_dbus_install_mime_types		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 gchar		**mime_types,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
-void		 gpk_dbus_modify_install_fontconfig_resources	(GpkDbus *dbus,
+void		 gpk_dbus_install_fontconfig_resources	(GpkDbus 	*dbus,
 							 guint32	 xid,
 							 gchar		**fonts,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
-void		 gpk_dbus_modify_install_gstreamer_resources	(GpkDbus *dbus,
+void		 gpk_dbus_install_gstreamer_resources	(GpkDbus 	*dbus,
 							 guint32	 xid,
 							 gchar		**codecs,
 							 const gchar	*interaction,

@@ -299,6 +299,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	dbus_g_method_return (context);
 }
 
+#if 0
 /**
  * gpk_dbus_install_package_names:
  **/
@@ -337,6 +338,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 
 	dbus_g_method_return (context);
 }
+#endif
 
 /**
  * gpk_dbus_install_mime_type:
@@ -577,6 +579,60 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 }
 
 /**
+ * gpk_dbus_set_interaction:
+ **/
+static void
+gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
+{
+	guint i;
+	guint len;
+	gchar **interactions;
+	PkBitfield interact = GPK_CLIENT_INTERACT_NEVER;
+
+	interactions = g_strsplit (interaction, ",", -1);
+	len = g_strv_length (interactions);
+	for (i=0; i<len; i++) {
+		if (egg_strequal (interactions[i], "show-confirm-search"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-confirm-deps"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-confirm-install"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-progress"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_PROGRESS);
+		else if (egg_strequal (interactions[i], "show-finished"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_FINISHED);
+		else if (egg_strequal (interactions[i], "show-warning"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_WARNING);
+		else
+			egg_warning ("failed to get interaction '%s'", interactions[i]);
+	}
+	g_strfreev (interactions);
+
+	/* set the interaction mode */
+	gpk_client_set_interaction (dbus->priv->gclient, interact);
+}
+
+/**
+ * gpk_dbus_set_context:
+ **/
+static void
+gpk_dbus_set_context (GpkDbus *dbus, DBusGMethodInvocation *context)
+{
+	gchar *sender;
+	gchar *exec;
+
+	/* get the program name and set */
+	sender = dbus_g_method_get_sender (context);
+	exec = gpk_dbus_get_exec_for_sender (sender);
+	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
+
+	g_free (sender);
+	g_free (exec);
+}
+
+#if 0
+/**
  * gpk_dbus_is_package_installed:
  **/
 gboolean
@@ -615,107 +671,285 @@ out:
 	g_strfreev (package_names);
 	return ret;
 }
+#endif
 
 /**
- * gpk_dbus_query_is_package_installed:
+ * gpk_dbus_is_installed:
  **/
 gboolean
-gpk_dbus_query_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
+gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
 {
-	return gpk_dbus_is_package_installed (dbus, package_name, installed, error);
-}
+	gboolean ret;
+	GError *error_local = NULL;
+	PkPackageList *list = NULL;
+	gchar **package_names = NULL;
 
-/**
- * gpk_dbus_query_search_file:
- **/
-gboolean
-gpk_dbus_query_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed, gchar **package_name, GError **error)
-{
-	return TRUE;
-}
+	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
 
-/**
- * gpk_dbus_query_search_file:
- **/
-static void
-gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
-{
-	guint i;
-	guint len;
-	gchar **interactions;
-	PkBitfield interact = GPK_CLIENT_INTERACT_NEVER;
-
-	interactions = g_strsplit (interaction, ",", -1);
-	len = g_strv_length (interactions);
-	for (i=0; i<len; i++) {
-		if (egg_strequal (interactions[i], "show-confirm-search"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
-		else if (egg_strequal (interactions[i], "show-confirm-deps"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
-		else if (egg_strequal (interactions[i], "show-confirm-install"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
-		else if (egg_strequal (interactions[i], "show-progress"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_PROGRESS);
-		else if (egg_strequal (interactions[i], "show-finished"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_FINISHED);
-		else if (egg_strequal (interactions[i], "show-warning"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_WARNING);
-		else
-			egg_warning ("failed to get interaction '%s'", interactions[i]);
+	/* reset */
+	ret = pk_client_reset (dbus->priv->client, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
 	}
-	g_strfreev (interactions);
 
-	/* set the interaction mode */
-	gpk_client_set_interaction (dbus->priv->gclient, interact);
+	/* get the package list for the installed packages */
+	package_names = g_strsplit (package_name, "|", 1);
+	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* more than one entry? */
+	list = pk_client_get_package_list (dbus->priv->client);
+	*installed = (PK_OBJ_LIST(list)->len > 0);
+out:
+	if (list != NULL)
+		g_object_unref (list);
+	g_strfreev (package_names);
+	return ret;
 }
 
 /**
- * gpk_dbus_modify_install_files:
+ * gpk_dbus_search_file:
  **/
-void
-gpk_dbus_modify_install_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+gboolean
+gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed, gchar **package_name, GError **error)
 {
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_install_local_file (dbus, xid, 0, files[0], context);
+	gboolean ret;
+	GError *error_local = NULL;
+	PkPackageList *list = NULL;
+	const PkPackageObj *obj;
+
+	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
+
+	/* reset */
+	ret = pk_client_reset (dbus->priv->client, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* get the package list for the installed packages */
+	ret = pk_client_search_file (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
+	if (!ret) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to search for file: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* more than one entry? */
+	list = pk_client_get_package_list (dbus->priv->client);
+	if (PK_OBJ_LIST(list)->len < 1) {
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "could not find package providing file");
+		ret = FALSE;
+		goto out;
+	}
+
+	/* get the package name too */
+	*installed = TRUE;
+	obj = pk_package_list_get_obj (list, 0);
+	*package_name = g_strdup (obj->id->name);
+
+out:
+	if (list != NULL)
+		g_object_unref (list);
+	return ret;
 }
 
 /**
- * gpk_dbus_modify_install_packages:
+ * gpk_dbus_install_provide_files:
  **/
 void
-gpk_dbus_modify_install_packages (GpkDbus *dbus, guint32 xid, gchar **packages, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallProvideFiles method called: %s", files[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
 	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_provide_file (dbus->priv->gclient, files[0], &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 
 /**
- * gpk_dbus_modify_install_mime_types:
+ * gpk_dbus_install_package_files:
  **/
 void
-gpk_dbus_modify_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallPackageFiles method called: %s", files[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
 	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_local_files (dbus->priv->gclient, files, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 
 /**
- * gpk_dbus_modify_install_fontconfig_resources:
+ * gpk_dbus_install_package_names:
  **/
 void
-gpk_dbus_modify_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, const gchar *interaction, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallPackageNames method called: %s", packages[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
 	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_package_names (dbus->priv->gclient, packages, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 
 /**
- * gpk_dbus_modify_install_gstreamer_resources:
+ * gpk_dbus_install_mime_types:
  **/
 void
-gpk_dbus_modify_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, const gchar *interaction, DBusGMethodInvocation *context)
 {
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallMimeTypes method called: %s", mime_types[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
 	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_types[0], &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_install_fontconfig_resources:
+ **/
+void
+gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallFontconfigResources method called: %s", resources[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_fonts (dbus->priv->gclient, resources, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_install_gstreamer_resources:
+ **/
+void
+gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gboolean ret;
+	GError *error;
+	GError *error_local = NULL;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
+
+	egg_debug ("InstallGStreamerResources method called: %s", resources[0]);
+
+	/* set common parameters */
+	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_set_context (dbus, context);
+
+	/* do the action */
+	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, resources, &error_local);
+	if (!ret) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+				     "Method failed: %s", error_local->message);
+		g_error_free (error_local);
+		dbus_g_method_return_error (context, error);
+		return;
+	}
+
 	dbus_g_method_return (context);
 }
 

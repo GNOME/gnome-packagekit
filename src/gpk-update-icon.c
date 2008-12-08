@@ -42,8 +42,6 @@
 #include "gpk-hardware.h"
 #include "gpk-dbus.h"
 #include "org.freedesktop.PackageKit.h"
-#include "org.freedesktop.PackageKit.Query.h"
-#include "org.freedesktop.PackageKit.Modify.h"
 #include "gpk-common.h"
 
 /**
@@ -89,10 +87,6 @@ gpk_object_register (DBusGConnection *connection, GObject *object)
 		return FALSE;
 
 	dbus_g_object_type_install_info (GPK_TYPE_DBUS, &dbus_glib_gpk_dbus_object_info);
-#if 0
-	dbus_g_object_type_install_info (GPK_TYPE_DBUS, &dbus_glib_gpk_dbus_query_object_info);
-	dbus_g_object_type_install_info (GPK_TYPE_DBUS, &dbus_glib_gpk_dbus_modify_object_info);
-#endif
 	dbus_g_error_domain_register (GPK_DBUS_ERROR, NULL, GPK_DBUS_TYPE_ERROR);
 	dbus_g_connection_register_g_object (connection, PK_DBUS_PATH, object);
 
