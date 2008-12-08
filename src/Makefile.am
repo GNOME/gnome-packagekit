@@ -283,14 +283,14 @@ org.freedesktop.PackageKit.h: org.freedesktop.PackageKit.xml
 
 org.freedesktop.PackageKit.Query.h: org.freedesktop.PackageKit.Query.xml
 	$(LIBTOOL) --mode=execute dbus-binding-tool	\
-		--prefix=gpk_dbus			\
+		--prefix=gpk_dbus_query			\
 		--mode=glib-server			\
 		--output=org.freedesktop.PackageKit.Query.h	\
 		$(srcdir)/org.freedesktop.PackageKit.Query.xml
 
 org.freedesktop.PackageKit.Modify.h: org.freedesktop.PackageKit.Modify.xml
 	$(LIBTOOL) --mode=execute dbus-binding-tool	\
-		--prefix=gpk_dbus			\
+		--prefix=gpk_dbus_modify		\
 		--mode=glib-server			\
 		--output=org.freedesktop.PackageKit.Modify.h	\
 		$(srcdir)/org.freedesktop.PackageKit.Modify.xml
