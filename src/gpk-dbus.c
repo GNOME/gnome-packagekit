@@ -43,6 +43,7 @@
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
+#include "egg-string.h"
 
 #include "gpk-dbus.h"
 #include "gpk-x11.h"
@@ -198,6 +199,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
 	g_strfreev (full_paths);
 	if (!ret) {
@@ -238,6 +240,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -281,6 +284,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	g_strfreev (package_names);
 
@@ -321,6 +325,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -360,6 +365,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -427,6 +433,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	g_ptr_array_free (array, TRUE);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_strings, &error_local);
 	g_strfreev (codec_strings);
 
@@ -455,7 +462,7 @@ gpk_dbus_install_fonts (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **f
 
 	g_return_if_fail (PK_IS_DBUS (dbus));
 
-	egg_debug ("InstallPackageNames method called: %s", fonts[0]);
+	egg_debug ("InstallFonts method called: %s", fonts[0]);
 
 	gpk_dbus_set_parent_window (dbus, xid, timestamp);
 
@@ -467,6 +474,7 @@ gpk_dbus_install_fonts (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **f
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -508,6 +516,7 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 
 	/* do the action */
 	fonts = g_strsplit (font, "|", 1);
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	g_strfreev (fonts);
 	if (!ret) {
@@ -552,6 +561,7 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 	g_free (exec);
 
 	/* do the action */
+	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_catalogs (dbus->priv->gclient, catalog_files, &error_local);
 	g_strfreev (catalog_files);
 
@@ -604,6 +614,109 @@ out:
 		g_object_unref (list);
 	g_strfreev (package_names);
 	return ret;
+}
+
+/**
+ * gpk_dbus_query_is_package_installed:
+ **/
+gboolean
+gpk_dbus_query_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
+{
+	return gpk_dbus_is_package_installed (dbus, package_name, installed, error);
+}
+
+/**
+ * gpk_dbus_query_search_file:
+ **/
+gboolean
+gpk_dbus_query_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed, gchar **package_name, GError **error)
+{
+	return TRUE;
+}
+
+/**
+ * gpk_dbus_query_search_file:
+ **/
+static void
+gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
+{
+	guint i;
+	guint len;
+	gchar **interactions;
+	PkBitfield interact = GPK_CLIENT_INTERACT_NEVER;
+
+	interactions = g_strsplit (interaction, ",", -1);
+	len = g_strv_length (interactions);
+	for (i=0; i<len; i++) {
+		if (egg_strequal (interactions[i], "show-confirm-search"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-confirm-deps"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-confirm-install"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "show-progress"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_PROGRESS);
+		else if (egg_strequal (interactions[i], "show-finished"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_FINISHED);
+		else if (egg_strequal (interactions[i], "show-warning"))
+			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_WARNING);
+		else
+			egg_warning ("failed to get interaction '%s'", interactions[i]);
+	}
+	g_strfreev (interactions);
+
+	/* set the interaction mode */
+	gpk_client_set_interaction (dbus->priv->gclient, interact);
+}
+
+/**
+ * gpk_dbus_modify_install_files:
+ **/
+void
+gpk_dbus_modify_install_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gpk_dbus_set_interaction (dbus, interaction);
+	gpk_dbus_install_local_file (dbus, xid, 0, files[0], context);
+}
+
+/**
+ * gpk_dbus_modify_install_packages:
+ **/
+void
+gpk_dbus_modify_install_packages (GpkDbus *dbus, guint32 xid, gchar **packages, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gpk_dbus_set_interaction (dbus, interaction);
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_modify_install_mime_types:
+ **/
+void
+gpk_dbus_modify_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gpk_dbus_set_interaction (dbus, interaction);
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_modify_install_fontconfig_resources:
+ **/
+void
+gpk_dbus_modify_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gpk_dbus_set_interaction (dbus, interaction);
+	dbus_g_method_return (context);
+}
+
+/**
+ * gpk_dbus_modify_install_gstreamer_resources:
+ **/
+void
+gpk_dbus_modify_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	gpk_dbus_set_interaction (dbus, interaction);
+	dbus_g_method_return (context);
 }
 
 /**

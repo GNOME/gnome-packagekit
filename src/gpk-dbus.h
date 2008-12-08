@@ -110,6 +110,44 @@ gboolean	 gpk_dbus_is_package_installed		(GpkDbus	*dbus,
 							 gboolean	*installed,
 							 GError		**error);
 
+/* org.freedesktop.PackageKit.Query */
+gboolean	 gpk_dbus_query_is_package_installed	(GpkDbus	*dbus,
+							 const gchar	*package_name,
+							 gboolean	*installed,
+							 GError		**error);
+gboolean	 gpk_dbus_query_search_file		(GpkDbus	*dbus,
+							 const gchar	*file_name,
+							 gboolean	*installed,
+							 gchar		**package_name,
+							 GError		**error);
+
+/* org.freedesktop.PackageKit.Modify */
+void		 gpk_dbus_modify_install_files		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**files,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_modify_install_packages	(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**packages,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_modify_install_mime_types	(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**mime_types,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_modify_install_fontconfig_resources	(GpkDbus *dbus,
+							 guint32	 xid,
+							 gchar		**fonts,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_modify_install_gstreamer_resources	(GpkDbus *dbus,
+							 guint32	 xid,
+							 gchar		**codecs,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+
 G_END_DECLS
 
 #endif /* __GPK_DBUS_H */
