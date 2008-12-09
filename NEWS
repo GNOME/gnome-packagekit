@@ -1,3 +1,40 @@
+Version 0.4.0
+~~~~~~~~~~~~~
+Released: 2008-12-09
+
+* Translations
+ - Added Traditional Chinese translation(Hong Kong) (Chao-Hsiung Liao)
+ - Added Traditional Chinese translation(Taiwan) (Chao-Hsiung Liao)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Italian translation (Gianvito Cavasoli)
+ - Updated Catalan translation (Gil Forcada)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated Danish translation (Kenneth Nielsen)
+
+* New Features:
+ - Add InstallFonts to the session DBUS interface (Richard Hughes)
+ - Add a key to gnome-settings-daemon GConf so we can load the gtk module (Richard Hughes)
+ - Add a fontconfig dep for the new font code (Richard Hughes)
+ - Show the menu path in Add/Remove programs when we install new software (Sylvain Baubeau)
+ - Add two prototype interfaces to make the session interface more sane (Richard Hughes)
+
+* Bugfix:
+ - Show the 'Force Install' button on the unsigned dialog UI (Richard Hughes)
+ - Fix the self tests in GpkCommon (Richard Hughes)
+ - Set the dialog type up in a setup function, and then present it like a normal
+   window -- fixes funny icons in different places (Richard Hughes)
+ - Don't clear the list in gpk-repo when the list is refreshed, just update it in place.
+   Use the same approach in gpk-log. Fixed first part of fd#18733 (Richard Hughes)
+ - Don't abort with an error if we are using small form factor mode (Richard Hughes)
+ - Convert the iso639 language codes to localised language names (Richard Hughes)
+ - Add ISO639-2B language names to the language hash also (Richard Hughes)
+ - Don't emit a critical warning if the desktop file contains invalid markup (Richard Hughes)
+ - Set the run window modal over the parent window to fix rh#475046 (Richard Hughes)
+ - Set an interaction mode in gpk-application when we refresh the package lists to
+   avoid getting an empty window (Richard Hughes)
+ - Set the run window modal over the parent window to fix rh#475046 (Richard Hughes)
+ - Don't send signal during object init - upper layers need to hook up first (Scott Reeves)
+
 Version 0.3.11
 ~~~~~~~~~~~~~~
 Released: 2008-11-24
