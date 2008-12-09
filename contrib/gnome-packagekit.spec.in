@@ -4,7 +4,7 @@
 
 %{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Summary:   GNOME PackageKit Client
+Summary:   Session applications to manage packages
 Name:      gnome-packagekit
 Version:   #VERSION#
 Release:   0.#BUILD#%{?alphatag}%{?dist}
@@ -64,7 +64,7 @@ There are several utilities designed for installing, updating and
 removing packages on your system.
 
 %package extra
-Summary: GNOME PackageKit Client (extra bits)
+Summary: Session applications to manage packages (extra bits)
 Group: Applications/System
 Requires: %{name} = %{version}-%{release}
 
