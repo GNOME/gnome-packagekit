@@ -95,6 +95,7 @@ GtkEntryCompletion *gpk_package_entry_completion_new	(void);
 gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
+gboolean	 gpk_session_logout			(void);
 
 G_END_DECLS
 

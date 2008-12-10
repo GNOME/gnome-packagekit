@@ -66,11 +66,12 @@ struct GpkWatchPrivate
 {
 	PkControl		*control;
 	GpkSmartIcon		*sicon;
-	GpkSmartIcon		*sicon_restart;
+	GpkSmartIcon		*sicon_action;
 	GpkInhibit		*inhibit;
 	GpkClient		*gclient;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
+	PkRestartEnum		 restart;
 	GConfClient		*gconf_client;
 	gboolean		 show_refresh_in_menu;
 	PolKitGnomeAction	*restart_action;
@@ -316,13 +317,16 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
 	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		/* if more important than what we are already showing, then update the icon */
 		restart = pk_client_get_require_restart (client);
-		if (restart == PK_RESTART_ENUM_SYSTEM ||
-		    restart == PK_RESTART_ENUM_SESSION) {
+		if (restart > watch->priv->restart) {
 			restart_message = gpk_restart_enum_to_localised_text (restart);
 			icon_name = gpk_restart_enum_to_icon_name (restart);
-			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_restart), restart_message);
-			gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, icon_name);
+			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_action), restart_message);
+			gpk_smart_icon_set_icon_name (watch->priv->sicon_action, icon_name);
+
+			/* save new restart */
+			watch->priv->restart = restart;
 		}
 	}
 
@@ -813,7 +817,18 @@ gpk_watch_hide_restart_cb (GtkMenuItem *item, gpointer data)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* just hide it */
-	gpk_smart_icon_set_icon_name (watch->priv->sicon_restart, NULL);
+	gpk_smart_icon_set_icon_name (watch->priv->sicon_action, NULL);
+}
+
+/**
+ * gpk_watch_log_out_cb:
+ **/
+static void
+gpk_watch_log_out_cb (GtkMenuItem *item, gpointer data)
+{
+	GpkWatch *watch = GPK_WATCH (data);
+	g_return_if_fail (GPK_IS_WATCH (watch));
+	gpk_session_logout ();
 }
 
 /**
@@ -833,9 +848,21 @@ gpk_watch_activate_status_restart_cb (GtkStatusIcon *status_icon, GpkWatch *watc
 
 	egg_debug ("icon left clicked");
 
+	/* log off session */
+	if (watch->priv->restart == PK_RESTART_ENUM_SESSION) {
+		widget = gtk_image_menu_item_new_with_mnemonic (_("_Log out"));
+		image = gtk_image_new_from_icon_name ("system-log-out", GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+		g_signal_connect (G_OBJECT (widget), "activate",
+				  G_CALLBACK (gpk_watch_log_out_cb), watch);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+	}
+
 	/* restart computer */
-	widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+	if (watch->priv->restart == PK_RESTART_ENUM_SYSTEM) {
+		widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+	}
 
 	/* TRANSLATORS: This hides the 'restart required' icon */
 	widget = gtk_image_menu_item_new_with_mnemonic (_("_Hide this icon"));
@@ -1075,6 +1102,7 @@ gpk_watch_init (GpkWatch *watch)
 
 	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
 	watch->priv->error_details = NULL;
+	watch->priv->restart = PK_RESTART_ENUM_NONE;
 
 	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
@@ -1082,8 +1110,8 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->sicon = gpk_smart_icon_new ();
 	gpk_smart_icon_set_priority (watch->priv->sicon, 1);
 
-	watch->priv->sicon_restart = gpk_smart_icon_new ();
-	gpk_smart_icon_set_priority (watch->priv->sicon_restart, 3);
+	watch->priv->sicon_action = gpk_smart_icon_new ();
+	gpk_smart_icon_set_priority (watch->priv->sicon_action, 3);
 
 	watch->priv->set_proxy_timeout = 0;
 	watch->priv->gclient = gpk_client_new ();
@@ -1104,7 +1132,7 @@ gpk_watch_init (GpkWatch *watch)
 				 "activate", G_CALLBACK (gpk_watch_activate_status_cb), watch, 0);
 
 	/* provide the user with a way to restart */
-	status_icon = GTK_STATUS_ICON (watch->priv->sicon_restart);
+	status_icon = GTK_STATUS_ICON (watch->priv->sicon_action);
 	g_signal_connect_object (G_OBJECT (status_icon),
 				 "activate", G_CALLBACK (gpk_watch_activate_status_restart_cb), watch, 0);
 
