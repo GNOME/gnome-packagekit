@@ -400,6 +400,30 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/dbus_default_interaction</key>
+      <applyto>/apps/gnome-packagekit/dbus_default_interaction</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>show-confirm-search,show-confirm-deps,show-confirm-install,show-progress,show-finished,show-warning</default>
+      <locale name="C">
+        <short>Interaction modes to use by default</short>
+        <long>When displaying UI from a session DBus request, automatically use these options by default</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/dbus_enforced_interaction</key>
+      <applyto>/apps/gnome-packagekit/dbus_enforced_interaction</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>show-confirm-install</default>
+      <locale name="C">
+        <short>Interaction modes that must be used, overriding requests from client</short>
+        <long>When displaying UI from a session DBus request, force these options to be turned on</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
 

@@ -41,6 +41,7 @@
 #include <polkit/polkit.h>
 #include <polkit-dbus/polkit-dbus.h>
 #include <packagekit-glib/packagekit.h>
+#include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -48,6 +49,7 @@
 #include "gpk-dbus.h"
 #include "gpk-x11.h"
 #include "gpk-client.h"
+#include "gpk-common.h"
 
 static void     gpk_dbus_class_init	(GpkDbusClass	*klass);
 static void     gpk_dbus_init		(GpkDbus	*dbus);
@@ -59,6 +61,7 @@ struct GpkDbusPrivate
 {
 	GpkClient		*gclient;
 	PkClient		*client;
+	GConfClient		*gconf_client;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -579,21 +582,26 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 }
 
 /**
- * gpk_dbus_set_interaction:
+ * gpk_dbus_set_interaction_from_text:
  **/
 static void
-gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
+gpk_dbus_set_interaction_from_text (PkBitfield interact, const gchar *interaction)
 {
 	guint i;
 	guint len;
 	gchar **interactions;
-	PkBitfield interact;
-
-	/* set the default, for now use never */
-	interact = GPK_CLIENT_INTERACT_NEVER;
-
 	interactions = g_strsplit (interaction, ",", -1);
 	len = g_strv_length (interactions);
+
+	/* do special keys first */
+	for (i=0; i<len; i++) {
+		if (egg_strequal (interactions[i], "always"))
+			interact = GPK_CLIENT_INTERACT_ALWAYS;
+		else if (egg_strequal (interactions[i], "never"))
+			interact = GPK_CLIENT_INTERACT_NEVER;
+	}
+
+	/* add or remove from defaults */
 	for (i=0; i<len; i++) {
 		/* show */
 		if (egg_strequal (interactions[i], "show-confirm-search"))
@@ -621,10 +629,36 @@ gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_FINISHED);
 		else if (egg_strequal (interactions[i], "hide-warning"))
 			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_WARNING);
-		else
-			egg_warning ("failed to get interaction '%s'", interactions[i]);
 	}
 	g_strfreev (interactions);
+}
+
+/**
+ * gpk_dbus_set_interaction:
+ **/
+static void
+gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
+{
+	PkBitfield interact;
+	gchar *policy;
+
+	/* set the default, for now use all */
+	interact = GPK_CLIENT_INTERACT_ALWAYS;
+
+	/* get default policy from gconf */
+	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_DEFAULT_INTERACTION, NULL);
+	if (policy != NULL)
+		gpk_dbus_set_interaction_from_text (interact, policy);
+	g_free (policy);
+
+	/* now override with policy from client */
+	gpk_dbus_set_interaction_from_text (interact, policy);
+
+	/* now override with enforced policy from gconf */
+	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_ENFORCED_INTERACTION, NULL);
+	if (policy != NULL)
+		gpk_dbus_set_interaction_from_text (interact, policy);
+	g_free (policy);
 
 	/* set the interaction mode */
 	gpk_client_set_interaction (dbus->priv->gclient, interact);
@@ -990,6 +1024,7 @@ static void
 gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
+	dbus->priv->gconf_client = gconf_client_get_default ();
 	dbus->priv->client = pk_client_new ();
 	pk_client_set_use_buffer (dbus->priv->client, TRUE, NULL);
 	pk_client_set_synchronous (dbus->priv->client, TRUE, NULL);
@@ -1011,6 +1046,7 @@ gpk_dbus_finalize (GObject *object)
 	g_return_if_fail (dbus->priv != NULL);
 	g_object_unref (dbus->priv->client);
 	g_object_unref (dbus->priv->gclient);
+	g_object_unref (dbus->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
 }

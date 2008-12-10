@@ -1,0 +1,60 @@
+There are currently three interfaces on the service org.freedesktop.PackageKit.
+
+== org.freedesktop.PackageKit ==
+
+ * This interface is a legacy interface first used in gnome-packagekit 0.2.1
+   and methods were added and changed over the 0.2.x series.
+ * It was not really designed at this time as a standalone service, and as such
+   provides little flexibility for client programs.
+ * Consider this interface DEPRECATED as it will be removed in the 0.4.x series.
+
+== org.freedesktop.PackageKit.Query ==
+
+ * This interface is used for synchronous querying of package data, for instance
+   finding what package owns a file, or if a package is installed.
+ * It is designed to be easy to use, rather than flexible.
+ * No user interaction is allowed, or UI shown, when using this interface.
+
+== org.freedesktop.PackageKit.Modify ==
+
+ * This interface is for synchronous modification of the system, for instance
+   installing applications or other resources.
+ * The user interaction is controlled using an 'interaction mode', and this is
+   outlined below:
+
+  There are lots of different types that can be shown or suppressed:
+
+   - confirm-search	Ask the user before we search
+   - confirm-deps	Ask the user to agree to deps
+   - confirm-install	Ask the user before we install
+   - progress		Show the user a progress bar
+   - finished		Ask the user a finished dialog box
+   - warning		Show the user a warning
+
+  These are obviously something that people may want to set per-user defaults,
+  and so the GConf key /apps/gnome-packagekit/dbus_default_interaction is
+  provided.
+  This sets up the default interactions used by clients unless they opt-in
+  or opt-out of certain interactions.
+
+  Of course, we do not want software silently installing things behind our back,
+  even if they are signed and trusted. One could imagine an application hiding
+  all the interactions do install some software silently.
+  Another GConf key /apps/gnome-packagekit/dbus_enforced_interaction is used
+  to set modes that are absolutely required or suppressed, even when the client
+  or defaults specify otherwise.
+
+  An example:
+  Defaults specify:
+   show-confirm-search,show-confirm-deps,show-confirm-install,show-progress
+  Enforced specify:
+   show-confirm-install
+  Client specifies:
+   hide-confirm-install,hide-confirm-search,show-warnings
+
+  The defaults are modified by the client settings to add warnings, and
+  remove confirm-install.
+  The admin specified confirm-install is required, so the finished interaction
+  mode is:
+   show-confirm-deps,show-confirm-install,show-progress,show-warnings
+

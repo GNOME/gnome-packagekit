@@ -53,7 +53,8 @@ G_BEGIN_DECLS
 #define GPK_CONF_SHOW_DEPENDS			"/apps/gnome-packagekit/show_depends"
 #define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
 #define GPK_CONF_BANNED_FIRMWARE		"/apps/gnome-packagekit/banned_firmware"
-
+#define GPK_CONF_DBUS_DEFAULT_INTERACTION	"/apps/gnome-packagekit/dbus_default_interaction"
+#define GPK_CONF_DBUS_ENFORCED_INTERACTION	"/apps/gnome-packagekit/dbus_enforced  _interaction"
 #define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
