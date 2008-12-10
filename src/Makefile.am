@@ -5,6 +5,7 @@ NULL =
 
 INCLUDES =						\
 	$(GLIB_CFLAGS)					\
+	$(GIO_CFLAGS)					\
 	$(DBUS_CFLAGS)					\
 	$(GCONF_CFLAGS)					\
 	$(LIBGLADE_CFLAGS)				\
@@ -102,6 +103,7 @@ shared_SOURCES =					\
 
 shared_LIBS =						\
 	$(GLIB_LIBS)					\
+	$(GIO_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
 	$(LIBGLADE_LIBS)				\
