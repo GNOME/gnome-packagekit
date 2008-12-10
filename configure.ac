@@ -105,12 +105,6 @@ PKG_CHECK_MODULES(GIO, gio-2.0)
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
 
-OLDCPPFLAGS=$CPPFLAGS
-CPPFLAGS=$GIO_CFLAGS
-LIBS=$GIO_LIBS
-AC_CHECK_FUNCS(g_file_make_directory_with_parents)
-CPPFLAGS=$OLDCPPFLAGS
-
 PKG_CHECK_MODULES(DBUS, \
  dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
  dbus-1 >= $DBUS_REQUIRED \
@@ -147,6 +141,24 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= $GNOME_MENUS_REQUIRED)
 AC_SUBST(GNOME_MENUS_CFLAGS)
 AC_SUBST(GNOME_MENUS_LIBS)
+
+dnl ---------------------------------------------------------------------------
+dnl - Check for g_file_make_directory_with_parents
+dnl ---------------------------------------------------------------------------
+OLDCPPFLAGS=$CPPFLAGS
+CPPFLAGS=$GIO_CFLAGS
+LIBS=$GIO_LIBS
+AC_CHECK_FUNCS(g_file_make_directory_with_parents)
+CPPFLAGS=$OLDCPPFLAGS
+
+dnl ---------------------------------------------------------------------------
+dnl - Check for gtk_dialog_get_action_area
+dnl ---------------------------------------------------------------------------
+OLDCPPFLAGS=$CPPFLAGS
+CPPFLAGS=$GTK_CFLAGS
+LIBS=$GTK_LIBS
+AC_CHECK_FUNCS(gtk_dialog_get_action_area)
+CPPFLAGS=$OLDCPPFLAGS
 
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2

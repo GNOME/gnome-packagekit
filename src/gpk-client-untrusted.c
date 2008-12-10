@@ -123,7 +123,11 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 
 	/* add to box */
 	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+#ifdef HAVE_GTK_DIALOG_GET_ACTION_AREA
 	widget = gtk_dialog_get_action_area (GTK_DIALOG(widget));
+#else
+	widget = GTK_DIALOG(widget)->action_area;
+#endif
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
 
 	/* show window */
