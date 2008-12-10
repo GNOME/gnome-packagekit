@@ -597,11 +597,11 @@ gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 	for (i=0; i<len; i++) {
 		/* show */
 		if (egg_strequal (interactions[i], "show-confirm-search"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
 		else if (egg_strequal (interactions[i], "show-confirm-deps"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
 		else if (egg_strequal (interactions[i], "show-confirm-install"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
 		else if (egg_strequal (interactions[i], "show-progress"))
 			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_PROGRESS);
 		else if (egg_strequal (interactions[i], "show-finished"))
@@ -610,11 +610,11 @@ gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_WARNING);
 		/* hide */
 		else if (egg_strequal (interactions[i], "hide-confirm-search"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
 		else if (egg_strequal (interactions[i], "hide-confirm-deps"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
 		else if (egg_strequal (interactions[i], "hide-confirm-install"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
 		else if (egg_strequal (interactions[i], "hide-progress"))
 			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_PROGRESS);
 		else if (egg_strequal (interactions[i], "hide-finished"))

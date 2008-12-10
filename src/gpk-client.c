@@ -89,7 +89,9 @@ struct _GpkClientPrivate
 	PkBitfield		 roles;
 	gboolean		 using_secondary_client;
 	gboolean		 retry_untrusted_value;
-	gboolean		 show_confirm;
+	gboolean		 show_confirm_search;
+	gboolean		 show_confirm_deps;
+	gboolean		 show_confirm_install;
 	gboolean		 show_progress;
 	gboolean		 show_finished;
 	gboolean		 show_warning;
@@ -175,7 +177,9 @@ void
 gpk_client_set_interaction (GpkClient *gclient, PkBitfield interact)
 {
 	g_return_if_fail (GPK_IS_CLIENT (gclient));
-	gclient->priv->show_confirm = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_CONFIRM);
+	gclient->priv->show_confirm_search = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
+	gclient->priv->show_confirm_deps = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
+	gclient->priv->show_confirm_install = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
 	gclient->priv->show_progress = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_PROGRESS);
 	gclient->priv->show_finished = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_FINISHED);
 	gclient->priv->show_warning = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_WARNING);
@@ -1185,7 +1189,7 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	gchar *title_name;
 
 	/* check the user wanted to call this method */
-	if (!gclient->priv->show_confirm)
+	if (!gclient->priv->show_confirm_search)
 		return TRUE;
 
 	/* make title */
@@ -1248,7 +1252,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	array = pk_strv_to_ptr_array (files_rel);
 
 	/* check the user wanted to call this method */
-	if (gclient->priv->show_confirm) {
+	if (gclient->priv->show_confirm_search) {
 		ret = gpk_client_install_local_files_verify (gclient, array, error);
 		if (!ret)
 			goto out;
@@ -1298,7 +1302,7 @@ gpk_client_install_local_files (GpkClient *gclient, gchar **files_rel, GError **
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
 
 	/* optional, and only when successfull */
-	if (ret && gclient->priv->show_confirm) {
+	if (ret && gclient->priv->show_finished) {
 		/* TRANSLATORS: title: we have installed the local file OK */
 		title = ngettext ("File was installed successfully",
 				  "Files were installed successfully", array->len);
@@ -1345,7 +1349,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_deps) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -1499,7 +1503,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_deps) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -1639,7 +1643,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	g_return_val_if_fail (packages != NULL, FALSE);
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_install) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -1836,7 +1840,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	g_return_val_if_fail (full_path != NULL, FALSE);
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -2096,7 +2100,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -2169,7 +2173,7 @@ skip_checks:
 		goto out;
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_deps) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
@@ -2245,7 +2249,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -2486,7 +2490,7 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -2604,7 +2608,7 @@ skip_checks:
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_deps) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
@@ -2690,7 +2694,7 @@ gpk_client_install_catalogs (GpkClient *gclient, gchar **filenames, GError **err
 	len = g_strv_length (filenames);
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
@@ -2749,7 +2753,7 @@ skip_checks:
 	}
 
 	/* optional */
-	if (!gclient->priv->show_confirm) {
+	if (!gclient->priv->show_confirm_deps) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
@@ -3637,7 +3641,9 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->error_details = NULL;
 	gclient->priv->using_secondary_client = FALSE;
 	gclient->priv->exit = PK_EXIT_ENUM_FAILED;
-	gclient->priv->show_confirm = TRUE;
+	gclient->priv->show_confirm_search = TRUE;
+	gclient->priv->show_confirm_deps = TRUE;
+	gclient->priv->show_confirm_install = TRUE;
 	gclient->priv->show_progress = TRUE;
 	gclient->priv->show_finished = TRUE;
 	gclient->priv->show_warning = TRUE;
@@ -3865,7 +3871,7 @@ gpk_client_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "install fonts (if found)");
 	error = NULL;
-	gpk_client_set_interaction (gclient, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM, GPK_CLIENT_INTERACT_FINISHED, -1));
+	gpk_client_set_interaction (gclient, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM_SEARCH, GPK_CLIENT_INTERACT_FINISHED, -1));
 	ret = gpk_client_install_fonts (gclient, fonts, &error);
 	if (ret)
 		egg_test_success (test, NULL);
