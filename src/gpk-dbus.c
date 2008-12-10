@@ -202,7 +202,6 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
 	g_strfreev (full_paths);
 	if (!ret) {
@@ -243,7 +242,6 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -287,7 +285,6 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	g_strfreev (package_names);
 
@@ -329,7 +326,6 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -370,7 +366,6 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -438,7 +433,6 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	g_ptr_array_free (array, TRUE);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, codec_strings, &error_local);
 	g_strfreev (codec_strings);
 
@@ -479,7 +473,6 @@ gpk_dbus_install_fonts (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **f
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	if (!ret) {
 		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
@@ -521,7 +514,6 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 
 	/* do the action */
 	fonts = g_strsplit (font, "|", 1);
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	g_strfreev (fonts);
 	if (!ret) {
@@ -566,7 +558,6 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 	g_free (exec);
 
 	/* do the action */
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	ret = gpk_client_install_catalogs (dbus->priv->gclient, catalog_files, &error_local);
 	g_strfreev (catalog_files);
 
@@ -585,7 +576,7 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
  * gpk_dbus_set_interaction_from_text:
  **/
 static void
-gpk_dbus_set_interaction_from_text (PkBitfield interact, const gchar *interaction)
+gpk_dbus_set_interaction_from_text (PkBitfield *interact, const gchar *interaction)
 {
 	guint i;
 	guint len;
@@ -596,39 +587,39 @@ gpk_dbus_set_interaction_from_text (PkBitfield interact, const gchar *interactio
 	/* do special keys first */
 	for (i=0; i<len; i++) {
 		if (egg_strequal (interactions[i], "always"))
-			interact = GPK_CLIENT_INTERACT_ALWAYS;
+			*interact = GPK_CLIENT_INTERACT_ALWAYS;
 		else if (egg_strequal (interactions[i], "never"))
-			interact = GPK_CLIENT_INTERACT_NEVER;
+			*interact = GPK_CLIENT_INTERACT_NEVER;
 	}
 
 	/* add or remove from defaults */
 	for (i=0; i<len; i++) {
 		/* show */
 		if (egg_strequal (interactions[i], "show-confirm-search"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
 		else if (egg_strequal (interactions[i], "show-confirm-deps"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
 		else if (egg_strequal (interactions[i], "show-confirm-install"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
 		else if (egg_strequal (interactions[i], "show-progress"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_PROGRESS);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_PROGRESS);
 		else if (egg_strequal (interactions[i], "show-finished"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_FINISHED);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_FINISHED);
 		else if (egg_strequal (interactions[i], "show-warning"))
-			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_WARNING);
+			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_WARNING);
 		/* hide */
 		else if (egg_strequal (interactions[i], "hide-confirm-search"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
 		else if (egg_strequal (interactions[i], "hide-confirm-deps"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
 		else if (egg_strequal (interactions[i], "hide-confirm-install"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
 		else if (egg_strequal (interactions[i], "hide-progress"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_PROGRESS);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_PROGRESS);
 		else if (egg_strequal (interactions[i], "hide-finished"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_FINISHED);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_FINISHED);
 		else if (egg_strequal (interactions[i], "hide-warning"))
-			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_WARNING);
+			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_WARNING);
 	}
 	g_strfreev (interactions);
 }
@@ -639,28 +630,31 @@ gpk_dbus_set_interaction_from_text (PkBitfield interact, const gchar *interactio
 static void
 gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 {
-	PkBitfield interact;
+	PkBitfield interact = 0;
 	gchar *policy;
-
-	/* set the default, for now use all */
-	interact = GPK_CLIENT_INTERACT_ALWAYS;
 
 	/* get default policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_DEFAULT_INTERACTION, NULL);
-	if (policy != NULL)
-		gpk_dbus_set_interaction_from_text (interact, policy);
+	if (policy != NULL) {
+		egg_debug ("default is %s", policy);
+		gpk_dbus_set_interaction_from_text (&interact, policy);
+	}
 	g_free (policy);
 
 	/* now override with policy from client */
-	gpk_dbus_set_interaction_from_text (interact, policy);
+	gpk_dbus_set_interaction_from_text (&interact, interaction);
+	egg_debug ("client is %s", interaction);
 
 	/* now override with enforced policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_ENFORCED_INTERACTION, NULL);
-	if (policy != NULL)
-		gpk_dbus_set_interaction_from_text (interact, policy);
+	if (policy != NULL) {
+		egg_debug ("enforced is %s", policy);
+		gpk_dbus_set_interaction_from_text (&interact, policy);
+	}
 	g_free (policy);
 
 	/* set the interaction mode */
+	egg_debug ("interact=%i", (gint) interact);
 	gpk_client_set_interaction (dbus->priv->gclient, interact);
 }
 
