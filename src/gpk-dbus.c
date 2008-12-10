@@ -587,23 +587,40 @@ gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 	guint i;
 	guint len;
 	gchar **interactions;
-	PkBitfield interact = GPK_CLIENT_INTERACT_NEVER;
+	PkBitfield interact;
+
+	/* set the default, for now use never */
+	interact = GPK_CLIENT_INTERACT_NEVER;
 
 	interactions = g_strsplit (interaction, ",", -1);
 	len = g_strv_length (interactions);
 	for (i=0; i<len; i++) {
+		/* show */
 		if (egg_strequal (interactions[i], "show-confirm-search"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
 		else if (egg_strequal (interactions[i], "show-confirm-deps"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
 		else if (egg_strequal (interactions[i], "show-confirm-install"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
 		else if (egg_strequal (interactions[i], "show-progress"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_PROGRESS);
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_PROGRESS);
 		else if (egg_strequal (interactions[i], "show-finished"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_FINISHED);
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_FINISHED);
 		else if (egg_strequal (interactions[i], "show-warning"))
-			interact += pk_bitfield_value (GPK_CLIENT_INTERACT_WARNING);
+			pk_bitfield_add (interact, GPK_CLIENT_INTERACT_WARNING);
+		/* hide */
+		else if (egg_strequal (interactions[i], "hide-confirm-search"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "hide-confirm-deps"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "hide-confirm-install"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_CONFIRM);	//TODO: need to split
+		else if (egg_strequal (interactions[i], "hide-progress"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_PROGRESS);
+		else if (egg_strequal (interactions[i], "hide-finished"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_FINISHED);
+		else if (egg_strequal (interactions[i], "hide-warning"))
+			pk_bitfield_remove (interact, GPK_CLIENT_INTERACT_WARNING);
 		else
 			egg_warning ("failed to get interaction '%s'", interactions[i]);
 	}
