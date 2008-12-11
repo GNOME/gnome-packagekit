@@ -91,7 +91,11 @@ gpk_dbus_error_get_type (void)
 	if (etype == 0) {
 		static const GEnumValue values[] =
 		{
-			ENUM_ENTRY (GPK_DBUS_ERROR_DENIED, "PermissionDenied"),
+			ENUM_ENTRY (GPK_DBUS_ERROR_FAILED, "Failed"),
+			ENUM_ENTRY (GPK_DBUS_ERROR_INTERNAL_ERROR, "InternalError"),
+			ENUM_ENTRY (GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "NoPackagesFound"),
+			ENUM_ENTRY (GPK_DBUS_ERROR_FORBIDDEN, "Forbidden"),
+			ENUM_ENTRY (GPK_DBUS_ERROR_CANCELLED, "Cancelled"),
 			{ 0, NULL, NULL }
 		};
 		etype = g_enum_register_static ("GpkDbusError", values);
@@ -205,7 +209,7 @@ gpk_dbus_install_local_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, cons
 	ret = gpk_client_install_local_files (dbus->priv->gclient, full_paths, &error_local);
 	g_strfreev (full_paths);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -244,7 +248,7 @@ gpk_dbus_install_provide_file (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	/* do the action */
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, full_path, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -289,7 +293,7 @@ gpk_dbus_install_package_name (GpkDbus *dbus, guint32 xid, guint32 timestamp, co
 	g_strfreev (package_names);
 
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -328,7 +332,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, guint32 timestamp, g
 	/* do the action */
 	ret = gpk_client_install_package_names (dbus->priv->gclient, package_names, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -368,7 +372,7 @@ gpk_dbus_install_mime_type (GpkDbus *dbus, guint32 xid, guint32 timestamp, const
 	/* do the action */
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_type, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -437,7 +441,7 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	g_strfreev (codec_strings);
 
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -475,7 +479,7 @@ gpk_dbus_install_fonts (GpkDbus *dbus, guint32 xid, guint32 timestamp, gchar **f
 	/* do the action */
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -517,7 +521,7 @@ gpk_dbus_install_font (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gcha
 	ret = gpk_client_install_fonts (dbus->priv->gclient, fonts, &error_local);
 	g_strfreev (fonts);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -562,7 +566,7 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 	g_strfreev (catalog_files);
 
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -693,7 +697,7 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 	/* reset */
 	ret = pk_client_reset (dbus->priv->client, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -702,7 +706,7 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 	package_names = g_strsplit (package_name, "|", 1);
 	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -734,7 +738,7 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *insta
 	/* reset */
 	ret = pk_client_reset (dbus->priv->client, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -743,7 +747,7 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *insta
 	package_names = g_strsplit (package_name, "|", 1);
 	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -774,7 +778,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed
 	/* reset */
 	ret = pk_client_reset (dbus->priv->client, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to get installed status: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -782,7 +786,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed
 	/* get the package list for the installed packages */
 	ret = pk_client_search_file (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
 	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "failed to search for file: %s", error_local->message);
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for file: %s", error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -790,7 +794,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed
 	/* more than one entry? */
 	list = pk_client_get_package_list (dbus->priv->client);
 	if (PK_OBJ_LIST(list)->len < 1) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED, "could not find package providing file");
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "could not find package providing file");
 		ret = FALSE;
 		goto out;
 	}
@@ -828,7 +832,7 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 	/* do the action */
 	ret = gpk_client_install_provide_file (dbus->priv->gclient, files[0], &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -860,7 +864,7 @@ gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 	/* do the action */
 	ret = gpk_client_install_local_files (dbus->priv->gclient, files, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -892,7 +896,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, co
 	/* do the action */
 	ret = gpk_client_install_package_names (dbus->priv->gclient, packages, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -924,7 +928,7 @@ gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, con
 	/* do the action */
 	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_types[0], &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -956,7 +960,7 @@ gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resou
 	/* do the action */
 	ret = gpk_client_install_fonts (dbus->priv->gclient, resources, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);
@@ -988,7 +992,7 @@ gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resour
 	/* do the action */
 	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, resources, &error_local);
 	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_DENIED,
+		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
 				     "Method failed: %s", error_local->message);
 		g_error_free (error_local);
 		dbus_g_method_return_error (context, error);

@@ -141,6 +141,10 @@ gpk_client_error_get_type (void)
 		static const GEnumValue values[] =
 		{
 			ENUM_ENTRY (GPK_CLIENT_ERROR_FAILED, "Failed"),
+			ENUM_ENTRY (GPK_CLIENT_ERROR_INTERNAL_ERROR, "InternalError"),
+			ENUM_ENTRY (GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "NoPackagesFound"),
+			ENUM_ENTRY (GPK_CLIENT_ERROR_FORBIDDEN, "Forbidden"),
+			ENUM_ENTRY (GPK_CLIENT_ERROR_CANCELLED, "Cancelled"),
 			{ 0, NULL, NULL }
 		};
 		etype = g_enum_register_static ("PkClientError", values);
@@ -720,7 +724,7 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		return FALSE;
 	}
@@ -734,7 +738,7 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 	/* TRANSLATORS: title: detailed internal error why the file install failed */
 	title = ngettext ("Failed to install file", "Failed to install files", length);
 	gpk_client_error_msg (gclient, title, error_local);
-	gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+	gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 	g_error_free (error_local);
 	return FALSE;
 }
@@ -753,13 +757,13 @@ gpk_client_set_error_from_exit_enum (PkExitEnum exit, GError **error)
 	if (exit == PK_EXIT_ENUM_FAILED)
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Unspecified failure");
 	else if (exit == PK_EXIT_ENUM_CANCELLED)
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Transaction was cancelled");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "Transaction was cancelled");
 	else if (exit == PK_EXIT_ENUM_KEY_REQUIRED)
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "A key was required but not provided");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "A key was required but not provided");
 	else if (exit == PK_EXIT_ENUM_EULA_REQUIRED)
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "A EULA was not agreed to");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "A EULA was not agreed to");
 	else if (exit == PK_EXIT_ENUM_KILLED)
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "The transaction was killed");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "The transaction was killed");
 	else
 		egg_error ("unknown exit code");
 	return FALSE;
@@ -1001,7 +1005,7 @@ gpk_client_install_local_files_native_check (GpkClient *gclient, GPtrArray *arra
 		button = gpk_client_dialog_run (gclient->priv->dialog);
 		/* did we click no or exit the window? */
 		if (button != GTK_RESPONSE_OK) {
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted the copy");
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "Aborted the copy");
 			ret = FALSE;
 			goto out;
 		}
@@ -1110,7 +1114,7 @@ gpk_client_install_local_files_verify (GpkClient *gclient, GPtrArray *array, GEr
 		gpk_client_dialog_set_title (gclient->priv->dialog, title);
 		gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
 		gpk_client_dialog_run (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Aborted");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "Aborted");
 		ret = FALSE;
 		goto out;
 	}
@@ -1368,7 +1372,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	if (!ret) {
 		/* TRANSLATORS: this is an internal error, and should not be seen */
 		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1378,7 +1382,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	if (!ret) {
 		/* TRANSLATORS: we could not work out what other packages have to be removed to remove this package */
 		gpk_client_error_msg (gclient, _("Could not work out what packages would also be removed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1424,7 +1428,7 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_dialog_close (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to additional requires");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to additional requires");
 		ret = FALSE;
 		goto out;
 	}
@@ -1441,7 +1445,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1451,7 +1455,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: error: failed to remove the package we tried to remove */
 		gpk_client_error_msg (gclient, _("Failed to remove package"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1522,7 +1526,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	if (!ret) {
 		/* TRANSLATORS: this is an internal error, and should not be seen */
 		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1532,7 +1536,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	if (!ret) {
 		/* TRANSLATORS: error: could not get the extra package list when installing a package */
 		gpk_client_error_msg (gclient, _("Could not work out what packages would be also installed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1569,7 +1573,7 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_dialog_close (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to additional deps");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to additional deps");
 		ret = FALSE;
 		goto out;
 	}
@@ -1586,7 +1590,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1595,7 +1599,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: error: failed to install, detailed error follows */
 		gpk_client_error_msg (gclient, _("Failed to install package"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1673,7 +1677,7 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 	g_free (text);
 	g_free (message);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
 		ret = FALSE;
 		goto out;
 	}
@@ -1692,7 +1696,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: this is an internal error, and should not be seen */
 		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1702,7 +1706,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Incorrect response from search"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1736,7 +1740,7 @@ skip_checks:
 			g_free (text);
 			g_free (title);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no package found");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "no package found");
 		ret = FALSE;
 		goto out;
 	}
@@ -1785,7 +1789,7 @@ skip_checks:
 			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "package already found");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, "incorrect response from search");
 		ret = FALSE;
 		goto out;
 	}
@@ -1798,7 +1802,7 @@ skip_checks:
 	ret = gpk_client_install_package_ids (gclient, package_ids, &error_local);
 	if (!ret) {
 		/* copy error message */
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, error_local->code, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1856,7 +1860,7 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), message, _("Install"));
 	g_free (message);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
 		ret = FALSE;
 		goto out;
 	}
@@ -1871,7 +1875,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: this is an internal error, and should not be seen */
 		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1881,7 +1885,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to search for file"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -1910,7 +1914,7 @@ skip_checks:
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files found");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "no files found");
 		ret = FALSE;
 		goto out;
 	}
@@ -1990,7 +1994,7 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 
 	/* found nothing? */
 	if (len == 0) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to find: %s", codec_desc);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "failed to find: %s", codec_desc);
 		goto out;
 	}
 
@@ -2094,7 +2098,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_CODEC_HELPER);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_CODEC_HELPER);
 		ret = FALSE;
 		goto out;
 	}
@@ -2108,7 +2112,7 @@ gpk_client_install_gstreamer_codecs (GpkClient *gclient, gchar **codec_name_stri
 	/* confirm */
 	ret = gpk_client_install_gstreamer_codecs_confirm (gclient, codec_name_strings);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
 		ret = FALSE;
 		goto out;
 	}
@@ -2154,7 +2158,7 @@ skip_checks:
 					gpk_gnome_open (info_url);
 				g_free (info_url);
 			}
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			gpk_client_error_set (error, error_local->code, error_local->message);
 			g_error_free (error_local);
 			ret = FALSE;
 		}
@@ -2194,7 +2198,7 @@ skip_checks:
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_dialog_close (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to download");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to download");
 		ret = FALSE;
 		goto out;
 	}
@@ -2243,7 +2247,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_MIME_TYPE_HELPER, NULL);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_MIME_TYPE_HELPER);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_MIME_TYPE_HELPER);
 		ret = FALSE;
 		goto out;
 	}
@@ -2266,7 +2270,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), message, _("Search"));
 	g_free (message);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
 		ret = FALSE;
 		goto out;
 	}
@@ -2287,7 +2291,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: this is an internal error, and should not be seen */
 		gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2298,7 +2302,7 @@ skip_checks:
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2327,7 +2331,7 @@ skip_checks:
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "nothing was found to handle mime type");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "nothing was found to handle mime type");
 		ret = FALSE;
 		goto out;
 	}
@@ -2348,7 +2352,7 @@ skip_checks:
 			gpk_client_dialog_present (gclient->priv->dialog);
 			gpk_client_dialog_run (gclient->priv->dialog);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "user chose nothing");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "user chose nothing");
 		ret = FALSE;
 		goto out;
 	}
@@ -2484,7 +2488,7 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "not enabled in GConf : %s", GPK_CONF_ENABLE_FONT_HELPER);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_FONT_HELPER);
 		ret = FALSE;
 		goto out;
 	}
@@ -2530,7 +2534,7 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 	ret = gpk_client_confirm_action (gclient, title, message, _("Search"));
 	g_free (message);
 	if (!ret) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to search");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
 		ret = FALSE;
 		goto out;
 	}
@@ -2556,7 +2560,7 @@ skip_checks:
 		if (!ret) {
 			/* TRANSLATORS: this is an internal error, and should not be seen */
 			gpk_client_error_msg (gclient, _("Failed to reset client used for searching"), error_local);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 			g_error_free (error_local);
 			goto out;
 		}
@@ -2567,7 +2571,7 @@ skip_checks:
 		if (!ret) {
 			/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 			gpk_client_error_msg (gclient, _("Failed to search for provides"), error_local);
-			gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+			gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 			g_error_free (error_local);
 			goto out;
 		}
@@ -2602,7 +2606,7 @@ skip_checks:
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "failed to find font");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "failed to find font");
 		ret = FALSE;
 		goto out;
 	}
@@ -2628,7 +2632,7 @@ skip_checks:
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_client_dialog_close (gclient->priv->dialog);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "did not agree to download");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to download");
 		ret = FALSE;
 		goto out;
 	}
@@ -2789,7 +2793,7 @@ skip_checks:
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Action was cancelled");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "Action was cancelled");
 		ret = FALSE;
 		goto out;
 	}
@@ -2825,7 +2829,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2840,7 +2844,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update system"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2903,7 +2907,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2918,7 +2922,7 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update package lists"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2956,7 +2960,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -2966,7 +2970,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to get updates"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -3010,7 +3014,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		return NULL;
 	}
@@ -3026,7 +3030,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Getting update lists failed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -3061,7 +3065,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		return NULL;
 	}
@@ -3073,7 +3077,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		return NULL;
 	}
@@ -3094,7 +3098,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 
 	/* no files? */
 	if (gclient->priv->files_array == NULL) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "no files were found");
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "no files were found");
 		return NULL;
 	}
 
@@ -3118,7 +3122,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	if (!ret) {
 		/* TRANSLATORS: this should never happen, low level failure */
 		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -3128,7 +3132,7 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_client_error_msg (gclient, _("Failed to update packages"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, error_local->message);
+		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
