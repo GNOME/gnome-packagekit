@@ -48,45 +48,28 @@
                             <property name="column_spacing">20</property>
                             <property name="row_spacing">5</property>
                             <child>
-                              <widget class="GtkComboBox" id="combobox_upgrade">
+                              <widget class="GtkComboBox" id="combobox_check">
                                 <property name="visible">True</property>
                                 <property name="items"></property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_upgrade">
+                              <widget class="GtkComboBox" id="combobox_install">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Check for major _upgrades:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">combobox_check</property>
+                                <property name="items"></property>
                               </widget>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label_check1">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">C_heck for updates:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">combobox_check</property>
-                              </widget>
-                              <packing>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
@@ -105,31 +88,88 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkComboBox" id="combobox_install">
+                              <widget class="GtkLabel" id="label_check1">
                                 <property name="visible">True</property>
-                                <property name="items"></property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">C_heck for updates:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">combobox_check</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="y_options">GTK_FILL</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkComboBox" id="combobox_check">
+                              <widget class="GtkLabel" id="label_upgrade">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Check for major _upgrades:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">combobox_check</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkComboBox" id="combobox_upgrade">
                                 <property name="visible">True</property>
                                 <property name="items"></property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                           </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkCheckButton" id="checkbutton_mobile_broadband">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="label" translatable="yes">Check for updates when using mobile broadband</property>
+                            <property name="response_id">0</property>
+                            <property name="draw_indicator">True</property>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkHBox" id="hbox_mobile_broadband">
+                            <property name="spacing">9</property>
+                            <child>
+                              <widget class="GtkImage" id="image1">
+                                <property name="visible">True</property>
+                                <property name="stock">gtk-dialog-info</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">&lt;i&gt;Currently using mobile broadband&lt;/i&gt;</property>
+                                <property name="use_markup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">2</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>

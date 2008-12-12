@@ -42,6 +42,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_NOTIFY_UPDATE_FAILED		"/apps/gnome-packagekit/notify_update_failed"
 #define GPK_CONF_NOTIFY_UPDATE_COMPLETE		"/apps/gnome-packagekit/notify_update_complete"
 #define GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART	"/apps/gnome-packagekit/notify_update_complete_restart"
+#define GPK_CONF_USE_MOBILE_BROADBAND		"/apps/gnome-packagekit/use_mobile_broadband"
 #define GPK_CONF_AUTOCOMPLETE			"/apps/gnome-packagekit/autocomplete"
 #define GPK_CONF_SESSION_STARTUP_TIMEOUT	"/apps/gnome-packagekit/session_startup_timeout"
 #define GPK_CONF_FORCE_GET_UPDATES_LOGIN	"/apps/gnome-packagekit/force_get_updates_login"

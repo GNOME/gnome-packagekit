@@ -463,6 +463,30 @@ gpk_auto_refresh_get_on_battery (GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_convert_network_state:
+ **/
+static gboolean
+gpk_auto_refresh_convert_network_state (GpkAutoRefresh *arefresh, PkNetworkEnum state)
+{
+	/* offline */
+	if (state == PK_NETWORK_ENUM_OFFLINE)
+		return FALSE;
+
+	/* online */
+	if (state == PK_NETWORK_ENUM_ONLINE ||
+	    state == PK_NETWORK_ENUM_FAST)
+		return TRUE;
+
+	/* check policy */
+	if (state == PK_NETWORK_ENUM_SLOW)
+		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_USE_MOBILE_BROADBAND, NULL);
+
+	/* not recognised */
+	egg_warning ("state unknown: %i", state);
+	return TRUE;
+}
+
+/**
  * gpk_auto_refresh_network_status_changed_cb:
  **/
 static void
@@ -470,8 +494,7 @@ gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	arefresh->priv->network_active = (state == PK_NETWORK_ENUM_ONLINE ||
-					  state == PK_NETWORK_ENUM_FAST);
+	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
 	egg_debug ("setting online %i", arefresh->priv->network_active);
 	if (arefresh->priv->network_active)
 		gpk_auto_refresh_change_state (arefresh);
@@ -624,8 +647,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	g_signal_connect (arefresh->priv->control, "network-state-changed",
 			  G_CALLBACK (gpk_auto_refresh_network_status_changed_cb), arefresh);
 	state = pk_control_get_network_state (arefresh->priv->control, NULL);
-	if (state == PK_NETWORK_ENUM_ONLINE || state == PK_NETWORK_ENUM_FAST)
-		arefresh->priv->network_active = TRUE;
+	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
 
 	/* connect to session bus */
 	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);

@@ -336,6 +336,22 @@ gpk_prefs_activated_cb (EggUnique *egg_unique, gpointer data)
 }
 
 /**
+ * gpk_prefs_network_status_changed_cb:
+ **/
+static void
+gpk_prefs_network_status_changed_cb (PkControl *control, PkNetworkEnum state, gpointer data)
+{
+	GtkWidget *widget;
+
+	/* only show label on mobile broadband */
+	widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
+	if (state == PK_NETWORK_ENUM_SLOW)
+		gtk_widget_show (widget);
+	else
+		gtk_widget_hide (widget);
+}
+
+/**
  * main:
  **/
 int
@@ -349,6 +365,7 @@ main (int argc, char *argv[])
 	PkBitfield roles;
 	PkControl *control;
 	EggUnique *egg_unique;
+	PkNetworkEnum state;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -395,8 +412,10 @@ main (int argc, char *argv[])
 
 	/* get actions */
 	control = pk_control_new ();
+	g_signal_connect (control, "network-state-changed",
+			  G_CALLBACK (gpk_prefs_network_status_changed_cb), NULL);
 	roles = pk_control_get_actions (control, NULL);
-	g_object_unref (control);
+	state = pk_control_get_network_state (control, NULL);
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-prefs.glade", NULL, NULL);
 	main_window = glade_xml_get_widget (glade_xml, "dialog_prefs");
@@ -414,11 +433,20 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_completed");
 	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
 
+	widget = glade_xml_get_widget (glade_xml, "checkbutton_mobile_broadband");
+	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_USE_MOBILE_BROADBAND);
+
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
+
+	/* only show label on mobile broadband */
+	if (state == PK_NETWORK_ENUM_SLOW) {
+		widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
+		gtk_widget_show (widget);
+	}
 
 	/* update the combo boxes */
 	pk_prefs_update_freq_combo_setup ();
@@ -438,6 +466,7 @@ main (int argc, char *argv[])
 	/* wait */
 	gtk_main ();
 
+	g_object_unref (control);
 	g_object_unref (glade_xml);
 unique_out:
 	g_object_unref (egg_unique);
