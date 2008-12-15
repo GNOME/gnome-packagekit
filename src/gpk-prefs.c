@@ -345,7 +345,7 @@ gpk_prefs_network_status_changed_cb (PkControl *control, PkNetworkEnum state, gp
 
 	/* only show label on mobile broadband */
 	widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
-	if (state == PK_NETWORK_ENUM_SLOW)
+	if (state == PK_NETWORK_ENUM_MOBILE)
 		gtk_widget_show (widget);
 	else
 		gtk_widget_hide (widget);
@@ -434,7 +434,7 @@ main (int argc, char *argv[])
 	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_mobile_broadband");
-	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_USE_MOBILE_BROADBAND);
+	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
@@ -443,7 +443,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (pk_button_help_cb), NULL);
 
 	/* only show label on mobile broadband */
-	if (state == PK_NETWORK_ENUM_SLOW) {
+	if (state == PK_NETWORK_ENUM_MOBILE) {
 		widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
 		gtk_widget_show (widget);
 	}

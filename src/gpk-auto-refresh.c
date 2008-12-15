@@ -474,12 +474,16 @@ gpk_auto_refresh_convert_network_state (GpkAutoRefresh *arefresh, PkNetworkEnum 
 
 	/* online */
 	if (state == PK_NETWORK_ENUM_ONLINE ||
-	    state == PK_NETWORK_ENUM_FAST)
+	    state == PK_NETWORK_ENUM_WIRED)
 		return TRUE;
 
 	/* check policy */
-	if (state == PK_NETWORK_ENUM_SLOW)
-		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_USE_MOBILE_BROADBAND, NULL);
+	if (state == PK_NETWORK_ENUM_MOBILE)
+		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_CONNECTION_USE_MOBILE, NULL);
+
+	/* check policy */
+	if (state == PK_NETWORK_ENUM_WIFI)
+		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_CONNECTION_USE_WIFI, NULL);
 
 	/* not recognised */
 	egg_warning ("state unknown: %i", state);

@@ -194,14 +194,26 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/gnome-packagekit/use_mobile_broadband</key>
-      <applyto>/apps/gnome-packagekit/use_mobile_broadband</applyto>
+      <key>/schemas/apps/gnome-packagekit/connection_use_mobile</key>
+      <applyto>/apps/gnome-packagekit/connection_use_mobile</applyto>
       <owner>gnome-packagekit</owner>
       <type>bool</type>
       <default>false</default>
       <locale name="C">
         <short>Use mobile broadband connections</short>
-        <long>Use mobile broadband connection such as GSM and CDMA to check for updates</long>
+        <long>Use mobile broadband connections such as GSM and CDMA to check for updates</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/connection_use_wifi</key>
+      <applyto>/apps/gnome-packagekit/connection_use_wifi</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Use WiFi connections</short>
+        <long>Use WiFi (wireless LAN) connections to check for updates</long>
       </locale>
     </schema>
 
