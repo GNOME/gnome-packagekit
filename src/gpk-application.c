@@ -20,12 +20,12 @@
  */
 
 #include "config.h"
-
 #include <glib.h>
 #include <glib/gi18n.h>
 
 #include <glade/glade.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <gconf/gconf-client.h>
 #include <libsexy/sexy-icon-entry.h>
 #include <math.h>
@@ -3137,6 +3137,15 @@ gpk_application_init (GpkApplication *application)
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_help_cb), application);
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menu_about");
+	gtk_menu_set_accel_group (GTK_MENU (widget),
+				  GTK_ACCEL_GROUP (gtk_accel_groups_from_object (G_OBJECT (main_window))->data));
+
+	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
+	gtk_menu_item_set_accel_path (GTK_MENU_ITEM (widget),
+			              "<gpk-application>/menuitem_help");
+	gtk_accel_map_add_entry ("<gpk-application>/menuitem_help", GDK_F1, 0);
 
 	/* install */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
