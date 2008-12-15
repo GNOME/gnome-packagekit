@@ -138,6 +138,8 @@ gboolean	 gpk_client_update_packages		(GpkClient	*gclient,
 							 GError		**error);
 void		 gpk_client_set_interaction		(GpkClient	*gclient,
 							 PkBitfield	 interact);
+void		 gpk_client_set_timeout			(GpkClient	*gclient,
+							 gint		 timeout);
 PkPackageList	*gpk_client_get_updates			(GpkClient	*gclient,
 							 GError		**error);
 const GPtrArray	*gpk_client_get_distro_upgrades		(GpkClient	*gclient,

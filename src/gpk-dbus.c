@@ -62,6 +62,7 @@ struct GpkDbusPrivate
 	GpkClient		*gclient;
 	PkClient		*client;
 	GConfClient		*gconf_client;
+	gint			 timeout;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -580,7 +581,7 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
  * gpk_dbus_set_interaction_from_text:
  **/
 static void
-gpk_dbus_set_interaction_from_text (PkBitfield *interact, const gchar *interaction)
+gpk_dbus_set_interaction_from_text (PkBitfield *interact, gint *timeout, const gchar *interaction)
 {
 	guint i;
 	guint len;
@@ -624,6 +625,9 @@ gpk_dbus_set_interaction_from_text (PkBitfield *interact, const gchar *interacti
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_FINISHED);
 		else if (egg_strequal (interactions[i], "hide-warning"))
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_WARNING);
+		/* wait */
+		else if (g_str_has_prefix (interactions[i], "timeout="))
+			*timeout = atoi (&interactions[i][8]);
 	}
 	g_strfreev (interactions);
 }
@@ -637,29 +641,36 @@ gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
 	PkBitfield interact = 0;
 	gchar *policy;
 
+	/* set default */
+	dbus->priv->timeout = -1;
+
 	/* get default policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_DEFAULT_INTERACTION, NULL);
 	if (policy != NULL) {
 		egg_debug ("default is %s", policy);
-		gpk_dbus_set_interaction_from_text (&interact, policy);
+		gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, policy);
 	}
 	g_free (policy);
 
 	/* now override with policy from client */
-	gpk_dbus_set_interaction_from_text (&interact, interaction);
+	gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, interaction);
 	egg_debug ("client is %s", interaction);
 
 	/* now override with enforced policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_ENFORCED_INTERACTION, NULL);
 	if (policy != NULL) {
 		egg_debug ("enforced is %s", policy);
-		gpk_dbus_set_interaction_from_text (&interact, policy);
+		gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, policy);
 	}
 	g_free (policy);
 
 	/* set the interaction mode */
 	egg_debug ("interact=%i", (gint) interact);
 	gpk_client_set_interaction (dbus->priv->gclient, interact);
+
+	/* set the timeout locally and in the helper client */
+	egg_debug ("timeout=%i", dbus->priv->timeout);
+	gpk_client_set_timeout (dbus->priv->gclient, dbus->priv->timeout);
 }
 
 /**
@@ -702,6 +713,9 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
+
 	/* get the package list for the installed packages */
 	package_names = g_strsplit (package_name, "|", 1);
 	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
@@ -726,7 +740,7 @@ out:
  * gpk_dbus_is_installed:
  **/
 gboolean
-gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
+gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *interaction, gboolean *installed, GError **error)
 {
 	gboolean ret;
 	GError *error_local = NULL;
@@ -735,6 +749,9 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *insta
 
 	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
 
+	/* process wait command */
+	gpk_dbus_set_interaction (dbus, interaction);
+
 	/* reset */
 	ret = pk_client_reset (dbus->priv->client, &error_local);
 	if (!ret) {
@@ -742,6 +759,9 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, gboolean *insta
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
 
 	/* get the package list for the installed packages */
 	package_names = g_strsplit (package_name, "|", 1);
@@ -766,7 +786,7 @@ out:
  * gpk_dbus_search_file:
  **/
 gboolean
-gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed, gchar **package_name, GError **error)
+gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *interaction, gboolean *installed, gchar **package_name, GError **error)
 {
 	gboolean ret;
 	GError *error_local = NULL;
@@ -775,6 +795,9 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed
 
 	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
 
+	/* process wait command */
+	gpk_dbus_set_interaction (dbus, interaction);
+
 	/* reset */
 	ret = pk_client_reset (dbus->priv->client, &error_local);
 	if (!ret) {
@@ -782,6 +805,9 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, gboolean *installed
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
 
 	/* get the package list for the installed packages */
 	ret = pk_client_search_file (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
@@ -1022,10 +1048,12 @@ static void
 gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
+	dbus->priv->timeout = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
 	dbus->priv->client = pk_client_new ();
 	pk_client_set_use_buffer (dbus->priv->client, TRUE, NULL);
 	pk_client_set_synchronous (dbus->priv->client, TRUE, NULL);
+
 	dbus->priv->gclient = gpk_client_new ();
 	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 }

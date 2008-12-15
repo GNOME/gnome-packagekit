@@ -121,10 +121,12 @@ gboolean	 gpk_dbus_is_package_installed		(GpkDbus	*dbus,
 /* org.freedesktop.PackageKit.Query */
 gboolean	 gpk_dbus_is_installed			(GpkDbus	*dbus,
 							 const gchar	*package_name,
+							 const gchar	*interaction,
 							 gboolean	*installed,
 							 GError		**error);
 gboolean	 gpk_dbus_search_file			(GpkDbus	*dbus,
 							 const gchar	*file_name,
+							 const gchar	*interaction,
 							 gboolean	*installed,
 							 gchar		**package_name,
 							 GError		**error);

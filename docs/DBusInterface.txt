@@ -13,7 +13,17 @@ There are currently three interfaces on the service org.freedesktop.PackageKit.
  * This interface is used for synchronous querying of package data, for instance
    finding what package owns a file, or if a package is installed.
  * It is designed to be easy to use, rather than flexible.
- * No user interaction is allowed, or UI shown, when using this interface.
+ * In the interaction mode an application can also specify that it should not
+   be blocked when other transactions are in progress.
+   If the system is in the process of updating glibc and the kernel, and
+   a trivial request is issued for org.freedesktop.PackageKit.Query.IsInstalled
+   then we might not want to wait several minutes for an accurate answer.
+
+   The timeout command is supplied for this purpose.
+    - By adding the interaction mode of timeout=0 the method will immediatly fail
+      if there are any other transactions running
+    - The mode timeout=10 would wait a maximum of 10 seconds before returning with
+      an error.
 
 == org.freedesktop.PackageKit.Modify ==
 

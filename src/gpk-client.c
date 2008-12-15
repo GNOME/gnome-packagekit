@@ -103,6 +103,7 @@ struct _GpkClientPrivate
 	gchar			*parent_title;
 	gchar			*parent_icon_name;
 	gchar			*error_details;
+	gint			 timeout;
 	GMainLoop		*loop;
 };
 
@@ -187,6 +188,16 @@ gpk_client_set_interaction (GpkClient *gclient, PkBitfield interact)
 	gclient->priv->show_progress = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_PROGRESS);
 	gclient->priv->show_finished = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_FINISHED);
 	gclient->priv->show_warning = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_WARNING);
+}
+
+/**
+ * gpk_client_set_timeout:
+ **/
+void
+gpk_client_set_timeout (GpkClient *gclient, gint timeout)
+{
+	g_return_if_fail (GPK_IS_CLIENT (gclient));
+	gclient->priv->timeout = timeout;
 }
 
 /**
@@ -728,6 +739,9 @@ gpk_client_install_local_files_internal (GpkClient *gclient, gboolean trusted,
 		g_error_free (error_local);
 		return FALSE;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	/* install local file */
 	ret = pk_client_install_files (gclient->priv->client_action, trusted, files_rel, &error_local);
@@ -1377,6 +1391,9 @@ gpk_client_remove_package_ids (GpkClient *gclient, gchar **package_ids, GError *
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
+
 	/* find out if this would force removal of other packages */
 	ret = pk_client_get_requires (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error_local);
 	if (!ret) {
@@ -1449,6 +1466,9 @@ skip_checks:
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	/* try to remove the package_ids */
 	ret = pk_client_remove_packages (gclient->priv->client_action, package_ids, TRUE, FALSE, &error_local);
@@ -1531,6 +1551,9 @@ gpk_client_install_package_ids (GpkClient *gclient, gchar **package_ids, GError 
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
+
 	/* find out if this would drag in other packages */
 	ret = pk_client_get_depends (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error_local);
 	if (!ret) {
@@ -1594,6 +1617,9 @@ skip_checks:
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	ret = pk_client_install_packages (gclient->priv->client_action, package_ids, &error_local);
 	if (!ret) {
@@ -1700,6 +1726,9 @@ skip_checks:
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
 
 	/* find out if we can find a package */
 	ret = pk_client_resolve (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, packages, &error_local);
@@ -1880,6 +1909,9 @@ skip_checks:
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
+
 	/* do search */
 	ret = pk_client_search_file (gclient->priv->client_resolve, PK_FILTER_ENUM_NONE, full_path, &error_local);
 	if (!ret) {
@@ -1978,6 +2010,9 @@ gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_
 	ret = pk_client_reset (gclient->priv->client_resolve, error);
 	if (!ret)
 		return NULL;
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
 
 	/* TRANSLATORS: title, searching for codecs */
 	title = g_strdup_printf (_("Searching for plugin: %s"), codec_name);
@@ -2296,6 +2331,9 @@ skip_checks:
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
+
 	/* action */
 	ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_type, &error_local);
@@ -2564,6 +2602,9 @@ skip_checks:
 			g_error_free (error_local);
 			goto out;
 		}
+
+		/* set timeout */
+		pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
 
 		/* action */
 		ret = pk_client_what_provides (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
@@ -2834,6 +2875,9 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
+
 	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: update all pending updates */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("System update"));
@@ -2912,6 +2956,9 @@ gpk_client_refresh_cache (GpkClient *gclient, GError **error)
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
+
 	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	/* TRANSLATORS: title: refresh the lists of packages */
 	gpk_client_dialog_set_title (gclient->priv->dialog, _("Refresh package lists"));
@@ -2964,6 +3011,9 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
@@ -3019,6 +3069,9 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 		return NULL;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
+
 	/* clear old data */
 	if (gclient->priv->upgrade_array->len > 0) {
 		g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
@@ -3069,6 +3122,9 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 		g_error_free (error_local);
 		return NULL;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	/* wrap get files */
 	package_ids = pk_package_ids_from_id (package_id);
@@ -3126,6 +3182,9 @@ gpk_client_update_packages (GpkClient *gclient, gchar **package_ids, GError **er
 		g_error_free (error_local);
 		goto out;
 	}
+
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
 
 	/* wrap update, but handle all the GPG and EULA stuff */
 	ret = pk_client_update_packages (gclient->priv->client_action, package_ids, &error_local);
@@ -3451,6 +3510,9 @@ gpk_client_get_package_for_exec (GpkClient *gclient, const gchar *exec)
 		goto out;
 	}
 
+	/* set timeout */
+	pk_client_set_timeout (gclient->priv->client_resolve, gclient->priv->timeout, NULL);
+
 	/* find the package name */
 	ret = pk_client_search_file (gclient->priv->client_resolve, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), exec, &error);
 	if (!ret) {
@@ -3653,6 +3715,7 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->show_warning = TRUE;
 	gclient->priv->finished_timer_id = 0;
 	gclient->priv->timestamp = 0;
+	gclient->priv->timeout = -1;
 	gclient->priv->loop = g_main_loop_new (NULL, FALSE);
 
 	/* add application specific icons to search path */
