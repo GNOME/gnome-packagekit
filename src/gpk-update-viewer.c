@@ -40,6 +40,7 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-unique.h"
+#include "egg-markdown.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
@@ -824,48 +825,6 @@ out:
 }
 
 /**
- * gpk_update_viewer_pretty_description:
- **/
-static gchar *
-gpk_update_viewer_pretty_description (const gchar *description)
-{
-	gchar **lines;
-	GString *string;
-	gchar *line;
-	gchar *line2;
-	guint len;
-	guint i;
-
-	/* process each line */
-	lines = g_strsplit (description, "\n", 0);
-	string = g_string_new ("");
-	len = g_strv_length (lines);
-	for (i=0; i<len; i++) {
-		/* do not free this */
-		line = g_strstrip (lines[i]);
-
-		/* common prefixes */
-		if (g_str_has_prefix (line, "- ") ||
-		    g_str_has_prefix (line, "* "))
-			line2 = g_strdup_printf ("• %s", line+2);
-		else
-			line2 = g_strdup (line);
-
-		/* if not null then append back */
-		if (!egg_strzero (line2))
-			g_string_append_printf (string, "%s\n", line2);
-		g_free (line2);
-	}
-	/* remove trailing \n */
-	if (string->len > 0)
-		g_string_set_size (string, string->len - 1);
-	line = g_string_free (string, FALSE);
-	g_strfreev (lines);
-
-	return line;
-}
-
-/**
  * gpk_update_viewer_update_detail_cb:
  **/
 static void
@@ -950,7 +909,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 
 	if (!egg_strzero (obj->update_text)) {
 		/* convert the bullets */
-		line = gpk_update_viewer_pretty_description (obj->update_text);
+		line = egg_markdown_to_pango_markup (obj->update_text, -1);
 		/* TRANSLATORS: this is the package description */
 		gpk_update_viewer_add_description_item (_("Description"), line, NULL);
 		g_free (line);
@@ -1090,7 +1049,7 @@ gpk_update_viewer_treeview_add_columns_description (GtkTreeView *treeview)
 	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_update_viewer_treeview_renderer_clicked), NULL);
 	/* TRANSLATORS: The information about the update, not currently shown */
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "text", DESC_COLUMN_TEXT,
+							   "markup", DESC_COLUMN_TEXT,
 							   "uri", DESC_COLUMN_URI, NULL);
 	gtk_tree_view_append_column (treeview, column);
 }

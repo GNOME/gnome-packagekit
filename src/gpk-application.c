@@ -35,6 +35,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-markdown.h"
 
 #include "gpk-client.h"
 #include "gpk-common.h"
@@ -918,37 +919,13 @@ gpk_application_clear_packages (GpkApplication *application)
 }
 
 /**
- * egg_strreplace_indirect:
- **/
-static gboolean
-egg_strreplace_indirect (gchar **text, const gchar *find, const gchar *replace)
-{
-	gchar *new;
-
-	/* is needle even in string? */
-	if (g_strrstr (*text, find) == NULL)
-		return FALSE;
-
-	/* replace */
-	new = egg_strreplace (*text, find, replace);
-
-	/* replace old string with new string */
-	g_free (*text);
-	*text = new;
-	return TRUE;
-}
-
-/**
  * gpk_application_text_format_display:
  **/
 static gchar *
 gpk_application_text_format_display (const gchar *ascii)
 {
 	gchar *text;
-	text = g_strdup (ascii);
-	egg_strreplace_indirect (&text, "``", "“");
-	egg_strreplace_indirect (&text, "''", "”");
-	egg_strreplace_indirect (&text, "'", "’");
+	text = egg_markdown_to_utf8 (ascii, 100);
 	if (egg_strlen (text, 1024) > 1023) {
 		text[1020] = '.';
 		text[1021] = '.';
