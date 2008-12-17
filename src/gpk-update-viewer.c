@@ -1321,7 +1321,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	/* we don't need to do anything here */
 	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		return;
+		gpk_update_viewer_description_animation_stop ();
 	}
 
 	/* stop the throbber */
