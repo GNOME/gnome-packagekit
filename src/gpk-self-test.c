@@ -26,6 +26,7 @@
 #include "gpk-common.h"
 #include "gpk-enum.h"
 
+void egg_markdown_test (EggTest *test);
 void egg_string_test (EggTest *test);
 void egg_string_list_test (EggTest *test);
 void gpk_dbus_test (EggTest *test);
@@ -46,6 +47,7 @@ main (int argc, char **argv)
 	egg_debug_init (TRUE);
 
 	/* tests go here */
+	egg_markdown_test (test);
 	egg_string_test (test);
 	egg_string_list_test (test);
 	gpk_enum_test (test);
