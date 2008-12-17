@@ -1079,12 +1079,14 @@ gpk_update_viewer_treeview_add_columns_description (GtkTreeView *treeview)
 	/* title */
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", DESC_COLUMN_TITLE);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for uris */
 	renderer = gpk_cell_renderer_uri_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_update_viewer_treeview_renderer_clicked), NULL);
 	/* TRANSLATORS: The information about the update, not currently shown */
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
