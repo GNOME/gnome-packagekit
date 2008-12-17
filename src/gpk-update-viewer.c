@@ -1027,6 +1027,20 @@ gpk_update_viewer_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar 
 }
 
 /**
+ * gpk_update_viewer_treeview_description_size_allocate_cb:
+ **/
+static void
+gpk_update_viewer_treeview_description_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
+{
+	GtkTreeViewColumn *column;
+	gint width;
+
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 0);
+	width = gtk_tree_view_column_get_width (column);
+	g_object_set (cell, "wrap-width", allocation->width - width - 10, NULL);
+}
+
+/**
  * gpk_update_viewer_treeview_add_columns_description:
  **/
 static void
@@ -1046,6 +1060,8 @@ gpk_update_viewer_treeview_add_columns_description (GtkTreeView *treeview)
 	/* column for uris */
 	renderer = gpk_cell_renderer_uri_new ();
 	g_object_set (renderer, "yalign", 0.0, NULL);
+	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_description_size_allocate_cb), renderer);
 	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_update_viewer_treeview_renderer_clicked), NULL);
 	/* TRANSLATORS: The information about the update, not currently shown */
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,

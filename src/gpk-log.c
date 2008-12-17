@@ -286,6 +286,20 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 }
 
 /**
+ * gpk_log_treeview_size_allocate_cb:
+ **/
+static void
+gpk_log_treeview_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
+{
+	GtkTreeViewColumn *column;
+	gint width;
+
+	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 2);
+	width = gtk_tree_view_column_get_width (column);
+	g_object_set (cell, "wrap-width", width - 10, NULL);
+}
+
+/**
  * pk_treeview_add_general_columns:
  **/
 static void
@@ -332,6 +346,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_object_set(renderer, "wrap-width", 400, NULL);
+	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
