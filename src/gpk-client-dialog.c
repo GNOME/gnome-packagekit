@@ -634,7 +634,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 	GtkTreeIter iter;
 	const PkPackageObj *obj;
 	PkDesktop *desktop;
-	const gchar *icon;
+	gchar *icon;
 	gchar *package_id;
 	gchar *text;
 	guint length;
@@ -662,7 +662,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 		/* get the icon */
 		icon = gpk_desktop_guess_icon_name (desktop, obj->id->name);
 		if (icon == NULL)
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
+			icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED));
 
 		gtk_list_store_append (dialog->priv->store, &iter);
 		gtk_list_store_set (dialog->priv->store, &iter,
@@ -670,6 +670,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 				    GPK_CLIENT_DIALOG_STORE_ID, package_id,
 				    GPK_CLIENT_DIALOG_STORE_TEXT, text,
 				    -1);
+		g_free (icon);
 		g_free (text);
 		g_free (package_id);
 	}
