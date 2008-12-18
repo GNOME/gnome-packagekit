@@ -28,6 +28,26 @@
 #include "egg-string.h"
 #include "egg-markdown.h"
 
+/*******************************************************************************
+ *
+ * This is a simple Markdown parser.
+ * It can output to Pango, HTML or plain text. The following limitations are
+ * already known, and properly deliberate:
+ *
+ * - No code section support
+ * - No ordered list support
+ * - No blockquote section support
+ * - No image support
+ * - No links or email support
+ * - No backslash escapes support
+ * - No HTML escaping support
+ *
+ * It does support the rest of the standard pretty well, although it's not
+ * been run against any conformance tests. The parsing is single pass, with
+ * a simple enumerated intepretor mode and a single line back-memory.
+ *
+ ******************************************************************************/
+
 static void     egg_markdown_class_init	(EggMarkdownClass	*klass);
 static void     egg_markdown_init	(EggMarkdown		*markdown);
 static void     egg_markdown_finalize	(GObject		*object);
