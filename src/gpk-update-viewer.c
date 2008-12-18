@@ -63,7 +63,7 @@ static gchar *cached_package_id = NULL;
 static GpkClient *gclient = NULL;
 static gboolean are_updates_available = FALSE;
 static guint description_event_id = 0;
-
+static EggMarkdown *markdown = NULL;
 static PolKitGnomeAction *refresh_action = NULL;
 static PolKitGnomeAction *update_system_action = NULL;
 static PolKitGnomeAction *update_packages_action = NULL;
@@ -909,9 +909,11 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 
 	if (!egg_strzero (obj->update_text)) {
 		/* convert the bullets */
-		line = egg_markdown_to_pango_markup (obj->update_text, -1);
-		/* TRANSLATORS: this is the package description */
-		gpk_update_viewer_add_description_item (_("Description"), line, NULL);
+		line = egg_markdown_parse (markdown, obj->update_text);
+		if (!egg_strzero (line)) {
+			/* TRANSLATORS: this is the package description */
+			gpk_update_viewer_add_description_item (_("Description"), line, NULL);
+		}
 		g_free (line);
 	}
 
@@ -1856,6 +1858,9 @@ main (int argc, char *argv[])
 	/* we have to do this before we connect up the glade file */
 	gpk_update_viewer_setup_policykit ();
 
+	markdown = egg_markdown_new ();
+	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
+
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_update_viewer_repo_list_changed_cb), NULL);
@@ -2047,6 +2052,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store_details);
 	g_object_unref (gclient);
 	g_object_unref (control);
+	g_object_unref (markdown);
 	g_object_unref (client_query);
 	g_object_unref (client_action);
 	g_free (cached_package_id);

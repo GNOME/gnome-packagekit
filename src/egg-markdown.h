@@ -22,15 +22,53 @@
 #ifndef __EGG_MARKDOWN_H
 #define __EGG_MARKDOWN_H
 
-#include <glib.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
-gchar		*egg_markdown_to_pango_markup		(const gchar	*markdown,
-							 gint		 max_lines);
-gchar		*egg_markdown_to_utf8			(const gchar	*markdown,
-							 gint		 max_lines);
+#define EGG_TYPE_MARKDOWN		(egg_markdown_get_type ())
+#define EGG_MARKDOWN(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), EGG_TYPE_MARKDOWN, EggMarkdown))
+#define EGG_MARKDOWN_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), EGG_TYPE_MARKDOWN, EggMarkdownClass))
+#define EGG_IS_MARKDOWN(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), EGG_TYPE_MARKDOWN))
+#define EGG_IS_MARKDOWN_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), EGG_TYPE_MARKDOWN))
+#define EGG_MARKDOWN_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), EGG_TYPE_MARKDOWN, EggMarkdownClass))
+#define EGG_MARKDOWN_ERROR		(egg_markdown_error_quark ())
+#define EGG_MARKDOWN_TYPE_ERROR	(egg_markdown_error_get_type ())
+
+typedef struct EggMarkdownPrivate EggMarkdownPrivate;
+
+typedef struct
+{
+	 GObject		 parent;
+	 EggMarkdownPrivate	*priv;
+} EggMarkdown;
+
+typedef struct
+{
+	GObjectClass	parent_class;
+	void		(* active_changed)		(EggMarkdown	*self,
+							 gboolean	 active);
+} EggMarkdownClass;
+
+typedef enum {
+	EGG_MARKDOWN_OUTPUT_TEXT,
+	EGG_MARKDOWN_OUTPUT_PANGO,
+	EGG_MARKDOWN_OUTPUT_HTML,
+	EGG_MARKDOWN_OUTPUT_UNKNOWN
+} EggMarkdownOutput;
+
+GType		 egg_markdown_get_type	  		(void) G_GNUC_CONST;
+EggMarkdown	*egg_markdown_new			(void);
+gboolean	 egg_markdown_set_output		(EggMarkdown		*self,
+							 EggMarkdownOutput	 output);
+gboolean	 egg_markdown_set_max_lines		(EggMarkdown		*self,
+							 gint			 max_lines);
+gboolean	 egg_markdown_set_smart_quoting		(EggMarkdown		*self,
+							 gboolean		 smart_quoting);
+gchar		*egg_markdown_parse			(EggMarkdown		*self,
+							 const gchar		*text);
 
 G_END_DECLS
 
 #endif /* __EGG_MARKDOWN_H */
+

@@ -84,6 +84,7 @@ struct GpkApplicationPrivate
 	GtkListStore		*packages_store;
 	GtkTreeStore		*groups_store;
 	GtkListStore		*details_store;
+	EggMarkdown		*markdown;
 	PkControl		*control;
 	PkClient		*client_search;
 	PkClient		*client_action;
@@ -922,10 +923,11 @@ gpk_application_clear_packages (GpkApplication *application)
  * gpk_application_text_format_display:
  **/
 static gchar *
-gpk_application_text_format_display (const gchar *ascii)
+gpk_application_text_format_display (GpkApplication *application, const gchar *ascii)
 {
 	gchar *text;
-	text = egg_markdown_to_utf8 (ascii, 100);
+	egg_markdown_set_output (application->priv->markdown, EGG_MARKDOWN_OUTPUT_TEXT);
+	text = egg_markdown_parse (application->priv->markdown, ascii);
 	if (egg_strlen (text, 1024) > 1023) {
 		text[1020] = '.';
 		text[1021] = '.';
@@ -1010,7 +1012,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	g_free (value);
 
 	/* set the description */
-	text = gpk_application_text_format_display (details->description);
+	text = gpk_application_text_format_display (application, details->description);
 	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
@@ -1070,7 +1072,8 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 		return;
 
 	/* format if required */
-	summary = gpk_application_text_format_display (obj->summary);
+	egg_markdown_set_output (application->priv->markdown, EGG_MARKDOWN_OUTPUT_PANGO);
+	summary = egg_markdown_parse (application->priv->markdown, obj->summary);
 
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
@@ -2986,6 +2989,9 @@ gpk_application_init (GpkApplication *application)
 	application->priv->search_mode = PK_MODE_UNKNOWN;
 	application->priv->filters_current = PK_FILTER_ENUM_NONE;
 
+	application->priv->markdown = egg_markdown_new ();
+	egg_markdown_set_max_lines (application->priv->markdown, 50);
+
 	/* watch gnome-packagekit keys */
 	gconf_client_add_dir (application->priv->gconf_client, GPK_CONF_DIR,
 			      GCONF_CLIENT_PRELOAD_NONE, NULL);
@@ -3503,6 +3509,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->gconf_client);
 	g_object_unref (application->priv->gclient);
 	g_object_unref (application->priv->package_list);
+	g_object_unref (application->priv->markdown);
 
 	g_free (application->priv->url);
 	g_free (application->priv->group);
