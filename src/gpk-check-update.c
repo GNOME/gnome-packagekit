@@ -666,6 +666,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	guint length;
 	guint i;
 	guint more;
+	guint showing = 0;
 	gboolean ret = FALSE;
 	GString *status_security;
 	GString *status_tooltip;
@@ -726,20 +727,27 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		goto out;
 	}
 
-	/* find the security updates */
+	/* find the security updates first */
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (list, i);
 		if (obj->info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
 			package_id = pk_package_id_to_string (obj->id);
 			g_ptr_array_add (security_array, package_id);
-			g_string_append_printf (status_security, "<b>%s</b> - %s\n",
-						obj->id->name, obj->summary);
 		}
+	}
 
-		/* don't have a huge notification that won't fit on the screen */
-		if (security_array->len > GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
-			more = length - security_array->len;
+	/* get the security update text */
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (list, i);
+		if (obj->info != PK_INFO_ENUM_SECURITY)
+			continue;
+
+		/* don't use a huge notification that won't fit on the screen */
+		g_string_append_printf (status_security, "<b>%s</b> - %s\n",
+					obj->id->name, obj->summary);
+		if (++showing == GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
+			more = security_array->len - showing;
 			/* TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing */
 			g_string_append_printf (status_security, ngettext ("and %d other security update",
 									   "and %d other security updates", more), more);
