@@ -2564,6 +2564,7 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s\n%s", title, text, title_part);
+	g_free (text);
 
 	/* TRANSLATORS: generic confirm, the application name is used as a prefix */
 	title = ngettext ("wants to install a font", "wants to install fonts", len);
@@ -3577,7 +3578,7 @@ gboolean
 gpk_client_set_parent_exec (GpkClient *gclient, const gchar *exec)
 {
 	GpkX11 *x11;
-	gchar *package;
+	gchar *package = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -3619,6 +3620,7 @@ gpk_client_set_parent_exec (GpkClient *gclient, const gchar *exec)
 		gclient->priv->parent_title = g_path_get_basename (exec);
 	}
 out:
+	g_free (package);
 	egg_debug ("got name=%s, icon=%s", gclient->priv->parent_title, gclient->priv->parent_icon_name);
 	return TRUE;
 }
