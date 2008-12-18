@@ -41,7 +41,8 @@ typedef enum {
 	EGG_MARKDOWN_MODE_RULE,
 	EGG_MARKDOWN_MODE_BULLETT,
 	EGG_MARKDOWN_MODE_PARA,
-	EGG_MARKDOWN_MODE_HEADER,
+	EGG_MARKDOWN_MODE_H1,
+	EGG_MARKDOWN_MODE_H2,
 	EGG_MARKDOWN_MODE_UNKNOWN
 } EggMarkdownMode;
 
@@ -52,8 +53,10 @@ typedef struct {
 	const gchar *strong_end;
 	const gchar *code_start;
 	const gchar *code_end;
-	const gchar *header_start;
-	const gchar *header_end;
+	const gchar *h1_start;
+	const gchar *h1_end;
+	const gchar *h2_start;
+	const gchar *h2_end;
 	const gchar *bullett_start;
 	const gchar *bullett_end;
 	const gchar *rule;
@@ -126,12 +129,21 @@ egg_markdown_to_text_line_is_bullett (const gchar *line)
 }
 
 /**
- * egg_markdown_to_text_line_is_header:
+ * egg_markdown_to_text_line_is_header1:
  **/
 static gboolean
-egg_markdown_to_text_line_is_header (const gchar *line)
+egg_markdown_to_text_line_is_header1 (const gchar *line)
 {
 	return (g_str_has_prefix (line, "# "));
+}
+
+/**
+ * egg_markdown_to_text_line_is_header2:
+ **/
+static gboolean
+egg_markdown_to_text_line_is_header2 (const gchar *line)
+{
+	return (g_str_has_prefix (line, "## "));
 }
 
 #if 0
@@ -334,6 +346,23 @@ egg_markdown_add_pending (EggMarkdown *self, const gchar *line)
 }
 
 /**
+ * egg_markdown_add_pending_header:
+ **/
+static gboolean
+egg_markdown_add_pending_header (EggMarkdown *self, const gchar *line)
+{
+	gchar *copy;
+	gboolean ret;
+
+	/* strip trailing # */
+	copy = g_strdup (line);
+	g_strdelimit (copy, "#", ' ');
+	ret = egg_markdown_add_pending (self, copy);
+	g_free (copy);
+	return ret;
+}
+
+/**
  * egg_markdown_flush_pending:
  **/
 static void
@@ -361,8 +390,10 @@ egg_markdown_flush_pending (EggMarkdown *self)
 	if (self->priv->mode == EGG_MARKDOWN_MODE_BULLETT) {
 		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.bullett_start, temp, self->priv->tags.bullett_end);
 		self->priv->line_count++;
-	} else if (self->priv->mode == EGG_MARKDOWN_MODE_HEADER) {
-		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.header_start, temp, self->priv->tags.header_end);
+	} else if (self->priv->mode == EGG_MARKDOWN_MODE_H1) {
+		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.h1_start, temp, self->priv->tags.h1_end);
+	} else if (self->priv->mode == EGG_MARKDOWN_MODE_H2) {
+		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.h2_start, temp, self->priv->tags.h2_end);
 	} else {
 		g_string_append_printf (self->priv->processed, "%s\n", temp);
 		self->priv->line_count++;
@@ -416,13 +447,23 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 		goto out;
 	}
 
-	/* header */
-	ret = egg_markdown_to_text_line_is_header (line);
+	/* header1 */
+	ret = egg_markdown_to_text_line_is_header1 (line);
 	if (ret) {
-		egg_debug ("header: '%s'", line);
+		egg_debug ("header1: '%s'", line);
 		egg_markdown_flush_pending (self);
-		self->priv->mode = EGG_MARKDOWN_MODE_HEADER;
-		ret = egg_markdown_add_pending (self, &line[2]);
+		self->priv->mode = EGG_MARKDOWN_MODE_H1;
+		ret = egg_markdown_add_pending_header (self, &line[2]);
+		goto out;
+	}
+
+	/* header2 */
+	ret = egg_markdown_to_text_line_is_header2 (line);
+	if (ret) {
+		egg_debug ("header2: '%s'", line);
+		egg_markdown_flush_pending (self);
+		self->priv->mode = EGG_MARKDOWN_MODE_H2;
+		ret = egg_markdown_add_pending_header (self, &line[3]);
 		goto out;
 	}
 
@@ -459,8 +500,10 @@ egg_markdown_set_output (EggMarkdown *self, EggMarkdownOutput output)
 		self->priv->tags.strong_end = "</b>";
 		self->priv->tags.code_start = "<tt>";
 		self->priv->tags.code_end = "</tt>";
-		self->priv->tags.header_start = "<big>";
-		self->priv->tags.header_end = "</big>";
+		self->priv->tags.h1_start = "<big>";
+		self->priv->tags.h1_end = "</big>";
+		self->priv->tags.h2_start = "<b>";
+		self->priv->tags.h2_end = "</b>";
 		self->priv->tags.bullett_start = "• ";
 		self->priv->tags.bullett_end = "";
 		self->priv->tags.rule = "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n";
@@ -473,8 +516,10 @@ egg_markdown_set_output (EggMarkdown *self, EggMarkdownOutput output)
 		self->priv->tags.strong_end = "</strong>";
 		self->priv->tags.code_start = "<code>";
 		self->priv->tags.code_end = "</code>";
-		self->priv->tags.header_start = "<h1>";
-		self->priv->tags.header_end = "</h1>";
+		self->priv->tags.h1_start = "<h1>";
+		self->priv->tags.h1_end = "</h1>";
+		self->priv->tags.h2_start = "<h2>";
+		self->priv->tags.h2_end = "</h2>";
 		self->priv->tags.bullett_start = "<li>";
 		self->priv->tags.bullett_end = "</li>";
 		self->priv->tags.rule = "<hr>";
@@ -487,8 +532,10 @@ egg_markdown_set_output (EggMarkdown *self, EggMarkdownOutput output)
 		self->priv->tags.strong_end = "";
 		self->priv->tags.code_start = "";
 		self->priv->tags.code_end = "";
-		self->priv->tags.header_start = "[";
-		self->priv->tags.header_end = "]";
+		self->priv->tags.h1_start = "[";
+		self->priv->tags.h1_end = "]";
+		self->priv->tags.h2_start = "-";
+		self->priv->tags.h2_end = "-";
 		self->priv->tags.bullett_start = "* ";
 		self->priv->tags.bullett_end = "";
 		self->priv->tags.rule = " ----- \n";
@@ -834,7 +881,7 @@ egg_markdown_test (EggTest *test)
 		   "an **update** description in bohdi.\n"
 		   "\n"
 		   "* * *\n"
-		   "# Big title\n"
+		   "# Big title #\n"
 		   "\n"
 		   "The *following* things 'were' fixed:\n"
 		   "- Fix `dave`\n"
