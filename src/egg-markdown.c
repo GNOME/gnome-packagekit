@@ -134,7 +134,7 @@ egg_markdown_to_text_line_is_bullett (const gchar *line)
 static gboolean
 egg_markdown_to_text_line_is_header1 (const gchar *line)
 {
-	return (g_str_has_prefix (line, "# "));
+	return g_str_has_prefix (line, "# ");
 }
 
 /**
@@ -143,7 +143,25 @@ egg_markdown_to_text_line_is_header1 (const gchar *line)
 static gboolean
 egg_markdown_to_text_line_is_header2 (const gchar *line)
 {
-	return (g_str_has_prefix (line, "## "));
+	return g_str_has_prefix (line, "## ");
+}
+
+/**
+ * egg_markdown_to_text_line_is_header1_type2:
+ **/
+static gboolean
+egg_markdown_to_text_line_is_header1_type2 (const gchar *line)
+{
+	return g_str_has_prefix (line, "===");
+}
+
+/**
+ * egg_markdown_to_text_line_is_header2_type2:
+ **/
+static gboolean
+egg_markdown_to_text_line_is_header2_type2 (const gchar *line)
+{
+	return g_str_has_prefix (line, "---");
 }
 
 #if 0
@@ -424,6 +442,24 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 		if (self->priv->mode != EGG_MARKDOWN_MODE_BULLETT)
 			ret = egg_markdown_add_pending (self, "\n");
 		self->priv->mode = EGG_MARKDOWN_MODE_BLANK;
+		goto out;
+	}
+
+	/* header1_type2 */
+	ret = egg_markdown_to_text_line_is_header1_type2 (line);
+	if (ret) {
+		egg_debug ("header1_type2: '%s'", line);
+		if (self->priv->mode == EGG_MARKDOWN_MODE_PARA)
+			self->priv->mode = EGG_MARKDOWN_MODE_H1;
+		goto out;
+	}
+
+	/* header2_type2 */
+	ret = egg_markdown_to_text_line_is_header2_type2 (line);
+	if (ret) {
+		egg_debug ("header2_type2: '%s'", line);
+		if (self->priv->mode == EGG_MARKDOWN_MODE_PARA)
+			self->priv->mode = EGG_MARKDOWN_MODE_H2;
 		goto out;
 	}
 
@@ -826,6 +862,21 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	ret = egg_markdown_set_output (self, EGG_MARKDOWN_OUTPUT_PANGO);
 	egg_test_title_assert (test, "set pango output", ret);
+
+	/************************************************************/
+	markdown = "OEMs\n"
+		   "====\n"
+		   " - Bullett\n";
+	markdown_expected =
+		   "<big>OEMs</big>\n"
+		   "• Bullett";
+	egg_test_title (test, "markdown (type2 header)");
+	text = egg_markdown_parse (self, markdown);
+	if (egg_strequal (text, markdown_expected))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
+	g_free (text);
 
 	/************************************************************/
 	markdown = " - This is a *very*\n"
