@@ -235,6 +235,22 @@ out:
 }
 
 /**
+ * egg_markdown_replace:
+ **/
+static gchar *
+egg_markdown_replace (const gchar *haystack, const gchar *needle, const gchar *replace)
+{
+	gchar *new;
+	gchar **split;
+
+	split = g_strsplit (haystack, needle, -1);
+	new = g_strjoinv (replace, split);
+	g_strfreev (split);
+
+	return new;
+}
+
+/**
  * egg_markdown_strstr_spaces:
  **/
 static gchar *
@@ -343,6 +359,11 @@ egg_markdown_to_text_line_format (EggMarkdown *self, const gchar *line)
 	/* fixed */
 	temp = data;
 	data = egg_markdown_to_text_line_formatter (temp, "`", self->priv->tags.code_start, self->priv->tags.code_end);
+	g_free (temp);
+
+	/* em-dash */
+	temp = data;
+	data = egg_markdown_replace (temp, " -- ", " — ");
 	g_free (temp);
 
 	/* smart quoting */
@@ -806,6 +827,18 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	ret = egg_markdown_to_text_line_is_blank ("ccccccccc");
 	egg_test_title_assert (test, "is blank (full)", !ret);
+
+
+	/************************************************************
+	 ****************           replace            **************
+	 ************************************************************/
+	text = egg_markdown_replace ("summary -- really -- sure!", " -- ", " – ");
+	egg_test_title (test, "replace (multiple)");
+	if (egg_strequal (text, "summary – really – sure!"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
 
 	/************************************************************
 	 ****************          formatter           **************
