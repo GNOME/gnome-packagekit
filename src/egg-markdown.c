@@ -439,10 +439,11 @@ egg_markdown_flush_pending (EggMarkdown *self)
 		g_string_set_size (self->priv->pending, self->priv->pending->len - 1);
 
 	/* pango requires escaping */
-	if (self->priv->output == EGG_MARKDOWN_OUTPUT_PANGO)
-		copy = g_markup_escape_text (self->priv->pending->str, -1);
-	else
-		copy = g_strdup (self->priv->pending->str);
+	copy = g_strdup (self->priv->pending->str);
+	if (self->priv->output == EGG_MARKDOWN_OUTPUT_PANGO) {
+		g_strdelimit (copy, "<", '(');
+		g_strdelimit (copy, ">", ')');
+	}
 
 	/* do formatting */
 	temp = egg_markdown_to_text_line_format (self, copy);
