@@ -872,7 +872,6 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
 }
 
-
 /**
  * gpk_application_clear_details_really:
  **/
@@ -2019,6 +2018,9 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	application->priv->search_type = PK_SEARCH_NAME;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
+	/* save default to GConf */
+	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "name", NULL);
+
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	/* TRANSLATORS: entry tooltip: basic search */
@@ -2040,6 +2042,9 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	/* set type */
 	application->priv->search_type = PK_SEARCH_DETAILS;
 	egg_debug ("set search type=%i", application->priv->search_type);
+
+	/* save default to GConf */
+	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "details", NULL);
 
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
@@ -2063,6 +2068,9 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	application->priv->search_type = PK_SEARCH_FILE;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
+	/* save default to GConf */
+	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "file", NULL);
+
 	/* set the new icon */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
 	/* TRANSLATORS: entry tooltip: file search */
@@ -2085,9 +2093,9 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* only respond to left button */
-	if (button != 1) {
+	if (button != 1)
 		return;
-	}
+
 	egg_debug ("icon_pos=%i", icon_pos);
 
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
@@ -2299,9 +2307,8 @@ gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *app
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2333,9 +2340,8 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *applica
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2367,9 +2373,8 @@ gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *applicati
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2401,9 +2406,8 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2435,9 +2439,8 @@ gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *applicat
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2469,9 +2472,8 @@ gpk_application_menu_filter_source_cb (GtkWidget *widget, GpkApplication *applic
 	name = gtk_widget_get_name (widget);
 
 	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget))) {
+	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
 		return;
-	}
 
 	/* set new filter */
 	if (g_str_has_suffix (name, "_yes")) {
@@ -2506,11 +2508,10 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 			       GPK_CONF_APPLICATION_FILTER_BASENAME, enabled, NULL);
 
 	/* change the filter */
-	if (enabled) {
+	if (enabled)
 		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
-	} else {
+	else
 		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_BASENAME);
-	}
 
 	/* refresh the search results */
 	gpk_application_perform_search (application);
@@ -2533,11 +2534,10 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 			       GPK_CONF_APPLICATION_FILTER_NEWEST, enabled, NULL);
 
 	/* change the filter */
-	if (enabled) {
+	if (enabled)
 		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
-	} else {
+	else
 		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
-	}
 
 	/* refresh the search results */
 	gpk_application_perform_search (application);
@@ -2971,6 +2971,7 @@ gpk_application_init (GpkApplication *application)
 	GtkTreeSelection *selection;
 	gboolean enabled;
 	gboolean ret;
+	gchar *mode;
 	GError *error = NULL;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
@@ -3473,8 +3474,43 @@ gpk_application_init (GpkApplication *application)
 	/* hide details */
 	gpk_application_clear_details (application);
 
-	/* coldplug icon to default to search by name*/
-	gpk_application_menu_search_by_name (NULL, application);
+	/* set the search mode */
+	mode = gconf_client_get_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, NULL);
+	if (mode == NULL) {
+		egg_warning ("search mode not set, using name");
+		mode = g_strdup ("name");
+	}
+
+	/* search by name */
+	if (egg_strequal (mode, "name")) {
+		gpk_application_menu_search_by_name (NULL, application);
+
+	/* set to details if we can we do the action? */
+	} else if (egg_strequal (mode, "details")) {
+		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
+			gpk_application_menu_search_by_description (NULL, application);
+		} else {
+			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			gpk_application_menu_search_by_name (NULL, application);
+		}
+
+	/* set to file if we can we do the action? */
+	} else if (egg_strequal (mode, "file")) {
+		gpk_application_menu_search_by_file (NULL, application);
+
+		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
+			gpk_application_menu_search_by_file (NULL, application);
+		} else {
+			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			gpk_application_menu_search_by_name (NULL, application);
+		}
+
+	/* mode not recognised */
+	} else {
+		egg_warning ("cannot recognise mode %s, using name", mode);
+		gpk_application_menu_search_by_name (NULL, application);
+	}
+	g_free (mode);
 
 	/* welcome */
 	gpk_application_add_welcome (application);
