@@ -1489,7 +1489,7 @@ gpk_update_viewer_repo_list_changed_cb (PkClient *client, gpointer data)
 /**
  * gpk_update_viewer_detail_popup_menu_select_all:
  **/
-void
+static void
 gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer userdata)
 {
 	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
@@ -1513,7 +1513,7 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 /**
  * gpk_update_viewer_detail_popup_menu_select_none:
  **/
-void
+static void
 gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer userdata)
 {
 	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
@@ -1535,7 +1535,7 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer u
 /**
  * gpk_update_viewer_get_checked_status:
  **/
-void
+static void
 gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_checked)
 {
 	GtkTreeView *treeview;
@@ -1563,7 +1563,7 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 /**
  * gpk_update_viewer_detail_popup_menu_create:
  **/
-void
+static void
 gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
 	GtkWidget *menu;
@@ -1608,7 +1608,7 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 /**
  * gpk_update_viewer_detail_button_pressed:
  **/
-gboolean
+static gboolean
 gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
 	GtkTreeSelection *selection;
@@ -1643,7 +1643,7 @@ gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *ev
 /**
  * gpk_update_viewer_detail_popup_menu:
  **/
-gboolean
+static gboolean
 gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer userdata)
 {
 	gpk_update_viewer_detail_popup_menu_create (treeview, NULL, userdata);

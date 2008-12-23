@@ -156,7 +156,7 @@ out:
 /**
  * gpk_dbus_set_parent_window:
  **/
-void
+static void
 gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid, guint32 timestamp)
 {
 	GpkX11 *x11;

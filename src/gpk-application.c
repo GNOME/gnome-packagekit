@@ -190,7 +190,7 @@ gpk_application_show (GpkApplication *application)
 /**
  * gpk_application_state_get_icon:
  **/
-const gchar *
+static const gchar *
 gpk_application_state_get_icon (PkBitfield state)
 {
 	if (state == 0)
@@ -223,7 +223,7 @@ gpk_application_state_get_icon (PkBitfield state)
 /**
  * gpk_application_state_get_checkbox:
  **/
-gboolean
+static gboolean
 gpk_application_state_get_checkbox (PkBitfield state)
 {
 	PkBitfield state_local;
@@ -478,7 +478,7 @@ gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application
 /**
  * gpk_application_strcmp_indirect:
  **/
-gint
+static gint
 gpk_application_strcmp_indirect (gchar **a, gchar **b)
 {
 	return strcmp (*a, *b);
@@ -2243,7 +2243,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 	if (!been_here) {
 		been_here = TRUE;
 		gtk_about_dialog_set_url_hook (gpk_application_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (gpk_application_about_dialog_url_cb, "mailto:", NULL);
+		gtk_about_dialog_set_email_hook (gpk_application_about_dialog_url_cb, (gpointer) "mailto:", NULL);
 	}
 
 	/* use parent */
@@ -2591,9 +2591,9 @@ gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApp
 /**
  * gpk_application_package_row_activated_cb:
  **/
-void
+static void
 gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
-					 GtkTreeViewColumn *col, GpkApplication *application)
+					  GtkTreeViewColumn *col, GpkApplication *application)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;

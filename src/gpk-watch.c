@@ -953,7 +953,7 @@ out:
  * gpk_watch_get_proxy_ftp:
  * Return value: username:password@server.lan:8080
  **/
-gchar *
+static gchar *
 gpk_watch_get_proxy_http (GpkWatch *watch)
 {
 	gchar *mode = NULL;

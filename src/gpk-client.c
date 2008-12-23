@@ -1996,7 +1996,7 @@ out:
 /**
  * gpk_client_install_gstreamer_codec_part:
  **/
-PkPackageObj *
+static PkPackageObj *
 gpk_client_install_gstreamer_codec_part (GpkClient *gclient, const gchar *codec_name, const gchar *codec_desc, GError **error)
 {
 	PkPackageList *list = NULL;

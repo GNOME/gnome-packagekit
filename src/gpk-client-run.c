@@ -115,7 +115,7 @@ gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
 /**
  * gpk_client_run_row_activated_cb:
  **/
-void
+static void
 gpk_client_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 				 GtkTreeViewColumn *col, gpointer user_data)
 {
