@@ -34,6 +34,7 @@
 
 #include "gpk-gnome.h"
 #include "gpk-common.h"
+#include "gpk-client-chooser.h"
 #include "gpk-enum.h"
 #include "gpk-desktop.h"
 

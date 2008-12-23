@@ -32,6 +32,7 @@
 
 #include "gpk-gnome.h"
 #include "gpk-common.h"
+#include "gpk-client-eula.h"
 
 static gboolean has_agreed_eula = FALSE;
 

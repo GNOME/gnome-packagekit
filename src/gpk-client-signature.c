@@ -32,6 +32,7 @@
 
 #include "gpk-gnome.h"
 #include "gpk-common.h"
+#include "gpk-client-signature.h"
 
 static gboolean has_imported_signature = FALSE;
 

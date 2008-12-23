@@ -33,6 +33,7 @@
 #include "egg-string.h"
 
 #include "gpk-common.h"
+#include "gpk-error.h"
 
 /**
  * gpk_error_dialog_modal_with_time:

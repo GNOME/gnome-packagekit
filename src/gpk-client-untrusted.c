@@ -33,6 +33,7 @@
 
 #include "gpk-gnome.h"
 #include "gpk-common.h"
+#include "gpk-client-untrusted.h"
 #include "gpk-enum.h"
 
 static gboolean retry_untrusted = FALSE;

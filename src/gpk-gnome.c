@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "egg-debug.h"
+#include "gpk-gnome.h"
 
 /**
  * gpk_gnome_open:

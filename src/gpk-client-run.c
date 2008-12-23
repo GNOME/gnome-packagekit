@@ -33,6 +33,7 @@
 
 #include "gpk-gnome.h"
 #include "gpk-client.h"
+#include "gpk-client-run.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
 #include "gpk-desktop.h"

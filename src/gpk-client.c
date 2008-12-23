@@ -2519,7 +2519,7 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 	g_return_val_if_fail (fonts != NULL, FALSE);
 
 	/* get number of fonts to install */
-	len = g_strv_length (fonts);
+	len = g_strv_length ((gchar **)fonts);
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (gclient->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);

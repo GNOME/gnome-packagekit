@@ -205,7 +205,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
 	gtk_about_dialog_set_url_hook (gpk_check_update_about_dialog_url_cb, NULL, NULL);
-	gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, "mailto:", NULL);
+	gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, (gpointer) "mailto:", NULL);
 
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_UPDATE);
 	gtk_show_about_dialog (NULL,

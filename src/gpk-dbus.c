@@ -392,9 +392,6 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	GError *error_local = NULL;
 	gchar *sender;
 	gchar *exec;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
 	guint i;
 	GValue *value;
 	gchar *description;
@@ -403,6 +400,8 @@ gpk_dbus_install_gstreamer_codecs (GpkDbus *dbus, guint32 xid, guint32 timestamp
 	GPtrArray *array;
 	GValueArray *varray;
 	gchar **codec_strings;
+
+	g_return_if_fail (PK_IS_DBUS (dbus));
 
 	egg_debug ("InstallGStreamerCodecs method called");
 

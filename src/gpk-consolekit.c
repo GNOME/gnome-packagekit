@@ -30,6 +30,7 @@
 
 #include "egg-debug.h"
 #include "gpk-common.h"
+#include "gpk-consolekit.h"
 #include "gpk-error.h"
 
 /**

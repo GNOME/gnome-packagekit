@@ -1260,8 +1260,6 @@ gpk_update_viewer_restart_cb (GtkWidget *widget, gpointer data)
 	gpk_restart_system ();
 }
 
-static void gpk_update_viewer_populate_preview (PkPackageList *list);
-
 /**
  * gpk_update_viewer_check_blocked_packages:
  **/
@@ -1964,11 +1962,11 @@ main (int argc, char *argv[])
 
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), "update-viewer");
+			  G_CALLBACK (pk_button_help_cb), (gpointer)"update-viewer");
 
 	widget = glade_xml_get_widget (glade_xml, "button_help2");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), "update-viewer-details");
+			  G_CALLBACK (pk_button_help_cb), (gpointer)"update-viewer-details");
 
 	/* create list stores */
 	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
