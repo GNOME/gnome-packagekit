@@ -158,9 +158,9 @@ egg_test_finish (EggTest *test)
 guint
 egg_test_elapsed (EggTest *test)
 {
-	gdouble time;
-	time = g_timer_elapsed (test->timer, NULL);
-	return (guint) (time * 1000.0f);
+	gdouble time_s;
+	time_s = g_timer_elapsed (test->timer, NULL);
+	return (guint) (time_s * 1000.0f);
 }
 
 /**

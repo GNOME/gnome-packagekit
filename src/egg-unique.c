@@ -59,7 +59,7 @@ G_DEFINE_TYPE (EggUnique, egg_unique, G_TYPE_OBJECT)
  **/
 static void
 egg_unique_message_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data,
-		      guint time, EggUnique *egg_unique)
+		      guint time_ms, EggUnique *egg_unique)
 {
 	g_return_if_fail (EGG_IS_UNIQUE (egg_unique));
 	if (command == UNIQUE_ACTIVATE)

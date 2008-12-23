@@ -1187,16 +1187,16 @@ gpk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gbo
  * pk_update_get_approx_time:
  **/
 static const gchar *
-pk_update_get_approx_time (guint time)
+pk_update_get_approx_time (guint time_s)
 {
-	if (time < 60)
+	if (time_s < 60)
 		/* TRANSLATORS: less than 60 seconds, a short time */
 		return _("Less than a minute ago");
-	else if (time < 60*60)
+	else if (time_s < 60*60)
 		return _("Less than an hour ago");
-	else if (time < 24*60*60)
+	else if (time_s < 24*60*60)
 		return _("A few hours ago");
-	else if (time < 7*24*60*60)
+	else if (time_s < 7*24*60*60)
 		return _("A few days ago");
 	return _("Over a week ago");
 }
@@ -1208,12 +1208,12 @@ static gboolean
 pk_update_viewer_set_last_refreshed_time (void)
 {
 	GtkWidget *widget;
-	guint time;
+	guint time_s;
 	const gchar *time_text;
 
 	/* get times from the daemon */
-	pk_control_get_time_since_action (control, PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
-	if (time < 60*60*24) {
+	pk_control_get_time_since_action (control, PK_ROLE_ENUM_REFRESH_CACHE, &time_s, NULL);
+	if (time_s < 60*60*24) {
 		widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
@@ -1223,7 +1223,7 @@ pk_update_viewer_set_last_refreshed_time (void)
 
 	widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
 	gtk_widget_show (widget);
-	time_text = pk_update_get_approx_time (time);
+	time_text = pk_update_get_approx_time (time_s);
 	widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
 	gtk_widget_show (widget);
@@ -1237,18 +1237,18 @@ static gboolean
 pk_update_viewer_set_last_updated_time (void)
 {
 	GtkWidget *widget;
-	guint time;
+	guint time_s;
 	guint time_new;
 	const gchar *time_text;
 
 	/* get times from the daemon */
-	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_SYSTEM, &time, NULL);
+	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_SYSTEM, &time_s, NULL);
 	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
 
 	/* always use the shortest time */
-	if (time_new < time)
-		time = time_new;
-	time_text = pk_update_get_approx_time (time);
+	if (time_new < time_s)
+		time_s = time_new;
+	time_text = pk_update_get_approx_time (time_s);
 	widget = glade_xml_get_widget (glade_xml, "label_last_update");
 	gtk_label_set_label (GTK_LABEL (widget), time_text);
 	return TRUE;
@@ -1428,7 +1428,7 @@ gpk_update_viewer_preview_set_animation (const gchar *text)
  * gpk_update_viewer_task_list_changed_cb:
  **/
 static void
-gpk_update_viewer_task_list_changed_cb (PkTaskList *tlist, gpointer data)
+gpk_update_viewer_task_list_changed_cb (PkTaskList *tlist_, gpointer data)
 {
 	GtkWidget *widget;
 
@@ -1654,8 +1654,8 @@ gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer userdata)
  * gpk_update_viewer_task_list_finished_cb:
  **/
 static void
-gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit,
-					guint runtime, gpointer userdata)
+gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist_, PkClient *client, PkExitEnum exit_enum,
+					 guint runtime, gpointer userdata)
 {
 	PkRoleEnum role;
 	gboolean ret;

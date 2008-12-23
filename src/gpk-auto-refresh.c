@@ -45,8 +45,6 @@
 #include "gpk-auto-refresh.h"
 #include "gpk-enum.h"
 
-static void     gpk_auto_refresh_class_init	(GpkAutoRefreshClass *klass);
-static void     gpk_auto_refresh_init		(GpkAutoRefresh      *arefresh);
 static void     gpk_auto_refresh_finalize	(GObject            *object);
 
 #define GPK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshPrivate))
@@ -219,7 +217,7 @@ gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *
 static gboolean
 gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 {
-	guint time;
+	guint time_s;
 	guint thresh;
 	gboolean ret;
 
@@ -253,15 +251,15 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_REFRESH_CACHE, &time, NULL);
+						PK_ROLE_ENUM_REFRESH_CACHE, &time_s, NULL);
 	if (!ret) {
 		egg_warning ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
-	if (time < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+	if (time_s < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
 		return FALSE;
 	}
 
@@ -275,7 +273,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 static gboolean
 gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 {
-	guint time;
+	guint time_s;
 	guint thresh;
 	gboolean ret;
 
@@ -299,15 +297,15 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_GET_UPDATES, &time, NULL);
+						PK_ROLE_ENUM_GET_UPDATES, &time_s, NULL);
 	if (!ret) {
 		egg_warning ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
-	if (time < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+	if (time_s < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
 		return FALSE;
 	}
 
@@ -321,7 +319,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 static gboolean
 gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 {
-	guint time;
+	guint time_s;
 	guint thresh;
 	gboolean ret;
 
@@ -336,15 +334,15 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 
 	/* get the time since the last refresh */
 	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time, NULL);
+						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time_s, NULL);
 	if (!ret) {
 		egg_debug ("failed to get last time");
 		return FALSE;
 	}
 
 	/* have we passed the timout? */
-	if (time < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time);
+	if (time_s < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
 		return FALSE;
 	}
 

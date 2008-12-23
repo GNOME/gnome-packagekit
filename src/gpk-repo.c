@@ -210,7 +210,7 @@ out:
  * gpk_repo_detail_cb:
  **/
 static void
-gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
+gpk_repo_detail_cb (PkClient *client_, const gchar *repo_id,
 		    const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
@@ -283,7 +283,7 @@ pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
  * gpk_repo_finished_cb:
  **/
 static void
-gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
+gpk_repo_finished_cb (PkClient *client_, PkExitEnum exit, guint runtime, gpointer data)
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -303,7 +303,7 @@ gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer
  * gpk_repo_status_changed_cb:
  **/
 static void
-gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+gpk_repo_status_changed_cb (PkClient *client_, PkStatusEnum status, gpointer data)
 {
 	const gchar *text;
 	GtkWidget *widget;
@@ -332,7 +332,7 @@ gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data
  * gpk_repo_error_code_cb:
  **/
 static void
-gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
+gpk_repo_error_code_cb (PkClient *client_, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "dialog_repo");

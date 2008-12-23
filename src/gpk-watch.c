@@ -288,7 +288,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
  * gpk_watch_finished_cb:
  **/
 static void
-gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, guint runtime, GpkWatch *watch)
+gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
 {
 	gboolean ret;
 	gboolean value;
@@ -335,7 +335,7 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit, gui
 	}
 
 	/* is it worth showing a UI? */
-	if (exit != PK_EXIT_ENUM_SUCCESS) {
+	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
 		egg_debug ("not notifying, as didn't complete okay");
 		goto out;
 	}
