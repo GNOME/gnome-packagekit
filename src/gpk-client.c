@@ -3857,7 +3857,7 @@ gpk_client_test (gpointer data)
 	gchar *language;
 	gchar *package;
 	gboolean ret;
-	gchar *fonts[] = { ":lang=mn", NULL };
+	const gchar *fonts[] = { ":lang=mn", NULL };
 	GError *error;
 
 	if (egg_test_start (test, "GpkChooser") == FALSE)
@@ -3926,7 +3926,7 @@ gpk_client_test (gpointer data)
 	egg_test_title (test, "install fonts (no UI)");
 	error = NULL;
 	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
-	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	ret = gpk_client_install_fonts (gclient, (gchar**)fonts, &error);
 	if (ret)
 		egg_test_success (test, NULL);
 	else {
@@ -3939,7 +3939,7 @@ gpk_client_test (gpointer data)
 	egg_test_title (test, "install fonts (if found)");
 	error = NULL;
 	gpk_client_set_interaction (gclient, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM_SEARCH, GPK_CLIENT_INTERACT_FINISHED, -1));
-	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	ret = gpk_client_install_fonts (gclient, (gchar**)fonts, &error);
 	if (ret)
 		egg_test_success (test, NULL);
 	else {
@@ -3952,7 +3952,7 @@ gpk_client_test (gpointer data)
 	egg_test_title (test, "install fonts (always)");
 	error = NULL;
 	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	ret = gpk_client_install_fonts (gclient, fonts, &error);
+	ret = gpk_client_install_fonts (gclient, (gchar**)fonts, &error);
 	if (ret)
 		egg_test_success (test, NULL);
 	else {
