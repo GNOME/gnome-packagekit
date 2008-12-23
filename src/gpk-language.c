@@ -28,8 +28,6 @@
 
 #include "gpk-language.h"
 
-static void     gpk_language_class_init	(GpkLanguageClass *klass);
-static void     gpk_language_init	(GpkLanguage      *language);
 static void     gpk_language_finalize	(GObject	  *object);
 
 #define GPK_LANGUAGE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_LANGUAGE, GpkLanguagePrivate))

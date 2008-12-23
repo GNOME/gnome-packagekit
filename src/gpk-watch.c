@@ -52,8 +52,6 @@
 #include "gpk-consolekit.h"
 #include "gpk-enum.h"
 
-static void     gpk_watch_class_init	(GpkWatchClass *klass);
-static void     gpk_watch_init		(GpkWatch      *watch);
 static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))

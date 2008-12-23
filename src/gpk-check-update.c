@@ -50,8 +50,6 @@
 #include "gpk-check-update.h"
 #include "gpk-enum.h"
 
-static void     gpk_check_update_class_init	(GpkCheckUpdateClass *klass);
-static void     gpk_check_update_init		(GpkCheckUpdate      *cupdate);
 static void     gpk_check_update_finalize	(GObject	     *object);
 
 #define GPK_CHECK_UPDATE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CHECK_UPDATE, GpkCheckUpdatePrivate))

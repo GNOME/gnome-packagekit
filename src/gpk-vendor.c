@@ -27,8 +27,6 @@
 #include "egg-string.h"
 #include "gpk-vendor.h"
 
-static void     gpk_vendor_class_init	(GpkVendorClass *klass);
-static void     gpk_vendor_init		(GpkVendor      *vendor);
 static void     gpk_vendor_finalize	(GObject          *object);
 
 #define GPK_VENDOR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_VENDOR, GpkVendorPrivate))

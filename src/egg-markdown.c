@@ -48,8 +48,6 @@
  *
  ******************************************************************************/
 
-static void     egg_markdown_class_init	(EggMarkdownClass	*klass);
-static void     egg_markdown_init	(EggMarkdown		*markdown);
 static void     egg_markdown_finalize	(GObject		*object);
 
 #define EGG_MARKDOWN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), EGG_TYPE_MARKDOWN, EggMarkdownPrivate))

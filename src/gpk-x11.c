@@ -29,11 +29,8 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 
-//#include "gpk-common.h"
 #include "gpk-x11.h"
 
-static void     gpk_x11_class_init	(GpkX11Class *klass);
-static void     gpk_x11_init		(GpkX11      *x11);
 static void     gpk_x11_finalize	(GObject	  *object);
 
 #define GPK_X11_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_X11, GpkX11Private))

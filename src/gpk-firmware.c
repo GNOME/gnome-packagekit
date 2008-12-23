@@ -46,8 +46,6 @@
 #include "gpk-common.h"
 #include "gpk-firmware.h"
 
-static void     gpk_firmware_class_init	(GpkFirmwareClass *klass);
-static void     gpk_firmware_init	(GpkFirmware      *firmware);
 static void     gpk_firmware_finalize	(GObject	  *object);
 
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))

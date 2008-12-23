@@ -47,8 +47,6 @@
 #include "gpk-enum.h"
 #include "gpk-desktop.h"
 
-static void     gpk_client_dialog_class_init	(GpkClientDialogClass	*klass);
-static void     gpk_client_dialog_init		(GpkClientDialog	*dialog);
 static void     gpk_client_dialog_finalize	(GObject		*object);
 
 #define GPK_CLIENT_DIALOG_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT_DIALOG, GpkClientDialogPrivate))

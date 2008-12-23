@@ -41,8 +41,6 @@
 #include "gpk-inhibit.h"
 #include "gpk-common.h"
 
-static void     gpk_inhibit_class_init	(GpkInhibitClass *klass);
-static void     gpk_inhibit_init	(GpkInhibit      *inhibit);
 static void     gpk_inhibit_finalize	(GObject          *object);
 
 #define GPK_INHIBIT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_INHIBIT, GpkInhibitPrivate))

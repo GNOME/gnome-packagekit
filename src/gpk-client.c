@@ -63,8 +63,6 @@
 #include "gpk-x11.h"
 #include "gpk-desktop.h"
 
-static void     gpk_client_class_init	(GpkClientClass *klass);
-static void     gpk_client_init		(GpkClient      *gclient);
 static void     gpk_client_finalize	(GObject	*object);
 
 #define GPK_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CLIENT, GpkClientPrivate))

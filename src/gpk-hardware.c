@@ -49,8 +49,6 @@
 #include "gpk-common.h"
 #include "gpk-hardware.h"
 
-static void     gpk_hardware_class_init	(GpkHardwareClass *klass);
-static void     gpk_hardware_init	(GpkHardware      *hardware);
 static void     gpk_hardware_finalize	(GObject	  *object);
 
 #define GPK_HARDWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_HARDWARE, GpkHardwarePrivate))

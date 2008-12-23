@@ -42,8 +42,6 @@
 #include "gpk-common.h"
 #include "gpk-smart-icon.h"
 
-static void     gpk_smart_icon_class_init	(GpkSmartIconClass *klass);
-static void     gpk_smart_icon_init		(GpkSmartIcon      *sicon);
 static void     gpk_smart_icon_finalize		(GObject           *object);
 
 #define GPK_SMART_ICON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_SMART_ICON, GpkSmartIconPrivate))

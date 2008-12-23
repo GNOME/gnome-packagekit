@@ -50,8 +50,6 @@
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-desktop.h"
 
-static void     gpk_application_class_init (GpkApplicationClass *klass);
-static void     gpk_application_init       (GpkApplication      *application);
 static void     gpk_application_finalize   (GObject	    *object);
 
 #define GPK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_APPLICATION, GpkApplicationPrivate))

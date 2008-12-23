@@ -31,8 +31,6 @@
 #include "egg-unique.h"
 #include "egg-debug.h"
 
-static void     egg_unique_class_init (EggUniqueClass *klass);
-static void     egg_unique_init       (EggUnique      *unique);
 static void     egg_unique_finalize   (GObject        *object);
 
 #define EGG_UNIQUE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), EGG_UNIQUE_TYPE, EggUniquePrivate))
