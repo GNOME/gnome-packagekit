@@ -28,11 +28,31 @@ dnl ---------------------------------------------------------------------------
 dnl - Extra verbose warning switches
 dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
-	CPPFLAGS="$CPPFLAGS -Werror -Wcast-align -Wno-uninitialized"
-	CPPFLAGS="$CPPFLAGS -Wall -Wformat-security"
 #	CPPFLAGS="$CPPFLAGS -DG_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES"
 	CPPFLAGS="$CPPFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED"
 	CPPFLAGS="$CPPFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
+	CPPFLAGS="$CPPFLAGS -Wall -Wreturn-type"
+	CPPFLAGS="$CPPFLAGS -Werror"
+#	CPPFLAGS="$CPPFLAGS -Wextra"
+	CPPFLAGS="$CPPFLAGS -Wdeclaration-after-statement"
+#	CPPFLAGS="$CPPFLAGS -Wmissing-declarations"
+	CPPFLAGS="$CPPFLAGS -Wno-uninitialized"
+	CPPFLAGS="$CPPFLAGS -Wredundant-decls"
+	CPPFLAGS="$CPPFLAGS -Wmissing-noreturn"
+	CPPFLAGS="$CPPFLAGS -Wshadow"
+	CPPFLAGS="$CPPFLAGS -Wpointer-arith"
+	CPPFLAGS="$CPPFLAGS -Wcast-align"
+	CPPFLAGS="$CPPFLAGS -Wwrite-strings"
+	CPPFLAGS="$CPPFLAGS -Winline"
+	CPPFLAGS="$CPPFLAGS -Wformat-nonliteral"
+	CPPFLAGS="$CPPFLAGS -Wformat-security"
+#	CPPFLAGS="$CPPFLAGS -Wswitch-enum"
+	CPPFLAGS="$CPPFLAGS -Wswitch-default"
+	CPPFLAGS="$CPPFLAGS -Winit-self"
+	CPPFLAGS="$CPPFLAGS -Wmissing-include-dirs"
+	CPPFLAGS="$CPPFLAGS -Wundef"
+	CPPFLAGS="$CPPFLAGS -Waggregate-return"
+	CPPFLAGS="$CPPFLAGS -Wmissing-format-attribute"
 fi
 
 dnl ---------------------------------------------------------------------------
