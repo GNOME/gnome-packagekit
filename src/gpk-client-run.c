@@ -38,8 +38,10 @@
 #include "gpk-enum.h"
 #include "gpk-desktop.h"
 
-static GtkListStore *list_store = NULL;
-static gchar *full_path = NULL;
+typedef struct {
+	GtkListStore	*list_store;
+	gchar		*full_path;
+} GpkClientRunPriv;
 
 enum
 {
@@ -53,7 +55,7 @@ enum
  * gpk_client_run_button_help_cb:
  **/
 static void
-gpk_client_run_button_help_cb (GtkWidget *widget, gpointer data)
+gpk_client_run_button_help_cb (GtkWidget *widget, GpkClientRunPriv *priv)
 {
 	gpk_gnome_help ("application-run");
 }
@@ -62,11 +64,11 @@ gpk_client_run_button_help_cb (GtkWidget *widget, gpointer data)
  * gpk_client_run_button_close_cb:
  **/
 static void
-gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
+gpk_client_run_button_close_cb (GtkWidget *widget, GpkClientRunPriv *priv)
 {
 	/* clear full_path */
-	g_free (full_path);
-	full_path = NULL;
+	g_free (priv->full_path);
+	priv->full_path = NULL;
 	gtk_main_quit ();
 }
 
@@ -74,11 +76,11 @@ gpk_client_run_button_close_cb (GtkWidget *widget, gpointer data)
  * gpk_client_run_delete_event_cb:
  **/
 static gboolean
-gpk_client_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+gpk_client_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkClientRunPriv *priv)
 {
 	/* clear full_path */
-	g_free (full_path);
-	full_path = NULL;
+	g_free (priv->full_path);
+	priv->full_path = NULL;
 	gtk_main_quit ();
 	return FALSE;
 }
@@ -87,7 +89,7 @@ gpk_client_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer use
  * gpk_client_run_button_action_cb:
  **/
 static void
-gpk_client_run_button_action_cb (GtkWidget *widget, gpointer data)
+gpk_client_run_button_action_cb (GtkWidget *widget, GpkClientRunPriv *priv)
 {
 	gtk_main_quit ();
 }
@@ -96,18 +98,18 @@ gpk_client_run_button_action_cb (GtkWidget *widget, gpointer data)
  * gpk_client_run_treeview_clicked_cb:
  **/
 static void
-gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
+gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, GpkClientRunPriv *priv)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (full_path);
-		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &full_path, -1);
+		g_free (priv->full_path);
+		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &priv->full_path, -1);
 
-		/* show full_path */
-		egg_debug ("selected row is: %s", full_path);
+		/* show full path */
+		egg_debug ("selected row is: %s", priv->full_path);
 	} else {
 		egg_debug ("no row selected");
 	}
@@ -118,7 +120,7 @@ gpk_client_run_treeview_clicked_cb (GtkTreeSelection *selection, gboolean data)
  **/
 static void
 gpk_client_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
-				 GtkTreeViewColumn *col, gpointer user_data)
+				 GtkTreeViewColumn *col, GpkClientRunPriv *priv)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -132,8 +134,8 @@ gpk_client_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 		return;
 	}
 
-	g_free (full_path);
-	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &full_path, -1);
+	g_free (priv->full_path);
+	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &priv->full_path, -1);
 	gtk_main_quit ();
 }
 
@@ -183,7 +185,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
  * gpk_client_run_add_desktop_file:
  **/
 static gboolean
-gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
+gpk_client_run_add_desktop_file (GpkClientRunPriv *priv, const gchar *package_id, const gchar *filename)
 {
 	gboolean ret;
 	gchar *icon = NULL;
@@ -253,7 +255,7 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	g_free (text);
 
 	/* put formatted text into treeview */
-	gtk_list_store_append (list_store, &iter);
+	gtk_list_store_append (priv->list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
 	id = pk_package_id_new_from_string (package_id);
 	text = gpk_package_id_format_twoline (id, joint);
@@ -265,7 +267,7 @@ gpk_client_run_add_desktop_file (const gchar *package_id, const gchar *filename)
 	}
 	pk_package_id_free (id);
 
-	gtk_list_store_set (list_store, &iter,
+	gtk_list_store_set (priv->list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
 			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
 			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
@@ -287,7 +289,7 @@ out:
  * gpk_client_run_add_package_ids:
  **/
 static guint
-gpk_client_run_add_package_ids (gchar **package_ids)
+gpk_client_run_add_package_ids (GpkClientRunPriv *priv, gchar **package_ids)
 {
 	guint i, j;
 	guint length;
@@ -314,7 +316,7 @@ gpk_client_run_add_package_ids (gchar **package_ids)
 		if (array != NULL) {
 			for (j=0; j<array->len; j++) {
 				filename = g_ptr_array_index (array, j);
-				ret = gpk_client_run_add_desktop_file (package_ids[i], filename);
+				ret = gpk_client_run_add_desktop_file (priv, package_ids[i], filename);
 				if (ret)
 					added++;
 			}
@@ -340,6 +342,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	guint len;
+	GpkClientRunPriv priv;
 
 	g_return_val_if_fail (package_ids != NULL, FALSE);
 
@@ -348,20 +351,23 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
 
+	/* initially nothing */
+	priv.full_path = NULL;
+
 	/* connect up default actions */
 	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
-	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_run_delete_event_cb), NULL);
+	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_run_delete_event_cb), &priv);
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
 
 	/* connect up buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_help");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_help_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_help_cb), &priv);
 	widget = glade_xml_get_widget (glade_xml, "button_close");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_close_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_close_cb), &priv);
 	widget = glade_xml_get_widget (glade_xml, "button_action");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_action_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_action_cb), &priv);
 	gtk_widget_show (widget);
 
 	/* hide the filter box */
@@ -379,19 +385,19 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	gtk_window_set_title (GTK_WINDOW (widget), _("Run new application?"));
 
 	/* create list stores */
-	list_store = gtk_list_store_new (GPK_CHOOSER_COLUMN_LAST, G_TYPE_STRING,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	priv.list_store = gtk_list_store_new (GPK_CHOOSER_COLUMN_LAST, G_TYPE_STRING,
+					      G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package_id tree view */
 	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store));
+				 GTK_TREE_MODEL (priv.list_store));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
-			  G_CALLBACK (gpk_client_run_row_activated_cb), NULL);
+			  G_CALLBACK (gpk_client_run_row_activated_cb), &priv);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (gpk_client_run_treeview_clicked_cb), NULL);
+			  G_CALLBACK (gpk_client_run_treeview_clicked_cb), &priv);
 
 	/* add columns to the tree view */
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
@@ -399,7 +405,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (widget), FALSE);
 
 	/* add all the apps */
-	len = gpk_client_run_add_package_ids (package_ids);
+	len = gpk_client_run_add_package_ids (&priv, package_ids);
 	if (len == 0) {
 		egg_debug ("no executable file for %s", package_ids[0]);
 		goto out;
@@ -425,8 +431,9 @@ out:
 		gtk_widget_hide (widget);
 
 	//g_object_unref (glade_xml);
+	g_object_unref (priv.list_store);
 
-	return full_path;
+	return priv.full_path;
 }
 
 /***************************************************************************
