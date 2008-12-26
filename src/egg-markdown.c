@@ -88,6 +88,7 @@ struct EggMarkdownPrivate
 	gint			 max_lines;
 	guint			 line_count;
 	gboolean		 smart_quoting;
+	gboolean		 escape;
 	GString			*pending;
 	GString			*processed;
 };
@@ -443,6 +444,12 @@ egg_markdown_flush_pending (EggMarkdown *self)
 		g_strdelimit (copy, ">", ')');
 	}
 
+	/* escape */
+	if (self->priv->escape) {
+		g_free (copy);
+		copy = g_markup_escape_text (self->priv->pending->str, -1);
+	}
+
 	/* do formatting */
 	temp = egg_markdown_to_text_line_format (self, copy);
 	if (self->priv->mode == EGG_MARKDOWN_MODE_BULLETT) {
@@ -651,6 +658,17 @@ egg_markdown_set_smart_quoting (EggMarkdown *self, gboolean smart_quoting)
 }
 
 /**
+ * egg_markdown_set_escape:
+ **/
+gboolean
+egg_markdown_set_escape (EggMarkdown *self, gboolean escape)
+{
+	g_return_val_if_fail (EGG_IS_MARKDOWN (self), FALSE);
+	self->priv->escape = escape;
+	return TRUE;
+}
+
+/**
  * egg_markdown_parse:
  **/
 gchar *
@@ -724,6 +742,7 @@ egg_markdown_init (EggMarkdown *self)
 	self->priv->processed = g_string_new ("");
 	self->priv->max_lines = -1;
 	self->priv->smart_quoting = FALSE;
+	self->priv->escape = FALSE;
 }
 
 /**
@@ -907,7 +926,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************
 	 ****************          markdown            **************
 	 ************************************************************/
-	egg_test_title (test, "get Eggmarkup object");
+	egg_test_title (test, "get EggMarkdown object");
 	self = egg_markdown_new ();
 	egg_test_assert (test, self != NULL);
 
@@ -968,9 +987,9 @@ egg_markdown_test (EggTest *test)
 		   "\n"
 		   "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"
 		   "\n"
-		   "Paragraph one isn&apos;t <b>very</b> long at all.\n"
+		   "Paragraph one isn't <b>very</b> long at all.\n"
 		   "\n"
-		   "Paragraph two isn&apos;t much better.";
+		   "Paragraph two isn't much better.";
 	egg_test_title (test, "markdown (complex1)");
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
@@ -995,9 +1014,9 @@ egg_markdown_test (EggTest *test)
 		   "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"
 		   "<big>Big title</big>\n"
 		   "\n"
-		   "The <i>following</i> things &apos;were&apos; fixed:\n"
+		   "The <i>following</i> things 'were' fixed:\n"
 		   "• Fix <tt>dave</tt>\n"
-		   "• Fubar update because of &quot;security&quot;";
+		   "• Fubar update because of \"security\"";
 	egg_test_title (test, "markdown (complex2)");
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
@@ -1052,7 +1071,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	markdown = "* list & spaces";
 	markdown_expected =
-		   "• list &amp; spaces";
+		   "• list & spaces";
 	egg_test_title (test, "markdown (escaping)");
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
@@ -1064,7 +1083,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "markdown (free text)");
 	text = egg_markdown_parse (self, "This isn't a present");
-	if (egg_strequal (text, "This isn&apos;t a present"))
+	if (egg_strequal (text, "This isn't a present"))
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s'", text);

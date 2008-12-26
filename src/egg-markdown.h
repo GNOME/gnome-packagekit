@@ -65,6 +65,8 @@ gboolean	 egg_markdown_set_max_lines		(EggMarkdown		*self,
 							 gint			 max_lines);
 gboolean	 egg_markdown_set_smart_quoting		(EggMarkdown		*self,
 							 gboolean		 smart_quoting);
+gboolean	 egg_markdown_set_escape		(EggMarkdown		*self,
+							 gboolean		 escape);
 gchar		*egg_markdown_parse			(EggMarkdown		*self,
 							 const gchar		*text);
 
