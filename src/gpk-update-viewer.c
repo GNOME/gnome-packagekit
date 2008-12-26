@@ -1858,6 +1858,7 @@ main (int argc, char *argv[])
 
 	markdown = egg_markdown_new ();
 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
+	egg_markdown_set_escape (markdown, TRUE);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
