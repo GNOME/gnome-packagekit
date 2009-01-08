@@ -275,7 +275,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 		gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
 }
 
-static gboolean gpk_check_update_query_updates (GpkCheckUpdate *cupdate);
+static gboolean gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action);
 
 /**
  * gpk_check_update_get_updates_post_update_cb:
@@ -288,7 +288,7 @@ gpk_check_update_get_updates_post_update_cb (GpkCheckUpdate *cupdate)
 	/* debug so we can catch polling */
 	egg_debug ("polling check");
 
-	gpk_check_update_query_updates (cupdate);
+	gpk_check_update_query_updates (cupdate, FALSE);
 	return FALSE;
 }
 
@@ -658,7 +658,7 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
  * gpk_check_update_query_updates:
  **/
 static gboolean
-gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
+gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 {
 	const PkPackageObj *obj;
 	guint length;
@@ -754,13 +754,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		}
 	}
 
-	/* do we do the automatic updates? */
-	update = gpk_check_update_get_update_policy (cupdate);
-	if (update == GPK_UPDATE_ENUM_UNKNOWN) {
-		egg_warning ("policy unknown");
-		goto out;
-	}
-
 	/* work out icon */
 	icon = gpk_check_update_get_best_update_icon (cupdate, list);
 	gpk_smart_icon_set_icon_name (cupdate->priv->sicon, icon);
@@ -773,6 +766,20 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 							  "There are %d updates pending", length), length);
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
+
+	/* if we are just refreshing after a failed update, don't try to do the actions */
+	if (!policy_action) {
+		egg_debug ("skipping actions");
+		ret = TRUE;
+		goto out;
+	}
+
+	/* do we do the automatic updates? */
+	update = gpk_check_update_get_update_policy (cupdate);
+	if (update == GPK_UPDATE_ENUM_UNKNOWN) {
+		egg_warning ("policy unknown");
+		goto out;
+	}
 
 	/* is policy none? */
 	if (update == GPK_UPDATE_ENUM_NONE) {
@@ -841,7 +848,7 @@ out:
 static gboolean
 gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
 {
-	gpk_check_update_query_updates (cupdate);
+	gpk_check_update_query_updates (cupdate, TRUE);
 	return FALSE;
 }
 
@@ -934,7 +941,7 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 
 		/* now try to get updates */
 		egg_debug ("get updates");
-		gpk_check_update_query_updates (cupdate);
+		gpk_check_update_query_updates (cupdate, TRUE);
 	}
 	cupdate->priv->cache_update_in_progress = FALSE;
 }
