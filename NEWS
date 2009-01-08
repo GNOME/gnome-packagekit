@@ -1,3 +1,53 @@
+Version 0.4.1
+~~~~~~~~~~~~~
+Released: 2000-01-08
+
+* Translations
+ - Added Kannada translation (Andre Klapper)
+ - Added Spanish language help screenshots (Jorge Gonzalez)
+ - Updated German translation (Andre Klapper)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Greek help translation (Evgenia Petoumenou)
+ - Updated Greek translation (Evgenia Petoumenou)
+ - Updated Hungarian translation (Gabor Kelemen)
+ - Updated Spanish translation (Jorge Gonzalez, Daniel Mustieles)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Brazilian Portuguese translation (Michel Recondo)
+
+* New Features:
+ - Add an option to the prefs dialog to prevent checking for updates when
+   using mobile broadband connections (Richard Hughes)
+ - Allow the admin to restrict getting updates when on WiFi connections (Richard Hughes)
+ - Set the default search mode to details (not name) and preserve the search
+   type in GConf if changed in the UI (Richard Hughes)
+ - Add a simple markdown parser (Richard Hughes)
+ - Add dbus_default_interaction and dbus_enforced_interaction GConf keys and
+   some documentation (Richard Hughes)
+ - Send different errors when we fail a method on the session DBus interface (Richard Hughes)
+ - Support setting timeouts via the interaction mode from the DBus interface (Richard Hughes)
+
+* Bugfix:
+ - Add quit and contents accelerators in gpk-application (Matthias Clasen)
+ - Define a macro directory so we work with newer versions of libtool (Richard Hughes)
+ - Don't use gtk_dialog_get_action_area on gtk < 2.14 (Richard Hughes)
+ - Fix compile on F9 as gio is linked in explicitly (Richard Hughes)
+ - Make the confirm interaction more granular (Richard Hughes)
+ - When the restart mode is session then offer logout, rather than restart. Fixes RH#475781 (Richard Hughes)
+ - Truncate description fields greater than 1024 bytes in size to fix rh#475947 (Richard Hughes)
+ - We should do idle network actions on ONLINE (wireless or unknown) and FAST (ethernet) (Richard Hughes)
+ - Make sure the update description headers are top aligned, not centered (Richard Hughes)
+ - Use the markdown parser in gpk-application and gpk-update-viewer (Richard Hughes)
+ - Don't keep spinning the animation if the backend fails to send an update detail signal (Richard Hughes)
+ - Fix a small icon leak when showing the generic window with a custom icon (Richard Hughes)
+ - Fix two small memory leaks when installing fonts (Richard Hughes)
+ - Put the security updates in an array before we show the notification else
+   the number on the session critical notification is wrong (Richard Hughes)
+ - Output update descriptions with valid escaping to fix some descriptions (Richard Hughes)
+ - Fix a crash in gpk-application when doing run multiple times (Richard Hughes)
+ - Make error dialog resizable when error details are being shown. Fixes RH#478378 (Richard Hughes)
+ - Allow copy pasting of the update text in the update viewer (Richard Hughes)
+
 Version 0.4.0
 ~~~~~~~~~~~~~
 Released: 2008-12-09
