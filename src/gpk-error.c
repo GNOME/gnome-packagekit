@@ -36,6 +36,24 @@
 #include "gpk-error.h"
 
 /**
+ * gpk_error_dialog_expanded_cb:
+ **/
+static void
+gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GladeXML *glade_xml)
+{
+	GtkWidget *widget;
+	GtkExpander *expander;
+	expander = GTK_EXPANDER (object);
+
+	/* only resizable when expanded */
+	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	if (gtk_expander_get_expanded (expander))
+		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
+	else
+		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
+}
+
+/**
  * gpk_error_dialog_modal_with_time:
  * @window: the parent dialog
  * @title: the localised text to put in bold as a title
@@ -59,11 +77,17 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 
 	/* connect up actions */
 	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* make modal if window set */
-	if (window != NULL)
+	if (window != NULL) {
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+		gtk_window_set_title (GTK_WINDOW (widget), "");
+	} else {
+		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
+		gtk_window_set_title (GTK_WINDOW (widget), title);
+	}
 
 	/* set icon name */
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
@@ -71,6 +95,10 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* close button */
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+
+	/* we become resizable when the expander is expanded */
+	widget = glade_xml_get_widget (glade_xml, "expander_details");
+	g_signal_connect (widget, "notify::expanded", G_CALLBACK (gpk_error_dialog_expanded_cb), glade_xml);
 
 	/* title */
 	widget = glade_xml_get_widget (glade_xml, "label_title");
@@ -97,7 +125,6 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "dialog_error");
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
-	gtk_window_set_title (GTK_WINDOW (widget), "");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* wait for button press */
@@ -140,4 +167,30 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 {
 	return gpk_error_dialog_modal (NULL, title, message, details);
 }
+
+/***************************************************************************
+ ***                          MAKE CHECK TESTS                           ***
+ ***************************************************************************/
+#ifdef EGG_TEST
+#include "egg-test.h"
+
+void
+gpk_error_test (EggTest *test)
+{
+	gboolean ret;
+
+	if (!egg_test_start (test, "GpkError"))
+		return;
+
+	/************************************************************/
+	egg_test_title (test, "do dialog");
+	ret = gpk_error_dialog ("No space is left on the disk",
+				"There is insufficient space on the device.\n"
+				"Free some space on the system disk to perform this operation.",
+				"[Errno 28] No space left on device");
+	egg_test_assert (test, ret);
+
+	egg_test_end (test);
+}
+#endif
 
