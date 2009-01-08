@@ -743,7 +743,7 @@ gpk_update_viewer_add_description_item (const gchar *title, const gchar *text, c
 
 	tree_view = glade_xml_get_widget (glade_xml, "treeview_description");
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
 }
 
@@ -890,7 +890,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 
 	/* split and add */
 	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
-	if (package_pretty != NULL) {
+	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are updated */
 		gpk_update_viewer_add_description_item (_("Updates"), package_pretty, NULL);
 	}
@@ -898,7 +898,7 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 
 	/* split and add */
 	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
-	if (package_pretty != NULL) {
+	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are obsoleted */
 		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
 	}

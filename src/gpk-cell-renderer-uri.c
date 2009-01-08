@@ -49,9 +49,8 @@ gpk_cell_renderer_uri_is_clicked (GpkCellRendererUri *cru)
 {
 	gpointer value;
 	g_return_val_if_fail (cru != NULL, FALSE);
-	if (cru->uri == NULL) {
+	if (cru->uri == NULL)
 		return FALSE;
-	}
 	value = g_hash_table_lookup (cru->clicked, cru->uri);
 	return (value != NULL);
 }
@@ -60,11 +59,10 @@ static void
 gpk_cell_renderer_uri_set_clicked (GpkCellRendererUri *cru, gboolean clicked)
 {
 	g_return_if_fail (cru != NULL);
-	if (clicked) {
+	if (clicked)
 		g_hash_table_insert (cru->clicked, g_strdup (cru->uri), GINT_TO_POINTER (1));
-	} else {
+	else
 		g_hash_table_remove (cru->clicked, cru->uri);
-	}
 }
 
 static gboolean
@@ -76,9 +74,8 @@ gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
 	/* nothing to do */
-	if (cru->uri == NULL) {
+	if (cru->uri == NULL)
 		return TRUE;
-	}
 
 	gpk_cell_renderer_uri_set_clicked (cru, TRUE);
 
@@ -198,7 +195,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	if (cru->uri == NULL) {
 		color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
 		color_string = gdk_color_to_string (color);
-		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
+		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
 	} else if (ret) {
 		/* if we defined this in our theme, else find a compromise */
@@ -208,7 +205,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			gpk_cell_renderer_uri_set_link_color (color, TRUE);
 		}
 		color_string = gdk_color_to_string (color);
-		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
+		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {
 		/* if we defined this in our theme, else find a compromise */
@@ -218,15 +215,20 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			gpk_cell_renderer_uri_set_link_color (color, FALSE);
 		}
 		color_string = gdk_color_to_string (color);
-		g_object_set (G_OBJECT (cell), "foreground", color_string, NULL);
+		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	}
 
 	gdk_color_free (color);
 	g_free (color_string);
 
-	/* we can click */
-	g_object_set (G_OBJECT (cru), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
+	/* can we select the text or click it? */
+	if (cru->uri == NULL) {
+		g_object_set (G_OBJECT(cru), "editable", TRUE, NULL);
+		g_object_set (G_OBJECT(cru), "mode", GTK_CELL_RENDERER_MODE_EDITABLE, NULL);
+	} else  {
+		g_object_set (G_OBJECT(cru), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
+	}
 
 	GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, window, widget, background_area, cell_area, expose_area, flags);
 }
