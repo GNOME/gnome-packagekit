@@ -440,6 +440,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
 		text = _("Package is incompatible with this system");
 		break;
+	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
+		text = _("No space is left on the disk");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -618,6 +621,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
 		text = _("The package that is trying to be installed is incompatible with this system.");
+		break;
+	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
+		text = _("There is insufficient space on the device.\n"
+			 "Free some space on the system disk to perform this operation.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
