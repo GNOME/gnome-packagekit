@@ -87,9 +87,8 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	if (! g_thread_supported ()) {
+	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	}
 	dbus_g_thread_init ();
 	g_type_init ();
 
@@ -109,16 +108,14 @@ main (int argc, char *argv[])
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Package installer"), TRUE);
-	if (!ret) {
+	if (!ret)
 		return 1;
-	}
 
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
 	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Application");
-	if (!ret) {
+	if (!ret)
 		goto unique_out;
-	}
 
 	/* create a new application object */
 	application = gpk_application_new ();
