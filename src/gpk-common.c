@@ -110,7 +110,7 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 
 	/* normal size laptop panel */
 	egg_debug ("using native mode: %ix%i", width, height);
-	gtk_widget_set_size_request (GTK_WIDGET(window), width, height);
+	gtk_window_set_default_size (window, width, height);
 	return TRUE;
 }
 
