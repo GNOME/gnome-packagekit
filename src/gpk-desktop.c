@@ -175,6 +175,11 @@ gpk_desktop_get_file_weight (const gchar *filename)
 	gint weight = 0;
 	const gchar *locale;
 
+	/* autostart files usually are not hat we are looking for */
+	value = g_strstr_len (filename, -1, "autostart");
+	if (value != NULL)
+		weight -= 100;
+
 	locale = setlocale (LC_ALL, NULL);
 	file = g_key_file_new ();
 	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_KEEP_TRANSLATIONS, NULL);
@@ -207,7 +212,7 @@ gpk_desktop_get_file_weight (const gchar *filename)
 		weight -= 100;
 	g_free (value);
 
-	/* hidden */
+	/* has locale */
 	value = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, locale, NULL);
 	if (value != NULL)
 		weight += 30;
