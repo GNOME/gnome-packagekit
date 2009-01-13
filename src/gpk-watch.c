@@ -233,6 +233,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 					      PK_STATUS_ENUM_CLEANUP,
 					      PK_STATUS_ENUM_REPACKAGING,
 					      PK_STATUS_ENUM_WAIT,
+					      PK_STATUS_ENUM_WAITING_FOR_LOCK,
 					      PK_STATUS_ENUM_FINISHED, -1);
 
 	/* only set if in the list and not unknown */
