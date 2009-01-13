@@ -450,6 +450,7 @@ gpk_client_progress_changed_cb (PkClient *client, guint percentage, guint subper
 	if (!gclient->priv->show_progress)
 		return;
 	gpk_client_dialog_set_percentage (gclient->priv->dialog, percentage);
+	gpk_client_dialog_set_remaining (gclient->priv->dialog, remaining);
 }
 
 /**

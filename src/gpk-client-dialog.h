@@ -107,6 +107,8 @@ gboolean	 gpk_client_dialog_set_action		(GpkClientDialog	*dialog,
 							 const gchar		*action);
 gboolean	 gpk_client_dialog_set_percentage	(GpkClientDialog	*dialog,
 							 guint			 percentage);
+gboolean	 gpk_client_dialog_set_remaining	(GpkClientDialog	*dialog,
+							 guint			 remaining);
 gboolean	 gpk_client_dialog_set_image		(GpkClientDialog	*dialog,
 							 const gchar		*image);
 gboolean	 gpk_client_dialog_set_image_status	(GpkClientDialog	*dialog,

@@ -416,6 +416,37 @@ gpk_client_dialog_set_percentage (GpkClientDialog *dialog, guint percentage)
 }
 
 /**
+ * gpk_client_dialog_set_remaining:
+ **/
+gboolean
+gpk_client_dialog_set_remaining (GpkClientDialog *dialog, guint remaining)
+{
+	GtkWidget *widget;
+	gchar *timestring = NULL;
+	gchar *text = NULL;
+
+	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+
+	egg_debug ("setting remaining: %u", remaining);
+	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
+
+	/* unknown */
+	if (remaining == 0) {
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
+		goto out;
+	}
+
+	/* get time text */
+	timestring = gpk_time_to_localised_string (remaining);
+	text = g_strdup_printf (_("Remaining time : %s"), timestring);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), text);
+out:
+	g_free (timestring);
+	g_free (text);
+	return TRUE;
+}
+
+/**
  * gpk_client_dialog_set_image:
  **/
 gboolean
