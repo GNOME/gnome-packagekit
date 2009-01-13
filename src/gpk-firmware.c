@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
@@ -49,7 +50,8 @@
 static void     gpk_firmware_finalize	(GObject	  *object);
 
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))
-#define GPK_FIRMWARE_STATE_DIR		"/var/run/PackageKit/udev"
+#define GPK_FIRMWARE_MISSING_DIR		"/dev/.udev/firmware-missing"
+#define GPK_FIRMWARE_LOADING_DIR		"/lib/firmware"
 #define GPK_FIRMWARE_LOGIN_DELAY	60 /* seconds */
 
 struct GpkFirmwarePrivate
@@ -256,6 +258,33 @@ out:
 }
 
 /**
+ * gpk_firmware_udev_text_decode:
+ **/
+static gchar *
+gpk_firmware_udev_text_decode (const gchar *data)
+{
+	guint i;
+	guint j;
+	gchar *decode;
+
+	decode = g_strdup (data);
+	for (i = 0, j = 0; data[i] != '\0'; j++) {
+		if (memcmp (&data[i], "\\x2f", 4) == 0) {
+			decode[j] = '/';
+			i += 4;
+		}else if (memcmp (&data[i], "\\x5c", 4) == 0) {
+			decode[j] = '\\';
+			i += 4;
+		} else {
+			decode[j] = data[i];
+			i++;
+		}
+	}
+	decode[j] = '\0';
+	return decode;
+}
+
+/**
  * gpk_firmware_class_init:
  * @klass: The GpkFirmwareClass
  **/
@@ -275,14 +304,12 @@ static void
 gpk_firmware_init (GpkFirmware *firmware)
 {
 	gboolean ret;
-	gchar *contents;
 	GError *error = NULL;
 	GDir *dir;
 	const gchar *filename;
+	gchar *filename_decoded;
 	gchar *filename_path;
-	gchar **firmware_files;
 	guint i;
-	guint length;
 	GPtrArray *array;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
@@ -298,7 +325,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	}
 
 	/* open the directory of requests */
-	dir = g_dir_open (GPK_FIRMWARE_STATE_DIR, 0, &error);
+	dir = g_dir_open (GPK_FIRMWARE_MISSING_DIR, 0, &error);
 	if (dir == NULL) {
 		egg_warning ("failed to open directory: %s", error->message);
 		g_error_free (error);
@@ -310,31 +337,17 @@ gpk_firmware_init (GpkFirmware *firmware)
 	array = firmware->priv->array_requested;
 	while (filename != NULL) {
 
-		/* can we get the contents */
-		filename_path = g_build_filename (GPK_FIRMWARE_STATE_DIR, filename, NULL);
-		egg_debug ("opening %s", filename_path);
-		ret = g_file_get_contents (filename_path, &contents, NULL, &error);
-		if (!ret) {
-			egg_warning ("can't open file %s, %s", filename, error->message);
-			g_error_free (error);
-			error = NULL;
-			goto skip_file;
-		}
+		/* decode udev text */
+		filename_decoded = gpk_firmware_udev_text_decode (filename);
+		filename_path = g_build_filename (GPK_FIRMWARE_LOADING_DIR, filename_decoded, NULL);
+		egg_debug ("filename=%s -> %s", filename, filename_path);
 
-		/* split, as we can use multiple requests in one file */
-		firmware_files = g_strsplit (contents, "\n", 0);
-		length = g_strv_length (firmware_files);
-		for (i=0; i<length; i++) {
-			if (!egg_strzero (firmware_files[i])) {
-				/* file still doesn't exist */
-				ret = g_file_test (firmware_files[i], G_FILE_TEST_EXISTS);
-				if (!ret)
-					egg_str_list_add (array, firmware_files[i]);
-			}
-		}
-		g_free (contents);
-		g_strfreev (firmware_files);
-skip_file:
+		/* file already exists */
+		ret = g_file_test (filename_path, G_FILE_TEST_EXISTS);
+		if (!ret)
+			egg_str_list_add (array, filename_path);
+
+		g_free (filename_decoded);
 		g_free (filename_path);
 		/* next file */
 		filename = g_dir_read_name (dir);
