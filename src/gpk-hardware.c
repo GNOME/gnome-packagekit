@@ -43,7 +43,6 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
-#include "egg-string-list.h"
 
 #include "gpk-client.h"
 #include "gpk-common.h"

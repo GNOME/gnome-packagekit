@@ -28,7 +28,6 @@
 
 void egg_markdown_test (EggTest *test);
 void egg_string_test (EggTest *test);
-void egg_string_list_test (EggTest *test);
 void gpk_dbus_test (EggTest *test);
 void gpk_language_test (EggTest *test);
 void gpk_client_dialog_test (EggTest *test);
@@ -50,7 +49,6 @@ main (int argc, char **argv)
 	/* tests go here */
 	egg_markdown_test (test);
 	egg_string_test (test);
-	egg_string_list_test (test);
 	gpk_enum_test (test);
 	gpk_common_test (test);
 //	gpk_dbus_test (test);
