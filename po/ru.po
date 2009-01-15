@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-15 17:27+0200\n"
+"POT-Creation-Date: 2009-01-15 16:58+0000\n"
 "PO-Revision-Date: 2009-01-15 17:25+0200\n"
 "Last-Translator: Leonid Kanter <leon@asplinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1019,18 +1019,18 @@ msgstr "Поиск по имени файла"
 #. TRANSLATORS: packaging problem, failed to show link
 #. TRANSLATORS: normally a packaging error, cannot launch link
 #: ../src/gpk-application.c:2176 ../src/gpk-check-update.c:158
-#: ../src/gpk-watch.c:546
+#: ../src/gpk-watch.c:566
 msgid "Failed to show url"
 msgstr "Не удалось показать url"
 
 #: ../src/gpk-application.c:2215 ../src/gpk-check-update.c:183
-#: ../src/gpk-watch.c:567
+#: ../src/gpk-watch.c:587
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr ""
 "Лицензируется на условиях Универсальной Общественной Лицензии GNU версии 2"
 
 #: ../src/gpk-application.c:2216 ../src/gpk-check-update.c:184
-#: ../src/gpk-watch.c:568
+#: ../src/gpk-watch.c:588
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
@@ -1043,7 +1043,7 @@ msgstr ""
 "либо (на ваше усмотрение) любой более поздней версии."
 
 #: ../src/gpk-application.c:2220 ../src/gpk-check-update.c:188
-#: ../src/gpk-watch.c:572
+#: ../src/gpk-watch.c:592
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1058,7 +1058,7 @@ msgstr ""
 "Общественной Лицензии GNU."
 
 #: ../src/gpk-application.c:2224 ../src/gpk-check-update.c:192
-#: ../src/gpk-watch.c:576
+#: ../src/gpk-watch.c:596
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
@@ -1072,7 +1072,7 @@ msgstr ""
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
 #: ../src/gpk-application.c:2230 ../src/gpk-check-update.c:197
-#: ../src/gpk-watch.c:581
+#: ../src/gpk-watch.c:601
 msgid "translator-credits"
 msgstr ""
 "Алексей Осипов <aliks-os@yandex.ru>\n"
@@ -1081,7 +1081,7 @@ msgstr ""
 
 #. TRANSLATORS: website label
 #: ../src/gpk-application.c:2255 ../src/gpk-check-update.c:216
-#: ../src/gpk-watch.c:599
+#: ../src/gpk-watch.c:619
 msgid "PackageKit Website"
 msgstr "Веб-сайт PackageKit"
 
@@ -1183,7 +1183,7 @@ msgstr "_Параметры"
 
 #. TRANSLATORS: context menu to show the about screen
 #. TRANSLATORS: this is the right click menu item
-#: ../src/gpk-check-update.c:262 ../src/gpk-watch.c:629
+#: ../src/gpk-check-update.c:262 ../src/gpk-watch.c:649
 msgid "_About"
 msgstr "_О программе"
 
@@ -1231,8 +1231,8 @@ msgstr "Установить все обновления"
 #. TRANSLATORS: don't pop-up the same message twice
 #: ../src/gpk-check-update.c:507 ../src/gpk-check-update.c:1022
 #: ../src/gpk-client.c:327 ../src/gpk-client.c:331 ../src/gpk-client.c:2962
-#: ../src/gpk-dialog.c:289 ../src/gpk-firmware.c:219 ../src/gpk-hardware.c:171
-#: ../src/gpk-watch.c:382
+#: ../src/gpk-dialog.c:289 ../src/gpk-firmware.c:219 ../src/gpk-hardware.c:170
+#: ../src/gpk-watch.c:402
 msgid "Do not show this again"
 msgstr "Не показывать больше это сообщение"
 
@@ -1326,7 +1326,7 @@ msgstr "Следующие пакеты были установлены:"
 
 #. TRANSLATORS: button: show details about the error
 #. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-client.c:527 ../src/gpk-watch.c:454
+#: ../src/gpk-client.c:527 ../src/gpk-watch.c:474
 msgid "Show details"
 msgstr "Дополнительные сведения"
 
@@ -3679,18 +3679,18 @@ msgstr "Установка микропрограмм"
 
 #. TODO: tell the user what hardware, NOT JUST A UDI
 #. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
-#: ../src/gpk-hardware.c:160
+#: ../src/gpk-hardware.c:159
 msgid "Additional packages can be installed to support this hardware"
 msgstr "Для поддержки этого оборудования требуются дополнительные пакеты"
 
 #. TRANSLATORS: a new bit of hardware has been plugged in
-#: ../src/gpk-hardware.c:162
+#: ../src/gpk-hardware.c:161
 msgid "New hardware attached"
 msgstr "Подключено новое оборудование"
 
 #  summary information texts
 #. TRANSLATORS: button text, install the packages needed for the hardware to work
-#: ../src/gpk-hardware.c:168
+#: ../src/gpk-hardware.c:167
 msgid "Install package"
 msgstr "Установить пакет"
 
@@ -4234,8 +4234,14 @@ msgstr[2] "(ещё %i заданий)"
 msgid "Package manager error details"
 msgstr "Сведения об ошибке менеджера пакетов"
 
+#. TRANSLATORS: this is a package that required an update
+#: ../src/gpk-watch.c:335
+#, fuzzy
+msgid "Package:"
+msgstr "Пакет"
+
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:365
+#: ../src/gpk-watch.c:385
 #, c-format
 msgid "Package '%s' has been removed"
 msgstr "Пакет '%s' удалён"
@@ -4243,47 +4249,47 @@ msgstr "Пакет '%s' удалён"
 #  if installation failes
 #  Translators: The package name is stored in %1.
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:368
+#: ../src/gpk-watch.c:388
 #, c-format
 msgid "Package '%s' has been installed"
 msgstr "Установлен пакет '%s' "
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:371
+#: ../src/gpk-watch.c:391
 msgid "System has been updated"
 msgstr "Обновление системы завершено"
 
 #. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
-#: ../src/gpk-watch.c:378
+#: ../src/gpk-watch.c:398
 msgid "Task completed"
 msgstr "Задание выполнено"
 
 #. TRANSLATORS: Prefix to the title shown in the libnotify popup
-#: ../src/gpk-watch.c:446 ../src/gpk-watch.c:490
+#: ../src/gpk-watch.c:466 ../src/gpk-watch.c:510
 msgid "Package Manager"
 msgstr "Менеджер пакетов"
 
 #. TRANSLATORS: We couldn't launch the tool, normally a packaging problem
-#: ../src/gpk-watch.c:546
+#: ../src/gpk-watch.c:566
 msgid "Internal error"
 msgstr "Внутренняя ошибка"
 
 #. TRANSLATORS: This is a right click menu item, and will refresh all the package lists
-#: ../src/gpk-watch.c:793
+#: ../src/gpk-watch.c:813
 msgid "_Refresh Software List"
 msgstr "_Обновить список программ"
 
-#: ../src/gpk-watch.c:852
+#: ../src/gpk-watch.c:872
 msgid "_Log out"
 msgstr "_Завершить сеанс"
 
 #. TRANSLATORS: This hides the 'restart required' icon
-#: ../src/gpk-watch.c:867
+#: ../src/gpk-watch.c:887
 msgid "_Hide this icon"
 msgstr "_Скрыть этот значок"
 
 #. TRANSLATORS: This button restarts the computer after an update
-#: ../src/gpk-watch.c:1161
+#: ../src/gpk-watch.c:1181
 msgid "_Restart computer"
 msgstr "_Перезагрузить компьютер"
 
