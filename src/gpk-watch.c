@@ -101,6 +101,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	PkTaskListItem *item;
 	guint length;
 	GString *status;
+	const gchar *trailer;
 	const gchar *localised_status;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
@@ -131,9 +132,8 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
 			/* TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting */
-			g_string_append_printf (status, _("(%i more tasks)"),
-						i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
-			g_string_append_c (status, '\n');
+			trailer = ngettext ("(%i more task)", "(%i more tasks)", i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
+			g_string_append_printf (status, "%s\n", trailer);
 			break;
 		}
 	}

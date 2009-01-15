@@ -104,14 +104,19 @@
                         <property name="column_spacing">6</property>
                         <property name="row_spacing">6</property>
                         <child>
-                          <widget class="GtkLabel" id="label_last_update">
+                          <widget class="GtkLabel" id="label_last_refresh_title">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label">Unknown....</property>
+                            <property name="label" translatable="yes">Last refresh:</property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label_last_update_title">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Last update:</property>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
@@ -128,22 +133,17 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label_last_update_title">
+                          <widget class="GtkLabel" id="label_last_update">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Last update:</property>
+                            <property name="label">Unknown....</property>
                           </widget>
                           <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                           </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label_last_refresh_title">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Last refresh:</property>
-                          </widget>
                         </child>
                       </widget>
                       <packing>
@@ -218,7 +218,7 @@
                                 <child>
                                   <widget class="GtkLabel" id="label11">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">_Review</property>
+                                    <property name="label" translatable="yes" comments="Look through the list of updates, and maybe choose them one by one, as you can check the update description">_Review</property>
                                     <property name="use_underline">True</property>
                                   </widget>
                                   <packing>

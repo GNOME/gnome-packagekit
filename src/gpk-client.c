@@ -1203,19 +1203,10 @@ static gboolean
 gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *message, const gchar *action)
 {
 	GtkResponseType button;
-	gchar *title_name;
 
 	/* check the user wanted to call this method */
 	if (!gclient->priv->show_confirm_search)
 		return TRUE;
-
-	/* make title */
-	if (gclient->priv->parent_title != NULL)
-		title_name = g_strdup_printf ("%s %s", gclient->priv->parent_title, title);
-	else {
-		/* TRANSLATORS: string is an action, e.g. "wants to install a codec" */
-		title_name = g_strdup_printf (_("A program %s"), title);
-	}
 
 	/* setup UI */
 	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_CONFIRM, 0);
@@ -1227,12 +1218,10 @@ gpk_client_confirm_action (GpkClient *gclient, const gchar *title, const gchar *
 	else
 		gpk_client_dialog_set_image (gclient->priv->dialog, "emblem-system");
 
-	gpk_client_dialog_set_title (gclient->priv->dialog, title_name);
+	gpk_client_dialog_set_title (gclient->priv->dialog, title);
 	gpk_client_dialog_set_message (gclient->priv->dialog, message);
 	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-application-confirm");
 	gpk_client_dialog_present_with_time (gclient->priv->dialog, gclient->priv->timestamp);
-
-	g_free (title_name);
 	button = gpk_client_dialog_run (gclient->priv->dialog);
 
 	/* close, we're going to fail the method */
@@ -1697,8 +1686,19 @@ gpk_client_install_package_names (GpkClient *gclient, gchar **packages, GError *
 				   text,
 				   /* TRANSLATORS: ask the user if it's okay to search */
 				   _("Do you want to search for this file now?"));
-	/* TRANSLATORS: generic confirm, use the application name if we can */
-	ret = gpk_client_confirm_action (gclient, _("wants to install packages"), message, _("Install"));
+	g_free (text);
+
+	/* make title using application name */
+	if (gclient->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		text = g_strdup_printf (ngettext ("%s wants to install a package", "%s wants to install packages", len), gclient->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		text = g_strdup (ngettext ("A program wants to install a package", "A program wants to install packages", len));
+	}
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_client_confirm_action (gclient, text, message, _("Install"));
 	g_free (text);
 	g_free (message);
 	if (!ret) {
@@ -1884,8 +1884,22 @@ gpk_client_install_provide_file (GpkClient *gclient, const gchar *full_path, GEr
 				   full_path,
 				   /* TRANSLATORS: confirm with the user */
 				   _("Do you want to search for this now?"));
-	/* TRANSLATORS: generic confirm, use the application name if we can */
-	ret = gpk_client_confirm_action (gclient, _("wants to install a file"), message, _("Install"));
+
+	/* hardcode for now as we only support one file at a time */
+	len = 1;
+
+	/* make title using application name */
+	if (gclient->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		text = g_strdup_printf (ngettext ("%s wants to install a file", "%s wants to install files", len), gclient->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		text = g_strdup (ngettext ("A program wants to install a file", "A program wants to install files", len));
+	}
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_client_confirm_action (gclient, text, message, _("Install"));
+	g_free (text);
 	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
@@ -2058,6 +2072,7 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	guint i;
 	guint len;
 	gchar *text;
+	gchar *confirm_text;
 	gchar **parts;
 	gboolean ret;
 	GString *string;
@@ -2096,8 +2111,18 @@ gpk_client_install_gstreamer_codecs_confirm (GpkClient *gclient, gchar **codec_n
 	/* display messagebox  */
 	text = g_string_free (string, FALSE);
 
-	/* TRANSLATORS: generic confirm, use the application name if we can */
-	ret = gpk_client_confirm_action (gclient, _("requires additional plugins"), text, _("Search"));
+	/* make title using application name */
+	if (gclient->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		confirm_text = g_strdup_printf (ngettext ("%s requires an additional plugin", "%s requires additional plugins", len), gclient->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		confirm_text = g_strdup (ngettext ("A program requires an additional plugin", "A program requires additional plugins", len));
+	}
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_client_confirm_action (gclient, confirm_text, text, _("Search"));
+	g_free (confirm_text);
 	g_free (text);
 
 	return ret;
@@ -2274,6 +2299,7 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 	GtkResponseType button;
 	gchar *info_url;
 	gchar *message;
+	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 	g_return_val_if_fail (mime_type != NULL, FALSE);
@@ -2300,8 +2326,21 @@ gpk_client_install_mime_type (GpkClient *gclient, const gchar *mime_type, GError
 				   /* TRANSLATORS: message: confirm with the user */
 				   _("Do you want to search for a program to open this file type now?"));
 
-	/* TRANSLATORS: generic confirm, use the application name if we can */
-	ret = gpk_client_confirm_action (gclient, _("requires a new mime type"), message, _("Search"));
+	/* hardcode for now as we only support one mime type at a time */
+	len = 1;
+
+	/* make title using application name */
+	if (gclient->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		text = g_strdup_printf (ngettext ("%s requires a new mime type", "%s requires new mime types", len), gclient->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		text = g_strdup (ngettext ("A program requires a new mime type", "A program requires new mime types", len));
+	}
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_client_confirm_action (gclient, text, message, _("Search"));
+	g_free (text);
 	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");
@@ -2565,11 +2604,18 @@ gpk_client_install_fonts (GpkClient *gclient, gchar **fonts, GError **error)
 	message = g_strdup_printf ("%s\n\n%s\n%s", title, text, title_part);
 	g_free (text);
 
-	/* TRANSLATORS: generic confirm, the application name is used as a prefix */
-	title = ngettext ("wants to install a font", "wants to install fonts", len);
+	/* make title using application name */
+	if (gclient->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		text = g_strdup_printf (ngettext ("%s wants to install a font", "%s wants to install fonts", len), gclient->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		text = g_strdup (ngettext ("A program wants to install a font", "A program wants to install fonts", len));
+	}
 
-	/* TRANSLATORS: button: confirm to install fonts */
-	ret = gpk_client_confirm_action (gclient, title, message, _("Search"));
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_client_confirm_action (gclient, text, message, _("Search"));
+	g_free (text);
 	g_free (message);
 	if (!ret) {
 		gpk_client_error_set (error, GPK_CLIENT_ERROR_CANCELLED, "did not agree to search");

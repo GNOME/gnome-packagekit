@@ -696,12 +696,15 @@ gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 	const gchar *text = NULL;
 	switch (state) {
 	case PK_UPDATE_STATE_ENUM_STABLE:
+		/* TRANSLATORS: A distribution stability level */
 		text = _("Stable");
 		break;
 	case PK_UPDATE_STATE_ENUM_UNSTABLE:
+		/* TRANSLATORS: A distribution stability level */
 		text = _("Unstable");
 		break;
 	case PK_UPDATE_STATE_ENUM_TESTING:
+		/* TRANSLATORS: A distribution stability level */
 		text = _("Testing");
 		break;
 	default:
@@ -770,99 +773,131 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 	const gchar *text = NULL;
 	switch (status) {
 	case PK_STATUS_ENUM_UNKNOWN:
+		/* TRANSLATORS: This is when the status is not known */
 		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
+		/* TRANSLATORS: The transaction state */
 		text = _("Waiting for service to start");
 		break;
 	case PK_STATUS_ENUM_WAIT:
+		/* TRANSLATORS: The transaction state */
 		text = _("Waiting for other tasks");
 		break;
 	case PK_STATUS_ENUM_RUNNING:
+		/* TRANSLATORS: The transaction state */
 		text = _("Running task");
 		break;
 	case PK_STATUS_ENUM_QUERY:
+		/* TRANSLATORS: The transaction state */
 		text = _("Querying");
 		break;
 	case PK_STATUS_ENUM_INFO:
+		/* TRANSLATORS: The transaction state */
 		text = _("Getting information");
 		break;
 	case PK_STATUS_ENUM_REMOVE:
-		text = _("Removing");
+		/* TRANSLATORS: The transaction state */
+		text = _("Removing packages");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD:
-		text = _("Downloading");
+		/* TRANSLATORS: The transaction state */
+		text = _("Downloading packages");
 		break;
 	case PK_STATUS_ENUM_INSTALL:
-		text = _("Installing");
+		/* TRANSLATORS: The transaction state */
+		text = _("Installing packages");
 		break;
 	case PK_STATUS_ENUM_REFRESH_CACHE:
+		/* TRANSLATORS: The transaction state */
 		text = _("Refreshing software list");
 		break;
 	case PK_STATUS_ENUM_UPDATE:
-		text = _("Updating");
+		/* TRANSLATORS: The transaction state */
+		text = _("Updating packages");
 		break;
 	case PK_STATUS_ENUM_CLEANUP:
-		text = _("Cleaning up");
+		/* TRANSLATORS: The transaction state */
+		text = _("Cleaning up packages");
 		break;
 	case PK_STATUS_ENUM_OBSOLETE:
-		text = _("Obsoleting");
+		/* TRANSLATORS: The transaction state */
+		text = _("Obsoleting packages");
 		break;
 	case PK_STATUS_ENUM_DEP_RESOLVE:
+		/* TRANSLATORS: The transaction state */
 		text = _("Resolving dependencies");
 		break;
 	case PK_STATUS_ENUM_SIG_CHECK:
+		/* TRANSLATORS: The transaction state */
 		text = _("Checking signatures");
 		break;
 	case PK_STATUS_ENUM_ROLLBACK:
+		/* TRANSLATORS: The transaction state */
 		text = _("Rolling back");
 		break;
 	case PK_STATUS_ENUM_TEST_COMMIT:
+		/* TRANSLATORS: The transaction state */
 		text = _("Testing changes");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
+		/* TRANSLATORS: The transaction state */
 		text = _("Committing changes");
 		break;
 	case PK_STATUS_ENUM_REQUEST:
+		/* TRANSLATORS: The transaction state */
 		text = _("Requesting data");
 		break;
 	case PK_STATUS_ENUM_FINISHED:
+		/* TRANSLATORS: The transaction state */
 		text = _("Finished");
 		break;
 	case PK_STATUS_ENUM_CANCEL:
+		/* TRANSLATORS: The transaction state */
 		text = _("Cancelling");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_REPOSITORY:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading repository information");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading list of packages");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_FILELIST:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading file lists");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_CHANGELOG:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading lists of changes");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_GROUP:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading groups");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO:
+		/* TRANSLATORS: The transaction state */
 		text = _("Downloading update information");
 		break;
 	case PK_STATUS_ENUM_REPACKAGING:
+		/* TRANSLATORS: The transaction state */
 		text = _("Repackaging files");
 		break;
 	case PK_STATUS_ENUM_LOADING_CACHE:
+		/* TRANSLATORS: The transaction state */
 		text = _("Loading cache");
 		break;
 	case PK_STATUS_ENUM_SCAN_APPLICATIONS:
+		/* TRANSLATORS: The transaction state */
 		text = _("Scanning installed applications");
 		break;
 	case PK_STATUS_ENUM_GENERATE_PACKAGE_LIST:
+		/* TRANSLATORS: The transaction state */
 		text = _("Generating package lists");
 		break;
 	case PK_STATUS_ENUM_WAITING_FOR_LOCK:
+		/* TRANSLATORS: The transaction state */
 		text = _("Waiting for legacy package manager lock");
 		break;
 	default:
@@ -922,32 +957,41 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 	const gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_LOW:
+		/* TRANSLATORS: The type of update */
 		text = _("Trivial update");
 		break;
 	case PK_INFO_ENUM_NORMAL:
-		text = _("Update");
+		/* TRANSLATORS: The type of update */
+		text = _("Normal update");
 		break;
 	case PK_INFO_ENUM_IMPORTANT:
+		/* TRANSLATORS: The type of update */
 		text = _("Important update");
 		break;
 	case PK_INFO_ENUM_SECURITY:
+		/* TRANSLATORS: The type of update */
 		text = _("Security update");
 		break;
 	case PK_INFO_ENUM_BUGFIX:
+		/* TRANSLATORS: The type of update */
 		text = _("Bug fix update");
 		break;
 	case PK_INFO_ENUM_ENHANCEMENT:
+		/* TRANSLATORS: The type of update */
 		text = _("Enhancement update");
 		break;
 	case PK_INFO_ENUM_BLOCKED:
+		/* TRANSLATORS: The type of update */
 		text = _("Blocked update");
 		break;
 	case PK_INFO_ENUM_INSTALLED:
 	case PK_INFO_ENUM_COLLECTION_INSTALLED:
+		/* TRANSLATORS: The state of a package */
 		text = _("Installed");
 		break;
 	case PK_INFO_ENUM_AVAILABLE:
 	case PK_INFO_ENUM_COLLECTION_AVAILABLE:
+		/* TRANSLATORS: The state of a package, i.e. not installed */
 		text = _("Available");
 		break;
 	default:
@@ -965,21 +1009,27 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 	const gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_DOWNLOADING:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Downloading");
 		break;
 	case PK_INFO_ENUM_UPDATING:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Updating");
 		break;
 	case PK_INFO_ENUM_INSTALLING:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Installing");
 		break;
 	case PK_INFO_ENUM_REMOVING:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Removing");
 		break;
 	case PK_INFO_ENUM_CLEANUP:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Cleaning up");
 		break;
 	case PK_INFO_ENUM_OBSOLETING:
+		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Obsoleting");
 		break;
 	default:
@@ -997,21 +1047,27 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 	const gchar *text = NULL;
 	switch (info) {
 	case PK_INFO_ENUM_DOWNLOADING:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Downloaded");
 		break;
 	case PK_INFO_ENUM_UPDATING:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Updated");
 		break;
 	case PK_INFO_ENUM_INSTALLING:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Installed");
 		break;
 	case PK_INFO_ENUM_REMOVING:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Removed");
 		break;
 	case PK_INFO_ENUM_CLEANUP:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Cleaned up");
 		break;
 	case PK_INFO_ENUM_OBSOLETING:
+		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Obsoleted");
 		break;
 	default:
@@ -1029,96 +1085,127 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Unknown role type");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting dependencies");
 		break;
 	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting update detail");
 		break;
 	case PK_ROLE_ENUM_GET_DETAILS:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting details");
 		break;
 	case PK_ROLE_ENUM_GET_REQUIRES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting requires");
 		break;
 	case PK_ROLE_ENUM_GET_UPDATES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting updates");
 		break;
 	case PK_ROLE_ENUM_SEARCH_DETAILS:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Searching details");
 		break;
 	case PK_ROLE_ENUM_SEARCH_FILE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Searching for file");
 		break;
 	case PK_ROLE_ENUM_SEARCH_GROUP:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Searching groups");
 		break;
 	case PK_ROLE_ENUM_SEARCH_NAME:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Searching for package name");
 		break;
 	case PK_ROLE_ENUM_REMOVE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Removing");
 		break;
 	case PK_ROLE_ENUM_INSTALL_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Installing");
 		break;
 	case PK_ROLE_ENUM_INSTALL_FILES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Installing file");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Refreshing package cache");
 		break;
 	case PK_ROLE_ENUM_UPDATE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Updating packages");
 		break;
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Updating system");
 		break;
 	case PK_ROLE_ENUM_CANCEL:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Canceling");
 		break;
 	case PK_ROLE_ENUM_ROLLBACK:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Rolling back");
 		break;
 	case PK_ROLE_ENUM_GET_REPO_LIST:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting list of repositories");
 		break;
 	case PK_ROLE_ENUM_REPO_ENABLE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Enabling repository");
 		break;
 	case PK_ROLE_ENUM_REPO_SET_DATA:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Setting repository data");
 		break;
 	case PK_ROLE_ENUM_RESOLVE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Resolving");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting file list");
 		break;
 	case PK_ROLE_ENUM_WHAT_PROVIDES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting what provides");
 		break;
 	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Installing signature");
 		break;
 	case PK_ROLE_ENUM_GET_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting package lists");
 		break;
 	case PK_ROLE_ENUM_ACCEPT_EULA:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Accepting EULA");
 		break;
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Downloading packages");
 		break;
 	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting distribution upgrade information");
 		break;
 	case PK_ROLE_ENUM_GET_CATEGORIES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting categories");
 		break;
 	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting old transactions");
 		break;
 	default:
@@ -1138,96 +1225,127 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	const gchar *text = NULL;
 	switch (role) {
 	case PK_ROLE_ENUM_UNKNOWN:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Unknown role type");
 		break;
 	case PK_ROLE_ENUM_GET_DEPENDS:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got dependencies");
 		break;
 	case PK_ROLE_ENUM_GET_UPDATE_DETAIL:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got update detail");
 		break;
 	case PK_ROLE_ENUM_GET_DETAILS:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got details");
 		break;
 	case PK_ROLE_ENUM_GET_REQUIRES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got requires");
 		break;
 	case PK_ROLE_ENUM_GET_UPDATES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got updates");
 		break;
 	case PK_ROLE_ENUM_SEARCH_DETAILS:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got details");
 		break;
 	case PK_ROLE_ENUM_SEARCH_FILE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Searched for file");
 		break;
 	case PK_ROLE_ENUM_SEARCH_GROUP:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Searched groups");
 		break;
 	case PK_ROLE_ENUM_SEARCH_NAME:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Searched for package name");
 		break;
 	case PK_ROLE_ENUM_REMOVE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Removed packages");
 		break;
 	case PK_ROLE_ENUM_INSTALL_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Installed packages");
 		break;
 	case PK_ROLE_ENUM_INSTALL_FILES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Installed local files");
 		break;
 	case PK_ROLE_ENUM_REFRESH_CACHE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Refreshed package cache");
 		break;
 	case PK_ROLE_ENUM_UPDATE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Updated packages");
 		break;
 	case PK_ROLE_ENUM_UPDATE_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Updated system");
 		break;
 	case PK_ROLE_ENUM_CANCEL:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Canceled");
 		break;
 	case PK_ROLE_ENUM_ROLLBACK:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Rolled back");
 		break;
 	case PK_ROLE_ENUM_GET_REPO_LIST:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got list of repositories");
 		break;
 	case PK_ROLE_ENUM_REPO_ENABLE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Enabled repository");
 		break;
 	case PK_ROLE_ENUM_REPO_SET_DATA:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Set repository data");
 		break;
 	case PK_ROLE_ENUM_RESOLVE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Resolved");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got file list");
 		break;
 	case PK_ROLE_ENUM_WHAT_PROVIDES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got what provides");
 		break;
 	case PK_ROLE_ENUM_INSTALL_SIGNATURE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Installed signature");
 		break;
 	case PK_ROLE_ENUM_GET_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got package lists");
 		break;
 	case PK_ROLE_ENUM_ACCEPT_EULA:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Accepted EULA");
 		break;
 	case PK_ROLE_ENUM_DOWNLOAD_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Downloaded packages");
 		break;
 	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got distribution upgrades");
 		break;
 	case PK_ROLE_ENUM_GET_CATEGORIES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got categories");
 		break;
 	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got old transactions");
 		break;
 	default:
@@ -1245,108 +1363,143 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	const gchar *text = NULL;
 	switch (group) {
 	case PK_GROUP_ENUM_ACCESSIBILITY:
+		/* TRANSLATORS: The group type */
 		text = _("Accessibility");
 		break;
 	case PK_GROUP_ENUM_ACCESSORIES:
+		/* TRANSLATORS: The group type */
 		text = _("Accessories");
 		break;
 	case PK_GROUP_ENUM_EDUCATION:
+		/* TRANSLATORS: The group type */
 		text = _("Education");
 		break;
 	case PK_GROUP_ENUM_GAMES:
+		/* TRANSLATORS: The group type */
 		text = _("Games");
 		break;
 	case PK_GROUP_ENUM_GRAPHICS:
+		/* TRANSLATORS: The group type */
 		text = _("Graphics");
 		break;
 	case PK_GROUP_ENUM_INTERNET:
+		/* TRANSLATORS: The group type */
 		text = _("Internet");
 		break;
 	case PK_GROUP_ENUM_OFFICE:
+		/* TRANSLATORS: The group type */
 		text = _("Office");
 		break;
 	case PK_GROUP_ENUM_OTHER:
+		/* TRANSLATORS: The group type */
 		text = _("Other");
 		break;
 	case PK_GROUP_ENUM_PROGRAMMING:
+		/* TRANSLATORS: The group type */
 		text = _("Programming");
 		break;
 	case PK_GROUP_ENUM_MULTIMEDIA:
+		/* TRANSLATORS: The group type */
 		text = _("Multimedia");
 		break;
 	case PK_GROUP_ENUM_SYSTEM:
+		/* TRANSLATORS: The group type */
 		text = _("System");
 		break;
 	case PK_GROUP_ENUM_DESKTOP_GNOME:
+		/* TRANSLATORS: The group type */
 		text = _("GNOME desktop");
 		break;
 	case PK_GROUP_ENUM_DESKTOP_KDE:
+		/* TRANSLATORS: The group type */
 		text = _("KDE desktop");
 		break;
 	case PK_GROUP_ENUM_DESKTOP_XFCE:
+		/* TRANSLATORS: The group type */
 		text = _("XFCE desktop");
 		break;
 	case PK_GROUP_ENUM_DESKTOP_OTHER:
+		/* TRANSLATORS: The group type */
 		text = _("Other desktops");
 		break;
 	case PK_GROUP_ENUM_PUBLISHING:
+		/* TRANSLATORS: The group type */
 		text = _("Publishing");
 		break;
 	case PK_GROUP_ENUM_SERVERS:
+		/* TRANSLATORS: The group type */
 		text = _("Servers");
 		break;
 	case PK_GROUP_ENUM_FONTS:
+		/* TRANSLATORS: The group type */
 		text = _("Fonts");
 		break;
 	case PK_GROUP_ENUM_ADMIN_TOOLS:
+		/* TRANSLATORS: The group type */
 		text = _("Admin tools");
 		break;
 	case PK_GROUP_ENUM_LEGACY:
+		/* TRANSLATORS: The group type */
 		text = _("Legacy");
 		break;
 	case PK_GROUP_ENUM_LOCALIZATION:
+		/* TRANSLATORS: The group type */
 		text = _("Localization");
 		break;
 	case PK_GROUP_ENUM_VIRTUALIZATION:
+		/* TRANSLATORS: The group type */
 		text = _("Virtualization");
 		break;
 	case PK_GROUP_ENUM_SECURITY:
+		/* TRANSLATORS: The group type */
 		text = _("Security");
 		break;
 	case PK_GROUP_ENUM_POWER_MANAGEMENT:
+		/* TRANSLATORS: The group type */
 		text = _("Power management");
 		break;
 	case PK_GROUP_ENUM_COMMUNICATION:
+		/* TRANSLATORS: The group type */
 		text = _("Communication");
 		break;
 	case PK_GROUP_ENUM_NETWORK:
+		/* TRANSLATORS: The group type */
 		text = _("Network");
 		break;
 	case PK_GROUP_ENUM_MAPS:
+		/* TRANSLATORS: The group type */
 		text = _("Maps");
 		break;
 	case PK_GROUP_ENUM_REPOS:
+		/* TRANSLATORS: The group type */
 		text = _("Software sources");
 		break;
 	case PK_GROUP_ENUM_SCIENCE:
+		/* TRANSLATORS: The group type */
 		text = _("Science");
 		break;
 	case PK_GROUP_ENUM_DOCUMENTATION:
+		/* TRANSLATORS: The group type */
 		text = _("Documentation");
 		break;
 	case PK_GROUP_ENUM_ELECTRONICS:
+		/* TRANSLATORS: The group type */
 		text = _("Electronics");
 		break;
 	case PK_GROUP_ENUM_COLLECTIONS:
+		/* TRANSLATORS: The group type */
 		text = _("Package collections");
 		break;
 	case PK_GROUP_ENUM_VENDOR:
+		/* TRANSLATORS: The group type */
 		text = _("Vendor");
 		break;
 	case PK_GROUP_ENUM_NEWEST:
+		/* TRANSLATORS: The group type */
 		text = _("Newest packages");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
+		/* TRANSLATORS: The group type */
 		text = _("Unknown group");
 		break;
 	default:

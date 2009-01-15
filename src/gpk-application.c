@@ -707,8 +707,8 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 		length = pk_package_list_get_size (list);
 		name = gpk_dialog_package_id_name_join_locale (package_ids);
 		/* TRANSLATORS: title: how many packages require this package */
-		title = g_strdup_printf (ngettext ("%i additional package require %s",
-						   "%i additional packages require %s",
+		title = g_strdup_printf (ngettext ("%i package requires %s",
+						   "%i packages require %s",
 						   length), length, name);
 
 		/* TRANSLATORS: show a list of packages for the package */
@@ -788,7 +788,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 						   "%i additional packages are required for %s",
 						   length), length, name);
 
-		/* TRANSLATORS: message: show the list of packages for this package */
+		/* TRANSLATORS: message: show the list of dependant packages for this package */
 		message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
 						     "Packages listed below are required for %s to function correctly.",
 						     length), name);
