@@ -198,7 +198,7 @@ egg_dbus_monitor_is_connected (EggDbusMonitor *monitor)
 const gchar *
 egg_dbus_monitor_get_service (EggDbusMonitor *monitor)
 {
-	g_return_val_if_fail (EGG_IS_DBUS_MONITOR (monitor), FALSE);
+	g_return_val_if_fail (EGG_IS_DBUS_MONITOR (monitor), NULL);
 
 	return monitor->priv->service;
 }

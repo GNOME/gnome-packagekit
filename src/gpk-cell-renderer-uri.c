@@ -31,7 +31,7 @@
 enum {
 	PROP_0,
 	PROP_URI,
-	PROP_CLICKED,
+	PROP_CLICKED
 };
 
 enum {

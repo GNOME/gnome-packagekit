@@ -344,7 +344,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	guint len;
 	GpkClientRunPriv priv;
 
-	g_return_val_if_fail (package_ids != NULL, FALSE);
+	g_return_val_if_fail (package_ids != NULL, NULL);
 
 	/* use custom widgets */
 	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);

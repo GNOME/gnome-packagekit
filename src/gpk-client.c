@@ -3046,7 +3046,7 @@ gpk_client_get_updates (GpkClient *gclient, GError **error)
 	GError *error_local = NULL;
 	PkPackageList *list = NULL;
 
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);
@@ -3097,7 +3097,7 @@ gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
 	gboolean ret;
 	GError *error_local = NULL;
 
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
 
 	/* are we not able to do this? */
 	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
@@ -3157,7 +3157,7 @@ gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **
 	GError *error_local = NULL;
 	gchar **package_ids;
 
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
+	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
 
 	/* reset */
 	ret = pk_client_reset (gclient->priv->client_action, &error_local);

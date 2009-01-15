@@ -183,8 +183,8 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	guint len;
 	guint i;
 
-	g_return_val_if_fail (list != NULL, FALSE);
-	g_return_val_if_fail (title != NULL, FALSE);
+	g_return_val_if_fail (list != NULL, NULL);
+	g_return_val_if_fail (title != NULL, NULL);
 
 	/* we have to do this before we connect up the glade file */
 	gpk_update_viewer_setup_policykit ();
