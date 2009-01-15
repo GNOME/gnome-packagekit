@@ -291,6 +291,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 static void
 gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
 {
+	guint i;
 	gboolean ret;
 	gboolean value;
 	PkRoleEnum role;
@@ -298,8 +299,10 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum
 	GError *error = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
-	const gchar *restart_message;
+	GString *string;
+	PkPackageId *id;
 	const gchar *icon_name;
+	const GPtrArray	*array;
 	NotifyNotification *notification;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
@@ -319,10 +322,27 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum
 		/* if more important than what we are already showing, then update the icon */
 		restart = pk_client_get_require_restart (client);
 		if (restart > watch->priv->restart) {
-			restart_message = gpk_restart_enum_to_localised_text (restart);
+
+			/* get title */
+			string = g_string_new (gpk_restart_enum_to_localised_text (restart));
+			g_string_append_c (string, '\n');
+
+			/* list packages requiring this */
+			array = pk_client_get_require_restart_list (client);
+			for (i=0; i<array->len; i++) {
+				id = g_ptr_array_index (array, i);
+				/* TRANSLATORS: this is a package that required an update */
+				g_string_append_printf (string, "%s %s\n", _("Package:"), id->name);
+			}
+
+			/* remove final \n */
+			if (string->len > 0)
+				g_string_set_size (string, string->len - 1);
+
 			icon_name = gpk_restart_enum_to_icon_name (restart);
-			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_action), restart_message);
+			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_action), string->str);
 			gpk_smart_icon_set_icon_name (watch->priv->sicon_action, icon_name);
+			g_string_free (string, TRUE);
 
 			/* save new restart */
 			watch->priv->restart = restart;
