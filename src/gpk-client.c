@@ -2907,7 +2907,7 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 	GError *error_local = NULL;
 	gchar *text = NULL;
 	gchar *message = NULL;
-	NotifyNotification *notification;
+	NotifyNotification *notification = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
@@ -2969,6 +2969,15 @@ gpk_client_update_system (GpkClient *gclient, GError **error)
 
 	/* wait for an answer */
 	g_main_loop_run (gclient->priv->loop);
+
+	/* close the notification */
+	if (notification != NULL) {
+		ret = notify_notification_close (notification, &error_local);
+		if (!ret) {
+			egg_debug ("failed to close notification: %s", error_local->message);
+			g_error_free (error_local);
+		}
+	}
 
 	/* fail the transaction and set the correct error */
 	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
