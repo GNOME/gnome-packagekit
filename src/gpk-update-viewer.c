@@ -1865,6 +1865,11 @@ main (int argc, char *argv[])
 	notify_init ("gpk-update-viewer");
 	gtk_init (&argc, &argv);
 
+	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
+	ret = gpk_check_privileged_user (_("Software Update Viewer"), TRUE);
+	if (!ret)
+		return 1;
+
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
