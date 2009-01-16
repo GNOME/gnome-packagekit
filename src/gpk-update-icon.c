@@ -163,8 +163,10 @@ main (int argc, char *argv[])
 
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Update applet"), FALSE);
-	if (!ret)
+	if (!ret) {
+		egg_warning ("Exit: gpk_check_privileged_user returned FALSE");
 		return 1;
+	}
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
