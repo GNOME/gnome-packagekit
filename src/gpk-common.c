@@ -245,7 +245,7 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 		dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL, "%s", title);
 		/* TRANSLATORS: button: allow the user to run this, even when insecure */
-		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Continue Anyway"), GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Continue _Anyway"), GTK_RESPONSE_OK);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 		result = gtk_dialog_run (GTK_DIALOG(dialog));
