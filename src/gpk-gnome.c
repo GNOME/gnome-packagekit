@@ -55,7 +55,7 @@ gboolean
 gpk_gnome_help (const gchar *link_id)
 {
 	GError *error = NULL;
-	gchar *command = NULL;
+	gchar *command;
 	const gchar *lang;
 	gchar *uri = NULL;
 	GdkScreen *gscreen;
@@ -70,18 +70,18 @@ gpk_gnome_help (const gchar *link_id)
 			continue;
 		uri = g_build_filename (DATADIR, "/gnome/help/gnome-packagekit/",
 					lang, "/gnome-packagekit.xml", NULL);
-		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
+		if (g_file_test (uri, G_FILE_TEST_EXISTS))
+		{
 			found_help_file = TRUE;
 			break;
 		}
 		g_free (uri);
 	}
-	if (!found_help_file) {
-		egg_warning ("cant find help file for %s", link_id);
-		ret = FALSE;
-		goto out;
+	if (! found_help_file) {
+		egg_warning ("cant find help file");
+		return FALSE;
 	}
-
+	
 	if (link_id)
 		command = g_strconcat ("gnome-open ghelp://", uri, "?", link_id, NULL);
 	else
@@ -99,7 +99,7 @@ gpk_gnome_help (const gchar *link_id)
 		g_error_free (error);
 		ret = FALSE;
 	}
-out:
+
 	g_free (command);
 	g_free (uri);
 	return ret;
