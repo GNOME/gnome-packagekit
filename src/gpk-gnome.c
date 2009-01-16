@@ -71,18 +71,17 @@ gpk_gnome_help (const gchar *link_id)
 			continue;
 		uri = g_build_filename (DATADIR, "/gnome/help/gnome-packagekit/",
 					lang, "/gnome-packagekit.xml", NULL);
-		if (g_file_test (uri, G_FILE_TEST_EXISTS))
-		{
+		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
 			found_help_file = TRUE;
 			break;
 		}
 		g_free (uri);
 	}
-	if (! found_help_file) {
+	if (!found_help_file) {
 		egg_warning ("cant find help file");
 		return FALSE;
 	}
-	
+
 	if (link_id)
 		command = g_strconcat ("gnome-open ghelp://", uri, "?", link_id, NULL);
 	else
