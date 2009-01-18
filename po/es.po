@@ -10,9 +10,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-15 16:58+0000\n"
-"PO-Revision-Date: 2009-01-10 01:37+0100\n"
+"Report-Msgid-Bugs-To: https://bugs.freedesktop.org/enter_bug.cgi?"
+"product=PackageKit&component=General\n"
+"POT-Creation-Date: 2009-01-15 17:03+0000\n"
+"PO-Revision-Date: 2009-01-16 20:01+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -90,11 +91,12 @@ msgid "Firmware files that should not be searched for"
 msgstr "Archivos de firmware que no se deben buscar"
 
 #: ../data/gnome-packagekit.schemas.in.h:14
-#, fuzzy
 msgid ""
 "Firmware files that should not be searched for, separated by commas. These "
 "can include '*' and '?' characters"
-msgstr "Archivos de firmware que no se deben buscar, separados por comas"
+msgstr ""
+"Archivos de firmware que no se deben buscar, separados por comas. Se pueden "
+"incluir los caracteres «*» y «?»"
 
 #: ../data/gnome-packagekit.schemas.in.h:15
 msgid "GTK+ module for font installation"
@@ -162,10 +164,12 @@ msgstr ""
 #: ../data/gnome-packagekit.schemas.in.h:26
 msgid "Interaction modes that must be used, overriding requests from client"
 msgstr ""
+"Modos de interacción que se deben usar de forma predeterminada, ignorando las peticiones "
+"del cliente"
 
 #: ../data/gnome-packagekit.schemas.in.h:27
 msgid "Interaction modes to use by default"
-msgstr ""
+msgstr "Modos de interacción para usar de forma predeterminada"
 
 #: ../data/gnome-packagekit.schemas.in.h:28
 msgid "Notify the user for completed updates"
@@ -260,13 +264,15 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:46
 msgid "The search mode used by default"
-msgstr ""
+msgstr "El modo de búsqueda utilizado de forma predeterminada"
 
 #: ../data/gnome-packagekit.schemas.in.h:47
 msgid ""
 "The search mode used by default. Options are \"name\", \"details\", or \"file"
 "\""
 msgstr ""
+"El modo de búsqueda usado de forma predeterminada. Las opciones son «nombre», «detalles» o "
+"«archivo»"
 
 #: ../data/gnome-packagekit.schemas.in.h:48
 msgid "This key determines if applications should be able to prompt for fonts"
@@ -274,34 +280,39 @@ msgstr ""
 "Esta clave determina si las aplicaciones pueden preguntar por tipografías"
 
 #: ../data/gnome-packagekit.schemas.in.h:49
-#, fuzzy
 msgid "Use WiFi (wireless LAN) connections to check for updates"
-msgstr "Con qué frecuencia deben comprobarse las actualizaciones"
+msgstr "Usar conexiones WiFi (LAN inalámbrica) para buscar actualizaciones"
 
 #: ../data/gnome-packagekit.schemas.in.h:50
 msgid "Use WiFi connections"
-msgstr ""
+msgstr "Usar conexiones WiFi"
 
 #: ../data/gnome-packagekit.schemas.in.h:51
 msgid "Use mobile broadband connections"
-msgstr ""
+msgstr "Usar conexiones móviles de banda ancha"
 
 #: ../data/gnome-packagekit.schemas.in.h:52
 msgid ""
 "Use mobile broadband connections such as GSM and CDMA to check for updates"
 msgstr ""
+"Usar conexiones móviles de banda ancha como GSM o CDMA para buscar "
+"actualizaciones"
 
 #: ../data/gnome-packagekit.schemas.in.h:53
 msgid ""
 "When displaying UI from a session DBus request, automatically use these "
 "options by default"
 msgstr ""
+"Al mostrar la IU desde una solicitud de sesión de DBUS usar automáticamente "
+"estas opciones de forma predeterminada"
 
 #: ../data/gnome-packagekit.schemas.in.h:54
 msgid ""
 "When displaying UI from a session DBus request, force these options to be "
 "turned on"
 msgstr ""
+"Al mostrar la IU desde una solicitud de sesión de DBUS forzar la activación "
+"de estas opciones"
 
 #: ../data/gpk-application.desktop.in.h:1
 msgid "Add or remove software installed on the system"
@@ -589,7 +600,7 @@ msgstr "<b>Ajustes de actualización</b>"
 
 #: ../data/gpk-prefs.glade.h:4
 msgid "<i>Currently using mobile broadband</i>"
-msgstr ""
+msgstr "<i>Actualmente usando banda ancha móvil</i>"
 
 #: ../data/gpk-prefs.glade.h:5
 msgid "C_heck for updates:"
@@ -601,7 +612,7 @@ msgstr "Comprobar si hay actualizaciones _importantes:"
 
 #: ../data/gpk-prefs.glade.h:7
 msgid "Check for updates when using mobile broadband"
-msgstr ""
+msgstr "Buscar actualizaciones cuando se use banda ancha móvil"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.glade.h:8 ../src/gpk-prefs.c:392
@@ -799,7 +810,7 @@ msgstr "No hay otros paquetes que requieran éste"
 
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:710
-#, fuzzy, c-format
+#, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
 msgstr[0] "%i paquete adicional requiere %s"
@@ -1559,19 +1570,18 @@ msgstr "¿Quiere buscar este archivo ahora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1694
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
-msgstr[0] "necesita instalar paquetes"
-msgstr[1] "necesita instalar paquetes"
+msgstr[0] "%s quiere instalar un paquete"
+msgstr[1] "%s quiere instalar paquetes"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1697
-#, fuzzy
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
-msgstr[0] "necesita instalar paquetes"
-msgstr[1] "necesita instalar paquetes"
+msgstr[0] "Un programa quiere instalar un paquete"
+msgstr[1] "Un programa quiere instalar paquetes"
 
 #. TRANSLATORS: title, searching
 #: ../src/gpk-client.c:1713
@@ -1622,19 +1632,18 @@ msgstr[1] "¿Quiere buscarlos ahora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1894
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
-msgstr[0] "quiere instalar un archivo"
-msgstr[1] "quiere instalar un archivo"
+msgstr[0] "%s quiere instalar un archivo"
+msgstr[1] "%s quiere instalar archivos"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1897
-#, fuzzy
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
-msgstr[0] "quiere instalar un archivo"
-msgstr[1] "quiere instalar un archivo"
+msgstr[0] "Un programa quiere instalar un archivo"
+msgstr[1] "Un programa quiere instalar archivos"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
@@ -1687,19 +1696,18 @@ msgstr[1] "Se necesitan los siguientes complementos:"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2117
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires an additional plugin"
 msgid_plural "%s requires additional plugins"
-msgstr[0] "requiere complementos adicionales"
-msgstr[1] "requiere complementos adicionales"
+msgstr[0] "%s necesita un complemento adicional"
+msgstr[1] "%s necesita complementos adicionales"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2120
-#, fuzzy
 msgid "A program requires an additional plugin"
 msgid_plural "A program requires additional plugins"
-msgstr[0] "requiere complementos adicionales"
-msgstr[1] "requiere complementos adicionales"
+msgstr[0] "Un programa necesita un complemento adicional"
+msgstr[1] "Un programa necesita complementos adicionales"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-client.c:2124 ../src/gpk-client.c:2342 ../src/gpk-client.c:2617
@@ -1749,19 +1757,18 @@ msgstr "¿Quiere buscar un programa para abrir este tipo de archivo ahora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2335
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
-msgstr[0] "requiere un tipo MIME nuevo"
-msgstr[1] "requiere un tipo MIME nuevo"
+msgstr[0] "%s necesita un tipo MIME nuevo"
+msgstr[1] "%s necesita tipos MIME nuevos"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2338
-#, fuzzy
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
-msgstr[0] "requiere un tipo MIME nuevo"
-msgstr[1] "requiere un tipo MIME nuevo"
+msgstr[0] "Un necesita requiere un tipo MIME nuevo"
+msgstr[1] "Un necesita requiere tipos MIME nuevos"
 
 #. TRANSLATORS: title: searching for mime type handlers
 #: ../src/gpk-client.c:2354
@@ -1827,19 +1834,18 @@ msgstr[1] "¿Quiere buscar unos paquetes adecuados ahora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2610
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
-msgstr[0] "quiere instalar una tipografía"
-msgstr[1] "quiere instalar tipografías"
+msgstr[0] "%s quiere instalar una tipografía"
+msgstr[1] "%s quiere instalar tipografías"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2613
-#, fuzzy
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
-msgstr[0] "quiere instalar una tipografía"
-msgstr[1] "quiere instalar tipografías"
+msgstr[0] "Un programa quiere instalar una tipografía"
+msgstr[1] "Un programa quiere instalar tipografías"
 
 #. TRANSLATORS: title to show when searching for font files
 #: ../src/gpk-client.c:2628
@@ -2029,9 +2035,9 @@ msgid "_Install"
 msgstr "_Instalar"
 
 #: ../src/gpk-client-dialog.c:441
-#, fuzzy, c-format
+#, c-format
 msgid "Remaining time : %s"
-msgstr "Buscando nombre de archivo: %s"
+msgstr "Tiempo restante : %s"
 
 #. TRANSLATORS: button: execute the application
 #: ../src/gpk-client-run.c:152
@@ -2766,6 +2772,8 @@ msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"No ha espacio suficiente en el dispositivo.\n"
+"Libere espacio en el disco de sistema para ejecutar esta operación."
 
 #: ../src/gpk-enum.c:647
 msgid "No restart is necessary for this update"
@@ -2896,9 +2904,8 @@ msgstr "Obteniendo información"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:801
-#, fuzzy
 msgid "Removing packages"
-msgstr "Quitar paquetes"
+msgstr "Eliminando paquetes"
 
 #. TRANSLATORS: The transaction state
 #. TRANSLATORS: The role of the transaction, in present tense
@@ -2919,15 +2926,13 @@ msgstr "Actualizando paquetes"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:821
-#, fuzzy
 msgid "Cleaning up packages"
-msgstr "Buscando paquetes"
+msgstr "Limpiando paquetes"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:825
-#, fuzzy
 msgid "Obsoleting packages"
-msgstr "Instalar paquetes"
+msgstr "Marcando paquetes como obsoletos"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:829
@@ -3022,9 +3027,8 @@ msgstr "Generando listas de paquetes"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:901
-#, fuzzy
 msgid "Waiting for legacy package manager lock"
-msgstr "Buscando por el nombre del paquete"
+msgstr "Esperando al bloqueo del gestor de paquetes obsoletos"
 
 #. TRANSLATORS: type of update
 #: ../src/gpk-enum.c:919
@@ -3089,9 +3093,8 @@ msgstr "Actualización trivial"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:965
-#, fuzzy
 msgid "Normal update"
-msgstr "Actualización trivial"
+msgstr "Actualización normal"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:969
@@ -4183,10 +4186,10 @@ msgstr "Volver a la vista global"
 
 #. TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting
 #: ../src/gpk-watch.c:135
-#, fuzzy, c-format
+#, c-format
 msgid "(%i more task)"
 msgid_plural "(%i more tasks)"
-msgstr[0] "(%i tareas más)"
+msgstr[0] "(%i tarea más)"
 msgstr[1] "(%i tareas más)"
 
 #: ../src/gpk-watch.c:281
@@ -4195,9 +4198,8 @@ msgstr "Detalle de errores del gestor de paquetes"
 
 #. TRANSLATORS: this is a package that required an update
 #: ../src/gpk-watch.c:335
-#, fuzzy
 msgid "Package:"
-msgstr "Paquete"
+msgstr "Paquete:"
 
 #. TRANSLATORS: This is the message in the libnotify body
 #: ../src/gpk-watch.c:385
