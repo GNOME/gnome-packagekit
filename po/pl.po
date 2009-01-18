@@ -7,9 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pl\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-15 16:58+0000\n"
-"PO-Revision-Date: 2008-11-21 14:06+0100\n"
+"Report-Msgid-Bugs-To: https://bugs.freedesktop.org/enter_bug.cgi?"
+"product=PackageKit&component=General\n"
+"POT-Creation-Date: 2009-01-16 13:01+0000\n"
+"PO-Revision-Date: 2009-01-16 23:14+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Aviary.pl <gnomepl@.aviary.pl>\n"
 "MIME-Version: 1.0\n"
@@ -86,17 +87,16 @@ msgid "Firmware files that should not be searched for"
 msgstr "Pliki oprogramowania dla urządzeń, które nie powinny być wyszukiwane"
 
 #: ../data/gnome-packagekit.schemas.in.h:14
-#, fuzzy
 msgid ""
 "Firmware files that should not be searched for, separated by commas. These "
 "can include '*' and '?' characters"
 msgstr ""
 "Pliki oprogramowania dla urządzeń, które nie powinny być wyszukiwane, "
-"oddzielone przecinkami"
+"oddzielone przecinkami. Można używać znaków \"*\" i \"?\""
 
 #: ../data/gnome-packagekit.schemas.in.h:15
 msgid "GTK+ module for font installation"
-msgstr ""
+msgstr "Moduł GTK+ do instalacji czcionek"
 
 #: ../data/gnome-packagekit.schemas.in.h:16
 msgid "Get the update list when the session starts"
@@ -158,10 +158,11 @@ msgstr "Automatyczne instalowanie aktualizacji podczas zasilania z akumulatora"
 #: ../data/gnome-packagekit.schemas.in.h:26
 msgid "Interaction modes that must be used, overriding requests from client"
 msgstr ""
+"Tryby interakcji, które muszą zostać użyte, zastępując żądania od klienta"
 
 #: ../data/gnome-packagekit.schemas.in.h:27
 msgid "Interaction modes to use by default"
-msgstr ""
+msgstr "Domyślnie używane tryby interakcji"
 
 #: ../data/gnome-packagekit.schemas.in.h:28
 msgid "Notify the user for completed updates"
@@ -256,47 +257,55 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:46
 msgid "The search mode used by default"
-msgstr ""
+msgstr "Domyślnie używany tryb wyszukiwania"
 
 #: ../data/gnome-packagekit.schemas.in.h:47
 msgid ""
 "The search mode used by default. Options are \"name\", \"details\", or \"file"
 "\""
 msgstr ""
+"Domyślnie używany tryb wyszukiwania. Opcje to \"name\", \"details\" lub "
+"\"file\""
 
 #: ../data/gnome-packagekit.schemas.in.h:48
 msgid "This key determines if applications should be able to prompt for fonts"
 msgstr ""
+"Ten klucz określa, czy programy mogą prosić o zainstalowanie nowych czcionek"
 
 #: ../data/gnome-packagekit.schemas.in.h:49
-#, fuzzy
 msgid "Use WiFi (wireless LAN) connections to check for updates"
-msgstr "Jak często sprawdzać aktualizacje"
+msgstr ""
+"Używanie połączeń WiFi (bezprzewodowa sieć LAN), aby sprawdzać aktualizacje"
 
 #: ../data/gnome-packagekit.schemas.in.h:50
 msgid "Use WiFi connections"
-msgstr ""
+msgstr "Używanie połączeń WiFi"
 
 #: ../data/gnome-packagekit.schemas.in.h:51
 msgid "Use mobile broadband connections"
-msgstr ""
+msgstr "Używanie połączeń sieci komórkowych"
 
 #: ../data/gnome-packagekit.schemas.in.h:52
 msgid ""
 "Use mobile broadband connections such as GSM and CDMA to check for updates"
 msgstr ""
+"Używanie połączeń sieci komórkowych, takich jak GSM i CDMA do sprawdzania "
+"aktualizacji"
 
 #: ../data/gnome-packagekit.schemas.in.h:53
 msgid ""
 "When displaying UI from a session DBus request, automatically use these "
 "options by default"
 msgstr ""
+"Domyślne automatyczne używanie tych opcji podczas wyświetlania UI z żądania "
+"sesji D-Bus"
 
 #: ../data/gnome-packagekit.schemas.in.h:54
 msgid ""
 "When displaying UI from a session DBus request, force these options to be "
 "turned on"
 msgstr ""
+"Wymuszanie włączenia tych opcji podczas wyświetlania UI z żądania sesji D-Bus"
 
 #: ../data/gpk-application.desktop.in.h:1
 msgid "Add or remove software installed on the system"
@@ -504,7 +513,7 @@ msgstr "_System"
 
 #: ../data/gpk-application.glade.h:47
 msgid "gtk-quit"
-msgstr ""
+msgstr "gtk-quit"
 
 #: ../data/gpk-backend-status.glade.h:1
 msgid "Backend Status"
@@ -584,7 +593,7 @@ msgstr "<b>Ustawienia aktualizacji</b>"
 
 #: ../data/gpk-prefs.glade.h:4
 msgid "<i>Currently using mobile broadband</i>"
-msgstr ""
+msgstr "<i>Używanie sieci komórkowej</i>"
 
 #: ../data/gpk-prefs.glade.h:5
 msgid "C_heck for updates:"
@@ -596,7 +605,7 @@ msgstr "Sprawdzanie dużych akt_ualizacji:"
 
 #: ../data/gpk-prefs.glade.h:7
 msgid "Check for updates when using mobile broadband"
-msgstr ""
+msgstr "Sprawdzanie aktualizacji podczas używania sieci komórkowej"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.glade.h:8 ../src/gpk-prefs.c:392
@@ -795,12 +804,12 @@ msgstr "Żaden inny pakiet nie wymaga tego pakietu"
 
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:710
-#, fuzzy, c-format
+#, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
-msgstr[0] "%i dodatkowy pakiet wymaga %s"
-msgstr[1] "%i dodatkowe pakiety wymagają %s"
-msgstr[2] "%i dodatkowych pakietów wymaga %s"
+msgstr[0] "%i pakiet wymaga %s"
+msgstr[1] "%i pakiety wymagają %s"
+msgstr[2] "%i pakietów wymaga %s"
 
 #. TRANSLATORS: show a list of packages for the package
 #: ../src/gpk-application.c:715
@@ -877,7 +886,7 @@ msgstr "Licencja"
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
 #: ../src/gpk-application.c:1005
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #. TRANSLATORS: the size of the meta package
 #: ../src/gpk-application.c:1023
@@ -1576,21 +1585,20 @@ msgstr "Znaleźć ten plik?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1694
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
-msgstr[0] "chce zainstalować pakiety"
-msgstr[1] "chce zainstalować pakiety"
-msgstr[2] "chce zainstalować pakiety"
+msgstr[0] "%s chce zainstalować pakiet"
+msgstr[1] "%s chce zainstalować pakiety"
+msgstr[2] "%s chce zainstalować pakiety"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1697
-#, fuzzy
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
-msgstr[0] "chce zainstalować pakiety"
-msgstr[1] "chce zainstalować pakiety"
-msgstr[2] "chce zainstalować pakiety"
+msgstr[0] "Program chce zainstalować pakiet"
+msgstr[1] "Program chce zainstalować pakiety"
+msgstr[2] "Program chce zainstalować pakiety"
 
 #. TRANSLATORS: title, searching
 #: ../src/gpk-client.c:1713
@@ -1641,21 +1649,20 @@ msgstr[2] "Znaleźć je teraz?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1894
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
-msgstr[0] "chce zainstalować plik"
-msgstr[1] "chce zainstalować plik"
-msgstr[2] "chce zainstalować plik"
+msgstr[0] "%s chce zainstalować plik"
+msgstr[1] "%s chce zainstalować pliki"
+msgstr[2] "%s chce zainstalować pliki"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1897
-#, fuzzy
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
-msgstr[0] "chce zainstalować plik"
-msgstr[1] "chce zainstalować plik"
-msgstr[2] "chce zainstalować plik"
+msgstr[0] "Program chce zainstalować plik"
+msgstr[1] "Program chce zainstalować pliki"
+msgstr[2] "Program chce zainstalować pliki"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
@@ -1708,21 +1715,20 @@ msgstr[2] "Następujące wtyczki są wymagane:"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2117
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires an additional plugin"
 msgid_plural "%s requires additional plugins"
-msgstr[0] "wymaga dodatkowych wtyczek"
-msgstr[1] "wymaga dodatkowych wtyczek"
-msgstr[2] "wymaga dodatkowych wtyczek"
+msgstr[0] "%s wymaga dodatkowej wtyczki"
+msgstr[1] "%s wymaga dodatkowych wtyczek"
+msgstr[2] "%s wymaga dodatkowych wtyczek"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2120
-#, fuzzy
 msgid "A program requires an additional plugin"
 msgid_plural "A program requires additional plugins"
-msgstr[0] "wymaga dodatkowych wtyczek"
-msgstr[1] "wymaga dodatkowych wtyczek"
-msgstr[2] "wymaga dodatkowych wtyczek"
+msgstr[0] "Program wymaga dodatkowej wtyczki"
+msgstr[1] "Program wymaga dodatkowych wtyczek"
+msgstr[2] "Program wymaga dodatkowych wtyczek"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-client.c:2124 ../src/gpk-client.c:2342 ../src/gpk-client.c:2617
@@ -1772,21 +1778,20 @@ msgstr "Znaleźć program do otworzenie tego typu plików?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2335
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
-msgstr[0] "wymaga nowego typu MIME"
-msgstr[1] "wymaga nowego typu MIME"
-msgstr[2] "wymaga nowego typu MIME"
+msgstr[0] "%s wymaga nowego typu MIME"
+msgstr[1] "%s wymaga nowych typów MIME"
+msgstr[2] "%s wymaga nowych typów MIME"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2338
-#, fuzzy
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
-msgstr[0] "wymaga nowego typu MIME"
-msgstr[1] "wymaga nowego typu MIME"
-msgstr[2] "wymaga nowego typu MIME"
+msgstr[0] "Program wymaga nowego typu MIME"
+msgstr[1] "Program wymaga nowych typów MIME"
+msgstr[2] "Program wymaga nowych typów MIME"
 
 #. TRANSLATORS: title: searching for mime type handlers
 #: ../src/gpk-client.c:2354
@@ -1826,66 +1831,64 @@ msgstr "Nie wybrano żadnych programów do zainstalowania"
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
 #: ../src/gpk-client.c:2508
 msgid "Language tag not parsed"
-msgstr ""
+msgstr "Znacznik języka nie został przeanalizowany"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
 #: ../src/gpk-client.c:2516
 msgid "Language code not matched"
-msgstr ""
+msgstr "Kod języka nie pasuje"
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-client.c:2596
-#, fuzzy
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
-msgstr[0] "Wymagana jest dodatkowa czcionka, aby poprawnie wyświetlić ten plik"
-msgstr[1] "Wymagana jest dodatkowa czcionka, aby poprawnie wyświetlić ten plik"
-msgstr[2] "Wymagana jest dodatkowa czcionka, aby poprawnie wyświetlić ten plik"
+msgstr[0] ""
+"Wymagana jest dodatkowa czcionka, aby poprawnie wyświetlić ten dokument."
+msgstr[1] ""
+"Wymagane są dodatkowe czcionki, aby poprawnie wyświetlić ten dokument."
+msgstr[2] ""
+"Wymagane są dodatkowe czcionki, aby poprawnie wyświetlić ten dokument."
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-client.c:2600
-#, fuzzy
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Znaleźć odpowiednią czcionkę?"
-msgstr[1] "Znaleźć odpowiednią czcionkę?"
-msgstr[2] "Znaleźć odpowiednią czcionkę?"
+msgstr[0] "Znaleźć odpowiedni pakiet?"
+msgstr[1] "Znaleźć odpowiednie pakiety?"
+msgstr[2] "Znaleźć odpowiednie pakiety?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2610
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
-msgstr[0] "chce zainstalować czcionkę"
-msgstr[1] "chce zainstalować czcionkę"
-msgstr[2] "chce zainstalować czcionkę"
+msgstr[0] "%s chce zainstalować czcionkę"
+msgstr[1] "%s chce zainstalować czcionki"
+msgstr[2] "%s chce zainstalować czcionki"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2613
-#, fuzzy
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
-msgstr[0] "chce zainstalować czcionkę"
-msgstr[1] "chce zainstalować czcionkę"
-msgstr[2] "chce zainstalować czcionkę"
+msgstr[0] "Program chce zainstalować czcionkę"
+msgstr[1] "Program chce zainstalować czcionki"
+msgstr[2] "Program chce zainstalować czcionki"
 
 #. TRANSLATORS: title to show when searching for font files
 #: ../src/gpk-client.c:2628
-#, fuzzy
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
-msgstr[0] "Wyszukiwanie czcionek"
+msgstr[0] "Wyszukiwanie czcionki"
 msgstr[1] "Wyszukiwanie czcionek"
 msgstr[2] "Wyszukiwanie czcionek"
 
 #. TRANSLATORS: title: cannot find in sources
 #: ../src/gpk-client.c:2678
-#, fuzzy
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Znalezienie czcionki zakończone niepowodzeniem"
-msgstr[1] "Znalezienie czcionki zakończone niepowodzeniem"
-msgstr[2] "Znalezienie czcionki zakończone niepowodzeniem"
+msgstr[1] "Znalezienie czcionek zakończone niepowodzeniem"
+msgstr[2] "Znalezienie czcionek zakończone niepowodzeniem"
 
 #. TRANSLATORS: message: tell the user we suck
 #: ../src/gpk-client.c:2686
@@ -2061,9 +2064,9 @@ msgid "_Install"
 msgstr "Za_instaluj"
 
 #: ../src/gpk-client-dialog.c:441
-#, fuzzy, c-format
+#, c-format
 msgid "Remaining time : %s"
-msgstr "Wyszukiwanie nazwy pliku: %s"
+msgstr "Pozostały czas: %s"
 
 #. TRANSLATORS: button: execute the application
 #: ../src/gpk-client-run.c:152
@@ -2459,11 +2462,11 @@ msgstr "Brak danych aktualizacji dystrybucji"
 
 #: ../src/gpk-enum.c:443
 msgid "Package is incompatible with this system"
-msgstr ""
+msgstr "Pakiet jest niezgodny z tym systemem"
 
 #: ../src/gpk-enum.c:446
 msgid "No space is left on the disk"
-msgstr ""
+msgstr "Brak miejsca na dysku"
 
 #: ../src/gpk-enum.c:463
 msgid ""
@@ -2786,16 +2789,17 @@ msgstr ""
 "Lista aktualizacji dystrybucji będzie niedostępna."
 
 #: ../src/gpk-enum.c:625
-#, fuzzy
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
-msgstr "Instalowany pakiet jest już zainstalowany."
+msgstr "Instalowany pakiet jest niezgodny z tym systemem."
 
 #: ../src/gpk-enum.c:628
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"Niewystarczająca ilość miejsca na urządzeniu.\n"
+"Należy zwolnić trochę miejsca na dysku systemowym, aby wykonać to działanie."
 
 #: ../src/gpk-enum.c:647
 msgid "No restart is necessary for this update"
@@ -2924,7 +2928,6 @@ msgstr "Pobieranie informacji"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:801
-#, fuzzy
 msgid "Removing packages"
 msgstr "Usuwanie pakietów"
 
@@ -2947,15 +2950,13 @@ msgstr "Aktualizowanie pakietów"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:821
-#, fuzzy
 msgid "Cleaning up packages"
-msgstr "Wyszukiwanie pakietów"
+msgstr "Czyszczenie pakietów"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:825
-#, fuzzy
 msgid "Obsoleting packages"
-msgstr "Instalowanie pakietów"
+msgstr "Zastępowanie pakietów"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:829
@@ -3050,9 +3051,8 @@ msgstr "Tworzenie list pakietów"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:901
-#, fuzzy
 msgid "Waiting for legacy package manager lock"
-msgstr "Wyszukiwanie nazwy pakietu"
+msgstr "Oczekiwanie na przestarzałą blokadę menedżera pakietów"
 
 #. TRANSLATORS: type of update
 #: ../src/gpk-enum.c:919
@@ -3124,9 +3124,8 @@ msgstr "Drobna aktualizacja"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:965
-#, fuzzy
 msgid "Normal update"
-msgstr "Drobna aktualizacja"
+msgstr "Normalna aktualizacja"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:969
@@ -3798,9 +3797,8 @@ msgstr "Należy podać pakiet do zainstalowania"
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
 #: ../src/gpk-install-provide-file.c:64 ../src/gpk-install-provide-file.c:66
 #: ../src/gpk-install-provide-file.c:75
-#, fuzzy
 msgid "Single File Installer"
-msgstr "Instalator pakietów dostarczających pliki"
+msgstr "Instalator pojedynczych plików"
 
 #. TRANSLATORS: nothig was specified
 #: ../src/gpk-install-provide-file.c:83
@@ -4222,12 +4220,12 @@ msgstr "Wróć do przeglądu"
 
 #. TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting
 #: ../src/gpk-watch.c:135
-#, fuzzy, c-format
+#, c-format
 msgid "(%i more task)"
 msgid_plural "(%i more tasks)"
-msgstr[0] "(%i więcej zadań)"
-msgstr[1] "(%i więcej zadań)"
-msgstr[2] "(%i więcej zadań)"
+msgstr[0] "(%i zadanie więcej)"
+msgstr[1] "(%i zadania więcej)"
+msgstr[2] "(%i zadań więcej)"
 
 #: ../src/gpk-watch.c:281
 msgid "Package manager error details"
@@ -4235,9 +4233,8 @@ msgstr "Szczegóły błędu menedżera pakietów"
 
 #. TRANSLATORS: this is a package that required an update
 #: ../src/gpk-watch.c:335
-#, fuzzy
 msgid "Package:"
-msgstr "Pakiet"
+msgstr "Pakiet:"
 
 #. TRANSLATORS: This is the message in the libnotify body
 #: ../src/gpk-watch.c:385
@@ -4278,7 +4275,7 @@ msgstr "Odśwież listę op_rogramowania"
 
 #: ../src/gpk-watch.c:872
 msgid "_Log out"
-msgstr ""
+msgstr "Wy_loguj się"
 
 #. TRANSLATORS: This hides the 'restart required' icon
 #: ../src/gpk-watch.c:887
@@ -4292,18 +4289,16 @@ msgstr "U_ruchom ponownie komputer"
 
 #. TRANSLATORS: the menu item, Applications, Places, System etc
 #: ../src/gpk-desktop.c:114
-#, fuzzy
 msgid "Applications"
-msgstr "Program"
+msgstr "Programy"
 
 #: ../src/gpk-desktop.c:119
-#, fuzzy
 msgid "Preferences"
-msgstr "_Preferencje"
+msgstr "Preferencje"
 
 #: ../src/gpk-desktop.c:126
 msgid "Administration"
-msgstr ""
+msgstr "Administracja"
 
 #. TRANSLATORS: expander label in the error dialog
 #: ../python/packagekit/gtkwidgets.py:413
@@ -4345,36 +4340,3 @@ msgid ""
 msgstr ""
 "Instalowane oprogramowanie wymaga dodatkowego oprogramowania do poprawnego "
 "działania."
-
-#~ msgid "_Quit"
-#~ msgstr "Za_kończ"
-
-#~ msgid " "
-#~ msgstr " "
-
-#~ msgid "A program %s"
-#~ msgstr "Program %s"
-
-#~ msgid "File installer"
-#~ msgstr "Instalator plików"
-
-#~ msgid "Plugin installer"
-#~ msgstr "Instalator wtyczek"
-
-#~ msgid "File type installer"
-#~ msgstr "Instalator programów obsługujących typy plików"
-
-#~ msgid "Font installer"
-#~ msgstr "Instalator czcionek"
-
-#~ msgid "Install the following fonts"
-#~ msgstr "Instalowanie następujących czcionek"
-
-#~ msgid "Do you want to install these packages now?"
-#~ msgstr "Zainstalować te pakiety?"
-
-#~ msgid "Update"
-#~ msgstr "Aktualizacja"
-
-#~ msgid "File Provide Installer"
-#~ msgstr "Instalator plików dostarczanych przez pakiety"
