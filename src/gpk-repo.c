@@ -51,8 +51,7 @@ static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
 
-enum
-{
+enum {
 	REPO_COLUMN_ENABLED,
 	REPO_COLUMN_TEXT,
 	REPO_COLUMN_ID,
@@ -143,16 +142,16 @@ gpk_repo_remove_nonactive (GtkTreeModel *model)
 }
 
 /**
- * pk_button_help_cb:
+ * gpk_button_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget, gboolean  data)
+gpk_button_help_cb (GtkWidget *widget, gboolean  data)
 {
 	gpk_gnome_help ("software-sources");
 }
 
 static void
-pk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
+gpk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model = (GtkTreeModel *)data;
@@ -232,10 +231,10 @@ gpk_repo_detail_cb (PkClient *client_, const gchar *repo_id,
 }
 
 /**
- * pk_treeview_add_columns:
+ * gpk_treeview_add_columns:
  **/
 static void
-pk_treeview_add_columns (GtkTreeView *treeview)
+gpk_treeview_add_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -243,7 +242,7 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 
 	/* column for installed toggles */
 	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (pk_misc_installed_toggled), model);
+	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_misc_installed_toggled), model);
 
 	/* TRANSLATORS: column if the source is enabled */
 	column = gtk_tree_view_column_new_with_attributes (_("Enabled"), renderer,
@@ -260,10 +259,10 @@ pk_treeview_add_columns (GtkTreeView *treeview)
 }
 
 /**
- * pk_repos_treeview_clicked_cb:
+ * gpk_repos_treeview_clicked_cb:
  **/
 static void
-pk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
+gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -507,7 +506,7 @@ main (int argc, char *argv[])
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), NULL);
+			  G_CALLBACK (gpk_button_help_cb), NULL);
 
 	widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
 	show_details = gconf_client_get_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, NULL);
@@ -529,10 +528,10 @@ main (int argc, char *argv[])
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_repos_treeview_clicked_cb), NULL);
+			  G_CALLBACK (gpk_repos_treeview_clicked_cb), NULL);
 
 	/* add columns to the tree view */
-	pk_treeview_add_columns (GTK_TREE_VIEW (widget));
+	gpk_treeview_add_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	/* show window */
