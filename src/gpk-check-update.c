@@ -765,8 +765,11 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
 							  "There are %d updates pending", length), length);
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
+#else
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
-
+#endif
 	/* if we are just refreshing after a failed update, don't try to do the actions */
 	if (!policy_action) {
 		egg_debug ("skipping actions");
