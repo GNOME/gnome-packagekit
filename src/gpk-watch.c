@@ -109,7 +109,11 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	length = pk_task_list_get_size (watch->priv->tlist);
 	egg_debug ("refresh tooltip %i", length);
 	if (length == 0) {
+#if GTK_CHECK_VERSION(2,15,0)
+		gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (watch->priv->sicon), "Doing nothing...");
+#else
 		gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), "Doing nothing...");
+#endif
 		return TRUE;
 	}
 	status = g_string_new ("");
@@ -142,7 +146,11 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	else
 		g_string_set_size (status, status->len-1);
 
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (watch->priv->sicon), status->str);
+#else
 	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), status->str);
+#endif
 	g_string_free (status, TRUE);
 	return TRUE;
 }
@@ -340,7 +348,11 @@ gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum
 				g_string_set_size (string, string->len - 1);
 
 			icon_name = gpk_restart_enum_to_icon_name (restart);
+#if GTK_CHECK_VERSION(2,15,0)
+			gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (watch->priv->sicon_action), string->str);
+#else
 			gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon_action), string->str);
+#endif
 			gpk_smart_icon_set_icon_name (watch->priv->sicon_action, icon_name);
 			g_string_free (string, TRUE);
 
