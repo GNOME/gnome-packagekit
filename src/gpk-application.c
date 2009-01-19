@@ -925,12 +925,6 @@ gpk_application_text_format_display (GpkApplication *application, const gchar *a
 	gchar *text;
 	egg_markdown_set_output (application->priv->markdown, EGG_MARKDOWN_OUTPUT_TEXT);
 	text = egg_markdown_parse (application->priv->markdown, ascii);
-	if (egg_strlen (text, 1024) > 1023) {
-		text[1020] = '.';
-		text[1021] = '.';
-		text[1022] = '.';
-		text[1023] = '\0';
-	}
 	return text;
 }
 
