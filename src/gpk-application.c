@@ -902,7 +902,7 @@ gpk_application_clear_details (GpkApplication *application)
 	/* only clear the last data if it takes a little while, else we flicker the display */
 	if (application->priv->details_event_id > 0)
 		g_source_remove (application->priv->details_event_id);
-	application->priv->details_event_id = g_timeout_add (100, (GSourceFunc) gpk_application_clear_details_really, application);
+	application->priv->details_event_id = g_timeout_add (200, (GSourceFunc) gpk_application_clear_details_really, application);
 }
 
 /**
