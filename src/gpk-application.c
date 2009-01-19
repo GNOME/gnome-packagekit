@@ -3420,6 +3420,10 @@ gpk_application_init (GpkApplication *application)
 	}
 	gtk_widget_show (GTK_WIDGET(main_window));
 
+	/* set details box decent size */
+	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_packages");
+	gtk_widget_set_size_request (widget, -1, 120);
+
 	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
