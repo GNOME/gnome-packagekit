@@ -1,3 +1,41 @@
+Version 0.4.2
+~~~~~~~~~~~~~
+Released: 2000-01-19
+
+* Translations
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Brazilian Portuguese (Igor Pires Soares)
+ - Updated Spanish translation (Jorge Gonzalez)
+ - Updated Polish translation (Tomasz Dominikowski)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Russian translation (Leonud Kanter)
+
+* New Features:
+ - Show the remaining time in the client UI if it's available (Richard Hughes)
+
+* Bugfix:
+ - Don't retry a policy action if the previous one failed (Richard Hughes)
+ - Drop obsolete InstallPackageNames definition (Richard Hughes)
+ - Use gtk_window_set_default_size() to set the window size so the user can
+   still resize it a little (Richard Hughes)
+ - Reduce the weight of autostart desktop files to avoid showing hidden entries
+   in the run dialog (Richard Hughes)
+ - Allow pattern matches in the banned firmware list (Richard Hughes)
+ - Add intel microcode to the banned firmware list (Richard Hughes)
+ - Lots of translation bugfixes found by Andre Klapper. Fixes gnome#19564 (Richard Hughes)
+ - Show the package that caused the restart required signal in the icon tooltip (Richard Hughes)
+ - Add a keyboard shortcut to the 'Continue Anyway' button when running an
+   application as root. Fixes fd#19595 (Richard Hughes)
+ - Clear the 'updates are being installed' notification if the update finishes
+   before the notification times out. Fixes novell#407347 (Richard Hughes)
+ - Use scrollbars in the description, and set the hbox to a fixed size to avoid
+   flicker. Fixes fd#19633 (Jens Knutson)
+ - Increase the anti-flicker timout when getting the package details to prevent
+   flicker when scrolling through packages
+ - Call gpk_check_privileged_user in the update viewer (Scott Reeves)
+ - Dont reference already freed pointer when help is not installed (Scott Reeves)
+
 Version 0.4.1
 ~~~~~~~~~~~~~
 Released: 2000-01-08
