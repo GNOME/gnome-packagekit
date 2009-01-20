@@ -52,8 +52,6 @@ typedef struct
 GType		 gpk_smart_icon_get_type		(void) G_GNUC_CONST;
 GpkSmartIcon	*gpk_smart_icon_new			(void);
 gboolean	 gpk_smart_icon_pulse			(GpkSmartIcon		*sicon);
-gboolean	 gpk_smart_icon_set_priority		(GpkSmartIcon		*sicon,
-							 guint			 number);
 gboolean	 gpk_smart_icon_set_icon_name		(GpkSmartIcon		*sicon,
 							 const gchar		*icon_name);
 

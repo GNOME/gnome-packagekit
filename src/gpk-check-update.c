@@ -1047,7 +1047,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->important_updates_array = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->sicon = gpk_smart_icon_new ();
-	gpk_smart_icon_set_priority (cupdate->priv->sicon, 2);
 
 	cupdate->priv->gconf_client = gconf_client_get_default ();
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
