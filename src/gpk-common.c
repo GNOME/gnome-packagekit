@@ -350,6 +350,56 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
 }
 
 /**
+ * gpk_time_to_imprecise_string:
+ * @time_secs: The time value to convert in seconds
+ *
+ * Returns a localised timestring
+ *
+ * Return value: The time string, e.g. "2 hours"
+ **/
+gchar *
+gpk_time_to_imprecise_string (guint time_secs)
+{
+	gchar* timestring = NULL;
+	guint hours;
+	guint minutes;
+	guint seconds;
+
+	/* is valid? */
+	if (time_secs == 0) {
+		/* TRANSLATORS: The actions has just literally happened */
+		timestring = g_strdup_printf (_("Now"));
+		goto out;
+	}
+
+	/* make local copy */
+	seconds = time_secs;
+
+	/* less than a minute */
+	if (seconds < 60) {
+		/* TRANSLATORS: time */
+		timestring = g_strdup_printf (ngettext ("%i second", "%i seconds", seconds), seconds);
+		goto out;
+	}
+
+	/* Add 0.5 to do rounding */
+	minutes = (guint) ((time_secs / 60.0 ) + 0.5);
+
+	/* less than an hour */
+	if (minutes < 60) {
+		/* TRANSLATORS: time */
+		timestring = g_strdup_printf (ngettext ("%i minute", "%i minutes", minutes), minutes);
+		goto out;
+	}
+
+	hours = minutes / 60;
+	/* TRANSLATORS: time */
+	timestring = g_strdup_printf (ngettext ("%i hour", "%i hours", hours), hours);
+out:
+	return timestring;
+}
+
+/**
  * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
  *
@@ -369,7 +419,7 @@ gpk_time_to_localised_string (guint time_secs)
 	if (time_secs == 0) {
 		/* TRANSLATORS: The actions has just literally happened */
 		timestring = g_strdup_printf (_("Now"));
-		return timestring;
+		goto out;
 	}
 
 	/* make local copy */
@@ -381,7 +431,7 @@ gpk_time_to_localised_string (guint time_secs)
 		timestring = g_strdup_printf (ngettext ("%i second",
 							"%i seconds",
 							seconds), seconds);
-		return timestring;
+		goto out;
 	}
 
 	/* Add 0.5 to do rounding */
@@ -401,7 +451,7 @@ gpk_time_to_localised_string (guint time_secs)
 					minutes, ngettext ("minute", "minutes", minutes),
 					seconds, ngettext ("second", "seconds", seconds));
 		}
-		return timestring;
+		goto out;
 	}
 
 	/* more than an hour */
@@ -420,6 +470,7 @@ gpk_time_to_localised_string (guint time_secs)
 				hours, ngettext ("hour", "hours", hours),
 				minutes, ngettext ("minute", "minutes", minutes));
 	}
+out:
 	return timestring;
 }
 
@@ -621,6 +672,33 @@ gpk_common_test (gpointer data)
 	egg_test_title (test, "time 30m10s");
 	text = gpk_time_to_localised_string (30*60+10);
 	if (text != NULL && strcmp (text, "30 minutes 10 seconds") == 0)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
+
+	/************************************************************/
+	egg_test_title (test, "imprecise time 1s");
+	text = gpk_time_to_imprecise_string (1);
+	if (text != NULL && strcmp (text, "1 second") == 0)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
+
+	/************************************************************/
+	egg_test_title (test, "imprecise time 30m");
+	text = gpk_time_to_imprecise_string (30*60);
+	if (text != NULL && strcmp (text, "30 minutes") == 0)
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
+
+	/************************************************************/
+	egg_test_title (test, "imprecise time 30m10s");
+	text = gpk_time_to_imprecise_string (30*60+10);
+	if (text != NULL && strcmp (text, "30 minutes") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
