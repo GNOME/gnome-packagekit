@@ -554,7 +554,6 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	gboolean ret;
 	GError *error = NULL;
 	gboolean value;
-	gchar *title;
 	NotifyNotification *notification;
 	GpkWatchCachedMessage *cached_message;
 
@@ -581,7 +580,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
 	if (!value) {
 		egg_debug ("not showing notification as prevented in gconf");
-		goto out;
+		return;
 	}
 
 	/* do the bubble */
@@ -594,8 +593,6 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 		g_error_free (error);
 	}
 	watch->priv->notification_cached_messages = notification;
-out:
-	g_free (title);
 }
 
 /**
