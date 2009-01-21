@@ -154,7 +154,13 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 				packages = pk_ptr_array_to_strv (watch->priv->restart_package_names);
 				package_loc = gpk_strv_join_locale (packages);
 				g_strfreev (packages);
-				g_string_append_printf (status, ngettext ("Package: %s", "Packages: %s", len), package_loc);
+				if (package_loc != NULL) {
+					/* TRANSLATORS: a list of packages is shown that need to restarted */
+					g_string_append_printf (status, ngettext ("Package: %s", "Packages: %s", len), package_loc);
+				} else {
+					/* TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here */
+					g_string_append_printf (status, ngettext ("%i package", "%i packages", len), len);
+				}
 				g_string_append_c (status, '\n');
 				g_free (package_loc);
 			}
