@@ -3485,7 +3485,6 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		egg_warning ("could not get status");
 		return FALSE;
 	}
-	gpk_client_set_status (gclient, status);
 
 	/* are we cancellable? */
 	pk_client_get_allow_cancel (gclient->priv->client_action, &allow_cancel, NULL);
@@ -3502,21 +3501,6 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		gpk_client_progress_changed_cb (gclient->priv->client_action,
 						PK_CLIENT_PERCENTAGE_INVALID,
 						PK_CLIENT_PERCENTAGE_INVALID, 0, 0, gclient);
-	}
-
-	/* do the best we can */
-	ret = pk_client_get_package (gclient->priv->client_action, &package_id, NULL);
-	if (ret) {
-		PkPackageId *id;
-		PkPackageObj *obj;
-
-		id = pk_package_id_new_from_string (package_id);
-		if (id != NULL) {
-			obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
-			gpk_client_package_cb (gclient->priv->client_action, obj, gclient);
-			pk_package_obj_free (obj);
-		}
-		pk_package_id_free (id);
 	}
 
 	/* get the role */
@@ -3536,6 +3520,26 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
 	else
 		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
+
+	/* set the status */
+	gpk_client_set_status (gclient, status);
+
+	/* do the best we can, and get the last package */
+	ret = pk_client_get_package (gclient->priv->client_action, &package_id, NULL);
+	if (ret) {
+		PkPackageId *id;
+		PkPackageObj *obj;
+
+		id = pk_package_id_new_from_string (package_id);
+		if (id != NULL) {
+			obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
+			egg_warning ("package_id=%s", package_id);
+			gpk_client_package_cb (gclient->priv->client_action, obj, gclient);
+			pk_package_obj_free (obj);
+		}
+		pk_package_id_free (id);
+	}
+
 	gpk_client_dialog_present (gclient->priv->dialog);
 
 	/* wait for an answer */
