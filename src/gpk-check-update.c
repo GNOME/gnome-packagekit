@@ -56,6 +56,8 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 
 /* the maximum number of lines of data on the libnotify widget */
 #define GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES	7
+#define ACTION_DISTRO_UPGRADE_INFO "distro-upgrade-info"
+#define ACTION_DISTRO_UPGRADE_DO_NOT_SHOW "distro-upgrade-do-not-show-available"
 
 struct GpkCheckUpdatePrivate
 {
@@ -420,6 +422,14 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	} else if (egg_strequal (action, "do-not-show-update-not-battery")) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
+	} else if (egg_strequal (action, ACTION_DISTRO_UPGRADE_INFO)) {
+		ret = g_spawn_command_line_async ("/usr/share/PackageKit/pk-upgrade-distro.sh", NULL);
+		if (!ret) {
+			egg_warning ("Failure launching pk-upgrade-distro.sh");
+		}
+	} else if (egg_strequal (action, ACTION_DISTRO_UPGRADE_DO_NOT_SHOW)) {
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_DISTRO_UPGRADES);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, FALSE, NULL);
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
@@ -1017,10 +1027,10 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
-	notify_notification_add_action (notification, "upgrade-info",
+	notify_notification_add_action (notification, ACTION_DISTRO_UPGRADE_INFO,
 					/* TRANSLATORS: provides more information about the upgrade */
 					_("More information"), gpk_check_update_libnotify_cb, cupdate, NULL);
-	notify_notification_add_action (notification, "do-not-show-upgrade-available",
+	notify_notification_add_action (notification, ACTION_DISTRO_UPGRADE_DO_NOT_SHOW,
 					/* TRANSLATORS: hides forever */
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
