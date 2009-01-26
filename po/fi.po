@@ -2,14 +2,15 @@
 # Copyright (C) 2008 Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
 # This file is distributed under the same license as the gnome-packagekit
 # package.
-# Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>, 2008
+# Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>, 2008-2009
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-15 16:58+0000\n"
-"PO-Revision-Date: 2008-11-22 02:00+0200\n"
+"Report-Msgid-Bugs-To: https://bugs.freedesktop.org/enter_bug.cgi?"
+"product=PackageKit&component=General\n"
+"POT-Creation-Date: 2009-01-15 17:03+0000\n"
+"PO-Revision-Date: 2009-01-21 18:52+0200\n"
 "Last-Translator: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>\n"
 "Language-Team: Finnish <laatu@lokalisointi.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,15 +79,16 @@ msgid "Firmware files that should not be searched for"
 msgstr "Laiteohjelmistotiedostot joita ei pitäisi etsiä"
 
 #: ../data/gnome-packagekit.schemas.in.h:14
-#, fuzzy
 msgid ""
 "Firmware files that should not be searched for, separated by commas. These "
 "can include '*' and '?' characters"
-msgstr "Laiteohjelmistotiedostot joita ei pitäisi etsiä, pilkulla erotettuina"
+msgstr ""
+"Laiteohjelmistotiedostot joita ei pitäisi etsiä, pilkulla erotettuina. "
+"Merkit ”*” ja ”?” ovat käytettävissä."
 
 #: ../data/gnome-packagekit.schemas.in.h:15
 msgid "GTK+ module for font installation"
-msgstr ""
+msgstr "GTK+-moduuli kirjasinten asentamiseen"
 
 #: ../data/gnome-packagekit.schemas.in.h:16
 msgid "Get the update list when the session starts"
@@ -245,47 +247,53 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:46
 msgid "The search mode used by default"
-msgstr ""
+msgstr "Oletuksena käytettävä hakutila"
 
 #: ../data/gnome-packagekit.schemas.in.h:47
 msgid ""
 "The search mode used by default. Options are \"name\", \"details\", or \"file"
 "\""
 msgstr ""
+"Oletuksena käytettävä hakutila. Vaihtoehdot ovat ”nimi”, ”lisätiedot” tai "
+"”tiedosto”"
 
 #: ../data/gnome-packagekit.schemas.in.h:48
 msgid "This key determines if applications should be able to prompt for fonts"
-msgstr ""
+msgstr "Tämä avain määrää voivatko ohjelmat pyytää kirjasimia asennettavaksi"
 
 #: ../data/gnome-packagekit.schemas.in.h:49
-#, fuzzy
 msgid "Use WiFi (wireless LAN) connections to check for updates"
-msgstr "Kuinka usein etsitään päivityksiä"
+msgstr "Käytä WiFi-yhteyksiä (langaton lähiverkko) päivitysten etsimiseen"
 
 #: ../data/gnome-packagekit.schemas.in.h:50
 msgid "Use WiFi connections"
-msgstr ""
+msgstr "Käytä WiFi-yhteyksiä"
 
 #: ../data/gnome-packagekit.schemas.in.h:51
 msgid "Use mobile broadband connections"
-msgstr ""
+msgstr "Käytä mobiililaajakaistayhteyksiä"
 
 #: ../data/gnome-packagekit.schemas.in.h:52
 msgid ""
 "Use mobile broadband connections such as GSM and CDMA to check for updates"
 msgstr ""
+"Käytä mobiililaajakaistayhteyksiä, kuten GSM tai CDMA, päivitysten "
+"etsimiseen"
 
 #: ../data/gnome-packagekit.schemas.in.h:53
 msgid ""
 "When displaying UI from a session DBus request, automatically use these "
 "options by default"
 msgstr ""
+"Käytä näitä asetuksia automaattisesti oletuksina näytettäessä DBus-pyynnön "
+"käyttöliittymää"
 
 #: ../data/gnome-packagekit.schemas.in.h:54
 msgid ""
 "When displaying UI from a session DBus request, force these options to be "
 "turned on"
 msgstr ""
+"Pakota nämä asetukset käyttöön näytettäessä DBus-pyynnön käyttöliittymää"
 
 #: ../data/gpk-application.desktop.in.h:1
 msgid "Add or remove software installed on the system"
@@ -575,7 +583,7 @@ msgstr "<b>Päivitysasetukset</b>"
 
 #: ../data/gpk-prefs.glade.h:4
 msgid "<i>Currently using mobile broadband</i>"
-msgstr ""
+msgstr "<i>Käytetään mobiililaajakaistaa</i>"
 
 #: ../data/gpk-prefs.glade.h:5
 msgid "C_heck for updates:"
@@ -587,7 +595,7 @@ msgstr "Etsi merkittäviä _jakelupäivityksiä:"
 
 #: ../data/gpk-prefs.glade.h:7
 msgid "Check for updates when using mobile broadband"
-msgstr ""
+msgstr "Etsi päivityksiä käytettäessä mobiililaajakaistaa"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.glade.h:8 ../src/gpk-prefs.c:392
@@ -788,11 +796,11 @@ msgstr "Mitkään muut paketit eivät vaadi tätä pakettia"
 # TODO check
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:710
-#, fuzzy, c-format
+#, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
-msgstr[0] "%i lisäpaketti vaatii paketin %s"
-msgstr[1] "%i lisäpakettia vaatii paketin %s"
+msgstr[0] "%i paketti vaatii paketin %s"
+msgstr[1] "%i pakettia vaatii paketin %s"
 
 #. TRANSLATORS: show a list of packages for the package
 #: ../src/gpk-application.c:715
@@ -866,7 +874,7 @@ msgstr "Lisenssi"
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
 #: ../src/gpk-application.c:1005
 msgid "Menu"
-msgstr ""
+msgstr "Valikko"
 
 #. TRANSLATORS: the size of the meta package
 #: ../src/gpk-application.c:1023
@@ -1058,7 +1066,7 @@ msgstr ""
 #: ../src/gpk-watch.c:601
 msgid "translator-credits"
 msgstr ""
-"Ville-Pekka Vainio, 2008.\n"
+"Ville-Pekka Vainio, 2008-2009.\n"
 "\n"
 "http://www.gnome.fi/"
 
@@ -1540,19 +1548,18 @@ msgstr "Haluatko etsiä tätä tiedostoa nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1694
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
-msgstr[0] "haluaa asentaa paketteja"
-msgstr[1] "haluaa asentaa paketteja"
+msgstr[0] "%s haluaa asentaa paketin"
+msgstr[1] "%s haluaa asentaa paketteja"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1697
-#, fuzzy
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
-msgstr[0] "haluaa asentaa paketteja"
-msgstr[1] "haluaa asentaa paketteja"
+msgstr[0] "Ohjelma haluaa asentaa paketin"
+msgstr[1] "Ohjelma haluaa asentaa paketteja"
 
 #. TRANSLATORS: title, searching
 #: ../src/gpk-client.c:1713
@@ -1602,19 +1609,18 @@ msgstr[1] "Haluatko etsiä niitä nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:1894
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
-msgstr[0] "haluaa asentaa tiedoston"
-msgstr[1] "haluaa asentaa tiedoston"
+msgstr[0] "%s haluaa asentaa tiedoston"
+msgstr[1] "%s haluaa asentaa tiedostoja"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:1897
-#, fuzzy
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
-msgstr[0] "haluaa asentaa tiedoston"
-msgstr[1] "haluaa asentaa tiedoston"
+msgstr[0] "Ohjelma haluaa asentaa tiedoston"
+msgstr[1] "Ohjelma haluaa asentaa tiedostoja"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
@@ -1666,19 +1672,18 @@ msgstr[1] "Seuraavat liitännäiset vaaditaan:"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2117
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires an additional plugin"
 msgid_plural "%s requires additional plugins"
-msgstr[0] "vaatii lisäliitännäisiä"
-msgstr[1] "vaatii lisäliitännäisiä"
+msgstr[0] "%s vaatii lisäliitännäisen"
+msgstr[1] "%s vaatii lisäliitännäisiä"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2120
-#, fuzzy
 msgid "A program requires an additional plugin"
 msgid_plural "A program requires additional plugins"
-msgstr[0] "vaatii lisäliitännäisiä"
-msgstr[1] "vaatii lisäliitännäisiä"
+msgstr[0] "Ohjelma vaatii lisäliitännäisen"
+msgstr[1] "Ohjelma vaatii lisäliitännäisiä"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-client.c:2124 ../src/gpk-client.c:2342 ../src/gpk-client.c:2617
@@ -1726,19 +1731,18 @@ msgstr ""
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2335
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
-msgstr[0] "vaatii uuden mime-tyypin"
-msgstr[1] "vaatii uuden mime-tyypin"
+msgstr[0] "%s vaatii uuden mime-tyypin"
+msgstr[1] "%s vaatii uusia mime-tyyppejä"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2338
-#, fuzzy
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
-msgstr[0] "vaatii uuden mime-tyypin"
-msgstr[1] "vaatii uuden mime-tyypin"
+msgstr[0] "Ohjelma vaatii uuden mime-tyypin"
+msgstr[1] "Ohjelma vaatii uusia mime-tyyppejä"
 
 # paremmin?
 #. TRANSLATORS: title: searching for mime type handlers
@@ -1779,60 +1783,55 @@ msgstr "Mitään ohjelmaa ei valittu asennettavaksi"
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
 #: ../src/gpk-client.c:2508
 msgid "Language tag not parsed"
-msgstr ""
+msgstr "Kielitunnistetta ei voitu jäsentää"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
 #: ../src/gpk-client.c:2516
 msgid "Language code not matched"
-msgstr ""
+msgstr "Kielikoodia ei löytynyt"
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-client.c:2596
-#, fuzzy
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Tämän tiedoston näyttämiseksi oikein tarvitaan lisäkirjasin"
-msgstr[1] "Tämän tiedoston näyttämiseksi oikein tarvitaan lisäkirjasin"
+msgstr[1] "Tämän tiedoston näyttämiseksi oikein tarvitaan lisäkirjasimia"
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-client.c:2600
-#, fuzzy
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Haluatko etsiä sopivaa kirjasinta nyt?"
-msgstr[1] "Haluatko etsiä sopivaa kirjasinta nyt?"
+msgstr[0] "Haluatko etsiä sopivaa pakettia nyt?"
+msgstr[1] "Haluatko etsiä sopivia paketteja nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-client.c:2610
-#, fuzzy, c-format
+#, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
-msgstr[0] "haluaa asentaa kirjasimen"
-msgstr[1] "haluaa asentaa kirjasimen"
+msgstr[0] "%s haluaa asentaa kirjasimen"
+msgstr[1] "%s haluaa asentaa kirjasimia"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-client.c:2613
-#, fuzzy
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
-msgstr[0] "haluaa asentaa kirjasimen"
-msgstr[1] "haluaa asentaa kirjasimen"
+msgstr[0] "Ohjelma haluaa asentaa kirjasimen"
+msgstr[1] "Ohjelma haluaa asentaa kirjasimia"
 
 #. TRANSLATORS: title to show when searching for font files
 #: ../src/gpk-client.c:2628
-#, fuzzy
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
-msgstr[0] "Etsitään kirjasimia"
+msgstr[0] "Etsitään kirjasinta"
 msgstr[1] "Etsitään kirjasimia"
 
 #. TRANSLATORS: title: cannot find in sources
 #: ../src/gpk-client.c:2678
-#, fuzzy
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Kirjasinta ei löytynyt"
-msgstr[1] "Kirjasinta ei löytynyt"
+msgstr[1] "Kirjasimia ei löytynyt"
 
 #. TRANSLATORS: message: tell the user we suck
 #: ../src/gpk-client.c:2686
@@ -2009,9 +2008,9 @@ msgid "_Install"
 msgstr "_Asenna"
 
 #: ../src/gpk-client-dialog.c:441
-#, fuzzy, c-format
+#, c-format
 msgid "Remaining time : %s"
-msgstr "Etsitään tiedostoa nimeltä: %s"
+msgstr "Aikaa jäljellä: %s"
 
 #. TRANSLATORS: button: execute the application
 #: ../src/gpk-client-run.c:152
@@ -2406,11 +2405,11 @@ msgstr "Jakelupäivitystietoja ei ole saatavilla"
 
 #: ../src/gpk-enum.c:443
 msgid "Package is incompatible with this system"
-msgstr ""
+msgstr "Paketti ei ole yhteensopiva tämän järjestelmän kanssa"
 
 #: ../src/gpk-enum.c:446
 msgid "No space is left on the disk"
-msgstr ""
+msgstr "Levyllä ei ole vapaata tilaa"
 
 #: ../src/gpk-enum.c:463
 msgid ""
@@ -2728,16 +2727,19 @@ msgstr ""
 "Jakelupäivitysten luettelo ei ole käytettävissä."
 
 #: ../src/gpk-enum.c:625
-#, fuzzy
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
-msgstr "Paketti, jota yritetään asentaa, on jo asennettu."
+msgstr ""
+"Paketti, jota yritetään asentaa, ei ole yhteensopiva tämän järjestelmän "
+"kanssa."
 
 #: ../src/gpk-enum.c:628
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"Laitteella ei ole riittävästi tilaa.\n"
+"Vapauta tilaa järjestelmälevyltä tämän toiminnon tekemiseksi."
 
 #: ../src/gpk-enum.c:647
 msgid "No restart is necessary for this update"
@@ -2889,15 +2891,13 @@ msgstr "Päivitetään paketteja"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:821
-#, fuzzy
 msgid "Cleaning up packages"
-msgstr "Etsitään paketteja"
+msgstr "Siivotaan paketteja"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:825
-#, fuzzy
 msgid "Obsoleting packages"
-msgstr "Asennetaan paketteja"
+msgstr "Vanhennetaan paketteja"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:829
@@ -2994,9 +2994,8 @@ msgstr "Luodaan pakettiluetteloita"
 # hieman huono
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:901
-#, fuzzy
 msgid "Waiting for legacy package manager lock"
-msgstr "Paketinhallinnan alustus epäonnistui"
+msgstr "Odotetaan vanhentuneen paketinhallinnan lukkoa"
 
 #. TRANSLATORS: type of update
 #: ../src/gpk-enum.c:919
@@ -3062,9 +3061,8 @@ msgstr "Vähäpätöinen päivitys"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:965
-#, fuzzy
 msgid "Normal update"
-msgstr "Vähäpätöinen päivitys"
+msgstr "Tavallinen päivitys"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:969
@@ -3741,9 +3739,8 @@ msgstr "Asennettava paketti on määritettävä"
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
 #: ../src/gpk-install-provide-file.c:64 ../src/gpk-install-provide-file.c:66
 #: ../src/gpk-install-provide-file.c:75
-#, fuzzy
 msgid "Single File Installer"
-msgstr "Tiedostotarjoajien asennin"
+msgstr "Yksittäisen tiedoston asennin"
 
 #. TRANSLATORS: nothig was specified
 #: ../src/gpk-install-provide-file.c:83
@@ -4167,10 +4164,10 @@ msgstr "Takaisin yleiskatsaukseen"
 
 #. TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting
 #: ../src/gpk-watch.c:135
-#, fuzzy, c-format
+#, c-format
 msgid "(%i more task)"
 msgid_plural "(%i more tasks)"
-msgstr[0] "(%i tehtävää jäljellä)"
+msgstr[0] "(%i tehtävä jäljellä)"
 msgstr[1] "(%i tehtävää jäljellä)"
 
 #: ../src/gpk-watch.c:281
@@ -4179,9 +4176,8 @@ msgstr "Paketinhallitsimen virheen tiedot"
 
 #. TRANSLATORS: this is a package that required an update
 #: ../src/gpk-watch.c:335
-#, fuzzy
 msgid "Package:"
-msgstr "Paketti"
+msgstr "Paketti:"
 
 #. TRANSLATORS: This is the message in the libnotify body
 #: ../src/gpk-watch.c:385
@@ -4222,7 +4218,7 @@ msgstr "_Virkistä ohjelmistoluettelo"
 
 #: ../src/gpk-watch.c:872
 msgid "_Log out"
-msgstr ""
+msgstr "_Kirjaudu ulos"
 
 #. TRANSLATORS: This hides the 'restart required' icon
 #: ../src/gpk-watch.c:887
@@ -4236,18 +4232,16 @@ msgstr "_Käynnistä tietokone uudelleen"
 
 #. TRANSLATORS: the menu item, Applications, Places, System etc
 #: ../src/gpk-desktop.c:114
-#, fuzzy
 msgid "Applications"
-msgstr "Ohjelma"
+msgstr "Ohjelmat"
 
 #: ../src/gpk-desktop.c:119
-#, fuzzy
 msgid "Preferences"
-msgstr "_Asetukset"
+msgstr "Asetukset"
 
 #: ../src/gpk-desktop.c:126
 msgid "Administration"
-msgstr ""
+msgstr "Ylläpito"
 
 #. TRANSLATORS: expander label in the error dialog
 #: ../python/packagekit/gtkwidgets.py:413
