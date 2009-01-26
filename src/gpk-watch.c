@@ -70,6 +70,7 @@ struct GpkWatchPrivate
 	NotifyNotification	*notification_cached_messages;
 	GpkInhibit		*inhibit;
 	GpkClient		*gclient;
+	GpkClient		*monitor;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkRestartEnum		 restart;
@@ -861,23 +862,12 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
- * pk_monitor_action_unref_cb:
- **/
-static void
-pk_monitor_action_unref_cb (GpkClient *gclient, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-	g_object_unref (gclient);
-}
-
-/**
  * gpk_watch_menu_job_status_cb:
  **/
 static void
 gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 {
 	gchar *tid;
-	GpkClient *gclient = NULL;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
@@ -889,10 +879,7 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 	}
 
 	/* launch the UI */
-	gclient = gpk_client_new ();
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
-	g_signal_connect (gclient, "quit", G_CALLBACK (pk_monitor_action_unref_cb), watch);
-	gpk_client_monitor_tid (gclient, tid);
+	gpk_client_monitor_tid (watch->priv->monitor, tid);
 }
 
 /**
@@ -1297,6 +1284,9 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->cached_messages = g_ptr_array_new ();
 	watch->priv->restart_package_names = g_ptr_array_new ();
 
+	watch->priv->monitor = gpk_client_new ();
+	gpk_client_set_interaction (watch->priv->monitor, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
+
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
 	g_signal_connect (watch->priv->control, "locked",
@@ -1397,6 +1387,7 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->restart_action);
+	g_object_unref (watch->priv->monitor);
 
 	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
 }
