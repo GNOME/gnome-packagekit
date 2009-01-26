@@ -3466,6 +3466,14 @@ gpk_client_monitor_tid (GpkClient *gclient, const gchar *tid)
 
 	g_return_val_if_fail (GPK_IS_CLIENT (gclient), FALSE);
 
+	/* reset client */
+	ret = pk_client_reset (gclient->priv->client_action, &error);
+	if (!ret) {
+		egg_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
 	ret = pk_client_set_tid (gclient->priv->client_action, tid, &error);
 	if (!ret) {
 		egg_warning ("could not set tid: %s", error->message);
