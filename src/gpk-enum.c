@@ -898,7 +898,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_WAITING_FOR_LOCK:
 		/* TRANSLATORS: The transaction state */
-		text = _("Waiting for legacy package manager lock");
+		text = _("Waiting for package manager lock");
 		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
