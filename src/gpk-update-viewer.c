@@ -962,6 +962,27 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 }
 
 /**
+ * gpk_update_viewer_reconsider_update_packages_button:
+ **/
+static void
+gpk_update_viewer_reconsider_update_packages_button (GtkTreeModel *model)
+{
+	GtkTreeIter iter;
+	gboolean valid;
+	gboolean selected;
+
+	/* if there are no entries selected, deselect the button */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &selected, -1);
+		if (selected)
+			break;
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+	polkit_gnome_action_set_sensitive (update_packages_action, valid);
+}
+
+/**
  * gpk_update_viewer_treeview_update_toggled:
  **/
 static void
@@ -989,6 +1010,9 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 
 	/* clean up */
 	gtk_tree_path_free (path);
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_update_packages_button (model);
 }
 
 /**
@@ -1506,6 +1530,9 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 					    PACKAGES_COLUMN_SELECT, TRUE, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_update_packages_button (model);
 }
 
 /**
@@ -1528,6 +1555,9 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer u
 				    PACKAGES_COLUMN_SELECT, FALSE, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_update_packages_button (model);
 }
 
 /**
