@@ -128,8 +128,11 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 static gboolean
 gpk_animated_icon_update (GpkAnimatedIcon *icon)
 {
+	static guint rate_limit = 0;
+
 	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	if (rate_limit++ % 20 == 0)
+		egg_debug ("polling check");
 
 	/* have we loaded a file */
 	if (icon->frames == NULL) {
