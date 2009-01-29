@@ -55,7 +55,6 @@ static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
 static GtkListStore *list_store_details = NULL;
 static GtkListStore *list_store_description = NULL;
-static PkClient *client_action = NULL;
 static PkClient *client_query = NULL;
 static PkControl *control = NULL;
 static PkTaskList *tlist = NULL;
@@ -429,12 +428,11 @@ gpk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 	GError *error = NULL;
 
 	/* we might have a transaction running */
-	ret = pk_client_cancel (client_action, &error);
+	ret = gpk_client_cancel (gclient, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
-
 	gtk_main_quit ();
 }
 
@@ -1927,19 +1925,6 @@ main (int argc, char *argv[])
 	g_signal_connect (client_query, "error-code",
 			  G_CALLBACK (gpk_update_viewer_error_code_cb), NULL);
 
-	client_action = pk_client_new ();
-	pk_client_set_use_buffer (client_action, TRUE, NULL);
-	g_signal_connect (client_action, "package",
-			  G_CALLBACK (gpk_update_viewer_package_cb), NULL);
-	g_signal_connect (client_action, "finished",
-			  G_CALLBACK (gpk_update_viewer_finished_cb), NULL);
-	g_signal_connect (client_action, "progress-changed",
-			  G_CALLBACK (gpk_update_viewer_progress_changed_cb), NULL);
-	g_signal_connect (client_action, "status-changed",
-			  G_CALLBACK (gpk_update_viewer_status_changed_cb), NULL);
-	g_signal_connect (client_action, "error-code",
-			  G_CALLBACK (gpk_update_viewer_error_code_cb), NULL);
-
 	/* get actions */
 	roles = pk_control_get_actions (control, NULL);
 
@@ -1970,15 +1955,13 @@ main (int argc, char *argv[])
 	 * screens, where we want to cancel transactions when closing
 	 */
 	widget = glade_xml_get_widget (glade_xml, "button_close2");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
 	widget = glade_xml_get_widget (glade_xml, "button_close3");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
 
 	/* normal close buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (refresh_action, "activate",
@@ -2100,7 +2083,6 @@ main (int argc, char *argv[])
 	g_object_unref (control);
 	g_object_unref (markdown);
 	g_object_unref (client_query);
-	g_object_unref (client_action);
 	g_free (cached_package_id);
 unique_out:
 	g_object_unref (egg_unique);
