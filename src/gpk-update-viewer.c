@@ -1352,6 +1352,8 @@ static void
 gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	GtkWidget *widget;
+	GtkTreePath *path;
+	GtkTreeSelection *selection;
 	PkRoleEnum role;
 	PkRestartEnum restart;
 	PkPackageList *list;
@@ -1362,6 +1364,16 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL ||
 	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
 		gpk_update_viewer_description_animation_stop ();
+	}
+
+	/* select the first entry in the updates list */
+	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+		widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+		gtk_tree_selection_unselect_all (selection);
+		path = gtk_tree_path_new_first ();
+		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_path_free (path);
 	}
 
 	/* stop the throbber */
