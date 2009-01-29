@@ -594,10 +594,10 @@ gpk_client_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkClient *
 }
 
 /**
- * pk_client_button_close_cb:
+ * gpk_client_button_close_cb:
  **/
 static void
-pk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
+gpk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
 {
 	/* stop the timers if running */
 	if (gclient->priv->finished_timer_id != 0)
@@ -608,20 +608,50 @@ pk_client_button_close_cb (GtkWidget *widget, GpkClient *gclient)
 }
 
 /**
- * pk_client_button_cancel_cb:
+ * pk_client_cancel:
  **/
-static void
-pk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
+gboolean
+gpk_client_cancel (GpkClient *gclient, GError **error)
 {
 	gboolean ret;
-	GError *error = NULL;
+	GError *error_local = NULL;
 
 	/* we might have a transaction running */
-	ret = pk_client_cancel (gclient->priv->client_action, &error);
+	ret = pk_client_cancel (gclient->priv->client_action, &error_local);
 	if (!ret) {
-		egg_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
+		egg_warning ("failed to cancel client: %s", error_local->message);
+		if (error != NULL)
+			*error = g_error_new (GPK_CLIENT_ERROR, GPK_CLIENT_ERROR_FAILED, "failed to cancel: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
 	}
+	ret = pk_client_cancel (gclient->priv->client_resolve, &error_local);
+	if (!ret) {
+		egg_warning ("failed to cancel client: %s", error_local->message);
+		if (error != NULL)
+			*error = g_error_new (GPK_CLIENT_ERROR, GPK_CLIENT_ERROR_FAILED, "failed to cancel: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+	ret = pk_client_cancel (gclient->priv->client_secondary, &error_local);
+	if (!ret) {
+		egg_warning ("failed to cancel client: %s", error_local->message);
+		if (error != NULL)
+			*error = g_error_new (GPK_CLIENT_ERROR, GPK_CLIENT_ERROR_FAILED, "failed to cancel: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+out:
+	return ret;
+}
+
+/**
+ * gpk_client_button_cancel_cb:
+ **/
+static void
+gpk_client_button_cancel_cb (GtkWidget *widget, GpkClient *gclient)
+{
+	gpk_client_cancel (gclient, NULL);
 }
 
 /**
@@ -3798,9 +3828,9 @@ gpk_client_init (GpkClient *gclient)
 	gclient->priv->dialog = gpk_client_dialog_new ();
 	gpk_client_dialog_set_window_icon (gclient->priv->dialog, "pk-package-installed");
 	g_signal_connect (gclient->priv->dialog, "cancel",
-			  G_CALLBACK (pk_client_button_cancel_cb), gclient);
+			  G_CALLBACK (gpk_client_button_cancel_cb), gclient);
 	g_signal_connect (gclient->priv->dialog, "close",
-			  G_CALLBACK (pk_client_button_close_cb), gclient);
+			  G_CALLBACK (gpk_client_button_close_cb), gclient);
 
 	/* map ISO639 to language names */
 	gclient->priv->language = gpk_language_new ();

@@ -148,6 +148,8 @@ const GPtrArray	*gpk_client_get_distro_upgrades		(GpkClient	*gclient,
 gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
 							 const gchar	*package_id,
 							 GError		**error);
+gboolean	 gpk_client_cancel			(GpkClient	*gclient,
+							 GError		**error);
 gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
 							 const gchar	*tid);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
