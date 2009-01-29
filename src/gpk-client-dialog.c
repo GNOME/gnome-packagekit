@@ -320,11 +320,13 @@ static gboolean
 gpk_client_dialog_pulse_progress (GpkClientDialog *dialog)
 {
 	GtkWidget *widget;
-
+	static guint rate_limit = 0;
+	
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	if (rate_limit++ % 20 == 0)
+		egg_debug ("polling check");
 
 	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
