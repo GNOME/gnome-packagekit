@@ -1,3 +1,35 @@
+Version 0.4.3
+~~~~~~~~~~~~~
+Released: 2000-02-02
+
+* Translations
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Brazilian Portuguese translation (Og Maciel)
+
+* New Features:
+ - Don't spam the user with PackageManager messages, queue them and show another
+   menu item on the info status icon (Richard Hughes)
+
+* Bugfix:
+ - Fix typo in Russian translation. Fixes rh#481479 (Leonid Kanter)
+ - Don't infer precision we don't have when printing an estimated time (Richard Hughes)
+ - Make sure we set the icon and text of the client dialog after setup is called,
+   not before. Fixes rh#480908 (Richard Hughes)
+ - Stop abusing a PkPackageList as a list to store package_id's, as the PkInfoEnum
+   changes when we do a filter change. Fixes rh#481123 (Richard Hughes)
+ - Reset the client when we monitor a tid, else we ignore the second request when
+   the fist is running (Richard Hughes)
+ - When the user switches the task to monitor, re-use the existing monitor rather
+   than using a new window. Fixes half of rh#481293 (Richard Hughes)
+ - Disable the 'Apply updates' button when none are selected. Fixes fd#19779 (Richard Hughes)
+ - Ensure we select the first entry in the details treeview after we've got
+   the update list. Fixes fd#19780 (Richard Hughes)
+ - We don't use a PkControl action in gpk-update-viewer anymore, use the GpkClient
+   cancel method (Richard Hughes)
+ - Hook up the distro upgrade notification actions (Scott Reeves)
+
 Version 0.4.2
 ~~~~~~~~~~~~~
 Released: 2000-01-19
