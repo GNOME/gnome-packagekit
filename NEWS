@@ -1,3 +1,25 @@
+Version 0.3.14
+~~~~~~~~~~~~~~
+Released: 2009-02-02
+
+* Bugfix:
+ - Stop abusing a PkPackageList as a list to store package_id's, as the
+   PkInfoEnum changes when we do a filter change. Fixes rh#481123 (Richard Hughes)
+ - Ensure we select the first entry in the details treeview after we've got
+   the update list. Fixes fd#19780 (Richard Hughes)
+ - Disable the 'Apply updates' button when no updates are selected. Fixes fd#19779 (Richard Hughes)
+ - Reset the client when we monitor a tid, else we ignore the second request
+   when the first is running (Richard Hughes)
+ - Increase the anti-flicker timout when getting the package details to prevent
+   flicker when scrolling through packages (Richard Hughes)
+ - Use scrollbars in the description, and set the hbox to a fixed size to avoid
+   flicker. Based on a patch from Jens Knutson, many thanks. Fixes fd#19633 (Richard Hughes)
+ - Call gpk_check_privileged_user like other gpk-* apps. Use existing string so
+   it's not a string freeze break (Scott Reeves)
+ - Dont reference already freed pointer when help is not installed (Scott Reeves)
+ - Dont just silently exit when gpk_check_privileged_user bails (Scott Reeves)
+ - Hook up the distro upgrade notification actions (Scott Reeves)
+
 Version 0.3.13
 ~~~~~~~~~~~~~~
 Released: 2009-01-08
