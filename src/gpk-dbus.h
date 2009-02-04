@@ -60,8 +60,8 @@ typedef enum
 } GpkDbusError;
 
 GQuark		 gpk_dbus_error_quark			(void);
-GType		 gpk_dbus_error_get_type		(void) G_GNUC_CONST;
-GType		 gpk_dbus_get_type			(void) G_GNUC_CONST;
+GType		 gpk_dbus_error_get_type		(void);
+GType		 gpk_dbus_get_type			(void);
 GpkDbus		*gpk_dbus_new				(void);
 
 void		 gpk_dbus_install_local_file		(GpkDbus	*dbus,

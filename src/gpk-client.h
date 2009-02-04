@@ -99,7 +99,7 @@ struct _GpkClientClass
 };
 
 GQuark		 gpk_client_error_quark			(void);
-GType		 gpk_client_get_type			(void) G_GNUC_CONST;
+GType		 gpk_client_get_type			(void);
 GType		 gpk_client_error_get_type		(void);
 GpkClient	*gpk_client_new				(void);
 

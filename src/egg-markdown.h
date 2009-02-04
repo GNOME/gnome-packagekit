@@ -57,7 +57,7 @@ typedef enum {
 	EGG_MARKDOWN_OUTPUT_UNKNOWN
 } EggMarkdownOutput;
 
-GType		 egg_markdown_get_type	  		(void) G_GNUC_CONST;
+GType		 egg_markdown_get_type	  		(void);
 EggMarkdown	*egg_markdown_new			(void);
 gboolean	 egg_markdown_set_output		(EggMarkdown		*self,
 							 EggMarkdownOutput	 output);

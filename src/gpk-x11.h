@@ -49,7 +49,7 @@ typedef struct
 	GObjectClass		parent_class;
 } GpkX11Class;
 
-GType		 gpk_x11_get_type		  	(void) G_GNUC_CONST;
+GType		 gpk_x11_get_type		  	(void);
 GpkX11		*gpk_x11_new				(void);
 gboolean	 gpk_x11_set_xid			(GpkX11		*x11,
 							 guint32	 xid);

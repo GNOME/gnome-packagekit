@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkFirmwareClass;
 
-GType		 gpk_firmware_get_type		  	(void) G_GNUC_CONST;
+GType		 gpk_firmware_get_type		  	(void);
 GpkFirmware	*gpk_firmware_new			(void);
 
 G_END_DECLS

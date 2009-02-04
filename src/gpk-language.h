@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkLanguageClass;
 
-GType		 gpk_language_get_type		  	(void) G_GNUC_CONST;
+GType		 gpk_language_get_type		  	(void);
 GpkLanguage	*gpk_language_new			(void);
 gboolean	 gpk_language_populate			(GpkLanguage	*language,
 							 GError		**error);

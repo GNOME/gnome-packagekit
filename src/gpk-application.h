@@ -48,7 +48,7 @@ typedef struct
 	void		(* action_close)		(GpkApplication	*application);
 } GpkApplicationClass;
 
-GType		 gpk_application_get_type		(void) G_GNUC_CONST;
+GType		 gpk_application_get_type		(void);
 GpkApplication	*gpk_application_new			(void);
 void		 gpk_application_show			(GpkApplication *application);
 

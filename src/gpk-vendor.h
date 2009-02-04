@@ -60,7 +60,7 @@ typedef enum
 	GPK_VENDOR_URL_TYPE_DEFAULT
 } GpkVendorUrlType;
 
-GType		 gpk_vendor_get_type			(void) G_GNUC_CONST;
+GType		 gpk_vendor_get_type			(void);
 GpkVendor	*gpk_vendor_new				(void);
 gchar		*gpk_vendor_get_not_found_url		(GpkVendor		*vendor,
 							 GpkVendorUrlType	 type);

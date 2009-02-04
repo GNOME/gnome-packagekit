@@ -87,7 +87,7 @@ struct _GpkClientDialogClass
 };
 
 GQuark		 gpk_client_dialog_error_quark		(void);
-GType		 gpk_client_dialog_get_type		(void) G_GNUC_CONST;
+GType		 gpk_client_dialog_get_type		(void);
 GpkClientDialog	*gpk_client_dialog_new			(void);
 
 gboolean	 gpk_client_dialog_present		(GpkClientDialog	*dialog);

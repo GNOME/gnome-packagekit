@@ -51,7 +51,7 @@ struct _GpkCellRendererUriClass
 				 const gchar		*uri);
 };
 
-GType		 gpk_cell_renderer_uri_get_type		(void) G_GNUC_CONST;
+GType		 gpk_cell_renderer_uri_get_type		(void);
 GtkCellRenderer	*gpk_cell_renderer_uri_new		(void);
 
 G_END_DECLS

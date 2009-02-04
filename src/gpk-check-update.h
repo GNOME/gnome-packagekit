@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkCheckUpdateClass;
 
-GType		 gpk_check_update_get_type		  	(void) G_GNUC_CONST;
+GType		 gpk_check_update_get_type		  	(void);
 GpkCheckUpdate	*gpk_check_update_new				(void);
 
 G_END_DECLS

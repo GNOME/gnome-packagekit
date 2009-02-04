@@ -48,7 +48,7 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkHardwareClass;
 
-GType		 gpk_hardware_get_type		  	(void) G_GNUC_CONST;
+GType		 gpk_hardware_get_type		  	(void);
 GpkHardware	*gpk_hardware_new			(void);
 
 G_END_DECLS

@@ -53,7 +53,7 @@ struct _GpkAnimatedIconClass
 	GtkImageClass		 parent_class;
 };
 
-GType		 gpk_animated_icon_get_type		(void) G_GNUC_CONST;
+GType		 gpk_animated_icon_get_type		(void);
 GtkWidget	*gpk_animated_icon_new			(void);
 gboolean	 gpk_animated_icon_set_filename_tile	(GpkAnimatedIcon	*icon,
 							 GtkIconSize		 size,
