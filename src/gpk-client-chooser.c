@@ -237,6 +237,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	/* add columns to the tree view */
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (widget), FALSE);
 
 	/* use PkDesktop to get better icon */
 	desktop = pk_desktop_new ();
@@ -267,6 +268,14 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	}
 
 	g_object_unref (desktop);
+
+	/* hide the filter box */
+	widget = glade_xml_get_widget (glade_xml, "hbox_filter");
+	gtk_widget_hide (widget);
+
+	/* hide the refresh button */
+	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	gtk_widget_hide (widget);
 
 	/* show window */
 	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
