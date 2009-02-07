@@ -344,8 +344,8 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	/* --- column for details --- */
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (renderer, "yalign", 0.0, NULL);
-	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_object_set(renderer, "wrap-width", 400, NULL);
+	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set (renderer, "wrap-width", 400, NULL);
 	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,

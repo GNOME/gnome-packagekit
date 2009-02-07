@@ -810,6 +810,10 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
+	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set (renderer, "wrap-width", 400, NULL);
+
 	/* TRANSLATORS: column for the message type */
 	column = gtk_tree_view_column_new_with_attributes (_("Message"), renderer,
 							   "markup", GPK_WATCH_COLUMN_TEXT, NULL);
@@ -818,6 +822,10 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 
 	/* column for details */
 	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer, "yalign", 0.0, NULL);
+	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set (renderer, "wrap-width", 400, NULL);
+
 	/* TRANSLATORS: column for the message description */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_WATCH_COLUMN_DETAILS, NULL);
