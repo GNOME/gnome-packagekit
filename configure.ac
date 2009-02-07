@@ -78,7 +78,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.3.11
+PACKAGEKIT_REQUIRED=0.4.4
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.12.0
 DBUS_REQUIRED=1.1.2
