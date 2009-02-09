@@ -50,6 +50,7 @@ if test "$GCC" = "yes"; then
 	CPPFLAGS="$CPPFLAGS -Wswitch-default"
 	CPPFLAGS="$CPPFLAGS -Winit-self"
 	CPPFLAGS="$CPPFLAGS -Wmissing-include-dirs"
+	CPPFLAGS="$CPPFLAGS -Wno-strict-aliasing"
 	CPPFLAGS="$CPPFLAGS -Wundef"
 	CPPFLAGS="$CPPFLAGS -Waggregate-return"
 	CPPFLAGS="$CPPFLAGS -Wmissing-format-attribute"
@@ -137,11 +138,6 @@ PKG_CHECK_MODULES(GTK, \
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
-PKG_CHECK_MODULES(LIBSEXY, \
- libsexy >= $LIBSEXY_REQUIRED)
-AC_SUBST(LIBSEXY_CFLAGS)
-AC_SUBST(LIBSEXY_LIBS)
-
 PKG_CHECK_MODULES(LIBGLADE, \
  libglade-2.0 >= $LIBGLADE_REQUIRED)
 AC_SUBST(LIBGLADE_CFLAGS)
@@ -161,6 +157,15 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= $GNOME_MENUS_REQUIRED)
 AC_SUBST(GNOME_MENUS_CFLAGS)
 AC_SUBST(GNOME_MENUS_LIBS)
+
+dnl ---------------------------------------------------------------------------
+dnl - Is a new enough GTK available for the SexyIconEntry replacement?
+dnl ---------------------------------------------------------------------------
+if $PKG_CONFIG --atleast-version 2.15.0 gtk+-2.0; then
+   PKG_CHECK_MODULES(LIBSEXY, libsexy >= $LIBSEXY_REQUIRED)
+   AC_SUBST(LIBSEXY_CFLAGS)
+   AC_SUBST(LIBSEXY_LIBS)
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl - Check for g_file_make_directory_with_parents
