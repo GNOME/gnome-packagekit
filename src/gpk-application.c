@@ -27,11 +27,14 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gconf/gconf-client.h>
-#include <libsexy/sexy-icon-entry.h>
 #include <math.h>
 #include <string.h>
 #include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
+
+#if !GTK_CHECK_VERSION(2,15,0)
+ #include <libsexy/sexy-icon-entry.h>
+#endif
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -1977,12 +1980,14 @@ gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *na
 				      gchar *string1, gchar *string2,
 				      gint int1, gint int2, gpointer user_data)
 {
-	if (egg_strequal (name, "entry_text")) {
+	if (egg_strequal (name, "entry_text"))
+#if GTK_CHECK_VERSION(2,15,0)
+		return gtk_entry_new ();
+#else
 		return sexy_icon_entry_new ();
-	}
-	if (egg_strequal (name, "image_status")) {
+#endif
+	if (egg_strequal (name, "image_status"))
 		return gpk_animated_icon_new ();
-	}
 	egg_warning ("name unknown='%s'", name);
 	return NULL;
 }
@@ -2032,7 +2037,11 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	/* TRANSLATORS: entry tooltip: basic search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+#else
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+#endif
 }
 
 /**
@@ -2057,7 +2066,11 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	/* TRANSLATORS: entry tooltip: detailed search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_EDIT);
+#else
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+#endif
 }
 
 /**
@@ -2082,14 +2095,26 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	/* TRANSLATORS: entry tooltip: file search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_OPEN);
+#else
 	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, GTK_IMAGE (icon));
+#endif
 }
 
+#if GTK_CHECK_VERSION(2,15,0)
+/**
+ * gpk_application_entry_text_icon_press_cb:
+ **/
+static void
+gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEventButton *event, gpointer data)
+#else
 /**
  * gpk_application_entry_text_icon_pressed_cb:
  **/
 static void
 gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos, gint button, gpointer data)
+#endif
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
@@ -2099,8 +2124,13 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* only respond to left button */
+#if GTK_CHECK_VERSION(2,15,0)
+	if (event->button != 1)
+		return;
+#else
 	if (button != 1)
 		return;
+#endif
 
 	egg_debug ("icon_pos=%i", icon_pos);
 
@@ -2135,9 +2165,15 @@ gpk_application_entry_text_icon_pressed_cb (SexyIconEntry *entry, gint icon_pos,
 	}
 
 	gtk_widget_show_all (GTK_WIDGET (menu));
+#if GTK_CHECK_VERSION(2,15,0)
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			gpk_application_popup_position_menu, entry,
-			1, gtk_get_current_event_time());
+			event->button, event->time);
+#else
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+			gpk_application_popup_position_menu, entry,
+			button, gtk_get_current_event_time());
+#endif
 }
 
 /**
@@ -3338,11 +3374,21 @@ gpk_application_init (GpkApplication *application)
 	/* set focus on entry text */
 	gtk_widget_grab_focus (widget);
 	gtk_widget_show (widget);
+#if GTK_CHECK_VERSION(2,15,0)
+	gtk_entry_set_icon_sensitive (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, TRUE);
+#else
 	sexy_icon_entry_set_icon_highlight (SEXY_ICON_ENTRY (widget), SEXY_ICON_ENTRY_PRIMARY, TRUE);
+#endif
+
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_find_cb), application);
+#if GTK_CHECK_VERSION(2,15,0)
+	g_signal_connect (widget, "icon-press",
+			  G_CALLBACK (gpk_application_entry_text_icon_press_cb), application);
+#else
 	g_signal_connect (widget, "icon-pressed",
 			  G_CALLBACK (gpk_application_entry_text_icon_pressed_cb), application);
+#endif
 
 	/* hide the filters we can't support */
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
