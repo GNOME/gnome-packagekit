@@ -2294,7 +2294,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_show_about_dialog (GTK_WINDOW (main_window),
 			       "version", PACKAGE_VERSION,
-			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
+			       "copyright", "Copyright \xc2\xa9 2007-2009 Richard Hughes",
 			       "license", license_trans,
 			       "website-label", _("PackageKit Website"),
 			       "website", "http://www.packagekit.org",

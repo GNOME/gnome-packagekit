@@ -212,7 +212,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_UPDATE);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
-			       "copyright", "Copyright \xc2\xa9 2007-2008 Richard Hughes",
+			       "copyright", "Copyright \xc2\xa9 2007-2009 Richard Hughes",
 			       "license", license_trans,
 				/* TRANSLATORS: website label */
 			       "website-label", _("PackageKit Website"),
