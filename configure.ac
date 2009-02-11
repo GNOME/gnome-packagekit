@@ -162,6 +162,8 @@ dnl ---------------------------------------------------------------------------
 dnl - Is a new enough GTK available for the SexyIconEntry replacement?
 dnl ---------------------------------------------------------------------------
 if $PKG_CONFIG --atleast-version 2.15.0 gtk+-2.0; then
+   echo "using built in replacement"
+else
    PKG_CHECK_MODULES(LIBSEXY, libsexy >= $LIBSEXY_REQUIRED)
    AC_SUBST(LIBSEXY_CFLAGS)
    AC_SUBST(LIBSEXY_LIBS)
