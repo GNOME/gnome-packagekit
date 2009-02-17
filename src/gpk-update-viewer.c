@@ -51,6 +51,7 @@
 #include "gpk-client.h"
 #include "gpk-enum.h"
 
+static GMainLoop *loop = NULL;
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_preview = NULL;
 static GtkListStore *list_store_details = NULL;
@@ -433,7 +434,16 @@ gpk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
 		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
-	gtk_main_quit ();
+	g_main_loop_quit (loop);
+}
+
+/**
+ * gpk_update_viewer_button_close:
+ **/
+static void
+gpk_update_viewer_button_close (GtkWidget *widget, gpointer data)
+{
+	g_main_loop_quit (loop);
 }
 
 /**
@@ -1949,7 +1959,7 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* Get the main window quit */
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_close), NULL);
 
 	/* button_close2 and button_close3 are on the overview/review
 	 * screens, where we want to cancel transactions when closing
@@ -1961,7 +1971,7 @@ main (int argc, char *argv[])
 
 	/* normal close buttons */
 	widget = glade_xml_get_widget (glade_xml, "button_close4");
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close), NULL);
 
 	/* connect up PolicyKit actions */
 	g_signal_connect (refresh_action, "activate",
@@ -2066,7 +2076,8 @@ main (int argc, char *argv[])
 	gpk_update_viewer_get_new_update_list ();
 
 	/* wait */
-	gtk_main ();
+	loop = g_main_loop_new (NULL, FALSE);
+	g_main_loop_run (loop);
 
 	/* we might have visual stuff running, close it down */
 	ret = pk_client_cancel (client_query, &error);
@@ -2075,6 +2086,7 @@ main (int argc, char *argv[])
 		g_error_free (error);
 	}
 
+	g_main_loop_unref (loop);
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_preview);
 	g_object_unref (list_store_description);
