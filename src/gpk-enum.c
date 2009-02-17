@@ -1250,7 +1250,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_SEARCH_DETAILS:
 		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Got details");
+		text = _("Searched for package details");
 		break;
 	case PK_ROLE_ENUM_SEARCH_FILE:
 		/* TRANSLATORS: The role of the transaction, in past tense */
