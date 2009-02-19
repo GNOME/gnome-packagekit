@@ -778,7 +778,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_SETUP:
 		/* TRANSLATORS: The transaction state */
-		text = _("Waiting for service to start");
+		text = _("Waiting for transaction to start");
 		break;
 	case PK_STATUS_ENUM_WAIT:
 		/* TRANSLATORS: The transaction state */
