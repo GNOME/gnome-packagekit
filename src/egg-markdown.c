@@ -302,7 +302,7 @@ egg_markdown_to_text_line_formatter (const gchar *line, const gchar *formatter, 
 	str1 = egg_markdown_strstr_spaces (copy, formatter);
 	if (str1 != NULL) {
 		*str1 = '\0';
-		str2 = egg_markdown_strstr_spaces (str1+1, formatter);
+		str2 = egg_markdown_strstr_spaces (str1+len, formatter);
 		if (str2 != NULL) {
 			*str2 = '\0';
 			middle = str1 + len;
