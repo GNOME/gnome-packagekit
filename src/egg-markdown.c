@@ -888,6 +888,15 @@ egg_markdown_test (EggTest *test)
 	g_free (text);
 
 	/************************************************************/
+	text = egg_markdown_to_text_line_formatter ("***important***", "**", "<b>", "</b>");
+	egg_test_title (test, "formatter (only)");
+	if (egg_strequal (text, "<b>*important</b>*"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
+
+	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("I guess * this is * not bold", "*", "<i>", "</i>");
 	egg_test_title (test, "formatter (with spaces)");
 	if (egg_strequal (text, "I guess * this is * not bold"))
@@ -942,6 +951,17 @@ egg_markdown_test (EggTest *test)
 		   "<big>OEMs</big>\n"
 		   "• Bullett";
 	egg_test_title (test, "markdown (type2 header)");
+	text = egg_markdown_parse (self, markdown);
+	if (egg_strequal (text, markdown_expected))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
+	g_free (text);
+
+	/************************************************************/
+	markdown = "*** This software is currently in alpha state ***\n";
+	markdown_expected = "<b><i> This software is currently in alpha state </b></i>";
+	egg_test_title (test, "markdown some invalid header");
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
 		egg_test_success (test, NULL);
