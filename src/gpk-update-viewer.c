@@ -1799,9 +1799,9 @@ gpk_update_viewer_setup_policykit (void)
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-update");
 	update_packages_action = polkit_gnome_action_new_default ("update-package", pk_action,
 								  /* TRANSLATORS: button label, apply all pending updates the user has selected */
-								  _("_Apply Updates"),
+								  _("_Install Updates"),
 								  /* TRANSLATORS: button tooltip */
-								  _("Apply the selected updates"));
+								  _("Install the selected updates"));
 	g_object_set (update_packages_action,
 		      "no-icon-name", GTK_STOCK_APPLY,
 		      "auth-icon-name", GTK_STOCK_APPLY,
@@ -1817,7 +1817,7 @@ gpk_update_viewer_setup_policykit (void)
 								/* TRANSLATORS: button label, update all packages pending */
 								_("_Update System"),
 								/* TRANSLATORS: button tooltip */
-								_("Apply all updates"));
+								_("Install all updates"));
 	g_object_set (update_system_action,
 		      "no-icon-name", GTK_STOCK_APPLY,
 		      "auth-icon-name", GTK_STOCK_APPLY,

@@ -773,8 +773,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	if (status_security->len != 0)
 		g_string_set_size (status_security, status_security->len-1);
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
-	g_string_append_printf (status_tooltip, ngettext ("There is %d update pending",
-							  "There are %d updates pending", length), length);
+	g_string_append_printf (status_tooltip, ngettext ("There is %d update available",
+							  "There are %d updates available", length), length);
 #if GTK_CHECK_VERSION(2,15,0)
 	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
 #else
