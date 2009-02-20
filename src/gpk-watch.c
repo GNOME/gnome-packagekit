@@ -553,6 +553,49 @@ gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum er
 }
 
 /**
+ * gpk_watch_is_message_ignored:
+ **/
+static gboolean
+gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
+{
+	guint i;
+	gboolean ret = FALSE;
+	gchar *ignored_str;
+	gchar **ignored = NULL;
+	const gchar *message_str;
+
+	/* get from gconf */
+	ignored_str = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_IGNORED_MESSAGES, NULL);
+	if (ignored_str == NULL) {
+		egg_warning ("could not read ignored list");
+		goto out;
+	}
+
+	/* nothing in list, common case */
+	if (egg_strzero (ignored_str)) {
+		egg_debug ("nothing in ignored list");
+		goto out;
+	}
+
+	/* split using "," */
+	ignored = g_strsplit (ignored_str, ",", 0);
+
+	/* remove any ignored pattern matches */
+	message_str = pk_message_enum_to_text (message);
+	for (i=0; ignored[i] != NULL; i++) {
+		ret = g_pattern_match_simple (ignored[i], message_str);
+		if (ret) {
+			egg_debug ("match %s for %s, ignoring", ignored[i], message_str);
+			break;
+		}
+	}
+out:
+	g_free (ignored_str);
+	g_strfreev (ignored);
+	return ret;
+}
+
+/**
  * gpk_watch_message_cb:
  **/
 static void
@@ -565,6 +608,13 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	GpkWatchCachedMessage *cached_message;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
+
+	/* is ignored */
+	ret = gpk_watch_is_message_ignored (watch, message);
+	if (ret) {
+		egg_debug ("igoring message");
+		return;
+	}
 
 	/* add to list */
 	cached_message = g_new0 (GpkWatchCachedMessage, 1);

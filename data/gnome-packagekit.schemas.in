@@ -26,6 +26,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnome-packagekit/ignored_messages</key>
+      <applyto>/apps/gnome-packagekit/ignored_messages</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>backend-*,untrusted-package</default>
+      <locale name="C">
+        <short>Messages that should be ignored</short>
+        <long>Messages that should be ignored, separated by commas. These can include '*' and '?' characters</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnome-packagekit/enable_check_hardware</key>
       <applyto>/apps/gnome-packagekit/enable_check_hardware</applyto>
       <owner>gnome-packagekit</owner>
