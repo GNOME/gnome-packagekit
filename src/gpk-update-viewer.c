@@ -1640,8 +1640,8 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	}
 
-	/* TRANSLATORS: right click option, ignore this package name, not currently used */
-	menuitem = gtk_menu_item_new_with_label (_("Ignore this package"));
+	/* TRANSLATORS: right click option, ignore this update name, not currently used */
+	menuitem = gtk_menu_item_new_with_label (_("Ignore this update"));
 	gtk_widget_set_sensitive (GTK_WIDGET (menuitem), FALSE);
 	g_signal_connect (menuitem, "activate",
 			  G_CALLBACK (gpk_update_viewer_detail_popup_menu_select_all), treeview);
