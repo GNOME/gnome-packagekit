@@ -1044,6 +1044,19 @@ out:
 }
 
 /**
+ * gpk_check_update_network_status_changed_cb:
+ **/
+static void
+gpk_check_update_network_status_changed_cb (PkControl *control, PkNetworkEnum state, GpkCheckUpdate *cupdate)
+{
+	//TODO: check that set_visible (TRUE) on a unset icon doesn't cause an icon to show
+	if (state == PK_NETWORK_ENUM_OFFLINE)
+		gtk_status_icon_set_visible (GTK_STATUS_ICON(cupdate->priv->sicon), FALSE);
+	else
+		gtk_status_icon_set_visible (GTK_STATUS_ICON(cupdate->priv->sicon), TRUE);
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1096,6 +1109,8 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_check_update_updates_changed_cb), cupdate);
 	g_signal_connect (cupdate->priv->control, "restart-schedule",
 			  G_CALLBACK (gpk_check_update_restart_schedule_cb), cupdate);
+	g_signal_connect (cupdate->priv->control, "network-state-changed",
+			  G_CALLBACK (gpk_check_update_network_status_changed_cb), cupdate);
 
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	cupdate->priv->tlist = pk_task_list_new ();
