@@ -1,3 +1,26 @@
+Version 0.4.4
+~~~~~~~~~~~~~
+Released: 2000-02-23
+
+* Translations
+ - Added Simplified Chinese translation (Wei Mingzhi)
+ - Added Portuguese translation (Antonio Lima)
+ - Updated Swedish translation (Daniel Nylander)
+
+* Bugfix:
+ - Small improvement on PK_ROLE_ENUM_SEARCH_DETAILS (Daniel Nicoletti)
+ - Fix compile failure with gcc-4.4.0 and old versions of glib2 (Richard Hughes)
+ - Correct the specification in that we shouldn't send the provide name encoded
+   with the provides prefix, as this is distro specific (Richard Hughes)
+ - Don't show the filter UI when we offer applications to install (Richard Hughes)
+ - Bump the required version of PackageKit to 0.4.4 now we are turning on
+   lots of compiler warnings (Richard Hughes)
+ - Use GTK 2.15.x new GtkEntry features to remove dep on libsexy (Richard Hughes)
+ - Fix infinite recursion when we try to format invalid markdown. Fixes rh#486334 (Richard Hughes)
+ - Provide a GConf key to allow ignoring some daemon messages (Richard Hughes)
+ - Change the update viewer UI to be 'Ignore this update' not 'Ignore this package' (Richard Hughes)
+ - When we loose network and have updates, hide the icon as we can't do the updates (Richard Hughes)
+
 Version 0.4.3
 ~~~~~~~~~~~~~
 Released: 2000-02-02
