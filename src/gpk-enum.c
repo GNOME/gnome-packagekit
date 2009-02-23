@@ -202,6 +202,15 @@ static const PkEnumMatch enum_group_icon_name[] = {
 
 static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
+	{PK_RESTART_ENUM_NONE,			""},
+	{PK_RESTART_ENUM_SYSTEM,		"view-refresh"},
+	{PK_RESTART_ENUM_SESSION,		"view-refresh"},
+	{PK_RESTART_ENUM_APPLICATION,		"view-refresh"},
+	{0, NULL}
+};
+
+static const PkEnumMatch enum_restart_dialog_icon_name[] = {
+	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_RESTART_ENUM_NONE,			"dialog-information"},
 	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
 	{PK_RESTART_ENUM_SESSION,		"dialog-warning"},
@@ -1560,6 +1569,15 @@ const gchar *
 gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 {
 	return pk_enum_find_string (enum_restart_icon_name, restart);
+}
+
+/**
+ * gpk_restart_enum_to_dialog_icon_name:
+ **/
+const gchar *
+gpk_restart_enum_to_dialog_icon_name (PkRestartEnum restart)
+{
+	return pk_enum_find_string (enum_restart_dialog_icon_name, restart);
 }
 
 /**
