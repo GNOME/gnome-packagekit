@@ -51,6 +51,7 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_CLEANUP,			"pk-package-cleanup"},
 	{PK_INFO_ENUM_COLLECTION_INSTALLED,	"pk-collection-installed"},
 	{PK_INFO_ENUM_COLLECTION_AVAILABLE,	"pk-collection-available"},
+	{PK_INFO_ENUM_FINISHED,			"dialog-information"},
 	{0, NULL}
 };
 
@@ -203,9 +204,9 @@ static const PkEnumMatch enum_group_icon_name[] = {
 static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_RESTART_ENUM_NONE,			""},
-	{PK_RESTART_ENUM_SYSTEM,		"view-refresh"},
-	{PK_RESTART_ENUM_SESSION,		"view-refresh"},
-	{PK_RESTART_ENUM_APPLICATION,		"view-refresh"},
+	{PK_RESTART_ENUM_SYSTEM,		"computer"},
+	{PK_RESTART_ENUM_SESSION,		"preferences-system-session"},
+	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
 	{0, NULL}
 };
 
