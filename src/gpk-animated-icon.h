@@ -58,6 +58,9 @@ GtkWidget	*gpk_animated_icon_new			(void);
 gboolean	 gpk_animated_icon_set_filename_tile	(GpkAnimatedIcon	*icon,
 							 GtkIconSize		 size,
 							 const gchar		*name);
+gboolean	 gpk_animated_icon_set_icon_name	(GpkAnimatedIcon	*icon,
+							 GtkIconSize		 size,
+							 const gchar		*name);
 gboolean	 gpk_animated_icon_set_frame_delay	(GpkAnimatedIcon	*icon,
 							 guint			 delay_ms);
 gboolean	 gpk_animated_icon_enable_animation	(GpkAnimatedIcon	*icon,

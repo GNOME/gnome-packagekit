@@ -60,6 +60,23 @@ gpk_animated_icon_free_pixbufs (GpkAnimatedIcon *icon)
 }
 
 /**
+ * gpk_animated_icon_set_icon_name:
+ **/
+gboolean
+gpk_animated_icon_set_icon_name (GpkAnimatedIcon *icon, GtkIconSize size, const gchar *name)
+{
+	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	/* stop existing animation */
+	gpk_animated_icon_enable_animation (icon, FALSE);
+
+	/* set static image */
+	gtk_image_set_from_icon_name (GTK_IMAGE (icon), name, size);
+	return TRUE;
+}
+
+/**
  * gpk_animated_icon_set_filename_tile:
  **/
 gboolean
@@ -118,6 +135,9 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	}
 
 	g_object_unref (pixbuf);
+
+	/* enable new animation */
+	gpk_animated_icon_enable_animation (icon, TRUE);
 
 	return TRUE;
 }
