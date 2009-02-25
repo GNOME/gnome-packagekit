@@ -142,6 +142,21 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	return TRUE;
 }
 
+
+/**
+ * gpk_animated_icon_visible_notify_cb:
+ **/
+static void
+gpk_animated_icon_visible_notify_cb (GObject *object, GParamSpec *param, GpkAnimatedIcon *icon)
+{
+	gboolean ret;
+	g_object_get (object, "visible", &ret, NULL);
+	if (!ret && icon->animation_id != 0) {
+		egg_debug ("disabling animation as hidden");
+		gpk_animated_icon_enable_animation (icon, FALSE);
+	}
+}
+
 /**
  * gpk_animated_icon_update:
  **/
@@ -266,6 +281,9 @@ gpk_animated_icon_init (GpkAnimatedIcon *icon)
 	icon->frame_counter = 0;
 	icon->number_frames = 0;
 	icon->frame_delay = 200;
+
+	/* disable polling if we are hidden */
+	g_signal_connect (GTK_WIDGET (icon), "notify::visible", G_CALLBACK (gpk_animated_icon_visible_notify_cb), icon);
 }
 
 /**
