@@ -108,7 +108,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 
 	/* message */
 	widget = glade_xml_get_widget (glade_xml, "label_message");
-	gtk_label_set_label (GTK_LABEL (widget), message);
+	gtk_label_set_markup (GTK_LABEL (widget), message);
 
 	/* show text in the expander */
 	if (egg_strzero (details)) {
