@@ -65,7 +65,7 @@ gpk_cell_renderer_percentage_set_property (GObject *object, guint param_id,
 	switch (param_id) {
 	case PROP_PERCENT:
 		cru->percent = g_value_get_uint (value);
-		if (cru->percent == 0) {
+		if (cru->percent == 0 || cru->percent == 100) {
 			g_object_set (cru, "pulse", -1, NULL);
 			g_object_set (cru, "visible", FALSE, NULL);
 		} else if (cru->percent == 101) {
