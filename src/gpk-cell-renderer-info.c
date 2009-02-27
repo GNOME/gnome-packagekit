@@ -65,8 +65,15 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 	switch (param_id) {
 	case PROP_VALUE:
 		cru->value = g_value_get_uint (value);
-		cru->icon_name = gpk_info_enum_to_icon_name (cru->value);
-		g_object_set (cru, "icon-name", cru->icon_name, NULL);
+		if (cru->value == PK_INFO_ENUM_UNKNOWN) {
+			g_object_set (cru, "visible", FALSE, NULL);
+		} else if (cru->value == PK_INFO_ENUM_FINISHED) {
+			// just ignore
+		} else {
+			cru->icon_name = gpk_info_enum_to_icon_name (cru->value);
+			g_object_set (cru, "visible", TRUE, NULL);
+			g_object_set (cru, "icon-name", cru->icon_name, NULL);
+		}
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
