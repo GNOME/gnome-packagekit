@@ -142,6 +142,10 @@ gpk_eula_helper_set_parent (GpkEulaHelper *eula_helper, GtkWindow *window)
 	/* make modal if window set */
 	widget = glade_xml_get_widget (eula_helper->priv->glade_xml, "dialog_eula");
 	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+
+	/* this is a modal popup, so don't show a window title */
+	gtk_window_set_title (GTK_WINDOW (widget), "");
+
 	return TRUE;
 }
 
