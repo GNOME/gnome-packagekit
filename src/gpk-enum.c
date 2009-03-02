@@ -204,7 +204,7 @@ static const PkEnumMatch enum_group_icon_name[] = {
 static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_RESTART_ENUM_NONE,			""},
-	{PK_RESTART_ENUM_SYSTEM,		"computer"},
+	{PK_RESTART_ENUM_SYSTEM,		"system-shutdown"},
 	{PK_RESTART_ENUM_SESSION,		"preferences-system-session"},
 	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
 	{0, NULL}
@@ -654,16 +654,16 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 	const gchar *text = NULL;
 	switch (restart) {
 	case PK_RESTART_ENUM_NONE:
-		text = _("No restart is necessary for this update");
+		text = _("No restart is necessary");
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
-		text = _("An application restart is required after this update");
+		text = _("An application restart is required");
 		break;
 	case PK_RESTART_ENUM_SESSION:
-		text = _("You will be required to log off and back on after this update");
+		text = _("You will be required to log out and back in");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("A system restart is required after this update");
+		text = _("A restart is required");
 		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);
@@ -683,7 +683,7 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("No restart is required");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("A system restart is required");
+		text = _("A restart is required");
 		break;
 	case PK_RESTART_ENUM_SESSION:
 		text = _("You will need to log off and log back on");
