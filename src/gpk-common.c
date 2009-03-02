@@ -217,11 +217,10 @@ gpk_package_get_name (const gchar *package_id)
 gboolean
 gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 {
-	EggConsoleKit *ck = NULL;
 	guint uid;
-	gboolean ret = FALSE;
-	gchar *message;
-	gchar *title;
+	gboolean ret = TRUE;
+	gchar *message = NULL;
+	gchar *title = NULL;
 	GtkResponseType result;
 	GtkWidget *dialog;
 
@@ -251,67 +250,16 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 		result = gtk_dialog_run (GTK_DIALOG(dialog));
 		gtk_widget_destroy (dialog);
 
-		g_free (title);
-		g_free (message);
-
 		/* user did not agree to run insecure */
 		if (result != GTK_RESPONSE_OK) {
+			ret = FALSE;
 			egg_warning ("uid=%i so closing", uid);
 			goto out;
 		}
 	}
-
-	/* talk to ConsoleKit */
-	ck = egg_console_kit_new ();
-
-	/* we are not local */
-	ret = egg_console_kit_is_local (ck);
-	if (!ret) {
-		if (!show_ui)
-			goto out;
-		if (application_name == NULL)
-			/* TRANSLATORS: the user is not sitting in front of the keyboard */
-			title = g_strdup (_("This application is running when the session is not local"));
-		else
-			/* TRANSLATORS: same, but we know the application name */
-			title = g_strdup_printf (_("%s is running when the session is not local"), application_name);
-		message = g_strjoin ("\n",
-				     /* TRANSLATORS: tell the user off */
-				     _("These applications should be run only when on local console."),
-				     /* TRANSLATORS: explain what to do */
-				     _("This normally indicates a bug with ConsoleKit or with the way your session has started."), NULL);
-		gpk_error_dialog (title, message, "");
-		g_free (title);
-		g_free (message);
-		egg_warning ("not LOCAL so closing");
-		goto out;
-	}
-
-	/* we are not active */
-	ret = egg_console_kit_is_active (ck);
-	if (!ret) {
-		if (!show_ui)
-			goto out;
-		if (application_name == NULL)
-			/* TRANSLATORS: the user is not active, i.e. is idle */
-			title = g_strdup (_("This application is running when the session is not active"));
-		else
-			/* TRANSLATORS: same, but we know the application name */
-			title = g_strdup_printf (_("%s is running when the session is not active"), application_name);
-		message = g_strjoin ("\n",
-				     /* TRANSLATORS: tell the user off */
-				     _("These applications should be run only when on active console."),
-				     /* TRANSLATORS: explain what to do */
-				     _("This normally indicates a bug with your remote desktop implementation."), NULL);
-		gpk_error_dialog (title, message, "");
-		g_free (title);
-		g_free (message);
-		egg_warning ("not ACTIVE so closing");
-		goto out;
-	}
 out:
-	if (ck != NULL)
-		g_object_unref (ck);
+	g_free (title);
+	g_free (message);
 	return ret;
 }
 
