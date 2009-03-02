@@ -37,12 +37,12 @@ G_BEGIN_DECLS
 
 typedef struct _GpkCellRendererInfo		GpkCellRendererInfo;
 typedef struct _GpkCellRendererInfoClass	GpkCellRendererInfoClass;
+typedef struct _GpkCellRendererInfoPrivate	GpkCellRendererInfoPrivate;
 
 struct _GpkCellRendererInfo
 {
-	GtkCellRendererPixbuf	 parent;
-	PkInfoEnum		 value;
-	const gchar		*icon_name;
+	GtkCellRendererPixbuf		 parent;
+	GpkCellRendererInfoPrivate	*priv;
 };
 
 struct _GpkCellRendererInfoClass

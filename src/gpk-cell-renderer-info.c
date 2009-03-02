@@ -36,19 +36,27 @@ enum {
 	PROP_VALUE
 };
 
+#define GPK_CELL_RENDERER_INFO_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfoPrivate))
+
+struct _GpkCellRendererInfoPrivate
+{
+	PkInfoEnum		 value;
+	const gchar		*icon_name;
+};
+
 G_DEFINE_TYPE (GpkCellRendererInfo, gpk_cell_renderer_info, GTK_TYPE_CELL_RENDERER_PIXBUF)
 
 static gpointer parent_class = NULL;
 
 static void
 gpk_cell_renderer_info_get_property (GObject *object, guint param_id,
-				        GValue *value, GParamSpec *pspec)
+				     GValue *value, GParamSpec *pspec)
 {
 	GpkCellRendererInfo *cru = GPK_CELL_RENDERER_INFO (object);
 
 	switch (param_id) {
 	case PROP_VALUE:
-		g_value_set_uint (value, cru->value);
+		g_value_set_uint (value, cru->priv->value);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -58,21 +66,19 @@ gpk_cell_renderer_info_get_property (GObject *object, guint param_id,
 
 static void
 gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
-				    const GValue *value, GParamSpec *pspec)
+				     const GValue *value, GParamSpec *pspec)
 {
 	GpkCellRendererInfo *cru = GPK_CELL_RENDERER_INFO (object);
 
 	switch (param_id) {
 	case PROP_VALUE:
-		cru->value = g_value_get_uint (value);
-		if (cru->value == PK_INFO_ENUM_UNKNOWN) {
+		cru->priv->value = g_value_get_uint (value);
+		if (cru->priv->value == PK_INFO_ENUM_UNKNOWN) {
 			g_object_set (cru, "visible", FALSE, NULL);
-		} else if (cru->value == PK_INFO_ENUM_FINISHED) {
-			// just ignore
 		} else {
-			cru->icon_name = gpk_info_enum_to_icon_name (cru->value);
+			cru->priv->icon_name = gpk_info_enum_to_icon_name (cru->priv->value);
 			g_object_set (cru, "visible", TRUE, NULL);
-			g_object_set (cru, "icon-name", cru->icon_name, NULL);
+			g_object_set (cru, "icon-name", cru->priv->icon_name, NULL);
 		}
 		break;
 	default:
@@ -110,6 +116,8 @@ gpk_cell_renderer_info_class_init (GpkCellRendererInfoClass *class)
 	g_object_class_install_property (object_class, PROP_VALUE,
 					 g_param_spec_uint ("value", "VALUE",
 					 "VALUE", 0, G_MAXUINT, PK_INFO_ENUM_UNKNOWN, G_PARAM_READWRITE));
+
+	g_type_class_add_private (object_class, sizeof (GpkCellRendererInfoPrivate));
 }
 
 /**
@@ -118,8 +126,9 @@ gpk_cell_renderer_info_class_init (GpkCellRendererInfoClass *class)
 static void
 gpk_cell_renderer_info_init (GpkCellRendererInfo *cru)
 {
-	cru->value = PK_INFO_ENUM_UNKNOWN;
-	cru->icon_name = NULL;
+	cru->priv = GPK_CELL_RENDERER_INFO_GET_PRIVATE (cru);
+	cru->priv->value = PK_INFO_ENUM_UNKNOWN;
+	cru->priv->icon_name = NULL;
 }
 
 /**
