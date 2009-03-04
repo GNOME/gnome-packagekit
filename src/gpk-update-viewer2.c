@@ -42,7 +42,6 @@
 #include "gpk-gnome.h"
 #include "gpk-error.h"
 #include "gpk-consolekit.h"
-#include "gpk-cell-renderer-uri.h"
 #include "gpk-cell-renderer-size.h"
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"
@@ -69,7 +68,6 @@ static gchar *package_id_last = NULL;
 enum {
 	GPK_DESC_COLUMN_TITLE,
 	GPK_DESC_COLUMN_TEXT,
-	GPK_DESC_COLUMN_URI,
 	GPK_DESC_COLUMN_LAST
 };
 
@@ -739,15 +737,14 @@ gpk_update_viewer_treeview_add_columns_details (GtkTreeView *treeview)
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", GPK_DESC_COLUMN_TITLE);
 	gtk_tree_view_append_column (treeview, column);
 
-	/* column for uris */
+	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_details_size_allocate_cb), renderer);
 	/* TRANSLATORS: The information about the update, not currently shown */
 	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "markup", GPK_DESC_COLUMN_TEXT,
-							   "uri", GPK_DESC_COLUMN_URI, NULL);
+							   "markup", GPK_DESC_COLUMN_TEXT, NULL);
 	gtk_tree_view_append_column (treeview, column);
 }
 
@@ -840,7 +837,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
  * gpk_update_viewer_add_description_item:
  **/
 static void
-gpk_update_viewer_add_description_item (const gchar *title, const gchar *text, const gchar *uri)
+gpk_update_viewer_add_description_item (const gchar *title, const gchar *text)
 {
 	gchar *markup;
 	GtkWidget *tree_view;
@@ -850,12 +847,11 @@ gpk_update_viewer_add_description_item (const gchar *title, const gchar *text, c
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
 
-	egg_debug ("%s %s %s", markup, text, uri);
+	egg_debug ("%s: %s", markup, text);
 	gtk_list_store_append (list_store_details, &iter);
 	gtk_list_store_set (list_store_details, &iter,
 			    GPK_DESC_COLUMN_TITLE, markup,
 			    GPK_DESC_COLUMN_TEXT, text,
-			    GPK_DESC_COLUMN_URI, uri,
 			    -1);
 
 	g_free (markup);
@@ -988,20 +984,20 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 
 	info_text = gpk_info_enum_to_localised_text (info);
 	/* TRANSLATORS: this is the update type, e.g. security */
-	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
+	gpk_update_viewer_add_description_item (_("Type"), info_text);
 
 	/* state */
 	if (obj->state != PK_UPDATE_STATE_ENUM_UNKNOWN) {
 		info_text = gpk_update_state_enum_to_localised_text (obj->state);
 		/* TRANSLATORS: this is the stability status of the update */
-		gpk_update_viewer_add_description_item (_("State"), info_text, NULL);
+		gpk_update_viewer_add_description_item (_("State"), info_text);
 	}
 
 	/* issued */
 	if (obj->issued != NULL) {
 		line = pk_iso8601_from_date (obj->issued);
 		/* TRANSLATORS: this is when the update was issued */
-		gpk_update_viewer_add_description_item (_("Issued"), line, NULL);
+		gpk_update_viewer_add_description_item (_("Issued"), line);
 		g_free (line);
 	}
 
@@ -1009,20 +1005,20 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	if (obj->updated != NULL) {
 		line = pk_iso8601_from_date (obj->updated);
 		/* TRANSLATORS: this is when (if?) the update was updated */
-		gpk_update_viewer_add_description_item (_("Updated"), line, NULL);
+		gpk_update_viewer_add_description_item (_("Updated"), line);
 		g_free (line);
 	}
 
 	package_pretty = gpk_package_id_name_version (obj->id);
 	/* TRANSLATORS: this is the package version */
-	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
+	gpk_update_viewer_add_description_item (_("New version"), package_pretty);
 	g_free (package_pretty);
 
 	/* split and add */
 	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
 	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are updated */
-		gpk_update_viewer_add_description_item (_("Installed version"), package_pretty, NULL);
+		gpk_update_viewer_add_description_item (_("Installed version"), package_pretty);
 	}
 	g_free (package_pretty);
 
@@ -1030,12 +1026,12 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
 	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are obsoleted */
-		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
+		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty);
 	}
 	g_free (package_pretty);
 
 	/* TRANSLATORS: this is the repository the package has come from */
-	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data, NULL);
+	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data);
 
 	/* update text */
 	if (!egg_strzero (obj->update_text)) {
@@ -1051,7 +1047,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	/* changelog */
 	if (!egg_strzero (obj->changelog)) {
 		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog, NULL);
+		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog);
 	}
 
 	/* add all the links */
@@ -1073,7 +1069,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	    obj->restart == PK_RESTART_ENUM_SYSTEM) {
 		info_text = gpk_restart_enum_to_localised_text (obj->restart);
 		/* TRANSLATORS: this is a notice a restart might be required */
-		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
+		gpk_update_viewer_add_description_item (_("Notice"), info_text);
 	}
 }
 
@@ -2087,7 +2083,7 @@ main (int argc, char *argv[])
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
 						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
-	list_store_details = gtk_list_store_new (GPK_DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_details = gtk_list_store_new (GPK_DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 	text_buffer = gtk_text_buffer_new (NULL);
 
 	/* no upgrades yet */
