@@ -63,7 +63,7 @@ static PkPackageList *update_list = NULL;
 static GpkRepoSignatureHelper *repo_signature_helper = NULL;
 static GpkEulaHelper *eula_helper = NULL;
 static EggMarkdown *markdown = NULL;
-static gchar *package_id_last = NULL;
+static PkPackageId *package_id_last = NULL;
 
 enum {
 	GPK_DESC_COLUMN_TITLE,
@@ -264,25 +264,31 @@ gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, gp
  * gpk_update_viewer_find_iter_model_cb:
  **/
 static gboolean
-gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *id)
+gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const PkPackageId *id)
 {
 	gchar *id_tmp = NULL;
 	GtkTreePath **_path = NULL;
+	PkPackageId *id_new;
+	gboolean ret = FALSE;
 
 	_path = (GtkTreePath **) g_object_get_data (G_OBJECT(model), "_path");
 	gtk_tree_model_get (model, iter, GPK_UPDATES_COLUMN_ID, &id_tmp, -1);
-	if (strcmp (id_tmp, id) == 0) {
+
+	/* only match on the name */
+	id_new = pk_package_id_new_from_string (id_tmp);
+	if (g_strcmp0 (id_new->name, id->name) == 0) {
 		*_path = gtk_tree_path_copy (path);
-		return TRUE;
+		ret = TRUE;
 	}
-	return FALSE;
+	pk_package_id_free (id_new);
+	return ret;
 }
 
 /**
  * gpk_update_viewer_model_get_path:
  **/
 static GtkTreePath *
-gpk_update_viewer_model_get_path (GtkTreeModel *model, const gchar *id)
+gpk_update_viewer_model_get_path (GtkTreeModel *model, const PkPackageId *id)
 {
 	GtkTreePath *path = NULL;
 	g_object_set_data (G_OBJECT(model), "_path", (gpointer) &path);
@@ -301,16 +307,14 @@ gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointe
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
-	gchar *id;
 
 	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
-	id = pk_package_id_to_string (obj->id);
 
-	path = gpk_update_viewer_model_get_path (model, id);
+	path = gpk_update_viewer_model_get_path (model, obj->id);
 	if (path == NULL) {
 		egg_debug ("not found ID for group");
-		goto out;
+		return;
 	}
 
 	gtk_tree_model_get_iter (model, &iter, path);
@@ -322,8 +326,6 @@ gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointe
 	if (obj->size == 0)
 		gtk_list_store_set (list_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_DOWNLOADING, -1);
-out:
-	g_free (id);
 }
 
 /**
@@ -371,15 +373,15 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 
 	/* used for progress */
 	if (!gpk_update_viewer_is_update_info (obj->info)) {
-		g_free (package_id_last);
-		package_id_last = g_strdup (package_id);
+		pk_package_id_free (package_id_last);
+		package_id_last = pk_package_id_copy (obj->id);
 
 		/* find model */
 		widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 		model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 
 		/* update icon */
-		path = gpk_update_viewer_model_get_path (model, package_id);
+		path = gpk_update_viewer_model_get_path (model, obj->id);
 		if (path == NULL) {
 			egg_debug ("not found ID for package");
 			goto out;
@@ -425,17 +427,15 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	gchar *id;
 	GtkTreePath *path;
 
 	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
-	id = pk_package_id_to_string (obj->id);
 
-	path = gpk_update_viewer_model_get_path (model, id);
+	path = gpk_update_viewer_model_get_path (model, obj->id);
 	if (path == NULL) {
 		egg_warning ("not found ID for update detail");
-		goto out;
+		return;
 	}
 
 	gtk_tree_model_get_iter (model, &iter, path);
@@ -443,8 +443,6 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 	gtk_list_store_set (list_store_updates, &iter,
 			    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, (gpointer) pk_update_detail_obj_copy (obj),
 			    GPK_UPDATES_COLUMN_RESTART, obj->restart, -1);
-out:
-	g_free (id);
 }
 
 /**
@@ -2203,7 +2201,7 @@ main (int argc, char *argv[])
 	g_object_unref (client_primary);
 	g_object_unref (client_secondary);
 	g_object_unref (text_buffer);
-	g_free (package_id_last);
+	pk_package_id_free (package_id_last);
 unique_out:
 	g_object_unref (egg_unique);
 
