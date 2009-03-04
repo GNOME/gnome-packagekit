@@ -42,6 +42,7 @@ bin_PROGRAMS =						\
 	gpk-install-package-name			\
 	gpk-update-icon					\
 	gpk-update-viewer				\
+	gpk-update-viewer2				\
 	gpk-log						\
 	gpk-backend-status				\
 	$(NULL)
@@ -207,18 +208,34 @@ gpk_service_pack_LDADD =				\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\
-	egg-debug.c					\
-	egg-debug.h					\
-	egg-unique.c					\
-	egg-unique.h					\
 	gpk-prefs.c					\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-enum.c					\
-	gpk-enum.h					\
+	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_prefs_LDADD =					\
+	$(shared_LIBS)					\
+	$(NULL)
+
+gpk_update_viewer2_SOURCES =				\
+	gpk-update-viewer2.c				\
+	gpk-repo-signature-helper.c			\
+	gpk-repo-signature-helper.h			\
+	gpk-eula-helper.c				\
+	gpk-eula-helper.h				\
+	gpk-cell-renderer-uri.c				\
+	gpk-cell-renderer-uri.h				\
+	gpk-cell-renderer-size.c			\
+	gpk-cell-renderer-size.h			\
+	gpk-cell-renderer-info.c			\
+	gpk-cell-renderer-info.h			\
+	gpk-cell-renderer-percentage.c			\
+	gpk-cell-renderer-percentage.h			\
+	gpk-cell-renderer-restart.c			\
+	gpk-cell-renderer-restart.h			\
+	$(shared_SOURCES)				\
+	$(NULL)
+
+gpk_update_viewer2_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 
