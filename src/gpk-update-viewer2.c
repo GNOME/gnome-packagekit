@@ -390,9 +390,6 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		gtk_tree_model_get_iter (model, &iter, path);
 		gtk_list_store_set (list_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_STATUS, obj->info, -1);
-
-		/* scroll to cell */
-		gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (widget), path, NULL, FALSE, 0.0, 0.0);
 		gtk_tree_path_free (path);
 		goto out;
 	}
