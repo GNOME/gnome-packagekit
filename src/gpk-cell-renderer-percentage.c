@@ -122,7 +122,7 @@ gpk_cell_renderer_percentage_init (GpkCellRendererPercentage *cru)
 {
 	cru->percent = 0;
 	g_object_set (cru, "text", "", NULL);
-	g_object_set (cru, "ypad", 6, NULL);
+	g_object_set (cru, "ypad", 8, NULL);
 }
 
 /**
