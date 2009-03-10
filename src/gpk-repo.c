@@ -467,6 +467,10 @@ main (int argc, char *argv[])
 	if (!ret)
 		return 1;
 
+        /* add application specific icons to search path */
+        gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           GPK_DATA G_DIR_SEPARATOR_S "icons");
+
 	/* are we already activated? */
 	egg_unique = egg_unique_new ();
 	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Repo");
