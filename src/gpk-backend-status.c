@@ -35,6 +35,8 @@
 
 #include "egg-debug.h"
 
+#include "gpk-common.h"
+
 /**
  * pk_updates_close_cb:
  **/
@@ -125,6 +127,8 @@ main (int argc, char *argv[])
 	}
 
 	glade_xml = glade_xml_new (GPK_DATA "/gpk-backend-status.glade", NULL, NULL);
+	widget = glade_xml_get_widget (glade_xml, "dialog_backend");
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
