@@ -54,7 +54,6 @@
 static GMainLoop *loop = NULL;
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_updates = NULL;
-static GtkListStore *list_store_details = NULL;
 static GtkTextBuffer *text_buffer = NULL;
 static PkClient *client_primary = NULL;
 static PkClient *client_secondary = NULL;
@@ -64,12 +63,6 @@ static GpkRepoSignatureHelper *repo_signature_helper = NULL;
 static GpkEulaHelper *eula_helper = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
-
-enum {
-	GPK_DESC_COLUMN_TITLE,
-	GPK_DESC_COLUMN_TEXT,
-	GPK_DESC_COLUMN_LAST
-};
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -637,10 +630,12 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 		gtk_widget_hide (widget);
 		goto out;
 	}
-	if (status == PK_STATUS_ENUM_QUERY)
-		text = _("Getting list of updates");
-	else
+	if (status == PK_STATUS_ENUM_QUERY) {
+		/* TRANSLATORS: querying update list */
+		text = _("Getting the list of updates");
+	} else {
 		text = gpk_status_enum_to_localised_text (status);
+	}
 
 	/* set label */
 	gtk_label_set_label (GTK_LABEL (widget), text);
@@ -688,20 +683,6 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 }
 
 /**
- * gpk_update_viewer_treeview_details_size_allocate_cb:
- **/
-static void
-gpk_update_viewer_treeview_details_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
-{
-	GtkTreeViewColumn *column;
-	gint width;
-
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 0);
-	width = gtk_tree_view_column_get_width (column);
-	g_object_set (cell, "wrap-width", allocation->width - width - 10, NULL);
-}
-
-/**
  * gpk_update_viewer_treeview_updates_size_allocate_cb:
  **/
 static void
@@ -709,38 +690,16 @@ gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAlloc
 {
 	GtkTreeViewColumn *column;
 	gint width;
+	gint wrap_width;
 
 	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 0);
 	width = gtk_tree_view_column_get_width (column);
-	g_object_set (cell, "wrap-width", allocation->width - width - 200, NULL);
-}
-
-/**
- * gpk_update_viewer_treeview_add_columns_details:
- **/
-static void
-gpk_update_viewer_treeview_add_columns_details (GtkTreeView *treeview)
-{
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-
-	/* title */
-	column = gtk_tree_view_column_new ();
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "markup", GPK_DESC_COLUMN_TITLE);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for text */
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_details_size_allocate_cb), renderer);
-	/* TRANSLATORS: The information about the update, not currently shown */
-	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "markup", GPK_DESC_COLUMN_TEXT, NULL);
-	gtk_tree_view_append_column (treeview, column);
+	wrap_width = allocation->width - width - 200;
+	if (wrap_width < 10) {
+		egg_warning ("wrap_width is impossibly small %i", wrap_width);
+		return;
+	}
+	g_object_set (cell, "wrap-width", wrap_width, NULL);
 }
 
 /**
@@ -832,29 +791,27 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
  * gpk_update_viewer_add_description_item:
  **/
 static void
-gpk_update_viewer_add_description_item (const gchar *title, const gchar *text)
+gpk_update_viewer_add_description_item (const gchar *text)
 {
-	gchar *markup;
-	GtkWidget *tree_view;
-	GtkTreeIter iter;
-	GtkTreeSelection *selection;
+	GtkTextIter start;
+	GtkTextIter iter;
 
-	/* format */
-	markup = g_strdup_printf ("<b>%s:</b>", title);
+	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
+	gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, text, -1, "para", NULL);
+	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+}
 
-	egg_debug ("%s: %s", markup, text);
-	gtk_list_store_append (list_store_details, &iter);
-	gtk_list_store_set (list_store_details, &iter,
-			    GPK_DESC_COLUMN_TITLE, markup,
-			    GPK_DESC_COLUMN_TEXT, text,
-			    -1);
-
-	g_free (markup);
-
-	tree_view = glade_xml_get_widget (glade_xml, "treeview_details");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
+/**
+ * gpk_update_viewer_add_markup_item:
+ **/
+static void
+gpk_update_viewer_add_markup_item (const gchar *text)
+{
+	GtkTextIter start;
+	GtkTextIter iter;
+	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
+	gtk_text_buffer_insert_markup (text_buffer, &iter, text);
+	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 }
 
 /**
@@ -897,8 +854,7 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 
 	/* insert at end */
 	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
-	gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
-	gtk_text_buffer_insert (text_buffer, &iter, title, -1);
+	gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, title, -1, "para", NULL);
 
 	for (i=0; i<length; i+=2) {
 		uri = urls[i];
@@ -906,12 +862,20 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 		if (egg_strzero (text))
 			text = uri;
 
-		gtk_text_buffer_insert (text_buffer, &iter, "\n• ", -1);
-		gpk_text_buffer_insert_link (text_buffer, &iter, text, uri);
+		if (length == 2) {
+			gpk_text_buffer_insert_link (text_buffer, &iter, text, uri);
+		} else {
+			gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+			gtk_text_buffer_insert (text_buffer, &iter, "• ", -1);
+			gpk_text_buffer_insert_link (text_buffer, &iter, text, uri);
+//			gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+		}
 	}
+	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	g_strfreev (urls);
 }
 
+#if 0
 /**
  * gpk_update_viewer_get_pretty_from_composite:
  **/
@@ -937,17 +901,18 @@ gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
 		pretty = gpk_package_id_name_version (id);
 		pk_package_id_free (id);
 		g_string_append (string, pretty);
-		g_string_append_c (string, '\n');
+		g_string_append_c (string, ',');
 		g_free (pretty);
 	}
 
-	/* remove trailing \n */
+	/* remove trailing comma */
 	g_string_set_size (string, string->len - 1);
 	pretty = g_string_free (string, FALSE);
 	g_strfreev (package_ids);
 out:
 	return pretty;
 }
+#endif
 
 /**
  * gpk_update_viewer_populate_details:
@@ -955,18 +920,15 @@ out:
 static void
 gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 {
-
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
-	gchar *package_pretty;
-	const gchar *info_text;
+//	gchar *package_pretty;
 	PkInfoEnum info;
 	gchar *line;
-
-	/* clear existing list */
-	gtk_list_store_clear (list_store_details);
+	gchar *issued;
+	gchar *updated;
 
 	/* get info  */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -977,72 +939,56 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	else
 		info = PK_INFO_ENUM_NORMAL;
 
-	info_text = gpk_info_enum_to_localised_text (info);
-	/* TRANSLATORS: this is the update type, e.g. security */
-	gpk_update_viewer_add_description_item (_("Type"), info_text);
+	/* blank */
+	gtk_text_buffer_set_text (text_buffer, "", -1);
 
-	/* state */
-	if (obj->state != PK_UPDATE_STATE_ENUM_UNKNOWN) {
-		info_text = gpk_update_state_enum_to_localised_text (obj->state);
-		/* TRANSLATORS: this is the stability status of the update */
-		gpk_update_viewer_add_description_item (_("State"), info_text);
+	if (info == PK_INFO_ENUM_ENHANCEMENT) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gpk_update_viewer_add_description_item (_("This update will add new features and expand functionality."));
+	} else if (info == PK_INFO_ENUM_BUGFIX) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gpk_update_viewer_add_description_item (_("This update will fix bugs and other non-critical problems."));
+	} else if (info == PK_INFO_ENUM_IMPORTANT) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		line = g_strdup_printf ("<b>%s</b>", _("This update is important as it may solve critical problems."));
+		gpk_update_viewer_add_markup_item (line);
+		g_free (line);
+	} else if (info == PK_INFO_ENUM_SECURITY) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		line = g_strdup_printf ("<b>%s</b>", _("This update is needed to fix a security vulnerability with this package."));
+		gpk_update_viewer_add_markup_item (line);
+		g_free (line);
+	} else if (info == PK_INFO_ENUM_BLOCKED) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gpk_update_viewer_add_description_item (_("This update is blocked."));
 	}
 
-	/* issued */
-	if (obj->issued != NULL) {
-		line = pk_iso8601_from_date (obj->issued);
+	/* issued and updated */
+	if (obj->issued != NULL && obj->updated != NULL) {
+		issued = pk_iso8601_from_date (obj->issued);
+		updated = pk_iso8601_from_date (obj->updated);
+		/* TRANSLATORS: this is when the notification was issued and then updated*/
+		line = g_strdup_printf (_("This notification was issued on %s and last updated on %s."), issued, updated);
+		gpk_update_viewer_add_description_item (line);
+		g_free (issued);
+		g_free (updated);
+		g_free (line);
+	} else if (obj->issued != NULL) {
+		issued = pk_iso8601_from_date (obj->issued);
 		/* TRANSLATORS: this is when the update was issued */
-		gpk_update_viewer_add_description_item (_("Issued"), line);
+		line = g_strdup_printf (_("This notification was issued on %s."), issued);
+		gpk_update_viewer_add_description_item (line);
+		g_free (issued);
 		g_free (line);
 	}
-
-	/* updated */
-	if (obj->updated != NULL) {
-		line = pk_iso8601_from_date (obj->updated);
-		/* TRANSLATORS: this is when (if?) the update was updated */
-		gpk_update_viewer_add_description_item (_("Updated"), line);
-		g_free (line);
-	}
-
-	package_pretty = gpk_package_id_name_version (obj->id);
-	/* TRANSLATORS: this is the package version */
-	gpk_update_viewer_add_description_item (_("New version"), package_pretty);
-	g_free (package_pretty);
-
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are updated */
-		gpk_update_viewer_add_description_item (_("Installed version"), package_pretty);
-	}
-	g_free (package_pretty);
-
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are obsoleted */
-		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty);
-	}
-	g_free (package_pretty);
-
-	/* TRANSLATORS: this is the repository the package has come from */
-	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data);
 
 	/* update text */
 	if (!egg_strzero (obj->update_text)) {
 		/* convert the bullets */
 		line = egg_markdown_parse (markdown, obj->update_text);
 		if (!egg_strzero (line))
-			gtk_text_buffer_set_markup (text_buffer, line);
+			gpk_update_viewer_add_markup_item (line);
 		g_free (line);
-	} else {
-		gtk_text_buffer_set_text (text_buffer, _("No update information"), -1);
-	}
-
-	/* changelog */
-	if (!egg_strzero (obj->changelog)) {
-		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog);
 	}
 
 	/* add all the links */
@@ -1060,11 +1006,51 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	}
 
 	/* reboot */
-	if (obj->restart == PK_RESTART_ENUM_SESSION ||
-	    obj->restart == PK_RESTART_ENUM_SYSTEM) {
-		info_text = gpk_restart_enum_to_localised_text (obj->restart);
-		/* TRANSLATORS: this is a notice a restart might be required */
-		gpk_update_viewer_add_description_item (_("Notice"), info_text);
+	if (obj->restart == PK_RESTART_ENUM_SYSTEM) {
+		/* TRANSLATORS: reboot required */
+		gpk_update_viewer_add_description_item (_("The computer will have to be restarted for the changes to take effect."));
+	} else if (obj->restart == PK_RESTART_ENUM_SESSION) {
+		/* TRANSLATORS: log out required */
+		gpk_update_viewer_add_description_item (_("You will need to log off and back on before the changes will take effect"));
+	}
+
+	/* state */
+	if (obj->state == PK_UPDATE_STATE_ENUM_UNSTABLE) {
+		/* TRANSLATORS: this is the stability status of the update */
+		gpk_update_viewer_add_description_item (_("This update is unstable, and should not be used on production systems."));
+	} else if (obj->state == PK_UPDATE_STATE_ENUM_TESTING) {
+		/* TRANSLATORS: this is the stability status of the update */
+		gpk_update_viewer_add_description_item (_("This is a test update, and should not be used on production systems."));
+	}
+
+#if 0
+	/* split and add */
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
+	if (!egg_strzero (package_pretty)) {
+		/* TRANSLATORS: this is a list of packages that are updated */
+		line = g_strdup_printf (_("This update replaces %s."), package_pretty);
+		gpk_update_viewer_add_description_item (line);
+		g_free (line);
+	}
+	g_free (package_pretty);
+
+	/* split and add */
+	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
+	if (!egg_strzero (package_pretty)) {
+		/* TRANSLATORS: this is a list of packages that are obsoleted */
+		line = g_strdup_printf (_("This update obsoletes %s."), package_pretty);
+		gpk_update_viewer_add_description_item (line);
+		g_free (line);
+	}
+	g_free (package_pretty);
+#endif
+
+	/* changelog */
+	if (!egg_strzero (obj->changelog)) {
+		/* TRANSLATORS: this is a ChangeLog */
+		line = g_strdup_printf ("%s\n%s", _("List of changes:"), obj->changelog);
+		gpk_update_viewer_add_description_item (line);
+		g_free (line);
 	}
 }
 
@@ -1084,7 +1070,6 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		gtk_tree_model_get (model, &iter,
 				    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &obj,
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
-
 		egg_debug ("selected row is: %s, %p", package_id, obj);
 		g_free (package_id);
 		if (obj != NULL)
@@ -1135,6 +1120,7 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 
 	/* throw up dialog */
 	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	/* TRANSLATORS: we failed to install all the updates we requested */
 	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Some updates were not installed"), text, NULL);
 out:
 	g_free (text);
@@ -1622,7 +1608,6 @@ gpk_update_viewer_get_new_update_list (void)
 
 	/* clear all widgets */
 	gtk_list_store_clear (list_store_updates);
-	gtk_list_store_clear (list_store_details);
 	gtk_text_buffer_set_text (text_buffer, "", -1);
 
 	/* reset client */
@@ -1777,6 +1762,7 @@ pk_client_distro_upgrade_cb (PkClient *client, const PkDistroUpgradeObj *obj, gp
 
 	/* only display last (newest) distro */
 	widget = glade_xml_get_widget (glade_xml, "label_upgrade");
+	/* TRANSLATORS: new distro available, e.g. F9 to F10 */
 	text = g_strdup_printf (_("New distribution upgrade release '%s' is available"), obj->summary);
 	text_format = g_strdup_printf ("<b>%s</b>", text);
 	gtk_label_set_label (GTK_LABEL (widget), text_format);
@@ -2078,8 +2064,10 @@ main (int argc, char *argv[])
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
 						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
-	list_store_details = gtk_list_store_new (GPK_DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING);
 	text_buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_create_tag (text_buffer, "para",
+				    "pixels_below_lines", 3,
+				    "pixels_above_lines", 3, NULL);
 
 	/* no upgrades yet */
 	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
@@ -2093,6 +2081,7 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "textview_details");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), text_buffer);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (widget), 5);
 	g_signal_connect (GTK_TEXT_VIEW (widget), "key-press-event", G_CALLBACK (gpk_update_viewer_textview_key_press_event), NULL);
 	g_signal_connect (GTK_TEXT_VIEW (widget), "event-after", G_CALLBACK (gpk_update_viewer_textview_event_after), NULL);
 	g_signal_connect (GTK_TEXT_VIEW (widget), "motion-notify-event", G_CALLBACK (gpk_update_viewer_textview_motion_notify_event), NULL);
@@ -2116,15 +2105,7 @@ main (int argc, char *argv[])
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
-	/* details */
-	widget = glade_xml_get_widget (glade_xml, "vbox_details");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
-	widget = glade_xml_get_widget (glade_xml, "treeview_details");
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store_details));
-	gpk_update_viewer_treeview_add_columns_details (GTK_TREE_VIEW (widget));
-
+	/* bottom UI */
 	widget = glade_xml_get_widget (glade_xml, "progressbar_progress");
 	gtk_widget_hide (widget);
 	widget = glade_xml_get_widget (glade_xml, "label_summary");
@@ -2191,7 +2172,6 @@ main (int argc, char *argv[])
 	g_object_unref (eula_helper);
 	g_object_unref (repo_signature_helper);
 	g_object_unref (glade_xml);
-	g_object_unref (list_store_details);
 	g_object_unref (list_store_updates);
 	g_object_unref (control);
 	g_object_unref (markdown);

@@ -874,11 +874,14 @@ gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* now try to get newest update list */
-	egg_debug ("updates changed");
+	egg_warning ("updates changed");
 
 	/* ignore our own updates */
-	if (!cupdate->priv->get_updates_in_progress)
+	if (!cupdate->priv->get_updates_in_progress) {
 		g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
+		egg_warning ("not own updates");
+	} else
+		egg_warning ("own updates");
 }
 
 /**

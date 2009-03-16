@@ -47,14 +47,13 @@
 
 
 /**
- * gtk_text_buffer_set_markup:
+ * gtk_text_buffer_insert_markup:
  * @buffer: a #GtkTextBuffer
  * @markup: nul-terminated UTF-8 text with pango markup to insert
  **/
 void
-gtk_text_buffer_set_markup (GtkTextBuffer *buffer, const gchar *markup)
+gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *markup)
 {
-	GtkTextIter textiter, end_iter;
 	PangoAttrIterator *paiter;
 	PangoAttrList *attrlist;
 	GtkTextMark *mark;
@@ -67,10 +66,6 @@ gtk_text_buffer_set_markup (GtkTextBuffer *buffer, const gchar *markup)
 	if (*markup == '\000')
 		return;
 
-	gtk_text_buffer_get_bounds (buffer, &textiter, &end_iter);
-	gtk_text_buffer_delete (buffer, &textiter, &end_iter);
-	gtk_text_buffer_get_iter_at_offset (buffer, &textiter, 0);
-
 	/* invalid */
 	if (!pango_parse_markup (markup, -1, 0, &attrlist, &text, NULL, &error)) {
 		g_warning ("Invalid markup string: %s", error->message);
@@ -80,13 +75,13 @@ gtk_text_buffer_set_markup (GtkTextBuffer *buffer, const gchar *markup)
 
 	/* trivial, no markup */
 	if (attrlist == NULL) {
-		gtk_text_buffer_insert (buffer, &textiter, text, -1);
+		gtk_text_buffer_insert (buffer, iter, text, -1);
 		g_free (text);
 		return;
 	}
 
 	/* create mark with right gravity */
-	mark = gtk_text_buffer_create_mark (buffer, NULL, &textiter, FALSE);
+	mark = gtk_text_buffer_create_mark (buffer, NULL, iter, FALSE);
 	paiter = pango_attr_list_get_iterator (attrlist);
 
 	do {
@@ -158,11 +153,11 @@ gtk_text_buffer_set_markup (GtkTextBuffer *buffer, const gchar *markup)
 			g_object_set (tag, "scale", ( (PangoAttrFloat*)attr)->value, NULL);
 
 		gtk_text_tag_table_add (gtk_text_buffer_get_tag_table (buffer), tag);
-		gtk_text_buffer_insert_with_tags (buffer, &textiter, text+start, end - start, tag, NULL);
+		gtk_text_buffer_insert_with_tags (buffer, iter, text+start, end - start, tag, NULL);
 
 		/* mark had right gravity, so it should be
 		 *	at the end of the inserted text now */
-		gtk_text_buffer_get_iter_at_mark (buffer, &textiter, mark);
+		gtk_text_buffer_get_iter_at_mark (buffer, iter, mark);
 	} while (pango_attr_iterator_next (paiter));
 
 	gtk_text_buffer_delete_mark (buffer, mark);

@@ -82,7 +82,8 @@ G_BEGIN_DECLS
 #define GPK_ICON_SERVICE_PACK			"gpk-service-pack"
 
 void		 gpk_common_test			(gpointer	 data);
-void		 gtk_text_buffer_set_markup		(GtkTextBuffer	*buffer,
+void		 gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
+							 GtkTextIter	*iter,
 							 const gchar	*markup);
 gchar		*gpk_package_get_name			(const gchar	*package_id);
 gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,
