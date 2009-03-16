@@ -538,6 +538,8 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
 	gpk_dialog_embed_file_list_widget (GTK_DIALOG (dialog), array);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 600, 250);
 
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -3147,6 +3149,7 @@ gpk_application_init (GpkApplication *application)
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* Get the main window quit */
 	g_signal_connect (main_window, "delete_event",
