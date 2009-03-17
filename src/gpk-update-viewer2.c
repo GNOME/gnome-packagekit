@@ -788,33 +788,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 }
 
 /**
- * gpk_update_viewer_add_description_item:
- **/
-static void
-gpk_update_viewer_add_description_item (const gchar *text)
-{
-	GtkTextIter start;
-	GtkTextIter iter;
-
-	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
-	gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, text, -1, "para", NULL);
-	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
-}
-
-/**
- * gpk_update_viewer_add_markup_item:
- **/
-static void
-gpk_update_viewer_add_markup_item (const gchar *text)
-{
-	GtkTextIter start;
-	GtkTextIter iter;
-	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
-	gtk_text_buffer_insert_markup (text_buffer, &iter, text);
-	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
-}
-
-/**
  * gpk_text_buffer_insert_link:
  **/
 static void
@@ -833,15 +806,13 @@ gpk_text_buffer_insert_link (GtkTextBuffer *buffer, GtkTextIter *iter, const gch
  * gpk_update_viewer_add_description_link_item:
  **/
 static void
-gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *url_string)
+gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *title, const gchar *url_string)
 {
 	const gchar *text;
 	const gchar *uri;
 	gchar **urls;
 	guint length;
 	gint i;
-	GtkTextIter start;
-	GtkTextIter iter;
 
 	urls = g_strsplit (url_string, ";", 0);
 	length = g_strv_length (urls);
@@ -853,8 +824,7 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 	}
 
 	/* insert at end */
-	gtk_text_buffer_get_bounds (text_buffer, &start, &iter);
-	gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, title, -1, "para", NULL);
+	gtk_text_buffer_insert_with_tags_by_name (buffer, iter, title, -1, "para", NULL);
 
 	for (i=0; i<length; i+=2) {
 		uri = urls[i];
@@ -863,15 +833,15 @@ gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *ur
 			text = uri;
 
 		if (length == 2) {
-			gpk_text_buffer_insert_link (text_buffer, &iter, text, uri);
+			gpk_text_buffer_insert_link (buffer, iter, text, uri);
 		} else {
-			gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
-			gtk_text_buffer_insert (text_buffer, &iter, "• ", -1);
-			gpk_text_buffer_insert_link (text_buffer, &iter, text, uri);
-//			gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+			gtk_text_buffer_insert (buffer, iter, "\n", -1);
+			gtk_text_buffer_insert (buffer, iter, "• ", -1);
+			gpk_text_buffer_insert_link (buffer, iter, text, uri);
+//			gtk_text_buffer_insert (buffer, iter, "\n", -1);
 		}
 	}
-	gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	gtk_text_buffer_insert (buffer, iter, "\n", -1);
 	g_strfreev (urls);
 }
 
@@ -929,6 +899,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	gchar *line;
 	gchar *issued;
 	gchar *updated;
+	GtkTextIter iter;
 
 	/* get info  */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -941,26 +912,28 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 
 	/* blank */
 	gtk_text_buffer_set_text (text_buffer, "", -1);
+	gtk_text_buffer_get_start_iter (text_buffer, &iter);
 
 	if (info == PK_INFO_ENUM_ENHANCEMENT) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		gpk_update_viewer_add_description_item (_("This update will add new features and expand functionality."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, ("This update will add new features and expand functionality."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (info == PK_INFO_ENUM_BUGFIX) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		gpk_update_viewer_add_description_item (_("This update will fix bugs and other non-critical problems."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update will fix bugs and other non-critical problems."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (info == PK_INFO_ENUM_IMPORTANT) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		line = g_strdup_printf ("<b>%s</b>", _("This update is important as it may solve critical problems."));
-		gpk_update_viewer_add_markup_item (line);
-		g_free (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is important as it may solve critical problems."), -1, "para", "important", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (info == PK_INFO_ENUM_SECURITY) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		line = g_strdup_printf ("<b>%s</b>", _("This update is needed to fix a security vulnerability with this package."));
-		gpk_update_viewer_add_markup_item (line);
-		g_free (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is needed to fix a security vulnerability with this package."), -1, "para", "important", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (info == PK_INFO_ENUM_BLOCKED) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		gpk_update_viewer_add_description_item (_("This update is blocked."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is blocked."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
 	/* issued and updated */
@@ -969,7 +942,8 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		updated = pk_iso8601_from_date (obj->updated);
 		/* TRANSLATORS: this is when the notification was issued and then updated*/
 		line = g_strdup_printf (_("This notification was issued on %s and last updated on %s."), issued, updated);
-		gpk_update_viewer_add_description_item (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 		g_free (issued);
 		g_free (updated);
 		g_free (line);
@@ -977,7 +951,8 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		issued = pk_iso8601_from_date (obj->issued);
 		/* TRANSLATORS: this is when the update was issued */
 		line = g_strdup_printf (_("This notification was issued on %s."), issued);
-		gpk_update_viewer_add_description_item (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 		g_free (issued);
 		g_free (line);
 	}
@@ -986,41 +961,47 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	if (!egg_strzero (obj->update_text)) {
 		/* convert the bullets */
 		line = egg_markdown_parse (markdown, obj->update_text);
-		if (!egg_strzero (line))
-			gpk_update_viewer_add_markup_item (line);
+		if (!egg_strzero (line)) {
+			gtk_text_buffer_insert_markup (text_buffer, &iter, line);
+			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
+		}
 		g_free (line);
 	}
 
 	/* add all the links */
 	if (!egg_strzero (obj->vendor_url)) {
 		/* TRANSLATORS: this is a list of vendor URLs */
-		gpk_update_viewer_add_description_link_item (_("For more information about this update please visit:"), obj->vendor_url);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about this update please visit:"), obj->vendor_url);
 	}
 	if (!egg_strzero (obj->bugzilla_url)) {
 		/* TRANSLATORS: this is a list of bugzilla URLs */
-		gpk_update_viewer_add_description_link_item (_("For more information about bugs fixed by this this update please visit:"), obj->bugzilla_url);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about bugs fixed by this this update please visit:"), obj->bugzilla_url);
 	}
 	if (!egg_strzero (obj->cve_url)) {
 		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_link_item (_("For more information about this security update please visit:"), obj->cve_url);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about this security update please visit:"), obj->cve_url);
 	}
 
 	/* reboot */
 	if (obj->restart == PK_RESTART_ENUM_SYSTEM) {
 		/* TRANSLATORS: reboot required */
-		gpk_update_viewer_add_description_item (_("The computer will have to be restarted for the changes to take effect."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The computer will have to be restarted for the changes to take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (obj->restart == PK_RESTART_ENUM_SESSION) {
 		/* TRANSLATORS: log out required */
-		gpk_update_viewer_add_description_item (_("You will need to log off and back on before the changes will take effect"));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log off and back on before the changes will take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
 	/* state */
 	if (obj->state == PK_UPDATE_STATE_ENUM_UNSTABLE) {
 		/* TRANSLATORS: this is the stability status of the update */
-		gpk_update_viewer_add_description_item (_("This update is unstable, and should not be used on production systems."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is unstable, and should not be used on production systems."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (obj->state == PK_UPDATE_STATE_ENUM_TESTING) {
 		/* TRANSLATORS: this is the stability status of the update */
-		gpk_update_viewer_add_description_item (_("This is a test update, and should not be used on production systems."));
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This is a test update, and should not be used on production systems."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
 #if 0
@@ -1029,7 +1010,8 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are updated */
 		line = g_strdup_printf (_("This update replaces %s."), package_pretty);
-		gpk_update_viewer_add_description_item (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 		g_free (line);
 	}
 	g_free (package_pretty);
@@ -1039,7 +1021,8 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	if (!egg_strzero (package_pretty)) {
 		/* TRANSLATORS: this is a list of packages that are obsoleted */
 		line = g_strdup_printf (_("This update obsoletes %s."), package_pretty);
-		gpk_update_viewer_add_description_item (line);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 		g_free (line);
 	}
 	g_free (package_pretty);
@@ -1048,8 +1031,8 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	/* changelog */
 	if (!egg_strzero (obj->changelog)) {
 		/* TRANSLATORS: this is a ChangeLog */
-		line = g_strdup_printf ("%s\n%s", _("List of changes:"), obj->changelog);
-		gpk_update_viewer_add_description_item (line);
+		line = g_strdup_printf ("\n%s\n%s\n", _("List of changes:"), obj->changelog);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
 		g_free (line);
 	}
 }
@@ -1943,6 +1926,7 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
+	GtkRequisition req;
 	PkBitfield roles;
 	gboolean ret;
 	GError *error = NULL;
@@ -2068,6 +2052,8 @@ main (int argc, char *argv[])
 	gtk_text_buffer_create_tag (text_buffer, "para",
 				    "pixels_below_lines", 3,
 				    "pixels_above_lines", 3, NULL);
+	gtk_text_buffer_create_tag (text_buffer, "important",
+				    "weight", PANGO_WEIGHT_BOLD, NULL);
 
 	/* no upgrades yet */
 	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
@@ -2142,6 +2128,13 @@ main (int argc, char *argv[])
 
 	/* show window */
 	gtk_widget_show (main_window);
+
+	/* set the paned to be in the middle */
+	widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
+	gtk_widget_size_request (widget, &req);
+	egg_debug ("req.height=%i", req.height);
+	if (req.height != 0)
+		gtk_paned_set_position (GTK_PANED (widget), req.height / 2);
 
 	/* coldplug */
 	gpk_update_viewer_get_new_update_list ();
