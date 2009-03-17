@@ -87,6 +87,7 @@ gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const g
 	do {
 		PangoAttribute *attr;
 		GtkTextTag *tag;
+		GtkTextTag *tag_para;
 		gint start, end;
 
 		pango_attr_iterator_range (paiter, &start, &end);
@@ -153,7 +154,9 @@ gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const g
 			g_object_set (tag, "scale", ( (PangoAttrFloat*)attr)->value, NULL);
 
 		gtk_text_tag_table_add (gtk_text_buffer_get_tag_table (buffer), tag);
-		gtk_text_buffer_insert_with_tags (buffer, iter, text+start, end - start, tag, NULL);
+
+		tag_para = gtk_text_tag_table_lookup (gtk_text_buffer_get_tag_table (buffer), "para");
+		gtk_text_buffer_insert_with_tags (buffer, iter, text+start, end - start, tag, tag_para, NULL);
 
 		/* mark had right gravity, so it should be
 		 *	at the end of the inserted text now */

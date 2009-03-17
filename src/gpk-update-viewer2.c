@@ -526,7 +526,6 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 
 		/* close button */
 		widget = glade_xml_get_widget (glade_xml, "button_close");
-		gtk_widget_show (widget);
 		gtk_window_set_focus (GTK_WINDOW(main_window), widget);
 
 		/* header */
@@ -551,11 +550,9 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	gtk_window_set_resizable (GTK_WINDOW(widget), TRUE);
 	widget = glade_xml_get_widget (glade_xml, "button_install");
 	gtk_widget_show (widget);
+	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	gtk_widget_show (widget);
-	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
-	widget = glade_xml_get_widget (glade_xml, "button_close");
-	gtk_widget_hide (widget);
 
 	/* restart */
 	widget = glade_xml_get_widget (glade_xml, "label_package");
@@ -746,7 +743,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	/* TRANSLATORS: a column that has name of the package that will be updated */
 	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
@@ -788,31 +784,45 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 }
 
 /**
- * gpk_text_buffer_insert_link:
+ * gpk_update_viewer_add_description_link_item:
  **/
 static void
-gpk_text_buffer_insert_link (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *text, const gchar *href)
+gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *title, const GPtrArray *array)
 {
 	GtkTextTag *tag;
-	tag = gtk_text_buffer_create_tag (buffer, NULL,
-					  "foreground", "blue",
-					  "underline", PANGO_UNDERLINE_SINGLE,
-					  NULL);
-	g_object_set_data (G_OBJECT (tag), "href", g_strdup (href));
-	gtk_text_buffer_insert_with_tags (buffer, iter, text, -1, tag, NULL);
+	const gchar *uri;
+	gint i;
+
+	/* insert at end */
+	gtk_text_buffer_insert_with_tags_by_name (buffer, iter, title, -1, "para", NULL);
+
+	for (i=0; i<array->len; i++) {
+		uri = g_ptr_array_index (array, i);
+		gtk_text_buffer_insert (buffer, iter, "\n", -1);
+		gtk_text_buffer_insert (buffer, iter, "• ", -1);
+		tag = gtk_text_buffer_create_tag (buffer, NULL,
+						  "foreground", "blue",
+						  "underline", PANGO_UNDERLINE_SINGLE,
+						  NULL);
+		g_object_set_data (G_OBJECT (tag), "href", g_strdup (uri));
+		gtk_text_buffer_insert_with_tags (buffer, iter, uri, -1, tag, NULL);
+		gtk_text_buffer_insert (buffer, iter, ".", -1);
+	}
+	gtk_text_buffer_insert (buffer, iter, "\n", -1);
 }
 
 /**
  * gpk_update_viewer_add_description_link_item:
  **/
-static void
-gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *title, const gchar *url_string)
+static GPtrArray *
+gpk_update_viewer_get_uris (const gchar *url_string)
 {
-	const gchar *text;
-	const gchar *uri;
+	GPtrArray *array;
 	gchar **urls;
 	guint length;
 	gint i;
+
+	array = g_ptr_array_new ();
 
 	urls = g_strsplit (url_string, ";", 0);
 	length = g_strv_length (urls);
@@ -823,66 +833,12 @@ gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer, GtkTextIter 
 		length--;
 	}
 
-	/* insert at end */
-	gtk_text_buffer_insert_with_tags_by_name (buffer, iter, title, -1, "para", NULL);
+	/* copy into array */
+	for (i=0; i<length; i+=2)
+		g_ptr_array_add (array, g_strdup (urls[i]));
 
-	for (i=0; i<length; i+=2) {
-		uri = urls[i];
-		text = urls[i+1];
-		if (egg_strzero (text))
-			text = uri;
-
-		if (length == 2) {
-			gpk_text_buffer_insert_link (buffer, iter, text, uri);
-		} else {
-			gtk_text_buffer_insert (buffer, iter, "\n", -1);
-			gtk_text_buffer_insert (buffer, iter, "• ", -1);
-			gpk_text_buffer_insert_link (buffer, iter, text, uri);
-//			gtk_text_buffer_insert (buffer, iter, "\n", -1);
-		}
-	}
-	gtk_text_buffer_insert (buffer, iter, "\n", -1);
-	g_strfreev (urls);
+	return array;
 }
-
-#if 0
-/**
- * gpk_update_viewer_get_pretty_from_composite:
- **/
-static gchar *
-gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
-{
-	guint i;
-	guint length;
-	gchar **package_ids;
-	gchar *pretty = NULL;
-	GString *string;
-	PkPackageId *id;
-
-	/* do we have any data? */
-	if (egg_strzero (package_ids_delimit))
-		goto out;
-
-	string = g_string_new ("");
-	package_ids = pk_package_ids_from_text (package_ids_delimit);
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		id = pk_package_id_new_from_string (package_ids[i]);
-		pretty = gpk_package_id_name_version (id);
-		pk_package_id_free (id);
-		g_string_append (string, pretty);
-		g_string_append_c (string, ',');
-		g_free (pretty);
-	}
-
-	/* remove trailing comma */
-	g_string_set_size (string, string->len - 1);
-	pretty = g_string_free (string, FALSE);
-	g_strfreev (package_ids);
-out:
-	return pretty;
-}
-#endif
 
 /**
  * gpk_update_viewer_populate_details:
@@ -894,9 +850,10 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter treeiter;
-//	gchar *package_pretty;
+	GPtrArray *array;
 	PkInfoEnum info;
 	gchar *line;
+	const gchar *title;
 	gchar *issued;
 	gchar *updated;
 	GtkTextIter iter;
@@ -970,63 +927,54 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 
 	/* add all the links */
 	if (!egg_strzero (obj->vendor_url)) {
+		array = gpk_update_viewer_get_uris (obj->vendor_url);
 		/* TRANSLATORS: this is a list of vendor URLs */
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about this update please visit:"), obj->vendor_url);
+		title = ngettext ("For more information about this update please visit this website:",
+				  "For more information about this update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
 	}
 	if (!egg_strzero (obj->bugzilla_url)) {
+		array = gpk_update_viewer_get_uris (obj->bugzilla_url);
 		/* TRANSLATORS: this is a list of bugzilla URLs */
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about bugs fixed by this this update please visit:"), obj->bugzilla_url);
+		title = ngettext ("For more information about bugs fixed by this update please visit this website:",
+				  "For more information about bugs fixed by this update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
 	}
 	if (!egg_strzero (obj->cve_url)) {
+		array = gpk_update_viewer_get_uris (obj->cve_url);
 		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, _("For more information about this security update please visit:"), obj->cve_url);
+		title = ngettext ("For more information about this security update please visit this website:",
+				  "For more information about this security update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
 	}
 
 	/* reboot */
 	if (obj->restart == PK_RESTART_ENUM_SYSTEM) {
 		/* TRANSLATORS: reboot required */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The computer will have to be restarted for the changes to take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The computer will have to be restarted after the update for the changes to take effect."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (obj->restart == PK_RESTART_ENUM_SESSION) {
 		/* TRANSLATORS: log out required */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log off and back on before the changes will take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log off and back on after the update for the changes to take effect."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
 	/* state */
 	if (obj->state == PK_UPDATE_STATE_ENUM_UNSTABLE) {
 		/* TRANSLATORS: this is the stability status of the update */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is unstable, and should not be used on production systems."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The classifaction of this update is unstable which means it is not designed for production use."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (obj->state == PK_UPDATE_STATE_ENUM_TESTING) {
 		/* TRANSLATORS: this is the stability status of the update */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This is a test update, and should not be used on production systems."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
-
-#if 0
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are updated */
-		line = g_strdup_printf (_("This update replaces %s."), package_pretty);
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
-		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
-		g_free (line);
-	}
-	g_free (package_pretty);
-
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are obsoleted */
-		line = g_strdup_printf (_("This update obsoletes %s."), package_pretty);
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
-		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
-		g_free (line);
-	}
-	g_free (package_pretty);
-#endif
 
 	/* changelog */
 	if (!egg_strzero (obj->changelog)) {
@@ -1771,7 +1719,8 @@ gpk_update_viewer_textview_follow_link (GtkWidget *text_view, GtkTextIter *iter)
 	for (tagp = tags; tagp != NULL; tagp = tagp->next) {
 		GtkTextTag *tag = tagp->data;
 		const gchar *href = (const gchar *) (g_object_get_data (G_OBJECT (tag), "href"));
-		gpk_gnome_open (href);
+		if (href != NULL)
+			gpk_gnome_open (href);
 	}
 
 	if (tags != NULL)
@@ -2050,8 +1999,7 @@ main (int argc, char *argv[])
 						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "para",
-				    "pixels_below_lines", 3,
-				    "pixels_above_lines", 3, NULL);
+				    "pixels_above_lines", 5, NULL);
 	gtk_text_buffer_create_tag (text_buffer, "important",
 				    "weight", PANGO_WEIGHT_BOLD, NULL);
 
@@ -2112,7 +2060,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_close");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_close_cb), NULL);
-	gtk_widget_hide (widget);
 	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
 
 	/* hide cancel button */
