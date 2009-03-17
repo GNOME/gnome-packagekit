@@ -1990,9 +1990,6 @@ main (int argc, char *argv[])
 	g_signal_connect (eula_helper, "event", G_CALLBACK (gpk_update_viewer_eula_event_cb), NULL);
 	gpk_eula_helper_set_parent (eula_helper, GTK_WINDOW (main_window));
 
-	/* make GpkClient windows modal */
-	gtk_widget_realize (main_window);
-
 	/* create list stores */
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
