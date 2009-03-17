@@ -205,7 +205,7 @@ static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
 	{PK_RESTART_ENUM_NONE,			""},
 	{PK_RESTART_ENUM_SYSTEM,		"system-shutdown"},
-	{PK_RESTART_ENUM_SESSION,		"preferences-system-session"},
+	{PK_RESTART_ENUM_SESSION,		"system-log-out"},
 	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
 	{0, NULL}
 };
