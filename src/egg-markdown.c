@@ -459,7 +459,8 @@ egg_markdown_flush_pending (EggMarkdown *self)
 		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.h1_start, temp, self->priv->tags.h1_end);
 	} else if (self->priv->mode == EGG_MARKDOWN_MODE_H2) {
 		g_string_append_printf (self->priv->processed, "%s%s%s\n", self->priv->tags.h2_start, temp, self->priv->tags.h2_end);
-	} else {
+	} else if (self->priv->mode == EGG_MARKDOWN_MODE_PARA ||
+		   self->priv->mode == EGG_MARKDOWN_MODE_RULE) {
 		g_string_append_printf (self->priv->processed, "%s\n", temp);
 		self->priv->line_count++;
 	}
@@ -1004,11 +1005,8 @@ egg_markdown_test (EggTest *test)
 		   "• This is a <i>very</i> short paragraph that is not usual.\n"
 		   "• This is the second bullett point.\n"
 		   "• And the third.\n"
-		   "\n"
 		   "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"
-		   "\n"
 		   "Paragraph one isn't <b>very</b> long at all.\n"
-		   "\n"
 		   "Paragraph two isn't much better.";
 	egg_test_title (test, "markdown (complex1)");
 	text = egg_markdown_parse (self, markdown);
@@ -1030,10 +1028,8 @@ egg_markdown_test (EggTest *test)
 		   "* Fubar update because of \"security\"\n";
 	markdown_expected =
 		   "This is a spec file description or an <b>update</b> description in bohdi.\n"
-		   "\n"
 		   "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"
 		   "<big>Big title</big>\n"
-		   "\n"
 		   "The <i>following</i> things 'were' fixed:\n"
 		   "• Fix <tt>dave</tt>\n"
 		   "• Fubar update because of \"security\"";
@@ -1054,9 +1050,7 @@ egg_markdown_test (EggTest *test)
 		   "* third item\n";
 	markdown_expected =
 		   "• list seporated with spaces - first item\n"
-		   "\n"
 		   "• second item\n"
-		   "\n"
 		   "• third item";
 	egg_test_title (test, "markdown (list with spaces)");
 	text = egg_markdown_parse (self, markdown);
@@ -1107,6 +1101,33 @@ egg_markdown_test (EggTest *test)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s'", text);
+	g_free (text);
+
+	/************************************************************/
+	markdown = "*Thu Mar 12 12:00:00 2009* Dan Walsh <dwalsh@redhat.com> - 2.0.79-1\n"
+		   "- Update to upstream \n"
+		   " * Netlink socket handoff patch from Adam Jackson.\n"
+		   " * AVC caching of compute_create results by Eric Paris.\n"
+		   "\n"
+		   "*Tue Mar 10 12:00:00 2009* Dan Walsh <dwalsh@redhat.com> - 2.0.78-5\n"
+		   "- Add patch from ajax to accellerate X SELinux \n"
+		   "- Update eparis patch\n";
+	markdown_expected =
+		   "<i>Thu Mar 12 12:00:00 2009</i> Dan Walsh &lt;dwalsh@redhat.com&gt; - 2.0.79-1\n"
+		   "• Update to upstream\n"
+		   "• Netlink socket handoff patch from Adam Jackson.\n"
+		   "• AVC caching of compute_create results by Eric Paris.\n"
+		   "<i>Tue Mar 10 12:00:00 2009</i> Dan Walsh &lt;dwalsh@redhat.com&gt; - 2.0.78-5\n"
+		   "• Add patch from ajax to accellerate X SELinux\n"
+		   "• Update eparis patch";
+	egg_test_title (test, "markdown (end of bullett)");
+	egg_markdown_set_escape (self, TRUE);
+	ret = egg_markdown_set_max_lines (self, 1024);
+	text = egg_markdown_parse (self, markdown);
+	if (egg_strequal (text, markdown_expected))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
 	g_free (text);
 
 	g_object_unref (self);
