@@ -853,6 +853,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	GPtrArray *array;
 	PkInfoEnum info;
 	gchar *line;
+	gchar *line2;
 	const gchar *title;
 	gchar *issued;
 	gchar *updated;
@@ -978,9 +979,13 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 
 	/* changelog */
 	if (!egg_strzero (obj->changelog)) {
-		/* TRANSLATORS: this is a ChangeLog */
-		line = g_strdup_printf ("\n%s\n%s\n", _("List of changes:"), obj->changelog);
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		line = egg_markdown_parse (markdown, obj->changelog);
+		if (!egg_strzero (line)) {
+			/* TRANSLATORS: this is a ChangeLog */
+			line2 = g_strdup_printf ("\n%s\n%s\n", _("List of changes:"), line);
+			gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
+			g_free (line2);
+		}
 		g_free (line);
 	}
 }
