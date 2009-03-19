@@ -41,6 +41,7 @@
  * - No links or email support
  * - No backslash escapes support
  * - No HTML escaping support
+ * - Auto-escapes certain word patterns, like http://
  *
  * It does support the rest of the standard pretty well, although it's not
  * been run against any conformance tests. The parsing is single pass, with
@@ -89,6 +90,7 @@ struct EggMarkdownPrivate
 	guint			 line_count;
 	gboolean		 smart_quoting;
 	gboolean		 escape;
+	gboolean		 autocode;
 	GString			*pending;
 	GString			*processed;
 };
@@ -327,10 +329,10 @@ out:
 }
 
 /**
- * egg_markdown_to_text_line_format:
+ * egg_markdown_to_text_line_format_sections:
  **/
 static gchar *
-egg_markdown_to_text_line_format (EggMarkdown *self, const gchar *line)
+egg_markdown_to_text_line_format_sections (EggMarkdown *self, const gchar *line)
 {
 	gchar *data = g_strdup (line);
 	gchar *temp;
@@ -355,11 +357,6 @@ egg_markdown_to_text_line_format (EggMarkdown *self, const gchar *line)
 	data = egg_markdown_to_text_line_formatter (temp, "_", self->priv->tags.em_start, self->priv->tags.em_end);
 	g_free (temp);
 
-	/* fixed */
-	temp = data;
-	data = egg_markdown_to_text_line_formatter (temp, "`", self->priv->tags.code_start, self->priv->tags.code_end);
-	g_free (temp);
-
 	/* em-dash */
 	temp = data;
 	data = egg_markdown_replace (temp, " -- ", " — ");
@@ -377,6 +374,47 @@ egg_markdown_to_text_line_format (EggMarkdown *self, const gchar *line)
 	}
 
 	return data;
+}
+
+/**
+ * egg_markdown_to_text_line_format:
+ **/
+static gchar *
+egg_markdown_to_text_line_format (EggMarkdown *self, const gchar *line)
+{
+	guint i;
+	gchar *text;
+	gboolean mode = FALSE;
+	gchar **codes;
+	GString *string;
+
+	/* optimise the trivial case where we don't have any code tags */
+	text = strstr (line, "`");
+	if (text == NULL) {
+		text = egg_markdown_to_text_line_format_sections (self, line);
+		goto out;
+	}
+
+	/* we want to parse the code sections without formatting */
+	codes = g_strsplit (line, "`", -1);
+	string = g_string_new ("");
+	for (i=0; codes[i] != NULL; i++) {
+		if (!mode) {
+			text = egg_markdown_to_text_line_format_sections (self, codes[i]);
+			g_string_append (string, text);
+			g_free (text);
+			mode = TRUE;
+		} else {
+			/* just append without formatting */
+			g_string_append (string, self->priv->tags.code_start);
+			g_string_append (string, codes[i]);
+			g_string_append (string, self->priv->tags.code_end);
+			mode = FALSE;
+		}
+	}
+	text = g_string_free (string, FALSE);
+out:
+	return text;
 }
 
 /**
@@ -421,6 +459,72 @@ egg_markdown_add_pending_header (EggMarkdown *self, const gchar *line)
 }
 
 /**
+ * egg_markdown_word_is_code:
+ **/
+static gboolean
+egg_markdown_word_is_code (const gchar *text)
+{
+	if (g_str_has_prefix (text, "`"))
+		return FALSE;
+	if (g_str_has_suffix (text, "`"))
+		return FALSE;
+	if (g_str_has_prefix (text, "/"))
+		return TRUE;
+	if (g_str_has_prefix (text, "#"))
+		return TRUE;
+	if (g_str_has_prefix (text, "http://"))
+		return TRUE;
+	if (g_str_has_prefix (text, "https://"))
+		return TRUE;
+	if (g_str_has_prefix (text, "ftp://"))
+		return TRUE;
+	if (g_strrstr (text, ".patch") != NULL)
+		return TRUE;
+	if (g_strrstr (text, "()") != NULL)
+		return TRUE;
+	if (g_strrstr (text, "@") != NULL)
+		return TRUE;
+	return FALSE;
+}
+
+/**
+ * egg_markdown_word_auto_format_code:
+ **/
+static gchar *
+egg_markdown_word_auto_format_code (const gchar *text)
+{
+	guint i;
+	gchar *temp;
+	gchar **words;
+	gboolean ret = FALSE;
+
+	/* split sentance up with space */
+	words = g_strsplit (text, " ", -1);
+
+	/* search each word */
+	for (i=0; words[i] != NULL; i++) {
+		if (egg_markdown_word_is_code (words[i])) {
+			temp = g_strdup_printf ("`%s`", words[i]);
+			g_free (words[i]);
+			words[i] = temp;
+			ret = TRUE;
+		}
+	}
+
+	/* no replacements, so just return a copy */
+	if (!ret) {
+		temp = g_strdup (text);
+		goto out;
+	}
+
+	/* join the array back into a string */
+	temp = g_strjoinv (" ", words);
+out:
+	g_strfreev (words);
+	return temp;
+}
+
+/**
  * egg_markdown_flush_pending:
  **/
 static void
@@ -439,15 +543,25 @@ egg_markdown_flush_pending (EggMarkdown *self)
 
 	/* pango requires escaping */
 	copy = g_strdup (self->priv->pending->str);
-	if (self->priv->output == EGG_MARKDOWN_OUTPUT_PANGO) {
+	if (!self->priv->escape && self->priv->output == EGG_MARKDOWN_OUTPUT_PANGO) {
 		g_strdelimit (copy, "<", '(');
 		g_strdelimit (copy, ">", ')');
 	}
 
+	/* check words for code */
+	if (self->priv->autocode &&
+	    (self->priv->mode == EGG_MARKDOWN_MODE_PARA ||
+	     self->priv->mode == EGG_MARKDOWN_MODE_BULLETT)) {
+		temp = egg_markdown_word_auto_format_code (copy);
+		g_free (copy);
+		copy = temp;
+	}
+
 	/* escape */
 	if (self->priv->escape) {
+		temp = g_markup_escape_text (copy, -1);
 		g_free (copy);
-		copy = g_markup_escape_text (self->priv->pending->str, -1);
+		copy = temp;
 	}
 
 	/* do formatting */
@@ -670,6 +784,17 @@ egg_markdown_set_escape (EggMarkdown *self, gboolean escape)
 }
 
 /**
+ * egg_markdown_set_autocode:
+ **/
+gboolean
+egg_markdown_set_autocode (EggMarkdown *self, gboolean autocode)
+{
+	g_return_val_if_fail (EGG_IS_MARKDOWN (self), FALSE);
+	self->priv->autocode = autocode;
+	return TRUE;
+}
+
+/**
  * egg_markdown_parse:
  **/
 gchar *
@@ -744,6 +869,7 @@ egg_markdown_init (EggMarkdown *self)
 	self->priv->max_lines = -1;
 	self->priv->smart_quoting = FALSE;
 	self->priv->escape = FALSE;
+	self->priv->autocode = FALSE;
 }
 
 /**
@@ -916,6 +1042,15 @@ egg_markdown_test (EggTest *test)
 	g_free (text);
 
 	/************************************************************/
+	text = egg_markdown_word_auto_format_code ("this is http://www.hughsie.com/with_spaces_in_url inline link");
+	egg_test_title (test, "auto formatter (url)");
+	if (egg_strequal (text, "this is `http://www.hughsie.com/with_spaces_in_url` inline link"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got %s", text);
+	g_free (text);
+
+	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("this was \"triffic\" it was", "\"", "“", "”");
 	egg_test_title (test, "formatter (quotes)");
 	if (egg_strequal (text, "this was “triffic” it was"))
@@ -952,6 +1087,18 @@ egg_markdown_test (EggTest *test)
 		   "<big>OEMs</big>\n"
 		   "• Bullett";
 	egg_test_title (test, "markdown (type2 header)");
+	text = egg_markdown_parse (self, markdown);
+	if (egg_strequal (text, markdown_expected))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
+	g_free (text);
+
+
+	/************************************************************/
+	markdown = "this is http://www.hughsie.com/with_spaces_in_url inline link\n";
+	markdown_expected = "this is <tt>http://www.hughsie.com/with_spaces_in_url</tt> inline link";
+	egg_test_title (test, "markdown (autocode)");
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
 		egg_test_success (test, NULL);

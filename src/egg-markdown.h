@@ -67,6 +67,8 @@ gboolean	 egg_markdown_set_smart_quoting		(EggMarkdown		*self,
 							 gboolean		 smart_quoting);
 gboolean	 egg_markdown_set_escape		(EggMarkdown		*self,
 							 gboolean		 escape);
+gboolean	 egg_markdown_set_autocode		(EggMarkdown		*self,
+							 gboolean		 autocode);
 gchar		*egg_markdown_parse			(EggMarkdown		*self,
 							 const gchar		*text);
 
