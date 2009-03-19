@@ -621,6 +621,8 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		gtk_label_set_label (GTK_LABEL (widget), text);
 		g_free (text);
 		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (glade_xml, "label_summary");
+		gtk_widget_hide (widget);
 
 		/* close button */
 		widget = glade_xml_get_widget (glade_xml, "button_close");

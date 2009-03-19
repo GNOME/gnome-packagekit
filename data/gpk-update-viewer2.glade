@@ -234,7 +234,7 @@
                     <child>
                       <widget class="GtkLabel" id="label_status">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Downloading:&lt;/b&gt;</property>
+                        <property name="label">&lt;b&gt;Downloading:&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -245,25 +245,12 @@
                     <child>
                       <widget class="GtkLabel" id="label_package">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">data</property>
+                        <property name="label">data</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
                         <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_summary">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">7 updates selected (45Mb)</property>
-                        <property name="use_markup">True</property>
-                        <property name="justify">right</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">4</property>
                       </packing>
                     </child>
                   </widget>
@@ -297,6 +284,19 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_summary">
+                        <property name="visible">True</property>
+                        <property name="label">7 updates selected (45Mb)</property>
+                        <property name="use_markup">True</property>
+                        <property name="justify">right</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </widget>
@@ -350,7 +350,7 @@
             </child>
             <child>
               <widget class="GtkButton" id="button_shutdown">
-                <property name="label" translatable="yes">Shut down</property>
+                <property name="label" translatable="yes">Restart computer</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </widget>
