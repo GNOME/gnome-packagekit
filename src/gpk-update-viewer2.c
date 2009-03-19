@@ -877,6 +877,10 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* column for size */
 	renderer = gpk_cell_renderer_size_new ();
+	g_object_set (renderer,
+		      "alignment", PANGO_ALIGN_RIGHT,
+		      "xalign", 1.0f,
+		      NULL);
 	/* TRANSLATORS: a column that has size of the package */
 	column = gtk_tree_view_column_new_with_attributes (_("Size"), renderer,
 							   "value", GPK_UPDATES_COLUMN_SIZE, NULL);
