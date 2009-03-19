@@ -504,6 +504,12 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	gtk_widget_set_sensitive (widget, any_selected);
 	main_window = glade_xml_get_widget (glade_xml, "dialog_updates");
 
+	/* sensitive */
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_updates");
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
+	gtk_widget_set_sensitive (widget, TRUE);
+
 	/* have we got any updates */
 	len = PK_OBJ_LIST(update_list)->len;
 	if (len == 0) {
@@ -2009,10 +2015,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
 	gtk_widget_hide (widget);
 
-	/* header */
-	widget = glade_xml_get_widget (glade_xml, "hbox_header");
-	gtk_widget_hide (widget);
-
 	/* description */
 	widget = glade_xml_get_widget (glade_xml, "textview_details");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), text_buffer);
@@ -2057,6 +2059,12 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_install_cb), NULL);
+
+	/* sensitive */
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_updates");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
+	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* close button */
 	widget = glade_xml_get_widget (glade_xml, "button_close");
