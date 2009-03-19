@@ -2007,9 +2007,12 @@ main (int argc, char *argv[])
 						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "para",
-				    "pixels_above_lines", 5, NULL);
+				    "pixels_above_lines", 5,
+				    "wrap-mode", GTK_WRAP_WORD,
+				    NULL);
 	gtk_text_buffer_create_tag (text_buffer, "important",
-				    "weight", PANGO_WEIGHT_BOLD, NULL);
+				    "weight", PANGO_WEIGHT_BOLD,
+				    NULL);
 
 	/* no upgrades yet */
 	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
@@ -2027,7 +2030,7 @@ main (int argc, char *argv[])
 
 	/* updates */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 800, 200);
+	gtk_widget_set_size_request (GTK_WIDGET (widget), 750, 300);
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_updates));
