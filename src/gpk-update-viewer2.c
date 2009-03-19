@@ -37,6 +37,7 @@
 #include "egg-string.h"
 #include "egg-unique.h"
 #include "egg-markdown.h"
+#include "egg-console-kit.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
@@ -52,6 +53,9 @@
 #include "gpk-eula-helper.h"
 
 #define GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT 10 /* seconds */
+#define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
+#define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
+#define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
 static guint auto_shutdown_id = 0;
 static GMainLoop *loop = NULL;
@@ -66,6 +70,7 @@ static GpkRepoSignatureHelper *repo_signature_helper = NULL;
 static GpkEulaHelper *eula_helper = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
+static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -84,6 +89,59 @@ enum {
 };
 
 static gboolean gpk_update_viewer_get_new_update_list (void);
+
+/**
+ * gpk_update_viewer_button_logout_cb:
+ **/
+static void
+gpk_update_viewer_button_logout_cb (GtkWidget *widget, gpointer data)
+{
+	DBusGConnection *connection;
+	DBusGProxy *proxy;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get org.gnome.Session interface */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
+	proxy = dbus_g_proxy_new_for_name_owner (connection, GNOME_SESSION_MANAGER_SERVICE,
+						 GNOME_SESSION_MANAGER_PATH,
+						 GNOME_SESSION_MANAGER_INTERFACE, &error);
+	if (proxy == NULL) {
+		egg_warning ("cannot connect to proxy %s: %s", GNOME_SESSION_MANAGER_SERVICE, error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* log out of the session */
+	ret = dbus_g_proxy_call (proxy, "Shutdown", &error, G_TYPE_INVALID);
+	if (!ret) {
+		egg_warning ("cannot shutdown session: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_object_unref (proxy);
+}
+
+/**
+ * gpk_update_viewer_button_shutdown_cb:
+ **/
+static void
+gpk_update_viewer_button_shutdown_cb (GtkWidget *widget, gpointer data)
+{
+	EggConsoleKit *console;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* use consolekit to restart */
+	console = egg_console_kit_new ();
+	ret = egg_console_kit_restart (console, &error);
+	if (!ret) {
+		egg_warning ("cannot restart: %s", error->message);
+		g_error_free (error);
+	}
+	g_object_unref (console);
+}
 
 /**
  * gpk_update_viewer_button_help_cb:
@@ -567,8 +625,17 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		widget = glade_xml_get_widget (glade_xml, "label_package");
 		gtk_widget_hide (widget);
 
-		/* setup a callback so we autoclose */
-		auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, NULL);
+		/* do we have to show any widgets? */
+		if (restart_update == PK_RESTART_ENUM_SYSTEM) {
+			widget = glade_xml_get_widget (glade_xml, "button_shutdown");
+			gtk_widget_show (widget);
+		} else if (restart_update == PK_RESTART_ENUM_SESSION) {
+			widget = glade_xml_get_widget (glade_xml, "button_logout");
+			gtk_widget_show (widget);
+		} else {
+			/* setup a callback so we autoclose */
+			auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, NULL);
+		}
 		goto out;
 	}
 
@@ -1210,6 +1277,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	GtkTreeSelection *selection;
 	PkRoleEnum role;
 	PkPackageList *list;
+	PkRestartEnum restart;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit));
@@ -1300,6 +1368,11 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	if (exit == PK_EXIT_ENUM_SUCCESS &&
 	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+
+		/* get the worst restart case */
+		restart = pk_client_get_require_restart (client_primary);
+		if (restart > restart_update)
+			restart_update = restart;
 
 		/* check blocked */
 		list = pk_client_get_package_list (client_primary);
@@ -2087,6 +2160,16 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_help_cb), (gpointer) "update-viewer");
+
+	/* shutdown button */
+	widget = glade_xml_get_widget (glade_xml, "button_shutdown");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_shutdown_cb), NULL);
+
+	/* logout button */
+	widget = glade_xml_get_widget (glade_xml, "button_logout");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_logout_cb), NULL);
 
 	/* set install button insensitive */
 	widget = glade_xml_get_widget (glade_xml, "button_install");
