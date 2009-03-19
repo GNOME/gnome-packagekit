@@ -513,13 +513,8 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 
 	/* set the pluralisation of the button */
 	widget = glade_xml_get_widget (glade_xml, "button_install");
-	if (number_total == 0) {
-		/* TRANSLATORS: this is the button text for no updates */
-		title = _("No updates");
-	} else {
-		/* TRANSLATORS: this is the button text when we have updates */
-		title = ngettext ("_Install update", "_Install updates", number_total);
-	}
+	/* TRANSLATORS: this is the button text when we have updates */
+	title = ngettext ("_Install update", "_Install updates", number_total);
 	gtk_button_set_label (GTK_BUTTON (widget), title);
 
 	/* no updates */
@@ -645,7 +640,7 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 		gtk_widget_hide (widget);
 		goto out;
 	}
-	if (status == PK_STATUS_ENUM_QUERY) {
+	if (status == PK_STATUS_ENUM_QUERY || status == PK_STATUS_ENUM_SETUP) {
 		/* TRANSLATORS: querying update list */
 		text = _("Getting the list of updates");
 	} else {
@@ -1267,6 +1262,11 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		gtk_tree_selection_select_path (selection, path);
 		gtk_tree_path_free (path);
 
+		/* set info */
+		gpk_update_viewer_reconsider_info (model);
+	}
+
+	if (role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES) {
 		/* set info */
 		gpk_update_viewer_reconsider_info (model);
 	}
