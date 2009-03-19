@@ -195,6 +195,7 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	GtkTreeSelection *selection;
 	gboolean ret;
 	gboolean valid;
 	gboolean update;
@@ -249,6 +250,10 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 					_("No updates are selected"), NULL);
 		return;
 	}
+
+	/* clear the selection */
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_unselect_all (selection);
 
 	/* reset client */
 	ret = pk_client_reset (client_primary, &error);
@@ -1547,12 +1552,13 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer u
 /**
  * gpk_update_viewer_get_checked_status:
  **/
-static void
+static gboolean
 gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_checked)
 {
 	GtkTreeView *treeview;
 	gboolean valid;
 	gboolean update;
+	gboolean clickable;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 
@@ -1563,13 +1569,16 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 	*all_checked = TRUE;
 	*none_checked = TRUE;
 	while (valid) {
-		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_SELECT, &update, -1);
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_SELECT, &update,
+				    GPK_UPDATES_COLUMN_CLICKABLE, &clickable, -1);
 		if (update)
 			*none_checked = FALSE;
 		else
 			*all_checked = FALSE;
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
+	return clickable;
 }
 
 /**
@@ -1582,11 +1591,16 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 	GtkWidget *menuitem;
 	gboolean all_checked;
 	gboolean none_checked;
+	gboolean ret;
 
 	menu = gtk_menu_new();
 
 	/* we don't want to show 'Select all' if they are all checked */
-	gpk_update_viewer_get_checked_status (&all_checked, &none_checked);
+	ret = gpk_update_viewer_get_checked_status (&all_checked, &none_checked);
+	if (!ret) {
+		egg_debug ("ignoring as we are locked down");
+		return;
+	}
 
 	if (!all_checked) {
 		/* TRANSLATORS: right click menu, select all the updates */
