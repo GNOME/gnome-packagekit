@@ -992,6 +992,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 	gchar *issued;
 	gchar *updated;
 	GtkTextIter iter;
+	gboolean update_text = FALSE;
 
 	/* get info  */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
@@ -1056,6 +1057,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		if (!egg_strzero (line)) {
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line);
 			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
+			update_text = TRUE;
 		}
 		g_free (line);
 	}
@@ -1111,12 +1113,12 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
-	/* changelog */
-	if (!egg_strzero (obj->changelog)) {
+	/* only show changelog if we didn't have any update text */
+	if (!update_text && !egg_strzero (obj->changelog)) {
 		line = egg_markdown_parse (markdown, obj->changelog);
 		if (!egg_strzero (line)) {
 			/* TRANSLATORS: this is a ChangeLog */
-			line2 = g_strdup_printf ("\n%s\n%s\n", _("List of changes:"), line);
+			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no information is available for this update:"), line);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
 			g_free (line2);
 		}
