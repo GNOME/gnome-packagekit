@@ -51,6 +51,9 @@
 #include "gpk-repo-signature-helper.h"
 #include "gpk-eula-helper.h"
 
+#define GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT 10 /* seconds */
+
+static guint auto_shutdown_id = 0;
 static GMainLoop *loop = NULL;
 static GladeXML *glade_xml = NULL;
 static GtkListStore *list_store_updates = NULL;
@@ -461,6 +464,16 @@ gpk_update_viewer_reconsider_buttons (gpointer data)
 }
 
 /**
+ * gpk_update_viewer_auto_shutdown:
+ **/
+static gboolean
+gpk_update_viewer_auto_shutdown (void)
+{
+	g_main_loop_quit (loop);
+	return FALSE;
+}
+
+/**
  * gpk_update_viewer_reconsider_info:
  **/
 static void
@@ -553,6 +566,9 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		gtk_widget_hide (widget);
 		widget = glade_xml_get_widget (glade_xml, "label_package");
 		gtk_widget_hide (widget);
+
+		/* setup a callback so we autoclose */
+		auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, NULL);
 		goto out;
 	}
 
