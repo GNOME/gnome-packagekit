@@ -180,7 +180,9 @@ gpk_update_viewer_undisable_packages ()
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 	while (valid) {
 		gtk_list_store_set (list_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_SENSITIVE, TRUE, -1);
+				    GPK_UPDATES_COLUMN_SENSITIVE, TRUE,
+				    GPK_UPDATES_COLUMN_CLICKABLE, TRUE,
+				    -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 }
@@ -219,6 +221,7 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 
 		/* set all the checkboxes insensitive */
 		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
 				    GPK_UPDATES_COLUMN_SENSITIVE, FALSE, -1);
 
 		/* ay selected? */
