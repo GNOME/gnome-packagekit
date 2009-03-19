@@ -761,7 +761,10 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set (renderer,
+		      "wrap-mode", PANGO_WRAP_WORD,
+		      "ellipsize", PANGO_ELLIPSIZE_END,
+		      NULL);
 	/* TRANSLATORS: a column that has name of the package that will be updated */
 	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
 							   "markup", GPK_UPDATES_COLUMN_TEXT, NULL);
