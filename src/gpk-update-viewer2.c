@@ -445,6 +445,11 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		gtk_list_store_set (list_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_STATUS, obj->info, -1);
 		gtk_tree_path_free (path);
+
+		/* set package description */
+		widget = glade_xml_get_widget (glade_xml, "label_package");
+		//gtk_label_set_label (GTK_LABEL (widget), obj->summary);
+
 		goto out;
 	}
 
@@ -596,12 +601,18 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 		gtk_window_set_resizable (GTK_WINDOW(widget), FALSE);
 
+		/* use correct status pane */
+		widget = glade_xml_get_widget (glade_xml, "hbox_status");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "hbox_info");
+		gtk_widget_show (widget);
+
 		/* set state */
-		widget = glade_xml_get_widget (glade_xml, "image_progress");
+		widget = glade_xml_get_widget (glade_xml, "image_info");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "dialog-information", GTK_ICON_SIZE_DIALOG);
 		gtk_widget_show (widget);
 
-		widget = glade_xml_get_widget (glade_xml, "label_summary");
+		widget = glade_xml_get_widget (glade_xml, "label_info");
 		/* TRANSLATORS: there are no updates */
 		text = g_strdup_printf ("<b>%s</b>", _("There are no updates available for your computer"));
 		gtk_label_set_label (GTK_LABEL (widget), text);
@@ -650,18 +661,22 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	gtk_widget_show (widget);
 
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "hbox_status");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "hbox_info");
+	gtk_widget_show (widget);
+
 	/* restart */
-	widget = glade_xml_get_widget (glade_xml, "label_package");
+	widget = glade_xml_get_widget (glade_xml, "label_info");
 	if (restart_worst == PK_RESTART_ENUM_NONE) {
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "image_progress");
+		widget = glade_xml_get_widget (glade_xml, "image_info");
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_summary");
-		gtk_label_set_label (GTK_LABEL (widget), "");
 	} else {
 		gtk_label_set_label (GTK_LABEL (widget), gpk_restart_enum_to_localised_text_future (restart_worst));
 		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (glade_xml, "image_progress");
+		widget = glade_xml_get_widget (glade_xml, "image_info");
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), gpk_restart_enum_to_icon_name (restart_worst), GTK_ICON_SIZE_BUTTON);
 		gtk_widget_show (widget);
 	}
@@ -708,6 +723,12 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 	const gchar *text;
 
 	egg_debug ("status %s", pk_status_enum_to_text (status));
+
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "hbox_status");
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (glade_xml, "hbox_info");
+	gtk_widget_hide (widget);
 
 	/* clear package */
 	if (status == PK_STATUS_ENUM_WAIT) {
@@ -2209,6 +2230,12 @@ main (int argc, char *argv[])
 	egg_debug ("req.height=%i", req.height);
 	if (req.height != 0)
 		gtk_paned_set_position (GTK_PANED (widget), req.height / 2);
+
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "label_status");
+	gtk_widget_set_size_request (widget, -1, 32);
+	widget = glade_xml_get_widget (glade_xml, "label_info");
+	gtk_widget_set_size_request (widget, -1, 32);
 
 	/* coldplug */
 	gpk_update_viewer_get_new_update_list ();
