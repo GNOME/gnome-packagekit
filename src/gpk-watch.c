@@ -1385,10 +1385,10 @@ gpk_watch_init (GpkWatch *watch)
 							  /* TRANSLATORS: This button restarts the computer after an update */
 							  _("_Restart computer"), NULL);
 	g_object_set (restart_action,
-		      "no-icon-name", "gnome-shutdown",
-		      "auth-icon-name", "gnome-shutdown",
-		      "yes-icon-name","gnome-shutdown",
-		      "self-blocked-icon-name", "gnome-shutdown",
+		      "no-icon-name", "system-shutdown",
+		      "auth-icon-name", "system-shutdown",
+		      "yes-icon-name","system-shutdown",
+		      "self-blocked-icon-name", "system-shutdown",
 		      NULL);
 	polkit_action_unref (pk_action);
 	g_signal_connect (restart_action, "activate",
