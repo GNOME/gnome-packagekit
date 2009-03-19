@@ -478,6 +478,7 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	guint number_total = 0;
 	PkRestartEnum restart;
 	PkRestartEnum restart_worst = PK_RESTART_ENUM_NONE;
+	const gchar *title;
 	gchar *text;
 	gchar *text_size;
 
@@ -510,7 +511,18 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
 	gtk_widget_set_sensitive (widget, TRUE);
 
-	/* have we got any updates */
+	/* set the pluralisation of the button */
+	widget = glade_xml_get_widget (glade_xml, "button_install");
+	if (number_total == 0) {
+		/* TRANSLATORS: this is the button text for no updates */
+		title = _("No updates");
+	} else {
+		/* TRANSLATORS: this is the button text when we have updates */
+		title = ngettext ("_Install update", "_Install updates", number_total);
+	}
+	gtk_button_set_label (GTK_BUTTON (widget), title);
+
+	/* no updates */
 	len = PK_OBJ_LIST(update_list)->len;
 	if (len == 0) {
 		widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
