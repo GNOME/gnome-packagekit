@@ -46,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-	void		(* event)				(GpkHelperRepoSignature	*helper_repo_signature,
+	void		(* event)				(GpkHelperRepoSignature	*helper,
 								 GtkResponseType	 type,
 								 const gchar		*key_id,
 								 const gchar		*package_id);
@@ -55,9 +55,9 @@ typedef struct
 
 GType			 gpk_helper_repo_signature_get_type	(void);
 GpkHelperRepoSignature	*gpk_helper_repo_signature_new		(void);
-gboolean		 gpk_helper_repo_signature_set_parent	(GpkHelperRepoSignature	*helper_repo_signature,
+gboolean		 gpk_helper_repo_signature_set_parent	(GpkHelperRepoSignature	*helper,
 								 GtkWindow		*window);
-gboolean		 gpk_helper_repo_signature_show		(GpkHelperRepoSignature	*helper_repo_signature,
+gboolean		 gpk_helper_repo_signature_show		(GpkHelperRepoSignature	*helper,
 								 const gchar		*package_id,
 								 const gchar		*repository_name,
 								 const gchar		*key_url,

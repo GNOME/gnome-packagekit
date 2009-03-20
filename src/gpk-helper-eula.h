@@ -46,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-	void		(* event)			(GpkHelperEula		*helper_eula,
+	void		(* event)			(GpkHelperEula		*helper,
 							 GtkResponseType	 type,
 							 const gchar		*eula_id);
 	GObjectClass	parent_class;
@@ -54,9 +54,9 @@ typedef struct
 
 GType		 gpk_helper_eula_get_type	  	(void);
 GpkHelperEula	*gpk_helper_eula_new			(void);
-gboolean	 gpk_helper_eula_set_parent		(GpkHelperEula		*helper_eula,
+gboolean	 gpk_helper_eula_set_parent		(GpkHelperEula		*helper,
 							 GtkWindow		*window);
-gboolean	 gpk_helper_eula_show			(GpkHelperEula		*helper_eula,
+gboolean	 gpk_helper_eula_show			(GpkHelperEula		*helper,
 							 const gchar		*eula_id,
 							 const gchar		*package_id,
 							 const gchar		*vendor_name,

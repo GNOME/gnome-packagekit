@@ -54,10 +54,10 @@ G_DEFINE_TYPE (GpkHelperEula, gpk_helper_eula, G_TYPE_OBJECT)
  * gpk_helper_eula_button_agree_cb:
  **/
 static void
-gpk_helper_eula_button_agree_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
+gpk_helper_eula_button_agree_cb (GtkWidget *widget, GpkHelperEula *helper)
 {
-	g_signal_emit (helper_eula, signals [GPK_HELPER_EULA_EVENT], 0, GTK_RESPONSE_YES, helper_eula->priv->eula_id);
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	g_signal_emit (helper, signals [GPK_HELPER_EULA_EVENT], 0, GTK_RESPONSE_YES, helper->priv->eula_id);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	gtk_widget_hide (widget);
 }
 
@@ -65,10 +65,10 @@ gpk_helper_eula_button_agree_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
  * gpk_helper_eula_button_cancel_cb:
  **/
 static void
-gpk_helper_eula_button_cancel_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
+gpk_helper_eula_button_cancel_cb (GtkWidget *widget, GpkHelperEula *helper)
 {
-	g_signal_emit (helper_eula, signals [GPK_HELPER_EULA_EVENT], 0, GTK_RESPONSE_NO, helper_eula->priv->eula_id);
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	g_signal_emit (helper, signals [GPK_HELPER_EULA_EVENT], 0, GTK_RESPONSE_NO, helper->priv->eula_id);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	gtk_widget_hide (widget);
 }
 
@@ -76,7 +76,7 @@ gpk_helper_eula_button_cancel_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
  * gpk_helper_eula_button_help_cb:
  **/
 static void
-gpk_helper_eula_button_help_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
+gpk_helper_eula_button_help_cb (GtkWidget *widget, GpkHelperEula *helper)
 {
 	/* show the help */
 	gpk_gnome_help ("eula");
@@ -88,7 +88,7 @@ gpk_helper_eula_button_help_cb (GtkWidget *widget, GpkHelperEula *helper_eula)
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_eula_show (GpkHelperEula *helper_eula, const gchar *eula_id, const gchar *package_id,
+gpk_helper_eula_show (GpkHelperEula *helper, const gchar *eula_id, const gchar *package_id,
 	       const gchar *vendor_name, const gchar *license_agreement)
 {
 	GtkWidget *widget;
@@ -96,15 +96,15 @@ gpk_helper_eula_show (GpkHelperEula *helper_eula, const gchar *eula_id, const gc
 	gchar *text;
 	PkPackageId *ident;
 
-	g_return_val_if_fail (GPK_IS_HELPER_EULA (helper_eula), FALSE);
+	g_return_val_if_fail (GPK_IS_HELPER_EULA (helper), FALSE);
 	g_return_val_if_fail (eula_id != NULL, FALSE);
 
 	/* cache */
-	g_free (helper_eula->priv->eula_id);
-	helper_eula->priv->eula_id = g_strdup (eula_id);
+	g_free (helper->priv->eula_id);
+	helper->priv->eula_id = g_strdup (eula_id);
 
 	/* title */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "label_title");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "label_title");
 	ident = pk_package_id_new_from_string (package_id);
 	text = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", ident->name, vendor_name);
 	gtk_label_set_label (GTK_LABEL (widget), text);
@@ -113,14 +113,14 @@ gpk_helper_eula_show (GpkHelperEula *helper_eula, const gchar *eula_id, const gc
 
 	buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_insert_at_cursor (buffer, license_agreement, strlen (license_agreement));
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "textview_details");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "textview_details");
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 
 	/* set minimum size a bit bigger */
 	gtk_widget_set_size_request (widget, 100, 200);
 
 	/* show window */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	gtk_widget_show (widget);
 
 	g_object_unref (buffer);
@@ -132,15 +132,15 @@ gpk_helper_eula_show (GpkHelperEula *helper_eula, const gchar *eula_id, const gc
  * gpk_helper_eula_set_parent:
  **/
 gboolean
-gpk_helper_eula_set_parent (GpkHelperEula *helper_eula, GtkWindow *window)
+gpk_helper_eula_set_parent (GpkHelperEula *helper, GtkWindow *window)
 {
 	GtkWidget *widget;
 
-	g_return_val_if_fail (GPK_IS_HELPER_EULA (helper_eula), FALSE);
+	g_return_val_if_fail (GPK_IS_HELPER_EULA (helper), FALSE);
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 
 	/* this is a modal popup, so don't show a window title */
@@ -171,30 +171,30 @@ gpk_helper_eula_class_init (GpkHelperEulaClass *klass)
  * gpk_helper_eula_init:
  **/
 static void
-gpk_helper_eula_init (GpkHelperEula *helper_eula)
+gpk_helper_eula_init (GpkHelperEula *helper)
 {
 	GtkWidget *widget;
 
-	helper_eula->priv = GPK_HELPER_EULA_GET_PRIVATE (helper_eula);
+	helper->priv = GPK_HELPER_EULA_GET_PRIVATE (helper);
 
-	helper_eula->priv->eula_id = NULL;
-	helper_eula->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-eula.glade", NULL, NULL);
+	helper->priv->eula_id = NULL;
+	helper->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-eula.glade", NULL, NULL);
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
-	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_helper_eula_button_cancel_cb), helper_eula);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
+	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_helper_eula_button_cancel_cb), helper);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "button_agree");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_agree_cb), helper_eula);
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "button_help");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_help_cb), helper_eula);
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "button_cancel");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_cancel_cb), helper_eula);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_agree");
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_agree_cb), helper);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_help");
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_help_cb), helper);
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_cancel");
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_eula_button_cancel_cb), helper);
 }
 
 /**
@@ -204,18 +204,18 @@ static void
 gpk_helper_eula_finalize (GObject *object)
 {
 	GtkWidget *widget;
-	GpkHelperEula *helper_eula;
+	GpkHelperEula *helper;
 
 	g_return_if_fail (GPK_IS_HELPER_EULA (object));
 
-	helper_eula = GPK_HELPER_EULA (object);
+	helper = GPK_HELPER_EULA (object);
 
 	/* hide window */
-	widget = glade_xml_get_widget (helper_eula->priv->glade_xml, "dialog_eula");
+	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_eula");
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_free (helper_eula->priv->eula_id);
-	g_object_unref (helper_eula->priv->glade_xml);
+	g_free (helper->priv->eula_id);
+	g_object_unref (helper->priv->glade_xml);
 
 	G_OBJECT_CLASS (gpk_helper_eula_parent_class)->finalize (object);
 }
@@ -226,8 +226,8 @@ gpk_helper_eula_finalize (GObject *object)
 GpkHelperEula *
 gpk_helper_eula_new (void)
 {
-	GpkHelperEula *helper_eula;
-	helper_eula = g_object_new (GPK_TYPE_HELPER_EULA, NULL);
-	return GPK_HELPER_EULA (helper_eula);
+	GpkHelperEula *helper;
+	helper = g_object_new (GPK_TYPE_HELPER_EULA, NULL);
+	return GPK_HELPER_EULA (helper);
 }
 
