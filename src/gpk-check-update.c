@@ -869,7 +869,7 @@ gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
  * gpk_check_update_updates_changed_cb:
  **/
 static void
-gpk_check_update_updates_changed_cb (PkClient *client, GpkCheckUpdate *cupdate)
+gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate)
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
