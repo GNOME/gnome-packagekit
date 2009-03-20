@@ -49,8 +49,8 @@
 #include "gpk-cell-renderer-percentage.h"
 #include "gpk-client.h"
 #include "gpk-enum.h"
-#include "gpk-repo-signature-helper.h"
-#include "gpk-eula-helper.h"
+#include "gpk-helper-repo-signature.h"
+#include "gpk-helper-eula.h"
 
 #define GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT 10 /* seconds */
 #define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
@@ -66,8 +66,8 @@ static PkClient *client_primary = NULL;
 static PkClient *client_secondary = NULL;
 static PkControl *control = NULL;
 static PkPackageList *update_list = NULL;
-static GpkRepoSignatureHelper *repo_signature_helper = NULL;
-static GpkEulaHelper *eula_helper = NULL;
+static GpkHelperRepoSignature *helper_repo_signature = NULL;
+static GpkHelperEula *helper_eula = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
@@ -1739,14 +1739,14 @@ gpk_update_viewer_eula_required_cb (PkClient *client, const gchar *eula_id, cons
 				    const gchar *vendor_name, const gchar *license_agreement, gpointer data)
 {
 	/* use the helper */
-	gpk_eula_helper_show (eula_helper, eula_id, package_id, vendor_name, license_agreement);
+	gpk_helper_eula_show (helper_eula, eula_id, package_id, vendor_name, license_agreement);
 }
 
 /**
  * gpk_update_viewer_repo_signature_event_cb:
  **/
 static void
-gpk_update_viewer_repo_signature_event_cb (GpkRepoSignatureHelper *_repo_signature_helper, GtkResponseType type, const gchar *key_id, const gchar *package_id, gpointer data)
+gpk_update_viewer_repo_signature_event_cb (GpkHelperRepoSignature *_helper_repo_signature, GtkResponseType type, const gchar *key_id, const gchar *package_id, gpointer data)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;
@@ -1788,7 +1788,7 @@ out:
  * gpk_update_viewer_eula_event_cb:
  **/
 static void
-gpk_update_viewer_eula_event_cb (GpkRepoSignatureHelper *_eula_helper, GtkResponseType type, const gchar *eula_id, gpointer data)
+gpk_update_viewer_eula_event_cb (GpkHelperRepoSignature *_helper_eula, GtkResponseType type, const gchar *eula_id, gpointer data)
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;
@@ -1836,7 +1836,7 @@ gpk_update_viewer_repo_signature_required_cb (PkClient *client, const gchar *pac
 					      PkSigTypeEnum type, gpointer data)
 {
 	/* use the helper */
-	gpk_repo_signature_helper_show (repo_signature_helper, package_id, repository_name, key_url, key_userid, key_id, key_fingerprint, key_timestamp);
+	gpk_helper_repo_signature_show (helper_repo_signature, package_id, repository_name, key_url, key_userid, key_id, key_fingerprint, key_timestamp);
 }
 
 /**
@@ -2157,13 +2157,13 @@ main (int argc, char *argv[])
 	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_delete_event_cb), NULL);
 
 	/* helpers */
-	repo_signature_helper = gpk_repo_signature_helper_new ();
-	g_signal_connect (repo_signature_helper, "event", G_CALLBACK (gpk_update_viewer_repo_signature_event_cb), NULL);
-	gpk_repo_signature_helper_set_parent (repo_signature_helper, GTK_WINDOW (main_window));
+	helper_repo_signature = gpk_helper_repo_signature_new ();
+	g_signal_connect (helper_repo_signature, "event", G_CALLBACK (gpk_update_viewer_repo_signature_event_cb), NULL);
+	gpk_helper_repo_signature_set_parent (helper_repo_signature, GTK_WINDOW (main_window));
 
-	eula_helper = gpk_eula_helper_new ();
-	g_signal_connect (eula_helper, "event", G_CALLBACK (gpk_update_viewer_eula_event_cb), NULL);
-	gpk_eula_helper_set_parent (eula_helper, GTK_WINDOW (main_window));
+	helper_eula = gpk_helper_eula_new ();
+	g_signal_connect (helper_eula, "event", G_CALLBACK (gpk_update_viewer_eula_event_cb), NULL);
+	gpk_helper_eula_set_parent (helper_eula, GTK_WINDOW (main_window));
 
 	/* create list stores */
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
@@ -2302,8 +2302,8 @@ main (int argc, char *argv[])
 	if (update_list != NULL)
 		g_object_unref (update_list);
 
-	g_object_unref (eula_helper);
-	g_object_unref (repo_signature_helper);
+	g_object_unref (helper_eula);
+	g_object_unref (helper_repo_signature);
 	g_object_unref (glade_xml);
 	g_object_unref (list_store_updates);
 	g_object_unref (control);

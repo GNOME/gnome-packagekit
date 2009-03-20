@@ -218,10 +218,10 @@ gpk_prefs_LDADD =					\
 
 gpk_update_viewer2_SOURCES =				\
 	gpk-update-viewer2.c				\
-	gpk-repo-signature-helper.c			\
-	gpk-repo-signature-helper.h			\
-	gpk-eula-helper.c				\
-	gpk-eula-helper.h				\
+	gpk-helper-repo-signature.c			\
+	gpk-helper-repo-signature.h			\
+	gpk-helper-eula.c				\
+	gpk-helper-eula.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	gpk-cell-renderer-size.c			\
