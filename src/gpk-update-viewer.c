@@ -925,12 +925,6 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 		g_free (line);
 	}
 
-	/* changelog */
-	if (!egg_strzero (obj->changelog)) {
-		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_item (_("Changes"), obj->changelog, NULL);
-	}
-
 	/* add all the links */
 	if (!egg_strzero (obj->vendor_url)) {
 		/* TRANSLATORS: this is a list of vendor URLs */
