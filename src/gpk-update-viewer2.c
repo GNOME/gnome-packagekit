@@ -2025,6 +2025,17 @@ gpk_update_viewer_textview_visibility_notify_event (GtkWidget *text_view, GdkEve
 }
 
 /**
+ * gpk_update_viewer_updates_changed_cb:
+ **/
+static void
+gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer data)
+{
+	/* now try to get newest update list */
+	egg_debug ("updates changed");
+	gpk_update_viewer_get_new_update_list ();
+}
+
+/**
  * main:
  **/
 int
@@ -2102,6 +2113,8 @@ main (int argc, char *argv[])
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_update_viewer_repo_list_changed_cb), NULL);
+	g_signal_connect (control, "updates-changed",
+			  G_CALLBACK (gpk_update_viewer_updates_changed_cb), NULL);
 
 	/* this is what we use mainly */
 	client_primary = pk_client_new ();
