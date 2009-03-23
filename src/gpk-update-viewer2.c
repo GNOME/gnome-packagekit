@@ -1586,7 +1586,7 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 	gboolean valid;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	PkStatusEnum info;
+	PkInfoEnum info;
 
 	/* get the first iter in the list */
 	model = gtk_tree_view_get_model (treeview);
@@ -1596,6 +1596,34 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 		if (info != PK_INFO_ENUM_BLOCKED)
 			gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 					    GPK_UPDATES_COLUMN_SELECT, TRUE, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_info (model);
+}
+
+/**
+ * gpk_update_viewer_detail_popup_menu_select_security:
+ **/
+static void
+gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, gpointer userdata)
+{
+	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
+	gboolean valid;
+	gboolean ret;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	PkInfoEnum info;
+
+	/* get the first iter in the list */
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
+		ret = (info == PK_INFO_ENUM_SECURITY);
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+				    GPK_UPDATES_COLUMN_SELECT, ret, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
@@ -1696,6 +1724,12 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 				  G_CALLBACK (gpk_update_viewer_detail_popup_menu_select_none), treeview);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	}
+
+	/* TRANSLATORS: right click menu, select only security updates */
+	menuitem = gtk_menu_item_new_with_label (_("Select security updates"));
+	g_signal_connect (menuitem, "activate",
+			  G_CALLBACK (gpk_update_viewer_detail_popup_menu_select_security), treeview);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 	/* TRANSLATORS: right click option, ignore this update name, not currently used */
 	menuitem = gtk_menu_item_new_with_label (_("Ignore this update"));
