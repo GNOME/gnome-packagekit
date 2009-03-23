@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD\n"
 "Report-Msgid-Bugs-To: https://bugs.freedesktop.org/enter_bug.cgi?"
 "product=PackageKit&component=General\n"
-"POT-Creation-Date: 2009-03-19 12:08+0000\n"
-"PO-Revision-Date: 2009-03-19 15:13+0100\n"
+"POT-Creation-Date: 2009-03-19 14:14+0000\n"
+"PO-Revision-Date: 2009-03-20 12:22+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: ES <gnome-es@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -825,14 +825,12 @@ msgid "<b>Downloading:</b>"
 msgstr "<b>Descargando:</b>"
 
 #: ../data/gpk-update-viewer2.glade.h:3
-#, fuzzy
-#| msgid "_Log out"
 msgid "Log out"
-msgstr "_Terminar la sesión"
+msgstr "Cerrar la sesión"
 
 #: ../data/gpk-update-viewer2.glade.h:4
 msgid "Shut down"
-msgstr ""
+msgstr "Apagar"
 
 #: ../data/gpk-update-viewer2.glade.h:5
 msgid ""
@@ -2358,28 +2356,20 @@ msgid "Could not remove a protected system package"
 msgstr "No se pudo quitar un paquete protegido del sistema"
 
 #: ../src/gpk-enum.c:378
-#, fuzzy
-#| msgid "The task was canceled"
 msgid "The action was canceled"
-msgstr "Se canceló la tarea"
+msgstr "Se canceló la acción"
 
 #: ../src/gpk-enum.c:381
-#, fuzzy
-#| msgid "The task was forcibly canceled"
 msgid "The action was forcibly canceled"
-msgstr "La tarea se ha cancelado forzadamente"
+msgstr "La acción se ha cancelado forzadamente"
 
 #: ../src/gpk-enum.c:384
-#, fuzzy
-#| msgid "Reading the config file failed"
 msgid "Reading the configuration file failed"
-msgstr "Falló la lectura del archivo de configuración"
+msgstr "Falló al leer el archivo de configuración"
 
 #: ../src/gpk-enum.c:387
-#, fuzzy
-#| msgid "The task cannot be canceled"
 msgid "The action cannot be canceled"
-msgstr "No se puede cancelar la tarea"
+msgstr "No se puede cancelar la acción"
 
 #: ../src/gpk-enum.c:390
 msgid "Source packages cannot be installed"
@@ -2576,15 +2566,11 @@ msgstr ""
 "repositorio de software."
 
 #: ../src/gpk-enum.c:522
-#, fuzzy
-#| msgid ""
-#| "A package could not be found that allows the task to complete.\n"
-#| "More information is available in the detailed report."
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
 msgstr ""
-"No se pudo encontrar un paquete que permita completar la transacción\n"
+"No se pudo encontrar un paquete que permita completar la acción\n"
 "Dispone de más información en el informe detallado."
 
 #: ../src/gpk-enum.c:526
@@ -2601,15 +2587,11 @@ msgstr ""
 "Normalmente esto indica un error interno y se debería informar de ello."
 
 #: ../src/gpk-enum.c:533
-#, fuzzy
-#| msgid ""
-#| "An unspecified task error has occurred.\n"
-#| "More information is available in the detailed report."
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Ha ocurrido un error de la tarea inesperado.\n"
+"Ha ocurrido un error inesperado en la transacción.\n"
 "Dispone de más información en el informe detallado."
 
 #: ../src/gpk-enum.c:537
@@ -2625,22 +2607,15 @@ msgid "Removing a protected system package is not allowed."
 msgstr "No se permite la eliminación de un paquete protegido del sistema."
 
 #: ../src/gpk-enum.c:544
-#, fuzzy
-#| msgid "The task was canceled successfully and no packages were changed."
 msgid "The action was canceled successfully and no packages were changed."
-msgstr ""
-"La tarea se ha cancelado con éxito y no se ha modificado ningún paquete."
+msgstr "La acción se canceló con éxito y no se ha modificado ningún paquete."
 
 #: ../src/gpk-enum.c:547
-#, fuzzy
-#| msgid ""
-#| "The task was canceled successfully and no packages were changed.\n"
-#| "The backend did not exit cleanly."
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
-"La tarea se ha cancelado con éxito y no hay paquetes modificados.\n"
+"La acción se canceló con éxito y no hay paquetes modificados.\n"
 "El «backend» no finalizó correctamente."
 
 #: ../src/gpk-enum.c:551
@@ -2652,10 +2627,8 @@ msgstr ""
 "Asegúrese de que la configuración es válida."
 
 #: ../src/gpk-enum.c:555
-#, fuzzy
-#| msgid "The task is not safe to be canceled at this time."
 msgid "The action cannot be canceled at this time."
-msgstr "No es seguro cancelar la tarea en este momento."
+msgstr "No se puede cancelar la tarea en este momento."
 
 #: ../src/gpk-enum.c:558
 msgid ""
@@ -2926,20 +2899,18 @@ msgstr "Estado desconocido"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:791
-#| msgid "Updating"
 msgid "Starting"
-msgstr ""
+msgstr "Iniciando"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:795
 msgid "Waiting in queue"
-msgstr ""
+msgstr "Esperando en la cola"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:799
-#| msgid "Running task"
 msgid "Running"
-msgstr ""
+msgstr "Ejecutando"
 
 #. TRANSLATORS: The transaction state
 #: ../src/gpk-enum.c:803
@@ -4355,7 +4326,6 @@ msgstr "Administración"
 
 #. TRANSLATORS: this is the button text when we have updates
 #: ../src/gpk-update-viewer2.c:596
-#| msgid "_Install updates"
 msgid "_Install update"
 msgid_plural "_Install updates"
 msgstr[0] "_Instalar actualización"
@@ -4383,7 +4353,6 @@ msgstr[1] "%i actualizaciones seleccionadas (%s)"
 
 #. TRANSLATORS: querying update list
 #: ../src/gpk-update-viewer2.c:752
-#| msgid "Getting list of updates"
 msgid "Getting the list of updates"
 msgstr "Obteniendo la lista de actualizaciones"
 
@@ -4395,23 +4364,24 @@ msgstr "Estado"
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer2.c:1008
 msgid "This update will fix bugs and other non-critical problems."
-msgstr ""
+msgstr "Esta actualización corregirá errores y otros problemas no críticos."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer2.c:1012
 msgid "This update is important as it may solve critical problems."
 msgstr ""
+"Esta actualización es importante y puede resolver varios problemas críticos."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer2.c:1016
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
+"Esta actualización es necesaria para corregir una vulnerabilidad de "
+"seguridad en este paquete."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer2.c:1020
-#| msgid "There is %d update available"
-#| msgid_plural "There are %d updates available"
 msgid "This update is blocked."
 msgstr "Esta actualización está bloqueada."
 
@@ -4419,17 +4389,16 @@ msgstr "Esta actualización está bloqueada."
 #: ../src/gpk-update-viewer2.c:1029
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
-msgstr ""
+msgstr "Esta notificación se emitió en %s y se actualizó por última vez en %s."
 
 #. TRANSLATORS: this is when the update was issued
 #: ../src/gpk-update-viewer2.c:1038
 #, c-format
 msgid "This notification was issued on %s."
-msgstr ""
+msgstr "Esta notificación se emitió en %s"
 
 #. TRANSLATORS: this is a list of vendor URLs
 #: ../src/gpk-update-viewer2.c:1060
-#| msgid "For more information about this update please visit:"
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4440,8 +4409,6 @@ msgstr[1] ""
 
 #. TRANSLATORS: this is a list of bugzilla URLs
 #: ../src/gpk-update-viewer2.c:1069
-#| msgid ""
-#| "For more information about bugs fixed by this this update please visit:"
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4457,7 +4424,6 @@ msgstr[1] ""
 
 #. TRANSLATORS: this is a list of CVE (security) URLs
 #: ../src/gpk-update-viewer2.c:1078
-#| msgid "For more information about this security update please visit:"
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4475,14 +4441,17 @@ msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr ""
+"Deberá reiniciar el equipo después de la actualización para que los cambios "
+"surtan efecto."
 
 #. TRANSLATORS: log out required
 #: ../src/gpk-update-viewer2.c:1092
-#| msgid "You will be required to log off and back on after this update"
 msgid ""
 "You will need to log off and back on after the update for the changes to "
 "take effect."
 msgstr ""
+"Deberá cerrar su sesión e iniciar sesión de nuevo después de la "
+"actualización para que los cambios surtan efecto."
 
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer2.c:1099
@@ -4490,6 +4459,8 @@ msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
+"La clasificación de esta actualización es «inestable», lo que significa que "
+"no está diseñada para usarse en producción."
 
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer2.c:1103
@@ -4497,17 +4468,17 @@ msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
+"Esta es una actualización de prueba y no está diseñada para un uso normal. "
+"Informe de cualquier problema o regresión que encuentre."
 
 #. TRANSLATORS: this is a ChangeLog
 #: ../src/gpk-update-viewer2.c:1112
-#| msgid "Testing changes"
 msgid "List of changes:"
 msgstr "Lista de cambios:"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
 #: ../src/gpk-update-viewer2.c:1840
 #, c-format
-#| msgid "No distribution upgrade data is available"
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Está disponible la nueva actualización «%s» de la distribución"
 
