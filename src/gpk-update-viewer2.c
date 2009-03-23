@@ -2036,6 +2036,19 @@ gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer data)
 }
 
 /**
+ * gpk_update_viewer_vpaned_realized_cb:
+ **/
+static void
+gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer data)
+{
+	GtkRequisition req;
+	gtk_widget_size_request (widget, &req);
+	egg_debug ("req.height=%i", req.height);
+	if (req.height != 0)
+		gtk_paned_set_position (GTK_PANED (widget), 166);
+}
+
+/**
  * main:
  **/
 int
@@ -2047,7 +2060,6 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
-	GtkRequisition req;
 	PkBitfield roles;
 	gboolean ret;
 	GError *error = NULL;
@@ -2194,7 +2206,6 @@ main (int argc, char *argv[])
 
 	/* updates */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 750, 300);
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_updates));
@@ -2260,21 +2271,28 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_upgrade_cb), NULL);
 
-	/* show window */
-	gtk_widget_show (main_window);
-
-	/* set the paned to be in the middle */
-	widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
-	gtk_widget_size_request (widget, &req);
-	egg_debug ("req.height=%i", req.height);
-	if (req.height != 0)
-		gtk_paned_set_position (GTK_PANED (widget), req.height / 2);
+	/* set a size, if the screen allows */
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 800, 600);
+	if (!ret) {
+		egg_debug ("small form factor mode");
+		/* hide the header in SFF mode */
+		widget = glade_xml_get_widget (glade_xml, "hbox_header");
+		gtk_widget_hide (widget);
+	}
 
 	/* use correct status pane */
 	widget = glade_xml_get_widget (glade_xml, "label_status");
 	gtk_widget_set_size_request (widget, -1, 32);
 	widget = glade_xml_get_widget (glade_xml, "label_info");
 	gtk_widget_set_size_request (widget, -1, 32);
+
+	/* show window */
+	gtk_widget_show (main_window);
+
+	/* set the paned to be in the middle */
+	widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
+	g_signal_connect (widget, "realize",
+			  G_CALLBACK (gpk_update_viewer_vpaned_realized_cb), NULL);
 
 	/* coldplug */
 	gpk_update_viewer_get_new_update_list ();
