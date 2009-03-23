@@ -827,6 +827,76 @@ gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAlloc
 }
 
 /**
+ * gpk_update_viewer_treeview_query_tooltip_cb:
+ */
+static gboolean
+gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, gboolean keyboard, GtkTooltip *tooltip, gpointer user_data)
+{
+	gboolean ret;
+	GtkTreePath *path = NULL;
+	GtkTreeViewColumn *column;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	PkInfoEnum info;
+	PkRestartEnum restart;
+	gint bin_x, bin_y, cell_x, cell_y, col_id;
+	const gchar *text = NULL;
+
+	/* get path */
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (widget), x, y, &bin_x, &bin_y);
+	ret = gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget), bin_x, bin_y, &path, &column, &cell_x, &cell_y);
+
+	/* did not get path */
+	if (!ret || column == NULL || path == NULL)
+		goto out;
+
+	/* get iter at path */
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	/* Find out what column we are over */
+	col_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (column), "tooltip-id"));
+	switch (col_id) {
+	case GPK_UPDATES_COLUMN_INFO:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
+		text = gpk_info_enum_to_localised_text (info);
+		break;
+	case GPK_UPDATES_COLUMN_RESTART:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_RESTART, &restart, -1);
+		if (restart == PK_RESTART_ENUM_NONE) {
+			ret = FALSE;
+			break;
+		}
+		text = gpk_restart_enum_to_localised_text_future (restart);
+		break;
+	case GPK_UPDATES_COLUMN_STATUS:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_STATUS, &info, -1);
+		if (info == PK_INFO_ENUM_UNKNOWN) {
+			ret = FALSE;
+			break;
+		}
+		text = gpk_info_enum_to_localised_past (info);
+		break;
+	default:
+		/* ignore */
+		ret = FALSE;
+		break;
+	}
+
+	/* set tooltip */
+	if (text != NULL) {
+		gtk_tooltip_set_text (tooltip, text);
+		gtk_tree_view_set_tooltip_cell (GTK_TREE_VIEW (widget), tooltip, path, column, NULL);
+	}
+out:
+	if (path != NULL)
+		gtk_tree_path_free(path);
+	return ret;
+}
+
+
+
+/**
  * gpk_update_viewer_treeview_add_columns_update:
  **/
 static void
@@ -843,6 +913,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 							   "value", GPK_UPDATES_COLUMN_RESTART, NULL);
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_RESTART));
 
 	/* --- column for image and toggle --- */
 	column = gtk_tree_view_column_new ();
@@ -867,6 +938,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_add_attribute (column, renderer, "sensitive", GPK_UPDATES_COLUMN_SENSITIVE);
 
 	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_INFO));
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
@@ -902,7 +974,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_STATUS);
 
-	/* info */
+	/* status */
 	renderer = gpk_cell_renderer_info_new ();
 	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
@@ -915,6 +987,11 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 
 	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_STATUS));
+
+	/* tooltips */
+	g_signal_connect (treeview, "query-tooltip", G_CALLBACK (gpk_update_viewer_treeview_query_tooltip_cb), NULL);
+	g_object_set (treeview, "has-tooltip", TRUE, NULL);
 }
 
 /**
