@@ -598,7 +598,7 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	/* set the pluralisation of the button */
 	widget = glade_xml_get_widget (glade_xml, "button_install");
 	/* TRANSLATORS: this is the button text when we have updates */
-	title = ngettext ("_Install update", "_Install updates", number_total);
+	title = ngettext ("_Install Update", "_Install Updates", number_total);
 	gtk_button_set_label (GTK_BUTTON (widget), title);
 
 	/* no updates */
