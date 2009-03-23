@@ -2272,7 +2272,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_update_viewer_button_upgrade_cb), NULL);
 
 	/* set a size, if the screen allows */
-	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 800, 600);
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 700, 600);
 	if (!ret) {
 		egg_debug ("small form factor mode");
 		/* hide the header in SFF mode */
