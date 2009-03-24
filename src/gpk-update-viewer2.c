@@ -208,6 +208,10 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 	GPtrArray *array;
 	gchar **package_ids = NULL;
 
+	/* hide the upgrade viewbox from now on */
+	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
+	gtk_widget_hide (widget);
+
 	egg_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
 
