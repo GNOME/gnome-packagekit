@@ -72,6 +72,7 @@ static GpkHelperEula *helper_eula = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
+static gboolean running_hidden = FALSE;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -319,6 +320,41 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer data)
 static gboolean
 gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+	PkRoleEnum role;
+	PkStatusEnum status;
+
+	/* if we are in a transaction, don't quit, just hide, as we want to return
+	 * to this state if the dialog is run again */
+	ret = pk_client_get_role (client_primary, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (role == PK_ROLE_ENUM_UNKNOWN) {
+		egg_debug ("no role, so quitting");
+		goto out;
+	}
+	ret = pk_client_get_status (client_primary, &status, &error);
+	if (!ret) {
+		egg_warning ("failed to get status: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		egg_debug ("status is finished, so quitting");
+		goto out;
+	}
+
+	/* hide window */
+	egg_debug ("hiding to preserve state");
+	running_hidden = TRUE;
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	gtk_widget_hide (widget);
+	return TRUE;
+out:
 	g_main_loop_quit (loop);
 	return FALSE;
 }
@@ -1433,6 +1469,12 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	widget = glade_xml_get_widget (glade_xml, "progressbar_progress");
 	gtk_widget_hide (widget);
 
+	/* hidden window, so quit at this point */
+	if (running_hidden) {
+		egg_debug ("transaction finished whilst hidden, so exit");
+		g_main_loop_quit (loop);
+	}
+
 	/* if secondary, ignore */
 	if (client == client_primary &&
 	    (exit == PK_EXIT_ENUM_KEY_REQUIRED ||
@@ -1831,6 +1873,9 @@ gpk_update_viewer_activated_cb (EggUnique *egg_unique, gpointer data)
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 	gtk_window_present (GTK_WINDOW (widget));
+
+	/* not hidden anymore */
+	running_hidden = FALSE;
 }
 
 /**
