@@ -41,6 +41,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-dbus-monitor.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
@@ -56,8 +57,8 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 
 /* the maximum number of lines of data on the libnotify widget */
 #define GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES	7
-#define ACTION_DISTRO_UPGRADE_INFO "distro-upgrade-info"
-#define ACTION_DISTRO_UPGRADE_DO_NOT_SHOW "distro-upgrade-do-not-show-available"
+#define ACTION_DISTRO_UPGRADE_INFO 			"distro-upgrade-info"
+#define ACTION_DISTRO_UPGRADE_DO_NOT_SHOW		"distro-upgrade-do-not-show-available"
 
 struct GpkCheckUpdatePrivate
 {
@@ -77,6 +78,7 @@ struct GpkCheckUpdatePrivate
 	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
 	GPtrArray		*important_updates_array;
+	EggDbusMonitor		*dbus_monitor_viewer;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -1060,6 +1062,19 @@ gpk_check_update_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 }
 
 /**
+ * gpk_cupdate_connection_changed_cb:
+ **/
+static void
+gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, GpkCheckUpdate *cupdate)
+{
+	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+	if (connected) {
+		egg_debug ("update viewer on the bus, so hiding icon");
+		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
+	}
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1093,6 +1108,13 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 				 "activate",
 				 G_CALLBACK (gpk_check_update_activate_update_cb),
 				 cupdate, 0);
+
+	cupdate->priv->dbus_monitor_viewer = egg_dbus_monitor_new ();
+	egg_dbus_monitor_assign (cupdate->priv->dbus_monitor_viewer,
+				 EGG_DBUS_MONITOR_SESSION,
+				 "org.freedesktop.PackageKit.UpdateViewer2");
+	g_signal_connect (cupdate->priv->dbus_monitor_viewer, "connection-changed",
+			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
 
 	/* install stuff using the gnome helpers */
 	cupdate->priv->gclient_refresh_cache = gpk_client_new ();
@@ -1151,6 +1173,7 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->gclient_update_system);
 	g_object_unref (cupdate->priv->gclient_get_updates);
 	g_object_unref (cupdate->priv->gclient_get_distro_upgrades);
+	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	if (cupdate->priv->important_updates_array != NULL) {
 		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
