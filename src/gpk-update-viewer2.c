@@ -52,7 +52,8 @@
 #include "gpk-helper-repo-signature.h"
 #include "gpk-helper-eula.h"
 
-#define GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT 10 /* seconds */
+#define GPK_UPDATE_VIEWER_AUTO_CLOSE_TIMEOUT	10 /* seconds */
+#define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
 #define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
@@ -91,10 +92,10 @@ enum {
 static gboolean gpk_update_viewer_get_new_update_list (void);
 
 /**
- * gpk_update_viewer_button_logout_cb:
+ * gpk_update_viewer_logout:
  **/
 static void
-gpk_update_viewer_button_logout_cb (GtkWidget *widget, gpointer data)
+gpk_update_viewer_logout (void)
 {
 	DBusGConnection *connection;
 	DBusGProxy *proxy;
@@ -124,10 +125,10 @@ out:
 }
 
 /**
- * gpk_update_viewer_button_shutdown_cb:
+ * gpk_update_viewer_shutdown:
  **/
 static void
-gpk_update_viewer_button_shutdown_cb (GtkWidget *widget, gpointer data)
+gpk_update_viewer_shutdown (void)
 {
 	EggConsoleKit *console;
 	GError *error = NULL;
@@ -538,9 +539,10 @@ gpk_update_viewer_reconsider_buttons (gpointer data)
  * gpk_update_viewer_auto_shutdown:
  **/
 static gboolean
-gpk_update_viewer_auto_shutdown (void)
+gpk_update_viewer_auto_shutdown (GtkDialog *dialog)
 {
-	g_main_loop_quit (loop);
+	gtk_dialog_response (dialog, GTK_RESPONSE_CANCEL);
+	auto_shutdown_id = 0;
 	return FALSE;
 }
 
@@ -553,6 +555,7 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	GtkTreeIter iter;
 	GtkWidget *widget;
 	GtkWidget *main_window;
+	GtkWidget *dialog;
 	gboolean valid;
 	gboolean selected;
 	gboolean any_selected = FALSE;
@@ -604,72 +607,36 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	/* no updates */
 	len = PK_OBJ_LIST(update_list)->len;
 	if (len == 0) {
-		widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
-		gtk_window_set_resizable (GTK_WINDOW(widget), FALSE);
-
-		/* use correct status pane */
-		widget = glade_xml_get_widget (glade_xml, "hbox_status");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "hbox_info");
-		gtk_widget_show (widget);
-
-		/* set state */
-		widget = glade_xml_get_widget (glade_xml, "image_info");
-		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "dialog-information", GTK_ICON_SIZE_DIALOG);
-		gtk_widget_show (widget);
-
-		widget = glade_xml_get_widget (glade_xml, "label_info");
-		/* TRANSLATORS: there are no updates */
-		text = g_strdup_printf ("<b>%s</b>", _("There are no updates available for your computer"));
-		gtk_label_set_label (GTK_LABEL (widget), text);
-		g_free (text);
-		gtk_widget_show (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_summary");
-		gtk_widget_hide (widget);
-
-		/* close button */
+		/* hide close button */
 		widget = glade_xml_get_widget (glade_xml, "button_close");
-		gtk_window_set_focus (GTK_WINDOW(main_window), widget);
-
-		/* header */
-		widget = glade_xml_get_widget (glade_xml, "hbox_header");
 		gtk_widget_hide (widget);
 
-		widget = glade_xml_get_widget (glade_xml, "button_help");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "button_install");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_status");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_package");
-		gtk_widget_hide (widget);
+		/* show modal dialog */
+		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
+						 "%s", _("No updates available"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+							  "%s",
+							  /* TRANSLATORS: tell the user the problem */
+							  _("There are no updates available for your computer at this time."));
+		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
-		/* do we have to show any widgets? */
-		if (restart_update == PK_RESTART_ENUM_SYSTEM) {
-			widget = glade_xml_get_widget (glade_xml, "button_shutdown");
-			gtk_widget_show (widget);
-		} else if (restart_update == PK_RESTART_ENUM_SESSION) {
-			widget = glade_xml_get_widget (glade_xml, "button_logout");
-			gtk_widget_show (widget);
-		} else {
-			/* setup a callback so we autoclose */
-			auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_SHUTDOWN_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, NULL);
-		}
+		/* setup a callback so we autoclose */
+		auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+
+		gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_widget_destroy (dialog);
+
+		/* exit the program */
+		g_main_loop_quit (loop);
 		goto out;
 	}
 
-	/* details */
-	widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
-	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
-	gtk_window_set_resizable (GTK_WINDOW(widget), TRUE);
+	/* focus on install button */
 	widget = glade_xml_get_widget (glade_xml, "button_install");
-	gtk_widget_show (widget);
 	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
-	gtk_widget_show (widget);
 
 	/* use correct status pane */
 	widget = glade_xml_get_widget (glade_xml, "hbox_status");
@@ -1380,6 +1347,69 @@ gpk_update_viewer_requeue (gpointer data)
 }
 
 /**
+ * gpk_update_viewer_check_restart:
+ **/
+static gboolean
+gpk_update_viewer_check_restart (PkRestartEnum restart)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	gboolean ret = FALSE;
+	const gchar *title;
+	const gchar *message;
+	const gchar *button;
+	GtkResponseType response;
+
+	if (restart != PK_RESTART_ENUM_SYSTEM &&
+	    restart != PK_RESTART_ENUM_SESSION)
+		goto out;
+
+	/* get the text */
+	title = gpk_restart_enum_to_localised_text (restart);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		/* TRANSLATORS: the message text for the restart */
+		message = _("Some of the updates that were installed require the computer to be restarted before the changes will be applied.");
+		/* TRANSLATORS: the button text for the restart */
+		button = _("Restart Computer");
+	} else {
+		/* TRANSLATORS: the message text for the logout */
+		message = _("Some of the updates that were installed require you to log off and back on before the changes will be applied.");
+		/* TRANSLATORS: the button text for the logout */
+		button = _("Log Out");
+	}
+
+	/* show modal dialog */
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
+					 "%s", title);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+
+	/* setup a callback so we autoclose */
+	auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+
+	response = gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	/* cancel */
+	if (response != GTK_RESPONSE_OK)
+		goto out;
+
+	/* doing the action, return success */
+	ret = TRUE;
+
+	/* do the action */
+	if (restart == PK_RESTART_ENUM_SYSTEM)
+		gpk_update_viewer_shutdown ();
+	else if (restart == PK_RESTART_ENUM_SESSION)
+		gpk_update_viewer_logout ();
+out:
+	return ret;
+}
+
+/**
  * gpk_update_viewer_finished_cb:
  **/
 static void
@@ -1492,6 +1522,9 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		list = pk_client_get_package_list (client_primary);
 		gpk_update_viewer_check_blocked_packages (list);
 		g_object_unref (list);
+
+		/* check restart */
+		gpk_update_viewer_check_restart (restart_update);
 
 		/* refresh list */
 		gpk_update_viewer_get_new_update_list ();
@@ -2342,16 +2375,6 @@ main (int argc, char *argv[])
 	widget = glade_xml_get_widget (glade_xml, "button_help");
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_help_cb), (gpointer) "update-viewer");
-
-	/* shutdown button */
-	widget = glade_xml_get_widget (glade_xml, "button_shutdown");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_shutdown_cb), NULL);
-
-	/* logout button */
-	widget = glade_xml_get_widget (glade_xml, "button_logout");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_logout_cb), NULL);
 
 	/* set install button insensitive */
 	widget = glade_xml_get_widget (glade_xml, "button_install");

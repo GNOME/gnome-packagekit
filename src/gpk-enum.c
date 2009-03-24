@@ -657,13 +657,13 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("No restart is necessary");
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
-		text = _("An application restart is required");
+		text = _("You will be required to restart this application");
 		break;
 	case PK_RESTART_ENUM_SESSION:
 		text = _("You will be required to log out and back in");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("A restart is required");
+		text = _("A restart will be required");
 		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);
