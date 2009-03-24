@@ -143,6 +143,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/gpk-repo
 %{_bindir}/gpk-update-icon
 %{_bindir}/gpk-update-viewer
+%{_bindir}/gpk-update-viewer2
 %dir %{_datadir}/gnome-packagekit
 %{_datadir}/gnome-packagekit/gpk-application.glade
 %{_datadir}/gnome-packagekit/gpk-client.glade
@@ -174,16 +175,15 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-repo.desktop
 %{_datadir}/applications/gpk-update-viewer.desktop
+%{_datadir}/gnome-packagekit/gpk-update-viewer2.glade
 
 %files extra
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/gpk-backend-status
 %{_bindir}/gpk-service-pack
-%{_bindir}/gpk-update-viewer2
 %{_datadir}/gnome-packagekit/gpk-service-pack.glade
 %{_datadir}/gnome-packagekit/gpk-backend-status.glade
-%{_datadir}/gnome-packagekit/gpk-update-viewer2.glade
 %{_datadir}/applications/gpk-service-pack.desktop
 
 %changelog
