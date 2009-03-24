@@ -491,8 +491,10 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		}
 
 		gtk_tree_model_get_iter (model, &iter, path);
-		gtk_list_store_set (list_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_STATUS, obj->info, -1);
+		if (obj->info != PK_INFO_ENUM_FINISHED) {
+			gtk_list_store_set (list_store_updates, &iter,
+					    GPK_UPDATES_COLUMN_STATUS, obj->info, -1);
+		}
 		gtk_tree_path_free (path);
 
 		/* set package description */
