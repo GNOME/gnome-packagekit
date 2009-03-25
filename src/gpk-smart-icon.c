@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2009 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -52,9 +52,6 @@ struct GpkSmartIconPrivate
 	gchar			*current;
 	gchar			*new;
 	guint			 event_source;
-	guint			 pulse_source;
-	gfloat			 icon_opacity;
-	gboolean		 going_down;
 };
 
 G_DEFINE_TYPE (GpkSmartIcon, gpk_smart_icon, GTK_TYPE_STATUS_ICON)
@@ -72,101 +69,6 @@ gpk_smart_icon_class_init (GpkSmartIconClass *klass)
 }
 
 /**
- * gpk_smart_icon_set_pixmap_opacity:
- **/
-static gboolean
-gpk_smart_icon_set_pixmap_opacity (GdkPixbuf *pixbuf, gfloat adjust)
-{
-	gint width, height, rowstride, n_channels;
-	guchar *pixels, *p;
-	gint x, y;
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
-	pixels = gdk_pixbuf_get_pixels (pixbuf);
-
-	/* scale the opacity of each pixel */
-	for (y=0; y<height-1;y++) {
-		for (x=0; x<height-1;x++) {
-			p = pixels + y * rowstride + x * n_channels;
-			p[3] = (gfloat) p[3] * adjust;
-		}
-	}
-	return TRUE;
-}
-
-/**
- * gpk_smart_icon_pulse_timeout_cb:
- **/
-static gboolean
-gpk_smart_icon_pulse_timeout_cb (gpointer data)
-{
-	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
-	GdkPixbuf *pixbuf;
-	GdkRectangle area;
-
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-
-	/* debug so we can catch polling */
-	egg_debug ("polling check");
-
-	/* have we hidden the icon already? */
-	if (sicon->priv->current == NULL || sicon->priv->new == NULL) {
-		egg_debug ("not pulsing as icon cleared");
-		return FALSE;
-	}
-
-	/* get pixmap the same size as the original icon */
-	gtk_status_icon_get_geometry (GTK_STATUS_ICON (sicon), NULL, &area, NULL);
-	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), sicon->priv->current, area.width, 0, NULL);
-
-	/* set the new pixmap with the correct opacity */
-	gpk_smart_icon_set_pixmap_opacity (pixbuf, sicon->priv->icon_opacity);
-	gtk_status_icon_set_from_pixbuf (GTK_STATUS_ICON (sicon), pixbuf);
-	g_object_unref (pixbuf);
-
-	/* dimming down */
-	if (sicon->priv->going_down) {
-		sicon->priv->icon_opacity -= 0.1;
-		if (sicon->priv->icon_opacity<0) {
-			sicon->priv->icon_opacity = 0;
-			sicon->priv->going_down = FALSE;
-		}
-		return TRUE;
-	}
-
-	/* dimming up */
-	sicon->priv->icon_opacity += 0.1;
-	if (sicon->priv->icon_opacity>1) {
-		/* restore */
-		gtk_status_icon_set_from_icon_name (GTK_STATUS_ICON (sicon), sicon->priv->current);
-		sicon->priv->pulse_source = 0;
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * gpk_smart_icon_pulse:
- **/
-gboolean
-gpk_smart_icon_pulse (GpkSmartIcon *sicon)
-{
-	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-
-	sicon->priv->icon_opacity = 0.9;
-	sicon->priv->going_down = TRUE;
-	if (sicon->priv->pulse_source != 0) {
-		egg_debug ("already pulsing");
-		return FALSE;
-	}
-	sicon->priv->pulse_source = g_timeout_add (20, gpk_smart_icon_pulse_timeout_cb, sicon);
-	return TRUE;
-}
-
-/**
  * gpk_smart_icon_set_icon_name_cb:
  **/
 static gboolean
@@ -174,23 +76,16 @@ gpk_smart_icon_set_icon_name_cb (gpointer data)
 {
 	GpkSmartIcon *sicon = (GpkSmartIcon *) data;
 
-	/* debug so we can catch polling */
-	egg_debug ("polling check");
-
 	/* no point setting the same */
-	if (sicon->priv->new != NULL &&
-	    sicon->priv->current != NULL &&
-	    strcmp (sicon->priv->new, sicon->priv->current) == 0) {
-		return FALSE;
-	}
-	if (sicon->priv->new == NULL &&
-	    sicon->priv->current == NULL) {
+	if (g_strcmp0 (sicon->priv->new, sicon->priv->current) == 0) {
+		egg_debug ("setting the same: %s", sicon->priv->new);
 		return FALSE;
 	}
 
-	/* save what we have */
+	/* save new version of what we have */
 	g_free (sicon->priv->current);
 	sicon->priv->current = g_strdup (sicon->priv->new);
+	egg_debug ("setting new: %s", sicon->priv->new);
 
 	/* set the correct thing */
 	if (sicon->priv->new == NULL) {
@@ -215,6 +110,7 @@ gpk_smart_icon_set_icon_name (GpkSmartIcon *sicon, const gchar *icon_name)
 		g_source_remove (sicon->priv->event_source);
 		sicon->priv->event_source = 0;
 	}
+
 	/* tell us what we -want- */
 	g_free (sicon->priv->new);
 	egg_debug ("setting icon name %s", icon_name);
@@ -232,7 +128,6 @@ gboolean
 gpk_smart_icon_set_priority (GpkSmartIcon *sicon, guint number)
 {
 	g_return_val_if_fail (GPK_IS_SMART_ICON (sicon), FALSE);
-
 	egg_debug ("set priority %i", number);
 	return TRUE;
 }
@@ -248,7 +143,6 @@ gpk_smart_icon_init (GpkSmartIcon *sicon)
 	sicon->priv->new = NULL;
 	sicon->priv->current = NULL;
 	sicon->priv->event_source = 0;
-	sicon->priv->pulse_source = 0;
 	gtk_status_icon_set_visible (GTK_STATUS_ICON (sicon), FALSE);
 }
 
@@ -266,13 +160,9 @@ gpk_smart_icon_finalize (GObject *object)
 	sicon = GPK_SMART_ICON (object);
 	g_return_if_fail (sicon->priv != NULL);
 
-	/* remove any timers that may be firing */
-	if (sicon->priv->event_source != 0) {
+	/* remove any timers that may be pending */
+	if (sicon->priv->event_source != 0)
 		g_source_remove (sicon->priv->event_source);
-	}
-	if (sicon->priv->pulse_source != 0) {
-		g_source_remove (sicon->priv->pulse_source);
-	}
 
 	g_free (sicon->priv->new);
 	g_free (sicon->priv->current);

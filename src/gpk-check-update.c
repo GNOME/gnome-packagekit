@@ -769,7 +769,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	/* work out icon */
 	icon = gpk_check_update_get_best_update_icon (cupdate, list);
 	gpk_smart_icon_set_icon_name (cupdate->priv->sicon, icon);
-	gpk_smart_icon_pulse (cupdate->priv->sicon);
 
 	/* make tooltip */
 	if (status_security->len != 0)
