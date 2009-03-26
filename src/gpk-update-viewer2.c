@@ -653,6 +653,13 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		widget = glade_xml_get_widget (glade_xml, "button_close");
 		gtk_widget_hide (widget);
 
+		/* show a new title */
+		widget = glade_xml_get_widget (glade_xml, "label_header_title");
+		/* TRANSLATORS: there are no updates */
+		text = g_strdup_printf ("<big><b>%s</b></big>", _("There are no updates available"));
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
+
 		/* show modal dialog */
 		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
