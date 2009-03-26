@@ -336,7 +336,7 @@ gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 static void
 gpk_check_update_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
 {
-	const gchar *command = "gpk-update-viewer";
+	const gchar *command = "gpk-update-viewer2";
 	if (!g_spawn_command_line_async (command, NULL))
 		egg_warning ("Couldn't execute command: %s", command);
 }
