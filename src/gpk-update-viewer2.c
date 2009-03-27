@@ -1430,7 +1430,7 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 	/* show modal dialog */
 	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
-					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
 					 "%s", title);
 	gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
@@ -1581,8 +1581,8 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		/* check restart */
 		gpk_update_viewer_check_restart (restart_update);
 
-		/* refresh list */
-		gpk_update_viewer_get_new_update_list ();
+		/* quit after we successfully updated */
+		g_main_loop_quit (loop);
 	}
 
 	/* we pressed cancel */
