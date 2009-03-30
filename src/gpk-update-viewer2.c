@@ -1585,6 +1585,13 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		g_main_loop_quit (loop);
 	}
 
+	/* check if we need to refresh list */
+	if (exit != PK_EXIT_ENUM_SUCCESS &&
+	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+		gpk_update_viewer_get_new_update_list ();
+	}
+
 	/* we pressed cancel */
 	if (exit != PK_EXIT_ENUM_SUCCESS) {
 		gpk_update_viewer_undisable_packages ();
