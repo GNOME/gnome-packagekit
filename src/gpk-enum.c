@@ -686,7 +686,7 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("A restart is required");
 		break;
 	case PK_RESTART_ENUM_SESSION:
-		text = _("You will need to log off and log back on");
+		text = _("You will need to log out and log back in");
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
 		text = _("You need to restart the application");

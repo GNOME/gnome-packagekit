@@ -1071,7 +1071,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 		show_hide = TRUE;
 	}
 
-	/* log off session */
+	/* log out session */
 	if (watch->priv->restart == PK_RESTART_ENUM_SESSION) {
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Log out"));
 		image = gtk_image_new_from_icon_name ("system-log-out", GTK_ICON_SIZE_MENU);

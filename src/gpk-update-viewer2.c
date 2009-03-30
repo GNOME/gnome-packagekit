@@ -1187,7 +1187,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (obj->restart == PK_RESTART_ENUM_SESSION) {
 		/* TRANSLATORS: log out required */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log off and back on after the update for the changes to take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log out and back in after the update for the changes to take effect."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	}
 
@@ -1418,7 +1418,7 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 		button = _("Restart Computer");
 	} else {
 		/* TRANSLATORS: the message text for the logout */
-		message = _("Some of the updates that were installed require you to log off and back on before the changes will be applied.");
+		message = _("Some of the updates that were installed require you to log out and back in before the changes will be applied.");
 		/* TRANSLATORS: the button text for the logout */
 		button = _("Log Out");
 	}
