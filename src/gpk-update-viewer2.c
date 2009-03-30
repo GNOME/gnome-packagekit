@@ -683,10 +683,6 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		goto out;
 	}
 
-	/* focus on install button */
-	widget = glade_xml_get_widget (glade_xml, "button_install");
-	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
-
 	/* use correct status pane */
 	widget = glade_xml_get_widget (glade_xml, "hbox_status");
 	gtk_widget_hide (widget);
