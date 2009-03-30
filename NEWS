@@ -1,3 +1,49 @@
+Version 2.27.1
+~~~~~~~~~~~~~~
+Released: 2000-03-30
+
+* Translations
+ - Added Romanian translation (Alex Szasz)
+ - Update Punjabi Translation (A S Alam)
+ - Update Portuguese translation (António Lima)
+ - Update Spanish translation (Daniel Mustieles)
+ - Update Swedish translation (Daniel Mustieles)
+ - Update Hungarian translation (Gabor Kelemen)
+ - Update Brazilian Portuguese translation (Igor Pires Soares)
+ - Update Spanish manual translation (Jorge Gonzalez)
+ - Update Norwegian bokmål translation (Kjartan Maraas)
+ - Update Telugu Translation (Krishnababu K)
+ - Update Marathi Translation (Sandeep Shedmake)
+ - Update Finnish translation (Ville-Pekka Vainio)
+ - Update Simplified Chinise translation (Wei Mingzhi)
+
+* New Features:
+ - Switch gnome-packagekit to the GNOME release guidelines and version numbers (Richard Hughes)
+ - Provide tooltips for the icons in the new update viewer (Richard Hughes)
+ - Add a new menu item 'Select security updates' to the new update viewer. Fixes rh#491713 (Richard Hughes)
+ - Hide the update icon notification when the update viewer is opened (Richard Hughes)
+ - Switch the default update viewer to gpk-update-viewer2 (Richard Hughes)
+
+* Bugfix:
+ - Fix some window icons in gpk-repo (Matthias Clasen)
+ - Don't set the default widget to the install button when we reconsider. Fixes rh#492645 (Matthias Clasen)
+ - Don't scroll to the downloading object, it makes Matthias sick (Richard Hughes)
+ - Fix the MimeType entry of gpk-install-catalog. Fixes rh#489473 (Richard Hughes)
+ - Set an icon for gpk-backend-status. Fixes fd#20681 (Richard Hughes)
+ - Make gpk-applcation file list resizable, and a good default size. Fixes rh#490334 (Richard Hughes)
+ - Don't use newline as a paragraph spacer in the Markdown parser (Richard Hughes)
+ - The changelog data is markup formatted, so use the markdown parser before displaying (Richard Hughes)
+ - Don't escape markdown code sections, and enable autocode for certain special words (Richard Hughes)
+ - Make the new update viewer respond to PkControl::updates-changed and update the update list (Richard Hughes)
+ - Set an initial size of the update viewer using gpk_window_set_size_request. Fixes rh#491422 (Richard Hughes)
+ - Wrap the header text to allow the new update viewer to be made much smaller (Richard Hughes)
+ - Don't resize the main window when no updates are available, use a modal window. Fixes rh#491708 (Richard Hughes)
+ - If the new update viewer is running in a transaction when it's closed, just hide the window (Richard Hughes)
+ - Don't set the model with finished, as working round it in the CellRenderer breaks things (Richard Hughes)
+ - Allow gpk-update-icon to be run in XFCE. Fixes rh#491104 (Richard Hughes)
+ - Set the update viewer title properly when there are no updates. Fixes rh#492096 (Richard Hughes)
+ - After we've applied updates, close the UI rather than getting the new update list. Fixes rh#491710 (Richard Hughes)
+
 Version 0.4.5
 ~~~~~~~~~~~~~
 Released: 2000-03-09
