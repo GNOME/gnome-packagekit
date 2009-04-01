@@ -1464,6 +1464,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	GtkTreePath *path;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
+	PkBitfield roles;
 	PkRoleEnum role;
 	PkPackageList *list;
 	PkRestartEnum restart;
@@ -1530,8 +1531,11 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	}
 
 	if (role == PK_ROLE_ENUM_GET_DETAILS) {
-		/* get the distro-upgrades */
-		g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_distro_upgrades_cb, NULL);
+
+		/* get the distro-upgrades if we support it */
+		roles = pk_control_get_actions (control, NULL);
+		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES))
+			g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_distro_upgrades_cb, NULL);
 
 		/* select the first entry in the updates list now we've got data */
 		widget = glade_xml_get_widget (glade_xml, "treeview_updates");
