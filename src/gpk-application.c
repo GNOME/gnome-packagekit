@@ -3017,6 +3017,7 @@ gpk_application_init (GpkApplication *application)
 	gboolean ret;
 	gchar *mode;
 	GError *error = NULL;
+	GSList *list;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -3167,9 +3168,11 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_help_cb), application);
 
+	/* set F1 = contents */
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menu_about");
-	gtk_menu_set_accel_group (GTK_MENU (widget),
-				  GTK_ACCEL_GROUP (gtk_accel_groups_from_object (G_OBJECT (main_window))->data));
+	list = gtk_accel_groups_from_object (G_OBJECT (main_window));
+	if (list != NULL)
+		gtk_menu_set_accel_group (GTK_MENU (widget), GTK_ACCEL_GROUP (list->data));
 
 	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
 	gtk_menu_item_set_accel_path (GTK_MENU_ITEM (widget),
