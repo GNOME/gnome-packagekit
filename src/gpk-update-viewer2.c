@@ -752,6 +752,11 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 	widget = glade_xml_get_widget (glade_xml, "hbox_info");
 	gtk_widget_hide (widget);
 
+	/* set cursor back to normal */
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		gdk_window_set_cursor (widget->window, NULL);
+	}
+
 	/* clear package */
 	if (status == PK_STATUS_ENUM_WAIT) {
 		widget = glade_xml_get_widget (glade_xml, "label_package");
@@ -1935,9 +1940,21 @@ out:
 static void
 gpk_update_viewer_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
 {
+	GdkDisplay *display;
+	GdkCursor *cursor;
 	GtkWidget *widget;
 	widget = glade_xml_get_widget (glade_xml, "button_cancel");
 	gtk_widget_set_sensitive (widget, allow_cancel);
+
+	/* set cursor */
+	if (allow_cancel) {
+		gdk_window_set_cursor (widget->window, NULL);
+	} else {
+		display = gdk_display_get_default ();
+		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
+		gdk_window_set_cursor (widget->window, cursor);
+		gdk_cursor_unref (cursor);
+	}
 }
 
 /**
