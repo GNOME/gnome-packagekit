@@ -1987,10 +1987,17 @@ gpk_update_viewer_get_new_update_list (void)
 {
 	gboolean ret;
 	GError *error = NULL;
+	GtkWidget *widget;
+	gchar *text = NULL;
 
 	/* clear all widgets */
 	gtk_list_store_clear (list_store_updates);
 	gtk_text_buffer_set_text (text_buffer, "", -1);
+
+	widget = glade_xml_get_widget (glade_xml, "label_header_title");
+	/* TRANSLATORS: this is the header */
+	text = g_strdup_printf ("<big><b>%s</b></big>", _("Checking for updates..."));
+	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* reset client */
 	ret = pk_client_reset (client_primary, &error);
@@ -2007,6 +2014,7 @@ gpk_update_viewer_get_new_update_list (void)
 		g_error_free (error);
 	}
 out:
+	g_free (text);
 	return ret;
 }
 
