@@ -14,6 +14,7 @@ icons_DATA = 				\
 	pk-package-blocked.svg		\
 	pk-package-delete.svg		\
 	pk-package-download.svg		\
+	pk-package-downloaded.svg	\
 	pk-package-search.svg		\
 	pk-package-update.svg		\
 	pk-package-info.svg		\

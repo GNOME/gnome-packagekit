@@ -14,6 +14,7 @@ icons_DATA = 				\
 	pk-package-blocked.png		\
 	pk-package-delete.png		\
 	pk-package-download.png		\
+	pk-package-downloaded.png	\
 	pk-package-search.png		\
 	pk-package-update.png		\
 	pk-package-info.png		\

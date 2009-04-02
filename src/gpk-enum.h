@@ -52,6 +52,22 @@ typedef enum {
 	GPK_UPDATE_ENUM_UNKNOWN
 } GpkUpdateEnum;
 
+typedef enum {
+	GPK_INFO_ENUM_DOWNLOADING	= PK_INFO_ENUM_DOWNLOADING,
+	GPK_INFO_ENUM_UPDATING		= PK_INFO_ENUM_UPDATING,
+	GPK_INFO_ENUM_INSTALLING	= PK_INFO_ENUM_INSTALLING,
+	GPK_INFO_ENUM_REMOVING		= PK_INFO_ENUM_REMOVING,
+	GPK_INFO_ENUM_CLEANUP		= PK_INFO_ENUM_CLEANUP,
+	GPK_INFO_ENUM_OBSOLETING	= PK_INFO_ENUM_OBSOLETING,
+	GPK_INFO_ENUM_DOWNLOADED	= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_DOWNLOADING,
+	GPK_INFO_ENUM_UPDATED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_UPDATING,
+	GPK_INFO_ENUM_INSTALLED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_INSTALLING,
+	GPK_INFO_ENUM_REMOVED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_REMOVING,
+	GPK_INFO_ENUM_CLEANEDUP		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_CLEANUP,
+	GPK_INFO_ENUM_OBSOLETED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_OBSOLETING,
+	GPK_INFO_ENUM_UNKNOWN
+} GpkInfoStatusEnum;
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
@@ -93,6 +109,8 @@ const gchar	*gpk_group_enum_to_icon_name		(PkGroupEnum	 group);
 gchar		*gpk_update_enum_to_localised_text	(PkInfoEnum	 info,
 							 guint		 number)
 							 G_GNUC_CONST;
+const gchar	*gpk_info_status_enum_to_text		(GpkInfoStatusEnum info);
+const gchar	*gpk_info_status_enum_to_icon_name	(GpkInfoStatusEnum info);
 
 G_END_DECLS
 

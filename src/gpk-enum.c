@@ -1590,6 +1590,38 @@ gpk_message_enum_to_icon_name (PkMessageEnum message)
 	return pk_enum_find_string (enum_message_icon_name, message);
 }
 
+/**
+ * gpk_info_status_enum_to_text:
+ **/
+const gchar *
+gpk_info_status_enum_to_text (GpkInfoStatusEnum info)
+{
+	if (info > PK_INFO_ENUM_UNKNOWN)
+		return gpk_info_enum_to_localised_past (info - PK_INFO_ENUM_UNKNOWN);
+	return gpk_info_enum_to_localised_present (info);
+}
+
+/**
+ * gpk_info_status_enum_to_icon_name:
+ **/
+const gchar *
+gpk_info_status_enum_to_icon_name (GpkInfoStatusEnum info)
+{
+	/* special hardcoded icons */
+	if (info == GPK_INFO_ENUM_DOWNLOADED)
+		return "pk-package-downloaded";
+	if (info == GPK_INFO_ENUM_INSTALLED ||
+	    info == GPK_INFO_ENUM_UPDATED)
+		return "pk-package-installed";
+
+	/* use normal icon as a fallback */
+	if (info > PK_INFO_ENUM_UNKNOWN)
+		return gpk_info_enum_to_icon_name (info - PK_INFO_ENUM_UNKNOWN);
+
+	/* regular PkInfoEnum */
+	return gpk_info_enum_to_icon_name (info);
+}
+
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/

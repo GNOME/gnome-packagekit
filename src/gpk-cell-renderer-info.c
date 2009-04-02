@@ -76,7 +76,7 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 		if (cru->priv->value == PK_INFO_ENUM_UNKNOWN) {
 			g_object_set (cru, "visible", FALSE, NULL);
 		} else {
-			cru->priv->icon_name = gpk_info_enum_to_icon_name (cru->priv->value);
+			cru->priv->icon_name = gpk_info_status_enum_to_icon_name (cru->priv->value);
 			g_object_set (cru, "visible", TRUE, NULL);
 			g_object_set (cru, "icon-name", cru->priv->icon_name, NULL);
 		}

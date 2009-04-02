@@ -428,7 +428,7 @@ gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointe
 	/* in cache */
 	if (obj->size == 0)
 		gtk_list_store_set (list_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_DOWNLOADING, -1);
+				    GPK_UPDATES_COLUMN_STATUS, GPK_INFO_ENUM_DOWNLOADED, -1);
 }
 
 /**
@@ -459,6 +459,7 @@ static void
 gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointer data)
 {
 	PkRoleEnum role;
+	PkInfoEnum info;
 	gchar *text = NULL;
 	gchar *package_id;
 	GtkTreeIter iter;
@@ -491,10 +492,19 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		}
 
 		gtk_tree_model_get_iter (model, &iter, path);
-		if (obj->info != PK_INFO_ENUM_FINISHED) {
-			gtk_list_store_set (list_store_updates, &iter,
-					    GPK_UPDATES_COLUMN_STATUS, obj->info, -1);
+
+		/* if the info is finished, change the status to past tense */
+		if (obj->info == PK_INFO_ENUM_FINISHED) {
+			gtk_tree_model_get (model, &iter,
+					    GPK_UPDATES_COLUMN_STATUS, &info, -1);
+			/* promote to past tense if present tense */
+			if (info < PK_INFO_ENUM_UNKNOWN)
+				info += PK_INFO_ENUM_UNKNOWN;
+		} else {
+			info = obj->info;
 		}
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_STATUS, info, -1);
 		gtk_tree_path_free (path);
 
 		/* set package description */
@@ -892,7 +902,7 @@ gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, 
 			ret = FALSE;
 			break;
 		}
-		text = gpk_info_enum_to_localised_past (info);
+		text = gpk_info_status_enum_to_text (info);
 		break;
 	default:
 		/* ignore */
