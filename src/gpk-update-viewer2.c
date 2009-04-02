@@ -54,6 +54,7 @@
 
 #define GPK_UPDATE_VIEWER_AUTO_CLOSE_TIMEOUT	10 /* seconds */
 #define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
+#define GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE	512*1024 /* bytes */
 #define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
@@ -73,6 +74,7 @@ static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
 static gboolean running_hidden = FALSE;
+static guint size_total = 0;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -190,6 +192,64 @@ gpk_update_viewer_undisable_packages ()
 }
 
 /**
+ * gpk_update_viewer_button_check_connection:
+ **/
+static gboolean
+gpk_update_viewer_button_check_connection (guint size)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	gboolean ret = TRUE;
+	gchar *text_size = NULL;
+	gchar *message = NULL;
+	GtkResponseType response;
+	GError *error = NULL;
+	PkNetworkEnum state;
+
+	/* get network state */
+	state = pk_control_get_network_state (control, &error);
+	if (error != NULL) {
+		egg_warning ("failed to get network state: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* not on wireless mobile */
+	if (state != PK_NETWORK_ENUM_MOBILE)
+		goto out;
+
+	/* not when small */
+	if (size < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
+		goto out;
+
+	/* show modal dialog */
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
+					 "%s", _("Detected wireless broadband connection"));
+
+	/* TRANSLATORS: this is the button text when we check if it's okay to download */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Update anyway"), GTK_RESPONSE_OK);
+	text_size = g_format_size_for_display (size_total);
+
+	/* TRANSLATORS, the %s is a size, e.g. 13.3Mb */
+	message = g_strdup_printf (_("Connectivity is being provided by wireless broadband, and it may be expensive to download %s."), text_size);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
+
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	response = gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	if (response != GTK_RESPONSE_OK)
+		ret = FALSE;
+out:
+	g_free (text_size);
+	g_free (message);
+	return ret;
+}
+
+
+/**
  * gpk_update_viewer_button_install_cb:
  **/
 static void
@@ -205,8 +265,13 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 	gboolean selected_any = FALSE;
 	gchar *package_id;
 	GError *error = NULL;
-	GPtrArray *array;
+	GPtrArray *array = NULL;
 	gchar **package_ids = NULL;
+
+	/* check connection */
+	ret = gpk_update_viewer_button_check_connection (size_total);
+	if (!ret)
+		goto out;
 
 	/* hide the upgrade viewbox from now on */
 	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
@@ -281,8 +346,10 @@ out:
 	g_strfreev (package_ids);
 
 	/* get rid of the array, and free the contents */
-	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-	g_ptr_array_free (array, TRUE);
+	if (array != NULL) {
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
 }
 
 /**
@@ -613,7 +680,6 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	gboolean any_selected = FALSE;
 	guint len;
 	guint size;
-	guint size_total = 0;
 	guint number_total = 0;
 	PkRestartEnum restart;
 	PkRestartEnum restart_worst = PK_RESTART_ENUM_NONE;
