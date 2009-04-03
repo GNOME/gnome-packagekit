@@ -41,7 +41,6 @@ bin_PROGRAMS =						\
 	gpk-install-package-name			\
 	gpk-update-icon					\
 	gpk-update-viewer				\
-	gpk-update-viewer2				\
 	gpk-log						\
 	gpk-backend-status				\
 	$(NULL)
@@ -212,14 +211,12 @@ gpk_prefs_LDADD =					\
 	$(shared_LIBS)					\
 	$(NULL)
 
-gpk_update_viewer2_SOURCES =				\
-	gpk-update-viewer2.c				\
+gpk_update_viewer_SOURCES =				\
+	gpk-update-viewer.c				\
 	gpk-helper-repo-signature.c			\
 	gpk-helper-repo-signature.h			\
 	gpk-helper-eula.c				\
 	gpk-helper-eula.h				\
-	gpk-cell-renderer-uri.c				\
-	gpk-cell-renderer-uri.h				\
 	gpk-cell-renderer-size.c			\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\
@@ -228,17 +225,6 @@ gpk_update_viewer2_SOURCES =				\
 	gpk-cell-renderer-percentage.h			\
 	gpk-cell-renderer-restart.c			\
 	gpk-cell-renderer-restart.h			\
-	$(shared_SOURCES)				\
-	$(NULL)
-
-gpk_update_viewer2_LDADD =				\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_update_viewer_SOURCES =				\
-	gpk-update-viewer.c				\
-	gpk-cell-renderer-uri.c				\
-	gpk-cell-renderer-uri.h				\
 	$(shared_SOURCES)				\
 	$(NULL)
 

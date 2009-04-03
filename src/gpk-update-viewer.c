@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2009 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -27,12 +27,8 @@
 #include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <math.h>
-#include <string.h>
 #include <dbus/dbus-glib.h>
-#include <locale.h>
 
-#include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
 #include <libnotify/notify.h>
@@ -41,174 +37,245 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-markdown.h"
+#include "egg-console-kit.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-error.h"
 #include "gpk-consolekit.h"
-#include "gpk-cell-renderer-uri.h"
-#include "gpk-animated-icon.h"
+#include "gpk-cell-renderer-size.h"
+#include "gpk-cell-renderer-info.h"
+#include "gpk-cell-renderer-restart.h"
+#include "gpk-cell-renderer-percentage.h"
 #include "gpk-client.h"
 #include "gpk-enum.h"
+#include "gpk-helper-repo-signature.h"
+#include "gpk-helper-eula.h"
 
+#define GPK_UPDATE_VIEWER_AUTO_CLOSE_TIMEOUT	10 /* seconds */
+#define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
+#define GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE	512*1024 /* bytes */
+#define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
+#define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
+#define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
+
+static guint auto_shutdown_id = 0;
 static GMainLoop *loop = NULL;
 static GladeXML *glade_xml = NULL;
-static GtkListStore *list_store_preview = NULL;
-static GtkListStore *list_store_details = NULL;
-static GtkListStore *list_store_description = NULL;
-static PkClient *client_query = NULL;
+static GtkListStore *list_store_updates = NULL;
+static GtkTextBuffer *text_buffer = NULL;
+static PkClient *client_primary = NULL;
+static PkClient *client_secondary = NULL;
 static PkControl *control = NULL;
-static PkTaskList *tlist = NULL;
-static gchar *cached_package_id = NULL;
-static GpkClient *gclient = NULL;
-static gboolean are_updates_available = FALSE;
-static guint description_event_id = 0;
+static PkPackageList *update_list = NULL;
+static GpkHelperRepoSignature *helper_repo_signature = NULL;
+static GpkHelperEula *helper_eula = NULL;
 static EggMarkdown *markdown = NULL;
-static PolKitGnomeAction *refresh_action = NULL;
-static PolKitGnomeAction *update_system_action = NULL;
-static PolKitGnomeAction *update_packages_action = NULL;
-static PolKitGnomeAction *restart_action = NULL;
-
-/* for the preview throbber */
-static void gpk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gboolean clear);
-static void gpk_update_viewer_description_animation_stop (void);
-static void gpk_update_viewer_get_new_update_list (void);
+static PkPackageId *package_id_last = NULL;
+static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
+static gboolean running_hidden = FALSE;
+static guint size_total = 0;
 
 enum {
-	PREVIEW_COLUMN_ICON,
-	PREVIEW_COLUMN_TEXT,
-	PREVIEW_COLUMN_PROGRESS,
-	PREVIEW_COLUMN_LAST
+	GPK_UPDATES_COLUMN_TEXT,
+	GPK_UPDATES_COLUMN_ID,
+	GPK_UPDATES_COLUMN_INFO,
+	GPK_UPDATES_COLUMN_SELECT,
+	GPK_UPDATES_COLUMN_SENSITIVE,
+	GPK_UPDATES_COLUMN_CLICKABLE,
+	GPK_UPDATES_COLUMN_RESTART,
+	GPK_UPDATES_COLUMN_SIZE,
+	GPK_UPDATES_COLUMN_PERCENTAGE,
+	GPK_UPDATES_COLUMN_STATUS,
+	GPK_UPDATES_COLUMN_DETAILS_OBJ,
+	GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ,
+	GPK_UPDATES_COLUMN_LAST
 };
 
-enum {
-	DESC_COLUMN_TITLE,
-	DESC_COLUMN_TEXT,
-	DESC_COLUMN_URI,
-	DESC_COLUMN_LAST
-};
-
-enum {
-	HISTORY_COLUMN_ICON,
-	HISTORY_COLUMN_TEXT,
-	HISTORY_COLUMN_LAST
-};
-
-enum {
-	PACKAGES_COLUMN_ICON,
-	PACKAGES_COLUMN_TEXT,
-	PACKAGES_COLUMN_ID,
-	PACKAGES_COLUMN_INFO,
-	PACKAGES_COLUMN_SELECT,
-	PACKAGES_COLUMN_SENSITIVE,
-	PACKAGES_COLUMN_CLICKABLE,
-	PACKAGES_COLUMN_LAST
-};
-
-typedef enum {
-	PAGE_PREVIEW,
-	PAGE_DETAILS,
-	PAGE_CONFIRM,
-	PAGE_LAST
-} PkPageEnum;
+static gboolean gpk_update_viewer_get_new_update_list (void);
 
 /**
- * pk_button_help_cb:
+ * gpk_update_viewer_logout:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget, gpointer data)
+gpk_update_viewer_logout (void)
 {
-	const char *id = data;
+	DBusGConnection *connection;
+	DBusGProxy *proxy;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get org.gnome.Session interface */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
+	proxy = dbus_g_proxy_new_for_name_owner (connection, GNOME_SESSION_MANAGER_SERVICE,
+						 GNOME_SESSION_MANAGER_PATH,
+						 GNOME_SESSION_MANAGER_INTERFACE, &error);
+	if (proxy == NULL) {
+		egg_warning ("cannot connect to proxy %s: %s", GNOME_SESSION_MANAGER_SERVICE, error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* log out of the session */
+	ret = dbus_g_proxy_call (proxy, "Shutdown", &error, G_TYPE_INVALID);
+	if (!ret) {
+		egg_warning ("cannot shutdown session: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_object_unref (proxy);
+}
+
+/**
+ * gpk_update_viewer_shutdown:
+ **/
+static void
+gpk_update_viewer_shutdown (void)
+{
+	EggConsoleKit *console;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* use consolekit to restart */
+	console = egg_console_kit_new ();
+	ret = egg_console_kit_restart (console, &error);
+	if (!ret) {
+		egg_warning ("cannot restart: %s", error->message);
+		g_error_free (error);
+	}
+	g_object_unref (console);
+}
+
+/**
+ * gpk_update_viewer_button_help_cb:
+ **/
+static void
+gpk_update_viewer_button_help_cb (GtkWidget *widget, gpointer data)
+{
+	const gchar *id = data;
 	gpk_gnome_help (id);
 }
 
 /**
- * gpk_update_viewer_set_page:
+ * gpk_update_viewer_button_close_cb:
  **/
 static void
-gpk_update_viewer_set_page (PkPageEnum page)
+gpk_update_viewer_button_close_cb (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *widget;
-	GList *list, *l;
-	guint i;
-
-	widget = glade_xml_get_widget (glade_xml, "window_updates");
-	if (page == PAGE_LAST) {
-		gtk_widget_hide (widget);
-		gpk_client_set_parent (gclient, NULL);
-		return;
-	}
-
-	/* restore modalness */
-	gpk_client_set_parent (gclient, GTK_WINDOW (widget));
-
-	/* some pages are resizeable */
-	if (page == PAGE_DETAILS)
-		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
-	else
-		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-	if (page == PAGE_CONFIRM)
-		gtk_window_unmaximize (GTK_WINDOW (widget));
-	gtk_widget_show (widget);
-
-	/* clear */
-	if (page == PAGE_DETAILS) {
-		widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
-		gtk_widget_hide (widget);
-	}
-
-	widget = glade_xml_get_widget (glade_xml, "hbox_hidden");
-	list = gtk_container_get_children (GTK_CONTAINER (widget));
-	for (l=list, i=0; l; l=l->next, i++) {
-		if (i == page)
-			gtk_widget_show (l->data);
-		else
-			gtk_widget_hide (l->data);
-	}
+	g_main_loop_quit (loop);
 }
 
 /**
- * gpk_update_viewer_update_system_cb:
+ * gpk_update_viewer_undisable_packages:
  **/
 static void
-gpk_update_viewer_update_system_cb (PolKitGnomeAction *action, gpointer data)
-{
-	GtkWidget *widget;
-	gboolean ret;
-
-	egg_debug ("Doing the system update");
-
-	widget = glade_xml_get_widget (glade_xml, "button_overview2");
-	gtk_widget_hide (widget);
-
-	gpk_update_viewer_set_page (PAGE_LAST);
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
-	ret = gpk_client_update_system (gclient, NULL);
-
-	/* did we succeed updating the system */
-	if (!ret)
-		gpk_update_viewer_set_page (PAGE_PREVIEW);
-	else
-		gpk_update_viewer_set_page (PAGE_CONFIRM);
-}
-
-/**
- * gpk_update_viewer_apply_cb:
- **/
-static void
-gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
+gpk_update_viewer_undisable_packages ()
 {
 	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	gboolean valid;
+
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+
+	/* set all the checkboxes sensitive */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_SENSITIVE, TRUE,
+				    GPK_UPDATES_COLUMN_CLICKABLE, TRUE,
+				    -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
+ * gpk_update_viewer_button_check_connection:
+ **/
+static gboolean
+gpk_update_viewer_button_check_connection (guint size)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	gboolean ret = TRUE;
+	gchar *text_size = NULL;
+	gchar *message = NULL;
+	GtkResponseType response;
+	GError *error = NULL;
+	PkNetworkEnum state;
+
+	/* get network state */
+	state = pk_control_get_network_state (control, &error);
+	if (error != NULL) {
+		egg_warning ("failed to get network state: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* not on wireless mobile */
+	if (state != PK_NETWORK_ENUM_MOBILE)
+		goto out;
+
+	/* not when small */
+	if (size < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
+		goto out;
+
+	/* show modal dialog */
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
+					 "%s", _("Detected wireless broadband connection"));
+
+	/* TRANSLATORS: this is the button text when we check if it's okay to download */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Update anyway"), GTK_RESPONSE_OK);
+	text_size = g_format_size_for_display (size_total);
+
+	/* TRANSLATORS, the %s is a size, e.g. 13.3Mb */
+	message = g_strdup_printf (_("Connectivity is being provided by wireless broadband, and it may be expensive to download %s."), text_size);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
+
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	response = gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	if (response != GTK_RESPONSE_OK)
+		ret = FALSE;
+out:
+	g_free (text_size);
+	g_free (message);
+	return ret;
+}
+
+
+/**
+ * gpk_update_viewer_button_install_cb:
+ **/
+static void
+gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
 	gboolean ret;
 	gboolean valid;
 	gboolean update;
 	gboolean selected_all = TRUE;
 	gboolean selected_any = FALSE;
 	gchar *package_id;
-	GPtrArray *array;
-	gchar **package_ids;
+	GError *error = NULL;
+	GPtrArray *array = NULL;
+	gchar **package_ids = NULL;
+
+	/* check connection */
+	ret = gpk_update_viewer_button_check_connection (size_total);
+	if (!ret)
+		goto out;
+
+	/* hide the upgrade viewbox from now on */
+	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
+	gtk_widget_hide (widget);
 
 	egg_debug ("Doing the package updates");
 	array = g_ptr_array_new ();
@@ -221,9 +288,15 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* find out how many we should update */
 	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update,
-				    PACKAGES_COLUMN_ID, &package_id, -1);
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_SELECT, &update,
+				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
+		/* set all the checkboxes insensitive */
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
+				    GPK_UPDATES_COLUMN_SENSITIVE, FALSE, -1);
+
+		/* ay selected? */
 		if (!update)
 			selected_all = FALSE;
 		else
@@ -231,7 +304,6 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 		/* do something with the data */
 		if (update) {
-			egg_debug ("%s", package_id);
 			g_ptr_array_add (array, package_id);
 		} else {
 			/* need to free the one in the array later */
@@ -242,7 +314,7 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 
 	/* we have no checkboxes selected */
 	if (!selected_any) {
-		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 		gpk_error_dialog_modal (GTK_WINDOW (widget),
 					/* TRANSLATORS: we clicked apply, but had no packages selected */
 					_("No updates selected"),
@@ -250,466 +322,201 @@ gpk_update_viewer_apply_cb (PolKitGnomeAction *action, gpointer data)
 		return;
 	}
 
-	widget = glade_xml_get_widget (glade_xml, "button_overview2");
-	if (selected_all)
-		gtk_widget_hide (widget);
-	else
-		gtk_widget_show (widget);
+	/* clear the selection */
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_unselect_all (selection);
 
-	/* set correct view */
-	gpk_update_viewer_set_page (PAGE_LAST);
-	package_ids = pk_package_ids_from_array (array);
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
-	ret = gpk_client_update_packages (gclient, package_ids, NULL);
-	g_strfreev (package_ids);
-
-	/* did we succeed updating the system */
-	if (!ret)
-		gpk_update_viewer_set_page (PAGE_PREVIEW);
-	else
-		gpk_update_viewer_set_page (PAGE_CONFIRM);
-
-	/* get rid of the array, and free the contents */
-	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-	g_ptr_array_free (array, TRUE);
-}
-
-/**
- * gpk_update_viewer_preview_animation_start:
- **/
-static void
-gpk_update_viewer_preview_animation_start (const gchar *text)
-{
-	GtkWidget *widget;
-	gchar *text_bold;
-
-	widget = glade_xml_get_widget (glade_xml, "image_animation_preview");
-	gpk_animated_icon_set_frame_delay (GPK_ANIMATED_ICON (widget), 50);
-	gpk_animated_icon_set_filename_tile (GPK_ANIMATED_ICON (widget), GTK_ICON_SIZE_DIALOG, "process-working");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), TRUE);
-	gtk_widget_show (widget);
-
-	text_bold = g_strdup_printf ("<b>%s</b>", text);
-	widget = glade_xml_get_widget (glade_xml, "label_animation_preview");
-	gtk_label_set_label (GTK_LABEL (widget), text_bold);
-	g_free (text_bold);
-
-	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
-	gtk_widget_show (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_preview");
-	gtk_widget_hide (widget);
-}
-
-/**
- * gpk_update_viewer_preview_animation_stop:
- **/
-static void
-gpk_update_viewer_preview_animation_stop (void)
-{
-	GtkWidget *widget;
-
-	widget = glade_xml_get_widget (glade_xml, "image_animation_preview");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
-
-	widget = glade_xml_get_widget (glade_xml, "label_animation_preview");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-
-	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_preview");
-	gtk_widget_show (widget);
-}
-
-/**
- * gpk_update_viewer_description_animation_start_really:
- **/
-static gboolean
-gpk_update_viewer_description_animation_start_really (void)
-{
-	GtkWidget *widget;
-	gchar *text_bold;
-
-	widget = glade_xml_get_widget (glade_xml, "image_animation_description");
-	gpk_animated_icon_set_frame_delay (GPK_ANIMATED_ICON (widget), 50);
-	gpk_animated_icon_set_filename_tile (GPK_ANIMATED_ICON (widget), GTK_ICON_SIZE_DIALOG, "process-working");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), TRUE);
-	gtk_widget_show (widget);
-
-	/* TRANSLATORS: getting information about the update -- can take some time */
-	text_bold = g_strdup_printf ("<b>%s</b>", _("Getting Description..."));
-	widget = glade_xml_get_widget (glade_xml, "label_animation_description");
-	gtk_label_set_label (GTK_LABEL (widget), text_bold);
-	g_free (text_bold);
-
-	widget = glade_xml_get_widget (glade_xml, "viewport_animation_description");
-	gtk_widget_show (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
-	gtk_widget_hide (widget);
-
-	/* we've done the event */
-	description_event_id = 0;
-
-	/* never repeat */
-	return FALSE;
-}
-
-/**
- * gpk_update_viewer_description_animation_start:
- **/
-static void
-gpk_update_viewer_description_animation_start (void)
-{
-	/* only clear the last data and show the spinner if it takes a little
-	 * while, else we flicker the display too much */
-	if (description_event_id > 0)
-		g_source_remove (description_event_id);
-	description_event_id = g_timeout_add (100, (GSourceFunc) gpk_update_viewer_description_animation_start_really, NULL);
-}
-
-/**
- * gpk_update_viewer_description_animation_stop:
- **/
-static void
-gpk_update_viewer_description_animation_stop (void)
-{
-	GtkWidget *widget;
-
-	/* if we are not showing, clear timeout and return */
-	if (description_event_id > 0) {
-		g_source_remove (description_event_id);
-		description_event_id = 0;
-		return;
-	}
-
-	widget = glade_xml_get_widget (glade_xml, "image_animation_description");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
-
-	widget = glade_xml_get_widget (glade_xml, "label_animation_description");
-	gtk_label_set_label (GTK_LABEL (widget), "");
-
-	widget = glade_xml_get_widget (glade_xml, "viewport_animation_description");
-	gtk_widget_hide (widget);
-
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
-	gtk_widget_show (widget);
-}
-
-/**
- * gpk_update_viewer_refresh_cb:
- **/
-static void
-gpk_update_viewer_refresh_cb (PolKitGnomeAction *action, gpointer data)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* refresh the cache */
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
-	polkit_gnome_action_set_sensitive (refresh_action, FALSE);
-	ret = gpk_client_refresh_cache (gclient, &error);
-	polkit_gnome_action_set_sensitive (refresh_action, TRUE);
-	if (ret == FALSE) {
-		egg_warning ("failed: %s", error->message);
-		g_error_free (error);
-	}
-	/* get new list */
-	gpk_update_viewer_get_new_update_list ();
-}
-
-/**
- * gpk_update_viewer_button_close_and_cancel_cb:
- **/
-static void
-gpk_update_viewer_button_close_and_cancel_cb (GtkWidget *widget, gpointer data)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* we might have a transaction running */
-	ret = gpk_client_cancel (gclient, &error);
+	/* reset client */
+	ret = pk_client_reset (client_primary, &error);
 	if (!ret) {
-		egg_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-	}
-	g_main_loop_quit (loop);
-}
-
-/**
- * gpk_update_viewer_button_close:
- **/
-static void
-gpk_update_viewer_button_close (GtkWidget *widget, gpointer data)
-{
-	g_main_loop_quit (loop);
-}
-
-/**
- * gpk_update_viewer_review_cb:
- **/
-static void
-gpk_update_viewer_review_cb (GtkWidget *widget, gpointer data)
-{
-	GtkWidget *treeview;
-	GtkTreeSelection *selection;
-	GtkTreeIter iter;
-
-	treeview = glade_xml_get_widget (glade_xml, "treeview_updates");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
-	if (!gtk_tree_selection_get_selected (selection, NULL, NULL)) {
-		if (gtk_tree_model_get_iter_first (gtk_tree_view_get_model (GTK_TREE_VIEW (treeview)),
-						   &iter))
-			gtk_tree_selection_select_iter (selection, &iter);
-	}
-
-	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
-
-	widget = glade_xml_get_widget (glade_xml, "treeview_description");
-	gtk_widget_set_size_request (GTK_WIDGET (widget), 500, 200);
-
-	/* set correct view */
-	gpk_update_viewer_set_page (PAGE_DETAILS);
-}
-
-
-/**
- * gpk_update_viewer_populate_preview:
- **/
-static void
-gpk_update_viewer_populate_preview (PkPackageList *list)
-{
-	GtkWidget *widget;
-	guint length;
-	const PkPackageObj *obj;
-	guint i;
-	guint num_low = 0;
-	guint num_normal = 0;
-	guint num_important = 0;
-	guint num_security = 0;
-	guint num_bugfix = 0;
-	guint num_enhancement = 0;
-	guint num_blocked = 0;
-	const gchar *icon;
-	gchar *text;
-
-	length = pk_package_list_get_size (list);
-	if (length == 0) {
-		/* TRANSLATORS: no updates available for the user */
-		gpk_update_viewer_add_preview_item ("dialog-information", _("There are no updates available"), TRUE);
-		widget = glade_xml_get_widget (glade_xml, "button_close3");
-		gtk_widget_grab_default (widget);
-	} else {
-
-		for (i=0;i<length;i++) {
-			obj = pk_package_list_get_obj (list, i);
-			if (obj->info == PK_INFO_ENUM_LOW)
-				num_low++;
-			else if (obj->info == PK_INFO_ENUM_IMPORTANT)
-				num_important++;
-			else if (obj->info == PK_INFO_ENUM_SECURITY)
-				num_security++;
-			else if (obj->info == PK_INFO_ENUM_BUGFIX)
-				num_bugfix++;
-			else if (obj->info == PK_INFO_ENUM_ENHANCEMENT)
-				num_enhancement++;
-			else if (obj->info == PK_INFO_ENUM_BLOCKED)
-				num_blocked++;
-			else
-				num_normal++;
-		}
-
-		/* clear existing list */
-		gtk_list_store_clear (list_store_preview);
-
-		/* add to preview box in order of priority */
-		if (num_security > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_SECURITY);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_SECURITY, num_security);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_important > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_IMPORTANT);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_IMPORTANT, num_important);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_bugfix > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_BUGFIX);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_BUGFIX, num_bugfix);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_enhancement > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_ENHANCEMENT);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_ENHANCEMENT, num_enhancement);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_blocked > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_BLOCKED);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_BLOCKED, num_blocked);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_low > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_LOW);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_LOW, num_low);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-		if (num_normal > 0) {
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_NORMAL);
-			text = gpk_update_enum_to_localised_text (PK_INFO_ENUM_NORMAL, num_normal);
-			gpk_update_viewer_add_preview_item (icon, text, FALSE);
-			g_free (text);
-		}
-
-		/* set visible and sensitive */
-		widget = glade_xml_get_widget (glade_xml, "button_review");
-		gtk_widget_set_sensitive (widget, TRUE);
-		polkit_gnome_action_set_sensitive (update_system_action, TRUE);
-		polkit_gnome_action_set_sensitive (update_packages_action, TRUE);
-	}
-}
-
-/**
- * gpk_update_viewer_do_precache:
- **/
-static gboolean
-gpk_update_viewer_do_precache (const PkPackageList *list)
-{
-	gboolean ret;
-	GError *error = NULL;
-	gchar **package_ids;
-	GConfClient *client;
-	gboolean precache;
-
-	client = gconf_client_get_default ();
-	precache = gconf_client_get_bool (client, GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS, NULL);
-	g_object_unref (client);
-
-	if (!precache)
-		return FALSE;
-
-	egg_debug ("doing precache");
-
-	/* reset */
-	ret = pk_client_reset (client_query, &error);
-	if (!ret) {
-		egg_warning ("failed to reset: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-
-	/* pre-cache the update detail if we can */
-	package_ids = pk_package_list_to_strv (list);
-	ret = pk_client_get_update_detail (client_query, package_ids, &error);
-	g_strfreev (package_ids);
-	if (!ret) {
-		egg_warning ("failed to cache update detail: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-/**
- * gpk_update_viewer_get_new_update_list:
- **/
-static void
-gpk_update_viewer_get_new_update_list (void)
-{
-	GError *error = NULL;
-	PkPackageList *list;
-	const PkPackageObj *obj;
-	GtkWidget *widget;
-	guint length;
-	guint i;
-	gchar *text;
-	gchar *package_id;
-	const gchar *icon_name;
-	GtkTreeIter iter;
-	gboolean selected;
-
-	/* spin */
-	gpk_update_viewer_description_animation_start ();
-
-	/* clear existing list */
-	gtk_list_store_clear (list_store_details);
-
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_NEVER);
-	list = gpk_client_get_updates (gclient, &error);
-	if (list == NULL) {
-		gpk_update_viewer_description_animation_stop ();
-		egg_warning ("failed: %s", error->message);
+		egg_warning ("cannot reset client: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 
-	/* sort by priority, then by package_id (reversed) */
-	pk_package_list_sort (list);
-	pk_package_list_sort_info (list);
-
-	/* do we have updates? */
-	length = pk_package_list_get_size (list);
-	if (length == 0)
-		are_updates_available = FALSE;
-	else
-		are_updates_available = TRUE;
-
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_twoline (obj->id, obj->summary);
-		icon_name = gpk_info_enum_to_icon_name (obj->info);
-		gtk_list_store_append (list_store_details, &iter);
-		package_id = pk_package_id_to_string (obj->id);
-		selected = (obj->info != PK_INFO_ENUM_BLOCKED);
-		gtk_list_store_set (list_store_details, &iter,
-				    PACKAGES_COLUMN_TEXT, text,
-				    PACKAGES_COLUMN_ID, package_id,
-				    PACKAGES_COLUMN_ICON, icon_name,
-				    PACKAGES_COLUMN_INFO, obj->info,
-				    PACKAGES_COLUMN_SELECT, selected,
-				    PACKAGES_COLUMN_SENSITIVE, selected,
-				    PACKAGES_COLUMN_CLICKABLE, selected,
-				    -1);
-		g_free (package_id);
-		g_free (text);
+	/* set correct view */
+	package_ids = pk_package_ids_from_array (array);
+	ret = pk_client_update_packages (client_primary, package_ids, &error);
+	if (!ret) {
+		egg_warning ("cannot update packages: %s", error->message);
+		g_error_free (error);
+		goto out;
 	}
-
-
-	/* make the buttons non-clickable until we get completion */
-	polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
-	polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
-	widget = glade_xml_get_widget (glade_xml, "button_review");
-	gtk_widget_set_sensitive (widget, are_updates_available);
-
-	gpk_update_viewer_populate_preview (list);
-	gpk_update_viewer_do_precache (list);
-
-	/* don't spin */
-	gpk_update_viewer_description_animation_stop ();
-
 out:
-	if (list != NULL)
-		g_object_unref (list);
+	g_strfreev (package_ids);
+
+	/* get rid of the array, and free the contents */
+	if (array != NULL) {
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
 }
 
 /**
- * gpk_update_viewer_overview_cb:
+ * gpk_update_viewer_button_cancel_cb:
  **/
 static void
-gpk_update_viewer_overview_cb (GtkWidget *widget, gpointer data)
+gpk_update_viewer_button_cancel_cb (GtkWidget *widget, gpointer data)
 {
-	/* set correct view */
-	gpk_update_viewer_set_page (PAGE_PREVIEW);
+	gboolean ret;
+	GError *error = NULL;
 
-	/* get the new update list */
-	gpk_update_viewer_get_new_update_list ();
+	/* cancel the transaction */
+	ret = pk_client_cancel (client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
+ * gpk_update_viewer_button_upgrade_cb:
+ **/
+static void
+gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	ret = g_spawn_command_line_async ("/usr/share/PackageKit/pk-upgrade-distro.sh", NULL);
+	if (!ret) {
+		egg_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
+ * gpk_update_viewer_button_delete_event_cb:
+ **/
+static gboolean
+gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+	PkRoleEnum role;
+	PkStatusEnum status;
+
+	/* if we are in a transaction, don't quit, just hide, as we want to return
+	 * to this state if the dialog is run again */
+	ret = pk_client_get_role (client_primary, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (role == PK_ROLE_ENUM_UNKNOWN) {
+		egg_debug ("no role, so quitting");
+		goto out;
+	}
+	ret = pk_client_get_status (client_primary, &status, &error);
+	if (!ret) {
+		egg_warning ("failed to get status: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		egg_debug ("status is finished, so quitting");
+		goto out;
+	}
+
+	/* hide window */
+	egg_debug ("hiding to preserve state");
+	running_hidden = TRUE;
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	gtk_widget_hide (widget);
+	return TRUE;
+out:
+	g_main_loop_quit (loop);
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_find_iter_model_cb:
+ **/
+static gboolean
+gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const PkPackageId *id)
+{
+	gchar *id_tmp = NULL;
+	GtkTreePath **_path = NULL;
+	PkPackageId *id_new;
+	gboolean ret = FALSE;
+
+	_path = (GtkTreePath **) g_object_get_data (G_OBJECT(model), "_path");
+	gtk_tree_model_get (model, iter, GPK_UPDATES_COLUMN_ID, &id_tmp, -1);
+
+	/* only match on the name */
+	id_new = pk_package_id_new_from_string (id_tmp);
+	if (g_strcmp0 (id_new->name, id->name) == 0) {
+		*_path = gtk_tree_path_copy (path);
+		ret = TRUE;
+	}
+	pk_package_id_free (id_new);
+	return ret;
+}
+
+/**
+ * gpk_update_viewer_model_get_path:
+ **/
+static GtkTreePath *
+gpk_update_viewer_model_get_path (GtkTreeModel *model, const PkPackageId *id)
+{
+	GtkTreePath *path = NULL;
+	g_object_set_data (G_OBJECT(model), "_path", (gpointer) &path);
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_update_viewer_find_iter_model_cb, (gpointer) id);
+	g_object_steal_data (G_OBJECT(model), "_path");
+	return path;
+}
+
+/**
+ * gpk_update_viewer_details_cb:
+ **/
+static void
+gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointer data)
+{
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+
+	path = gpk_update_viewer_model_get_path (model, obj->id);
+	if (path == NULL) {
+		egg_debug ("not found ID for group");
+		return;
+	}
+
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_path_free (path);
+	gtk_list_store_set (list_store_updates, &iter,
+			    GPK_UPDATES_COLUMN_DETAILS_OBJ, (gpointer) pk_details_obj_copy (obj),
+			    GPK_UPDATES_COLUMN_SIZE, (gint)obj->size, -1);
+	/* in cache */
+	if (obj->size == 0)
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_STATUS, GPK_INFO_ENUM_DOWNLOADED, -1);
+}
+
+/**
+ * gpk_update_viewer_is_update_info:
+ **/
+static gboolean
+gpk_update_viewer_is_update_info (PkInfoEnum info)
+{
+	if (info == PK_INFO_ENUM_LOW)
+		return TRUE;
+	if (info == PK_INFO_ENUM_NORMAL)
+		return TRUE;
+	if (info == PK_INFO_ENUM_IMPORTANT)
+		return TRUE;
+	if (info == PK_INFO_ENUM_SECURITY)
+		return TRUE;
+	if (info == PK_INFO_ENUM_BUGFIX)
+		return TRUE;
+	if (info == PK_INFO_ENUM_ENHANCEMENT)
+		return TRUE;
+	return FALSE;
 }
 
 /**
@@ -719,117 +526,80 @@ static void
 gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointer data)
 {
 	PkRoleEnum role;
+	PkInfoEnum info;
+	gchar *text = NULL;
+	gchar *package_id;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GtkWidget *widget;
+	GtkTreePath *path;
+	gboolean selected;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
 		  pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
-}
 
-/**
- * gpk_update_viewer_add_description_item:
- **/
-static void
-gpk_update_viewer_add_description_item (const gchar *title, const gchar *text, const gchar *uri)
-{
-	gchar *markup;
-	GtkWidget *tree_view;
-	GtkTreeIter iter;
-	GtkTreeSelection *selection;
+	/* convert to string */
+	package_id = pk_package_id_to_string (obj->id);
 
-	/* format */
-	markup = g_strdup_printf ("<b>%s:</b>", title);
+	/* used for progress */
+	if (!gpk_update_viewer_is_update_info (obj->info)) {
+		pk_package_id_free (package_id_last);
+		package_id_last = pk_package_id_copy (obj->id);
 
-	egg_debug ("%s %s %s", markup, text, uri);
-	gtk_list_store_append (list_store_description, &iter);
-	gtk_list_store_set (list_store_description, &iter,
-			    DESC_COLUMN_TITLE, markup,
-			    DESC_COLUMN_TEXT, text,
-			    DESC_COLUMN_URI, uri,
-			    -1);
+		/* find model */
+		widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+		model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 
-	g_free (markup);
-
-	tree_view = glade_xml_get_widget (glade_xml, "treeview_description");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
-}
-
-/**
- * gpk_update_viewer_add_description_link_item:
- **/
-static void
-gpk_update_viewer_add_description_link_item (const gchar *title, const gchar *url_string)
-{
-	const gchar *text;
-	const gchar *uri;
-	gchar *title_num;
-	gchar **urls;
-	guint length;
-	gint i;
-
-	urls = g_strsplit (url_string, ";", 0);
-	length = g_strv_length (urls);
-
-	/* could we have malformed descriptions with ';' in them? */
-	if (length % 2 != 0) {
-		egg_warning ("length not correct, correcting");
-		length--;
-	}
-
-	for (i=0; i<length; i+=2) {
-		uri = urls[i];
-		text = urls[i+1];
-		if (egg_strzero (text)) {
-			text = uri;
+		/* update icon */
+		path = gpk_update_viewer_model_get_path (model, obj->id);
+		if (path == NULL) {
+			egg_debug ("not found ID for package");
+			goto out;
 		}
-		/* no suffix needed */
-		if (length == 2) {
-			gpk_update_viewer_add_description_item (title, text, uri);
+
+		gtk_tree_model_get_iter (model, &iter, path);
+
+		/* if the info is finished, change the status to past tense */
+		if (obj->info == PK_INFO_ENUM_FINISHED) {
+			gtk_tree_model_get (model, &iter,
+					    GPK_UPDATES_COLUMN_STATUS, &info, -1);
+			/* promote to past tense if present tense */
+			if (info < PK_INFO_ENUM_UNKNOWN)
+				info += PK_INFO_ENUM_UNKNOWN;
 		} else {
-			title_num = g_strdup_printf ("%s (%i)", title, (i/2) + 1);
-			gpk_update_viewer_add_description_item (title_num, text, uri);
-			g_free (title_num);
+			info = obj->info;
 		}
-	}
-	g_strfreev (urls);
-}
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_STATUS, info, -1);
+		gtk_tree_path_free (path);
 
-/**
- * gpk_update_viewer_get_pretty_from_composite:
- **/
-static gchar *
-gpk_update_viewer_get_pretty_from_composite (const gchar *package_ids_delimit)
-{
-	guint i;
-	guint length;
-	gchar **package_ids;
-	gchar *pretty = NULL;
-	GString *string;
-	PkPackageId *id;
+		/* set package description */
+		widget = glade_xml_get_widget (glade_xml, "label_package");
+		//gtk_label_set_label (GTK_LABEL (widget), obj->summary);
 
-	/* do we have any data? */
-	if (egg_strzero (package_ids_delimit))
 		goto out;
-
-	string = g_string_new ("");
-	package_ids = pk_package_ids_from_text (package_ids_delimit);
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		id = pk_package_id_new_from_string (package_ids[i]);
-		pretty = gpk_package_id_name_version (id);
-		pk_package_id_free (id);
-		g_string_append (string, pretty);
-		g_string_append_c (string, '\n');
-		g_free (pretty);
 	}
 
-	/* remove trailing \n */
-	g_string_set_size (string, string->len - 1);
-	pretty = g_string_free (string, FALSE);
-	g_strfreev (package_ids);
+	/* add to list store */
+	text = gpk_package_id_format_twoline (obj->id, obj->summary);
+	selected = (obj->info != PK_INFO_ENUM_BLOCKED);
+	gtk_list_store_append (list_store_updates, &iter);
+	gtk_list_store_set (list_store_updates, &iter,
+			    GPK_UPDATES_COLUMN_TEXT, text,
+			    GPK_UPDATES_COLUMN_ID, package_id,
+			    GPK_UPDATES_COLUMN_INFO, obj->info,
+			    GPK_UPDATES_COLUMN_SELECT, selected,
+			    GPK_UPDATES_COLUMN_SENSITIVE, selected,
+			    GPK_UPDATES_COLUMN_CLICKABLE, selected,
+			    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
+			    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
+			    GPK_UPDATES_COLUMN_SIZE, 0,
+			    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
+			    -1);
 out:
-	return pretty;
+	g_free (package_id);
+	g_free (text);
 }
 
 /**
@@ -838,114 +608,207 @@ out:
 static void
 gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *obj, gpointer data)
 {
-	GtkWidget *widget;
-	GtkTreeSelection *selection;
+	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	GtkTreeIter treeiter;
-	gchar *package_pretty;
-	const gchar *info_text;
-	PkInfoEnum info;
-	gchar *line;
+	GtkTreeIter iter;
+	GtkTreePath *path;
 
-	/* clear existing list */
-	gpk_update_viewer_description_animation_stop ();
-	gtk_list_store_clear (list_store_description);
+	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
 
-	/* initially we are hidden */
-	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_description");
+	path = gpk_update_viewer_model_get_path (model, obj->id);
+	if (path == NULL) {
+		egg_warning ("not found ID for update detail");
+		return;
+	}
+
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_path_free (path);
+	gtk_list_store_set (list_store_updates, &iter,
+			    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, (gpointer) pk_update_detail_obj_copy (obj),
+			    GPK_UPDATES_COLUMN_RESTART, obj->restart, -1);
+}
+
+/**
+ * gpk_update_viewer_reconsider_buttons:
+ **/
+static void
+gpk_update_viewer_reconsider_buttons (gpointer data)
+{
+	GtkWidget *widget;
+	PkStatusEnum status;
+
+	/* cancel buttons? */
+	pk_client_get_status (client_primary, &status, NULL);
+	egg_debug ("status is %s", pk_status_enum_to_text (status));
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		widget = glade_xml_get_widget (glade_xml, "button_install");
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (glade_xml, "button_cancel");
+		gtk_widget_hide (widget);
+	} else {
+		widget = glade_xml_get_widget (glade_xml, "button_install");
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "button_cancel");
+		gtk_widget_show (widget);
+	}
+}
+
+/**
+ * gpk_update_viewer_auto_shutdown:
+ **/
+static gboolean
+gpk_update_viewer_auto_shutdown (GtkDialog *dialog)
+{
+	gtk_dialog_response (dialog, GTK_RESPONSE_CANCEL);
+	auto_shutdown_id = 0;
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_reconsider_info:
+ **/
+static void
+gpk_update_viewer_reconsider_info (GtkTreeModel *model)
+{
+	GtkTreeIter iter;
+	GtkWidget *widget;
+	GtkWidget *main_window;
+	GtkWidget *dialog;
+	gboolean valid;
+	gboolean selected;
+	gboolean any_selected = FALSE;
+	guint len;
+	guint size;
+	guint number_total = 0;
+	PkRestartEnum restart;
+	PkRestartEnum restart_worst = PK_RESTART_ENUM_NONE;
+	const gchar *title;
+	gchar *text;
+	gchar *text_size;
+
+	/* if there are no entries selected, deselect the button */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_SELECT, &selected,
+				    GPK_UPDATES_COLUMN_RESTART, &restart,
+				    GPK_UPDATES_COLUMN_SIZE, &size,
+				    -1);
+		if (selected) {
+			any_selected = TRUE;
+			size_total += size;
+			number_total++;
+			if (restart > restart_worst)
+				restart_worst = restart;
+		}
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+
+	/* action button */
+	widget = glade_xml_get_widget (glade_xml, "button_install");
+	gtk_widget_set_sensitive (widget, any_selected);
+	main_window = glade_xml_get_widget (glade_xml, "dialog_updates");
+
+	/* sensitive */
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_updates");
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
+	gtk_widget_set_sensitive (widget, TRUE);
+
+	/* set the pluralisation of the button */
+	widget = glade_xml_get_widget (glade_xml, "button_install");
+	/* TRANSLATORS: this is the button text when we have updates */
+	title = ngettext ("_Install Update", "_Install Updates", number_total);
+	gtk_button_set_label (GTK_BUTTON (widget), title);
+
+	/* no updates */
+	len = PK_OBJ_LIST(update_list)->len;
+	if (len == 0) {
+		/* hide close button */
+		widget = glade_xml_get_widget (glade_xml, "button_close");
+		gtk_widget_hide (widget);
+
+		/* show a new title */
+		widget = glade_xml_get_widget (glade_xml, "label_header_title");
+		/* TRANSLATORS: there are no updates */
+		text = g_strdup_printf ("<big><b>%s</b></big>", _("There are no updates available"));
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
+
+		/* show modal dialog */
+		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
+						 "%s", _("No updates available"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+							  "%s",
+							  /* TRANSLATORS: tell the user the problem */
+							  _("There are no updates available for your computer at this time."));
+		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+
+		/* setup a callback so we autoclose */
+		auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+
+		gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_widget_destroy (dialog);
+
+		/* exit the program */
+		g_main_loop_quit (loop);
+		goto out;
+	}
+
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "hbox_status");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "hbox_info");
 	gtk_widget_show (widget);
 
-	/* get info  */
-	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-	if (gtk_tree_selection_get_selected (selection, &model, &treeiter))
-		gtk_tree_model_get (model, &treeiter,
-				    PACKAGES_COLUMN_INFO, &info, -1);
-	else
-		info = PK_INFO_ENUM_NORMAL;
-
-	info_text = gpk_info_enum_to_localised_text (info);
-	/* TRANSLATORS: this is the update type, e.g. security */
-	gpk_update_viewer_add_description_item (_("Type"), info_text, NULL);
-
-	/* state */
-	if (obj->state != PK_UPDATE_STATE_ENUM_UNKNOWN) {
-		info_text = gpk_update_state_enum_to_localised_text (obj->state);
-		/* TRANSLATORS: this is the stability status of the update */
-		gpk_update_viewer_add_description_item (_("State"), info_text, NULL);
+	/* restart */
+	widget = glade_xml_get_widget (glade_xml, "label_info");
+	if (restart_worst == PK_RESTART_ENUM_NONE) {
+		gtk_widget_hide (widget);
+		widget = glade_xml_get_widget (glade_xml, "image_info");
+		gtk_widget_hide (widget);
+	} else {
+		gtk_label_set_label (GTK_LABEL (widget), gpk_restart_enum_to_localised_text_future (restart_worst));
+		gtk_widget_show (widget);
+		widget = glade_xml_get_widget (glade_xml, "image_info");
+		gtk_image_set_from_icon_name (GTK_IMAGE (widget), gpk_restart_enum_to_icon_name (restart_worst), GTK_ICON_SIZE_BUTTON);
+		gtk_widget_show (widget);
 	}
 
-	/* issued */
-	if (obj->issued != NULL) {
-		line = pk_iso8601_from_date (obj->issued);
-		/* TRANSLATORS: this is when the update was issued */
-		gpk_update_viewer_add_description_item (_("Issued"), line, NULL);
-		g_free (line);
+	/* header */
+	widget = glade_xml_get_widget (glade_xml, "label_header_title");
+	text = g_strdup_printf (ngettext ("There is %i update available",
+					  "There are %i updates available", len), len);
+	text_size = g_strdup_printf ("<big><b>%s</b></big>", text);
+	gtk_label_set_label (GTK_LABEL (widget), text_size);
+	g_free (text);
+	g_free (text_size);
+	widget = glade_xml_get_widget (glade_xml, "hbox_header");
+	gtk_widget_show (widget);
+
+	/* total */
+	widget = glade_xml_get_widget (glade_xml, "label_summary");
+	if (number_total == 0) {
+		gtk_label_set_label (GTK_LABEL (widget), "");
+	} else {
+		text_size = g_format_size_for_display (size_total);
+		/* TRANSLATORS: how many updates are selected in the UI */
+		text = g_strdup_printf (ngettext ("%i update selected (%s)",
+						  "%i updates selected (%s)",
+						  number_total), number_total, text_size);
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
+		g_free (text_size);
 	}
 
-	/* updated */
-	if (obj->updated != NULL) {
-		line = pk_iso8601_from_date (obj->updated);
-		/* TRANSLATORS: this is when (if?) the update was updated */
-		gpk_update_viewer_add_description_item (_("Updated"), line, NULL);
-		g_free (line);
-	}
-
-	package_pretty = gpk_package_id_name_version (obj->id);
-	/* TRANSLATORS: this is the package version */
-	gpk_update_viewer_add_description_item (_("New version"), package_pretty, NULL);
-	g_free (package_pretty);
-
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->updates);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are updated */
-		gpk_update_viewer_add_description_item (_("Updates"), package_pretty, NULL);
-	}
-	g_free (package_pretty);
-
-	/* split and add */
-	package_pretty = gpk_update_viewer_get_pretty_from_composite (obj->obsoletes);
-	if (!egg_strzero (package_pretty)) {
-		/* TRANSLATORS: this is a list of packages that are obsoleted */
-		gpk_update_viewer_add_description_item (_("Obsoletes"), package_pretty, NULL);
-	}
-	g_free (package_pretty);
-
-	/* TRANSLATORS: this is the repository the package has come from */
-	gpk_update_viewer_add_description_item (_("Repository"), obj->id->data, NULL);
-
-	if (!egg_strzero (obj->update_text)) {
-		/* convert the bullets */
-		line = egg_markdown_parse (markdown, obj->update_text);
-		if (!egg_strzero (line)) {
-			/* TRANSLATORS: this is the package description */
-			gpk_update_viewer_add_description_item (_("Description"), line, NULL);
-		}
-		g_free (line);
-	}
-
-	/* add all the links */
-	if (!egg_strzero (obj->vendor_url)) {
-		/* TRANSLATORS: this is a list of vendor URLs */
-		gpk_update_viewer_add_description_link_item (_("Vendor"), obj->vendor_url);
-	}
-	if (!egg_strzero (obj->bugzilla_url)) {
-		/* TRANSLATORS: this is a list of bugzilla URLs */
-		gpk_update_viewer_add_description_link_item (_("Bugzilla"), obj->bugzilla_url);
-	}
-	if (!egg_strzero (obj->cve_url)) {
-		/* TRANSLATORS: this is a list of CVE (security) URLs */
-		gpk_update_viewer_add_description_link_item (_("CVE"), obj->cve_url);
-	}
-
-	/* reboot */
-	if (obj->restart == PK_RESTART_ENUM_SESSION ||
-	    obj->restart == PK_RESTART_ENUM_SYSTEM) {
-		info_text = gpk_restart_enum_to_localised_text (obj->restart);
-		/* TRANSLATORS: this is a notice a restart might be required */
-		gpk_update_viewer_add_description_item (_("Notice"), info_text, NULL);
-	}
+	widget = glade_xml_get_widget (glade_xml, "label_summary");
+	gtk_widget_show (widget);
+out:
+	return;
 }
 
 /**
@@ -955,33 +818,52 @@ static void
 gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	GtkWidget *widget;
+	const gchar *text;
 
-	/* when we are testing the transaction, no package should be displayed */
-	if (status == PK_STATUS_ENUM_TEST_COMMIT) {
-		widget = glade_xml_get_widget (glade_xml, "progress_package_label");
+	egg_debug ("status %s", pk_status_enum_to_text (status));
+
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "hbox_status");
+	gtk_widget_show (widget);
+	widget = glade_xml_get_widget (glade_xml, "hbox_info");
+	gtk_widget_hide (widget);
+
+	/* set cursor back to normal */
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		gdk_window_set_cursor (widget->window, NULL);
+	}
+
+	/* clear package */
+	if (status == PK_STATUS_ENUM_WAIT) {
+		widget = glade_xml_get_widget (glade_xml, "label_package");
 		gtk_label_set_label (GTK_LABEL (widget), "");
 	}
-}
 
-/**
- * gpk_update_viewer_reconsider_update_packages_button:
- **/
-static void
-gpk_update_viewer_reconsider_update_packages_button (GtkTreeModel *model)
-{
-	GtkTreeIter iter;
-	gboolean valid;
-	gboolean selected;
-
-	/* if there are no entries selected, deselect the button */
-	valid = gtk_tree_model_get_iter_first (model, &iter);
-	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &selected, -1);
-		if (selected)
-			break;
-		valid = gtk_tree_model_iter_next (model, &iter);
+	/* set status */
+	widget = glade_xml_get_widget (glade_xml, "label_status");
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		gtk_label_set_label (GTK_LABEL (widget), "");
+		widget = glade_xml_get_widget (glade_xml, "image_progress");
+		gtk_widget_hide (widget);
+		goto out;
 	}
-	polkit_gnome_action_set_sensitive (update_packages_action, valid);
+	if (status == PK_STATUS_ENUM_QUERY || status == PK_STATUS_ENUM_SETUP) {
+		/* TRANSLATORS: querying update list */
+		text = _("Getting the list of updates");
+	} else {
+		text = gpk_status_enum_to_localised_text (status);
+	}
+
+	/* set label */
+	gtk_label_set_label (GTK_LABEL (widget), text);
+	widget = glade_xml_get_widget (glade_xml, "image_progress");
+
+	/* set icon */
+	gtk_image_set_from_icon_name (GTK_IMAGE (widget), gpk_status_enum_to_icon_name (status), GTK_ICON_SIZE_BUTTON);
+	gtk_widget_show (widget);
+out:
+	/* set state */
+	gpk_update_viewer_reconsider_buttons (NULL);
 }
 
 /**
@@ -998,8 +880,8 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update,
-			    PACKAGES_COLUMN_ID, &package_id, -1);
+	gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_SELECT, &update,
+			    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
 	/* unstage */
 	update ^= 1;
@@ -1008,95 +890,104 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 	g_free (package_id);
 
 	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_SELECT, update, -1);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, GPK_UPDATES_COLUMN_SELECT, update, -1);
 
 	/* clean up */
 	gtk_tree_path_free (path);
 
 	/* if there are no entries selected, deselect the button */
-	gpk_update_viewer_reconsider_update_packages_button (model);
+	gpk_update_viewer_reconsider_info (model);
 }
 
 /**
- * gpk_update_viewer_treeview_add_columns:
+ * gpk_update_viewer_treeview_updates_size_allocate_cb:
  **/
 static void
-gpk_update_viewer_treeview_add_columns (GtkTreeView *treeview)
-{
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-
-	/* image */
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
-	/* TRANSLATORS: a column that has how serious the update is */
-	column = gtk_tree_view_column_new_with_attributes (_("Severity"), renderer,
-							   "icon-name", PACKAGES_COLUMN_ICON, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_INFO);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for text */
-	renderer = gtk_cell_renderer_text_new ();
-	/* TRANSLATORS: a column that has name of the package that will be updated */
-	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
-							   "markup", PACKAGES_COLUMN_TEXT, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, PACKAGES_COLUMN_TEXT);
-	gtk_tree_view_append_column (treeview, column);
-}
-
-/**
- * gpk_update_viewer_treeview_renderer_clicked:
- **/
-static void
-gpk_update_viewer_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer data)
-{
-	egg_debug ("clicked %s", uri);
-	gpk_gnome_open (uri);
-}
-
-/**
- * gpk_update_viewer_treeview_description_size_allocate_cb:
- **/
-static void
-gpk_update_viewer_treeview_description_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
+gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
 {
 	GtkTreeViewColumn *column;
 	gint width;
+	gint wrap_width;
 
 	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 0);
 	width = gtk_tree_view_column_get_width (column);
-	g_object_set (cell, "wrap-width", allocation->width - width - 10, NULL);
+	wrap_width = allocation->width - width - 200;
+	if (wrap_width < 10) {
+		egg_warning ("wrap_width is impossibly small %i", wrap_width);
+		return;
+	}
+	g_object_set (cell, "wrap-width", wrap_width, NULL);
 }
 
 /**
- * gpk_update_viewer_treeview_add_columns_description:
- **/
-static void
-gpk_update_viewer_treeview_add_columns_description (GtkTreeView *treeview)
+ * gpk_update_viewer_treeview_query_tooltip_cb:
+ */
+static gboolean
+gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, gboolean keyboard, GtkTooltip *tooltip, gpointer user_data)
 {
-	GtkCellRenderer *renderer;
+	gboolean ret;
+	GtkTreePath *path = NULL;
 	GtkTreeViewColumn *column;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	PkInfoEnum info;
+	PkRestartEnum restart;
+	gint bin_x, bin_y, cell_x, cell_y, col_id;
+	const gchar *text = NULL;
 
-	/* title */
-	column = gtk_tree_view_column_new ();
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "markup", DESC_COLUMN_TITLE);
-	gtk_tree_view_append_column (treeview, column);
+	/* get path */
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (widget), x, y, &bin_x, &bin_y);
+	ret = gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget), bin_x, bin_y, &path, &column, &cell_x, &cell_y);
 
-	/* column for uris */
-	renderer = gpk_cell_renderer_uri_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_description_size_allocate_cb), renderer);
-	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_update_viewer_treeview_renderer_clicked), NULL);
-	/* TRANSLATORS: The information about the update, not currently shown */
-	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "markup", DESC_COLUMN_TEXT,
-							   "uri", DESC_COLUMN_URI, NULL);
-	gtk_tree_view_append_column (treeview, column);
+	/* did not get path */
+	if (!ret || column == NULL || path == NULL)
+		goto out;
+
+	/* get iter at path */
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	/* Find out what column we are over */
+	col_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (column), "tooltip-id"));
+	switch (col_id) {
+	case GPK_UPDATES_COLUMN_INFO:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
+		text = gpk_info_enum_to_localised_text (info);
+		break;
+	case GPK_UPDATES_COLUMN_RESTART:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_RESTART, &restart, -1);
+		if (restart == PK_RESTART_ENUM_NONE) {
+			ret = FALSE;
+			break;
+		}
+		text = gpk_restart_enum_to_localised_text_future (restart);
+		break;
+	case GPK_UPDATES_COLUMN_STATUS:
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_STATUS, &info, -1);
+		if (info == PK_INFO_ENUM_UNKNOWN) {
+			ret = FALSE;
+			break;
+		}
+		text = gpk_info_status_enum_to_text (info);
+		break;
+	default:
+		/* ignore */
+		ret = FALSE;
+		break;
+	}
+
+	/* set tooltip */
+	if (text != NULL) {
+		gtk_tooltip_set_text (tooltip, text);
+		gtk_tree_view_set_tooltip_cell (GTK_TREE_VIEW (widget), tooltip, path, column, NULL);
+	}
+out:
+	if (path != NULL)
+		gtk_tree_path_free(path);
+	return ret;
 }
+
+
 
 /**
  * gpk_update_viewer_treeview_add_columns_update:
@@ -1108,22 +999,301 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	GtkTreeViewColumn *column;
 	GtkTreeModel *model;
 
-	/* column for select toggle */
+	/* restart */
+	renderer = gpk_cell_renderer_restart_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	column = gtk_tree_view_column_new_with_attributes ("", renderer,
+							   "value", GPK_UPDATES_COLUMN_RESTART, NULL);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_RESTART));
+
+	/* --- column for image and toggle --- */
+	column = gtk_tree_view_column_new ();
+	/* TRANSLATORS: if the update should be installed */
+	gtk_tree_view_column_set_title (column, _("Install"));
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_INFO);
+
+	/* info */
+	renderer = gpk_cell_renderer_info_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_INFO);
+
+	/* select toggle */
 	renderer = gtk_cell_renderer_toggle_new ();
 	model = gtk_tree_view_get_model (treeview);
 	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_update_viewer_treeview_update_toggled), model);
-	column = gtk_tree_view_column_new_with_attributes ("Update", renderer,
-							   "active", PACKAGES_COLUMN_SELECT,
-							   "activatable", PACKAGES_COLUMN_CLICKABLE,
-							   "sensitive", PACKAGES_COLUMN_SENSITIVE, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer, "active", GPK_UPDATES_COLUMN_SELECT);
+	gtk_tree_view_column_add_attribute (column, renderer, "activatable", GPK_UPDATES_COLUMN_CLICKABLE);
+	gtk_tree_view_column_add_attribute (column, renderer, "sensitive", GPK_UPDATES_COLUMN_SENSITIVE);
 
-	/* set this column to a fixed sizing (of 50 pixels) */
-	gtk_tree_view_column_set_sizing (GTK_TREE_VIEW_COLUMN (column), GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_fixed_width (GTK_TREE_VIEW_COLUMN (column), 20);
+	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_INFO));
+
+	/* column for text */
+	renderer = gtk_cell_renderer_text_new ();
+	g_object_set (renderer,
+		      "wrap-mode", PANGO_WRAP_WORD,
+		      "ellipsize", PANGO_ELLIPSIZE_END,
+		      NULL);
+	/* TRANSLATORS: a column that has name of the package that will be updated */
+	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
+							   "markup", GPK_UPDATES_COLUMN_TEXT, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_TEXT);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
+	gtk_tree_view_append_column (treeview, column);
+	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_updates_size_allocate_cb), renderer);
+
+	/* column for size */
+	renderer = gpk_cell_renderer_size_new ();
+	g_object_set (renderer,
+		      "alignment", PANGO_ALIGN_RIGHT,
+		      "xalign", 1.0f,
+		      NULL);
+	/* TRANSLATORS: a column that has size of the package */
+	column = gtk_tree_view_column_new_with_attributes (_("Size"), renderer,
+							   "value", GPK_UPDATES_COLUMN_SIZE, NULL);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_SIZE);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 	gtk_tree_view_append_column (treeview, column);
 
-	/* usual suspects */
-	gpk_update_viewer_treeview_add_columns (treeview);
+	/* --- column for progress --- */
+	column = gtk_tree_view_column_new ();
+	/* TRANSLATORS: a column that has state of each package */
+	gtk_tree_view_column_set_title (column, _("Status"));
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_STATUS);
+
+	/* status */
+	renderer = gpk_cell_renderer_info_new ();
+	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_STATUS);
+
+	/* column for progress */
+	renderer = gpk_cell_renderer_percentage_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "percent", GPK_UPDATES_COLUMN_PERCENTAGE);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+
+	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_STATUS));
+
+	/* tooltips */
+	g_signal_connect (treeview, "query-tooltip", G_CALLBACK (gpk_update_viewer_treeview_query_tooltip_cb), NULL);
+	g_object_set (treeview, "has-tooltip", TRUE, NULL);
+}
+
+/**
+ * gpk_update_viewer_add_description_link_item:
+ **/
+static void
+gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer, GtkTextIter *iter, const gchar *title, const GPtrArray *array)
+{
+	GtkTextTag *tag;
+	const gchar *uri;
+	gint i;
+
+	/* insert at end */
+	gtk_text_buffer_insert_with_tags_by_name (buffer, iter, title, -1, "para", NULL);
+
+	for (i=0; i<array->len; i++) {
+		uri = g_ptr_array_index (array, i);
+		gtk_text_buffer_insert (buffer, iter, "\n", -1);
+		gtk_text_buffer_insert (buffer, iter, "• ", -1);
+		tag = gtk_text_buffer_create_tag (buffer, NULL,
+						  "foreground", "blue",
+						  "underline", PANGO_UNDERLINE_SINGLE,
+						  NULL);
+		g_object_set_data (G_OBJECT (tag), "href", g_strdup (uri));
+		gtk_text_buffer_insert_with_tags (buffer, iter, uri, -1, tag, NULL);
+		gtk_text_buffer_insert (buffer, iter, ".", -1);
+	}
+	gtk_text_buffer_insert (buffer, iter, "\n", -1);
+}
+
+/**
+ * gpk_update_viewer_add_description_link_item:
+ **/
+static GPtrArray *
+gpk_update_viewer_get_uris (const gchar *url_string)
+{
+	GPtrArray *array;
+	gchar **urls;
+	guint length;
+	gint i;
+
+	array = g_ptr_array_new ();
+
+	urls = g_strsplit (url_string, ";", 0);
+	length = g_strv_length (urls);
+
+	/* could we have malformed descriptions with ';' in them? */
+	if (length % 2 != 0) {
+		egg_warning ("length not correct, correcting");
+		length--;
+	}
+
+	/* copy into array */
+	for (i=0; i<length; i+=2)
+		g_ptr_array_add (array, g_strdup (urls[i]));
+
+	return array;
+}
+
+/**
+ * gpk_update_viewer_populate_details:
+ **/
+static void
+gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
+{
+	GtkWidget *widget;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter treeiter;
+	GPtrArray *array;
+	PkInfoEnum info;
+	gchar *line;
+	gchar *line2;
+	const gchar *title;
+	gchar *issued;
+	gchar *updated;
+	GtkTextIter iter;
+	gboolean update_text = FALSE;
+
+	/* get info  */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	if (gtk_tree_selection_get_selected (selection, &model, &treeiter))
+		gtk_tree_model_get (model, &treeiter,
+				    GPK_UPDATES_COLUMN_INFO, &info, -1);
+	else
+		info = PK_INFO_ENUM_NORMAL;
+
+	/* blank */
+	gtk_text_buffer_set_text (text_buffer, "", -1);
+	gtk_text_buffer_get_start_iter (text_buffer, &iter);
+
+	if (info == PK_INFO_ENUM_ENHANCEMENT) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, ("This update will add new features and expand functionality."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (info == PK_INFO_ENUM_BUGFIX) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update will fix bugs and other non-critical problems."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (info == PK_INFO_ENUM_IMPORTANT) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is important as it may solve critical problems."), -1, "para", "important", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (info == PK_INFO_ENUM_SECURITY) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is needed to fix a security vulnerability with this package."), -1, "para", "important", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (info == PK_INFO_ENUM_BLOCKED) {
+		/* TRANSLATORS: this is the update type, e.g. security */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update is blocked."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	}
+
+	/* issued and updated */
+	if (obj->issued != NULL && obj->updated != NULL) {
+		issued = pk_iso8601_from_date (obj->issued);
+		updated = pk_iso8601_from_date (obj->updated);
+		/* TRANSLATORS: this is when the notification was issued and then updated*/
+		line = g_strdup_printf (_("This notification was issued on %s and last updated on %s."), issued, updated);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+		g_free (issued);
+		g_free (updated);
+		g_free (line);
+	} else if (obj->issued != NULL) {
+		issued = pk_iso8601_from_date (obj->issued);
+		/* TRANSLATORS: this is when the update was issued */
+		line = g_strdup_printf (_("This notification was issued on %s."), issued);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, line, -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+		g_free (issued);
+		g_free (line);
+	}
+
+	/* update text */
+	if (!egg_strzero (obj->update_text)) {
+		/* convert the bullets */
+		line = egg_markdown_parse (markdown, obj->update_text);
+		if (!egg_strzero (line)) {
+			gtk_text_buffer_insert_markup (text_buffer, &iter, line);
+			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
+			update_text = TRUE;
+		}
+		g_free (line);
+	}
+
+	/* add all the links */
+	if (!egg_strzero (obj->vendor_url)) {
+		array = gpk_update_viewer_get_uris (obj->vendor_url);
+		/* TRANSLATORS: this is a list of vendor URLs */
+		title = ngettext ("For more information about this update please visit this website:",
+				  "For more information about this update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
+	if (!egg_strzero (obj->bugzilla_url)) {
+		array = gpk_update_viewer_get_uris (obj->bugzilla_url);
+		/* TRANSLATORS: this is a list of bugzilla URLs */
+		title = ngettext ("For more information about bugs fixed by this update please visit this website:",
+				  "For more information about bugs fixed by this update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
+	if (!egg_strzero (obj->cve_url)) {
+		array = gpk_update_viewer_get_uris (obj->cve_url);
+		/* TRANSLATORS: this is a list of CVE (security) URLs */
+		title = ngettext ("For more information about this security update please visit this website:",
+				  "For more information about this security update please visit these websites:", array->len);
+		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
+		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+		g_ptr_array_free (array, TRUE);
+	}
+
+	/* reboot */
+	if (obj->restart == PK_RESTART_ENUM_SYSTEM) {
+		/* TRANSLATORS: reboot required */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The computer will have to be restarted after the update for the changes to take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (obj->restart == PK_RESTART_ENUM_SESSION) {
+		/* TRANSLATORS: log out required */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("You will need to log out and back in after the update for the changes to take effect."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	}
+
+	/* state */
+	if (obj->state == PK_UPDATE_STATE_ENUM_UNSTABLE) {
+		/* TRANSLATORS: this is the stability status of the update */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The classifaction of this update is unstable which means it is not designed for production use."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	} else if (obj->state == PK_UPDATE_STATE_ENUM_TESTING) {
+		/* TRANSLATORS: this is the stability status of the update */
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."), -1, "para", NULL);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
+	}
+
+	/* only show changelog if we didn't have any update text */
+	if (!update_text && !egg_strzero (obj->changelog)) {
+		line = egg_markdown_parse (markdown, obj->changelog);
+		if (!egg_strzero (line)) {
+			/* TRANSLATORS: this is a ChangeLog */
+			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no information is available for this update:"), line);
+			gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
+			g_free (line2);
+		}
+		g_free (line);
+	}
 }
 
 /**
@@ -1135,155 +1305,20 @@ pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gchar *package_id;
-	GError *error = NULL;
-	gboolean ret;
-	gchar **package_ids;
+	PkUpdateDetailObj *obj = NULL;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter,
-				    PACKAGES_COLUMN_ID, &package_id, -1);
-
-		if (cached_package_id && package_id &&
-		    strcmp (cached_package_id, package_id) == 0) {
-			g_free (package_id);
-			return;
-		}
-		g_free (cached_package_id);
-		/* make back into package ID */
-		cached_package_id = g_strdup (package_id);
+				    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &obj,
+				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
+		egg_debug ("selected row is: %s, %p", package_id, obj);
 		g_free (package_id);
-
-		/* clear and display animation until new details come in */
-		gpk_update_viewer_description_animation_start ();
-
-		egg_debug ("selected row is: %s", cached_package_id);
-
-		/* reset */
-		ret = pk_client_reset (client_query, &error);
-		if (!ret) {
-			egg_warning ("failed to reset: %s", error->message);
-			g_error_free (error);
-		}
-
-		/* get the description */
-		error = NULL;
-		package_ids = pk_package_ids_from_id (cached_package_id);
-		ret = pk_client_get_update_detail (client_query, package_ids, &error);
-		g_strfreev (package_ids);
-		if (!ret) {
-			egg_warning ("failed to get update detail: %s", error->message);
-			g_error_free (error);
-		}
+		if (obj != NULL)
+			gpk_update_viewer_populate_details (obj);
 	} else {
 		egg_debug ("no row selected");
 	}
-}
-
-/**
- * gpk_update_viewer_add_preview_item:
- **/
-static void
-gpk_update_viewer_add_preview_item (const gchar *icon, const gchar *message, gboolean clear)
-{
-	GtkWidget *tree_view;
-	GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	gchar *markup;
-
-	/* clear existing list */
-	if (clear) {
-		gtk_list_store_clear (list_store_preview);
-	}
-
-	markup = g_strdup_printf ("<b>%s</b>", message);
-	gtk_list_store_append (list_store_preview, &iter);
-	gtk_list_store_set (list_store_preview, &iter,
-			    PACKAGES_COLUMN_TEXT, markup,
-			    PACKAGES_COLUMN_ICON, icon,
-			    -1);
-	g_free (markup);
-
-	tree_view = glade_xml_get_widget (glade_xml, "treeview_preview");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
-}
-
-/**
- * pk_update_get_approx_time:
- **/
-static const gchar *
-pk_update_get_approx_time (guint time_s)
-{
-	if (time_s < 60)
-		/* TRANSLATORS: less than 60 seconds, a short time */
-		return _("Less than a minute ago");
-	else if (time_s < 60*60)
-		return _("Less than an hour ago");
-	else if (time_s < 24*60*60)
-		return _("A few hours ago");
-	else if (time_s < 7*24*60*60)
-		return _("A few days ago");
-	return _("Over a week ago");
-}
-
-/**
- * pk_update_viewer_set_last_refreshed_time:
- **/
-static gboolean
-pk_update_viewer_set_last_refreshed_time (void)
-{
-	GtkWidget *widget;
-	guint time_s;
-	const gchar *time_text;
-
-	/* get times from the daemon */
-	pk_control_get_time_since_action (control, PK_ROLE_ENUM_REFRESH_CACHE, &time_s, NULL);
-	if (time_s < 60*60*24) {
-		widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
-		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
-		gtk_widget_hide (widget);
-		return FALSE;
-	}
-
-	widget = glade_xml_get_widget (glade_xml, "label_last_refresh_title");
-	gtk_widget_show (widget);
-	time_text = pk_update_get_approx_time (time_s);
-	widget = glade_xml_get_widget (glade_xml, "label_last_refresh");
-	gtk_label_set_label (GTK_LABEL (widget), time_text);
-	gtk_widget_show (widget);
-	return TRUE;
-}
-
-/**
- * pk_update_viewer_set_last_updated_time:
- **/
-static gboolean
-pk_update_viewer_set_last_updated_time (void)
-{
-	GtkWidget *widget;
-	guint time_s;
-	guint time_new;
-	const gchar *time_text;
-
-	/* get times from the daemon */
-	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_SYSTEM, &time_s, NULL);
-	pk_control_get_time_since_action (control, PK_ROLE_ENUM_UPDATE_PACKAGES, &time_new, NULL);
-
-	/* always use the shortest time */
-	if (time_new < time_s)
-		time_s = time_new;
-	time_text = pk_update_get_approx_time (time_s);
-	widget = glade_xml_get_widget (glade_xml, "label_last_update");
-	gtk_label_set_label (GTK_LABEL (widget), time_text);
-	return TRUE;
-}
-
-static void
-gpk_update_viewer_restart_cb (GtkWidget *widget, gpointer data)
-{
-	gpk_restart_system ();
 }
 
 /**
@@ -1298,7 +1333,6 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 	GString *string;
 	gboolean exists = FALSE;
 	gchar *text;
-	gchar *title_bold;
 	GtkWidget *widget;
 
 	string = g_string_new ("");
@@ -1322,29 +1356,183 @@ gpk_update_viewer_check_blocked_packages (PkPackageList *list)
 	/* convert to a normal gchar */
 	text = g_string_free (string, FALSE);
 
-	/* set the widget text */
-	if (exists) {
-		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		/* TRANSLATORS: some updates the user selected could not be installed */
-		title_bold = g_strdup_printf ("<b>%s</b>", _("Some updates were not installed"));
-		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
-		g_free (title_bold);
+	/* nothing of interest */
+	if (!exists)
+		goto out;
 
-		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
-		gtk_label_set_markup (GTK_LABEL (widget), text);
-		gtk_widget_show (widget);
+	/* throw up dialog */
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	/* TRANSLATORS: we failed to install all the updates we requested */
+	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Some updates were not installed"), text, NULL);
+out:
+	g_free (text);
+}
+
+/**
+ * gpk_update_viewer_finished_get_details_cb:
+ **/
+static gboolean
+gpk_update_viewer_finished_get_details_cb (PkPackageList *list)
+{
+	gboolean ret;
+	gchar **package_ids;
+	GError *error = NULL;
+	package_ids = pk_package_list_to_strv (list);
+
+	/* get the details of all the packages */
+	ret = pk_client_reset (client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	ret = pk_client_get_details (client_primary, package_ids, &error);
+	if (!ret) {
+		egg_error ("cannot get details: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_strfreev (package_ids);
+	g_object_unref (list);
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_finished_get_update_details_cb:
+ **/
+static gboolean
+gpk_update_viewer_finished_get_update_details_cb (PkPackageList *list)
+{
+	gboolean ret;
+	gchar **package_ids;
+	GError *error = NULL;
+	package_ids = pk_package_list_to_strv (list);
+
+	/* get the details of all the packages */
+	ret = pk_client_reset (client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	ret = pk_client_get_update_detail (client_primary, package_ids, &error);
+	if (!ret) {
+		egg_error ("cannot get details: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_strfreev (package_ids);
+	g_object_unref (list);
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_finished_get_distro_upgrades_cb:
+ **/
+static gboolean
+gpk_update_viewer_finished_get_distro_upgrades_cb (gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* get the details of all the packages */
+	ret = pk_client_reset (client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	ret = pk_client_get_distro_upgrades (client_primary, &error);
+	if (!ret) {
+		egg_error ("cannot get details: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_requeue:
+ **/
+static gboolean
+gpk_update_viewer_requeue (gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* retry new action */
+	ret = pk_client_requeue (client_primary, &error);
+	if (!ret) {
+		egg_warning ("Failed to requeue: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
+ * gpk_update_viewer_check_restart:
+ **/
+static gboolean
+gpk_update_viewer_check_restart (PkRestartEnum restart)
+{
+	GtkWidget *widget;
+	GtkWidget *dialog;
+	gboolean ret = FALSE;
+	const gchar *title;
+	const gchar *message;
+	const gchar *button;
+	GtkResponseType response;
+
+	if (restart != PK_RESTART_ENUM_SYSTEM &&
+	    restart != PK_RESTART_ENUM_SESSION)
+		goto out;
+
+	/* get the text */
+	title = gpk_restart_enum_to_localised_text (restart);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		/* TRANSLATORS: the message text for the restart */
+		message = _("Some of the updates that were installed require the computer to be restarted before the changes will be applied.");
+		/* TRANSLATORS: the button text for the restart */
+		button = _("Restart Computer");
 	} else {
-		widget = glade_xml_get_widget (glade_xml, "label_update_title");
-		/* TRANSLATORS: everything updates okay */
-		title_bold = g_strdup_printf ("<b>%s</b>", _("System update completed"));
-		gtk_label_set_markup (GTK_LABEL (widget), title_bold);
-		g_free (title_bold);
-
-		widget = glade_xml_get_widget (glade_xml, "label_update_notice");
-		gtk_widget_hide (widget);
+		/* TRANSLATORS: the message text for the logout */
+		message = _("Some of the updates that were installed require you to log out and back in before the changes will be applied.");
+		/* TRANSLATORS: the button text for the logout */
+		button = _("Log Out");
 	}
 
-	g_free (text);
+	/* show modal dialog */
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+					 "%s", title);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+
+	/* setup a callback so we autoclose */
+	auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+
+	response = gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	/* cancel */
+	if (response != GTK_RESPONSE_OK)
+		goto out;
+
+	/* doing the action, return success */
+	ret = TRUE;
+
+	/* do the action */
+	if (restart == PK_RESTART_ENUM_SYSTEM)
+		gpk_update_viewer_shutdown ();
+	else if (restart == PK_RESTART_ENUM_SESSION)
+		gpk_update_viewer_logout ();
+out:
+	return ret;
 }
 
 /**
@@ -1355,77 +1543,140 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 {
 	GtkWidget *widget;
 	GtkTreePath *path;
+	GtkTreeModel *model;
 	GtkTreeSelection *selection;
+	PkBitfield roles;
 	PkRoleEnum role;
-	PkRestartEnum restart;
 	PkPackageList *list;
+	PkRestartEnum restart;
 
 	pk_client_get_role (client, &role, NULL, NULL);
+	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit));
 
-	/* we don't need to do anything here */
-	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL ||
-	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		gpk_update_viewer_description_animation_stop ();
+	/* clear package */
+	widget = glade_xml_get_widget (glade_xml, "label_package");
+	gtk_label_set_label (GTK_LABEL (widget), "");
+
+	widget = glade_xml_get_widget (glade_xml, "progressbar_progress");
+	gtk_widget_hide (widget);
+
+	/* hidden window, so quit at this point */
+	if (running_hidden) {
+		egg_debug ("transaction finished whilst hidden, so exit");
+		g_main_loop_quit (loop);
 	}
 
-	/* select the first entry in the updates list */
+	/* if secondary, ignore */
+	if (client == client_primary &&
+	    (exit == PK_EXIT_ENUM_KEY_REQUIRED ||
+	     exit == PK_EXIT_ENUM_EULA_REQUIRED)) {
+		egg_debug ("ignoring primary sig-required or eula");
+		return;
+	}
+
+	/* get model */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+
+	/* clicked cancel on get updates screen */
+	if (role == PK_ROLE_ENUM_GET_UPDATES &&
+	    exit == PK_EXIT_ENUM_CANCELLED) {
+		g_main_loop_quit (loop);
+		return;
+	}
+
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
+		/* get the download sizes */
+		if (update_list != NULL)
+			g_object_unref (update_list);
+		update_list = pk_client_get_package_list (client_primary);
+
+		/* get the download sizes */
+		if (PK_OBJ_LIST(update_list)->len > 0)
+			g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_update_details_cb, g_object_ref (update_list));
+
+		/* set info */
+		gpk_update_viewer_reconsider_info (model);
+	}
+
+	if (role == PK_ROLE_ENUM_GET_UPDATE_DETAIL) {
+		/* get the restarts */
+		g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_details_cb, g_object_ref (update_list));
+
+		/* are now able to do action */
+		widget = glade_xml_get_widget (glade_xml, "button_install");
+		gtk_widget_set_sensitive (widget, TRUE);
+
+		/* set info */
+		gpk_update_viewer_reconsider_info (model);
+	}
+
+	if (role == PK_ROLE_ENUM_GET_DETAILS) {
+
+		/* get the distro-upgrades if we support it */
+		roles = pk_control_get_actions (control, NULL);
+		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES))
+			g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_distro_upgrades_cb, NULL);
+
+		/* select the first entry in the updates list now we've got data */
 		widget = glade_xml_get_widget (glade_xml, "treeview_updates");
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 		gtk_tree_selection_unselect_all (selection);
 		path = gtk_tree_path_new_first ();
 		gtk_tree_selection_select_path (selection, path);
 		gtk_tree_path_free (path);
+
+		/* set info */
+		gpk_update_viewer_reconsider_info (model);
 	}
 
-	/* stop the throbber */
-	gpk_update_viewer_preview_animation_stop ();
+	if (role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES) {
+		/* set info */
+		gpk_update_viewer_reconsider_info (model);
+	}
+
+	/* we've just agreed to auth or a EULA */
+	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
+	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
+		if (exit == PK_EXIT_ENUM_SUCCESS)
+			gpk_update_viewer_requeue (NULL);
+		else
+			gpk_update_viewer_undisable_packages ();
+	}
 
 	/* check if we need to display infomation about blocked packages */
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
-	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		//TODO: this has to be moved to GpkClient
-		list = pk_client_get_package_list (client);
+	if (exit == PK_EXIT_ENUM_SUCCESS &&
+	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+
+		/* get the worst restart case */
+		restart = pk_client_get_require_restart (client_primary);
+		if (restart > restart_update)
+			restart_update = restart;
+
+		/* check blocked */
+		list = pk_client_get_package_list (client_primary);
 		gpk_update_viewer_check_blocked_packages (list);
 		g_object_unref (list);
+
+		/* check restart */
+		gpk_update_viewer_check_restart (restart_update);
+
+		/* quit after we successfully updated */
+		g_main_loop_quit (loop);
 	}
 
-	/* hide the cancel */
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
-	    role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		widget = glade_xml_get_widget (glade_xml, "button_cancel");
-		gtk_widget_hide (widget);
-
-		/* go onto the success page */
-		if (exit == PK_EXIT_ENUM_SUCCESS) {
-
-			/* do we have to show any widgets? */
-			restart = pk_client_get_require_restart (client);
-			if (restart == PK_RESTART_ENUM_SYSTEM ||
-			    restart == PK_RESTART_ENUM_SESSION) {
-				egg_debug ("showing reboot widgets");
-				widget = glade_xml_get_widget (glade_xml, "hbox_restart");
-				gtk_widget_show (widget);
-				polkit_gnome_action_set_visible (restart_action, TRUE);
-			}
-
-			widget = glade_xml_get_widget (glade_xml, "button_close4");
-			gtk_widget_grab_default (widget);
-
-			/* set correct view */
-			gpk_update_viewer_set_page (PAGE_CONFIRM);
-		}
+	/* check if we need to refresh list */
+	if (exit != PK_EXIT_ENUM_SUCCESS &&
+	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+		gpk_update_viewer_get_new_update_list ();
 	}
 
-//	gpk_update_viewer_populate_preview (list);
-}
-
-static void
-pk_button_more_installs_cb (GtkWidget *button, gpointer data)
-{
-	/* set correct view */
-	gpk_update_viewer_set_page (PAGE_DETAILS);
-	gpk_update_viewer_get_new_update_list ();
+	/* we pressed cancel */
+	if (exit != PK_EXIT_ENUM_SUCCESS) {
+		gpk_update_viewer_undisable_packages ();
+	}
 }
 
 /**
@@ -1436,61 +1687,33 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 				guint elapsed, guint remaining, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "progressbar_percent");
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
 
+	widget = glade_xml_get_widget (glade_xml, "progressbar_progress");
+	gtk_widget_show (widget);
 	if (percentage != PK_CLIENT_PERCENTAGE_INVALID)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
-}
 
-/**
- * gpk_update_viewer_preview_set_animation:
- **/
-static void
-gpk_update_viewer_preview_set_animation (const gchar *text)
-{
-	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 
-	/* hide apply, review and refresh */
-	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
-	polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
-	widget = glade_xml_get_widget (glade_xml, "button_review");
-	gtk_widget_set_sensitive (widget, FALSE);
-
-	/* start the spinning preview */
-	gpk_update_viewer_preview_animation_start (text);
-}
-
-/**
- * gpk_update_viewer_task_list_changed_cb:
- **/
-static void
-gpk_update_viewer_task_list_changed_cb (PkTaskList *tlist_, gpointer data)
-{
-	GtkWidget *widget;
-
-	/* hide buttons if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
-		/* TRANSLATORS: either this current user, or another user is already updating the system */
-		gpk_update_viewer_preview_set_animation (_("A system update is already in progress"));
-
-	} else if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_GET_UPDATES)) {
-		/* TRANSLATORS: we are getting the list of updates from the server */
-		gpk_update_viewer_preview_set_animation (_("Getting updates"));
-
-	} else if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE)) {
-		/* TRANSLATORS: we are refreshing the package lists and the update lists */
-		gpk_update_viewer_preview_set_animation (_("Refreshing package cache"));
-
-	} else {
-		gpk_update_viewer_preview_animation_stop ();
-
-		/* show apply, review and refresh */
-		polkit_gnome_action_set_sensitive (update_system_action, are_updates_available);
-		polkit_gnome_action_set_sensitive (update_packages_action, are_updates_available);
-		widget = glade_xml_get_widget (glade_xml, "button_review");
-		gtk_widget_set_sensitive (widget, are_updates_available);
+	if (package_id_last == NULL) {
+		egg_debug ("no last package");
+		return;
 	}
+
+	path = gpk_update_viewer_model_get_path (model, package_id_last);
+	if (path == NULL) {
+		egg_debug ("not found ID for package");
+		return;
+	}
+
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_path_free (path);
+	gtk_list_store_set (list_store_updates, &iter,
+			    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage, -1);
 }
 
 /**
@@ -1508,7 +1731,14 @@ gpk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const g
 		return;
 	}
 
-	widget = glade_xml_get_widget (glade_xml, "window_updates");
+	/* ignore the ones we can handle */
+	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
+	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
+		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
 				gpk_error_enum_to_localised_message (code), details);
 }
@@ -1532,21 +1762,49 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 	gboolean valid;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	PkStatusEnum info;
+	PkInfoEnum info;
 
 	/* get the first iter in the list */
 	model = gtk_tree_view_get_model (treeview);
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_INFO, &info, -1);
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
 		if (info != PK_INFO_ENUM_BLOCKED)
 			gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-					    PACKAGES_COLUMN_SELECT, TRUE, -1);
+					    GPK_UPDATES_COLUMN_SELECT, TRUE, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
 	/* if there are no entries selected, deselect the button */
-	gpk_update_viewer_reconsider_update_packages_button (model);
+	gpk_update_viewer_reconsider_info (model);
+}
+
+/**
+ * gpk_update_viewer_detail_popup_menu_select_security:
+ **/
+static void
+gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, gpointer userdata)
+{
+	GtkTreeView *treeview = GTK_TREE_VIEW (userdata);
+	gboolean valid;
+	gboolean ret;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	PkInfoEnum info;
+
+	/* get the first iter in the list */
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
+		ret = (info == PK_INFO_ENUM_SECURITY);
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+				    GPK_UPDATES_COLUMN_SELECT, ret, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_info (model);
 }
 
 /**
@@ -1566,23 +1824,24 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer u
 	while (valid) {
 		gtk_tree_model_get (model, &iter, -1);
 		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-				    PACKAGES_COLUMN_SELECT, FALSE, -1);
+				    GPK_UPDATES_COLUMN_SELECT, FALSE, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
 	/* if there are no entries selected, deselect the button */
-	gpk_update_viewer_reconsider_update_packages_button (model);
+	gpk_update_viewer_reconsider_info (model);
 }
 
 /**
  * gpk_update_viewer_get_checked_status:
  **/
-static void
+static gboolean
 gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_checked)
 {
 	GtkTreeView *treeview;
 	gboolean valid;
 	gboolean update;
+	gboolean clickable;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 
@@ -1593,13 +1852,16 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 	*all_checked = TRUE;
 	*none_checked = TRUE;
 	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_SELECT, &update, -1);
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_SELECT, &update,
+				    GPK_UPDATES_COLUMN_CLICKABLE, &clickable, -1);
 		if (update)
 			*none_checked = FALSE;
 		else
 			*all_checked = FALSE;
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
+	return clickable;
 }
 
 /**
@@ -1612,11 +1874,16 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 	GtkWidget *menuitem;
 	gboolean all_checked;
 	gboolean none_checked;
+	gboolean ret;
 
 	menu = gtk_menu_new();
 
 	/* we don't want to show 'Select all' if they are all checked */
-	gpk_update_viewer_get_checked_status (&all_checked, &none_checked);
+	ret = gpk_update_viewer_get_checked_status (&all_checked, &none_checked);
+	if (!ret) {
+		egg_debug ("ignoring as we are locked down");
+		return;
+	}
 
 	if (!all_checked) {
 		/* TRANSLATORS: right click menu, select all the updates */
@@ -1633,6 +1900,12 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 				  G_CALLBACK (gpk_update_viewer_detail_popup_menu_select_none), treeview);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 	}
+
+	/* TRANSLATORS: right click menu, select only security updates */
+	menuitem = gtk_menu_item_new_with_label (_("Select security updates"));
+	g_signal_connect (menuitem, "activate",
+			  G_CALLBACK (gpk_update_viewer_detail_popup_menu_select_security), treeview);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 	/* TRANSLATORS: right click option, ignore this update name, not currently used */
 	menuitem = gtk_menu_item_new_with_label (_("Ignore this update"));
@@ -1654,6 +1927,7 @@ static gboolean
 gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
 	GtkTreeSelection *selection;
+	GtkTreePath *path;
 
 	/* single click with the right mouse button? */
 	if (event->type != GDK_BUTTON_PRESS || event->button != 3) {
@@ -1666,7 +1940,6 @@ gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *ev
 	/* select the row */
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
 	if (gtk_tree_selection_count_selected_rows (selection) <= 1) {
-		GtkTreePath *path;
 		/* Get tree path for row that was clicked */
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (treeview),
 						   (gint) event->x, (gint) event->y, &path,
@@ -1693,135 +1966,6 @@ gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer userdata)
 }
 
 /**
- * gpk_update_viewer_task_list_finished_cb:
- **/
-static void
-gpk_update_viewer_task_list_finished_cb (PkTaskList *tlist_, PkClient *client, PkExitEnum exit_enum,
-					 guint runtime, gpointer userdata)
-{
-	PkRoleEnum role;
-	gboolean ret;
-
-	/* get the role */
-	ret = pk_client_get_role (client, &role, NULL, NULL);
-	if (!ret) {
-		egg_warning ("cannot get role");
-		return;
-	}
-	egg_debug ("%s", pk_role_enum_to_text (role));
-
-	/* update last time in the UI */
-	if (role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		pk_update_viewer_set_last_refreshed_time ();
-	} else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
-		   role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
-		pk_update_viewer_set_last_updated_time ();
-	}
-
-	/* do we need to repopulate the preview widget */
-	if (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
-	    role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-	    role == PK_ROLE_ENUM_REFRESH_CACHE) {
-		egg_debug ("getting new");
-		//gpk_update_viewer_get_new_update_list ();
-	}
-}
-
-/**
- * gpk_update_viewer_create_custom_widget:
- **/
-static GtkWidget *
-gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				     gchar *string1, gchar *string2,
-				     gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "button_refresh"))
-		return polkit_gnome_action_create_button (refresh_action);
-	if (egg_strequal (name, "button_restart"))
-		return polkit_gnome_action_create_button (restart_action);
-	if (egg_strequal (name, "button_update_system"))
-		return polkit_gnome_action_create_button (update_system_action);
-	if (egg_strequal (name, "button_update_packages"))
-		return polkit_gnome_action_create_button (update_packages_action);
-	if (egg_strequal (name, "image_animation_preview"))
-		return gpk_animated_icon_new ();
-	if (egg_strequal (name, "image_animation_description"))
-		return gpk_animated_icon_new ();
-	egg_warning ("name unknown=%s", name);
-	return NULL;
-}
-
-/**
- * gpk_update_viewer_setup_policykit:
- *
- * We have to do this before the glade stuff if done as the custom handler needs the actions setup
- **/
-static void
-gpk_update_viewer_setup_policykit (void)
-{
-	PolKitAction *pk_action;
-
-	/* refresh */
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-sources-refresh");
-	refresh_action = polkit_gnome_action_new_default ("refresh", pk_action,
-							  /* TRANSLATORS: button label, refresh the package lists */
-							  _("Refresh"),
-							  /* TRANSLATORS: button tooltip */
-							  _("Refreshing is not normally required but will retrieve the latest application and update lists"));
-	g_object_set (refresh_action, "auth-icon-name", NULL, NULL);
-	polkit_action_unref (pk_action);
-
-	/* restart */
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
-	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
-							  /* TRANSLATORS: button label */
-							  _("_Restart computer now"), NULL);
-	g_object_set (restart_action,
-		      "no-icon-name", GTK_STOCK_REFRESH,
-		      "auth-icon-name", GTK_STOCK_REFRESH,
-		      "yes-icon-name", GTK_STOCK_REFRESH,
-		      "self-blocked-icon-name", GTK_STOCK_REFRESH,
-		      "no-visible", FALSE,
-		      "master-visible", FALSE,
-		      NULL);
-	polkit_action_unref (pk_action);
-
-	/* update-package */
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-update");
-	update_packages_action = polkit_gnome_action_new_default ("update-package", pk_action,
-								  /* TRANSLATORS: button label, apply all pending updates the user has selected */
-								  _("_Install Updates"),
-								  /* TRANSLATORS: button tooltip */
-								  _("Install the selected updates"));
-	g_object_set (update_packages_action,
-		      "no-icon-name", GTK_STOCK_APPLY,
-		      "auth-icon-name", GTK_STOCK_APPLY,
-		      "yes-icon-name", GTK_STOCK_APPLY,
-		      "self-blocked-icon-name", GTK_STOCK_APPLY,
-		      NULL);
-	polkit_action_unref (pk_action);
-
-	/* update-system */
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-update");
-	update_system_action = polkit_gnome_action_new_default ("update-system", pk_action,
-								/* TRANSLATORS: button label, update all packages pending */
-								_("_Update System"),
-								/* TRANSLATORS: button tooltip */
-								_("Install all updates"));
-	g_object_set (update_system_action,
-		      "no-icon-name", GTK_STOCK_APPLY,
-		      "auth-icon-name", GTK_STOCK_APPLY,
-		      "yes-icon-name", GTK_STOCK_APPLY,
-		      "self-blocked-icon-name", GTK_STOCK_APPLY,
-		      NULL);
-	polkit_action_unref (pk_action);
-}
-
-/**
  * gpk_update_viewer_message_received_cb
  **/
 static void
@@ -1829,9 +1973,391 @@ gpk_update_viewer_message_received_cb (UniqueApp *app, UniqueCommand command, Un
 {
 	GtkWidget *widget;
 	if (command == UNIQUE_ACTIVATE) {
-		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
 		gtk_window_present (GTK_WINDOW (widget));
+
+		/* not hidden anymore */
+		running_hidden = FALSE;
 	}
+}
+
+/**
+ * gpk_update_viewer_get_new_update_list
+ **/
+static gboolean
+gpk_update_viewer_get_new_update_list (void)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GtkWidget *widget;
+	gchar *text = NULL;
+
+	/* clear all widgets */
+	gtk_list_store_clear (list_store_updates);
+	gtk_text_buffer_set_text (text_buffer, "", -1);
+
+	widget = glade_xml_get_widget (glade_xml, "label_header_title");
+	/* TRANSLATORS: this is the header */
+	text = g_strdup_printf ("<big><b>%s</b></big>", _("Checking for updates..."));
+	gtk_label_set_label (GTK_LABEL (widget), text);
+
+	/* reset client */
+	ret = pk_client_reset (client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get new list */
+	ret = pk_client_get_updates (client_primary, PK_FILTER_ENUM_NONE, &error);
+	if (!ret) {
+		egg_warning ("Failed to get updates: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	g_free (text);
+	return ret;
+}
+
+/**
+ * gpk_update_viewer_allow_cancel_cb:
+ **/
+static void
+gpk_update_viewer_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
+{
+	GdkDisplay *display;
+	GdkCursor *cursor;
+	GtkWidget *widget;
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	gtk_widget_set_sensitive (widget, allow_cancel);
+
+	/* set cursor */
+	if (allow_cancel) {
+		gdk_window_set_cursor (widget->window, NULL);
+	} else {
+		display = gdk_display_get_default ();
+		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
+		gdk_window_set_cursor (widget->window, cursor);
+		gdk_cursor_unref (cursor);
+	}
+}
+
+/**
+ * gpk_update_viewer_eula_cb:
+ **/
+static void
+gpk_update_viewer_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar *package_id,
+				    const gchar *vendor_name, const gchar *license_agreement, gpointer data)
+{
+	/* use the helper */
+	gpk_helper_eula_show (helper_eula, eula_id, package_id, vendor_name, license_agreement);
+}
+
+/**
+ * gpk_update_viewer_repo_signature_event_cb:
+ **/
+static void
+gpk_update_viewer_repo_signature_event_cb (GpkHelperRepoSignature *_helper_repo_signature, GtkResponseType type, const gchar *key_id, const gchar *package_id, gpointer data)
+{
+	GtkWidget *widget;
+	GtkTreeModel *model;
+	gboolean ret;
+	GError *error = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		/* we've ruined the old one by making the checkboxes insensitive */
+		gpk_update_viewer_get_new_update_list ();
+		gpk_update_viewer_reconsider_buttons (NULL);
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (client_secondary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* install signature */
+	ret = pk_client_install_signature (client_secondary, PK_SIGTYPE_ENUM_GPG, key_id, package_id, &error);
+	if (!ret) {
+		egg_warning ("cannot install signature: %s", error->message);
+		g_error_free (error);
+		/* we've ruined the old one by making the checkboxes insensitive */
+		gpk_update_viewer_get_new_update_list ();
+		goto out;
+	}
+out:
+	/* set state */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	gpk_update_viewer_reconsider_info (model);
+}
+
+/**
+ * gpk_update_viewer_eula_event_cb:
+ **/
+static void
+gpk_update_viewer_eula_event_cb (GpkHelperRepoSignature *_helper_eula, GtkResponseType type, const gchar *eula_id, gpointer data)
+{
+	GtkWidget *widget;
+	GtkTreeModel *model;
+	gboolean ret;
+	GError *error = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		/* we've ruined the old one by making the checkboxes insensitive */
+		gpk_update_viewer_get_new_update_list ();
+		gpk_update_viewer_reconsider_buttons (NULL);
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (client_secondary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* install signature */
+	ret = pk_client_accept_eula (client_secondary, eula_id, &error);
+	if (!ret) {
+		egg_warning ("cannot accept eula: %s", error->message);
+		g_error_free (error);
+		/* we've ruined the old one by making the checkboxes insensitive */
+		gpk_update_viewer_get_new_update_list ();
+		goto out;
+	}
+out:
+	/* set state */
+	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	gpk_update_viewer_reconsider_info (model);
+}
+
+/**
+ * gpk_update_viewer_repo_signature_required_cb:
+ **/
+static void
+gpk_update_viewer_repo_signature_required_cb (PkClient *client, const gchar *package_id, const gchar *repository_name,
+					      const gchar *key_url, const gchar *key_userid, const gchar *key_id,
+					      const gchar *key_fingerprint, const gchar *key_timestamp,
+					      PkSigTypeEnum type, gpointer data)
+{
+	/* use the helper */
+	gpk_helper_repo_signature_show (helper_repo_signature, package_id, repository_name, key_url, key_userid, key_id, key_fingerprint, key_timestamp);
+}
+
+/**
+ * pk_client_distro_upgrade_cb:
+ **/
+static void
+pk_client_distro_upgrade_cb (PkClient *client, const PkDistroUpgradeObj *obj, gpointer data)
+{
+	gchar *text;
+	gchar *text_format;
+	GtkWidget *widget;
+
+	if (obj->state != PK_UPDATE_STATE_ENUM_STABLE)
+		return;
+
+	/* only display last (newest) distro */
+	widget = glade_xml_get_widget (glade_xml, "label_upgrade");
+	/* TRANSLATORS: new distro available, e.g. F9 to F10 */
+	text = g_strdup_printf (_("New distribution upgrade release '%s' is available"), obj->summary);
+	text_format = g_strdup_printf ("<b>%s</b>", text);
+	gtk_label_set_label (GTK_LABEL (widget), text_format);
+	g_free (text);
+	g_free (text_format);
+	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
+	gtk_widget_show (widget);
+}
+
+/**
+ * gpk_update_viewer_textview_follow_link:
+ *
+ * Looks at all tags covering the position of iter in the text view,
+ * and if one of them is a link, follow it by showing the page identified
+ * by the data attached to it.
+ **/
+static void
+gpk_update_viewer_textview_follow_link (GtkWidget *text_view, GtkTextIter *iter)
+{
+	GSList *tags = NULL, *tagp = NULL;
+
+	tags = gtk_text_iter_get_tags (iter);
+	for (tagp = tags; tagp != NULL; tagp = tagp->next) {
+		GtkTextTag *tag = tagp->data;
+		const gchar *href = (const gchar *) (g_object_get_data (G_OBJECT (tag), "href"));
+		if (href != NULL)
+			gpk_gnome_open (href);
+	}
+
+	if (tags != NULL)
+		g_slist_free (tags);
+}
+
+/**
+ * gpk_update_viewer_textview_key_press_event:
+ *
+ * Links can be activated by pressing Enter
+ **/
+static gboolean
+gpk_update_viewer_textview_key_press_event (GtkWidget *text_view, GdkEventKey *event)
+{
+	GtkTextIter iter;
+	GtkTextBuffer *buffer;
+
+	switch (event->keyval) {
+		case GDK_Return:
+		case GDK_KP_Enter:
+			buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+			gtk_text_buffer_get_iter_at_mark (buffer, &iter, gtk_text_buffer_get_insert (buffer));
+			gpk_update_viewer_textview_follow_link (text_view, &iter);
+			break;
+		default:
+		break;
+	}
+
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_textview_event_after:
+ *
+ * Links can also be activated by clicking
+ **/
+static gboolean
+gpk_update_viewer_textview_event_after (GtkWidget *text_view, GdkEvent *ev)
+{
+	GtkTextIter start, end, iter;
+	GtkTextBuffer *buffer;
+	GdkEventButton *event;
+	gint x, y;
+
+	if (ev->type != GDK_BUTTON_RELEASE)
+		return FALSE;
+
+	event = (GdkEventButton *)ev;
+	if (event->button != 1)
+		return FALSE;
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+
+	/* we shouldn't follow a link if the user has selected something */
+	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
+		return FALSE;
+
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, event->x, event->y, &x, &y);
+	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, x, y);
+	gpk_update_viewer_textview_follow_link (text_view, &iter);
+
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_textview_set_cursor:
+ *
+ * Looks at all tags covering the position (x, y) in the text view,
+ * and if one of them is a link, change the cursor to the "hands" cursor
+ * typically used by web browsers.
+ **/
+static void
+gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
+{
+	GSList *tags = NULL, *tagp = NULL;
+	GtkTextIter iter;
+	GdkCursor *cursor;
+	gboolean hovering = FALSE;
+	gboolean hovering_over_link = FALSE;
+
+	hovering_over_link = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT(text_view), "hovering"));
+	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
+
+	tags = gtk_text_iter_get_tags (&iter);
+	for (tagp = tags; tagp != NULL; tagp = tagp->next) {
+		GtkTextTag *tag = tagp->data;
+		const gchar *href = (const gchar *) g_object_get_data (G_OBJECT (tag), "href");
+		if (href != NULL) {
+			hovering = TRUE;
+			break;
+		}
+	}
+
+	/* already set same state */
+	if (hovering != hovering_over_link) {
+		g_object_set_data (G_OBJECT(text_view), "hovering", GUINT_TO_POINTER (hovering));
+		if (hovering)
+			cursor = gdk_cursor_new_for_display (gdk_display_get_default (), GDK_HAND2);
+		else
+			cursor = gdk_cursor_new_for_display (gdk_display_get_default (), GDK_XTERM);
+		gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), cursor);
+		gdk_cursor_unref (cursor);
+	}
+
+	if (tags != NULL)
+		g_slist_free (tags);
+}
+
+/**
+ * gpk_update_viewer_textview_motion_notify_event:
+ *
+ * Update the cursor image if the pointer moved.
+ **/
+static gboolean
+gpk_update_viewer_textview_motion_notify_event (GtkWidget *text_view, GdkEventMotion *event)
+{
+	gint x, y;
+
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, event->x, event->y, &x, &y);
+	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), x, y);
+	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_textview_visibility_notify_event:
+ *
+ * Also update the cursor image if the window becomes visible
+ * (e.g. when a window covering it got iconified).
+ **/
+static gboolean
+gpk_update_viewer_textview_visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event)
+{
+	gint wx, wy, bx, by;
+
+	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, wx, wy, &bx, &by);
+	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), bx, by);
+	return FALSE;
+}
+
+/**
+ * gpk_update_viewer_updates_changed_cb:
+ **/
+static void
+gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer data)
+{
+	/* now try to get newest update list */
+	egg_debug ("updates changed");
+	gpk_update_viewer_get_new_update_list ();
+}
+
+/**
+ * gpk_update_viewer_vpaned_realized_cb:
+ **/
+static void
+gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer data)
+{
+	GtkRequisition req;
+	gtk_widget_size_request (widget, &req);
+	egg_debug ("req.height=%i", req.height);
+	if (req.height != 0)
+		gtk_paned_set_position (GTK_PANED (widget), 166);
 }
 
 /**
@@ -1896,179 +2422,181 @@ main (int argc, char *argv[])
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer", NULL);
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer2", NULL);
 	if (unique_app_is_running (unique_app)) {
 		egg_debug ("You have another instance running. This program will now close");
 		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
 	}
 
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
-
-	/* we have to do this before we connect up the glade file */
-	gpk_update_viewer_setup_policykit ();
+	g_signal_connect (unique_app, "message-received", G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
 
 	markdown = egg_markdown_new ();
 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
 	egg_markdown_set_escape (markdown, TRUE);
+	egg_markdown_set_autocode (markdown, TRUE);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_update_viewer_repo_list_changed_cb), NULL);
+	g_signal_connect (control, "updates-changed",
+			  G_CALLBACK (gpk_update_viewer_updates_changed_cb), NULL);
 
-	/* this is stuff we don't care about */
-	client_query = pk_client_new ();
-	pk_client_set_use_buffer (client_query, TRUE, NULL);
-	g_signal_connect (client_query, "package",
+	/* this is what we use mainly */
+	client_primary = pk_client_new ();
+	pk_client_set_use_buffer (client_primary, TRUE, NULL);
+	g_signal_connect (client_primary, "package",
 			  G_CALLBACK (gpk_update_viewer_package_cb), NULL);
-	g_signal_connect (client_query, "finished",
+	g_signal_connect (client_primary, "details",
+			  G_CALLBACK (gpk_update_viewer_details_cb), NULL);
+	g_signal_connect (client_primary, "finished",
 			  G_CALLBACK (gpk_update_viewer_finished_cb), NULL);
-	g_signal_connect (client_query, "progress-changed",
+	g_signal_connect (client_primary, "progress-changed",
 			  G_CALLBACK (gpk_update_viewer_progress_changed_cb), NULL);
-	g_signal_connect (client_query, "update-detail",
+	g_signal_connect (client_primary, "update-detail",
 			  G_CALLBACK (gpk_update_viewer_update_detail_cb), NULL);
-	g_signal_connect (client_query, "status-changed",
+	g_signal_connect (client_primary, "status-changed",
 			  G_CALLBACK (gpk_update_viewer_status_changed_cb), NULL);
-	g_signal_connect (client_query, "error-code",
+	g_signal_connect (client_primary, "error-code",
 			  G_CALLBACK (gpk_update_viewer_error_code_cb), NULL);
+	g_signal_connect (client_primary, "allow-cancel",
+			  G_CALLBACK (gpk_update_viewer_allow_cancel_cb), NULL);
+	g_signal_connect (client_primary, "repo-signature-required",
+			  G_CALLBACK (gpk_update_viewer_repo_signature_required_cb), NULL);
+	g_signal_connect (client_primary, "eula-required",
+			  G_CALLBACK (gpk_update_viewer_eula_required_cb), NULL);
+	g_signal_connect (client_primary, "distro-upgrade",
+			  G_CALLBACK (pk_client_distro_upgrade_cb), NULL);
+
+	/* this is for auth and eula callbacks */
+	client_secondary = pk_client_new ();
+	g_signal_connect (client_secondary, "error-code",
+			  G_CALLBACK (gpk_update_viewer_error_code_cb), NULL);
+	g_signal_connect (client_secondary, "finished",
+			  G_CALLBACK (gpk_update_viewer_finished_cb), NULL);
 
 	/* get actions */
 	roles = pk_control_get_actions (control, NULL);
 
-	/* monitor for other updates in progress */
-	tlist = pk_task_list_new ();
+	glade_xml = glade_xml_new (GPK_DATA "/gpk-update-viewer2.glade", NULL, NULL);
+	main_window = glade_xml_get_widget (glade_xml, "dialog_updates");
+	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_delete_event_cb), NULL);
 
-	/* install stuff using the gnome helpers */
-	gclient = gpk_client_new ();
+	/* helpers */
+	helper_repo_signature = gpk_helper_repo_signature_new ();
+	g_signal_connect (helper_repo_signature, "event", G_CALLBACK (gpk_update_viewer_repo_signature_event_cb), NULL);
+	gpk_helper_repo_signature_set_parent (helper_repo_signature, GTK_WINDOW (main_window));
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
-
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-update-viewer.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "window_updates");
-
-	/* make GpkClient windows modal */
-	gtk_widget_realize (main_window);
-	gpk_client_set_parent (gclient, GTK_WINDOW (main_window));
-
-	/* hide from finished page until we have updates */
-	widget = glade_xml_get_widget (glade_xml, "hbox_restart");
-	gtk_widget_hide (widget);
-
-	/* Get the main window quit */
-	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_close), NULL);
-
-	/* button_close2 and button_close3 are on the overview/review
-	 * screens, where we want to cancel transactions when closing
-	 */
-	widget = glade_xml_get_widget (glade_xml, "button_close2");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_close3");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close_and_cancel_cb), NULL);
-
-	/* normal close buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_close4");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_update_viewer_button_close), NULL);
-
-	/* connect up PolicyKit actions */
-	g_signal_connect (refresh_action, "activate",
-			  G_CALLBACK (gpk_update_viewer_refresh_cb), NULL);
-	g_signal_connect (restart_action, "activate",
-			  G_CALLBACK (gpk_update_viewer_restart_cb), NULL);
-	g_signal_connect (update_packages_action, "activate",
-			  G_CALLBACK (gpk_update_viewer_apply_cb), NULL);
-	g_signal_connect (update_system_action, "activate",
-			  G_CALLBACK (gpk_update_viewer_update_system_cb), NULL);
-
-	widget = glade_xml_get_widget (glade_xml, "button_review");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_review_cb), NULL);
-	/* TRANSLATORS: tooltip on the review button */
-	gtk_widget_set_tooltip_text(widget, _("Review the update list"));
-
-	widget = glade_xml_get_widget (glade_xml, "button_overview");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_overview_cb), NULL);
-	/* TRANSLATORS: tooltip on the back button (from the detailed view) */
-	gtk_widget_set_tooltip_text(widget, _("Back to overview"));
-
-	widget = glade_xml_get_widget (glade_xml, "button_overview2");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_more_installs_cb), NULL);
-	/* TRANSLATORS: tooltip on the back button (from finished view) */
-	gtk_widget_set_tooltip_text (widget, _("Back to overview"));
-
-	widget = glade_xml_get_widget (glade_xml, "button_help");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), (gpointer)"update-viewer");
-
-	widget = glade_xml_get_widget (glade_xml, "button_help2");
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), (gpointer)"update-viewer-details");
+	helper_eula = gpk_helper_eula_new ();
+	g_signal_connect (helper_eula, "event", G_CALLBACK (gpk_update_viewer_eula_event_cb), NULL);
+	gpk_helper_eula_set_parent (helper_eula, GTK_WINDOW (main_window));
 
 	/* create list stores */
-	list_store_details = gtk_list_store_new (PACKAGES_COLUMN_LAST, G_TYPE_STRING,
-						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
-						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
-	list_store_preview = gtk_list_store_new (PREVIEW_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
-	list_store_description = gtk_list_store_new (DESC_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
+						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
+						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
+	text_buffer = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_create_tag (text_buffer, "para",
+				    "pixels_above_lines", 5,
+				    "wrap-mode", GTK_WRAP_WORD,
+				    NULL);
+	gtk_text_buffer_create_tag (text_buffer, "important",
+				    "weight", PANGO_WEIGHT_BOLD,
+				    NULL);
 
-	/* create preview tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_preview");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store_preview));
+	/* no upgrades yet */
+	widget = glade_xml_get_widget (glade_xml, "viewport_upgrade");
+	gtk_widget_hide (widget);
 
-	/* add columns to the tree view */
-	gpk_update_viewer_treeview_add_columns (GTK_TREE_VIEW (widget));
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+	/* description */
+	widget = glade_xml_get_widget (glade_xml, "textview_details");
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), text_buffer);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (widget), 5);
+	g_signal_connect (GTK_TEXT_VIEW (widget), "key-press-event", G_CALLBACK (gpk_update_viewer_textview_key_press_event), NULL);
+	g_signal_connect (GTK_TEXT_VIEW (widget), "event-after", G_CALLBACK (gpk_update_viewer_textview_event_after), NULL);
+	g_signal_connect (GTK_TEXT_VIEW (widget), "motion-notify-event", G_CALLBACK (gpk_update_viewer_textview_motion_notify_event), NULL);
+	g_signal_connect (GTK_TEXT_VIEW (widget), "visibility-notify-event", G_CALLBACK (gpk_update_viewer_textview_visibility_notify_event), NULL);
 
-	/* create description tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_description");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store_description));
-
-	/* add columns to the tree view */
-	gpk_update_viewer_treeview_add_columns_description (GTK_TREE_VIEW (widget));
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
-
-	/* create package tree view */
+	/* updates */
 	widget = glade_xml_get_widget (glade_xml, "treeview_updates");
+	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (list_store_details));
+				 GTK_TREE_MODEL (list_store_updates));
+	gpk_update_viewer_treeview_add_columns_update (GTK_TREE_VIEW (widget));
 	g_signal_connect (widget, "popup-menu",
 			  G_CALLBACK (gpk_update_viewer_detail_popup_menu), NULL);
 	g_signal_connect (widget, "button-press-event",
 			  G_CALLBACK (gpk_update_viewer_detail_button_pressed), NULL);
 
+	/* selection */
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
 
-	/* add columns to the tree view */
-	gpk_update_viewer_treeview_add_columns_update (GTK_TREE_VIEW (widget));
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
+	/* bottom UI */
+	widget = glade_xml_get_widget (glade_xml, "progressbar_progress");
+	gtk_widget_hide (widget);
+	widget = glade_xml_get_widget (glade_xml, "label_summary");
+	gtk_widget_hide (widget);
 
-	/* make the buttons non-clickable until we get completion */
-	polkit_gnome_action_set_sensitive (update_system_action, FALSE);
-	polkit_gnome_action_set_sensitive (update_packages_action, FALSE);
-	widget = glade_xml_get_widget (glade_xml, "button_review");
+	/* help button */
+	widget = glade_xml_get_widget (glade_xml, "button_help");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_help_cb), (gpointer) "update-viewer");
+
+	/* set install button insensitive */
+	widget = glade_xml_get_widget (glade_xml, "button_install");
+	gtk_widget_set_sensitive (widget, FALSE);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_install_cb), NULL);
+
+	/* sensitive */
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_updates");
+	gtk_widget_set_sensitive (widget, FALSE);
+	widget = glade_xml_get_widget (glade_xml, "scrolledwindow_details");
 	gtk_widget_set_sensitive (widget, FALSE);
 
-	/* set the last updated text */
-	pk_update_viewer_set_last_refreshed_time ();
-	pk_update_viewer_set_last_updated_time ();
+	/* close button */
+	widget = glade_xml_get_widget (glade_xml, "button_close");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_close_cb), NULL);
+	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
 
-	/* we need to grey out all the buttons if we are in progress */
-	g_signal_connect (tlist, "changed",
-			  G_CALLBACK (gpk_update_viewer_task_list_changed_cb), NULL);
-	gpk_update_viewer_task_list_changed_cb (tlist, NULL);
-	g_signal_connect (tlist, "finished",
-			  G_CALLBACK (gpk_update_viewer_task_list_finished_cb), NULL);
+	/* hide cancel button */
+	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	gtk_widget_hide (widget);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_cancel_cb), NULL);
+
+	/* upgrade button */
+	widget = glade_xml_get_widget (glade_xml, "button_upgrade");
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_update_viewer_button_upgrade_cb), NULL);
+
+	/* set a size, if the screen allows */
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 700, 600);
+	if (!ret) {
+		egg_debug ("small form factor mode");
+		/* hide the header in SFF mode */
+		widget = glade_xml_get_widget (glade_xml, "hbox_header");
+		gtk_widget_hide (widget);
+	}
+
+	/* use correct status pane */
+	widget = glade_xml_get_widget (glade_xml, "label_status");
+	gtk_widget_set_size_request (widget, -1, 32);
+	widget = glade_xml_get_widget (glade_xml, "label_info");
+	gtk_widget_set_size_request (widget, -1, 32);
 
 	/* show window */
 	gtk_widget_show (main_window);
+
+	/* set the paned to be in the middle */
+	widget = glade_xml_get_widget (glade_xml, "vpaned_updates");
+	g_signal_connect (widget, "realize",
+			  G_CALLBACK (gpk_update_viewer_vpaned_realized_cb), NULL);
 
 	/* coldplug */
 	gpk_update_viewer_get_new_update_list ();
@@ -2078,24 +2606,37 @@ main (int argc, char *argv[])
 	g_main_loop_run (loop);
 
 	/* we might have visual stuff running, close it down */
-	ret = pk_client_cancel (client_query, &error);
+	ret = pk_client_cancel (client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to cancel client: %s", error->message);
+		g_clear_error (&error);
+	}
+
+	/* we might have visual stuff running, close it down */
+	ret = pk_client_cancel (client_secondary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 	}
 
 	g_main_loop_unref (loop);
+
+	if (update_list != NULL)
+		g_object_unref (update_list);
+
+	g_object_unref (helper_eula);
+	g_object_unref (helper_repo_signature);
 	g_object_unref (glade_xml);
-	g_object_unref (list_store_preview);
-	g_object_unref (list_store_description);
-	g_object_unref (list_store_details);
-	g_object_unref (gclient);
+	g_object_unref (list_store_updates);
 	g_object_unref (control);
 	g_object_unref (markdown);
-	g_object_unref (client_query);
-	g_free (cached_package_id);
+	g_object_unref (client_primary);
+	g_object_unref (client_secondary);
+	g_object_unref (text_buffer);
+	pk_package_id_free (package_id_last);
 unique_out:
 	g_object_unref (unique_app);
 
 	return 0;
 }
+

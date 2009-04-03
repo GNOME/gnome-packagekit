@@ -1111,7 +1111,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->dbus_monitor_viewer = egg_dbus_monitor_new ();
 	egg_dbus_monitor_assign (cupdate->priv->dbus_monitor_viewer,
 				 EGG_DBUS_MONITOR_SESSION,
-				 "org.freedesktop.PackageKit.UpdateViewer2");
+				 "org.freedesktop.PackageKit.UpdateViewer");
 	g_signal_connect (cupdate->priv->dbus_monitor_viewer, "connection-changed",
 			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
 
