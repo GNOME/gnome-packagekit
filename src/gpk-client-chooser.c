@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
 
@@ -40,7 +39,8 @@
 
 static GtkListStore *list_store = NULL;
 static gchar *package_id = NULL;
-static PolKitGnomeAction *button_action = NULL;
+static PolKitGnomeAction *polkit_action = NULL;
+static GtkWidget *button_action = NULL;
 
 enum
 {
@@ -102,20 +102,6 @@ gpk_client_chooser_treeview_clicked_cb (GtkTreeSelection *selection, gboolean da
 }
 
 /**
- * gpk_update_viewer_create_custom_widget:
- **/
-static GtkWidget *
-gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				        gchar *string1, gchar *string2,
-				        gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "button_action"))
-		return polkit_gnome_action_create_button (button_action);
-	egg_warning ("name unknown=%s", name);
-	return NULL;
-}
-
-/**
  * pk_treeview_add_general_columns:
  **/
 static void
@@ -144,8 +130,6 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 
 /**
  * gpk_update_viewer_setup_policykit:
- *
- * We have to do this before the glade stuff if done as the custom handler needs the actions setup
  **/
 static void
 gpk_update_viewer_setup_policykit (void)
@@ -154,8 +138,8 @@ gpk_update_viewer_setup_policykit (void)
 	pk_action = polkit_action_new ();
 	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.package-install");
 	/* TRANSLATORS: button label, install the selected package */
-	button_action = polkit_gnome_action_new_default ("install", pk_action, _("_Install"), NULL);
-	g_object_set (button_action,
+	polkit_action = polkit_gnome_action_new_default ("install", pk_action, _("_Install"), NULL);
+	g_object_set (polkit_action,
 		      "no-icon-name", GTK_STOCK_FLOPPY,
 		      "auth-icon-name", GTK_STOCK_FLOPPY,
 		      "yes-icon-name", GTK_STOCK_FLOPPY,
@@ -172,7 +156,7 @@ gpk_update_viewer_setup_policykit (void)
 gchar *
 gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *title)
 {
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	const PkPackageObj *obj;
@@ -182,33 +166,37 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	gchar *text;
 	guint len;
 	guint i;
+	guint retval;
+	GError *error = NULL;
+	GtkBox *box;
 
 	g_return_val_if_fail (list != NULL, NULL);
 	g_return_val_if_fail (title != NULL, NULL);
 
-	/* we have to do this before we connect up the glade file */
-	gpk_update_viewer_setup_policykit ();
-
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
-
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_chooser_button_help_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_chooser_button_close_cb), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 
@@ -218,7 +206,14 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 	}
 
-	/* connect up PolicyKit actions */
+	/* we have to do this before we connect up the action */
+	gpk_update_viewer_setup_policykit ();
+
+	/* add policykit action widget */
+	button_action = polkit_gnome_action_create_button (polkit_action);
+	box = GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (widget)));
+	gtk_box_pack_start (box, button_action, FALSE, FALSE, 0);
+	gtk_widget_show (button_action);
 	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_client_chooser_button_action_cb), NULL);
 
 	/* create list stores */
@@ -226,7 +221,7 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 						 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package_id tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_simple"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store));
 
@@ -270,15 +265,15 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	g_object_unref (desktop);
 
 	/* hide the filter box */
-	widget = glade_xml_get_widget (glade_xml, "hbox_filter");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_filter"));
 	gtk_widget_hide (widget);
 
 	/* hide the refresh button */
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	gtk_widget_hide (widget);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_widget_show (widget);
 
 	/* wait for button press */
@@ -287,8 +282,9 @@ gpk_client_chooser_show (GtkWindow *window, PkPackageList *list, const gchar *ti
 	/* hide window */
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_object_unref (glade_xml);
-
+	g_object_unref (button_action);
+out_build:
+	g_object_unref (builder);
 	return package_id;
 }
 

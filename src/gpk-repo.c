@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 
-#include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
@@ -43,13 +42,14 @@
 #include "gpk-animated-icon.h"
 #include "gpk-enum.h"
 
-static GladeXML *glade_xml = NULL;
+static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
+static GtkWidget *image_animation = NULL;
 
 enum {
 	REPO_COLUMN_ENABLED,
@@ -169,7 +169,7 @@ gpk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpoint
 	}
 
 	/* set insensitive until we've done this */
-	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* get toggled iter */
@@ -213,7 +213,7 @@ gpk_repo_detail_cb (PkClient *client_, const gchar *repo_id,
 		    const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
-	GtkTreeView *treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
@@ -289,11 +289,11 @@ gpk_repo_finished_cb (PkClient *client_, PkExitEnum exit, guint runtime, gpointe
 	GtkWidget *widget;
 
 	/* set sensitive now we've done this */
-	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* remove the items that are not used */
-	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
 	gpk_repo_remove_nonactive (model);
 }
@@ -307,23 +307,21 @@ gpk_repo_status_changed_cb (PkClient *client_, PkStatusEnum status, gpointer dat
 	const gchar *text;
 	GtkWidget *widget;
 
-	widget = glade_xml_get_widget (glade_xml, "viewport_animation_preview");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
 	if (status == PK_STATUS_ENUM_FINISHED) {
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "image_animation");
-		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
+		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (image_animation), FALSE);
 		return;
 	}
 
 	/* set the text and show */
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (glade_xml, "label_animation");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_animation"));
 	text = gpk_status_enum_to_localised_text (status);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	widget = glade_xml_get_widget (glade_xml, "image_animation");
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
 	gtk_widget_show (widget);
 }
 
@@ -333,10 +331,10 @@ gpk_repo_status_changed_cb (PkClient *client_, PkStatusEnum status, gpointer dat
 static void
 gpk_repo_error_code_cb (PkClient *client_, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "dialog_repo");
+	GtkWindow *window;
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
 	/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
-	gpk_error_dialog_modal (GTK_WINDOW (widget), _("Failed to change status"),
+	gpk_error_dialog_modal (window, _("Failed to change status"),
 				gpk_error_enum_to_localised_text (code), details);
 }
 
@@ -353,7 +351,7 @@ gpk_repo_repo_list_refresh (void)
 	GtkTreeModel *model;
 
 	/* mark the items as not used */
-	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_repo"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
 	gpk_repo_mark_nonactive (model);
 
@@ -402,25 +400,11 @@ gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 static void
 gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 	if (command == UNIQUE_ACTIVATE) {
-		widget = glade_xml_get_widget (glade_xml, "dialog_repo");
-		gtk_window_present (GTK_WINDOW (widget));
+		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
+		gtk_window_present (window);
 	}
-}
-
-/**
- * gpk_repo_create_custom_widget:
- **/
-static GtkWidget *
-gpk_repo_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-			       gchar *string1, gchar *string2,
-			       gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "image_animation"))
-		return gpk_animated_icon_new ();
-	egg_warning ("name unknown='%s'", name);
-	return NULL;
 }
 
 /**
@@ -436,7 +420,10 @@ main (int argc, char *argv[])
 	GtkTreeSelection *selection;
 	PkControl *control;
 	UniqueApp *unique_app;
+	GError *error = NULL;
+	guint retval;
 	gboolean ret;
+	GtkBox *box;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -500,23 +487,33 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_repo_repo_list_changed_cb), NULL);
 	roles = pk_control_get_actions (control, NULL);
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_repo_create_custom_widget, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-repo.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-repo.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "dialog_repo");
+	/* add animated widget */
+	image_animation = gpk_animated_icon_new ();
+	box = GTK_BOX (gtk_builder_get_object (builder, "hbox_animation"));
+	gtk_box_pack_start (box, image_animation, FALSE, FALSE, 0);
+	gtk_box_reorder_child (box, image_animation, 0);
+	gtk_widget_show (image_animation);
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_repo"));
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
-
-	/* Get the main window quit */
 	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_button_help_cb), NULL);
 
-	widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
 	show_details = gconf_client_get_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, NULL);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), show_details);
 	g_signal_connect (widget, "clicked",
@@ -530,7 +527,7 @@ main (int argc, char *argv[])
 					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	/* create repo tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store));
 
@@ -546,7 +543,7 @@ main (int argc, char *argv[])
 	gtk_widget_show (main_window);
 
 	/* focus back to the close button */
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	gtk_widget_grab_focus (widget);
 
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
@@ -555,17 +552,18 @@ main (int argc, char *argv[])
 	} else {
 		gpk_repo_detail_cb (client, "default",
 				   _("Getting software source list not supported by backend"), FALSE, NULL);
-		widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
 	/* wait */
 	gtk_main ();
 
-	g_object_unref (glade_xml);
 	g_object_unref (list_store);
+out_build:
+	g_object_unref (builder);
 	g_object_unref (gconf_client);
 	g_object_unref (client);
 	g_object_unref (control);

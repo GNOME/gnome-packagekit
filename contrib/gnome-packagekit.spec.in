@@ -34,7 +34,6 @@ Obsoletes: pirut < 1.3.31-2
 Provides:  pirut = 1.3.31-2
 
 BuildRequires: libgnomeui-devel
-BuildRequires: libglade2-devel
 BuildRequires: libwnck-devel
 BuildRequires: dbus-devel >= %{dbus_version}
 BuildRequires: libnotify-devel
@@ -144,15 +143,15 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/gpk-update-icon
 %{_bindir}/gpk-update-viewer
 %dir %{_datadir}/gnome-packagekit
-%{_datadir}/gnome-packagekit/gpk-application.glade
-%{_datadir}/gnome-packagekit/gpk-client.glade
-%{_datadir}/gnome-packagekit/gpk-eula.glade
-%{_datadir}/gnome-packagekit/gpk-prefs.glade
-%{_datadir}/gnome-packagekit/gpk-update-viewer.glade
-%{_datadir}/gnome-packagekit/gpk-error.glade
-%{_datadir}/gnome-packagekit/gpk-log.glade
-%{_datadir}/gnome-packagekit/gpk-repo.glade
-%{_datadir}/gnome-packagekit/gpk-signature.glade
+%{_datadir}/gnome-packagekit/gpk-application.ui
+%{_datadir}/gnome-packagekit/gpk-client.ui
+%{_datadir}/gnome-packagekit/gpk-eula.ui
+%{_datadir}/gnome-packagekit/gpk-prefs.ui
+%{_datadir}/gnome-packagekit/gpk-update-viewer.ui
+%{_datadir}/gnome-packagekit/gpk-error.ui
+%{_datadir}/gnome-packagekit/gpk-log.ui
+%{_datadir}/gnome-packagekit/gpk-repo.ui
+%{_datadir}/gnome-packagekit/gpk-signature.ui
 %dir %{_datadir}/gnome-packagekit/icons
 %dir %{_datadir}/gnome-packagekit/icons/hicolor
 %dir %{_datadir}/gnome-packagekit/icons/hicolor/*
@@ -180,8 +179,8 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/gpk-backend-status
 %{_bindir}/gpk-service-pack
-%{_datadir}/gnome-packagekit/gpk-service-pack.glade
-%{_datadir}/gnome-packagekit/gpk-backend-status.glade
+%{_datadir}/gnome-packagekit/gpk-service-pack.ui
+%{_datadir}/gnome-packagekit/gpk-backend-status.ui
 %{_datadir}/applications/gpk-service-pack.desktop
 
 %changelog

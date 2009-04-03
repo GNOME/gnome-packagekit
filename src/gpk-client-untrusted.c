@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
 
@@ -60,26 +59,35 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	GtkWidget *widget;
 	GtkWidget *button;
 	PolKitAction *pk_action;
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	gchar *text;
 	const gchar *title;
 	gchar *message;
 	PolKitGnomeAction *update_system_action;
+	guint retval;
+	GError *error = NULL;
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* connect up actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* title */
 	title = gpk_error_enum_to_localised_text (code);
-	widget = glade_xml_get_widget (glade_xml, "label_title");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_title"));
 	text = g_strdup_printf ("<b><big>%s</big></b>", title);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 	g_free (text);
@@ -94,12 +102,12 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 				   _("Malicious software can damage your computer or cause other harm."),
 				   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
 				   _("Are you <b>sure</b> you want to install this package?"));
-	widget = glade_xml_get_widget (glade_xml, "label_message");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_message"));
 	gtk_label_set_markup (GTK_LABEL (widget), message);
 	g_free (message);
 
 	/* don't show text in the expander */
-	widget = glade_xml_get_widget (glade_xml, "expander_details");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "expander_details"));
 	gtk_widget_hide (widget);
 
 	/* add the extra button and connect up to a Policykit action */
@@ -123,12 +131,12 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	gtk_widget_show (button);
 
 	/* add to box */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
 	widget = gtk_dialog_get_action_area (GTK_DIALOG(widget));
 	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
 	gtk_widget_show (widget);
 
 	/* wait for button press */
@@ -138,7 +146,8 @@ gpk_client_untrusted_show (PkErrorCodeEnum code)
 	if (GTK_IS_WIDGET (widget)) {
 		gtk_widget_hide (widget);
 	}
-	g_object_unref (glade_xml);
+out_build:
+	g_object_unref (builder);
 	return retry_untrusted;
 }
 

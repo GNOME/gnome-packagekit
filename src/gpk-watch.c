@@ -35,7 +35,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <polkit-gnome/polkit-gnome.h>
@@ -821,7 +820,7 @@ static void
 gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkWatch *watch = GPK_WATCH (data);
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkListStore *list_store;
@@ -831,9 +830,19 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 	GtkTreeModel *model;
 	guint i;
 	GpkWatchCachedMessage *cached_message;
+	guint retval;
+	GError *error = NULL;
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-repo.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "dialog_repo");
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-repo.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_repo"));
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_LOG);
 	gtk_window_set_title (GTK_WINDOW (main_window), _("Package Manager Messages"));
 
@@ -843,19 +852,19 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 	/* Get the main window quit */
 	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	gtk_widget_hide (widget);
 
-	widget = glade_xml_get_widget (glade_xml, "checkbutton_detail");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
 	gtk_widget_hide (widget);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_WATCH_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create repo tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_repo");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (list_store));
 
 	/* column for text */
@@ -900,7 +909,7 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 	gtk_widget_show (main_window);
 
 	/* focus back to the close button */
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	gtk_widget_grab_focus (widget);
 
 	/* wait */
@@ -911,8 +920,9 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 	g_ptr_array_foreach (watch->priv->cached_messages, (GFunc) gpk_watch_cached_message_free, NULL);
 	g_ptr_array_set_size (watch->priv->cached_messages, 0);
 
-	g_object_unref (glade_xml);
 	g_object_unref (list_store);
+out_build:
+	g_object_unref (builder);
 
 	/* refresh UI */
 	gpk_watch_refresh_icon (watch);

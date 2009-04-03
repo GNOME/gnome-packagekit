@@ -8,7 +8,6 @@ INCLUDES =						\
 	$(GIO_CFLAGS)					\
 	$(DBUS_CFLAGS)					\
 	$(GCONF_CFLAGS)					\
-	$(LIBGLADE_CFLAGS)				\
 	$(LIBNOTIFY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(UNIQUE_CFLAGS)				\
@@ -103,7 +102,6 @@ shared_LIBS =						\
 	$(GIO_LIBS)					\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
-	$(LIBGLADE_LIBS)				\
 	$(GTK_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\

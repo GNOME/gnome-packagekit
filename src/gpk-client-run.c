@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -137,21 +136,6 @@ gpk_client_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 	g_free (priv->full_path);
 	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &priv->full_path, -1);
 	gtk_main_quit ();
-}
-
-/**
- * gpk_update_viewer_create_custom_widget:
- **/
-static GtkWidget *
-gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				        gchar *string1, gchar *string2,
-				        gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "button_action"))
-		/* TRANSLATORS: button: execute the application */
-		return gtk_button_new_with_mnemonic (_("_Run"));
-	egg_warning ("name unknown=%s", name);
-	return NULL;
 }
 
 /**
@@ -338,48 +322,60 @@ out:
 gchar *
 gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 {
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	guint len;
 	GpkClientRunPriv priv;
+	guint retval;
+	GError *error = NULL;
+	GtkBox *box;
+	GtkWidget *button;
 
 	g_return_val_if_fail (package_ids != NULL, NULL);
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
+	/* add run widget */
+	button = gtk_button_new_with_mnemonic (_("_Run"));
+	box = GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (widget)));
+	gtk_box_pack_start (box, button, FALSE, FALSE, 0);
+	gtk_widget_show (button);
+	g_signal_connect (button, "clicked", G_CALLBACK (gpk_client_run_button_action_cb), &priv);
 
 	/* initially nothing */
 	priv.full_path = NULL;
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_run_delete_event_cb), &priv);
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_help_cb), &priv);
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_close_cb), &priv);
-	widget = glade_xml_get_widget (glade_xml, "button_action");
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_run_button_action_cb), &priv);
-	gtk_widget_show (widget);
 
 	/* hide the filter box */
-	widget = glade_xml_get_widget (glade_xml, "hbox_filter");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_filter"));
 	gtk_widget_hide (widget);
 
 	/* hide the refresh button */
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	gtk_widget_hide (widget);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 	/* TRANSLATORS: window title: do we want to execute a program we just installed? */
 	gtk_window_set_title (GTK_WINDOW (widget), _("Run new application?"));
@@ -389,7 +385,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 					      G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* create package_id tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_simple"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (priv.list_store));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
@@ -412,7 +408,7 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 	}
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	if (window != NULL) {
 		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
@@ -426,12 +422,13 @@ gpk_client_run_show (GtkWindow *window, gchar **package_ids)
 
 out:
 	/* hide window */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-
-	//g_object_unref (glade_xml);
 	g_object_unref (priv.list_store);
+
+out_build:
+	g_object_unref (builder);
 
 	return priv.full_path;
 }

@@ -24,7 +24,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
-#include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
@@ -33,7 +32,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-#include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
 #include <unique/unique.h>
@@ -45,12 +43,11 @@
 #include "gpk-gnome.h"
 #include "gpk-enum.h"
 
-static GladeXML *glade_xml = NULL;
+static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
-static PolKitGnomeAction *button_action = NULL;
 static PkObjList *transactions = NULL;
 static GtkTreePath *path_global = NULL;
 
@@ -157,24 +154,6 @@ static void
 gpk_log_button_help_cb (GtkWidget *widget, gpointer data)
 {
 	gpk_gnome_help ("software-log");
-}
-
-/**
- * gpk_log_button_rollback_cb:
- **/
-static void
-gpk_log_button_rollback_cb (PolKitGnomeAction *action, gpointer data)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* rollback */
-	ret = pk_client_rollback (client, transaction_id, &error);
-	if (!ret) {
-		egg_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-	}
-	gtk_main_quit ();
 }
 
 /**
@@ -392,51 +371,15 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * gpk_update_viewer_create_custom_widget:
- **/
-static GtkWidget *
-gpk_update_viewer_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				        gchar *string1, gchar *string2,
-				        gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "button_action"))
-		return polkit_gnome_action_create_button (button_action);
-	egg_warning ("name unknown=%s", name);
-	return NULL;
-}
-
-/**
- * gpk_update_viewer_setup_policykit:
- *
- * We have to do this before the glade stuff if done as the custom handler needs the actions setup
- **/
-static void
-gpk_update_viewer_setup_policykit (void)
-{
-	PolKitAction *pk_action;
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.packagekit.system-rollback");
-	/* TRANSLATORS: button label, roll back to a previous system snapshot */
-	button_action = polkit_gnome_action_new_default ("rollback", pk_action, _("_Rollback"), NULL);
-	g_object_set (button_action,
-		      "no-icon-name", "gtk-go-back-ltr",
-		      "auth-icon-name", "gtk-go-back-ltr",
-		      "yes-icon-name", "gtk-go-back-ltr",
-		      "self-blocked-icon-name", "gtk-go-back-ltr",
-		      NULL);
-	polkit_action_unref (pk_action);
-}
-
-/**
  * gpk_log_message_received_cb
  **/
 static void
 gpk_log_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 	if (command == UNIQUE_ACTIVATE) {
-		widget = glade_xml_get_widget (glade_xml, "dialog_simple");
-		gtk_window_present (GTK_WINDOW (widget));
+		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
+		gtk_window_present (window);
 	}
 }
 
@@ -514,7 +457,7 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	const gchar *tool;
 	static guint count;
 	struct passwd *pw;
-	GtkTreeView *treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_simple"));
+	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* put formatted text into treeview */
@@ -588,7 +531,7 @@ gpk_log_refilter (void)
 
 	/* set the new filter */
 	g_free (filter);
-	widget = glade_xml_get_widget (glade_xml, "entry_package");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	package = gtk_entry_get_text (GTK_ENTRY(widget));
 	if (!egg_strzero (package))
 		filter = g_strdup (package);
@@ -598,7 +541,7 @@ gpk_log_refilter (void)
 	egg_debug ("len=%i", transactions->len);
 
 	/* mark the items as not used */
-	treeview = GTK_TREE_VIEW (glade_xml_get_widget (glade_xml, "treeview_simple"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	model = gtk_tree_view_get_model (treeview);
 	gpk_log_mark_nonactive (model);
 
@@ -690,6 +633,8 @@ main (int argc, char *argv[])
 	PkControl *control;
 	UniqueApp *unique_app;
 	gboolean ret;
+	guint retval;
+	GError *error = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -739,12 +684,6 @@ main (int argc, char *argv[])
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* we have to do this before we connect up the glade file */
-	gpk_update_viewer_setup_policykit ();
-
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_update_viewer_create_custom_widget, NULL);
-
 	client = pk_client_new ();
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	pk_client_set_synchronous (client, TRUE, NULL);
@@ -754,8 +693,16 @@ main (int argc, char *argv[])
 	roles = pk_control_get_actions (control, NULL);
 	g_object_unref (control);
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-log.glade", NULL, NULL);
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
+
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 
 	/* set a size, if the screen allows */
@@ -763,26 +710,26 @@ main (int argc, char *argv[])
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
-		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 		gtk_entry_set_text (GTK_ENTRY(widget), filter);
 	}
 
 	/* Get the main window quit */
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 	gtk_widget_grab_default (widget);
 
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_help_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_refresh");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_filter");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_filter"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
 	/* hit enter in the search box for filter */
-	widget = glade_xml_get_widget (glade_xml, "entry_package");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	g_signal_connect (widget, "activate", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
 	/* autocompletion can be turned off as it's slow */
@@ -791,7 +738,7 @@ main (int argc, char *argv[])
 	if (ret) {
 		/* create the completion object */
 		completion = gpk_package_entry_completion_new ();
-		widget = glade_xml_get_widget (glade_xml, "entry_package");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
 		g_object_unref (completion);
 	} else {
@@ -801,21 +748,12 @@ main (int argc, char *argv[])
 	}
 	g_object_unref (gconf_client);
 
-	/* connect up PolicyKit actions */
-	g_signal_connect (button_action, "activate", G_CALLBACK (gpk_log_button_rollback_cb), NULL);
-
-	/* hide the rollback button if we can't do the action */
-	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_ROLLBACK))
-		polkit_gnome_action_set_visible (button_action, TRUE);
-	else
-		polkit_gnome_action_set_visible (button_action, FALSE);
-
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
 					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	/* create transaction_id tree view */
-	widget = glade_xml_get_widget (glade_xml, "treeview_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_simple"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store));
 
@@ -834,11 +772,12 @@ main (int argc, char *argv[])
 	gpk_log_refresh ();
 
 	/* show */
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_widget_show (widget);
 	gtk_main ();
 
-	g_object_unref (glade_xml);
+out_build:
+	g_object_unref (builder);
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_free (transaction_id);

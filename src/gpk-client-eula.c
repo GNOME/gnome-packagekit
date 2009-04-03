@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -66,37 +65,46 @@ gboolean
 gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *package_id,
 		      const gchar *vendor_name, const gchar *license_agreement)
 {
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
 	gchar *text;
 	PkPackageId *ident;
+	guint retval;
+	GError *error = NULL;
 
 	g_return_val_if_fail (eula_id != NULL, FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
 	g_return_val_if_fail (vendor_name != NULL, FALSE);
 	g_return_val_if_fail (license_agreement != NULL, FALSE);
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-eula.glade", NULL, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-eula.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_eula"));
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_eula"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_agree");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_agree"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_eula_button_agree_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_eula_button_help_cb), NULL);
 
 	/* title */
-	widget = glade_xml_get_widget (glade_xml, "label_title");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_title"));
 	ident = pk_package_id_new_from_string (package_id);
 	text = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", ident->name, vendor_name);
 	gtk_label_set_label (GTK_LABEL (widget), text);
@@ -105,14 +113,14 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 
 	buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_insert_at_cursor (buffer, license_agreement, strlen (license_agreement));
-	widget = glade_xml_get_widget (glade_xml, "textview_details");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "textview_details"));
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 
 	/* set minimum size a bit bigger */
 	gtk_widget_set_size_request (widget, 100, 200);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (glade_xml, "dialog_eula");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_eula"));
 	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 
@@ -126,9 +134,9 @@ gpk_client_eula_show (GtkWindow *window, const gchar *eula_id, const gchar *pack
 	/* hide window */
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_object_unref (glade_xml);
 	g_object_unref (buffer);
-
+out_build:
+	g_object_unref (builder);
 	return has_agreed_eula;
 }
 
