@@ -36,10 +36,10 @@
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
 #include <libnotify/notify.h>
+#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
-#include "egg-unique.h"
 #include "egg-markdown.h"
 
 #include "gpk-common.h"
@@ -1822,14 +1822,16 @@ gpk_update_viewer_setup_policykit (void)
 }
 
 /**
- * gpk_update_viewer_activated_cb
+ * gpk_update_viewer_message_received_cb
  **/
 static void
-gpk_update_viewer_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_update_viewer_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_updates");
-	gtk_window_present (GTK_WINDOW (widget));
+	if (command == UNIQUE_ACTIVATE) {
+		widget = glade_xml_get_widget (glade_xml, "window_updates");
+		gtk_window_present (GTK_WINDOW (widget));
+	}
 }
 
 /**
@@ -1847,7 +1849,7 @@ main (int argc, char *argv[])
 	PkBitfield roles;
 	gboolean ret;
 	GError *error = NULL;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -1894,13 +1896,15 @@ main (int argc, char *argv[])
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.UpdateViewer");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
+	}
 
-	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (gpk_update_viewer_activated_cb), NULL);
+	g_signal_connect (unique_app, "message-received",
+			  G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
 
 	/* we have to do this before we connect up the glade file */
 	gpk_update_viewer_setup_policykit ();
@@ -2091,7 +2095,7 @@ main (int argc, char *argv[])
 	g_object_unref (client_query);
 	g_free (cached_package_id);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 
 	return 0;
 }

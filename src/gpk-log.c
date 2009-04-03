@@ -36,8 +36,8 @@
 #include <polkit-gnome/polkit-gnome.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
+#include <unique/unique.h>
 
-#include "egg-unique.h"
 #include "egg-debug.h"
 #include "egg-string.h"
 
@@ -428,14 +428,16 @@ gpk_update_viewer_setup_policykit (void)
 }
 
 /**
- * gpk_log_activated_cb
+ * gpk_log_message_received_cb
  **/
 static void
-gpk_log_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_log_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "dialog_simple");
-	gtk_window_present (GTK_WINDOW (widget));
+	if (command == UNIQUE_ACTIVATE) {
+		widget = glade_xml_get_widget (glade_xml, "dialog_simple");
+		gtk_window_present (GTK_WINDOW (widget));
+	}
 }
 
 /**
@@ -686,7 +688,7 @@ main (int argc, char *argv[])
 	GtkEntryCompletion *completion;
 	PkBitfield roles;
 	PkControl *control;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -724,13 +726,14 @@ main (int argc, char *argv[])
 		return 1;
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.LogViewer");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.LogViewer", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
-
-	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (gpk_log_activated_cb), NULL);
+	}
+	g_signal_connect (unique_app, "message-received",
+			  G_CALLBACK (gpk_log_message_received_cb), NULL);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -843,6 +846,6 @@ main (int argc, char *argv[])
 	if (transactions != NULL)
 		g_object_unref (transactions);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 	return 0;
 }

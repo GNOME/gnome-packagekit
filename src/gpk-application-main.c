@@ -30,8 +30,8 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
+#include <unique/unique.h>
 
-#include "egg-unique.h"
 #include "egg-debug.h"
 
 #include "gpk-application.h"
@@ -50,12 +50,13 @@ gpk_application_close_cb (GpkApplication *application)
 }
 
 /**
- * gpk_application_activated_cb
+ * gpk_application_message_received_cb
  **/
 static void
-gpk_application_activated_cb (EggUnique *egg_unique, GpkApplication *application)
+gpk_application_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, GpkApplication *application)
 {
-	gpk_application_show (application);
+	if (command == UNIQUE_ACTIVATE)
+		gpk_application_show (application);
 }
 
 /**
@@ -68,7 +69,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkApplication *application = NULL;
 	GOptionContext *context;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -112,15 +113,17 @@ main (int argc, char *argv[])
 		return 1;
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Application");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.Application", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
+	}
 
 	/* create a new application object */
 	application = gpk_application_new ();
-	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (gpk_application_activated_cb), application);
+	g_signal_connect (unique_app, "message-received",
+			  G_CALLBACK (gpk_application_message_received_cb), application);
 	g_signal_connect (application, "action-close",
 			  G_CALLBACK (gpk_application_close_cb), NULL);
 
@@ -129,7 +132,7 @@ main (int argc, char *argv[])
 
 	g_object_unref (application);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 	return 0;
 }
 

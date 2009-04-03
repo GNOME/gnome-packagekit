@@ -51,8 +51,6 @@ shared_SOURCES =					\
 	egg-debug.h					\
 	egg-string.c					\
 	egg-string.h					\
-	egg-unique.c					\
-	egg-unique.h					\
 	egg-markdown.c					\
 	egg-markdown.h					\
 	egg-console-kit.c				\

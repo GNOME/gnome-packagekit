@@ -32,8 +32,8 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
+#include <unique/unique.h>
 
-#include "egg-unique.h"
 #include "egg-debug.h"
 #include "egg-string.h"
 
@@ -397,14 +397,16 @@ gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
 }
 
 /**
- * gpk_repo_activated_cb
+ * gpk_repo_message_received_cb
  **/
 static void
-gpk_repo_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "dialog_repo");
-	gtk_window_present (GTK_WINDOW (widget));
+	if (command == UNIQUE_ACTIVATE) {
+		widget = glade_xml_get_widget (glade_xml, "dialog_repo");
+		gtk_window_present (GTK_WINDOW (widget));
+	}
 }
 
 /**
@@ -433,7 +435,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkControl *control;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -472,12 +474,14 @@ main (int argc, char *argv[])
                                            GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.Repo");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.Repo", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
-	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (gpk_repo_activated_cb), NULL);
+	}
+	g_signal_connect (unique_app, "message-received",
+			  G_CALLBACK (gpk_repo_message_received_cb), NULL);
 
 	gconf_client = gconf_client_get_default ();
 
@@ -566,7 +570,7 @@ main (int argc, char *argv[])
 	g_object_unref (client);
 	g_object_unref (control);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 
 	return 0;
 }

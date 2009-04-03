@@ -33,9 +33,9 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
+#include <unique/unique.h>
 
 #include "egg-debug.h"
-#include "egg-unique.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -456,14 +456,16 @@ out:
 }
 
 /**
- * gpk_pack_activated_cb
+ * gpk_pack_message_received_cb
  **/
 static void
-gpk_pack_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_pack_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "window_prefs");
-	gtk_window_present (GTK_WINDOW (widget));
+	if (command == UNIQUE_ACTIVATE) {
+		widget = glade_xml_get_widget (glade_xml, "window_prefs");
+		gtk_window_present (GTK_WINDOW (widget));
+	}
 }
 
 /**
@@ -525,7 +527,7 @@ main (int argc, char *argv[])
 	GtkEntryCompletion *completion;
 	PkBitfield roles;
 	PkControl *control;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 	gboolean ret;
 	GConfClient *client;
 	gchar *option = NULL;
@@ -573,12 +575,14 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.ServicePack");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.ServicePack", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
-	g_signal_connect (egg_unique, "activated",
-			  G_CALLBACK (gpk_pack_activated_cb), NULL);
+	}
+	g_signal_connect (unique_app, "message-received",
+			  G_CALLBACK (gpk_pack_message_received_cb), NULL);
 
 	/* get actions */
 	control = pk_control_new ();
@@ -671,7 +675,7 @@ main (int argc, char *argv[])
 
 	g_object_unref (glade_xml);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 	g_free (option);
 	g_free (package);
 	g_free (with_list);

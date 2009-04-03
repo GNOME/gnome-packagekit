@@ -88,7 +88,7 @@ DBUS_GLIB_REQUIRED=0.73
 LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
 POLKIT_GNOME_REQUIRED=0.8
-UNIQUE_REQUIRED=0.9.4
+UNIQUE_REQUIRED=1.0.0
 GNOME_MENUS_REQUIRED=2.24.1
 GIO_REQUIRED=2.18.0
 
@@ -158,6 +158,11 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
 AC_SUBST(GNOME_MENUS_CFLAGS)
 AC_SUBST(GNOME_MENUS_LIBS)
 
+PKG_CHECK_MODULES(UNIQUE, \
+ unique-1.0 >= $UNIQUE_REQUIRED)
+AC_SUBST(UNIQUE_CFLAGS)
+AC_SUBST(UNIQUE_LIBS)
+
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
@@ -194,21 +199,6 @@ if test "$DOCBOOK2MAN" = "no" ; then
 	AC_MSG_WARN([docbook2man not found, will not be able to build man documentation])
 	fi
 AM_CONDITIONAL(HAVE_DOCBOOK2MAN, [test "$DOCBOOK2MAN" != "no"])
-
-dnl ---------------------------------------------------------------------------
-dnl - Is unique available?
-dnl ---------------------------------------------------------------------------
-if $PKG_CONFIG --atleast-version $UNIQUE_REQUIRED unique-1.0; then
-   have_unique=yes
-   PKG_CHECK_MODULES(UNIQUE, unique-1.0 >= $UNIQUE_REQUIRED)
-   AC_SUBST(UNIQUE_CFLAGS)
-   AC_SUBST(UNIQUE_LIBS)
-   AC_DEFINE(HAVE_UNIQUE, 1, [Building with unique support])
-else
-   have_unique=no
-   AC_DEFINE(HAVE_UNIQUE, 0, [Not building with unique support])
-fi
-AM_CONDITIONAL([HAVE_UNIQUE], [test $have_unique = yes])
 
 dnl ---------------------------------------------------------------------------
 dnl - Build self tests

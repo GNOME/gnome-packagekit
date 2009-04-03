@@ -32,10 +32,10 @@
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
 #include <libnotify/notify.h>
+#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
-#include "egg-unique.h"
 #include "egg-markdown.h"
 #include "egg-console-kit.h"
 
@@ -1966,17 +1966,19 @@ gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer userdata)
 }
 
 /**
- * gpk_update_viewer_activated_cb
+ * gpk_update_viewer_message_received_cb
  **/
 static void
-gpk_update_viewer_activated_cb (EggUnique *egg_unique, gpointer data)
+gpk_update_viewer_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (glade_xml, "dialog_updates");
-	gtk_window_present (GTK_WINDOW (widget));
+	if (command == UNIQUE_ACTIVATE) {
+		widget = glade_xml_get_widget (glade_xml, "dialog_updates");
+		gtk_window_present (GTK_WINDOW (widget));
 
-	/* not hidden anymore */
-	running_hidden = FALSE;
+		/* not hidden anymore */
+		running_hidden = FALSE;
+	}
 }
 
 /**
@@ -2373,7 +2375,7 @@ main (int argc, char *argv[])
 	PkBitfield roles;
 	gboolean ret;
 	GError *error = NULL;
-	EggUnique *egg_unique;
+	UniqueApp *unique_app;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -2420,12 +2422,14 @@ main (int argc, char *argv[])
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	egg_unique = egg_unique_new ();
-	ret = egg_unique_assign (egg_unique, "org.freedesktop.PackageKit.UpdateViewer2");
-	if (!ret)
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer2", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
 		goto unique_out;
+	}
 
-	g_signal_connect (egg_unique, "activated", G_CALLBACK (gpk_update_viewer_activated_cb), NULL);
+	g_signal_connect (unique_app, "message-received", G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
 
 	markdown = egg_markdown_new ();
 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
@@ -2631,7 +2635,7 @@ main (int argc, char *argv[])
 	g_object_unref (text_buffer);
 	pk_package_id_free (package_id_last);
 unique_out:
-	g_object_unref (egg_unique);
+	g_object_unref (unique_app);
 
 	return 0;
 }
