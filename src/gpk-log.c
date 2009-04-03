@@ -542,9 +542,6 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	else if (egg_strequal (obj->cmdline, "gpk-update-viewer"))
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Update System");
-	else if (egg_strequal (obj->cmdline, "gpk-update-viewer2"))
-		/* TRANSLATORS: short name for gpk-update-viewer (new name) */
-		tool = _("Update System");
 	else if (egg_strequal (obj->cmdline, "gpk-update-icon"))
 		/* TRANSLATORS: short name for gpk-update-icon */
 		tool = _("Update Icon");
