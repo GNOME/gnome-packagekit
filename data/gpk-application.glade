@@ -524,10 +524,14 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">5</property>
                                 <child>
-                                  <widget class="Custom" id="entry_text">
+                                  <widget class="GtkEntry" id="entry_text">
                                     <property name="visible">True</property>
-                                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
                                   </widget>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
                                 </child>
                                 <child>
                                   <widget class="GtkNotebook" id="notebook_search_cancel">

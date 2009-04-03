@@ -81,13 +81,12 @@ dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
 PACKAGEKIT_REQUIRED=0.4.4
 GLIB_REQUIRED=2.14.0
-GTK_REQUIRED=2.12.0
+GTK_REQUIRED=2.15.0
 DBUS_REQUIRED=1.1.2
 GCONF_REQUIRED=0.22
 DBUS_GLIB_REQUIRED=0.73
 LIBGLADE_REQUIRED=2.5.0
 LIBNOTIFY_REQUIRED=0.4.3
-LIBSEXY_REQUIRED=0.1.10
 POLKIT_GNOME_REQUIRED=0.8
 UNIQUE_REQUIRED=0.9.4
 GNOME_MENUS_REQUIRED=2.24.1
@@ -102,7 +101,6 @@ AC_SUBST(DBUS_REQUIRED)
 AC_SUBST(DBUS_GLIB_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(LIBNOTIFY_REQUIRED)
-AC_SUBST(LIBSEXY_REQUIRED)
 AC_SUBST(POLKIT_GNOME_REQUIRED)
 AC_SUBST(UNIQUE_REQUIRED)
 AC_SUBST(GNOME_MENUS_REQUIRED)
@@ -157,17 +155,6 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= $GNOME_MENUS_REQUIRED)
 AC_SUBST(GNOME_MENUS_CFLAGS)
 AC_SUBST(GNOME_MENUS_LIBS)
-
-dnl ---------------------------------------------------------------------------
-dnl - Is a new enough GTK available for the SexyIconEntry replacement?
-dnl ---------------------------------------------------------------------------
-if $PKG_CONFIG --atleast-version 2.15.0 gtk+-2.0; then
-   echo "using built in replacement"
-else
-   PKG_CHECK_MODULES(LIBSEXY, libsexy >= $LIBSEXY_REQUIRED)
-   AC_SUBST(LIBSEXY_CFLAGS)
-   AC_SUBST(LIBSEXY_LIBS)
-fi
 
 dnl ---------------------------------------------------------------------------
 dnl - Check for g_file_make_directory_with_parents

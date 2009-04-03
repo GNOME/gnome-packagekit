@@ -10,7 +10,6 @@ INCLUDES =						\
 	$(GCONF_CFLAGS)					\
 	$(LIBGLADE_CFLAGS)				\
 	$(LIBNOTIFY_CFLAGS)				\
-	$(LIBSEXY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(UNIQUE_CFLAGS)				\
 	$(POLKIT_GNOME_CFLAGS)				\
@@ -195,7 +194,6 @@ gpk_application_SOURCES =				\
 
 gpk_application_LDADD =					\
 	$(shared_LIBS)					\
-	$(LIBSEXY_LIBS)					\
 	$(NULL)
 
 gpk_service_pack_SOURCES =				\
