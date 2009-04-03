@@ -876,7 +876,6 @@ gpk_client_install_local_files_get_user_temp (GpkClient *gclient, const gchar *s
 		goto out;
 
 	/* create as does not exist */
-#ifdef HAVE_G_GILE_MAKE_DIRECTORY_WITH_PARENTS
 	ret = g_file_make_directory_with_parents (file, NULL, error);
 	g_object_unref (file);
 	if (!ret) {
@@ -884,15 +883,6 @@ gpk_client_install_local_files_get_user_temp (GpkClient *gclient, const gchar *s
 		g_free (path);
 		path = NULL;
 	}
-#else
-	g_mkdir_with_parents(path, 0755);
-	g_object_unref (file);
-	if (ret == -1) {
-		/* return nothing.. */
-		g_free (path);
-		path = NULL;
-	}
-#endif
 out:
 	return path;
 }

@@ -90,6 +90,7 @@ LIBNOTIFY_REQUIRED=0.4.3
 POLKIT_GNOME_REQUIRED=0.8
 UNIQUE_REQUIRED=0.9.4
 GNOME_MENUS_REQUIRED=2.24.1
+GIO_REQUIRED=2.18.0
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -104,6 +105,7 @@ AC_SUBST(LIBNOTIFY_REQUIRED)
 AC_SUBST(POLKIT_GNOME_REQUIRED)
 AC_SUBST(UNIQUE_REQUIRED)
 AC_SUBST(GNOME_MENUS_REQUIRED)
+AC_SUBST(GIO_REQUIRED)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
@@ -120,7 +122,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 
-PKG_CHECK_MODULES(GIO, gio-2.0)
+PKG_CHECK_MODULES(GIO, gio-2.0 >= $GIO_REQUIRED)
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
 
