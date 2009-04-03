@@ -1099,6 +1099,7 @@ egg_markdown_test (EggTest *test)
 	markdown = "this is http://www.hughsie.com/with_spaces_in_url inline link\n";
 	markdown_expected = "this is <tt>http://www.hughsie.com/with_spaces_in_url</tt> inline link";
 	egg_test_title (test, "markdown (autocode)");
+	egg_markdown_set_autocode (self, TRUE);
 	text = egg_markdown_parse (self, markdown);
 	if (egg_strequal (text, markdown_expected))
 		egg_test_success (test, NULL);
@@ -1260,11 +1261,11 @@ egg_markdown_test (EggTest *test)
 		   "- Add patch from ajax to accellerate X SELinux \n"
 		   "- Update eparis patch\n";
 	markdown_expected =
-		   "<i>Thu Mar 12 12:00:00 2009</i> Dan Walsh &lt;dwalsh@redhat.com&gt; - 2.0.79-1\n"
+		   "<i>Thu Mar 12 12:00:00 2009</i> Dan Walsh <tt>&lt;dwalsh@redhat.com&gt;</tt> - 2.0.79-1\n"
 		   "• Update to upstream\n"
 		   "• Netlink socket handoff patch from Adam Jackson.\n"
 		   "• AVC caching of compute_create results by Eric Paris.\n"
-		   "<i>Tue Mar 10 12:00:00 2009</i> Dan Walsh &lt;dwalsh@redhat.com&gt; - 2.0.78-5\n"
+		   "<i>Tue Mar 10 12:00:00 2009</i> Dan Walsh <tt>&lt;dwalsh@redhat.com&gt;</tt> - 2.0.78-5\n"
 		   "• Add patch from ajax to accellerate X SELinux\n"
 		   "• Update eparis patch";
 	egg_test_title (test, "markdown (end of bullett)");
