@@ -165,15 +165,6 @@ LIBS=$GIO_LIBS
 AC_CHECK_FUNCS(g_file_make_directory_with_parents)
 CPPFLAGS=$OLDCPPFLAGS
 
-dnl ---------------------------------------------------------------------------
-dnl - Check for gtk_dialog_get_action_area
-dnl ---------------------------------------------------------------------------
-OLDCPPFLAGS=$CPPFLAGS
-CPPFLAGS=$GTK_CFLAGS
-LIBS=$GTK_LIBS
-AC_CHECK_FUNCS(gtk_dialog_get_action_area)
-CPPFLAGS=$OLDCPPFLAGS
-
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
