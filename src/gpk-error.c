@@ -26,7 +26,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -39,18 +38,18 @@
  * gpk_error_dialog_expanded_cb:
  **/
 static void
-gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GladeXML *glade_xml)
+gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GtkBuilder *builder)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 	GtkExpander *expander;
 	expander = GTK_EXPANDER (object);
 
 	/* only resizable when expanded */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_error"));
 	if (gtk_expander_get_expanded (expander))
-		gtk_window_set_resizable (GTK_WINDOW (widget), TRUE);
+		gtk_window_set_resizable (window, TRUE);
 	else
-		gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
+		gtk_window_set_resizable (window, FALSE);
 }
 
 /**
@@ -66,17 +65,26 @@ gboolean
 gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details, guint timestamp)
 {
 	GtkWidget *widget;
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	GtkTextBuffer *buffer = NULL;
 	gchar *text;
+	guint retval;
+	GError *error = NULL;
 
 	g_return_val_if_fail (title != NULL, FALSE);
 	g_return_val_if_fail (message != NULL, FALSE);
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-error.glade", NULL, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* connect up actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
 	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
@@ -93,37 +101,37 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* we become resizable when the expander is expanded */
-	widget = glade_xml_get_widget (glade_xml, "expander_details");
-	g_signal_connect (widget, "notify::expanded", G_CALLBACK (gpk_error_dialog_expanded_cb), glade_xml);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "expander_details"));
+	g_signal_connect (widget, "notify::expanded", G_CALLBACK (gpk_error_dialog_expanded_cb), builder);
 
 	/* title */
-	widget = glade_xml_get_widget (glade_xml, "label_title");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_title"));
 	text = g_strdup_printf ("<b><big>%s</big></b>", title);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 	g_free (text);
 
 	/* message */
-	widget = glade_xml_get_widget (glade_xml, "label_message");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_message"));
 	gtk_label_set_markup (GTK_LABEL (widget), message);
 
 	/* show text in the expander */
 	if (egg_strzero (details)) {
-		widget = glade_xml_get_widget (glade_xml, "expander_details");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "expander_details"));
 		gtk_widget_hide (widget);
 	} else {
 		buffer = gtk_text_buffer_new (NULL);
 //		text = g_markup_escape_text (details, -1);
 		gtk_text_buffer_insert_at_cursor (buffer, details, strlen (details));
-		widget = glade_xml_get_widget (glade_xml, "textview_details");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "textview_details"));
 		gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 	}
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "dialog_error");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
@@ -133,9 +141,10 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* hide window */
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_object_unref (glade_xml);
 	if (buffer != NULL)
 		g_object_unref (buffer);
+out_build:
+	g_object_unref (builder);
 	return TRUE;
 }
 

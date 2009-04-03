@@ -29,7 +29,6 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 #include <locale.h>
 
@@ -70,13 +69,15 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *widget;
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
 	gchar *name;
 	gchar *author;
 	PkRoleEnum roles;
 	PkBitfield filters;
 	PkControl *control;
-	gboolean retval;
+	gboolean ret;
+	guint retval;
+	GError *error = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -119,160 +120,169 @@ main (int argc, char *argv[])
 	filters = pk_control_get_filters (control, NULL);
 
 	/* general stuff */
-	retval = pk_control_get_backend_detail (control, &name, &author, NULL);
-	if (FALSE == retval) {
+	ret = pk_control_get_backend_detail (control, &name, &author, NULL);
+	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
 		egg_warning (_("Exiting as backend details could not be retrieved"));
 		return 1;
 	}
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-backend-status.glade", NULL, NULL);
-	widget = glade_xml_get_widget (glade_xml, "dialog_backend");
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-backend-status.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
+
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_backend"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_updates_close_cb), loop);
 
-	widget = glade_xml_get_widget (glade_xml, "dialog_backend");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_backend"));
 	g_signal_connect (widget, "delete_event",
 			  G_CALLBACK (pk_updates_delete_event_cb), loop);
 	gtk_widget_show (GTK_WIDGET (widget));
 
-	widget = glade_xml_get_widget (glade_xml, "label_name");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_name"));
 	gtk_label_set_label (GTK_LABEL (widget), name);
-	widget = glade_xml_get_widget (glade_xml, "label_author");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_author"));
 	gtk_label_set_label (GTK_LABEL (widget), author);
 	g_free (name);
 	g_free (author);
 
 	/* actions */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_CANCEL)) {
-		widget = glade_xml_get_widget (glade_xml, "image_cancel");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_cancel"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DEPENDS)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_depends");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_depends"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_UPDATE_DETAIL)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_update_detail");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_update_detail"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DETAILS)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_description");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_description"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_FILES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_files");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_files"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REQUIRES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_requires");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_requires"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_UPDATES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_updates");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_updates"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
-		widget = glade_xml_get_widget (glade_xml, "image_search_details");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_search_details"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_FILE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_search_file");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_search_file"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		widget = glade_xml_get_widget (glade_xml, "image_search_group");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_search_group"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_NAME)) {
-		widget = glade_xml_get_widget (glade_xml, "image_search_name");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_search_name"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REFRESH_CACHE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_refresh_cache");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_refresh_cache"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REMOVE_PACKAGES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_package_remove");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_package_remove"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_INSTALL_PACKAGES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_package_install");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_package_install"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_INSTALL_FILES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_file_install");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_file_install"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_package_update");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_package_update"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		widget = glade_xml_get_widget (glade_xml, "image_system_update");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_system_update"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_RESOLVE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_resolve");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_resolve"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_WHAT_PROVIDES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_what_provides");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_what_provides"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_PACKAGES)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_packages");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_packages"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
 	/* repos */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
-		widget = glade_xml_get_widget (glade_xml, "image_get_repo_list");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_get_repo_list"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_repo_enable");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_repo_enable"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_SET_DATA)) {
-		widget = glade_xml_get_widget (glade_xml, "image_repo_set_data");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_repo_set_data"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
 	/* filters */
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED)) {
-		widget = glade_xml_get_widget (glade_xml, "image_installed");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_installed"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_DEVELOPMENT)) {
-		widget = glade_xml_get_widget (glade_xml, "image_devel");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_devel"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_GUI)) {
-		widget = glade_xml_get_widget (glade_xml, "image_gui");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_gui"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_FREE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_free");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_free"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_VISIBLE)) {
-		widget = glade_xml_get_widget (glade_xml, "image_visible");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_visible"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SUPPORTED)) {
-		widget = glade_xml_get_widget (glade_xml, "image_supported");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_supported"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_NEWEST)) {
-		widget = glade_xml_get_widget (glade_xml, "image_newest");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_newest"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
 
-	g_object_unref (glade_xml);
+out_build:
+	g_object_unref (builder);
 	g_object_unref (control);
 
 	g_main_loop_run (loop);

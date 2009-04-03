@@ -23,7 +23,6 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 
 #include "gpk-helper-repo-signature.h"
 #include "gpk-marshal.h"
@@ -38,7 +37,7 @@ static void     gpk_helper_repo_signature_finalize	(GObject	  *object);
 
 struct GpkHelperRepoSignaturePrivate
 {
-	GladeXML		*glade_xml;
+	GtkBuilder		*builder;
 	gchar			*key_id;
 	gchar			*package_id;
 };
@@ -59,7 +58,7 @@ gpk_helper_repo_signature_button_yes_cb (GtkWidget *widget, GpkHelperRepoSignatu
 {
 	g_signal_emit (helper, signals [GPK_HELPER_REPO_SIGNATURE_EVENT], 0,
 		       GTK_RESPONSE_YES, helper->priv->key_id, helper->priv->package_id);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	gtk_widget_hide (widget);
 }
 
@@ -71,7 +70,7 @@ gpk_helper_repo_signature_button_no_cb (GtkWidget *widget, GpkHelperRepoSignatur
 {
 	g_signal_emit (helper, signals [GPK_HELPER_REPO_SIGNATURE_EVENT], 0,
 		       GTK_RESPONSE_NO, helper->priv->key_id, helper->priv->package_id);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	gtk_widget_hide (widget);
 }
 
@@ -107,17 +106,17 @@ gpk_helper_repo_signature_show (GpkHelperRepoSignature *helper, const gchar *pac
 	helper->priv->package_id = g_strdup (package_id);
 
 	/* show correct text */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "label_name");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_name"));
 	gtk_label_set_label (GTK_LABEL (widget), repository_name);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "label_url");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_url"));
 	gtk_label_set_label (GTK_LABEL (widget), key_url);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "label_user");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_user"));
 	gtk_label_set_label (GTK_LABEL (widget), key_userid);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "label_id");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_id"));
 	gtk_label_set_label (GTK_LABEL (widget), key_id);
 
 	/* show window */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	gtk_widget_show (widget);
 
 	return TRUE;
@@ -135,7 +134,7 @@ gpk_helper_repo_signature_set_parent (GpkHelperRepoSignature *helper, GtkWindow 
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 
 	/* this is a modal popup, so don't show a window title */
@@ -169,27 +168,36 @@ static void
 gpk_helper_repo_signature_init (GpkHelperRepoSignature *helper)
 {
 	GtkWidget *widget;
+	guint retval;
+	GError *error = NULL;
 
 	helper->priv = GPK_HELPER_REPO_SIGNATURE_GET_PRIVATE (helper);
 
 	helper->priv->key_id = NULL;
 	helper->priv->package_id = NULL;
-	helper->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-signature.glade", NULL, NULL);
+
+	/* get UI */
+	helper->priv->builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (helper->priv->builder, GPK_DATA "/gpk-signature.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+	}
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_helper_repo_signature_button_no_cb), helper);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_yes"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_repo_signature_button_yes_cb), helper);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_repo_signature_button_help_cb), helper);
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "button_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_no"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_repo_signature_button_no_cb), helper);
 }
 
@@ -207,12 +215,12 @@ gpk_helper_repo_signature_finalize (GObject *object)
 	helper = GPK_HELPER_REPO_SIGNATURE (object);
 
 	/* hide window */
-	widget = glade_xml_get_widget (helper->priv->glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
 	g_free (helper->priv->key_id);
 	g_free (helper->priv->package_id);
-	g_object_unref (helper->priv->glade_xml);
+	g_object_unref (helper->priv->builder);
 
 	G_OBJECT_CLASS (gpk_helper_repo_signature_parent_class)->finalize (object);
 }

@@ -34,7 +34,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <glib/gi18n.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -53,7 +52,7 @@ static void     gpk_client_dialog_finalize	(GObject		*object);
 
 struct _GpkClientDialogPrivate
 {
-	GladeXML		*glade_xml;
+	GtkBuilder		*builder;
 	guint			 pulse_timer_id;
 	gboolean		 show_progress_files;
 	gboolean		 has_parent;
@@ -65,6 +64,7 @@ struct _GpkClientDialogPrivate
 	gboolean		 set_image;
 	GpkClientDialogPage	 page;
 	PkBitfield		 options;
+	GtkWidget		*image_status;
 };
 
 enum {
@@ -93,7 +93,7 @@ static void
 gpk_client_dialog_show_widget (GpkClientDialog *dialog, const gchar *name, gboolean enabled)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, name);
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, name));
 	if (enabled)
 		gtk_widget_show (widget);
 	else
@@ -106,7 +106,7 @@ gpk_client_dialog_show_widget (GpkClientDialog *dialog, const gchar *name, gbool
 gboolean
 gpk_client_dialog_setup (GpkClientDialog *dialog, GpkClientDialogPage page, PkBitfield options)
 {
-	GtkWidget *widget;
+	GtkLabel *label;
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	/* reset state */
@@ -115,8 +115,8 @@ gpk_client_dialog_setup (GpkClientDialog *dialog, GpkClientDialogPage page, PkBi
 	dialog->priv->set_image = FALSE;
 	dialog->priv->page = page;
 	dialog->priv->options = options;
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
-	gtk_label_set_label (GTK_LABEL (widget), "");
+	label = GTK_LABEL (gtk_builder_get_object (dialog->priv->builder, "label_message"));
+	gtk_label_set_label (label, "");
 	gpk_client_dialog_set_action (dialog, NULL);
 	return TRUE;
 }
@@ -132,10 +132,9 @@ gpk_client_dialog_present_with_time (GpkClientDialog *dialog, guint32 timestamp)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_title");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "label_title"));
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
-	gtk_widget_show (widget);
+	gtk_widget_show (dialog->priv->image_status);
 	/* helper */
 	if (dialog->priv->page == GPK_CLIENT_DIALOG_PAGE_CONFIRM) {
 		if (!dialog->priv->set_image)
@@ -191,7 +190,7 @@ gpk_client_dialog_present_with_time (GpkClientDialog *dialog, guint32 timestamp)
 	gpk_client_dialog_show_widget (dialog, "label_force_width", TRUE);
 
 	/* show */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_widget_realize (widget);
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 
@@ -224,7 +223,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 	/* not sure what to do here, should probably unparent somehow */
 	if (window == NULL) {
 		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
+		widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
 		dialog->priv->has_parent = FALSE;
 
@@ -241,7 +240,7 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 		return FALSE;
 	}
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_widget_realize (widget);
 	gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
 	gdk_window_set_transient_for (GTK_WIDGET (widget)->window, window);
@@ -255,14 +254,14 @@ gpk_client_dialog_set_parent (GpkClientDialog *dialog, GdkWindow *window)
 static gboolean
 gpk_client_dialog_set_window_title (GpkClientDialog *dialog, const gchar *title)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (title != NULL, FALSE);
 
 	egg_debug ("setting window title: %s", title);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
-	gtk_window_set_title (GTK_WINDOW (widget), title);
+	window = GTK_WINDOW (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
+	gtk_window_set_title (window, title);
 	return TRUE;
 }
 
@@ -272,14 +271,14 @@ gpk_client_dialog_set_window_title (GpkClientDialog *dialog, const gchar *title)
 gboolean
 gpk_client_dialog_set_window_icon (GpkClientDialog *dialog, const gchar *icon)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (icon != NULL, FALSE);
 
 	egg_debug ("setting window icon: %s", icon);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
-	gtk_window_set_icon_name (GTK_WINDOW (widget), icon);
+	window = GTK_WINDOW (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
+	gtk_window_set_icon_name (window, icon);
 	return TRUE;
 }
 
@@ -289,7 +288,7 @@ gpk_client_dialog_set_window_icon (GpkClientDialog *dialog, const gchar *icon)
 gboolean
 gpk_client_dialog_set_title (GpkClientDialog *dialog, const gchar *title)
 {
-	GtkWidget *widget;
+	GtkLabel *label;
 	gchar *title_bold;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
@@ -305,8 +304,8 @@ gpk_client_dialog_set_title (GpkClientDialog *dialog, const gchar *title)
 
 	title_bold = g_strdup_printf ("<b><big>%s</big></b>", title);
 	egg_debug ("setting title: %s", title_bold);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_title");
-	gtk_label_set_markup (GTK_LABEL (widget), title_bold);
+	label = GTK_LABEL (gtk_builder_get_object (dialog->priv->builder, "label_title"));
+	gtk_label_set_markup (label, title_bold);
 	g_free (title_bold);
 	return TRUE;
 }
@@ -317,7 +316,7 @@ gpk_client_dialog_set_title (GpkClientDialog *dialog, const gchar *title)
 gboolean
 gpk_client_dialog_set_message (GpkClientDialog *dialog, const gchar *message)
 {
-	GtkWidget *widget;
+	GtkLabel *label;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (message != NULL, FALSE);
@@ -327,8 +326,8 @@ gpk_client_dialog_set_message (GpkClientDialog *dialog, const gchar *message)
 		return FALSE;
 
 	egg_debug ("setting message: %s", message);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
-	gtk_label_set_markup (GTK_LABEL (widget), message);
+	label = GTK_LABEL (gtk_builder_get_object (dialog->priv->builder, "label_message"));
+	gtk_label_set_markup (label, message);
 	return TRUE;
 }
 
@@ -343,7 +342,7 @@ gpk_client_dialog_set_action (GpkClientDialog *dialog, const gchar *action)
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	egg_debug ("setting action: %s", action);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_action"));
 	if (action != NULL)
 		gtk_button_set_label (GTK_BUTTON (widget), action);
 	else
@@ -366,7 +365,7 @@ gpk_client_dialog_pulse_progress (GpkClientDialog *dialog)
 	if (rate_limit++ % 20 == 0)
 		egg_debug ("polling check");
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
 
 	/* if there's no slider, optimise out the polling */
@@ -383,10 +382,10 @@ gpk_client_dialog_pulse_progress (GpkClientDialog *dialog)
 static void
 gpk_client_dialog_make_progressbar_pulse (GpkClientDialog *dialog)
 {
-	GtkWidget *widget;
+	GtkProgressBar *progress_bar;
 	if (dialog->priv->pulse_timer_id == 0) {
-		widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
-		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (widget ), 0.04);
+		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
+		gtk_progress_bar_set_pulse_step (progress_bar, 0.04);
 		dialog->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_client_dialog_pulse_progress, dialog);
 	}
 }
@@ -397,13 +396,13 @@ gpk_client_dialog_make_progressbar_pulse (GpkClientDialog *dialog)
 gboolean
 gpk_client_dialog_set_percentage (GpkClientDialog *dialog, guint percentage)
 {
-	GtkWidget *widget;
+	GtkProgressBar *progress_bar;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	egg_debug ("setting percentage: %u", percentage);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
+	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 	if (dialog->priv->pulse_timer_id != 0) {
 		g_source_remove (dialog->priv->pulse_timer_id);
 		dialog->priv->pulse_timer_id = 0;
@@ -413,7 +412,7 @@ gpk_client_dialog_set_percentage (GpkClientDialog *dialog, guint percentage)
 	if (percentage == PK_CLIENT_PERCENTAGE_INVALID)
 		gpk_client_dialog_make_progressbar_pulse (dialog);
 	else
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+		gtk_progress_bar_set_fraction (progress_bar, (gfloat) percentage / 100.0);
 	return TRUE;
 }
 
@@ -423,25 +422,25 @@ gpk_client_dialog_set_percentage (GpkClientDialog *dialog, guint percentage)
 gboolean
 gpk_client_dialog_set_remaining (GpkClientDialog *dialog, guint remaining)
 {
-	GtkWidget *widget;
+	GtkProgressBar *progress_bar;
 	gchar *timestring = NULL;
 	gchar *text = NULL;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	egg_debug ("setting remaining: %u", remaining);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "progressbar_percent");
+	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 
 	/* unknown */
 	if (remaining == 0) {
-		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
+		gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress_bar), "");
 		goto out;
 	}
 
 	/* get time text */
 	timestring = gpk_time_to_imprecise_string (remaining);
 	text = g_strdup_printf (_("Remaining time : %s"), timestring);
-	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), text);
+	gtk_progress_bar_set_text (progress_bar, text);
 out:
 	g_free (timestring);
 	g_free (text);
@@ -454,8 +453,6 @@ out:
 gboolean
 gpk_client_dialog_set_image (GpkClientDialog *dialog, const gchar *image)
 {
-	GtkWidget *widget;
-
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (image != NULL, FALSE);
 
@@ -463,9 +460,8 @@ gpk_client_dialog_set_image (GpkClientDialog *dialog, const gchar *image)
 	dialog->priv->set_image = TRUE;
 
 	egg_debug ("setting image: %s", image);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
-	gtk_image_set_from_icon_name (GTK_IMAGE (widget), image, GTK_ICON_SIZE_DIALOG);
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (dialog->priv->image_status), FALSE);
+	gtk_image_set_from_icon_name (GTK_IMAGE (dialog->priv->image_status), image, GTK_ICON_SIZE_DIALOG);
 	return TRUE;
 }
 
@@ -475,15 +471,11 @@ gpk_client_dialog_set_image (GpkClientDialog *dialog, const gchar *image)
 gboolean
 gpk_client_dialog_set_image_status (GpkClientDialog *dialog, PkStatusEnum status)
 {
-	GtkWidget *widget;
-
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	/* set state */
 	dialog->priv->set_image = TRUE;
-
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_DIALOG);
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (dialog->priv->image_status), status, GTK_ICON_SIZE_DIALOG);
 	return TRUE;
 }
 
@@ -493,12 +485,12 @@ gpk_client_dialog_set_image_status (GpkClientDialog *dialog, PkStatusEnum status
 GtkWindow *
 gpk_client_dialog_get_window (GpkClientDialog *dialog)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), NULL);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
-	return GTK_WINDOW (widget);
+	window = GTK_WINDOW (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
+	return window;
 }
 
 /**
@@ -511,7 +503,7 @@ gpk_client_dialog_set_allow_cancel (GpkClientDialog *dialog, gboolean can_cancel
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_cancel"));
 	gtk_widget_set_sensitive (widget, can_cancel);
 
 	return TRUE;
@@ -541,7 +533,7 @@ gpk_client_dialog_close (GpkClientDialog *dialog)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_widget_hide (widget);
 
 	if (dialog->priv->pulse_timer_id != 0) {
@@ -549,9 +541,7 @@ gpk_client_dialog_close (GpkClientDialog *dialog)
 		dialog->priv->pulse_timer_id = 0;
 	}
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
-
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (dialog->priv->image_status), FALSE);
 	return TRUE;
 }
 
@@ -575,8 +565,6 @@ gpk_client_dialog_window_delete_cb (GtkWidget *widget, GdkEvent *event, GpkClien
 static void
 gpk_client_dialog_button_close_cb (GtkWidget *widget_button, GpkClientDialog *dialog)
 {
-	GtkWidget *widget;
-
 	dialog->priv->response = GTK_RESPONSE_CLOSE;
 	g_main_loop_quit (dialog->priv->loop);
 
@@ -585,8 +573,7 @@ gpk_client_dialog_button_close_cb (GtkWidget *widget_button, GpkClientDialog *di
 		dialog->priv->pulse_timer_id = 0;
 	}
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "image_status");
-	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
+	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (dialog->priv->image_status), FALSE);
 	if (g_main_loop_is_running (dialog->priv->loop))
 		g_main_loop_quit (dialog->priv->loop);
 	else
@@ -643,20 +630,6 @@ gpk_client_dialog_button_cancel_cb (GtkWidget *widget_button, GpkClientDialog *d
 }
 
 /**
- * gpk_client_create_custom_widget:
- **/
-static GtkWidget *
-gpk_client_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				 gchar *string1, gchar *string2,
-				 gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "image_status"))
-		return gpk_animated_icon_new ();
-	egg_warning ("name unknown=%s", name);
-	return NULL;
-}
-
-/**
  * gpk_client_dialog_set_package_list:
  **/
 gboolean
@@ -675,7 +648,7 @@ gpk_client_dialog_set_package_list (GpkClientDialog *dialog, const PkPackageList
 	gtk_list_store_clear (dialog->priv->store);
 
 	length = pk_package_list_get_size (list);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "scrolledwindow_packages");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "scrolledwindow_packages"));
 	if (length > 5)
 		gtk_widget_set_size_request (widget, -1, 300);
 	else if (length > 1)
@@ -719,13 +692,11 @@ static gboolean
 gpk_dialog_treeview_for_package_list (GpkClientDialog *dialog)
 {
 	GtkTreeView *treeview;
-	GtkWidget *widget;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkTreeSelection *selection;
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (dialog->priv->builder, "treeview_packages"));
 
 	/* column for images */
 	column = gtk_tree_view_column_new ();
@@ -807,13 +778,13 @@ static void
 gpk_client_dialog_init (GpkClientDialog *dialog)
 {
 	GtkWidget *widget;
+	GtkTreeView *treeview;
+	guint retval;
+	GError *error = NULL;
+	GtkBox *box;
 
 	dialog->priv = GPK_CLIENT_DIALOG_GET_PRIVATE (dialog);
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_client_create_custom_widget, dialog);
-
-	dialog->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-client.glade", NULL, NULL);
 	dialog->priv->loop = g_main_loop_new (NULL, FALSE);
 	dialog->priv->response = GTK_RESPONSE_NONE;
 	dialog->priv->pulse_timer_id = 0;
@@ -828,30 +799,45 @@ gpk_client_dialog_init (GpkClientDialog *dialog)
 	dialog->priv->store = gtk_list_store_new (GPK_CLIENT_DIALOG_STORE_LAST,
 						  G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
+	/* get UI */
+	dialog->priv->builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (dialog->priv->builder, GPK_DATA "/gpk-client.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
+
+	/* add animated widget */
+	dialog->priv->image_status = gpk_animated_icon_new ();
+	box = GTK_BOX (gtk_builder_get_object (dialog->priv->builder, "hbox_status"));
+	gtk_box_pack_start (box, dialog->priv->image_status, FALSE, FALSE, 0);
+	gtk_widget_show (dialog->priv->image_status);
+
 	gpk_dialog_treeview_for_package_list (dialog);
 
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "treeview_packages");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (dialog->priv->store));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (dialog->priv->builder, "treeview_packages"));
+	gtk_tree_view_set_model (treeview, GTK_TREE_MODEL (dialog->priv->store));
 
 	/* common stuff */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "dialog_client");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_client_dialog_window_delete_cb), dialog);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_close_cb), dialog);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_help_cb), dialog);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_action");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_action"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_action_cb), dialog);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "button_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_cancel"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_dialog_button_cancel_cb), dialog);
 
 	/* set the message text an absolute width so it's forced to wrap */
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "hbox_message");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "hbox_message"));
 	gtk_widget_set_size_request (widget, 400, -1);
-	widget = glade_xml_get_widget (dialog->priv->glade_xml, "label_message");
+	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "label_message"));
 	gtk_widget_set_size_request (widget, 400, -1);
 
+out_build:
 	/* clear status and progress text */
 	gpk_client_dialog_set_window_title (dialog, "");
 	gpk_client_dialog_set_title (dialog, "");
@@ -871,7 +857,7 @@ gpk_client_dialog_finalize (GObject *object)
 	dialog = GPK_CLIENT_DIALOG (object);
 	g_return_if_fail (dialog->priv != NULL);
 
-	/* no updates, we're about to rip the glade file up  */
+	/* no updates, we're about to rip the builder up  */
 	if (dialog->priv->pulse_timer_id != 0)
 		g_source_remove (dialog->priv->pulse_timer_id);
 
@@ -885,7 +871,7 @@ gpk_client_dialog_finalize (GObject *object)
 	}
 
 	g_object_unref (dialog->priv->store);
-	g_object_unref (dialog->priv->glade_xml);
+	g_object_unref (dialog->priv->builder);
 	g_main_loop_unref (dialog->priv->loop);
 	g_free (dialog->priv->help_id);
 	g_free (dialog->priv->title);

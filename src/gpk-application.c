@@ -23,7 +23,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
-#include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gconf/gconf-client.h>
@@ -76,7 +75,7 @@ typedef enum {
 
 struct GpkApplicationPrivate
 {
-	GladeXML		*glade_xml;
+	GtkBuilder		*builder;
 	GConfClient		*gconf_client;
 	GtkListStore		*packages_store;
 	GtkTreeStore		*groups_store;
@@ -105,6 +104,7 @@ struct GpkApplicationPrivate
 	PkSearchMode		 search_mode;
 	PkActionMode		 action;
 	GPtrArray		*package_list;
+	GtkWidget		*image_status;
 };
 
 enum {
@@ -179,9 +179,9 @@ gpk_application_class_init (GpkApplicationClass *klass)
 void
 gpk_application_show (GpkApplication *application)
 {
-	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-	gtk_window_present (GTK_WINDOW (widget));
+	GtkWindow *window;
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	gtk_window_present (window);
 }
 
 /**
@@ -246,12 +246,12 @@ gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean f
 
 	/* if we can't do it, then just make the button insensitive */
 	if (!pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
 	/* which tab to enable? */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "notebook_search_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "notebook_search_cancel"));
 	if (find) {
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
 	} else {
@@ -284,7 +284,7 @@ static void
 gpk_application_allow_install (GpkApplication *application, gboolean allow)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_install");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_install"));
 	gtk_widget_set_sensitive (widget, allow);
 }
 
@@ -295,7 +295,7 @@ static void
 gpk_application_allow_remove (GpkApplication *application, gboolean allow)
 {
 	GtkWidget *widget;
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_remove");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_remove"));
 	gtk_widget_set_sensitive (widget, allow);
 }
 
@@ -309,15 +309,13 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	GtkWidget *widget;
 	const gchar *icon;
 	gboolean checkbox;
 	PkBitfield state;
 	gboolean ret;
 
 	/* get the selection and add */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
@@ -379,21 +377,20 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 
 	/* okay to apply? */
 	if (application->priv->package_list->len == 0) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
 		gtk_widget_set_sensitive (widget, FALSE);
 		application->priv->action = PK_ACTION_NONE;
 	} else {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, TRUE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
 		gtk_widget_set_sensitive (widget, TRUE);
 	}
 
 	/* correct the enabled state */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	model = gtk_tree_view_get_model (treeview);
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 
@@ -505,7 +502,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	GError *error = NULL;
 	gchar **files;
 	gchar *title;
-	GtkWidget *widget;
+	GtkWindow *window;
 	GtkWidget *dialog;
 	PkPackageId *id;
 
@@ -530,8 +527,8 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 					   "%i files installed by %s",
 					   array->len), array->len, id->name);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
 	gpk_dialog_embed_file_list_widget (GTK_DIALOG (dialog), array);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
@@ -631,14 +628,13 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	GtkWidget *widget;
+	GtkWindow *window;
 	PkBitfield state;
 	gboolean ret;
 	gchar *package_id = NULL;
 
 	/* get selection */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
@@ -655,8 +651,8 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
 		/* run this single package id */
 		package_ids = pk_package_ids_from_id (package_id);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		exec = gpk_client_run_show (GTK_WINDOW (widget), package_ids);
+		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+		exec = gpk_client_run_show (window, package_ids);
 		if (exec != NULL) {
 			ret = g_spawn_command_line_async (exec, &error);
 			if (!ret) {
@@ -680,6 +676,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	gboolean ret;
 	PkPackageList *list;
 	GtkWidget *widget;
+	GtkWindow *window;
 	gchar **package_ids;
 
 	/* cancel any previous request */
@@ -704,9 +701,9 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	}
 
 	list = pk_client_get_package_list (application->priv->client_files);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget),
+		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: no packages returned */
 					_("No packages"),
 					/* TRANSLATORS: this package is not required by any others */
@@ -757,6 +754,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	gboolean ret;
 	PkPackageList *list;
 	GtkWidget *widget;
+	GtkWindow *window;
 	gchar **package_ids;
 
 	/* cancel any previous request */
@@ -781,9 +779,9 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	}
 
 	list = pk_client_get_package_list (application->priv->client_files);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (GTK_WINDOW (widget),
+		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: no packages returned */
 					_("No packages"),
 					/* TRANSLATORS: this package does not depend on any others */
@@ -855,7 +853,7 @@ static void
 gpk_application_add_detail_item (GpkApplication *application, const gchar *title, const gchar *text, const gchar *uri)
 {
 	gchar *markup;
-	GtkWidget *tree_view;
+	GtkTreeView *treeview;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
 
@@ -878,10 +876,10 @@ gpk_application_add_detail_item (GpkApplication *application, const gchar *title
 
 	g_free (markup);
 
-	tree_view = glade_xml_get_widget (application->priv->glade_xml, "treeview_detail");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
+	selection = gtk_tree_view_get_selection (treeview);
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (tree_view));
+	gtk_tree_view_columns_autosize (treeview);
 }
 
 /**
@@ -896,11 +894,11 @@ gpk_application_clear_details_really (GpkApplication *application)
 	gtk_list_store_clear (application->priv->details_store);
 
 	/* clear the old text */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
 	gpk_application_set_text_buffer (widget, NULL);
 
 	/* hide dead widgets */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "scrolledwindow_detail"));
 	gtk_widget_hide (widget);
 
 	/* never repeat */
@@ -960,7 +958,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	installed = egg_strequal (details->id->data, "installed");
 
 	/* hide to start */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_detail");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "scrolledwindow_detail"));
 	gtk_widget_show (widget);
 
 	gtk_list_store_clear (application->priv->details_store);
@@ -971,7 +969,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 		gpk_application_add_detail_item (application, _("Type"), _("Collection"), NULL);
 
 	/* homepage */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_homepage"));
 	if (egg_strzero (details->url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
 
@@ -1018,7 +1016,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	/* set the description */
 	text = gpk_application_text_format_display (application, details->description);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "textview_description");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
@@ -1122,7 +1120,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 
 	/* if it's an exact match, select it */
 	if (egg_strequal (obj->id->name, application->priv->search_text)) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 		gtk_tree_selection_select_iter (selection, &iter);
 	}
@@ -1144,15 +1142,15 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 static void
 gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkApplication *application)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* obvious message, don't tell the user */
 	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED)
 		return;
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-	gpk_error_dialog_modal (GTK_WINDOW (widget), gpk_error_enum_to_localised_text (code),
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (code),
 				gpk_error_enum_to_localised_message (code), details);
 }
 
@@ -1255,7 +1253,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, G
 		}
 
 		/* focus back to the text extry */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 		gtk_widget_grab_focus (widget);
 	}
 
@@ -1293,13 +1291,14 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 static gboolean
 gpk_application_perform_search_name_details_file (GpkApplication *application)
 {
-	GtkWidget *widget;
+	GtkEntry *entry;
+	GtkWindow *window;
 	GError *error = NULL;
 	gboolean ret;
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	entry = GTK_ENTRY (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	g_free (application->priv->search_text);
-	application->priv->search_text = g_strdup (gtk_entry_get_text (GTK_ENTRY (widget)));
+	application->priv->search_text = g_strdup (gtk_entry_get_text (entry));
 
 	/* have we got input? */
 	if (egg_strzero (application->priv->search_text)) {
@@ -1311,8 +1310,8 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	if (!ret) {
 		egg_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget),
+		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: title: invlid text in the search bar */
 					_("Invalid search text"),
 					/* TRANSLATORS: message: tell the user that's not allowed */
@@ -1348,8 +1347,8 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	}
 
 	if (!ret) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget),
+		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: title: we failed to execute the mthod */
 					_("The search could not be completed"),
 					/* TRANSLATORS: low level failure, details to follow */
@@ -1368,7 +1367,7 @@ static gboolean
 gpk_application_perform_search_others (GpkApplication *application)
 {
 	gboolean ret;
-	GtkWidget *widget;
+	GtkWindow *window;
 	GError *error = NULL;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
@@ -1392,8 +1391,8 @@ gpk_application_perform_search_others (GpkApplication *application)
 	}
 
 	if (!ret) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		gpk_error_dialog_modal (GTK_WINDOW (widget),
+		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: title: could not get group data */
 					_("The group could not be queried"),
 					/* TRANSLATORS: low level failure */
@@ -1457,26 +1456,26 @@ gpk_application_quit (GpkApplication *application)
 	gboolean ret;
 	GtkResponseType result;
 	GError *error = NULL;
-	GtkWidget *widget;
+	GtkWindow *window;
 	GtkWidget *dialog;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
 	/* do we have any items queued for removal or installation? */
 	if (application->priv->package_list->len != 0) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+		dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
 						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
 						 "%s", _("Changes not applied"));
-		gtk_dialog_add_button (GTK_DIALOG(dialog), _("Close Anyway"), GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG (dialog), _("Close Anyway"), GTK_RESPONSE_OK);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 							  "%s\n%s",
 							  /* TRANSLATORS: tell the user the problem */
 							  _("You have made changes that have not yet been applied."),
 							  _("These changes will be lost if you close this window."));
-		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
-		result = gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_window_set_icon_name (GTK_WINDOW (dialog), GPK_ICON_SOFTWARE_INSTALLER);
+		result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 
 		/* did not agree */
@@ -1540,25 +1539,25 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 {
 	gboolean valid;
 	GtkWidget *widget;
+	GtkTreeView *treeview;
 	const gchar *package;
 	GtkTreeSelection *selection;
 
 	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
-	package = gtk_entry_get_text (GTK_ENTRY (widget));
+	package = gtk_entry_get_text (entry);
 
 	/* clear group selection if we have the tab */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+		treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
+		selection = gtk_tree_view_get_selection (treeview);
 		gtk_tree_selection_unselect_all (selection);
 	}
 
 	/* check for invalid chars */
 	valid = pk_strvalidate (package);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
 	if (valid == FALSE || egg_strzero (package))
 		gtk_widget_set_sensitive (widget, FALSE);
 	else
@@ -1574,7 +1573,6 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 {
 	GpkApplication *application = (GpkApplication *) data;
 	GtkTreeView *treeview;
-	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
@@ -1583,8 +1581,7 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	model = gtk_tree_view_get_model (treeview);
 	path = gtk_tree_path_new_from_string (path_str);
 
@@ -1627,7 +1624,6 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	GtkTreeView *treeview;
 	gboolean valid;
 	gboolean checkbox;
-	GtkWidget *widget;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -1638,8 +1634,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* get the first iter in the list */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	model = gtk_tree_view_get_model (treeview);
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 
@@ -1668,8 +1663,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	g_ptr_array_set_size (application->priv->package_list, 0);
 
 	/* force a button refresh */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	selection = gtk_tree_view_get_selection (treeview);
 	gpk_application_packages_treeview_clicked_cb (selection, application);
 
 	gpk_application_set_buttons_apply_clear (application);
@@ -1685,6 +1679,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	GError *error = NULL;
 	gchar **package_ids = NULL;
 	gchar *exec;
+	GtkWindow *window;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1694,8 +1689,8 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
 		/* can we show the user the new application? */
 		if (ret) {
-			widget = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
-			exec = gpk_client_run_show (GTK_WINDOW (widget), package_ids);
+			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+			exec = gpk_client_run_show (window, package_ids);
 			if (exec != NULL) {
 				ret = g_spawn_command_line_async (exec, &error);
 				if (!ret) {
@@ -1730,10 +1725,8 @@ gpk_application_packages_add_columns (GpkApplication *application)
 	GtkTreeViewColumn *column;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	GtkWidget *widget;
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
-	treeview = GTK_TREE_VIEW (widget);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	model = gtk_tree_view_get_model (treeview);
 
 	/* column for installed toggles */
@@ -1795,7 +1788,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	GtkWidget *widget;
+	GtkEntry *entry;
 	GtkTreeView *treeview;
 	GtkTreePath *path;
 	gboolean active;
@@ -1807,8 +1800,8 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	gpk_application_clear_packages (application);
 
 	/* clear the search text if we clicked the group list */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
-	gtk_entry_set_text (GTK_ENTRY (widget), "");
+	entry = GTK_ENTRY (gtk_builder_get_object (application->priv->builder, "entry_text"));
+	gtk_entry_set_text (entry, "");
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -1820,7 +1813,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 
 		/* don't search parent groups */
 		if (!active) {
-			treeview = GTK_TREE_VIEW (glade_xml_get_widget (application->priv->glade_xml, "treeview_detail"));
+			treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
 			path = gtk_tree_model_get_path (model, &iter);
 
 			/* select the parent group */
@@ -1870,7 +1863,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		/* we cannot now add it */
 		gpk_application_allow_install (application, FALSE);
 		gpk_application_allow_remove (application, FALSE);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_selection"));
 		gtk_widget_hide (widget);
 
 		/* hide details */
@@ -1888,7 +1881,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	}
 
 	/* show the menu item */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_selection"));
 	gtk_widget_show (widget);
 
 	/* get data */
@@ -1915,7 +1908,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* only show run menuitem for installed programs */
 	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_run");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_run"));
 	gtk_widget_set_sensitive (widget, ret);
 
 	/* cancel any previous request */
@@ -1971,20 +1964,6 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 }
 
 /**
- * gpk_application_create_custom_widget:
- **/
-static GtkWidget *
-gpk_application_create_custom_widget (GladeXML *xml, gchar *func_name, gchar *name,
-				      gchar *string1, gchar *string2,
-				      gint int1, gint int2, gpointer user_data)
-{
-	if (egg_strequal (name, "image_status"))
-		return gpk_animated_icon_new ();
-	egg_warning ("name unknown='%s'", name);
-	return NULL;
-}
-
-/**
  * gpk_application_popup_position_menu:
  **/
 static void
@@ -2025,7 +2004,7 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "name", NULL);
 
 	/* set the new icon */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: basic search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
@@ -2050,7 +2029,7 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "details", NULL);
 
 	/* set the new icon */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: detailed search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
@@ -2075,7 +2054,7 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "file", NULL);
 
 	/* set the new icon */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: file search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
 	icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
@@ -2250,7 +2229,7 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 	}
 
 	/* use parent */
-	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	main_window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
 
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_show_about_dialog (GTK_WINDOW (main_window),
@@ -2557,23 +2536,21 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_status");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
 	if (status == PK_STATUS_ENUM_FINISHED) {
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "image_status");
-		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (widget), FALSE);
+		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (application->priv->image_status), FALSE);
 		return;
 	}
 
 	/* set the text and show */
 	gtk_widget_show (widget);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "label_status");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "label_status"));
 	text = gpk_status_enum_to_localised_text (status);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "image_status");
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (widget), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (application->priv->image_status), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
 	gtk_widget_show (widget);
 }
 
@@ -2587,7 +2564,7 @@ gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApp
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 	gtk_widget_set_sensitive (widget, allow_cancel);
 }
 
@@ -2674,7 +2651,7 @@ gpk_application_treeview_add_columns_description (GpkApplication *application)
 	GtkTreeViewColumn *column;
 	GtkTreeView *treeview;
 
-	treeview = GTK_TREE_VIEW (glade_xml_get_widget (application->priv->glade_xml, "treeview_detail"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
 
 	/* title */
 	column = gtk_tree_view_column_new ();
@@ -2735,7 +2712,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	const gchar *icon_name;
 
 	/* set to no indent */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
 	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), FALSE);
 	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 0);
 
@@ -2771,7 +2748,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_ID, "separator", -1);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
 		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
 						      gpk_application_group_row_separator_func, NULL, NULL);
 	}
@@ -2802,13 +2779,13 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	GtkTreeIter iter;
 	GtkTreeIter iter2;
 	guint i, j;
-	GtkWidget *widget;
+	GtkTreeView *treeview;
 	const gchar *icon_name;
 
 	/* set to expanders with indent */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (widget), TRUE);
-	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 3);
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
+	gtk_tree_view_set_show_expanders (treeview, TRUE);
+	gtk_tree_view_set_level_indentation  (treeview, 3);
 
 	/* add an "all" entry if we can GetPackages */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
@@ -2837,8 +2814,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
 				    GROUPS_COLUMN_ID, "separator", -1);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
-		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+		gtk_tree_view_set_row_separator_func (treeview,
 						      gpk_application_group_row_separator_func, NULL, NULL);
 	}
 
@@ -2880,8 +2856,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	}
 
 	/* open all expanders */
-	gtk_tree_view_collapse_all (GTK_TREE_VIEW (widget));
-
+	gtk_tree_view_collapse_all (treeview);
 	g_object_unref (list);
 out:
 	g_object_unref (client);
@@ -2931,33 +2906,33 @@ gpk_application_create_group_list_categories (GpkApplication *application)
  * We might have to do things when the gconf keys change; do them here.
  **/
 static void
-gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkApplication *application)
+gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *gconf_entry, GpkApplication *application)
 {
 	GtkEntryCompletion *completion;
 	GConfValue *value;
 	gboolean ret;
-	GtkWidget *widget;
+	GtkEntry *entry;
 
-	value = gconf_entry_get_value (entry);
+	value = gconf_entry_get_value (gconf_entry);
 	if (value == NULL)
 		return;
 
-	if (egg_strequal (entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS)) {
+	if (egg_strequal (gconf_entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS)) {
 		ret = gconf_value_get_bool (value);
 		gtk_tree_store_clear (application->priv->groups_store);
 		if (ret)
 			gpk_application_create_group_list_categories (application);
 		else
 			gpk_application_create_group_list_enum (application);
-	} else if (egg_strequal (entry->key, GPK_CONF_AUTOCOMPLETE)) {
+	} else if (egg_strequal (gconf_entry->key, GPK_CONF_AUTOCOMPLETE)) {
 		ret = gconf_value_get_bool (value);
-		widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+		entry = GTK_ENTRY (gtk_builder_get_object (application->priv->builder, "entry_text"));
 		if (ret) {
 			completion = gpk_package_entry_completion_new ();
-			gtk_entry_set_completion (GTK_ENTRY (widget), completion);
+			gtk_entry_set_completion (entry, completion);
 			g_object_unref (completion);
 		} else {
-			gtk_entry_set_completion (GTK_ENTRY (widget), NULL);
+			gtk_entry_set_completion (entry, NULL);
 		}
 	}
 }
@@ -2970,6 +2945,7 @@ gpk_application_init (GpkApplication *application)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	GtkWidget *image;
 	GtkEntryCompletion *completion;
 	GtkTreeSelection *selection;
 	gboolean enabled;
@@ -2977,6 +2953,8 @@ gpk_application_init (GpkApplication *application)
 	gchar *mode;
 	GError *error = NULL;
 	GSList *list;
+	guint retval;
+	GtkBox *box;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->package = NULL;
@@ -3096,11 +3074,23 @@ gpk_application_init (GpkApplication *application)
 	if (!ret)
 		egg_warning ("Failure opening database");
 
-	/* use custom widgets */
-	glade_set_custom_handler (gpk_application_create_custom_widget, application);
+	/* get UI */
+	application->priv->builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (application->priv->builder, GPK_DATA "/gpk-application.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
-	application->priv->glade_xml = glade_xml_new (GPK_DATA "/gpk-application.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (application->priv->glade_xml, "window_manager");
+	/* add animated widget */
+	application->priv->image_status = gpk_animated_icon_new ();
+	box = GTK_BOX (gtk_builder_get_object (application->priv->builder, "hbox_status"));
+	gtk_box_pack_start (box, application->priv->image_status, FALSE, FALSE, 0);
+	gtk_box_reorder_child (box, application->priv->image_status, 0);
+	gtk_widget_show (application->priv->image_status);
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
 
 	/* make GpkClient windows modal */
 	gtk_widget_realize (main_window);
@@ -3116,216 +3106,218 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_delete_event_cb), application);
 
 	/* clear */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_clear");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_clear_cb), application);
 	/* TRANSLATORS: tooltip on the clear button */
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
 	/* help */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_help_cb), application);
 
 	/* set F1 = contents */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menu_about");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menu_about"));
 	list = gtk_accel_groups_from_object (G_OBJECT (main_window));
 	if (list != NULL)
 		gtk_menu_set_accel_group (GTK_MENU (widget), GTK_ACCEL_GROUP (list->data));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_help"));
 	gtk_menu_item_set_accel_path (GTK_MENU_ITEM (widget),
 			              "<gpk-application>/menuitem_help");
 	gtk_accel_map_add_entry ("<gpk-application>/menuitem_help", GDK_F1, 0);
+	image = gtk_image_new_from_stock ("gtk-help", GTK_ICON_SIZE_MENU);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 
 	/* install */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_apply");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_apply_cb), application);
 	/* TRANSLATORS: tooltip on the apply button */
 	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_about");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_about"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_about_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_help"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_help_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_sources"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_sources_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_refresh");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_refresh"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_refresh_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_homepage");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_homepage"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_homepage_cb), application);
 	/* TRANSLATORS: tooltip on the homepage button */
 	gtk_widget_set_tooltip_text (widget, _("Visit home page for selected package"));
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_files");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_files"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_files_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_install");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_install"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_install_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_remove");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_remove"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_remove_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_depends");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_depends"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_depends_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_requires");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_requires"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_requires_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_run");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_run"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_run_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_quit");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_quit"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_quit_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_selection");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_selection"));
 	gtk_widget_hide (widget);
 
 	/* installed filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_installed_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_installed_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_installed_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_installed_cb), application);
 
 	/* devel filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_devel_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_devel_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_devel_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_devel_cb), application);
 
 	/* gui filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_gui_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_gui_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_gui_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_gui_cb), application);
 
 	/* free filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_free_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_free_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_free_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
 
 	/* arch filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_arch_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_arch_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_arch_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
 
 	/* source filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_source_yes"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_source_no"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source_both");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_source_both"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_source_cb), application);
 
 	/* basename filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_basename"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_basename_cb), application);
 
 	/* newest filter */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_newest"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_newest_cb), application);
 
 	/* Remove description/file list if needed. */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow2");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "scrolledwindow2"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_FILES) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_files");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_files"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_depends");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_depends"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_requires");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_requires"));
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the group selector if we don't support search-groups */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "scrolledwindow_groups");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "scrolledwindow_groups"));
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the refresh cache button if we can't do it */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_refresh");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_refresh"));
 		gtk_widget_hide (widget);
 	}
 
 	/* hide the software-sources button if we can't do it */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_sources");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_sources"));
 		gtk_widget_hide (widget);
 	}
 
 	/* simple find button */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_find_cb), application);
 	/* TRANSLATORS: tooltip on the find button */
 	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	/* search cancel button */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_cancel");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), application);
 	/* TRANSLATORS: tooltip on the cancel button */
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 
 	/* the fancy text entry widget */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 
 	/* autocompletion can be turned off as it's slow */
 	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
@@ -3348,32 +3340,32 @@ gpk_application_init (GpkApplication *application)
 
 	/* hide the filters we can't support */
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_installed");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_installed"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_devel");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_devel"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_GUI) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_gui");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_gui"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_FREE) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_free");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_free"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_ARCH) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_arch");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_SOURCE) == FALSE) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_source");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_source"));
 		gtk_widget_hide (widget);
 	}
 
 	/* BASENAME, use by default, or hide */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_basename");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_basename"));
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_BASENAME)) {
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
 						 GPK_CONF_APPLICATION_FILTER_BASENAME, NULL);
@@ -3385,7 +3377,7 @@ gpk_application_init (GpkApplication *application)
 	}
 
 	/* NEWEST, use by default, or hide */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "menuitem_newest");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_newest"));
 	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_NEWEST)) {
 		/* set from remembered state */
 		enabled = gconf_client_get_bool (application->priv->gconf_client,
@@ -3397,13 +3389,13 @@ gpk_application_init (GpkApplication *application)
 		gtk_widget_hide (widget);
 	}
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "entry_text");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	g_signal_connect (widget, "key-press-event",
 			  G_CALLBACK (gpk_application_text_changed_cb), application);
 	g_signal_connect (widget, "key-release-event",
 			  G_CALLBACK (gpk_application_text_changed_cb), application);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "button_find");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* set a size, if the screen allows */
@@ -3411,22 +3403,22 @@ gpk_application_init (GpkApplication *application)
 
 	/* we are small form factor */
 	if (!ret) {
-		widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_packages");
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_packages"));
 		gtk_box_set_homogeneous (GTK_BOX (widget), FALSE);
 	}
 	gtk_widget_show (GTK_WIDGET(main_window));
 
 	/* set details box decent size */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "hbox_packages");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_packages"));
 	gtk_widget_set_size_request (widget, -1, 120);
 
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
 			  G_CALLBACK (gpk_application_package_row_activated_cb), application);
 
 	/* use a list store for the extra data */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_detail");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (application->priv->details_store));
 
 	/* add columns to the tree view */
@@ -3437,7 +3429,7 @@ gpk_application_init (GpkApplication *application)
 					      PACKAGES_COLUMN_ID, GTK_SORT_ASCENDING);
 
 	/* create package tree view */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_packages");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (application->priv->packages_store));
 
@@ -3449,7 +3441,7 @@ gpk_application_init (GpkApplication *application)
 	gpk_application_packages_add_columns (application);
 
 	/* set up the groups checkbox */
-	widget = glade_xml_get_widget (application->priv->glade_xml, "treeview_groups");
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
 
 	/* add columns to the tree view */
 	gpk_application_groups_add_columns (GTK_TREE_VIEW (widget));
@@ -3524,6 +3516,7 @@ gpk_application_init (GpkApplication *application)
 	}
 	g_free (mode);
 
+out_build:
 	/* welcome */
 	gpk_application_add_welcome (application);
 }
@@ -3544,7 +3537,6 @@ gpk_application_finalize (GObject *object)
 	if (application->priv->details_event_id > 0)
 		g_source_remove (application->priv->details_event_id);
 
-	g_object_unref (application->priv->glade_xml);
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->details_store);
 	g_object_unref (application->priv->control);
@@ -3557,6 +3549,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->gconf_client);
 	g_object_unref (application->priv->gclient);
 	g_object_unref (application->priv->markdown);
+	g_object_unref (application->priv->builder);
 
 	g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
 	g_ptr_array_set_size (application->priv->package_list, 0);

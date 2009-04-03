@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 
-#include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <math.h>
@@ -57,7 +56,7 @@
 /* TRANSLATORS: don't update anything */
 #define PK_UPDATE_NONE_TEXT		_("Nothing")
 
-static GladeXML *glade_xml = NULL;
+static GtkBuilder *builder = NULL;
 
 /**
  * pk_button_help_cb:
@@ -89,10 +88,10 @@ pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_update_freq_combo_changed:
+ * gpk_prefs_update_freq_combo_changed:
  **/
 static void
-pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
+gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
@@ -120,10 +119,10 @@ pk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_upgrade_freq_combo_changed:
+ * gpk_prefs_upgrade_freq_combo_changed:
  **/
 static void
-pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
+gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
@@ -149,10 +148,10 @@ pk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_update_combo_changed:
+ * gpk_prefs_update_combo_changed:
  **/
 static void
-pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
+gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	const gchar *action;
@@ -166,7 +165,7 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 		egg_warning ("value NULL");
 		return;
 	}
-	notify_widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
+	notify_widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_updates"));
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = GPK_UPDATE_ENUM_ALL;
 		gtk_widget_set_sensitive (notify_widget, FALSE);
@@ -188,10 +187,30 @@ pk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_prefs_update_freq_combo_setup:
+ * gpk_prefs_set_combo_model_simple_text:
  **/
 static void
-pk_prefs_update_freq_combo_setup (void)
+gpk_prefs_update_freq_combo_simple_text (GtkWidget *combo_box)
+{
+	GtkCellRenderer *cell;
+	GtkListStore *store;
+
+	store = gtk_list_store_new (1, G_TYPE_STRING);
+	gtk_combo_box_set_model (GTK_COMBO_BOX (combo_box), GTK_TREE_MODEL (store));
+	g_object_unref (store);
+
+	cell = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box), cell, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo_box), cell,
+					"text", 0,
+					NULL);
+}
+
+/**
+ * gpk_prefs_update_freq_combo_setup:
+ **/
+static void
+gpk_prefs_update_freq_combo_setup (void)
 {
 	gchar *value;
 	gboolean is_writable;
@@ -200,7 +219,7 @@ pk_prefs_update_freq_combo_setup (void)
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
-	widget = glade_xml_get_widget (glade_xml, "combobox_check");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_check"));
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (value == NULL) {
@@ -215,6 +234,8 @@ pk_prefs_update_freq_combo_setup (void)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
+	/* set a simple text model */
+	gpk_prefs_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_HOURLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
@@ -224,14 +245,14 @@ pk_prefs_update_freq_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_update_freq_combo_changed), NULL);
+			  G_CALLBACK (gpk_prefs_update_freq_combo_changed), NULL);
 }
 
 /**
- * pk_prefs_upgrade_freq_combo_setup:
+ * gpk_prefs_upgrade_freq_combo_setup:
  **/
 static void
-pk_prefs_upgrade_freq_combo_setup (void)
+gpk_prefs_upgrade_freq_combo_setup (void)
 {
 	gchar *value;
 	gboolean is_writable;
@@ -240,7 +261,7 @@ pk_prefs_upgrade_freq_combo_setup (void)
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
-	widget = glade_xml_get_widget (glade_xml, "combobox_upgrade");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
 	if (value == NULL) {
@@ -255,6 +276,8 @@ pk_prefs_upgrade_freq_combo_setup (void)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
+	/* set a simple text model */
+	gpk_prefs_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
@@ -263,14 +286,14 @@ pk_prefs_upgrade_freq_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_upgrade_freq_combo_changed), NULL);
+			  G_CALLBACK (gpk_prefs_upgrade_freq_combo_changed), NULL);
 }
 
 /**
- * pk_prefs_auto_update_combo_setup:
+ * gpk_prefs_auto_update_combo_setup:
  **/
 static void
-pk_prefs_auto_update_combo_setup (void)
+gpk_prefs_auto_update_combo_setup (void)
 {
 	gchar *value;
 	gboolean is_writable;
@@ -279,7 +302,7 @@ pk_prefs_auto_update_combo_setup (void)
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
-	widget = glade_xml_get_widget (glade_xml, "combobox_install");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_install"));
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_AUTO_UPDATE, NULL);
 	value = gconf_client_get_string (client, GPK_CONF_AUTO_UPDATE, NULL);
 	if (value == NULL) {
@@ -294,6 +317,8 @@ pk_prefs_auto_update_combo_setup (void)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
+	/* set a simple text model */
+	gpk_prefs_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_ALL_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_SECURITY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_NONE_TEXT);
@@ -302,14 +327,14 @@ pk_prefs_auto_update_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (pk_prefs_update_combo_changed), NULL);
+			  G_CALLBACK (gpk_prefs_update_combo_changed), NULL);
 }
 
 /**
- * pk_prefs_notify_checkbutton_setup:
+ * gpk_prefs_notify_checkbutton_setup:
  **/
 static void
-pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
+gpk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
 {
 	GConfClient *client;
 	gboolean value;
@@ -330,10 +355,10 @@ pk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
 static void
 gpk_prefs_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
 {
-	GtkWidget *widget;
+	GtkWindow *window;
 	if (command == UNIQUE_ACTIVATE) {
-		widget = glade_xml_get_widget (glade_xml, "dialog_prefs");
-		gtk_window_present (GTK_WINDOW (widget));
+		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_prefs"));
+		gtk_window_present (window);
 	}
 }
 
@@ -346,7 +371,7 @@ gpk_prefs_network_status_changed_cb (PkControl *control, PkNetworkEnum state, gp
 	GtkWidget *widget;
 
 	/* only show label on mobile broadband */
-	widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
 	if (state == PK_NETWORK_ENUM_MOBILE)
 		gtk_widget_show (widget);
 	else
@@ -368,6 +393,8 @@ main (int argc, char *argv[])
 	PkControl *control;
 	UniqueApp *unique_app;
 	PkNetworkEnum state;
+	guint retval;
+	GError *error = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -420,8 +447,16 @@ main (int argc, char *argv[])
 	roles = pk_control_get_actions (control, NULL);
 	state = pk_control_get_network_state (control, NULL);
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-prefs.glade", NULL, NULL);
-	main_window = glade_xml_get_widget (glade_xml, "dialog_prefs");
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-prefs.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_prefs"));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
@@ -430,37 +465,37 @@ main (int argc, char *argv[])
 	/* Get the main window quit */
 	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_updates");
-	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_AVAILABLE);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_updates"));
+	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_AVAILABLE);
 
-	widget = glade_xml_get_widget (glade_xml, "checkbutton_notify_completed");
-	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_completed"));
+	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
 
-	widget = glade_xml_get_widget (glade_xml, "checkbutton_mobile_broadband");
-	pk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_mobile_broadband"));
+	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
 
-	widget = glade_xml_get_widget (glade_xml, "button_close");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
 
 	/* only show label on mobile broadband */
 	if (state == PK_NETWORK_ENUM_MOBILE) {
-		widget = glade_xml_get_widget (glade_xml, "hbox_mobile_broadband");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
 		gtk_widget_show (widget);
 	}
 
 	/* update the combo boxes */
-	pk_prefs_update_freq_combo_setup ();
-	pk_prefs_upgrade_freq_combo_setup ();
-	pk_prefs_auto_update_combo_setup ();
+	gpk_prefs_update_freq_combo_setup ();
+	gpk_prefs_upgrade_freq_combo_setup ();
+	gpk_prefs_auto_update_combo_setup ();
 
 	/* hide if not supported */
 	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		widget = glade_xml_get_widget (glade_xml, "label_upgrade");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_upgrade"));
 		gtk_widget_hide (widget);
-		widget = glade_xml_get_widget (glade_xml, "combobox_upgrade");
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
 		gtk_widget_hide (widget);
 	}
 
@@ -469,8 +504,9 @@ main (int argc, char *argv[])
 	/* wait */
 	gtk_main ();
 
+out_build:
 	g_object_unref (control);
-	g_object_unref (glade_xml);
+	g_object_unref (builder);
 unique_out:
 	g_object_unref (unique_app);
 

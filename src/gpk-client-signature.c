@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -67,45 +66,54 @@ gpk_client_signature_show (GtkWindow *window, const gchar *package_id, const gch
 			   const gchar *key_fingerprint, const gchar *key_timestamp)
 {
 	GtkWidget *widget;
-	GladeXML *glade_xml;
+	GtkBuilder *builder;
+	guint retval;
+	GError *error = NULL;
 
 	g_return_val_if_fail (package_id != NULL, FALSE);
 
-	glade_xml = glade_xml_new (GPK_DATA "/gpk-signature.glade", NULL, NULL);
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-signature.ui", &error);
+	if (error != NULL) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* connect up default actions */
-	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_gpg"));
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_no");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_no"));
 	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
 
 	/* set icon name */
-	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_gpg"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
-	widget = glade_xml_get_widget (glade_xml, "button_yes");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_yes"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_signature_button_yes_cb), NULL);
-	widget = glade_xml_get_widget (glade_xml, "button_help");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_signature_button_help_cb), NULL);
 
 	/* show correct text */
-	widget = glade_xml_get_widget (glade_xml, "label_name");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_name"));
 	gtk_label_set_label (GTK_LABEL (widget), repository_name);
-	widget = glade_xml_get_widget (glade_xml, "label_url");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_url"));
 	gtk_label_set_label (GTK_LABEL (widget), key_url);
-	widget = glade_xml_get_widget (glade_xml, "label_user");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_user"));
 	gtk_label_set_label (GTK_LABEL (widget), key_userid);
-	widget = glade_xml_get_widget (glade_xml, "label_id");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_id"));
 	gtk_label_set_label (GTK_LABEL (widget), key_id);
 
 	/* make modal if window set */
-	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_gpg"));
 	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
 
 	/* show window */
-	widget = glade_xml_get_widget (glade_xml, "dialog_gpg");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_gpg"));
 	gtk_widget_show (widget);
 
 	/* wait for button press */
@@ -115,8 +123,8 @@ gpk_client_signature_show (GtkWindow *window, const gchar *package_id, const gch
 	/* hide window */
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_object_unref (glade_xml);
-
+out_build:
+	g_object_unref (builder);
 	return has_imported_signature;
 }
 

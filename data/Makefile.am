@@ -28,17 +28,17 @@ autostart_in_files = gpk-update-icon.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
-	gpk-repo.glade					\
-	gpk-eula.glade					\
-	gpk-application.glade				\
-	gpk-update-viewer.glade				\
-	gpk-prefs.glade					\
-	gpk-service-pack.glade				\
-	gpk-signature.glade				\
-	gpk-error.glade					\
-	gpk-log.glade					\
-	gpk-backend-status.glade			\
-	gpk-client.glade				\
+	gpk-repo.ui					\
+	gpk-eula.ui					\
+	gpk-application.ui				\
+	gpk-update-viewer.ui				\
+	gpk-prefs.ui					\
+	gpk-service-pack.ui				\
+	gpk-signature.ui				\
+	gpk-error.ui					\
+	gpk-log.ui					\
+	gpk-backend-status.ui				\
+	gpk-client.ui					\
 	$(NULL)
 
 EXTRA_DIST =						\
