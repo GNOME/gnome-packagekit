@@ -158,15 +158,6 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
 AC_SUBST(GNOME_MENUS_CFLAGS)
 AC_SUBST(GNOME_MENUS_LIBS)
 
-dnl ---------------------------------------------------------------------------
-dnl - Check for g_file_make_directory_with_parents
-dnl ---------------------------------------------------------------------------
-OLDCPPFLAGS=$CPPFLAGS
-CPPFLAGS=$GIO_CFLAGS
-LIBS=$GIO_LIBS
-AC_CHECK_FUNCS(g_file_make_directory_with_parents)
-CPPFLAGS=$OLDCPPFLAGS
-
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
