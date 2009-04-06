@@ -46,7 +46,7 @@
 #include "gpk-common.h"
 #include "gpk-error.h"
 #include "gpk-watch.h"
-#include "gpk-client.h"
+#include "gpk-client-dialog.h"
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
@@ -68,13 +68,12 @@ struct GpkWatchPrivate
 	GPtrArray		*restart_package_names;
 	NotifyNotification	*notification_cached_messages;
 	GpkInhibit		*inhibit;
-	GpkClient		*gclient;
-	GpkClient		*monitor;
+	GpkClientDialog		*dialog;
+	PkClient		*client_primary;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkRestartEnum		 restart;
 	GConfClient		*gconf_client;
-	gboolean		 show_refresh_in_menu;
 	PolKitGnomeAction	*restart_action;
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
@@ -339,13 +338,6 @@ gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
 {
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_REFRESH_CACHE) ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM))
-		watch->priv->show_refresh_in_menu = FALSE;
-	else
-		watch->priv->show_refresh_in_menu = TRUE;
-
 	gpk_watch_refresh_icon (watch);
 	gpk_watch_refresh_tooltip (watch);
 }
@@ -372,10 +364,10 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 }
 
 /**
- * gpk_watch_finished_cb:
+ * gpk_watch_task_list_finished_cb:
  **/
 static void
-gpk_watch_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
+gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
 {
 	guint i;
 	gboolean ret;
@@ -793,27 +785,6 @@ gpk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
 }
 
 /**
- * gpk_watch_menu_refresh_cache_cb:
- **/
-static void
-gpk_watch_menu_refresh_cache_cb (GtkMenuItem *item, gpointer data)
-{
-	gboolean ret;
-	GpkWatch *watch = GPK_WATCH (data);
-	GError *error = NULL;
-
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	egg_debug ("refresh cache");
-	gpk_client_set_interaction (watch->priv->gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	ret = gpk_client_refresh_cache (watch->priv->gclient, &error);
-	if (!ret) {
-		egg_warning ("%s", error->message);
-		g_error_free (error);
-	}
-}
-
-/**
  * gpk_watch_menu_show_messages_cb:
  **/
 static void
@@ -930,6 +901,214 @@ out_build:
 }
 
 /**
+ * gpk_watch_get_role_text:
+ **/
+static gchar *
+gpk_watch_get_role_text (PkClient *client)
+{
+	const gchar *role_text;
+	gchar *text;
+	gchar *message;
+	PkRoleEnum role;
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get role and text */
+	ret = pk_client_get_role (client, &role, &text, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		return NULL;
+	}
+
+	/* backup */
+	role_text = gpk_role_enum_to_localised_present (role);
+
+	if (!egg_strzero (text) && role != PK_ROLE_ENUM_UPDATE_PACKAGES)
+		message = g_strdup_printf ("%s: %s", role_text, text);
+	else
+		message = g_strdup_printf ("%s", role_text);
+	g_free (text);
+
+	return message;
+}
+
+/**
+ * gpk_watch_progress_changed_cb:
+ **/
+static void
+gpk_watch_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+				guint elapsed, guint remaining, GpkWatch *watch)
+{
+	gpk_client_dialog_set_percentage (watch->priv->dialog, percentage);
+	gpk_client_dialog_set_remaining (watch->priv->dialog, remaining);
+}
+
+/**
+ * gpk_watch_set_status:
+ **/
+static gboolean
+gpk_watch_set_status (GpkWatch *watch, PkStatusEnum status)
+{
+	/* do we force progress? */
+	if (status == PK_STATUS_ENUM_DOWNLOAD_REPOSITORY ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_FILELIST ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_CHANGELOG ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
+	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
+	    status == PK_STATUS_ENUM_REFRESH_CACHE) {
+		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	}
+
+	/* set icon */
+	gpk_client_dialog_set_image_status (watch->priv->dialog, status);
+
+	/* set label */
+	gpk_client_dialog_set_title (watch->priv->dialog, gpk_status_enum_to_localised_text (status));
+
+	/* spin */
+	if (status == PK_STATUS_ENUM_WAIT)
+		gpk_client_dialog_set_percentage (watch->priv->dialog, PK_CLIENT_PERCENTAGE_INVALID);
+
+	/* do visual stuff when finished */
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		/* make insensitive */
+		gpk_client_dialog_set_allow_cancel (watch->priv->dialog, FALSE);
+
+		/* stop spinning */
+		gpk_client_dialog_set_percentage (watch->priv->dialog, 100);
+	}
+	return TRUE;
+}
+
+/**
+ * gpk_watch_status_changed_cb:
+ **/
+static void
+gpk_watch_status_changed_cb (PkClient *client, PkStatusEnum status, GpkWatch *watch)
+{
+	gpk_watch_set_status (watch, status);
+}
+
+/**
+ * gpk_watch_package_cb:
+ **/
+static void
+gpk_watch_package_cb (PkClient *client, const PkPackageObj *obj, GpkWatch *watch)
+{
+	gchar *text;
+	text = gpk_package_id_format_twoline (obj->id, obj->summary);
+	gpk_client_dialog_set_message (watch->priv->dialog, text);
+	g_free (text);
+}
+
+/**
+ * gpk_watch_monitor_tid:
+ **/
+static gboolean
+gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
+{
+	PkStatusEnum status;
+	gboolean ret;
+	gboolean allow_cancel;
+	gchar *text;
+	gchar *package_id = NULL;
+	guint percentage;
+	guint subpercentage;
+	guint elapsed;
+	guint remaining;
+	GError *error = NULL;
+	PkRoleEnum role;
+
+	/* reset client */
+	ret = pk_client_reset (watch->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to reset client: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	ret = pk_client_set_tid (watch->priv->client_primary, tid, &error);
+	if (!ret) {
+		egg_warning ("could not set tid: %s", error->message);
+		g_error_free (error);
+		return FALSE;
+	}
+
+	/* fill in role */
+	text = gpk_watch_get_role_text (watch->priv->client_primary);
+	gpk_client_dialog_set_title (watch->priv->dialog, text);
+	g_free (text);
+
+	/* coldplug */
+	ret = pk_client_get_status (watch->priv->client_primary, &status, NULL);
+	/* no such transaction? */
+	if (!ret) {
+		egg_warning ("could not get status");
+		return FALSE;
+	}
+
+	/* are we cancellable? */
+	pk_client_get_allow_cancel (watch->priv->client_primary, &allow_cancel, NULL);
+	gpk_client_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
+
+	/* coldplug */
+	ret = pk_client_get_progress (watch->priv->client_primary,
+				      &percentage, &subpercentage, &elapsed, &remaining, NULL);
+	if (ret) {
+		gpk_watch_progress_changed_cb (watch->priv->client_primary, percentage,
+						subpercentage, elapsed, remaining, watch);
+	} else {
+		egg_warning ("GetProgress failed");
+		gpk_watch_progress_changed_cb (watch->priv->client_primary,
+						PK_CLIENT_PERCENTAGE_INVALID,
+						PK_CLIENT_PERCENTAGE_INVALID, 0, 0, watch);
+	}
+
+	/* get the role */
+	ret = pk_client_get_role (watch->priv->client_primary, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* setup the UI */
+	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
+	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
+	    role == PK_ROLE_ENUM_SEARCH_FILE ||
+	    role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_GET_UPDATES)
+		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+	else
+		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
+
+	/* set the status */
+	gpk_watch_set_status (watch, status);
+
+	/* do the best we can, and get the last package */
+	ret = pk_client_get_package (watch->priv->client_primary, &package_id, NULL);
+	if (ret) {
+		PkPackageId *id;
+		PkPackageObj *obj;
+
+		id = pk_package_id_new_from_string (package_id);
+		if (id != NULL) {
+			obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
+			egg_warning ("package_id=%s", package_id);
+			gpk_watch_package_cb (watch->priv->client_primary, obj, watch);
+			pk_package_obj_free (obj);
+		}
+		pk_package_id_free (id);
+	}
+
+	gpk_client_dialog_present (watch->priv->dialog);
+
+	return TRUE;
+}
+
+/**
  * gpk_watch_menu_job_status_cb:
  **/
 static void
@@ -947,7 +1126,7 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 	}
 
 	/* launch the UI */
-	gpk_client_monitor_tid (watch->priv->monitor, tid);
+	gpk_watch_monitor_tid (watch, tid);
 }
 
 /**
@@ -1049,24 +1228,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 
 	/* add jobs as drop down */
 	len = gpk_watch_populate_menu_with_jobs (watch, menu);
-
-	/* force a refresh if we are not updating or refreshing */
-	if (watch->priv->show_refresh_in_menu) {
-
-		/* Separator for HIG? */
-		if (len > 0) {
-			widget = gtk_separator_menu_item_new ();
-			gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
-		}
-
-		/* TRANSLATORS: This is a right click menu item, and will refresh all the package lists */
-		widget = gtk_image_menu_item_new_with_mnemonic (_("_Refresh Software List"));
-		image = gtk_image_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
-		g_signal_connect (G_OBJECT (widget), "activate",
-				  G_CALLBACK (gpk_watch_menu_refresh_cache_cb), watch);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
-	}
 
 	/* any messages to show? */
 	len = watch->priv->cached_messages->len;
@@ -1328,6 +1489,32 @@ gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *
 }
 
 /**
+ * gpk_watch_allow_cancel_cb:
+ **/
+static void
+gpk_watch_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkWatch *watch)
+{
+	gpk_client_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
+}
+
+/**
+ * gpk_watch_finished_cb:
+ **/
+static void
+gpk_watch_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
+{
+	g_return_if_fail (GPK_IS_WATCH (watch));
+
+	/* stop spinning */
+	gpk_client_dialog_set_percentage (watch->priv->dialog, 100);
+
+	/* autoclose if success */
+	if (exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		gpk_client_dialog_close (watch->priv->dialog);
+	}
+}
+
+/**
  * gpk_watch_init:
  * @watch: This class instance
  **/
@@ -1343,17 +1530,26 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->notification_cached_messages = NULL;
 	watch->priv->restart = PK_RESTART_ENUM_NONE;
 
-	watch->priv->show_refresh_in_menu = TRUE;
 	watch->priv->gconf_client = gconf_client_get_default ();
 
 	watch->priv->sicon = gpk_smart_icon_new ();
 	watch->priv->set_proxy_timeout = 0;
-	watch->priv->gclient = gpk_client_new ();
 	watch->priv->cached_messages = g_ptr_array_new ();
 	watch->priv->restart_package_names = g_ptr_array_new ();
 
-	watch->priv->monitor = gpk_client_new ();
-	gpk_client_set_interaction (watch->priv->monitor, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
+	watch->priv->client_primary = pk_client_new ();
+	g_signal_connect (watch->priv->client_primary, "finished",
+			  G_CALLBACK (gpk_watch_finished_cb), watch);
+	g_signal_connect (watch->priv->client_primary, "progress-changed",
+			  G_CALLBACK (gpk_watch_progress_changed_cb), watch);
+	g_signal_connect (watch->priv->client_primary, "status-changed",
+			  G_CALLBACK (gpk_watch_status_changed_cb), watch);
+	g_signal_connect (watch->priv->client_primary, "package",
+			  G_CALLBACK (gpk_watch_package_cb), watch);
+	g_signal_connect (watch->priv->client_primary, "allow-cancel",
+			  G_CALLBACK (gpk_watch_allow_cancel_cb), watch);
+
+	watch->priv->dialog = gpk_client_dialog_new ();
 
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
@@ -1376,7 +1572,7 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->tlist, "status-changed",
 			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
 	g_signal_connect (watch->priv->tlist, "finished",
-			  G_CALLBACK (gpk_watch_finished_cb), watch);
+			  G_CALLBACK (gpk_watch_task_list_finished_cb), watch);
 	g_signal_connect (watch->priv->tlist, "error-code",
 			  G_CALLBACK (gpk_watch_error_code_cb), watch);
 	g_signal_connect (watch->priv->tlist, "message",
@@ -1451,11 +1647,11 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->control);
-	g_object_unref (watch->priv->gclient);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->restart_action);
-	g_object_unref (watch->priv->monitor);
+	g_object_unref (watch->priv->client_primary);
+	g_object_unref (watch->priv->dialog);
 
 	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
 }

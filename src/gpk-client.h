@@ -146,8 +146,6 @@ gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_cancel			(GpkClient	*gclient,
 							 GError		**error);
-gboolean	 gpk_client_monitor_tid			(GpkClient	*gclient,
-							 const gchar	*tid);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
 							 GtkWindow	*window);
 gboolean	 gpk_client_set_parent_xid		(GpkClient	*gclient,
