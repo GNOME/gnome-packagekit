@@ -1152,6 +1152,24 @@ gpk_check_update_repo_signature_required_cb (PkClient *client, const gchar *pack
 }
 
 /**
+ * gpk_check_update_primary_requeue:
+ **/
+static gboolean
+gpk_check_update_primary_requeue (GpkCheckUpdate *cupdate)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* retry new action */
+	ret = pk_client_requeue (cupdate->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("Failed to requeue: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
  * gpk_check_update_finished_cb:
  **/
 static void
@@ -1163,6 +1181,12 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
+
+	/* we've just agreed to auth */
+	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE) {
+		if (exit_enum == PK_EXIT_ENUM_SUCCESS)
+			gpk_check_update_primary_requeue (cupdate);
+	}
 
 	/* updates */
 	if (role == PK_ROLE_ENUM_GET_UPDATES &&

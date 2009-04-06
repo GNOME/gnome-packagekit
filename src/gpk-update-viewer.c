@@ -1455,10 +1455,10 @@ out:
 }
 
 /**
- * gpk_update_viewer_requeue:
+ * gpk_update_viewer_primary_requeue:
  **/
 static gboolean
-gpk_update_viewer_requeue (gpointer data)
+gpk_update_viewer_primary_requeue (gpointer data)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -1640,7 +1640,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
 	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
 		if (exit == PK_EXIT_ENUM_SUCCESS)
-			gpk_update_viewer_requeue (NULL);
+			gpk_update_viewer_primary_requeue (NULL);
 		else
 			gpk_update_viewer_undisable_packages ();
 	}
