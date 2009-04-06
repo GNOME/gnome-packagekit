@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2008-2009 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -25,11 +25,11 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <locale.h>
+#include <dbus/dbus-glib.h>
 
 #include "egg-debug.h"
 
 #include "gpk-common.h"
-#include "gpk-client.h"
 #include "gpk-error.h"
 
 /**
@@ -41,12 +41,17 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	gboolean ret;
 	gboolean verbose = FALSE;
-	GError *error;
-	GpkClient *gclient;
+	GError *error = NULL;
+	DBusGConnection *connection;
+	DBusGProxy *proxy = NULL;
+	gchar **types = NULL;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
+		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &types,
+		/* TRANSLATORS: command line option: a list of catalogs to install */
+		  _("Mime types to install"), NULL },
 		{ NULL}
 	};
 
@@ -74,28 +79,52 @@ main (int argc, char *argv[])
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Mime type installer"), TRUE);
 	if (!ret)
-		return 1;
+		goto out;
 
-	if (argc < 2) {
+	if (types == NULL) {
 		/* TRANSLATORS: could not install program supporting this type */
 		gpk_error_dialog (_("Failed to install a program to handle this file type"),
 				  /* TRANSLATORS: no type given */
 				  _("You need to specify a mime-type to install"), NULL);
-		return 1;
-	}
-	if (argc > 2) {
-		/* TRANSLATORS: could not install program supporting this type */
-		gpk_error_dialog (_("Failed to install a program to handle this file type"),
-				  /* TRANSLATORS: more than one type given */
-				  _("You can only specify one mime-type to install"), NULL);
-		return 1;
+		goto out;
 	}
 
-	error = NULL;
-	gclient = gpk_client_new ();
-	gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_ALWAYS);
-	ret = gpk_client_install_mime_type (gclient, argv[1], NULL);
-	g_object_unref (gclient);
+	/* check dbus connections, exit if not valid */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (connection == NULL) {
+		egg_warning ("%s", error->message);
+		g_error_free (error);
+		goto out;
+	}
 
+	/* get a connection */
+	proxy = dbus_g_proxy_new_for_name (connection,
+					   "org.freedesktop.PackageKit",
+					   "/org/freedesktop/PackageKit",
+					   "org.freedesktop.PackageKit.Modify");
+	if (proxy == NULL) {
+		egg_warning ("Cannot connect to session service");
+		goto out;
+	}
+
+	/* don't timeout, as dbus-glib sets the timeout ~25 seconds */
+	dbus_g_proxy_set_default_timeout (proxy, INT_MAX);
+
+	/* do method */
+	ret = dbus_g_proxy_call (proxy, "InstallMimeTypes", &error,
+				 G_TYPE_UINT, 0, /* xid */
+				 G_TYPE_STRV, types, /* data */
+				 G_TYPE_STRING, "", /* interaction */
+				 G_TYPE_INVALID,
+				 G_TYPE_INVALID);
+	if (!ret) {
+		egg_warning ("%s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	if (proxy != NULL)
+		g_object_unref (proxy);
+	g_strfreev (types);
 	return !ret;
 }
