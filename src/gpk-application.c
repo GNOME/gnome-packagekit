@@ -3335,6 +3335,8 @@ gpk_application_init (GpkApplication *application)
 
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_find_cb), application);
+	g_signal_connect (widget, "paste-clipboard",
+			  G_CALLBACK (gpk_application_find_cb), application);
 	g_signal_connect (widget, "icon-press",
 			  G_CALLBACK (gpk_application_entry_text_icon_press_cb), application);
 
