@@ -1515,6 +1515,33 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, Gp
 }
 
 /**
+ * gpk_watch_button_close_cb:
+ **/
+static void
+gpk_watch_button_close_cb (GtkWidget *widget, GpkWatch *watch)
+{
+	/* close, don't abort */
+	gpk_client_dialog_close (watch->priv->dialog);
+}
+
+/**
+ * gpk_watch_button_cancel_cb:
+ **/
+static void
+gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* we might have a transaction running */
+	ret = pk_client_cancel (watch->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to cancel client: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
  * gpk_watch_init:
  * @watch: This class instance
  **/
@@ -1550,6 +1577,11 @@ gpk_watch_init (GpkWatch *watch)
 			  G_CALLBACK (gpk_watch_allow_cancel_cb), watch);
 
 	watch->priv->dialog = gpk_client_dialog_new ();
+	gpk_client_dialog_set_window_icon (watch->priv->dialog, "pk-package-installed");
+	g_signal_connect (watch->priv->dialog, "cancel",
+			  G_CALLBACK (gpk_watch_button_cancel_cb), watch);
+	g_signal_connect (watch->priv->dialog, "close",
+			  G_CALLBACK (gpk_watch_button_close_cb), watch);
 
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
