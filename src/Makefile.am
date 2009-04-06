@@ -161,6 +161,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-check-update.h				\
 	gpk-auto-refresh.c				\
 	gpk-auto-refresh.h				\
+	gpk-helper-repo-signature.c			\
+	gpk-helper-repo-signature.h			\
 	gpk-watch.c					\
 	gpk-watch.h					\
 	gpk-firmware.c					\

@@ -50,6 +50,8 @@
 #include "gpk-client.h"
 #include "gpk-check-update.h"
 #include "gpk-enum.h"
+#include "gpk-error.h"
+#include "gpk-helper-repo-signature.h"
 
 static void     gpk_check_update_finalize	(GObject	     *object);
 
@@ -66,15 +68,12 @@ struct GpkCheckUpdatePrivate
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkControl		*control;
+	GpkHelperRepoSignature	*helper_repo_signature;
 	GpkAutoRefresh		*arefresh;
-	GpkClient		*gclient_refresh_cache;
 	GpkClient		*gclient_update_system;
-	GpkClient		*gclient_get_updates;
-	GpkClient		*gclient_get_distro_upgrades;
+	PkClient		*client_primary;
+	PkClient		*client_secondary;
 	GConfClient		*gconf_client;
-	gboolean		 cache_okay;
-	gboolean		 cache_update_in_progress;
-	gboolean		 get_updates_in_progress;
 	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
 	GPtrArray		*important_updates_array;
@@ -290,7 +289,7 @@ gpk_check_update_get_updates_post_update_cb (GpkCheckUpdate *cupdate)
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
 	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	egg_debug ("post updates check");
 
 	gpk_check_update_query_updates (cupdate, FALSE);
 	return FALSE;
@@ -672,6 +671,41 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 static gboolean
 gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 {
+	gboolean ret = FALSE;
+	GError *error = NULL;
+
+	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
+
+	/* No point if we are already updating */
+	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
+	    pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
+		egg_debug ("Not checking for updates as already in progress");
+		goto out;
+	}
+
+	ret = pk_client_reset (cupdate->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	ret = pk_client_get_updates (cupdate->priv->client_primary, PK_FILTER_ENUM_NONE, &error);
+	if (!ret) {
+		egg_warning ("cannot get updates: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return ret;
+}
+
+/**
+ * gpk_check_update_process_updates:
+ **/
+static gboolean
+gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, gboolean policy_action)
+{
 	const PkPackageObj *obj;
 	guint length;
 	guint i;
@@ -685,34 +719,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	const gchar *icon;
 	gchar *package_id;
 	gchar **package_ids;
-	PkPackageList *list;
 	GError *error = NULL;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
-
-	/* are we already called */
-	if (cupdate->priv->get_updates_in_progress) {
-		egg_debug ("GetUpdate already in progress");
-		return FALSE;
-	}
-
-	/* No point if we are already updating */
-	if (pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
-	    pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		egg_debug ("Not checking for updates as already in progress");
-		return FALSE;
-	}
-
-	/* get updates */
-	gpk_client_set_interaction (cupdate->priv->gclient_get_updates, GPK_CLIENT_INTERACT_NEVER);
-	cupdate->priv->get_updates_in_progress = TRUE;
-	list = gpk_client_get_updates (cupdate->priv->gclient_get_updates, &error);
-	cupdate->priv->get_updates_in_progress = FALSE;
-	if (list == NULL) {
-		egg_warning ("failed to get updates: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
 
 	/* sort by name */
 	pk_package_list_sort (list);
@@ -776,11 +785,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update available",
 							  "There are %d updates available", length), length);
-#if GTK_CHECK_VERSION(2,15,0)
 	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
-#else
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
-#endif
+
 	/* if we are just refreshing after a failed update, don't try to do the actions */
 	if (!policy_action) {
 		egg_debug ("skipping actions");
@@ -848,7 +854,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate, gboolean policy_action)
 	/* shouldn't happen */
 	egg_warning ("unknown update mode");
 out:
-	g_object_unref (list);
 	g_string_free (status_security, TRUE);
 	g_string_free (status_tooltip, TRUE);
 	g_ptr_array_foreach (security_array, (GFunc) g_free, NULL);
@@ -862,6 +867,7 @@ out:
 static gboolean
 gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
 {
+	egg_warning ("idle cb");
 	gpk_check_update_query_updates (cupdate, TRUE);
 	return FALSE;
 }
@@ -876,13 +882,7 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 
 	/* now try to get newest update list */
 	egg_warning ("updates changed");
-
-	/* ignore our own updates */
-	if (!cupdate->priv->get_updates_in_progress) {
-		g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
-		egg_warning ("not own updates");
-	} else
-		egg_warning ("own updates");
+	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
 /**
@@ -930,37 +930,25 @@ static void
 gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
 {
 	gboolean ret;
+	GError *error = NULL;
+
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
-	/* got a cache, no need to poll */
-	if (cupdate->priv->cache_okay)
-		return;
-
-	/* already in progress, but not yet certified okay */
-	if (cupdate->priv->cache_update_in_progress)
-		return;
-
-	cupdate->priv->cache_update_in_progress = TRUE;
-	cupdate->priv->cache_okay = TRUE;
-
-	/* use the gnome helper to refresh the cache */
-	gpk_client_set_interaction (cupdate->priv->gclient_refresh_cache, GPK_CLIENT_INTERACT_NEVER);
-	ret = gpk_client_refresh_cache (cupdate->priv->gclient_refresh_cache, NULL);
+	ret = pk_client_reset (cupdate->priv->client_primary, &error);
 	if (!ret) {
-		/* we failed to get the cache */
-		egg_warning ("failed to refresh cache");
-
-		/* try again in a few minutes */
-		cupdate->priv->cache_okay = FALSE;
-	} else {
-		/* stop the polling */
-		cupdate->priv->cache_okay = TRUE;
-
-		/* now try to get updates */
-		egg_debug ("get updates");
-		gpk_check_update_query_updates (cupdate, TRUE);
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
 	}
-	cupdate->priv->cache_update_in_progress = FALSE;
+
+	ret = pk_client_refresh_cache (cupdate->priv->client_primary, TRUE, &error);
+	if (!ret) {
+		egg_warning ("cannot refresh cache: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
 }
 
 /**
@@ -972,6 +960,7 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* show the icon at login time */
+	egg_debug ("login cb");
 	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
@@ -981,24 +970,40 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 static void
 gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
 {
-	GError *error = NULL;
-	const GPtrArray	*array;
 	gboolean ret;
+	GError *error = NULL;
+
+	ret = pk_client_reset (cupdate->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	ret = pk_client_get_distro_upgrades (cupdate->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot get updates: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
+}
+
+/**
+ * gpk_check_update_process_distro_upgrades:
+ **/
+static void
+gpk_check_update_process_distro_upgrades (GpkCheckUpdate *cupdate, PkObjList *array)
+{
+	gboolean ret;
+	GError *error = NULL;
 	guint i;
 	PkDistroUpgradeObj *obj;
 	const gchar *title;
 	NotifyNotification *notification;
 	GString *string = NULL;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-
-	/* get updates */
-	gpk_client_set_interaction (cupdate->priv->gclient_get_distro_upgrades, GPK_CLIENT_INTERACT_NEVER);
-	array = gpk_client_get_distro_upgrades (cupdate->priv->gclient_get_distro_upgrades, &error);
-	if (array == NULL) {
-		egg_warning ("failed to get upgrades: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
 
 	/* any updates? */
 	if (array->len == 0) {
@@ -1016,7 +1021,7 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	/* find the upgrade string */
 	string = g_string_new ("");
 	for (i=0; i < array->len; i++) {
-		obj = (PkDistroUpgradeObj *) g_ptr_array_index (array, i);
+		obj = (PkDistroUpgradeObj *) pk_obj_list_index (array, i);
 		g_string_append_printf (string, "%s (%s)\n", obj->name, pk_distro_upgrade_enum_to_text (obj->state));
 	}
 	if (string->len != 0)
@@ -1074,6 +1079,116 @@ gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, 
 }
 
 /**
+ * gpk_check_update_error_code_cb:
+ **/
+static void
+gpk_check_update_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkCheckUpdate *cupdate)
+{
+	/* ignore some errors */
+	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		egg_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+	/* ignore the ones we can handle */
+	if (code == PK_ERROR_ENUM_GPG_FAILURE) {
+		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+	/* not modal as we are a status icon */
+	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
+			  gpk_error_enum_to_localised_message (code), details);
+}
+
+/**
+ * gpk_check_update_repo_signature_event_cb:
+ **/
+static void
+gpk_check_update_repo_signature_event_cb (GpkHelperRepoSignature *helper_repo_signature, GtkResponseType type, const gchar *key_id, const gchar *package_id, GpkCheckUpdate *cupdate)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (cupdate->priv->client_secondary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* install signature */
+	ret = pk_client_install_signature (cupdate->priv->client_secondary, PK_SIGTYPE_ENUM_GPG, key_id, package_id, &error);
+	if (!ret) {
+		egg_warning ("cannot install signature: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	/* set state */
+	egg_debug ("repo sig cb");
+	gpk_check_update_query_updates (cupdate, TRUE);
+out:
+	return;
+}
+
+/**
+ * gpk_check_update_repo_signature_required_cb:
+ **/
+static void
+gpk_check_update_repo_signature_required_cb (PkClient *client, const gchar *package_id, const gchar *repository_name,
+					      const gchar *key_url, const gchar *key_userid, const gchar *key_id,
+					      const gchar *key_fingerprint, const gchar *key_timestamp,
+					      PkSigTypeEnum type, GpkCheckUpdate *cupdate)
+{
+	/* use the helper */
+	gpk_helper_repo_signature_show (cupdate->priv->helper_repo_signature, package_id,
+					repository_name, key_url, key_userid, key_id, key_fingerprint, key_timestamp);
+}
+
+/**
+ * gpk_check_update_finished_cb:
+ **/
+static void
+gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkCheckUpdate *cupdate)
+{
+	PkRoleEnum role;
+	PkPackageList *list;
+	PkObjList *array;
+
+	pk_client_get_role (client, &role, NULL, NULL);
+	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
+
+	/* updates */
+	if (role == PK_ROLE_ENUM_GET_UPDATES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (client);
+		gpk_check_update_process_updates (cupdate, list, TRUE);
+		g_object_unref (list);
+	}
+
+	/* upgrades */
+	if (role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		array = pk_client_get_cached_objects (client);
+		gpk_check_update_process_distro_upgrades (cupdate, array);
+		g_object_unref (array);
+	}
+
+	/* upgrades */
+	if (role == PK_ROLE_ENUM_REFRESH_CACHE &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		egg_debug ("finished refresh cb");
+		gpk_check_update_query_updates (cupdate, TRUE);
+	}
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1115,11 +1230,29 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	g_signal_connect (cupdate->priv->dbus_monitor_viewer, "connection-changed",
 			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
 
-	/* install stuff using the gnome helpers */
-	cupdate->priv->gclient_refresh_cache = gpk_client_new ();
+	/* update stuff using the gnome helpers */
 	cupdate->priv->gclient_update_system = gpk_client_new ();
-	cupdate->priv->gclient_get_updates = gpk_client_new ();
-	cupdate->priv->gclient_get_distro_upgrades = gpk_client_new ();
+
+	/* use an asynchronous query object */
+	cupdate->priv->client_primary = pk_client_new ();
+	pk_client_set_use_buffer (cupdate->priv->client_primary, TRUE, NULL);
+	g_signal_connect (cupdate->priv->client_primary, "finished",
+			  G_CALLBACK (gpk_check_update_finished_cb), cupdate);
+	g_signal_connect (cupdate->priv->client_primary, "error-code",
+			  G_CALLBACK (gpk_check_update_error_code_cb), cupdate);
+	g_signal_connect (cupdate->priv->client_primary, "repo-signature-required",
+			  G_CALLBACK (gpk_check_update_repo_signature_required_cb), cupdate);
+
+	/* this is for the auth callback */
+	cupdate->priv->client_secondary = pk_client_new ();
+	g_signal_connect (cupdate->priv->client_secondary, "error-code",
+			  G_CALLBACK (gpk_check_update_error_code_cb), cupdate);
+	g_signal_connect (cupdate->priv->client_secondary, "finished",
+			  G_CALLBACK (gpk_check_update_finished_cb), cupdate);
+
+	/* helpers */
+	cupdate->priv->helper_repo_signature = gpk_helper_repo_signature_new ();
+	g_signal_connect (cupdate->priv->helper_repo_signature, "event", G_CALLBACK (gpk_check_update_repo_signature_event_cb), NULL);
 
 	cupdate->priv->pconnection = pk_connection_new ();
 	g_signal_connect (cupdate->priv->pconnection, "connection-changed",
@@ -1140,11 +1273,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->tlist = pk_task_list_new ();
 	g_signal_connect (cupdate->priv->tlist, "changed",
 			  G_CALLBACK (gpk_check_update_task_list_changed_cb), cupdate);
-
-	/* refresh the cache, and poll until we get a good refresh */
-	cupdate->priv->cache_okay = FALSE;
-	cupdate->priv->cache_update_in_progress = FALSE;
-	cupdate->priv->get_updates_in_progress = FALSE;
 }
 
 /**
@@ -1168,11 +1296,11 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->arefresh);
 	g_object_unref (cupdate->priv->gconf_client);
 	g_object_unref (cupdate->priv->control);
-	g_object_unref (cupdate->priv->gclient_refresh_cache);
 	g_object_unref (cupdate->priv->gclient_update_system);
-	g_object_unref (cupdate->priv->gclient_get_updates);
-	g_object_unref (cupdate->priv->gclient_get_distro_upgrades);
+	g_object_unref (cupdate->priv->client_primary);
+	g_object_unref (cupdate->priv->client_secondary);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
+	g_object_unref (cupdate->priv->helper_repo_signature);
 	if (cupdate->priv->important_updates_array != NULL) {
 		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);

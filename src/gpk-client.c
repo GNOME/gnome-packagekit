@@ -96,7 +96,6 @@ struct _GpkClientPrivate
 	gchar			**files_array;
 	PkExitEnum		 exit;
 	GdkWindow		*parent_window;
-	GPtrArray		*upgrade_array;
 	guint			 timestamp;
 	gchar			*parent_title;
 	gchar			*parent_icon_name;
@@ -547,19 +546,6 @@ gpk_client_package_cb (PkClient *client, const PkPackageObj *obj, GpkClient *gcl
 	text = gpk_package_id_format_twoline (obj->id, obj->summary);
 	gpk_client_dialog_set_message (gclient->priv->dialog, text);
 	g_free (text);
-}
-
-/**
- * pk_client_distro_upgrade_cb:
- **/
-static void
-pk_client_distro_upgrade_cb (PkClient *client, const PkDistroUpgradeObj *obj, GpkClient *gclient)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	/* copy into array */
-	g_ptr_array_add (gclient->priv->upgrade_array, pk_distro_upgrade_obj_copy (obj));
-	egg_debug ("%s, %s, %s", obj->name, pk_update_state_enum_to_text (obj->state), obj->summary);
 }
 
 /**
@@ -3066,117 +3052,6 @@ out:
 }
 
 /**
- * gpk_client_get_updates:
- **/
-PkPackageList *
-gpk_client_get_updates (GpkClient *gclient, GError **error)
-{
-	gboolean ret;
-	GError *error_local = NULL;
-	PkPackageList *list = NULL;
-
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
-
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_action, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: this should never happen, low level failure */
-		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
-
-	/* wrap update, but handle all the GPG and EULA stuff */
-	ret = pk_client_get_updates (gclient->priv->client_action, PK_FILTER_ENUM_NONE, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-		gpk_client_error_msg (gclient, _("Failed to get updates"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* ignore this if it's uninteresting */
-	if (gclient->priv->show_progress) {
-		gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
-		/* TRANSLATORS: title: getting the list of updates */
-		gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting list of updates"));
-		gpk_client_dialog_present (gclient->priv->dialog);
-	}
-
-	/* wait for an answer */
-	g_main_loop_run (gclient->priv->loop);
-
-	/* copy from client to local */
-	list = pk_client_get_package_list (gclient->priv->client_action);
-out:
-	return list;
-}
-
-/**
- * gpk_client_get_distro_upgrades:
- **/
-const GPtrArray *
-gpk_client_get_distro_upgrades (GpkClient *gclient, GError **error)
-{
-	gboolean ret;
-	GError *error_local = NULL;
-
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
-
-	/* are we not able to do this? */
-	if (!pk_bitfield_contain (gclient->priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_FAILED, "Backend does not support GetDistroUpgrades");
-		return NULL;
-	}
-
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_action, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: this should never happen, low level failure */
-		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		return NULL;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
-
-	/* clear old data */
-	if (gclient->priv->upgrade_array->len > 0) {
-		g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
-		g_ptr_array_remove_range (gclient->priv->upgrade_array, 0, gclient->priv->upgrade_array->len);
-	}
-
-	/* wrap update, but handle all the GPG and EULA stuff */
-	ret = pk_client_get_distro_upgrades (gclient->priv->client_action, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-		gpk_client_error_msg (gclient, _("Getting update lists failed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
-	/* TRANSLATORS: get if we can go from one distro release to another */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting distribution upgrade information"));
-	gpk_client_dialog_set_help_id (gclient->priv->dialog, "dialog-get-upgrades");
-	if (gclient->priv->show_progress)
-		gpk_client_dialog_present (gclient->priv->dialog);
-
-	/* wait for an answer */
-	g_main_loop_run (gclient->priv->loop);
-out:
-	return gclient->priv->upgrade_array;
-}
-
-/**
  * gpk_client_get_file_list:
  **/
 gchar **
@@ -3853,8 +3728,6 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "files",
 			  G_CALLBACK (gpk_client_files_cb), gclient);
-	g_signal_connect (gclient->priv->client_action, "distro-upgrade",
-			  G_CALLBACK (pk_client_distro_upgrade_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -3872,9 +3745,6 @@ gpk_client_init (GpkClient *gclient)
 	ret = pk_desktop_open_database (gclient->priv->desktop, NULL);
 	if (!ret)
 		egg_warning ("failed to open desktop database");
-
-	/* cache the upgrade array */
-	gclient->priv->upgrade_array = g_ptr_array_new ();
 }
 
 /**
@@ -3898,8 +3768,6 @@ gpk_client_finalize (GObject *object)
 	g_free (gclient->priv->parent_title);
 	g_free (gclient->priv->parent_icon_name);
 	g_free (gclient->priv->error_details);
-	g_ptr_array_foreach (gclient->priv->upgrade_array, (GFunc) pk_distro_upgrade_obj_free, NULL);
-	g_ptr_array_free (gclient->priv->upgrade_array, TRUE);
 	g_strfreev (gclient->priv->files_array);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
