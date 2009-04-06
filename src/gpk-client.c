@@ -93,7 +93,6 @@ struct _GpkClientPrivate
 	gboolean		 show_progress;
 	gboolean		 show_finished;
 	gboolean		 show_warning;
-	gchar			**files_array;
 	PkExitEnum		 exit;
 	GdkWindow		*parent_window;
 	guint			 timestamp;
@@ -546,28 +545,6 @@ gpk_client_package_cb (PkClient *client, const PkPackageObj *obj, GpkClient *gcl
 	text = gpk_package_id_format_twoline (obj->id, obj->summary);
 	gpk_client_dialog_set_message (gclient->priv->dialog, text);
 	g_free (text);
-}
-
-/**
- * gpk_client_files_cb:
- **/
-static void
-gpk_client_files_cb (PkClient *client, const gchar *package_id,
-		     const gchar *filelist, GpkClient *gclient)
-{
-	g_return_if_fail (GPK_IS_CLIENT (gclient));
-
-	/* free old array and set new */
-	g_strfreev (gclient->priv->files_array);
-
-	/* no data, eugh */
-	if (egg_strzero (filelist)) {
-		gclient->priv->files_array = NULL;
-		return;
-	}
-
-	/* set new */
-	gclient->priv->files_array = g_strsplit (filelist, ";", 0);
 }
 
 /**
@@ -3052,67 +3029,6 @@ out:
 }
 
 /**
- * gpk_client_get_file_list:
- **/
-gchar **
-gpk_client_get_file_list (GpkClient *gclient, const gchar *package_id, GError **error)
-{
-	gboolean ret;
-	GError *error_local = NULL;
-	gchar **package_ids;
-
-	g_return_val_if_fail (GPK_IS_CLIENT (gclient), NULL);
-
-	/* reset */
-	ret = pk_client_reset (gclient->priv->client_action, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: this should never happen, low level failure */
-		gpk_client_error_msg (gclient, _("Failed to reset client to perform action"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		return NULL;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (gclient->priv->client_action, gclient->priv->timeout, NULL);
-
-	/* wrap get files */
-	package_ids = pk_package_ids_from_id (package_id);
-	ret = pk_client_get_files (gclient->priv->client_action, package_ids, &error_local);
-	g_strfreev (package_ids);
-	if (!ret) {
-		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-		gpk_client_error_msg (gclient, _("Getting file list failed"), error_local);
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_INTERNAL_ERROR, error_local->message);
-		g_error_free (error_local);
-		return NULL;
-	}
-
-	gpk_client_dialog_setup (gclient->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
-	/* TRANSLATORS: title: getting the files that are contained in a package */
-	gpk_client_dialog_set_title (gclient->priv->dialog, _("Getting file lists"));
-	if (gclient->priv->show_progress)
-		gpk_client_dialog_present (gclient->priv->dialog);
-
-	/* wait for an answer */
-	g_main_loop_run (gclient->priv->loop);
-
-	/* fail the transaction and set the correct error */
-	ret = gpk_client_set_error_from_exit_enum (gclient->priv->exit, error);
-	if (!ret)
-		return NULL;
-
-	/* no files? */
-	if (gclient->priv->files_array == NULL) {
-		gpk_client_error_set (error, GPK_CLIENT_ERROR_NO_PACKAGES_FOUND, "no files were found");
-		return NULL;
-	}
-
-	/* return the file list */
-	return g_strdupv (gclient->priv->files_array);
-}
-
-/**
  * gpk_client_update_packages:
  **/
 gboolean
@@ -3520,7 +3436,6 @@ gpk_client_init (GpkClient *gclient)
 
 	gclient->priv = GPK_CLIENT_GET_PRIVATE (gclient);
 
-	gclient->priv->files_array = NULL;
 	gclient->priv->parent_window = NULL;
 	gclient->priv->parent_title = NULL;
 	gclient->priv->parent_icon_name = NULL;
@@ -3583,8 +3498,6 @@ gpk_client_init (GpkClient *gclient)
 			  G_CALLBACK (gpk_client_repo_signature_required_cb), gclient);
 	g_signal_connect (gclient->priv->client_action, "eula-required",
 			  G_CALLBACK (gpk_client_eula_required_cb), gclient);
-	g_signal_connect (gclient->priv->client_action, "files",
-			  G_CALLBACK (gpk_client_files_cb), gclient);
 
 	gclient->priv->client_resolve = pk_client_new ();
 	g_signal_connect (gclient->priv->client_resolve, "status-changed",
@@ -3625,7 +3538,6 @@ gpk_client_finalize (GObject *object)
 	g_free (gclient->priv->parent_title);
 	g_free (gclient->priv->parent_icon_name);
 	g_free (gclient->priv->error_details);
-	g_strfreev (gclient->priv->files_array);
 	g_object_unref (gclient->priv->client_action);
 	g_object_unref (gclient->priv->client_resolve);
 	g_object_unref (gclient->priv->client_secondary);

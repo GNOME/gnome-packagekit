@@ -498,50 +498,39 @@ gpk_application_strcmp_indirect (gchar **a, gchar **b)
 static void
 gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 {
-	GPtrArray *array;
+	gboolean ret;
 	GError *error = NULL;
-	gchar **files;
-	gchar *title;
+	gchar **package_ids = NULL;
 	GtkWindow *window;
-	GtkWidget *dialog;
-	PkPackageId *id;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	/* get window */
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 
-	gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
-	files = gpk_client_get_file_list (application->priv->gclient, application->priv->package, &error);
-	if (files == NULL) {
-		egg_warning ("could not get file list: %s", error->message);
+	/* reset */
+	ret = pk_client_reset (application->priv->client_files, &error);
+	if (!ret) {
+		/* TRANSLATORS: this should never happen, low level failure */
+		egg_warning ("failed to reset: %s",  error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
 
-	/* convert to pointer array */
-	array = pk_strv_to_ptr_array (files);
-	g_ptr_array_sort (array, (GCompareFunc) gpk_application_strcmp_indirect);
+	/* get files */
+	package_ids = pk_package_ids_from_id (application->priv->package);
+	ret = pk_client_get_files (application->priv->client_files, package_ids, &error);
+	if (!ret) {
+		/* TRANSLATORS: this should never happen, low level failure */
+		egg_warning ("failed to get files: %s",  error->message);
+		gpk_error_dialog_modal (window,
+					/* TRANSLATORS: we failed to get the file list */
+					_("Failed to get files"),
+					_("Could not get files for this package"), error->message);
+		g_error_free (error);
+		goto out;
+	}
 
-	/* title */
-	id = pk_package_id_new_from_string (application->priv->package);
-	/* TRANSLATORS: title: how many files are installed by the application */
-	title = g_strdup_printf (ngettext ("%i file installed by %s",
-					   "%i files installed by %s",
-					   array->len), array->len, id->name);
-
-	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
-	gpk_dialog_embed_file_list_widget (GTK_DIALOG (dialog), array);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (dialog), 600, 250);
-
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-
-	g_free (title);
-	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-	g_ptr_array_free (array, TRUE);
-	g_strfreev (files);
-	pk_package_id_free (id);
+out:
+	g_strfreev (package_ids);
 }
 
 /**
@@ -2938,6 +2927,52 @@ gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfE
 }
 
 /**
+ * gpk_application_files_cb:
+ **/
+static void
+gpk_application_files_cb (PkClient *client, const gchar *package_id,
+			  const gchar *filelist, GpkApplication *application)
+{
+	GPtrArray *array;
+	gchar **files;
+	gchar *title;
+	GtkWindow *window;
+	GtkWidget *dialog;
+	PkPackageId *id;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	files = g_strsplit (filelist, ";", -1);
+
+	/* convert to pointer array */
+	array = pk_strv_to_ptr_array (files);
+	g_ptr_array_sort (array, (GCompareFunc) gpk_application_strcmp_indirect);
+
+	/* title */
+	id = pk_package_id_new_from_string (application->priv->package);
+	/* TRANSLATORS: title: how many files are installed by the application */
+	title = g_strdup_printf (ngettext ("%i file installed by %s",
+					   "%i files installed by %s",
+					   array->len), array->len, id->name);
+
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gpk_dialog_embed_file_list_widget (GTK_DIALOG (dialog), array);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 600, 250);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+	g_free (title);
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+	g_ptr_array_free (array, TRUE);
+	g_strfreev (files);
+	pk_package_id_free (id);
+}
+
+/**
  * gpk_application_init:
  **/
 static void
@@ -3058,6 +3093,8 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_status_changed_cb), application);
 	g_signal_connect (application->priv->client_files, "allow-cancel",
 			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
+	g_signal_connect (application->priv->client_files, "files",
+			  G_CALLBACK (gpk_application_files_cb), application);
 
 	/* get bitfield */
 	application->priv->roles = pk_control_get_actions (application->priv->control, NULL);

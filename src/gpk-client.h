@@ -141,9 +141,6 @@ void		 gpk_client_set_interaction		(GpkClient	*gclient,
 							 PkBitfield	 interact);
 void		 gpk_client_set_timeout			(GpkClient	*gclient,
 							 gint		 timeout);
-gchar		**gpk_client_get_file_list		(GpkClient	*gclient,
-							 const gchar	*package_id,
-							 GError		**error);
 gboolean	 gpk_client_cancel			(GpkClient	*gclient,
 							 GError		**error);
 gboolean	 gpk_client_set_parent			(GpkClient	*gclient,
