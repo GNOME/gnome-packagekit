@@ -58,7 +58,7 @@ static void     gpk_dbus_finalize	(GObject	*object);
 struct GpkDbusPrivate
 {
 	GpkClient		*gclient;
-	PkClient		*client;
+	PkClient		*client_primary;
 	GConfClient		*gconf_client;
 	gint			 timeout;
 };
@@ -703,7 +703,7 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
 
 	/* reset */
-	ret = pk_client_reset (dbus->priv->client, &error_local);
+	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
@@ -711,11 +711,11 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 	}
 
 	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
+	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
 
 	/* get the package list for the installed packages */
 	package_names = g_strsplit (package_name, "|", 1);
-	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
+	ret = pk_client_resolve (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
@@ -723,7 +723,7 @@ gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolea
 	}
 
 	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client);
+	list = pk_client_get_package_list (dbus->priv->client_primary);
 	*installed = (PK_OBJ_LIST(list)->len > 0);
 out:
 	if (list != NULL)
@@ -750,7 +750,7 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *in
 	gpk_dbus_set_interaction (dbus, interaction);
 
 	/* reset */
-	ret = pk_client_reset (dbus->priv->client, &error_local);
+	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
@@ -758,11 +758,11 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *in
 	}
 
 	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
+	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
 
 	/* get the package list for the installed packages */
 	package_names = g_strsplit (package_name, "|", 1);
-	ret = pk_client_resolve (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
+	ret = pk_client_resolve (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
@@ -770,7 +770,7 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *in
 	}
 
 	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client);
+	list = pk_client_get_package_list (dbus->priv->client_primary);
 	*installed = (PK_OBJ_LIST(list)->len > 0);
 out:
 	if (list != NULL)
@@ -796,7 +796,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *intera
 	gpk_dbus_set_interaction (dbus, interaction);
 
 	/* reset */
-	ret = pk_client_reset (dbus->priv->client, &error_local);
+	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
 		g_error_free (error_local);
@@ -804,10 +804,10 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *intera
 	}
 
 	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client, dbus->priv->timeout, NULL);
+	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
 
 	/* get the package list for the installed packages */
-	ret = pk_client_search_file (dbus->priv->client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
+	ret = pk_client_search_file (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
 	if (!ret) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for file: %s", error_local->message);
 		g_error_free (error_local);
@@ -815,7 +815,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *intera
 	}
 
 	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client);
+	list = pk_client_get_package_list (dbus->priv->client_primary);
 	if (PK_OBJ_LIST(list)->len < 1) {
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "could not find package providing file");
 		ret = FALSE;
@@ -1047,9 +1047,9 @@ gpk_dbus_init (GpkDbus *dbus)
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->timeout = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
-	dbus->priv->client = pk_client_new ();
-	pk_client_set_use_buffer (dbus->priv->client, TRUE, NULL);
-	pk_client_set_synchronous (dbus->priv->client, TRUE, NULL);
+	dbus->priv->client_primary = pk_client_new ();
+	pk_client_set_use_buffer (dbus->priv->client_primary, TRUE, NULL);
+	pk_client_set_synchronous (dbus->priv->client_primary, TRUE, NULL);
 
 	dbus->priv->gclient = gpk_client_new ();
 	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
@@ -1067,7 +1067,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
-	g_object_unref (dbus->priv->client);
+	g_object_unref (dbus->priv->client_primary);
 	g_object_unref (dbus->priv->gclient);
 	g_object_unref (dbus->priv->gconf_client);
 
