@@ -155,15 +155,16 @@ out:
  * gpk_dbus_set_parent_window:
  **/
 static void
-gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid, guint32 timestamp)
+gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid)
 {
 	GpkX11 *x11;
+	guint timestamp;
 
 	/* set the parent window */
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
 
 	/* try to get the user time of the window if not provided */
-	if (timestamp == 0 && xid != 0) {
+	if (xid != 0) {
 		x11 = gpk_x11_new ();
 		gpk_x11_set_xid (x11, xid);
 		timestamp = gpk_x11_get_user_time (x11);
@@ -197,7 +198,7 @@ gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const g
 
 	/* just convert from char* to char** */
 	catalog_files = g_strsplit (catalog_file, "|", 1);
-	gpk_dbus_set_parent_window (dbus, xid, timestamp);
+	gpk_dbus_set_parent_window (dbus, xid);
 
 	/* get the program name and set */
 	exec = gpk_dbus_get_exec_for_sender (sender);
@@ -495,7 +496,7 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 	egg_debug ("InstallProvideFiles method called: %s", files[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
@@ -527,7 +528,7 @@ gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 	egg_debug ("InstallPackageFiles method called: %s", files[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
@@ -559,7 +560,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, co
 	egg_debug ("InstallPackageNames method called: %s", packages[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
@@ -591,7 +592,7 @@ gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, con
 	egg_debug ("InstallMimeTypes method called: %s", mime_types[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
@@ -623,7 +624,7 @@ gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resou
 	egg_debug ("InstallFontconfigResources method called: %s", resources[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
@@ -655,7 +656,7 @@ gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resour
 	egg_debug ("InstallGStreamerResources method called: %s", resources[0]);
 
 	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid, 0);
+	gpk_dbus_set_parent_window (dbus, xid);
 	gpk_dbus_set_interaction (dbus, interaction);
 	gpk_dbus_set_context (dbus, context);
 
