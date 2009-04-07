@@ -273,7 +273,7 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	egg_debug ("Changing %s to %i", key, checked);
 	gconf_client = gconf_client_get_default ();
-	gconf_client_set_bool (gconf_client, key, checked, NULL);
+	gconf_client_set_bool (gconf_client, key, !checked, NULL);
 	g_object_unref (gconf_client);
 }
 
@@ -284,11 +284,20 @@ gboolean
 gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 {
 	GtkWidget *widget;
+	gboolean checked;
+	GConfClient *gconf_client;
 
 	/* add a checkbutton for deps screen */
 	widget = gtk_check_button_new_with_label (_("Do not show this again"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), (gpointer) key);
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), widget);
+
+	/* checked? */
+	gconf_client = gconf_client_get_default ();
+	checked = gconf_client_get_bool (gconf_client, key, NULL);
+	g_object_unref (gconf_client);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), !checked);
+
 	gtk_widget_show (widget);
 	return TRUE;
 }
