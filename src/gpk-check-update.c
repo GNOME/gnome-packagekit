@@ -43,11 +43,11 @@
 #include "egg-string.h"
 #include "egg-dbus-monitor.h"
 
+#include "gpk-consolekit.h"
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
-#include "gpk-client.h"
 #include "gpk-check-update.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
@@ -70,7 +70,6 @@ struct GpkCheckUpdatePrivate
 	PkControl		*control;
 	GpkHelperRepoSignature	*helper_repo_signature;
 	GpkAutoRefresh		*arefresh;
-	GpkClient		*gclient_update_system;
 	PkClient		*client_primary;
 	PkClient		*client_secondary;
 	GConfClient		*gconf_client;
@@ -302,18 +301,25 @@ static gboolean
 gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 {
 	gboolean ret;
-	ret = gpk_client_update_system (cupdate->priv->gclient_update_system, NULL);
+	GError *error = NULL;
 
-	/* this isn't valid anymore */
-	if (ret)
-		cupdate->priv->number_updates_critical_last_shown = 0;
-
-	/* we failed, show the icon */
+	ret = pk_client_reset (cupdate->priv->client_primary, &error);
 	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	ret = pk_client_update_system (cupdate->priv->client_primary, &error);
+	if (!ret) {
+		/* we failed, show the icon */
+		egg_warning ("cannot update system: %s", error->message);
+		g_error_free (error);
 		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
 		/* we failed, so re-get the update list */
 		g_timeout_add_seconds (2, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
 	}
+out:
 	return ret;
 }
 
@@ -325,7 +331,6 @@ gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
 	gpk_check_update_update_system (cupdate);
 }
 
@@ -400,21 +405,23 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (egg_strequal (action, "update-all-packages")) {
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
 		gpk_check_update_update_system (cupdate);
 	} else if (egg_strequal (action, "update-just-security")) {
 
+		ret = pk_client_reset (cupdate->priv->client_primary, &error);
+		if (!ret) {
+			egg_warning ("cannot reset client: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
+
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
-		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
+		ret = pk_client_update_packages (cupdate->priv->client_primary, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
 		}
-		/* this isn't valid anymore */
-		if (ret)
-			cupdate->priv->number_updates_critical_last_shown = 0;
 		g_strfreev (package_ids);
 
 	} else if (egg_strequal (action, "do-not-show-notify-critical")) {
@@ -434,6 +441,8 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
+out:
+	return;
 }
 
 /**
@@ -701,6 +710,97 @@ out:
 }
 
 /**
+ * gpk_client_libnotify_cb:
+ **/
+static void
+gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
+
+	if (egg_strequal (action, "do-not-show-complete-restart")) {
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
+	} else if (egg_strequal (action, "do-not-show-complete")) {
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
+	} else if (egg_strequal (action, "do-not-show-update-started")) {
+		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
+		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
+//	} else if (egg_strequal (action, "show-error-details")) {
+//		/* TRANSLATORS: detailed text about the error */
+//		gpk_error_dialog (_("Error details"), _("Package Manager error details"), cupdate->priv->error_details);
+	} else if (egg_strequal (action, "cancel")) {
+		/* try to cancel */
+		ret = pk_client_cancel (cupdate->priv->client_primary, &error);
+		if (!ret) {
+			egg_warning ("failed to cancel client: %s", error->message);
+			g_error_free (error);
+		}
+	} else if (egg_strequal (action, "restart-computer")) {
+		/* restart using gnome-power-manager */
+		ret = gpk_restart_system ();
+		if (!ret)
+			egg_warning ("failed to reboot");
+	} else {
+		egg_warning ("unknown action id: %s", action);
+	}
+}
+
+/**
+ * gpk_check_update_notify_doing_updates:
+ **/
+static void
+gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
+{
+	gboolean ret;
+	GError *error = NULL;
+	NotifyNotification *notification;
+
+	/* in GConf? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
+	if (!ret)
+		goto out;
+
+	/* TRANSLATORS: title: notification when we scheduled an automatic update */
+	notification = notify_notification_new (_("Updates are being installed"),
+						/* TRANSLATORS: tell the user why the hard disk is grinding... */
+						_("Updates are being automatically installed on your computer"),
+						"software-update-urgent", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	/* TRANSLATORS: button: cancel the update system */
+	notify_notification_add_action (notification, "cancel",
+					_("Cancel update"), gpk_client_libnotify_cb, cupdate, NULL);
+	/* TRANSLATORS: button: don't show this again */
+	notify_notification_add_action (notification, "do-not-show-update-started",
+					_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	return;
+}
+
+/**
+ * gpk_check_update_policy_all_idle_cb:
+ **/
+static gboolean
+gpk_check_update_policy_all_idle_cb (GpkCheckUpdate *cupdate)
+{
+	gboolean ret;
+	ret = gpk_check_update_update_system (cupdate);
+	if (ret)
+		gpk_check_update_notify_doing_updates (cupdate);
+
+	/* never repeat */
+	return FALSE;
+}
+
+/**
  * gpk_check_update_process_updates:
  **/
 static gboolean
@@ -828,17 +928,22 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 			goto out;
 		}
 
+		ret = pk_client_reset (cupdate->priv->client_primary, &error);
+		if (!ret) {
+			egg_warning ("cannot reset client: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
+
 		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
-		ret = gpk_client_update_packages (cupdate->priv->gclient_update_system, package_ids, &error);
+		ret = pk_client_update_packages (cupdate->priv->client_primary, package_ids, &error);
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
+		} else {
+			gpk_check_update_notify_doing_updates (cupdate);
 		}
-		/* this isn't valid anymore */
-		if (ret)
-			cupdate->priv->number_updates_critical_last_shown = 0;
 		g_strfreev (package_ids);
 		goto out;
 	}
@@ -846,8 +951,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	/* just do everything */
 	if (update == GPK_UPDATE_ENUM_ALL) {
 		egg_debug ("we should do the update automatically!");
-		gpk_client_set_interaction (cupdate->priv->gclient_update_system, GPK_CLIENT_INTERACT_WARNING);
-		g_idle_add ((GSourceFunc) gpk_check_update_update_system, cupdate);
+		g_idle_add ((GSourceFunc) gpk_check_update_policy_all_idle_cb, cupdate);
 		goto out;
 	}
 
@@ -1170,6 +1274,105 @@ gpk_check_update_primary_requeue (GpkCheckUpdate *cupdate)
 }
 
 /**
+ * gpk_check_update_finished_notify:
+ **/
+static void
+gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkClient *client)
+{
+	gboolean ret;
+	GError *error = NULL;
+	NotifyNotification *notification;
+	PkRestartEnum restart;
+	guint i;
+	guint length;
+	PkPackageList *list;
+	const PkPackageObj *obj;
+	GString *message_text;
+	guint skipped_number = 0;
+	const gchar *message;
+
+	/* check we got some packages */
+	list = pk_client_get_package_list (client);
+	length = pk_package_list_get_size (list);
+	egg_debug ("length=%i", length);
+	if (length == 0) {
+		egg_debug ("no updates");
+		return;
+	}
+
+	message_text = g_string_new ("");
+
+	/* find any we skipped */
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (list, i);
+		egg_debug ("%s, %s, %s", pk_info_enum_to_text (obj->info),
+			  obj->id->name, obj->summary);
+		if (obj->info == PK_INFO_ENUM_BLOCKED) {
+			skipped_number++;
+			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
+						obj->id->name, obj->summary);
+		}
+	}
+	g_object_unref (list);
+
+	/* notify the user if there were skipped entries */
+	if (skipped_number > 0) {
+		/* TRANSLATORS: we did the update, but some updates were skipped and not applied */
+		message = ngettext ("One package was skipped:",
+				    "Some packages were skipped:", skipped_number);
+		g_string_prepend (message_text, message);
+		g_string_append_c (message_text, '\n');
+	}
+
+	/* add a message that we need to restart */
+	restart = pk_client_get_require_restart (client);
+	if (restart != PK_RESTART_ENUM_NONE) {
+		message = gpk_restart_enum_to_localised_text (restart);
+
+		/* add a gap if we are putting both */
+		if (skipped_number > 0)
+			g_string_append (message_text, "\n");
+
+		g_string_append (message_text, message);
+		g_string_append_c (message_text, '\n');
+	}
+
+	/* trim off extra newlines */
+	if (message_text->len != 0)
+		g_string_set_size (message_text, message_text->len-1);
+
+	/* do we do the notification? */
+	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, NULL);
+	if (!ret) {
+		egg_debug ("ignoring due to GConf");
+		return;
+	}
+
+	/* TRANSLATORS: title: system update completed all okay */
+	notification = notify_notification_new (_("The system update has completed"), message_text->str, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	if (restart == PK_RESTART_ENUM_SYSTEM) {
+		notify_notification_add_action (notification, "restart",
+						/* TRANSLATORS: restart computer as system packages need update */
+						_("Restart computer now"), gpk_client_libnotify_cb, cupdate, NULL);
+		notify_notification_add_action (notification, "do-not-show-complete-restart",
+						/* TRANSLATORS: don't show this option again (for restart) */
+						_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+	} else {
+		notify_notification_add_action (notification, "do-not-show-complete",
+						/* TRANSLATORS: don't show this option again (when finished)  */
+						_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+	}
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+	g_string_free (message_text, TRUE);
+}
+
+/**
  * gpk_check_update_finished_cb:
  **/
 static void
@@ -1188,7 +1391,7 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 			gpk_check_update_primary_requeue (cupdate);
 	}
 
-	/* updates */
+	/* get-updates */
 	if (role == PK_ROLE_ENUM_GET_UPDATES &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
 		list = pk_client_get_package_list (client);
@@ -1196,7 +1399,7 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 		g_object_unref (list);
 	}
 
-	/* upgrades */
+	/* get-upgrades */
 	if (role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
 		array = pk_client_get_cached_objects (client);
@@ -1204,11 +1407,19 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 		g_object_unref (array);
 	}
 
-	/* upgrades */
+	/* refresh-cache */
 	if (role == PK_ROLE_ENUM_REFRESH_CACHE &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
 		egg_debug ("finished refresh cb");
 		gpk_check_update_query_updates (cupdate, TRUE);
+	}
+
+	/* updates */
+	if ((role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+	     role == PK_ROLE_ENUM_UPDATE_SYSTEM) &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		gpk_check_update_finished_notify (cupdate, client);
+		cupdate->priv->number_updates_critical_last_shown = 0;
 	}
 }
 
@@ -1253,9 +1464,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 				 "org.freedesktop.PackageKit.UpdateViewer");
 	g_signal_connect (cupdate->priv->dbus_monitor_viewer, "connection-changed",
 			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
-
-	/* update stuff using the gnome helpers */
-	cupdate->priv->gclient_update_system = gpk_client_new ();
 
 	/* use an asynchronous query object */
 	cupdate->priv->client_primary = pk_client_new ();
@@ -1320,7 +1528,6 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->arefresh);
 	g_object_unref (cupdate->priv->gconf_client);
 	g_object_unref (cupdate->priv->control);
-	g_object_unref (cupdate->priv->gclient_update_system);
 	g_object_unref (cupdate->priv->client_primary);
 	g_object_unref (cupdate->priv->client_secondary);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
