@@ -64,59 +64,11 @@ GType		 gpk_dbus_error_get_type		(void);
 GType		 gpk_dbus_get_type			(void);
 GpkDbus		*gpk_dbus_new				(void);
 
-void		 gpk_dbus_install_local_file		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*full_path,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_provide_file		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*full_path,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_package_name		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*package_name,
-							 DBusGMethodInvocation *context);
-#if 0
-void		 gpk_dbus_install_package_names		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 gchar		**package_names,
-							 DBusGMethodInvocation *context);
-#endif
-void		 gpk_dbus_install_mime_type		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*mime_type,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_gstreamer_codecs	(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 GPtrArray	*codecs,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_font			(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*font_desc,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_fonts			(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 gchar		**font_descs,
-							 DBusGMethodInvocation *context);
-void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
-							 guint32	 xid,
-							 guint32	 timestamp,
-							 const gchar	*catalog_file,
-							 DBusGMethodInvocation *context);
-#if 0
-gboolean	 gpk_dbus_is_package_installed		(GpkDbus	*dbus,
-							 const gchar	*package_name,
-							 gboolean	*installed,
-							 GError		**error);
-#endif
+//void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
+//							 guint32	 xid,
+//							 guint32	 timestamp,
+//							 const gchar	*catalog_file,
+//							 DBusGMethodInvocation *context);
 
 /* org.freedesktop.PackageKit.Query */
 gboolean	 gpk_dbus_is_installed			(GpkDbus	*dbus,

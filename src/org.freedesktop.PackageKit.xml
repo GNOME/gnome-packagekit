@@ -5,7 +5,6 @@
 ]>
 <node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
 
-  <!-- ######################################################################################### -->
   <interface name="org.freedesktop.PackageKit.Query">
     <doc:doc>
       <doc:description>
@@ -360,65 +359,6 @@
           </doc:summary>
         </doc:doc>
       </arg>
-    </method>
-  </interface>
-
-  <!-- ######################################################################################### -->
-  <!-- LEGACY INTERFACE -->
-  <interface name="org.freedesktop.PackageKit">
-<!--
-    <method name="IsPackageInstalled">
-      <arg type="s" name="package_name" direction="in"/>
-      <arg type="b" name="installed" direction="out"/>
-    </method>
--->
-    <method name="InstallLocalFile">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="full_path" direction="in"/>
-    </method>
-    <method name="InstallProvideFile">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="full_path" direction="in"/>
-    </method>
-    <method name="InstallPackageName">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="package_name" direction="in"/>
-    </method>
-    <method name="InstallMimeType">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="mime_type" direction="in"/>
-    </method>
-    <method name="InstallGStreamerCodecs">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="a(ss)" name="codecs" direction="in"/>
-    </method>
-    <method name="InstallFont">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="font_desc" direction="in"/>
-    </method>
-    <method name="InstallFonts">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="as" name="font_descs" direction="in"/>
-    </method>
-    <method name="InstallCatalog">
-      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
-      <arg type="u" name="xid" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-      <arg type="s" name="catalog_file" direction="in"/>
     </method>
   </interface>
 </node>
