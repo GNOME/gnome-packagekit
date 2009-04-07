@@ -44,7 +44,6 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 
-#include "gpk-client.h"
 #include "gpk-common.h"
 #include "gpk-hardware.h"
 
@@ -74,19 +73,21 @@ static gboolean
 gpk_hardware_install_package (GpkHardware *hardware)
 {
 	GError *error = NULL;
-	GpkClient *gclient = NULL;
+	PkClient *client = NULL;
 	gboolean ret;
 
-	gclient = gpk_client_new ();
+	client = pk_client_new ();
 
-	ret = gpk_client_install_package_ids (gclient, hardware->priv->package_ids, &error);
+	/* FIXME: this needs to be async and connect up to the repo signature stuff */
+	pk_client_set_synchronous (client, TRUE, NULL);
+	ret = pk_client_install_packages (client, hardware->priv->package_ids, &error);
 	if (!ret) {
 		egg_warning ("failed to install package: %s", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
 
-	g_object_unref (gclient);
+	g_object_unref (client);
 	return ret;
 }
 
