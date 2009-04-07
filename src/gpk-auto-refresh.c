@@ -364,6 +364,17 @@ gpk_auto_refresh_change_state_cb (GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_maybe_get_updates_logon_cb:
+ **/
+static gboolean
+gpk_auto_refresh_maybe_get_updates_logon_cb (GpkAutoRefresh *arefresh)
+{
+	gpk_auto_refresh_maybe_get_updates (arefresh);
+	/* never repeat, even if failure */
+	return FALSE;
+}
+
+/**
  * gpk_auto_refresh_change_state:
  **/
 static gboolean
@@ -389,7 +400,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 			 * we need to wait until upper layers  finish hooking up to the signal first. */
 			if (arefresh->priv->force_get_updates_login_timeout_id == 0)
 				arefresh->priv->force_get_updates_login_timeout_id =
-					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT, (GSourceFunc) gpk_auto_refresh_maybe_get_updates, arefresh);
+					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT, (GSourceFunc) gpk_auto_refresh_maybe_get_updates_logon_cb, arefresh);
 		}
 	}
 
