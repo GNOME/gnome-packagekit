@@ -1297,15 +1297,18 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 }
 
 /**
- * pk_packages_treeview_clicked_cb:
+ * gpk_packages_treeview_clicked_cb:
  **/
 static void
-pk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
+gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gchar *package_id;
 	PkUpdateDetailObj *obj = NULL;
+
+	/* set loading text */
+	gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -2543,7 +2546,7 @@ main (int argc, char *argv[])
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (pk_packages_treeview_clicked_cb), NULL);
+			  G_CALLBACK (gpk_packages_treeview_clicked_cb), NULL);
 
 	/* bottom UI */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_progress"));
