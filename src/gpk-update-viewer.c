@@ -1017,7 +1017,9 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* info */
 	renderer = gpk_cell_renderer_info_new ();
-	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	g_object_set (renderer,
+		      "stock-size", GTK_ICON_SIZE_BUTTON,
+		      "ignore-values", "unknown,normal", NULL);
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_INFO);
 
@@ -1069,7 +1071,9 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* status */
 	renderer = gpk_cell_renderer_info_new ();
-	g_object_set (renderer, "stock-size", GTK_ICON_SIZE_BUTTON, NULL);
+	g_object_set (renderer,
+		      "stock-size", GTK_ICON_SIZE_BUTTON,
+		      "ignore-values", "unknown", NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_STATUS);
 
