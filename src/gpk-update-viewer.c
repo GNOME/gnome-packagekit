@@ -51,7 +51,7 @@
 #include "gpk-helper-repo-signature.h"
 #include "gpk-helper-eula.h"
 
-#define GPK_UPDATE_VIEWER_AUTO_CLOSE_TIMEOUT	10 /* seconds */
+#define GPK_UPDATE_VIEWER_AUTO_QUIT_TIMEOUT	10 /* seconds */
 #define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
 #define GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE	512*1024 /* bytes */
 #define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
@@ -72,7 +72,6 @@ static GpkHelperEula *helper_eula = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
-static gboolean running_hidden = FALSE;
 static guint size_total = 0;
 
 enum {
@@ -157,12 +156,91 @@ gpk_update_viewer_button_help_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * gpk_update_viewer_button_close_cb:
+ * gpk_update_viewer_quit:
  **/
 static void
-gpk_update_viewer_button_close_cb (GtkWidget *widget, gpointer data)
+gpk_update_viewer_quit (void)
 {
+	gboolean ret;
+	gboolean allow_cancel = FALSE;
+	GError *error = NULL;
+	PkRoleEnum role;
+	PkStatusEnum status;
+	GtkWindow *window;
+	GtkWidget *dialog;
+	GtkResponseType response;
+
+	/* are we in a transaction */
+	ret = pk_client_get_role (client_primary, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (role == PK_ROLE_ENUM_UNKNOWN) {
+		egg_debug ("no role, so quitting");
+		goto out;
+	}
+	ret = pk_client_get_status (client_primary, &status, &error);
+	if (!ret) {
+		egg_warning ("failed to get status: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		egg_debug ("status is finished, so quitting");
+		goto out;
+	}
+
+	/* can we easily cancel */
+	ret = pk_client_get_allow_cancel (client_primary, &allow_cancel, &error);
+	if (!ret) {
+		egg_warning ("failed to get allow cancel state: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* cancel the transaction */
+	if (allow_cancel) {
+		ret = pk_client_cancel (client_primary, &error);
+		if (!ret) {
+			egg_warning ("failed to cancel client: %s", error->message);
+			g_error_free (error);
+		}
+		goto out;
+	}
+
+	/* show modal dialog asking for confirmation */
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_updates"));
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
+					 "%s", _("Cannot cancel running task"));
+
+	/* TRANSLATORS: this is the button text when we check if it's okay to download */
+	gtk_dialog_add_button (GTK_DIALOG (dialog), "gtk-quit", GTK_RESPONSE_OK);
+
+	/* TRANSLATORS, user clicked the [x] when we cannot cancel what we are doing */
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+						  "%s", _("There are tasks that cannot be cancelled."));
+
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	response = gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	/* pressed cancel or [x] */
+	if (response != GTK_RESPONSE_OK)
+		return;
+out:
 	g_main_loop_quit (loop);
+}
+
+/**
+ * gpk_update_viewer_button_quit_cb:
+ **/
+static void
+gpk_update_viewer_button_quit_cb (GtkWidget *widget, gpointer data)
+{
+	gpk_update_viewer_quit ();
 }
 
 /**
@@ -354,23 +432,6 @@ out:
 }
 
 /**
- * gpk_update_viewer_button_cancel_cb:
- **/
-static void
-gpk_update_viewer_button_cancel_cb (GtkWidget *widget, gpointer data)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* cancel the transaction */
-	ret = pk_client_cancel (client_primary, &error);
-	if (!ret) {
-		egg_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-	}
-}
-
-/**
  * gpk_update_viewer_button_upgrade_cb:
  **/
 static void
@@ -392,43 +453,8 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer data)
 static gboolean
 gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-	gboolean ret;
-	GError *error = NULL;
-	PkRoleEnum role;
-	PkStatusEnum status;
-
-	/* if we are in a transaction, don't quit, just hide, as we want to return
-	 * to this state if the dialog is run again */
-	ret = pk_client_get_role (client_primary, &role, NULL, &error);
-	if (!ret) {
-		egg_warning ("failed to get role: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-	if (role == PK_ROLE_ENUM_UNKNOWN) {
-		egg_debug ("no role, so quitting");
-		goto out;
-	}
-	ret = pk_client_get_status (client_primary, &status, &error);
-	if (!ret) {
-		egg_warning ("failed to get status: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-	if (status == PK_STATUS_ENUM_FINISHED) {
-		egg_debug ("status is finished, so quitting");
-		goto out;
-	}
-
-	/* hide window */
-	egg_debug ("hiding to preserve state");
-	running_hidden = TRUE;
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_updates"));
-	gtk_widget_hide (widget);
+	gpk_update_viewer_quit ();
 	return TRUE;
-out:
-	g_main_loop_quit (loop);
-	return FALSE;
 }
 
 /**
@@ -632,31 +658,6 @@ gpk_update_viewer_update_detail_cb (PkClient *client, const PkUpdateDetailObj *o
 }
 
 /**
- * gpk_update_viewer_reconsider_buttons:
- **/
-static void
-gpk_update_viewer_reconsider_buttons (gpointer data)
-{
-	GtkWidget *widget;
-	PkStatusEnum status;
-
-	/* cancel buttons? */
-	pk_client_get_status (client_primary, &status, NULL);
-	egg_debug ("status is %s", pk_status_enum_to_text (status));
-	if (status == PK_STATUS_ENUM_FINISHED) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
-		gtk_widget_show (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
-		gtk_widget_hide (widget);
-	} else {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
-		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
-		gtk_widget_show (widget);
-	}
-}
-
-/**
  * gpk_update_viewer_auto_shutdown:
  **/
 static gboolean
@@ -726,7 +727,7 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	len = PK_OBJ_LIST(update_list)->len;
 	if (len == 0) {
 		/* hide close button */
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
 		gtk_widget_hide (widget);
 
 		/* show a new title */
@@ -869,8 +870,7 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget), gpk_status_enum_to_icon_name (status), GTK_ICON_SIZE_BUTTON);
 	gtk_widget_show (widget);
 out:
-	/* set state */
-	gpk_update_viewer_reconsider_buttons (NULL);
+	return;
 }
 
 /**
@@ -1575,11 +1575,8 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_progress"));
 	gtk_widget_hide (widget);
 
-	/* hidden window, so quit at this point */
-	if (running_hidden) {
-		egg_debug ("transaction finished whilst hidden, so exit");
-		g_main_loop_quit (loop);
-	}
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
+	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* if secondary, ignore */
 	if (client == client_primary &&
@@ -1991,8 +1988,6 @@ gpk_update_viewer_message_received_cb (UniqueApp *app, UniqueCommand command, Un
 	if (command == UNIQUE_ACTIVATE) {
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_updates"));
 		gtk_window_present (window);
-		/* not hidden anymore */
-		running_hidden = FALSE;
 	}
 }
 
@@ -2042,7 +2037,7 @@ static void
 gpk_update_viewer_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
 {
 	GtkWidget *widget;
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
 	gtk_widget_set_sensitive (widget, allow_cancel);
 }
 
@@ -2071,7 +2066,6 @@ gpk_update_viewer_repo_signature_event_cb (GpkHelperRepoSignature *_helper_repo_
 	if (type != GTK_RESPONSE_YES) {
 		/* we've ruined the old one by making the checkboxes insensitive */
 		gpk_update_viewer_get_new_update_list ();
-		gpk_update_viewer_reconsider_buttons (NULL);
 		goto out;
 	}
 
@@ -2113,7 +2107,6 @@ gpk_update_viewer_eula_event_cb (GpkHelperRepoSignature *_helper_eula, GtkRespon
 	if (type != GTK_RESPONSE_YES) {
 		/* we've ruined the old one by making the checkboxes insensitive */
 		gpk_update_viewer_get_new_update_list ();
-		gpk_update_viewer_reconsider_buttons (NULL);
 		goto out;
 	}
 
@@ -2572,16 +2565,10 @@ main (int argc, char *argv[])
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* close button */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_close_cb), NULL);
+			  G_CALLBACK (gpk_update_viewer_button_quit_cb), NULL);
 	gtk_window_set_focus (GTK_WINDOW(main_window), widget);
-
-	/* hide cancel button */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
-	gtk_widget_hide (widget);
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_cancel_cb), NULL);
 
 	/* upgrade button */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_upgrade"));
@@ -2639,7 +2626,6 @@ main (int argc, char *argv[])
 
 	g_object_unref (helper_eula);
 	g_object_unref (helper_repo_signature);
-	g_object_unref (builder);
 	g_object_unref (list_store_updates);
 	g_object_unref (text_buffer);
 	pk_package_id_free (package_id_last);
