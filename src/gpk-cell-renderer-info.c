@@ -102,17 +102,15 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 		cru->priv->value = g_value_get_uint (value);
 		ret = gpk_cell_renderer_should_show (cru);
 		if (!ret) {
-			g_object_set (cru, "visible", FALSE, NULL);
+			g_object_set (cru, "icon-name", "", NULL);
 		} else {
 			cru->priv->icon_name = gpk_info_status_enum_to_icon_name (cru->priv->value);
-			g_object_set (cru, "visible", TRUE, NULL);
 			g_object_set (cru, "icon-name", cru->priv->icon_name, NULL);
 		}
 		break;
 	case PROP_IGNORE_VALUES:
 		/* split up ignore values */
 		text = g_value_get_string (value);
-		egg_warning ("text=%s", text);
 		split = g_strsplit (text, ",", -1);
 		for (i=0; split[i] != NULL; i++) {
 			info = pk_info_enum_from_text (split[i]);
