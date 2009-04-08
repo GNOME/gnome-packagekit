@@ -739,13 +739,13 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 		/* show modal dialog */
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_updates"));
 		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
-						 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
-						 "%s", _("No updates available"));
+						 "%s", _("All software is up to date"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 							  "%s",
 							  /* TRANSLATORS: tell the user the problem */
-							  _("There are no updates available for your computer at this time."));
+							  _("There are no software updates available for your computer at this time."));
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 		/* setup a callback so we autoclose */
@@ -2494,6 +2494,7 @@ main (int argc, char *argv[])
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_updates"));
 	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_delete_event_cb), NULL);
+	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* helpers */
 	helper_repo_signature = gpk_helper_repo_signature_new ();
