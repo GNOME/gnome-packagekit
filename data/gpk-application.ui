@@ -478,64 +478,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkNotebook" id="notebook_search_cancel">
+                                  <object class="GtkButton" id="button_find">
+                                    <property name="label" translatable="yes">Fi_nd</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="show_tabs">False</property>
-                                    <property name="show_border">False</property>
-                                    <property name="tab_border">0</property>
-                                    <property name="tab_hborder">0</property>
-                                    <property name="tab_vborder">0</property>
-                                    <child>
-                                      <object class="GtkButton" id="button_find">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <child>
-                                          <object class="GtkLabel" id="label_button_find">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Fi_nd</property>
-                                            <property name="use_underline">True</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                    <child type="tab">
-                                      <object class="GtkLabel" id="label_find">
-                                        <property name="visible">True</property>
-                                        <property name="label">find</property>
-                                      </object>
-                                      <packing>
-                                        <property name="tab_fill">False</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="button_cancel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <child>
-                                          <object class="GtkLabel" id="label_button_cancel">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">_Cancel</property>
-                                            <property name="use_underline">True</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child type="tab">
-                                      <object class="GtkLabel" id="label_cancel">
-                                        <property name="visible">True</property>
-                                        <property name="label">cancel</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">1</property>
-                                        <property name="tab_fill">False</property>
-                                      </packing>
-                                    </child>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
                                   </object>
                                   <packing>
                                     <property name="position">1</property>
@@ -570,6 +518,15 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkProgressBar" id="progressbar_progress">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkHBox" id="hbox_status">
                                 <property name="spacing">6</property>
                                 <child>
@@ -587,7 +544,7 @@
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="position">2</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>
@@ -709,6 +666,20 @@
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkButton" id="button_cancel">
+                        <property name="label" translatable="yes">gtk-cancel</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkButton" id="button_clear">
                         <property name="label">gtk-clear</property>
                         <property name="visible">True</property>
@@ -719,7 +690,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -733,7 +704,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>

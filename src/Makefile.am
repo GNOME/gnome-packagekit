@@ -186,6 +186,16 @@ gpk_application_SOURCES =				\
 	gpk-application.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
+	gpk-helper-repo-signature.c			\
+	gpk-helper-repo-signature.h			\
+	gpk-helper-eula.c				\
+	gpk-helper-eula.h				\
+	gpk-helper-run.c				\
+	gpk-helper-run.h				\
+	gpk-helper-deps-remove.c			\
+	gpk-helper-deps-remove.h			\
+	gpk-helper-deps-install.c			\
+	gpk-helper-deps-install.h			\
 	$(shared_SOURCES)				\
 	$(NULL)
 

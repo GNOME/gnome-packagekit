@@ -47,6 +47,11 @@
 #include "gpk-client-chooser.h"
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-desktop.h"
+#include "gpk-helper-repo-signature.h"
+#include "gpk-helper-eula.h"
+#include "gpk-helper-run.h"
+#include "gpk-helper-deps-remove.h"
+#include "gpk-helper-deps-install.h"
 
 static void     gpk_application_finalize   (GObject	    *object);
 
@@ -82,11 +87,8 @@ struct GpkApplicationPrivate
 	GtkListStore		*details_store;
 	EggMarkdown		*markdown;
 	PkControl		*control;
-	PkClient		*client_search;
-	PkClient		*client_action;
-	PkClient		*client_details;
-	PkClient		*client_files;
-	GpkClient		*gclient;
+	PkClient		*client_primary;
+	PkClient		*client_secondary;
 	PkConnection		*pconnection;
 	PkDesktop		*desktop;
 	gchar			*package;
@@ -105,6 +107,12 @@ struct GpkApplicationPrivate
 	PkActionMode		 action;
 	GPtrArray		*package_list;
 	GtkWidget		*image_status;
+	GpkHelperRepoSignature	*helper_repo_signature;
+	GpkHelperEula		*helper_eula;
+	GpkHelperRun		*helper_run;
+	GpkHelperDepsRemove	*helper_deps_remove;
+	GpkHelperDepsInstall	*helper_deps_install;
+	gboolean		 dep_check_info_only;
 };
 
 enum {
@@ -149,7 +157,8 @@ static guint	     signals [LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (GpkApplication, gpk_application, G_TYPE_OBJECT)
 
-static gboolean gpk_application_refresh_search_results (GpkApplication *application);
+static void gpk_application_categories_finished (GpkApplication *application);
+static gboolean gpk_application_perform_search (GpkApplication *application);
 
 /**
  * gpk_application_class_init:
@@ -234,29 +243,6 @@ gpk_application_state_get_checkbox (PkBitfield state)
 	    state_local == pk_bitfield_value (GPK_STATE_IN_LIST))
 		return TRUE;
 	return FALSE;
-}
-
-/**
- * gpk_application_set_find_cancel_buttons:
- **/
-static void
-gpk_application_set_find_cancel_buttons (GpkApplication *application, gboolean find)
-{
-	GtkWidget *widget;
-
-	/* if we can't do it, then just make the button insensitive */
-	if (!pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_CANCEL)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
-
-	/* which tab to enable? */
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "notebook_search_cancel"));
-	if (find) {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 0);
-	} else {
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (widget), 1);
-	}
 }
 
 /**
@@ -500,35 +486,26 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
 	GError *error = NULL;
-	gchar **package_ids = NULL;
-	GtkWindow *window;
+	gchar **package_ids;
 
-	/* get window */
-	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	/* reset */
-	ret = pk_client_reset (application->priv->client_files, &error);
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
-		/* TRANSLATORS: this should never happen, low level failure */
-		egg_warning ("failed to reset: %s",  error->message);
+		egg_warning ("cannot reset client: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 
-	/* get files */
+	/* set correct view */
 	package_ids = pk_package_ids_from_id (application->priv->package);
-	ret = pk_client_get_files (application->priv->client_files, package_ids, &error);
+	ret = pk_client_get_files (application->priv->client_primary, package_ids, &error);
 	if (!ret) {
-		/* TRANSLATORS: this should never happen, low level failure */
-		egg_warning ("failed to get files: %s",  error->message);
-		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: we failed to get the file list */
-					_("Failed to get files"),
-					_("Could not get files for this package"), error->message);
+		egg_warning ("cannot get file lists for %s: %s", application->priv->package, error->message);
 		g_error_free (error);
 		goto out;
 	}
-
 out:
 	g_strfreev (package_ids);
 }
@@ -610,14 +587,11 @@ gpk_application_menu_remove_cb (GtkAction *action, GpkApplication *application)
 static void
 gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 {
-	gchar *exec;
-	GError *error = NULL;
 	gchar **package_ids;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	GtkWindow *window;
 	PkBitfield state;
 	gboolean ret;
 	gchar *package_id = NULL;
@@ -640,16 +614,7 @@ gpk_application_menu_run_cb (GtkAction *action, GpkApplication *application)
 	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
 		/* run this single package id */
 		package_ids = pk_package_ids_from_id (package_id);
-		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-		exec = gpk_client_run_show (window, package_ids);
-		if (exec != NULL) {
-			ret = g_spawn_command_line_async (exec, &error);
-			if (!ret) {
-				egg_warning ("failed to run: %s", error->message);
-				g_error_free (error);
-			}
-		}
-		g_free (exec);
+		gpk_helper_run_show (application->priv->helper_run, package_ids);
 		g_strfreev (package_ids);
 	}
 	g_free (package_id);
@@ -663,74 +628,28 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 {
 	GError *error = NULL;
 	gboolean ret;
-	PkPackageList *list;
-	GtkWidget *widget;
-	GtkWindow *window;
-	gchar **package_ids;
+	gchar **package_ids = NULL;
 
 	/* cancel any previous request */
-	ret = pk_client_reset (application->priv->client_files, &error);
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
 
 	/* get the requires */
-	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
 	package_ids = pk_package_ids_from_id (application->priv->package);
-	ret = pk_client_get_requires (application->priv->client_files, PK_FILTER_ENUM_NONE,
+	application->priv->dep_check_info_only = TRUE;
+	ret = pk_client_get_requires (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				      package_ids, TRUE, &error);
-	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
-
 	if (!ret) {
 		egg_warning ("failed to get requires: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
-
-	list = pk_client_get_package_list (application->priv->client_files);
-	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: no packages returned */
-					_("No packages"),
-					/* TRANSLATORS: this package is not required by any others */
-					_("No other packages require this package"), NULL);
-	} else {
-		gchar *name;
-		gchar *title;
-		gchar *message;
-		guint length;
-		GtkWidget *dialog;
-
-		length = pk_package_list_get_size (list);
-		name = gpk_dialog_package_id_name_join_locale (package_ids);
-		/* TRANSLATORS: title: how many packages require this package */
-		title = g_strdup_printf (ngettext ("%i package requires %s",
-						   "%i packages require %s",
-						   length), length, name);
-
-		/* TRANSLATORS: show a list of packages for the package */
-		message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
-						     "Packages listed below require %s to function correctly.",
-						     length), name);
-
-		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
-		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-		gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
-
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
-		g_free (name);
-		g_free (title);
-		g_free (message);
-	}
-
+out:
 	g_strfreev (package_ids);
-	g_object_unref (list);
 }
 
 /**
@@ -741,74 +660,28 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 {
 	GError *error = NULL;
 	gboolean ret;
-	PkPackageList *list;
-	GtkWidget *widget;
-	GtkWindow *window;
-	gchar **package_ids;
+	gchar **package_ids = NULL;
 
 	/* cancel any previous request */
-	ret = pk_client_reset (application->priv->client_files, &error);
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
 
 	/* get the depends */
-	pk_client_set_synchronous (application->priv->client_files, TRUE, NULL);
 	package_ids = pk_package_ids_from_id (application->priv->package);
-	ret = pk_client_get_depends (application->priv->client_files, PK_FILTER_ENUM_NONE,
+	application->priv->dep_check_info_only = TRUE;
+	ret = pk_client_get_depends (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				     package_ids, TRUE, &error);
-	pk_client_set_synchronous (application->priv->client_files, FALSE, NULL);
-
 	if (!ret) {
 		egg_warning ("failed to get depends: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
-
-	list = pk_client_get_package_list (application->priv->client_files);
-	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-	if (pk_package_list_get_size (list) == 0) {
-		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: no packages returned */
-					_("No packages"),
-					/* TRANSLATORS: this package does not depend on any others */
-					_("This package does not depends on any others"), NULL);
-	} else {
-		gchar *name;
-		gchar *title;
-		gchar *message;
-		guint length;
-		GtkWidget *dialog;
-
-		length = pk_package_list_get_size (list);
-		name = gpk_dialog_package_id_name_join_locale (package_ids);
-		/* TRANSLATORS: title: show the number of other packages we depend on */
-		title = g_strdup_printf (ngettext ("%i additional package is required for %s",
-						   "%i additional packages are required for %s",
-						   length), length, name);
-
-		/* TRANSLATORS: message: show the list of dependant packages for this package */
-		message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
-						     "Packages listed below are required for %s to function correctly.",
-						     length), name);
-
-		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
-		gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-		gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
-
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
-		g_free (name);
-		g_free (title);
-		g_free (message);
-	}
-
+out:
 	g_strfreev (package_ids);
-	g_object_unref (list);
 }
 
 /**
@@ -1053,10 +926,16 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	gboolean enabled;
 	PkBitfield state = 0;
 	static guint package_cnt = 0;
+	PkRoleEnum role;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
+
+	/* ignore not search data */
+	pk_client_get_role (client, &role, NULL, NULL);
+	if (role == PK_ROLE_ENUM_GET_DEPENDS || role == PK_ROLE_ENUM_GET_REQUIRES)
+		return;
 
 	/* ignore progress */
 	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE &&
@@ -1138,39 +1017,16 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED)
 		return;
 
+	/* ignore the ones we can handle */
+	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
+	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
+		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
 	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 	gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (code),
 				gpk_error_enum_to_localised_message (code), details);
-}
-
-/**
- * gpk_application_refresh_search_results:
- **/
-static gboolean
-gpk_application_refresh_search_results (GpkApplication *application)
-{
-	gboolean ret;
-	GError *error = NULL;
-	PkRoleEnum role;
-
-	/* get role -- do we actually need to do anything */
-	pk_client_get_role (application->priv->client_search, &role, NULL, NULL);
-	if (role == PK_ROLE_ENUM_UNKNOWN) {
-		egg_debug ("no defined role, no not requeuing");
-		return FALSE;
-	}
-
-	/* hide details */
-	gpk_application_clear_details (application);
-	gpk_application_clear_packages (application);
-
-	ret = pk_client_requeue (application->priv->client_search, &error);
-	if (!ret) {
-		egg_warning ("failed to requeue the search: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
-	return TRUE;
 }
 
 /**
@@ -1213,44 +1069,273 @@ gpk_application_suggest_better_search (GpkApplication *application)
 }
 
 /**
+ * gpk_update_viewer_requeue:
+ **/
+static gboolean
+gpk_update_viewer_requeue (GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* retry new action */
+	ret = pk_client_requeue (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("Failed to requeue: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
+ * gpk_application_finished_get_depends:
+ **/
+static void
+gpk_application_finished_get_depends (GpkApplication *application, PkPackageList *list)
+{
+	GtkWindow *window;
+	gchar *name = NULL;
+	gchar *title = NULL;
+	gchar *message = NULL;
+	gchar **package_ids = NULL;
+	guint length;
+	GtkWidget *dialog;
+
+	/* empty list */
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	if (pk_package_list_get_size (list) == 0) {
+		gpk_error_dialog_modal (window,
+					/* TRANSLATORS: no packages returned */
+					_("No packages"),
+					/* TRANSLATORS: this package does not depend on any others */
+					_("This package does not depends on any others"), NULL);
+		goto out;
+	}
+
+	length = pk_package_list_get_size (list);
+	package_ids = pk_package_ids_from_id (application->priv->package);
+	name = gpk_dialog_package_id_name_join_locale (package_ids);
+	/* TRANSLATORS: title: show the number of other packages we depend on */
+	title = g_strdup_printf (ngettext ("%i additional package is required for %s",
+					   "%i additional packages are required for %s",
+					   length), length, name);
+
+	/* TRANSLATORS: message: show the list of dependant packages for this package */
+	message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
+					     "Packages listed below are required for %s to function correctly.",
+					     length), name);
+
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+out:
+	g_strfreev (package_ids);
+	g_free (name);
+	g_free (title);
+	g_free (message);
+}
+
+/**
+ * gpk_application_finished_get_requires:
+ **/
+static void
+gpk_application_finished_get_requires (GpkApplication *application, PkPackageList *list)
+{
+	GtkWindow *window;
+	gchar *name = NULL;
+	gchar *title = NULL;
+	gchar *message = NULL;
+	gchar **package_ids = NULL;
+	guint length;
+	GtkWidget *dialog;
+
+	/* empty list */
+	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	if (pk_package_list_get_size (list) == 0) {
+		gpk_error_dialog_modal (window,
+					/* TRANSLATORS: no packages returned */
+					_("No packages"),
+					/* TRANSLATORS: this package is not required by any others */
+					_("No other packages require this package"), NULL);
+		goto out;
+	}
+
+	length = pk_package_list_get_size (list);
+	package_ids = pk_package_ids_from_id (application->priv->package);
+	name = gpk_dialog_package_id_name_join_locale (package_ids);
+	/* TRANSLATORS: title: how many packages require this package */
+	title = g_strdup_printf (ngettext ("%i package requires %s",
+					   "%i packages require %s",
+					   length), length, name);
+
+	/* TRANSLATORS: show a list of packages for the package */
+	message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
+					     "Packages listed below require %s to function correctly.",
+					     length), name);
+
+	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), list);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+out:
+	g_strfreev (package_ids);
+	g_free (name);
+	g_free (title);
+	g_free (message);
+}
+
+/**
+ * gpk_application_perform_search_idle_cb:
+ **/
+static gboolean
+gpk_application_perform_search_idle_cb (GpkApplication *application)
+{
+	gpk_application_perform_search (application);
+	return FALSE;
+}
+
+/**
+ * gpk_application_primary_requeue:
+ **/
+static gboolean
+gpk_application_primary_requeue (GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* retry new action */
+	ret = pk_client_requeue (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("Failed to requeue: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
  * gpk_application_finished_cb:
  **/
 static void
-gpk_application_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
+gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkApplication *application)
 {
 	GtkWidget *widget;
 	PkRoleEnum role;
+	PkPackageList *list;
+	gchar **package_ids;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	/* get role */
 	pk_client_get_role (client, &role, NULL, NULL);
+	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
 
-	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
-	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
-	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
-	    role == PK_ROLE_ENUM_GET_PACKAGES) {
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "progressbar_progress"));
+	gtk_widget_hide (widget);
 
-		/* switch round buttons */
-		gpk_application_set_find_cancel_buttons (application, TRUE);
+	/* reset UI */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
+	gtk_widget_set_sensitive (widget, TRUE);
+	gpk_application_set_buttons_apply_clear (application);
 
-		/* were there no entries found? */
-		if (exit == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
+	/* if secondary, ignore */
+	if (client == application->priv->client_primary &&
+	    (exit_enum == PK_EXIT_ENUM_KEY_REQUIRED ||
+	     exit_enum == PK_EXIT_ENUM_EULA_REQUIRED)) {
+		egg_debug ("ignoring primary sig-required or eula");
+		return;
+	}
 
-			/* try to be helpful... */
-			gpk_application_suggest_better_search (application);
-		}
+	if (role == PK_ROLE_ENUM_GET_CATEGORIES) {
+		/* get complex group list */
+		gpk_application_categories_finished (application);
+	}
 
-		/* focus back to the text extry */
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
-		gtk_widget_grab_focus (widget);
+	/* get deps */
+	if (role == PK_ROLE_ENUM_GET_DEPENDS &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		if (application->priv->dep_check_info_only)
+			gpk_application_finished_get_depends (application, list);
+		else
+			gpk_helper_deps_install_show (application->priv->helper_deps_install, application->priv->package_list, list);
+		g_object_unref (list);
+
+	}
+
+	/* get reqs */
+	if (role == PK_ROLE_ENUM_GET_REQUIRES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		if (application->priv->dep_check_info_only)
+			gpk_application_finished_get_requires (application, list);
+		else
+			gpk_helper_deps_remove_show (application->priv->helper_deps_remove, application->priv->package_list, list);
+		g_object_unref (list);
+	}
+
+	/* we've just agreed to auth or a EULA */
+	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
+	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
+		if (exit_enum == PK_EXIT_ENUM_SUCCESS)
+			gpk_update_viewer_requeue (application);
 	}
 
 	/* do we need to update the search? */
 	if (role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
 	    role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
 		/* refresh the search as the items may have changed and the filter has not changed */
-		gpk_application_refresh_search_results (application);
+		if (exit_enum == PK_EXIT_ENUM_SUCCESS) {
+			/* idle add in the background */
+			g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
+
+			/* this is async */
+			package_ids = pk_package_ids_from_id (application->priv->package);
+			gpk_helper_run_show (application->priv->helper_run, package_ids);
+			g_strfreev (package_ids);
+
+			/* clear if success */
+			g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
+			g_ptr_array_set_size (application->priv->package_list, 0);
+			application->priv->action = PK_ACTION_NONE;
+			gpk_application_set_buttons_apply_clear (application);
+		}
+	}
+
+	/* we've just agreed to auth or a EULA */
+	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
+	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
+		if (exit_enum == PK_EXIT_ENUM_SUCCESS)
+			gpk_application_primary_requeue (application);
+	}
+
+	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
+	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
+	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
+	    role == PK_ROLE_ENUM_GET_PACKAGES) {
+		/* were there no entries found? */
+		if (exit_enum == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
+			gpk_application_suggest_better_search (application);
+		}
+
+		/* focus back to the text extry */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
+		gtk_widget_grab_focus (widget);
 	}
 }
 
@@ -1264,12 +1349,11 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ret = pk_client_cancel (application->priv->client_search, NULL);
+	ret = pk_client_cancel (application->priv->client_primary, NULL);
 	egg_debug ("canceled? %i", ret);
 
 	/* switch buttons around */
 	if (ret) {
-		gpk_application_set_find_cancel_buttons (application, TRUE);
 		application->priv->search_mode = PK_MODE_UNKNOWN;
 	}
 }
@@ -1310,7 +1394,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	egg_debug ("find %s", application->priv->search_text);
 
 	/* reset */
-	ret = pk_client_reset (application->priv->client_search, &error);
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
@@ -1319,15 +1403,15 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* do the search */
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		ret = pk_client_search_name (application->priv->client_search,
+		ret = pk_client_search_name (application->priv->client_primary,
 					     application->priv->filters_current,
 					     application->priv->search_text, &error);
 	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
-		ret = pk_client_search_details (application->priv->client_search,
+		ret = pk_client_search_details (application->priv->client_primary,
 					     application->priv->filters_current,
 					     application->priv->search_text, &error);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		ret = pk_client_search_file (application->priv->client_search,
+		ret = pk_client_search_file (application->priv->client_primary,
 					     application->priv->filters_current,
 					     application->priv->search_text, &error);
 	} else {
@@ -1363,7 +1447,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 	g_return_val_if_fail (application->priv->group != NULL, FALSE);
 
 	/* cancel this, we don't care about old results that are pending */
-	ret = pk_client_reset (application->priv->client_search, &error);
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
@@ -1371,11 +1455,11 @@ gpk_application_perform_search_others (GpkApplication *application)
 	}
 
 	if (application->priv->search_mode == PK_MODE_GROUP) {
-		ret = pk_client_search_group (application->priv->client_search,
+		ret = pk_client_search_group (application->priv->client_primary,
 					      application->priv->filters_current,
 					      application->priv->group, &error);
 	} else {
-		ret = pk_client_get_packages (application->priv->client_search,
+		ret = pk_client_get_packages (application->priv->client_primary,
 					      application->priv->filters_current, &error);
 	}
 
@@ -1414,12 +1498,6 @@ gpk_application_perform_search (GpkApplication *application)
 	} else {
 		egg_debug ("doing nothing");
 	}
-	if (!ret)
-		return ret;
-
-	/* switch around buttons */
-	gpk_application_set_find_cancel_buttons (application, FALSE);
-
 	return ret;
 }
 
@@ -1473,19 +1551,13 @@ gpk_application_quit (GpkApplication *application)
 	}
 
 	/* we might have visual stuff running, close them down */
-	ret = pk_client_cancel (application->priv->client_search, &error);
+	ret = pk_client_cancel (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
-	ret = pk_client_cancel (application->priv->client_details, &error);
-	if (!ret) {
-		egg_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-	ret = pk_client_cancel (application->priv->client_files, &error);
+	ret = pk_client_cancel (application->priv->client_secondary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel client: %s", error->message);
 		g_error_free (error);
@@ -1667,44 +1739,50 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	gboolean ret = FALSE;
 	GError *error = NULL;
 	gchar **package_ids = NULL;
-	gchar *exec;
-	GtkWindow *window;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
 	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
-		gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
-		ret = gpk_client_install_package_ids (application->priv->gclient, package_ids, NULL);
-		/* can we show the user the new application? */
-		if (ret) {
-			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			exec = gpk_client_run_show (window, package_ids);
-			if (exec != NULL) {
-				ret = g_spawn_command_line_async (exec, &error);
-				if (!ret) {
-					egg_warning ("failed to run: %s", error->message);
-					g_error_free (error);
-				}
-			}
-			g_free (exec);
+
+		/* reset client */
+		ret = pk_client_reset (application->priv->client_primary, &error);
+		if (!ret) {
+			egg_warning ("failed to cancel: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
+
+		/* install */
+		application->priv->dep_check_info_only = FALSE;
+		ret = pk_client_get_depends (application->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error);
+		if (!ret) {
+			egg_warning ("failed to get depends: %s", error->message);
+			g_error_free (error);
+			goto out;
 		}
 	}
 	if (application->priv->action == PK_ACTION_REMOVE) {
-		gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
-		ret = gpk_client_remove_package_ids (application->priv->gclient, package_ids, NULL);
-	}
-	g_strfreev (package_ids);
+		/* reset client */
+		ret = pk_client_reset (application->priv->client_primary, &error);
+		if (!ret) {
+			egg_warning ("failed to cancel: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
 
-	/* refresh the search as the items may have changed and the filter has not changed */
-	if (ret) {
-		/* clear if success */
-		g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
-		g_ptr_array_set_size (application->priv->package_list, 0);
-		application->priv->action = PK_ACTION_NONE;
-		gpk_application_set_buttons_apply_clear (application);
-		gpk_application_refresh_search_results (application);
+		/* install */
+		application->priv->dep_check_info_only = FALSE;
+		ret = pk_client_get_requires (application->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error);
+		if (!ret) {
+			egg_warning ("failed to get requires: %s", error->message);
+			g_error_free (error);
+			goto out;
+		}
 	}
+out:
+	g_strfreev (package_ids);
+	return;
 }
 
 static void
@@ -1901,7 +1979,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gtk_widget_set_sensitive (widget, ret);
 
 	/* cancel any previous request */
-	ret = pk_client_reset (application->priv->client_details, &error);
+	ret = pk_client_reset (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
@@ -1910,7 +1988,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* get the details */
 	package_ids = pk_package_ids_from_id (application->priv->package);
-	ret = pk_client_get_details (application->priv->client_details, package_ids, &error);
+	ret = pk_client_get_details (application->priv->client_primary, package_ids, &error);
 	g_strfreev (package_ids);
 	if (!ret) {
 		egg_warning ("failed to get details: %s", error->message);
@@ -2260,8 +2338,28 @@ gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 static void
 gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
-	gpk_client_set_interaction (application->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
-	gpk_client_refresh_cache (application->priv->gclient, NULL);
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* set correct view */
+	ret = pk_client_refresh_cache (application->priv->client_primary, TRUE, &error);
+	if (!ret) {
+		egg_warning ("cannot get refresh cache: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
 }
 
 /**
@@ -2525,6 +2623,26 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
+	if (application->priv->action == PK_ACTION_INSTALL ||
+	    application->priv->action == PK_ACTION_REMOVE) {
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
+
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
 	if (status == PK_STATUS_ENUM_FINISHED) {
 		gtk_widget_hide (widget);
@@ -2555,6 +2673,165 @@ gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApp
 
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 	gtk_widget_set_sensitive (widget, allow_cancel);
+}
+
+
+/**
+ * gpk_application_repo_signature_event_cb:
+ **/
+static void
+gpk_application_repo_signature_event_cb (GpkHelperRepoSignature *helper_repo_signature, GtkResponseType type, const gchar *key_id, const gchar *package_id, GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_secondary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* install signature */
+	ret = pk_client_install_signature (application->priv->client_secondary, PK_SIGTYPE_ENUM_GPG, key_id, package_id, &error);
+	if (!ret) {
+		egg_warning ("cannot install signature: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
+}
+
+/**
+ * gpk_application_eula_event_cb:
+ **/
+static void
+gpk_application_eula_event_cb (GpkHelperEula *helper_eula, GtkResponseType type, const gchar *eula_id, GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_secondary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* install signature */
+	ret = pk_client_accept_eula (application->priv->client_secondary, eula_id, &error);
+	if (!ret) {
+		egg_warning ("cannot accept eula: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
+}
+
+/**
+ * gpk_application_deps_remove_event_cb:
+ **/
+static void
+gpk_application_deps_remove_event_cb (GpkHelperDepsRemove *helper_deps_remove, GtkResponseType type, GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gchar **package_ids = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* actually remove packages this time */
+	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+	ret = pk_client_remove_packages (application->priv->client_primary, package_ids, TRUE, FALSE, &error);
+	if (!ret) {
+		egg_warning ("cannot remove packages: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_strfreev (package_ids);
+	return;
+}
+
+/**
+ * gpk_application_deps_install_event_cb:
+ **/
+static void
+gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install, GtkResponseType type, GpkApplication *application)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gchar **package_ids = NULL;
+
+	if (type != GTK_RESPONSE_YES) {
+		goto out;
+	}
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* actually remove packages this time */
+	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+	ret = pk_client_install_packages (application->priv->client_primary, package_ids, &error);
+	if (!ret) {
+		egg_warning ("cannot install packages: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_strfreev (package_ids);
+	return;
+}
+
+/**
+ * gpk_application_eula_cb:
+ **/
+static void
+gpk_application_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar *package_id,
+				    const gchar *vendor_name, const gchar *license_agreement, GpkApplication *application)
+{
+	/* use the helper */
+	gpk_helper_eula_show (application->priv->helper_eula, eula_id, package_id, vendor_name, license_agreement);
+}
+
+/**
+ * gpk_application_repo_signature_required_cb:
+ **/
+static void
+gpk_application_repo_signature_required_cb (PkClient *client, const gchar *package_id, const gchar *repository_name,
+					      const gchar *key_url, const gchar *key_userid, const gchar *key_id,
+					      const gchar *key_fingerprint, const gchar *key_timestamp,
+					      PkSigTypeEnum type, GpkApplication *application)
+{
+	/* use the helper */
+	gpk_helper_repo_signature_show (application->priv->helper_repo_signature, package_id, repository_name, key_url, key_userid, key_id, key_fingerprint, key_timestamp);
 }
 
 /**
@@ -2757,10 +3034,10 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 }
 
 /**
- * gpk_application_categories_finished_cb:
+ * gpk_application_categories_finished:
  **/
 static void
-gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, GpkApplication *application)
+gpk_application_categories_finished (GpkApplication *application)
 {
 	PkObjList *list;
 	const PkCategoryObj *obj;
@@ -2808,7 +3085,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	}
 
 	/* get return values */
-	list = pk_client_get_cached_objects (client);
+	list = pk_client_get_cached_objects (application->priv->client_primary);
 	if (list->len == 0) {
 		egg_warning ("no results from GetCategories");
 		goto out;
@@ -2848,7 +3125,7 @@ gpk_application_categories_finished_cb (PkClient *client, PkExitEnum exit, guint
 	gtk_tree_view_collapse_all (treeview);
 	g_object_unref (list);
 out:
-	g_object_unref (client);
+	return;
 }
 
 /**
@@ -2858,34 +3135,30 @@ static gboolean
 gpk_application_create_group_list_categories (GpkApplication *application)
 {
 	GError *error = NULL;
-	PkClient *client;
-	gboolean ret;
+	gboolean ret = FALSE;
 
 	/* check we can do this */
 	if (!pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES)) {
 		egg_warning ("backend does not support complex groups");
-		return FALSE;
+		goto out;
 	}
 
-	/* async */
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_application_categories_finished_cb), application);
-	g_signal_connect (client, "finished",
-			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (client, "status-changed",
-			  G_CALLBACK (gpk_application_status_changed_cb), application);
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
 
 	/* get categories supported */
-	ret = pk_client_get_categories (client, &error);
+	ret = pk_client_get_categories (application->priv->client_primary, &error);
 	if (!ret) {
 		egg_warning ("failed to get categories: %s", error->message);
 		g_error_free (error);
-		g_object_unref (client);
+		goto out;
 	}
-
-	/* client will be unreff'd in finished handler */
+out:
 	return ret;
 }
 
@@ -2997,6 +3270,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->url = NULL;
 	application->priv->search_text = NULL;
 	application->priv->has_package = FALSE;
+	application->priv->dep_check_info_only = FALSE;
 	application->priv->details_event_id = 0;
 	application->priv->package_list = g_ptr_array_new ();
 
@@ -3043,58 +3317,38 @@ gpk_application_init (GpkApplication *application)
 					   "/usr/share/PackageKit/icons");
 
 	application->priv->control = pk_control_new ();
-	application->priv->gclient = gpk_client_new ();
 
-	application->priv->client_search = pk_client_new ();
-	g_signal_connect (application->priv->client_search, "package",
-			  G_CALLBACK (gpk_application_package_cb), application);
-	g_signal_connect (application->priv->client_search, "error-code",
-			  G_CALLBACK (gpk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client_search, "finished",
-			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_search, "status-changed",
-			  G_CALLBACK (gpk_application_status_changed_cb), application);
-	g_signal_connect (application->priv->client_search, "allow-cancel",
-			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
-
-	application->priv->client_action = pk_client_new ();
-	g_signal_connect (application->priv->client_action, "package",
-			  G_CALLBACK (gpk_application_package_cb), application);
-	g_signal_connect (application->priv->client_action, "error-code",
-			  G_CALLBACK (gpk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client_action, "finished",
-			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_action, "status-changed",
-			  G_CALLBACK (gpk_application_status_changed_cb), application);
-	g_signal_connect (application->priv->client_action, "allow-cancel",
-			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
-	g_signal_connect (application->priv->client_action, "repo-detail",
-			  G_CALLBACK (pk_application_repo_detail_cb), application);
-
-	application->priv->client_details = pk_client_new ();
-	g_signal_connect (application->priv->client_details, "details",
-			  G_CALLBACK (gpk_application_details_cb), application);
-	g_signal_connect (application->priv->client_details, "error-code",
-			  G_CALLBACK (gpk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client_details, "finished",
-			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_details, "status-changed",
-			  G_CALLBACK (gpk_application_status_changed_cb), application);
-	g_signal_connect (application->priv->client_details, "allow-cancel",
-			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
-
-	application->priv->client_files = pk_client_new ();
-	pk_client_set_use_buffer (application->priv->client_files, TRUE, NULL);
-	g_signal_connect (application->priv->client_files, "error-code",
-			  G_CALLBACK (gpk_application_error_code_cb), application);
-	g_signal_connect (application->priv->client_files, "finished",
-			  G_CALLBACK (gpk_application_finished_cb), application);
-	g_signal_connect (application->priv->client_files, "status-changed",
-			  G_CALLBACK (gpk_application_status_changed_cb), application);
-	g_signal_connect (application->priv->client_files, "allow-cancel",
-			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
-	g_signal_connect (application->priv->client_files, "files",
+	/* this is what we use mainly */
+	application->priv->client_primary = pk_client_new ();
+	pk_client_set_use_buffer (application->priv->client_primary, TRUE, NULL);
+	g_signal_connect (application->priv->client_primary, "files",
 			  G_CALLBACK (gpk_application_files_cb), application);
+	g_signal_connect (application->priv->client_primary, "package",
+			  G_CALLBACK (gpk_application_package_cb), application);
+	g_signal_connect (application->priv->client_primary, "details",
+			  G_CALLBACK (gpk_application_details_cb), application);
+	g_signal_connect (application->priv->client_primary, "error-code",
+			  G_CALLBACK (gpk_application_error_code_cb), application);
+	g_signal_connect (application->priv->client_primary, "finished",
+			  G_CALLBACK (gpk_application_finished_cb), application);
+	g_signal_connect (application->priv->client_primary, "status-changed",
+			  G_CALLBACK (gpk_application_status_changed_cb), application);
+	g_signal_connect (application->priv->client_primary, "allow-cancel",
+			  G_CALLBACK (gpk_application_allow_cancel_cb), application);
+	g_signal_connect (application->priv->client_primary, "repo-detail",
+			  G_CALLBACK (pk_application_repo_detail_cb), application);
+	g_signal_connect (application->priv->client_primary, "repo-signature-required",
+			  G_CALLBACK (gpk_application_repo_signature_required_cb), application);
+	g_signal_connect (application->priv->client_primary, "eula-required",
+			  G_CALLBACK (gpk_application_eula_required_cb), application);
+
+	/* this is for auth and eula callbacks */
+	application->priv->client_secondary = pk_client_new ();
+	pk_client_set_use_buffer (application->priv->client_secondary, TRUE, NULL);
+	g_signal_connect (application->priv->client_secondary, "error-code",
+			  G_CALLBACK (gpk_application_error_code_cb), application);
+	g_signal_connect (application->priv->client_secondary, "finished",
+			  G_CALLBACK (gpk_application_finished_cb), application);
 
 	/* get bitfield */
 	application->priv->roles = pk_control_get_actions (application->priv->control, NULL);
@@ -3129,9 +3383,25 @@ gpk_application_init (GpkApplication *application)
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
 
-	/* make GpkClient windows modal */
-	gtk_widget_realize (main_window);
-	gpk_client_set_parent (application->priv->gclient, GTK_WINDOW (main_window));
+	/* helpers */
+	application->priv->helper_repo_signature = gpk_helper_repo_signature_new ();
+	g_signal_connect (application->priv->helper_repo_signature, "event", G_CALLBACK (gpk_application_repo_signature_event_cb), application);
+	gpk_helper_repo_signature_set_parent (application->priv->helper_repo_signature, GTK_WINDOW (main_window));
+
+	application->priv->helper_eula = gpk_helper_eula_new ();
+	g_signal_connect (application->priv->helper_eula, "event", G_CALLBACK (gpk_application_eula_event_cb), application);
+	gpk_helper_eula_set_parent (application->priv->helper_eula, GTK_WINDOW (main_window));
+
+	application->priv->helper_run = gpk_helper_run_new ();
+	gpk_helper_run_set_parent (application->priv->helper_run, GTK_WINDOW (main_window));
+
+	application->priv->helper_deps_remove = gpk_helper_deps_remove_new ();
+	g_signal_connect (application->priv->helper_deps_remove, "event", G_CALLBACK (gpk_application_deps_remove_event_cb), application);
+	gpk_helper_deps_remove_set_parent (application->priv->helper_deps_remove, GTK_WINDOW (main_window));
+
+	application->priv->helper_deps_install = gpk_helper_deps_install_new ();
+	g_signal_connect (application->priv->helper_deps_install, "event", G_CALLBACK (gpk_application_deps_install_event_cb), application);
+	gpk_helper_deps_install_set_parent (application->priv->helper_deps_install, GTK_WINDOW (main_window));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
@@ -3504,7 +3774,7 @@ gpk_application_init (GpkApplication *application)
 		gpk_application_create_group_list_enum (application);
 
 	/* get repos, so we can show the full name in the software source box */
-	ret = pk_client_get_repo_list (application->priv->client_action, PK_FILTER_ENUM_NONE, &error);
+	ret = pk_client_get_repo_list (application->priv->client_primary, PK_FILTER_ENUM_NONE, &error);
 	if (!ret) {
 		egg_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
@@ -3579,16 +3849,18 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->packages_store);
 	g_object_unref (application->priv->details_store);
 	g_object_unref (application->priv->control);
-	g_object_unref (application->priv->client_search);
-	g_object_unref (application->priv->client_action);
-	g_object_unref (application->priv->client_details);
-	g_object_unref (application->priv->client_files);
+	g_object_unref (application->priv->client_primary);
+	g_object_unref (application->priv->client_secondary);
 	g_object_unref (application->priv->pconnection);
 	g_object_unref (application->priv->desktop);
 	g_object_unref (application->priv->gconf_client);
-	g_object_unref (application->priv->gclient);
 	g_object_unref (application->priv->markdown);
 	g_object_unref (application->priv->builder);
+	g_object_unref (application->priv->helper_eula);
+	g_object_unref (application->priv->helper_run);
+	g_object_unref (application->priv->helper_deps_remove);
+	g_object_unref (application->priv->helper_deps_install);
+	g_object_unref (application->priv->helper_repo_signature);
 
 	g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
 	g_ptr_array_set_size (application->priv->package_list, 0);
