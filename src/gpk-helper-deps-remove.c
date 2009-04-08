@@ -66,12 +66,11 @@ gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, GPtrArray *packages, P
 	GtkResponseType response;
 
 	/* empty list */
-	if (pk_package_list_get_size (deps_list) == 0) {
+	length = pk_package_list_get_size (deps_list);
+	if (length == 0) {
 		g_signal_emit (helper, signals [GPK_HELPER_DEPS_REMOVE_EVENT], 0, GTK_RESPONSE_YES);
 		goto out;
 	}
-
-	length = pk_package_list_get_size (deps_list);
 
 	/* TRANSLATORS: title: show the number of other packages we depend on */
 	title = g_strdup_printf (ngettext ("%i additional package also has to be removed",
