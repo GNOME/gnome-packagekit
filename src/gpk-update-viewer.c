@@ -819,6 +819,8 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 {
 	GtkWidget *widget;
 	const gchar *text;
+	GdkDisplay *display;
+	GdkCursor *cursor;
 
 	egg_debug ("status %s", pk_status_enum_to_text (status));
 
@@ -831,6 +833,11 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 	/* set cursor back to normal */
 	if (status == PK_STATUS_ENUM_FINISHED) {
 		gdk_window_set_cursor (widget->window, NULL);
+	} else {
+		display = gdk_display_get_default ();
+		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
+		gdk_window_set_cursor (widget->window, cursor);
+		gdk_cursor_unref (cursor);
 	}
 
 	/* clear package */
@@ -2034,21 +2041,9 @@ out:
 static void
 gpk_update_viewer_allow_cancel_cb (PkClient *client, gboolean allow_cancel, gpointer data)
 {
-	GdkDisplay *display;
-	GdkCursor *cursor;
 	GtkWidget *widget;
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_cancel"));
 	gtk_widget_set_sensitive (widget, allow_cancel);
-
-	/* set cursor */
-	if (allow_cancel) {
-		gdk_window_set_cursor (widget->window, NULL);
-	} else {
-		display = gdk_display_get_default ();
-		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
-		gdk_window_set_cursor (widget->window, cursor);
-		gdk_cursor_unref (cursor);
-	}
 }
 
 /**
