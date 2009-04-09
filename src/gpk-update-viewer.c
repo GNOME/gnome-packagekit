@@ -46,7 +46,6 @@
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"
 #include "gpk-cell-renderer-percentage.h"
-#include "gpk-client.h"
 #include "gpk-enum.h"
 #include "gpk-helper-repo-signature.h"
 #include "gpk-helper-eula.h"

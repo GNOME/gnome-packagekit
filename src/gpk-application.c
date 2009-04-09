@@ -35,7 +35,6 @@
 #include "egg-string.h"
 #include "egg-markdown.h"
 
-#include "gpk-client.h"
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-error.h"
@@ -43,8 +42,6 @@
 #include "gpk-application.h"
 #include "gpk-animated-icon.h"
 #include "gpk-dialog.h"
-#include "gpk-client-run.h"
-#include "gpk-client-chooser.h"
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-desktop.h"
 #include "gpk-helper-repo-signature.h"
