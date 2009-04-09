@@ -710,10 +710,10 @@ out:
 }
 
 /**
- * gpk_client_libnotify_cb:
+ * gpk_check_update_libnotify_cb:
  **/
 static void
-gpk_client_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
+gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -772,10 +772,10 @@ gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	/* TRANSLATORS: button: cancel the update system */
 	notify_notification_add_action (notification, "cancel",
-					_("Cancel update"), gpk_client_libnotify_cb, cupdate, NULL);
+					_("Cancel update"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	/* TRANSLATORS: button: don't show this again */
 	notify_notification_add_action (notification, "do-not-show-update-started",
-					_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -1355,14 +1355,14 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkClient *client)
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
 		notify_notification_add_action (notification, "restart",
 						/* TRANSLATORS: restart computer as system packages need update */
-						_("Restart computer now"), gpk_client_libnotify_cb, cupdate, NULL);
+						_("Restart computer now"), gpk_check_update_libnotify_cb, cupdate, NULL);
 		notify_notification_add_action (notification, "do-not-show-complete-restart",
 						/* TRANSLATORS: don't show this option again (for restart) */
-						_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+						_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	} else {
 		notify_notification_add_action (notification, "do-not-show-complete",
 						/* TRANSLATORS: don't show this option again (when finished)  */
-						_("Do not show this again"), gpk_client_libnotify_cb, cupdate, NULL);
+						_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	}
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
