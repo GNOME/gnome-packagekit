@@ -381,17 +381,18 @@ out:
 gboolean
 gpk_helper_run_set_parent (GpkHelperRun *helper, GtkWindow *window)
 {
-	GtkWidget *widget;
+	GtkWindow *widget;
 
 	g_return_val_if_fail (GPK_IS_HELPER_RUN (helper), FALSE);
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	/* make modal if window set */
-	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
-	gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+	widget = GTK_WINDOW (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
+	gtk_window_set_transient_for (widget, window);
+	gtk_window_set_modal (widget, TRUE);
 
 	/* this is a modal popup, so don't show a window title */
-	gtk_window_set_title (GTK_WINDOW (widget), "");
+	gtk_window_set_title (widget, "");
 
 	return TRUE;
 }
