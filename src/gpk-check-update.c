@@ -1416,7 +1416,11 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->sicon = gpk_smart_icon_new ();
 
+	/* preload all the common GConf keys */
 	cupdate->priv->gconf_client = gconf_client_get_default ();
+	gconf_client_add_dir (cupdate->priv->gconf_client, GPK_CONF_DIR,
+			      GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
+
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
 	g_signal_connect (cupdate->priv->arefresh, "refresh-cache",
 			  G_CALLBACK (gpk_check_update_auto_refresh_cache_cb), cupdate);
