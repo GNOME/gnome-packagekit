@@ -483,7 +483,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
 	GError *error = NULL;
-	gchar **package_ids;
+	gchar **package_ids = NULL;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 

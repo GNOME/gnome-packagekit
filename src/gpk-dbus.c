@@ -158,7 +158,7 @@ static void
 gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid)
 {
 	GpkX11 *x11;
-	guint timestamp;
+	guint timestamp = 0;
 
 	/* set the parent window */
 	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
