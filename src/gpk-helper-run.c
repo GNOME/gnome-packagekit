@@ -285,7 +285,6 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
 			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
 			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
-egg_warning ("moo: %s", exec);
 out:
 	if (file != NULL)
 		g_key_file_free (file);
@@ -358,6 +357,9 @@ gpk_helper_run_show (GpkHelperRun *helper, gchar **package_ids)
 
 	g_return_val_if_fail (GPK_IS_HELPER_RUN (helper), FALSE);
 	g_return_val_if_fail (package_ids != NULL, FALSE);
+
+	/* clear old list */
+	gtk_list_store_clear (helper->priv->list_store);
 
 	/* add all the apps */
 	len = gpk_helper_run_add_package_ids (helper, package_ids);
