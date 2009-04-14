@@ -860,6 +860,15 @@ skip_checks:
 			/* TRANSLATORS: list the packages we just installed */
 			gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_FINISHED, GPK_MODAL_DIALOG_PACKAGE_LIST);
 			gpk_modal_dialog_set_message (task->priv->dialog, _("The following packages were installed:"));
+
+			/* filter out installed */
+			for (i=0; i<PK_OBJ_LIST(list)->len; i++) {
+				obj = pk_obj_list_index (PK_OBJ_LIST (list), i);
+				if (obj->info != PK_INFO_ENUM_INSTALLING) {
+					pk_obj_list_remove_index (PK_OBJ_LIST (list), i);
+					i--;
+				}
+			}
 			gpk_modal_dialog_set_package_list (task->priv->dialog, list);
 			gpk_modal_dialog_present (task->priv->dialog);
 			g_object_unref (list);
