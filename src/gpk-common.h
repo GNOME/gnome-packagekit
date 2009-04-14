@@ -62,7 +62,8 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
 #define GPK_CONF_APPLICATION_CATEGORY_GROUPS	"/apps/gnome-packagekit/application/category_groups"
 #define GPK_CONF_APPLICATION_SEARCH_MODE	"/apps/gnome-packagekit/application/search_mode"
-#define GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS	"/apps/gnome-packagekit/update_viewer/precache_details"
+#define GPK_CONF_UPDATE_VIEWER_PRECACHE_DETAILS	"/apps/gnome-packagekit/update-viewer/precache_details"
+#define GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND	"/apps/gnome-packagekit/update-viewer/notify_mobile_connection"
 #define GPK_CONF_IGNORED_MESSAGES		"/apps/gnome-packagekit/ignored_messages"
 
 #define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/enable_font_helper"

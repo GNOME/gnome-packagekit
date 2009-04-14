@@ -40,6 +40,7 @@
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
+#include "gpk-dialog.h"
 #include "gpk-error.h"
 #include "gpk-consolekit.h"
 #include "gpk-cell-renderer-size.h"
@@ -72,6 +73,7 @@ static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
 static guint size_total = 0;
+static GConfClient *gconf_client = NULL;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -298,6 +300,11 @@ gpk_update_viewer_button_check_connection (guint size)
 	if (size < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
 		goto out;
 
+	/* not when ignored */
+	ret = gconf_client_get_bool (gconf_client, GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND, NULL);
+	if (!ret)
+		goto out;
+
 	/* show modal dialog */
 	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_updates"));
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
@@ -311,7 +318,7 @@ gpk_update_viewer_button_check_connection (guint size)
 	/* TRANSLATORS, the %s is a size, e.g. 13.3Mb */
 	message = g_strdup_printf (_("Connectivity is being provided by wireless broadband, and it may be expensive to download %s."), text_size);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
-
+	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG (dialog), GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND);
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 	response = gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
@@ -2425,6 +2432,9 @@ main (int argc, char *argv[])
 		goto unique_out;
 	}
 
+	/* get GConf instance */
+	gconf_client = gconf_client_get_default ();
+
 	g_signal_connect (unique_app, "message-received", G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
 
 	markdown = egg_markdown_new ();
@@ -2629,6 +2639,7 @@ main (int argc, char *argv[])
 	g_object_unref (text_buffer);
 	pk_package_id_free (package_id_last);
 out_build:
+	g_object_unref (gconf_client);
 	g_object_unref (control);
 	g_object_unref (markdown);
 	g_object_unref (client_primary);
