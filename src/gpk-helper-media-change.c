@@ -25,10 +25,8 @@
 #include <gtk/gtk.h>
 
 #include "gpk-helper-media-change.h"
-//#include "gpk-marshal.h"
 #include "gpk-enum.h"
 #include "gpk-common.h"
-//#include "gpk-dialog.h"
 
 #include "egg-debug.h"
 
@@ -39,6 +37,10 @@ static void     gpk_helper_media_change_finalize	(GObject	  *object);
 struct GpkHelperMediaChangePrivate
 {
 	GtkWindow		*window;
+	guint			 idle_id;
+	PkMediaTypeEnum		 type;
+	gchar			*media_id;
+	gchar			*media_text;
 };
 
 enum {
@@ -50,21 +52,21 @@ static guint signals [GPK_HELPER_MEDIA_CHANGE_LAST_SIGNAL] = { 0 };
 G_DEFINE_TYPE (GpkHelperMediaChange, gpk_helper_media_change, G_TYPE_OBJECT)
 
 /**
- * gpk_helper_media_change_show:
+ * gpk_helper_media_change_show_idle_cb:
  *
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_media_change_show (GpkHelperMediaChange *helper, PkMediaTypeEnum type, const gchar *media_id, const gchar *media_text)
+gpk_helper_media_change_show_idle_cb (GpkHelperMediaChange *helper)
 {
 	const gchar *name = NULL;
 	gchar *message = NULL;
 	GtkWidget *dialog;
 	GtkResponseType response;
 
-	name = gpk_media_type_enum_to_localised_text (type);
+	name = gpk_media_type_enum_to_localised_text (helper->priv->type);
 	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
-	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' and click continue"), name, media_text);
+	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' and click continue"), name, helper->priv->media_text);
 
 	dialog = gtk_message_dialog_new (helper->priv->window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 /* TRANSLATORS: this is the window title when a new cd or dvd is required */
@@ -87,6 +89,27 @@ gpk_helper_media_change_show (GpkHelperMediaChange *helper, PkMediaTypeEnum type
 		g_signal_emit (helper, signals [GPK_HELPER_MEDIA_CHANGE_EVENT], 0, GTK_RESPONSE_NO);
 	}
 	g_free (message);
+
+	/* never repeat */
+	helper->priv->media_id = 0;
+	return FALSE;
+}
+
+/**
+ * gpk_helper_media_change_show:
+ *
+ * Return value: if we agreed
+ **/
+gboolean
+gpk_helper_media_change_show (GpkHelperMediaChange *helper, PkMediaTypeEnum type, const gchar *media_id, const gchar *media_text)
+{
+	g_return_val_if_fail (GPK_IS_HELPER_MEDIA_CHANGE (helper), FALSE);
+	g_return_val_if_fail (helper->priv->media_id == 0, FALSE);
+
+	helper->priv->type = type;
+	helper->priv->media_id = g_strdup (media_id);
+	helper->priv->media_text = g_strdup (media_text);
+	helper->priv->idle_id = g_idle_add ((GSourceFunc) gpk_helper_media_change_show_idle_cb, helper);
 	return TRUE;
 }
 
@@ -129,6 +152,7 @@ gpk_helper_media_change_init (GpkHelperMediaChange *helper)
 {
 	helper->priv = GPK_HELPER_MEDIA_CHANGE_GET_PRIVATE (helper);
 	helper->priv->window = NULL;
+	helper->priv->idle_id = 0;
 }
 
 /**
@@ -142,6 +166,10 @@ gpk_helper_media_change_finalize (GObject *object)
 	g_return_if_fail (GPK_IS_HELPER_MEDIA_CHANGE (object));
 
 	helper = GPK_HELPER_MEDIA_CHANGE (object);
+	if (helper->priv->idle_id != 0)
+		g_source_remove (helper->priv->idle_id);
+	g_free (helper->priv->media_id);
+	g_free (helper->priv->media_text);
 
 	G_OBJECT_CLASS (gpk_helper_media_change_parent_class)->finalize (object);
 }
