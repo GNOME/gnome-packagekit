@@ -655,10 +655,33 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 	/* stop spinning */
 	gpk_modal_dialog_set_percentage (task->priv->dialog, 100);
 
+	/* we failed because we're handling the auth, just ignore */
+	if (client == task->priv->client_primary &&
+	    (exit_enum == PK_EXIT_ENUM_KEY_REQUIRED ||
+	     exit_enum == PK_EXIT_ENUM_EULA_REQUIRED)) {
+		egg_debug ("ignoring primary sig-required or eula");
+		goto out;
+	}
+
+	/* EULA or GPG key auth done */
+	if (client == task->priv->client_secondary &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+
+		/* try again */
+		ret = pk_client_requeue (task->priv->client_primary, &error_local);
+		if (!ret) {
+			egg_warning ("Failed to requeue: %s", error_local->message);
+			error = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_INTERNAL_ERROR, "cannot requeue: %s", error_local->message);
+			dbus_g_method_return_error (task->priv->context, error);
+		}
+		goto out;
+	}
+
 	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
 
 		/* we failed because of failed exit code */
-		if (task->priv->last_exit_code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
+		if (task->priv->last_exit_code == PK_ERROR_ENUM_GPG_FAILURE ||
+		    task->priv->last_exit_code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
 		    task->priv->last_exit_code == PK_ERROR_ENUM_MISSING_GPG_SIGNATURE) {
 			egg_warning ("showing untrusted ui");
 			gpk_helper_untrusted_show (task->priv->helper_untrusted, task->priv->last_exit_code);
@@ -3106,6 +3129,12 @@ gpk_dbus_task_init (GpkDbusTask *task)
 
 	/* this is asynchronous, else we get into livelock */
 	task->priv->client_secondary = pk_client_new ();
+	g_signal_connect (task->priv->client_secondary, "finished",
+			  G_CALLBACK (gpk_dbus_task_finished_cb), task);
+	g_signal_connect (task->priv->client_secondary, "error-code",
+			  G_CALLBACK (gpk_dbus_task_error_code_cb), task);
+	g_signal_connect (task->priv->client_secondary, "status-changed",
+			  G_CALLBACK (gpk_dbus_task_status_changed_cb), task);
 
 	/* used for icons and translations */
 	task->priv->desktop = pk_desktop_new ();
