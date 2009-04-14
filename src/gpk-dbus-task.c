@@ -811,8 +811,10 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 		/* these are the new packages */
 		list = pk_client_get_package_list (task->priv->client_primary);
 		len = pk_package_list_get_size (list);
-		if (len == 0)
+		if (len == 0) {
+			egg_debug ("no deps");
 			goto skip_checks;
+		}
 
 		/* TRANSLATORS: title: tell the user we have to install additional packages */
 		title = g_strdup_printf (ngettext ("%i additional package also has to be installed",
@@ -820,7 +822,7 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 						   len), len);
 
 		/* message */
-		text = gpk_dialog_package_id_name_join_locale (package_ids);
+		text = gpk_dialog_package_id_name_join_locale (task->priv->package_ids);
 		/* TRANSLATORS: message: explain to the user what we are doing in more detail */
 		message = g_strdup_printf (ngettext ("To install %s, an additional package also has to be downloaded.",
 						     "To install %s, additional packages also have to be downloaded.",
@@ -896,10 +898,11 @@ skip_checks:
 	}
 
 	/* InstallPackageNames */
-	if (task->priv->role == GPK_DBUS_TASK_ROLE_INSTALL_PACKAGE_NAMES) {
-		list = pk_client_get_package_list (task->priv->client_primary);
+	if (task->priv->role == GPK_DBUS_TASK_ROLE_INSTALL_PACKAGE_NAMES &&
+	    role == PK_ROLE_ENUM_RESOLVE) {
 
 		/* found nothing? */
+		list = pk_client_get_package_list (task->priv->client_primary);
 		len = pk_package_list_get_size (list);
 		if (len == 0) {
 			if (task->priv->show_warning) {
@@ -2262,6 +2265,9 @@ skip_checks:
 				/* TRANSLATORS: no software sources have the wanted codec */
 				gpk_modal_dialog_set_message (task->priv->dialog, _("Could not find plugin in any configured software source"));
 				gpk_modal_dialog_set_help_id (task->priv->dialog, "dialog-package-not-found");
+
+				/* TRANSLATORS: button text */
+				gpk_modal_dialog_set_action (task->priv->dialog, _("More information"));
 				gpk_modal_dialog_present (task->priv->dialog);
 				button = gpk_modal_dialog_run (task->priv->dialog);
 				if (button == GTK_RESPONSE_OK)
