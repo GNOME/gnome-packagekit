@@ -310,6 +310,36 @@ gpk_update_enum_to_text (GpkUpdateEnum update)
 }
 
 /**
+ * gpk_media_type_enum_to_localised_text:
+ **/
+const gchar *
+gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
+{
+	const gchar *text = NULL;
+	switch (type) {
+	case PK_MEDIA_TYPE_ENUM_CD:
+		/* TRANSLATORS: this is compact disk (CD) media */
+		text = _("CD");
+		break;
+	case PK_MEDIA_TYPE_ENUM_DVD:
+		/* TRANSLATORS: this is digital versatile disk (DVD) media */
+		text = _("DVD");
+		break;
+	case PK_MEDIA_TYPE_ENUM_DISC:
+		/* TRANSLATORS: this is either CD or DVD media */
+		text = _("disc");
+		break;
+	case PK_MEDIA_TYPE_ENUM_UNKNOWN:
+		/* TRANSLATORS: this is generic media of unknown type that we will install from */
+		text = _("media");
+		break;
+	default:
+		egg_warning ("Unknown media type");
+	}
+	return text;
+}
+
+/**
  * gpk_error_enum_to_localised_text:
  **/
 const gchar *
@@ -454,6 +484,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
 		text = _("No space is left on the disk");
+		break;
+	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
+		text = _("A media change is required");
 		break;
 	default:
 		egg_warning ("Unknown error");
@@ -637,6 +670,9 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
 		text = _("There is insufficient space on the device.\n"
 			 "Free some space on the system disk to perform this operation.");
+		break;
+	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
+		text = _("Additional media is required to complete the transaction.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"

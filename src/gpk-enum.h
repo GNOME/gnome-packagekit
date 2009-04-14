@@ -78,6 +78,8 @@ const gchar	*gpk_freq_enum_to_text			(GpkFreqEnum	 freq);
 GpkUpdateEnum	 gpk_update_enum_from_text		(const gchar	*update);
 const gchar	*gpk_update_enum_to_text		(GpkUpdateEnum	 update);
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
+const gchar	*gpk_media_type_enum_to_localised_text	(PkMediaTypeEnum type)
+							 G_GNUC_CONST;
 const gchar	*gpk_info_enum_to_localised_text	(PkInfoEnum	 info)
 							 G_GNUC_CONST;
 const gchar	*gpk_info_enum_to_localised_past	(PkInfoEnum	 info)
