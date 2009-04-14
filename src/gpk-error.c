@@ -71,7 +71,6 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	guint retval;
 	GError *error = NULL;
 
-	g_return_val_if_fail (title != NULL, FALSE);
 	g_return_val_if_fail (message != NULL, FALSE);
 
 	/* get UI */
