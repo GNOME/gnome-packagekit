@@ -114,7 +114,7 @@ main (int argc, char *argv[])
 	ret = dbus_g_proxy_call (proxy, "InstallPackageFiles", &error,
 				 G_TYPE_UINT, 0, /* xid */
 				 G_TYPE_STRV, files, /* data */
-				 G_TYPE_STRING, "", /* interaction */
+				 G_TYPE_STRING, "hide-finished", /* interaction */
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
 	if (!ret) {

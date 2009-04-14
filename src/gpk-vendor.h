@@ -49,7 +49,7 @@ typedef struct
 } GpkVendorClass;
 
 /**
- * GpkClientDialogWidgets:
+ * GpkModalDialogWidgets:
  */
 typedef enum
 {

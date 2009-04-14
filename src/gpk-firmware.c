@@ -42,7 +42,6 @@
 #include "egg-debug.h"
 #include "egg-string.h"
 
-#include "gpk-client.h"
 #include "gpk-common.h"
 #include "gpk-firmware.h"
 
@@ -55,7 +54,8 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 
 struct GpkFirmwarePrivate
 {
-	GPtrArray		*array_found;
+	PkClient		*client_primary;
+	PkPackageList		*packages_found;
 	GPtrArray		*array_requested;
 	GConfClient		*gconf_client;
 };
@@ -68,28 +68,26 @@ G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
 static gboolean
 gpk_firmware_install_file (GpkFirmware *firmware)
 {
-	guint i;
 	gboolean ret;
-	GpkClient *gclient;
-	GPtrArray *array;
 	GError *error = NULL;
-	const gchar *filename;
+	gchar **package_ids;
 
-	gclient = gpk_client_new ();
-	array = firmware->priv->array_found;
-
-	/* try to install each firmware file */
-	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
-		gpk_client_set_interaction (gclient, GPK_CLIENT_INTERACT_WARNING_PROGRESS);
-		ret = gpk_client_install_provide_file (gclient, filename, &error);
-		if (!ret) {
-			egg_warning ("failed to install provide file: %s", error->message);
-			g_error_free (error);
-			error = NULL;
-		}
+	/* install all of the firmware files */
+	package_ids = pk_package_list_to_strv (firmware->priv->packages_found);
+	ret = pk_client_reset (firmware->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to reset: %s", error->message);
+		g_error_free (error);
+		goto out;
 	}
-	g_object_unref (gclient);
+	ret = pk_client_install_packages (firmware->priv->client_primary, package_ids, &error);
+	if (!ret) {
+		egg_warning ("failed to install provide file: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_strfreev (package_ids);
 	return ret;
 }
 
@@ -116,39 +114,42 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
  * @firmware: This class instance
  * @filename: Firmware to search for
  **/
-static gboolean
+static PkPackageObj *
 gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 {
 	gboolean ret;
 	guint length = 0;
-	PkClient *client = NULL;
 	PkPackageList *list = NULL;
 	GError *error = NULL;
+	PkPackageObj *obj = NULL;
 
 	/* actually check we can provide the firmware */
-	client = pk_client_new ();
-	pk_client_set_synchronous (client, TRUE, NULL);
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	ret = pk_client_search_file (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), filename, &error);
+	ret = pk_client_reset (firmware->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("failed to reset: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	ret = pk_client_search_file (firmware->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), filename, &error);
 	if (!ret) {
 		egg_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);
-		error = NULL;
 		goto out;
 	}
 
 	/* make sure we have one package */
-	list = pk_client_get_package_list (client);
+	list = pk_client_get_package_list (firmware->priv->client_primary);
 	length = pk_package_list_get_size (list);
-	g_object_unref (list);
 	if (length == 0)
 		egg_debug ("no package providing %s found", filename);
 	else if (length != 1)
 		egg_warning ("not one package providing %s found (%i)", filename, length);
-
+	else
+		obj = pk_package_obj_copy (pk_package_list_get_obj (list, 0));
 out:
-	g_object_unref (client);
-	return (length == 1);
+	if (list != NULL)
+		g_object_unref (list);
+	return obj;
 }
 
 /**
@@ -158,15 +159,15 @@ out:
 static gboolean
 gpk_firmware_timeout_cb (gpointer data)
 {
-	guint i, j;
+	guint i;
 	gboolean ret;
 	const gchar *filename;
 	const gchar *message;
-	gchar *duplicate;
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 	NotifyNotification *notification;
 	GPtrArray *array;
 	GError *error = NULL;
+	PkPackageObj *obj = NULL;
 
 	/* debug so we can catch polling */
 	egg_debug ("polling check");
@@ -176,35 +177,21 @@ gpk_firmware_timeout_cb (gpointer data)
 	for (i=0; i<array->len; i++) {
 		filename = g_ptr_array_index (array, i);
 		/* save to new array if we found one package for this file */
-		ret = gpk_firmware_check_available (firmware, filename);
-		if (ret)
-			g_ptr_array_add (firmware->priv->array_found, g_strdup (filename));
+		obj = gpk_firmware_check_available (firmware, filename);
+		if (obj != NULL) {
+			pk_obj_list_add (PK_OBJ_LIST (firmware->priv->packages_found), obj);
+			pk_package_obj_free (obj);
+		}
 	}
 
 	/* nothing to do */
-	array = firmware->priv->array_found;
-	if (array->len == 0) {
+	if (pk_package_list_get_size (firmware->priv->packages_found) == 0) {
 		egg_debug ("no packages providing any of the missing firmware");
 		goto out;
 	}
 
 	/* check we don't want the same package more than once */
-	for (i=0; i<array->len; i++) {
-		for (j=0; j<array->len; j++) {
-			duplicate = g_ptr_array_index (array, j);
-			if (i != j && egg_strequal (g_ptr_array_index (array, i), duplicate)) {
-				g_free (duplicate);
-				g_ptr_array_remove_index_fast (array, j);
-			}
-		}
-	}
-
-	/* debugging */
-	egg_debug ("need to install:");
-	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
-		egg_debug ("%s", filename);
-	}
+	pk_obj_list_remove_duplicate (PK_OBJ_LIST (firmware->priv->packages_found));
 
 	/* TRANSLATORS: we need another package to keep udev quiet */
 	message = _("Additional firmware is required to make hardware in this computer function correctly.");
@@ -330,9 +317,12 @@ gpk_firmware_init (GpkFirmware *firmware)
 	GPtrArray *array;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
-	firmware->priv->array_found = g_ptr_array_new ();
+	firmware->priv->packages_found = pk_package_list_new ();
 	firmware->priv->array_requested = g_ptr_array_new ();
 	firmware->priv->gconf_client = gconf_client_get_default ();
+	firmware->priv->client_primary = pk_client_new ();
+	pk_client_set_synchronous (firmware->priv->client_primary, TRUE, NULL);
+	pk_client_set_use_buffer (firmware->priv->client_primary, TRUE, NULL);
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
@@ -405,10 +395,10 @@ gpk_firmware_finalize (GObject *object)
 	firmware = GPK_FIRMWARE (object);
 
 	g_return_if_fail (firmware->priv != NULL);
-	g_ptr_array_foreach (firmware->priv->array_found, (GFunc) g_free, NULL);
-	g_ptr_array_free (firmware->priv->array_found, TRUE);
 	g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) g_free, NULL);
 	g_ptr_array_free (firmware->priv->array_requested, TRUE);
+	g_object_unref (firmware->priv->packages_found);
+	g_object_unref (firmware->priv->client_primary);
 	g_object_unref (firmware->priv->gconf_client);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);

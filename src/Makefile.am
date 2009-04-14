@@ -73,20 +73,24 @@ shared_SOURCES =					\
 	gpk-vendor.h					\
 	gpk-language.c					\
 	gpk-language.h					\
-	gpk-client.c					\
-	gpk-client.h					\
-	gpk-client-dialog.c				\
-	gpk-client-dialog.h				\
-	gpk-client-eula.c				\
-	gpk-client-eula.h				\
-	gpk-client-signature.c				\
-	gpk-client-signature.h				\
-	gpk-client-untrusted.c				\
-	gpk-client-untrusted.h				\
-	gpk-client-chooser.c				\
-	gpk-client-chooser.h				\
-	gpk-client-run.c				\
-	gpk-client-run.h				\
+	gpk-modal-dialog.c				\
+	gpk-modal-dialog.h				\
+	gpk-helper-repo-signature.c			\
+	gpk-helper-repo-signature.h			\
+	gpk-helper-eula.c				\
+	gpk-helper-eula.h				\
+	gpk-helper-run.c				\
+	gpk-helper-run.h				\
+	gpk-helper-deps-remove.c			\
+	gpk-helper-deps-remove.h			\
+	gpk-helper-deps-install.c			\
+	gpk-helper-deps-install.h			\
+	gpk-helper-untrusted.c				\
+	gpk-helper-untrusted.h				\
+	gpk-helper-chooser.c				\
+	gpk-helper-chooser.h				\
+	gpk-helper-media-change.c			\
+	gpk-helper-media-change.h			\
 	gpk-smart-icon.c				\
 	gpk-smart-icon.h				\
 	gpk-gnome.c					\
@@ -161,8 +165,6 @@ gpk_update_icon_SOURCES =				\
 	gpk-check-update.h				\
 	gpk-auto-refresh.c				\
 	gpk-auto-refresh.h				\
-	gpk-helper-repo-signature.c			\
-	gpk-helper-repo-signature.h			\
 	gpk-watch.c					\
 	gpk-watch.h					\
 	gpk-firmware.c					\
@@ -173,6 +175,8 @@ gpk_update_icon_SOURCES =				\
 	gpk-inhibit.h					\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
+	gpk-dbus-task.c					\
+	gpk-dbus-task.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 
@@ -186,18 +190,6 @@ gpk_application_SOURCES =				\
 	gpk-application.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
-	gpk-helper-repo-signature.c			\
-	gpk-helper-repo-signature.h			\
-	gpk-helper-eula.c				\
-	gpk-helper-eula.h				\
-	gpk-helper-run.c				\
-	gpk-helper-run.h				\
-	gpk-helper-deps-remove.c			\
-	gpk-helper-deps-remove.h			\
-	gpk-helper-deps-install.c			\
-	gpk-helper-deps-install.h			\
-	gpk-helper-media-change.c			\
-	gpk-helper-media-change.h			\
 	$(shared_SOURCES)				\
 	$(NULL)
 
@@ -225,10 +217,6 @@ gpk_prefs_LDADD =					\
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
-	gpk-helper-repo-signature.c			\
-	gpk-helper-repo-signature.h			\
-	gpk-helper-eula.c				\
-	gpk-helper-eula.h				\
 	gpk-cell-renderer-size.c			\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\
@@ -306,6 +294,8 @@ gpk_self_test_SOURCES =					\
 	egg-test.c					\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
+	gpk-dbus-task.c					\
+	gpk-dbus-task.h					\
 	$(shared_SOURCES)				\
 	$(NULL)
 

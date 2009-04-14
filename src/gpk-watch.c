@@ -46,7 +46,7 @@
 #include "gpk-common.h"
 #include "gpk-error.h"
 #include "gpk-watch.h"
-#include "gpk-client-dialog.h"
+#include "gpk-modal-dialog.h"
 #include "gpk-inhibit.h"
 #include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
@@ -68,7 +68,7 @@ struct GpkWatchPrivate
 	GPtrArray		*restart_package_names;
 	NotifyNotification	*notification_cached_messages;
 	GpkInhibit		*inhibit;
-	GpkClientDialog		*dialog;
+	GpkModalDialog		*dialog;
 	PkClient		*client_primary;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
@@ -940,8 +940,8 @@ static void
 gpk_watch_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
 				guint elapsed, guint remaining, GpkWatch *watch)
 {
-	gpk_client_dialog_set_percentage (watch->priv->dialog, percentage);
-	gpk_client_dialog_set_remaining (watch->priv->dialog, remaining);
+	gpk_modal_dialog_set_percentage (watch->priv->dialog, percentage);
+	gpk_modal_dialog_set_remaining (watch->priv->dialog, remaining);
 }
 
 /**
@@ -958,26 +958,26 @@ gpk_watch_set_status (GpkWatch *watch, PkStatusEnum status)
 	    status == PK_STATUS_ENUM_DOWNLOAD_GROUP ||
 	    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
 	    status == PK_STATUS_ENUM_REFRESH_CACHE) {
-		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+		gpk_modal_dialog_setup (watch->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
 	}
 
 	/* set icon */
-	gpk_client_dialog_set_image_status (watch->priv->dialog, status);
+	gpk_modal_dialog_set_image_status (watch->priv->dialog, status);
 
 	/* set label */
-	gpk_client_dialog_set_title (watch->priv->dialog, gpk_status_enum_to_localised_text (status));
+	gpk_modal_dialog_set_title (watch->priv->dialog, gpk_status_enum_to_localised_text (status));
 
 	/* spin */
 	if (status == PK_STATUS_ENUM_WAIT)
-		gpk_client_dialog_set_percentage (watch->priv->dialog, PK_CLIENT_PERCENTAGE_INVALID);
+		gpk_modal_dialog_set_percentage (watch->priv->dialog, PK_CLIENT_PERCENTAGE_INVALID);
 
 	/* do visual stuff when finished */
 	if (status == PK_STATUS_ENUM_FINISHED) {
 		/* make insensitive */
-		gpk_client_dialog_set_allow_cancel (watch->priv->dialog, FALSE);
+		gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, FALSE);
 
 		/* stop spinning */
-		gpk_client_dialog_set_percentage (watch->priv->dialog, 100);
+		gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
 	}
 	return TRUE;
 }
@@ -999,7 +999,7 @@ gpk_watch_package_cb (PkClient *client, const PkPackageObj *obj, GpkWatch *watch
 {
 	gchar *text;
 	text = gpk_package_id_format_twoline (obj->id, obj->summary);
-	gpk_client_dialog_set_message (watch->priv->dialog, text);
+	gpk_modal_dialog_set_message (watch->priv->dialog, text);
 	g_free (text);
 }
 
@@ -1038,7 +1038,7 @@ gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
 
 	/* fill in role */
 	text = gpk_watch_get_role_text (watch->priv->client_primary);
-	gpk_client_dialog_set_title (watch->priv->dialog, text);
+	gpk_modal_dialog_set_title (watch->priv->dialog, text);
 	g_free (text);
 
 	/* coldplug */
@@ -1051,7 +1051,7 @@ gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
 
 	/* are we cancellable? */
 	pk_client_get_allow_cancel (watch->priv->client_primary, &allow_cancel, NULL);
-	gpk_client_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
+	gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
 
 	/* coldplug */
 	ret = pk_client_get_progress (watch->priv->client_primary,
@@ -1080,9 +1080,9 @@ gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
 	    role == PK_ROLE_ENUM_SEARCH_FILE ||
 	    role == PK_ROLE_ENUM_SEARCH_NAME ||
 	    role == PK_ROLE_ENUM_GET_UPDATES)
-		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, 0);
+		gpk_modal_dialog_setup (watch->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
 	else
-		gpk_client_dialog_setup (watch->priv->dialog, GPK_CLIENT_DIALOG_PAGE_PROGRESS, GPK_CLIENT_DIALOG_PACKAGE_PADDING);
+		gpk_modal_dialog_setup (watch->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
 
 	/* set the status */
 	gpk_watch_set_status (watch, status);
@@ -1103,7 +1103,7 @@ gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
 		pk_package_id_free (id);
 	}
 
-	gpk_client_dialog_present (watch->priv->dialog);
+	gpk_modal_dialog_present (watch->priv->dialog);
 
 	return TRUE;
 }
@@ -1494,7 +1494,7 @@ gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *
 static void
 gpk_watch_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkWatch *watch)
 {
-	gpk_client_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
+	gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
 }
 
 /**
@@ -1506,11 +1506,11 @@ gpk_watch_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, Gp
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* stop spinning */
-	gpk_client_dialog_set_percentage (watch->priv->dialog, 100);
+	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
 
 	/* autoclose if success */
 	if (exit_enum == PK_EXIT_ENUM_SUCCESS) {
-		gpk_client_dialog_close (watch->priv->dialog);
+		gpk_modal_dialog_close (watch->priv->dialog);
 	}
 }
 
@@ -1521,7 +1521,7 @@ static void
 gpk_watch_button_close_cb (GtkWidget *widget, GpkWatch *watch)
 {
 	/* close, don't abort */
-	gpk_client_dialog_close (watch->priv->dialog);
+	gpk_modal_dialog_close (watch->priv->dialog);
 }
 
 /**
@@ -1576,8 +1576,8 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->client_primary, "allow-cancel",
 			  G_CALLBACK (gpk_watch_allow_cancel_cb), watch);
 
-	watch->priv->dialog = gpk_client_dialog_new ();
-	gpk_client_dialog_set_window_icon (watch->priv->dialog, "pk-package-installed");
+	watch->priv->dialog = gpk_modal_dialog_new ();
+	gpk_modal_dialog_set_window_icon (watch->priv->dialog, "pk-package-installed");
 	g_signal_connect (watch->priv->dialog, "cancel",
 			  G_CALLBACK (gpk_watch_button_cancel_cb), watch);
 	g_signal_connect (watch->priv->dialog, "close",

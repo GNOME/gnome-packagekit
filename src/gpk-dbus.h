@@ -71,17 +71,14 @@ GpkDbus		*gpk_dbus_new				(void);
 //							 DBusGMethodInvocation *context);
 
 /* org.freedesktop.PackageKit.Query */
-gboolean	 gpk_dbus_is_installed			(GpkDbus	*dbus,
+void		 gpk_dbus_is_installed			(GpkDbus	*dbus,
 							 const gchar	*package_name,
 							 const gchar	*interaction,
-							 gboolean	*installed,
-							 GError		**error);
-gboolean	 gpk_dbus_search_file			(GpkDbus	*dbus,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_search_file			(GpkDbus	*dbus,
 							 const gchar	*file_name,
 							 const gchar	*interaction,
-							 gboolean	*installed,
-							 gchar		**package_name,
-							 GError		**error);
+							 DBusGMethodInvocation *context);
 
 /* org.freedesktop.PackageKit.Modify */
 void		 gpk_dbus_install_provide_files		(GpkDbus	*dbus,

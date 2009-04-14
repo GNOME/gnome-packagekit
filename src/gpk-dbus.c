@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2008-2009 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -47,8 +47,8 @@
 #include "egg-string.h"
 
 #include "gpk-dbus.h"
+#include "gpk-dbus-task.h"
 #include "gpk-x11.h"
-#include "gpk-client.h"
 #include "gpk-common.h"
 
 static void     gpk_dbus_finalize	(GObject	*object);
@@ -57,10 +57,10 @@ static void     gpk_dbus_finalize	(GObject	*object);
 
 struct GpkDbusPrivate
 {
-	GpkClient		*gclient;
-	PkClient		*client_primary;
 	GConfClient		*gconf_client;
-	gint			 timeout;
+	gint			 timeout_tmp;
+	GpkX11			*x11;
+	GPtrArray		*array;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -152,77 +152,6 @@ out:
 }
 
 /**
- * gpk_dbus_set_parent_window:
- **/
-static void
-gpk_dbus_set_parent_window (GpkDbus *dbus, guint32 xid)
-{
-	GpkX11 *x11;
-	guint timestamp = 0;
-
-	/* set the parent window */
-	gpk_client_set_parent_xid (dbus->priv->gclient, xid);
-
-	/* try to get the user time of the window if not provided */
-	if (xid != 0) {
-		x11 = gpk_x11_new ();
-		gpk_x11_set_xid (x11, xid);
-		timestamp = gpk_x11_get_user_time (x11);
-		g_object_unref (x11);
-	}
-
-	/* set the last interaction */
-	gpk_client_update_timestamp (dbus->priv->gclient, timestamp);
-}
-
-#if 0
-/**
- * gpk_dbus_install_catalog:
- **/
-void
-gpk_dbus_install_catalog (GpkDbus *dbus, guint32 xid, guint32 timestamp, const gchar *catalog_file, DBusGMethodInvocation *context)
-{
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-	gchar *sender;
-	gchar **catalog_files;
-	gchar *exec;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallCatalog method called: %s", catalog_file);
-
-	/* check sender */
-	sender = dbus_g_method_get_sender (context);
-
-	/* just convert from char* to char** */
-	catalog_files = g_strsplit (catalog_file, "|", 1);
-	gpk_dbus_set_parent_window (dbus, xid);
-
-	/* get the program name and set */
-	exec = gpk_dbus_get_exec_for_sender (sender);
-	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
-	g_free (sender);
-	g_free (exec);
-
-	/* do the action */
-	ret = gpk_client_install_catalogs (dbus->priv->gclient, catalog_files, &error_local);
-	g_strfreev (catalog_files);
-
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
-}
-#endif
-
-/**
  * gpk_dbus_set_interaction_from_text:
  **/
 static void
@@ -278,239 +207,122 @@ gpk_dbus_set_interaction_from_text (PkBitfield *interact, gint *timeout, const g
 }
 
 /**
- * gpk_dbus_set_interaction:
+ * gpk_dbus_parse_interaction:
  **/
 static void
-gpk_dbus_set_interaction (GpkDbus *dbus, const gchar *interaction)
+gpk_dbus_parse_interaction (GpkDbus *dbus, const gchar *interaction, PkBitfield *interact, gint *timeout)
 {
-	PkBitfield interact = 0;
 	gchar *policy;
 
-	/* set default */
-	dbus->priv->timeout = -1;
+	/* set temp default */
+	*interact = 0;
+	dbus->priv->timeout_tmp = -1;
 
 	/* get default policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_DEFAULT_INTERACTION, NULL);
 	if (policy != NULL) {
 		egg_debug ("default is %s", policy);
-		gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, policy);
+		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
 	}
 	g_free (policy);
 
 	/* now override with policy from client */
-	gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, interaction);
+	gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, interaction);
 	egg_debug ("client is %s", interaction);
 
 	/* now override with enforced policy from gconf */
 	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_ENFORCED_INTERACTION, NULL);
 	if (policy != NULL) {
 		egg_debug ("enforced is %s", policy);
-		gpk_dbus_set_interaction_from_text (&interact, &dbus->priv->timeout, policy);
+		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
 	}
 	g_free (policy);
 
-	/* set the interaction mode */
-	egg_debug ("interact=%i", (gint) interact);
-	gpk_client_set_interaction (dbus->priv->gclient, interact);
-
-	/* set the timeout locally and in the helper client */
-	egg_debug ("timeout=%i", dbus->priv->timeout);
-	gpk_client_set_timeout (dbus->priv->gclient, dbus->priv->timeout);
+	/* copy from temp */
+	*timeout = dbus->priv->timeout_tmp;
 }
 
 /**
- * gpk_dbus_set_context:
+ * gpk_dbus_create_task:
  **/
-static void
-gpk_dbus_set_context (GpkDbus *dbus, DBusGMethodInvocation *context)
+static GpkDbusTask *
+gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBusGMethodInvocation *context)
 {
+	GpkDbusTask *task;
+	PkBitfield interact = 0;
+	gint timeout = 0;
 	gchar *sender;
 	gchar *exec;
+	guint timestamp = 0;
+
+	task = gpk_dbus_task_new ();
+
+	/* work out what interaction the task should use */
+	gpk_dbus_parse_interaction (dbus, interaction, &interact, &timeout);
+
+	/* set interaction mode */
+	egg_debug ("interact=%i", (gint) interact);
+	gpk_dbus_task_set_interaction (task, interact);
+
+	/* set timeout */
+	egg_debug ("timeout=%i", timeout);
+	gpk_dbus_task_set_timeout (task, timeout);
+
+	/* set the parent window */
+	gpk_dbus_task_set_xid (task, xid);
+
+	/* try to get the user time of the window */
+	if (xid != 0) {
+		gpk_x11_set_xid (dbus->priv->x11, xid);
+		timestamp = gpk_x11_get_user_time (dbus->priv->x11);
+	}
+
+	/* set the context for the return values */
+	gpk_dbus_task_set_context (task, context);
+
+	/* set the last interaction */
+	gpk_dbus_task_set_timestamp (task, timestamp);
+
+	/* set the window for the modal and timestamp */
+	gpk_dbus_task_set_xid (task, xid);
 
 	/* get the program name and set */
 	sender = dbus_g_method_get_sender (context);
 	exec = gpk_dbus_get_exec_for_sender (sender);
-	gpk_client_set_parent_exec (dbus->priv->gclient, exec);
+	gpk_dbus_task_set_exec (task, exec);
+
+	/* unref on delete */
+	//g_signal_connect...
+
+	/* add to array */
+	g_ptr_array_add (dbus->priv->array, task);
 
 	g_free (sender);
 	g_free (exec);
+	return task;
 }
 
-#if 0
-/**
- * gpk_dbus_is_package_installed:
- **/
-gboolean
-gpk_dbus_is_package_installed (GpkDbus *dbus, const gchar *package_name, gboolean *installed, GError **error)
-{
-	gboolean ret;
-	GError *error_local = NULL;
-	PkPackageList *list = NULL;
-	gchar **package_names = NULL;
-
-	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
-
-	/* reset */
-	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
-
-	/* get the package list for the installed packages */
-	package_names = g_strsplit (package_name, "|", 1);
-	ret = pk_client_resolve (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client_primary);
-	*installed = (PK_OBJ_LIST(list)->len > 0);
-out:
-	if (list != NULL)
-		g_object_unref (list);
-	g_strfreev (package_names);
-	return ret;
-}
-#endif
 
 /**
  * gpk_dbus_is_installed:
  **/
-gboolean
-gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *interaction, gboolean *installed, GError **error)
+void
+gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error_local = NULL;
-	PkPackageList *list = NULL;
-	gchar **package_names = NULL;
-
-	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
-
-	/* process wait command */
-	gpk_dbus_set_interaction (dbus, interaction);
-
-	/* reset */
-	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
-
-	/* get the package list for the installed packages */
-	package_names = g_strsplit (package_name, "|", 1);
-	ret = pk_client_resolve (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_names, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client_primary);
-	*installed = (PK_OBJ_LIST(list)->len > 0);
-out:
-	if (list != NULL)
-		g_object_unref (list);
-	g_strfreev (package_names);
-	return ret;
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, 0, interaction, context);
+	gpk_dbus_task_is_installed (task, package_name);
 }
 
 /**
  * gpk_dbus_search_file:
  **/
-gboolean
-gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *interaction, gboolean *installed, gchar **package_name, GError **error)
-{
-	gboolean ret;
-	GError *error_local = NULL;
-	PkPackageList *list = NULL;
-	const PkPackageObj *obj;
-
-	g_return_val_if_fail (PK_IS_DBUS (dbus), FALSE);
-
-	/* process wait command */
-	gpk_dbus_set_interaction (dbus, interaction);
-
-	/* reset */
-	ret = pk_client_reset (dbus->priv->client_primary, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to get installed status: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* set timeout */
-	pk_client_set_timeout (dbus->priv->client_primary, dbus->priv->timeout, NULL);
-
-	/* get the package list for the installed packages */
-	ret = pk_client_search_file (dbus->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), file_name, &error_local);
-	if (!ret) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for file: %s", error_local->message);
-		g_error_free (error_local);
-		goto out;
-	}
-
-	/* more than one entry? */
-	list = pk_client_get_package_list (dbus->priv->client_primary);
-	if (PK_OBJ_LIST(list)->len < 1) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "could not find package providing file");
-		ret = FALSE;
-		goto out;
-	}
-
-	/* get the package name too */
-	*installed = TRUE;
-	obj = pk_package_list_get_obj (list, 0);
-	*package_name = g_strdup (obj->id->name);
-
-out:
-	if (list != NULL)
-		g_object_unref (list);
-	return ret;
-}
-
-/**
- * gpk_dbus_install_provide_files:
- **/
 void
-gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallProvideFiles method called: %s", files[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_provide_file (dbus->priv->gclient, files[0], &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, 0, interaction, context);
+	gpk_dbus_task_search_file (task, file_name);
 }
 
 /**
@@ -519,30 +331,20 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 void
 gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_package_files (task, files);
+}
 
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallPackageFiles method called: %s", files[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_local_files (dbus->priv->gclient, files, &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+/**
+ * gpk_dbus_install_provide_files:
+ **/
+void
+gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_provide_files (task, files);
 }
 
 /**
@@ -551,30 +353,9 @@ gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 void
 gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallPackageNames method called: %s", packages[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_package_names (dbus->priv->gclient, packages, &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_package_names (task, packages);
 }
 
 /**
@@ -583,30 +364,9 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, co
 void
 gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallMimeTypes method called: %s", mime_types[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_mime_type (dbus->priv->gclient, mime_types[0], &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_mime_types (task, mime_types);
 }
 
 /**
@@ -615,30 +375,9 @@ gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, con
 void
 gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallFontconfigResources method called: %s", resources[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_fonts (dbus->priv->gclient, resources, &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_fontconfig_resources (task, resources);
 }
 
 /**
@@ -647,30 +386,9 @@ gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resou
 void
 gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
 {
-	gboolean ret;
-	GError *error;
-	GError *error_local = NULL;
-
-	g_return_if_fail (PK_IS_DBUS (dbus));
-
-	egg_debug ("InstallGStreamerResources method called: %s", resources[0]);
-
-	/* set common parameters */
-	gpk_dbus_set_parent_window (dbus, xid);
-	gpk_dbus_set_interaction (dbus, interaction);
-	gpk_dbus_set_context (dbus, context);
-
-	/* do the action */
-	ret = gpk_client_install_gstreamer_codecs (dbus->priv->gclient, resources, &error_local);
-	if (!ret) {
-		error = g_error_new (GPK_DBUS_ERROR, error_local->code,
-				     "Method failed: %s", error_local->message);
-		g_error_free (error_local);
-		dbus_g_method_return_error (context, error);
-		return;
-	}
-
-	dbus_g_method_return (context);
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_gstreamer_resources (task, resources);
 }
 
 /**
@@ -693,14 +411,10 @@ static void
 gpk_dbus_init (GpkDbus *dbus)
 {
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
-	dbus->priv->timeout = -1;
+	dbus->priv->timeout_tmp = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
-	dbus->priv->client_primary = pk_client_new ();
-	pk_client_set_use_buffer (dbus->priv->client_primary, TRUE, NULL);
-	pk_client_set_synchronous (dbus->priv->client_primary, TRUE, NULL);
-
-	dbus->priv->gclient = gpk_client_new ();
-	gpk_client_set_interaction (dbus->priv->gclient, GPK_CLIENT_INTERACT_WARNING_CONFIRM_PROGRESS);
+	dbus->priv->array = g_ptr_array_new ();
+	dbus->priv->x11 = gpk_x11_new ();
 }
 
 /**
@@ -715,9 +429,10 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
-	g_object_unref (dbus->priv->client_primary);
-	g_object_unref (dbus->priv->gclient);
+	g_ptr_array_foreach (dbus->priv->array, (GFunc) g_object_unref, NULL);
+	g_ptr_array_free (dbus->priv->array, TRUE);
 	g_object_unref (dbus->priv->gconf_client);
+	g_object_unref (dbus->priv->x11);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
 }

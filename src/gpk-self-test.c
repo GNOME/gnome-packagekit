@@ -30,7 +30,7 @@ void egg_markdown_test (EggTest *test);
 void egg_string_test (EggTest *test);
 void gpk_dbus_test (EggTest *test);
 void gpk_language_test (EggTest *test);
-void gpk_client_dialog_test (EggTest *test);
+void gpk_modal_dialog_test (EggTest *test);
 void gpk_client_test (EggTest *test);
 void gpk_error_test (EggTest *test);
 
@@ -54,8 +54,8 @@ main (int argc, char **argv)
 //	gpk_dbus_test (test);
 	gpk_language_test (test);
 	gpk_error_test (test);
-	gpk_client_test (test);
-	gpk_client_dialog_test (test);
+//	gpk_client_test (test);
+	gpk_modal_dialog_test (test);
 
 	return egg_test_finish (test);
 }
