@@ -49,6 +49,7 @@
 #include "gpk-helper-run.h"
 #include "gpk-helper-deps-remove.h"
 #include "gpk-helper-deps-install.h"
+#include "gpk-helper-media-change.h"
 
 static void     gpk_application_finalize   (GObject	    *object);
 
@@ -109,6 +110,7 @@ struct GpkApplicationPrivate
 	GpkHelperRun		*helper_run;
 	GpkHelperDepsRemove	*helper_deps_remove;
 	GpkHelperDepsInstall	*helper_deps_install;
+	GpkHelperMediaChange	*helper_media_change;
 	gboolean		 dep_check_info_only;
 };
 
@@ -1016,7 +1018,8 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 
 	/* ignore the ones we can handle */
 	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
-	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
+	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
+	    code == PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED) {
 		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}
@@ -2769,7 +2772,6 @@ gpk_application_deps_remove_event_cb (GpkHelperDepsRemove *helper_deps_remove, G
 	}
 out:
 	g_strfreev (package_ids);
-	return;
 }
 
 /**
@@ -2804,11 +2806,25 @@ gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install
 	}
 out:
 	g_strfreev (package_ids);
+}
+
+/**
+ * gpk_application_media_change_event_cb:
+ **/
+static void
+gpk_application_media_change_event_cb (GpkHelperMediaChange *helper_media_change, GtkResponseType type, GpkApplication *application)
+{
+	if (type != GTK_RESPONSE_YES)
+		goto out;
+
+	/* requeue */
+	gpk_update_viewer_requeue (application);
+out:
 	return;
 }
 
 /**
- * gpk_application_eula_cb:
+ * gpk_application_eula_required_cb:
  **/
 static void
 gpk_application_eula_required_cb (PkClient *client, const gchar *eula_id, const gchar *package_id,
@@ -2816,6 +2832,16 @@ gpk_application_eula_required_cb (PkClient *client, const gchar *eula_id, const 
 {
 	/* use the helper */
 	gpk_helper_eula_show (application->priv->helper_eula, eula_id, package_id, vendor_name, license_agreement);
+}
+
+/**
+ * gpk_application_media_change_required_cb:
+ **/
+static void
+gpk_application_media_change_required_cb (PkClient *client, PkMediaTypeEnum type, const gchar *media_id, const gchar *media_text, GpkApplication *application)
+{
+	/* use the helper */
+	gpk_helper_media_change_show (application->priv->helper_media_change, type, media_id, media_text);
 }
 
 /**
@@ -3338,6 +3364,8 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_repo_signature_required_cb), application);
 	g_signal_connect (application->priv->client_primary, "eula-required",
 			  G_CALLBACK (gpk_application_eula_required_cb), application);
+	g_signal_connect (application->priv->client_primary, "media-change-required",
+			  G_CALLBACK (gpk_application_media_change_required_cb), application);
 
 	/* this is for auth and eula callbacks */
 	application->priv->client_secondary = pk_client_new ();
@@ -3399,6 +3427,10 @@ gpk_application_init (GpkApplication *application)
 	application->priv->helper_deps_install = gpk_helper_deps_install_new ();
 	g_signal_connect (application->priv->helper_deps_install, "event", G_CALLBACK (gpk_application_deps_install_event_cb), application);
 	gpk_helper_deps_install_set_parent (application->priv->helper_deps_install, GTK_WINDOW (main_window));
+
+	application->priv->helper_media_change = gpk_helper_media_change_new ();
+	g_signal_connect (application->priv->helper_media_change, "event", G_CALLBACK (gpk_application_media_change_event_cb), application);
+	gpk_helper_media_change_set_parent (application->priv->helper_media_change, GTK_WINDOW (main_window));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
@@ -3857,6 +3889,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->helper_run);
 	g_object_unref (application->priv->helper_deps_remove);
 	g_object_unref (application->priv->helper_deps_install);
+	g_object_unref (application->priv->helper_media_change);
 	g_object_unref (application->priv->helper_repo_signature);
 
 	g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);

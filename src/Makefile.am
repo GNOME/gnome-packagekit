@@ -196,6 +196,8 @@ gpk_application_SOURCES =				\
 	gpk-helper-deps-remove.h			\
 	gpk-helper-deps-install.c			\
 	gpk-helper-deps-install.h			\
+	gpk-helper-media-change.c			\
+	gpk-helper-media-change.h			\
 	$(shared_SOURCES)				\
 	$(NULL)
 
