@@ -699,6 +699,9 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	gchar *text;
 	gchar *text_size;
 
+	/* reset to zero */
+	size_total = 0;
+
 	/* if there are no entries selected, deselect the button */
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 	while (valid) {
