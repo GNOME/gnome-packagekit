@@ -860,7 +860,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		break;
 	case PK_STATUS_ENUM_UPDATE:
 		/* TRANSLATORS: The transaction state */
-		text = _("Updating packages");
+		text = _("Installing updates");
 		break;
 	case PK_STATUS_ENUM_CLEANUP:
 		/* TRANSLATORS: The transaction state */
