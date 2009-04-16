@@ -1057,7 +1057,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	/* TRANSLATORS: a column that has name of the package that will be updated */
 	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
 							   "markup", GPK_UPDATES_COLUMN_TEXT, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_TEXT);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_ID);
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
 	gtk_tree_view_append_column (treeview, column);
 	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_updates_size_allocate_cb), renderer);
