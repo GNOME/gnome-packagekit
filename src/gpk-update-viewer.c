@@ -407,6 +407,10 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 		return;
 	}
 
+	/* disable button */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
+	gtk_widget_set_sensitive (widget, FALSE);
+
 	/* clear the selection */
 	selection = gtk_tree_view_get_selection (treeview);
 	gtk_tree_selection_unselect_all (selection);
