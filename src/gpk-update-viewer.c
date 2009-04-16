@@ -1609,6 +1609,9 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 			g_object_unref (update_list);
 		update_list = pk_client_get_package_list (client_primary);
 
+		/* sort by name */
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model), GPK_UPDATES_COLUMN_ID, GTK_SORT_ASCENDING);
+
 		/* get the download sizes */
 		if (PK_OBJ_LIST(update_list)->len > 0)
 			g_idle_add ((GSourceFunc) gpk_update_viewer_finished_get_update_details_cb, g_object_ref (update_list));
