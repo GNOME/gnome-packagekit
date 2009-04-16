@@ -1324,11 +1324,12 @@ gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	gchar *package_id;
 	PkUpdateDetailObj *obj = NULL;
 
-	/* set loading text */
-	gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
-
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+
+		/* set loading text */
+		gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
+
 		gtk_tree_model_get (model, &iter,
 				    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &obj,
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
