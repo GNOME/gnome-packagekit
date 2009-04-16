@@ -130,7 +130,7 @@ enum {
 	PACKAGES_COLUMN_IMAGE,
 	PACKAGES_COLUMN_STATE,  /* state of the item */
 	PACKAGES_COLUMN_CHECKBOX,  /* what we show in the checkbox */
-	PACKAGES_COLUMN_CHECKBOX_ENABLE, /* sensitive */
+	PACKAGES_COLUMN_CHECKBOX_VISIBLE, /* visible */
 	PACKAGES_COLUMN_TEXT,
 	PACKAGES_COLUMN_ID,
 	PACKAGES_COLUMN_LAST
@@ -357,6 +357,7 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	GtkTreeModel *model;
 	PkBitfield state;
 	gboolean enabled;
+	gchar *package_id;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -381,9 +382,21 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 
 	/* for all current items, reset the state if in the list */
 	while (valid) {
-		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
-		enabled = gpk_application_get_checkbox_enable (application, state);
-		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_ENABLE, enabled, -1);
+		gtk_tree_model_get (model, &iter,
+				    PACKAGES_COLUMN_STATE, &state,
+				    PACKAGES_COLUMN_ID, &package_id,
+				    -1);
+
+		/* we never show the checkbox for the search helper */
+		if (package_id == NULL) {
+			enabled = FALSE;
+		} else {
+			enabled = gpk_application_get_checkbox_enable (application, state);
+		}
+		g_free (package_id);
+
+		/* set visible */
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled, -1);
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 }
@@ -979,7 +992,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
 			    PACKAGES_COLUMN_CHECKBOX, installed ^ in_queue,
-			    PACKAGES_COLUMN_CHECKBOX_ENABLE, enabled,
+			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_IMAGE, icon,
@@ -1061,9 +1074,10 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
-			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_IMAGE, "system-search",
+			    PACKAGES_COLUMN_ID, NULL,
 			    -1);
 	g_free (text);
 }
@@ -1803,7 +1817,7 @@ gpk_application_packages_add_columns (GpkApplication *application)
 	/* TRANSLATORS: column for installed status */
 	column = gtk_tree_view_column_new_with_attributes (_("Installed"), renderer,
 							   "active", PACKAGES_COLUMN_CHECKBOX,
-							   "visible", PACKAGES_COLUMN_CHECKBOX_ENABLE, NULL);
+							   "visible", PACKAGES_COLUMN_CHECKBOX_VISIBLE, NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for images */
@@ -1914,8 +1928,8 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gboolean show_install = TRUE;
 	gboolean show_remove = TRUE;
 	PkBitfield state;
-	gchar **package_ids;
-	gchar *image;
+	gchar **package_ids = NULL;
+	gchar *package_id = NULL;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1935,16 +1949,14 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 		/* hide details */
 		gpk_application_clear_details (application);
-		return;
+		goto out;
 	}
 
 	/* check we aren't a help line */
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_IMAGE, &image, -1);
-	ret = egg_strequal (image, "system-search");
-	g_free (image);
-	if (ret) {
+	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_ID, &package_id, -1);
+	if (package_id == NULL) {
 		egg_debug ("ignoring help click");
-		return;
+		goto out;
 	}
 
 	/* show the menu item */
@@ -1983,17 +1995,19 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	if (!ret) {
 		egg_warning ("failed to cancel, and adding to queue: %s", error->message);
 		g_error_free (error);
-		return;
+		goto out;
 	}
 
 	/* get the details */
 	package_ids = pk_package_ids_from_id (application->priv->package);
 	ret = pk_client_get_details (application->priv->client_primary, package_ids, &error);
-	g_strfreev (package_ids);
 	if (!ret) {
 		egg_warning ("failed to get details: %s", error->message);
 		g_error_free (error);
 	}
+out:
+	g_free (package_id);
+	g_strfreev (package_ids);
 }
 
 /**
@@ -2984,9 +2998,11 @@ gpk_application_add_welcome (GpkApplication *application)
 	gtk_list_store_set (application->priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
 			    PACKAGES_COLUMN_CHECKBOX, FALSE,
-			    PACKAGES_COLUMN_CHECKBOX_ENABLE, FALSE,
+			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, welcome,
-			    PACKAGES_COLUMN_IMAGE, "system-search", -1);
+			    PACKAGES_COLUMN_IMAGE, "system-search",
+			    PACKAGES_COLUMN_ID, NULL,
+			    -1);
 }
 
 /**
