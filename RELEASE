@@ -4,8 +4,6 @@ PackageKit Release Notes
 
 git shortlog GNOME_PACKAGEKIT_2_27_1.. | grep -v trivial | grep -v Merge > NEWS.new
 
-2. Add download date to docs/html/pk-download.html, save file.
-
 3. Commit changes in gnome-packagekit git:
 
 git commit -a -m "Release version 2.27.2"
@@ -13,32 +11,38 @@ git tag GNOME_PACKAGEKIT_2_27_2
 git push --tags
 git push
 
-4. run 'make dist-gzip'
+4. Create tarball
 
-5. Upload tarball to:
+make distcheck
+
+5. Upload tarballs:
 
 scp *.tar.gz packagekit.org:/srv/www/html/releases/
+scp *.tar.gz rhughes@master.gnome.org:
 
-6. Do post release version bump in configure.ac
+6. Install module
 
-7. Commit trivial changes:
+ssh rhughes@master.gnome.org
+install-module gnome-packagekit-*.tar.gz
 
-git commit -a -m "trivial: post release version bump"
+7. Do post release version bump in configure.ac
+
+8. Commit trivial changes:
+
+git commit -a -m "Post release version bump"
 git push
 
-8. Upload new html sources
-
-9. Send an email to packagekit@lists.freedesktop.org
+9. Send an email to packagekit@lists.freedesktop.org, gnome-announce-list@gnome.org, gnome-doc-list@gnome.org, gnome-i18n@gnome.org
 
 =================================================
 Subject: gnome-packagekit 2.27.2 released!
 
-Today I released gnome-packagekit 2.27.2.
+GNOME PackageKit is the name of the collection of PackageKit GUI tools for use in the GNOME desktop.
 
-gnome-packagekit release notes: http://cgit.freedesktop.org/~hughsient/gnome-packagekit/tree/NEWS
+gnome-packagekit release notes: http://git.gnome.org/cgit/gnome-packagekit/plain/NEWS
 
-Tarballs available here: http://www.packagekit.org/releases/
+Tarballs available here: http://download.gnome.org/sources/gnome-packagekit/2.27/
 
-Thanks to all those who made this possible.
+This stable release contains important fixes since 2.26.0 was released.
+Distributions should consider upgrading gnome-power-manager via errata packages if possible.
 =================================================
-
