@@ -610,6 +610,11 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		}
 		gtk_list_store_set (list_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_STATUS, info, -1);
+
+		/* set size zero when we get a info update */
+		gtk_list_store_set (list_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_SIZE, 0, -1);
+
 		gtk_tree_path_free (path);
 
 		/* set package description */
