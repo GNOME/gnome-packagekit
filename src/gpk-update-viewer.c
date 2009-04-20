@@ -46,7 +46,7 @@
 #include "gpk-cell-renderer-size.h"
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"
-#include "gpk-cell-renderer-percentage.h"
+#include "gpk-cell-renderer-spinner.h"
 #include "gpk-enum.h"
 #include "gpk-helper-repo-signature.h"
 #include "gpk-helper-eula.h"
@@ -88,6 +88,7 @@ enum {
 	GPK_UPDATES_COLUMN_STATUS,
 	GPK_UPDATES_COLUMN_DETAILS_OBJ,
 	GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ,
+	GPK_UPDATES_COLUMN_PULSE,
 	GPK_UPDATES_COLUMN_LAST
 };
 
@@ -639,6 +640,7 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 			    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
 			    GPK_UPDATES_COLUMN_SIZE, 0,
 			    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
+			    GPK_UPDATES_COLUMN_PULSE, -1,
 			    -1);
 out:
 	g_free (package_id);
@@ -1101,9 +1103,10 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE);
 
 	/* column for progress */
-	renderer = gpk_cell_renderer_percentage_new ();
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "percent", GPK_UPDATES_COLUMN_PERCENTAGE);
+	renderer = gpk_cell_renderer_spinner_new ();
+	g_object_set (renderer, "size", GTK_ICON_SIZE_BUTTON, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer, "pulse", GPK_UPDATES_COLUMN_PULSE);
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 
 	gtk_tree_view_append_column (treeview, column);
@@ -1704,6 +1707,96 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	}
 }
 
+static GSList *active_rows = NULL;
+static guint active_row_timeout = 0;
+
+static gint
+gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
+{
+	GtkTreeModel *am, *bm;
+	GtkTreePath *ap, *bp;
+	gint res;
+
+	am = gtk_tree_row_reference_get_model (a);
+	bm = gtk_tree_row_reference_get_model (b);
+
+	res = 1;
+	if (am == bm) {
+		ap = gtk_tree_row_reference_get_path (a);
+		bp = gtk_tree_row_reference_get_path (b);
+
+		res = gtk_tree_path_compare (ap, bp);
+
+		gtk_tree_path_free (ap);
+		gtk_tree_path_free (bp);
+	}
+
+	return res;
+}
+
+static gboolean
+gpk_update_viewer_pulse_active_rows (void)
+{
+	GSList *l;
+	GtkTreeRowReference *ref;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gint val;
+
+	for (l = active_rows; l; l = l->next) {
+		ref = l->data;
+		model = gtk_tree_row_reference_get_model (ref);
+		path = gtk_tree_row_reference_get_path (ref);
+		if (path) {
+			gtk_tree_model_get_iter (model, &iter, path);
+			gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_PULSE, &val, -1);
+			gtk_list_store_set (GTK_LIST_STORE (model), &iter, GPK_UPDATES_COLUMN_PULSE, val + 1, -1);
+			gtk_tree_path_free (path);
+		}
+	}
+
+	return TRUE;
+}
+
+static void
+gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
+{
+	GtkTreeRowReference *ref;
+
+	if (!active_row_timeout) {
+		active_row_timeout = g_timeout_add (60, (GSourceFunc)gpk_update_viewer_pulse_active_rows, NULL);
+	}
+
+	ref = gtk_tree_row_reference_new (model, path);
+	active_rows = g_slist_prepend (active_rows, ref);
+}
+
+static void
+gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
+{
+	GSList *link;
+	GtkTreeRowReference *ref;
+	GtkTreeIter iter;
+
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, GPK_UPDATES_COLUMN_PULSE, -1, -1);
+
+	ref = gtk_tree_row_reference_new (model, path);
+	link = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
+	gtk_tree_row_reference_free (ref);
+	g_assert (link);
+
+	active_rows = g_slist_remove_link (active_rows, link);
+	gtk_tree_row_reference_free (link->data);
+	g_slist_free (link);
+
+	if (active_rows == NULL) {
+		g_source_remove (active_row_timeout);
+		active_row_timeout = 0;
+	}
+}
+
 /**
  * gpk_update_viewer_progress_changed_cb:
  **/
@@ -1716,6 +1809,7 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
+	guint oldval;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_progress"));
 	gtk_widget_show (widget);
@@ -1737,9 +1831,18 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	}
 
 	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_path_free (path);
+
+	gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_PERCENTAGE, &oldval, -1);
+	if ((oldval > 0 && oldval < 100) != (subpercentage > 0 && subpercentage < 100)) {
+		if (oldval > 0 && oldval < 100)
+			gpk_update_viewer_remove_active_row (model, path);
+		else
+			gpk_update_viewer_add_active_row (model, path);
+	}
 	gtk_list_store_set (list_store_updates, &iter,
 			    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage, -1);
+
+	gtk_tree_path_free (path);
 }
 
 /**
@@ -2516,7 +2619,7 @@ main (int argc, char *argv[])
 	/* create list stores */
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
-						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER);
+						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_INT);
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "para",
 				    "pixels_above_lines", 5,
