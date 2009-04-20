@@ -1088,7 +1088,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	g_object_set (renderer,
 		      "stock-size", GTK_ICON_SIZE_BUTTON,
 		      "ignore-values", "unknown", NULL);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_STATUS);
 
 	/* size */
