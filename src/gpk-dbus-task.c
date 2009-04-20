@@ -2010,7 +2010,7 @@ gpk_dbus_task_install_provide_files (GpkDbusTask *task, gchar **full_paths)
 				   ngettext ("The following file is required:", "The following files are required:", len),
 				   text,
 				   /* TRANSLATORS: confirm with the user */
-				   ngettext ("Do you want to search for this file now?", "Do you want to search for these files now:", len));
+				   ngettext ("Do you want to search for this file now?", "Do you want to search for these files now?", len));
 
 	/* make title using application name */
 	if (task->priv->parent_title != NULL) {
