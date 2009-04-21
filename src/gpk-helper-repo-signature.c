@@ -23,6 +23,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <packagekit-glib/packagekit.h>
 
 #include "gpk-helper-repo-signature.h"
 #include "gpk-marshal.h"
@@ -95,6 +96,8 @@ gpk_helper_repo_signature_show (GpkHelperRepoSignature *helper, const gchar *pac
 				const gchar *key_fingerprint, const gchar *key_timestamp)
 {
 	GtkWidget *widget;
+	PkPackageId *id;
+	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_HELPER_REPO_SIGNATURE (helper), FALSE);
 	g_return_val_if_fail (package_id != NULL, FALSE);
@@ -114,6 +117,16 @@ gpk_helper_repo_signature_show (GpkHelperRepoSignature *helper, const gchar *pac
 	gtk_label_set_label (GTK_LABEL (widget), key_userid);
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_id"));
 	gtk_label_set_label (GTK_LABEL (widget), key_id);
+
+	/* TODO: pass this as a struct from the PkClient signal */
+	id = pk_package_id_new_from_string (package_id);
+	text = gpk_package_id_name_version (id);
+
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_package"));
+	gtk_label_set_label (GTK_LABEL (widget), text);
+
+	g_free (text);
+	pk_package_id_free (id);
 
 	/* show window */
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_gpg"));
