@@ -2473,6 +2473,34 @@ gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * gpk_update_viewer_search_equal_func:
+ **/
+static gboolean
+gpk_update_viewer_search_equal_func (GtkTreeModel *model, gint column, const gchar *key, GtkTreeIter *iter, gpointer search_data)
+{
+	char *text;
+	char *cn_key;
+	char *cn_text;
+	gboolean result;
+
+	gtk_tree_model_get (model, iter, column, &text, -1);
+
+	cn_key = g_utf8_casefold (key, -1);
+	cn_text = g_utf8_casefold (text, -1);
+
+	if (strstr (cn_text, cn_key))
+		result = FALSE;
+	else
+		result = TRUE;
+
+	g_free (text);
+	g_free (cn_key);
+	g_free (cn_text);
+
+	return result;
+}
+
+/**
  * main:
  **/
 int
@@ -2645,6 +2673,8 @@ main (int argc, char *argv[])
 
 	/* updates */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_updates"));
+	gtk_tree_view_set_search_column (GTK_TREE_VIEW (widget), GPK_UPDATES_COLUMN_TEXT);
+	gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (widget), gpk_update_viewer_search_equal_func, NULL, NULL);
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
 				 GTK_TREE_MODEL (list_store_updates));
