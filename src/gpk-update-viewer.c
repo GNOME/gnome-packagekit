@@ -1520,10 +1520,6 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 	const gchar *button;
 	GtkResponseType response;
 
-	if (restart != PK_RESTART_ENUM_SYSTEM &&
-	    restart != PK_RESTART_ENUM_SESSION)
-		goto out;
-
 	/* get the text */
 	title = gpk_restart_enum_to_localised_text (restart);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
@@ -1576,6 +1572,7 @@ static void
 gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	GtkWidget *widget;
+	GtkWidget *dialog;
 	GtkTreeView *treeview;
 	GtkTreePath *path;
 	GtkTreeModel *model;
@@ -1584,6 +1581,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	PkRoleEnum role;
 	PkPackageList *list;
 	PkRestartEnum restart;
+	gchar *text;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit));
@@ -1695,7 +1693,40 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		g_object_unref (list);
 
 		/* check restart */
-		gpk_update_viewer_check_restart (restart_update);
+		if (restart_update == PK_RESTART_ENUM_SYSTEM ||
+		    restart_update == PK_RESTART_ENUM_SESSION) {
+			gpk_update_viewer_check_restart (restart_update);
+			g_main_loop_quit (loop);
+		}
+
+		/* hide close button */
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
+		gtk_widget_hide (widget);
+
+		/* show a new title */
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_header_title"));
+		/* TRANSLATORS: completed all updates */
+		text = g_strdup_printf ("<big><b>%s</b></big>", _("All selected updates installed..."));
+		gtk_label_set_label (GTK_LABEL (widget), text);
+		g_free (text);
+
+		/* show modal dialog */
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_updates"));
+		dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+						 /* TRANSLATORS: title: all updates installed okay */
+						 "%s", _("All selected updates installed"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+							  "%s",
+							  /* TRANSLATORS: software updates installed okay */
+							  _("All selected updates were successfully installed."));
+		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+
+		/* setup a callback so we autoclose */
+		auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+
+		gtk_dialog_run (GTK_DIALOG(dialog));
+		gtk_widget_destroy (dialog);
 
 		/* quit after we successfully updated */
 		g_main_loop_quit (loop);
