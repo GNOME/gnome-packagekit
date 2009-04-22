@@ -884,6 +884,15 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	if (update == GPK_UPDATE_ENUM_NONE) {
 		egg_debug ("not updating as policy NONE");
 
+		/* play the sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 /* TODO: add a new sound to the spec */
+				 CA_PROP_EVENT_ID, "software-update-available",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Icon"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Update available"), NULL);
+
 		/* do we warn the user? */
 		if (security_array->len > 0)
 			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
@@ -894,6 +903,16 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	ret = gpk_check_update_check_on_battery (cupdate);
 	if (!ret) {
 		egg_debug ("on battery so not doing update");
+
+		/* play the sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 /* TODO: add a new sound to the spec */
+				 CA_PROP_EVENT_ID, "software-update-available",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Icon"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Update available (on battery)"), NULL);
+
 		/* do we warn the user? */
 		if (security_array->len > 0)
 			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
