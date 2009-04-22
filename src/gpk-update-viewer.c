@@ -32,6 +32,7 @@
 #include <packagekit-glib/packagekit.h>
 #include <libnotify/notify.h>
 #include <unique/unique.h>
+#include <canberra-gtk.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -1682,6 +1683,15 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
 
+		/* play the sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 /* TODO: add a new sound to the spec */
+				 CA_PROP_EVENT_ID, "complete-download",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Updated successfully"), NULL);
+
 		/* get the worst restart case */
 		restart = pk_client_get_require_restart (client_primary);
 		if (restart > restart_update)
@@ -1730,6 +1740,20 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 
 		/* quit after we successfully updated */
 		g_main_loop_quit (loop);
+	}
+
+	/* failed sound */
+	if (exit != PK_EXIT_ENUM_SUCCESS &&
+	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
+	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+
+		/* play the sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 CA_PROP_EVENT_ID, "dialog-warning",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Failed to update"), NULL);
 	}
 
 	/* we pressed cancel */

@@ -25,6 +25,7 @@ Requires:  PackageKit-libs >= %{packagekit_version}
 Requires:  PackageKit-gtk-module >= %{packagekit_version}
 Requires:  shared-mime-info
 Requires:  iso-codes
+Requires:  libcanberra
 Requires(post):   scrollkeeper
 Requires(pre):    GConf2
 Requires(post):   GConf2
@@ -54,6 +55,7 @@ BuildRequires: unique-devel
 BuildRequires: intltool
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: fontconfig-devel
+BuildRequires: libcanberra-devel
 
 %description
 gnome-packagekit provides session applications for the PackageKit API.

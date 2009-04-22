@@ -88,6 +88,7 @@ POLKIT_GNOME_REQUIRED=0.8
 UNIQUE_REQUIRED=1.0.0
 GNOME_MENUS_REQUIRED=2.24.1
 GIO_REQUIRED=2.18.0
+CANBERRA_REQUIRED=0.10
 
 dnl ---------------------------------------------------------------------------
 dnl - Make above strings available for packaging files (e.g. rpm spec files)
@@ -153,6 +154,10 @@ PKG_CHECK_MODULES(UNIQUE, \
  unique-1.0 >= $UNIQUE_REQUIRED)
 AC_SUBST(UNIQUE_CFLAGS)
 AC_SUBST(UNIQUE_LIBS)
+
+PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk >= $CANBERRA_REQUIRED)
+AC_SUBST(CANBERRA_CFLAGS)
+AC_SUBST(CANBERRA_LIBS)
 
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2

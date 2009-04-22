@@ -38,6 +38,7 @@
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib/packagekit.h>
+#include <canberra-gtk.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -1396,6 +1397,16 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 	if ((role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	     role == PK_ROLE_ENUM_UPDATE_SYSTEM) &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+
+		/* play the sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 /* TODO: add a new sound to the spec */
+				 CA_PROP_EVENT_ID, "complete-download",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Icon"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Updated successfully"), NULL);
+
 		gpk_check_update_finished_notify (cupdate, client);
 		cupdate->priv->number_updates_critical_last_shown = 0;
 	}

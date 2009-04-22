@@ -14,6 +14,7 @@ INCLUDES =						\
 	$(POLKIT_GNOME_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
+	$(CANBERRA_CFLAGS)				\
 	-DBINDIR=\"$(bindir)\"			 	\
 	-DDATADIR=\"$(datadir)\"			\
 	-DPREFIX=\""$(prefix)"\" 			\
@@ -112,6 +113,7 @@ shared_LIBS =						\
 	$(UNIQUE_LIBS)					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
+	$(CANBERRA_LIBS)				\
 	$(NULL)
 
 gpk_install_provide_file_SOURCES =			\
