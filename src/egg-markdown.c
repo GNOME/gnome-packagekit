@@ -459,31 +459,77 @@ egg_markdown_add_pending_header (EggMarkdown *self, const gchar *line)
 }
 
 /**
+ * egg_markdown_count_chars_in_word:
+ **/
+static guint
+egg_markdown_count_chars_in_word (const gchar *text, gchar find)
+{
+	guint i;
+	guint len;
+	guint count = 0;
+
+	/* get length */
+	len = egg_strlen (text, EGG_MARKDOWN_MAX_LINE_LENGTH);
+	if (len == 0)
+		goto out;
+
+	/* find matching chars */
+	for (i=0; i<len; i++) {
+		if (text[i] == find)
+			count++;
+	}
+out:
+	return count;
+}
+
+/**
  * egg_markdown_word_is_code:
  **/
 static gboolean
 egg_markdown_word_is_code (const gchar *text)
 {
+	/* already code */
 	if (g_str_has_prefix (text, "`"))
 		return FALSE;
 	if (g_str_has_suffix (text, "`"))
 		return FALSE;
+
+	/* paths */
 	if (g_str_has_prefix (text, "/"))
 		return TRUE;
+
+	/* bugzillas */
 	if (g_str_has_prefix (text, "#"))
 		return TRUE;
+
+	/* uri's */
 	if (g_str_has_prefix (text, "http://"))
 		return TRUE;
 	if (g_str_has_prefix (text, "https://"))
 		return TRUE;
 	if (g_str_has_prefix (text, "ftp://"))
 		return TRUE;
+
+	/* patch files */
 	if (g_strrstr (text, ".patch") != NULL)
 		return TRUE;
+	if (g_strrstr (text, ".diff") != NULL)
+		return TRUE;
+
+	/* function names */
 	if (g_strrstr (text, "()") != NULL)
 		return TRUE;
+
+	/* email addresses */
 	if (g_strrstr (text, "@") != NULL)
 		return TRUE;
+
+	/* compiler defines */
+	if (text[0] != '_' &&
+	    egg_markdown_count_chars_in_word (text, '_') > 1)
+		return TRUE;
+
+	/* nothing special */
 	return FALSE;
 }
 
@@ -498,7 +544,7 @@ egg_markdown_word_auto_format_code (const gchar *text)
 	gchar **words;
 	gboolean ret = FALSE;
 
-	/* split sentance up with space */
+	/* split sentence up with space */
 	words = g_strsplit (text, " ", -1);
 
 	/* search each word */
@@ -1246,6 +1292,15 @@ egg_markdown_test (EggTest *test)
 	egg_test_title (test, "markdown (free text)");
 	text = egg_markdown_parse (self, "This isn't a present");
 	if (egg_strequal (text, "This isn't a present"))
+		egg_test_success (test, NULL);
+	else
+		egg_test_failed (test, "failed, got '%s'", text);
+	g_free (text);
+
+	/************************************************************/
+	egg_test_title (test, "markdown (autotext underscore)");
+	text = egg_markdown_parse (self, "This isn't CONFIG_UEVENT_HELPER_PATH present");
+	if (egg_strequal (text, "This isn't <tt>CONFIG_UEVENT_HELPER_PATH</tt> present"))
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s'", text);
