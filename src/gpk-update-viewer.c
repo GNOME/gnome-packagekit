@@ -333,7 +333,6 @@ out:
 	return ret;
 }
 
-
 /**
  * gpk_update_viewer_button_install_cb:
  **/
@@ -2235,8 +2234,8 @@ gpk_update_viewer_repo_signature_event_cb (GpkHelperRepoSignature *_helper_repo_
 	GError *error = NULL;
 
 	if (type != GTK_RESPONSE_YES) {
-		/* we've ruined the old one by making the checkboxes insensitive */
-		gpk_update_viewer_get_new_update_list ();
+		/* make sensitive again */
+		gpk_update_viewer_undisable_packages ();
 		goto out;
 	}
 
@@ -2253,8 +2252,9 @@ gpk_update_viewer_repo_signature_event_cb (GpkHelperRepoSignature *_helper_repo_
 	if (!ret) {
 		egg_warning ("cannot install signature: %s", error->message);
 		g_error_free (error);
-		/* we've ruined the old one by making the checkboxes insensitive */
-		gpk_update_viewer_get_new_update_list ();
+
+		/* make sensitive again */
+		gpk_update_viewer_undisable_packages ();
 		goto out;
 	}
 out:
@@ -2276,8 +2276,8 @@ gpk_update_viewer_eula_event_cb (GpkHelperRepoSignature *_helper_eula, GtkRespon
 	GError *error = NULL;
 
 	if (type != GTK_RESPONSE_YES) {
-		/* we've ruined the old one by making the checkboxes insensitive */
-		gpk_update_viewer_get_new_update_list ();
+		/* make sensitive again */
+		gpk_update_viewer_undisable_packages ();
 		goto out;
 	}
 
@@ -2294,8 +2294,8 @@ gpk_update_viewer_eula_event_cb (GpkHelperRepoSignature *_helper_eula, GtkRespon
 	if (!ret) {
 		egg_warning ("cannot accept eula: %s", error->message);
 		g_error_free (error);
-		/* we've ruined the old one by making the checkboxes insensitive */
-		gpk_update_viewer_get_new_update_list ();
+		/* make sensitive again */
+		gpk_update_viewer_undisable_packages ();
 		goto out;
 	}
 out:
