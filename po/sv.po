@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-20 17:06+0200\n"
-"PO-Revision-Date: 2009-04-20 17:22+0100\n"
+"POT-Creation-Date: 2009-04-28 08:59+0200\n"
+"PO-Revision-Date: 2009-04-28 09:02+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -328,8 +328,8 @@ msgstr "Programuppdatering"
 #. TRANSLATORS: program name, a simple app to view pending updates
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:2
-#: ../src/gpk-update-viewer.c:2514
-#: ../src/gpk-update-viewer.c:2529
+#: ../src/gpk-update-viewer.c:2597
+#: ../src/gpk-update-viewer.c:2612
 msgid "Software Update Viewer"
 msgstr "Visare för programuppdateringar"
 
@@ -612,19 +612,19 @@ msgstr "Sök efter filnamn"
 #. TRANSLATORS: packaging problem, failed to show link
 #. TRANSLATORS: normally a packaging error, cannot launch link
 #: ../src/gpk-application.c:2241
-#: ../src/gpk-check-update.c:158
+#: ../src/gpk-check-update.c:159
 #: ../src/gpk-watch.c:682
 msgid "Failed to show url"
 msgstr "Misslyckades med att visa url"
 
 #: ../src/gpk-application.c:2280
-#: ../src/gpk-check-update.c:183
+#: ../src/gpk-check-update.c:184
 #: ../src/gpk-watch.c:703
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licensierad under GNU General Public License Version 2"
 
 #: ../src/gpk-application.c:2281
-#: ../src/gpk-check-update.c:184
+#: ../src/gpk-check-update.c:185
 #: ../src/gpk-watch.c:704
 msgid ""
 "PackageKit is free software; you can redistribute it and/or\n"
@@ -638,7 +638,7 @@ msgstr ""
 "någon senare version."
 
 #: ../src/gpk-application.c:2285
-#: ../src/gpk-check-update.c:188
+#: ../src/gpk-check-update.c:189
 #: ../src/gpk-watch.c:708
 msgid ""
 "PackageKit is distributed in the hope that it will be useful,\n"
@@ -652,7 +652,7 @@ msgstr ""
 "GNU General Public License för ytterligare information."
 
 #: ../src/gpk-application.c:2289
-#: ../src/gpk-check-update.c:192
+#: ../src/gpk-check-update.c:193
 #: ../src/gpk-watch.c:712
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
@@ -667,7 +667,7 @@ msgstr ""
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
 #: ../src/gpk-application.c:2295
-#: ../src/gpk-check-update.c:197
+#: ../src/gpk-check-update.c:198
 #: ../src/gpk-watch.c:717
 msgid "translator-credits"
 msgstr ""
@@ -678,7 +678,7 @@ msgstr ""
 
 #. TRANSLATORS: website label
 #: ../src/gpk-application.c:2320
-#: ../src/gpk-check-update.c:216
+#: ../src/gpk-check-update.c:217
 #: ../src/gpk-watch.c:735
 msgid "PackageKit Website"
 msgstr "Webbplatsen för PackageKit"
@@ -761,7 +761,7 @@ msgstr "Avbryt sökning"
 #: ../src/gpk-repo.c:430
 #: ../src/gpk-service-pack.c:541
 #: ../src/gpk-update-icon.c:128
-#: ../src/gpk-update-viewer.c:2495
+#: ../src/gpk-update-viewer.c:2578
 msgid "Show extra debugging information"
 msgstr "Visa extra felsökningsinformation"
 
@@ -770,7 +770,7 @@ msgstr "Visa extra felsökningsinformation"
 #: ../src/gpk-backend-status.c:86
 #: ../src/gpk-prefs.c:403
 #: ../src/gpk-update-icon.c:132
-#: ../src/gpk-update-viewer.c:2497
+#: ../src/gpk-update-viewer.c:2580
 msgid "Show the program version and exit"
 msgstr "Visa programversionen och avsluta"
 
@@ -789,53 +789,53 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "Avslutar eftersom bakändesdetaljer inte kunde hämtas"
 
 #. TRANSLATORS: context menu to open the preferences
-#: ../src/gpk-check-update.c:242
+#: ../src/gpk-check-update.c:243
 msgid "_Preferences"
 msgstr "_Inställningar"
 
 #. TRANSLATORS: context menu to open the offline help file
-#: ../src/gpk-check-update.c:254
+#: ../src/gpk-check-update.c:255
 msgid "_Help"
 msgstr "_Hjälp"
 
 #. TRANSLATORS: context menu to show the about screen
 #. TRANSLATORS: this is the right click menu item
-#: ../src/gpk-check-update.c:262
+#: ../src/gpk-check-update.c:263
 #: ../src/gpk-watch.c:762
 msgid "_About"
 msgstr "_Om"
 
 #. TRANSLATORS: context menu to execute the update viewer
-#: ../src/gpk-check-update.c:362
+#: ../src/gpk-check-update.c:363
 msgid "_Show Updates"
 msgstr "_Visa uppdateringar"
 
 #. TRANSLATORS: context menu to update any pending updates
-#: ../src/gpk-check-update.c:370
+#: ../src/gpk-check-update.c:371
 msgid "_Update System Now"
 msgstr "_Uppdatera systemet nu"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:511
+#: ../src/gpk-check-update.c:512
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Säkerhetsuppdatering finns tillgänglig"
 msgstr[1] "Säkerhetsuppdateringar finns tillgängliga"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:516
+#: ../src/gpk-check-update.c:517
 msgid "The following important update is available for your computer:"
 msgid_plural "The following important updates are available for your computer:"
 msgstr[0] "Följande viktig uppdatering finns tillgänglig för din dator:"
 msgstr[1] "Följande viktiga uppdateringar finns tillgängliga för din dator:"
 
 #. TRANSLATORS: button: only security updates
-#: ../src/gpk-check-update.c:538
+#: ../src/gpk-check-update.c:539
 msgid "Install only security updates"
 msgstr "Installera endast säkerhetsuppdateringar"
 
 #. TRANSLATORS: button: all pending updates
-#: ../src/gpk-check-update.c:541
+#: ../src/gpk-check-update.c:542
 msgid "Install all updates"
 msgstr "Installera alla uppdateringar"
 
@@ -845,11 +845,11 @@ msgstr "Installera alla uppdateringar"
 #. TRANSLATORS: don't show this option again (when finished)
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:544
-#: ../src/gpk-check-update.c:756
-#: ../src/gpk-check-update.c:1126
-#: ../src/gpk-check-update.c:1339
-#: ../src/gpk-check-update.c:1343
+#: ../src/gpk-check-update.c:545
+#: ../src/gpk-check-update.c:757
+#: ../src/gpk-check-update.c:1146
+#: ../src/gpk-check-update.c:1359
+#: ../src/gpk-check-update.c:1363
 #: ../src/gpk-dialog.c:291
 #: ../src/gpk-firmware.c:206
 #: ../src/gpk-hardware.c:171
@@ -858,41 +858,41 @@ msgid "Do not show this again"
 msgstr "Visa inte det här igen"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:653
+#: ../src/gpk-check-update.c:654
 msgid "Automatic updates are not being installed as the computer is running on battery power"
 msgstr "Automatiska uppdateringar kommer inte att installeras eftersom datorn kör på batteridrift"
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:655
+#: ../src/gpk-check-update.c:656
 msgid "Updates not installed"
 msgstr "Uppdateringar inte installerade"
 
 #. TRANSLATORS: hide this warning type forever
-#: ../src/gpk-check-update.c:660
+#: ../src/gpk-check-update.c:661
 msgid "Do not show this warning again"
 msgstr "Visa inte den här varningen igen"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:663
+#: ../src/gpk-check-update.c:664
 msgid "Install the updates anyway"
 msgstr "Installera uppdateringar ändå"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:745
+#: ../src/gpk-check-update.c:746
 msgid "Updates are being installed"
 msgstr "Uppdateringar håller på att installeras"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:747
+#: ../src/gpk-check-update.c:748
 msgid "Updates are being automatically installed on your computer"
 msgstr "Uppdateringar håller på att installeras automatiskt på din dator"
 
-#: ../src/gpk-check-update.c:753
+#: ../src/gpk-check-update.c:754
 msgid "Cancel update"
 msgstr "Avbryt uppdatering"
 
 #. TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing
-#: ../src/gpk-check-update.c:849
+#: ../src/gpk-check-update.c:850
 #, c-format
 msgid "and %d other security update"
 msgid_plural "and %d other security updates"
@@ -900,15 +900,32 @@ msgstr[0] "och %d annan säkerhetsuppdatering"
 msgstr[1] "och %d andra säkerhetsuppdateringar"
 
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:864
+#: ../src/gpk-check-update.c:865
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
 msgstr[0] "Det finns %d uppdatering tillgängliga"
 msgstr[1] "Det finns %d uppdateringar tillgängliga"
 
+#. TRANSLATORS: this is the application name for libcanberra
+#: ../src/gpk-check-update.c:892
+#: ../src/gpk-check-update.c:912
+#: ../src/gpk-check-update.c:1425
+msgid "GNOME PackageKit Update Icon"
+msgstr "Uppdateringsikon för GNOME PackageKit"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:894
+msgid "Update available"
+msgstr "Uppdatering tillgänglig"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:914
+msgid "Update available (on battery)"
+msgstr "Uppdatering tillgänglig (på batteridrift)"
+
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1113
+#: ../src/gpk-check-update.c:1133
 msgid "Distribution upgrades available"
 msgstr "Distributionsuppgraderingar finns tillgängliga"
 
@@ -917,7 +934,7 @@ msgstr "Distributionsuppgraderingar finns tillgängliga"
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1123
+#: ../src/gpk-check-update.c:1143
 #: ../src/gpk-dbus-task.c:722
 #: ../src/gpk-dbus-task.c:758
 #: ../src/gpk-dbus-task.c:932
@@ -927,21 +944,27 @@ msgid "More information"
 msgstr "Mer information"
 
 #. TRANSLATORS: we did the update, but some updates were skipped and not applied
-#: ../src/gpk-check-update.c:1299
+#: ../src/gpk-check-update.c:1319
 msgid "One package was skipped:"
 msgid_plural "Some packages were skipped:"
 msgstr[0] "Ett paket hoppades över:"
 msgstr[1] "Några paket hoppades över:"
 
 #. TRANSLATORS: title: system update completed all okay
-#: ../src/gpk-check-update.c:1330
+#: ../src/gpk-check-update.c:1350
 msgid "The system update has completed"
 msgstr "Systemuppdateringen är färdigställd"
 
 #. TRANSLATORS: restart computer as system packages need update
-#: ../src/gpk-check-update.c:1336
+#: ../src/gpk-check-update.c:1356
 msgid "Restart computer now"
 msgstr "Starta om datorn nu"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:1427
+#: ../src/gpk-update-viewer.c:1692
+msgid "Updated successfully"
+msgstr "Uppdatering lyckades"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
 #: ../src/gpk-common.c:357
@@ -3511,25 +3534,25 @@ msgstr "Panelprogram för programuppdateringar"
 msgid "Update applet"
 msgstr "Panelprogram för programuppdateringar"
 
-#: ../src/gpk-update-viewer.c:219
+#: ../src/gpk-update-viewer.c:220
 msgid "Cannot cancel running task"
 msgstr "Kan inte avbryta körande åtgärd"
 
-#: ../src/gpk-update-viewer.c:226
+#: ../src/gpk-update-viewer.c:227
 msgid "There are tasks that cannot be cancelled."
 msgstr "Det finns åtgärder som inte kan avbrytas."
 
-#: ../src/gpk-update-viewer.c:313
+#: ../src/gpk-update-viewer.c:314
 msgid "Detected wireless broadband connection"
 msgstr "Upptäckte trådlös bredbandsanslutning"
 
 #. TRANSLATORS: this is the button text when we check if it's okay to download
-#: ../src/gpk-update-viewer.c:316
+#: ../src/gpk-update-viewer.c:317
 msgid "Update anyway"
 msgstr "Uppdatera ändå"
 
 #. TRANSLATORS, the %s is a size, e.g. 13.3Mb
-#: ../src/gpk-update-viewer.c:320
+#: ../src/gpk-update-viewer.c:321
 #, c-format
 msgid "Connectivity is being provided by wireless broadband, and it may be expensive to download %s."
 msgstr "Anslutningen tillhandahålls av trådlöst bredband och det kan vara kostsamt att hämta ner %s."
@@ -3684,52 +3707,78 @@ msgid "Some updates were not installed"
 msgstr "Några uppdateringar blev inte installerade"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:1531
+#: ../src/gpk-update-viewer.c:1527
 msgid "Some of the updates that were installed require the computer to be restarted before the changes will be applied."
 msgstr "Några av uppdateringarna som installerades kräver att datorn startas om för att ändringarna ska aktiveras."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:1533
+#: ../src/gpk-update-viewer.c:1529
 msgid "Restart Computer"
 msgstr "Starta om datorn"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:1536
+#: ../src/gpk-update-viewer.c:1532
 msgid "Some of the updates that were installed require you to log out and back in before the changes will be applied."
 msgstr "Några av uppdateringarna som installerades kräver att du loggar ut och in igen för att ändringarna ska aktiveras."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:1538
+#: ../src/gpk-update-viewer.c:1534
 msgid "Log Out"
 msgstr "Logga ut"
 
+#. TRANSLATORS: this is the application name for libcanberra
+#: ../src/gpk-update-viewer.c:1690
+#: ../src/gpk-update-viewer.c:1753
+msgid "GNOME PackageKit Update Viewer"
+msgstr "Uppdateringsvisare för GNOME PackageKit"
+
+#. TRANSLATORS: completed all updates
+#: ../src/gpk-update-viewer.c:1718
+msgid "All selected updates installed..."
+msgstr "Alla markerade uppdateringar har installerats..."
+
+#. TRANSLATORS: title: all updates installed okay
+#: ../src/gpk-update-viewer.c:1727
+msgid "All selected updates installed"
+msgstr "Alla markerade uppdateringar har installerats"
+
+#. TRANSLATORS: software updates installed okay
+#: ../src/gpk-update-viewer.c:1731
+msgid "All selected updates were successfully installed."
+msgstr "Alla markerade uppdateringar har installerats."
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-update-viewer.c:1755
+msgid "Failed to update"
+msgstr "Misslyckades med att uppdatera"
+
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2019
+#: ../src/gpk-update-viewer.c:2073
 msgid "Select all"
 msgstr "Markera allt"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2027
+#: ../src/gpk-update-viewer.c:2081
 msgid "Unselect all"
 msgstr "Avmarkera allt"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2034
+#: ../src/gpk-update-viewer.c:2088
 msgid "Select security updates"
 msgstr "Välj säkerhetsuppdateringar"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2040
+#: ../src/gpk-update-viewer.c:2094
 msgid "Ignore this update"
 msgstr "Ignorera denna uppdatering"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2127
+#: ../src/gpk-update-viewer.c:2181
 msgid "Checking for updates..."
 msgstr "Letar efter uppdateringar..."
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2282
+#: ../src/gpk-update-viewer.c:2337
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Nya distributionsuppgraderingen \"%s\" finns tillgänglig"
@@ -3996,8 +4045,6 @@ msgstr "Starta om _datorn"
 #~ msgstr "<b>Systemuppdatering färdigställd</b>"
 #~ msgid "A system restart is recommended"
 #~ msgstr "En omstart av systemet rekommenderas"
-#~ msgid "All selected updates have been successfully installed"
-#~ msgstr "Alla markerade uppdateringar har installerats"
 #~ msgid "Last refresh:"
 #~ msgstr "Senaste informationsinläsning:"
 #~ msgid "Last update:"
@@ -4018,10 +4065,6 @@ msgstr "Starta om _datorn"
 #~ "tillhandahåller nya funktioner."
 #~ msgid "_Upgrade"
 #~ msgstr "_Uppgradera"
-#~ msgid "File was installed successfully"
-#~ msgid_plural "Files were installed successfully"
-#~ msgstr[0] "Filen blev installerad"
-#~ msgstr[1] "Filerna blev installerade"
 #~ msgid "Finding packages we require"
 #~ msgstr "Söker paket som vi kräver"
 #~ msgid "Failed to reset client used for searching"
@@ -4042,8 +4085,6 @@ msgstr "Starta om _datorn"
 #~ msgstr "Misslyckades med att uppdatera systemet"
 #~ msgid "Failed to update package lists"
 #~ msgstr "Misslyckades med att uppdatera paketlistor"
-#~ msgid "Failed to get updates"
-#~ msgstr "Misslyckades med att hämta uppdateringar"
 #~ msgid "Getting list of updates"
 #~ msgstr "Hämtar uppdateringslista"
 #~ msgid "Getting update lists failed"
@@ -4136,8 +4177,6 @@ msgstr "Starta om _datorn"
 #~ msgstr "Tillbaka till översikt"
 #~ msgid "_Refresh Software List"
 #~ msgstr "_Läs om programlista"
-#~ msgid "No updates available"
-#~ msgstr "Inga uppdateringar finns tillgängliga"
 #~ msgid "gtk-cancel"
 #~ msgstr "Avbryt"
 #~ msgid "gtk-close"
@@ -4465,10 +4504,6 @@ msgstr "Starta om _datorn"
 #~ msgstr "Paketinstallerare"
 #~ msgid "Unknown error"
 #~ msgstr "Okänt fel"
-
-#, fuzzy
-#~ msgid "PackageKit daemon"
-#~ msgstr "Paketstorlek:"
 #~ msgid "FILE"
 #~ msgstr "FIL"
 #~ msgid "Method not supported"
