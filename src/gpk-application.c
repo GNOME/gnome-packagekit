@@ -3237,7 +3237,9 @@ gpk_application_create_group_list_categories (GpkApplication *application)
 	}
 
 	/* get categories supported */
+	pk_client_set_synchronous (application->priv->client_primary, TRUE, NULL);
 	ret = pk_client_get_categories (application->priv->client_primary, &error);
+	pk_client_set_synchronous (application->priv->client_primary, FALSE, NULL);
 	if (!ret) {
 		egg_warning ("failed to get categories: %s", error->message);
 		g_error_free (error);
@@ -3863,6 +3865,14 @@ gpk_application_init (GpkApplication *application)
 	/* fallback to creating a simple list if we can't do category list */
 	if (!ret)
 		gpk_application_create_group_list_enum (application);
+
+	/* reset client */
+	ret = pk_client_reset (application->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out_build;
+	}
 
 	/* get repos, so we can show the full name in the software source box */
 	ret = pk_client_get_repo_list (application->priv->client_primary, PK_FILTER_ENUM_NONE, &error);
