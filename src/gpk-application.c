@@ -926,8 +926,6 @@ static void
 gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
 {
 	GtkTreeIter iter;
-	GtkTreeSelection *selection;
-	GtkWidget *widget;
 	gchar *summary;
 	const gchar *icon = NULL;
 	gchar *text;
@@ -997,13 +995,6 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
-
-	/* if it's an exact match, select it */
-	if (egg_strequal (obj->id->name, application->priv->search_text)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-		gtk_tree_selection_select_iter (selection, &iter);
-	}
 
 	/* only process every n events else we re-order too many times */
 	if (package_cnt++ % 200 == 0) {
@@ -1233,6 +1224,57 @@ gpk_application_primary_requeue (GpkApplication *application)
 }
 
 /**
+ * gpk_application_select_exact_match:
+ *
+ * NOTE: we have to do this in the finished_cb, as if we do this as we return
+ * results we cancel the search and start getting the package details.
+ **/
+static void
+gpk_application_select_exact_match (GpkApplication *application, const gchar *text)
+{
+	GtkTreeView *treeview;
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeModel *model;
+	GtkTreeSelection *selection = NULL;
+	gchar *package_id;
+	PkPackageId *id;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	/* get the first iter in the list */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+
+	/* for all items in treeview */
+	while (valid) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_ID, &package_id, -1);
+		if (package_id != NULL) {
+
+			/* exact match, so select and scroll */
+			id = pk_package_id_new_from_string (package_id);
+			if (g_strcmp0 (id->name, text) == 0) {
+				selection = gtk_tree_view_get_selection (treeview);
+				gtk_tree_selection_select_iter (selection, &iter);
+				path = gtk_tree_model_get_path (model, &iter);
+				gtk_tree_view_scroll_to_cell (treeview, path, NULL, FALSE, 0.5f, 0.5f);
+				gtk_tree_path_free (path);
+			}
+			pk_package_id_free (id);
+
+			/* no point continuing for a second match */
+			if (selection != NULL)
+				break;
+		}
+		g_free (package_id);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+
+/**
  * gpk_application_finished_cb:
  **/
 static void
@@ -1342,10 +1384,14 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	    role == PK_ROLE_ENUM_SEARCH_DETAILS ||
 	    role == PK_ROLE_ENUM_SEARCH_GROUP ||
 	    role == PK_ROLE_ENUM_GET_PACKAGES) {
+
 		/* were there no entries found? */
 		if (exit_enum == PK_EXIT_ENUM_SUCCESS && !application->priv->has_package) {
 			gpk_application_suggest_better_search (application);
 		}
+
+		/* if there is an exact match, select it */
+		gpk_application_select_exact_match (application, application->priv->search_text);
 
 		/* focus back to the text extry */
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
