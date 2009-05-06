@@ -86,6 +86,8 @@ shared_SOURCES =					\
 	gpk-helper-deps-remove.h			\
 	gpk-helper-deps-install.c			\
 	gpk-helper-deps-install.h			\
+	gpk-helper-deps-update.c			\
+	gpk-helper-deps-update.h			\
 	gpk-helper-untrusted.c				\
 	gpk-helper-untrusted.h				\
 	gpk-helper-chooser.c				\
