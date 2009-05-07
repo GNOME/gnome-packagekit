@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2009 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -45,13 +45,13 @@ static void     gpk_inhibit_finalize	(GObject          *object);
 
 #define GPK_INHIBIT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_INHIBIT, GpkInhibitPrivate))
 
-#define GPM_DBUS_SERVICE			"org.freedesktop.PowerManagement"
-#define GPM_DBUS_PATH_INHIBIT			"/org/freedesktop/PowerManagement/Inhibit"
-#define GPM_DBUS_INTERFACE_INHIBIT		"org.freedesktop.PowerManagement.Inhibit"
+#define GS_DBUS_SERVICE				"org.gnome.SessionManager"
+#define GS_DBUS_PATH_INHIBIT			"/org/gnome/SessionManager"
+#define GS_DBUS_INTERFACE_INHIBIT		"org.gnome.SessionManager"
 
 struct GpkInhibitPrivate
 {
-	DBusGProxy		*proxy_gpm;
+	DBusGProxy		*proxy;
 	guint			 cookie;
 };
 
@@ -80,8 +80,8 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
-	if (inhibit->priv->proxy_gpm == NULL) {
-		egg_debug ("no connection to g-p-m");
+	if (inhibit->priv->proxy == NULL) {
+		egg_debug ("no connection to gnome-session");
 		return FALSE;
 	}
 
@@ -92,11 +92,12 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 	}
 
 	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (inhibit->priv->proxy_gpm, "Inhibit", &error,
-				/* TRANSLATORS: the program name that inhibited the suspend */
-				 G_TYPE_STRING, _("Software Update Applet"),
+	ret = dbus_g_proxy_call (inhibit->priv->proxy, "Inhibit", &error,
+				 G_TYPE_STRING, "gpk-update-icon", /* app-id */
+				 G_TYPE_UINT, 0, /* xid */
 				/* TRANSLATORS: the reason why we've inhibited it */
-				 G_TYPE_STRING, _("A transaction that cannot be interrupted is running"),
+				 G_TYPE_STRING, _("A transaction that cannot be interrupted is running"), /* reason */
+				 G_TYPE_UINT, 4, /* flags */
 				 G_TYPE_INVALID,
 				 G_TYPE_UINT, &inhibit->priv->cookie,
 				 G_TYPE_INVALID);
@@ -118,8 +119,8 @@ gpk_inhibit_remove (GpkInhibit *inhibit)
 
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
-	if (inhibit->priv->proxy_gpm == NULL) {
-		egg_debug ("no connection to g-p-m");
+	if (inhibit->priv->proxy == NULL) {
+		egg_debug ("no connection to gnome-session");
 		return FALSE;
 	}
 
@@ -130,7 +131,7 @@ gpk_inhibit_remove (GpkInhibit *inhibit)
 	}
 
 	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (inhibit->priv->proxy_gpm, "UnInhibit", &error,
+	ret = dbus_g_proxy_call (inhibit->priv->proxy, "Uninhibit", &error,
 				 G_TYPE_UINT, inhibit->priv->cookie,
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
@@ -162,12 +163,12 @@ gpk_inhibit_init (GpkInhibit *inhibit)
 		return;
 	}
 
-	/* use gnome-power-manager for the session inhibit stuff */
-	inhibit->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (connection,
-				  GPM_DBUS_SERVICE, GPM_DBUS_PATH_INHIBIT,
-				  GPM_DBUS_INTERFACE_INHIBIT, &error);
+	/* use gnome-session for the session inhibit stuff */
+	inhibit->priv->proxy = dbus_g_proxy_new_for_name_owner (connection,
+				  GS_DBUS_SERVICE, GS_DBUS_PATH_INHIBIT,
+				  GS_DBUS_INTERFACE_INHIBIT, &error);
 	if (error != NULL) {
-		egg_warning ("Cannot connect to gnome-power-manager: %s", error->message);
+		egg_warning ("Cannot connect to gnome-session: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -186,7 +187,7 @@ gpk_inhibit_finalize (GObject *object)
 	inhibit = GPK_INHIBIT (object);
 	g_return_if_fail (inhibit->priv != NULL);
 
-	g_object_unref (inhibit->priv->proxy_gpm);
+	g_object_unref (inhibit->priv->proxy);
 
 	G_OBJECT_CLASS (gpk_inhibit_parent_class)->finalize (object);
 }
