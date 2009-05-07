@@ -36,6 +36,7 @@
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
+#include <devkit-power-gobject/devicekit-power.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -55,12 +56,6 @@ static void     gpk_auto_refresh_finalize	(GObject            *object);
 #define GS_DBUS_PATH				"/org/gnome/ScreenSaver"
 #define GS_DBUS_INTERFACE			"org.gnome.ScreenSaver"
 
-#define GPM_DBUS_SERVICE			"org.freedesktop.PowerManagement"
-#define GPM_DBUS_PATH				"/org/freedesktop/PowerManagement"
-#define GPM_DBUS_PATH_INHIBIT			"/org/freedesktop/PowerManagement/Inhibit"
-#define GPM_DBUS_INTERFACE			"org.freedesktop.PowerManagement"
-#define GPM_DBUS_INTERFACE_INHIBIT		"org.freedesktop.PowerManagement.Inhibit"
-
 /*
  * at startup, after a small delay, force a GetUpdates call
  * every hour (or any event) check:
@@ -77,10 +72,9 @@ struct GpkAutoRefreshPrivate
 	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
 	EggDbusMonitor		*monitor_gs;
-	EggDbusMonitor		*monitor_gpm;
+	DkpClient		*client;
 	GConfClient		*gconf_client;
 	DBusGProxy		*proxy_gs;
-	DBusGProxy		*proxy_gpm;
 	DBusGConnection		*connection;
 	PkControl		*control;
 };
@@ -448,20 +442,6 @@ gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *a
 }
 
 /**
- * gpk_auto_refresh_on_battery_cb:
- **/
-static void
-gpk_auto_refresh_on_battery_cb (DBusGProxy *proxy, gboolean on_battery, GpkAutoRefresh *arefresh)
-{
-	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
-
-	egg_debug ("setting on_battery %i", on_battery);
-	arefresh->priv->on_battery = on_battery;
-	if (!arefresh->priv->on_battery)
-		gpk_auto_refresh_change_state (arefresh);
-}
-
-/**
  * gpk_auto_refresh_get_on_battery:
  **/
 gboolean
@@ -534,59 +514,6 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 }
 
 /**
- * pk_connection_gpm_changed_cb:
- **/
-static void
-pk_connection_gpm_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
-{
-	GError *error = NULL;
-	gboolean on_battery;
-	gboolean ret;
-
-	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
-
-	egg_debug ("gnome-power-manager connection-changed: %i", connected);
-
-	/* is this valid? */
-	if (!connected) {
-		if (arefresh->priv->proxy_gpm != NULL) {
-			g_object_unref (arefresh->priv->proxy_gpm);
-			arefresh->priv->proxy_gpm = NULL;
-		}
-		return;
-	}
-
-	/* use gnome-power-manager for the battery detection */
-	arefresh->priv->proxy_gpm = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
-					  GPM_DBUS_SERVICE, GPM_DBUS_PATH, GPM_DBUS_INTERFACE, &error);
-	if (error != NULL) {
-		egg_warning ("Cannot connect to gnome-power-manager: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-
-	/* setup callbacks and get GetOnBattery if we could connect to g-p-m */
-	dbus_g_proxy_add_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
-	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gpm, "OnBatteryChanged",
-				     G_CALLBACK (gpk_auto_refresh_on_battery_cb),
-				     arefresh, NULL);
-	/* coldplug the battery state */
-	ret = dbus_g_proxy_call (arefresh->priv->proxy_gpm, "GetOnBattery", &error,
-				 G_TYPE_INVALID,
-				 G_TYPE_BOOLEAN, &on_battery,
-				 G_TYPE_INVALID);
-	if (error != NULL) {
-		printf ("DEBUG: ERROR: %s\n", error->message);
-		g_error_free (error);
-	}
-	if (ret) {
-		arefresh->priv->on_battery = on_battery;
-		egg_debug ("setting on battery %i", on_battery);
-	}
-}
-
-/**
  * pk_connection_gs_changed_cb:
  **/
 static void
@@ -625,6 +552,30 @@ pk_connection_gs_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connecte
 }
 
 /**
+ * gpk_auto_refresh_client_changed_cb:
+ **/
+static void
+gpk_auto_refresh_client_changed_cb (DkpClient *client, GpkAutoRefresh *arefresh)
+{
+	gboolean on_battery;
+
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
+
+	/* get the on-battery state */
+	on_battery = dkp_client_on_battery (arefresh->priv->client);
+	if (on_battery == arefresh->priv->on_battery) {
+		egg_debug ("same state as before, ignoring");
+		return;
+	}
+
+	/* save in local cache */
+	egg_debug ("setting on_battery %i", on_battery);
+	arefresh->priv->on_battery = on_battery;
+	if (!on_battery)
+		gpk_auto_refresh_change_state (arefresh);
+}
+
+/**
  * gpk_auto_refresh_init:
  * @auto_refresh: This class instance
  **/
@@ -641,9 +592,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->force_get_updates_login = FALSE;
 	arefresh->priv->timeout_id = 0;
 	arefresh->priv->force_get_updates_login_timeout_id = 0;
-
 	arefresh->priv->proxy_gs = NULL;
-	arefresh->priv->proxy_gpm = NULL;
 
 	/* we need to know the updates frequency */
 	arefresh->priv->gconf_client = gconf_client_get_default ();
@@ -670,17 +619,20 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 		return;
 	}
 
+	/* use a DkpClient */
+	arefresh->priv->client = dkp_client_new ();
+	g_signal_connect (arefresh->priv->client, "changed",
+			  G_CALLBACK (gpk_auto_refresh_client_changed_cb), arefresh);
+
+	/* get the battery state */
+	arefresh->priv->on_battery = dkp_client_on_battery (arefresh->priv->client);
+	egg_debug ("setting on battery %i", arefresh->priv->on_battery);
+
 	/* watch gnome-screensaver */
 	arefresh->priv->monitor_gs = egg_dbus_monitor_new ();
 	g_signal_connect (arefresh->priv->monitor_gs, "connection-changed",
 			  G_CALLBACK (pk_connection_gs_changed_cb), arefresh);
 	egg_dbus_monitor_assign (arefresh->priv->monitor_gs, EGG_DBUS_MONITOR_SESSION, GS_DBUS_SERVICE);
-
-	/* watch gnome-power-manager */
-	arefresh->priv->monitor_gpm = egg_dbus_monitor_new ();
-	g_signal_connect (arefresh->priv->monitor_gpm, "connection-changed",
-			  G_CALLBACK (pk_connection_gpm_changed_cb), arefresh);
-	egg_dbus_monitor_assign (arefresh->priv->monitor_gpm, EGG_DBUS_MONITOR_SESSION, GPM_DBUS_SERVICE);
 
 	/* we check this in case we miss one of the async signals */
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
@@ -710,14 +662,12 @@ gpk_auto_refresh_finalize (GObject *object)
 
 	g_object_unref (arefresh->priv->control);
 	g_object_unref (arefresh->priv->monitor_gs);
-	g_object_unref (arefresh->priv->monitor_gpm);
 	g_object_unref (arefresh->priv->gconf_client);
+	g_object_unref (arefresh->priv->client);
 
 	/* only unref the proxies if they were ever set */
 	if (arefresh->priv->proxy_gs != NULL)
 		g_object_unref (arefresh->priv->proxy_gs);
-	if (arefresh->priv->proxy_gpm != NULL)
-		g_object_unref (arefresh->priv->proxy_gpm);
 
 	G_OBJECT_CLASS (gpk_auto_refresh_parent_class)->finalize (object);
 }

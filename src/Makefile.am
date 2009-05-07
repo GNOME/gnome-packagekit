@@ -14,6 +14,8 @@ INCLUDES =						\
 	$(POLKIT_GNOME_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
+	-DI_KNOW_THE_DEVICEKIT_POWER_API_IS_SUBJECT_TO_CHANGE \
+	$(DEVKIT_CFLAGS)				\
 	$(CANBERRA_CFLAGS)				\
 	-DBINDIR=\"$(bindir)\"			 	\
 	-DDATADIR=\"$(datadir)\"			\
@@ -115,6 +117,7 @@ shared_LIBS =						\
 	$(UNIQUE_LIBS)					\
 	$(POLKIT_GNOME_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
+	$(DEVKIT_LIBS)					\
 	$(CANBERRA_LIBS)				\
 	$(NULL)
 
