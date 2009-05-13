@@ -117,6 +117,11 @@ main (int argc, char *argv[])
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
 	if (!ret) {
+		/* TRANSLATORS: This is when the specified DBus method did not execute successfully */
+		gpk_error_dialog (_("The action could not be completed"),
+				  /* TRANSLATORS: we don't have anything more useful to translate. sorry. */
+				  _("The request failed. More details are available in the detailed report."),
+				  error->message);
 		egg_warning ("%s", error->message);
 		g_error_free (error);
 		goto out;
