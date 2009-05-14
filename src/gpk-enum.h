@@ -68,6 +68,32 @@ typedef enum {
 	GPK_INFO_ENUM_UNKNOWN
 } GpkInfoStatusEnum;
 
+/* for very old versions of PackageKit */
+#ifndef PK_CHECK_VERSION
+#define PK_CHECK_VERSION(major, minor, micro) 0
+#endif
+
+/* constants defined in 0.4.5 */
+#if (!PK_CHECK_VERSION(0,4,5))
+#define PK_INFO_ENUM_FINISHED			(PK_INFO_ENUM_COLLECTION_AVAILABLE + 1)
+#endif
+
+/* constants defined in 0.4.7 */
+#if (!PK_CHECK_VERSION(0,4,7))
+typedef guint PkMediaTypeEnum;
+#define PK_MEDIA_TYPE_ENUM_CD			(0)
+#define PK_MEDIA_TYPE_ENUM_DVD			(1)
+#define PK_MEDIA_TYPE_ENUM_DISC			(2)
+#define PK_MEDIA_TYPE_ENUM_UNKNOWN		(3)
+#define PK_EXIT_ENUM_MEDIA_CHANGE_REQUIRED	(PK_EXIT_ENUM_KILLED + 1)
+#define PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED	(PK_ERROR_ENUM_NO_SPACE_ON_DEVICE + 1)
+#endif
+
+/* constants defined in 0.4.8 */
+#if (!PK_CHECK_VERSION(0,4,8))
+#define PK_ERROR_ENUM_NOT_AUTHORIZED		(PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

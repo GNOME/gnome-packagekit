@@ -77,7 +77,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.4.4
+PACKAGEKIT_REQUIRED=0.4.4 # when changing, nuke some compatability entries in gpk-enum.h
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.15.0
 DBUS_REQUIRED=1.1.2

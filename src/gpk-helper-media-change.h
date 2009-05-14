@@ -26,6 +26,8 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib/packagekit.h>
 
+#include "gpk-enum.h"
+
 G_BEGIN_DECLS
 
 #define GPK_TYPE_HELPER_MEDIA_CHANGE		(gpk_helper_media_change_get_type ())
