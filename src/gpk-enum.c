@@ -488,6 +488,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
 		text = _("A media change is required");
 		break;
+	case PK_ERROR_ENUM_NOT_AUTHORIZED:
+		text = _("Authorization failed");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -673,6 +676,9 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
 		text = _("Additional media is required to complete the transaction.");
+		break;
+	case PK_ERROR_ENUM_NOT_AUTHORIZED:
+		text = _("You have failed to provide correct authentication. Please check any passwords or account settings.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
