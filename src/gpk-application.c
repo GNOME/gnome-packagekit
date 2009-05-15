@@ -2894,6 +2894,7 @@ gpk_application_eula_required_cb (PkClient *client, const gchar *eula_id, const 
 	gpk_helper_eula_show (application->priv->helper_eula, eula_id, package_id, vendor_name, license_agreement);
 }
 
+#if PK_CHECK_VERSION(0,4,7)
 /**
  * gpk_application_media_change_required_cb:
  **/
@@ -2903,6 +2904,7 @@ gpk_application_media_change_required_cb (PkClient *client, PkMediaTypeEnum type
 	/* use the helper */
 	gpk_helper_media_change_show (application->priv->helper_media_change, type, media_id, media_text);
 }
+#endif
 
 /**
  * gpk_application_repo_signature_required_cb:
@@ -3428,8 +3430,10 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_repo_signature_required_cb), application);
 	g_signal_connect (application->priv->client_primary, "eula-required",
 			  G_CALLBACK (gpk_application_eula_required_cb), application);
+#if PK_CHECK_VERSION(0,4,7)
 	g_signal_connect (application->priv->client_primary, "media-change-required",
 			  G_CALLBACK (gpk_application_media_change_required_cb), application);
+#endif
 
 	/* this is for auth and eula callbacks */
 	application->priv->client_secondary = pk_client_new ();
