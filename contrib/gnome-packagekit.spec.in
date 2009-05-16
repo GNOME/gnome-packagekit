@@ -14,10 +14,10 @@ URL:       http://www.packagekit.org
 Source0:   http://download.gnome.org/sources/gnome-packagekit/2.27/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:  gtk2 >= 2.12.0
+Requires:  gtk2 >= 2.15.0
 Requires:  gnome-icon-theme
 Requires:  libnotify >= 0.4.3
-Requires:  unique >= 0.9.4
+Requires:  unique >= 1.0.0
 Requires:  dbus-glib >= %{dbus_version}
 Requires:  dbus-x11 >= %{dbus_version}
 Requires:  PackageKit >= %{packagekit_version}
@@ -57,6 +57,7 @@ BuildRequires: intltool
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: fontconfig-devel
 BuildRequires: libcanberra-devel
+BuildRequires: DeviceKit-devel >= 003
 BuildRequires: DeviceKit-power-devel >= 007
 
 %description
