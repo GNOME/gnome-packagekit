@@ -331,6 +331,7 @@ out:
 		return FALSE;
 	}
 	gtk_status_icon_set_from_icon_name (watch->priv->status_icon, icon_name);
+	gtk_status_icon_set_visible (watch->priv->status_icon, TRUE);
 	return TRUE;
 }
 

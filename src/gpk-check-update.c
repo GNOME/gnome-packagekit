@@ -856,6 +856,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	/* work out icon (cannot be NULL) */
 	icon = gpk_check_update_get_best_update_icon (cupdate, list);
 	gtk_status_icon_set_from_icon_name (cupdate->priv->status_icon, icon);
+	gtk_status_icon_set_visible (watch->priv->status_icon, TRUE);
 
 	/* make tooltip */
 	if (status_security->len != 0)
