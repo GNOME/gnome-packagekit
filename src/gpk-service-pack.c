@@ -49,6 +49,7 @@ typedef enum {
 } GpkActionEnum;
 
 static GtkBuilder *builder = NULL;
+static PkClient *client = NULL;
 static GpkActionEnum action = GPK_ACTION_ENUM_UPDATES;
 static guint pulse_id = 0;
 
@@ -141,8 +142,10 @@ gpk_pack_package_cb (PkServicePack *pack, const PkPackageObj *obj, gpointer data
 {
 	GtkProgressBar *progress_bar;
 	gchar *text;
+
 	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
-	text = g_strdup_printf ("%s-%s.%s", obj->id->name, obj->id->version, obj->id->arch);
+	/* TRANSLATORS: This is the package name that is being downloaded */
+	text = g_strdup_printf ("%s: %s-%s.%s", _("Downloading"), obj->id->name, obj->id->version, obj->id->arch);
 	gtk_progress_bar_set_text (progress_bar, text);
 	g_free (text);
 }
@@ -198,7 +201,7 @@ gpk_pack_percentage_cb (PkServicePack *pack, guint percentage, gpointer data)
  * gpk_pack_progress_changed_cb:
  **/
 static void
-gpk_pack_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
+gpk_pack_progress_changed_cb (PkClient *_client, guint percentage, guint subpercentage,
 			      guint elapsed, guint remaining, gpointer data)
 {
 	gpk_pack_set_percentage (percentage);
@@ -215,18 +218,20 @@ gpk_pack_resolve_package_id (const gchar *package)
 	gchar *package_id = NULL;
 	gchar **packages;
 	gchar *text;
-	PkClient *client;
 	GError *error = NULL;
 	const PkPackageObj *obj;
 	gboolean ret = FALSE;
 	guint len;
 
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_set_synchronous (client, TRUE, NULL);
-	g_signal_connect (client, "progress-changed", G_CALLBACK (gpk_pack_progress_changed_cb), NULL);
+	/* reset client */
+	ret = pk_client_reset (client, &error);
+	if (!ret) {
+		egg_warning ("could not reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
 
-	/* resolve */
+	/* get package list */
 	packages = g_strsplit (package, ";", 0);
 	ret = pk_client_resolve (client, pk_bitfield_value (PK_FILTER_ENUM_NEWEST), packages, &error);
 	if (!ret) {
@@ -265,7 +270,6 @@ gpk_pack_resolve_package_id (const gchar *package)
 out:
 	if (list != NULL)
 		g_object_unref (list);
-	g_object_unref (client);
 	g_strfreev (packages);
 	return package_id;
 }
@@ -311,15 +315,20 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	gboolean ret = FALSE;
 	PkPackageList *list = NULL;
 	GError *error_local = NULL;
-	PkClient *client;
 
-	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_set_synchronous (client, TRUE, NULL);
-	g_signal_connect (client, "progress-changed", G_CALLBACK (gpk_pack_progress_changed_cb), NULL);
+	/* reset client */
+	ret = pk_client_reset (client, &error_local);
+	if (!ret) {
+		/* TRANSLATORS: internal error */
+		*error = g_error_new (0, 0, _("Could not reset client: %s"), error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
 
+	/* get package list */
 	ret = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), &error_local);
 	if (!ret) {
+		/* TRANSLATORS: cannot get package list */
 		*error = g_error_new (0, 0, _("Could not get list of installed packages: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
@@ -336,7 +345,6 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 		goto out;
 	}
 out:
-	g_object_unref (client);
 	if (list != NULL)
 		g_object_unref (list);
 	return ret;
@@ -359,6 +367,8 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	PkPackageList *list = NULL;
 	GError *error = NULL;
 	gboolean ret;
+	gboolean use_default = FALSE;
+	GtkProgressBar *progress_bar;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_directory"));
 	directory = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
@@ -386,8 +396,10 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	/* get the exclude list, and fall back to the system copy */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
 	exclude = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
-	if (exclude == NULL)
+	if (exclude == NULL) {
 		exclude = g_strdup (PK_SYSTEM_PACKAGE_LIST_FILENAME);
+		use_default = TRUE;
+	}
 
 	/* get the package to download */
 	if (action == GPK_ACTION_ENUM_PACKAGE) {
@@ -403,6 +415,34 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		package_ids = gpk_pack_resolve_package_ids (packages);
 		if (package_ids == NULL)
 			goto out;
+	}
+
+	/* if we're using the default list, and it doesn't exist, refresh and create it */
+	if (use_default && !g_file_test (exclude, G_FILE_TEST_EXISTS)) {
+		/* reset client */
+		ret = pk_client_reset (client, &error);
+		if (!ret) {
+			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
+			/* TRANSLATORS: we could not reset internal state */
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Refresh error"), _("Could not reset client"), error->message);
+			g_error_free (error);
+			goto out;
+		}
+
+		/* tell the user what we are doing */
+		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
+		/* TRANSLATORS: progressbar text */
+		gtk_progress_bar_set_text (progress_bar, _("Refreshing system package list"));
+
+		/* refresh package list */
+		ret = pk_client_refresh_cache (client, TRUE, &error);
+		if (!ret) {
+			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
+			/* TRANSLATORS: we could not reset internal state */
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Refresh error"), _("Could not refresh package list"), error->message);
+			g_error_free (error);
+			goto out;
+		}
 	}
 
 	/* add the exclude list */
@@ -528,7 +568,7 @@ main (int argc, char *argv[])
 	PkControl *control;
 	UniqueApp *unique_app;
 	gboolean ret;
-	GConfClient *client;
+	GConfClient *gconf_client;
 	gchar *option = NULL;
 	gchar *package = NULL;
 	gchar *with_list = NULL;
@@ -588,7 +628,11 @@ main (int argc, char *argv[])
 	/* get actions */
 	control = pk_control_new ();
 	roles = pk_control_get_actions (control, NULL);
-	g_object_unref (control);
+
+	client = pk_client_new ();
+	pk_client_set_use_buffer (client, TRUE, NULL);
+	pk_client_set_synchronous (client, TRUE, NULL);
+	g_signal_connect (client, "progress-changed", G_CALLBACK (gpk_pack_progress_changed_cb), NULL);
 
 	/* get UI */
 	builder = gtk_builder_new ();
@@ -640,8 +684,8 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* autocompletion can be turned off as it's slow */
-	client = gconf_client_get_default ();
-	ret = gconf_client_get_bool (client, GPK_CONF_AUTOCOMPLETE, NULL);
+	gconf_client = gconf_client_get_default ();
+	ret = gconf_client_get_bool (gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
 	if (ret) {
 		/* create the completion object */
 		completion = gpk_package_entry_completion_new ();
@@ -649,7 +693,6 @@ main (int argc, char *argv[])
 		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
 		g_object_unref (completion);
 	}
-	g_object_unref (client);
 
 	/* if command line arguments are set, then setup UI */
 	if (option != NULL) {
@@ -685,7 +728,10 @@ main (int argc, char *argv[])
 out_build:
 	g_object_unref (builder);
 unique_out:
+	g_object_unref (gconf_client);
 	g_object_unref (unique_app);
+	g_object_unref (control);
+	g_object_unref (client);
 	g_free (option);
 	g_free (package);
 	g_free (with_list);
