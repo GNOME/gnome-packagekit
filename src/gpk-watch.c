@@ -225,6 +225,8 @@ out:
 static PkBitfield
 gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 {
+	gboolean ret;
+	gboolean active;
 	guint i;
 	guint length;
 	PkBitfield status = 0;
@@ -244,8 +246,18 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 			egg_warning ("not found item %i", i);
 			break;
 		}
-		egg_debug ("%s %s", item->tid, pk_status_enum_to_text (item->status));
-		pk_bitfield_add (status, item->status);
+
+		/* only show an icon for this if the application isn't still on the bus */
+		ret = pk_client_is_caller_active (item->monitor, &active, NULL);
+
+		/* if we failed to get data, assume bad things happened */
+		if (!ret)
+			active = TRUE;
+
+		/* add to bitfield calculation */
+		egg_debug ("%s %s (active:%i)", item->tid, pk_status_enum_to_text (item->status), active);
+		if (!active)
+			pk_bitfield_add (status, item->status);
 	}
 out:
 	return status;
