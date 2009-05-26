@@ -2775,13 +2775,9 @@ gpk_dbus_task_install_catalogs (GpkDbusTask *task, gchar **filenames)
 	GtkResponseType button;
 	gchar *message;
 	const gchar *title;
-	const PkPackageObj *obj;
 	PkPackageList *list = NULL;
 	PkCatalog *catalog;
-	GString *string;
-	gchar *text;
 	guint len;
-	guint i;
 
 	len = g_strv_length (filenames);
 
@@ -2853,34 +2849,17 @@ skip_checks:
 		goto skip_checks2;
 	}
 
-	/* TRANSLATORS: display a list of packages to install */
-	string = g_string_new (_("The following packages are marked to be installed from the catalog:"));
-	g_string_append (string, "\n\n");
-
-	/* process package list */
-	for (i=0; i<len; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_oneline (obj->id, obj->summary);
-		g_string_append_printf (string, "%s\n", text);
-		g_free (text);
-	}
-	/* remove last \n */
-	g_string_set_size (string, string->len - 1);
-
-	/* display messagebox  */
-	text = g_string_free (string, FALSE);
-
-	gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, 0);
+	gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
 	/* TRANSLATORS: title: allow user to confirm */
 	gpk_modal_dialog_set_title (task->priv->dialog, _("Install packages in catalog?"));
-	gpk_modal_dialog_set_message (task->priv->dialog, text);
+	/* TRANSLATORS: display a list of packages to install */
+	gpk_modal_dialog_set_message (task->priv->dialog, _("The following packages are marked to be installed from the catalog:"));
 	gpk_modal_dialog_set_image (task->priv->dialog, "dialog-question");
+	gpk_modal_dialog_set_package_list (task->priv->dialog, list);
 	/* TRANSLATORS: button: install packages in catalog */
 	gpk_modal_dialog_set_action (task->priv->dialog, _("Install"));
 	gpk_modal_dialog_present_with_time (task->priv->dialog, task->priv->timestamp);
 	button = gpk_modal_dialog_run (task->priv->dialog);
-
-	g_free (text);
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
