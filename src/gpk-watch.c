@@ -48,7 +48,6 @@
 #include "gpk-watch.h"
 #include "gpk-modal-dialog.h"
 #include "gpk-inhibit.h"
-#include "gpk-smart-icon.h"
 #include "gpk-consolekit.h"
 #include "gpk-enum.h"
 
@@ -63,7 +62,7 @@ static void     gpk_watch_finalize	(GObject       *object);
 struct GpkWatchPrivate
 {
 	PkControl		*control;
-	GpkSmartIcon		*sicon;
+	GtkStatusIcon		*status_icon;
 	GPtrArray		*cached_messages;
 	GPtrArray		*restart_package_names;
 	NotifyNotification	*notification_cached_messages;
@@ -212,9 +211,9 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 
 out:
 #if GTK_CHECK_VERSION(2,15,0)
-	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (watch->priv->sicon), status->str);
+	gtk_status_icon_set_tooltip_text (watch->priv->status_icon, status->str);
 #else
-	gtk_status_icon_set_tooltip (GTK_STATUS_ICON (watch->priv->sicon), status->str);
+	gtk_status_icon_set_tooltip (watch->priv->status_icon, status->str);
 #endif
 	g_string_free (status, TRUE);
 	return TRUE;
@@ -326,7 +325,12 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	}
 
 out:
-	gpk_smart_icon_set_icon_name (watch->priv->sicon, icon_name);
+	/* no icon, hide */
+	if (icon_name == NULL) {
+		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
+		return FALSE;
+	}
+	gtk_status_icon_set_from_icon_name (watch->priv->status_icon, icon_name);
 	return TRUE;
 }
 
@@ -632,7 +636,7 @@ gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message
 	}
 
 	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (_("New package manager message"), NULL, "emblem-important", GTK_STATUS_ICON(watch->priv->sicon));
+	notification = notify_notification_new_with_status_icon (_("New package manager message"), NULL, "emblem-important", watch->priv->status_icon);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
@@ -1193,7 +1197,9 @@ gpk_watch_menu_hide_restart_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkWatch *watch = GPK_WATCH (data);
 	g_return_if_fail (GPK_IS_WATCH (watch));
-	gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
+
+	/* hide */
+	gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
 }
 
 /**
@@ -1290,7 +1296,7 @@ pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatc
 		gpk_watch_refresh_icon (watch);
 		gpk_watch_refresh_tooltip (watch);
 	} else {
-		gpk_smart_icon_set_icon_name (watch->priv->sicon, NULL);
+		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
 	}
 }
 
@@ -1548,7 +1554,6 @@ gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 static void
 gpk_watch_init (GpkWatch *watch)
 {
-	GtkStatusIcon *status_icon;
 	PolKitAction *pk_action;
 	PolKitGnomeAction *restart_action;
 
@@ -1559,7 +1564,7 @@ gpk_watch_init (GpkWatch *watch)
 
 	watch->priv->gconf_client = gconf_client_get_default ();
 
-	watch->priv->sicon = gpk_smart_icon_new ();
+	watch->priv->status_icon = gtk_status_icon_new ();
 	watch->priv->set_proxy_timeout = 0;
 	watch->priv->cached_messages = g_ptr_array_new ();
 	watch->priv->restart_package_names = g_ptr_array_new ();
@@ -1592,10 +1597,9 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->inhibit = gpk_inhibit_new ();
 
 	/* right click actions are common */
-	status_icon = GTK_STATUS_ICON (watch->priv->sicon);
-	g_signal_connect_object (G_OBJECT (status_icon),
+	g_signal_connect_object (G_OBJECT (watch->priv->status_icon),
 				 "popup_menu", G_CALLBACK (gpk_watch_popup_menu_cb), watch, 0);
-	g_signal_connect_object (G_OBJECT (status_icon),
+	g_signal_connect_object (G_OBJECT (watch->priv->status_icon),
 				 "activate", G_CALLBACK (gpk_watch_activate_status_cb), watch, 0);
 
 	watch->priv->tlist = pk_task_list_new ();
@@ -1675,7 +1679,7 @@ gpk_watch_finalize (GObject *object)
 	g_ptr_array_free (watch->priv->restart_package_names, TRUE);
 
 	g_free (watch->priv->error_details);
-	g_object_unref (watch->priv->sicon);
+	g_object_unref (watch->priv->status_icon);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->tlist);
 	g_object_unref (watch->priv->control);

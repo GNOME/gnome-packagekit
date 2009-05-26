@@ -96,8 +96,6 @@ shared_SOURCES =					\
 	gpk-helper-chooser.h				\
 	gpk-helper-media-change.c			\
 	gpk-helper-media-change.h			\
-	gpk-smart-icon.c				\
-	gpk-smart-icon.h				\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
 	gpk-common.c					\

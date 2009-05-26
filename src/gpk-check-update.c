@@ -47,7 +47,6 @@
 #include "gpk-consolekit.h"
 #include "gpk-common.h"
 #include "gpk-gnome.h"
-#include "gpk-smart-icon.h"
 #include "gpk-auto-refresh.h"
 #include "gpk-check-update.h"
 #include "gpk-enum.h"
@@ -63,7 +62,7 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 
 struct GpkCheckUpdatePrivate
 {
-	GpkSmartIcon		*sicon;
+	GtkStatusIcon		*status_icon;
 	PkConnection		*pconnection;
 	PkTaskList		*tlist;
 	PkControl		*control;
@@ -314,7 +313,7 @@ gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 		/* we failed, show the icon */
 		egg_warning ("cannot update system: %s", error->message);
 		g_error_free (error);
-		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
 		/* we failed, so re-get the update list */
 		g_timeout_add_seconds (2, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
 	}
@@ -602,12 +601,12 @@ gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, PkPackageList *l
 
 	/* get the most important icon */
 	value = pk_bitfield_contain_priority (infos,
-					   PK_INFO_ENUM_SECURITY,
-					   PK_INFO_ENUM_IMPORTANT,
-					   PK_INFO_ENUM_BUGFIX,
-					   PK_INFO_ENUM_NORMAL,
-					   PK_INFO_ENUM_ENHANCEMENT,
-					   PK_INFO_ENUM_LOW, -1);
+					      PK_INFO_ENUM_SECURITY,
+					      PK_INFO_ENUM_IMPORTANT,
+					      PK_INFO_ENUM_BUGFIX,
+					      PK_INFO_ENUM_NORMAL,
+					      PK_INFO_ENUM_ENHANCEMENT,
+					      PK_INFO_ENUM_LOW, -1);
 	if (value == -1) {
 		egg_warning ("should not be possible!");
 		value = PK_INFO_ENUM_LOW;
@@ -821,7 +820,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	/* we have no updates */
 	if (length == 0) {
 		egg_debug ("no updates");
-		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
 		goto out;
 	}
 
@@ -854,9 +853,9 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 		}
 	}
 
-	/* work out icon */
+	/* work out icon (cannot be NULL) */
 	icon = gpk_check_update_get_best_update_icon (cupdate, list);
-	gpk_smart_icon_set_icon_name (cupdate->priv->sicon, icon);
+	gtk_status_icon_set_from_icon_name (cupdate->priv->status_icon, icon);
 
 	/* make tooltip */
 	if (status_security->len != 0)
@@ -864,7 +863,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update available",
 							  "There are %d updates available", length), length);
-	gtk_status_icon_set_tooltip_text (GTK_STATUS_ICON (cupdate->priv->sicon), status_tooltip->str);
+	gtk_status_icon_set_tooltip_text (cupdate->priv->status_icon, status_tooltip->str);
 
 	/* if we are just refreshing after a failed update, don't try to do the actions */
 	if (!policy_action) {
@@ -1021,7 +1020,7 @@ gpk_check_update_task_list_changed_cb (PkTaskList *tlist, GpkCheckUpdate *cupdat
 	/* hide icon if we are updating */
 	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
 	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
-		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
 	}
 }
 
@@ -1162,9 +1161,9 @@ gpk_check_update_network_status_changed_cb (PkControl *control, PkNetworkEnum st
 {
 	//TODO: check that set_visible (TRUE) on a unset icon doesn't cause an icon to show
 	if (state == PK_NETWORK_ENUM_OFFLINE)
-		gtk_status_icon_set_visible (GTK_STATUS_ICON(cupdate->priv->sicon), FALSE);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
 	else
-		gtk_status_icon_set_visible (GTK_STATUS_ICON(cupdate->priv->sicon), TRUE);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, TRUE);
 }
 
 /**
@@ -1176,7 +1175,7 @@ gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, 
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 	if (connected) {
 		egg_debug ("update viewer on the bus, so hiding icon");
-		gpk_smart_icon_set_icon_name (cupdate->priv->sicon, NULL);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
 	}
 }
 
@@ -1438,13 +1437,12 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 static void
 gpk_check_update_init (GpkCheckUpdate *cupdate)
 {
-	GtkStatusIcon *status_icon;
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
 	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->important_updates_array = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
-	cupdate->priv->sicon = gpk_smart_icon_new ();
+	cupdate->priv->status_icon = gtk_status_icon_new ();
 
 	/* preload all the common GConf keys */
 	cupdate->priv->gconf_client = gconf_client_get_default ();
@@ -1460,12 +1458,11 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_check_update_auto_get_upgrades_cb), cupdate);
 
 	/* right click actions are common */
-	status_icon = GTK_STATUS_ICON (cupdate->priv->sicon);
-	g_signal_connect_object (G_OBJECT (status_icon),
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
 				 "popup_menu",
 				 G_CALLBACK (gpk_check_update_popup_menu_cb),
 				 cupdate, 0);
-	g_signal_connect_object (G_OBJECT (status_icon),
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
 				 "activate",
 				 G_CALLBACK (gpk_check_update_activate_update_cb),
 				 cupdate, 0);
@@ -1534,7 +1531,7 @@ gpk_check_update_finalize (GObject *object)
 
 	g_return_if_fail (cupdate->priv != NULL);
 
-	g_object_unref (cupdate->priv->sicon);
+	g_object_unref (cupdate->priv->status_icon);
 	g_object_unref (cupdate->priv->pconnection);
 	g_object_unref (cupdate->priv->tlist);
 	g_object_unref (cupdate->priv->arefresh);
