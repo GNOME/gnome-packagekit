@@ -31,6 +31,7 @@
 
 #include "gpk-common.h"
 #include "gpk-error.h"
+#include "gpk-dbus.h"
 
 /**
  * main:
@@ -93,7 +94,6 @@ main (int argc, char *argv[])
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (connection == NULL) {
 		egg_warning ("%s", error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -117,17 +117,18 @@ main (int argc, char *argv[])
 				 G_TYPE_STRING, "hide-finished", /* interaction */
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
-	if (!ret) {
+	if (!ret && !gpk_ignore_session_error (error)) {
 		/* TRANSLATORS: This is when the specified DBus method did not execute successfully */
 		gpk_error_dialog (_("The action could not be completed"),
 				  /* TRANSLATORS: we don't have anything more useful to translate. sorry. */
 				  _("The request failed. More details are available in the detailed report."),
 				  error->message);
 		egg_warning ("%s", error->message);
-		g_error_free (error);
 		goto out;
 	}
 out:
+	if (error != NULL)
+		g_error_free (error);
 	if (proxy != NULL)
 		g_object_unref (proxy);
 	g_strfreev (files);

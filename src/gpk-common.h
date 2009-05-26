@@ -106,6 +106,7 @@ gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
 gboolean	 gpk_session_logout			(void);
+gboolean	 gpk_ignore_session_error		(GError		*error);
 
 G_END_DECLS
 
