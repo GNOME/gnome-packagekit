@@ -64,12 +64,6 @@ GType		 gpk_dbus_error_get_type		(void);
 GType		 gpk_dbus_get_type			(void);
 GpkDbus		*gpk_dbus_new				(void);
 
-//void		 gpk_dbus_install_catalog		(GpkDbus	*dbus,
-//							 guint32	 xid,
-//							 guint32	 timestamp,
-//							 const gchar	*catalog_file,
-//							 DBusGMethodInvocation *context);
-
 /* org.freedesktop.PackageKit.Query */
 void		 gpk_dbus_is_installed			(GpkDbus	*dbus,
 							 const gchar	*package_name,
@@ -82,6 +76,11 @@ void		 gpk_dbus_search_file			(GpkDbus	*dbus,
 
 /* org.freedesktop.PackageKit.Modify */
 void		 gpk_dbus_install_provide_files		(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**files,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
+void		 gpk_dbus_install_catalogs		(GpkDbus	*dbus,
 							 guint32	 xid,
 							 gchar		**files,
 							 const gchar	*interaction,

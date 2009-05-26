@@ -203,6 +203,46 @@
     </method>
 
     <!--*****************************************************************************************-->
+    <method name="InstallCatalogs">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Installs specified package catalogs.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type="u" name="xid" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              The X window handle ID, used for focus stealing prevention and setting modality.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="as" name="files" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An array of catalog filenames.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="s" name="interaction" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An optional interaction mode, e.g.
+              <doc:tt>show-confirm-search,show-confirm-deps,show-confirm-install,show-progress,show-finished,show-warning</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+    <!--*****************************************************************************************-->
     <method name="InstallPackageNames">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
       <doc:doc>
