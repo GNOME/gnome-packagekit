@@ -565,10 +565,10 @@ main (int argc, char *argv[])
 	GtkFileFilter *filter;
 	GtkEntryCompletion *completion;
 	PkBitfield roles;
-	PkControl *control;
+	PkControl *control = NULL;
 	UniqueApp *unique_app;
 	gboolean ret;
-	GConfClient *gconf_client;
+	GConfClient *gconf_client = NULL;
 	gchar *option = NULL;
 	gchar *package = NULL;
 	gchar *with_list = NULL;
@@ -620,7 +620,7 @@ main (int argc, char *argv[])
 	if (unique_app_is_running (unique_app)) {
 		egg_debug ("You have another instance running. This program will now close");
 		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
+		goto out_unique;
 	}
 	g_signal_connect (unique_app, "message-received",
 			  G_CALLBACK (gpk_pack_message_received_cb), NULL);
@@ -727,11 +727,14 @@ main (int argc, char *argv[])
 
 out_build:
 	g_object_unref (builder);
-unique_out:
-	g_object_unref (gconf_client);
+out_unique:
 	g_object_unref (unique_app);
-	g_object_unref (control);
-	g_object_unref (client);
+	if (gconf_client != NULL)
+		g_object_unref (gconf_client);
+	if (control != NULL)
+		g_object_unref (control);
+	if (client != NULL)
+		g_object_unref (client);
 	g_free (option);
 	g_free (package);
 	g_free (with_list);
