@@ -90,37 +90,37 @@ GQuark		 gpk_modal_dialog_error_quark		(void);
 GType		 gpk_modal_dialog_get_type		(void);
 GpkModalDialog	*gpk_modal_dialog_new			(void);
 
-gboolean	 gpk_modal_dialog_present		(GpkModalDialog	*dialog);
-gboolean	 gpk_modal_dialog_present_with_time	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_present		(GpkModalDialog		*dialog);
+gboolean	 gpk_modal_dialog_present_with_time	(GpkModalDialog		*dialog,
 							 guint32		 timestamp);
-gboolean	 gpk_modal_dialog_set_package_list	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_package_list	(GpkModalDialog		*dialog,
 							 const PkPackageList	*list);
-gboolean	 gpk_modal_dialog_set_parent		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_parent		(GpkModalDialog		*dialog,
 							 GdkWindow		*window);
-gboolean	 gpk_modal_dialog_set_window_icon	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_window_icon	(GpkModalDialog		*dialog,
 							 const gchar		*icon);
-gboolean	 gpk_modal_dialog_set_title		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_title		(GpkModalDialog		*dialog,
 							 const gchar		*title);
-gboolean	 gpk_modal_dialog_set_message		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_message		(GpkModalDialog		*dialog,
 							 const gchar		*message);
-gboolean	 gpk_modal_dialog_set_action		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_action		(GpkModalDialog		*dialog,
 							 const gchar		*action);
-gboolean	 gpk_modal_dialog_set_percentage	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_percentage	(GpkModalDialog		*dialog,
 							 guint			 percentage);
-gboolean	 gpk_modal_dialog_set_remaining	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_remaining		(GpkModalDialog		*dialog,
 							 guint			 remaining);
-gboolean	 gpk_modal_dialog_set_image		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_image		(GpkModalDialog		*dialog,
 							 const gchar		*image);
-gboolean	 gpk_modal_dialog_set_image_status	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_image_status	(GpkModalDialog		*dialog,
 							 PkStatusEnum		 status);
-gboolean	 gpk_modal_dialog_set_allow_cancel	(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_allow_cancel	(GpkModalDialog		*dialog,
 							 gboolean		 can_cancel);
-gboolean	 gpk_modal_dialog_set_help_id		(GpkModalDialog	*dialog,
+gboolean	 gpk_modal_dialog_set_help_id		(GpkModalDialog		*dialog,
 							 const gchar		*help_id);
-GtkWindow	*gpk_modal_dialog_get_window		(GpkModalDialog	*dialog);
-GtkResponseType	 gpk_modal_dialog_run			(GpkModalDialog	*dialog);
-gboolean	 gpk_modal_dialog_close		(GpkModalDialog	*dialog);
-gboolean	 gpk_modal_dialog_setup		(GpkModalDialog	*dialog,
+GtkWindow	*gpk_modal_dialog_get_window		(GpkModalDialog		*dialog);
+GtkResponseType	 gpk_modal_dialog_run			(GpkModalDialog		*dialog);
+gboolean	 gpk_modal_dialog_close			(GpkModalDialog		*dialog);
+gboolean	 gpk_modal_dialog_setup			(GpkModalDialog		*dialog,
 							 GpkModalDialogPage	 page,
 							 PkBitfield		 options);
 
