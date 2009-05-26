@@ -1318,7 +1318,7 @@ gpk_update_viewer_populate_details (const PkUpdateDetailObj *obj)
 		line = egg_markdown_parse (markdown, obj->changelog);
 		if (!egg_strzero (line)) {
 			/* TRANSLATORS: this is a ChangeLog */
-			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no information is available for this update:"), line);
+			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), line);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
 			g_free (line2);
 		}
