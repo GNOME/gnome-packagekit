@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD\n"
 "Report-Msgid-Bugs-To: https://bugs.freedesktop.org/enter_bug.cgi?"
 "product=PackageKit&component=General\n"
-"POT-Creation-Date: 2009-05-16 18:56+0000\n"
-"PO-Revision-Date: 2009-05-18 20:46+0200\n"
+"POT-Creation-Date: 2009-05-26 16:34+0000\n"
+"PO-Revision-Date: 2009-05-26 22:24+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <Gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -352,8 +352,8 @@ msgid "Add/Remove Software"
 msgstr "Añadir/Quitar software"
 
 #. TRANSLATORS: program name: application to install a catalog of software
-#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:70
-#: ../src/gpk-install-catalog.c:72
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:71
+#: ../src/gpk-install-catalog.c:73
 msgid "Catalog Installer"
 msgstr "Instalador de catálogos"
 
@@ -398,7 +398,7 @@ msgid "Create service packs for sharing with other computers"
 msgstr "Cree «Service packs» para compartir con otros equipos"
 
 #. TRANSLATORS: program description, an application to create service packs
-#: ../data/gpk-service-pack.desktop.in.h:2 ../src/gpk-service-pack.c:570
+#: ../data/gpk-service-pack.desktop.in.h:2 ../src/gpk-service-pack.c:610
 msgid "Service Pack Creator"
 msgstr "Creador de «Service packs»"
 
@@ -839,10 +839,10 @@ msgstr "Cancelar búsqueda"
 
 #. TRANSLATORS: show the debug data on the console
 #: ../src/gpk-application-main.c:78 ../src/gpk-backend-status.c:84
-#: ../src/gpk-install-catalog.c:52 ../src/gpk-install-local-file.c:51
-#: ../src/gpk-install-mime-type.c:51 ../src/gpk-install-package-name.c:51
-#: ../src/gpk-install-provide-file.c:51 ../src/gpk-log.c:641
-#: ../src/gpk-prefs.c:401 ../src/gpk-repo.c:430 ../src/gpk-service-pack.c:541
+#: ../src/gpk-install-catalog.c:53 ../src/gpk-install-local-file.c:52
+#: ../src/gpk-install-mime-type.c:52 ../src/gpk-install-package-name.c:52
+#: ../src/gpk-install-provide-file.c:52 ../src/gpk-log.c:641
+#: ../src/gpk-prefs.c:401 ../src/gpk-repo.c:430 ../src/gpk-service-pack.c:581
 #: ../src/gpk-update-icon.c:128 ../src/gpk-update-viewer.c:2578
 msgid "Show extra debugging information"
 msgstr "Mostrar información adicional de depurado"
@@ -1323,7 +1323,7 @@ msgstr[1] ""
 #: ../src/gpk-dbus-task.c:837 ../src/gpk-dbus-task.c:1582
 #: ../src/gpk-dbus-task.c:1912 ../src/gpk-dbus-task.c:2025
 #: ../src/gpk-dbus-task.c:2310 ../src/gpk-dbus-task.c:2717
-#: ../src/gpk-dbus-task.c:2804 ../src/gpk-dbus-task.c:2879
+#: ../src/gpk-dbus-task.c:2800 ../src/gpk-dbus-task.c:2860
 #: ../src/gpk-helper-deps-install.c:106 ../src/gpk-helper-deps-update.c:106
 #: ../src/gpk-update-viewer.c:1041
 msgid "Install"
@@ -1714,31 +1714,31 @@ msgid "Finding a package to provide: %s"
 msgstr "Buscando un paquete que proporcione: %s"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2795
+#: ../src/gpk-dbus-task.c:2791
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "¿Quiere instalar este catálogo?"
 msgstr[1] "¿Quiere instalar estos catálogos?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2820
+#: ../src/gpk-dbus-task.c:2816
 msgid "Install catalogs"
 msgstr "Instalar catálogos"
 
-#: ../src/gpk-dbus-task.c:2840
+#: ../src/gpk-dbus-task.c:2836
 msgid "No packages need to be installed"
 msgstr "No es necesario instalar ningún paquete"
 
+#. TRANSLATORS: title: allow user to confirm
+#: ../src/gpk-dbus-task.c:2854
+msgid "Install packages in catalog?"
+msgstr "¿Instalar los paquetes del catálogo?"
+
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2857
+#: ../src/gpk-dbus-task.c:2856
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr ""
 "Se han marcado los siguientes paquetes para instalarlos desde el catálogo:"
-
-#. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2875
-msgid "Install packages in catalog?"
-msgstr "¿Instalar los paquetes del catálogo?"
 
 #. TRANSLATORS: the menu item, Applications, Places, System etc
 #: ../src/gpk-desktop.c:114
@@ -2676,7 +2676,8 @@ msgid "Available"
 msgstr "Disponible"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1065
+#. TRANSLATORS: This is the package name that is being downloaded
+#: ../src/gpk-enum.c:1065 ../src/gpk-service-pack.c:148
 msgid "Downloading"
 msgstr "Descargando"
 
@@ -3337,21 +3338,21 @@ msgid "A transaction that cannot be interrupted is running"
 msgstr "Se está ejecutando una transacción que no se puede interrumpir"
 
 #. TRANSLATORS: command line option: a list of catalogs to install
-#: ../src/gpk-install-catalog.c:55
+#: ../src/gpk-install-catalog.c:56
 msgid "Catalogs files to install"
 msgstr "Archivos de catálogos para instalar"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:81
+#: ../src/gpk-install-catalog.c:82
 msgid "Catalog installer"
 msgstr "Instalador de catálogos"
 
-#: ../src/gpk-install-catalog.c:86
+#: ../src/gpk-install-catalog.c:87
 msgid "Failed to install catalog"
 msgstr "Falló al instalar el catálogo"
 
 #. TRANSLATORS: no filename was supplied
-#: ../src/gpk-install-catalog.c:88
+#: ../src/gpk-install-catalog.c:89
 msgid "You need to specify a file name to install"
 msgstr "Debe especificar un nombre de archivo para instalar"
 
@@ -3370,91 +3371,91 @@ msgid "The request failed. More details are available in the detailed report."
 msgstr "Falló la petición. Dispone de más detalles en el informe detallado"
 
 #. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:54
+#: ../src/gpk-install-local-file.c:55
 msgid "Files to install"
 msgstr "Archivos para instalar"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:69 ../src/gpk-install-local-file.c:71
+#: ../src/gpk-install-local-file.c:70 ../src/gpk-install-local-file.c:72
 msgid "PackageKit File Installer"
 msgstr "Instalador de archivos PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:80
+#: ../src/gpk-install-local-file.c:81
 msgid "Local file installer"
 msgstr "Instalador del archivo local"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:86 ../src/gpk-install-provide-file.c:86
+#: ../src/gpk-install-local-file.c:87 ../src/gpk-install-provide-file.c:87
 msgid "Failed to install a package to provide a file"
 msgstr "Falló al instalar un paquete para proporcionar el archivo"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:88
+#: ../src/gpk-install-local-file.c:89
 msgid "You need to specify a file to install"
 msgstr "Debe especificar un archivo para instalar"
 
 #. TRANSLATORS: command line option: a list of catalogs to install
-#: ../src/gpk-install-mime-type.c:54
+#: ../src/gpk-install-mime-type.c:55
 msgid "Mime types to install"
 msgstr "Tipos MIME que se instalarán"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:69 ../src/gpk-install-mime-type.c:71
+#: ../src/gpk-install-mime-type.c:70 ../src/gpk-install-mime-type.c:72
 msgid "Mime Type Installer"
 msgstr "Instalador de tipos MIME"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:80
+#: ../src/gpk-install-mime-type.c:81
 msgid "Mime type installer"
 msgstr "Instalador de tipos MIME"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:86
+#: ../src/gpk-install-mime-type.c:87
 msgid "Failed to install a program to handle this file type"
 msgstr "Falló al instalar un programa para manejar este tipo de archivo"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:88
+#: ../src/gpk-install-mime-type.c:89
 msgid "You need to specify a mime-type to install"
 msgstr "Debe especificar un tipo MIME para instalar"
 
-#: ../src/gpk-install-package-name.c:53
+#: ../src/gpk-install-package-name.c:54
 msgid "Packages to install"
 msgstr "Paquetes para instalar"
 
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:70
-#: ../src/gpk-install-package-name.c:79
+#: ../src/gpk-install-package-name.c:69 ../src/gpk-install-package-name.c:71
+#: ../src/gpk-install-package-name.c:80
 msgid "Package Name Installer"
 msgstr "Instalador del nombre del paquete"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:85
+#: ../src/gpk-install-package-name.c:86
 msgid "Failed to install package from name"
 msgstr "Falló al instalar el paquete por su nombre"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:87
+#: ../src/gpk-install-package-name.c:88
 msgid "You need to specify a package to install"
 msgstr "Debe especificar un paquete para instalar"
 
 #. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-provide-file.c:54
+#: ../src/gpk-install-provide-file.c:55
 msgid "Local files to install"
 msgstr "Archivos locales que se instalarán"
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:69 ../src/gpk-install-provide-file.c:71
-#: ../src/gpk-install-provide-file.c:80
+#: ../src/gpk-install-provide-file.c:70 ../src/gpk-install-provide-file.c:72
+#: ../src/gpk-install-provide-file.c:81
 msgid "Single File Installer"
 msgstr "Instalador de archivos simples"
 
 #. TRANSLATORS: nothig was specified
-#: ../src/gpk-install-provide-file.c:88
+#: ../src/gpk-install-provide-file.c:89
 msgid "You need to specify a filename to install"
 msgstr "Debe especificar un nombre de archivo para instalar"
 
@@ -3589,29 +3590,36 @@ msgstr ""
 "El «backend» no soporta la obtención de listas de repositorios de software"
 
 #. TRANSLATORS: message details when there were no packages found of that name
-#: ../src/gpk-service-pack.c:246
+#: ../src/gpk-service-pack.c:251
 #, c-format
 msgid "No package '%s' found!"
 msgstr "No se ha encontrado el paquete «%s»"
 
 #. TRANSLATORS: did not create pack file
-#: ../src/gpk-service-pack.c:248 ../src/gpk-service-pack.c:256
+#: ../src/gpk-service-pack.c:253 ../src/gpk-service-pack.c:261
 msgid "Failed to create"
 msgstr "Falló al crear"
 
 #. TRANSLATORS: more than one match for the package name
-#: ../src/gpk-service-pack.c:254
+#: ../src/gpk-service-pack.c:259
 #, c-format
 msgid "More than one possible package '%s' found!"
 msgstr "Existe más de un paquete «%s» posible"
 
+#. TRANSLATORS: internal error
 #: ../src/gpk-service-pack.c:323
+#, c-format
+msgid "Could not reset client: %s"
+msgstr "No se pudo reiniciar el cliente: %s"
+
+#. TRANSLATORS: cannot get package list
+#: ../src/gpk-service-pack.c:332
 #, c-format
 msgid "Could not get list of installed packages: %s"
 msgstr "No se pudo obtener la lista de paquetes instalados: %s"
 
 #. TRANSLATORS: we could not write to the destination directory for some reason
-#: ../src/gpk-service-pack.c:335
+#: ../src/gpk-service-pack.c:344
 #, c-format
 msgid "Could not write package list"
 msgstr "No se pudo escribir la lista de paquetes"
@@ -3619,56 +3627,74 @@ msgstr "No se pudo escribir la lista de paquetes"
 #. TRANSLATORS: Could not create package list
 #. TRANSLATORS: we could not read the file list for the destination computer
 #. TRANSLATORS: we could not create the pack file, generic error
-#: ../src/gpk-service-pack.c:380 ../src/gpk-service-pack.c:399
-#: ../src/gpk-service-pack.c:414 ../src/gpk-service-pack.c:433
+#: ../src/gpk-service-pack.c:390 ../src/gpk-service-pack.c:411
+#: ../src/gpk-service-pack.c:454 ../src/gpk-service-pack.c:473
 msgid "Create error"
 msgstr "Error al crear"
 
-#: ../src/gpk-service-pack.c:380
+#: ../src/gpk-service-pack.c:390
 msgid "Cannot copy system package list"
 msgstr "No se puede copiar la lista de paquetes del sistema"
 
-#: ../src/gpk-service-pack.c:399
+#: ../src/gpk-service-pack.c:411
 msgid "No package name selected"
 msgstr "No se ha seleccionado ningún nombre de paquete"
 
-#: ../src/gpk-service-pack.c:414
+#. TRANSLATORS: we could not reset internal state
+#: ../src/gpk-service-pack.c:427 ../src/gpk-service-pack.c:442
+msgid "Refresh error"
+msgstr "Error al actualizar"
+
+#: ../src/gpk-service-pack.c:427
+msgid "Could not reset client"
+msgstr "No se pudo reiniciar el cliente"
+
+#. TRANSLATORS: progressbar text
+#: ../src/gpk-service-pack.c:435
+msgid "Refreshing system package list"
+msgstr "Actualizar lista de paquetes del sistema"
+
+#: ../src/gpk-service-pack.c:442
+msgid "Could not refresh package list"
+msgstr "No se pudo actualizar la lista de paquetes"
+
+#: ../src/gpk-service-pack.c:454
 msgid "Cannot read destination package list"
 msgstr "No se puede leer la lista de paquetes de destino"
 
-#: ../src/gpk-service-pack.c:433
+#: ../src/gpk-service-pack.c:473
 msgid "Cannot create service pack"
 msgstr "No se puede crear el «Service pack»"
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:544
+#: ../src/gpk-service-pack.c:584
 msgid "Set the option, allowable values are 'list', 'updates' and 'package'"
 msgstr ""
 "Establecer la opción. Los valores posibles son «lista», «actualizaciones» y "
 "«paquete»"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:547
+#: ../src/gpk-service-pack.c:587
 msgid "Add the package name to the text entry box"
 msgstr "Añadir el nombre del paquete a la caja de entrada de texto"
 
 #. TRANSLATORS: this is the destination computer package list
-#: ../src/gpk-service-pack.c:550
+#: ../src/gpk-service-pack.c:590
 msgid "Set the remote package list filename"
 msgstr "Configurar el nombre de archivo de la lista de paquetes remotos"
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:553
+#: ../src/gpk-service-pack.c:593
 msgid "Set the default output directory"
 msgstr "Configurar el directorio de salida predeterminado:"
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:614
+#: ../src/gpk-service-pack.c:658
 msgid "Package list files"
 msgstr "Archivos de lista de paquetes"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:621
+#: ../src/gpk-service-pack.c:665
 msgid "Service pack files"
 msgstr "Archivos del «Service pack»"
 
@@ -3887,10 +3913,10 @@ msgstr ""
 #. TRANSLATORS: this is a ChangeLog
 #: ../src/gpk-update-viewer.c:1321
 msgid ""
-"The developer logs will be shown as no information is available for this "
+"The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
-"Se mostrarán los registros del desarrollador ya que no hay información "
+"Se mostrarán los registros del desarrollador ya que no hay una descripción "
 "disponible para esta actualización:"
 
 #. set loading text
@@ -4117,9 +4143,6 @@ msgstr "Reiniciar el e_quipo"
 
 #~ msgid "Failed to update system"
 #~ msgstr "Falló al actualizar el equipo"
-
-#~ msgid "Refresh package lists"
-#~ msgstr "Actualizar listas de paquetes"
 
 #~ msgid "Failed to update package lists"
 #~ msgstr "Falló al actualizar las listas de paquetes"
@@ -4499,9 +4522,6 @@ msgstr "Reiniciar el e_quipo"
 
 #~ msgid "A system update is already in progress"
 #~ msgstr "Hay otra actualización del sistema en proceso"
-
-#~ msgid "Refresh"
-#~ msgstr "Actualizar"
 
 #~ msgid ""
 #~ "Refreshing is not normally required but will retrieve the latest "
