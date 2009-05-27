@@ -2618,7 +2618,7 @@ main (int argc, char *argv[])
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer2", NULL);
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer", NULL);
 	if (unique_app_is_running (unique_app)) {
 		egg_debug ("You have another instance running. This program will now close");
 		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
