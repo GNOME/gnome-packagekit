@@ -63,7 +63,10 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 struct GpkCheckUpdatePrivate
 {
 	GtkStatusIcon		*status_icon;
-	PkConnection		*pconnection;
+	gboolean		 icon_inhibit_update_in_progress;
+	gboolean		 icon_inhibit_network_offline;
+	gboolean		 icon_inhibit_update_viewer_connected;
+	gchar			*icon_name;
 	PkTaskList		*tlist;
 	PkControl		*control;
 	GpkHelperRepoSignature	*helper_repo_signature;
@@ -78,6 +81,58 @@ struct GpkCheckUpdatePrivate
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
+
+/**
+ * gpk_check_update_set_icon_visibility:
+ **/
+static gboolean
+gpk_check_update_set_icon_visibility (GpkCheckUpdate *cupdate)
+{
+	gboolean ret = FALSE;
+
+	/* check we have data */
+	if (cupdate->priv->icon_name == NULL) {
+		egg_debug ("not showing icon as nothing to show");
+		goto out;
+	}
+
+	/* check we have no inhibits */
+	if (cupdate->priv->icon_inhibit_update_in_progress) {
+		egg_debug ("not showing icon as update in progress");
+		goto out;
+	}
+	if (cupdate->priv->icon_inhibit_network_offline) {
+		egg_debug ("not showing icon as network offline");
+		goto out;
+	}
+	if (cupdate->priv->icon_inhibit_update_viewer_connected) {
+		egg_debug ("not showing icon as update viewer showing");
+		goto out;
+	}
+
+	/* all okay, show icon */
+	ret = TRUE;
+out:
+	/* show or hide icon */
+	if (ret) {
+		gtk_status_icon_set_from_icon_name (cupdate->priv->status_icon, cupdate->priv->icon_name);
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, TRUE);
+	} else {
+		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
+	}
+	return ret;
+}
+
+/**
+ * gpk_check_update_set_icon_name:
+ **/
+static void
+gpk_check_update_set_icon_name (GpkCheckUpdate *cupdate, const gchar *icon_name)
+{
+	g_free (cupdate->priv->icon_name);
+	cupdate->priv->icon_name = g_strdup (icon_name);
+	gpk_check_update_set_icon_visibility (cupdate);
+}
 
 /**
  * gpk_check_update_class_init:
@@ -313,7 +368,7 @@ gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 		/* we failed, show the icon */
 		egg_warning ("cannot update system: %s", error->message);
 		g_error_free (error);
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
+		gpk_check_update_set_icon_name (cupdate, NULL);
 		/* we failed, so re-get the update list */
 		g_timeout_add_seconds (2, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
 	}
@@ -379,16 +434,6 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			gtk_status_icon_position_menu, status_icon,
 			1, gtk_get_current_event_time());
-}
-
-/**
- * pk_connection_changed_cb:
- **/
-static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkCheckUpdate *cupdate)
-{
-	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	egg_debug ("connected=%i", connected);
 }
 
 /**
@@ -820,7 +865,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	/* we have no updates */
 	if (length == 0) {
 		egg_debug ("no updates");
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
+		gpk_check_update_set_icon_name (cupdate, NULL);
 		goto out;
 	}
 
@@ -855,8 +900,7 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 
 	/* work out icon (cannot be NULL) */
 	icon = gpk_check_update_get_best_update_icon (cupdate, list);
-	gtk_status_icon_set_from_icon_name (cupdate->priv->status_icon, icon);
-	gtk_status_icon_set_visible (cupdate->priv->status_icon, TRUE);
+	gpk_check_update_set_icon_name (cupdate, icon);
 
 	/* make tooltip */
 	if (status_security->len != 0)
@@ -1018,11 +1062,12 @@ static void
 gpk_check_update_task_list_changed_cb (PkTaskList *tlist, GpkCheckUpdate *cupdate)
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	/* hide icon if we are updating */
-	if (pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
-	    pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
-	}
+
+	/* inhibit icon if we are updating */
+	cupdate->priv->icon_inhibit_update_in_progress =
+		(pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
+		 pk_task_list_contains_role (tlist, PK_ROLE_ENUM_UPDATE_PACKAGES));
+	gpk_check_update_set_icon_visibility (cupdate);
 }
 
 /**
@@ -1160,11 +1205,9 @@ out:
 static void
 gpk_check_update_network_status_changed_cb (PkControl *control, PkNetworkEnum state, GpkCheckUpdate *cupdate)
 {
-	//TODO: check that set_visible (TRUE) on a unset icon doesn't cause an icon to show
-	if (state == PK_NETWORK_ENUM_OFFLINE)
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
-	else
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, TRUE);
+	/* inhibit icon when we are offline */
+	cupdate->priv->icon_inhibit_network_offline = (state == PK_NETWORK_ENUM_OFFLINE);
+	gpk_check_update_set_icon_visibility (cupdate);
 }
 
 /**
@@ -1174,10 +1217,10 @@ static void
 gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, GpkCheckUpdate *cupdate)
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	if (connected) {
-		egg_debug ("update viewer on the bus, so hiding icon");
-		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
-	}
+	/* inhibit icon when update viewer open */
+	egg_debug ("update viewer on the bus: %i", connected);
+	cupdate->priv->icon_inhibit_update_viewer_connected = connected;
+	gpk_check_update_set_icon_visibility (cupdate);
 }
 
 /**
@@ -1438,10 +1481,14 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 static void
 gpk_check_update_init (GpkCheckUpdate *cupdate)
 {
+	gboolean ret;
+	PkNetworkEnum state;
+
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
 	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->important_updates_array = NULL;
+	cupdate->priv->icon_name = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->status_icon = gtk_status_icon_new ();
 
@@ -1496,13 +1543,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->helper_repo_signature = gpk_helper_repo_signature_new ();
 	g_signal_connect (cupdate->priv->helper_repo_signature, "event", G_CALLBACK (gpk_check_update_repo_signature_event_cb), NULL);
 
-	cupdate->priv->pconnection = pk_connection_new ();
-	g_signal_connect (cupdate->priv->pconnection, "connection-changed",
-			  G_CALLBACK (pk_connection_changed_cb), cupdate);
-	if (pk_connection_valid (cupdate->priv->pconnection)) {
-		pk_connection_changed_cb (cupdate->priv->pconnection, TRUE, cupdate);
-	}
-
 	cupdate->priv->control = pk_control_new ();
 	g_signal_connect (cupdate->priv->control, "updates-changed",
 			  G_CALLBACK (gpk_check_update_updates_changed_cb), cupdate);
@@ -1515,6 +1555,19 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->tlist = pk_task_list_new ();
 	g_signal_connect (cupdate->priv->tlist, "changed",
 			  G_CALLBACK (gpk_check_update_task_list_changed_cb), cupdate);
+
+	/* coldplug update in progress */
+	cupdate->priv->icon_inhibit_update_in_progress =
+		(pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
+		 pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_PACKAGES));
+
+	/* coldplug network state */
+	state = pk_control_get_network_state (cupdate->priv->control, NULL);
+	cupdate->priv->icon_inhibit_network_offline = (state == PK_NETWORK_ENUM_OFFLINE);
+
+	/* coldplug update viewer connected */
+	ret = egg_dbus_monitor_is_connected (cupdate->priv->dbus_monitor_viewer);
+	cupdate->priv->icon_inhibit_update_viewer_connected = ret;
 }
 
 /**
@@ -1533,7 +1586,6 @@ gpk_check_update_finalize (GObject *object)
 	g_return_if_fail (cupdate->priv != NULL);
 
 	g_object_unref (cupdate->priv->status_icon);
-	g_object_unref (cupdate->priv->pconnection);
 	g_object_unref (cupdate->priv->tlist);
 	g_object_unref (cupdate->priv->arefresh);
 	g_object_unref (cupdate->priv->gconf_client);
@@ -1546,6 +1598,7 @@ gpk_check_update_finalize (GObject *object)
 		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
 	}
+	g_free (cupdate->priv->icon_name);
 
 	G_OBJECT_CLASS (gpk_check_update_parent_class)->finalize (object);
 }
