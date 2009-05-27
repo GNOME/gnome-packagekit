@@ -1541,7 +1541,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	/* helpers */
 	cupdate->priv->helper_repo_signature = gpk_helper_repo_signature_new ();
-	g_signal_connect (cupdate->priv->helper_repo_signature, "event", G_CALLBACK (gpk_check_update_repo_signature_event_cb), NULL);
+	g_signal_connect (cupdate->priv->helper_repo_signature, "event", G_CALLBACK (gpk_check_update_repo_signature_event_cb), cupdate);
 
 	cupdate->priv->control = pk_control_new ();
 	g_signal_connect (cupdate->priv->control, "updates-changed",
