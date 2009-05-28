@@ -226,8 +226,6 @@ gpk_update_viewer_SOURCES =				\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\
 	gpk-cell-renderer-info.h			\
-	gpk-cell-renderer-percentage.c			\
-	gpk-cell-renderer-percentage.h			\
 	gpk-cell-renderer-spinner.c			\
 	gpk-cell-renderer-spinner.h			\
 	gpk-cell-renderer-restart.c			\
