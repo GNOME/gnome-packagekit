@@ -1361,9 +1361,11 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 			g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
 
 			/* this is async */
-			package_ids = pk_package_ids_from_id (application->priv->package);
-			gpk_helper_run_show (application->priv->helper_run, package_ids);
-			g_strfreev (package_ids);
+			if (application->priv->package != NULL) {
+				package_ids = pk_package_ids_from_id (application->priv->package);
+				gpk_helper_run_show (application->priv->helper_run, package_ids);
+				g_strfreev (package_ids);
+			}
 
 			/* clear if success */
 			g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
