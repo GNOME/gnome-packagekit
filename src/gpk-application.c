@@ -1360,9 +1360,10 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 			/* idle add in the background */
 			g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
 
-			/* this is async */
+			/* TODO: get the package list and filter on INSTALLED */
 			if (application->priv->package != NULL) {
 				package_ids = pk_package_ids_from_id (application->priv->package);
+				/* this is async */
 				gpk_helper_run_show (application->priv->helper_run, package_ids);
 				g_strfreev (package_ids);
 			}
