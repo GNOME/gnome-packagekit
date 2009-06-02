@@ -1074,24 +1074,6 @@ gpk_application_suggest_better_search (GpkApplication *application)
 }
 
 /**
- * gpk_update_viewer_requeue:
- **/
-static gboolean
-gpk_update_viewer_requeue (GpkApplication *application)
-{
-	gboolean ret;
-	GError *error = NULL;
-
-	/* retry new action */
-	ret = pk_client_requeue (application->priv->client_primary, &error);
-	if (!ret) {
-		egg_warning ("Failed to requeue: %s", error->message);
-		g_error_free (error);
-	}
-	return ret;
-}
-
-/**
  * gpk_application_finished_get_depends:
  **/
 static void
@@ -1349,7 +1331,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
 	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
 		if (exit_enum == PK_EXIT_ENUM_SUCCESS)
-			gpk_update_viewer_requeue (application);
+			gpk_update_viewer_primary_requeue (application);
 	}
 
 	/* do we need to update the search? */
@@ -2881,7 +2863,7 @@ gpk_application_media_change_event_cb (GpkHelperMediaChange *helper_media_change
 		goto out;
 
 	/* requeue */
-	gpk_update_viewer_requeue (application);
+	gpk_update_viewer_primary_requeue (application);
 out:
 	return;
 }
