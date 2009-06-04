@@ -28,19 +28,6 @@
 G_BEGIN_DECLS
 
 /**
- * GpkFreqEnum:
- *
- * The frequency type
- **/
-typedef enum {
-	GPK_FREQ_ENUM_HOURLY,
-	GPK_FREQ_ENUM_DAILY,
-	GPK_FREQ_ENUM_WEEKLY,
-	GPK_FREQ_ENUM_NEVER,
-	GPK_FREQ_ENUM_UNKNOWN
-} GpkFreqEnum;
-
-/**
  * GpkUpdateEnum:
  *
  * The update type
@@ -99,8 +86,6 @@ const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
-GpkFreqEnum	 gpk_freq_enum_from_text		(const gchar	*freq);
-const gchar	*gpk_freq_enum_to_text			(GpkFreqEnum	 freq);
 GpkUpdateEnum	 gpk_update_enum_from_text		(const gchar	*update);
 const gchar	*gpk_update_enum_to_text		(GpkUpdateEnum	 update);
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);

@@ -56,6 +56,11 @@
 /* TRANSLATORS: don't update anything */
 #define PK_UPDATE_NONE_TEXT		_("Nothing")
 
+#define GPK_PREFS_VALUE_NEVER		(0)
+#define GPK_PREFS_VALUE_HOURLY		(60*60)
+#define GPK_PREFS_VALUE_DAILY		(60*60*24)
+#define GPK_PREFS_VALUE_WEEKLY		(60*60*24*7)
+
 static GtkBuilder *builder = NULL;
 
 /**
@@ -94,26 +99,24 @@ static void
 gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
-	const gchar *action;
-	GpkFreqEnum freq = GPK_FREQ_ENUM_UNKNOWN;
+	guint freq = 0;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_HOURLY;
+		freq = GPK_PREFS_VALUE_HOURLY;
 	else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_DAILY;
+		freq = GPK_PREFS_VALUE_DAILY;
 	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_WEEKLY;
+		freq = GPK_PREFS_VALUE_WEEKLY;
 	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_NEVER;
+		freq = GPK_PREFS_VALUE_NEVER;
 	else
 		g_assert (FALSE);
 
-	action = gpk_freq_enum_to_text (freq);
-	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPDATES, action);
-	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, action, NULL);
+	egg_debug ("Changing %s to %i", GPK_CONF_FREQUENCY_GET_UPDATES, freq);
+	gconf_client_set_int (client, GPK_CONF_FREQUENCY_GET_UPDATES, freq, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -125,24 +128,22 @@ static void
 gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
-	const gchar *action;
-	GpkFreqEnum freq = GPK_FREQ_ENUM_UNKNOWN;
+	guint freq = 0;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_DAILY;
+		freq = GPK_PREFS_VALUE_DAILY;
 	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_WEEKLY;
+		freq = GPK_PREFS_VALUE_WEEKLY;
 	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
-		freq = GPK_FREQ_ENUM_NEVER;
+		freq = GPK_PREFS_VALUE_NEVER;
 	else
 		g_assert (FALSE);
 
-	action = gpk_freq_enum_to_text (freq);
-	egg_debug ("Changing %s to %s", GPK_CONF_FREQUENCY_GET_UPGRADES, action);
-	gconf_client_set_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, action, NULL);
+	egg_debug ("Changing %s to %i", GPK_CONF_FREQUENCY_GET_UPGRADES, freq);
+	gconf_client_set_int (client, GPK_CONF_FREQUENCY_GET_UPGRADES, freq, NULL);
 	g_free (value);
 	g_object_unref (client);
 }
@@ -212,23 +213,16 @@ gpk_prefs_update_freq_combo_simple_text (GtkWidget *combo_box)
 static void
 gpk_prefs_update_freq_combo_setup (void)
 {
-	gchar *value;
+	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	GpkFreqEnum freq;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_check"));
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
-	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
-	if (value == NULL) {
-		egg_warning ("invalid schema, please re-install");
-		return;
-	}
-	egg_debug ("value from gconf %s", value);
-	freq = gpk_freq_enum_from_text (value);
-	g_free (value);
+	value = gconf_client_get_int (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	egg_debug ("value from gconf %i", value);
 	g_object_unref (client);
 
 	/* do we have permission to write? */
@@ -240,8 +234,16 @@ gpk_prefs_update_freq_combo_setup (void)
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
-	/* we can do this as it's the same order */
-	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), freq);
+
+	/* select the correct entry */
+	if (value == GPK_PREFS_VALUE_HOURLY)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
+	else if (value == GPK_PREFS_VALUE_DAILY)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 1);
+	else if (value == GPK_PREFS_VALUE_WEEKLY)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
+	else if (value == GPK_PREFS_VALUE_NEVER)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 3);
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
@@ -254,23 +256,16 @@ gpk_prefs_update_freq_combo_setup (void)
 static void
 gpk_prefs_upgrade_freq_combo_setup (void)
 {
-	gchar *value;
+	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	GpkFreqEnum freq;
 	GConfClient *client;
 
 	client = gconf_client_get_default ();
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
 	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
-	value = gconf_client_get_string (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
-	if (value == NULL) {
-		egg_warning ("invalid schema, please re-install");
-		return;
-	}
-	egg_debug ("value from gconf %s", value);
-	freq = gpk_freq_enum_from_text (value);
-	g_free (value);
+	value = gconf_client_get_int (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
+	egg_debug ("value from gconf %i", value);
 	g_object_unref (client);
 
 	/* do we have permission to write? */
@@ -281,8 +276,14 @@ gpk_prefs_upgrade_freq_combo_setup (void)
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
-	/* don't do daily */
-	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), freq - 1);
+
+	/* select the correct entry */
+	if (value == GPK_PREFS_VALUE_DAILY)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
+	else if (value == GPK_PREFS_VALUE_WEEKLY)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 1);
+	else if (value == GPK_PREFS_VALUE_NEVER)
+		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",

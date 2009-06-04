@@ -157,52 +157,24 @@ gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
 }
 
 /**
- * gpk_auto_refresh_convert_frequency:
- *
- * Return value: The number of seconds for the frequency period,
- * or zero for never or no schema
+ * gpk_auto_refresh_get_frequency_prefs:
  **/
 static guint
-gpk_auto_refresh_convert_frequency (GpkFreqEnum freq)
+gpk_auto_refresh_get_frequency_prefs (GpkAutoRefresh *arefresh, const gchar *key)
 {
-	if (freq == GPK_FREQ_ENUM_UNKNOWN) {
-		egg_warning ("no schema");
-		return 0;
-	}
-	if (freq == GPK_FREQ_ENUM_NEVER)
-		return 0;
-	if (freq == GPK_FREQ_ENUM_HOURLY)
-		return 60*60;
-	if (freq == GPK_FREQ_ENUM_DAILY)
-		return 60*60*24;
-	if (freq == GPK_FREQ_ENUM_WEEKLY)
-		return 60*60*24*7;
-	egg_warning ("unknown frequency enum");
-	return 0;
-}
-
-/**
- * gpk_auto_refresh_convert_frequency_text:
- **/
-static guint
-gpk_auto_refresh_convert_frequency_text (GpkAutoRefresh *arefresh, const gchar *key)
-{
-	gchar *freq_text;
-	GpkFreqEnum freq;
+	guint value;
 
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), 0);
 
 	/* get from gconf */
-	freq_text = gconf_client_get_string (arefresh->priv->gconf_client, key, NULL);
-	if (freq_text == NULL) {
-		egg_warning ("no schema for %s", key);
-		return 0;
+	value = gconf_client_get_int (arefresh->priv->gconf_client, key, NULL);
+	if (value == 0) {
+		egg_warning ("no schema for %s, using daily", key);
+		value = 86400;
 	}
 
 	/* convert to enum and get seconds */
-	freq = gpk_freq_enum_from_text (freq_text);
-	g_free (freq_text);
-	return gpk_auto_refresh_convert_frequency (freq);
+	return value;
 }
 
 /**
@@ -218,7 +190,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is to never refresh");
 		return FALSE;
@@ -237,7 +209,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
 	if (thresh == 0) {
 		egg_debug ("not when policy is to never refresh");
 		return FALSE;
@@ -283,7 +255,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never get updates");
 		return FALSE;
@@ -320,7 +292,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_convert_frequency_text (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never check for upgrades");
 		return FALSE;

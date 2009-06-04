@@ -272,11 +272,11 @@
       <key>/schemas/apps/gnome-packagekit/frequency_get_updates</key>
       <applyto>/apps/gnome-packagekit/frequency_get_updates</applyto>
       <owner>gnome-packagekit</owner>
-      <type>string</type>
-      <default>daily</default>
+      <type>int</type>
+      <default>86400</default>
       <locale name="C">
         <short>How often to check for updates</short>
-        <long>How often to check for updates. Options are "hourly", "daily", "weekly", "never"</long>
+        <long>How often to check for updates. Value is in seconds.</long>
       </locale>
     </schema>
 
@@ -284,11 +284,11 @@
       <key>/schemas/apps/gnome-packagekit/frequency_get_upgrades</key>
       <applyto>/apps/gnome-packagekit/frequency_get_upgrades</applyto>
       <owner>gnome-packagekit</owner>
-      <type>string</type>
-      <default>weekly</default>
+      <type>int</type>
+      <default>604800</default>
       <locale name="C">
         <short>How often to check for distribution upgrades</short>
-        <long>How often to check for distribution upgrades. Options are "daily", "weekly", "never"</long>
+        <long>How often to check for distribution upgrades. Value is in seconds.</long>
       </locale>
     </schema>
 
@@ -296,11 +296,11 @@
       <key>/schemas/apps/gnome-packagekit/frequency_refresh_cache</key>
       <applyto>/apps/gnome-packagekit/frequency_refresh_cache</applyto>
       <owner>gnome-packagekit</owner>
-      <type>string</type>
-      <default>daily</default>
+      <type>int</type>
+      <default>86400</default>
       <locale name="C">
         <short>How often to refresh the package cache</short>
-        <long>How often to refresh the package cache. Options are "daily", "weekly", "never"</long>
+        <long>How often to refresh the package cache. Value is in seconds.</long>
       </locale>
     </schema>
 

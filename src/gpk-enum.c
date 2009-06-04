@@ -236,15 +236,6 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{0, NULL}
 };
 
-static const PkEnumMatch enum_freq[] = {
-	{GPK_FREQ_ENUM_UNKNOWN,			"unknown"},	/* fall though value */
-	{GPK_FREQ_ENUM_HOURLY,			"hourly"},
-	{GPK_FREQ_ENUM_DAILY,			"daily"},
-	{GPK_FREQ_ENUM_WEEKLY,			"weekly"},
-	{GPK_FREQ_ENUM_NEVER,			"never"},
-	{0, NULL}
-};
-
 static const PkEnumMatch enum_update[] = {
 	{GPK_UPDATE_ENUM_UNKNOWN,		"unknown"},	/* fall though value */
 	{GPK_UPDATE_ENUM_ALL,			"all"},
@@ -252,34 +243,6 @@ static const PkEnumMatch enum_update[] = {
 	{GPK_UPDATE_ENUM_NONE,			"none"},
 	{0, NULL}
 };
-
-/**
- * gpk_freq_enum_from_text:
- * @freq: Text describing the enumerated type
- *
- * Converts a text enumerated type to its unsigned integer representation
- *
- * Return value: the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
- **/
-GpkFreqEnum
-gpk_freq_enum_from_text (const gchar *freq)
-{
-	return pk_enum_find_value (enum_freq, freq);
-}
-
-/**
- * gpk_freq_enum_to_text:
- * @freq: The enumerated type value
- *
- * Converts a enumerated type to its text representation
- *
- * Return value: the enumerated constant value, e.g. "available"
- **/
-const gchar *
-gpk_freq_enum_to_text (GpkFreqEnum freq)
-{
-	return pk_enum_find_string (enum_freq, freq);
-}
 
 /**
  * gpk_update_enum_from_text:
@@ -1853,18 +1816,6 @@ gpk_enum_test (gpointer data)
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL || egg_strequal (string, "help-browser")) {
 			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
-			break;
-		}
-	}
-	egg_test_success (test, NULL);
-
-
-	/************************************************************/
-	egg_test_title (test, "check we convert all the freq bitfield");
-	for (i=0; i<=GPK_FREQ_ENUM_UNKNOWN; i++) {
-		string = gpk_freq_enum_to_text (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}
