@@ -213,11 +213,9 @@ gpk_pack_progress_changed_cb (PkClient *_client, guint percentage, guint subperc
 static gchar *
 gpk_pack_resolve_package_id (const gchar *package)
 {
-	GtkWindow *window;
 	PkPackageList *list = NULL;
 	gchar *package_id = NULL;
 	gchar **packages;
-	gchar *text;
 	GError *error = NULL;
 	const PkPackageObj *obj;
 	gboolean ret = FALSE;
@@ -244,24 +242,13 @@ gpk_pack_resolve_package_id (const gchar *package)
 	list = pk_client_get_package_list (client);
 	len = pk_package_list_get_size (list);
 
-	/* display errors if not exactly one match */
-	if (len == 0) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_pack"));
-		/* TRANSLATORS: message details when there were no packages found of that name */
-		text = g_strdup_printf (_("No package '%s' found!"), package);
-		/* TRANSLATORS: did not create pack file */
-		gpk_error_dialog_modal (window, _("Failed to create"), text, NULL);
-		g_free (text);
+	/* no matches */
+	if (len == 0)
 		goto out;
-	} else if (len > 1) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_pack"));
-		/* TRANSLATORS: more than one match for the package name */
-		text = g_strdup_printf (_("More than one possible package '%s' found!"), package);
-		/* TRANSLATORS: did not create pack file */
-		gpk_error_dialog_modal (window, _("Failed to create"), text, NULL);
-		g_free (text);
-		goto out;
-	}
+
+	/* display warning if not exactly one match */
+	if (len > 1)
+		egg_warning ("More than one possible package for '%s' found!", package);
 
 	/* convert to a text package id */
 	obj = pk_package_list_get_obj (list, 0);
@@ -278,31 +265,52 @@ out:
  * gpk_pack_resolve_package_ids:
  **/
 static gchar **
-gpk_pack_resolve_package_ids (gchar **package)
+gpk_pack_resolve_package_ids (gchar **package, GError **error)
 {
-	gchar **package_ids;
+	gchar **package_ids = NULL;
 	guint i, length;
 	gboolean ret = TRUE;
+	GPtrArray *array;
+	gchar *package_id;
 
 	length = g_strv_length (package);
-	package_ids = g_strdupv (package);
+	array = g_ptr_array_new ();
 
 	/* for each package, resolve to a package_id */
 	for (i=0; i<length; i++) {
-		g_free (package_ids[i]);
-		package_ids[i] = gpk_pack_resolve_package_id (package[i]);
-		if (package_ids[i] == NULL) {
-			egg_warning ("failed to resolve %s", package[i]);
+
+		/* nothing */
+		if (package[i][0] == '\0')
+			continue;
+
+		/* try to resolve */
+		package_id = gpk_pack_resolve_package_id (package[i]);
+		if (package_id == NULL) {
+			/* TRANSLATORS: cannot resolve name to package name */
+			*error = g_error_new (1, 0, _("Could not find any packages named '%s'"), package[i]);
 			ret = FALSE;
 			break;
 		}
+
+		/* add to array as a match */
+		g_ptr_array_add (array, package_id);
 	}
 
-	/* we failed at least one resolve */
-	if (!ret) {
-		g_strfreev (package_ids);
-		package_ids = NULL;
+	/* no packages */
+	if (array->len == 0) {
+		/* TRANSLATORS: cannot find any valid package names */
+		*error = g_error_new (1, 0, _("Could not find any valid package names"));
+		goto out;
 	}
+
+	/* we got package_ids for all of them */
+	if (ret)
+		package_ids = pk_ptr_array_to_strv (array);
+
+out:
+	/* free temp array */
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+	g_ptr_array_free (array, TRUE);
 	return package_ids;
 }
 
@@ -320,7 +328,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	ret = pk_client_reset (client, &error_local);
 	if (!ret) {
 		/* TRANSLATORS: internal error */
-		*error = g_error_new (0, 0, _("Could not reset client: %s"), error_local->message);
+		*error = g_error_new (1, 0, _("Could not reset client: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -329,7 +337,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	ret = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), &error_local);
 	if (!ret) {
 		/* TRANSLATORS: cannot get package list */
-		*error = g_error_new (0, 0, _("Could not get list of installed packages: %s"), error_local->message);
+		*error = g_error_new (1, 0, _("Could not get list of installed packages: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -341,7 +349,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	ret = pk_obj_list_to_file (PK_OBJ_LIST(list), filename);
 	if (!ret) {
 		/* TRANSLATORS: we could not write to the destination directory for some reason */
-		*error = g_error_new (0, 0, _("Could not write package list"));
+		*error = g_error_new (1, 0, _("Could not write package list"));
 		goto out;
 	}
 out:
@@ -411,10 +419,16 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("No package name selected"), NULL);
 			goto out;
 		}
-		packages = g_strsplit (package, ",", 0);
-		package_ids = gpk_pack_resolve_package_ids (packages);
-		if (package_ids == NULL)
+		/* split the package list with common delimiters */
+		packages = g_strsplit_set (package, ";, ", 0);
+		package_ids = gpk_pack_resolve_package_ids (packages, &error);
+		if (package_ids == NULL) {
+			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
+			/* TRANSLATORS: Could not create package list */
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), error->message, NULL);
+			g_error_free (error);
 			goto out;
+		}
 	}
 
 	/* if we're using the default list, and it doesn't exist, refresh and create it */
