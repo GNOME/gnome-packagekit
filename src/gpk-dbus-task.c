@@ -1666,7 +1666,7 @@ out:
  * gpk_dbus_task_install_package_files_check_type_get_content_type:
  **/
 static gchar *
-gpk_dbus_task_install_package_files_check_type_get_content_type (GpkDbusTask *task, const gchar *filename, GError **error)
+gpk_dbus_task_install_package_files_check_type_get_content_type (const gchar *filename, GError **error)
 {
 	GError *error_local = NULL;
 	GFile *file;
@@ -1728,7 +1728,7 @@ gpk_dbus_task_install_package_files_check_type (GpkDbusTask *task, GPtrArray *ar
 		data = (const gchar *) g_ptr_array_index (array, i);
 
 		/* get content type for this file */
-		content_type = gpk_dbus_task_install_package_files_check_type_get_content_type (task, data, error);
+		content_type = gpk_dbus_task_install_package_files_check_type_get_content_type (data, error);
 		if (content_type == NULL)
 			goto out;
 		egg_warning ("content_type=%s", content_type);
