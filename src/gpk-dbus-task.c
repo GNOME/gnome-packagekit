@@ -1663,6 +1663,125 @@ out:
 }
 
 /**
+ * gpk_dbus_task_install_package_files_check_type_get_content_type:
+ **/
+static gchar *
+gpk_dbus_task_install_package_files_check_type_get_content_type (GpkDbusTask *task, const gchar *filename, GError **error)
+{
+	GError *error_local = NULL;
+	GFile *file;
+	GFileInfo *info;
+	gchar *content_type = NULL;
+
+	/* get file info synchronously */
+	file = g_file_new_for_path (filename);
+	info = g_file_query_info (file, "standard::content-type", G_FILE_QUERY_INFO_NONE, NULL, &error_local);
+	if (info == NULL) {
+		*error = g_error_new (1, 0, "failed to get file attributes for %s: %s", filename, error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* get content type as string */
+	content_type = g_file_info_get_attribute_as_string (info, "standard::content-type");
+out:
+	if (info != NULL)
+		g_object_unref (info);
+	g_object_unref (file);
+	return content_type;
+}
+
+/**
+ * gpk_dbus_task_install_package_files_check_type:
+ *
+ * Skip files that are not present
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+static gboolean
+gpk_dbus_task_install_package_files_check_type (GpkDbusTask *task, GPtrArray *array, GError **error)
+{
+	guint i;
+	guint j;
+	const gchar *data;
+	gboolean ret;
+	GPtrArray *array_unknown;
+	const gchar *message_part;
+	const gchar *title;
+	gchar *message;
+	gchar *content_type;
+	GError *error_local = NULL;
+	gchar **supported_types;
+
+	array_unknown = g_ptr_array_new ();
+
+	/* get mime types supported by the backend */
+	supported_types = pk_control_get_mime_types (task->priv->control, &error_local);
+	if (supported_types == NULL) {
+		*error = g_error_new (1, 0, "failed to get supported types for the backend: %s", error_local->message);
+		g_error_free (error_local);
+		goto out;
+	}
+
+	/* find invalid files */
+	for (i=0; i<array->len; i++) {
+		data = (const gchar *) g_ptr_array_index (array, i);
+
+		/* get content type for this file */
+		content_type = gpk_dbus_task_install_package_files_check_type_get_content_type (task, data, error);
+		if (content_type == NULL)
+			goto out;
+		egg_warning ("content_type=%s", content_type);
+
+		/* can we support this one? */
+		ret = FALSE;
+		for (j=0; supported_types[j] != NULL; j++) {
+			if (g_strcmp0 (supported_types[j], content_type) == 0) {
+				ret = TRUE;
+				break;
+			}
+		}
+		g_free (content_type);
+
+		/* we can't handle the content type :-( */
+		if (!ret)
+			g_ptr_array_add (array_unknown, g_strdup (data));
+	}
+
+	/* warn, set error and quit */
+	ret = TRUE;
+	if (array_unknown->len > 0) {
+		/* TRANSLATORS: title: we couldn't find the file -- very hard to get this */
+		title = ngettext ("File was not recognised!",
+				  "Files were not recognised!", array_unknown->len);
+
+		/* TRANSLATORS: message: the backend would not be able to handle the mime-type */
+		message_part = ngettext ("The following file is not recognised by the packaging system:",
+					 "The following files are not recognised by the packaging system:", array_unknown->len);
+		message = gpk_dbus_task_ptr_array_to_bullets (array_unknown, message_part);
+
+		/* show UI */
+		gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
+		gpk_modal_dialog_set_title (task->priv->dialog, title);
+		gpk_modal_dialog_set_message (task->priv->dialog, message);
+		gpk_modal_dialog_present_with_time (task->priv->dialog, task->priv->timestamp);
+		gpk_modal_dialog_run (task->priv->dialog);
+
+		g_free (message);
+
+		ret = FALSE;
+		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "some files were not recognised");
+		goto out;
+	}
+
+out:
+	g_strfreev (supported_types);
+	g_ptr_array_foreach (array_unknown, (GFunc) g_free, NULL);
+	g_ptr_array_free (array_unknown, TRUE);
+	return ret;
+}
+
+/**
  * gpk_dbus_task_confirm_action:
  * @task: a valid #GpkDbusTask instance
  **/
@@ -1818,6 +1937,13 @@ gpk_dbus_task_install_package_files (GpkDbusTask *task, gchar **files_rel)
 
 	/* check all files exist and are readable by the local user */
 	ret = gpk_dbus_task_install_package_files_check_exists (task, array, &error);
+	if (!ret) {
+		dbus_g_method_return_error (task->priv->context, error);
+		goto out;
+	}
+
+	/* check all files can be handled by the backend */
+	ret = gpk_dbus_task_install_package_files_check_type (task, array, &error);
 	if (!ret) {
 		dbus_g_method_return_error (task->priv->context, error);
 		goto out;
