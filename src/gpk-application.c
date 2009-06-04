@@ -1331,7 +1331,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
 	    role == PK_ROLE_ENUM_ACCEPT_EULA) {
 		if (exit_enum == PK_EXIT_ENUM_SUCCESS)
-			gpk_update_viewer_primary_requeue (application);
+			gpk_application_primary_requeue (application);
 	}
 
 	/* do we need to update the search? */
@@ -2863,7 +2863,7 @@ gpk_application_media_change_event_cb (GpkHelperMediaChange *helper_media_change
 		goto out;
 
 	/* requeue */
-	gpk_update_viewer_primary_requeue (application);
+	gpk_application_primary_requeue (application);
 out:
 	return;
 }
