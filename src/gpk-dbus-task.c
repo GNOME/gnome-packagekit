@@ -644,7 +644,6 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 	gchar *text = NULL;
 	PkPackageId *id = NULL;
 	gchar *info_url = NULL;
-	gchar **package_ids = NULL;
 	GtkResponseType button;
 	gchar *package_id = NULL;
 
@@ -724,6 +723,7 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 				button = gpk_modal_dialog_run (task->priv->dialog);
 				if (button == GTK_RESPONSE_OK)
 					gpk_gnome_open (info_url);
+				g_free (info_url);
 			}
 			error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "nothing was found to handle mime type");
 			dbus_g_method_return_error (task->priv->context, error);
@@ -760,6 +760,7 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 				button = gpk_modal_dialog_run (task->priv->dialog);
 				if (button == GTK_RESPONSE_OK)
 					gpk_gnome_open (info_url);
+				g_free (info_url);
 			}
 			error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no files found");
 			dbus_g_method_return_error (task->priv->context, error);
@@ -800,6 +801,7 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 		package_id = pk_package_id_to_string (id);
 		/* convert to data */
 		task->priv->package_ids = pk_package_ids_from_id (package_id);
+		g_free (package_id);
 
 		/* install these packages with deps */
 		g_idle_add ((GSourceFunc) gpk_dbus_task_install_package_ids_dep_check_idle_cb, task);
@@ -996,9 +998,6 @@ skip_checks:
 	}
 
 out:
-	g_free (info_url);
-	g_free (package_id);
-	g_strfreev (package_ids);
 	if (error != NULL)
 		g_error_free (error);
 	if (error_local != NULL)
