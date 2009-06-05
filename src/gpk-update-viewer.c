@@ -51,6 +51,7 @@
 #include "gpk-enum.h"
 #include "gpk-helper-repo-signature.h"
 #include "gpk-helper-eula.h"
+#include "gpk-helper-deps-update.h"
 
 #define GPK_UPDATE_VIEWER_AUTO_QUIT_TIMEOUT	10 /* seconds */
 #define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
@@ -70,11 +71,13 @@ static PkControl *control = NULL;
 static PkPackageList *update_list = NULL;
 static GpkHelperRepoSignature *helper_repo_signature = NULL;
 static GpkHelperEula *helper_eula = NULL;
+static GpkHelperDepsUpdate *helper_deps_update = NULL;
 static EggMarkdown *markdown = NULL;
 static PkPackageId *package_id_last = NULL;
 static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
 static guint size_total = 0;
 static GConfClient *gconf_client = NULL;
+static gchar **install_package_ids = NULL;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -424,11 +427,15 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 		goto out;
 	}
 
-	/* set correct view */
+	/* save for finished */
 	package_ids = pk_package_ids_from_array (array);
-	ret = pk_client_update_packages (client_primary, package_ids, &error);
+	g_strfreev (install_package_ids);
+	install_package_ids = g_strdupv (package_ids);
+
+	/* get packages that also have to be updated */
+	ret = pk_client_get_depends (client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error);
 	if (!ret) {
-		egg_warning ("cannot update packages: %s", error->message);
+		egg_warning ("cannot get depends for updates: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -580,6 +587,12 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 
 	/* convert to string */
 	package_id = pk_package_id_to_string (obj->id);
+
+	/* are we simulating to get deps? */
+	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
+		egg_debug ("ignoring %s as we are in the depends phase", package_id);
+		goto out;
+	}
 
 	/* used for progress */
 	if (!gpk_update_viewer_is_update_info (obj->info)) {
@@ -1566,6 +1579,109 @@ out:
 }
 
 /**
+ * gpk_update_viewer_deps_update_event_cb:
+ **/
+static void
+gpk_update_viewer_deps_update_event_cb (GpkHelperDepsUpdate *helper, GtkResponseType type, PkPackageList *deps_list, gpointer data)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	gboolean valid;
+	GtkTreeIter iter;
+	gchar *package_id;
+	gchar *package_id_temp;
+	guint len;
+	guint i;
+	gboolean found;
+	gchar *text;
+	PkPackageId *id;
+	const PkPackageObj *obj;
+
+	/* get model */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+
+	if (type != GTK_RESPONSE_YES) {
+		/* clear selection */
+		gpk_update_viewer_reconsider_info (model);
+		gpk_update_viewer_undisable_packages ();
+		goto out;
+	}
+
+	/* need to select or add packages in deps_list */
+	len = PK_OBJ_LIST(deps_list)->len;
+	for (i=0; i<len; i++) {
+		obj = pk_package_list_get_obj (deps_list, i);
+		found = FALSE;
+
+		/* find it and select it */
+		valid = gtk_tree_model_get_iter_first (model, &iter);
+		while (valid && !found) {
+			gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_ID, &package_id_temp, -1);
+			id = pk_package_id_new_from_string (package_id_temp);
+
+			/* we found a match */
+			if (pk_package_id_equal (id, obj->id)) {
+				egg_debug ("selecting %s", id->name);
+				gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+						    GPK_UPDATES_COLUMN_SELECT, TRUE, -1);
+				found = TRUE;
+			}
+
+			g_free (package_id_temp);
+			pk_package_id_free (id);
+			valid = gtk_tree_model_iter_next (model, &iter);
+		}
+
+		/* not found, so add */
+		if (!found) {
+			package_id = pk_package_id_to_string (obj->id);
+			text = gpk_package_id_format_twoline (obj->id, obj->summary);
+			egg_debug ("adding: id=%s, text=%s", package_id, text);
+			gtk_list_store_append (list_store_updates, &iter);
+			gtk_list_store_set (list_store_updates, &iter,
+					    GPK_UPDATES_COLUMN_TEXT, text,
+					    GPK_UPDATES_COLUMN_ID, package_id,
+					    GPK_UPDATES_COLUMN_INFO, obj->info,
+					    GPK_UPDATES_COLUMN_SELECT, TRUE,
+					    GPK_UPDATES_COLUMN_SENSITIVE, FALSE,
+					    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
+					    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
+					    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
+					    GPK_UPDATES_COLUMN_SIZE, 0,
+					    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
+					    GPK_UPDATES_COLUMN_PULSE, -1,
+					    -1);
+			g_free (text);
+			g_free (package_id);
+		}
+	}
+
+	/* if there are no entries selected, deselect the button */
+	gpk_update_viewer_reconsider_info (model);
+
+	/* reset client */
+	ret = pk_client_reset (client_primary, &error);
+	if (!ret) {
+		egg_warning ("cannot reset client: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* actually install packages this time */
+	ret = pk_client_update_packages (client_primary, install_package_ids, &error);
+	if (!ret) {
+		egg_warning ("cannot install packages: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return;
+}
+
+/**
  * gpk_update_viewer_finished_cb:
  **/
 static void
@@ -1613,6 +1729,15 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	    exit == PK_EXIT_ENUM_CANCELLED) {
 		g_main_loop_quit (loop);
 		return;
+	}
+
+	/* finished depends check, show any extras */
+	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
+
+		/* show deps dialog */
+		list = pk_client_get_package_list (client);
+		gpk_helper_deps_update_show (helper_deps_update, list);
+		g_object_unref (list);
 	}
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
@@ -2699,6 +2824,10 @@ main (int argc, char *argv[])
 	g_signal_connect (helper_eula, "event", G_CALLBACK (gpk_update_viewer_eula_event_cb), NULL);
 	gpk_helper_eula_set_parent (helper_eula, GTK_WINDOW (main_window));
 
+	helper_deps_update = gpk_helper_deps_update_new ();
+	g_signal_connect (helper_deps_update, "event", G_CALLBACK (gpk_update_viewer_deps_update_event_cb), NULL);
+	gpk_helper_deps_update_set_parent (helper_deps_update, GTK_WINDOW (main_window));
+
 	/* create list stores */
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
@@ -2828,8 +2957,10 @@ main (int argc, char *argv[])
 	if (update_list != NULL)
 		g_object_unref (update_list);
 
+	g_strfreev (install_package_ids);
 	g_object_unref (helper_eula);
 	g_object_unref (helper_repo_signature);
+	g_object_unref (helper_deps_update);
 	g_object_unref (list_store_updates);
 	g_object_unref (text_buffer);
 	pk_package_id_free (package_id_last);
