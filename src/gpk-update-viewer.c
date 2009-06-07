@@ -852,6 +852,7 @@ static void
 gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
 {
 	GtkWidget *widget;
+	GdkWindow *window;
 	const gchar *text;
 	GdkDisplay *display;
 	GdkCursor *cursor;
@@ -865,12 +866,13 @@ gpk_update_viewer_status_changed_cb (PkClient *client, PkStatusEnum status, gpoi
 	gtk_widget_hide (widget);
 
 	/* set cursor back to normal */
+	window = gtk_widget_get_window (widget);
 	if (status == PK_STATUS_ENUM_FINISHED) {
-		gdk_window_set_cursor (widget->window, NULL);
+		gdk_window_set_cursor (window, NULL);
 	} else {
 		display = gdk_display_get_default ();
 		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
-		gdk_window_set_cursor (widget->window, cursor);
+		gdk_window_set_cursor (window, cursor);
 		gdk_cursor_unref (cursor);
 	}
 
@@ -2604,10 +2606,12 @@ static gboolean
 gpk_update_viewer_textview_motion_notify_event (GtkWidget *text_view, GdkEventMotion *event)
 {
 	gint x, y;
+	GdkWindow *window;
 
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, event->x, event->y, &x, &y);
 	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), x, y);
-	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+	window = gtk_widget_get_window (text_view);
+	gdk_window_get_pointer (window, NULL, NULL, NULL);
 	return FALSE;
 }
 
@@ -2621,8 +2625,10 @@ static gboolean
 gpk_update_viewer_textview_visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event)
 {
 	gint wx, wy, bx, by;
+	GdkWindow *window;
 
-	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+	window = gtk_widget_get_window (text_view);
+	gdk_window_get_pointer (window, &wx, &wy, NULL);
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, wx, wy, &bx, &by);
 	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), bx, by);
 	return FALSE;
