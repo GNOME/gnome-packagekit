@@ -38,10 +38,8 @@ typedef struct _GpkCellRendererSpinnerPrivate	GpkCellRendererSpinnerPrivate;
 
 struct _GpkCellRendererSpinner
 {
-	GtkCellRenderer parent_instance;
-
-	/*< private >*/
-	GpkCellRendererSpinnerPrivate *GSEAL (priv);
+	GtkCellRenderer			 parent;
+	GpkCellRendererSpinnerPrivate	*priv;
 };
 
 struct _GpkCellRendererSpinnerClass

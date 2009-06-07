@@ -107,13 +107,11 @@ gpk_cell_renderer_spinner_class_init (GpkCellRendererSpinnerClass *klass)
 static void
 gpk_cell_renderer_spinner_init (GpkCellRendererSpinner *cell)
 {
-	GpkCellRendererSpinnerPrivate *priv = GPK_CELL_RENDERER_SPINNER_GET_PRIVATE (cell);
-
-	priv->pulse = -1;
-	priv->size = GTK_ICON_SIZE_MENU;
-	priv->n_images = 0;
-	priv->images = NULL;
-	cell->priv = priv;
+	cell->priv = GPK_CELL_RENDERER_SPINNER_GET_PRIVATE (cell);
+	cell->priv->pulse = -1;
+	cell->priv->size = GTK_ICON_SIZE_MENU;
+	cell->priv->n_images = 0;
+	cell->priv->images = NULL;
 }
 
 GtkCellRenderer*
@@ -236,23 +234,27 @@ gpk_cell_renderer_spinner_get_size (GtkCellRenderer *cellr, GtkWidget *widget, G
 	GpkCellRendererSpinnerPrivate *priv = cell->priv;
 	gdouble align;
 	gint w, h;
+	gint xpad, ypad;
+	gfloat xalign, yalign;
 	gboolean rtl;
 
 	rtl = gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL;
 
 	gpk_cell_renderer_spinner_ensure_images (cell, widget);
 
-	w = gdk_pixbuf_get_width (priv->images[0]) + 2 * cellr->xpad;
-	h = gdk_pixbuf_get_height (priv->images[0]) + 2 * cellr->ypad;
+	gtk_misc_get_padding (GTK_MISC (cellr), &xpad, &ypad);
+	gtk_misc_get_alignment (GTK_MISC (cellr), &xalign, &yalign);
+	w = gdk_pixbuf_get_width (priv->images[0]) + 2 * xpad;
+	h = gdk_pixbuf_get_height (priv->images[0]) + 2 * ypad;
 
 	if (cell_area) {
 		if (x_offset) {
-			align = rtl ? 1.0 - cellr->xalign : cellr->xalign;
+			align = rtl ? 1.0 - xalign : xalign;
 			*x_offset = align * (cell_area->width - w);
 			*x_offset = MAX (*x_offset, 0);
 		}
 		if (y_offset) {
-			align = rtl ? 1.0 - cellr->yalign : cellr->yalign;
+			align = rtl ? 1.0 - yalign : yalign;
 			*y_offset = align * (cell_area->height - h);
 			*y_offset = MAX (*y_offset, 0);
 		}
@@ -279,6 +281,7 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 	GdkRectangle pix_rect;
 	GdkRectangle draw_rect;
 	cairo_t *cr;
+	gint xpad, ypad;
 
 	if (priv->pulse < 0)
 		return;
@@ -287,10 +290,11 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 					    &pix_rect.x, &pix_rect.y,
 					    &pix_rect.width, &pix_rect.height);
 
-	pix_rect.x += cell_area->x + cellr->xpad;
-	pix_rect.y += cell_area->y + cellr->ypad;
-	pix_rect.width -= cellr->xpad * 2;
-	pix_rect.height -= cellr->ypad * 2;
+	gtk_misc_get_padding (GTK_MISC (cellr), &xpad, &ypad);
+	pix_rect.x += cell_area->x + xpad;
+	pix_rect.y += cell_area->y + ypad;
+	pix_rect.width -= xpad * 2;
+	pix_rect.height -= ypad * 2;
 
 	if (!gdk_rectangle_intersect (cell_area, &pix_rect, &draw_rect) ||
 			!gdk_rectangle_intersect (expose_area, &draw_rect, &draw_rect))
@@ -302,6 +306,7 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 		pixbuf = priv->images[1 + priv->pulse % (priv->n_images - 1)];
 	g_object_ref (pixbuf);
 
+#if 0
 	if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE || !cellr->sensitive) {
 		GtkIconSource *source;
 
@@ -324,6 +329,7 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 						"gtkcellrendererpixbuf");
 		 gtk_icon_source_free (source);
 	}
+#endif
 
 	cr = gdk_cairo_create (window);
 

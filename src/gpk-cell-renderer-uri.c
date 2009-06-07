@@ -183,7 +183,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 		cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
 	else
 		cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
-	gdk_window_set_cursor (widget->window, cursor);
+	gdk_window_set_cursor (window, cursor);
 	gdk_cursor_unref (cursor);
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 

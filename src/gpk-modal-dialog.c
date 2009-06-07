@@ -214,6 +214,7 @@ gboolean
 gpk_modal_dialog_set_parent (GpkModalDialog *dialog, GdkWindow *window)
 {
 	GtkWidget *widget;
+	GdkWindow *window_ours;
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	/* never set, and nothing now */
@@ -243,7 +244,8 @@ gpk_modal_dialog_set_parent (GpkModalDialog *dialog, GdkWindow *window)
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_widget_realize (widget);
 	gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
-	gdk_window_set_transient_for (GTK_WIDGET (widget)->window, window);
+	window_ours = gtk_widget_get_window (widget);
+	gdk_window_set_transient_for (window_ours, window);
 	dialog->priv->has_parent = TRUE;
 	return TRUE;
 }
@@ -367,12 +369,6 @@ gpk_modal_dialog_pulse_progress (GpkModalDialog *dialog)
 
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
-
-	/* if there's no slider, optimise out the polling */
-	if (!GTK_WIDGET_VISIBLE (widget)) {
-		dialog->priv->pulse_timer_id = 0;
-		return FALSE;
-	}
 	return TRUE;
 }
 

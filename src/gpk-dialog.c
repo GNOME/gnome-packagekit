@@ -201,7 +201,9 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 150);
 	}
 
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), scroll);
+	/* add scrolled window */
+	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+	gtk_container_add (GTK_CONTAINER (widget), scroll);
 
 	/* free the store */
 	g_signal_connect (G_OBJECT (dialog), "unrealize",
@@ -254,7 +256,9 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
 	gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 300);
 
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), scroll);
+	/* add scrolled window */
+	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+	gtk_container_add (GTK_CONTAINER (widget), scroll);
 	g_free (text);
 
 	return TRUE;
@@ -283,22 +287,24 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 gboolean
 gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 {
+	GtkWidget *check_button;
 	GtkWidget *widget;
 	gboolean checked;
 	GConfClient *gconf_client;
 
 	/* add a checkbutton for deps screen */
-	widget = gtk_check_button_new_with_label (_("Do not show this again"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), (gpointer) key);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), widget);
+	check_button = gtk_check_button_new_with_label (_("Do not show this again"));
+	g_signal_connect (check_button, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), (gpointer) key);
+	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+	gtk_container_add (GTK_CONTAINER (widget), check_button);
 
 	/* checked? */
 	gconf_client = gconf_client_get_default ();
 	checked = gconf_client_get_bool (gconf_client, key, NULL);
 	g_object_unref (gconf_client);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), !checked);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button), !checked);
 
-	gtk_widget_show (widget);
+	gtk_widget_show (check_button);
 	return TRUE;
 }
 

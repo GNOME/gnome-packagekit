@@ -2081,7 +2081,8 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 static void
 gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
 {
-	GtkWidget     *widget;
+	GtkWidget *widget;
+	GdkWindow *window;
 	GtkRequisition requisition;
 	gint menu_xpos = 0;
 	gint menu_ypos = 0;
@@ -2089,7 +2090,8 @@ gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *
 	widget = GTK_WIDGET (user_data);
 
 	/* find the location */
-	gdk_window_get_origin (widget->window, &menu_xpos, &menu_ypos);
+	window = gtk_widget_get_window (widget);
+	gdk_window_get_origin (window, &menu_xpos, &menu_ypos);
 	gtk_widget_size_request (GTK_WIDGET (widget), &requisition);
 
 	/* set the position */
