@@ -81,6 +81,11 @@ typedef guint PkMediaTypeEnum;
 #define PK_ERROR_ENUM_NOT_AUTHORIZED		(PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED + 1)
 #endif
 
+/* constants defined in 0.4.9 */
+#if (!PK_CHECK_VERSION(0,4,9))
+#define PK_ERROR_ENUM_UPDATE_NOT_FOUND		(PK_ERROR_ENUM_NOT_AUTHORIZED + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

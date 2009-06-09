@@ -454,6 +454,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_NOT_AUTHORIZED:
 		text = _("Authorization failed");
 		break;
+	case PK_ERROR_ENUM_UPDATE_NOT_FOUND:
+		text = _("Update not found");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -642,6 +645,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_NOT_AUTHORIZED:
 		text = _("You have failed to provide correct authentication. Please check any passwords or account settings.");
+		break;
+	case PK_ERROR_ENUM_UPDATE_NOT_FOUND:
+		text = _("The specified update could not be found.\n"
+			 "It could have already been installed or no longer available on the remote server.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
