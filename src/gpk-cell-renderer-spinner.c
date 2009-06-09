@@ -242,8 +242,12 @@ gpk_cell_renderer_spinner_get_size (GtkCellRenderer *cellr, GtkWidget *widget, G
 
 	gpk_cell_renderer_spinner_ensure_images (cell, widget);
 
-	gtk_misc_get_padding (GTK_MISC (cellr), &xpad, &ypad);
-	gtk_misc_get_alignment (GTK_MISC (cellr), &xalign, &yalign);
+	g_object_get (cellr,
+		      "xpad", &xpad,
+		      "ypad", &ypad,
+		      "xalign", &xalign,
+		      "yalign", &yalign,
+		      NULL);
 	w = gdk_pixbuf_get_width (priv->images[0]) + 2 * xpad;
 	h = gdk_pixbuf_get_height (priv->images[0]) + 2 * ypad;
 
@@ -290,7 +294,10 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 					    &pix_rect.x, &pix_rect.y,
 					    &pix_rect.width, &pix_rect.height);
 
-	gtk_misc_get_padding (GTK_MISC (cellr), &xpad, &ypad);
+	g_object_get (cellr,
+		      "xpad", &xpad,
+		      "ypad", &ypad,
+		      NULL);
 	pix_rect.x += cell_area->x + xpad;
 	pix_rect.y += cell_area->y + ypad;
 	pix_rect.width -= xpad * 2;
