@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "POT-Creation-Date: 2009-04-22 12:02+0000\n"
-"PO-Revision-Date: 2009-06-08 22:02+0100\n"
+"PO-Revision-Date: 2009-06-14 12:35+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -369,10 +369,21 @@ msgid ""
 "all privileged operations is controlled via <ulink url=\"http://en.wikipedia."
 "org/wiki/PolicyKit\">PolicyKit</ulink>."
 msgstr ""
+"Eine der grundlegenden Verbesserungen von PackageKit gegenüber anderen "
+"Paketverwaltungen ist, dass der PackageKit-Dienst als Systemprozess läuft und "
+"nicht einer bestimmten Benutzersitzung zugeordnet ist. Eine langwierige "
+"Aktualisierung oder Installation kann auf diese Weise nicht durch einen sich "
+"abmeldenden Benutzer abgebrochen werden. Aufgaben werden in einer "
+"Warteschlange vorgehalten. Das bedeutet, dass ein Benutzer mehrere Aufgaben "
+"anstoßen kann, die nacheinander abgearbeitet werden. Außerdem können mehrere "
+"Benutzer gleichzeitig PackageKit parallel nutzen, ohne jeweils voneinander zu "
+"wissen, wer welche Aufgaben startet. Der Zugriff auf alle privilegierten "
+"Vorgänge wird über  <ulink url=\"http://en.wikipedia.org/wiki/PolicyKit"
+"\">PolicyKit</ulink> gesteuert."
 
 #: C/gnome-packagekit.xml:156(title) C/gnome-packagekit.xml:945(title)
 msgid "PolicyKit Permissions UI"
-msgstr ""
+msgstr "Grafische Oberfläche der PolicyKit-Zugriffsrechte"
 
 #: C/gnome-packagekit.xml:169(title)
 msgid "Applications"
@@ -439,6 +450,9 @@ msgid ""
 "packages. This also gets run if you double-click on a package in your desktop "
 "or within a file manager."
 msgstr ""
+"<command>gpk-install-file</command>: Installiert lokal verfügbare "
+"Softwarepakete. Dies wird auch dann ausgeführt, wenn Sie auf ein Paket auf "
+"Ihrem Desktop oder in Ihrem Dateimanager doppelklicken."
 
 #: C/gnome-packagekit.xml:234(para)
 msgid ""
@@ -448,12 +462,20 @@ msgid ""
 "available, and is responsible for showing notifications about PackageKit "
 "operations and events."
 msgstr ""
+"<command>gpk-update-icon</command>: Wenn PackageKit installiert ist, startet "
+"es das Sitzungssymbol beim Anmelden automatisch. Diese Anwendung zeigt ein "
+"Symbol im Benachrichtigungsfeld Ihres Panels an, wenn "
+"Softwareaktualisierungen zur Verfügung stehen. Außerdem ist es für "
+"Benachrichtigungen über Operationen und Ereignisse in PackageKit zuständig."
 
 #: C/gnome-packagekit.xml:246(para)
 msgid ""
 "<command>gpk-backend-status</command>: Shows technical status of support for "
 "the underlying package management backend. Only useful for developers."
 msgstr ""
+"<command>gpk-backend-status</command>: Zeigt den technischen Status der "
+"Unterstützung des zugrundeliegenden Paketverwaltungs-Backends. Dies dürfte "
+"nur für Entwickler von Bedeutung sein."
 
 #: C/gnome-packagekit.xml:257(title)
 msgid "Add/Remove Software"
@@ -485,6 +507,13 @@ msgid ""
 "graphical application and based on the software license. See <xref linkend="
 "\"filters\"/> for more information about filters."
 msgstr ""
+"Typischerweise finden Sie einige Tausend Softwarepakete, die in verschiedenen "
+"Gruppen verfügbar gemacht werden. Die Anzahl ist wohl beeindruckend, aber "
+"unübersichtlich. Daher können Sie Filter für verschiedene Kriterien "
+"auswählen: Ist das Paket bereits installiert? Handelt es sich um eine "
+"grafische Anwendung oder eine Entwicklungssoftware? Unter welcher Lizenz wird "
+"es veröffentlicht? Weitere Informationen über Filter finden Sie in <xref "
+"linkend=\"filters\"/>."
 
 #: C/gnome-packagekit.xml:289(para)
 msgid ""
@@ -580,6 +609,12 @@ msgid ""
 "installing a package with the necessary information. These are usually called "
 "(foo)-release, where foo is the name of the repository."
 msgstr ""
+"Derzeit bietet PackageKit keine Möglichkeit, neue Softwarebestände zu ihrem "
+"System hinzuzufügen. Es erlaubt lediglich die Aktivierung oder Deaktivierung "
+"vorhandener Bestände. Allerdings ist es oft möglich, PackageKit mit einer "
+"neuen Quelle bekannt zu machen, indem Sie ein Paket mit den benötigten "
+"Informationen installieren. Diese Pakete heißen üblicherweise »(foo)-release«, "
+"wobei »foo« für den Namen des Softwarebestandes steht."
 
 #: C/gnome-packagekit.xml:374(title)
 msgid "File Handler Helper"
@@ -591,6 +626,9 @@ msgid ""
 "file. If the file type is not recognised, then applications that can open "
 "this file type are shown."
 msgstr ""
+"Manchmal möchten Sie vielleicht verhindern, dass eine Software auf Ihrem "
+"System eine bestimmte Datei öffnet. Falls der Dateityp nicht erkannt wurde, "
+"werden Anwendungen angezeigt, die mit diesem Dateityp umgehen können."
 
 #: C/gnome-packagekit.xml:380(para)
 msgid ""
@@ -634,12 +672,18 @@ msgid ""
 "indication how long ago the last check (or <quote>refresh</quote>) for new "
 "updates happened, and when updates where last installed."
 msgstr ""
+"Unterhalb der Zusammenfassung der verfügbaren Aktualisierungen informiert Sie "
+"der Aktualisierungsbetrachter darüber, wann die vorhandenen Aktualisierungen "
+"zuletzt überprüft (oder »aufgefrischt«) und wann zuletzt Aktualisierungen "
+"installiert wurden."
 
 #: C/gnome-packagekit.xml:421(para)
 msgid ""
 "You can choose to manually refresh and verify the presence of updates by "
 "clicking the <guibutton>Refresh</guibutton> button."
 msgstr ""
+"Sie können vorhandene Aktualisierungen manuell auffrischen und überprüfen, "
+"indem Sie auf den <guibutton>Auffrischen</guibutton>-Knopf klicken."
 
 #: C/gnome-packagekit.xml:425(para)
 msgid ""
@@ -689,16 +733,23 @@ msgid ""
 "to install only the selected updates. If you do not want to install updates "
 "at this time, you can just close the window."
 msgstr ""
+"Die Ankreuzfelder neben jedem Paket in der Liste ermöglichen Ihnen, einzelne "
+"Pakete für die Installation auszuwählen. Verwenden Sie den Knopf "
+"<guibutton>Aktualisierungen installieren</guibutton>, um nur die ausgewählten "
+"Aktualisierungen zu installieren."
 
 #: C/gnome-packagekit.xml:463(title)
 msgid "Update viewer tool"
-msgstr ""
+msgstr "Werkzeug zum Betrachten von Aktualisierungen"
 
 #: C/gnome-packagekit.xml:472(para)
 msgid ""
 "You can uncheck all the updates quickly by right clicking on the list and "
 "selecting the menu item <guibutton>Unselect all</guibutton>."
 msgstr ""
+"Sie können auf einfache Art und Weise alle Aktualisierungen abwählen, indem "
+"Sie mit der rechten Maustaste in die Liste klicken und anschließend "
+"<guibutton>Alle abwählen</guibutton> anklicken."
 
 #: C/gnome-packagekit.xml:480(title)
 msgid "Software Updates Preferences"
@@ -722,10 +773,24 @@ msgid ""
 "These settings are per-user and effective only for the current user logged in "
 "the system."
 msgstr ""
+"Die Einstellungen können in <menuchoice><guimenu>System</"
+"guimenu><guisubmenu>Einstellungen</guisubmenu><guisubmenu>System</"
+"guisubmenu><guimenuitem>Software-Aktualiserungen</guimenuitem></menuchoice> "
+"geändert werden. Sie können festlegen, ob täglich, stündlich, wöchentlich "
+"oder niemals nach Aktualiserungen gesucht werden soll. Beachten Sie, dass "
+"diese Zeitabstände lediglich ungefähre Werte sind, denn die Suche nach "
+"Aktualisierungen kann durch andere Ereignisse überlagert werden, wie das "
+"Entsperren des Bildschirms, das Zustandekommen einer Netzwerkverbindung oder "
+"die Suche eines anderen Benutzers nach Aktualisierungen. Die Vorgabe hierbei "
+"sit die tägliche Überprüfung. Sie können auch bestimmen, dass alle "
+"Aktualisierungen automatisch installiert werden oder nur jene, die "
+"Sicherheitslücken schließen. Diese Einstellungen sind für den jeweiligen "
+"Benutzer gültig und wirken sich nur auf den am System angemeldeten Benutzer "
+"aus."
 
 #: C/gnome-packagekit.xml:508(title)
 msgid "Software Log Viewer"
-msgstr ""
+msgstr "Software-Protokollbtrachter"
 
 #: C/gnome-packagekit.xml:510(title)
 msgid "Log viewer"
@@ -737,26 +802,35 @@ msgid ""
 "guimenu><guisubmenu>System Tools</guisubmenu><guimenuitem>Software Log "
 "Viewer</guimenuitem></menuchoice>."
 msgstr ""
+"Um dieses Werkzeug zu öffnen, wählen Sie <menuchoice><guimenu>Anwendungen</"
+"guimenu><guisubmenu>Systemwerkzeuge</guisubmenu><guimenuitem>Software-"
+"Protokollbetrachter</guimenuitem></menuchoice>."
 
 #: C/gnome-packagekit.xml:524(para)
 msgid ""
 "The log viewer can be used to find out what updates were downloaded and "
 "installed. The filter will match on the package name, version or architecture."
 msgstr ""
+"Der Protokollbetrachter dient dazu, die heruntergeladenen und installierten "
+"Aktualisierungen zu betrachten. Eine Filterung nach Paketnamen, Versionen "
+"oder Architektur ist möglich."
 
 #: C/gnome-packagekit.xml:529(para)
 msgid ""
 "It can also can be used to roll back to a specific point for package backends "
 "that support <literal>RollBack</literal>."
 msgstr ""
+"Sie können auch zu einer bestimmten Stelle der Paketinstallation "
+"zurückrollen, sofern das Paketverwaltungs-Backend <literal>RollBack</literal> "
+"unterstützt."
 
 #: C/gnome-packagekit.xml:536(title)
 msgid "Service Pack Creator"
-msgstr ""
+msgstr "Servicepaket-Erstellung"
 
 #: C/gnome-packagekit.xml:538(title)
 msgid "Service pack creator"
-msgstr ""
+msgstr "Servicepaket-Erstellung"
 
 #: C/gnome-packagekit.xml:547(para)
 msgid ""
@@ -764,6 +838,9 @@ msgid ""
 "guimenu><guisubmenu>System Tools</guisubmenu><guimenuitem>Service Pack "
 "Creator</guimenuitem></menuchoice>."
 msgstr ""
+"Um dieses Werkzeug zu öffnen, wählen Sie <menuchoice><guimenu>Anwendungen</"
+"guimenu><guisubmenu>Systemwerkzeuge</guisubmenu><guimenuitem>Servicepaket-"
+"Erstellung</guimenuitem></menuchoice>."
 
 #: C/gnome-packagekit.xml:552(para)
 msgid ""
@@ -771,6 +848,9 @@ msgid ""
 "dependencies. To explain better what a service pack is, it is best to show a "
 "few use-cases."
 msgstr ""
+"Ein Servicepaket ist ein tar-Archiv, welches eine Reihe von Paketen und deren "
+"Abhängigkeiten enthält. Um zu verdeutlichen, was ein Servicepaket ist, zeigen "
+"wir hier einige Anwendungsfälle."
 
 #: C/gnome-packagekit.xml:556(para)
 msgid ""
@@ -820,6 +900,8 @@ msgid ""
 "We need a destination file list because we not know what packages are "
 "installed on the destination computer. For example:"
 msgstr ""
+"Wir benötigen eine Ziel-Dateiliste, da wir nicht wissen, welche Pakete auf "
+"dem Zielrechner installiert sind. Beispiel:"
 
 #: C/gnome-packagekit.xml:605(title)
 msgid "Two example computers"
@@ -894,12 +976,16 @@ msgid ""
 "The service pack can now be transferred from computer A to computer B on the "
 "USB pendrive."
 msgstr ""
+"Das Servicepaket kann nun vom Rechner A zum Rechner B mit Hilfe des USB-"
+"Speichersticks übertragen werden."
 
 #: C/gnome-packagekit.xml:655(para)
 msgid ""
 "The <command>pkgenpack</command> command line tool can also be used for "
 "creating service pack files."
 msgstr ""
+"Das Befehlszeilenwerkzeug <command>pkgenpack</command> kann auch dazu benutzt "
+"werden, um Servicepaket-Dateien zu erstellen."
 
 #: C/gnome-packagekit.xml:662(title)
 msgid "Automatic Updates"
@@ -938,6 +1024,11 @@ msgid ""
 "defines the legal terms under which a user may use the software. This is "
 "called an end-user license agreement or EULA for short."
 msgstr ""
+"Eine Lizenzvereinbarung ist ein Vertrag zwischen dem Hersteller und dem "
+"Benutzer einer Software, der dem Benutzer eine Softwarelizenz gewährt. Eine "
+"Software-Lizenzvereinbarung definiert die rechtlichen Grundlagen des "
+"Gebrauchs der Software durch den Benutzer. Dies wird Endbenutzer-"
+"Lizenzvertrag oder kurz EULA genannt."
 
 #: C/gnome-packagekit.xml:703(para)
 msgid ""
@@ -957,10 +1048,12 @@ msgid ""
 "Be sure to carefully read and accept the EULA text before continuing with the "
 "install or update."
 msgstr ""
+"Lesen Sie die EULA sorgfältig und akzeptieren Sie sie, bevor Sie die "
+"Installation oder Aktualisierung fortsetzen."
 
 #: C/gnome-packagekit.xml:727(title)
 msgid "Accepting a security signature"
-msgstr ""
+msgstr "Akzeptieren einer Sicherheitssignatur"
 
 #: C/gnome-packagekit.xml:728(para)
 msgid ""
@@ -995,6 +1088,8 @@ msgid ""
 "You should only proceed with this dialog if you are happy to trust packages "
 "from this software source."
 msgstr ""
+"Sie sollten diesen Dialog nur dann fortsetzen, wenn Sie tatsächlich den "
+"Paketen aus dieser Softwarequelle Ihr Vertrauen schenken wollen."
 
 #: C/gnome-packagekit.xml:764(title)
 msgid "Common Dialogs Explained"
@@ -1038,7 +1133,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:803(title)
 msgid "Installing Catalogs"
-msgstr ""
+msgstr "Installieren von Katalogen"
 
 #: C/gnome-packagekit.xml:804(para)
 msgid ""
@@ -1053,10 +1148,13 @@ msgid ""
 "To find more information about catalogs, please visit the <ulink url=\"http://"
 "www.packagekit.org/pk-faq.html#catalogs\" type=\"http\">FAQ</ulink>."
 msgstr ""
+"Weitere Informationen über Kataloge finden Sie in den <ulink url=\"http://www."
+"packagekit.org/pk-faq.html#catalogs\" type=\"http\">Häufig gestellten Fragen</"
+"ulink>."
 
 #: C/gnome-packagekit.xml:818(title)
 msgid "No Packages Required"
-msgstr ""
+msgstr "Keine Pakete notwendig"
 
 #: C/gnome-packagekit.xml:819(para)
 msgid ""
@@ -1066,11 +1164,11 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:831(title)
 msgid "Confirmation Required"
-msgstr ""
+msgstr "Bestätigung erforderlich"
 
 #: C/gnome-packagekit.xml:833(title)
 msgid "Example plugin dialog"
-msgstr ""
+msgstr "Beispiel-Plugindialog"
 
 #: C/gnome-packagekit.xml:842(para)
 msgid ""
@@ -1078,6 +1176,9 @@ msgid ""
 "system. The program name and the icon is from the application asking for "
 "permission."
 msgstr ""
+"Eine Anwendung erfordert die entsprechenden Zugriffsrechte, um Pakete auf "
+"Ihrem System zu ändern. Der Programmname und das Symbol stammen aus der "
+"Anwendung, die nach den Zugriffsrechten fragt."
 
 #: C/gnome-packagekit.xml:849(title)
 msgid "Finding Other Required Packages"
@@ -1191,10 +1292,12 @@ msgstr ""
 msgid ""
 "If you cannot authenticate, you need to speak to your systems administrator."
 msgstr ""
+"Falls Sie sich nicht legitimieren können, sollten Sie Ihren Systemverwalter "
+"kontaktieren."
 
 #: C/gnome-packagekit.xml:967(title)
 msgid "No PackageKit Service Running"
-msgstr ""
+msgstr "PackageKit-Dienst läuft nicht"
 
 #: C/gnome-packagekit.xml:968(para)
 msgid ""
@@ -1213,6 +1316,9 @@ msgid ""
 "All the packages that can be updated on your system are now being updated. "
 "You can cancel the update if the cancel button is not insensitive."
 msgstr ""
+"Alle auf Ihrem System aktualisierbaren Pakete wurden nun aktualisiert. Sie "
+"können die Aktualisierung abbrechen, sofern der <guibutton>Abbrechen</"
+"guibutton>-Knopf nicht ausgegraut ist."
 
 #: C/gnome-packagekit.xml:985(title)
 msgid "Update Packages"
@@ -1223,6 +1329,9 @@ msgid ""
 "Some packages on your system are now being upgraded. You can cancel the "
 "update if the cancel button is not insensitive."
 msgstr ""
+"Einige Pakete auf Ihrem System wurden nun aktualisiert. Sie können die "
+"Aktualisierung abbrechen, sofern der <guibutton>Abbrechen</guibutton>-Knopf "
+"nicht ausgegraut ist."
 
 #: C/gnome-packagekit.xml:993(title)
 msgid "Refreshing Package Lists"
@@ -1255,6 +1364,11 @@ msgid ""
 "org/\" type=\"http\"><application>gnome-packagekit</application> web page</"
 "ulink>."
 msgstr ""
+"<application>gnome-packagekit</application> wird von Richard Hughes "
+"<email>richard@hughsie.com</email> verwaltet und gemeinsamen mit einigen  "
+"anderen Mitstreitern entwickelt. Weitere Informationen über "
+"<application>gnome-packagekit</application> finden Sie auf dessen <ulink url="
+"\"http://www.packagekit.org/\" type=\"http\">Webseite</ulink>."
 
 #: C/gnome-packagekit.xml:1017(para)
 msgid ""
@@ -1262,6 +1376,10 @@ msgid ""
 "manual, follow the directions at the <ulink url=\"http://www.packagekit.org/"
 "\" type=\"http\"><application>gnome-packagekit</application> Bug Page</ulink>."
 msgstr ""
+"Wenn Sie Fehler finden oder Vorschläge zu dieser Anwendung oder zu diesem "
+"Handbuch haben, folgen Sie den Anweisungen auf der <ulink url=\"http://www."
+"packagekit.org/\" type=\"http\">Bug-Webseite von<application>gnome-"
+"packagekit</application></ulink>."
 
 #: C/gnome-packagekit.xml:1023(para)
 msgid ""
