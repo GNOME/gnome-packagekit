@@ -391,8 +391,8 @@ gpk_helper_run_set_parent (GpkHelperRun *helper, GtkWindow *window)
 	gtk_window_set_transient_for (widget, window);
 	gtk_window_set_modal (widget, TRUE);
 
-	/* this is a modal popup, so don't show a window title */
-	gtk_window_set_title (widget, "");
+	/* this is a modal popup */
+	gtk_window_set_type_hint (widget, GDK_WINDOW_TYPE_HINT_DIALOG);
 
 	return TRUE;
 }
