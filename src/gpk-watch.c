@@ -44,6 +44,7 @@
 #include "egg-string.h"
 
 #include "gpk-common.h"
+#include "gpk-session.h"
 #include "gpk-error.h"
 #include "gpk-watch.h"
 #include "gpk-modal-dialog.h"
@@ -1222,8 +1223,13 @@ static void
 gpk_watch_menu_log_out_cb (GtkMenuItem *item, gpointer data)
 {
 	GpkWatch *watch = GPK_WATCH (data);
+	GpkSession *session;
 	g_return_if_fail (GPK_IS_WATCH (watch));
-	gpk_session_logout ();
+
+	/* just ask for logout */
+	session = gpk_session_new ();
+	gpk_session_logout (session);
+	g_object_unref (session);
 }
 
 /**

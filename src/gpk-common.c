@@ -170,48 +170,6 @@ gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const g
 }
 
 /**
- * gpk_session_logout:
- **/
-gboolean
-gpk_session_logout (void)
-{
-	DBusGConnection *connection;
-	DBusGProxy *proxy = NULL;
-	gboolean ret = FALSE;
-	GError *error = NULL;
-
-	/* connect to DBus */
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
-	if (connection == NULL) {
-		egg_warning ("Failed to connect to DBus: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-
-	/* connect to SessionManager */
-	proxy = dbus_g_proxy_new_for_name (connection, GNOME_SESSION_MANAGER_NAME,
-					   GNOME_SESSION_MANAGER_PATH,
-					   GNOME_SESSION_MANAGER_INTERFACE);
-	if (proxy == NULL) {
-		egg_warning ("cannot connect to session manager");
-		goto out;
-	}
-	ret = dbus_g_proxy_call (proxy, "Logout", &error,
-				 G_TYPE_UINT, 0,
-				 G_TYPE_INVALID,
-				 G_TYPE_INVALID);
-	if (!ret) {
-		egg_warning ("Failed to logout: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-out:
-	if (proxy != NULL)
-		g_object_unref (proxy);
-	return ret;
-}
-
-/**
  * gpk_window_set_size_request:
  **/
 gboolean

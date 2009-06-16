@@ -33,16 +33,15 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
-#include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib/packagekit.h>
 #include <devkit-power-gobject/devicekit-power.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
-#include "egg-dbus-monitor.h"
 
 #include "gpk-common.h"
+#include "gpk-session.h"
 #include "gpk-auto-refresh.h"
 #include "gpk-enum.h"
 
@@ -51,10 +50,6 @@ static void     gpk_auto_refresh_finalize	(GObject            *object);
 #define GPK_AUTO_REFRESH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_AUTO_REFRESH, GpkAutoRefreshPrivate))
 #define GPK_AUTO_REFRESH_PERIODIC_CHECK		60*60	/* force check for updates every this much time */
 #define GPK_UPDATES_LOGIN_TIMEOUT		3	/* seconds */
-
-#define GS_DBUS_SERVICE				"org.gnome.ScreenSaver"
-#define GS_DBUS_PATH				"/org/gnome/ScreenSaver"
-#define GS_DBUS_INTERFACE			"org.gnome.ScreenSaver"
 
 /*
  * at startup, after a small delay, force a GetUpdates call
@@ -71,11 +66,9 @@ struct GpkAutoRefreshPrivate
 	gboolean		 force_get_updates_login;
 	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
-	EggDbusMonitor		*monitor_gs;
 	DkpClient		*client;
 	GConfClient		*gconf_client;
-	DBusGProxy		*proxy_gs;
-	DBusGConnection		*connection;
+	GpkSession		*session;
 	PkControl		*control;
 };
 
@@ -400,10 +393,10 @@ gpk_auto_refresh_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConf
 }
 
 /**
- * gpk_auto_refresh_idle_cb:
+ * gpk_auto_refresh_session_idle_changed_cb:
  **/
 static void
-gpk_auto_refresh_idle_cb (DBusGProxy *proxy, gboolean is_idle, GpkAutoRefresh *arefresh)
+gpk_auto_refresh_session_idle_changed_cb (GpkSession *session, gboolean is_idle, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
@@ -486,44 +479,6 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 }
 
 /**
- * pk_connection_gs_changed_cb:
- **/
-static void
-pk_connection_gs_changed_cb (EggDbusMonitor *egg_dbus_monitor, gboolean connected, GpkAutoRefresh *arefresh)
-{
-	GError *error = NULL;
-
-	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
-
-	egg_debug ("gnome-screensaver connection-changed: %i", connected);
-
-	/* is this valid? */
-	if (!connected) {
-		if (arefresh->priv->proxy_gs != NULL) {
-			g_object_unref (arefresh->priv->proxy_gs);
-			arefresh->priv->proxy_gs = NULL;
-		}
-		return;
-	}
-
-	/* use gnome-screensaver for the idle detection */
-	arefresh->priv->proxy_gs = dbus_g_proxy_new_for_name_owner (arefresh->priv->connection,
-					  GS_DBUS_SERVICE, GS_DBUS_PATH, GS_DBUS_INTERFACE, &error);
-	if (error != NULL) {
-		egg_warning ("Cannot connect to gnome-screensaver: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-	/* get SessionIdleChanged */
-	dbus_g_proxy_add_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
-				 G_TYPE_BOOLEAN, G_TYPE_INVALID);
-	dbus_g_proxy_connect_signal (arefresh->priv->proxy_gs, "SessionIdleChanged",
-				     G_CALLBACK (gpk_auto_refresh_idle_cb),
-				     arefresh, NULL);
-
-}
-
-/**
  * gpk_auto_refresh_client_changed_cb:
  **/
 static void
@@ -554,17 +509,14 @@ gpk_auto_refresh_client_changed_cb (DkpClient *client, GpkAutoRefresh *arefresh)
 static void
 gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 {
-	GError *error = NULL;
 	PkNetworkEnum state;
 
 	arefresh->priv = GPK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->on_battery = FALSE;
-	arefresh->priv->session_idle = FALSE;
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->force_get_updates_login = FALSE;
 	arefresh->priv->timeout_id = 0;
 	arefresh->priv->force_get_updates_login_timeout_id = 0;
-	arefresh->priv->proxy_gs = NULL;
 
 	/* we need to know the updates frequency */
 	arefresh->priv->gconf_client = gconf_client_get_default ();
@@ -583,14 +535,6 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	state = pk_control_get_network_state (arefresh->priv->control, NULL);
 	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
 
-	/* connect to session bus */
-	arefresh->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
-	if (error != NULL) {
-		egg_warning ("Cannot connect to session bus: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-
 	/* use a DkpClient */
 	arefresh->priv->client = dkp_client_new ();
 	g_signal_connect (arefresh->priv->client, "changed",
@@ -600,11 +544,11 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->on_battery = dkp_client_on_battery (arefresh->priv->client);
 	egg_debug ("setting on battery %i", arefresh->priv->on_battery);
 
-	/* watch gnome-screensaver */
-	arefresh->priv->monitor_gs = egg_dbus_monitor_new ();
-	g_signal_connect (arefresh->priv->monitor_gs, "connection-changed",
-			  G_CALLBACK (pk_connection_gs_changed_cb), arefresh);
-	egg_dbus_monitor_assign (arefresh->priv->monitor_gs, EGG_DBUS_MONITOR_SESSION, GS_DBUS_SERVICE);
+	/* use gnome-session for the idle detection */
+	arefresh->priv->session = gpk_session_new ();
+	g_signal_connect (arefresh->priv->session, "idle_changed",
+			  G_CALLBACK (gpk_auto_refresh_session_idle_changed_cb), arefresh);
+	arefresh->priv->session_idle = gpk_session_get_idle (arefresh->priv->session);
 
 	/* we check this in case we miss one of the async signals */
 	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
@@ -633,13 +577,9 @@ gpk_auto_refresh_finalize (GObject *object)
 		g_source_remove (arefresh->priv->force_get_updates_login_timeout_id);
 
 	g_object_unref (arefresh->priv->control);
-	g_object_unref (arefresh->priv->monitor_gs);
 	g_object_unref (arefresh->priv->gconf_client);
 	g_object_unref (arefresh->priv->client);
-
-	/* only unref the proxies if they were ever set */
-	if (arefresh->priv->proxy_gs != NULL)
-		g_object_unref (arefresh->priv->proxy_gs);
+	g_object_unref (arefresh->priv->session);
 
 	G_OBJECT_CLASS (gpk_auto_refresh_parent_class)->finalize (object);
 }
