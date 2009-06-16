@@ -333,7 +333,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	/* do we have any cached messages to show? */
 	len = watch->priv->cached_messages->len;
 	if (len > 0) {
-		icon_name = "emblem-important";
+		icon_name = "pk-setup";
 		goto out;
 	}
 
