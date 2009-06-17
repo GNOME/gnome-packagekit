@@ -80,7 +80,11 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 		g_error_free (error);
 		goto out;
 	}
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_install_packages (firmware->priv->client_primary, TRUE, package_ids, &error);
+#else
 	ret = pk_client_install_packages (firmware->priv->client_primary, package_ids, &error);
+#endif
 	if (!ret) {
 		egg_warning ("failed to install provide file: %s", error->message);
 		g_error_free (error);

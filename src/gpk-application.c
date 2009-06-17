@@ -2845,7 +2845,11 @@ gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install
 
 	/* actually remove packages this time */
 	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_install_packages (application->priv->client_primary, TRUE, package_ids, &error);
+#else
 	ret = pk_client_install_packages (application->priv->client_primary, package_ids, &error);
+#endif
 	if (!ret) {
 		egg_warning ("cannot install packages: %s", error->message);
 		g_error_free (error);

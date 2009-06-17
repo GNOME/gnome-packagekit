@@ -80,7 +80,11 @@ gpk_hardware_install_package (GpkHardware *hardware)
 
 	/* FIXME: this needs to be async and connect up to the repo signature stuff */
 	pk_client_set_synchronous (client, TRUE, NULL);
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_install_packages (client, TRUE, hardware->priv->package_ids, &error);
+#else
 	ret = pk_client_install_packages (client, hardware->priv->package_ids, &error);
+#endif
 	if (!ret) {
 		egg_warning ("failed to install package: %s", error->message);
 		g_error_free (error);

@@ -476,7 +476,11 @@ gpk_dbus_task_install_package_ids (GpkDbusTask *task)
 	/* set timeout */
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_install_packages (task->priv->client_primary, TRUE, task->priv->package_ids, &error_local);
+#else
 	ret = pk_client_install_packages (task->priv->client_primary, task->priv->package_ids, &error_local);
+#endif
 	if (!ret) {
 		/* TRANSLATORS: error: failed to install, detailed error follows */
 		gpk_dbus_task_error_msg (task, _("Failed to install package"), error_local);
@@ -679,9 +683,8 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
 
 		/* we failed because of failed exit code */
-		if (task->priv->last_exit_code == PK_ERROR_ENUM_GPG_FAILURE ||
-		    task->priv->last_exit_code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
-		    task->priv->last_exit_code == PK_ERROR_ENUM_MISSING_GPG_SIGNATURE) {
+		ret = gpk_is_error_code_retry_trusted (task->priv->last_exit_code);
+		if (ret) {
 			egg_warning ("showing untrusted ui");
 			gpk_helper_untrusted_show (task->priv->helper_untrusted, task->priv->last_exit_code);
 			goto out;

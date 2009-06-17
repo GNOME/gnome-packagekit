@@ -1673,7 +1673,11 @@ gpk_update_viewer_deps_update_event_cb (GpkHelperDepsUpdate *helper, GtkResponse
 	}
 
 	/* actually install packages this time */
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_update_packages (client_primary, TRUE, install_package_ids, &error);
+#else
 	ret = pk_client_update_packages (client_primary, install_package_ids, &error);
+#endif
 	if (!ret) {
 		egg_warning ("cannot install packages: %s", error->message);
 		g_error_free (error);

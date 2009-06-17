@@ -363,7 +363,11 @@ gpk_check_update_update_system (GpkCheckUpdate *cupdate)
 		goto out;
 	}
 
+#if PK_CHECK_VERSION(0,5,0)
+	ret = pk_client_update_system (cupdate->priv->client_primary, TRUE, &error);
+#else
 	ret = pk_client_update_system (cupdate->priv->client_primary, &error);
+#endif
 	if (!ret) {
 		/* we failed, show the icon */
 		egg_warning ("cannot update system: %s", error->message);
@@ -488,7 +492,11 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 
 		/* just update the important updates */
 		package_ids = pk_package_ids_from_array (cupdate->priv->important_updates_array);
+#if PK_CHECK_VERSION(0,5,0)
+		ret = pk_client_update_packages (cupdate->priv->client_primary, TRUE, package_ids, &error);
+#else
 		ret = pk_client_update_packages (cupdate->priv->client_primary, package_ids, &error);
+#endif
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
@@ -979,7 +987,11 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 
 		/* convert */
 		package_ids = pk_package_ids_from_array (security_array);
+#if PK_CHECK_VERSION(0,5,0)
+		ret = pk_client_update_packages (cupdate->priv->client_primary, TRUE, package_ids, &error);
+#else
 		ret = pk_client_update_packages (cupdate->priv->client_primary, package_ids, &error);
+#endif
 		if (!ret) {
 			egg_warning ("Individual updates failed: %s", error->message);
 			g_error_free (error);
