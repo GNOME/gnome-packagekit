@@ -105,6 +105,7 @@ gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
 gboolean	 gpk_ignore_session_error		(GError		*error);
+gboolean	 gpk_is_error_code_retry_trusted	(PkErrorCodeEnum error_code);
 
 G_END_DECLS
 

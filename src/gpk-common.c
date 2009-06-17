@@ -45,6 +45,29 @@
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
+/**
+ * gpk_is_error_code_retry_trusted:
+ * @error_code: the transactions #PkErrorCodeEnum
+ *
+ * Return value: if the error code suggests to try with only_trusted %FALSE
+ **/
+gboolean
+gpk_is_error_code_retry_trusted (PkErrorCodeEnum error_code)
+{
+	gboolean ret = FALSE;
+	switch (error_code) {
+		case PK_ERROR_ENUM_GPG_FAILURE:
+		case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
+		case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
+		case PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED:
+		case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
+			ret = TRUE;
+			break;
+		default:
+			break;
+	}
+	return ret;
+}
 
 /**
  * gtk_text_buffer_insert_markup:
