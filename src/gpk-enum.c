@@ -457,6 +457,12 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_UPDATE_NOT_FOUND:
 		text = _("Update not found");
 		break;
+	case PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED:
+		text = _("Cannot install from untrusted source");
+		break;
+	case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
+		text = _("Cannot update from untrusted source");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -649,6 +655,12 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_UPDATE_NOT_FOUND:
 		text = _("The specified update could not be found.\n"
 			 "It could have already been installed or no longer available on the remote server.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED:
+		text = _("The package could not be installed from untrusted source.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
+		text = _("The package could not be updated from untrusted source.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
