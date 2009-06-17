@@ -1249,7 +1249,7 @@ gpk_check_update_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gc
 	}
 
 	/* ignore the ones we can handle */
-	if (code == PK_ERROR_ENUM_GPG_FAILURE) {
+	if (pk_error_code_is_need_untrusted (code)) {
 		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}
@@ -1437,6 +1437,15 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
+
+	/* need to handle retry with only_trusted=FALSE */
+	if (client == cupdate->priv->client_primary &&
+	    exit_enum == PK_EXIT_ENUM_NEED_UNTRUSTED) {
+		egg_debug ("need to handle untrusted");
+		pk_client_set_only_trusted (client, FALSE);
+		gpk_check_update_primary_requeue (cupdate);
+		return;
+	}
 
 	/* we've just agreed to auth */
 	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE) {

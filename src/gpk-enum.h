@@ -88,6 +88,12 @@ typedef guint PkMediaTypeEnum;
 #define PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED	(PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED + 1)
 #endif
 
+/* constants defined in 0.5.0 */
+#if (!PK_CHECK_VERSION(0,5,0))
+#define PK_EXIT_ENUM_NEED_UNTRUSTED			(PK_EXIT_ENUM_MEDIA_CHANGE_REQUIRED + 1)
+#define pk_error_code_is_need_untrusted			gpk_error_code_is_need_untrusted
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

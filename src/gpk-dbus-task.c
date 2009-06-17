@@ -106,7 +106,9 @@ struct _GpkDbusTaskPrivate
 	GpkHelperRepoSignature	*helper_repo_signature;
 	GpkHelperEula		*helper_eula;
 	GpkHelperRun		*helper_run;
+#if (!PK_CHECK_VERSION(0,5,0))
 	GpkHelperUntrusted	*helper_untrusted;
+#endif
 	GpkHelperChooser	*helper_chooser;
 	DBusGMethodInvocation	*context;
 	GpkDbusTaskRole		 role;
@@ -301,6 +303,7 @@ gpk_dbus_task_repo_signature_required_cb (PkClient *client, const gchar *package
 
 static void gpk_dbus_task_install_package_files_internal (GpkDbusTask *task, gboolean trusted);
 
+#if (!PK_CHECK_VERSION(0,5,0))
 /**
  * gpk_dbus_task_untrusted_event_cb:
  **/
@@ -329,6 +332,7 @@ out:
 		g_error_free (error);
 	return;
 }
+#endif
 
 static void gpk_dbus_task_install_package_ids_dep_check (GpkDbusTask *task);
 
@@ -666,6 +670,22 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 		goto out;
 	}
 
+	/* need to handle retry with only_trusted=FALSE */
+	if (client == task->priv->client_primary &&
+	    exit_enum == PK_EXIT_ENUM_NEED_UNTRUSTED) {
+		egg_debug ("need to handle untrusted");
+		pk_client_set_only_trusted (client, FALSE);
+
+		/* try again */
+		ret = pk_client_requeue (task->priv->client_primary, &error_local);
+		if (!ret) {
+			egg_warning ("Failed to requeue: %s", error_local->message);
+			error = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_INTERNAL_ERROR, "cannot requeue: %s", error_local->message);
+			dbus_g_method_return_error (task->priv->context, error);
+		}
+		goto out;
+	}
+
 	/* EULA or GPG key auth done */
 	if (client == task->priv->client_secondary &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
@@ -682,13 +702,15 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 
 	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
 
+#if (!PK_CHECK_VERSION(0,5,0))
 		/* we failed because of failed exit code */
-		ret = gpk_is_error_code_retry_trusted (task->priv->last_exit_code);
+		ret = pk_error_code_is_need_untrusted (task->priv->last_exit_code);
 		if (ret) {
-			egg_warning ("showing untrusted ui");
+			egg_debug ("showing untrusted ui");
 			gpk_helper_untrusted_show (task->priv->helper_untrusted, task->priv->last_exit_code);
 			goto out;
 		}
+#endif
 
 		/* show finished? */
 		if (!task->priv->show_finished)
@@ -1099,15 +1121,13 @@ gpk_dbus_task_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar
 	task->priv->last_exit_code = code;
 
 	/* have we handled? */
-	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
-	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
+	if (code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
 		egg_warning ("did not auth, but should be already handled");
 		return;
 	}
 
 	/* have we handled? */
-	if (code == PK_ERROR_ENUM_BAD_GPG_SIGNATURE ||
-	    code == PK_ERROR_ENUM_MISSING_GPG_SIGNATURE) {
+	if (pk_error_code_is_need_untrusted (code)) {
 		egg_warning ("will handled in finished");
 		return;
 	}
@@ -3211,9 +3231,11 @@ gpk_dbus_task_init (GpkDbusTask *task)
 	task->priv->helper_run = gpk_helper_run_new ();
 	gpk_helper_run_set_parent (task->priv->helper_run, main_window);
 
+#if (!PK_CHECK_VERSION(0,5,0))
 	task->priv->helper_untrusted = gpk_helper_untrusted_new ();
 	g_signal_connect (task->priv->helper_untrusted, "event", G_CALLBACK (gpk_dbus_task_untrusted_event_cb), task);
 	gpk_helper_untrusted_set_parent (task->priv->helper_untrusted, main_window);
+#endif
 
 	task->priv->helper_chooser = gpk_helper_chooser_new ();
 	g_signal_connect (task->priv->helper_chooser, "event", G_CALLBACK (gpk_dbus_task_chooser_event_cb), task);
@@ -3294,7 +3316,9 @@ gpk_dbus_task_finalize (GObject *object)
 	g_object_unref (task->priv->language);
 	g_object_unref (task->priv->helper_eula);
 	g_object_unref (task->priv->helper_run);
+#if (!PK_CHECK_VERSION(0,5,0))
 	g_object_unref (task->priv->helper_untrusted);
+#endif
 	g_object_unref (task->priv->helper_chooser);
 	g_object_unref (task->priv->helper_repo_signature);
 

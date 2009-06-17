@@ -45,14 +45,15 @@
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
+#if (!PK_CHECK_VERSION(0,5,0))
 /**
- * gpk_is_error_code_retry_trusted:
+ * gpk_error_code_is_need_untrusted:
  * @error_code: the transactions #PkErrorCodeEnum
  *
  * Return value: if the error code suggests to try with only_trusted %FALSE
  **/
 gboolean
-gpk_is_error_code_retry_trusted (PkErrorCodeEnum error_code)
+gpk_error_code_is_need_untrusted (PkErrorCodeEnum error_code)
 {
 	gboolean ret = FALSE;
 	switch (error_code) {
@@ -68,6 +69,7 @@ gpk_is_error_code_retry_trusted (PkErrorCodeEnum error_code)
 	}
 	return ret;
 }
+#endif
 
 /**
  * gtk_text_buffer_insert_markup:

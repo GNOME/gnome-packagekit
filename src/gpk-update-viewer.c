@@ -1718,6 +1718,15 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_quit"));
 	gtk_widget_set_sensitive (widget, TRUE);
 
+	/* need to handle retry with only_trusted=FALSE */
+	if (client == client_primary &&
+	    exit == PK_EXIT_ENUM_NEED_UNTRUSTED) {
+		egg_debug ("need to handle untrusted");
+		pk_client_set_only_trusted (client, FALSE);
+		gpk_update_viewer_primary_requeue (NULL);
+		return;
+	}
+
 	/* if secondary, ignore */
 	if (client == client_primary &&
 	    (exit == PK_EXIT_ENUM_KEY_REQUIRED ||
@@ -2046,8 +2055,8 @@ gpk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const g
 	}
 
 	/* ignore the ones we can handle */
-	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
-	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT) {
+	if (code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
+	    pk_error_code_is_need_untrusted (code)) {
 		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}

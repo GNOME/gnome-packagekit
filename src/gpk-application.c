@@ -1021,9 +1021,9 @@ gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gch
 		return;
 
 	/* ignore the ones we can handle */
-	if (code == PK_ERROR_ENUM_GPG_FAILURE ||
-	    code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
-	    code == PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED) {
+	if (code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
+	    code == PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED ||
+	    pk_error_code_is_need_untrusted (code)) {
 		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
 		return;
 	}
@@ -1290,6 +1290,15 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	gpk_application_set_buttons_apply_clear (application);
+
+	/* need to handle retry with only_trusted=FALSE */
+	if (client == application->priv->client_primary &&
+	    exit_enum == PK_EXIT_ENUM_NEED_UNTRUSTED) {
+		egg_debug ("need to handle untrusted");
+		pk_client_set_only_trusted (client, FALSE);
+		gpk_application_primary_requeue (application);
+		return;
+	}
 
 	/* if secondary, ignore */
 	if (client == application->priv->client_primary &&
