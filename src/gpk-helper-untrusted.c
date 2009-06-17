@@ -94,15 +94,27 @@ gpk_helper_untrusted_show (GpkHelperUntrusted *helper, PkErrorCodeEnum code)
 	g_free (text);
 
 	/* message */
-	message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
-				   /* TRANSLATORS: is not GPG signed */
-				   _("The package is not signed by a trusted provider."),
-				   /* TRANSLATORS: user has to trust provider -- I know, this sucks */
-				   _("Do not install this package unless you are sure it is safe to do so."),
-				   /* TRANSLATORS: warn the user that all bets are off */
-				   _("Malicious software can damage your computer or cause other harm."),
-				   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
-				   _("Are you <b>sure</b> you want to install this package?"));
+	if (code == PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED) {
+		message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
+					   /* TRANSLATORS: is not GPG signed */
+					   _("The software is not signed by a trusted provider."),
+					   /* TRANSLATORS: user has to trust provider -- I know, this sucks */
+					   _("Do not update this package unless you are sure it is safe to do so."),
+					   /* TRANSLATORS: warn the user that all bets are off */
+					   _("Malicious software can damage your computer or cause other harm."),
+					   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
+					   _("Are you <b>sure</b> you want to update this package?"));
+	} else {
+		message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
+					   /* TRANSLATORS: is not GPG signed */
+					   _("The software is not signed by a trusted provider."),
+					   /* TRANSLATORS: user has to trust provider -- I know, this sucks */
+					   _("Do not install this package unless you are sure it is safe to do so."),
+					   /* TRANSLATORS: warn the user that all bets are off */
+					   _("Malicious software can damage your computer or cause other harm."),
+					   /* TRANSLATORS: ask if they are absolutely sure they want to do this */
+					   _("Are you <b>sure</b> you want to install this package?"));
+	}
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "label_message"));
 	gtk_label_set_markup (GTK_LABEL (widget), message);
 	g_free (message);
