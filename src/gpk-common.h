@@ -27,6 +27,7 @@
 #include <packagekit-glib/packagekit.h>
 
 #include "gpk-animated-icon.h"
+#include "gpk-enum.h"
 
 G_BEGIN_DECLS
 
