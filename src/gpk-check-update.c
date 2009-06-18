@@ -579,6 +579,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	}
 
 	/* do the bubble */
+	egg_debug ("title=%s, message=%s", title, message);
 	notification = notify_notification_new (title, message, "help-browser", NULL);
 	if (notification == NULL) {
 		egg_warning ("failed to get bubble");
