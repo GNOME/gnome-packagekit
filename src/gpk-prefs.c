@@ -169,13 +169,10 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	notify_widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_updates"));
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = GPK_UPDATE_ENUM_ALL;
-		gtk_widget_set_sensitive (notify_widget, FALSE);
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
 		update = GPK_UPDATE_ENUM_SECURITY;
-		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
 		update = GPK_UPDATE_ENUM_NONE;
-		gtk_widget_set_sensitive (notify_widget, TRUE);
 	} else {
 		g_assert (FALSE);
 	}
