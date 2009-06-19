@@ -71,6 +71,7 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-refresh-cache"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_WAITING_FOR_LOCK,	"pk-package-blocked"},
+	{PK_STATUS_ENUM_WAITING_FOR_AUTH,	"gtk-dialog-authentication"},
 	{PK_STATUS_ENUM_INFO,			"pk-package-info"},
 	{PK_STATUS_ENUM_INSTALL,		"pk-package-add"},
 	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-refresh-cache"},
@@ -107,6 +108,7 @@ static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-action-searching"},
 	{PK_STATUS_ENUM_WAITING_FOR_LOCK,	"pk-action-waiting"},
+	{PK_STATUS_ENUM_WAITING_FOR_AUTH,	"pk-action-waiting"},
 	{PK_STATUS_ENUM_INFO,			"process-working"},
 	{PK_STATUS_ENUM_INSTALL,		"pk-action-installing"},
 	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-action-refresh-cache"},
@@ -933,6 +935,10 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 	case PK_STATUS_ENUM_WAITING_FOR_LOCK:
 		/* TRANSLATORS: The transaction state */
 		text = _("Waiting for package manager lock");
+		break;
+	case PK_STATUS_ENUM_WAITING_FOR_AUTH:
+		/* TRANSLATORS: waitig for user to type in a password */
+		text = _("Waiting for authentication");
 		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
