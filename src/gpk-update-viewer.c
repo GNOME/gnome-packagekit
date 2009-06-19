@@ -356,6 +356,7 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 	GError *error = NULL;
 	GPtrArray *array = NULL;
 	gchar **package_ids = NULL;
+	PkInfoEnum info;
 
 	/* check connection */
 	ret = gpk_update_viewer_button_check_connection (size_total);
@@ -377,7 +378,9 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 
 	/* find out how many we should update */
 	while (valid) {
-		gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_SELECT, &update,
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_INFO, &info,
+				    GPK_UPDATES_COLUMN_SELECT, &update,
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
 		/* set all the checkboxes insensitive */
@@ -389,8 +392,8 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 		if (update)
 			selected_any = TRUE;
 
-		/* do something with the data */
-		if (update) {
+		/* if selected, and not added previously because of deps */
+		if (update && info != PK_INFO_ENUM_AVAILABLE) {
 			g_ptr_array_add (array, package_id);
 		} else {
 			/* need to free the one in the array later */
