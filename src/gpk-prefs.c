@@ -466,12 +466,6 @@ main (int argc, char *argv[])
 	/* Get the main window quit */
 	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_updates"));
-	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_AVAILABLE);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_completed"));
-	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_NOTIFY_COMPLETED);
-
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_mobile_broadband"));
 	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
 
