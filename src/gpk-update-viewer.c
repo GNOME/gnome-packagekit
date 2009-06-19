@@ -351,7 +351,6 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 	gboolean ret;
 	gboolean valid;
 	gboolean update;
-	gboolean selected_all = TRUE;
 	gboolean selected_any = FALSE;
 	gchar *package_id;
 	GError *error = NULL;
@@ -386,10 +385,8 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 				    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
 				    GPK_UPDATES_COLUMN_SENSITIVE, FALSE, -1);
 
-		/* ay selected? */
-		if (!update)
-			selected_all = FALSE;
-		else
+		/* any selected? */
+		if (update)
 			selected_any = TRUE;
 
 		/* do something with the data */
