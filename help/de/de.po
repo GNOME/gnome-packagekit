@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "POT-Creation-Date: 2009-04-22 12:02+0000\n"
-"PO-Revision-Date: 2009-06-14 12:35+0100\n"
+"PO-Revision-Date: 2009-06-21 18:16+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -522,6 +522,11 @@ msgid ""
 "the application lists for displaying the latest information about software "
 "packages available in the repository."
 msgstr ""
+"Eine Konfigurationsmöglichkeit für die Softwarequellen ist im Systemmenü "
+"verfügbar. Diese ermöglicht Ihnen die Aktivierung oder Deaktivierung "
+"vorhandener Softwarebestände. Sie können hier auch die Liste der Anwendungen "
+"auffrischen, um die neuesten Informationen über die in einem Softwarebestand "
+"vorhandenen Pakete anzuzeigen."
 
 #: C/gnome-packagekit.xml:297(title)
 msgid "Filters"
@@ -544,6 +549,9 @@ msgid ""
 "the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Installed</guisubmenu></"
 "menuchoice> menu."
 msgstr ""
+"Um nur installierte oder nicht installierte Pakete anzuzeigen, wählen Sie den "
+"entsprechenden Eintrag im Menü <menuchoice><guimenu>Filter</"
+"guimenu><guisubmenu>Installed</guisubmenu></menuchoice>."
 
 #: C/gnome-packagekit.xml:309(para)
 msgid ""
@@ -552,6 +560,10 @@ msgid ""
 "from the <menuchoice><guimenu>Filters</guimenu><guisubmenu>Graphical</"
 "guisubmenu></menuchoice> menu."
 msgstr ""
+"Um nur Pakete anzuzeigen, die entweder über eine grafische Oberfläche oder "
+"eine Befehlszeilen-Schnittstelle verfügen, wählen Sie einen Filter im Menü "
+"<menuchoice><guimenu>Filter</guimenu><guisubmenu>Grafisch</guisubmenu></"
+"menuchoice>."
 
 #: C/gnome-packagekit.xml:316(para)
 msgid ""
@@ -559,6 +571,9 @@ msgid ""
 "'graphical' application and can get this wrong when a package has "
 "dependencies like gtk2+."
 msgstr ""
+"Beachten Sie, dass PackageKit eine heuristische Analyse benutzt, um zu "
+"bestimmen, ob es sich bei einem Paket um eine grafische Anwendung handelt. "
+"Dies kann falsch sein, wenn ein Paket beispielsweise von gtk2+ abhängig ist."
 
 #: C/gnome-packagekit.xml:320(para)
 msgid ""
@@ -568,6 +583,12 @@ msgid ""
 "be free software if its license is listed as such in the Fedora <ulink url="
 "\"http://fedoraproject.org/wiki/Licensing\">Licensing</ulink> page."
 msgstr ""
+"Um nur Pakete anzuzeigen, die als freie Software gekennzeichnet sind, wählen "
+"Sie den entsprechenden Eintrag im Menü <menuchoice><guimenu>Filter</"
+"guimenu><guisubmenu>Frei</guisubmenu></menuchoice>. Gegenwärtig "
+"berücksichtigt PackageKit dabei Pakete, dessen Lizenz in der <ulink url="
+"\"http://fedoraproject.org/wiki/Licensing\">Licensing-Webseite von Fedora</"
+"ulink> aufgelistet sind."
 
 #: C/gnome-packagekit.xml:331(title)
 msgid "Searching for software"
@@ -581,6 +602,11 @@ msgid ""
 "contained in package name, the package description, or search for the name of "
 "a file contained in the package."
 msgstr ""
+"Mit dem Suchfeld und dem <guibutton>Find</guibutton>-Knopf können Sie nach "
+"Softwarepaketen suchen. Das Symbol innerhalb des Suchfeldes gibt an, welche "
+"Art einer Suche ausgeführt wird. Wenn Sie darauf klicken, können Sie wählen, "
+"ob nach einer im Paketnamen, der Paketbeschreibung oder im Namen einer in "
+"einem Paket enthaltenen Datei nach einer Zeichenkette gesucht werden soll."
 
 #: C/gnome-packagekit.xml:344(title)
 msgid "Software Sources"
@@ -599,7 +625,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:355(title)
 msgid "Software Sources UI"
-msgstr ""
+msgstr "Grafische Oberfläche der Software-Quellen"
 
 #: C/gnome-packagekit.xml:364(para)
 msgid ""
@@ -637,6 +663,10 @@ msgid ""
 "PackageKit. This will happen automatically, and soon all suitable "
 "applications will be shown."
 msgstr ""
+"Derzeit wird nur eine begrenzte Anzahl von Paketen angezeigt, da für die "
+"Anzeige der für PackageKit benötigten zusätzlichen Informationen ein erneutes "
+"Bauen des Pakets seitens des Distributors notwendig ist. Das wird automatisch "
+"geschehen, und bald werden alle entsprechenden Anwendungen angezeigt werden."
 
 #: C/gnome-packagekit.xml:388(title)
 msgid "Update Viewer"
@@ -654,6 +684,17 @@ msgid ""
 "range from security updates over important updates to bug fix updates and "
 "finally enhancements."
 msgstr ""
+"Sie können Ihr System über <menuchoice><guimenu>System</"
+"guimenu><guisubmenu>Systemverwaltung</guisubmenu><guimenuitem>System "
+"aktualisieren</guimenuitem></menuchoice> oder durch Wählen von "
+"<menuchoice><guimenuitem>Aktualisierungen anzeigen</guimenuitem></menuchoice> "
+"im Kontextmenü des Aktualisierungssymbols im Benachrichtigungsfeld "
+"aktualisieren. Wenn Sie dies tun, wird der Aktualisierungsbetrachter "
+"gestartet und unmittelbar mit der Überprüfung auf verfügbare Aktualisierungen "
+"begonnen. Sobald diese Überprüfung abgeschlossen ist, wird ein Überblick über "
+"die verfügbaren Aktualisierungen angezeigt, gruppiert nach Bedeutsamkeit. Die "
+"Bedeutung reicht von Sicherheitsaktualisierungen über wichtige "
+"Aktualisierungen bis hin zu Fehlerkorrekturen und kleinen Verbesserungen."
 
 #: C/gnome-packagekit.xml:401(para)
 msgid ""
@@ -661,6 +702,10 @@ msgid ""
 "repositories where the software packages originate. This information may not "
 "be available for development branches of distributions."
 msgstr ""
+"Beachten Sie, dass die Informationen zur Bedeutsamkeit von den "
+"Softwarebeständen bereitgestellt werden müssen, in denen sich das Paket "
+"befindet. Diese Information könnte für die Entwicklungszweige von "
+"Distributionen eventuell nicht verfügbar sein."
 
 #: C/gnome-packagekit.xml:407(title)
 msgid "Updates overview"
@@ -690,6 +735,8 @@ msgid ""
 "You can change how often PackageKit refreshes on its own in the <link linkend="
 "\"prefs\">Software Update Preferences</link>."
 msgstr ""
+"In den <link linkend=\"prefs\">Softwareaktualisierungs-Einstellungen</link> "
+"können Sie bestimmen, wie oft PackageKit selbst aktualisiert."
 
 #: C/gnome-packagekit.xml:429(para)
 msgid ""
@@ -725,6 +772,10 @@ msgid ""
 "repositories where the software packages originate. This information may not "
 "be available for development branches of distributions."
 msgstr ""
+"Beachten Sie, dass ausführliche Aktualisierungsinformationen durch die "
+"Softwarebestände bereitgestellt werden müssen, in denen sich das Paket "
+"befindet. Diese Information könnte für die Entwicklungszweige von "
+"Distributionen eventuell nicht verfügbar sein."
 
 #: C/gnome-packagekit.xml:455(para)
 msgid ""
@@ -857,12 +908,17 @@ msgid ""
 "You can add multiple packages to a service pack by separating the package "
 "names with a comma, for instance <literal>hal,gnome-power-manager</literal>."
 msgstr ""
+"Sie können mehrere Pakete zu einem Servicepaket hinzufügen, indem Sie die "
+"Paketnamen mit Kommata trennen, beispielsweise <literal>hal,gnome-power-"
+"manager</literal>."
 
 #: C/gnome-packagekit.xml:562(para)
 msgid ""
 "You have seven desktops you've just installed with Fedora 9. Each one needs "
 "to have 204Mb of updates installed."
 msgstr ""
+"Sie haben sieben Desktop-Rechner, auf denen Sie Fedora 9 installiert haben. "
+"Jeder dieser Rechner benötigt die Installation von 204 MB an Aktualisierungen."
 
 #: C/gnome-packagekit.xml:568(para)
 msgid ""
@@ -871,6 +927,11 @@ msgid ""
 "network drivers require a few dependencies, and other packages to be upgraded "
 "before they will install."
 msgstr ""
+"Sie haben einen Laptop, der Netzwerktreiber benötigt, bevor überhaupt "
+"Aktualisierungen heruntergeladen werden können. Weiterhin haben Sie einen "
+"ähnlichen, mit den neuesten Aktualisierungen ausgestatteten Laptop in der "
+"Nähe. Die Netzwerktreiber erfordern einige Abhängigkeiten, und weitere Pakete "
+"müssen aktualisiert werden, bevor diese installiert werden können."
 
 #: C/gnome-packagekit.xml:576(para)
 msgid ""
@@ -878,6 +939,10 @@ msgid ""
 "live-cd and a pendrive with a single 204Mb file <filename>Fedora-updates-SP1."
 "servicepack</filename> which contains all the updates since last week."
 msgstr ""
+"Sie installieren häufig Linux auf den Rechnern anderer Leute. Sie haben eine "
+"Live-CD und einen USB-Speicherstick dabei, der eine 204 MB große Datei namens "
+"<filename>Fedora-updates-SP1.servicepack</filename> mit sämtlichen "
+"Aktualisierungen seit letzter Woche enthält."
 
 #: C/gnome-packagekit.xml:584(para)
 msgid ""
@@ -885,6 +950,10 @@ msgid ""
 "plugins and programs with the latest Fedora release DVD. They want a way in "
 "which even the most lazy user can get the things installed without much fuss."
 msgstr ""
+"Eine Zeitschrift aus der Branche der freien Software möchte patentgeschützte "
+"Multimedia-Plugins und Programme zusammen mit der DVD der letzten Fedora-"
+"Veröffentlichung vertreiben. Es wird ein Weg benötigt, auf welchem auch der "
+"faulste Benutzer diese Dinge ohne viel Aufhebens installieren kann."
 
 #: C/gnome-packagekit.xml:592(para)
 msgid ""
@@ -894,6 +963,12 @@ msgid ""
 "installing a <filename>fedora-9-i386</filename> service pack on a "
 "<filename>ubuntu-intrepid-ppc</filename> machine."
 msgstr ""
+"Intern betrachtet ist die Paketdatei ein nicht gepacktes Tar-Archiv mit den "
+"Paketen und einer Datei namens metadata.conf. Die Metadaten-Datei enthält die "
+"Bezeichnung der Distribution und den Zeitpunkt der Erstellung. Dies stellt "
+"sicher, dass Sie nicht versehentlich ein <filename>fedora-9-i386</filename>-"
+"Servicepaket auf einem <filename>ubuntu-intrepid-ppc</filename>-Rechner "
+"installieren."
 
 #: C/gnome-packagekit.xml:599(para)
 msgid ""
@@ -951,6 +1026,8 @@ msgid ""
 "Computer B wants to have a service pack containing a new version of "
 "<literal>k3b</literal> so that it can burn DVD-RWs."
 msgstr ""
+"Rechner B benötigt ein Servicepaket, das eine neue Version von <literal>k3b</"
+"literal> enthält, mit deren Hilfe DVD-RWs gebrannt werden können."
 
 #: C/gnome-packagekit.xml:636(para)
 msgid ""
@@ -962,6 +1039,13 @@ msgid ""
 "computer A with the information about what packages computer B has got "
 "installed before we can create the service pack."
 msgstr ""
+"Das Programm <literal>k3b</literal> hängt von <literal>dbus</literal>, "
+"<literal>dbus-glib</literal> und <literal>kdebase</literal> ab. Wenn wir nun "
+"Rechner A <literal>k3b</literal> herunterladen lassen, werden <literal>k3b</"
+"literal><emphasis>und</emphasis><literal>kdebase</literal> heruntergeladen, "
+"aber <emphasis>nicht</emphasis><literal>dbus-glib</literal>. Wir müssen für "
+"Rechner A Informationen bereitstellen, welche Pakete Rechner B enthält, bevor "
+"ein Servicepaket erstellt werden kann."
 
 #: C/gnome-packagekit.xml:645(para)
 msgid ""
@@ -970,6 +1054,10 @@ msgid ""
 "case we would download <literal>k3b</literal> and <literal>dbus-glib</"
 "literal> and pack it into the new service pack."
 msgstr ""
+"Durch Erstellung einer Paketliste auf Rechner B und die Übertragung mittels "
+"USB-Speicherstick oder CDRW können die korrekten Pakete heruntergeladen "
+"werden. In diesem Fall werden <literal>k3b</literal> und <literal>dbus-glib</"
+"literal> heruntergeladen und im neuen Servicepaket abgelegt."
 
 #: C/gnome-packagekit.xml:651(para)
 msgid ""
@@ -1000,6 +1088,13 @@ msgid ""
 "just check for updates or perform the updates automatically and notify any "
 "email address."
 msgstr ""
+"Automatische Aktualisierungen können im Hintergrund systemweit ablaufen, "
+"wobei das Paket PackageKit-cron zum Einsatz kommt. Dieses Paket enthält einen "
+"Cronjob und eine Konfigurationsdatei. Die Einstellungen werden über die "
+"Konfigurationsdatei <filename>/etc/sysconfig/packagekit-background</filename> "
+"gesteuert. Sie können so nach Aktualisierungen suchen lassen oder die "
+"Aktualisierungen installieren und eine Nachricht an eine beliebige E-Mail-"
+"Adresse senden lassen."
 
 #: C/gnome-packagekit.xml:675(title)
 msgid "Update Icon"
@@ -1012,6 +1107,11 @@ msgid ""
 "about the available updates before installing them. See <xref linkend="
 "\"update-viewer\"/> for more information."
 msgstr ""
+"Das Symbol stellt Menüeinträge für die Installation der verfügbaren "
+"Aktualisierungen oder für das Starten des Aktualisierungsbetrachters bereit. "
+"Dieser erlaubt Ihnen das Abrufen ausführlicher Informationen über die "
+"verfügbaren Aktualisierungen, bevor Sie diese installieren. Weitere "
+"Informationen finden Sie in <xref linkend=\"update-viewer\"/>."
 
 #: C/gnome-packagekit.xml:695(title)
 msgid "Agreeing to EULAs"
@@ -1038,6 +1138,12 @@ msgid ""
 "limitations if the user can be held liable for damage that arises through "
 "improper use of the software."
 msgstr ""
+"Viele EULAs machen umfangreiche Haftungsbeschränkungen für die Software "
+"geltend. Typischerweise schützt eine EULA den Hersteller einer Software in "
+"dem Fall, dass die Software Schäden auf dem Rechner oder in dessen Daten "
+"verursacht. In einigen Fällen sind auch Beschränkungen einbegriffen für den "
+"Fall von auftretenden Schäden, die durch unzweckmäßige Benutzung der Software "
+"entstehen."
 
 #: C/gnome-packagekit.xml:711(title)
 msgid "Example EULA"
@@ -1061,6 +1167,10 @@ msgid ""
 "the repository or packages. This allows users to be sure a package signed "
 "with a security key is actually from the software source it claims to be."
 msgstr ""
+"Die Pakete einer Softwarequelle sind typischerweise von dem Projekt signiert, "
+"das diesen Softwarebestand oder die Pakete verwaltet. Dadurch wird für "
+"Benutzer sichergestellt, dass ein mit einem Sicherheitsschlüssel signiertes "
+"Paket auch aus der Softwarequelle stammt, aus der es zu stammen scheint."
 
 #: C/gnome-packagekit.xml:734(para)
 msgid ""
@@ -1070,6 +1180,11 @@ msgid ""
 "without using the administrator password, assuming your admin has enabled "
 "this option."
 msgstr ""
+"Um eine Paketverwaltungs-Infrastruktur effektiv zu betreiben, müssen "
+"vertrauenswürdige Softwarebestände vorhanden sein, um Aktualisierungen "
+"automatisch herunterzuladen und zu installieren. Ein weiterer Vorteil ist, "
+"dass signierte Pakete ohne einzugebendes Systemverwalterpasswort installiert "
+"werden können, sofern Ihr Systemverwalter diese Möglichkeit aktiviert hat."
 
 #: C/gnome-packagekit.xml:742(title)
 msgid "Example signature prompt"
@@ -1082,6 +1197,11 @@ msgid ""
 "source, and try to find details about the key used to sign the packages. This "
 "is normally called a <literal>GPG key</literal>."
 msgstr ""
+"Um einem Softwarebestand zu vertrauen, sollten Sie die Einzelheiten des "
+"signierenden Schlüssels überprüfen. Der einfachste Weg führt auf die Webseite "
+"dieser Softwarequelle. Dort sollten Sie Einzelheiten über den für "
+"Paketsignaturen verwendeten Schlüssel finden. Dieser wird üblicherweise "
+"<literal>GPG key</literal> genannt."
 
 #: C/gnome-packagekit.xml:757(para)
 msgid ""
@@ -1093,7 +1213,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:764(title)
 msgid "Common Dialogs Explained"
-msgstr ""
+msgstr "Erklärung häufig verwendeter Dialoge"
 
 #: C/gnome-packagekit.xml:765(para)
 msgid ""
@@ -1102,6 +1222,11 @@ msgid ""
 "following subsections, some of the dialogs will be explained further, often "
 "with examples or Internet links."
 msgstr ""
+"Diese Anwendung versucht Dialoge so oft wie möglich wiederzuverwenden, was "
+"eine nachvollziehbare und konsistente Benutzerschnittstelle zur Verwaltung "
+"von Paketen ermöglicht. In den folgenden Unterabschnitten werden einige "
+"dieser Dialoge ausführlicher erklärt, oft auch mit Beispielen oder "
+"Internetlinks."
 
 #: C/gnome-packagekit.xml:773(title)
 msgid "Copying Files To Another Location"
@@ -1130,6 +1255,9 @@ msgid ""
 "An application has asked to install local files on your system. If you "
 "initiated the action, please click the install button."
 msgstr ""
+"Eine Anwendung fragte nach der Installation lokaler Dateien auf Ihrem System. "
+"Falls Sie diese Aktion selbst eingeleitet haben, klicken Sie auf den "
+"<guibutton>Installieren</guibutton>-Knopf."
 
 #: C/gnome-packagekit.xml:803(title)
 msgid "Installing Catalogs"
@@ -1142,6 +1270,12 @@ msgid ""
 "to be simple and need no user interaction. Using a catalog file allows you to "
 "install different packages quickly and easily."
 msgstr ""
+"Ein Paketkatalog ist nichts weiter als eine Datei, die Anweisungen über die "
+"Installation anderer Pakete enthält. Es gibt keine wahlweise zu "
+"installierenden Pakete, weil eine solche Katalogdatei simpel und ohne "
+"weiteren Benutzereingriff funktionieren soll. Durch die Nutzung einer "
+"Katalogdatei ist die schnelle und einfache Installation verschiedener Pakete "
+"möglich."
 
 #: C/gnome-packagekit.xml:811(para) C/gnome-packagekit.xml:824(para)
 msgid ""
@@ -1161,6 +1295,9 @@ msgid ""
 "The catalog that you tried to install made no changes to your system as you "
 "already have the required packages installed. No further actions are required."
 msgstr ""
+"Der Katalog, den Sie installieren wollten, ändert nichts an Ihrem System, da "
+"die benötigten Pakete bereits installiert sind. Es sind keine weiteren "
+"Aktionen erforderlich."
 
 #: C/gnome-packagekit.xml:831(title)
 msgid "Confirmation Required"
@@ -1182,7 +1319,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:849(title)
 msgid "Finding Other Required Packages"
-msgstr ""
+msgstr "Suchen nach weiteren benötigten Paketen"
 
 #: C/gnome-packagekit.xml:850(para)
 msgid ""
@@ -1194,7 +1331,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:859(title)
 msgid "Finding Other Dependent Packages"
-msgstr ""
+msgstr "Suchen nach weiteren abhängigen Paketen"
 
 #: C/gnome-packagekit.xml:860(para)
 msgid ""
@@ -1202,10 +1339,12 @@ msgid ""
 "This application is searching for other required packages of the package you "
 "are trying to install."
 msgstr ""
+"Dieses Paket könnte in anderen Paketen enthaltene Ressourcen erfordern, um "
+"korrekt zu funktionieren. Diese Anwendung "
 
 #: C/gnome-packagekit.xml:868(title)
 msgid "Removing Other Packages"
-msgstr ""
+msgstr "Entfernen anderer Pakete"
 
 #: C/gnome-packagekit.xml:870(title)
 msgid "Example dialog when removing rarian"
@@ -1216,6 +1355,9 @@ msgid ""
 "Other packages need to be removed if this package is to be removed. If you "
 "remove these packages you may loose functionality in other applications."
 msgstr ""
+"Weitere Pakete müssen entfernt werden, wenn dieses Paket entfernt wird. Wenn "
+"Sie diese Pakete entfernen, könnte die Funktionalität anderer Anwendungen "
+"darunter leiden."
 
 #: C/gnome-packagekit.xml:884(para)
 msgid "If you are unsure you should not remove the package."
@@ -1223,7 +1365,7 @@ msgstr "Falls Sie nicht sicher sind, sollten Sie das Paket nicht entfernen."
 
 #: C/gnome-packagekit.xml:890(title)
 msgid "Installing Other Packages"
-msgstr ""
+msgstr "Installieren weiterer Pakete"
 
 #: C/gnome-packagekit.xml:892(title)
 msgid "Example dialog when installing xfce-utils"
@@ -1251,7 +1393,7 @@ msgstr ""
 
 #: C/gnome-packagekit.xml:920(title)
 msgid "Package Not Found"
-msgstr ""
+msgstr "Paket nicht gefunden"
 
 #: C/gnome-packagekit.xml:921(para)
 msgid ""
@@ -1259,6 +1401,10 @@ msgid ""
 "that you do not have any third party repositories enabled or installed. These "
 "extra repositories can often be found using search engines or forums."
 msgstr ""
+"In keiner entfernten Softwarequelle konnten Pakete gefunden werden. Das "
+"bedeutet normalerweise, dass Sie die Softwarebestände von Drittanbietern "
+"nicht aktiviert oder installiert haben. Diese Softwarebestände finden Sie oft "
+"in Foren oder mittels Suchmaschinen."
 
 #: C/gnome-packagekit.xml:927(para)
 msgid "Only install packages from reputable software sources."
@@ -1275,6 +1421,11 @@ msgid ""
 "time, then a new dialog will appear. This gives you the opportunity to cancel "
 "the task if this is not desired."
 msgstr ""
+"Wenn eine Aktion automatisch gestartet wird, dann geschieht dies "
+"normalerweise nicht interaktiv. Wenn diese Aktion den Zugriff auf das "
+"Netzwerk erfordert oder voraussichtlich eine lange Zeit benötigt, erscheint "
+"ein Dialog. In diesem Dialog erhalten Sie die Möglichkeit, die Aktion "
+"abzubrechen, falls deren Ausführung nicht gewünscht ist."
 
 #: C/gnome-packagekit.xml:943(title)
 msgid "No Privileges"
@@ -1287,6 +1438,12 @@ msgid ""
 "password correctly twice in a row. NOTE: you also need to enter the root "
 "password on some distributions, not your own password."
 msgstr ""
+"Sie verfügen nicht über die erforderlichen Rechte, um diese Aktion "
+"auszuführen. Dies könnte dann der Fall sein, wenn Sie sich nicht korrekt "
+"legitimiert haben, beispielsweise durch Eingabe eines korrekten Passworts "
+"zweimal in einer Zeile hintereinander. ACHTUNG: Auf einigen Distributionen "
+"muss das Passwort des Systemverwalters eingegeben werden, nicht Ihr "
+"Benutzerpasswort."
 
 #: C/gnome-packagekit.xml:961(para)
 msgid ""
@@ -1306,6 +1463,10 @@ msgid ""
 "by running (as the root user): <literal>/usr/sbin/packagekitd --verbose</"
 "literal>"
 msgstr ""
+"Der PackageKit zugrunde liegende Dienst konnte nicht gestartet werden. Dies "
+"geschieht nur bei ernstzunehmenden Systemfehlern. Weitere Informationen "
+"hierzu erhalten Sie, wenn Sie folgenden Befehl mit Systemverwalterrechten "
+"ausführen:  <literal>/usr/sbin/packagekitd --verbose</literal>"
 
 #: C/gnome-packagekit.xml:977(title)
 msgid "Update System"
@@ -1344,6 +1505,10 @@ msgid ""
 "you search for a package you do not have installed, you will get any new "
 "software that was added to a software source."
 msgstr ""
+"Einmal wöchentlich (kann in den Einstellungen geändert werden) werden "
+"automatisch die neuesten Paketlisten heruntergeladen. Das bedeutet, dass Sie "
+"bei der Suche nach einem nicht installierten Paket neue Software erhalten, "
+"die zu einer Softwarequelle hinzugefügt wurde."
 
 #: C/gnome-packagekit.xml:1000(para)
 msgid ""
@@ -1351,6 +1516,10 @@ msgid ""
 "will be cached so client tools can auto-complete. When this is completed, any "
 "new applications are scanned and added to a client database."
 msgstr ""
+"Sobald die Paketlisten heruntergeladen wurden, werden die installierten und "
+"verfügbaren Pakete zwischengespeichert, so dass Client-Werkzeuge diese "
+"automatisch vervollständigen können. Sobald dies abgeschlossen ist, werden "
+"neue Anwendungen eingelesen und zur Client-Datenbank hinzugefügt."
 
 #: C/gnome-packagekit.xml:1010(title)
 msgid "About"
@@ -1389,6 +1558,13 @@ msgid ""
 "found at this <ulink url=\"gpk-application:gpl\" type=\"help\">link</ulink>, "
 "or in the file COPYING included with the source code of this program."
 msgstr ""
+"Dieses Programm ist freie Software. Sie können es unter den Bedingungen der "
+"<citetitle>GNU General Public License</citetitle>, wie von der Free Software "
+"Foundation veröffentlicht, weitergeben und/oder verändern, entweder gemäß "
+"Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version. Eine "
+"<ulink url=\"ghelp:gpl\" type=\"help\">Kopie dieser Lizenz</ulink> ist in "
+"dieser Dokumentation enthalten, eine weitere in der Datei COPYING, die im "
+"Quellcode dieses Programms enthalten ist."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: C/gnome-packagekit.xml:0(None)
