@@ -669,7 +669,6 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 {
 	GError *error = NULL;
 	gboolean ret;
-	char *cmdline;
 	GdkScreen *gscreen;
 	gchar *url;
 	gchar *protocol = (gchar*) data;
@@ -681,19 +680,7 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 
 	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
 
-	cmdline = g_strconcat ("xdg-open ", url, NULL);
-	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
-	g_free (cmdline);
-
-	if (ret)
-		goto out;
-
-	g_error_free (error);
-	error = NULL;
-
-	cmdline = g_strconcat ("gnome-open ", url, NULL);
-	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
-	g_free (cmdline);
+	ret = gtk_show_uri (gscreen, url, gtk_get_current_event_time (), &error);
 
 	if (!ret) {
 		/* TRANSLATORS: We couldn't launch the tool, normally a packaging problem */
@@ -701,7 +688,6 @@ gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpoin
 		g_error_free (error);
 	}
 
-out:
 	g_free (url);
 }
 

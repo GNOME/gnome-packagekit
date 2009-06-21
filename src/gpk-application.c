@@ -2248,7 +2248,6 @@ gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address,
 	GError *error = NULL;
 	gboolean ret;
 
-	char *cmdline;
 	GdkScreen *gscreen;
 	GtkWidget *error_dialog;
 	gchar *url;
@@ -2261,18 +2260,7 @@ gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address,
 
 	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
 
-	cmdline = g_strconcat ("xdg-open ", url, NULL);
-	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
-	g_free (cmdline);
-
-	if (ret)
-		goto out;
-
-	g_error_free (error);
-	error = NULL;
-	cmdline = g_strconcat ("gnome-open ", url, NULL);
-	ret = gdk_spawn_command_line_on_screen (gscreen, cmdline, &error);
-	g_free (cmdline);
+	ret = gtk_show_uri (gscreen, url, gtk_get_current_event_time (), &error);
 
 	if (!ret) {
 		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
@@ -2287,8 +2275,6 @@ gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address,
 		gtk_widget_destroy (error_dialog);
 		g_error_free (error);
 	}
-
-out:
 	g_free (url);
 }
 
