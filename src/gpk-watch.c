@@ -77,6 +77,7 @@ struct GpkWatchPrivate
 	PolKitGnomeAction	*restart_action;
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
+	gboolean		 hide_warning;
 };
 
 typedef struct {
@@ -325,7 +326,8 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	}
 
 	/* any restart required? */
-	if (watch->priv->restart != PK_RESTART_ENUM_NONE) {
+	if (watch->priv->restart != PK_RESTART_ENUM_NONE &&
+	    watch->priv->hide_warning == FALSE) {
 		icon_name = gpk_restart_enum_to_dialog_icon_name (watch->priv->restart);
 		goto out;
 	}
@@ -1199,7 +1201,8 @@ gpk_watch_menu_hide_restart_cb (GtkMenuItem *item, gpointer data)
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
 	/* hide */
-	gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
+	watch->priv->hide_warning = TRUE;
+	gpk_watch_refresh_icon (watch);
 }
 
 /**
@@ -1566,6 +1569,7 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->error_details = NULL;
 	watch->priv->notification_cached_messages = NULL;
 	watch->priv->restart = PK_RESTART_ENUM_NONE;
+	watch->priv->hide_warning = FALSE;
 
 	watch->priv->gconf_client = gconf_client_get_default ();
 
