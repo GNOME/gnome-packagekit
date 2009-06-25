@@ -923,6 +923,8 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 	if (update == GPK_UPDATE_ENUM_NONE) {
 		egg_debug ("not updating as policy NONE");
 
+		/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
+
 		/* play the sound, using sounds from the naming spec */
 		ca_context_play (ca_gtk_context_get (), 0,
 				 /* TODO: add a new sound to the spec */

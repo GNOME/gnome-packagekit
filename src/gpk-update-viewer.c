@@ -1823,6 +1823,8 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	    (role == PK_ROLE_ENUM_UPDATE_SYSTEM ||
 	     role == PK_ROLE_ENUM_UPDATE_PACKAGES)) {
 
+		/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
+
 		/* play the sound, using sounds from the naming spec */
 		ca_context_play (ca_gtk_context_get (), 0,
 				 /* TODO: add a new sound to the spec */
