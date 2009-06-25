@@ -84,6 +84,18 @@ gpk_helper_chooser_button_cancel_cb (GtkWidget *widget, GpkHelperChooser *helper
 }
 
 /**
+ * gpk_helper_chooser_button_response_cb:
+ **/
+static void
+gpk_helper_chooser_button_response_cb (GtkDialog *dialog, GtkResponseType response_id, GpkHelperChooser *helper)
+{
+	if (response_id == GTK_RESPONSE_DELETE_EVENT) {
+		gtk_widget_hide (GTK_WIDGET (dialog));
+		g_signal_emit (helper, signals [GPK_HELPER_CHOOSER_EVENT], 0, GTK_RESPONSE_NO, helper->priv->package_id);
+	}
+}
+
+/**
  * gpk_helper_chooser_button_help_cb:
  **/
 static void
@@ -259,7 +271,7 @@ gpk_helper_chooser_init (GpkHelperChooser *helper)
 
 	/* connect up default actions */
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
-	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_helper_chooser_button_cancel_cb), helper);
+	g_signal_connect (GTK_DIALOG (widget), "response", G_CALLBACK (gpk_helper_chooser_button_response_cb), helper);
 
 	/* set icon name */
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
