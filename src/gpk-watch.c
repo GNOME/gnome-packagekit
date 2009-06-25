@@ -229,6 +229,7 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 {
 	gboolean ret;
 	gboolean active;
+	gboolean watch_active;
 	guint i;
 	guint length;
 	PkBitfield status = 0;
@@ -240,6 +241,9 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 	length = pk_task_list_get_size (watch->priv->tlist);
 	if (length == 0)
 		goto out;
+
+	/* do we watch active transactions */
+	watch_active = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_WATCH_ACTIVE_TRANSACTIONS, NULL);
 
 	/* add each status to a list */
 	for (i=0; i<length; i++) {
@@ -258,7 +262,7 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 
 		/* add to bitfield calculation */
 		egg_debug ("%s %s (active:%i)", item->tid, pk_status_enum_to_text (item->status), active);
-		if (!active)
+		if (!active || watch_active)
 			pk_bitfield_add (status, item->status);
 	}
 out:
