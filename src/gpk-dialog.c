@@ -296,7 +296,10 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	check_button = gtk_check_button_new_with_label (_("Do not show this again"));
 	g_signal_connect (check_button, "clicked", G_CALLBACK (gpk_client_checkbutton_show_depends_cb), (gpointer) key);
 	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
-	gtk_container_add (GTK_CONTAINER (widget), check_button);
+	gtk_container_add_with_properties (GTK_CONTAINER (widget), check_button,
+					   "expand", FALSE,
+					   "fill", FALSE,
+					   NULL);
 
 	/* checked? */
 	gconf_client = gconf_client_get_default ();
