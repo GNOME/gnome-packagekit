@@ -48,6 +48,9 @@
 /* if the dialog is going to cover more than this much of the screen, then maximise it at startup */
 #define GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT	75 /* % */
 
+/* static, so local to process */
+static gboolean small_form_factor_mode = FALSE;
+
 #if (!PK_CHECK_VERSION(0,5,0))
 /**
  * gpk_error_code_is_need_untrusted:
@@ -198,6 +201,15 @@ gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const g
 }
 
 /**
+ * gpk_window_get_small_form_factor_mode:
+ **/
+gboolean
+gpk_window_get_small_form_factor_mode (void)
+{
+	return small_form_factor_mode;
+}
+
+/**
  * gpk_window_set_size_request:
  **/
 gboolean
@@ -224,13 +236,16 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 		egg_debug ("using small form factor mode as %ix%i and requested %ix%i",
 			   screen_w, screen_h, width, height);
 		gtk_window_maximize (window);
-		return FALSE;
+		small_form_factor_mode = TRUE;
+		goto out;
 	}
 
 	/* normal size laptop panel */
 	egg_debug ("using native mode: %ix%i", width, height);
 	gtk_window_set_default_size (window, width, height);
-	return TRUE;
+	small_form_factor_mode = FALSE;
+out:
+	return !small_form_factor_mode;
 }
 
 /**

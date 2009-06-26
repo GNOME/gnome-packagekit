@@ -106,6 +106,7 @@ gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
 gboolean	 gpk_ignore_session_error		(GError		*error);
+gboolean	 gpk_window_get_small_form_factor_mode 	(void);
 #if (!PK_CHECK_VERSION(0,5,0))
 gboolean	 gpk_error_code_is_need_untrusted	(PkErrorCodeEnum error_code);
 #endif

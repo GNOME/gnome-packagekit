@@ -176,6 +176,7 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 	GtkListStore *store;
 	GtkWidget *widget;
 	guint length;
+	gboolean sffm;
 
 	/* convert to a store */
 	store = gpk_dialog_package_list_to_list_store (list);
@@ -194,16 +195,23 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 	/* add some spacing to conform to the GNOME HIG */
 	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
 
-	length = pk_package_list_get_size (list);
-	if (length > 5) {
-		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 300);
-	} else if (length > 1) {
-		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 150);
+	/* are we a normal size desktop, in which case, give the package list more space */
+	sffm = gpk_window_get_small_form_factor_mode ();
+	if (!sffm) {
+		length = pk_package_list_get_size (list);
+		if (length > 5) {
+			gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 300);
+		} else if (length > 1) {
+			gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, 150);
+		}
 	}
 
 	/* add scrolled window */
 	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
-	gtk_container_add (GTK_CONTAINER (widget), scroll);
+	gtk_container_add_with_properties (GTK_CONTAINER (widget), scroll,
+					   "expand", TRUE,
+					   "fill", TRUE,
+					   NULL);
 
 	/* free the store */
 	g_signal_connect (G_OBJECT (dialog), "unrealize",
