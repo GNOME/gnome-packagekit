@@ -45,6 +45,9 @@
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
+/* if the dialog is going to cover more than this much of the screen, then maximise it at startup */
+#define GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT	75 /* % */
+
 #if (!PK_CHECK_VERSION(0,5,0))
 /**
  * gpk_error_code_is_need_untrusted:
@@ -203,12 +206,21 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 	GdkScreen *screen;
 	guint screen_w;
 	guint screen_h;
+	guint percent_w;
+	guint percent_h;
 
 	/* check for tiny screen, like for instance a OLPC or EEE */
 	screen = gdk_screen_get_default ();
 	screen_w = gdk_screen_get_width (screen);
 	screen_h = gdk_screen_get_height (screen);
-	if (screen_w < width || screen_h < height) {
+
+	/* find percentage of screen area */
+	percent_w = (width * 100) / screen_w;
+	percent_h = (height * 100) / screen_h;
+	egg_debug ("window coverage x:%i%% y:%i%%", percent_w, percent_h);
+
+	if (percent_w > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT ||
+	    percent_h > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT) {
 		egg_debug ("using small form factor mode as %ix%i and requested %ix%i",
 			   screen_w, screen_h, width, height);
 		gtk_window_maximize (window);
