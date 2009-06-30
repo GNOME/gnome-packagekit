@@ -3158,7 +3158,11 @@ gpk_application_categories_finished (GpkApplication *application)
 	}
 
 	/* get return values */
-	list = pk_client_get_cached_objects (application->priv->client_primary);
+#if PK_CHECK_VERSION(0,5,0)
+	list = pk_client_get_category_list (application->priv->client_primary);
+#else
+	list = pk_client_get_cached_objects (application->priv->client_primary); /* removed in 0.5.x */
+#endif
 	if (list->len == 0) {
 		egg_warning ("no results from GetCategories");
 		goto out;

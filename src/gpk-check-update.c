@@ -1453,7 +1453,11 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 	/* get-upgrades */
 	if (role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
-		array = pk_client_get_cached_objects (client);
+#if PK_CHECK_VERSION(0,5,0)
+		array = pk_client_get_distro_upgrade_list (client);
+#else
+		array = pk_client_get_cached_objects (client); /* removed in 0.5.x */
+#endif
 		gpk_check_update_process_distro_upgrades (cupdate, array);
 		g_object_unref (array);
 	}

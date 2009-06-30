@@ -582,7 +582,11 @@ gpk_log_refresh (void)
 	/* get the list */
 	if (transactions != NULL)
 		g_object_unref (transactions);
-	transactions = pk_client_get_cached_objects (client);
+#if PK_CHECK_VERSION(0,5,0)
+	transactions = pk_client_get_transaction_list (client);
+#else
+	transactions = pk_client_get_cached_objects (client); /* removed in 0.5.x */
+#endif
 	gpk_log_refilter ();
 out:
 	return ret;
