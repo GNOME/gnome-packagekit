@@ -156,10 +156,12 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 				g_strfreev (packages);
 				if (package_loc != NULL) {
 					/* TRANSLATORS: a list of packages is shown that need to restarted */
-					g_string_append_printf (status, ngettext ("Package: %s", "Packages: %s", len), package_loc);
+					g_string_append_printf (status, ngettext ("This is due to the %s package being updated.",
+										  "This is due to the following packages being updated: %s", len), package_loc);
 				} else {
 					/* TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here */
-					g_string_append_printf (status, ngettext ("%i package", "%i packages", len), len);
+					g_string_append_printf (status, ngettext ("This is because %i package has been updated.",
+										  "This is because %i packages have been updated.", len), len);
 				}
 				g_string_append_c (status, '\n');
 				g_free (package_loc);
@@ -402,8 +404,13 @@ gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum
 	gchar *text = NULL;
 	gchar *message = NULL;
 	NotifyNotification *notification;
+#if PK_CHECK_VERSION(0,5,0)
+	const PkRequireRestartObj *obj;
+	PkObjList *array;
+#else
 	PkPackageId *id;
-	const GPtrArray	*array;
+	const GPtrArray *array;
+#endif
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
@@ -422,14 +429,28 @@ gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum
 		/* if more important than what we are already showing, then update the icon */
 		restart = pk_client_get_require_restart (client);
 		if (restart > watch->priv->restart) {
-
+#if PK_CHECK_VERSION(0,5,0)
+			/* list packages requiring this */
+			array = pk_client_get_require_restart_list (client);
+			if (array == NULL) {
+				egg_warning ("no data about restarts, perhaps not buffered");
+				goto no_data;
+			}
+			for (i=0; i<array->len; i++) {
+				obj = pk_obj_list_index (array, i);
+				if (obj->restart >= restart)
+					g_ptr_array_add (watch->priv->restart_package_names, g_strdup (obj->id->name));
+			}
+			g_object_unref (array);
+no_data:
+#else
 			/* list packages requiring this */
 			array = pk_client_get_require_restart_list (client);
 			for (i=0; i<array->len; i++) {
 				id = g_ptr_array_index (array, i);
 				g_ptr_array_add (watch->priv->restart_package_names, g_strdup (id->name));
 			}
-
+#endif
 			/* save new restart */
 			watch->priv->restart = restart;
 		}
