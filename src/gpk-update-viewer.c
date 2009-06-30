@@ -2333,7 +2333,7 @@ gpk_update_viewer_get_new_update_list (void)
 	}
 
 	/* get new list */
-	ret = pk_client_get_updates (client_primary, PK_FILTER_ENUM_NONE, &error);
+	ret = pk_client_get_updates (client_primary, pk_bitfield_from_enums (PK_FILTER_ENUM_NEWEST, -1), &error);
 	if (!ret) {
 		egg_warning ("Failed to get updates: %s", error->message);
 		g_error_free (error);
