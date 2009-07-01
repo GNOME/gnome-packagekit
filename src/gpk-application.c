@@ -90,7 +90,6 @@ struct GpkApplicationPrivate
 	PkClient		*client_secondary;
 	PkConnection		*pconnection;
 	PkDesktop		*desktop;
-	gchar			*package;
 	gchar			*group;
 	gchar			*url;
 	gchar			*search_text;
@@ -104,7 +103,7 @@ struct GpkApplicationPrivate
 	PkSearchType		 search_type;
 	PkSearchMode		 search_mode;
 	PkActionMode		 action;
-	GPtrArray		*package_list;
+	PkPackageList		*package_list;
 	GtkWidget		*image_status;
 	GpkHelperRepoSignature	*helper_repo_signature;
 	GpkHelperEula		*helper_eula;
@@ -360,11 +359,13 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	PkBitfield state;
 	gboolean enabled;
 	gchar *package_id;
+	gint len;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* okay to apply? */
-	if (application->priv->package_list->len == 0) {
+	len = PK_OBJ_LIST (application->priv->package_list)->len;
+	if (len == 0) {
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
@@ -403,22 +404,44 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	}
 }
 
-/**
- * gpk_application_find_in_queue:
- **/
-static gchar *
-gpk_application_find_in_queue (GpkApplication *application, const gchar *package_id)
-{
-	guint i;
-	gchar *value;
 
-	for (i=0; i<application->priv->package_list->len; i++) {
-		value = g_ptr_array_index (application->priv->package_list, i);
-		if (strcmp (value, package_id) == 0)
-			return value;
+
+/**
+ * gpk_application_get_selected_package:
+ **/
+static gboolean
+gpk_application_get_selected_package (GpkApplication *application, gchar **package_id, gchar **summary)
+{
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+	gboolean ret;
+
+	/* get the selection and add */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+	selection = gtk_tree_view_get_selection (treeview);
+	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
+	if (!ret) {
+		egg_warning ("no selection");
+		goto out;
 	}
-	return NULL;
+
+	/* get data */
+	if (summary == NULL) {
+		gtk_tree_model_get (model, &iter,
+				    PACKAGES_COLUMN_ID, package_id,
+				    -1);
+	} else {
+		gtk_tree_model_get (model, &iter,
+				    PACKAGES_COLUMN_ID, package_id,
+				    PACKAGES_COLUMN_SUMMARY, summary,
+				    -1);
+	}
+out:
+	return ret;
 }
+
 
 /**
  * gpk_application_install:
@@ -426,23 +449,26 @@ gpk_application_find_in_queue (GpkApplication *application, const gchar *package
 static gboolean
 gpk_application_install (GpkApplication *application)
 {
-	gchar *value;
+	gboolean ret;
+	PkPackageId *id;
+	gchar *package_id_selected = NULL;
+	gchar *summary_selected = NULL;
 
 	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
-	/* shouldn't be possible */
-	if (application->priv->package == NULL) {
-		egg_warning ("no package");
-		return FALSE;
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, &summary_selected);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
 	}
 
 	/* changed mind, or wrong mode */
 	if (application->priv->action == PK_ACTION_REMOVE) {
-		value = gpk_application_find_in_queue (application, application->priv->package);
-		if (value != NULL) {
-			egg_debug ("removed %s from package list", value);
-			g_ptr_array_remove (application->priv->package_list, value);
-			g_free (value);
+		ret = pk_package_list_contains (application->priv->package_list, package_id_selected);
+		if (ret) {
+			egg_debug ("removed %s from package list", package_id_selected);
+			pk_package_list_remove (application->priv->package_list, package_id_selected);
 
 			/* correct buttons */
 			gpk_application_allow_install (application, FALSE);
@@ -456,21 +482,29 @@ gpk_application_install (GpkApplication *application)
 	}
 
 	/* already added */
-	value = gpk_application_find_in_queue (application, application->priv->package);
-	if (value != NULL) {
+	ret = !pk_package_list_contains (application->priv->package_list, package_id_selected);
+	if (!ret) {
 		egg_warning ("already added");
-		return FALSE;
+		goto out;
 	}
 
+	/* set mode */
 	application->priv->action = PK_ACTION_INSTALL;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+
+	/* add to list */
+	id = pk_package_id_new_from_string (package_id_selected);
+	pk_package_list_add (application->priv->package_list, PK_INFO_ENUM_AVAILABLE, id, summary_selected);
+	pk_package_id_free (id);
 
 	/* correct buttons */
 	gpk_application_allow_install (application, FALSE);
 	gpk_application_allow_remove (application, TRUE);
 	gpk_application_packages_checkbox_invert (application);
 	gpk_application_set_buttons_apply_clear (application);
-	return TRUE;
+out:
+	g_free (package_id_selected);
+	g_free (summary_selected);
+	return ret;
 }
 
 /**
@@ -501,8 +535,16 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	gboolean ret;
 	GError *error = NULL;
 	gchar **package_ids = NULL;
+	gchar *package_id_selected = NULL;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	/* reset client */
 	ret = pk_client_reset (application->priv->client_primary, &error);
@@ -513,14 +555,15 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	}
 
 	/* set correct view */
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id_selected);
 	ret = pk_client_get_files (application->priv->client_primary, package_ids, &error);
 	if (!ret) {
-		egg_warning ("cannot get file lists for %s: %s", application->priv->package, error->message);
+		egg_warning ("cannot get file lists for %s: %s", package_id_selected, error->message);
 		g_error_free (error);
 		goto out;
 	}
 out:
+	g_free (package_id_selected);
 	g_strfreev (package_ids);
 }
 
@@ -530,23 +573,26 @@ out:
 static gboolean
 gpk_application_remove (GpkApplication *application)
 {
-	gchar *value;
+	gboolean ret;
+	PkPackageId *id;
+	gchar *package_id_selected = NULL;
+	gchar *summary_selected = NULL;
 
 	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
-	/* shouldn't be possible */
-	if (application->priv->package == NULL) {
-		egg_warning ("no package");
-		return FALSE;
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, &summary_selected);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
 	}
 
 	/* changed mind, or wrong mode */
 	if (application->priv->action == PK_ACTION_INSTALL) {
-		value = gpk_application_find_in_queue (application, application->priv->package);
-		if (value != NULL) {
-			egg_debug ("removed %s from package list", value);
-			g_ptr_array_remove (application->priv->package_list, value);
-			g_free (value);
+		ret = pk_package_list_contains (application->priv->package_list, package_id_selected);
+		if (ret) {
+			egg_debug ("removed %s from package list", package_id_selected);
+			pk_package_list_remove (application->priv->package_list, package_id_selected);
 
 			/* correct buttons */
 			gpk_application_allow_install (application, TRUE);
@@ -560,20 +606,25 @@ gpk_application_remove (GpkApplication *application)
 	}
 
 	/* already added */
-	value = gpk_application_find_in_queue (application, application->priv->package);
-	if (value != NULL) {
+	ret = !pk_package_list_contains (application->priv->package_list, package_id_selected);
+	if (!ret) {
 		egg_warning ("already added");
-		return FALSE;
+		goto out;
 	}
 
 	application->priv->action = PK_ACTION_REMOVE;
-	g_ptr_array_add (application->priv->package_list, g_strdup (application->priv->package));
+	id = pk_package_id_new_from_string (package_id_selected);
+	pk_package_list_add (application->priv->package_list, PK_INFO_ENUM_AVAILABLE, id, summary_selected);
+	pk_package_id_free (id);
 
 	/* correct buttons */
 	gpk_application_allow_install (application, TRUE);
 	gpk_application_allow_remove (application, FALSE);
 	gpk_application_packages_checkbox_invert (application);
 	gpk_application_set_buttons_apply_clear (application);
+out:
+	g_free (package_id_selected);
+	g_free (summary_selected);
 	return TRUE;
 }
 
@@ -643,6 +694,14 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	GError *error = NULL;
 	gboolean ret;
 	gchar **package_ids = NULL;
+	gchar *package_id_selected = NULL;
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_primary, &error);
@@ -653,7 +712,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 	}
 
 	/* get the requires */
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id_selected);
 	application->priv->dep_check_info_only = TRUE;
 	ret = pk_client_get_requires (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				      package_ids, TRUE, &error);
@@ -663,6 +722,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 		goto out;
 	}
 out:
+	g_free (package_id_selected);
 	g_strfreev (package_ids);
 }
 
@@ -675,6 +735,14 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	GError *error = NULL;
 	gboolean ret;
 	gchar **package_ids = NULL;
+	gchar *package_id_selected = NULL;
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	/* cancel any previous request */
 	ret = pk_client_reset (application->priv->client_primary, &error);
@@ -685,7 +753,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 	}
 
 	/* get the depends */
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id_selected);
 	application->priv->dep_check_info_only = TRUE;
 	ret = pk_client_get_depends (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				     package_ids, TRUE, &error);
@@ -695,6 +763,7 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 		goto out;
 	}
 out:
+	g_free (package_id_selected);
 	g_strfreev (package_ids);
 }
 
@@ -963,7 +1032,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	application->priv->has_package = TRUE;
 
 	/* are we in the package list? */
-	in_queue = (gpk_application_find_in_queue (application, package_id) != NULL);
+	in_queue = pk_package_list_contains (application->priv->package_list, package_id);
 	installed = (obj->info == PK_INFO_ENUM_INSTALLED) || (obj->info == PK_INFO_ENUM_COLLECTION_INSTALLED);
 
 	if (installed)
@@ -1089,6 +1158,15 @@ gpk_application_finished_get_depends (GpkApplication *application, PkPackageList
 	gchar **package_ids = NULL;
 	guint length;
 	GtkWidget *dialog;
+	gchar *package_id_selected = NULL;
+	gboolean ret;
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	/* empty list */
 	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
@@ -1102,7 +1180,7 @@ gpk_application_finished_get_depends (GpkApplication *application, PkPackageList
 	}
 
 	length = pk_package_list_get_size (list);
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 	/* TRANSLATORS: title: show the number of other packages we depend on */
 	title = g_strdup_printf (ngettext ("%i additional package is required for %s",
@@ -1122,6 +1200,7 @@ gpk_application_finished_get_depends (GpkApplication *application, PkPackageList
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 out:
+	g_free (package_id_selected);
 	g_strfreev (package_ids);
 	g_free (name);
 	g_free (title);
@@ -1141,6 +1220,15 @@ gpk_application_finished_get_requires (GpkApplication *application, PkPackageLis
 	gchar **package_ids = NULL;
 	guint length;
 	GtkWidget *dialog;
+	gchar *package_id_selected = NULL;
+	gboolean ret;
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	/* empty list */
 	window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
@@ -1154,7 +1242,7 @@ gpk_application_finished_get_requires (GpkApplication *application, PkPackageLis
 	}
 
 	length = pk_package_list_get_size (list);
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 	/* TRANSLATORS: title: how many packages require this package */
 	title = g_strdup_printf (ngettext ("%i package requires %s",
@@ -1174,6 +1262,7 @@ gpk_application_finished_get_requires (GpkApplication *application, PkPackageLis
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 out:
+	g_free (package_id_selected);
 	g_strfreev (package_ids);
 	g_free (name);
 	g_free (title);
@@ -1397,8 +1486,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 			gpk_application_run_installed (application);
 
 			/* clear if success */
-			g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
-			g_ptr_array_set_size (application->priv->package_list, 0);
+			pk_obj_list_clear (PK_OBJ_LIST (application->priv->package_list));
 			application->priv->action = PK_ACTION_NONE;
 			gpk_application_set_buttons_apply_clear (application);
 		}
@@ -1611,6 +1699,7 @@ gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 static gboolean
 gpk_application_quit (GpkApplication *application)
 {
+	gint len;
 	gboolean ret;
 	GtkResponseType result;
 	GError *error = NULL;
@@ -1620,7 +1709,8 @@ gpk_application_quit (GpkApplication *application)
 	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	/* do we have any items queued for removal or installation? */
-	if (application->priv->package_list->len != 0) {
+	len = PK_OBJ_LIST (application->priv->package_list)->len;
+	if (len != 0) {
 		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 		dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
@@ -1739,10 +1829,9 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
-	g_free (application->priv->package);
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
-			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
+			    -1);
 
 	/* enforce the selection in case we just fire at the checkbox without selecting */
 	selection = gtk_tree_view_get_selection (treeview);
@@ -1811,8 +1900,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	}
 
 	/* clear queue */
-	g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
-	g_ptr_array_set_size (application->priv->package_list, 0);
+	pk_obj_list_clear (PK_OBJ_LIST (application->priv->package_list));
 
 	/* force a button refresh */
 	selection = gtk_tree_view_get_selection (treeview);
@@ -1833,7 +1921,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+	package_ids = pk_package_list_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
 
 		/* reset client */
@@ -2010,10 +2098,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	/* reset */
-	g_free (application->priv->package);
-	application->priv->package = NULL;
-
 	/* This will only work in single or browse selection mode! */
 	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		egg_debug ("no row selected");
@@ -2030,7 +2114,10 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	}
 
 	/* check we aren't a help line */
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_ID, &package_id, -1);
+	gtk_tree_model_get (model, &iter,
+			    PACKAGES_COLUMN_STATE, &state,
+			    PACKAGES_COLUMN_ID, &package_id,
+			    -1);
 	if (package_id == NULL) {
 		egg_debug ("ignoring help click");
 		goto out;
@@ -2039,11 +2126,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	/* show the menu item */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_selection"));
 	gtk_widget_show (widget);
-
-	/* get data */
-	gtk_tree_model_get (model, &iter,
-			    PACKAGES_COLUMN_STATE, &state,
-			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
 
 	show_install = (state == 0 ||
 			state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_IN_LIST, -1));
@@ -2076,7 +2158,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	}
 
 	/* get the details */
-	package_ids = pk_package_ids_from_id (application->priv->package);
+	package_ids = pk_package_ids_from_id (package_id);
 	ret = pk_client_get_details (application->priv->client_primary, package_ids, &error);
 	if (!ret) {
 		egg_warning ("failed to get details: %s", error->message);
@@ -2790,7 +2872,6 @@ gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApp
 	gtk_widget_set_sensitive (widget, allow_cancel);
 }
 
-
 /**
  * gpk_application_repo_signature_event_cb:
  **/
@@ -2878,7 +2959,7 @@ gpk_application_deps_remove_event_cb (GpkHelperDepsRemove *helper_deps_remove, G
 	}
 
 	/* actually remove packages this time */
-	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+	package_ids = pk_package_list_to_strv (application->priv->package_list);
 	ret = pk_client_remove_packages (application->priv->client_primary, package_ids, TRUE, FALSE, &error);
 	if (!ret) {
 		egg_warning ("cannot remove packages: %s", error->message);
@@ -2912,7 +2993,7 @@ gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install
 	}
 
 	/* actually remove packages this time */
-	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
+	package_ids = pk_package_list_to_strv (application->priv->package_list);
 #if PK_CHECK_VERSION(0,5,0)
 	ret = pk_client_install_packages (application->priv->client_primary, TRUE, package_ids, &error);
 #else
@@ -3000,10 +3081,9 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 		return;
 	}
 
-	g_free (application->priv->package);
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
-			    PACKAGES_COLUMN_ID, &application->priv->package, -1);
+			    -1);
 	if (gpk_application_state_get_checkbox (state))
 		gpk_application_remove (application);
 	else
@@ -3365,8 +3445,17 @@ gpk_application_files_cb (PkClient *client, const gchar *package_id,
 	GtkWindow *window;
 	GtkWidget *dialog;
 	PkPackageId *id;
+	gchar *package_id_selected = NULL;
+	gboolean ret;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
+
+	/* get selection */
+	ret = gpk_application_get_selected_package (application, &package_id_selected, NULL);
+	if (!ret) {
+		egg_warning ("no package selected");
+		goto out;
+	}
 
 	files = g_strsplit (filelist, ";", -1);
 
@@ -3375,7 +3464,7 @@ gpk_application_files_cb (PkClient *client, const gchar *package_id,
 	g_ptr_array_sort (array, (GCompareFunc) gpk_application_strcmp_indirect);
 
 	/* title */
-	id = pk_package_id_new_from_string (application->priv->package);
+	id = pk_package_id_new_from_string (package_id_selected);
 	/* TRANSLATORS: title: how many files are installed by the application */
 	title = g_strdup_printf (ngettext ("%i file installed by %s",
 					   "%i files installed by %s",
@@ -3396,6 +3485,8 @@ gpk_application_files_cb (PkClient *client, const gchar *package_id,
 	g_ptr_array_free (array, TRUE);
 	g_strfreev (files);
 	pk_package_id_free (id);
+out:
+	g_free (package_id_selected);
 }
 
 /**
@@ -3418,14 +3509,13 @@ gpk_application_init (GpkApplication *application)
 	GtkBox *box;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
-	application->priv->package = NULL;
 	application->priv->group = NULL;
 	application->priv->url = NULL;
 	application->priv->search_text = NULL;
 	application->priv->has_package = FALSE;
 	application->priv->dep_check_info_only = FALSE;
 	application->priv->details_event_id = 0;
-	application->priv->package_list = g_ptr_array_new ();
+	application->priv->package_list = pk_package_list_new ();
 
 	application->priv->gconf_client = gconf_client_get_default ();
 	application->priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
@@ -4037,12 +4127,8 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->helper_media_change);
 	g_object_unref (application->priv->helper_repo_signature);
 
-	g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
-	g_ptr_array_set_size (application->priv->package_list, 0);
-
 	g_free (application->priv->url);
 	g_free (application->priv->group);
-	g_free (application->priv->package);
 	g_free (application->priv->search_text);
 	g_hash_table_destroy (application->priv->repos);
 

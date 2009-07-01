@@ -57,7 +57,7 @@ GpkHelperDepsInstall	*gpk_helper_deps_install_new	(void);
 gboolean	 gpk_helper_deps_install_set_parent	(GpkHelperDepsInstall	*helper,
 							 GtkWindow		*window);
 gboolean	 gpk_helper_deps_install_show		(GpkHelperDepsInstall	*helper,
-							 GPtrArray		*packages,
+							 PkPackageList		*packages,
 							 PkPackageList		*deps_list);
 
 G_END_DECLS

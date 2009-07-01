@@ -55,7 +55,7 @@ G_DEFINE_TYPE (GpkHelperDepsRemove, gpk_helper_deps_remove, G_TYPE_OBJECT)
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, GPtrArray *packages, PkPackageList *deps_list)
+gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, PkPackageList *packages, PkPackageList *deps_list)
 {
 	gchar *name = NULL;
 	gchar *title = NULL;
@@ -77,13 +77,13 @@ gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, GPtrArray *packages, P
 					   "%i additional packages also have to be removed",
 					   length), length);
 
-	package_ids = pk_ptr_array_to_strv (packages);
+	package_ids = pk_package_list_to_strv (packages);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 
 	/* TRANSLATORS: message: describe in detail why it must happen */
 	message = g_strdup_printf (ngettext ("To remove %s other packages that depend on it must also be removed.",
 					     "To remove %s other packages that depend on them must also be removed.",
-					     packages->len), name);
+					     PK_OBJ_LIST(packages)->len), name);
 
 	dialog = gtk_message_dialog_new (helper->priv->window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title);

@@ -57,7 +57,7 @@ G_DEFINE_TYPE (GpkHelperDepsInstall, gpk_helper_deps_install, G_TYPE_OBJECT)
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, GPtrArray *packages, PkPackageList *deps_list)
+gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, PkPackageList *packages, PkPackageList *deps_list)
 {
 	gchar *name = NULL;
 	gchar *title = NULL;
@@ -88,7 +88,7 @@ gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, GPtrArray *packages,
 					   "%i additional packages also have to be installed",
 					   length), length);
 
-	package_ids = pk_ptr_array_to_strv (packages);
+	package_ids = pk_package_list_to_strv (packages);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 
 	/* TRANSLATORS: message: describe in detail why it must happen */

@@ -57,7 +57,7 @@ GpkHelperDepsRemove	*gpk_helper_deps_remove_new	(void);
 gboolean	 gpk_helper_deps_remove_set_parent	(GpkHelperDepsRemove	*helper,
 							 GtkWindow		*window);
 gboolean	 gpk_helper_deps_remove_show		(GpkHelperDepsRemove	*helper,
-							 GPtrArray		*packages,
+							 PkPackageList		*packages,
 							 PkPackageList		*deps_list);
 
 G_END_DECLS
