@@ -392,6 +392,7 @@ main (int argc, char *argv[])
 	UniqueApp *unique_app;
 	PkNetworkEnum state;
 	guint retval;
+	guint xid = 0;
 	GError *error = NULL;
 
 	const GOptionEntry options[] = {
@@ -399,6 +400,9 @@ main (int argc, char *argv[])
 		  _("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
 		  _("Show the program version and exit"), NULL },
+		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
+		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
+		  _("Set the parent window to make this modal"), NULL },
 		{ NULL}
 	};
 
@@ -492,6 +496,12 @@ main (int argc, char *argv[])
 	}
 
 	gtk_widget_show (main_window);
+
+	/* set the parent window if it is specified */
+	if (xid != 0) {
+		egg_debug ("Setting xid %i", xid);
+		gpk_window_set_parent_xid (GTK_WINDOW (main_window), xid);
+	}
 
 	/* wait */
 	gtk_main ();

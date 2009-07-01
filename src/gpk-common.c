@@ -249,6 +249,29 @@ out:
 }
 
 /**
+ * gpk_window_set_parent_xid:
+ **/
+gboolean
+gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
+{
+	GdkDisplay *display;
+	GdkWindow *parent_window;
+	GdkWindow *our_window;
+
+	g_return_val_if_fail (xid != 0, FALSE);
+
+	display = gdk_display_get_default ();
+	parent_window = gdk_window_foreign_new_for_display (display, xid);
+	our_window = gtk_widget_get_window (GTK_WIDGET (window));
+
+	/* set this above our parent */
+	gtk_window_set_modal (window, TRUE);
+	gdk_window_set_transient_for (our_window, parent_window);
+	return TRUE;
+}
+
+
+/**
  * gpk_package_id_format_twoline:
  *
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"

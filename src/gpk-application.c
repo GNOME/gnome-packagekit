@@ -25,6 +25,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdkx.h>
 #include <gconf/gconf-client.h>
 #include <math.h>
 #include <string.h>
@@ -2365,13 +2366,23 @@ static void
 gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
+	guint xid;
+	gchar *command;
+	GtkWidget *window;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ret = g_spawn_command_line_async ("gpk-repo", NULL);
+	/* get xid */
+	window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
+
+	command = g_strdup_printf ("%s/gpk-repo --parent-window %u", BINDIR, xid);
+	egg_debug ("running: %s", command);
+	ret = g_spawn_command_line_async (command, NULL);
 	if (!ret) {
-		egg_warning ("spawn of pk-repo failed");
+		egg_warning ("spawn of %s failed", command);
 	}
+	g_free (command);
 }
 
 /**
@@ -2381,13 +2392,23 @@ static void
 gpk_application_menu_log_cb (GtkAction *action, GpkApplication *application)
 {
 	gboolean ret;
+	guint xid;
+	gchar *command;
+	GtkWidget *window;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
-	ret = g_spawn_command_line_async ("gpk-log", NULL);
+	/* get xid */
+	window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
+	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
+
+	command = g_strdup_printf ("%s/gpk-log --parent-window %u", BINDIR, xid);
+	egg_debug ("running: %s", command);
+	ret = g_spawn_command_line_async (command, NULL);
 	if (!ret) {
-		egg_warning ("spawn of pk-log failed");
+		egg_warning ("spawn of %s failed", command);
 	}
+	g_free (command);
 }
 
 /**

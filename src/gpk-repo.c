@@ -422,12 +422,16 @@ main (int argc, char *argv[])
 	UniqueApp *unique_app;
 	GError *error = NULL;
 	guint retval;
+	guint xid = 0;
 	gboolean ret;
 	GtkBox *box;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 		  _("Show extra debugging information"), NULL },
+		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
+		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
+		  _("Set the parent window to make this modal"), NULL },
 		{ NULL}
 	};
 
@@ -541,6 +545,12 @@ main (int argc, char *argv[])
 
 	/* show window */
 	gtk_widget_show (main_window);
+
+	/* set the parent window if it is specified */
+	if (xid != 0) {
+		egg_debug ("Setting xid %i", xid);
+		gpk_window_set_parent_xid (GTK_WINDOW (main_window), xid);
+	}
 
 	/* focus back to the close button */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));

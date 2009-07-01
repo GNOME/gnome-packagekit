@@ -638,6 +638,7 @@ main (int argc, char *argv[])
 	UniqueApp *unique_app;
 	gboolean ret;
 	guint retval;
+	guint xid = 0;
 	GError *error = NULL;
 
 	const GOptionEntry options[] = {
@@ -646,6 +647,9 @@ main (int argc, char *argv[])
 		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
 		  /* TRANSLATORS: preset the GtktextBox with this filter text */
 		  N_("Set the filter to this value"), NULL },
+		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
+		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
+		  _("Set the parent window to make this modal"), NULL },
 		{ NULL}
 	};
 
@@ -778,6 +782,13 @@ main (int argc, char *argv[])
 	/* show */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_widget_show (widget);
+
+	/* set the parent window if it is specified */
+	if (xid != 0) {
+		egg_debug ("Setting xid %i", xid);
+		gpk_window_set_parent_xid (GTK_WINDOW (widget), xid);
+	}
+
 	gtk_main ();
 
 out_build:
