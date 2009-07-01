@@ -360,6 +360,8 @@ gpk_helper_run_show (GpkHelperRun *helper, gchar **package_ids)
 
 	/* clear old list */
 	gtk_list_store_clear (helper->priv->list_store);
+	g_free (helper->priv->full_path);
+	helper->priv->full_path = NULL;
 
 	/* add all the apps */
 	len = gpk_helper_run_add_package_ids (helper, package_ids);
