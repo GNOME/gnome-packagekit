@@ -1014,7 +1014,7 @@ out:
 static gboolean
 gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
 {
-	egg_warning ("idle cb");
+	egg_debug ("idle cb");
 	gpk_check_update_query_updates (cupdate, TRUE);
 	return FALSE;
 }
@@ -1025,10 +1025,19 @@ gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
 static void
 gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate)
 {
+	guint thresh;
+
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
+	/* if we don't want to auto check for updates, don't do this either */
+	thresh = gconf_client_get_int (cupdate->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	if (thresh == 0) {
+		egg_debug ("not when policy is to never get updates");
+		return;
+	}
+
 	/* now try to get newest update list */
-	egg_warning ("updates changed");
+	egg_debug ("updates changed, so getting new update list");
 	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
 }
 
