@@ -361,7 +361,7 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	gboolean enabled;
 	gchar *package_id;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* okay to apply? */
 	if (application->priv->package_list->len == 0) {
@@ -428,7 +428,7 @@ gpk_application_install (GpkApplication *application)
 {
 	gchar *value;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	/* shouldn't be possible */
 	if (application->priv->package == NULL) {
@@ -479,7 +479,7 @@ gpk_application_install (GpkApplication *application)
 static void
 gpk_application_menu_homepage_cb (GtkAction *action, GpkApplication *application)
 {
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 	gpk_gnome_open (application->priv->url);
 }
 
@@ -502,7 +502,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 	GError *error = NULL;
 	gchar **package_ids = NULL;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* reset client */
 	ret = pk_client_reset (application->priv->client_primary, &error);
@@ -532,7 +532,7 @@ gpk_application_remove (GpkApplication *application)
 {
 	gchar *value;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	/* shouldn't be possible */
 	if (application->priv->package == NULL) {
@@ -829,7 +829,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	const gchar *group;
 	gboolean installed;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	installed = egg_strequal (details->id->data, "installed");
 
@@ -940,7 +940,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	static guint package_cnt = 0;
 	PkRoleEnum role;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
@@ -1017,7 +1017,7 @@ static void
 gpk_application_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkApplication *application)
 {
 	GtkWindow *window;
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* obvious message, don't tell the user */
 	if (code == PK_ERROR_ENUM_TRANSACTION_CANCELLED)
@@ -1226,7 +1226,7 @@ gpk_application_select_exact_match (GpkApplication *application, const gchar *te
 	gchar *package_id;
 	PkPackageId *id;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get the first iter in the list */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
@@ -1309,7 +1309,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	PkRoleEnum role;
 	PkPackageList *list;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get role */
 	pk_client_get_role (client, &role, NULL, NULL);
@@ -1438,7 +1438,7 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 {
 	gboolean ret;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	ret = pk_client_cancel (application->priv->client_primary, NULL);
 	egg_debug ("canceled? %i", ret);
@@ -1534,7 +1534,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 	GtkWindow *window;
 	GError *error = NULL;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 	g_return_val_if_fail (application->priv->group != NULL, FALSE);
 
 	/* cancel this, we don't care about old results that are pending */
@@ -1576,7 +1576,7 @@ gpk_application_perform_search (GpkApplication *application)
 {
 	gboolean ret = FALSE;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	gpk_application_clear_details (application);
 	gpk_application_clear_packages (application);
@@ -1598,7 +1598,7 @@ gpk_application_perform_search (GpkApplication *application)
 static void
 gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 {
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	application->priv->search_mode = PK_MODE_NAME_DETAILS_FILE;
 	gpk_application_perform_search (application);
@@ -1617,7 +1617,7 @@ gpk_application_quit (GpkApplication *application)
 	GtkWindow *window;
 	GtkWidget *dialog;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	/* do we have any items queued for removal or installation? */
 	if (application->priv->package_list->len != 0) {
@@ -1669,7 +1669,7 @@ gpk_application_delete_event_cb (GtkWidget	*widget,
 				GdkEvent	*event,
 				GpkApplication	*application)
 {
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	return !gpk_application_quit (application);
 }
@@ -1695,7 +1695,7 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 	const gchar *package;
 	GtkTreeSelection *selection;
 
-	g_return_val_if_fail (PK_IS_APPLICATION (application), FALSE);
+	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	package = gtk_entry_get_text (entry);
 
@@ -1731,7 +1731,7 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 	GtkTreeSelection *selection;
 	PkBitfield state;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	model = gtk_tree_view_get_model (treeview);
@@ -1783,7 +1783,7 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplication *appli
 	PkBitfield state;
 	gboolean ret;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get the first iter in the list */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
@@ -1831,7 +1831,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	GError *error = NULL;
 	gchar **package_ids = NULL;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	package_ids = pk_ptr_array_to_strv (application->priv->package_list);
 	if (application->priv->action == PK_ACTION_INSTALL) {
@@ -1951,7 +1951,7 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 	GtkTreePath *path;
 	gboolean active;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* hide details */
 	gpk_application_clear_details (application);
@@ -2008,7 +2008,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gchar **package_ids = NULL;
 	gchar *package_id = NULL;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* reset */
 	g_free (application->priv->package);
@@ -2093,7 +2093,7 @@ out:
 static void
 gpk_application_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkApplication *application)
 {
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	egg_debug ("connected=%i", connected);
 }
@@ -2232,7 +2232,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 	GtkWidget *image;
 	GpkApplication *application = GPK_APPLICATION (data);
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* only respond to left button */
 	if (event->button != 1)
@@ -2406,7 +2406,7 @@ gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 	gchar *command;
 	GtkWidget *window;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
@@ -2432,7 +2432,7 @@ gpk_application_menu_log_cb (GtkAction *action, GpkApplication *application)
 	gchar *command;
 	GtkWidget *window;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
@@ -2456,7 +2456,7 @@ gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 	gboolean ret;
 	GError *error = NULL;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* reset client */
 	ret = pk_client_reset (application->priv->client_primary, &error);
@@ -2486,7 +2486,7 @@ gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *app
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2519,7 +2519,7 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *applica
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2552,7 +2552,7 @@ gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *applicati
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2585,7 +2585,7 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2618,7 +2618,7 @@ gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *applicat
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2651,7 +2651,7 @@ gpk_application_menu_filter_source_cb (GtkWidget *widget, GpkApplication *applic
 {
 	const gchar *name;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	name = gtk_widget_get_name (widget);
 
@@ -2684,7 +2684,7 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 {
 	gboolean enabled;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* save users preference to gconf */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
@@ -2710,7 +2710,7 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 {
 	gboolean enabled;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* save users preference to gconf */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
@@ -2736,7 +2736,7 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 	const gchar *text;
 	GtkWidget *widget;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	if (application->priv->action == PK_ACTION_INSTALL ||
 	    application->priv->action == PK_ACTION_REMOVE) {
@@ -2784,7 +2784,7 @@ gpk_application_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkApp
 {
 	GtkWidget *widget;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 	gtk_widget_set_sensitive (widget, allow_cancel);
@@ -2990,7 +2990,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	gboolean ret;
 	PkBitfield state;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get selection */
 	model = gtk_tree_view_get_model (treeview);
@@ -3032,7 +3032,7 @@ pk_application_repo_detail_cb (PkClient *client, const gchar *repo_id,
 			       const gchar *description, gboolean enabled,
 			       GpkApplication *application)
 {
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	egg_debug ("repo = %s:%s", repo_id, description);
 	/* no problem, just no point adding as we will fallback to the repo_id */
@@ -3366,7 +3366,7 @@ gpk_application_files_cb (PkClient *client, const gchar *package_id,
 	GtkWidget *dialog;
 	PkPackageId *id;
 
-	g_return_if_fail (PK_IS_APPLICATION (application));
+	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	files = g_strsplit (filelist, ";", -1);
 
@@ -4012,7 +4012,7 @@ static void
 gpk_application_finalize (GObject *object)
 {
 	GpkApplication *application;
-	g_return_if_fail (PK_IS_APPLICATION (object));
+	g_return_if_fail (GPK_IS_APPLICATION (object));
 
 	application = GPK_APPLICATION (object);
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
