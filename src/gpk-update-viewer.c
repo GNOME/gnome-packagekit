@@ -1030,8 +1030,6 @@ out:
 	return ret;
 }
 
-
-
 /**
  * gpk_update_viewer_treeview_add_columns_update:
  **/
@@ -1917,6 +1915,9 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 static GSList *active_rows = NULL;
 static guint active_row_timeout = 0;
 
+/**
+ * gpk_update_viewer_compare_refs:
+ **/
 static gint
 gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
 {
@@ -1941,6 +1942,9 @@ gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
 	return res;
 }
 
+/**
+ * gpk_update_viewer_pulse_active_rows:
+ **/
 static gboolean
 gpk_update_viewer_pulse_active_rows (void)
 {
@@ -1966,6 +1970,9 @@ gpk_update_viewer_pulse_active_rows (void)
 	return TRUE;
 }
 
+/**
+ * gpk_update_viewer_add_active_row:
+ **/
 static void
 gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
@@ -1979,6 +1986,9 @@ gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 	active_rows = g_slist_prepend (active_rows, ref);
 }
 
+/**
+ * gpk_update_viewer_remove_active_row:
+ **/
 static void
 gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
@@ -2009,7 +2019,7 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
  **/
 static void
 gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				guint elapsed, guint remaining, gpointer data)
+				       guint elapsed, guint remaining, gpointer data)
 {
 	GtkWidget *widget;
 	GtkTreeView *treeview;
@@ -2038,7 +2048,6 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	}
 
 	gtk_tree_model_get_iter (model, &iter, path);
-
 	gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_PERCENTAGE, &oldval, -1);
 	if ((oldval > 0 && oldval < 100) != (subpercentage > 0 && subpercentage < 100)) {
 		if (oldval > 0 && oldval < 100)
