@@ -134,6 +134,7 @@ enum {
 	PACKAGES_COLUMN_CHECKBOX_VISIBLE, /* visible */
 	PACKAGES_COLUMN_TEXT,
 	PACKAGES_COLUMN_ID,
+	PACKAGES_COLUMN_SUMMARY,
 	PACKAGES_COLUMN_LAST
 };
 
@@ -993,6 +994,7 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 			    PACKAGES_COLUMN_CHECKBOX, installed ^ in_queue,
 			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled,
 			    PACKAGES_COLUMN_TEXT, text,
+			    PACKAGES_COLUMN_SUMMARY, obj->summary,
 			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
@@ -3106,6 +3108,7 @@ gpk_application_add_welcome (GpkApplication *application)
 			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, FALSE,
 			    PACKAGES_COLUMN_TEXT, welcome,
 			    PACKAGES_COLUMN_IMAGE, "system-search",
+			    PACKAGES_COLUMN_SUMMARY, NULL,
 			    PACKAGES_COLUMN_ID, NULL,
 			    -1);
 }
@@ -3447,6 +3450,7 @@ gpk_application_init (GpkApplication *application)
 								G_TYPE_UINT64,
 							        G_TYPE_BOOLEAN,
 							        G_TYPE_BOOLEAN,
+							        G_TYPE_STRING,
 							        G_TYPE_STRING,
 							        G_TYPE_STRING);
 	application->priv->groups_store = gtk_tree_store_new (GROUPS_COLUMN_LAST,
