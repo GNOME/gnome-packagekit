@@ -2375,6 +2375,22 @@ gpk_application_menu_sources_cb (GtkAction *action, GpkApplication *application)
 }
 
 /**
+ * gpk_application_menu_log_cb:
+ **/
+static void
+gpk_application_menu_log_cb (GtkAction *action, GpkApplication *application)
+{
+	gboolean ret;
+
+	g_return_if_fail (PK_IS_APPLICATION (application));
+
+	ret = g_spawn_command_line_async ("gpk-log", NULL);
+	if (!ret) {
+		egg_warning ("spawn of pk-log failed");
+	}
+}
+
+/**
  * gpk_application_menu_refresh_cb:
  **/
 static void
@@ -3546,6 +3562,10 @@ gpk_application_init (GpkApplication *application)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_refresh"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_refresh_cb), application);
+
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_log"));
+	g_signal_connect (widget, "activate",
+			  G_CALLBACK (gpk_application_menu_log_cb), application);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_homepage"));
 	g_signal_connect (widget, "activate",
