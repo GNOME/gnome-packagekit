@@ -1258,6 +1258,46 @@ gpk_application_select_exact_match (GpkApplication *application, const gchar *te
 
 
 /**
+ * gpk_application_run_installed:
+ **/
+static void
+gpk_application_run_installed (GpkApplication *application)
+{
+	guint i;
+	guint len;
+	PkPackageList *list;
+	const PkPackageObj *obj;
+	GPtrArray *array;
+	gchar **package_ids = NULL;
+
+	/* get the package list and filter on INSTALLED */
+	array = g_ptr_array_new ();
+	list = pk_client_get_package_list (application->priv->client_primary);
+	len = PK_OBJ_LIST (list)->len;
+	for (i=0; i<len; i++) {
+		obj = pk_package_list_get_obj (list, i);
+		if (obj->info == PK_INFO_ENUM_INSTALLING)
+			g_ptr_array_add (array, pk_package_id_to_string (obj->id));
+	}
+
+	/* nothing to show */
+	if (array->len == 0) {
+		egg_debug ("nothing to do");
+		goto out;
+	}
+
+	/* this is async */
+	package_ids = pk_package_ids_from_array (array);
+	gpk_helper_run_show (application->priv->helper_run, package_ids);
+
+out:
+	g_strfreev (package_ids);
+	g_object_unref (list);
+	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
+	g_ptr_array_free (array, TRUE);
+}
+
+/**
  * gpk_application_finished_cb:
  **/
 static void
@@ -1266,7 +1306,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	GtkWidget *widget;
 	PkRoleEnum role;
 	PkPackageList *list;
-	gchar **package_ids;
 
 	g_return_if_fail (PK_IS_APPLICATION (application));
 
@@ -1352,13 +1391,8 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 			/* idle add in the background */
 			g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
 
-			/* TODO: get the package list and filter on INSTALLED */
-			if (application->priv->package != NULL) {
-				package_ids = pk_package_ids_from_id (application->priv->package);
-				/* this is async */
-				gpk_helper_run_show (application->priv->helper_run, package_ids);
-				g_strfreev (package_ids);
-			}
+			/* find applications that were installed, and offer to run them */
+			gpk_application_run_installed (application);
 
 			/* clear if success */
 			g_ptr_array_foreach (application->priv->package_list, (GFunc) g_free, NULL);
