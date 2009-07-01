@@ -1107,17 +1107,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_STATUS);
 
-	/* size */
-	renderer = gpk_cell_renderer_size_new ();
-	g_object_set (renderer,
-		      "alignment", PANGO_ALIGN_RIGHT,
-		      "xalign", 1.0f,
-		      NULL);
-	g_object_set (renderer,
-		      "value", GPK_UPDATES_COLUMN_SIZE, NULL);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE);
-
 	/* column for progress */
 	renderer = gpk_cell_renderer_spinner_new ();
 	g_object_set (renderer, "size", GTK_ICON_SIZE_BUTTON, NULL);
@@ -1131,6 +1120,27 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	/* tooltips */
 	g_signal_connect (treeview, "query-tooltip", G_CALLBACK (gpk_update_viewer_treeview_query_tooltip_cb), NULL);
 	g_object_set (treeview, "has-tooltip", TRUE, NULL);
+
+	/* --- column for size --- */
+	column = gtk_tree_view_column_new ();
+	/* TRANSLATORS: a column that has size of each package */
+	gtk_tree_view_column_set_title (column, _("Size"));
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_SIZE);
+
+	/* size */
+	renderer = gpk_cell_renderer_size_new ();
+	g_object_set (renderer,
+		      "alignment", PANGO_ALIGN_RIGHT,
+		      "xalign", 1.0f,
+		      NULL);
+	g_object_set (renderer,
+		      "value", GPK_UPDATES_COLUMN_SIZE, NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE);
+
+	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_SIZE));
 }
 
 /**
