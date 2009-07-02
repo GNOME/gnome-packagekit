@@ -94,6 +94,13 @@ typedef guint PkMediaTypeEnum;
 /* constants defined in 0.5.0 */
 #if (!PK_CHECK_VERSION(0,5,0))
 #define PK_EXIT_ENUM_NEED_UNTRUSTED			(PK_EXIT_ENUM_MEDIA_CHANGE_REQUIRED + 1)
+#define PK_ERROR_ENUM_CANNOT_GET_FILELIST		(PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED + 1)
+#define PK_ERROR_ENUM_CANNOT_GET_REQUIRES		(PK_ERROR_ENUM_CANNOT_GET_FILELIST + 1)
+#define PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY		(PK_ERROR_ENUM_CANNOT_GET_REQUIRES + 1)
+#endif
+
+/* functions defined in 0.5.0 */
+#if (!PK_CHECK_VERSION(0,5,0))
 #define pk_error_code_is_need_untrusted			gpk_error_code_is_need_untrusted
 #define pk_client_set_only_trusted(c,t)
 #endif

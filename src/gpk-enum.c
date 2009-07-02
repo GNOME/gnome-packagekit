@@ -465,6 +465,15 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
 		text = _("Cannot update from untrusted source");
 		break;
+	case PK_ERROR_ENUM_CANNOT_GET_FILELIST:
+		text = _("Cannot get the file list");
+		break;
+	case PK_ERROR_ENUM_CANNOT_GET_REQUIRES:
+		text = _("Cannot get package requires");
+		break;
+	case PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY:
+		text = _("Cannot disable source");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -663,6 +672,15 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
 		text = _("The package could not be updated from untrusted source.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_GET_FILELIST:
+		text = _("The file list is not available for this package.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_GET_REQUIRES:
+		text = _("The information about what requires this package could not be obtained.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY:
+		text = _("The specified software source could not be disabled.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
