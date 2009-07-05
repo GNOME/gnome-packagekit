@@ -751,7 +751,6 @@ main (int argc, char *argv[])
 		g_object_unref (completion);
 	} else {
 		/* use search as you type */
-		g_signal_connect (widget, "key-press-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 		g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 	}
 	g_object_unref (gconf_client);
