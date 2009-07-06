@@ -38,8 +38,6 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
-#include <polkit/polkit.h>
-#include <polkit-dbus/polkit-dbus.h>
 #include <packagekit-glib/packagekit.h>
 #include <gconf/gconf-client.h>
 
@@ -61,6 +59,8 @@ struct GpkDbusPrivate
 	gint			 timeout_tmp;
 	GpkX11			*x11;
 	GPtrArray		*array;
+	DBusGProxy		*proxy_session_pid;
+	DBusGProxy		*proxy_system_pid;
 };
 
 G_DEFINE_TYPE (GpkDbus, gpk_dbus, G_TYPE_OBJECT)
@@ -103,52 +103,117 @@ gpk_dbus_error_get_type (void)
 }
 
 /**
+ * gpk_dbus_get_pid_session:
+ **/
+static guint
+gpk_dbus_get_pid_session (GpkDbus *dbus, const gchar *sender)
+{
+	guint pid = G_MAXUINT;
+	gboolean ret;
+	GError *error = NULL;
+
+	/* get pid from DBus (quite slow) */
+	ret = dbus_g_proxy_call (dbus->priv->proxy_session_pid, "GetConnectionUnixProcessID", &error,
+				 G_TYPE_STRING, sender,
+				 G_TYPE_INVALID,
+				 G_TYPE_UINT, &pid,
+				 G_TYPE_INVALID);
+	if (!ret) {
+		egg_debug ("failed to get pid from session: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return pid;
+}
+
+/**
+ * gpk_dbus_get_pid_system:
+ **/
+static guint
+gpk_dbus_get_pid_system (GpkDbus *dbus, const gchar *sender)
+{
+	guint pid = G_MAXUINT;
+	gboolean ret;
+	GError *error = NULL;
+
+	/* get pid from DBus (quite slow) */
+	ret = dbus_g_proxy_call (dbus->priv->proxy_system_pid, "GetConnectionUnixProcessID", &error,
+				 G_TYPE_STRING, sender,
+				 G_TYPE_INVALID,
+				 G_TYPE_UINT, &pid,
+				 G_TYPE_INVALID);
+	if (!ret) {
+		egg_debug ("failed to get pid from system: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	return pid;
+}
+
+/**
+ * gpk_dbus_get_pid:
+ **/
+static guint
+gpk_dbus_get_pid (GpkDbus *dbus, const gchar *sender)
+{
+	guint pid;
+
+	g_return_val_if_fail (PK_IS_DBUS (dbus), G_MAXUINT);
+	g_return_val_if_fail (dbus->priv->proxy_session_pid != NULL, G_MAXUINT);
+	g_return_val_if_fail (dbus->priv->proxy_system_pid != NULL, G_MAXUINT);
+	g_return_val_if_fail (sender != NULL, G_MAXUINT);
+
+	/* check system bus first */
+	pid = gpk_dbus_get_pid_system (dbus, sender);
+	if (pid != G_MAXUINT)
+		goto out;
+
+	/* and then session bus */
+	pid = gpk_dbus_get_pid_session (dbus, sender);
+	if (pid != G_MAXUINT)
+		goto out;
+
+	/* should be impossible */
+	egg_warning ("could not find pid!");
+out:
+	return pid;
+}
+
+
+/**
  * gpk_dbus_get_exec_for_sender:
  **/
 static gchar *
-gpk_dbus_get_exec_for_sender (const gchar *sender)
+gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 {
-	pid_t pid;
-	gchar exec[128];
-	PolKitCaller *caller = NULL;
-	DBusError dbus_error;
-	gboolean ret = FALSE;
-	gint retval;
-	DBusConnection *connection;
-	gchar *sender_exe = NULL;
+	gboolean ret;
+	gchar *filename = NULL;
+	gchar *cmdline = NULL;
+	GError *error = NULL;
+	guint pid;
 
-	/* get a connection */
-	connection = dbus_bus_get (DBUS_BUS_SESSION, NULL);
-	if (connection == NULL)
-		egg_error ("fatal, no system dbus");
+	g_return_val_if_fail (PK_IS_DBUS (dbus), NULL);
+	g_return_val_if_fail (sender != NULL, NULL);
 
-	dbus_error_init (&dbus_error);
-	caller = polkit_caller_new_from_dbus_name (connection, sender, &dbus_error);
-	if (caller == NULL) {
-		egg_warning ("cannot get caller from sender %s: %s", sender, dbus_error.message);
-		dbus_error_free (&dbus_error);
+	/* get pid */
+	pid = gpk_dbus_get_pid (dbus, sender);
+	if (pid == G_MAXUINT) {
+		egg_warning ("failed to get PID");
 		goto out;
 	}
 
-	ret = polkit_caller_get_pid (caller, &pid);
+	/* get command line from proc */
+	filename = g_strdup_printf ("/proc/%i/cmdline", pid);
+	ret = g_file_get_contents (filename, &cmdline, NULL, &error);
 	if (!ret) {
-		egg_warning ("cannot get pid from sender %p", sender);
-		goto out;
+		egg_warning ("failed to get cmdline: %s", error->message);
+		g_error_free (error);
 	}
-
-	retval = polkit_sysdeps_get_exe_for_pid (pid, exec, 128);
-	if (retval == -1) {
-		egg_warning ("cannot get exec for pid %i", pid);
-		goto out;
-	}
-
-	/* make a copy */
-	sender_exe = g_strdup (exec);
-
 out:
-	if (caller != NULL)
-		polkit_caller_unref (caller);
-	return sender_exe;
+	g_free (filename);
+	return cmdline;
 }
 
 /**
@@ -288,8 +353,9 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 
 	/* get the program name and set */
 	sender = dbus_g_method_get_sender (context);
-	exec = gpk_dbus_get_exec_for_sender (sender);
-	gpk_dbus_task_set_exec (task, exec);
+	exec = gpk_dbus_get_exec_for_sender (dbus, sender);
+	if (exec != NULL)
+		gpk_dbus_task_set_exec (task, exec);
 
 	/* unref on delete */
 	//g_signal_connect...
@@ -421,11 +487,26 @@ gpk_dbus_class_init (GpkDbusClass *klass)
 static void
 gpk_dbus_init (GpkDbus *dbus)
 {
+	DBusGConnection *connection;
+
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->timeout_tmp = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
 	dbus->priv->array = g_ptr_array_new ();
 	dbus->priv->x11 = gpk_x11_new ();
+
+	/* find out PIDs on the session bus */
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
+	dbus->priv->proxy_session_pid = dbus_g_proxy_new_for_name_owner (connection,
+								 "org.freedesktop.DBus",
+								 "/org/freedesktop/DBus/Bus",
+								 "org.freedesktop.DBus", NULL);
+	/* find out PIDs on the system bus */
+	connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, NULL);
+	dbus->priv->proxy_system_pid = dbus_g_proxy_new_for_name_owner (connection,
+								 "org.freedesktop.DBus",
+								 "/org/freedesktop/DBus/Bus",
+								 "org.freedesktop.DBus", NULL);
 }
 
 /**
@@ -444,6 +525,8 @@ gpk_dbus_finalize (GObject *object)
 	g_ptr_array_free (dbus->priv->array, TRUE);
 	g_object_unref (dbus->priv->gconf_client);
 	g_object_unref (dbus->priv->x11);
+	g_object_unref (dbus->priv->proxy_session_pid);
+	g_object_unref (dbus->priv->proxy_system_pid);
 
 	G_OBJECT_CLASS (gpk_dbus_parent_class)->finalize (object);
 }

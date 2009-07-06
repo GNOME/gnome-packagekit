@@ -31,7 +31,6 @@
 #include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
-#include <polkit-gnome/polkit-gnome.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib/packagekit.h>
 

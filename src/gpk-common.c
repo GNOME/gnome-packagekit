@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
-#include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
 #include <locale.h>
 

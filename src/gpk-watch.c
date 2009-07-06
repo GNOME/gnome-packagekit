@@ -37,7 +37,6 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
-#include <polkit-gnome/polkit-gnome.h>
 #include <packagekit-glib/packagekit.h>
 
 #include "egg-debug.h"
@@ -74,7 +73,6 @@ struct GpkWatchPrivate
 	PkTaskList		*tlist;
 	PkRestartEnum		 restart;
 	GConfClient		*gconf_client;
-	PolKitGnomeAction	*restart_action;
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
 	gboolean		 hide_warning;
@@ -807,15 +805,6 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint32 times
 }
 
 /**
- * gpk_watch_restart_cb:
- **/
-static void
-gpk_watch_restart_cb (PolKitGnomeAction *action, gpointer data)
-{
-	gpk_restart_system ();
-}
-
-/**
  * gpk_watch_menu_show_messages_cb:
  **/
 static void
@@ -1247,6 +1236,15 @@ gpk_watch_menu_log_out_cb (GtkMenuItem *item, gpointer data)
 }
 
 /**
+ * gpk_watch_menu_restart_cb:
+ **/
+static void
+gpk_watch_menu_restart_cb (GtkMenuItem *item, gpointer data)
+{
+	gpk_restart_system ();
+}
+
+/**
  * gpk_watch_activate_status_cb:
  * @button: Which buttons are pressed
  *
@@ -1283,6 +1281,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 
 	/* log out session */
 	if (watch->priv->restart == PK_RESTART_ENUM_SESSION) {
+		/* TRANSLATORS: log out of the session */
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Log out"));
 		image = gtk_image_new_from_icon_name ("system-log-out", GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
@@ -1294,7 +1293,12 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 
 	/* restart computer */
 	if (watch->priv->restart == PK_RESTART_ENUM_SYSTEM) {
-		widget = gtk_action_create_menu_item (GTK_ACTION (watch->priv->restart_action));
+		/* TRANSLATORS: this menu item restarts the computer after an update */
+		widget = gtk_image_menu_item_new_with_mnemonic (_("_Restart computer"));
+		image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
+		g_signal_connect (G_OBJECT (widget), "activate",
+				  G_CALLBACK (gpk_watch_menu_restart_cb), watch);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
 		show_hide = TRUE;
 	}
@@ -1587,9 +1591,6 @@ gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 static void
 gpk_watch_init (GpkWatch *watch)
 {
-	PolKitAction *pk_action;
-	PolKitGnomeAction *restart_action;
-
 	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
 	watch->priv->error_details = NULL;
 	watch->priv->notification_cached_messages = NULL;
@@ -1654,23 +1655,6 @@ gpk_watch_init (GpkWatch *watch)
 	if (pk_connection_valid (watch->priv->pconnection))
 		pk_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
 
-	pk_action = polkit_action_new ();
-	polkit_action_set_action_id (pk_action, "org.freedesktop.consolekit.system.restart");
-
-	restart_action = polkit_gnome_action_new_default ("restart-system", pk_action,
-							  /* TRANSLATORS: This button restarts the computer after an update */
-							  _("_Restart computer"), NULL);
-	g_object_set (restart_action,
-		      "no-icon-name", "system-shutdown",
-		      "auth-icon-name", "system-shutdown",
-		      "yes-icon-name","system-shutdown",
-		      "self-blocked-icon-name", "system-shutdown",
-		      NULL);
-	polkit_action_unref (pk_action);
-	g_signal_connect (restart_action, "activate",
-			  G_CALLBACK (gpk_watch_restart_cb), NULL);
-	watch->priv->restart_action = restart_action;
-
 	/* watch proxy keys */
 	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
 			      GCONF_CLIENT_PRELOAD_NONE, NULL);
@@ -1719,7 +1703,6 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->control);
 	g_object_unref (watch->priv->pconnection);
 	g_object_unref (watch->priv->gconf_client);
-	g_object_unref (watch->priv->restart_action);
 	g_object_unref (watch->priv->client_primary);
 	g_object_unref (watch->priv->dialog);
 
