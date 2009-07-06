@@ -1,6 +1,70 @@
+Version 2.27.3
+~~~~~~~~~~~~~~
+Released: 2009-06-01
+
+* Translations
+ - Updated Gurmukhi translation (A S Alam)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Assamese translation (Amitakhya Phukan)
+ - Updated Portuguese translation (António Lima)
+ - Updated German translation (Mario Blättermann)
+ - Updated German help file translation (Mario Blättermann, Hendrik Richter)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Polish translation (Piotr Drąg)
+ - Updated Bengali India translation (Runa Bhattacharjee)
+ - Updated Marathi translation (Sandeep Shedmake)
+ - Updated Kannada translation (Runa Bhattacharjee)
+ - Updated Gujarati Translation (Sweta Kothari)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Simplified Chinese translation (Wei Mingzhi)
+ - Updated Tamil translation (ifelix)
+ - Updated Telugu translation (krishnababu k)
+
+* New Features:
+ - Add a link to gpk-log in gpk-application (Christoph Wickert)
+ - Enable nice build output on automake1.11 (Richard Hughes)
+ - Enable the warning GSEAL_ENABLE and fix up build failures (Richard Hughes)
+ - Check for dependancies before downloading updates in the update viewer (Richard Hughes)
+ - Add --parent-window options to the client tools so they are set transient in gpk-application (Richard Hughes)
+
+* Bugfix:
+ - Include <locale.h> in gpk-update-viewer.c (Jaap A. Haitsma)
+ - Use gtk_show_uri instead of deprecated gnome-open (Jaap A. Haitsma)
+ - Don't use English enumerated values in GConf, instead use seconds (Richard Hughes)
+ - Check packages content-type before sending them to the daemon (Richard Hughes)
+ - Add a tooltip to the package entry box in the service pack creator (Richard Hughes)
+ - Fix a double free when we fail to find packages (Richard Hughes)
+ - Show normal updates in the update viewer severity column (Richard Hughes)
+ - Populate the manpage package names correctly (Richard Hughes)
+ - Force intltool to recognise .ui files as gettext/glade files (Richard Hughes)
+ - Set the GpkHelperRun window to be modal. Fixes rh#506010 (Richard Hughes)
+ - Connect to gnome-session to get the idle status, not gnome-screensaver (Richard Hughes)
+ - Don't show a generic icon when we have messages (Richard Hughes)
+ - Get rid of the 'Display Notification' section in the preferences pane (Richard Hughes)
+ - Don't try to update previously added deps to be installed in the update viewer (Richard Hughes)
+ - Fix mnemonic conflict in gpk-application (Richard Hughes)
+ - When the user clicks hide, do so until the session is restarted. Fixes rh#507062 (Richard Hughes)
+ - Move a few GConf keys to the correct places (Richard Hughes)
+ - Add preference to be able to see every PackageKit transaction, even if it's active (Richard Hughes)
+ - Don't ignore the user pressing escape to dismiss a GpkHelperChooser (Richard Hughes)
+ - Use small form factor mode when the window is nearly as big as the display (Richard Hughes)
+ - Don't use a large package screen on notebooks with small displays (Richard Hughes)
+ - Use the newest filter by default in the update viewer. Fixes rh#508505 (Richard Hughes)
+ - Use better wording when a package sent RequireRestart (Richard Hughes)
+ - Don't include the size column in the Status column. Fixes rh#509067 (Richard Hughes)
+ - Run all the packages after install, not just the selected package (Richard Hughes)
+ - Clear the run list when we setup a new GpkHelperRun. Fixes fd#22489 (Richard Hughes)
+ - Use a PkPackageList in gpk-appliction to store the package list (Richard Hughes)
+ - If the use has set get-updates policy to never, then ignore updates-changed events. Fixes rh#509104 (Richard Hughes)
+ - Fix up a translation string. Fixes fd#22623 (Richard Hughes)
+ - Don't connect to key press _and_ release in gpk-log. Fixes rh#509636 (Richard Hughes)
+
 Version 2.27.2
 ~~~~~~~~~~~~~~
-Released: 2000-06-01
+Released: 2009-06-01
 
 * Translations
  - Added German translation (Mario Blättermann)
@@ -80,7 +144,7 @@ Released: 2000-06-01
 
 Version 2.27.1
 ~~~~~~~~~~~~~~
-Released: 2000-03-30
+Released: 2009-03-30
 
 * Translations
  - Added Romanian translation (Alex Szasz)
@@ -126,7 +190,7 @@ Released: 2000-03-30
 
 Version 0.4.5
 ~~~~~~~~~~~~~
-Released: 2000-03-09
+Released: 2009-03-09
 
 * Translations
  - Updated Portuguese translation (António Lima)
@@ -149,7 +213,7 @@ Released: 2000-03-09
 
 Version 0.4.4
 ~~~~~~~~~~~~~
-Released: 2000-02-23
+Released: 2009-02-23
 
 * Translations
  - Added Simplified Chinese translation (Wei Mingzhi)
@@ -172,7 +236,7 @@ Released: 2000-02-23
 
 Version 0.4.3
 ~~~~~~~~~~~~~
-Released: 2000-02-02
+Released: 2009-02-02
 
 * Translations
  - Updated Spanish translation (Daniel Mustieles)
@@ -204,7 +268,7 @@ Released: 2000-02-02
 
 Version 0.4.2
 ~~~~~~~~~~~~~
-Released: 2000-01-19
+Released: 2009-01-19
 
 * Translations
  - Updated Spanish translation (Daniel Mustieles)
@@ -242,7 +306,7 @@ Released: 2000-01-19
 
 Version 0.4.1
 ~~~~~~~~~~~~~
-Released: 2000-01-08
+Released: 2009-01-08
 
 * Translations
  - Added Kannada translation (Andre Klapper)
