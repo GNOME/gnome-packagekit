@@ -237,7 +237,22 @@
       <default>false</default>
       <locale name="C">
         <short>Show transactions that have the original application running</short>
-        <long>Show the transaction progress icon in the tray when the original application is still running.</long>
+        <long>
+          <!-- TRANSLATORS:
+             The original application is the program that was opened by the user,
+             and that requested the PackageKit action.
+             If the user then closes the application, but the task is still running
+             (for instance, updating the system) then the original application is
+             marked as not running.
+             This is the only time we should show the progress icon in the tray,
+             as the user would have no other way to interact with, or cancel the task.
+
+             Some people like being able to interact with the task for debugging
+             or just because they want to know what is happening in other user sessions.
+             Those sort of people (not typical users) should enable this option.
+           -->
+          Show the transaction progress icon in the tray when the original application is still running.
+        </long>
       </locale>
     </schema>
 
