@@ -2333,6 +2333,7 @@ gpk_update_viewer_get_new_update_list (void)
 	GError *error = NULL;
 	GtkWidget *widget;
 	gchar *text = NULL;
+	PkBitfield filter = PK_FILTER_ENUM_NONE;
 
 	/* clear all widgets */
 	gtk_list_store_clear (list_store_updates);
@@ -2351,8 +2352,15 @@ gpk_update_viewer_get_new_update_list (void)
 		goto out;
 	}
 
+	/* only show newest updates? */
+	ret = gconf_client_get_bool (gconf_client, GPK_CONF_UPDATE_VIEWER_ONLY_NEWEST, NULL);
+	if (ret) {
+		egg_warning ("only showing newest updates");
+		filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NEWEST, -1);
+	}
+
 	/* get new list */
-	ret = pk_client_get_updates (client_primary, pk_bitfield_from_enums (PK_FILTER_ENUM_NEWEST, -1), &error);
+	ret = pk_client_get_updates (client_primary, filter, &error);
 	if (!ret) {
 		egg_warning ("Failed to get updates: %s", error->message);
 		g_error_free (error);
