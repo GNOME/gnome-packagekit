@@ -9,6 +9,7 @@
 %define devicekit_power_version		007
 %define libcanberra_version		0.10
 %define alphatag			#ALPHATAG#
+%define polkit_gnome_version		0.92
 
 %{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
@@ -36,6 +37,10 @@ Requires:  shared-mime-info
 Requires:  iso-codes
 Requires:  libcanberra >= %{libcanberra_version}
 Requires:  DeviceKit-power >= %{devicekit_power_version}
+
+# doesn't require it explicitly, just requires a _working_ authentication agent
+Requires:  polkit-gnome >= %{polkit_gnome_version}
+
 Requires(post):   scrollkeeper
 Requires(pre):    GConf2
 Requires(post):   GConf2
@@ -62,7 +67,6 @@ BuildRequires: perl(XML::Parser)
 BuildRequires: gnome-doc-utils
 BuildRequires: gnome-menus-devel >= 2.24.1
 BuildRequires: PackageKit-devel >= %{packagekit_version}
-BuildRequires: PolicyKit-gnome-devel
 BuildRequires: unique-devel >= %{unique_version}
 BuildRequires: intltool
 BuildRequires: xorg-x11-proto-devel
