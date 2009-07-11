@@ -105,6 +105,12 @@ typedef guint PkMediaTypeEnum;
 #define pk_client_set_only_trusted(c,t)
 #endif
 
+/* constants defined in 0.5.1 */
+#if (!PK_CHECK_VERSION(0,5,1))
+#define PK_RESTART_ENUM_SECURITY_SESSION		(PK_RESTART_ENUM_SYSTEM + 1)
+#define PK_RESTART_ENUM_SECURITY_SYSTEM			(PK_RESTART_ENUM_SECURITY_SESSION + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

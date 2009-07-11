@@ -209,6 +209,8 @@ static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_SYSTEM,		"system-shutdown"},
 	{PK_RESTART_ENUM_SESSION,		"system-log-out"},
 	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
+	{PK_RESTART_ENUM_SECURITY_SYSTEM,	"system-shutdown"},
+	{PK_RESTART_ENUM_SECURITY_SESSION,	"system-log-out"},
 	{0, NULL}
 };
 
@@ -218,6 +220,8 @@ static const PkEnumMatch enum_restart_dialog_icon_name[] = {
 	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
 	{PK_RESTART_ENUM_SESSION,		"dialog-warning"},
 	{PK_RESTART_ENUM_APPLICATION,		"dialog-warning"},
+	{PK_RESTART_ENUM_SECURITY_SYSTEM,	"dialog-error"},
+	{PK_RESTART_ENUM_SECURITY_SESSION,	"dialog-error"},
 	{0, NULL}
 };
 
@@ -709,6 +713,12 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 	case PK_RESTART_ENUM_SYSTEM:
 		text = _("A restart will be required");
 		break;
+	case PK_RESTART_ENUM_SECURITY_SESSION:
+		text = _("You will be required to log out and back in due to a security update");
+		break;
+	case PK_RESTART_ENUM_SECURITY_SYSTEM:
+		text = _("A restart will be required due to a security update");
+		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);
 	}
@@ -734,6 +744,12 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
 		text = _("You need to restart the application");
+		break;
+	case PK_RESTART_ENUM_SECURITY_SESSION:
+		text = _("You need to log out and log back in to remain secure, as important security updates have recently been installed");
+		break;
+	case PK_RESTART_ENUM_SECURITY_SYSTEM:
+		text = _("A restart is required to remain secure, as important security updates have recently been installed");
 		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);
