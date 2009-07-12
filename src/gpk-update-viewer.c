@@ -1551,11 +1551,28 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 		message = _("Some of the updates that were installed require the computer to be restarted before the changes will be applied.");
 		/* TRANSLATORS: the button text for the restart */
 		button = _("Restart Computer");
-	} else {
+
+	} else if (restart == PK_RESTART_ENUM_SECURITY_SYSTEM) {
+		/* TRANSLATORS: the message text for the restart */
+		message = _("Some of the updates that were installed require the computer to be restarted to remain secure.");
+		/* TRANSLATORS: the button text for the restart */
+		button = _("Restart Computer");
+
+	} else if (restart == PK_RESTART_ENUM_SESSION) {
 		/* TRANSLATORS: the message text for the logout */
 		message = _("Some of the updates that were installed require you to log out and back in before the changes will be applied.");
 		/* TRANSLATORS: the button text for the logout */
 		button = _("Log Out");
+
+	} else if (restart == PK_RESTART_ENUM_SECURITY_SESSION) {
+		/* TRANSLATORS: the message text for the logout */
+		message = _("Some of the updates that were installed require you to log out and back in to remain secure.");
+		/* TRANSLATORS: the button text for the logout */
+		button = _("Log Out");
+
+	} else {
+		egg_warning ("unknown restart enum");
+		goto out;
 	}
 
 	/* show modal dialog */
@@ -1854,7 +1871,9 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 
 		/* check restart */
 		if (restart_update == PK_RESTART_ENUM_SYSTEM ||
-		    restart_update == PK_RESTART_ENUM_SESSION) {
+		    restart_update == PK_RESTART_ENUM_SESSION ||
+		    restart_update == PK_RESTART_ENUM_SECURITY_SESSION ||
+		    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 			gpk_update_viewer_check_restart (restart_update);
 			g_main_loop_quit (loop);
 		}
