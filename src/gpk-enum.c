@@ -89,6 +89,9 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_TEST_COMMIT,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
 	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
+	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
+	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
+	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
 	{0, NULL}
 };
 
@@ -126,6 +129,9 @@ static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_TEST_COMMIT,		"pk-action-testing"},
 	{PK_STATUS_ENUM_UPDATE,			"pk-action-installing"},
 	{PK_STATUS_ENUM_WAIT,			"pk-action-waiting"},
+	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
+	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
+	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
 	{0, NULL}
 };
 
@@ -971,8 +977,20 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Waiting for package manager lock");
 		break;
 	case PK_STATUS_ENUM_WAITING_FOR_AUTH:
-		/* TRANSLATORS: waitig for user to type in a password */
+		/* TRANSLATORS: waiting for user to type in a password */
 		text = _("Waiting for authentication");
+		break;
+	case PK_STATUS_ENUM_SCAN_PROCESS_LIST:
+		/* TRANSLATORS: we are updating the list of processes */
+		text = _("Updating the list of running applications");
+		break;
+	case PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES:
+		/* TRANSLATORS: we are checking executable files in use */
+		text = _("Checking for applications currently in use");
+		break;
+	case PK_STATUS_ENUM_CHECK_LIBRARIES:
+		/* TRANSLATORS: we are checking for libraries in use */
+		text = _("Checking for libraries currently in use");
 		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
