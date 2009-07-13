@@ -500,7 +500,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 	switch (code) {
 	case PK_ERROR_ENUM_NO_NETWORK:
 		text = _("There is no network connection available.\n"
-			 "Please check your connection settings and try again");
+			 "Please check your connection settings and try again.");
 		break;
 	case PK_ERROR_ENUM_NO_CACHE:
 		text = _("The package list needs to be rebuilt.\n"
@@ -564,7 +564,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
 		text = _("The remote software source name was not found.\n"
-			 "You may need to enable an item in Software Sources");
+			 "You may need to enable an item in Software Sources.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
 		text = _("Removing a protected system package is not allowed.");
@@ -600,7 +600,7 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 			 "This is usually due to mixing packages from different software sources.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
-		text = _("There was a (possibly temporary) problem connecting to a software source\n"
+		text = _("There was a (possibly temporary) problem connecting to a software source.\n"
 			 "Please check the detailed error for further details.");
 		break;
 	case PK_ERROR_ENUM_FAILED_INITIALIZATION:

@@ -66,7 +66,7 @@ gpk_helper_media_change_show_idle_cb (GpkHelperMediaChange *helper)
 
 	name = gpk_media_type_enum_to_localised_text (helper->priv->type);
 	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
-	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' and click continue"), name, helper->priv->media_text);
+	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' to continue."), name, helper->priv->media_text);
 
 	dialog = gtk_message_dialog_new (helper->priv->window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 /* TRANSLATORS: this is the window title when a new cd or dvd is required */
