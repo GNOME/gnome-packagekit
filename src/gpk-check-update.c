@@ -60,6 +60,9 @@ static void     gpk_check_update_finalize	(GObject	     *object);
 /* the maximum number of lines of data on the libnotify widget */
 #define GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES	7
 
+/* the amount of time after ::UpdatesChanged we refresh the update list */
+#define GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT	60 /* seconds */
+
 struct GpkCheckUpdatePrivate
 {
 	GtkStatusIcon		*status_icon;
@@ -78,6 +81,7 @@ struct GpkCheckUpdatePrivate
 	NotifyNotification	*notification_updates_available;
 	GPtrArray		*important_updates_array;
 	EggDbusMonitor		*dbus_monitor_viewer;
+	guint			 updates_changed_id;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -1020,6 +1024,18 @@ gpk_check_update_query_updates_idle_cb (GpkCheckUpdate *cupdate)
 }
 
 /**
+ * gpk_check_update_query_updates_changed_cb:
+ **/
+static gboolean
+gpk_check_update_query_updates_changed_cb (GpkCheckUpdate *cupdate)
+{
+	egg_debug ("getting new update list (after we waited a short delay)");
+	cupdate->priv->updates_changed_id = 0;
+	gpk_check_update_query_updates (cupdate, TRUE);
+	return FALSE;
+}
+
+/**
  * gpk_check_update_updates_changed_cb:
  **/
 static void
@@ -1036,9 +1052,15 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 		return;
 	}
 
+	/* if we get this in the timeout, just remove and start again from now */
+	if (cupdate->priv->updates_changed_id > 0)
+		g_source_remove (cupdate->priv->updates_changed_id);
+
 	/* now try to get newest update list */
-	egg_debug ("updates changed, so getting new update list");
-	g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
+	egg_debug ("updates changed, so getting new update list soon");
+	cupdate->priv->updates_changed_id =
+		g_timeout_add_seconds (GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT,
+				       (GSourceFunc) gpk_check_update_query_updates_changed_cb, cupdate);
 }
 
 /**
@@ -1509,6 +1531,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
+	cupdate->priv->updates_changed_id = 0;
 	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->important_updates_array = NULL;
 	cupdate->priv->icon_name = NULL;
@@ -1622,6 +1645,8 @@ gpk_check_update_finalize (GObject *object)
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
 	}
 	g_free (cupdate->priv->icon_name);
+	if (cupdate->priv->updates_changed_id > 0)
+		g_source_remove (cupdate->priv->updates_changed_id);
 
 	G_OBJECT_CLASS (gpk_check_update_parent_class)->finalize (object);
 }
