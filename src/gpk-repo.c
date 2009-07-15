@@ -42,22 +42,30 @@
 #include "gpk-animated-icon.h"
 #include "gpk-enum.h"
 
+/* any status that is slower than this will not be shown */
+#define GPK_REPO_HIDE_LAG	250 /* ms */
+
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
-static PkClient *client = NULL;
+static PkClient *client_query = NULL;
+static GPtrArray *client_array = NULL;
 static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
 static GtkWidget *image_animation = NULL;
+static guint status_id = 0;
 
 enum {
 	REPO_COLUMN_ENABLED,
 	REPO_COLUMN_TEXT,
 	REPO_COLUMN_ID,
 	REPO_COLUMN_ACTIVE,
+	REPO_COLUMN_SENSITIVE,
 	REPO_COLUMN_LAST
 };
+
+static PkClient *gpk_repo_create_client (void);
 
 /**
  * gpk_repo_find_iter_model_cb:
@@ -151,16 +159,16 @@ gpk_button_help_cb (GtkWidget *widget, gboolean  data)
 }
 
 static void
-gpk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
+gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
 {
-	GtkWidget *widget;
 	GtkTreeModel *model = (GtkTreeModel *)data;
 	GtkTreeIter iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
-	gboolean installed;
+	gboolean enabled;
 	gchar *repo_id;
 	gboolean ret;
 	GError *error = NULL;
+	PkClient *client;
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
@@ -168,36 +176,30 @@ gpk_misc_installed_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpoint
 		return;
 	}
 
-	/* set insensitive until we've done this */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
-	gtk_widget_set_sensitive (widget, FALSE);
-
 	/* get toggled iter */
 	gtk_tree_model_get_iter (model, &iter, path);
 	gtk_tree_model_get (model, &iter,
-			    REPO_COLUMN_ENABLED, &installed,
+			    REPO_COLUMN_ENABLED, &enabled,
 			    REPO_COLUMN_ID, &repo_id, -1);
 
 	/* do something with the value */
-	installed ^= 1;
+	enabled ^= 1;
 
 	/* do this to the repo */
-	egg_debug ("setting %s to %i", repo_id, installed);
-	ret = pk_client_reset (client, &error);
-	if (!ret) {
-		egg_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-	ret = pk_client_repo_enable (client, repo_id, installed, &error);
+	egg_debug ("setting %s to %i", repo_id, enabled);
+	client = gpk_repo_create_client ();
+	ret = pk_client_repo_enable (client, repo_id, enabled, &error);
 	if (!ret) {
 		egg_warning ("could not set repo enabled state: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
+	g_object_unref (client);
 
 	/* set new value */
-	gtk_list_store_set (GTK_LIST_STORE(model), &iter, REPO_COLUMN_ENABLED, installed, -1);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			    REPO_COLUMN_SENSITIVE, FALSE,
+			    -1);
 
 out:
 	/* clean up */
@@ -209,7 +211,7 @@ out:
  * gpk_repo_detail_cb:
  **/
 static void
-gpk_repo_detail_cb (PkClient *client_, const gchar *repo_id,
+gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
 		    const gchar *description, gboolean enabled, gpointer data)
 {
 	GtkTreeIter iter;
@@ -224,6 +226,7 @@ gpk_repo_detail_cb (PkClient *client_, const gchar *repo_id,
 			    REPO_COLUMN_TEXT, description,
 			    REPO_COLUMN_ID, repo_id,
 			    REPO_COLUMN_ACTIVE, TRUE,
+			    REPO_COLUMN_SENSITIVE, TRUE,
 			    -1);
 
 	/* sort after each entry, which is okay as there shouldn't be many */
@@ -240,13 +243,15 @@ gpk_treeview_add_columns (GtkTreeView *treeview)
 	GtkTreeViewColumn *column;
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
-	/* column for installed toggles */
+	/* column for enabled toggles */
 	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_misc_installed_toggled), model);
+	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_misc_enabled_toggled), model);
 
 	/* TRANSLATORS: column if the source is enabled */
 	column = gtk_tree_view_column_new_with_attributes (_("Enabled"), renderer,
-							   "active", REPO_COLUMN_ENABLED, NULL);
+							   "active", REPO_COLUMN_ENABLED,
+							   "sensitive", REPO_COLUMN_SENSITIVE,
+							   NULL);
 	gtk_tree_view_append_column (treeview, column);
 
 	/* column for text */
@@ -282,15 +287,10 @@ gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
  * gpk_repo_finished_cb:
  **/
 static void
-gpk_repo_finished_cb (PkClient *client_, PkExitEnum exit, guint runtime, gpointer data)
+gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	GtkWidget *widget;
-
-	/* set sensitive now we've done this */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
-	gtk_widget_set_sensitive (widget, TRUE);
 
 	/* remove the items that are not used */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
@@ -298,38 +298,68 @@ gpk_repo_finished_cb (PkClient *client_, PkExitEnum exit, guint runtime, gpointe
 	gpk_repo_remove_nonactive (model);
 }
 
+static PkStatusEnum status_last = PK_STATUS_ENUM_UNKNOWN;
+
 /**
- * gpk_repo_status_changed_cb:
+ * gpk_repo_status_changed_timeout_cb:
  **/
-static void
-gpk_repo_status_changed_cb (PkClient *client_, PkStatusEnum status, gpointer data)
+static gboolean
+gpk_repo_status_changed_timeout_cb (gpointer data)
 {
 	const gchar *text;
 	GtkWidget *widget;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
-	if (status == PK_STATUS_ENUM_FINISHED) {
-		gtk_widget_hide (widget);
-		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (image_animation), FALSE);
-		return;
-	}
-
 	/* set the text and show */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
 	gtk_widget_show (widget);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_animation"));
-	text = gpk_status_enum_to_localised_text (status);
+	text = gpk_status_enum_to_localised_text (status_last);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
-	gtk_widget_show (widget);
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status_last, GTK_ICON_SIZE_LARGE_TOOLBAR);
+
+	/* never repeat */
+	status_id = 0;
+	return FALSE;
+}
+
+/**
+ * gpk_repo_status_changed_cb:
+ **/
+static void
+gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
+{
+	GtkWidget *widget;
+
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		/* we've not yet shown, so don't bother */
+		if (status_id > 0) {
+			g_source_remove (status_id);
+			status_id = 0;
+		}
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
+		gtk_widget_hide (widget);
+		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (image_animation), FALSE);
+		goto out;
+	}
+
+	/* already pending show */
+	if (status_id > 0)
+		goto out;
+
+	/* only show after some time in the transaction */
+	status_id = g_timeout_add (GPK_REPO_HIDE_LAG, (GSourceFunc) gpk_repo_status_changed_timeout_cb, NULL);
+out:
+	/* save for the callback */
+	status_last = status;
 }
 
 /**
  * gpk_repo_error_code_cb:
  **/
 static void
-gpk_repo_error_code_cb (PkClient *client_, PkErrorCodeEnum code, const gchar *details, gpointer data)
+gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
 {
 	GtkWindow *window;
 	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
@@ -356,7 +386,7 @@ gpk_repo_repo_list_refresh (void)
 	gpk_repo_mark_nonactive (model);
 
 	egg_debug ("refreshing list");
-	ret = pk_client_reset (client, &error);
+	ret = pk_client_reset (client_query, &error);
 	if (!ret) {
 		egg_warning ("failed to reset client: %s", error->message);
 		g_error_free (error);
@@ -366,7 +396,7 @@ gpk_repo_repo_list_refresh (void)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	else
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
-	ret = pk_client_get_repo_list (client, filters, &error);
+	ret = pk_client_get_repo_list (client_query, filters, &error);
 	if (!ret) {
 		egg_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
@@ -405,6 +435,42 @@ gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessa
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
 		gtk_window_present (window);
 	}
+}
+
+/**
+ * gpk_repo_destroy_cb:
+ **/
+static void
+gpk_repo_destroy_cb (PkClient *client, gpointer data)
+{
+	gboolean ret;
+	egg_debug ("client destroyed");
+	ret = g_ptr_array_remove (client_array, client);
+	if (!ret)
+		egg_warning ("failed to remove %p", client);
+	/* TODO: disconnect signals? */
+	g_object_unref (client);
+}
+
+/**
+ * gpk_repo_create_client
+ **/
+static PkClient *
+gpk_repo_create_client (void)
+{
+	PkClient *client;
+	client = pk_client_new ();
+	g_signal_connect (client, "repo-detail",
+			  G_CALLBACK (gpk_repo_detail_cb), NULL);
+	g_signal_connect (client, "status-changed",
+			  G_CALLBACK (gpk_repo_status_changed_cb), NULL);
+	g_signal_connect (client, "error-code",
+			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
+	g_signal_connect (client, "destroy",
+			  G_CALLBACK (gpk_repo_destroy_cb), NULL);
+	g_ptr_array_add (client_array, client);
+	egg_debug ("added %p", client);
+	return g_object_ref (client);
 }
 
 /**
@@ -476,15 +542,17 @@ main (int argc, char *argv[])
 
 	gconf_client = gconf_client_get_default ();
 
-	client = pk_client_new ();
-	g_signal_connect (client, "repo-detail",
+	client_query = pk_client_new ();
+	g_signal_connect (client_query, "repo-detail",
 			  G_CALLBACK (gpk_repo_detail_cb), NULL);
-	g_signal_connect (client, "status-changed",
+	g_signal_connect (client_query, "status-changed",
 			  G_CALLBACK (gpk_repo_status_changed_cb), NULL);
-	g_signal_connect (client, "finished",
+	g_signal_connect (client_query, "finished",
 			  G_CALLBACK (gpk_repo_finished_cb), NULL);
-	g_signal_connect (client, "error-code",
+	g_signal_connect (client_query, "error-code",
 			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
+
+	client_array = g_ptr_array_new ();
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
@@ -528,7 +596,7 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (REPO_COLUMN_LAST, G_TYPE_BOOLEAN,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 
 	/* create repo tree view */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
@@ -560,7 +628,7 @@ main (int argc, char *argv[])
 		/* get the update list */
 		gpk_repo_repo_list_refresh ();
 	} else {
-		gpk_repo_detail_cb (client, "default",
+		gpk_repo_detail_cb (client_query, "default",
 				   _("Getting software source list not supported by backend"), FALSE, NULL);
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
 		gtk_widget_set_sensitive (widget, FALSE);
@@ -575,8 +643,10 @@ main (int argc, char *argv[])
 out_build:
 	g_object_unref (builder);
 	g_object_unref (gconf_client);
-	g_object_unref (client);
+	g_object_unref (client_query);
 	g_object_unref (control);
+	g_ptr_array_foreach (client_array, (GFunc) g_object_unref, NULL);
+	g_ptr_array_free (client_array, TRUE);
 unique_out:
 	g_object_unref (unique_app);
 
