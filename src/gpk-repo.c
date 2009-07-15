@@ -48,7 +48,11 @@
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client_query = NULL;
+#if PK_CHECK_VERSION(0,5,1)
+static PkClientPool *pool = NULL;
+#else
 static GPtrArray *client_array = NULL;
+#endif
 static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
@@ -65,7 +69,9 @@ enum {
 	REPO_COLUMN_LAST
 };
 
+#if !PK_CHECK_VERSION(0,5,1)
 static PkClient *gpk_repo_create_client (void);
+#endif
 
 /**
  * gpk_repo_find_iter_model_cb:
@@ -187,7 +193,11 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 
 	/* do this to the repo */
 	egg_debug ("setting %s to %i", repo_id, enabled);
+#if PK_CHECK_VERSION(0,5,1)
+	client = pk_client_pool_create (pool);
+#else
 	client = gpk_repo_create_client ();
+#endif
 	ret = pk_client_repo_enable (client, repo_id, enabled, &error);
 	if (!ret) {
 		egg_warning ("could not set repo enabled state: %s", error->message);
@@ -437,6 +447,7 @@ gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessa
 	}
 }
 
+#if !PK_CHECK_VERSION(0,5,1)
 /**
  * gpk_repo_destroy_cb:
  **/
@@ -472,6 +483,7 @@ gpk_repo_create_client (void)
 	egg_debug ("added %p", client);
 	return g_object_ref (client);
 }
+#endif
 
 /**
  * main:
@@ -552,7 +564,17 @@ main (int argc, char *argv[])
 	g_signal_connect (client_query, "error-code",
 			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
 
+#if PK_CHECK_VERSION(0,5,1)
+	pool = pk_client_pool_new ();
+	pk_client_pool_connect (pool, "repo-detail",
+				G_CALLBACK (gpk_repo_detail_cb), NULL);
+	pk_client_pool_connect (pool, "status-changed",
+				G_CALLBACK (gpk_repo_status_changed_cb), NULL);
+	pk_client_pool_connect (pool, "error-code",
+				G_CALLBACK (gpk_repo_error_code_cb), NULL);
+#else
 	client_array = g_ptr_array_new ();
+#endif
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
@@ -645,8 +667,12 @@ out_build:
 	g_object_unref (gconf_client);
 	g_object_unref (client_query);
 	g_object_unref (control);
+#if PK_CHECK_VERSION(0,5,1)
+	g_object_unref (pool);
+#else
 	g_ptr_array_foreach (client_array, (GFunc) g_object_unref, NULL);
 	g_ptr_array_free (client_array, TRUE);
+#endif
 unique_out:
 	g_object_unref (unique_app);
 
