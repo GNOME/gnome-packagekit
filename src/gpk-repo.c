@@ -58,6 +58,7 @@ static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
 static GtkWidget *image_animation = NULL;
+static PkStatusEnum status_last = PK_STATUS_ENUM_UNKNOWN;
 static guint status_id = 0;
 
 enum {
@@ -307,8 +308,6 @@ gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer
 	model = gtk_tree_view_get_model (treeview);
 	gpk_repo_remove_nonactive (model);
 }
-
-static PkStatusEnum status_last = PK_STATUS_ENUM_UNKNOWN;
 
 /**
  * gpk_repo_status_changed_timeout_cb:
