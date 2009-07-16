@@ -1322,22 +1322,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 }
 
 /**
- * pk_connection_changed_cb:
- **/
-static void
-pk_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-	egg_debug ("connected=%i", connected);
-	if (connected) {
-		gpk_watch_refresh_icon (watch);
-		gpk_watch_refresh_tooltip (watch);
-	} else {
-		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
-	}
-}
-
-/**
  * gpk_watch_locked_cb:
  **/
 static void
@@ -1585,6 +1569,23 @@ gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 }
 
 /**
+ * gpk_watch_connection_changed_cb:
+ **/
+static void
+gpk_watch_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
+{
+	g_return_if_fail (GPK_IS_WATCH (watch));
+	egg_debug ("connected=%i", connected);
+	if (connected) {
+		gpk_watch_refresh_icon (watch);
+		gpk_watch_refresh_tooltip (watch);
+		gpk_watch_set_proxies (watch);
+	} else {
+		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
+	}
+}
+
+/**
  * gpk_watch_init:
  * @watch: This class instance
  **/
@@ -1651,9 +1652,9 @@ gpk_watch_init (GpkWatch *watch)
 
 	watch->priv->pconnection = pk_connection_new ();
 	g_signal_connect (watch->priv->pconnection, "connection-changed",
-			  G_CALLBACK (pk_connection_changed_cb), watch);
+			  G_CALLBACK (gpk_watch_connection_changed_cb), watch);
 	if (pk_connection_valid (watch->priv->pconnection))
-		pk_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
+		gpk_watch_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
 
 	/* watch proxy keys */
 	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
