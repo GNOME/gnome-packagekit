@@ -2696,6 +2696,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *task, gchar **fonts)
 	GError *error_local = NULL;
 	guint i;
 	guint len;
+	guint size;
 	gchar *text;
 	gchar *message;
 	const gchar *title;
@@ -2720,6 +2721,23 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *task, gchar **fonts)
 	if (!task->priv->show_confirm_search) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
+	}
+
+	/* check we got valid data */
+	for (i=0; i<len; i++) {
+		/* correct prefix */
+		if (!g_str_has_prefix (fonts[i], ":lang=")) {
+			error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "not recognised prefix: '%s'", fonts[i]);
+			dbus_g_method_return_error (task->priv->context, error);
+			goto out;
+		}
+		/* no lang code */
+		size = strlen (fonts[i]);
+		if (size < 7 || size > 20) {
+			error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "lang tag malformed: '%s'", fonts[i]);
+			dbus_g_method_return_error (task->priv->context, error);
+			goto out;
+		}
 	}
 
 	string = g_string_new ("");
