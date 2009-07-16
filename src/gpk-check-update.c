@@ -1261,22 +1261,46 @@ gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, 
 static void
 gpk_check_update_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkCheckUpdate *cupdate)
 {
+	PkRoleEnum role;
+	gboolean ret;
+	GError *error = NULL;
+
 	/* ignore some errors */
 	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 		egg_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
-		return;
+		goto out;
 	}
 
 	/* ignore the ones we can handle */
 	if (pk_error_code_is_need_untrusted (code)) {
 		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
-		return;
+		goto out;
+	}
+
+	/* get the role */
+	ret = pk_client_get_role (client, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* if we're doing queries automatically for the user, don't spam them
+	   with locking failure messages */
+	if (code == PK_ERROR_ENUM_CANNOT_GET_LOCK) {
+		if (role == PK_ROLE_ENUM_GET_UPDATES ||
+		    role == PK_ROLE_ENUM_GET_DISTRO_UPGRADES) {
+			egg_debug ("cannot get lock for automatic action, ignoring");
+			goto out;
+		}
 	}
 
 	/* not modal as we are a status icon */
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
 			  gpk_error_enum_to_localised_message (code), details);
+out:
+	return;
 }
 
 /**
