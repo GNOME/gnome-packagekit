@@ -89,6 +89,7 @@ enum {
 	GPK_UPDATES_COLUMN_CLICKABLE,
 	GPK_UPDATES_COLUMN_RESTART,
 	GPK_UPDATES_COLUMN_SIZE,
+	GPK_UPDATES_COLUMN_SIZE_DISPLAY,
 	GPK_UPDATES_COLUMN_PERCENTAGE,
 	GPK_UPDATES_COLUMN_STATUS,
 	GPK_UPDATES_COLUMN_DETAILS_OBJ,
@@ -537,7 +538,9 @@ gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointe
 	gtk_tree_path_free (path);
 	gtk_list_store_set (list_store_updates, &iter,
 			    GPK_UPDATES_COLUMN_DETAILS_OBJ, (gpointer) pk_details_obj_copy (obj),
-			    GPK_UPDATES_COLUMN_SIZE, (gint)obj->size, -1);
+			    GPK_UPDATES_COLUMN_SIZE, (gint)obj->size,
+			    GPK_UPDATES_COLUMN_SIZE_DISPLAY, (gint)obj->size,
+			    -1);
 	/* in cache */
 	if (obj->size == 0)
 		gtk_list_store_set (list_store_updates, &iter,
@@ -626,10 +629,6 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		gtk_list_store_set (list_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_STATUS, info, -1);
 
-		/* set size zero when we get a info update */
-		gtk_list_store_set (list_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_SIZE, 0, -1);
-
 		gtk_tree_path_free (path);
 
 		/* set package description */
@@ -653,6 +652,7 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 			    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
 			    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
 			    GPK_UPDATES_COLUMN_SIZE, 0,
+			    GPK_UPDATES_COLUMN_SIZE_DISPLAY, 0,
 			    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
 			    GPK_UPDATES_COLUMN_PULSE, -1,
 			    -1);
@@ -1124,7 +1124,7 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	/* TRANSLATORS: a column that has size of each package */
 	gtk_tree_view_column_set_title (column, _("Size"));
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
-	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_SIZE);
+	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_SIZE_DISPLAY);
 
 	/* size */
 	renderer = gpk_cell_renderer_size_new ();
@@ -1133,12 +1133,12 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 		      "xalign", 1.0f,
 		      NULL);
 	g_object_set (renderer,
-		      "value", GPK_UPDATES_COLUMN_SIZE, NULL);
+		      "value", GPK_UPDATES_COLUMN_SIZE_DISPLAY, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE);
+	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE_DISPLAY);
 
 	gtk_tree_view_append_column (treeview, column);
-	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_SIZE));
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_SIZE_DISPLAY));
 }
 
 /**
@@ -1679,6 +1679,7 @@ gpk_update_viewer_deps_update_event_cb (GpkHelperDepsUpdate *helper, GtkResponse
 					    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
 					    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
 					    GPK_UPDATES_COLUMN_SIZE, 0,
+					    GPK_UPDATES_COLUMN_SIZE_DISPLAY, 0,
 					    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
 					    GPK_UPDATES_COLUMN_PULSE, -1,
 					    -1);
@@ -2046,6 +2047,8 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	guint oldval;
+	guint size;
+	guint size_display;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_progress"));
 	gtk_widget_show (widget);
@@ -2067,15 +2070,22 @@ gpk_update_viewer_progress_changed_cb (PkClient *client, guint percentage, guint
 	}
 
 	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_model_get (model, &iter, GPK_UPDATES_COLUMN_PERCENTAGE, &oldval, -1);
+	gtk_tree_model_get (model, &iter,
+			    GPK_UPDATES_COLUMN_PERCENTAGE, &oldval,
+			    GPK_UPDATES_COLUMN_SIZE, &size,
+			    -1);
 	if ((oldval > 0 && oldval < 100) != (subpercentage > 0 && subpercentage < 100)) {
 		if (oldval > 0 && oldval < 100)
 			gpk_update_viewer_remove_active_row (model, path);
 		else
 			gpk_update_viewer_add_active_row (model, path);
 	}
+
+	size_display = size - ((size * subpercentage) / 100);
 	gtk_list_store_set (list_store_updates, &iter,
-			    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage, -1);
+			    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage,
+			    GPK_UPDATES_COLUMN_SIZE_DISPLAY, size_display,
+			    -1);
 
 	gtk_tree_path_free (path);
 }
@@ -2899,7 +2909,8 @@ main (int argc, char *argv[])
 	/* create list stores */
 	list_store_updates = gtk_list_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
-						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_INT);
+						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT,
+						 G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_INT);
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "para",
 				    "pixels_above_lines", 5,
