@@ -46,7 +46,8 @@ bin_PROGRAMS =						\
 	gpk-backend-status				\
 	$(NULL)
 
-shared_SOURCES =					\
+noinst_LIBRARIES = libgpkshared.a
+libgpkshared_a_SOURCES =				\
 	egg-debug.c					\
 	egg-debug.h					\
 	egg-string.c					\
@@ -121,46 +122,46 @@ shared_LIBS =						\
 
 gpk_install_provide_file_SOURCES =			\
 	gpk-install-provide-file.c			\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_provide_file_LDADD =			\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_catalog_SOURCES =				\
 	gpk-install-catalog.c				\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_catalog_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_local_file_SOURCES =			\
 	gpk-install-local-file.c			\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_mime_type_SOURCES =				\
 	gpk-install-mime-type.c				\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_mime_type_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_package_name_SOURCES =			\
 	gpk-install-package-name.c			\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_install_package_name_LDADD =			\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
@@ -182,10 +183,10 @@ gpk_update_icon_SOURCES =				\
 	gpk-dbus.h					\
 	gpk-dbus-task.c					\
 	gpk-dbus-task.h					\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_update_icon_LDADD =					\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
@@ -195,28 +196,28 @@ gpk_application_SOURCES =				\
 	gpk-application.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_application_LDADD =					\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_service_pack_SOURCES =				\
 	gpk-service-pack.c				\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_service_pack_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_prefs_SOURCES =					\
 	gpk-prefs.c					\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_prefs_LDADD =					\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
@@ -230,28 +231,28 @@ gpk_update_viewer_SOURCES =				\
 	gpk-cell-renderer-spinner.h			\
 	gpk-cell-renderer-restart.c			\
 	gpk-cell-renderer-restart.h			\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_update_viewer_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_repo_SOURCES =					\
 	gpk-repo.c					\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_repo_LDADD =					\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_log_SOURCES =					\
 	gpk-log.c					\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_log_LDADD =						\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
@@ -262,6 +263,7 @@ gpk_backend_status_SOURCES =				\
 	$(NULL)
 
 gpk_backend_status_LDADD =				\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
 
@@ -301,10 +303,10 @@ gpk_self_test_SOURCES =					\
 	gpk-dbus.h					\
 	gpk-dbus-task.c					\
 	gpk-dbus-task.h					\
-	$(shared_SOURCES)				\
 	$(NULL)
 
 gpk_self_test_LDADD =					\
+	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(SELFTEST_LIBS)				\
 	$(NULL)
