@@ -581,9 +581,11 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 	GtkTreeView *treeview;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	GtkTreeViewColumn *column;
 	GtkWidget *widget;
 	GtkTreePath *path;
 	gboolean selected;
+	gboolean scroll;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role = %s, package = %s:%s:%s", pk_role_enum_to_text (role),
@@ -615,6 +617,13 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		}
 
 		gtk_tree_model_get_iter (model, &iter, path);
+
+		/* scroll to the active cell */
+		scroll = gconf_client_get_bool (gconf_client, GPK_CONF_UPDATE_VIEWER_SCROLL_ACTIVE, NULL);
+		if (scroll) {
+			column = gtk_tree_view_get_column (treeview, 3);
+			gtk_tree_view_scroll_to_cell (treeview, path, column, FALSE, 0.0f, 0.0f);
+		}
 
 		/* if the info is finished, change the status to past tense */
 		if (obj->info == PK_INFO_ENUM_FINISHED) {
