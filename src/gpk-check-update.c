@@ -371,17 +371,6 @@ out:
 }
 
 /**
- * gpk_check_update_menuitem_update_system_cb:
- **/
-static void
-gpk_check_update_menuitem_update_system_cb (GtkMenuItem *item, gpointer data)
-{
-	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
-	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
-	gpk_check_update_update_system (cupdate);
-}
-
-/**
  * gpk_check_update_menuitem_show_updates_cb:
  **/
 static void
@@ -413,14 +402,6 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (gpk_check_update_menuitem_show_updates_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-	/* TRANSLATORS: context menu to update any pending updates */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Update System Now"));
-	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE_AVAILABLE, GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (gpk_check_update_menuitem_update_system_cb), icon);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	/* show the menu */
