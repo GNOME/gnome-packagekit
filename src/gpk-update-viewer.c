@@ -839,14 +839,23 @@ gpk_update_viewer_reconsider_info (GtkTreeModel *model)
 	if (number_total == 0) {
 		gtk_label_set_label (GTK_LABEL (widget), "");
 	} else {
-		text_size = g_format_size_for_display (size_total);
-		/* TRANSLATORS: how many updates are selected in the UI */
-		text = g_strdup_printf (ngettext ("%i update selected (%s)",
-						  "%i updates selected (%s)",
-						  number_total), number_total, text_size);
-		gtk_label_set_label (GTK_LABEL (widget), text);
-		g_free (text);
-		g_free (text_size);
+		if (size_total == 0) {
+			/* TRANSLATORS: how many updates are selected in the UI */
+			text = g_strdup_printf (ngettext ("%i update selected",
+							  "%i updates selected",
+							  number_total), number_total);
+			gtk_label_set_label (GTK_LABEL (widget), text);
+			g_free (text);
+		} else {
+			text_size = g_format_size_for_display (size_total);
+			/* TRANSLATORS: how many updates are selected in the UI, and the size of packages to download */
+			text = g_strdup_printf (ngettext ("%i update selected (%s)",
+							  "%i updates selected (%s)",
+							  number_total), number_total, text_size);
+			gtk_label_set_label (GTK_LABEL (widget), text);
+			g_free (text);
+			g_free (text_size);
+		}
 	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_summary"));
