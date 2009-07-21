@@ -471,6 +471,12 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 		}
 	} else if (egg_strequal (action, "update-all-packages")) {
 		gpk_check_update_update_system (cupdate);
+	} else if (egg_strequal (action, "show-update-viewer")) {
+		ret = g_spawn_command_line_async (BINDIR "/gpk-update-viewer", &error);
+		if (!ret) {
+			egg_warning ("Failure launching update viewer: %s", error->message);
+			g_error_free (error);
+		}
 	} else if (egg_strequal (action, "update-just-security")) {
 
 		ret = pk_client_reset (cupdate->priv->client_primary, &error);
@@ -494,9 +500,10 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 		g_strfreev (package_ids);
 
 	} else if (egg_strequal (action, "distro-upgrade-info")) {
-		ret = g_spawn_command_line_async ("/usr/share/PackageKit/pk-upgrade-distro.sh", NULL);
+		ret = g_spawn_command_line_async (DATADIR "/PackageKit/pk-upgrade-distro.sh", &error);
 		if (!ret) {
-			egg_warning ("Failure launching pk-upgrade-distro.sh");
+			egg_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);
+			g_error_free (error);
 		}
 	} else {
 		egg_warning ("unknown action id: %s", action);
@@ -580,12 +587,15 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	notify_notification_add_action (notification, "update-just-security",
 					/* TRANSLATORS: button: only security updates */
 					_("Install only security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
-	notify_notification_add_action (notification, "update-all-packages",
-					/* TRANSLATORS: button: all pending updates */
-					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
-	notify_notification_add_action (notification, "do-not-show-notify-critical",
-					/* TRANSLATORS: button: hide forever */
-					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+//	notify_notification_add_action (notification, "update-all-packages",
+//					/* TRANSLATORS: button: all pending updates */
+//					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	notify_notification_add_action (notification, "show-update-viewer",
+					/* TRANSLATORS: button: open the update viewer */
+					_("Show software updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+//	notify_notification_add_action (notification, "do-not-show-notify-critical",
+//					/* TRANSLATORS: button: hide forever */
+//					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -699,9 +709,9 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	notification = notify_notification_new (_("Updates not installed"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-	notify_notification_add_action (notification, "do-not-show-update-not-battery",
-					/* TRANSLATORS: hide this warning type forever */
-					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+//	notify_notification_add_action (notification, "do-not-show-update-not-battery",
+//					/* TRANSLATORS: hide this warning type forever */
+//					_("Do not show this warning again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "update-all-packages",
 					/* TRANSLATORS: to hell with my battery life, just do it */
 					_("Install the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
@@ -796,8 +806,8 @@ gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
 	notify_notification_add_action (notification, "cancel",
 					_("Cancel update"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	/* TRANSLATORS: button: don't show this again */
-	notify_notification_add_action (notification, "do-not-show-update-started",
-					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+//	notify_notification_add_action (notification, "do-not-show-update-started",
+//					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -1453,9 +1463,9 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkClient *client)
 		notify_notification_add_action (notification, "restart",
 						/* TRANSLATORS: restart computer as system packages need update */
 						_("Restart computer now"), gpk_check_update_libnotify_cb, cupdate, NULL);
-		notify_notification_add_action (notification, "do-not-show-complete-restart",
-						/* TRANSLATORS: don't show this option again (for restart) */
-						_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+//		notify_notification_add_action (notification, "do-not-show-complete-restart",
+//						/* TRANSLATORS: don't show this option again (for restart) */
+//						_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	} else {
 		notify_notification_add_action (notification, "do-not-show-complete",
 						/* TRANSLATORS: don't show this option again (when finished)  */
