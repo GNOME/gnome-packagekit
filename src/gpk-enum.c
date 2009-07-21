@@ -671,7 +671,8 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		text = _("Additional media is required to complete the transaction.");
 		break;
 	case PK_ERROR_ENUM_NOT_AUTHORIZED:
-		text = _("You have failed to provide correct authentication. Please check any passwords or account settings.");
+		text = _("You have failed to provide correct authentication.\n"
+			 "Please check any passwords or account settings.");
 		break;
 	case PK_ERROR_ENUM_UPDATE_NOT_FOUND:
 		text = _("The specified update could not be found.\n"

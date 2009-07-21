@@ -42,9 +42,6 @@
 #include "gpk-animated-icon.h"
 #include "gpk-enum.h"
 
-/* any status that is slower than this will not be shown */
-#define GPK_REPO_HIDE_LAG	250 /* ms */
-
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client_query = NULL;
@@ -58,7 +55,9 @@ static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
 static GtkWidget *image_animation = NULL;
+#if !PK_CHECK_VERSION(0,5,1)
 static PkStatusEnum status_last = PK_STATUS_ENUM_UNKNOWN;
+#endif
 static guint status_id = 0;
 
 enum {
@@ -313,20 +312,30 @@ gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer
  * gpk_repo_status_changed_timeout_cb:
  **/
 static gboolean
-gpk_repo_status_changed_timeout_cb (gpointer data)
+gpk_repo_status_changed_timeout_cb (PkClient *client)
 {
 	const gchar *text;
 	GtkWidget *widget;
+	PkStatusEnum status;
+
+#if PK_CHECK_VERSION(0,5,1)
+	/* get the last status */
+	g_object_get (client,
+		      "status", &status,
+		      NULL);
+#else
+	status = status_last;
+#endif
 
 	/* set the text and show */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
 	gtk_widget_show (widget);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_animation"));
-	text = gpk_status_enum_to_localised_text (status_last);
+	text = gpk_status_enum_to_localised_text (status);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status_last, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
 
 	/* never repeat */
 	status_id = 0;
@@ -358,10 +367,13 @@ gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data
 		goto out;
 
 	/* only show after some time in the transaction */
-	status_id = g_timeout_add (GPK_REPO_HIDE_LAG, (GSourceFunc) gpk_repo_status_changed_timeout_cb, NULL);
+	status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_repo_status_changed_timeout_cb, client);
 out:
+#if !PK_CHECK_VERSION(0,5,1)
 	/* save for the callback */
 	status_last = status;
+#endif
+	return;
 }
 
 /**

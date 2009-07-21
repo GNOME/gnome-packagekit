@@ -111,6 +111,8 @@ struct GpkApplicationPrivate
 	GpkHelperDepsInstall	*helper_deps_install;
 	GpkHelperMediaChange	*helper_media_change;
 	gboolean		 dep_check_info_only;
+	guint			 status_id;
+	PkStatusEnum		 status_last;
 };
 
 enum {
@@ -1013,7 +1015,13 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
 
 	/* ignore not search data */
+#if PK_CHECK_VERSION(0,5,1)
+	g_object_get (client,
+		      "role", &role,
+		      NULL);
+#else
 	pk_client_get_role (client, &role, NULL, NULL);
+#endif
 	if (role == PK_ROLE_ENUM_GET_DEPENDS || role == PK_ROLE_ENUM_GET_REQUIRES)
 		return;
 
@@ -1400,7 +1408,13 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* get role */
+#if PK_CHECK_VERSION(0,5,1)
+	g_object_get (client,
+		      "role", &role,
+		      NULL);
+#else
 	pk_client_get_role (client, &role, NULL, NULL);
+#endif
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
 
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "progressbar_progress"));
@@ -1412,8 +1426,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
-	gtk_widget_set_sensitive (widget, TRUE);
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	gtk_widget_set_sensitive (widget, TRUE);
@@ -1939,6 +1951,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 			g_error_free (error);
 			goto out;
 		}
+
+		/* make package list insensitive */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+		gtk_widget_set_sensitive (widget, FALSE);
 	}
 	if (application->priv->action == PK_ACTION_REMOVE) {
 		/* reset client */
@@ -1957,6 +1973,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 			g_error_free (error);
 			goto out;
 		}
+
+		/* make package list insensitive */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+		gtk_widget_set_sensitive (widget, FALSE);
 	}
 out:
 	g_strfreev (package_ids);
@@ -2809,12 +2829,38 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 }
 
 /**
+ * gpk_application_status_changed_timeout_cb:
+ **/
+static gboolean
+gpk_application_status_changed_timeout_cb (GpkApplication *application)
+{
+	const gchar *text;
+	GtkWidget *widget;
+
+	/* set the text and show */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "label_status"));
+	text = gpk_status_enum_to_localised_text (application->priv->status_last);
+	gtk_label_set_label (GTK_LABEL (widget), text);
+
+	/* set icon */
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (application->priv->image_status),
+					   application->priv->status_last, GTK_ICON_SIZE_LARGE_TOOLBAR);
+
+	/* show containing box */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
+	gtk_widget_show (widget);
+
+	/* never repeat */
+	application->priv->status_id = 0;
+	return FALSE;
+}
+
+/**
  * gpk_application_status_changed_cb:
  **/
 static void
 gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApplication *application)
 {
-	const gchar *text;
 	GtkWidget *widget;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
@@ -2827,8 +2873,6 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
-		gtk_widget_set_sensitive (widget, FALSE);
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
@@ -2839,22 +2883,34 @@ gpk_application_status_changed_cb (PkClient *client, PkStatusEnum status, GpkApp
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
 	if (status == PK_STATUS_ENUM_FINISHED) {
+
+		/* re-enable UI */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+		gtk_widget_set_sensitive (widget, TRUE);
+
+		/* we've not yet shown, so don't bother */
+		if (application->priv->status_id > 0) {
+			g_source_remove (application->priv->status_id);
+			application->priv->status_id = 0;
+		}
+
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
 		gtk_widget_hide (widget);
 		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (application->priv->image_status), FALSE);
-		return;
+		goto out;
 	}
 
-	/* set the text and show */
-	gtk_widget_show (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "label_status"));
-	text = gpk_status_enum_to_localised_text (status);
-	gtk_label_set_label (GTK_LABEL (widget), text);
+	/* already pending show */
+	if (application->priv->status_id > 0)
+		goto out;
 
-	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (application->priv->image_status), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
-	gtk_widget_show (widget);
+	/* only show after some time in the transaction */
+	application->priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_application_status_changed_timeout_cb, application);
+
+out:
+	/* save for the callback */
+	application->priv->status_last = status;
 }
 
 /**
@@ -2944,6 +3000,7 @@ gpk_application_deps_remove_event_cb (GpkHelperDepsRemove *helper_deps_remove, G
 	gboolean ret;
 	GError *error = NULL;
 	gchar **package_ids = NULL;
+	GtkWidget *widget;
 
 	if (type != GTK_RESPONSE_YES) {
 		goto out;
@@ -2965,6 +3022,10 @@ gpk_application_deps_remove_event_cb (GpkHelperDepsRemove *helper_deps_remove, G
 		g_error_free (error);
 		goto out;
 	}
+
+	/* make package list insensitive */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+	gtk_widget_set_sensitive (widget, FALSE);
 out:
 	g_strfreev (package_ids);
 }
@@ -2978,6 +3039,7 @@ gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install
 	gboolean ret;
 	GError *error = NULL;
 	gchar **package_ids = NULL;
+	GtkWidget *widget;
 
 	if (type != GTK_RESPONSE_YES) {
 		goto out;
@@ -3003,6 +3065,11 @@ gpk_application_deps_install_event_cb (GpkHelperDepsInstall *helper_deps_install
 		g_error_free (error);
 		goto out;
 	}
+
+	/* make package list insensitive */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+	gtk_widget_set_sensitive (widget, FALSE);
+
 out:
 	g_strfreev (package_ids);
 }
@@ -3514,6 +3581,8 @@ gpk_application_init (GpkApplication *application)
 	application->priv->has_package = FALSE;
 	application->priv->dep_check_info_only = FALSE;
 	application->priv->details_event_id = 0;
+	application->priv->status_id = 0;
+	application->priv->status_last = PK_STATUS_ENUM_UNKNOWN;
 	application->priv->package_list = pk_package_list_new ();
 
 	application->priv->gconf_client = gconf_client_get_default ();
@@ -4125,6 +4194,9 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->helper_deps_install);
 	g_object_unref (application->priv->helper_media_change);
 	g_object_unref (application->priv->helper_repo_signature);
+
+	if (application->priv->status_id > 0)
+		g_source_remove (application->priv->status_id);
 
 	g_free (application->priv->url);
 	g_free (application->priv->group);
