@@ -2281,22 +2281,31 @@ gpk_dbus_task_install_gstreamer_resources_confirm (GpkDbusTask *task, gchar **co
 {
 	guint i;
 	guint len;
-	gchar *text;
-	gchar *confirm_text;
+	const gchar *text;
 	gchar **parts;
 	gboolean ret;
 	GString *string;
-	const gchar *title;
-	const gchar *message;
+	gchar *title;
+	gchar *message;
+	gboolean is_decoder = FALSE;
+	gboolean is_encoder = FALSE;
 
 	len = g_strv_length (codec_names);
-	/* TRANSLATORS: title: we need a codec */
-	title = ngettext ("An additional plugin is required to play this content", "Additional plugins are required to play this content", len);
-	/* TRANSLATORS: we are listing the plugins in a box */
-	message = ngettext ("The following plugin is required:", "The following plugins are required:", len);
 
+	/* find out what type of request this is */
+	for (i=0; i<len; i++) {
+		parts = g_strsplit (codec_names[i], "|", 2);
+		if (g_str_has_prefix (parts[1], "gstreamer0.10(decoder"))
+			is_decoder = TRUE;
+		if (g_str_has_prefix (parts[1], "gstreamer0.10(encoder"))
+			is_encoder = TRUE;
+		g_strfreev (parts);
+	}
+
+	/* TRANSLATORS: we are listing the plugins in a box */
+	text = ngettext ("The following plugin is required:", "The following plugins are required:", len);
 	string = g_string_new ("");
-	g_string_append_printf (string, "%s\n%s\n\n", title, message);
+	g_string_append_printf (string, "%s\n\n", text);
 
 	/* don't use a bullet for one item */
 	if (len == 1) {
@@ -2319,21 +2328,43 @@ gpk_dbus_task_install_gstreamer_resources_confirm (GpkDbusTask *task, gchar **co
 	g_string_set_size (string, string->len - 1);
 
 	/* display messagebox  */
-	text = g_string_free (string, FALSE);
+	message = g_string_free (string, FALSE);
 
 	/* make title using application name */
 	if (task->priv->parent_title != NULL) {
-		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
-		confirm_text = g_strdup_printf (ngettext ("%s requires an additional plugin", "%s requires additional plugins", len), task->priv->parent_title);
+		if (is_decoder && !is_encoder) {
+			/* TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player" */
+			title = g_strdup_printf (ngettext ("%s requires an additional plugin to decode this file",
+							   "%s requires additional plugins to decode this file", len), task->priv->parent_title);
+		} else if (!is_decoder && is_encoder) {
+			/* TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player" */
+			title = g_strdup_printf (ngettext ("%s requires an additional plugin to encode this file",
+							   "%s requires additional plugins to encode this file", len), task->priv->parent_title);
+		} else if (!is_decoder && is_encoder) {
+			/* TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player" */
+			title = g_strdup_printf (ngettext ("%s requires an additional plugin for this operation",
+							   "%s requires additional plugins for this operation", len), task->priv->parent_title);
+		}
 	} else {
-		/* TRANSLATORS: a random program which we can't get the name wants to do something */
-		confirm_text = g_strdup (ngettext ("A program requires an additional plugin", "A program requires additional plugins", len));
+		if (is_decoder && !is_encoder) {
+			/* TRANSLATORS: a random program which we can't get the name wants to decode something */
+			title = g_strdup (ngettext ("A program requires an additional plugin to decode this file",
+						    "A program requires additional plugins to decode this file", len));
+		} else if (!is_decoder && is_encoder) {
+			/* TRANSLATORS: a random program which we can't get the name wants to encode something */
+			title = g_strdup (ngettext ("A program requires an additional plugin to encode this file",
+						    "A program requires additional plugins to encode this file", len));
+		} else if (!is_decoder && is_encoder) {
+			/* TRANSLATORS: a random program which we can't get the name wants to do something (unknown) */
+			title = g_strdup (ngettext ("A program requires an additional plugin for this operation",
+						    "A program requires additional plugins for this operation", len));
+		}
 	}
 
 	/* TRANSLATORS: button: confirm to search for packages */
-	ret = gpk_dbus_task_confirm_action (task, confirm_text, text, _("Search"));
-	g_free (confirm_text);
-	g_free (text);
+	ret = gpk_dbus_task_confirm_action (task, title, message, _("Search"));
+	g_free (title);
+	g_free (message);
 
 	return ret;
 }
