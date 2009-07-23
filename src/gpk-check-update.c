@@ -573,7 +573,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 //					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "show-update-viewer",
 					/* TRANSLATORS: button: open the update viewer */
-					_("Show software updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					_("Show all software updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 //	notify_notification_add_action (notification, "do-not-show-notify-critical",
 //					/* TRANSLATORS: button: hide forever */
 //					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
