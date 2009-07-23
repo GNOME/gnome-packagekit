@@ -2711,39 +2711,6 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 }
 
 /**
- * gpk_application_menu_filter_arch_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *application)
-{
-	const gchar *name;
-
-	g_return_if_fail (GPK_IS_APPLICATION (application));
-
-	name = gtk_widget_get_name (widget);
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_ARCH);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
-		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NOT_ARCH);
-	} else {
-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
-		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NOT_ARCH);
-	}
-
-	/* refresh the search results */
-	gpk_application_perform_search (application);
-}
-
-/**
  * gpk_application_menu_filter_source_cb:
  * @widget: The GtkWidget object
  **/
@@ -2823,6 +2790,32 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
 	else
 		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_NEWEST);
+
+	/* refresh the search results */
+	gpk_application_perform_search (application);
+}
+
+/**
+ * gpk_application_menu_filter_arch_cb:
+ * @widget: The GtkWidget object
+ **/
+static void
+gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *application)
+{
+	gboolean enabled;
+
+	g_return_if_fail (GPK_IS_APPLICATION (application));
+
+	/* save users preference to gconf */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	gconf_client_set_bool (application->priv->gconf_client,
+			       GPK_CONF_APPLICATION_FILTER_ARCH, enabled, NULL);
+
+	/* change the filter */
+	if (enabled)
+		pk_bitfield_add (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
+	else
+		pk_bitfield_remove (application->priv->filters_current, PK_FILTER_ENUM_ARCH);
 
 	/* refresh the search results */
 	gpk_application_perform_search (application);
@@ -3865,17 +3858,6 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_free_cb), application);
 
-	/* arch filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
-
 	/* source filter */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_source_yes"));
 	g_signal_connect (widget, "toggled",
@@ -3896,6 +3878,11 @@ gpk_application_init (GpkApplication *application)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_newest"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_newest_cb), application);
+
+	/* newest filter */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch"));
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_filter_arch_cb), application);
 
 	/* Remove description/file list if needed. */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_DETAILS) == FALSE) {
@@ -4018,6 +4005,19 @@ gpk_application_init (GpkApplication *application)
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_newest_cb (widget, application);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* ARCH, use by default, or hide */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch"));
+	if (pk_bitfield_contain (application->priv->filters, PK_FILTER_ENUM_ARCH)) {
+		/* set from remembered state */
+		enabled = gconf_client_get_bool (application->priv->gconf_client,
+						 GPK_CONF_APPLICATION_FILTER_ARCH, NULL);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
+		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
+		gpk_application_menu_filter_arch_cb (widget, application);
 	} else {
 		gtk_widget_hide (widget);
 	}

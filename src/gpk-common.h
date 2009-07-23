@@ -68,6 +68,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_WATCH_ACTIVE_TRANSACTIONS	"/apps/gnome-packagekit/update-icon/watch_active_transactions"
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
 #define GPK_CONF_APPLICATION_FILTER_NEWEST	"/apps/gnome-packagekit/application/filter_newest"
+#define GPK_CONF_APPLICATION_FILTER_ARCH	"/apps/gnome-packagekit/application/filter_arch"
 #define GPK_CONF_APPLICATION_CATEGORY_GROUPS	"/apps/gnome-packagekit/application/category_groups"
 #define GPK_CONF_APPLICATION_SEARCH_MODE	"/apps/gnome-packagekit/application/search_mode"
 #define GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND	"/apps/gnome-packagekit/update-viewer/notify_mobile_connection"
