@@ -1280,7 +1280,8 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	}
 
 	/* log out session */
-	if (watch->priv->restart == PK_RESTART_ENUM_SESSION) {
+	if (watch->priv->restart == PK_RESTART_ENUM_SESSION ||
+	    watch->priv->restart == PK_RESTART_ENUM_SECURITY_SESSION) {
 		/* TRANSLATORS: log out of the session */
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Log out"));
 		image = gtk_image_new_from_icon_name ("system-log-out", GTK_ICON_SIZE_MENU);
@@ -1292,7 +1293,8 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	}
 
 	/* restart computer */
-	if (watch->priv->restart == PK_RESTART_ENUM_SYSTEM) {
+	if (watch->priv->restart == PK_RESTART_ENUM_SYSTEM ||
+	    watch->priv->restart == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 		/* TRANSLATORS: this menu item restarts the computer after an update */
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Restart computer"));
 		image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
