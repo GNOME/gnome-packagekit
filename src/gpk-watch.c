@@ -119,6 +119,62 @@ gpk_watch_cached_message_free (GpkWatchCachedMessage *cached_message)
 }
 
 /**
+ * gpk_watch_get_restart_required_tooltip:
+ **/
+static gchar *
+gpk_watch_get_restart_required_tooltip (GpkWatch *watch)
+{
+	gchar *package_loc = NULL;
+	gchar **packages = NULL;
+	guint len;
+	const gchar *title;
+	gchar *message = NULL;
+	gchar *text = NULL;
+
+	/* nothing */
+	if (watch->priv->restart == PK_RESTART_ENUM_NONE)
+		goto out;
+
+	/* size */
+	len = watch->priv->restart_package_names->len;
+	if (len == 0)
+		goto out;
+
+	/* localised title */
+	title = gpk_restart_enum_to_localised_text (watch->priv->restart);
+
+	/* non-security require */
+	if (watch->priv->restart == PK_RESTART_ENUM_SESSION ||
+	    watch->priv->restart == PK_RESTART_ENUM_SYSTEM) {
+
+		/* get localised list */
+		packages = pk_ptr_array_to_strv (watch->priv->restart_package_names);
+		package_loc = gpk_strv_join_locale (packages);
+		if (package_loc != NULL) {
+			/* TRANSLATORS: a list of packages is shown that need to restarted */
+			message = g_strdup_printf (ngettext ("This is due to the %s package being updated.",
+							     "This is due to the following packages being updated: %s", len), package_loc);
+		} else {
+			/* TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here */
+			message = g_strdup_printf (ngettext ("This is because %i package has been updated.",
+							     "This is because %i packages have been updated.", len), len);
+		}
+
+		/* join */
+		text = g_strdup_printf ("%s\n%s", title, message);
+		goto out;
+	}
+
+	/* just use title, as security requires are not the package that are updated */
+	text = g_strdup (title);
+out:
+	g_strfreev (packages);
+	g_free (package_loc);
+	g_free (message);
+	return text;
+}
+
+/**
  * gpk_watch_refresh_tooltip:
  **/
 static gboolean
@@ -131,8 +187,7 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	GString *status;
 	const gchar *trailer;
 	const gchar *localised_status;
-	gchar *package_loc;
-	gchar **packages;
+	gchar *text;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
@@ -142,40 +197,18 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	if (length == 0) {
 
 		/* any restart required? */
-		if (watch->priv->restart != PK_RESTART_ENUM_NONE) {
-			g_string_append (status, gpk_restart_enum_to_localised_text (watch->priv->restart));
+		text = gpk_watch_get_restart_required_tooltip (watch);
+		if (text != NULL) {
+			g_string_append (status, text);
 			g_string_append_c (status, '\n');
-
-			len = watch->priv->restart_package_names->len;
-
-			if (len > 0) {
-				packages = pk_ptr_array_to_strv (watch->priv->restart_package_names);
-				package_loc = gpk_strv_join_locale (packages);
-				g_strfreev (packages);
-				if (package_loc != NULL) {
-					/* TRANSLATORS: a list of packages is shown that need to restarted */
-					g_string_append_printf (status, ngettext ("This is due to the %s package being updated.",
-										  "This is due to the following packages being updated: %s", len), package_loc);
-				} else {
-					/* TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here */
-					g_string_append_printf (status, ngettext ("This is because %i package has been updated.",
-										  "This is because %i packages have been updated.", len), len);
-				}
-				g_string_append_c (status, '\n');
-				g_free (package_loc);
-			}
-
-			/* remove final \n */
-			if (status->len > 0)
-				g_string_set_size (status, status->len - 1);
-
-			goto out;
 		}
+		g_free (text);
 
 		/* do we have any cached messages to show? */
 		len = watch->priv->cached_messages->len;
 		if (len > 0) {
-			g_string_append_printf (status, ngettext ("%i message from the package manager", "%i messages from the package manager", len), len);
+			g_string_append_printf (status, ngettext ("%i message from the package manager",
+								  "%i messages from the package manager", len), len);
 			goto out;
 		}
 
