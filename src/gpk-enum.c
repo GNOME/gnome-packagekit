@@ -709,22 +709,22 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 	const gchar *text = NULL;
 	switch (restart) {
 	case PK_RESTART_ENUM_NONE:
-		text = _("No restart is necessary");
+		text = _("No restart is necessary.");
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
-		text = _("You will be required to restart this application");
+		text = _("You will be required to restart this application.");
 		break;
 	case PK_RESTART_ENUM_SESSION:
-		text = _("You will be required to log out and back in");
+		text = _("You will be required to log out and back in.");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("A restart will be required");
+		text = _("A restart will be required.");
 		break;
 	case PK_RESTART_ENUM_SECURITY_SESSION:
-		text = _("You will be required to log out and back in due to a security update");
+		text = _("You will be required to log out and back in due to a security update.");
 		break;
 	case PK_RESTART_ENUM_SECURITY_SYSTEM:
-		text = _("A restart will be required due to a security update");
+		text = _("A restart will be required due to a security update.");
 		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);
@@ -741,22 +741,22 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 	const gchar *text = NULL;
 	switch (restart) {
 	case PK_RESTART_ENUM_NONE:
-		text = _("No restart is required");
+		text = _("No restart is required.");
 		break;
 	case PK_RESTART_ENUM_SYSTEM:
-		text = _("A restart is required");
+		text = _("A restart is required.");
 		break;
 	case PK_RESTART_ENUM_SESSION:
-		text = _("You need to log out and log back in");
+		text = _("You need to log out and log back in.");
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
-		text = _("You need to restart the application");
+		text = _("You need to restart the application.");
 		break;
 	case PK_RESTART_ENUM_SECURITY_SESSION:
-		text = _("You need to log out and log back in to remain secure, as important security updates have recently been installed");
+		text = _("You need to log out and log back in to remain secure, as important security updates have recently been installed.");
 		break;
 	case PK_RESTART_ENUM_SECURITY_SYSTEM:
-		text = _("A restart is required to remain secure, as important security updates have recently been installed");
+		text = _("A restart is required to remain secure, as important security updates have recently been installed.");
 		break;
 	default:
 		egg_warning ("restart unrecognised: %i", restart);

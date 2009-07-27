@@ -153,7 +153,7 @@ gpk_watch_get_restart_required_tooltip (GpkWatch *watch)
 		if (package_loc != NULL) {
 			/* TRANSLATORS: a list of packages is shown that need to restarted */
 			message = g_strdup_printf (ngettext ("This is due to the %s package being updated.",
-							     "This is due to the following packages being updated: %s", len), package_loc);
+							     "This is due to the following packages being updated: %s.", len), package_loc);
 		} else {
 			/* TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here */
 			message = g_strdup_printf (ngettext ("This is because %i package has been updated.",
