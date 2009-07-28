@@ -453,6 +453,12 @@ gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum
 	}
 	egg_debug ("role=%s, text=%s", pk_role_enum_to_text (role), text);
 
+	/* is it worth processing? */
+	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
+		egg_debug ("not processing, as didn't complete okay");
+		goto out;
+	}
+
 	/* show an icon if the user needs to reboot */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
@@ -490,12 +496,6 @@ no_data:
 	/* is it worth showing a UI? */
 	if (runtime < 3000) {
 		egg_debug ("no notification, too quick");
-		goto out;
-	}
-
-	/* is it worth showing a UI? */
-	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
-		egg_debug ("not notifying, as didn't complete okay");
 		goto out;
 	}
 
