@@ -66,6 +66,7 @@ typedef enum {
 	PK_MODE_NAME_DETAILS_FILE,
 	PK_MODE_GROUP,
 	PK_MODE_ALL_PACKAGES,
+	PK_MODE_SELECTED,
 	PK_MODE_UNKNOWN
 } PkSearchMode;
 
@@ -992,10 +993,10 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 }
 
 /**
- * gpk_application_package_cb:
+ * gpk_application_add_obj_to_results:
  **/
 static void
-gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
+gpk_application_add_obj_to_results (GpkApplication *application, const PkPackageObj *obj)
 {
 	GtkTreeIter iter;
 	gchar *summary;
@@ -1008,27 +1009,6 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	gboolean enabled;
 	PkBitfield state = 0;
 	static guint package_cnt = 0;
-	PkRoleEnum role;
-
-	g_return_if_fail (GPK_IS_APPLICATION (application));
-
-	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
-
-	/* ignore not search data */
-#if PK_CHECK_VERSION(0,5,1)
-	g_object_get (client,
-		      "role", &role,
-		      NULL);
-#else
-	pk_client_get_role (client, &role, NULL, NULL);
-#endif
-	if (role == PK_ROLE_ENUM_GET_DEPENDS || role == PK_ROLE_ENUM_GET_REQUIRES)
-		return;
-
-	/* ignore progress */
-	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE &&
-	    obj->info != PK_INFO_ENUM_COLLECTION_INSTALLED && obj->info != PK_INFO_ENUM_COLLECTION_AVAILABLE)
-		return;
 
 	/* format if required */
 	egg_markdown_set_output (application->priv->markdown, EGG_MARKDOWN_OUTPUT_PANGO);
@@ -1087,6 +1067,39 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 }
 
 /**
+ * gpk_application_package_cb:
+ **/
+static void
+gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplication *application)
+{
+	PkRoleEnum role;
+
+	g_return_if_fail (GPK_IS_APPLICATION (application));
+
+	egg_debug ("package = %s:%s:%s", pk_info_enum_to_text (obj->info), obj->id->name, obj->summary);
+
+	/* ignore not search data */
+#if PK_CHECK_VERSION(0,5,1)
+	g_object_get (client,
+		      "role", &role,
+		      NULL);
+#else
+	pk_client_get_role (client, &role, NULL, NULL);
+#endif
+	if (role == PK_ROLE_ENUM_GET_DEPENDS ||
+	    role == PK_ROLE_ENUM_GET_REQUIRES)
+		return;
+
+	/* ignore progress */
+	if (obj->info != PK_INFO_ENUM_INSTALLED && obj->info != PK_INFO_ENUM_AVAILABLE &&
+	    obj->info != PK_INFO_ENUM_COLLECTION_INSTALLED && obj->info != PK_INFO_ENUM_COLLECTION_AVAILABLE)
+		return;
+
+	/* add to list */
+	gpk_application_add_obj_to_results (application, obj);
+}
+
+/**
  * gpk_application_error_code_cb:
  **/
 static void
@@ -1129,6 +1142,9 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	    application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
 		/* TRANSLATORS: be helpful, but this shouldn't happen */
 		message = _("Try entering a package name in the search bar.");
+	}  else if (application->priv->search_mode == PK_MODE_SELECTED) {
+		/* TRANSLATORS: nothing in the package queue */
+		message = _("There are no packages queued to be installed or removed.");
 	} else {
 		if (application->priv->search_type == PK_SEARCH_NAME ||
 		    application->priv->search_type == PK_SEARCH_FILE)
@@ -1668,6 +1684,35 @@ gpk_application_perform_search_others (GpkApplication *application)
 }
 
 /**
+ * gpk_application_populate_selected:
+ **/
+static gboolean
+gpk_application_populate_selected (GpkApplication *application)
+{
+	guint i;
+	guint len;
+	PkPackageList *list;
+	const PkPackageObj *obj;
+
+	list = application->priv->package_list;
+	len = PK_OBJ_LIST (list)->len;
+
+	/* nothing in queue */
+	if (len == 0) {
+		gpk_application_suggest_better_search (application);
+		goto out;
+	}
+
+	/* dump queue to package window */
+	for (i=0; i<len; i++) {
+		obj = pk_package_list_get_obj (list, i);
+		gpk_application_add_obj_to_results (application, obj);
+	}
+out:
+	return TRUE;
+}
+
+/**
  * gpk_application_perform_search:
  **/
 static gboolean
@@ -1685,6 +1730,8 @@ gpk_application_perform_search (GpkApplication *application)
 	} else if (application->priv->search_mode == PK_MODE_GROUP ||
 		   application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
 		ret = gpk_application_perform_search_others (application);
+	} else if (application->priv->search_mode == PK_MODE_SELECTED) {
+		ret = gpk_application_populate_selected (application);
 	} else {
 		egg_debug ("doing nothing");
 	}
@@ -2090,6 +2137,8 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 		/* GetPackages? */
 		if (egg_strequal (application->priv->group, "all-packages"))
 			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
+		else if (egg_strequal (application->priv->group, "selected"))
+			application->priv->search_mode = PK_MODE_SELECTED;
 		else
 			application->priv->search_mode = PK_MODE_GROUP;
 
@@ -2218,6 +2267,25 @@ gpk_application_group_add_data (GpkApplication *application, PkGroupEnum group)
 			    GROUPS_COLUMN_SUMMARY, NULL,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
 			    GROUPS_COLUMN_ICON, icon_name,
+			    GROUPS_COLUMN_ACTIVE, TRUE,
+			    -1);
+}
+
+/**
+ * gpk_application_group_add_selected:
+ **/
+static void
+gpk_application_group_add_selected (GpkApplication *application)
+{
+	GtkTreeIter iter;
+
+	gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+	gtk_tree_store_set (application->priv->groups_store, &iter,
+			    /* TRANSLATORS: this is a menu group of packages in the queue */
+			    GROUPS_COLUMN_NAME, _("Selected packages"),
+			    GROUPS_COLUMN_SUMMARY, NULL,
+			    GROUPS_COLUMN_ID, "selected",
+			    GROUPS_COLUMN_ICON, "edit-find",
 			    GROUPS_COLUMN_ACTIVE, TRUE,
 			    -1);
 }
@@ -3292,18 +3360,16 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_NEWEST))
 		gpk_application_group_add_data (application, PK_GROUP_ENUM_NEWEST);
 
+	/* add group item for selected items */
+	gpk_application_group_add_selected (application);
+
 	/* add a separator only if we can do both */
-	if ((pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
-	     pk_bitfield_contain (application->priv->roles, PK_GROUP_ENUM_NEWEST) ||
-	     pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) &&
-	     pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
-		gtk_tree_store_set (application->priv->groups_store, &iter,
-				    GROUPS_COLUMN_ID, "separator", -1);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
-		gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
-						      gpk_application_group_row_separator_func, NULL, NULL);
-	}
+	gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+	gtk_tree_store_set (application->priv->groups_store, &iter,
+			    GROUPS_COLUMN_ID, "separator", -1);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
+	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (widget),
+					      gpk_application_group_row_separator_func, NULL, NULL);
 
 	/* create group tree view if we can search by group */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
@@ -3359,16 +3425,15 @@ gpk_application_categories_finished (GpkApplication *application)
 	if (pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_NEWEST))
 		gpk_application_group_add_data (application, PK_GROUP_ENUM_NEWEST);
 
-	/* add a separator only if we can do both */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES) ||
-	    pk_bitfield_contain (application->priv->roles, PK_GROUP_ENUM_NEWEST) ||
-	    pk_bitfield_contain (application->priv->groups, PK_GROUP_ENUM_COLLECTIONS)) {
-		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
-		gtk_tree_store_set (application->priv->groups_store, &iter,
-				    GROUPS_COLUMN_ID, "separator", -1);
-		gtk_tree_view_set_row_separator_func (treeview,
-						      gpk_application_group_row_separator_func, NULL, NULL);
-	}
+	/* add group item for selected items */
+	gpk_application_group_add_selected (application);
+
+	/* add a separator */
+	gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
+	gtk_tree_store_set (application->priv->groups_store, &iter,
+			    GROUPS_COLUMN_ID, "separator", -1);
+	gtk_tree_view_set_row_separator_func (treeview,
+					      gpk_application_group_row_separator_func, NULL, NULL);
 
 	/* get return values */
 #if PK_CHECK_VERSION(0,5,0)
