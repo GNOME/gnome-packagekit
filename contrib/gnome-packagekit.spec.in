@@ -37,10 +37,6 @@ Requires:  shared-mime-info
 Requires:  iso-codes
 Requires:  libcanberra >= %{libcanberra_version}
 Requires:  DeviceKit-power >= %{devicekit_power_version}
-
-# doesn't require it explicitly, just requires a _working_ authentication agent
-Requires:  polkit-gnome >= %{polkit_gnome_version}
-
 Requires(post):   scrollkeeper
 Requires(pre):    GConf2
 Requires(post):   GConf2
