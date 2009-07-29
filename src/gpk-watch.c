@@ -365,7 +365,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	/* any restart required? */
 	if (watch->priv->restart != PK_RESTART_ENUM_NONE &&
 	    watch->priv->hide_warning == FALSE) {
-		icon_name = gpk_restart_enum_to_dialog_icon_name (watch->priv->restart);
+		icon_name = gpk_restart_enum_to_icon_name (watch->priv->restart);
 		goto out;
 	}
 
