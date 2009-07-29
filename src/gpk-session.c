@@ -131,8 +131,8 @@ gpk_session_presence_status_changed_cb (DBusGProxy *proxy, guint status, GpkSess
 	is_idle = (status == GPK_SESSION_STATUS_ENUM_IDLE);
 	if (is_idle != session->priv->is_idle_old) {
 		egg_debug ("emitting idle-changed : (%i)", is_idle);
-		g_signal_emit (session, signals [IDLE_CHANGED], 0, is_idle);
 		session->priv->is_idle_old = is_idle;
+		g_signal_emit (session, signals [IDLE_CHANGED], 0, is_idle);
 	}
 }
 
@@ -338,8 +338,8 @@ gpk_session_inhibit_changed_cb (DBusGProxy *proxy, const gchar *id, GpkSession *
 	is_inhibited = gpk_session_is_inhibited (session);
 	if (is_inhibited != session->priv->is_inhibited_old) {
 		egg_debug ("emitting inhibited-changed : (%i)", is_inhibited);
-		g_signal_emit (session, signals [INHIBITED_CHANGED], 0, is_inhibited);
 		session->priv->is_inhibited_old = is_inhibited;
+		g_signal_emit (session, signals [INHIBITED_CHANGED], 0, is_inhibited);
 	}
 }
 
@@ -446,15 +446,15 @@ gpk_session_init (GpkSession *session)
 	}
 
 	/* get StatusChanged */
-	dbus_g_proxy_add_signal (session->priv->proxy_presence, "StatusChanged", G_TYPE_INVALID);
+	dbus_g_proxy_add_signal (session->priv->proxy_presence, "StatusChanged", G_TYPE_UINT, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (session->priv->proxy_presence, "StatusChanged", G_CALLBACK (gpk_session_presence_status_changed_cb), session, NULL);
 
 	/* get InhibitorAdded */
-	dbus_g_proxy_add_signal (session->priv->proxy, "InhibitorAdded", G_TYPE_INVALID);
+	dbus_g_proxy_add_signal (session->priv->proxy, "InhibitorAdded", DBUS_TYPE_G_OBJECT_PATH, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (session->priv->proxy, "InhibitorAdded", G_CALLBACK (gpk_session_inhibit_changed_cb), session, NULL);
 
 	/* get InhibitorRemoved */
-	dbus_g_proxy_add_signal (session->priv->proxy, "InhibitorRemoved", G_TYPE_INVALID);
+	dbus_g_proxy_add_signal (session->priv->proxy, "InhibitorRemoved", DBUS_TYPE_G_OBJECT_PATH, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (session->priv->proxy, "InhibitorRemoved", G_CALLBACK (gpk_session_inhibit_changed_cb), session, NULL);
 
 	/* coldplug */
