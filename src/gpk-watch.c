@@ -200,13 +200,14 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		text = gpk_watch_get_restart_required_tooltip (watch);
 		if (text != NULL) {
 			g_string_append (status, text);
-			g_string_append_c (status, '\n');
 		}
 		g_free (text);
 
 		/* do we have any cached messages to show? */
 		len = watch->priv->cached_messages->len;
 		if (len > 0) {
+			if (status->len > 0)
+				g_string_append_c (status, '\n');
 			g_string_append_printf (status, ngettext ("%i message from the package manager",
 								  "%i messages from the package manager", len), len);
 			goto out;
