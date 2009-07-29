@@ -382,13 +382,13 @@ static void
 gpk_auto_refresh_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
-	if (egg_strequal (entry->key, GPK_CONF_SESSION_STARTUP_TIMEOUT) ||
-	    egg_strequal (entry->key, GPK_CONF_FORCE_GET_UPDATES_LOGIN) ||
-	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_GET_UPDATES) ||
-	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_GET_UPGRADES) ||
-	    egg_strequal (entry->key, GPK_CONF_FREQUENCY_REFRESH_CACHE) ||
-	    egg_strequal (entry->key, GPK_CONF_AUTO_UPDATE) ||
-	    egg_strequal (entry->key, GPK_CONF_UPDATE_BATTERY))
+	if (g_strcmp0 (entry->key, GPK_CONF_SESSION_STARTUP_TIMEOUT) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_FORCE_GET_UPDATES_LOGIN) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_GET_UPDATES) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_GET_UPGRADES) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_REFRESH_CACHE) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_AUTO_UPDATE) == 0 ||
+	    g_strcmp0 (entry->key, GPK_CONF_UPDATE_BATTERY) == 0)
 		gpk_auto_refresh_change_state (arefresh);
 }
 

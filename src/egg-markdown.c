@@ -1025,7 +1025,7 @@ egg_markdown_test (EggTest *test)
 	 ************************************************************/
 	text = egg_markdown_replace ("summary -- really -- sure!", " -- ", " – ");
 	egg_test_title (test, "replace (multiple)");
-	if (egg_strequal (text, "summary – really – sure!"))
+	if (g_strcmp0 (text, "summary – really – sure!") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1036,7 +1036,7 @@ egg_markdown_test (EggTest *test)
 	 ************************************************************/
 	text = egg_markdown_to_text_line_formatter ("**is important** text", "**", "<b>", "</b>");
 	egg_test_title (test, "formatter (left)");
-	if (egg_strequal (text, "<b>is important</b> text"))
+	if (g_strcmp0 (text, "<b>is important</b> text") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1045,7 +1045,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("this is **important**", "**", "<b>", "</b>");
 	egg_test_title (test, "formatter (right)");
-	if (egg_strequal (text, "this is <b>important</b>"))
+	if (g_strcmp0 (text, "this is <b>important</b>") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1054,7 +1054,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("**important**", "**", "<b>", "</b>");
 	egg_test_title (test, "formatter (only)");
-	if (egg_strequal (text, "<b>important</b>"))
+	if (g_strcmp0 (text, "<b>important</b>") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1063,7 +1063,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("***important***", "**", "<b>", "</b>");
 	egg_test_title (test, "formatter (only)");
-	if (egg_strequal (text, "<b>*important</b>*"))
+	if (g_strcmp0 (text, "<b>*important</b>*") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1072,7 +1072,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("I guess * this is * not bold", "*", "<i>", "</i>");
 	egg_test_title (test, "formatter (with spaces)");
-	if (egg_strequal (text, "I guess * this is * not bold"))
+	if (g_strcmp0 (text, "I guess * this is * not bold") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1081,7 +1081,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("this **is important** text in **several** places", "**", "<b>", "</b>");
 	egg_test_title (test, "formatter (middle, multiple)");
-	if (egg_strequal (text, "this <b>is important</b> text in <b>several</b> places"))
+	if (g_strcmp0 (text, "this <b>is important</b> text in <b>several</b> places") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1090,7 +1090,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_word_auto_format_code ("this is http://www.hughsie.com/with_spaces_in_url inline link");
 	egg_test_title (test, "auto formatter (url)");
-	if (egg_strequal (text, "this is `http://www.hughsie.com/with_spaces_in_url` inline link"))
+	if (g_strcmp0 (text, "this is `http://www.hughsie.com/with_spaces_in_url` inline link") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1099,7 +1099,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("this was \"triffic\" it was", "\"", "“", "”");
 	egg_test_title (test, "formatter (quotes)");
-	if (egg_strequal (text, "this was “triffic” it was"))
+	if (g_strcmp0 (text, "this was “triffic” it was") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1108,7 +1108,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	text = egg_markdown_to_text_line_formatter ("This isn't a present", "'", "‘", "’");
 	egg_test_title (test, "formatter (one quote)");
-	if (egg_strequal (text, "This isn't a present"))
+	if (g_strcmp0 (text, "This isn't a present") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
@@ -1134,7 +1134,7 @@ egg_markdown_test (EggTest *test)
 		   "• Bullett";
 	egg_test_title (test, "markdown (type2 header)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1147,7 +1147,7 @@ egg_markdown_test (EggTest *test)
 	egg_test_title (test, "markdown (autocode)");
 	egg_markdown_set_autocode (self, TRUE);
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1158,7 +1158,7 @@ egg_markdown_test (EggTest *test)
 	markdown_expected = "<b><i> This software is currently in alpha state </b></i>";
 	egg_test_title (test, "markdown some invalid header");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1174,7 +1174,7 @@ egg_markdown_test (EggTest *test)
 		   "• Another";
 	egg_test_title (test, "markdown (complex1)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1204,7 +1204,7 @@ egg_markdown_test (EggTest *test)
 		   "Paragraph two isn't much better.";
 	egg_test_title (test, "markdown (complex1)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1229,7 +1229,7 @@ egg_markdown_test (EggTest *test)
 		   "• Fubar update because of \"security\"";
 	egg_test_title (test, "markdown (complex2)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1248,7 +1248,7 @@ egg_markdown_test (EggTest *test)
 		   "• third item";
 	egg_test_title (test, "markdown (list with spaces)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1266,7 +1266,7 @@ egg_markdown_test (EggTest *test)
 		   "• list seporated with spaces - first item";
 	egg_test_title (test, "markdown (one line limit)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1282,7 +1282,7 @@ egg_markdown_test (EggTest *test)
 		   "• list & spaces";
 	egg_test_title (test, "markdown (escaping)");
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
@@ -1291,7 +1291,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "markdown (free text)");
 	text = egg_markdown_parse (self, "This isn't a present");
-	if (egg_strequal (text, "This isn't a present"))
+	if (g_strcmp0 (text, "This isn't a present") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s'", text);
@@ -1300,7 +1300,7 @@ egg_markdown_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "markdown (autotext underscore)");
 	text = egg_markdown_parse (self, "This isn't CONFIG_UEVENT_HELPER_PATH present");
-	if (egg_strequal (text, "This isn't <tt>CONFIG_UEVENT_HELPER_PATH</tt> present"))
+	if (g_strcmp0 (text, "This isn't <tt>CONFIG_UEVENT_HELPER_PATH</tt> present") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s'", text);
@@ -1327,7 +1327,7 @@ egg_markdown_test (EggTest *test)
 	egg_markdown_set_escape (self, TRUE);
 	ret = egg_markdown_set_max_lines (self, 1024);
 	text = egg_markdown_parse (self, markdown);
-	if (egg_strequal (text, markdown_expected))
+	if (g_strcmp0 (text, markdown_expected) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);

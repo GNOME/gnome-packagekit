@@ -710,13 +710,13 @@ main (int argc, char *argv[])
 
 	/* if command line arguments are set, then setup UI */
 	if (option != NULL) {
-		if (egg_strequal (option, "list")) {
+		if (g_strcmp0 (option, "list") == 0) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "radiobutton_copy"));
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
-		} else if (egg_strequal (option, "updates")) {
+		} else if (g_strcmp0 (option, "updates") == 0) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "radiobutton_updates"));
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
-		} else if (egg_strequal (option, "package")) {
+		} else if (g_strcmp0 (option, "package") == 0) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "radiobutton_package"));
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
 		}

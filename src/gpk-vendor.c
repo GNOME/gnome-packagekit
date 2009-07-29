@@ -81,7 +81,7 @@ gpk_vendor_get_not_found_url (GpkVendor *vendor, GpkVendorUrlType type)
 	url = g_key_file_get_string (vendor->priv->file, "PackagesNotFound", key, NULL);
 
 	/* none is a special value */
-	if (egg_strequal (url, "none")) {
+	if (g_strcmp0 (url, "none") == 0) {
 		g_free (url);
 		url = NULL;
 	}
@@ -100,7 +100,7 @@ gpk_vendor_get_not_found_url (GpkVendor *vendor, GpkVendorUrlType type)
 	url = g_key_file_get_string (vendor->priv->file, "PackagesNotFound", key, NULL);
 
 	/* none is a special value */
-	if (egg_strequal (url, "none")) {
+	if (g_strcmp0 (url, "none") == 0) {
 		g_free (url);
 		url = NULL;
 	}

@@ -93,7 +93,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	g_return_val_if_fail (name != NULL, FALSE);
 
 	/* have we already set the same icon */
-	if (egg_strequal (icon->filename, name)) {
+	if (g_strcmp0 (icon->filename, name) == 0) {
 		egg_debug ("already set the same icon name %s, ignoring", name);
 		return FALSE;
 	}

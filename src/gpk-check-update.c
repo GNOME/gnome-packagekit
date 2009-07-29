@@ -422,43 +422,43 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	gchar **package_ids;
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
-	if (egg_strequal (action, "do-not-show-complete-restart")) {
+	if (g_strcmp0 (action, "do-not-show-complete-restart") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
-	} else if (egg_strequal (action, "do-not-show-complete")) {
+	} else if (g_strcmp0 (action, "do-not-show-complete") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
-	} else if (egg_strequal (action, "do-not-show-update-started")) {
+	} else if (g_strcmp0 (action, "do-not-show-update-started") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
-	} else if (egg_strequal (action, "do-not-show-notify-critical")) {
+	} else if (g_strcmp0 (action, "do-not-show-notify-critical") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
-	} else if (egg_strequal (action, "do-not-show-update-not-battery")) {
+	} else if (g_strcmp0 (action, "do-not-show-update-not-battery") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
-	} else if (egg_strequal (action, "distro-upgrade-do-not-show-available")) {
+	} else if (g_strcmp0 (action, "distro-upgrade-do-not-show-available") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_DISTRO_UPGRADES);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, FALSE, NULL);
 //	} else if (egg_strequal (action, "show-error-details")) {
 //		/* TRANSLATORS: detailed text about the error */
 //		gpk_error_dialog (_("Error details"), _("Package Manager error details"), cupdate->priv->error_details);
-	} else if (egg_strequal (action, "cancel")) {
+	} else if (g_strcmp0 (action, "cancel") == 0) {
 		/* try to cancel */
 		ret = pk_client_cancel (cupdate->priv->client_primary, &error);
 		if (!ret) {
 			egg_warning ("failed to cancel client: %s", error->message);
 			g_error_free (error);
 		}
-	} else if (egg_strequal (action, "update-all-packages")) {
+	} else if (g_strcmp0 (action, "update-all-packages") == 0) {
 		gpk_check_update_update_system (cupdate);
-	} else if (egg_strequal (action, "show-update-viewer")) {
+	} else if (g_strcmp0 (action, "show-update-viewer") == 0) {
 		ret = g_spawn_command_line_async (BINDIR "/gpk-update-viewer", &error);
 		if (!ret) {
 			egg_warning ("Failure launching update viewer: %s", error->message);
 			g_error_free (error);
 		}
-	} else if (egg_strequal (action, "update-just-security")) {
+	} else if (g_strcmp0 (action, "update-just-security") == 0) {
 
 		ret = pk_client_reset (cupdate->priv->client_primary, &error);
 		if (!ret) {
@@ -480,7 +480,7 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 		}
 		g_strfreev (package_ids);
 
-	} else if (egg_strequal (action, "distro-upgrade-info")) {
+	} else if (g_strcmp0 (action, "distro-upgrade-info") == 0) {
 		ret = g_spawn_command_line_async (DATADIR "/PackageKit/pk-upgrade-distro.sh", &error);
 		if (!ret) {
 			egg_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);

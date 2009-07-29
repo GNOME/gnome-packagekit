@@ -382,7 +382,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 {
 	GpkDbusTask *task = GPK_DBUS_TASK (data);
 
-	if (egg_strequal (action, "show-error-details")) {
+	if (g_strcmp0 (action, "show-error-details") == 0) {
 		/* TRANSLATORS: detailed text about the error */
 		gpk_error_dialog (_("Error details"), _("Package Manager error details"), task->priv->error_details);
 	} else {
@@ -3143,8 +3143,8 @@ static gboolean
 gpk_dbus_task_path_is_trusted (const gchar *exec)
 {
 	/* special case the plugin helper -- it's trusted */
-	if (egg_strequal (exec, "/usr/libexec/gst-install-plugins-helper") ||
-	    egg_strequal (exec, "/usr/libexec/pk-gstreamer-install"))
+	if (g_strcmp0 (exec, "/usr/libexec/gst-install-plugins-helper") == 0 ||
+	    g_strcmp0 (exec, "/usr/libexec/pk-gstreamer-install") == 0)
 		return TRUE;
 	return FALSE;
 }
@@ -3422,7 +3422,7 @@ gpk_dbus_task_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "convert tag to lang");
 	lang = gpk_dbus_task_font_tag_to_lang (":lang=mn");
-	if (egg_strequal (lang, "mn"))
+	if (g_strcmp0 (lang, "mn") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "lang '%s'", lang);
@@ -3431,7 +3431,7 @@ gpk_dbus_task_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "convert tag to language");
 	language = gpk_dbus_task_font_tag_to_localised_name (task, ":lang=mn");
-	if (egg_strequal (language, "Mongolian"))
+	if (g_strcmp0 (language, "Mongolian") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "language '%s'", language);
@@ -3456,7 +3456,7 @@ gpk_dbus_task_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "get package for exec");
 	package = gpk_dbus_task_get_package_for_exec (task, "/usr/bin/totem");
-	if (egg_strequal (package, "totem"))
+	if (g_strcmp0 (package, "totem") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "package '%s'", package);

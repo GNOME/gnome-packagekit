@@ -408,11 +408,11 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 {
 	GpkWatch *watch = GPK_WATCH (data);
 
-	if (egg_strequal (action, "do-not-show-notify-complete")) {
+	if (g_strcmp0 (action, "do-not-show-notify-complete") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_COMPLETED);
 		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
 
-	} else if (egg_strequal (action, "show-error-details")) {
+	} else if (g_strcmp0 (action, "show-error-details") == 0) {
 		/* TRANSLATORS: The detailed error if the user clicks "more info" */
 		gpk_error_dialog (_("Error details"), _("Package manager error details"), watch->priv->error_details);
 
@@ -1388,7 +1388,7 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
-	if (egg_strequal (mode, "none")) {
+	if (g_strcmp0 (mode, "none") == 0) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}
@@ -1430,7 +1430,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 
 	/* common case, a direct connection */
 	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
-	if (egg_strequal (mode, "none")) {
+	if (g_strcmp0 (mode, "none") == 0) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}

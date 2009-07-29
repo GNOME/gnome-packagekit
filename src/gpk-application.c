@@ -902,7 +902,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	installed = egg_strequal (details->id->data, "installed");
+	installed = g_strcmp0 (details->id->data, "installed") == 0;
 
 	/* hide to start */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "scrolledwindow_detail"));
@@ -911,7 +911,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	gtk_list_store_clear (application->priv->details_store);
 
 	/* if a collection, mark as such */
-	if (egg_strequal (details->id->data, "meta"))
+	if (g_strcmp0 (details->id->data, "meta") == 0)
 		/* TRANSLATORS: the type of package is a collection (metagroup) */
 		gpk_application_add_detail_item (application, _("Type"), _("Collection"), NULL);
 
@@ -971,7 +971,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	if (details->size > 0) {
 		/* set the size */
 		value = g_format_size_for_display (details->size);
-		if (egg_strequal (details->id->data, "meta"))
+		if (g_strcmp0 (details->id->data, "meta") == 0)
 			/* TRANSLATORS: the size of the meta package */
 			gpk_application_add_detail_item (application, _("Size"), value, NULL);
 		else if (installed)
@@ -984,7 +984,7 @@ gpk_application_details_cb (PkClient *client, PkDetailsObj *details, GpkApplicat
 	}
 
 	/* set the repo text, or hide if installed */
-	if (!installed && !egg_strequal (details->id->data, "meta")) {
+	if (!installed && g_strcmp0 (details->id->data, "meta") != 0) {
 		/* get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (application, details->id->data);
 		/* TRANSLATORS: where the package came from, the software source name */
@@ -2135,9 +2135,9 @@ gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkAppl
 		}
 
 		/* GetPackages? */
-		if (egg_strequal (application->priv->group, "all-packages"))
+		if (g_strcmp0 (application->priv->group, "all-packages") == 0)
 			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
-		else if (egg_strequal (application->priv->group, "selected"))
+		else if (g_strcmp0 (application->priv->group, "selected") == 0)
 			application->priv->search_mode = PK_MODE_SELECTED;
 		else
 			application->priv->search_mode = PK_MODE_GROUP;
@@ -3226,7 +3226,7 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 	gchar *name = NULL;
 	gboolean ret;
 	gtk_tree_model_get (model, iter, GROUPS_COLUMN_ID, &name, -1);
-	ret = egg_strequal (name, "separator");
+	ret = g_strcmp0 (name, "separator") == 0;
 	g_free (name);
 	return ret;
 }
@@ -3461,7 +3461,7 @@ gpk_application_categories_finished (GpkApplication *application)
 		do {
 			/* only allows groups two layers deep */
 			obj2 = pk_obj_list_index (list, j);
-			if (egg_strequal (obj2->parent_id, obj->cat_id)) {
+			if (g_strcmp0 (obj2->parent_id, obj->cat_id) == 0) {
 				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
 				gtk_tree_store_set (application->priv->groups_store, &iter2,
 						    GROUPS_COLUMN_NAME, obj2->name,
@@ -3536,14 +3536,14 @@ gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfE
 	if (value == NULL)
 		return;
 
-	if (egg_strequal (gconf_entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS)) {
+	if (g_strcmp0 (gconf_entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS) == 0) {
 		ret = gconf_value_get_bool (value);
 		gtk_tree_store_clear (application->priv->groups_store);
 		if (ret)
 			gpk_application_create_group_list_categories (application);
 		else
 			gpk_application_create_group_list_enum (application);
-	} else if (egg_strequal (gconf_entry->key, GPK_CONF_AUTOCOMPLETE)) {
+	} else if (g_strcmp0 (gconf_entry->key, GPK_CONF_AUTOCOMPLETE) == 0) {
 		ret = gconf_value_get_bool (value);
 		entry = GTK_ENTRY (gtk_builder_get_object (application->priv->builder, "entry_text"));
 		if (ret) {
@@ -4192,11 +4192,11 @@ gpk_application_init (GpkApplication *application)
 	}
 
 	/* search by name */
-	if (egg_strequal (mode, "name")) {
+	if (g_strcmp0 (mode, "name") == 0) {
 		gpk_application_menu_search_by_name (NULL, application);
 
 	/* set to details if we can we do the action? */
-	} else if (egg_strequal (mode, "details")) {
+	} else if (g_strcmp0 (mode, "details") == 0) {
 		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 			gpk_application_menu_search_by_description (NULL, application);
 		} else {
@@ -4205,7 +4205,7 @@ gpk_application_init (GpkApplication *application)
 		}
 
 	/* set to file if we can we do the action? */
-	} else if (egg_strequal (mode, "file")) {
+	} else if (g_strcmp0 (mode, "file") == 0) {
 		gpk_application_menu_search_by_file (NULL, application);
 
 		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {

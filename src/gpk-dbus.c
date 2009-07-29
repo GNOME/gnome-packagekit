@@ -230,39 +230,39 @@ gpk_dbus_set_interaction_from_text (PkBitfield *interact, gint *timeout, const g
 
 	/* do special keys first */
 	for (i=0; i<len; i++) {
-		if (egg_strequal (interactions[i], "always"))
+		if (g_strcmp0 (interactions[i], "always") == 0)
 			*interact = GPK_CLIENT_INTERACT_ALWAYS;
-		else if (egg_strequal (interactions[i], "never"))
+		else if (g_strcmp0 (interactions[i], "never") == 0)
 			*interact = GPK_CLIENT_INTERACT_NEVER;
 	}
 
 	/* add or remove from defaults */
 	for (i=0; i<len; i++) {
 		/* show */
-		if (egg_strequal (interactions[i], "show-confirm-search"))
+		if (g_strcmp0 (interactions[i], "show-confirm-search") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
-		else if (egg_strequal (interactions[i], "show-confirm-deps"))
+		else if (g_strcmp0 (interactions[i], "show-confirm-deps") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
-		else if (egg_strequal (interactions[i], "show-confirm-install"))
+		else if (g_strcmp0 (interactions[i], "show-confirm-install") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
-		else if (egg_strequal (interactions[i], "show-progress"))
+		else if (g_strcmp0 (interactions[i], "show-progress") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_PROGRESS);
-		else if (egg_strequal (interactions[i], "show-finished"))
+		else if (g_strcmp0 (interactions[i], "show-finished") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_FINISHED);
-		else if (egg_strequal (interactions[i], "show-warning"))
+		else if (g_strcmp0 (interactions[i], "show-warning") == 0)
 			pk_bitfield_add (*interact, GPK_CLIENT_INTERACT_WARNING);
 		/* hide */
-		else if (egg_strequal (interactions[i], "hide-confirm-search"))
+		else if (g_strcmp0 (interactions[i], "hide-confirm-search") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_SEARCH);
-		else if (egg_strequal (interactions[i], "hide-confirm-deps"))
+		else if (g_strcmp0 (interactions[i], "hide-confirm-deps") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_DEPS);
-		else if (egg_strequal (interactions[i], "hide-confirm-install"))
+		else if (g_strcmp0 (interactions[i], "hide-confirm-install") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_CONFIRM_INSTALL);
-		else if (egg_strequal (interactions[i], "hide-progress"))
+		else if (g_strcmp0 (interactions[i], "hide-progress") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_PROGRESS);
-		else if (egg_strequal (interactions[i], "hide-finished"))
+		else if (g_strcmp0 (interactions[i], "hide-finished") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_FINISHED);
-		else if (egg_strequal (interactions[i], "hide-warning"))
+		else if (g_strcmp0 (interactions[i], "hide-warning") == 0)
 			pk_bitfield_remove (*interact, GPK_CLIENT_INTERACT_WARNING);
 		/* wait */
 		else if (g_str_has_prefix (interactions[i], "timeout="))

@@ -103,9 +103,9 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 {
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 
-	if (egg_strequal (action, "install-firmware")) {
+	if (g_strcmp0 (action, "install-firmware") == 0) {
 		gpk_firmware_install_file (firmware);
-	} else if (egg_strequal (action, "do-not-show-prompt-firmware")) {
+	} else if (g_strcmp0 (action, "do-not-show-prompt-firmware") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_FIRMWARE);
 		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, FALSE, NULL);
 	} else {

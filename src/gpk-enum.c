@@ -1749,7 +1749,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the role icon name enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_role_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
 			break;
 		}
@@ -1760,7 +1760,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the status animation enums");
 	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_animation (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
 			break;
 		}
@@ -1771,7 +1771,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the info icon names enums");
 	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
 		string = gpk_info_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_info_enum_to_text (i));
 			break;
 		}
@@ -1793,7 +1793,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the status icon names enums");
 	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_status_enum_to_text (i));
 			break;
 		}
@@ -1804,7 +1804,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the restart icon names enums");
 	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_text (i));
 			break;
 		}
@@ -1848,7 +1848,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the message icon name enums");
 	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
 		string = gpk_message_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_message_enum_to_text (i));
 			break;
 		}
@@ -1892,7 +1892,7 @@ gpk_enum_test (gpointer data)
 	egg_test_title (test, "check we convert all the group icon name enums");
 	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
 		string = gpk_group_enum_to_icon_name (i);
-		if (string == NULL || egg_strequal (string, "help-browser")) {
+		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
 			break;
 		}

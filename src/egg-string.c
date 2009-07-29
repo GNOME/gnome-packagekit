@@ -226,7 +226,7 @@ egg_strvequal (gchar **id1, gchar **id2)
 
 	/* text equal each one */
 	for (i=0; i<length1; i++) {
-		if (!egg_strequal (id1[i], id2[i]))
+		if (g_strcmp0 (id1[i], id2[i]) != 0)
 			return FALSE;
 	}
 
@@ -288,14 +288,14 @@ egg_string_test (EggTest *test)
 	 ************************************************************/
 	egg_test_title (test, "egg_strequal same argument");
 	temp = "dave";
-	if (egg_strequal (temp, temp))
+	if (g_strcmp0 (temp, temp) == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "incorrect ret when both same");
 
 	/************************************************************/
 	egg_test_title (test, "egg_strequal both const");
-	if (egg_strequal ("dave", "dave"))
+	if (g_strcmp0 ("dave", "dave") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "incorrect ret when both same");
@@ -373,12 +373,12 @@ egg_string_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "id strcmp pass");
-	ret = egg_strequal ("moo;0.0.1;i386;fedora", "moo;0.0.1;i386;fedora");
+	ret = g_strcmp0 ("moo;0.0.1;i386;fedora", "moo;0.0.1;i386;fedora") == 0;
 	egg_test_assert (test, ret);
 
 	/************************************************************/
 	egg_test_title (test, "id strcmp fail");
-	ret = egg_strequal ("moo;0.0.1;i386;fedora", "moo;0.0.2;i386;fedora");
+	ret = g_strcmp0 ("moo;0.0.1;i386;fedora", "moo;0.0.2;i386;fedora") == 0;
 	egg_test_assert (test, !ret);
 
 	/************************************************************
@@ -412,7 +412,7 @@ egg_string_test (EggTest *test)
 	 ************************************************************/
 	egg_test_title (test, "replace start");
 	text_safe = egg_strreplace ("richard\nhughes", "r", "e");
-	if (egg_strequal (text_safe, "eichaed\nhughes"))
+	if (g_strcmp0 (text_safe, "eichaed\nhughes") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed the replace '%s'", text_safe);
@@ -421,7 +421,7 @@ egg_string_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "replace none");
 	text_safe = egg_strreplace ("richard\nhughes", "dave", "e");
-	if (egg_strequal (text_safe, "richard\nhughes"))
+	if (g_strcmp0 (text_safe, "richard\nhughes") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed the replace '%s'", text_safe);
@@ -430,7 +430,7 @@ egg_string_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "replace end");
 	text_safe = egg_strreplace ("richard\nhughes", "s", "e");
-	if (egg_strequal (text_safe, "richard\nhughee"))
+	if (g_strcmp0 (text_safe, "richard\nhughee") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed the replace '%s'", text_safe);
@@ -439,7 +439,7 @@ egg_string_test (EggTest *test)
 	/************************************************************/
 	egg_test_title (test, "replace unicode");
 	text_safe = egg_strreplace ("richard\n- hughes", "\n- ", "\n• ");
-	if (egg_strequal (text_safe, "richard\n• hughes"))
+	if (g_strcmp0 (text_safe, "richard\n• hughes") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed the replace '%s'", text_safe);

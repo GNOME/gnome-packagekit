@@ -478,16 +478,16 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	}
 
 	/* get nice name for tool name */
-	if (egg_strequal (obj->cmdline, "pkcon"))
+	if (g_strcmp0 (obj->cmdline, "pkcon") == 0)
 		/* TRANSLATORS: short name for pkcon */
 		tool = _("Command line client");
-	else if (egg_strequal (obj->cmdline, "gpk-application"))
+	else if (g_strcmp0 (obj->cmdline, "gpk-application") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Add/Remove Software");
-	else if (egg_strequal (obj->cmdline, "gpk-update-viewer"))
+	else if (g_strcmp0 (obj->cmdline, "gpk-update-viewer") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Update System");
-	else if (egg_strequal (obj->cmdline, "gpk-update-icon"))
+	else if (g_strcmp0 (obj->cmdline, "gpk-update-icon") == 0)
 		/* TRANSLATORS: short name for gpk-update-icon */
 		tool = _("Update Icon");
 	else

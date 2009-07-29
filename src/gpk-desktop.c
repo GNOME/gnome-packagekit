@@ -191,7 +191,7 @@ gpk_desktop_get_file_weight (const gchar *filename)
 
 	/* application */
 	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, NULL);
-	if (egg_strequal (value, G_KEY_FILE_DESKTOP_TYPE_APPLICATION))
+	if (g_strcmp0 (value, G_KEY_FILE_DESKTOP_TYPE_APPLICATION) == 0)
 		weight += 10;
 	g_free (value);
 
@@ -208,7 +208,7 @@ gpk_desktop_get_file_weight (const gchar *filename)
 	g_free (value);
 
 	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, NULL);
-	if (egg_strequal (value, "true"))
+	if (g_strcmp0 (value, "true") == 0)
 		weight -= 100;
 	g_free (value);
 

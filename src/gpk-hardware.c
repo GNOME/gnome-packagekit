@@ -103,9 +103,9 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 {
 	GpkHardware *hardware = GPK_HARDWARE (data);
 
-	if (egg_strequal (action, GPK_HARDWARE_INSTALL_ACTION)) {
+	if (g_strcmp0 (action, GPK_HARDWARE_INSTALL_ACTION) == 0) {
 		gpk_hardware_install_package (hardware);
-	} else if (egg_strequal (action, GPK_HARDWARE_DONT_PROMPT_ACTION)) {
+	} else if (g_strcmp0 (action, GPK_HARDWARE_DONT_PROMPT_ACTION) == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_HARDWARE);
 		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, FALSE, NULL);
 	} else {
