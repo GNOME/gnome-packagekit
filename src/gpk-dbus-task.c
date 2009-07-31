@@ -2242,7 +2242,9 @@ gpk_dbus_task_install_gstreamer_codec_part (GpkDbusTask *task, const gchar *code
 
 	/* get codec packages, FIXME: synchronous! */
 	pk_client_set_synchronous (task->priv->client_primary, TRUE, NULL);
-	ret = pk_client_what_provides (task->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), PK_PROVIDES_ENUM_CODEC, codec_desc, error);
+	ret = pk_client_what_provides (task->priv->client_primary,
+				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
+				       PK_PROVIDES_ENUM_CODEC, codec_desc, error);
 	pk_client_set_synchronous (task->priv->client_primary, FALSE, NULL);
 	if (!ret)
 		return NULL;
@@ -2604,7 +2606,8 @@ skip_checks:
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
 	/* action */
-	ret = pk_client_what_provides (task->priv->client_primary, 0,//pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+	ret = pk_client_what_provides (task->priv->client_primary,
+				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_types[0], &error_local);
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
@@ -2850,7 +2853,8 @@ skip_checks:
 
 		/* action: FIXME: synchronous */
 		pk_client_set_synchronous (task->priv->client_primary, TRUE, NULL);
-		ret = pk_client_what_provides (task->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+		ret = pk_client_what_provides (task->priv->client_primary,
+					       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
 					       PK_PROVIDES_ENUM_FONT, fonts[i], &error_local);
 		pk_client_set_synchronous (task->priv->client_primary, FALSE, NULL);
 		if (!ret) {
