@@ -1,3 +1,46 @@
+Version 2.27.5
+~~~~~~~~~~~~~~
+Released: 2009-08-03
+
+* Translations
+ - Updated Punjabi translation (A S Alam)
+ - Updated Portuguese translation (António Lima)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated German doc translation (Mario Blättermann)
+ - Updated German translation (Mario Blättermann)
+ - Updated Hebrew translation (Mark Krapivner)
+
+* New Features:
+ - Port all the code to using PolicyKit1 rather than PolicyKit (Richard Hughes)
+ - Reduce the size displayed as the package is downloaded in the update viewer (Richard Hughes)
+ - Scroll to the package being processed in the update list. Fixes rh#510984 (Richard Hughes)
+
+* Bugfix:
+ - Don't unconditionally force on NEWEST filtering in the update viewer (Richard Hughes)
+ - Fix compile with old versions of PackageKit (Richard Hughes)
+ - Fix up few translations to include trailing full stop. Fixes fd#22745 (Richard Hughes)
+ - Don't do the update check as soon as the UpdatesChanged signal is recieved (Richard Hughes)
+ - Don't flash the gpk-repo UI when we enable or disable repos. Fixes half of rh#510730 (Richard Hughes)
+ - Check the language tags before trying to parse them. Fixes fd#22792 (Richard Hughes)
+ - Ensure we re-set the proxy when packagekitd re-appears on the bus (Richard Hughes)
+ - When doing queries automatically, don't spam them with locking failure messages. Fixes gnome#588698 (Richard Hughes)
+ - Build a private library and link that to reduce the size of the package by 300kb (Richard Hughes)
+ - Don't set the package view insensitive when doing searches, and add a delay to prevent flicker. Fixes rh#510730 (Richard Hughes)
+ - Make some of the libnotify bubbles more sane (Richard Hughes)
+ - Don't show (0) in the update viewer if there is nothing to download (Richard Hughes)
+ - Don't show the 'Update System Now' link in the update dropdown, the user should use the update viewer (Richard Hughes)
+ - Add in different translations for encode, decode and unknown. Fixes rh#497737 (Richard Hughes)
+ - Make the arch filter a single tickbox, not an option group (Richard Hughes)
+ - Don't print the package list when we have a RestartRequired of a security type (Richard Hughes)
+ - Add some missing punctuation in some of the restart strings (Richard Hughes)
+ - Reduce the size of two of the messagebox titles (Richard Hughes)
+ - Add a 'Selected packages' group in add/remove programs like kpackagekit (Richard Hughes)
+ - Use the correct icon in the panel when restarts are required (Richard Hughes)
+ - Actually make the gnome-session code work by using the correct callback signatures (Richard Hughes)
+ - We don't require DeviceKit, so don't check for it. Fixes bgo#590157 (Richard Hughes)
+ - Only return the newest packages for mime, fonts and codec helpers and to perhaps fix rh#514879 (Richard Hughes)
+
 Version 2.27.3
 ~~~~~~~~~~~~~~
 Released: 2009-06-01
