@@ -245,6 +245,7 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
 	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,	"dialog-information"},
+	{PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,	"dialog-information"},
 	{0, NULL}
 };
 
@@ -834,7 +835,9 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 	case PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("Package is already installed");
 		break;
-
+	case PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED:
+		text = _("Automatic cleanup is being ignored");
+		break;
 	default:
 		egg_warning ("message unrecognised: %i", message);
 	}

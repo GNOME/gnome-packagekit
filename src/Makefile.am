@@ -299,14 +299,61 @@ gpk_self_test_SOURCES =					\
 	gpk-self-test.c					\
 	egg-test.h					\
 	egg-test.c					\
+	egg-string.c					\
+	egg-string.h					\
+	egg-markdown.c					\
+	egg-markdown.h					\
+	egg-debug.c					\
+	egg-debug.h					\
+	gpk-enum.c					\
+	gpk-enum.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
+	gpk-language.c					\
+	gpk-language.h					\
+	gpk-modal-dialog.c				\
+	gpk-modal-dialog.h				\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
 	gpk-dbus-task.c					\
 	gpk-dbus-task.h					\
+	gpk-animated-icon.c				\
+	gpk-animated-icon.h				\
+	gpk-gnome.c					\
+	gpk-gnome.h					\
+	gpk-x11.c					\
+	gpk-x11.h					\
+	gpk-vendor.c					\
+	gpk-vendor.h					\
+	gpk-desktop.c					\
+	gpk-desktop.h					\
+	gpk-helper-repo-signature.c			\
+	gpk-helper-repo-signature.h			\
+	gpk-helper-eula.c				\
+	gpk-helper-eula.h				\
+	gpk-helper-run.c				\
+	gpk-helper-run.h				\
+	gpk-helper-deps-remove.c			\
+	gpk-helper-deps-remove.h			\
+	gpk-helper-deps-install.c			\
+	gpk-helper-deps-install.h			\
+	gpk-helper-deps-update.c			\
+	gpk-helper-deps-update.h			\
+	gpk-helper-untrusted.c				\
+	gpk-helper-untrusted.h				\
+	gpk-helper-chooser.c				\
+	gpk-helper-chooser.h				\
+	gpk-helper-media-change.c			\
+	gpk-helper-media-change.h			\
+	gpk-marshal.c					\
+	gpk-marshal.h					\
+	gpk-dialog.c					\
+	gpk-dialog.h					\
 	$(NULL)
 
 gpk_self_test_LDADD =					\
-	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(SELFTEST_LIBS)				\
 	$(NULL)
