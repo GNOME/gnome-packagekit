@@ -287,7 +287,6 @@ echo "
 
         GCC coverage profiling:    ${enable_gcov}
         GCC time profiling:        ${enable_gprof}
-        unique support:            ${have_unique}
         prefix:                    ${prefix}
         datadir:                   ${datadir}
         compiler:                  ${CC}
