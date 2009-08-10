@@ -1,4 +1,4 @@
-%define packagekit_version		0.4.8
+%define packagekit_version		0.5.0
 %define dbus_version			1.1.2
 %define dbus_glib_version		0.73
 %define glib2_version			2.18.0
@@ -110,7 +110,7 @@ for i in gpk-application gpk-update-viewer gpk-install-file gpk-log gpk-prefs gp
     $RPM_BUILD_ROOT%{_datadir}/applications/$i.desktop
 done
 
-%find_lang %name
+%find_lang %name --with-gnome
 
 %clean
 rm -rf $RPM_BUILD_ROOT
