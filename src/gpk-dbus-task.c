@@ -2088,7 +2088,10 @@ skip_checks:
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
 	/* find out if we can find a package */
-	ret = pk_client_resolve (task->priv->client_primary, PK_FILTER_ENUM_NONE, packages, &error_local);
+	ret = pk_client_resolve (task->priv->client_primary,
+				 pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH,
+							 PK_FILTER_ENUM_NEWEST, -1),
+				 packages, &error_local);
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_dbus_task_error_msg (task, _("Incorrect response from search"), error_local);
@@ -2197,7 +2200,10 @@ skip_checks:
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
 	/* do search */
-	ret = pk_client_search_file (task->priv->client_primary, PK_FILTER_ENUM_NONE, full_paths[0], &error_local);
+	ret = pk_client_search_file (task->priv->client_primary,
+				     pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH,
+							     PK_FILTER_ENUM_NEWEST, -1),
+				     full_paths[0], &error_local);
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_dbus_task_error_msg (task, _("Failed to search for file"), error_local);
@@ -2243,7 +2249,9 @@ gpk_dbus_task_install_gstreamer_codec_part (GpkDbusTask *task, const gchar *code
 	/* get codec packages, FIXME: synchronous! */
 	pk_client_set_synchronous (task->priv->client_primary, TRUE, NULL);
 	ret = pk_client_what_provides (task->priv->client_primary,
-				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
+				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED,
+							       PK_FILTER_ENUM_ARCH,
+							       PK_FILTER_ENUM_NEWEST, -1),
 				       PK_PROVIDES_ENUM_CODEC, codec_desc, error);
 	pk_client_set_synchronous (task->priv->client_primary, FALSE, NULL);
 	if (!ret)
@@ -2607,7 +2615,9 @@ skip_checks:
 
 	/* action */
 	ret = pk_client_what_provides (task->priv->client_primary,
-				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
+				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED,
+							       PK_FILTER_ENUM_ARCH,
+							       PK_FILTER_ENUM_NEWEST, -1),
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_types[0], &error_local);
 	if (!ret) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
@@ -2854,7 +2864,9 @@ skip_checks:
 		/* action: FIXME: synchronous */
 		pk_client_set_synchronous (task->priv->client_primary, TRUE, NULL);
 		ret = pk_client_what_provides (task->priv->client_primary,
-					       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1),
+					       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED,
+								       PK_FILTER_ENUM_ARCH,
+								       PK_FILTER_ENUM_NEWEST, -1),
 					       PK_PROVIDES_ENUM_FONT, fonts[i], &error_local);
 		pk_client_set_synchronous (task->priv->client_primary, FALSE, NULL);
 		if (!ret) {
