@@ -44,7 +44,6 @@
 #include "gpk-gnome.h"
 #include "gpk-dialog.h"
 #include "gpk-error.h"
-#include "gpk-consolekit.h"
 #include "gpk-cell-renderer-size.h"
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"

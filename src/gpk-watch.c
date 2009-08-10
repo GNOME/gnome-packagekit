@@ -41,6 +41,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-console-kit.h"
 
 #include "gpk-common.h"
 #include "gpk-session.h"
@@ -48,7 +49,6 @@
 #include "gpk-watch.h"
 #include "gpk-modal-dialog.h"
 #include "gpk-inhibit.h"
-#include "gpk-consolekit.h"
 #include "gpk-enum.h"
 
 static void     gpk_watch_finalize	(GObject       *object);
@@ -1275,7 +1275,18 @@ gpk_watch_menu_log_out_cb (GtkMenuItem *item, gpointer data)
 static void
 gpk_watch_menu_restart_cb (GtkMenuItem *item, gpointer data)
 {
-	gpk_restart_system ();
+	gboolean ret;
+	GError *error = NULL;
+	EggConsoleKit *console;
+
+	/* restart using ConsoleKit */
+	console = egg_console_kit_new ();
+	ret = egg_console_kit_restart (console, &error);
+	if (!ret) {
+		egg_warning ("restarting failed: %s", error->message);
+		g_error_free (error);
+	}
+	g_object_unref (console);
 }
 
 /**

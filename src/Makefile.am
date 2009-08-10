@@ -70,8 +70,6 @@ libgpkshared_a_SOURCES =				\
 	gpk-desktop.h					\
 	gpk-animated-icon.c				\
 	gpk-animated-icon.h				\
-	gpk-consolekit.c				\
-	gpk-consolekit.h				\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
 	gpk-vendor.c					\

@@ -44,7 +44,6 @@
 #include "egg-string.h"
 #include "egg-dbus-monitor.h"
 
-#include "gpk-consolekit.h"
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-auto-refresh.h"
