@@ -1608,13 +1608,6 @@ gpk_dbus_task_install_package_files_verify (GpkDbusTask *task, GPtrArray *array,
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		/* TRANSLATORS: title: the user cancelled the action */
-		title = ngettext ("The file was not installed",
-				  "The files were not installed", array->len);
-		gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-		gpk_modal_dialog_set_title (task->priv->dialog, title);
-		gpk_modal_dialog_present_with_time (task->priv->dialog, task->priv->timestamp);
-		gpk_modal_dialog_run (task->priv->dialog);
 		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Aborted");
 		ret = FALSE;
 		goto out;
