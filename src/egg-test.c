@@ -188,12 +188,23 @@ egg_test_end (EggTest *test)
 		g_print ("Not started test! Cannot finish!\n");
 		exit (1);
 	}
-	g_print ("OK\n");
 
 	/* disable hang check */
 	if (test->hang_loop_id != 0) {
 		g_source_remove (test->hang_loop_id);
 		test->hang_loop_id = 0;
+	}
+
+	/* remove all the test callbacks */
+	while (g_source_remove_by_user_data (test))
+		g_print ("WARNING: removed callback for test module");
+
+	/* check we don't have any pending iterations */
+	if (g_main_context_pending (NULL)) {
+		g_print ("WARNING: Pending event in context! Running to completion... ");
+		while (g_main_context_pending (NULL))
+			g_main_context_iteration (NULL, TRUE);
+		g_print ("Done!\n");
 	}
 
 	test->started = FALSE;
@@ -332,6 +343,11 @@ egg_test_get_data_file (const gchar *filename)
 	g_free (full);
 
 	/* check to see if we are being run in make check */
+	full = g_build_filename ("..", "..", "data", "tests", filename, NULL);
+	ret = g_file_test (full, G_FILE_TEST_EXISTS);
+	if (ret)
+		return full;
+	g_free (full);
 	full = g_build_filename ("..", "..", "..", "data", "tests", filename, NULL);
 	ret = g_file_test (full, G_FILE_TEST_EXISTS);
 	if (ret)
