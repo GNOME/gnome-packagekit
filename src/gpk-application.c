@@ -1774,7 +1774,7 @@ gpk_application_quit (GpkApplication *application)
 						 GTK_MESSAGE_WARNING, GTK_BUTTONS_CANCEL,
 						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
 						 "%s", _("Changes not applied"));
-		gtk_dialog_add_button (GTK_DIALOG (dialog), _("Close Anyway"), GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG (dialog), _("Close _Anyway"), GTK_RESPONSE_OK);
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 							  "%s\n%s",
 							  /* TRANSLATORS: tell the user the problem */
