@@ -28,6 +28,26 @@ AC_SUBST(PYTHON_PACKAGE_DIR)
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 dnl ---------------------------------------------------------------------------
+dnl - Use strict options (default enabled for devs, disabled in releases)
+dnl ---------------------------------------------------------------------------
+
+dnl if .git directory is present, considering we are working in the repository
+if test -d ".git"; then
+	default_strict=yes
+else
+	default_strict=no
+fi
+
+AC_ARG_ENABLE(strict, AC_HELP_STRING([--enable-strict],
+							[Enable strict compilation options]), enable_strict=$enableval,
+							enable_strict=$default_strict)
+if test x$enable_strict != xno; then
+	if test "$GCC" = "yes"; then
+		CPPFLAGS="$CPPFLAGS -Werror"
+	fi
+fi
+
+dnl ---------------------------------------------------------------------------
 dnl - Extra verbose warning switches
 dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
@@ -36,7 +56,6 @@ if test "$GCC" = "yes"; then
 #	CPPFLAGS="$CPPFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
 	CPPFLAGS="$CPPFLAGS -DGSEAL_ENABLE"
 	CPPFLAGS="$CPPFLAGS -Wall -Wreturn-type"
-	CPPFLAGS="$CPPFLAGS -Werror"
 #	CPPFLAGS="$CPPFLAGS -Wextra"
 	CPPFLAGS="$CPPFLAGS -Wdeclaration-after-statement"
 #	CPPFLAGS="$CPPFLAGS -Wmissing-declarations"
