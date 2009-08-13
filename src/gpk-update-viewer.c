@@ -529,7 +529,7 @@ gpk_update_viewer_details_cb (PkClient *client, const PkDetailsObj *obj, gpointe
 
 	path = gpk_update_viewer_model_get_path (model, obj->id);
 	if (path == NULL) {
-		egg_debug ("not found ID for group");
+		egg_debug ("not found ID for details");
 		return;
 	}
 
