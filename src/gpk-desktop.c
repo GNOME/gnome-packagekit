@@ -218,6 +218,11 @@ gpk_desktop_get_file_weight (const gchar *filename)
 		weight += 30;
 	g_free (value);
 
+	/* has autostart phase */
+	value = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "X-GNOME-Autostart-Phase", NULL);
+	if (value != NULL)
+		weight -= 30;
+	g_free (value);
 out:
 	g_key_file_free (file);
 	return weight;
@@ -233,9 +238,9 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 	const gchar *filename;
 	gchar *best_file = NULL;
 	guint i;
-	guint max = G_MININT;
-	guint max_index = 0;
+	gint max = G_MININT;
 	gint weight;
+	guint max_index = 0;
 
 	array = pk_desktop_get_files_for_package (desktop, package, NULL);
 	if (array == NULL)
@@ -253,6 +258,10 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 			max_index = i;
 		}
 	}
+
+	/* nothing was processed */
+	if (max == G_MININT)
+		goto out;
 
 	/* we've got a best */
 	best_file = g_strdup (g_ptr_array_index (array, max_index));
