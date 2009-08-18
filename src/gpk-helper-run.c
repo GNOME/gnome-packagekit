@@ -239,6 +239,13 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 		goto out;
 	}
 
+	/* is WM? */
+	ret = !g_key_file_has_group (file, "Window Manager");
+	if (!ret) {
+		egg_debug ("ignoring Window Manager");
+		goto out;
+	}
+
 	/* get exec */
 	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TRY_EXEC, NULL);
 	if (exec == NULL)
