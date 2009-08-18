@@ -1791,7 +1791,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	}
 
 	/* finished depends check, show any extras */
-	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
+	if (exit == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_GET_DEPENDS) {
 
 		/* show deps dialog */
 		list = pk_client_get_package_list (client);
@@ -1946,6 +1946,8 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	/* we pressed cancel */
 	if (exit != PK_EXIT_ENUM_SUCCESS) {
 		gpk_update_viewer_undisable_packages ();
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
+		gtk_widget_set_sensitive (widget, TRUE);
 	}
 }
 
