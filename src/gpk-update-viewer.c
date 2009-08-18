@@ -2120,14 +2120,20 @@ gpk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const g
 	/* ignore some errors */
 	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_debug ("error ignored %s\n%s", pk_error_enum_to_text (code), details);
+		egg_debug ("error ignored %s: %s", pk_error_enum_to_text (code), details);
 		return;
 	}
 
 	/* ignore the ones we can handle */
 	if (code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
 	    pk_error_code_is_need_untrusted (code)) {
-		egg_debug ("error ignored as we're handling %s\n%s", pk_error_enum_to_text (code), details);
+		egg_debug ("error ignored as we're handling %s: %s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+	/* ignore not authorised, which seems odd but this will happen if the user clicks cancel */
+	if (code == PK_ERROR_ENUM_NOT_AUTHORIZED) {
+		egg_debug ("auth failure '%s' ignored: %s", pk_error_enum_to_text (code), details);
 		return;
 	}
 
