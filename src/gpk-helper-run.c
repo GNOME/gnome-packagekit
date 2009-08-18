@@ -214,6 +214,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	GKeyFile *file;
 	PkPackageId *id;
 	gint weight;
+	gboolean hidden;
 
 	/* get weight */
 	weight = gpk_desktop_get_file_weight (filename);
@@ -231,7 +232,15 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	}
 
 	/* get exec */
-	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "TryExec", NULL);
+	hidden = g_key_file_get_boolean (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_HIDDEN, NULL);
+	if (hidden) {
+		egg_debug ("hidden, so ignoring %s", filename);
+		ret = FALSE;
+		goto out;
+	}
+
+	/* get exec */
+	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TRY_EXEC, NULL);
 	if (exec == NULL)
 		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
 
@@ -242,20 +251,20 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	}
 
 	/* get name */
-	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Name", NULL, NULL);
+	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL, NULL);
 	if (text != NULL)
 		name = g_markup_escape_text (text, -1);
 	g_free (text);
 
 	/* get icon */
-	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Icon", NULL);
+	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
 	if (icon == NULL || !gpk_desktop_check_icon_valid (icon)) {
 		g_free (icon);
 		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
 	}
 
 	/* get summary */
-	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "Comment", NULL, NULL);
+	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
 	if (text == NULL)
 		text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
 	if (text != NULL)
