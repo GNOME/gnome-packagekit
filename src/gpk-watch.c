@@ -765,17 +765,17 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 		NULL};
 	const char *license[] = {
 		N_("Licensed under the GNU General Public License Version 2"),
-		N_("PackageKit is free software; you can redistribute it and/or\n"
-		   "modify it under the terms of the GNU General Public License\n"
-		   "as published by the Free Software Foundation; either version 2\n"
+		N_("PackageKit is free software; you can redistribute it and/or "
+		   "modify it under the terms of the GNU General Public License "
+		   "as published by the Free Software Foundation; either version 2 "
 		   "of the License, or (at your option) any later version."),
-		N_("PackageKit is distributed in the hope that it will be useful,\n"
-		   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+		N_("PackageKit is distributed in the hope that it will be useful, "
+		   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
 		   "GNU General Public License for more details."),
-		N_("You should have received a copy of the GNU General Public License\n"
-		   "along with this program; if not, write to the Free Software\n"
-		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
+		N_("You should have received a copy of the GNU General Public License "
+		   "along with this program; if not, write to the Free Software "
+		   "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
 		   "02110-1301, USA.")
 	};
 	const char *translators = _("translator-credits");
@@ -796,6 +796,7 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007-2009 Richard Hughes",
 			       "license", license_trans,
+			       "wrap-license", TRUE,	
 			       "website-label", _("PackageKit Website"),
 			       "website", "www.packagekit.org",
 			       "comments", "PackageKit",
