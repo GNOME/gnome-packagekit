@@ -12,6 +12,7 @@ INCLUDES =						\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(UNIQUE_CFLAGS)				\
 	$(GTK_CFLAGS)					\
+	$(GUDEV_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
 	-DI_KNOW_THE_DEVICEKIT_POWER_API_IS_SUBJECT_TO_CHANGE \
 	$(DEVKIT_CFLAGS)				\
@@ -110,6 +111,7 @@ shared_LIBS =						\
 	$(DBUS_LIBS)					\
 	$(GCONF_LIBS)					\
 	$(GTK_LIBS)					\
+	$(GUDEV_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
 	$(UNIQUE_LIBS)					\
