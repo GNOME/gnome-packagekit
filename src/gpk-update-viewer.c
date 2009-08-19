@@ -78,6 +78,7 @@ static PkRestartEnum restart_update = PK_RESTART_ENUM_NONE;
 static guint size_total = 0;
 static GConfClient *gconf_client = NULL;
 static gchar **install_package_ids = NULL;
+static EggConsoleKit *console = NULL;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -138,18 +139,15 @@ out:
 static void
 gpk_update_viewer_shutdown (void)
 {
-	EggConsoleKit *console;
 	GError *error = NULL;
 	gboolean ret;
 
 	/* use consolekit to restart */
-	console = egg_console_kit_new ();
 	ret = egg_console_kit_restart (console, &error);
 	if (!ret) {
 		egg_warning ("cannot restart: %s", error->message);
 		g_error_free (error);
 	}
-	g_object_unref (console);
 }
 
 /**
@@ -1560,6 +1558,7 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 	const gchar *message;
 	const gchar *button;
 	GtkResponseType response;
+	gboolean show_button = TRUE;
 
 	/* get the text */
 	title = gpk_restart_enum_to_localised_text (restart);
@@ -1597,7 +1596,16 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
 					 "%s", title);
-	gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
+
+	/* check to see if restart is possible */
+	if (restart == PK_RESTART_ENUM_SYSTEM ||
+	    restart == PK_RESTART_ENUM_SECURITY_SYSTEM) {
+		egg_console_kit_can_restart (console, &show_button, NULL);
+	}
+
+	/* only show the button if we can do the action */
+	if (show_button)
+		gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
@@ -2855,6 +2863,7 @@ main (int argc, char *argv[])
 
 	/* get GConf instance */
 	gconf_client = gconf_client_get_default ();
+	console = egg_console_kit_new ();
 
 	g_signal_connect (unique_app, "message-received", G_CALLBACK (gpk_update_viewer_message_received_cb), NULL);
 
@@ -3074,6 +3083,7 @@ out_build:
 	g_object_unref (markdown);
 	g_object_unref (client_primary);
 	g_object_unref (client_secondary);
+	g_object_unref (console);
 	g_object_unref (builder);
 unique_out:
 	g_object_unref (unique_app);

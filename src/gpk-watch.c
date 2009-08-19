@@ -76,6 +76,7 @@ struct GpkWatchPrivate
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
 	gboolean		 hide_warning;
+	EggConsoleKit		*console;
 };
 
 typedef struct {
@@ -1273,20 +1274,17 @@ gpk_watch_menu_log_out_cb (GtkMenuItem *item, gpointer data)
  * gpk_watch_menu_restart_cb:
  **/
 static void
-gpk_watch_menu_restart_cb (GtkMenuItem *item, gpointer data)
+gpk_watch_menu_restart_cb (GtkMenuItem *item, GpkWatch *watch)
 {
 	gboolean ret;
 	GError *error = NULL;
-	EggConsoleKit *console;
 
 	/* restart using ConsoleKit */
-	console = egg_console_kit_new ();
-	ret = egg_console_kit_restart (console, &error);
+	ret = egg_console_kit_restart (watch->priv->console, &error);
 	if (!ret) {
 		egg_warning ("restarting failed: %s", error->message);
 		g_error_free (error);
 	}
-	g_object_unref (console);
 }
 
 /**
@@ -1303,6 +1301,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	GtkWidget *image;
 	guint len;
 	gboolean show_hide = FALSE;
+	gboolean can_restart = FALSE;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
@@ -1338,8 +1337,10 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	}
 
 	/* restart computer */
-	if (watch->priv->restart == PK_RESTART_ENUM_SYSTEM ||
-	    watch->priv->restart == PK_RESTART_ENUM_SECURITY_SYSTEM) {
+	egg_console_kit_can_restart (watch->priv->console, &can_restart, NULL);
+	if (can_restart &&
+	    (watch->priv->restart == PK_RESTART_ENUM_SYSTEM ||
+	     watch->priv->restart == PK_RESTART_ENUM_SECURITY_SYSTEM)) {
 		/* TRANSLATORS: this menu item restarts the computer after an update */
 		widget = gtk_image_menu_item_new_with_mnemonic (_("_Restart computer"));
 		image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
@@ -1644,6 +1645,7 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->notification_cached_messages = NULL;
 	watch->priv->restart = PK_RESTART_ENUM_NONE;
 	watch->priv->hide_warning = FALSE;
+	watch->priv->console = egg_console_kit_new ();
 
 	watch->priv->gconf_client = gconf_client_get_default ();
 
@@ -1753,6 +1755,7 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->gconf_client);
 	g_object_unref (watch->priv->client_primary);
 	g_object_unref (watch->priv->dialog);
+	g_object_unref (watch->priv->console);
 
 	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
 }
