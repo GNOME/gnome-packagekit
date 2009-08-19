@@ -41,6 +41,7 @@
 
 #include "egg-debug.h"
 #include "egg-string.h"
+#include "egg-console-kit.h"
 
 #include "gpk-common.h"
 #include "gpk-error.h"
@@ -59,6 +60,7 @@ struct GpkFirmwarePrivate
 	PkPackageList		*packages_found;
 	GPtrArray		*array_requested;
 	GConfClient		*gconf_client;
+	EggConsoleKit		*consolekit;
 };
 
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
@@ -103,12 +105,20 @@ static void
 gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data)
 {
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
+	gboolean ret;
+	GError *error = NULL;
 
 	if (g_strcmp0 (action, "install-firmware") == 0) {
 		gpk_firmware_install_file (firmware);
 	} else if (g_strcmp0 (action, "do-not-show-prompt-firmware") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_FIRMWARE);
 		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, FALSE, NULL);
+	} else if (g_strcmp0 (action, "restart-now") == 0) {
+		ret = egg_console_kit_restart (firmware->priv->consolekit, &error);
+		if (!ret) {
+			egg_warning ("failed to reset: %s", error->message);
+			g_error_free (error);
+		}
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
@@ -137,9 +147,16 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 		goto out;
 	}
 
+	/* say bodge */
+	pk_client_set_synchronous (firmware->priv->client_primary, TRUE, NULL);
+
 	/* search for newest not installed package */
 	filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1);
 	ret = pk_client_search_file (firmware->priv->client_primary, filter, filename, &error);
+
+	/* unsay bodge */
+	pk_client_set_synchronous (firmware->priv->client_primary, FALSE, NULL);
+
 	if (!ret) {
 		egg_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);
@@ -285,7 +302,7 @@ gpk_firmware_udev_text_decode (const gchar *data)
 		if (memcmp (&data[i], "\\x2f", 4) == 0) {
 			decode[j] = '/';
 			i += 4;
-		}else if (memcmp (&data[i], "\\x5c", 4) == 0) {
+		} else if (memcmp (&data[i], "\\x5c", 4) == 0) {
 			decode[j] = '\\';
 			i += 4;
 		} else {
@@ -310,11 +327,11 @@ gpk_firmware_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar 
 		return;
 	}
 
-//	/* ignore the ones we can handle */
-//	if (pk_error_code_is_need_untrusted (code)) {
-//		egg_debug ("error ignored as we're handling %s: %s", pk_error_enum_to_text (code), details);
-//		return;
-//	}
+	/* ignore the ones we can handle */
+	if (pk_error_code_is_need_untrusted (code)) {
+		egg_debug ("error ignored as we're handling %s: %s", pk_error_enum_to_text (code), details);
+		return;
+	}
 
 	/* ignore not authorised, which seems odd but this will happen if the user clicks cancel */
 	if (code == PK_ERROR_ENUM_NOT_AUTHORIZED) {
@@ -324,6 +341,76 @@ gpk_firmware_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar 
 
 	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
 			  gpk_error_enum_to_localised_message (code), details);
+}
+
+/**
+ * gpk_firmware_primary_requeue:
+ **/
+static gboolean
+gpk_firmware_primary_requeue (GpkFirmware *firmware)
+{
+	gboolean ret;
+	GError *error = NULL;
+
+	/* retry new action */
+	ret = pk_client_requeue (firmware->priv->client_primary, &error);
+	if (!ret) {
+		egg_warning ("Failed to requeue: %s", error->message);
+		g_error_free (error);
+	}
+	return ret;
+}
+
+/**
+ * gpk_update_viewer_finished_cb:
+ **/
+static void
+gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkFirmware *firmware)
+{
+	gboolean can_restart = FALSE;
+	PkRoleEnum role;
+	NotifyNotification *notification;
+	const gchar *message;
+	gboolean ret;
+	GError *error = NULL;
+
+	pk_client_get_role (client, &role, NULL, NULL);
+	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
+
+	/* need to handle retry with only_trusted=FALSE */
+	if (exit_enum == PK_EXIT_ENUM_NEED_UNTRUSTED) {
+		egg_debug ("need to handle untrusted");
+		pk_client_set_only_trusted (client, FALSE);
+		gpk_firmware_primary_requeue (firmware);
+		return;
+	}
+
+	/* tell the user we installed okay */
+	if (exit_enum == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
+
+		/* TRANSLATORS: we need to restart so the new hardware can re-request the firmware */
+		message = _("You will need to restart this computer before the hardware will work correctly.");
+
+		/* TRANSLATORS: title of libnotify bubble */
+		notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
+		notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+		notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+
+		/* only show the restart button if we can restart */
+		egg_console_kit_can_restart (firmware->priv->consolekit, &can_restart, NULL);
+		if (can_restart) {
+			notify_notification_add_action (notification, "restart-now",
+							/* TRANSLATORS: button label */
+							_("Restart now"), gpk_firmware_libnotify_cb, firmware, NULL);
+		}
+
+		/* show the bubble */
+		ret = notify_notification_show (notification, &error);
+		if (!ret) {
+			egg_warning ("error: %s", error->message);
+			g_error_free (error);
+		}
+	}
 }
 
 /**
@@ -358,12 +445,14 @@ gpk_firmware_init (GpkFirmware *firmware)
 	firmware->priv->packages_found = pk_package_list_new ();
 	firmware->priv->array_requested = g_ptr_array_new ();
 	firmware->priv->gconf_client = gconf_client_get_default ();
+	firmware->priv->consolekit = egg_console_kit_new ();
 	firmware->priv->client_primary = pk_client_new ();
-	pk_client_set_synchronous (firmware->priv->client_primary, TRUE, NULL);
 	pk_client_set_use_buffer (firmware->priv->client_primary, TRUE, NULL);
 
 	g_signal_connect (firmware->priv->client_primary, "error-code",
 			  G_CALLBACK (gpk_firmware_error_code_cb), firmware);
+	g_signal_connect (firmware->priv->client_primary, "finished",
+			  G_CALLBACK (gpk_update_viewer_finished_cb), firmware);
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
@@ -441,6 +530,7 @@ gpk_firmware_finalize (GObject *object)
 	g_object_unref (firmware->priv->packages_found);
 	g_object_unref (firmware->priv->client_primary);
 	g_object_unref (firmware->priv->gconf_client);
+	g_object_unref (firmware->priv->consolekit);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
 }
