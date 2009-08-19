@@ -34,10 +34,14 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib/packagekit.h>
+#ifdef GPK_BUILD_GUDEV
+#include <gudev/gudev.h>
+#endif
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -63,7 +67,90 @@ struct GpkFirmwarePrivate
 	EggConsoleKit		*consolekit;
 };
 
+typedef enum {
+	GPK_FIRMWARE_SUBSYSTEM_USB,
+	GPK_FIRMWARE_SUBSYSTEM_PCI,
+	GPK_FIRMWARE_SUBSYSTEM_UNKNOWN
+} GpkFirmwareSubsystem;
+
+typedef struct {
+	gchar			*filename;
+	gchar			*model;
+	GpkFirmwareSubsystem	 subsystem;
+} GpkFirmwareRequest;
+
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
+
+/**
+ * gpk_firmware_subsystem_can_replug:
+ **/
+static gboolean
+gpk_firmware_subsystem_can_replug (GpkFirmwareSubsystem subsystem)
+{
+	if (subsystem == GPK_FIRMWARE_SUBSYSTEM_USB)
+		return TRUE;
+	return FALSE;
+}
+
+/**
+ * gpk_firmware_request_new:
+ **/
+static GpkFirmwareRequest *
+gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
+{
+	GpkFirmwareRequest *req;
+#ifdef GPK_BUILD_GUDEV
+	GUdevDevice *device;
+	GUdevClient *client;
+	const gchar *subsystem;
+	const gchar *model;
+#endif
+
+	req = g_new0 (GpkFirmwareRequest, 1);
+	req->filename = g_strdup (filename);
+	req->subsystem = GPK_FIRMWARE_SUBSYSTEM_UNKNOWN;
+#ifdef GPK_BUILD_GUDEV
+
+	/* get all subsystems */
+	client = g_udev_client_new (NULL);
+	device = g_udev_client_query_by_sysfs_path (client, sysfs_path);
+	if (device == NULL)
+		goto out;
+
+	/* find subsystem, which will affect if we have to replug, or reboot */
+	subsystem = g_udev_device_get_subsystem (device);
+	if (g_strcmp0 (subsystem, "usb") == 0) {
+		req->subsystem = GPK_FIRMWARE_SUBSYSTEM_USB;
+	} else if (g_strcmp0 (subsystem, "pci") == 0) {
+		req->subsystem = GPK_FIRMWARE_SUBSYSTEM_PCI;
+	} else {
+		egg_warning ("subsystem unrecognised: %s", subsystem);
+	}
+
+	/* get model, so we can show something sensible */
+	model = g_udev_device_get_property (device, "ID_MODEL");
+	if (model != NULL && model[0] != '\0') {
+		req->model = g_strdup (model);
+		/* replace invalid chars */
+		g_strdelimit (req->model, "_", ' ');
+	}
+out:
+	g_object_unref (device);
+	g_object_unref (client);
+#endif
+	return req;
+}
+
+/**
+ * gpk_firmware_request_free:
+ **/
+static void
+gpk_firmware_request_free (GpkFirmwareRequest *req)
+{
+	g_free (req->filename);
+	g_free (req->model);
+	g_free (req);
+}
 
 /**
  * gpk_firmware_install_file:
@@ -187,23 +274,24 @@ gpk_firmware_timeout_cb (gpointer data)
 {
 	guint i;
 	gboolean ret;
-	const gchar *filename;
-	const gchar *message;
+	GString *string;
 	GpkFirmware *firmware = GPK_FIRMWARE (data);
 	NotifyNotification *notification;
 	GPtrArray *array;
 	GError *error = NULL;
 	PkPackageObj *obj = NULL;
+	const GpkFirmwareRequest *req;
+	gboolean has_data = FALSE;
 
-	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	/* message string */
+	string = g_string_new ("");
 
 	/* try to find each firmware file in an available package */
 	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
+		req = g_ptr_array_index (array, i);
 		/* save to new array if we found one package for this file */
-		obj = gpk_firmware_check_available (firmware, filename);
+		obj = gpk_firmware_check_available (firmware, req->filename);
 		if (obj != NULL) {
 			pk_obj_list_add (PK_OBJ_LIST (firmware->priv->packages_found), obj);
 			pk_package_obj_free (obj);
@@ -219,10 +307,31 @@ gpk_firmware_timeout_cb (gpointer data)
 	/* check we don't want the same package more than once */
 	pk_obj_list_remove_duplicate (PK_OBJ_LIST (firmware->priv->packages_found));
 
+	/* have we got any models to list */
+	for (i=0; i<array->len; i++) {
+		req = g_ptr_array_index (array, i);
+		if (req->model != NULL) {
+			has_data = TRUE;
+			break;
+		}
+	}
+
 	/* TRANSLATORS: we need another package to keep udev quiet */
-	message = _("Additional firmware is required to make hardware in this computer function correctly.");
+	g_string_append (string, _("Additional firmware is required to make hardware in this computer function correctly."));
+
+	/* sdd what information we have */
+	if (has_data) {
+		g_string_append (string, "\n");
+		for (i=0; i<array->len; i++) {
+			req = g_ptr_array_index (array, i);
+			if (req->model != NULL)
+				g_string_append_printf (string, "\n• %s", req->model);
+		}
+		g_string_append (string, "\n");
+	}
+
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional firmware required"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional firmware required"), string->str, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "install-firmware",
@@ -237,6 +346,7 @@ gpk_firmware_timeout_cb (gpointer data)
 	}
 
 out:
+	g_string_free (string, TRUE);
 	/* never repeat */
 	return FALSE;
 }
@@ -250,9 +360,9 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 {
 	gchar *banned_str;
 	gchar **banned = NULL;
-	gchar *filename;
 	guint i, j;
 	gboolean ret;
+	GpkFirmwareRequest *req;
 
 	/* get from gconf */
 	banned_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_BANNED_FIRMWARE, NULL);
@@ -272,12 +382,12 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 
 	/* remove any banned pattern matches */
 	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
+		req = g_ptr_array_index (array, i);
 		for (j=0; banned[j] != NULL; j++) {
-			ret = g_pattern_match_simple (banned[j], filename);
+			ret = g_pattern_match_simple (banned[j], req->filename);
 			if (ret) {
-				egg_debug ("match %s for %s, removing", banned[j], filename);
-				g_free (filename);
+				egg_debug ("match %s for %s, removing", banned[j], req->filename);
+				gpk_firmware_request_free (req);
 				g_ptr_array_remove_index_fast (array, i);
 			}
 		}
@@ -362,17 +472,80 @@ gpk_firmware_primary_requeue (GpkFirmware *firmware)
 }
 
 /**
- * gpk_update_viewer_finished_cb:
+ * gpk_firmware_require_restart:
  **/
 static void
-gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkFirmware *firmware)
+gpk_firmware_require_restart (GpkFirmware *firmware)
 {
+	const gchar *message;
 	gboolean can_restart = FALSE;
-	PkRoleEnum role;
+	gboolean ret;
+	GError *error = NULL;
 	NotifyNotification *notification;
+
+	/* TRANSLATORS: we need to restart so the new hardware can re-request the firmware */
+	message = _("You will need to restart this computer before the hardware will work correctly.");
+
+	/* TRANSLATORS: title of libnotify bubble */
+	notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+
+	/* only show the restart button if we can restart */
+	egg_console_kit_can_restart (firmware->priv->consolekit, &can_restart, NULL);
+	if (can_restart) {
+		notify_notification_add_action (notification, "restart-now",
+						/* TRANSLATORS: button label */
+						_("Restart now"), gpk_firmware_libnotify_cb, firmware, NULL);
+	}
+
+	/* show the bubble */
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
+ * gpk_firmware_require_replug:
+ **/
+static void
+gpk_firmware_require_replug (GpkFirmware *firmware)
+{
 	const gchar *message;
 	gboolean ret;
 	GError *error = NULL;
+	NotifyNotification *notification;
+
+	/* TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware */
+	message = _("You will need to remove and then reinsert the hardware before it will work correctly.");
+
+	/* TRANSLATORS: title of libnotify bubble */
+	notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+
+	/* show the bubble */
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
+ * gpk_firmware_finished_cb:
+ **/
+static void
+gpk_firmware_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkFirmware *firmware)
+{
+	PkRoleEnum role;
+	gboolean restart = FALSE;
+	const GpkFirmwareRequest *req;
+	GPtrArray *array;
+	gboolean ret;
+	guint i;
 
 	pk_client_get_role (client, &role, NULL, NULL);
 	egg_debug ("role: %s, exit: %s", pk_role_enum_to_text (role), pk_exit_enum_to_text (exit_enum));
@@ -388,29 +561,120 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit_enum, guint run
 	/* tell the user we installed okay */
 	if (exit_enum == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
 
-		/* TRANSLATORS: we need to restart so the new hardware can re-request the firmware */
-		message = _("You will need to restart this computer before the hardware will work correctly.");
-
-		/* TRANSLATORS: title of libnotify bubble */
-		notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
-		notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
-		notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-
-		/* only show the restart button if we can restart */
-		egg_console_kit_can_restart (firmware->priv->consolekit, &can_restart, NULL);
-		if (can_restart) {
-			notify_notification_add_action (notification, "restart-now",
-							/* TRANSLATORS: button label */
-							_("Restart now"), gpk_firmware_libnotify_cb, firmware, NULL);
+		/* go through all the requests, and find the worst type */
+		array = firmware->priv->array_requested;
+		for (i=0; i<array->len; i++) {
+			req = g_ptr_array_index (array, i);
+			ret = gpk_firmware_subsystem_can_replug (req->subsystem);
+			if (!ret) {
+				restart = TRUE;
+				break;
+			}
 		}
 
-		/* show the bubble */
-		ret = notify_notification_show (notification, &error);
-		if (!ret) {
-			egg_warning ("error: %s", error->message);
-			g_error_free (error);
-		}
+		/* give the user the correct message */
+		if (restart)
+			gpk_firmware_require_restart (firmware);
+		else
+			gpk_firmware_require_replug (firmware);
 	}
+}
+
+/**
+ * gpk_firmware_get_device:
+ **/
+static gchar *
+gpk_firmware_get_device (GpkFirmware *firmware, const gchar *filename)
+{
+	GFile *file;
+	GFileInfo *info;
+	const gchar *symlink_path;
+	guint len;
+	gchar *syspath = NULL;
+	gchar **split = NULL;
+	GError *error = NULL;
+	gchar *target = NULL;
+	guint i;
+
+	/* get the file data */
+	file = g_file_new_for_path (filename);
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET, G_FILE_QUERY_INFO_NONE, NULL, &error);
+	if (info == NULL) {
+		egg_warning ("Failed to get symlink: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* /devices/pci0000:00/0000:00:1d.0/usb5/5-2/firmware/5-2 */
+	symlink_path = g_file_info_get_symlink_target (info);
+	if (symlink_path == NULL) {
+		egg_warning ("failed to get symlink target");
+		goto out;
+	}
+
+	/* prepend sys to make '/sys/devices/pci0000:00/0000:00:1d.0/usb5/5-2/firmware/5-2' */
+	syspath = g_strjoin (NULL, "/sys", symlink_path, NULL);
+
+	/* now find device without the junk */
+	split = g_strsplit (syspath, "/", -1);
+	len = g_strv_length (split);
+
+	/* start with the longest, and try to find a path that exists */
+	for (i=len; i>1; i--) {
+		split[i] = NULL;
+		target = g_strjoinv ("/", split);
+		egg_debug ("testing %s", target);
+		if (g_file_test (target, G_FILE_TEST_EXISTS))
+			goto out;
+		g_free (target);
+	}
+
+	/* ensure we return error if nothing found */
+	target = NULL;
+out:
+	if (info != NULL)
+		g_object_unref (info);
+	g_object_unref (file);
+	g_free (syspath);
+	g_strfreev (split);
+	return target;
+}
+
+/**
+ * gpk_firmware_add_file:
+ **/
+static void
+gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
+{
+	gchar *filename_path;
+	gchar *missing_path;
+	gchar *sysfs_path;
+	gboolean ret;
+	GpkFirmwareRequest *req;
+
+	/* this is the file we want to load */
+	filename_path = g_build_filename (GPK_FIRMWARE_LOADING_DIR, filename_no_path, NULL);
+
+	/* file already exists */
+	ret = g_file_test (filename_path, G_FILE_TEST_EXISTS);
+	if (ret)
+		goto out;
+
+	/* this is the file that udev created for us */
+	missing_path = g_build_filename (GPK_FIRMWARE_MISSING_DIR, filename_no_path, NULL);
+	egg_debug ("filename=%s -> %s", missing_path, filename_path);
+
+	/* get symlink target */
+	sysfs_path = gpk_firmware_get_device (firmware, missing_path);
+	if (sysfs_path == NULL)
+		goto out;
+
+	/* create new request object */
+	req = gpk_firmware_request_new (filename_path, sysfs_path);
+	g_ptr_array_add (firmware->priv->array_requested, req);
+out:
+	g_free (filename_path);
+	g_free (sysfs_path);
 }
 
 /**
@@ -437,9 +701,9 @@ gpk_firmware_init (GpkFirmware *firmware)
 	GDir *dir;
 	const gchar *filename;
 	gchar *filename_decoded;
-	gchar *filename_path;
 	guint i;
 	GPtrArray *array;
+	const GpkFirmwareRequest *req;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
 	firmware->priv->packages_found = pk_package_list_new ();
@@ -452,7 +716,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	g_signal_connect (firmware->priv->client_primary, "error-code",
 			  G_CALLBACK (gpk_firmware_error_code_cb), firmware);
 	g_signal_connect (firmware->priv->client_primary, "finished",
-			  G_CALLBACK (gpk_update_viewer_finished_cb), firmware);
+			  G_CALLBACK (gpk_firmware_finished_cb), firmware);
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
@@ -471,39 +735,32 @@ gpk_firmware_init (GpkFirmware *firmware)
 
 	/* find all the firmware requests */
 	filename = g_dir_read_name (dir);
-	array = firmware->priv->array_requested;
 	while (filename != NULL) {
 
-		/* decode udev text */
 		filename_decoded = gpk_firmware_udev_text_decode (filename);
-		filename_path = g_build_filename (GPK_FIRMWARE_LOADING_DIR, filename_decoded, NULL);
-		egg_debug ("filename=%s -> %s", filename, filename_path);
-
-		/* file already exists */
-		ret = g_file_test (filename_path, G_FILE_TEST_EXISTS);
-		if (!ret)
-			g_ptr_array_add (array, g_strdup (filename_path));
-
+		gpk_firmware_add_file (firmware, filename_decoded);
 		g_free (filename_decoded);
-		g_free (filename_path);
+
 		/* next file */
 		filename = g_dir_read_name (dir);
 	}
 	g_dir_close (dir);
 
 	/* debugging */
+	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
-		egg_debug ("requested: %s", filename);
+		req = g_ptr_array_index (array, i);
+		egg_debug ("requested: %s", req->filename);
 	}
 
 	/* remove banned files */
 	gpk_firmware_remove_banned (firmware, array);
 
 	/* debugging */
+	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
-		filename = g_ptr_array_index (array, i);
-		egg_debug ("searching for: %s", filename);
+		req = g_ptr_array_index (array, i);
+		egg_debug ("searching for: %s", req->filename);
 	}
 
 	/* don't spam the user at startup, so wait a little delay */
@@ -525,7 +782,7 @@ gpk_firmware_finalize (GObject *object)
 	firmware = GPK_FIRMWARE (object);
 
 	g_return_if_fail (firmware->priv != NULL);
-	g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) g_free, NULL);
+	g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) gpk_firmware_request_free, NULL);
 	g_ptr_array_free (firmware->priv->array_requested, TRUE);
 	g_object_unref (firmware->priv->packages_found);
 	g_object_unref (firmware->priv->client_primary);
