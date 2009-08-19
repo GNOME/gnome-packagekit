@@ -86,14 +86,14 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
 	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
+	/* never use a title */
+	gtk_window_set_title (GTK_WINDOW (widget), "");
+
 	/* make modal if window set */
-	if (window != NULL) {
+	if (window != NULL)
 		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
-		gtk_window_set_title (GTK_WINDOW (widget), "");
-	} else {
+	else
 		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
-		gtk_window_set_title (GTK_WINDOW (widget), title);
-	}
 
 	/* set icon name */
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
