@@ -67,7 +67,6 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	GtkWidget *widget;
 	GtkBuilder *builder;
 	GtkTextBuffer *buffer = NULL;
-	gchar *text;
 	guint retval;
 	GError *error = NULL;
 
@@ -109,9 +108,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 
 	/* title */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_title"));
-	text = g_strdup_printf ("<b><big>%s</big></b>", title);
-	gtk_label_set_label (GTK_LABEL (widget), text);
-	g_free (text);
+	gtk_label_set_label (GTK_LABEL (widget), title);
 
 	/* message */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_message"));
