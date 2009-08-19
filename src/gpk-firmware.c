@@ -126,6 +126,7 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	PkPackageList *list = NULL;
 	GError *error = NULL;
 	PkPackageObj *obj = NULL;
+	PkBitfield filter;
 
 	/* actually check we can provide the firmware */
 	ret = pk_client_reset (firmware->priv->client_primary, &error);
@@ -134,7 +135,10 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 		g_error_free (error);
 		goto out;
 	}
-	ret = pk_client_search_file (firmware->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), filename, &error);
+
+	/* search for newest not installed package */
+	filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1);
+	ret = pk_client_search_file (firmware->priv->client_primary, filter, filename, &error);
 	if (!ret) {
 		egg_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);
