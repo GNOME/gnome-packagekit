@@ -116,6 +116,14 @@ typedef guint PkMediaTypeEnum;
 #define PK_STATUS_ENUM_UNKNOWN				(PK_STATUS_ENUM_CHECK_LIBRARIES + 1)
 #endif
 
+/* constants defined in 0.5.2 */
+#if (!PK_CHECK_VERSION(0,5,2))
+#define PK_ERROR_ENUM_RESTRICTED_DOWNLOAD		(PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY + 1)
+#define PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE	(PK_ERROR_ENUM_RESTRICTED_DOWNLOAD + 1)
+#define PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD		(PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE + 1)
+#define PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL		(PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;

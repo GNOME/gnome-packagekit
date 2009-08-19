@@ -485,6 +485,18 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY:
 		text = _("Cannot disable source");
 		break;
+	case PK_ERROR_ENUM_RESTRICTED_DOWNLOAD:
+		text = _("The download failed");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE:
+		text = _("Package failed to configure");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD:
+		text = _("Package failed to build");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL:
+		text = _("Package failed to install");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -693,6 +705,22 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY:
 		text = _("The specified software source could not be disabled.");
+		break;
+	case PK_ERROR_ENUM_RESTRICTED_DOWNLOAD:
+		text = _("The download could not be done automatically and should be done manually.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_CONFIGURE:
+		text = _("One of the selected packages failed to configure correctly.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_BUILD:
+		text = _("One of the selected packages failed to build correctly.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL:
+		text = _("One of the selected packages failed to install correctly.\n"
+			 "More information is available in the detailed report.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
