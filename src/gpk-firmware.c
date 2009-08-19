@@ -56,15 +56,17 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 #define GPK_FIRMWARE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_FIRMWARE, GpkFirmwarePrivate))
 #define GPK_FIRMWARE_MISSING_DIR		"/dev/.udev/firmware-missing"
 #define GPK_FIRMWARE_LOADING_DIR		"/lib/firmware"
-#define GPK_FIRMWARE_LOGIN_DELAY		60 /* seconds */
+#define GPK_FIRMWARE_LOGIN_DELAY		10 /* seconds */
+#define GPK_FIRMWARE_PROCESS_DELAY		2 /* seconds */
 
 struct GpkFirmwarePrivate
 {
+	EggConsoleKit		*consolekit;
+	GConfClient		*gconf_client;
+	GFileMonitor		*monitor;
+	GPtrArray		*array_requested;
 	PkClient		*client_primary;
 	PkPackageList		*packages_found;
-	GPtrArray		*array_requested;
-	GConfClient		*gconf_client;
-	EggConsoleKit		*consolekit;
 };
 
 typedef enum {
@@ -678,23 +680,10 @@ out:
 }
 
 /**
- * gpk_firmware_class_init:
- * @klass: The GpkFirmwareClass
+ * gpk_firmware_scan_directory:
  **/
 static void
-gpk_firmware_class_init (GpkFirmwareClass *klass)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	object_class->finalize = gpk_firmware_finalize;
-	g_type_class_add_private (klass, sizeof (GpkFirmwarePrivate));
-}
-
-/**
- * gpk_firmware_init:
- * @firmware: This class instance
- **/
-static void
-gpk_firmware_init (GpkFirmware *firmware)
+gpk_firmware_scan_directory (GpkFirmware *firmware)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -704,19 +693,6 @@ gpk_firmware_init (GpkFirmware *firmware)
 	guint i;
 	GPtrArray *array;
 	const GpkFirmwareRequest *req;
-
-	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
-	firmware->priv->packages_found = pk_package_list_new ();
-	firmware->priv->array_requested = g_ptr_array_new ();
-	firmware->priv->gconf_client = gconf_client_get_default ();
-	firmware->priv->consolekit = egg_console_kit_new ();
-	firmware->priv->client_primary = pk_client_new ();
-	pk_client_set_use_buffer (firmware->priv->client_primary, TRUE, NULL);
-
-	g_signal_connect (firmware->priv->client_primary, "error-code",
-			  G_CALLBACK (gpk_firmware_error_code_cb), firmware);
-	g_signal_connect (firmware->priv->client_primary, "finished",
-			  G_CALLBACK (gpk_firmware_finished_cb), firmware);
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
@@ -765,7 +741,83 @@ gpk_firmware_init (GpkFirmware *firmware)
 
 	/* don't spam the user at startup, so wait a little delay */
 	if (array->len > 0)
-		g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, gpk_firmware_timeout_cb, firmware);
+		g_timeout_add_seconds (GPK_FIRMWARE_PROCESS_DELAY, gpk_firmware_timeout_cb, firmware);
+}
+
+/**
+ * gpk_firmware_scan_directory_cb:
+ **/
+static gboolean
+gpk_firmware_scan_directory_cb (GpkFirmware *firmware)
+{
+	gpk_firmware_scan_directory (firmware);
+	return FALSE;
+}
+
+/**
+ * gpk_firmware_monitor_changed_cb:
+ **/
+static void
+gpk_firmware_monitor_changed_cb (GFileMonitor *monitor, GFile *file, GFile *other_file,
+				 GFileMonitorEvent event_type, GpkFirmware *firmware)
+{
+	/* rescan directory for new firmware requests */
+	gpk_firmware_scan_directory (firmware);
+}
+
+/**
+ * gpk_firmware_class_init:
+ * @klass: The GpkFirmwareClass
+ **/
+static void
+gpk_firmware_class_init (GpkFirmwareClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	object_class->finalize = gpk_firmware_finalize;
+	g_type_class_add_private (klass, sizeof (GpkFirmwarePrivate));
+}
+
+/**
+ * gpk_firmware_init:
+ * @firmware: This class instance
+ **/
+static void
+gpk_firmware_init (GpkFirmware *firmware)
+{
+	GFile *file;
+	GError *error = NULL;
+
+	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
+	firmware->priv->packages_found = pk_package_list_new ();
+	firmware->priv->array_requested = g_ptr_array_new ();
+	firmware->priv->gconf_client = gconf_client_get_default ();
+	firmware->priv->consolekit = egg_console_kit_new ();
+	firmware->priv->client_primary = pk_client_new ();
+	pk_client_set_use_buffer (firmware->priv->client_primary, TRUE, NULL);
+
+	g_signal_connect (firmware->priv->client_primary, "error-code",
+			  G_CALLBACK (gpk_firmware_error_code_cb), firmware);
+	g_signal_connect (firmware->priv->client_primary, "finished",
+			  G_CALLBACK (gpk_firmware_finished_cb), firmware);
+
+	/* setup watch for new hardware */
+	file = g_file_new_for_path (GPK_FIRMWARE_MISSING_DIR);
+	firmware->priv->monitor = g_file_monitor (file, G_FILE_MONITOR_NONE, NULL, &error);
+	if (firmware->priv->monitor == NULL) {
+		egg_warning ("failed to setup monitor: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* limit to one per second */
+	g_file_monitor_set_rate_limit (firmware->priv->monitor, 1000);
+
+	/* get notified of changes */
+	g_signal_connect (firmware->priv->monitor, "changed",
+			  G_CALLBACK (gpk_firmware_monitor_changed_cb), firmware);
+out:
+	g_object_unref (file);
+	g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
 }
 
 /**
@@ -788,6 +840,8 @@ gpk_firmware_finalize (GObject *object)
 	g_object_unref (firmware->priv->client_primary);
 	g_object_unref (firmware->priv->gconf_client);
 	g_object_unref (firmware->priv->consolekit);
+	if (firmware->priv->monitor != NULL)
+		g_object_unref (firmware->priv->monitor);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
 }
