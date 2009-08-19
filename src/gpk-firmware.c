@@ -43,6 +43,7 @@
 #include "egg-string.h"
 
 #include "gpk-common.h"
+#include "gpk-error.h"
 #include "gpk-firmware.h"
 
 static void     gpk_firmware_finalize	(GObject	  *object);
@@ -297,6 +298,35 @@ gpk_firmware_udev_text_decode (const gchar *data)
 }
 
 /**
+ * gpk_firmware_error_code_cb:
+ **/
+static void
+gpk_firmware_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, GpkFirmware *firmware)
+{
+	/* ignore some errors */
+	if (code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		egg_debug ("error ignored %s: %s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+//	/* ignore the ones we can handle */
+//	if (pk_error_code_is_need_untrusted (code)) {
+//		egg_debug ("error ignored as we're handling %s: %s", pk_error_enum_to_text (code), details);
+//		return;
+//	}
+
+	/* ignore not authorised, which seems odd but this will happen if the user clicks cancel */
+	if (code == PK_ERROR_ENUM_NOT_AUTHORIZED) {
+		egg_debug ("auth failure '%s' ignored: %s", pk_error_enum_to_text (code), details);
+		return;
+	}
+
+	gpk_error_dialog (gpk_error_enum_to_localised_text (code),
+			  gpk_error_enum_to_localised_message (code), details);
+}
+
+/**
  * gpk_firmware_class_init:
  * @klass: The GpkFirmwareClass
  **/
@@ -331,6 +361,9 @@ gpk_firmware_init (GpkFirmware *firmware)
 	firmware->priv->client_primary = pk_client_new ();
 	pk_client_set_synchronous (firmware->priv->client_primary, TRUE, NULL);
 	pk_client_set_use_buffer (firmware->priv->client_primary, TRUE, NULL);
+
+	g_signal_connect (firmware->priv->client_primary, "error-code",
+			  G_CALLBACK (gpk_firmware_error_code_cb), firmware);
 
 	/* should we check and show the user */
 	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
