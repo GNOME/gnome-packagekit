@@ -39,8 +39,8 @@ else
 fi
 
 AC_ARG_ENABLE(strict, AC_HELP_STRING([--enable-strict],
-							[Enable strict compilation options]), enable_strict=$enableval,
-							enable_strict=$default_strict)
+					[Enable strict compilation options]), enable_strict=$enableval,
+					enable_strict=$default_strict)
 if test x$enable_strict != xno; then
 	if test "$GCC" = "yes"; then
 		CPPFLAGS="$CPPFLAGS -Werror"
@@ -182,6 +182,28 @@ PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk >= $CANBERRA_REQUIRED)
 AC_SUBST(CANBERRA_CFLAGS)
 AC_SUBST(CANBERRA_LIBS)
 
+dnl ---------------------------------------------------------------------------
+dnl - GUdev integration (default enabled)
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(gudev, AC_HELP_STRING([--disable-gudev],
+		[Disable GUdev support]), enable_gudev=$enableval)
+if test x$enable_gudev != xno; then
+	PKG_CHECK_MODULES(GUDEV, gudev-1.0, GPK_BUILD_GUDEV="yes", GPK_BUILD_GUDEV="no")
+	if test "x$GPK_BUILD_GUDEV" = "xyes"; then
+		AC_DEFINE(GPK_BUILD_GUDEV, 1, [define if GUdev is available])
+	else
+		if test x$enable_gudev = xyes; then
+			AC_MSG_ERROR([GUdev enabled but not found])
+		fi
+	fi
+else
+	GPK_BUILD_GUDEV=no
+fi
+
+AM_CONDITIONAL(GPK_BUILD_GUDEV, test x$GPK_BUILD_GUDEV = xyes)
+AC_SUBST(GUDEV_CFLAGS)
+AC_SUBST(GUDEV_LIBS)
+
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
@@ -204,9 +226,9 @@ AC_ARG_WITH(doc-dir,
               [AC_HELP_STRING([--with-doc-dir=<dir>],
               [directory to install documentation])])
 if ! test -z "$with_doc_dir"; then
-   DOCDIR="$with_doc_dir/gnome-packagekit-$VERSION"
+	DOCDIR="$with_doc_dir/gnome-packagekit-$VERSION"
 else
-   DOCDIR="$DATADIR/doc/gnome-packagekit-$VERSION"
+	DOCDIR="$DATADIR/doc/gnome-packagekit-$VERSION"
 fi
 AC_SUBST(DOCDIR)
 
@@ -216,7 +238,7 @@ dnl ---------------------------------------------------------------------------
 AC_PATH_PROG(DOCBOOK2MAN, docbook2man, no)
 if test "$DOCBOOK2MAN" = "no" ; then
 	AC_MSG_WARN([docbook2man not found, will not be able to build man documentation])
-	fi
+fi
 AM_CONDITIONAL(HAVE_DOCBOOK2MAN, [test "$DOCBOOK2MAN" != "no"])
 
 dnl ---------------------------------------------------------------------------
