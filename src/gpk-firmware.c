@@ -58,6 +58,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 #define GPK_FIRMWARE_LOADING_DIR		"/lib/firmware"
 #define GPK_FIRMWARE_LOGIN_DELAY		10 /* seconds */
 #define GPK_FIRMWARE_PROCESS_DELAY		2 /* seconds */
+#define GPK_FIRMWARE_DEVICE_REBIND_PROGRAM	"/usr/sbin/pk-device-rebind"
 
 struct GpkFirmwarePrivate
 {
@@ -77,6 +78,7 @@ typedef enum {
 
 typedef struct {
 	gchar			*filename;
+	gchar			*sysfs_path;
 	gchar			*model;
 	GpkFirmwareSubsystem	 subsystem;
 } GpkFirmwareRequest;
@@ -110,6 +112,7 @@ gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 
 	req = g_new0 (GpkFirmwareRequest, 1);
 	req->filename = g_strdup (filename);
+	req->sysfs_path = g_strdup (sysfs_path);
 	req->subsystem = GPK_FIRMWARE_SUBSYSTEM_UNKNOWN;
 #ifdef GPK_BUILD_GUDEV
 
@@ -151,6 +154,7 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 {
 	g_free (req->filename);
 	g_free (req->model);
+	g_free (req->sysfs_path);
 	g_free (req);
 }
 
@@ -184,6 +188,59 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 	}
 out:
 	g_strfreev (package_ids);
+	return ret;
+}
+
+/**
+ * gpk_firmware_rebind:
+ **/
+static gboolean
+gpk_firmware_rebind (GpkFirmware *firmware)
+{
+	gboolean ret;
+	gchar *command;
+	gchar *rebind_stderr = NULL;
+	gchar *rebind_stdout = NULL;
+	GError *error = NULL;
+	gint exit_status = 0;
+	guint i;
+	GPtrArray *array;
+	const GpkFirmwareRequest *req;
+	GString *string;
+
+	string = g_string_new ("");
+
+	/* make a string array of all the devices to replug */
+	array = firmware->priv->array_requested;
+	for (i=0; i<array->len; i++) {
+		req = g_ptr_array_index (array, i);
+		g_string_append_printf (string, "%s ", req->sysfs_path);
+	}
+
+	/* remove trailing space */
+	if (string->len > 0)
+		g_string_set_size (string, string->len-1);
+
+	/* use PolicyKit to do this as root */
+	command = g_strdup_printf ("pkexec %s %s", GPK_FIRMWARE_DEVICE_REBIND_PROGRAM, string->str);
+	ret = g_spawn_command_line_sync (command, &rebind_stdout, &rebind_stderr, &exit_status, &error);
+	if (!ret) {
+		egg_warning ("failed to spawn '%s': %s", command, error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* if we failed to rebind the device */
+	if (exit_status != 0) {
+		egg_warning ("failed to rebind: %s, %s", rebind_stdout, rebind_stderr);
+		ret = FALSE;
+		goto out;
+	}
+out:
+	g_free (rebind_stdout);
+	g_free (rebind_stderr);
+	g_free (command);
+	g_string_free (string, TRUE);
 	return ret;
 }
 
@@ -489,7 +546,7 @@ gpk_firmware_require_restart (GpkFirmware *firmware)
 	message = _("You will need to restart this computer before the hardware will work correctly.");
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 
@@ -524,7 +581,34 @@ gpk_firmware_require_replug (GpkFirmware *firmware)
 	message = _("You will need to remove and then reinsert the hardware before it will work correctly.");
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional firmware was installed"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+
+	/* show the bubble */
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+}
+
+/**
+ * gpk_firmware_require_nothing:
+ **/
+static void
+gpk_firmware_require_nothing (GpkFirmware *firmware)
+{
+	const gchar *message;
+	gboolean ret;
+	GError *error = NULL;
+	NotifyNotification *notification;
+
+	/* TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware */
+	message = _("Your hardware has been set up and is now ready to use.");
+
+	/* TRANSLATORS: title of libnotify bubble */
+	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 
@@ -574,12 +658,25 @@ gpk_firmware_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime,
 			}
 		}
 
+		/* can we just rebind the device */
+		ret = g_file_test (GPK_FIRMWARE_DEVICE_REBIND_PROGRAM, G_FILE_TEST_EXISTS);
+		ret = TRUE;
+		if (ret) {
+			ret = gpk_firmware_rebind (firmware);
+			if (ret) {
+				gpk_firmware_require_nothing (firmware);
+				goto out;
+			}
+		}
+
 		/* give the user the correct message */
 		if (restart)
 			gpk_firmware_require_restart (firmware);
 		else
 			gpk_firmware_require_replug (firmware);
 	}
+out:
+	return;
 }
 
 /**
