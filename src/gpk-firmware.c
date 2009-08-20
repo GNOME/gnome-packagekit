@@ -660,7 +660,6 @@ gpk_firmware_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime,
 
 		/* can we just rebind the device */
 		ret = g_file_test (GPK_FIRMWARE_DEVICE_REBIND_PROGRAM, G_FILE_TEST_EXISTS);
-		ret = TRUE;
 		if (ret) {
 			ret = gpk_firmware_rebind (firmware);
 			if (ret) {
