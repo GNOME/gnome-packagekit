@@ -58,6 +58,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 #define GPK_FIRMWARE_LOADING_DIR		"/lib/firmware"
 #define GPK_FIRMWARE_LOGIN_DELAY		10 /* seconds */
 #define GPK_FIRMWARE_PROCESS_DELAY		2 /* seconds */
+#define GPK_FIRMWARE_INSERT_DELAY		2 /* seconds */
 #define GPK_FIRMWARE_DEVICE_REBIND_PROGRAM	"/usr/sbin/pk-device-rebind"
 
 struct GpkFirmwarePrivate
@@ -68,6 +69,7 @@ struct GpkFirmwarePrivate
 	GPtrArray		*array_requested;
 	PkClient		*client_primary;
 	PkPackageList		*packages_found;
+	guint			 timeout_id;
 };
 
 typedef enum {
@@ -666,13 +668,17 @@ gpk_firmware_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime,
 				gpk_firmware_require_nothing (firmware);
 				goto out;
 			}
+		} else {
+			/* give the user the correct message */
+			if (restart)
+				gpk_firmware_require_restart (firmware);
+			else
+				gpk_firmware_require_replug (firmware);
 		}
 
-		/* give the user the correct message */
-		if (restart)
-			gpk_firmware_require_restart (firmware);
-		else
-			gpk_firmware_require_replug (firmware);
+		/* clear array */
+		g_ptr_array_foreach (firmware->priv->array_requested, (GFunc) gpk_firmware_request_free, NULL);
+		g_ptr_array_set_size (firmware->priv->array_requested, 0);
 	}
 out:
 	return;
@@ -744,11 +750,13 @@ out:
 static void
 gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 {
+	gboolean ret;
 	gchar *filename_path;
 	gchar *missing_path;
 	gchar *sysfs_path;
-	gboolean ret;
 	GpkFirmwareRequest *req;
+	GPtrArray *array;
+	guint i;
 
 	/* this is the file we want to load */
 	filename_path = g_build_filename (GPK_FIRMWARE_LOADING_DIR, filename_no_path, NULL);
@@ -766,6 +774,20 @@ gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 	sysfs_path = gpk_firmware_get_device (firmware, missing_path);
 	if (sysfs_path == NULL)
 		goto out;
+
+	/* find any previous requests with this path or firmware */
+	array = firmware->priv->array_requested;
+	for (i=0; i<array->len; i++) {
+		req = g_ptr_array_index (array, i);
+		if (g_strcmp0 (sysfs_path, req->sysfs_path) == 0) {
+			egg_debug ("ignoring previous sysfs request for %s", sysfs_path);
+			goto out;
+		}
+		if (g_strcmp0 (filename_path, req->filename) == 0) {
+			egg_debug ("ignoring previous filename request for %s", filename_path);
+			goto out;
+		}
+	}
 
 	/* create new request object */
 	req = gpk_firmware_request_new (filename_path, sysfs_path);
@@ -847,6 +869,7 @@ static gboolean
 gpk_firmware_scan_directory_cb (GpkFirmware *firmware)
 {
 	gpk_firmware_scan_directory (firmware);
+	firmware->priv->timeout_id = 0;
 	return FALSE;
 }
 
@@ -857,8 +880,14 @@ static void
 gpk_firmware_monitor_changed_cb (GFileMonitor *monitor, GFile *file, GFile *other_file,
 				 GFileMonitorEvent event_type, GpkFirmware *firmware)
 {
-	/* rescan directory for new firmware requests */
-	gpk_firmware_scan_directory (firmware);
+	if (firmware->priv->timeout_id > 0) {
+		egg_debug ("clearing timeout as device changed");
+		g_source_remove (firmware->priv->timeout_id);
+	}
+
+	/* wait for the device to settle */
+	firmware->priv->timeout_id =
+		g_timeout_add_seconds (GPK_FIRMWARE_INSERT_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
 }
 
 /**
@@ -884,6 +913,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	GError *error = NULL;
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
+	firmware->priv->timeout_id = 0;
 	firmware->priv->packages_found = pk_package_list_new ();
 	firmware->priv->array_requested = g_ptr_array_new ();
 	firmware->priv->gconf_client = gconf_client_get_default ();
@@ -913,7 +943,8 @@ gpk_firmware_init (GpkFirmware *firmware)
 			  G_CALLBACK (gpk_firmware_monitor_changed_cb), firmware);
 out:
 	g_object_unref (file);
-	g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
+	firmware->priv->timeout_id =
+		g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
 }
 
 /**
@@ -938,6 +969,8 @@ gpk_firmware_finalize (GObject *object)
 	g_object_unref (firmware->priv->consolekit);
 	if (firmware->priv->monitor != NULL)
 		g_object_unref (firmware->priv->monitor);
+	if (firmware->priv->timeout_id > 0)
+		g_source_remove (firmware->priv->timeout_id);
 
 	G_OBJECT_CLASS (gpk_firmware_parent_class)->finalize (object);
 }
