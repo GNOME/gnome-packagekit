@@ -371,44 +371,16 @@ out:
 }
 
 /**
- * gpk_check_update_menuitem_show_updates_cb:
- **/
-static void
-gpk_check_update_menuitem_show_updates_cb (GtkMenuItem *item, gpointer data)
-{
-	const gchar *command = "gpk-update-viewer";
-	if (!g_spawn_command_line_async (command, NULL))
-		egg_warning ("Couldn't execute command: %s", command);
-}
-
-/**
  * gpk_check_update_activate_update_cb:
- * @button: Which buttons are pressed
  *
- * Callback when the icon is clicked
+ * Callback when the icon is left clicked
  **/
 static void
 gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate *icon)
 {
-	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
-	GtkWidget *item;
-	GtkWidget *image;
-
-	egg_debug ("icon left clicked");
-
-	/* TRANSLATORS: context menu to execute the update viewer  */
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Show Updates"));
-	image = gtk_image_new_from_icon_name (GPK_ICON_SOFTWARE_UPDATE, GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	g_signal_connect (G_OBJECT (item), "activate",
-			  G_CALLBACK (gpk_check_update_menuitem_show_updates_cb), icon);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-	/* show the menu */
-	gtk_widget_show_all (GTK_WIDGET (menu));
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			gtk_status_icon_position_menu, status_icon,
-			1, gtk_get_current_event_time());
+	const gchar *command = "gpk-update-viewer";
+	if (!g_spawn_command_line_async (command, NULL))
+		egg_warning ("Couldn't execute command: %s", command);
 }
 
 /**
