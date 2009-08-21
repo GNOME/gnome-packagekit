@@ -2093,10 +2093,10 @@ gpk_application_groups_add_columns (GtkTreeView *treeview)
 }
 
 /**
- * gpk_application_groups_treeview_clicked_cb:
+ * gpk_application_groups_treeview_changed_cb:
  **/
 static void
-gpk_application_groups_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplication *application)
+gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkApplication *application)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -4152,7 +4152,7 @@ gpk_application_init (GpkApplication *application)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (gpk_application_groups_treeview_clicked_cb), application);
+			  G_CALLBACK (gpk_application_groups_treeview_changed_cb), application);
 
 	/* simple list or category tree? */
 	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
