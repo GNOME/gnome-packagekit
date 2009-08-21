@@ -497,6 +497,9 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
 	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL:
 		text = _("Package failed to install");
 		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE:
+		text = _("Package failed to be removed");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -720,6 +723,10 @@ gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
 		break;
 	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_INSTALL:
 		text = _("One of the selected packages failed to install correctly.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE:
+		text = _("One of the selected packages failed to be removed correctly.\n"
 			 "More information is available in the detailed report.");
 		break;
 	default:
