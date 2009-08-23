@@ -167,6 +167,10 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_UPDATE_SYSTEM,		"system-software-update"},
 	{PK_ROLE_ENUM_WHAT_PROVIDES,		"pk-package-search"},
+	{PK_ROLE_ENUM_SIMULATE_INSTALL_FILES,	"pk-package-add"},
+	{PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES, "pk-package-add"},
+	{PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES,	"pk-package-delete"},
+	{PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES,	"pk-package-update"},
 	{0, NULL}
 };
 
@@ -1339,6 +1343,22 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting old transactions");
 		break;
+	case PK_ROLE_ENUM_SIMULATE_INSTALL_FILES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Simulating the install");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Simulating the install of files");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Simulating the remove");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Simulating the update");
+		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1478,6 +1498,22 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got old transactions");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_INSTALL_FILES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulated the install");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulated the install of files");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulated the remove");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulated the update");
 		break;
 	default:
 		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
