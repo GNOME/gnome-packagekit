@@ -111,7 +111,9 @@ struct GpkApplicationPrivate
 	GpkHelperDepsRemove	*helper_deps_remove;
 	GpkHelperDepsInstall	*helper_deps_install;
 	GpkHelperMediaChange	*helper_media_change;
-	gboolean		 dep_check_info_only;
+#if !PK_CHECK_VERSION(0,5,2)
+	gboolean		 dep_check_info_only; /* bodge to tell apart the differing uses of GetDepends */
+#endif
 	guint			 status_id;
 	PkStatusEnum		 status_last;
 };
@@ -715,7 +717,9 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
+#if !PK_CHECK_VERSION(0,5,2)
 	application->priv->dep_check_info_only = TRUE;
+#endif
 	ret = pk_client_get_requires (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				      package_ids, TRUE, &error);
 	if (!ret) {
@@ -756,7 +760,9 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
+#if !PK_CHECK_VERSION(0,5,2)
 	application->priv->dep_check_info_only = TRUE;
+#endif
 	ret = pk_client_get_depends (application->priv->client_primary, PK_FILTER_ENUM_NONE,
 				     package_ids, TRUE, &error);
 	if (!ret) {
@@ -1087,7 +1093,8 @@ gpk_application_package_cb (PkClient *client, const PkPackageObj *obj, GpkApplic
 	pk_client_get_role (client, &role, NULL, NULL);
 #endif
 	if (role == PK_ROLE_ENUM_GET_DEPENDS ||
-	    role == PK_ROLE_ENUM_GET_REQUIRES)
+	    role == PK_ROLE_ENUM_GET_REQUIRES ||
+	    role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES)
 		return;
 
 	/* ignore progress */
@@ -1471,6 +1478,39 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 		gpk_application_categories_finished (application);
 	}
 
+#if PK_CHECK_VERSION(0,5,2)
+	/* simulating */
+	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		gpk_helper_deps_install_show (application->priv->helper_deps_install, application->priv->package_list, list);
+		g_object_unref (list);
+	}
+
+	/* get reqs */
+	if (role == PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		gpk_helper_deps_remove_show (application->priv->helper_deps_remove, application->priv->package_list, list);
+		g_object_unref (list);
+	}
+
+	/* get deps */
+	if (role == PK_ROLE_ENUM_GET_DEPENDS &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		gpk_application_finished_get_depends (application, list);
+		g_object_unref (list);
+	}
+
+	/* get reqs */
+	if (role == PK_ROLE_ENUM_GET_REQUIRES &&
+	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
+		list = pk_client_get_package_list (application->priv->client_primary);
+		gpk_application_finished_get_requires (application, list);
+		g_object_unref (list);
+	}
+#else
 	/* get deps */
 	if (role == PK_ROLE_ENUM_GET_DEPENDS &&
 	    exit_enum == PK_EXIT_ENUM_SUCCESS) {
@@ -1480,7 +1520,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 		else
 			gpk_helper_deps_install_show (application->priv->helper_deps_install, application->priv->package_list, list);
 		g_object_unref (list);
-
 	}
 
 	/* get reqs */
@@ -1493,6 +1532,7 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 			gpk_helper_deps_remove_show (application->priv->helper_deps_remove, application->priv->package_list, list);
 		g_object_unref (list);
 	}
+#endif
 
 	/* we've just agreed to auth or a EULA */
 	if (role == PK_ROLE_ENUM_INSTALL_SIGNATURE ||
@@ -1991,8 +2031,12 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		}
 
 		/* install */
+#if PK_CHECK_VERSION(0,5,2)
+		ret = pk_client_simulate_install_packages (application->priv->client_primary, package_ids, &error);
+#else
 		application->priv->dep_check_info_only = FALSE;
 		ret = pk_client_get_depends (application->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error);
+#endif
 		if (!ret) {
 			egg_warning ("failed to get depends: %s", error->message);
 			g_error_free (error);
@@ -2013,7 +2057,9 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		}
 
 		/* install */
+#if !PK_CHECK_VERSION(0,5,2)
 		application->priv->dep_check_info_only = FALSE;
+#endif
 		ret = pk_client_get_requires (application->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error);
 		if (!ret) {
 			egg_warning ("failed to get requires: %s", error->message);
@@ -3650,7 +3696,9 @@ gpk_application_init (GpkApplication *application)
 	application->priv->url = NULL;
 	application->priv->search_text = NULL;
 	application->priv->has_package = FALSE;
+#if !PK_CHECK_VERSION(0,5,2)
 	application->priv->dep_check_info_only = FALSE;
+#endif
 	application->priv->details_event_id = 0;
 	application->priv->status_id = 0;
 	application->priv->status_last = PK_STATUS_ENUM_UNKNOWN;

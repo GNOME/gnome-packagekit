@@ -432,7 +432,11 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 	install_package_ids = g_strdupv (package_ids);
 
 	/* get packages that also have to be updated */
+#if PK_CHECK_VERSION(0,5,2)
+	ret = pk_client_simulate_update_packages (client_primary, package_ids, &error);
+#else
 	ret = pk_client_get_depends (client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), package_ids, TRUE, &error);
+#endif
 	if (!ret) {
 		egg_warning ("cannot get depends for updates: %s", error->message);
 		g_error_free (error);
@@ -592,10 +596,17 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 	package_id = pk_package_id_to_string (obj->id);
 
 	/* are we simulating to get deps? */
+#if PK_CHECK_VERSION(0,5,2)
+	if (role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES) {
+		egg_debug ("ignoring %s as we are simulating", package_id);
+		goto out;
+	}
+#else
 	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
 		egg_debug ("ignoring %s as we are in the depends phase", package_id);
 		goto out;
 	}
+#endif
 
 	/* used for progress */
 	if (!gpk_update_viewer_is_update_info (obj->info)) {
@@ -1799,8 +1810,11 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 	}
 
 	/* finished depends check, show any extras */
+#if PK_CHECK_VERSION(0,5,2)
+	if (exit == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES) {
+#else
 	if (exit == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_GET_DEPENDS) {
-
+#endif
 		/* show deps dialog */
 		list = pk_client_get_package_list (client);
 		gpk_helper_deps_update_show (helper_deps_update, list);

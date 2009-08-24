@@ -517,7 +517,11 @@ gpk_dbus_task_install_package_ids_dep_check (GpkDbusTask *task)
 	g_return_if_fail (task->priv->package_ids != NULL);
 
 	/* are we dumb and can't check for depends? */
+#if PK_CHECK_VERSION(0,5,2)
+	if (!pk_bitfield_contain (task->priv->roles, PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES)) {
+#else
 	if (!pk_bitfield_contain (task->priv->roles, PK_ROLE_ENUM_GET_DEPENDS)) {
+#endif
 		egg_warning ("skipping depends check");
 		gpk_dbus_task_install_package_ids (task);
 		goto out;
@@ -561,7 +565,11 @@ gpk_dbus_task_install_package_ids_dep_check (GpkDbusTask *task)
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
 	/* find out if this would drag in other packages */
+#if PK_CHECK_VERSION(0,5,2)
+	ret = pk_client_simulate_install_packages (task->priv->client_primary, task->priv->package_ids, &error_local);
+#else
 	ret = pk_client_get_depends (task->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED), task->priv->package_ids, TRUE, &error_local);
+#endif
 	if (!ret) {
 		/* TRANSLATORS: error: could not get the extra package list when installing a package */
 		gpk_dbus_task_error_msg (task, _("Could not work out what packages would be also installed"), error_local);
