@@ -52,6 +52,7 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_COLLECTION_INSTALLED,	"pk-collection-installed"},
 	{PK_INFO_ENUM_COLLECTION_AVAILABLE,	"pk-collection-available"},
 	{PK_INFO_ENUM_FINISHED,			"dialog-information"},
+	{PK_INFO_ENUM_REINSTALLING,		"dialog-information"},
 	{0, NULL}
 };
 
@@ -1167,6 +1168,10 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Obsoleting");
 		break;
+	case PK_INFO_ENUM_REINSTALLING:
+		/* TRANSLATORS: The action of the package, in present tense */
+		text = _("Reinstalling");
+		break;
 	default:
 		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
@@ -1204,6 +1209,10 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 	case PK_INFO_ENUM_OBSOLETING:
 		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Obsoleted");
+		break;
+	case PK_INFO_ENUM_REINSTALLING:
+		/* TRANSLATORS: The action of the package, in past tense */
+		text = _("Reinstalled");
 		break;
 	default:
 		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
