@@ -1,3 +1,51 @@
+Version 2.27.91
+~~~~~~~~~~~~~~~
+Released: 2009-08-24
+
+* Translations
+ - Updated Bengali India Translation (Runa Bhattacharjee)
+ - Updated Telugu Translation (krishnababu k)
+ - Updated Assamese translation (Amitakhya Phukan)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Hungarian translation (Gabor Kelemen)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated Spanish translation (Jorge González)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Russian translation (Leonid Kanter)
+ - Updated Hebrew translation (Mark Krapivner)
+ - Updated Polish translation (Piotr Drąg)
+
+* New Features:
+ - Show the notifications pointing at the status icon when possible (Richard Hughes)
+ - Copy 'strict' option to configure to add -Werror from PackageKit (Anders F Bjorklund)
+ - Watch /dev/.udev/firmware-missing for changes so we pick up hotplug requests too (Richard Hughes)
+ - Add the pk-device-rebind functionality to replug hardware (Richard Hughes)
+
+* Bugfix:
+ - Wrap license in about dialogue (Christian Persch)
+ - Remove markup from .ui files (Gabor Kelemen)
+ - Add accelerator. Fixes #590999 (Gabor Kelemen)
+ - Only return the newest packages for mime, fonts and codec helpers. Fixes rh#514879 (Richard Hughes)
+ - Only install the newest native-arch package when using the session methods. Fixes rh#509569 (Richard Hughes)
+ - Don't show a modal dialog when the user cancels the file install (Richard Hughes)
+ - Egg update to fix compile on FreeBSD (Richard Hughes)
+ - Reduce in weight X-GNOME-Autostart-Phase desktop files (Richard Hughes)
+ - Ignore hidden desktop files when we show the list of new applications (Richard Hughes)
+ - Only run the update if the dep check was successful (Richard Hughes)
+ - Don't show the auth-failure dialog in the update viewer (Richard Hughes)
+ - Show errors when using the firmware client, don't just silently fail (Richard Hughes)
+ - Add CanStop and CanRestart methods on the ConsoleKit helper (Richard Hughes)
+ - Never use a title on a modal error dialog (Richard Hughes)
+ - Check in more places if a user is able to restart (Richard Hughes)
+ - Add application/x-deb to the list of files we try to open (Richard Hughes)
+ - Improve the firmware code when multiple devices are requesting the same files (Richard Hughes)
+ - Resize the deps list in a better way. Fixes rh#517662 (Richard Hughes)
+ - Don't show a single menu item for the left click on the updates star (Richard Hughes)
+ - Only show the on-battery warning only if we would have performed the update (Richard Hughes)
+ - Don't allow double click on a help item. Fixes rh#518854 (Richard Hughes)
+ - Change the firmware 'Do not show again' to a 'Ignore devices' button (Richard Hughes)
+
 Version 2.27.5
 ~~~~~~~~~~~~~~
 Released: 2009-08-03
