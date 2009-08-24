@@ -3198,6 +3198,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	GtkTreeIter iter;
 	gboolean ret;
 	PkBitfield state;
+	gchar *package_id = NULL;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
@@ -3209,13 +3210,24 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 		return;
 	}
 
+	/* get data */
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
+			    PACKAGES_COLUMN_ID, &package_id,
 			    -1);
+
+	/* check we aren't a help line */
+	if (package_id == NULL) {
+		egg_debug ("ignoring help click");
+		goto out;
+	}
+
 	if (gpk_application_state_get_checkbox (state))
 		gpk_application_remove (application);
 	else
 		gpk_application_install (application);
+out:
+	g_free (package_id);
 }
 
 /**
