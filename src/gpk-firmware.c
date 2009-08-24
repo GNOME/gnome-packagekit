@@ -82,6 +82,7 @@ typedef struct {
 	gchar			*filename;
 	gchar			*sysfs_path;
 	gchar			*model;
+	gchar			*id;
 	GpkFirmwareSubsystem	 subsystem;
 } GpkFirmwareRequest;
 
@@ -110,6 +111,8 @@ gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 	GUdevClient *client;
 	const gchar *subsystem;
 	const gchar *model;
+	const gchar *id_vendor;
+	const gchar *id_product;
 #endif
 
 	req = g_new0 (GpkFirmwareRequest, 1);
@@ -141,6 +144,11 @@ gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 		/* replace invalid chars */
 		g_strdelimit (req->model, "_", ' ');
 	}
+
+	/* create ID so we can ignore the specific device */
+	id_vendor = g_udev_device_get_property (device, "ID_VENDOR");
+	id_product = g_udev_device_get_property (device, "ID_MODEL_ID");
+	req->id = g_strdup_printf ("%s_%s", id_vendor, id_product);
 out:
 	g_object_unref (device);
 	g_object_unref (client);
@@ -157,6 +165,7 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 	g_free (req->filename);
 	g_free (req->model);
 	g_free (req->sysfs_path);
+	g_free (req->id);
 	g_free (req);
 }
 
@@ -247,6 +256,56 @@ out:
 }
 
 /**
+ * gpk_firmware_ignore_devices:
+ **/
+static void
+gpk_firmware_ignore_devices (GpkFirmware *firmware)
+{
+	gboolean ret;
+	gchar *existing;
+	GError *error = NULL;
+	GpkFirmwareRequest *req;
+	GPtrArray *array;
+	GString *string;
+	guint i;
+
+	/* get from gconf */
+	existing = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, &error);
+	if (error != NULL) {
+		egg_warning ("failed to get ignored devices: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get existing string */
+	string = g_string_new (existing);
+	if (string->len > 0)
+		g_string_append (string, ",");
+
+	/* add all listed devices */
+	array = firmware->priv->array_requested;
+	for (i=0; i<array->len; i++) {
+		req = g_ptr_array_index (array, i);
+		g_string_append_printf (string, "%s,", req->id);
+	}
+
+	/* remove final ',' */
+	if (string->len > 2)
+		g_string_set_size (string, string->len - 1);
+
+	/* set new string to gconf */
+	ret = gconf_client_set_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, string->str, &error);
+	if (!ret) {
+		egg_warning ("failed to set new string %s: %s", string->str, error->message);
+		g_error_free (error);
+		goto out;
+	}
+out:
+	g_free (existing);
+	g_string_free (string, TRUE);
+}
+
+/**
  * gpk_firmware_libnotify_cb:
  **/
 static void
@@ -258,9 +317,8 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 
 	if (g_strcmp0 (action, "install-firmware") == 0) {
 		gpk_firmware_install_file (firmware);
-	} else if (g_strcmp0 (action, "do-not-show-prompt-firmware") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_FIRMWARE);
-		gconf_client_set_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, FALSE, NULL);
+	} else if (g_strcmp0 (action, "ignore-devices") == 0) {
+		gpk_firmware_ignore_devices (firmware);
 	} else if (g_strcmp0 (action, "restart-now") == 0) {
 		ret = egg_console_kit_restart (firmware->priv->consolekit, &error);
 		if (!ret) {
@@ -328,7 +386,6 @@ out:
 
 /**
  * gpk_firmware_timeout_cb:
- * @data: This class instance
  **/
 static gboolean
 gpk_firmware_timeout_cb (gpointer data)
@@ -398,8 +455,9 @@ gpk_firmware_timeout_cb (gpointer data)
 	notify_notification_add_action (notification, "install-firmware",
 					/* TRANSLATORS: button label */
 					_("Install firmware"), gpk_firmware_libnotify_cb, firmware, NULL);
-	notify_notification_add_action (notification, "do-not-show-prompt-firmware",
-					_("Do not show this again"), gpk_firmware_libnotify_cb, firmware, NULL);
+	notify_notification_add_action (notification, "ignore-devices",
+					/* TRANSLATORS: we should ignore this device and not ask anymore */
+					_("Ignore devices"), gpk_firmware_libnotify_cb, firmware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -414,16 +472,15 @@ out:
 
 /**
  * gpk_firmware_remove_banned:
- * @data: This class instance
  **/
 static void
 gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 {
-	gchar *banned_str;
-	gchar **banned = NULL;
-	guint i, j;
 	gboolean ret;
+	gchar **banned = NULL;
+	gchar *banned_str;
 	GpkFirmwareRequest *req;
+	guint i, j;
 
 	/* get from gconf */
 	banned_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_BANNED_FIRMWARE, NULL);
@@ -450,12 +507,59 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 				egg_debug ("match %s for %s, removing", banned[j], req->filename);
 				gpk_firmware_request_free (req);
 				g_ptr_array_remove_index_fast (array, i);
+				break;
 			}
 		}
 	}
 out:
 	g_free (banned_str);
 	g_strfreev (banned);
+}
+
+/**
+ * gpk_firmware_remove_ignored:
+ **/
+static void
+gpk_firmware_remove_ignored (GpkFirmware *firmware, GPtrArray *array)
+{
+	gboolean ret;
+	gchar **ignored = NULL;
+	gchar *ignored_str;
+	GpkFirmwareRequest *req;
+	guint i, j;
+
+	/* get from gconf */
+	ignored_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, NULL);
+	if (ignored_str == NULL) {
+		egg_warning ("could not read ignored list");
+		goto out;
+	}
+
+	/* nothing in list, common case */
+	if (egg_strzero (ignored_str)) {
+		egg_debug ("nothing in ignored list");
+		goto out;
+	}
+
+	/* split using "," */
+	ignored = g_strsplit (ignored_str, ",", 0);
+
+	/* remove any ignored pattern matches */
+	for (i=0; i<array->len; i++) {
+		req = g_ptr_array_index (array, i);
+		for (j=0; ignored[j] != NULL; j++) {
+			ret = g_pattern_match_simple (ignored[j], req->id);
+			if (ret) {
+				egg_debug ("match %s for %s, removing", ignored[j], req->id);
+				gpk_firmware_request_free (req);
+				g_ptr_array_remove_index_fast (array, i);
+				break;
+			}
+		}
+	}
+out:
+	g_free (ignored_str);
+	g_strfreev (ignored);
 }
 
 /**
@@ -849,6 +953,9 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 
 	/* remove banned files */
 	gpk_firmware_remove_banned (firmware, array);
+
+	/* remove ignored devices */
+	gpk_firmware_remove_ignored (firmware, array);
 
 	/* debugging */
 	array = firmware->priv->array_requested;

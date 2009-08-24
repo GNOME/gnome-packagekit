@@ -64,6 +64,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_AUTO_UPDATE			"/apps/gnome-packagekit/update-icon/auto_update"
 #define GPK_CONF_UPDATE_BATTERY			"/apps/gnome-packagekit/update-icon/update_battery"
 #define GPK_CONF_BANNED_FIRMWARE		"/apps/gnome-packagekit/update-icon/banned_firmware"
+#define GPK_CONF_IGNORED_DEVICES		"/apps/gnome-packagekit/update-icon/ignored_devices"
 #define GPK_CONF_IGNORED_MESSAGES		"/apps/gnome-packagekit/update-icon/ignored_messages"
 #define GPK_CONF_WATCH_ACTIVE_TRANSACTIONS	"/apps/gnome-packagekit/update-icon/watch_active_transactions"
 #define GPK_CONF_APPLICATION_FILTER_BASENAME	"/apps/gnome-packagekit/application/filter_basename"
