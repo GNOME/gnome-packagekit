@@ -911,7 +911,9 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 
 	/* are we on battery and configured to skip the action */
 	ret = gpk_check_update_check_on_battery (cupdate);
-	if (!ret) {
+	if (!ret &&
+	    ((update == GPK_UPDATE_ENUM_SECURITY && security_array->len > 0) ||
+	      update == GPK_UPDATE_ENUM_ALL)) {
 		egg_debug ("on battery so not doing update");
 
 		/* play the sound, using sounds from the naming spec */
