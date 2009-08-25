@@ -55,7 +55,8 @@
 #include "gpk-helper-untrusted.h"
 #include "gpk-helper-chooser.h"
 
-static void     gpk_dbus_task_finalize	(GObject	*object);
+static void     gpk_dbus_task_finalize (GObject *object);
+static void	gpk_dbus_task_install_files (GpkDbusTask *task);
 
 #define GPK_DBUS_TASK_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_DBUS_TASK, GpkDbusTaskPrivate))
 #define GPK_DBUS_TASK_FINISHED_AUTOCLOSE_DELAY	10 /* seconds */
@@ -448,10 +449,6 @@ gpk_dbus_task_error_msg (GpkDbusTask *task, const gchar *title, GError *error)
 /**
  * gpk_dbus_task_install_package_ids:
  * @task: a valid #GpkDbusTask instance
- * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
- * @error: a %GError to put the error code and message in, or %NULL
- *
- * Return value: %TRUE if the method succeeded
  **/
 static void
 gpk_dbus_task_install_package_ids (GpkDbusTask *task)
@@ -501,10 +498,6 @@ out:
 /**
  * gpk_dbus_task_install_package_ids_dep_check:
  * @task: a valid #GpkDbusTask instance
- * @package_id: a package_id such as <literal>hal-info;0.20;i386;fedora</literal>
- * @error: a %GError to put the error code and message in, or %NULL
- *
- * Return value: %TRUE if the method succeeded
  **/
 static void
 gpk_dbus_task_install_package_ids_dep_check (GpkDbusTask *task)
@@ -635,6 +628,17 @@ gpk_dbus_task_install_package_ids_idle_cb (GpkDbusTask *task)
 {
 	egg_warning ("idle add install package ids");
 	gpk_dbus_task_install_package_ids (task);
+	return FALSE;
+}
+
+/**
+ * gpk_dbus_task_install_files_idle_cb:
+ **/
+static gboolean
+gpk_dbus_task_install_files_idle_cb (GpkDbusTask *task)
+{
+	egg_warning ("idle add install files");
+	gpk_dbus_task_install_files (task);
 	return FALSE;
 }
 
@@ -841,10 +845,37 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 	}
 
 	/* from InstallPackageIds */
+#if PK_CHECK_VERSION(0,5,2)
+	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES ||
+	    role == PK_ROLE_ENUM_SIMULATE_INSTALL_FILES) {
+#else
 	if (role == PK_ROLE_ENUM_GET_DEPENDS) {
+#endif
+		PkPackageList *new;
+
 		/* these are the new packages */
 		list = pk_client_get_package_list (task->priv->client_primary);
+		new = pk_package_list_new ();
 		len = pk_package_list_get_size (list);
+		for (i=0; i<len; i++) {
+			obj = pk_package_list_get_obj (list, i);
+
+#if PK_CHECK_VERSION(0,5,2)
+			/* not interesting */
+			if (obj->info != PK_INFO_ENUM_UPDATING &&
+			    obj->info != PK_INFO_ENUM_INSTALLING)
+				continue;
+#endif
+
+			/* is this package already local */
+			if (g_strcmp0 (obj->id->data, "local") == 0)
+				continue;
+
+			pk_package_list_add (new, obj->info, obj->id, obj->summary);
+		}
+
+		/* these are the new packages */
+		len = pk_package_list_get_size (new);
 		if (len == 0) {
 			egg_debug ("no deps");
 			goto skip_checks;
@@ -856,7 +887,17 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 						   len), len);
 
 		/* message */
-		text = gpk_dialog_package_id_name_join_locale (task->priv->package_ids);
+		if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES)
+			text = gpk_dialog_package_id_name_join_locale (task->priv->package_ids);
+		else {
+			gchar **files;
+			len = g_strv_length (task->priv->files);
+			files = g_new0 (gchar *, len+1);
+			for (i=0; i<len; i++)
+				files[i] = g_path_get_basename (task->priv->files[i]);
+			text = gpk_strv_join_locale (files);
+			g_strfreev (files);
+		}
 		/* TRANSLATORS: message: explain to the user what we are doing in more detail */
 		message = g_strdup_printf (ngettext ("To install %s, an additional package also has to be downloaded.",
 						     "To install %s, additional packages also have to be downloaded.",
@@ -864,7 +905,8 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 		g_free (text);
 
 		gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
-		gpk_modal_dialog_set_package_list (task->priv->dialog, list);
+		gpk_modal_dialog_set_package_list (task->priv->dialog, new);
+		g_object_unref (new);
 		gpk_modal_dialog_set_title (task->priv->dialog, title);
 		gpk_modal_dialog_set_message (task->priv->dialog, message);
 		/* TRANSLATORS: title: installing package */
@@ -881,7 +923,10 @@ gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime
 			goto out;
 		}
 skip_checks:
-		g_idle_add ((GSourceFunc) gpk_dbus_task_install_package_ids_idle_cb, task);
+		if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES)
+			g_idle_add ((GSourceFunc) gpk_dbus_task_install_package_ids_idle_cb, task);
+		else
+			g_idle_add ((GSourceFunc) gpk_dbus_task_install_files_idle_cb, task);
 	}
 
 	/* from InstallPackageIds */
@@ -1925,6 +1970,99 @@ out:
 }
 
 /**
+ * gpk_dbus_task_install_files:
+ **/
+static void
+gpk_dbus_task_install_files (GpkDbusTask *task)
+{
+	guint len;
+
+	gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
+	len = g_strv_length (task->priv->files);
+	/* TRANSLATORS: title: installing a local file */
+	gpk_modal_dialog_set_title (task->priv->dialog, ngettext ("Install local file", "Install local files", len));
+	if (task->priv->show_progress)
+		gpk_modal_dialog_present_with_time (task->priv->dialog, task->priv->timestamp);
+
+	gpk_dbus_task_install_package_files_internal (task, TRUE);
+}
+
+/**
+ * gpk_dbus_task_install_files_dep_check:
+ **/
+static void
+gpk_dbus_task_install_files_dep_check (GpkDbusTask *task)
+{
+	gboolean ret;
+	GError *error = NULL;
+	GError *error_local = NULL;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (task));
+	g_return_if_fail (task->priv->files != NULL);
+
+	/* are we dumb and can't check for depends? */
+	if (!pk_bitfield_contain (task->priv->roles, PK_ROLE_ENUM_SIMULATE_INSTALL_FILES)) {
+		egg_warning ("skipping depends check");
+		gpk_dbus_task_install_package_ids (task);
+		goto out;
+	}
+
+	/* have we previously said we don't want to be shown the confirmation */
+	ret = gconf_client_get_bool (task->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
+	if (!ret) {
+		egg_warning ("we've said we don't want the dep dialog");
+		gpk_dbus_task_install_package_ids (task);
+		goto out;
+	}
+
+	/* optional */
+	if (!task->priv->show_confirm_deps) {
+		egg_warning ("skip confirm as not allowed to interact with user");
+		gpk_dbus_task_install_files (task);
+		goto out;
+	}
+
+	gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
+	/* TRANSLATORS: finding a list of packages that we would also need to download */
+	gpk_modal_dialog_set_title (task->priv->dialog, _("Finding other packages we require"));
+	gpk_modal_dialog_set_help_id (task->priv->dialog, "dialog-finding-depends");
+
+	/* setup the UI */
+	if (task->priv->show_progress)
+		gpk_modal_dialog_present (task->priv->dialog);
+
+	/* reset */
+	ret = pk_client_reset (task->priv->client_primary, &error_local);
+	if (!ret) {
+		/* TRANSLATORS: this is an internal error, and should not be seen */
+		gpk_dbus_task_error_msg (task, _("Failed to reset client"), error_local);
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error_local->message);
+		dbus_g_method_return_error (task->priv->context, error);
+		goto out;
+	}
+
+	/* set timeout */
+	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
+
+	/* find out if this would drag in other packages */
+	ret = pk_client_simulate_install_files (task->priv->client_primary, task->priv->files, &error_local);
+	if (!ret) {
+		/* TRANSLATORS: error: could not get the extra package list when installing a package */
+		gpk_dbus_task_error_msg (task, _("Could not work out what packages would be also installed"), error_local);
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error_local->message);
+		dbus_g_method_return_error (task->priv->context, error);
+		goto out;
+	}
+
+	/* wait for async reply */
+out:
+	if (error != NULL)
+		g_error_free (error);
+	if (error_local != NULL)
+		g_error_free (error_local);
+}
+
+/**
  * gpk_dbus_task_install_package_files:
  * @task: a valid #GpkDbusTask instance
  * @file_rel: a file such as <literal>./hal-devel-0.10.0.rpm</literal>
@@ -1977,14 +2115,12 @@ gpk_dbus_task_install_package_files (GpkDbusTask *task, gchar **files_rel)
 		dbus_g_method_return_error (task->priv->context, error);
 		goto out;
 	}
-	gpk_modal_dialog_setup (task->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
-	/* TRANSLATORS: title: installing a local file */
-	gpk_modal_dialog_set_title (task->priv->dialog, ngettext ("Install local file", "Install local files", array->len));
-	if (task->priv->show_progress)
-		gpk_modal_dialog_present_with_time (task->priv->dialog, task->priv->timestamp);
 
+	/* check for deps */
 	task->priv->files = pk_ptr_array_to_strv (array);
-	gpk_dbus_task_install_package_files_internal (task, TRUE);
+	gpk_dbus_task_install_files_dep_check (task);
+
+	/* wait for async reply */
 out:
 	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
 	g_ptr_array_free (array, TRUE);
