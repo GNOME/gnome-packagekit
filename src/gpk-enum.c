@@ -1510,11 +1510,11 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_SIMULATE_INSTALL_FILES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Simulated the install");
+		text = _("Simulated the install of files");
 		break;
 	case PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Simulated the install of files");
+		text = _("Simulated the install");
 		break;
 	case PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
