@@ -1354,11 +1354,11 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		break;
 	case PK_ROLE_ENUM_SIMULATE_INSTALL_FILES:
 		/* TRANSLATORS: The role of the transaction, in present tense */
-		text = _("Simulating the install");
+		text = _("Simulating the install of files");
 		break;
 	case PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES:
 		/* TRANSLATORS: The role of the transaction, in present tense */
-		text = _("Simulating the install of files");
+		text = _("Simulating the install");
 		break;
 	case PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES:
 		/* TRANSLATORS: The role of the transaction, in present tense */
