@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-24 11:05+0100\n"
-"PO-Revision-Date: 2009-08-13 13:26+0200\n"
+"POT-Creation-Date: 2009-08-30 22:22+0200\n"
+"PO-Revision-Date: 2009-08-30 22:41+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
-"Language-Team: Hungarian <gnome at gnome dot hu>\n"
+"Language-Team: Hungarian <gnome at fsf dot hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -68,17 +68,15 @@ msgstr ""
 "„all” (mind), „security” (biztonsági), vagy „none” (egyik sem)."
 
 #: ../data/gnome-packagekit.schemas.in.h:11
-#, fuzzy
 msgid "Devices that should be ignored"
-msgstr "Figyelmen kívül hagyandó üzenetek"
+msgstr "Figyelmen kívül hagyandó eszközök"
 
 #: ../data/gnome-packagekit.schemas.in.h:12
-#, fuzzy
 msgid ""
 "Devices that should be ignored, separated by commas. These can include '*' "
 "and '?' characters"
 msgstr ""
-"Figyelmen kívül hagyandó üzenetek vesszővel elválasztott listája. Ez "
+"Figyelmen kívül hagyandó eszközök vesszővel elválasztott listája. Ez "
 "tartalmazhatja a * és ? karaktereket."
 
 #: ../data/gnome-packagekit.schemas.in.h:13
@@ -134,8 +132,7 @@ msgstr "Frissítések keresésének gyakorisága"
 
 #: ../data/gnome-packagekit.schemas.in.h:23
 msgid "How often to check for updates. Value is in seconds."
-msgstr ""
-"Frissítések keresésének gyakorisága. Az érték másodpercben van megadva."
+msgstr "Frissítések keresésének gyakorisága. Az érték másodpercben van megadva."
 
 #: ../data/gnome-packagekit.schemas.in.h:24
 msgid "How often to refresh the package cache"
@@ -193,8 +190,7 @@ msgstr "Felhasználó értesítése frissítések befejezésekor"
 
 #: ../data/gnome-packagekit.schemas.in.h:38
 msgid "Notify the user for completed updates where the user needs to restart"
-msgstr ""
-"Felhasználó értesítése frissítések befejezésekor, ha újraindítás szükséges"
+msgstr "Felhasználó értesítése frissítések befejezésekor, ha újraindítás szükséges"
 
 #: ../data/gnome-packagekit.schemas.in.h:39
 msgid "Notify the user when a task is complete"
@@ -213,8 +209,7 @@ msgid "Notify the user when security updates are available"
 msgstr "Felhasználó értesítése biztonsági frissítések elérhetővé válásakor"
 
 #: ../data/gnome-packagekit.schemas.in.h:43
-msgid ""
-"Notify the user when the automatic update was not started on battery power"
+msgid "Notify the user when the automatic update was not started on battery power"
 msgstr ""
 "Felhasználó értesítése, ha az automatikus frissítés nem indult el "
 "akkumulátoros működés esetén"
@@ -252,8 +247,7 @@ msgid "Only show native packages in the file lists"
 msgstr "Csak a natív csomagok megjelenítése a fájllistákban"
 
 #: ../data/gnome-packagekit.schemas.in.h:51
-msgid ""
-"Only show native packages maching the machine architecture in the file lists"
+msgid "Only show native packages maching the machine architecture in the file lists"
 msgstr ""
 "Csak a gép architektúrájának megfelelő natív csomagok megjelenítése a "
 "fájllistákban"
@@ -279,8 +273,7 @@ msgid "Scroll to packages as they are downloaded"
 msgstr "Csomagokra görgetés azok letöltésekor"
 
 #: ../data/gnome-packagekit.schemas.in.h:56
-msgid ""
-"Scroll to packages in the update list as they are downloaded or installed."
+msgid "Scroll to packages in the update list as they are downloaded or installed."
 msgstr ""
 "Görgetés a csomagokra a frissítések listájában azok letöltésekor vagy "
 "telepítésekor."
@@ -327,8 +320,7 @@ msgid "Show transactions that have the original application running"
 msgstr "Tranzakciók megjelenítése, amelyek eredeti alkalmazása még fut"
 
 #: ../data/gnome-packagekit.schemas.in.h:75
-msgid ""
-"The number of seconds at session startup to wait before checking for updates"
+msgid "The number of seconds at session startup to wait before checking for updates"
 msgstr ""
 "A munkamenet indítása után várakozás ennyi másodpercig a frissítések "
 "keresése előtt"
@@ -347,8 +339,7 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:78
 msgid "This key determines if applications should be able to prompt for fonts"
-msgstr ""
-"Ez a kulcs megadja, hogy az alkalmazások telepíthetnek-e betűkészleteket"
+msgstr "Ez a kulcs megadja, hogy az alkalmazások telepíthetnek-e betűkészleteket"
 
 #: ../data/gnome-packagekit.schemas.in.h:79
 msgid "Use WiFi (wireless LAN) connections to check for updates"
@@ -363,8 +354,7 @@ msgid "Use mobile broadband connections"
 msgstr "Mobil széles sávú kapcsolatok használata"
 
 #: ../data/gnome-packagekit.schemas.in.h:82
-msgid ""
-"Use mobile broadband connections such as GSM and CDMA to check for updates"
+msgid "Use mobile broadband connections such as GSM and CDMA to check for updates"
 msgstr ""
 "Mobil széles sávú kapcsolatok, például GSM és CDMA használata frissítések "
 "keresésére"
@@ -746,8 +736,8 @@ msgstr "Szoftverfrissítés"
 
 #. TRANSLATORS: program name, a simple app to view pending updates
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../data/gpk-update-viewer.desktop.in.h:2 ../src/gpk-update-viewer.c:2833
-#: ../src/gpk-update-viewer.c:2848
+#: ../data/gpk-update-viewer.desktop.in.h:2 ../src/gpk-update-viewer.c:2847
+#: ../src/gpk-update-viewer.c:2862
 msgid "Software Update Viewer"
 msgstr "Szoftverfrissítés-megjelenítő"
 
@@ -820,87 +810,87 @@ msgstr ""
 "működéshez."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:784
+#: ../src/gpk-application.c:790
 msgid "Invalid"
 msgstr "Érvénytelen"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:916
+#: ../src/gpk-application.c:922
 msgid "Type"
 msgstr "Típus"
 
-#: ../src/gpk-application.c:916
+#: ../src/gpk-application.c:922
 msgid "Collection"
 msgstr "Gyűjtemény"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:924
+#: ../src/gpk-application.c:930
 #, c-format
 msgid "Visit %s"
 msgstr "%s felkeresése"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:929
+#: ../src/gpk-application.c:935
 msgid "Project"
 msgstr "Projekt"
 
-#: ../src/gpk-application.c:929
+#: ../src/gpk-application.c:935
 msgid "Homepage"
 msgstr "Honlap"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:943
+#: ../src/gpk-application.c:949
 msgid "Group"
 msgstr "Csoport"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:949
+#: ../src/gpk-application.c:955
 msgid "License"
 msgstr "Licenc"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:958
+#: ../src/gpk-application.c:964
 msgid "Menu"
 msgstr "Menü"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:976 ../src/gpk-update-viewer.c:1140
+#: ../src/gpk-application.c:982 ../src/gpk-update-viewer.c:1151
 msgid "Size"
 msgstr "Méret"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:979
+#: ../src/gpk-application.c:985
 msgid "Installed size"
 msgstr "Telepített méret"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:982
+#: ../src/gpk-application.c:988
 msgid "Download size"
 msgstr "Letöltési méret"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:991
+#: ../src/gpk-application.c:997
 msgid "Source"
 msgstr "Forrás"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1136
+#: ../src/gpk-application.c:1143
 msgid "No results were found."
 msgstr "Nincs találat."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1144
+#: ../src/gpk-application.c:1151
 msgid "Try entering a package name in the search bar."
 msgstr "Adjon meg egy csomagnevet a keresősávban."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1147
+#: ../src/gpk-application.c:1154
 msgid "There are no packages queued to be installed or removed."
 msgstr "Nincsenek sorba állítva telepítendő vagy eltávolítandó csomagok."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1152
+#: ../src/gpk-application.c:1159
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -909,22 +899,22 @@ msgstr ""
 "kattintva."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1155
+#: ../src/gpk-application.c:1162
 msgid "Try again with a different search term."
 msgstr "Próbáljon más keresőkifejezést megadni."
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:1199 ../src/gpk-application.c:1261
+#: ../src/gpk-application.c:1206 ../src/gpk-application.c:1268
 msgid "No packages"
 msgstr "Nincsenek csomagok"
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1201
+#: ../src/gpk-application.c:1208
 msgid "This package does not depends on any others"
 msgstr "A csomag nem függ más csomagoktól"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1209
+#: ../src/gpk-application.c:1216
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -932,7 +922,7 @@ msgstr[0] "%i további csomag szükséges ehhez: %s"
 msgstr[1] "%i további csomag szükséges ehhez: %s"
 
 #. TRANSLATORS: message: show the list of dependant packages for this package
-#: ../src/gpk-application.c:1214
+#: ../src/gpk-application.c:1221
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -940,12 +930,12 @@ msgstr[0] "Az alább felsorolt csomag szükséges %s megfelelő működéséhez.
 msgstr[1] "Az alább felsorolt csomagok szükségesek %s megfelelő működéséhez."
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:1263
+#: ../src/gpk-application.c:1270
 msgid "No other packages require this package"
 msgstr "Ezt a csomagot nem igényli más csomag"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:1271
+#: ../src/gpk-application.c:1278
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -953,7 +943,7 @@ msgstr[0] "%i csomag igényli ezt: %s"
 msgstr[1] "%i csomag igényli ezt: %s"
 
 #. TRANSLATORS: show a list of packages for the package
-#: ../src/gpk-application.c:1276
+#: ../src/gpk-application.c:1283
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -961,198 +951,186 @@ msgstr[0] "Az alább felsorolt csomag megfelelő működéséhez szükséges ez:
 msgstr[1] "Az alább felsorolt csomagok megfelelő működéséhez szükséges ez: %s."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1595
+#: ../src/gpk-application.c:1635
 msgid "Invalid search text"
 msgstr "Érvénytelen keresőkifejezés"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1597
+#: ../src/gpk-application.c:1637
 msgid "The search text contains invalid characters"
 msgstr "A keresőkifejezés érvénytelen karaktereket tartalmaz"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1632
+#: ../src/gpk-application.c:1672
 msgid "The search could not be completed"
 msgstr "A keresés nem fejezhető be"
 
 #. TRANSLATORS: low level failure, details to follow
 #. TRANSLATORS: low level failure
-#: ../src/gpk-application.c:1634 ../src/gpk-application.c:1678
+#: ../src/gpk-application.c:1674 ../src/gpk-application.c:1718
 msgid "Running the transaction failed"
 msgstr "A tranzakció futtatása meghiúsult"
 
 #. TRANSLATORS: title: could not get group data
-#: ../src/gpk-application.c:1676
+#: ../src/gpk-application.c:1716
 msgid "The group could not be queried"
 msgstr "A csoport nem kérdezhető le"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1776
+#: ../src/gpk-application.c:1816
 msgid "Changes not applied"
 msgstr "A módosítások nincsenek alkalmazva"
 
-#: ../src/gpk-application.c:1777
+#: ../src/gpk-application.c:1817
 msgid "Close _Anyway"
 msgstr "Bezárás _mindenképp"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1781
+#: ../src/gpk-application.c:1821
 msgid "You have made changes that have not yet been applied."
 msgstr "Még ki vannak jelölve végrehajtatlan változtatások."
 
-#: ../src/gpk-application.c:1782
+#: ../src/gpk-application.c:1822
 msgid "These changes will be lost if you close this window."
 msgstr "Ha a kilépést választja, ezek elvesznek."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2049 ../src/gpk-enum.c:1125 ../src/gpk-enum.c:1194
+#: ../src/gpk-application.c:2095 ../src/gpk-enum.c:1126 ../src/gpk-enum.c:1199
 msgid "Installed"
 msgstr "Telepítve"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2065 ../src/gpk-application.c:2087
+#: ../src/gpk-application.c:2111 ../src/gpk-application.c:2133
 #: ../src/gpk-dialog.c:146 ../src/gpk-modal-dialog.c:714
 msgid "Name"
 msgstr "Név"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2331
 msgid "Selected packages"
 msgstr "Kiválasztott csomagok"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2338
+#: ../src/gpk-application.c:2384
 msgid "Searching by name"
 msgstr "Keresés név szerint"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2363
+#: ../src/gpk-application.c:2409
 msgid "Searching by description"
 msgstr "Keresés leírás szerint"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2388
+#: ../src/gpk-application.c:2434
 msgid "Searching by file"
 msgstr "Keresés fájl szerint"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2414
+#: ../src/gpk-application.c:2460
 msgid "Search by name"
 msgstr "Keresés név szerint"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2424
+#: ../src/gpk-application.c:2470
 msgid "Search by description"
 msgstr "Keresés leírás szerint"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2434
+#: ../src/gpk-application.c:2480
 msgid "Search by file name"
 msgstr "Keresés fájlnév szerint"
 
 #. TRANSLATORS: packaging problem, failed to show link
 #. TRANSLATORS: normally a packaging error, cannot launch link
-#: ../src/gpk-application.c:2477 ../src/gpk-check-update.c:203
+#: ../src/gpk-application.c:2523 ../src/gpk-check-update.c:203
 #: ../src/gpk-watch.c:747
 msgid "Failed to show url"
 msgstr "Az URL megjelenítése meghiúsult"
 
-#: ../src/gpk-application.c:2514 ../src/gpk-check-update.c:227
+#: ../src/gpk-application.c:2560 ../src/gpk-check-update.c:227
 #: ../src/gpk-watch.c:767
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "A GNU General Public License 2. változata szerint használható"
 
-#: ../src/gpk-application.c:2515 ../src/gpk-check-update.c:228
+#: ../src/gpk-application.c:2561 ../src/gpk-check-update.c:228
 #: ../src/gpk-watch.c:768
-#, fuzzy
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
-msgstr ""
-"A PackageKit szabad szoftver, terjesztheti és/vagy módosíthatja a Free\n"
-"Software Foundation által kiadott GNU General Public License második (vagy\n"
-"bármely későbbi) változatában foglaltak alapján."
+msgstr "A PackageKit szabad szoftver, terjesztheti és/vagy módosíthatja a Free Software Foundation által kiadott GNU General Public License második (vagy bármely későbbi) változatában foglaltak alapján."
 
-#: ../src/gpk-application.c:2519 ../src/gpk-check-update.c:232
+#: ../src/gpk-application.c:2565 ../src/gpk-check-update.c:232
 #: ../src/gpk-watch.c:772
-#, fuzzy
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
-msgstr ""
-"A PackageKit programot abban a reményben terjesztjük, hogy hasznos lesz, de\n"
-"nem vállalunk SEMMIFÉLE GARANCIÁT, még olyan értelemben sem, hogy a program\n"
-"alkalmas-e a KÖZREADÁSRA vagy EGY BIZONYOS FELADAT ELVÉGZÉSÉRE. További\n"
-"részletekért tanulmányozza a GNU GPL licencet."
+msgstr "A PackageKit programot abban a reményben terjesztjük, hogy hasznos lesz, de nem vállalunk SEMMIFÉLE GARANCIÁT, még olyan értelemben sem, hogy a program alkalmas-e a KÖZREADÁSRA vagy EGY BIZONYOS FELADAT ELVÉGZÉSÉRE. További részletekért tanulmányozza a GNU GPL licencet."
 
-#: ../src/gpk-application.c:2523 ../src/gpk-check-update.c:236
+#: ../src/gpk-application.c:2569 ../src/gpk-check-update.c:236
 #: ../src/gpk-watch.c:776
-#, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
-"A programhoz a GNU General Public License egy példánya is jár, \n"
-"ha nem kapta meg, írjon a Free Software Foundation Inc.-nek. \n"
-"Levélcímük: 51 Franklin Street, Fifth Floor, Boston, MA\n"
-"02110-1301, USA."
+"A programhoz a GNU General Public License egy példánya is jár, ha nem kapta "
+"meg, írjon a Free Software Foundation Inc.-nek. Levélcímük: 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2529 ../src/gpk-check-update.c:241
+#: ../src/gpk-application.c:2575 ../src/gpk-check-update.c:241
 #: ../src/gpk-watch.c:781
 msgid "translator-credits"
 msgstr "Kelemen Gábor <kelemeng@gnome.hu>"
 
 #. TRANSLATORS: website label
-#: ../src/gpk-application.c:2555 ../src/gpk-check-update.c:261
+#: ../src/gpk-application.c:2601 ../src/gpk-check-update.c:261
 #: ../src/gpk-watch.c:800
 msgid "PackageKit Website"
 msgstr "A PackageKit weboldala"
 
 #. TRANSLATORS: description of application, gpk-application that is
-#: ../src/gpk-application.c:2558
+#: ../src/gpk-application.c:2604
 msgid "Package Manager for GNOME"
 msgstr "Csomagkezelő GNOME környezethez"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3297
+#: ../src/gpk-application.c:3343
 msgid "Text"
 msgstr "Szöveg"
 
 #. TRANSLATORS: welcome text if we can click the group list
-#: ../src/gpk-application.c:3320
-msgid ""
-"Enter a package name and then click find, or click a group to get started."
+#: ../src/gpk-application.c:3366
+msgid "Enter a package name and then click find, or click a group to get started."
 msgstr ""
 "A kezdéshez adjon meg egy csomagnevet és válassza a keresést, vagy válasszon "
 "egy csoportot."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3323
+#: ../src/gpk-application.c:3369
 msgid "Enter a package name and then click find to get started."
 msgstr "A kezdéshez adjon meg egy csomagnevet és válassza a keresést."
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3358 ../src/gpk-application.c:3427
+#: ../src/gpk-application.c:3404 ../src/gpk-application.c:3473
 msgid "All packages"
 msgstr "Minden csomag"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3360 ../src/gpk-application.c:3429
+#: ../src/gpk-application.c:3406 ../src/gpk-application.c:3475
 msgid "Show all packages"
 msgstr "Minden csomag megjelenítése"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:3606
+#: ../src/gpk-application.c:3652
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -1160,27 +1138,27 @@ msgstr[0] "%i fájl telepítve %s által"
 msgstr[1] "%i fájl telepítve %s által"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3811
+#: ../src/gpk-application.c:3859
 msgid "Clear current selection"
 msgstr "Kijelölés törlése"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3836
+#: ../src/gpk-application.c:3884
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "A módosítások nem kerülnek alkalmazásra ezen gomb megnyomásáig"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3862
+#: ../src/gpk-application.c:3910
 msgid "Visit home page for selected package"
 msgstr "A kijelölt csomag honlapjának felkeresése"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:4006
+#: ../src/gpk-application.c:4054
 msgid "Find packages"
 msgstr "Csomagok keresése"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:4013
+#: ../src/gpk-application.c:4061
 msgid "Cancel search"
 msgstr "Keresés megszakítása"
 
@@ -1190,14 +1168,14 @@ msgstr "Keresés megszakítása"
 #: ../src/gpk-install-mime-type.c:52 ../src/gpk-install-package-name.c:52
 #: ../src/gpk-install-provide-file.c:52 ../src/gpk-log.c:646
 #: ../src/gpk-prefs.c:400 ../src/gpk-repo.c:520 ../src/gpk-service-pack.c:595
-#: ../src/gpk-update-icon.c:128 ../src/gpk-update-viewer.c:2814
+#: ../src/gpk-update-icon.c:128 ../src/gpk-update-viewer.c:2828
 msgid "Show extra debugging information"
 msgstr "Extra hibakeresési információk megjelenítése"
 
 #. TRANSLATORS: show the program version
 #: ../src/gpk-application-main.c:81 ../src/gpk-backend-status.c:86
 #: ../src/gpk-prefs.c:402 ../src/gpk-update-icon.c:132
-#: ../src/gpk-update-viewer.c:2816
+#: ../src/gpk-update-viewer.c:2830
 msgid "Show the program version and exit"
 msgstr "A programverzió megjelenítése és kilépés"
 
@@ -1325,9 +1303,9 @@ msgstr "Disztribúciófrissítés érhető el"
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1187 ../src/gpk-dbus-task.c:745
-#: ../src/gpk-dbus-task.c:782 ../src/gpk-dbus-task.c:958
-#: ../src/gpk-dbus-task.c:2460 ../src/gpk-dbus-task.c:2896
+#: ../src/gpk-check-update.c:1187 ../src/gpk-dbus-task.c:757
+#: ../src/gpk-dbus-task.c:794 ../src/gpk-dbus-task.c:1011
+#: ../src/gpk-dbus-task.c:2604 ../src/gpk-dbus-task.c:3040
 msgid "More information"
 msgstr "További információk"
 
@@ -1358,7 +1336,7 @@ msgid "Restart computer now"
 msgstr "Indítsa újra a számítógépet"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:1508 ../src/gpk-update-viewer.c:1886
+#: ../src/gpk-check-update.c:1508 ../src/gpk-update-viewer.c:1900
 msgid "Updated successfully"
 msgstr "Sikeresen frissítve"
 
@@ -1469,40 +1447,40 @@ msgstr "%s, %s, %s és %s"
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s és %s"
 
-#: ../src/gpk-dbus-task.c:271
+#: ../src/gpk-dbus-task.c:272
 msgid "EULA required"
 msgstr "EULA szükséges"
 
-#: ../src/gpk-dbus-task.c:293
+#: ../src/gpk-dbus-task.c:294
 msgid "Signature required"
 msgstr "Aláírás szükséges"
 
-#: ../src/gpk-dbus-task.c:321
+#: ../src/gpk-dbus-task.c:322
 msgid "Install untrusted"
 msgstr "Nem megbízható telepítése"
 
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:356
+#: ../src/gpk-dbus-task.c:357
 msgid "Failed to install software"
 msgstr "A szoftver telepítése meghiúsult"
 
 #. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:358
+#: ../src/gpk-dbus-task.c:359
 msgid "No applications were chosen to be installed"
 msgstr "Nincsenek kiválasztva alkalmazások telepítésre"
 
 #. TRANSLATORS: detailed text about the error
 #. TRANSLATORS: The detailed error if the user clicks "more info"
-#: ../src/gpk-dbus-task.c:387 ../src/gpk-watch.c:418
+#: ../src/gpk-dbus-task.c:388 ../src/gpk-watch.c:418
 msgid "Error details"
 msgstr "Hiba részletei"
 
-#: ../src/gpk-dbus-task.c:387
+#: ../src/gpk-dbus-task.c:388
 msgid "Package Manager error details"
 msgstr "Csomagkezelési hiba részletei"
 
 #. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:401
+#: ../src/gpk-dbus-task.c:402
 msgid ""
 "Unknown error. Please refer to the detailed report and report in your "
 "distribution bugtracker."
@@ -1511,95 +1489,95 @@ msgstr ""
 "disztribúciója hibajelentőjébe."
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:415
+#: ../src/gpk-dbus-task.c:416
 msgid "You don't have the necessary privileges to perform this action."
 msgstr "Nincs megfelelő jogosultsága a művelet végrehajtásához."
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:419
+#: ../src/gpk-dbus-task.c:420
 msgid "The packagekitd service could not be started."
 msgstr "A packagekitd szolgáltatás nem indítható el."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:423
+#: ../src/gpk-dbus-task.c:424
 msgid "The query is not valid."
 msgstr "A keresés érvénytelen volt."
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:427
+#: ../src/gpk-dbus-task.c:428
 msgid "The file is not valid."
 msgstr "A fájl érvénytelen volt."
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-dbus-task.c:465 ../src/gpk-enum.c:928
+#: ../src/gpk-dbus-task.c:462 ../src/gpk-enum.c:929
 msgid "Installing packages"
 msgstr "Csomagok telepítése"
 
 #. TRANSLATORS: this should never happen, low level failure
-#: ../src/gpk-dbus-task.c:473 ../src/gpk-dbus-task.c:1252
+#: ../src/gpk-dbus-task.c:470 ../src/gpk-dbus-task.c:1305
 msgid "Failed to reset client to perform action"
 msgstr "A kliens visszaállítása meghiúsult a művelet végrehajtásához"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:489 ../src/gpk-dbus-task.c:1005
+#: ../src/gpk-dbus-task.c:486 ../src/gpk-dbus-task.c:1058
 msgid "Failed to install package"
 msgstr "A csomag telepítése meghiúsult"
 
 #. TRANSLATORS: finding a list of packages that we would also need to download
-#: ../src/gpk-dbus-task.c:543
+#: ../src/gpk-dbus-task.c:540 ../src/gpk-dbus-task.c:2027
 msgid "Finding other packages we require"
 msgstr "Más szükséges csomagok keresése"
 
 #. TRANSLATORS: this is an internal error, and should not be seen
-#: ../src/gpk-dbus-task.c:554 ../src/gpk-dbus-task.c:2074
-#: ../src/gpk-dbus-task.c:2186 ../src/gpk-dbus-task.c:2600
-#: ../src/gpk-dbus-task.c:2848
+#: ../src/gpk-dbus-task.c:551 ../src/gpk-dbus-task.c:2038
+#: ../src/gpk-dbus-task.c:2218 ../src/gpk-dbus-task.c:2330
+#: ../src/gpk-dbus-task.c:2744 ../src/gpk-dbus-task.c:2992
 msgid "Failed to reset client"
 msgstr "A kliens visszaállítása meghiúsult"
 
 #. TRANSLATORS: error: could not get the extra package list when installing a package
-#: ../src/gpk-dbus-task.c:567
+#: ../src/gpk-dbus-task.c:568 ../src/gpk-dbus-task.c:2051
 msgid "Could not work out what packages would be also installed"
 msgstr "A szintén telepítendő csomagok nem határozhatók meg"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:740
+#: ../src/gpk-dbus-task.c:752
 msgid "Failed to find software"
 msgstr "A szoftver keresése meghiúsult"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:742
+#: ../src/gpk-dbus-task.c:754
 msgid "No new applications can be found to handle this type of file"
 msgstr "Nem találhatók új alkalmazások, amelyek kezelik ezt a fájltípust"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:777
+#: ../src/gpk-dbus-task.c:789
 msgid "Failed to find package"
 msgstr "A csomag keresése meghiúsult"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:779
+#: ../src/gpk-dbus-task.c:791
 msgid "The file could not be found in any packages"
 msgstr "A fájl nem található egyik csomagban sem"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:810
+#: ../src/gpk-dbus-task.c:822
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "A(z) %s csomag már biztosítja a fájlt"
 
 #. TRANSLATORS: title
 #. TRANSLATORS: title: detailed internal error why the file install failed
-#: ../src/gpk-dbus-task.c:813 ../src/gpk-dbus-task.c:1266
+#: ../src/gpk-dbus-task.c:825 ../src/gpk-dbus-task.c:1319
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "A fájl telepítése meghiúsult"
 msgstr[1] "A fájlok telepítése meghiúsult"
 
 #. TRANSLATORS: title: tell the user we have to install additional packages
-#: ../src/gpk-dbus-task.c:846 ../src/gpk-helper-deps-install.c:87
+#: ../src/gpk-dbus-task.c:885 ../src/gpk-helper-deps-install.c:87
 #, c-format
 msgid "%i additional package also has to be installed"
 msgid_plural "%i additional packages also have to be installed"
@@ -1608,7 +1586,7 @@ msgstr[1] "%i további csomag is telepítendő"
 
 #. TRANSLATORS: message: explain to the user what we are doing in more detail
 #. TRANSLATORS: message: describe in detail why it must happen
-#: ../src/gpk-dbus-task.c:853 ../src/gpk-helper-deps-install.c:95
+#: ../src/gpk-dbus-task.c:902 ../src/gpk-helper-deps-install.c:95
 #, c-format
 msgid "To install %s, an additional package also has to be downloaded."
 msgid_plural "To install %s, additional packages also have to be downloaded."
@@ -1625,151 +1603,149 @@ msgstr[1] "%s telepítéséhez további csomagokat is le kell tölteni."
 #. gtk_dialog_add_button (GTK_DIALOG (dialog), "help", GTK_RESPONSE_HELP);
 #. TRANSLATORS: this is button text
 #. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:863 ../src/gpk-dbus-task.c:1603
-#: ../src/gpk-dbus-task.c:2052 ../src/gpk-dbus-task.c:2168
-#: ../src/gpk-dbus-task.c:2491 ../src/gpk-dbus-task.c:2922
-#: ../src/gpk-dbus-task.c:3005 ../src/gpk-dbus-task.c:3065
+#: ../src/gpk-dbus-task.c:913 ../src/gpk-dbus-task.c:1656
+#: ../src/gpk-dbus-task.c:2196 ../src/gpk-dbus-task.c:2312
+#: ../src/gpk-dbus-task.c:2635 ../src/gpk-dbus-task.c:3066
+#: ../src/gpk-dbus-task.c:3149 ../src/gpk-dbus-task.c:3209
 #: ../src/gpk-helper-deps-install.c:106 ../src/gpk-helper-deps-update.c:106
-#: ../src/gpk-update-viewer.c:1070
+#: ../src/gpk-update-viewer.c:1081
 msgid "Install"
 msgstr "Telepítés"
 
-#: ../src/gpk-dbus-task.c:888
+#: ../src/gpk-dbus-task.c:941
 msgid "The following packages were installed:"
 msgstr "A következő csomagok kerültek telepítésre:"
 
 #. FIXME: shows package_id in UI
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:946
+#: ../src/gpk-dbus-task.c:999
 #, c-format
 msgid "Could not find packages"
 msgstr "A csomagok nem találhatók"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:955
+#: ../src/gpk-dbus-task.c:1008
 msgid "The packages could not be found in any software source"
 msgstr "A csomag nem található egyik szoftverforrásban sem"
 
-#: ../src/gpk-dbus-task.c:989
+#: ../src/gpk-dbus-task.c:1042
 msgid "Failed to install packages"
 msgstr "A csomagok telepítése meghiúsult"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:991 ../src/gpk-enum.c:358
+#: ../src/gpk-dbus-task.c:1044 ../src/gpk-enum.c:359
 msgid "The package is already installed"
 msgstr "A csomag már telepítve van"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1007 ../src/gpk-dbus-task.c:2090
+#: ../src/gpk-dbus-task.c:1060 ../src/gpk-dbus-task.c:2234
 msgid "Incorrect response from search"
 msgstr "Helytelen válasz a keresésből"
 
 #. TRANSLATORS: button: show details about the error
 #. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-dbus-task.c:1162 ../src/gpk-watch.c:614
+#: ../src/gpk-dbus-task.c:1215 ../src/gpk-watch.c:614
 msgid "Show details"
 msgstr "Részletek megjelenítése"
 
 #. TRANSLATORS: title: we have to copy the private files to a public location
-#: ../src/gpk-dbus-task.c:1487
+#: ../src/gpk-dbus-task.c:1540
 msgid "Do you want to copy this file?"
 msgid_plural "Do you want to copy these files?"
 msgstr[0] "Kívánja másolni ezt a fájlt?"
 msgstr[1] "Kívánja másolni ezeket a fájlokat?"
 
 #. TRANSLATORS: message: explain to the user what we are doing
-#: ../src/gpk-dbus-task.c:1490
+#: ../src/gpk-dbus-task.c:1543
 msgid ""
 "This package file has to be copied from a private directory so it can be "
 "installed:"
 msgid_plural ""
 "Several package files have to be copied from a private directory so they can "
 "be installed:"
-msgstr[0] ""
-"Ezt a csomagfájlt át kell másolni egy titkos könyvtárból a telepítéséhez:"
-msgstr[1] ""
-"Néhány csomagfájlt át kell másolni egy titkos könyvtárból a telepítéséhez:"
+msgstr[0] "Ezt a csomagfájlt át kell másolni egy titkos könyvtárból a telepítéséhez:"
+msgstr[1] "Néhány csomagfájlt át kell másolni egy titkos könyvtárból a telepítéséhez:"
 
 #. TRANSLATORS: button: copy file from one directory to another
-#: ../src/gpk-dbus-task.c:1501
+#: ../src/gpk-dbus-task.c:1554
 msgid "Copy file"
 msgid_plural "Copy files"
 msgstr[0] "Fájl másolása"
 msgstr[1] "Fájlok másolása"
 
 #. TRANSLATORS: title: we are about to copy files, which may take a few seconds
-#: ../src/gpk-dbus-task.c:1518
+#: ../src/gpk-dbus-task.c:1571
 msgid "Copying file"
 msgid_plural "Copying files"
 msgstr[0] "Fájl másolása"
 msgstr[1] "Fájlok másolása"
 
 #. TRANSLATORS: title: tell the user we failed
-#: ../src/gpk-dbus-task.c:1557
+#: ../src/gpk-dbus-task.c:1610
 msgid "The file could not be copied"
 msgid_plural "The files could not be copied"
 msgstr[0] "A fájl nem másolható"
 msgstr[1] "A fájlok nem másolhatók"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:1594
+#: ../src/gpk-dbus-task.c:1647
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Kívánja telepíteni a fájlt?"
 msgstr[1] "Kívánja telepíteni a fájlokat?"
 
 #. TRANSLATORS: title: we couldn't find the file -- very hard to get this
-#: ../src/gpk-dbus-task.c:1651
+#: ../src/gpk-dbus-task.c:1704
 msgid "File was not found!"
 msgid_plural "Files were not found!"
 msgstr[0] "A fájl nem található!"
 msgstr[1] "A fájlok nem találhatók!"
 
 #. TRANSLATORS: message: explain what went wrong
-#: ../src/gpk-dbus-task.c:1655
+#: ../src/gpk-dbus-task.c:1708
 msgid "The following file was not found:"
 msgid_plural "The following files were not found:"
 msgstr[0] "A következő fájl nem található:"
 msgstr[1] "A következő fájlok nem találhatók:"
 
 #. TRANSLATORS: title: we couldn't find the file -- very hard to get this
-#: ../src/gpk-dbus-task.c:1769
+#: ../src/gpk-dbus-task.c:1822
 msgid "File was not recognised!"
 msgid_plural "Files were not recognised!"
 msgstr[0] "A fájl ismeretlen!"
 msgstr[1] "A fájlok ismeretlenek!"
 
 #. TRANSLATORS: message: the backend would not be able to handle the mime-type
-#: ../src/gpk-dbus-task.c:1773
+#: ../src/gpk-dbus-task.c:1826
 msgid "The following file is not recognised by the packaging system:"
 msgid_plural "The following files are not recognised by the packaging system:"
 msgstr[0] "A következő fájlt nem ismerte fel a csomagkezelő rendszer:"
 msgstr[1] "A következő fájlokat nem ismerte fel a csomagkezelő rendszer:"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1974
+#: ../src/gpk-dbus-task.c:1983
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Helyi fájl telepítése"
 msgstr[1] "Helyi fájlok telepítése"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:2036
+#: ../src/gpk-dbus-task.c:2180
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "További csomag szükséges"
 msgstr[1] "További csomagok szükségesek"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:2039
+#: ../src/gpk-dbus-task.c:2183
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Kíván megfelelő csomagot keresni és telepíteni most?"
 msgstr[1] "Kíván megfelelő csomagokat keresni és telepíteni most?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2045
+#: ../src/gpk-dbus-task.c:2189
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1777,33 +1753,33 @@ msgstr[0] "%s csomagot akar telepíteni"
 msgstr[1] "%s csomagokat akar telepíteni"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2048
+#: ../src/gpk-dbus-task.c:2192
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Egy program csomagot akar telepíteni"
 msgstr[1] "Egy program csomagokat akar telepíteni"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:2064
+#: ../src/gpk-dbus-task.c:2208
 msgid "Searching for packages"
 msgstr "Csomagok keresése"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2153
+#: ../src/gpk-dbus-task.c:2297
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "A következő fájl szükséges:"
 msgstr[1] "A következő fájlok szükségesek:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2156
+#: ../src/gpk-dbus-task.c:2300
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Kívánja megkeresni a fájlt most?"
 msgstr[1] "Kívánja megkeresni a fájlokat most?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2161
+#: ../src/gpk-dbus-task.c:2305
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1811,7 +1787,7 @@ msgstr[0] "%s egy fájlt akar telepíteni"
 msgstr[1] "%s fájlokat akar telepíteni"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2164
+#: ../src/gpk-dbus-task.c:2308
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Egy program fájlt akar telepíteni"
@@ -1819,37 +1795,37 @@ msgstr[1] "Egy program fájlokat akar telepíteni"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:2179 ../src/gpk-enum.c:1252
+#: ../src/gpk-dbus-task.c:2323 ../src/gpk-enum.c:1261
 msgid "Searching for file"
 msgstr "Fájl keresése"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:2202
+#: ../src/gpk-dbus-task.c:2346
 msgid "Failed to search for file"
 msgstr "A fájl keresése meghiúsult"
 
 #. TRANSLATORS: title, searching for codecs
-#: ../src/gpk-dbus-task.c:2238
+#: ../src/gpk-dbus-task.c:2382
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Bővítmény keresése: %s"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:2309
+#: ../src/gpk-dbus-task.c:2453
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "A következő bővítmény szükséges:"
 msgstr[1] "A következő bővítmények szükségesek:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:2327
+#: ../src/gpk-dbus-task.c:2471
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Kívánja ezt megkeresni most?"
 msgstr[1] "Kívánja ezeket megkeresni most?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2340
+#: ../src/gpk-dbus-task.c:2484
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1857,7 +1833,7 @@ msgstr[0] "%s további bővítményt igényel a fájl dekódolásához"
 msgstr[1] "%s további bővítményeket igényel a fájl dekódolásához"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2344
+#: ../src/gpk-dbus-task.c:2488
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1865,7 +1841,7 @@ msgstr[0] "%s további bővítményt igényel a fájl kódolásához"
 msgstr[1] "%s további bővítményeket igényel a fájl kódolásához"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2348
+#: ../src/gpk-dbus-task.c:2492
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1873,72 +1849,72 @@ msgstr[0] "%s további bővítményt igényel a művelethez"
 msgstr[1] "%s további bővítményeket igényel a művelethez"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:2354
+#: ../src/gpk-dbus-task.c:2498
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Egy program további bővítményt igényel a fájl dekódolásához"
 msgstr[1] "Egy program további bővítményeket igényel a fájl dekódolásához"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:2358
+#: ../src/gpk-dbus-task.c:2502
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Egy program további bővítményt igényel a fájl kódolásához"
 msgstr[1] "Egy program további bővítményeket igényel a fájl kódolásához"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:2362
+#: ../src/gpk-dbus-task.c:2506
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Egy program további bővítményt igényel a művelethez"
 msgstr[1] "Egy program további bővítményeket igényel a művelethez"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2368 ../src/gpk-dbus-task.c:2576
-#: ../src/gpk-dbus-task.c:2819
+#: ../src/gpk-dbus-task.c:2512 ../src/gpk-dbus-task.c:2720
+#: ../src/gpk-dbus-task.c:2963
 msgid "Search"
 msgstr "Keresés"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:2426
+#: ../src/gpk-dbus-task.c:2570
 msgid "Searching for plugins"
 msgstr "Bővítmények keresése"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:2454
+#: ../src/gpk-dbus-task.c:2598
 msgid "Failed to search for plugin"
 msgstr "A bővítmény keresése meghiúsult"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:2456
+#: ../src/gpk-dbus-task.c:2600
 msgid "Could not find plugin in any configured software source"
 msgstr "A bővítmény nem található egyik beállított szoftverforrásban sem"
 
-#: ../src/gpk-dbus-task.c:2482
+#: ../src/gpk-dbus-task.c:2626
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "A következő bővítmény telepítése"
 msgstr[1] "A következő bővítmények telepítése"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:2483 ../src/gpk-dbus-task.c:2915
+#: ../src/gpk-dbus-task.c:2627 ../src/gpk-dbus-task.c:3059
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Kívánja most telepíteni a csomagot?"
 msgstr[1] "Kívánja most telepíteni a csomagokat?"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:2558
+#: ../src/gpk-dbus-task.c:2702
 msgid "An additional program is required to open this type of file:"
 msgstr "A fájltípus megnyitásához további program szükséges:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:2561
+#: ../src/gpk-dbus-task.c:2705
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Kíván a fájltípushoz megfelelő programot keresni?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2569
+#: ../src/gpk-dbus-task.c:2713
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1946,49 +1922,48 @@ msgstr[0] "%s új mime-típust igényel"
 msgstr[1] "%s új mime-típusokat igényel"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2572
+#: ../src/gpk-dbus-task.c:2716
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Egy program új mime-típust igényel"
 msgstr[1] "Egy program új mime-típusokat igényel"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:2588
+#: ../src/gpk-dbus-task.c:2732
 msgid "Searching for file handlers"
 msgstr "Fájlkezelők keresése"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:2617 ../src/gpk-dbus-task.c:2867
+#: ../src/gpk-dbus-task.c:2761 ../src/gpk-dbus-task.c:3011
 msgid "Failed to search for provides"
 msgstr "A biztosítók keresése meghiúsult"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2692
+#: ../src/gpk-dbus-task.c:2836
 msgid "Language tag not parsed"
 msgstr "A nyelv címke nincs feldolgozva"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2700
+#: ../src/gpk-dbus-task.c:2844
 msgid "Language code not matched"
 msgstr "A nyelvkód nem illeszkedik"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2798
+#: ../src/gpk-dbus-task.c:2942
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "A fájl megfelelő megjelenítéséhez további betűkészlet szükséges."
-msgstr[1] ""
-"A fájl megfelelő megjelenítéséhez további betűkészletek szükségesek."
+msgstr[1] "A fájl megfelelő megjelenítéséhez további betűkészletek szükségesek."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2802
+#: ../src/gpk-dbus-task.c:2946
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Kíván megfelelő csomagot keresni most?"
 msgstr[1] "Kíván megfelelő betűkészleteket csomagokat keresni most?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2812
+#: ../src/gpk-dbus-task.c:2956
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1996,72 +1971,72 @@ msgstr[0] "%s betűkészletet akar telepíteni"
 msgstr[1] "%s betűkészleteket akar telepíteni"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2815
+#: ../src/gpk-dbus-task.c:2959
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Egy program betűkészletet akar telepíteni"
 msgstr[1] "Egy program betűkészleteket akar telepíteni"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2830
+#: ../src/gpk-dbus-task.c:2974
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Betűkészlet keresése"
 msgstr[1] "Betűkészletek keresése"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2885
+#: ../src/gpk-dbus-task.c:3029
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "A betűkészlet keresése meghiúsult"
 msgstr[1] "A betűkészletek keresése meghiúsult"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2893
+#: ../src/gpk-dbus-task.c:3037
 msgid "No new fonts can be found for this document"
 msgstr "Nem találhatók új betűkészletek ehhez a dokumentumhoz"
 
 #. TRANSLATORS: finding the package names for a catalog
-#: ../src/gpk-dbus-task.c:2960
+#: ../src/gpk-dbus-task.c:3104
 #, c-format
 msgid "Finding package name: %s"
 msgstr "Csomagnév keresése: %s"
 
 #. TRANSLATORS: finding a package for a file for a catalog
-#: ../src/gpk-dbus-task.c:2963
+#: ../src/gpk-dbus-task.c:3107
 #, c-format
 msgid "Finding file name: %s"
 msgstr "Fájlnév keresése: %s"
 
 #. TRANSLATORS: finding a package which can provide a virtual provide
-#: ../src/gpk-dbus-task.c:2966
+#: ../src/gpk-dbus-task.c:3110
 #, c-format
 msgid "Finding a package to provide: %s"
 msgstr "Csomag keresése, amely biztosítja: %s"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2996
+#: ../src/gpk-dbus-task.c:3140
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Kívánja ezt a katalógust telepíteni?"
 msgstr[1] "Kívánja ezeket a katalógusokat telepíteni?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3021
+#: ../src/gpk-dbus-task.c:3165
 msgid "Install catalogs"
 msgstr "Katalógusok telepítése"
 
-#: ../src/gpk-dbus-task.c:3041
+#: ../src/gpk-dbus-task.c:3185
 msgid "No packages need to be installed"
 msgstr "Nem kell csomagokat telepíteni"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:3059
+#: ../src/gpk-dbus-task.c:3203
 msgid "Install packages in catalog?"
 msgstr "Telepíti a katalógus csomagjait?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:3061
+#: ../src/gpk-dbus-task.c:3205
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "A következő csomagokat telepítésre jelöli ki a katalógus:"
 
@@ -2072,7 +2047,7 @@ msgstr "Alkalmazások"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
 #. TRANSLATORS: The group type
-#: ../src/gpk-desktop.c:119 ../src/gpk-desktop.c:126 ../src/gpk-enum.c:1574
+#: ../src/gpk-desktop.c:119 ../src/gpk-desktop.c:126 ../src/gpk-enum.c:1583
 msgid "System"
 msgstr "Rendszer"
 
@@ -2094,264 +2069,259 @@ msgid "No files"
 msgstr "Nincsenek fájlok"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:302
+#: ../src/gpk-enum.c:303
 msgid "CD"
 msgstr "CD-t"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:306
+#: ../src/gpk-enum.c:307
 msgid "DVD"
 msgstr "DVD-t"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:311
 msgid "disc"
 msgstr "lemezt"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:314
+#: ../src/gpk-enum.c:315
 msgid "media"
 msgstr "adathordozó"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:332
 msgid "No network connection available"
 msgstr "Nem áll rendelkezésre hálózati kapcsolat"
 
-#: ../src/gpk-enum.c:334
+#: ../src/gpk-enum.c:335
 msgid "No package cache is available."
 msgstr "Nem áll rendelkezésre csomaggyorsítótár."
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:338
 msgid "Out of memory"
 msgstr "Nincs több memória"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:341
 msgid "Failed to create a thread"
 msgstr "A szál létrehozása meghiúsult"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:344
 msgid "Not supported by this backend"
 msgstr "Ez a háttérprogram nem támogatja"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:347
 msgid "An internal system error has occurred"
 msgstr "Belső rendszerhiba történt"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:350
 msgid "A security signature is not present"
 msgstr "Nincs biztonsági aláírás"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:353
 msgid "The package is not installed"
 msgstr "A csomag nincs telepítve"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:356
 msgid "The package was not found"
 msgstr "A csomag nem található"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:362
 msgid "The package download failed"
 msgstr "A csomag letöltése meghiúsult"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:365
 msgid "The group was not found"
 msgstr "A csoport nem található"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:368
 msgid "The group list was invalid"
 msgstr "A csoportlista érvénytelen volt"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:371
 msgid "Dependency resolution failed"
 msgstr "A függőségfeloldás meghiúsult"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:374
 msgid "Search filter was invalid"
 msgstr "A keresőkifejezés érvénytelen volt"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:377
 msgid "The package identifier was not well formed"
 msgstr "A csomagazonosító nem megfelelően formázott"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:380
 msgid "Transaction error"
 msgstr "Tranzakcióhiba"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:383
 msgid "Repository name was not found"
 msgstr "A tároló neve nem található"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:386
 msgid "Could not remove a protected system package"
 msgstr "Nem távolítható el a védett rendszercsomag"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:389
 msgid "The action was canceled"
 msgstr "A művelet megszakítva"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:392
 msgid "The action was forcibly canceled"
 msgstr "A művelet megszakítása ki lett kényszerítve"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:395
 msgid "Reading the configuration file failed"
 msgstr "A konfigurációs fájl olvasása meghiúsult"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:398
 msgid "The action cannot be canceled"
 msgstr "A művelet nem szakítható meg"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:401
 msgid "Source packages cannot be installed"
 msgstr "A forráscsomagok nem telepíthetők"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:404
 msgid "The license agreement failed"
 msgstr "A licencegyezmény elfogadása meghiúsult"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:407
 msgid "Local file conflict between packages"
 msgstr "Helyi fájlütközés a csomagok között"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:410
 msgid "Packages are not compatible"
 msgstr "A csomagok nem kompatibilisek"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:413
 msgid "Problem connecting to a software source"
 msgstr "Probléma a szoftverforráshoz csatlakozáskor"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:416
 msgid "Failed to initialize"
 msgstr "Az előkészítés meghiúsult"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:419
 msgid "Failed to finalise"
 msgstr "A befejezés meghiúsult"
 
-#: ../src/gpk-enum.c:421
+#: ../src/gpk-enum.c:422
 msgid "Cannot get lock"
 msgstr "Nem kérhető zár"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:425
 msgid "No packages to update"
 msgstr "Nincsenek frissítendő csomagok"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:428
 msgid "Cannot write repository configuration"
 msgstr "A tárolóinformációk nem írhatók"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:431
 msgid "Local install failed"
 msgstr "A helyi telepítés meghiúsult"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:434
 msgid "Bad security signature"
 msgstr "Hibás biztonsági aláírás"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:437
 msgid "Missing security signature"
 msgstr "Hiányzó biztonsági aláírás"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:440
 msgid "Repository configuration invalid"
 msgstr "A tároló konfigurációja érvénytelen"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:443
 msgid "Invalid package file"
 msgstr "Érvénytelen csomagfájl"
 
-#: ../src/gpk-enum.c:445
+#: ../src/gpk-enum.c:446
 msgid "Package install blocked"
 msgstr "A csomag telepítése blokkolva"
 
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:449
 msgid "Package is corrupt"
 msgstr "A csomag sérült"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:452
 msgid "All packages are already installed"
 msgstr "Már minden csomag telepítve van"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:455
 msgid "The specified file could not be found"
 msgstr "A megadott fájl nem található"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:458
 msgid "No more mirrors are available"
 msgstr "Nem érhetők el tükrök"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:461
 msgid "No distribution upgrade data is available"
 msgstr "A disztribúciófrissítés adatai nem érhetők el"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:464
 msgid "Package is incompatible with this system"
 msgstr "A csomag nem kompatibilis ezzel a rendszerrel"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:467
 msgid "No space is left on the disk"
 msgstr "Nincs több hely a lemezen"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:469 ../src/gpk-helper-media-change.c:73
+#: ../src/gpk-enum.c:470 ../src/gpk-helper-media-change.c:73
 msgid "A media change is required"
 msgstr "Adathordozó-csere szükséges"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:473
 msgid "Authorization failed"
 msgstr "A hitelesítés meghiúsult"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:476
 msgid "Update not found"
 msgstr "A frissítés nem található"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:479
 msgid "Cannot install from untrusted source"
 msgstr "Nem lehet nem megbízható forrásból telepíteni"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:482
 msgid "Cannot update from untrusted source"
 msgstr "Nem lehet nem megbízható forrásból frissíteni"
 
-#: ../src/gpk-enum.c:484
+#: ../src/gpk-enum.c:485
 msgid "Cannot get the file list"
 msgstr "Nem kérhető le a fájllista"
 
-#: ../src/gpk-enum.c:487
+#: ../src/gpk-enum.c:488
 msgid "Cannot get package requires"
 msgstr "Nem kérhetők le a csomag követelményei"
 
-#: ../src/gpk-enum.c:490
+#: ../src/gpk-enum.c:491
 msgid "Cannot disable source"
 msgstr "A forrás nem tiltható le"
 
-#: ../src/gpk-enum.c:493
-#, fuzzy
+#: ../src/gpk-enum.c:494
 msgid "The download failed"
-msgstr "A csomag letöltése meghiúsult"
+msgstr "A letöltés meghiúsult"
 
-#: ../src/gpk-enum.c:496
-#, fuzzy
+#: ../src/gpk-enum.c:497
 msgid "Package failed to configure"
-msgstr "A csomagok nem kompatibilisek"
+msgstr "A csomag beállítása meghiúsult"
 
-#: ../src/gpk-enum.c:499
-#, fuzzy
+#: ../src/gpk-enum.c:500
 msgid "Package failed to build"
-msgstr "Csomaglistafájlok"
+msgstr "A csomag fordítása meghiúsult"
 
-#: ../src/gpk-enum.c:502
-#, fuzzy
+#: ../src/gpk-enum.c:503
 msgid "Package failed to install"
-msgstr "Telepítendő csomagok"
+msgstr "A csomag telepítése meghiúsult"
 
-#: ../src/gpk-enum.c:505
-#, fuzzy
+#: ../src/gpk-enum.c:506
 msgid "Package failed to be removed"
-msgstr "A(z) „%s” csomag eltávolítva"
+msgstr "A csomag eltávolítása meghiúsult"
 
-#: ../src/gpk-enum.c:522
+#: ../src/gpk-enum.c:523
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -2359,7 +2329,7 @@ msgstr ""
 "Nem érhető el hálózati kapcsolat.\n"
 "Ellenőrizze a kapcsolatbeállításokat és próbálja újra."
 
-#: ../src/gpk-enum.c:526
+#: ../src/gpk-enum.c:527
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -2367,7 +2337,7 @@ msgstr ""
 "A csomaglistát újra kell építeni.\n"
 "Ezt a háttérprogramnak ezt automatikusan meg kellett volna tennie."
 
-#: ../src/gpk-enum.c:530
+#: ../src/gpk-enum.c:531
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -2377,11 +2347,11 @@ msgstr ""
 "elfogyott.\n"
 "Indítsa újra a számítógépet."
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:535
 msgid "A thread could not be created to service the user request."
 msgstr "Nem hozható létre a felhasználói kérést kiszolgáló szál."
 
-#: ../src/gpk-enum.c:537
+#: ../src/gpk-enum.c:538
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bugtracker as this should not have "
@@ -2391,7 +2361,7 @@ msgstr ""
 "Jelentse ezt hibaként a disztribúciója hibajelentőjében, mivel nem lett "
 "volna szabad megtörténnie."
 
-#: ../src/gpk-enum.c:541
+#: ../src/gpk-enum.c:542
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bugtracker with the error "
@@ -2401,7 +2371,7 @@ msgstr ""
 "Jelentse ezt a hibát a disztribúciója hibajelentőjében, a hibaleírással "
 "együtt."
 
-#: ../src/gpk-enum.c:545
+#: ../src/gpk-enum.c:546
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -2409,23 +2379,21 @@ msgstr ""
 "Nem hozható létre biztonságos kapcsolat a szoftverforrással.\n"
 "Ellenőrizze a biztonsági beállításait."
 
-#: ../src/gpk-enum.c:549
-msgid ""
-"The package that is trying to be removed or updated is not already installed."
+#: ../src/gpk-enum.c:550
+msgid "The package that is trying to be removed or updated is not already installed."
 msgstr "Az eltávolítani vagy frissíteni kívánt csomag még nincs telepítve."
 
-#: ../src/gpk-enum.c:552
+#: ../src/gpk-enum.c:553
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
-msgstr ""
-"A módosítani kívánt csomag nem található a rendszeren vagy csomagforrásban."
+msgstr "A módosítani kívánt csomag nem található a rendszeren vagy csomagforrásban."
 
-#: ../src/gpk-enum.c:555
+#: ../src/gpk-enum.c:556
 msgid "The package that is trying to be installed is already installed."
 msgstr "A telepíteni kívánt csomag már telepítve van."
 
-#: ../src/gpk-enum.c:558
+#: ../src/gpk-enum.c:559
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2433,7 +2401,7 @@ msgstr ""
 "A csomagletöltés meghiúsult.\n"
 "Ellenőrizze a hálózati kapcsolatát."
 
-#: ../src/gpk-enum.c:562
+#: ../src/gpk-enum.c:563
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2441,7 +2409,7 @@ msgstr ""
 "A csoporttípus nem található.\n"
 "Ellenőrizze a csoportlistát és próbálkozzon újra."
 
-#: ../src/gpk-enum.c:566
+#: ../src/gpk-enum.c:567
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -2450,7 +2418,7 @@ msgstr ""
 "A csoportlista nem tölthető be.\n"
 "A gyorsítótár frissítése segíthet, noha ez általában a szoftverforrás hibája."
 
-#: ../src/gpk-enum.c:571
+#: ../src/gpk-enum.c:572
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2458,11 +2426,11 @@ msgstr ""
 "A művelet befejezését lehetővé tevő csomag nem található.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:576
 msgid "The search filter was not correctly formed."
 msgstr "A keresési szűrő nem megfelelően formázott."
 
-#: ../src/gpk-enum.c:578
+#: ../src/gpk-enum.c:579
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2470,7 +2438,7 @@ msgstr ""
 "A csomagazonosító nem volt megfelelően formázva a kiszolgálóra küldéskor.\n"
 "Ez általában belső hibát jelez, kérjük jelentse."
 
-#: ../src/gpk-enum.c:582
+#: ../src/gpk-enum.c:583
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2478,7 +2446,7 @@ msgstr ""
 "Meghatározatlan tranzakcióhiba történt.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:586
+#: ../src/gpk-enum.c:587
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2486,15 +2454,15 @@ msgstr ""
 "A távoli szoftverforrás neve nem található.\n"
 "Szükség lehet egy elem engedélyezésére a Szoftverforrásokban."
 
-#: ../src/gpk-enum.c:590
+#: ../src/gpk-enum.c:591
 msgid "Removing a protected system package is not allowed."
 msgstr "Nem távolítható el védett rendszercsomag."
 
-#: ../src/gpk-enum.c:593
+#: ../src/gpk-enum.c:594
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "A művelet sikeresen megszakítva, nem kerültek módosításra csomagok."
 
-#: ../src/gpk-enum.c:596
+#: ../src/gpk-enum.c:597
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2502,7 +2470,7 @@ msgstr ""
 "A művelet sikeresen megszakítva, nem kerültek módosításra csomagok.\n"
 "A háttérprogram nem lépett ki tisztán."
 
-#: ../src/gpk-enum.c:600
+#: ../src/gpk-enum.c:601
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2510,11 +2478,11 @@ msgstr ""
 "A natív csomagkonfigurációs fájl nem nyitható meg.\n"
 "Győződjön meg, hogy a konfiguráció érvényes."
 
-#: ../src/gpk-enum.c:604
+#: ../src/gpk-enum.c:605
 msgid "The action cannot be canceled at this time."
 msgstr "A művelet most nem szakítható meg."
 
-#: ../src/gpk-enum.c:607
+#: ../src/gpk-enum.c:608
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2522,7 +2490,7 @@ msgstr ""
 "A forráscsomagok normális esetben nem így telepítendők.\n"
 "Ellenőrizze a telepíteni kívánt fájl kiterjesztését."
 
-#: ../src/gpk-enum.c:611
+#: ../src/gpk-enum.c:612
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2530,7 +2498,7 @@ msgstr ""
 "A licencszerződést nem fogadta el.\n"
 "A szoftver használatához el kell fogadnia a licencet."
 
-#: ../src/gpk-enum.c:615
+#: ../src/gpk-enum.c:616
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2539,7 +2507,7 @@ msgstr ""
 "Ezt általában különböző szoftverforrásokból származó csomagok keverése "
 "okozza."
 
-#: ../src/gpk-enum.c:619
+#: ../src/gpk-enum.c:620
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2548,7 +2516,7 @@ msgstr ""
 "Ezt általában különböző szoftverforrásokból származó csomagok keverése "
 "okozza."
 
-#: ../src/gpk-enum.c:623
+#: ../src/gpk-enum.c:624
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2556,7 +2524,7 @@ msgstr ""
 "Probléma lépett fel a szoftverforráshoz csatlakozáskor.\n"
 "További részletekért nézze meg a részletes hibaüzenetet."
 
-#: ../src/gpk-enum.c:627
+#: ../src/gpk-enum.c:628
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2564,7 +2532,7 @@ msgstr ""
 "A csomagkezelő háttérprogram előkészítése meghiúsult.\n"
 "Ez akkor történhet, ha más csomagkezelő eszközök is használatban vannak."
 
-#: ../src/gpk-enum.c:631
+#: ../src/gpk-enum.c:632
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2572,7 +2540,7 @@ msgstr ""
 "A háttérprogrampéldány bezárása meghiúsult.\n"
 "Ezt a hibát általában figyelmen kívül lehet hagyni."
 
-#: ../src/gpk-enum.c:635
+#: ../src/gpk-enum.c:636
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2580,15 +2548,15 @@ msgstr ""
 "Nem kérhető kizárólagos zár a csomagkezelő háttérprogramra.\n"
 "Zárjon be minden más nyitott csomagkezelő eszközt."
 
-#: ../src/gpk-enum.c:639
+#: ../src/gpk-enum.c:640
 msgid "None of the selected packages could be updated."
 msgstr "A kijelölt csomagok egyike sem frissíthető."
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:643
 msgid "The repository configuration could not be modified."
 msgstr "A tárolókonfiguráció nem távolítható módosítható."
 
-#: ../src/gpk-enum.c:645
+#: ../src/gpk-enum.c:646
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2596,11 +2564,11 @@ msgstr ""
 "A helyi fájl telepítése meghiúsult.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:649
+#: ../src/gpk-enum.c:650
 msgid "The package security signature could not be verified."
 msgstr "A csomag biztonsági aláírása nem ellenőrizhető."
 
-#: ../src/gpk-enum.c:652
+#: ../src/gpk-enum.c:653
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2608,11 +2576,11 @@ msgstr ""
 "A csomag biztonsági aláírása hiányzik és a csomag nem megbízható.\n"
 "Ez a csomag a létrehozásakor nem lett aláírva."
 
-#: ../src/gpk-enum.c:656
+#: ../src/gpk-enum.c:657
 msgid "Repository configuration was invalid and could not be read."
 msgstr "A tárolókonfiguráció érvénytelen és nem olvasható."
 
-#: ../src/gpk-enum.c:659
+#: ../src/gpk-enum.c:660
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2620,25 +2588,21 @@ msgstr ""
 "A telepíteni próbált csomag nem érvényes.\n"
 "A csomagfájl sérült, vagy nem megfelelő csomag."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:664
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
-msgstr ""
-"A csomag telepítését megakadályozta a csomagkezelő rendszer konfigurációja."
+msgstr "A csomag telepítését megakadályozta a csomagkezelő rendszer konfigurációja."
 
-#: ../src/gpk-enum.c:666
-msgid ""
-"The package that was downloaded is corrupt and needs to be downloaded again."
+#: ../src/gpk-enum.c:667
+msgid "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "A letöltött csomag sérült és újra le kell tölteni."
 
-#: ../src/gpk-enum.c:669
-msgid ""
-"All of the packages selected for install are already installed on the system."
-msgstr ""
-"A telepítésre kiválasztott szoftverek már mind telepítve vannak a rendszerre."
+#: ../src/gpk-enum.c:670
+msgid "All of the packages selected for install are already installed on the system."
+msgstr "A telepítésre kiválasztott szoftverek már mind telepítve vannak a rendszerre."
 
-#: ../src/gpk-enum.c:672
+#: ../src/gpk-enum.c:673
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2646,7 +2610,7 @@ msgstr ""
 "A megadott fájl nem található a rendszeren.\n"
 "Ellenőrizze, hogy a fájl létezik-e és nem került törlésre."
 
-#: ../src/gpk-enum.c:676
+#: ../src/gpk-enum.c:677
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2655,7 +2619,7 @@ msgstr ""
 "sem.\n"
 "Nem található több letöltési tükör, amelyen kereshető lenne."
 
-#: ../src/gpk-enum.c:680
+#: ../src/gpk-enum.c:681
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2665,12 +2629,11 @@ msgstr ""
 "egyikében sem.\n"
 "A disztribúciófrissítések listája nem érhető el."
 
-#: ../src/gpk-enum.c:684
-msgid ""
-"The package that is trying to be installed is incompatible with this system."
+#: ../src/gpk-enum.c:685
+msgid "The package that is trying to be installed is incompatible with this system."
 msgstr "A telepíteni kívánt csomag nem kompatibilis ezzel a rendszerrel."
 
-#: ../src/gpk-enum.c:687
+#: ../src/gpk-enum.c:688
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2678,11 +2641,11 @@ msgstr ""
 "Nincs elég hely az eszközön.\n"
 "Szabadítson fel némi helyet a rendszerlemezen a művelet végrehajtásához."
 
-#: ../src/gpk-enum.c:691
+#: ../src/gpk-enum.c:692
 msgid "Additional media is required to complete the transaction."
 msgstr "A tranzakció befejezéséhez másik adathordozó is szükséges."
 
-#: ../src/gpk-enum.c:694
+#: ../src/gpk-enum.c:695
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2690,7 +2653,7 @@ msgstr ""
 "A hitelesítés meghiúsult. Ellenőrizze a jelszót\n"
 "vagy a fiókja beállításait."
 
-#: ../src/gpk-enum.c:698
+#: ../src/gpk-enum.c:699
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2699,365 +2662,360 @@ msgstr ""
 "A megadott frissítés nem található.\n"
 "Lehet, hogy már telepítve van, vagy már nem érhető el a távoli kiszolgálón."
 
-#: ../src/gpk-enum.c:702
+#: ../src/gpk-enum.c:703
 msgid "The package could not be installed from untrusted source."
 msgstr "A csomag nem telepíthető nem megbízható forrásból."
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:706
 msgid "The package could not be updated from untrusted source."
 msgstr "A csomag nem frissíthető nem megbízható forrásból."
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:709
 msgid "The file list is not available for this package."
 msgstr "A fájllista nem érhető el ehhez a csomaghoz."
 
-#: ../src/gpk-enum.c:711
+#: ../src/gpk-enum.c:712
 msgid "The information about what requires this package could not be obtained."
 msgstr "Nem kérhetők le információk arról, hogy mi igényli ezt a csomagot."
 
-#: ../src/gpk-enum.c:714
+#: ../src/gpk-enum.c:715
 msgid "The specified software source could not be disabled."
 msgstr "A megadott szoftverforrás nem tiltható le."
 
-#: ../src/gpk-enum.c:717
-#, fuzzy
+#: ../src/gpk-enum.c:718
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
 msgstr ""
-"A művelet befejezését lehetővé tevő csomag nem található.\n"
+"A letöltés nem végezhető el automatikusan és saját kezűleg kell végrehajtania.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:721
-#, fuzzy
+#: ../src/gpk-enum.c:722
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"A helyi fájl telepítése meghiúsult.\n"
+"A kijelölt fájlok egyikének megfelelő beállítása meghiúsult.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:725
-#, fuzzy
+#: ../src/gpk-enum.c:726
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"A helyi fájl telepítése meghiúsult.\n"
+"A kijelölt fájlok egyikének megfelelő lefordítása meghiúsult.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:729
-#, fuzzy
+#: ../src/gpk-enum.c:730
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"A helyi fájl telepítése meghiúsult.\n"
+"A kijelölt fájlok egyikének megfelelő telepítése meghiúsult.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:733
-#, fuzzy
+#: ../src/gpk-enum.c:734
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Meghatározatlan tranzakcióhiba történt.\n"
+"A kijelölt fájlok egyikének megfelelő eltávolítása meghiúsult.\n"
 "A részletes jelentésben további információk találhatók."
 
-#: ../src/gpk-enum.c:752
+#: ../src/gpk-enum.c:753
 msgid "No restart is necessary."
 msgstr "Nincs szükség újraindításra."
 
-#: ../src/gpk-enum.c:755
+#: ../src/gpk-enum.c:756
 msgid "You will be required to restart this application."
 msgstr "Újra kell indítania ezt az alkalmazást."
 
-#: ../src/gpk-enum.c:758
+#: ../src/gpk-enum.c:759
 msgid "You will be required to log out and back in."
 msgstr "Ki, majd újra be kell jelentkeznie."
 
-#: ../src/gpk-enum.c:761
+#: ../src/gpk-enum.c:762
 msgid "A restart will be required."
 msgstr "Újraindításra lesz szükség."
 
-#: ../src/gpk-enum.c:764
+#: ../src/gpk-enum.c:765
 msgid "You will be required to log out and back in due to a security update."
 msgstr "Egy biztonsági frissítés miatt ki, majd újra be kell jelentkeznie."
 
-#: ../src/gpk-enum.c:767
+#: ../src/gpk-enum.c:768
 msgid "A restart will be required due to a security update."
 msgstr "Egy biztonsági frissítés miatt újraindításra lesz szükség."
 
-#: ../src/gpk-enum.c:784
+#: ../src/gpk-enum.c:785
 msgid "No restart is required."
 msgstr "Nincs szükség újraindításra."
 
-#: ../src/gpk-enum.c:787
+#: ../src/gpk-enum.c:788
 msgid "A restart is required."
 msgstr "Újraindítás szükséges."
 
-#: ../src/gpk-enum.c:790
+#: ../src/gpk-enum.c:791
 msgid "You need to log out and log back in."
 msgstr "Ki, majd újra be kell jelentkeznie."
 
-#: ../src/gpk-enum.c:793
+#: ../src/gpk-enum.c:794
 msgid "You need to restart the application."
 msgstr "Újra kell indítania az alkalmazást."
 
-#: ../src/gpk-enum.c:796
+#: ../src/gpk-enum.c:797
 msgid "You need to log out and log back in to remain secure."
 msgstr "A biztonság fenntartásához ki, majd újra be kell jelentkeznie."
 
-#: ../src/gpk-enum.c:799
+#: ../src/gpk-enum.c:800
 msgid "A restart is required to remain secure."
 msgstr "A biztonság fenntartásához újraindítás szükséges."
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:817
+#: ../src/gpk-enum.c:818
 msgid "Stable"
 msgstr "Stabil"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:821
+#: ../src/gpk-enum.c:822
 msgid "Unstable"
 msgstr "Instabil"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:825
+#: ../src/gpk-enum.c:826
 msgid "Testing"
 msgstr "Teszt"
 
-#: ../src/gpk-enum.c:842
+#: ../src/gpk-enum.c:843
 msgid "A mirror is possibly broken"
 msgstr "Valószínűleg a tükör hibás"
 
-#: ../src/gpk-enum.c:845
+#: ../src/gpk-enum.c:846
 msgid "The connection was refused"
 msgstr "A csatlakozás visszautasítva"
 
-#: ../src/gpk-enum.c:848
+#: ../src/gpk-enum.c:849
 msgid "The parameter was invalid"
 msgstr "A paraméter érvénytelen volt"
 
-#: ../src/gpk-enum.c:851
+#: ../src/gpk-enum.c:852
 msgid "The priority was invalid"
 msgstr "A prioritás érvénytelen volt"
 
-#: ../src/gpk-enum.c:854
+#: ../src/gpk-enum.c:855
 msgid "Backend warning"
 msgstr "Háttérprogram-figyelmeztetés"
 
-#: ../src/gpk-enum.c:857
+#: ../src/gpk-enum.c:858
 msgid "Daemon warning"
 msgstr "Démonfigyelmeztetés"
 
-#: ../src/gpk-enum.c:860
+#: ../src/gpk-enum.c:861
 msgid "The package list cache is being rebuilt"
 msgstr "A csomaglista-gyorsítótár újraépítése"
 
-#: ../src/gpk-enum.c:863
+#: ../src/gpk-enum.c:864
 msgid "An untrusted package was installed"
 msgstr "Nem megbízható csomag került telepítésre"
 
-#: ../src/gpk-enum.c:866
+#: ../src/gpk-enum.c:867
 msgid "A newer package exists"
 msgstr "Újabb csomag érhető el"
 
-#: ../src/gpk-enum.c:869
+#: ../src/gpk-enum.c:870
 msgid "Could not find package"
 msgstr "A csomag nem található"
 
-#: ../src/gpk-enum.c:872
+#: ../src/gpk-enum.c:873
 msgid "Configuration files were changed"
 msgstr "A konfigurációs fájlok módosultak"
 
-#: ../src/gpk-enum.c:875
+#: ../src/gpk-enum.c:876
 msgid "Package is already installed"
 msgstr "A csomag már telepítve van"
 
-#: ../src/gpk-enum.c:878
+#: ../src/gpk-enum.c:879
 msgid "Automatic cleanup is being ignored"
 msgstr "Az automatikus törlés figyelmen kívül marad"
 
 #. TRANSLATORS: This is when the status is not known
-#: ../src/gpk-enum.c:896
+#: ../src/gpk-enum.c:897
 msgid "Unknown state"
 msgstr "Ismeretlen állapot"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:900
+#: ../src/gpk-enum.c:901
 msgid "Starting"
 msgstr "Indul"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:904
+#: ../src/gpk-enum.c:905
 msgid "Waiting in queue"
 msgstr "Várakozik a sorban"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:908
+#: ../src/gpk-enum.c:909
 msgid "Running"
 msgstr "Fut"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:912
+#: ../src/gpk-enum.c:913
 msgid "Querying"
 msgstr "Lekérdezés"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:916
+#: ../src/gpk-enum.c:917
 msgid "Getting information"
 msgstr "Információk lekérése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:920
+#: ../src/gpk-enum.c:921
 msgid "Removing packages"
 msgstr "Csomagok eltávolítása"
 
 #. TRANSLATORS: The transaction state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:924 ../src/gpk-enum.c:1332
+#: ../src/gpk-enum.c:925 ../src/gpk-enum.c:1341
 msgid "Downloading packages"
 msgstr "Csomagok letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:932
+#: ../src/gpk-enum.c:933
 msgid "Refreshing software list"
 msgstr "Szoftverlista frissítése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:936
+#: ../src/gpk-enum.c:937
 msgid "Installing updates"
 msgstr "Frissítések telepítése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:940
+#: ../src/gpk-enum.c:941
 msgid "Cleaning up packages"
 msgstr "Csomagok tisztítása"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:944
+#: ../src/gpk-enum.c:945
 msgid "Obsoleting packages"
 msgstr "Csomagok elavulttá tétele"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:948
+#: ../src/gpk-enum.c:949
 msgid "Resolving dependencies"
 msgstr "Függőségek feloldása"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:952
+#: ../src/gpk-enum.c:953
 msgid "Checking signatures"
 msgstr "Aláírások ellenőrzése"
 
 #. TRANSLATORS: The transaction state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:956 ../src/gpk-enum.c:1292
+#: ../src/gpk-enum.c:957 ../src/gpk-enum.c:1301
 msgid "Rolling back"
 msgstr "Visszagörgetés"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:960
+#: ../src/gpk-enum.c:961
 msgid "Testing changes"
 msgstr "Módosítások tesztelése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:964
+#: ../src/gpk-enum.c:965
 msgid "Committing changes"
 msgstr "Módosítások véglegesítése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:968
+#: ../src/gpk-enum.c:969
 msgid "Requesting data"
 msgstr "Adatok lekérése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:972
+#: ../src/gpk-enum.c:973
 msgid "Finished"
 msgstr "Befejeződött"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:976
+#: ../src/gpk-enum.c:977
 msgid "Cancelling"
 msgstr "Megszakítás"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:980
+#: ../src/gpk-enum.c:981
 msgid "Downloading repository information"
 msgstr "Tárolóinformációk letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:984
+#: ../src/gpk-enum.c:985
 msgid "Downloading list of packages"
 msgstr "Csomaglista letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:988
+#: ../src/gpk-enum.c:989
 msgid "Downloading file lists"
 msgstr "Fájllisták letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:992
+#: ../src/gpk-enum.c:993
 msgid "Downloading lists of changes"
 msgstr "Változáslisták letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:996
+#: ../src/gpk-enum.c:997
 msgid "Downloading groups"
 msgstr "Csoportok letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1000
+#: ../src/gpk-enum.c:1001
 msgid "Downloading update information"
 msgstr "Frissítési információk letöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1004
+#: ../src/gpk-enum.c:1005
 msgid "Repackaging files"
 msgstr "Fájlok újracsomagolása"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1008
+#: ../src/gpk-enum.c:1009
 msgid "Loading cache"
 msgstr "Gyorsítótár betöltése"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1012
+#: ../src/gpk-enum.c:1013
 msgid "Scanning installed applications"
 msgstr "Telepített alkalmazások vizsgálata"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1016
+#: ../src/gpk-enum.c:1017
 msgid "Generating package lists"
 msgstr "Csomaglisták előállítása"
 
 #. TRANSLATORS: The transaction state
-#: ../src/gpk-enum.c:1020
+#: ../src/gpk-enum.c:1021
 msgid "Waiting for package manager lock"
 msgstr "Várakozás a csomagkezelő zárolására"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1024
+#: ../src/gpk-enum.c:1025
 msgid "Waiting for authentication"
 msgstr "Várakozás hitelesítésre"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1028
+#: ../src/gpk-enum.c:1029
 msgid "Updating the list of running applications"
 msgstr "Futó alkalmazások listájának frissítése"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1032
+#: ../src/gpk-enum.c:1033
 msgid "Checking for applications currently in use"
 msgstr "Használatban lévő alkalmazások keresése"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1036
+#: ../src/gpk-enum.c:1037
 msgid "Checking for libraries currently in use"
 msgstr "Használatban lévő programkönyvtárak keresése"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1054
+#: ../src/gpk-enum.c:1055
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -3065,7 +3023,7 @@ msgstr[0] "%i triviális frissítés"
 msgstr[1] "%i triviális frissítés"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1058
+#: ../src/gpk-enum.c:1059
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -3073,7 +3031,7 @@ msgstr[0] "%i frissítés"
 msgstr[1] "%i frissítés"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1062
+#: ../src/gpk-enum.c:1063
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -3081,7 +3039,7 @@ msgstr[0] "%i fontos frissítés"
 msgstr[1] "%i fontos frissítés"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1066
+#: ../src/gpk-enum.c:1067
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -3089,7 +3047,7 @@ msgstr[0] "%i biztonsági frissítés"
 msgstr[1] "%i biztonsági frissítés"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1070
+#: ../src/gpk-enum.c:1071
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -3097,7 +3055,7 @@ msgstr[0] "%i hibajavító frissítés"
 msgstr[1] "%i hibajavító frissítés"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1074
+#: ../src/gpk-enum.c:1075
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -3105,7 +3063,7 @@ msgstr[0] "%i továbbfejlesztési frissítés"
 msgstr[1] "%i továbbfejlesztési frissítés"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1078
+#: ../src/gpk-enum.c:1079
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -3113,598 +3071,602 @@ msgstr[0] "%i blokkolt frissítés"
 msgstr[1] "%i blokkolt frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1096
+#: ../src/gpk-enum.c:1097
 msgid "Trivial update"
 msgstr "Triviális frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1100
+#: ../src/gpk-enum.c:1101
 msgid "Normal update"
 msgstr "Normál frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1104
+#: ../src/gpk-enum.c:1105
 msgid "Important update"
 msgstr "Fontos frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1108
+#: ../src/gpk-enum.c:1109
 msgid "Security update"
 msgstr "Biztonsági frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1112
+#: ../src/gpk-enum.c:1113
 msgid "Bug fix update"
 msgstr "Hibajavító frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1116
+#: ../src/gpk-enum.c:1117
 msgid "Enhancement update"
 msgstr "Továbbfejlesztési frissítés"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1120
+#: ../src/gpk-enum.c:1121
 msgid "Blocked update"
 msgstr "Blokkolt frissítés"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1130
+#: ../src/gpk-enum.c:1131
 msgid "Available"
 msgstr "Elérhető"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: This is the package name that is being downloaded
-#: ../src/gpk-enum.c:1148 ../src/gpk-service-pack.c:148
+#: ../src/gpk-enum.c:1149 ../src/gpk-service-pack.c:148
 msgid "Downloading"
 msgstr "Letöltés"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1152
+#: ../src/gpk-enum.c:1153
 msgid "Updating"
 msgstr "Frissítés"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1268
+#: ../src/gpk-enum.c:1157 ../src/gpk-enum.c:1277
 msgid "Installing"
 msgstr "Telepítés"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1160 ../src/gpk-enum.c:1264
+#: ../src/gpk-enum.c:1161 ../src/gpk-enum.c:1273
 msgid "Removing"
 msgstr "Eltávolítás"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1164
+#: ../src/gpk-enum.c:1165
 msgid "Cleaning up"
 msgstr "Takarítás"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1168
+#: ../src/gpk-enum.c:1169
 msgid "Obsoleting"
 msgstr "Elavulttá téve"
 
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1173
+msgid "Reinstalling"
+msgstr "Újratelepítés"
+
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1186
+#: ../src/gpk-enum.c:1191
 msgid "Downloaded"
 msgstr "Letöltve"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1190
+#: ../src/gpk-enum.c:1195
 msgid "Updated"
 msgstr "Frissítve"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1198
+#: ../src/gpk-enum.c:1203
 msgid "Removed"
 msgstr "Eltávolítva"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1202
+#: ../src/gpk-enum.c:1207
 msgid "Cleaned up"
 msgstr "Megtisztítva"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1206
+#: ../src/gpk-enum.c:1211
 msgid "Obsoleted"
 msgstr "Elavult"
 
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1215
+msgid "Reinstalled"
+msgstr "Újratelepítve"
+
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1224 ../src/gpk-enum.c:1380
+#: ../src/gpk-enum.c:1233 ../src/gpk-enum.c:1389
 msgid "Unknown role type"
 msgstr "Ismeretlen szereptípus"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1228
+#: ../src/gpk-enum.c:1237
 msgid "Getting dependencies"
 msgstr "Függőségek lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1232
+#: ../src/gpk-enum.c:1241
 msgid "Getting update detail"
 msgstr "Frissítés részleteinek lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1236
+#: ../src/gpk-enum.c:1245
 msgid "Getting details"
 msgstr "Részletek lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1240
+#: ../src/gpk-enum.c:1249
 msgid "Getting requires"
 msgstr "Követelmények lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1244
+#: ../src/gpk-enum.c:1253
 msgid "Getting updates"
 msgstr "Frissítések lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1248
+#: ../src/gpk-enum.c:1257
 msgid "Searching details"
-msgstr "Kesesés a részletekben"
+msgstr "Keresés a részletekben"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1256
+#: ../src/gpk-enum.c:1265
 msgid "Searching groups"
 msgstr "Csoportok keresése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1260
+#: ../src/gpk-enum.c:1269
 msgid "Searching for package name"
 msgstr "Csomagnév keresése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1272
+#: ../src/gpk-enum.c:1281
 msgid "Installing file"
 msgstr "Fájl telepítése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1276
+#: ../src/gpk-enum.c:1285
 msgid "Refreshing package cache"
 msgstr "Csomaggyorsítótár frissítése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1280
+#: ../src/gpk-enum.c:1289
 msgid "Updating packages"
 msgstr "Csomagok frissítése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1284
+#: ../src/gpk-enum.c:1293
 msgid "Updating system"
 msgstr "Rendszer frissítése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1288
+#: ../src/gpk-enum.c:1297
 msgid "Canceling"
 msgstr "Megszakítás"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1296
+#: ../src/gpk-enum.c:1305
 msgid "Getting list of repositories"
 msgstr "Tárolók listájának lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1300
+#: ../src/gpk-enum.c:1309
 msgid "Enabling repository"
 msgstr "Tároló engedélyezése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1304
+#: ../src/gpk-enum.c:1313
 msgid "Setting repository data"
 msgstr "Tárolóadatok beállítása"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1308
+#: ../src/gpk-enum.c:1317
 msgid "Resolving"
 msgstr "Feloldás"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1312
+#: ../src/gpk-enum.c:1321
 msgid "Getting file list"
 msgstr "Fájllista lekérése"
 
 # fixme
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1316
+#: ../src/gpk-enum.c:1325
 msgid "Getting what provides"
 msgstr "Biztosító csomag lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1320
+#: ../src/gpk-enum.c:1329
 msgid "Installing signature"
 msgstr "Aláírás telepítése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1324
+#: ../src/gpk-enum.c:1333
 msgid "Getting package lists"
 msgstr "Csomaglisták lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1328
+#: ../src/gpk-enum.c:1337
 msgid "Accepting EULA"
 msgstr "EULA elfogadása"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1336
+#: ../src/gpk-enum.c:1345
 msgid "Getting distribution upgrade information"
 msgstr "Disztribúciófrissítési információk lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1340
+#: ../src/gpk-enum.c:1349
 msgid "Getting categories"
 msgstr "Kategóriák lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1344
+#: ../src/gpk-enum.c:1353
 msgid "Getting old transactions"
 msgstr "Régi tranzakciók lekérése"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1348
-#, fuzzy
-msgid "Simulating the install"
-msgstr "Mime-típus telepítő"
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1352
-#, fuzzy
+#: ../src/gpk-enum.c:1357
 msgid "Simulating the install of files"
-msgstr "A fájl telepítése meghiúsult"
+msgstr "A fájlok telepítésének szimulálása"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1356
+#: ../src/gpk-enum.c:1361
+msgid "Simulating the install"
+msgstr "A telepítés szimulálása"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1365
 msgid "Simulating the remove"
-msgstr ""
+msgstr "Az eltávolítás szimulálása"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1360
-#, fuzzy
+#: ../src/gpk-enum.c:1369
 msgid "Simulating the update"
-msgstr "Frissítések listájának lekérése"
+msgstr "A frissítés szimulálása"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1384
+#: ../src/gpk-enum.c:1393
 msgid "Got dependencies"
 msgstr "Függőségek lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1388
+#: ../src/gpk-enum.c:1397
 msgid "Got update detail"
 msgstr "Frissítés részletei lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1392
+#: ../src/gpk-enum.c:1401
 msgid "Got details"
 msgstr "Részletek lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1396
+#: ../src/gpk-enum.c:1405
 msgid "Got requires"
 msgstr "Követelmények lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1400
+#: ../src/gpk-enum.c:1409
 msgid "Got updates"
 msgstr "Frissítések lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1404
+#: ../src/gpk-enum.c:1413
 msgid "Searched for package details"
 msgstr "Csomagrészletek keresve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1408
+#: ../src/gpk-enum.c:1417
 msgid "Searched for file"
 msgstr "Fájl keresve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1412
+#: ../src/gpk-enum.c:1421
 msgid "Searched groups"
 msgstr "Csoportok keresve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1416
+#: ../src/gpk-enum.c:1425
 msgid "Searched for package name"
 msgstr "Csomagnév keresve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1420
+#: ../src/gpk-enum.c:1429
 msgid "Removed packages"
 msgstr "Csomagok eltávolítva"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1424
+#: ../src/gpk-enum.c:1433
 msgid "Installed packages"
 msgstr "Csomagok telepítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1428
+#: ../src/gpk-enum.c:1437
 msgid "Installed local files"
 msgstr "Helyi fájlok telepítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1432
+#: ../src/gpk-enum.c:1441
 msgid "Refreshed package cache"
 msgstr "Csomaggyorsítótár frissítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1436
+#: ../src/gpk-enum.c:1445
 msgid "Updated packages"
 msgstr "Csomagok frissítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1440
+#: ../src/gpk-enum.c:1449
 msgid "Updated system"
 msgstr "Rendszer frissítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1444
+#: ../src/gpk-enum.c:1453
 msgid "Canceled"
 msgstr "Megszakítva"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1448
+#: ../src/gpk-enum.c:1457
 msgid "Rolled back"
 msgstr "Visszagörgetve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1452
+#: ../src/gpk-enum.c:1461
 msgid "Got list of repositories"
 msgstr "Tárolók listája lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1456
+#: ../src/gpk-enum.c:1465
 msgid "Enabled repository"
 msgstr "Tároló engedélyezve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1460
+#: ../src/gpk-enum.c:1469
 msgid "Set repository data"
 msgstr "Tárolóadatok beállítva"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1464
+#: ../src/gpk-enum.c:1473
 msgid "Resolved"
 msgstr "Feloldva"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1468
+#: ../src/gpk-enum.c:1477
 msgid "Got file list"
 msgstr "Fájllista lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1472
+#: ../src/gpk-enum.c:1481
 msgid "Got what provides"
 msgstr "Biztosító csomag lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1476
+#: ../src/gpk-enum.c:1485
 msgid "Installed signature"
 msgstr "Aláírás telepítve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1480
+#: ../src/gpk-enum.c:1489
 msgid "Got package lists"
 msgstr "Csomaglisták lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1484
+#: ../src/gpk-enum.c:1493
 msgid "Accepted EULA"
 msgstr "EULA elfogadva"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1488
+#: ../src/gpk-enum.c:1497
 msgid "Downloaded packages"
 msgstr "Csomagok letöltve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1492
+#: ../src/gpk-enum.c:1501
 msgid "Got distribution upgrades"
 msgstr "Disztribúciófrissítések lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1496
+#: ../src/gpk-enum.c:1505
 msgid "Got categories"
 msgstr "Kategóriák lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1500
+#: ../src/gpk-enum.c:1509
 msgid "Got old transactions"
 msgstr "Régi tranzakciók lekérve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1504
-#, fuzzy
-msgid "Simulated the install"
-msgstr "Telepítendő fájlok"
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1508
-#, fuzzy
+#: ../src/gpk-enum.c:1513
 msgid "Simulated the install of files"
-msgstr "A fájl telepítése meghiúsult"
+msgstr "A fájlok telepítésének szimulálása kész"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1512
+#: ../src/gpk-enum.c:1517
+msgid "Simulated the install"
+msgstr "A telepítés szimulálása kész"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1521
 msgid "Simulated the remove"
-msgstr ""
+msgstr "Az eltávolítás szimulálása kész"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1516
-#, fuzzy
+#: ../src/gpk-enum.c:1525
 msgid "Simulated the update"
-msgstr "A frissítés meghiúsult"
+msgstr "A frissítés szimulálása kész"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1534
+#: ../src/gpk-enum.c:1543
 msgid "Accessibility"
 msgstr "Akadálymentesítés"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1538
+#: ../src/gpk-enum.c:1547
 msgid "Accessories"
 msgstr "Kellékek"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1542
+#: ../src/gpk-enum.c:1551
 msgid "Education"
 msgstr "Oktatás"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1546
+#: ../src/gpk-enum.c:1555
 msgid "Games"
 msgstr "Játékok"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1550
+#: ../src/gpk-enum.c:1559
 msgid "Graphics"
 msgstr "Grafika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1554
+#: ../src/gpk-enum.c:1563
 msgid "Internet"
 msgstr "Internet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1558
+#: ../src/gpk-enum.c:1567
 msgid "Office"
 msgstr "Iroda"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1562
+#: ../src/gpk-enum.c:1571
 msgid "Other"
 msgstr "Egyéb"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1566
+#: ../src/gpk-enum.c:1575
 msgid "Programming"
 msgstr "Fejlesztés"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1570
+#: ../src/gpk-enum.c:1579
 msgid "Multimedia"
 msgstr "Multimédia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1578
+#: ../src/gpk-enum.c:1587
 msgid "GNOME desktop"
 msgstr "GNOME asztali környezet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1582
+#: ../src/gpk-enum.c:1591
 msgid "KDE desktop"
 msgstr "KDE asztali környezet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1586
+#: ../src/gpk-enum.c:1595
 msgid "XFCE desktop"
 msgstr "XFCE asztali környezet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1590
+#: ../src/gpk-enum.c:1599
 msgid "Other desktops"
 msgstr "Egyéb asztali környezetek"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1594
+#: ../src/gpk-enum.c:1603
 msgid "Publishing"
 msgstr "Kiadványszerkesztés"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1598
+#: ../src/gpk-enum.c:1607
 msgid "Servers"
 msgstr "Kiszolgálók"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1602
+#: ../src/gpk-enum.c:1611
 msgid "Fonts"
 msgstr "Betűkészletek"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1606
+#: ../src/gpk-enum.c:1615
 msgid "Admin tools"
 msgstr "Adminisztrációs eszközök"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1610
+#: ../src/gpk-enum.c:1619
 msgid "Legacy"
 msgstr "Örökölt programok"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1614
+#: ../src/gpk-enum.c:1623
 msgid "Localization"
 msgstr "Lokalizáció"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1618
+#: ../src/gpk-enum.c:1627
 msgid "Virtualization"
 msgstr "Virtualizáció"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1622
+#: ../src/gpk-enum.c:1631
 msgid "Security"
 msgstr "Biztonság"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1626
+#: ../src/gpk-enum.c:1635
 msgid "Power management"
 msgstr "Energiagazdálkodás"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1630
+#: ../src/gpk-enum.c:1639
 msgid "Communication"
 msgstr "Kommunikáció"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1634
+#: ../src/gpk-enum.c:1643
 msgid "Network"
 msgstr "Hálózat"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1638
+#: ../src/gpk-enum.c:1647
 msgid "Maps"
 msgstr "Térképek"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1642
+#: ../src/gpk-enum.c:1651
 msgid "Software sources"
 msgstr "Szoftverforrások"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1646
+#: ../src/gpk-enum.c:1655
 msgid "Science"
 msgstr "Tudomány"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1650
+#: ../src/gpk-enum.c:1659
 msgid "Documentation"
 msgstr "Dokumentáció"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1654
+#: ../src/gpk-enum.c:1663
 msgid "Electronics"
 msgstr "Elektronika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1658
+#: ../src/gpk-enum.c:1667
 msgid "Package collections"
 msgstr "Csomaggyűjtemények"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1662
+#: ../src/gpk-enum.c:1671
 msgid "Vendor"
 msgstr "Gyártó"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1666
+#: ../src/gpk-enum.c:1675
 msgid "Newest packages"
 msgstr "Legújabb csomagok"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1670
+#: ../src/gpk-enum.c:1679
 msgid "Unknown group"
 msgstr "Ismeretlen csoport"
 
@@ -3713,8 +3675,7 @@ msgstr "Ismeretlen csoport"
 msgid ""
 "Additional firmware is required to make hardware in this computer function "
 "correctly."
-msgstr ""
-"A számítógép hardverének megfelelő működéséhez további firmware szükséges."
+msgstr "A számítógép hardverének megfelelő működéséhez további firmware szükséges."
 
 #. TRANSLATORS: title of libnotify bubble
 #: ../src/gpk-firmware.c:452
@@ -3728,44 +3689,38 @@ msgstr "Firmware telepítése"
 
 #. TRANSLATORS: we should ignore this device and not ask anymore
 #: ../src/gpk-firmware.c:460
-#, fuzzy
 msgid "Ignore devices"
-msgstr "További részletek"
+msgstr "Eszközök figyelmen kívül hagyása"
 
 #. TRANSLATORS: we need to restart so the new hardware can re-request the firmware
 #: ../src/gpk-firmware.c:652
 msgid ""
 "You will need to restart this computer before the hardware will work "
 "correctly."
-msgstr ""
+msgstr "Újra kell indítani a számítógépet a hardver megfelelő működéséhez."
 
 #. TRANSLATORS: title of libnotify bubble
 #: ../src/gpk-firmware.c:655 ../src/gpk-firmware.c:690
 #: ../src/gpk-firmware.c:717
-#, fuzzy
 msgid "Additional software was installed"
-msgstr "További firmware szükséges"
+msgstr "További szoftverek lettek telepítve"
 
 #. TRANSLATORS: button label
 #: ../src/gpk-firmware.c:664
-#, fuzzy
 msgid "Restart now"
-msgstr "Indítsa újra a számítógépet"
+msgstr "Újraindítás most"
 
 #. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
 #: ../src/gpk-firmware.c:687
-#, fuzzy
 msgid ""
 "You will need to remove and then reinsert the hardware before it will work "
 "correctly."
-msgstr ""
-"A frissítés után ki, majd újra be kell jelentkeznie a módosítások életbe "
-"lépéséhez."
+msgstr "El kell távolítani, majd újra kell csatlakoztatni a hardvert a megfelelő működéséhez."
 
 #. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
 #: ../src/gpk-firmware.c:714
 msgid "Your hardware has been set up and is now ready to use."
-msgstr ""
+msgstr "A hardver beállítása sikerült, immár használatra kész."
 
 #. TODO: tell the user what hardware, NOT JUST A UDI
 #. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
@@ -3805,12 +3760,9 @@ msgstr[1] "%i további csomagot kell eltávolítani"
 #: ../src/gpk-helper-deps-remove.c:84
 #, c-format
 msgid "To remove %s other packages that depend on it must also be removed."
-msgid_plural ""
-"To remove %s other packages that depend on them must also be removed."
-msgstr[0] ""
-"%s eltávolításához más, ettől függő csomagokat is el kell távolítani."
-msgstr[1] ""
-"%s eltávolításához más, ezektől függő csomagokat is el kell távolítani."
+msgid_plural "To remove %s other packages that depend on them must also be removed."
+msgstr[0] "%s eltávolításához más, ettől függő csomagokat is el kell távolítani."
+msgstr[1] "%s eltávolításához más, ezektől függő csomagokat is el kell távolítani."
 
 #. gtk_dialog_add_button (GTK_DIALOG (dialog), "help", GTK_RESPONSE_HELP);
 #. TRANSLATORS: this is button text
@@ -3828,19 +3780,15 @@ msgstr[1] "%i további frissítés is telepítendő"
 
 #. TRANSLATORS: message: describe in detail why it must happen
 #: ../src/gpk-helper-deps-update.c:96
-msgid ""
-"To perform this update, an additional package also has to be downloaded."
-msgid_plural ""
-"To perform this update, additional packages also have to be downloaded."
-msgstr[0] ""
-"A frissítés végrehajtásához egy további csomagot is le kell tölteni."
+msgid "To perform this update, an additional package also has to be downloaded."
+msgid_plural "To perform this update, additional packages also have to be downloaded."
+msgstr[0] "A frissítés végrehajtásához egy további csomagot is le kell tölteni."
 msgstr[1] "A frissítés végrehajtásához további csomagokat is le kell tölteni."
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
 #: ../src/gpk-helper-media-change.c:69
 #, c-format
-msgid ""
-"Additional media is required. Please insert the %s labeled '%s' to continue."
+msgid "Additional media is required. Please insert the %s labeled '%s' to continue."
 msgstr ""
 "Másik adathordozó szükséges. Helyezze be a(z) „$%2s” címkéjű $%1s-t a "
 "folytatáshoz."
@@ -3940,8 +3888,7 @@ msgstr "A művelet nem fejezhető be"
 #: ../src/gpk-install-mime-type.c:124 ../src/gpk-install-package-name.c:123
 #: ../src/gpk-install-provide-file.c:124
 msgid "The request failed. More details are available in the detailed report."
-msgstr ""
-"A kérés meghiúsult. A részletes jelentésben további információk találhatók."
+msgstr "A kérés meghiúsult. A részletes jelentésben további információk találhatók."
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:55
@@ -4226,8 +4173,7 @@ msgstr "Nem hozható létre javítócsomag"
 #. TRANSLATORS: the constants should not be translated
 #: ../src/gpk-service-pack.c:598
 msgid "Set the option, allowable values are 'list', 'updates' and 'package'"
-msgstr ""
-"A kapcsoló beállítása, a lehetséges értékek a „list”, „updates” és „package”"
+msgstr "A kapcsoló beállítása, a lehetséges értékek a „list”, „updates” és „package”"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
 #: ../src/gpk-service-pack.c:601
@@ -4305,28 +4251,28 @@ msgid "No updates are selected"
 msgstr "Nincsenek kiválasztva frissítések"
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:763
+#: ../src/gpk-update-viewer.c:774
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Frissítés telepítése"
 msgstr[1] "_Frissítések telepítése"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:776
+#: ../src/gpk-update-viewer.c:787
 msgid "There are no updates available"
 msgstr "Nem állnak rendelkezésre frissítések"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:785
+#: ../src/gpk-update-viewer.c:796
 msgid "All software is up to date"
 msgstr "Minden szoftver naprakész"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:789
+#: ../src/gpk-update-viewer.c:800
 msgid "There are no software updates available for your computer at this time."
 msgstr "Jelenleg nem érhetők el frissítések."
 
-#: ../src/gpk-update-viewer.c:825
+#: ../src/gpk-update-viewer.c:836
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4334,7 +4280,7 @@ msgstr[0] "%i frissítés áll rendelkezésre"
 msgstr[1] "%i frissítés áll rendelkezésre"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:841
+#: ../src/gpk-update-viewer.c:852
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4342,7 +4288,7 @@ msgstr[0] "%i frissítés kiválasztva"
 msgstr[1] "%i frissítés kiválasztva"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:849
+#: ../src/gpk-update-viewer.c:860
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4350,59 +4296,56 @@ msgstr[0] "%i frissítés kiválasztva (%s)"
 msgstr[1] "%i frissítés kiválasztva (%s)"
 
 #. TRANSLATORS: querying update list
-#: ../src/gpk-update-viewer.c:911
+#: ../src/gpk-update-viewer.c:922
 msgid "Getting the list of updates"
 msgstr "Frissítések listájának lekérése"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1101
+#: ../src/gpk-update-viewer.c:1112
 msgid "Software"
 msgstr "Szoftver"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1111
+#: ../src/gpk-update-viewer.c:1122
 msgid "Status"
 msgstr "Állapot"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1255
+#: ../src/gpk-update-viewer.c:1266
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Ez a frissítés hibákat és egyéb nem kritikus problémákat javít."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1259
+#: ../src/gpk-update-viewer.c:1270
 msgid "This update is important as it may solve critical problems."
 msgstr "Ez a frissítés fontos, mivel kritikus problémákat javíthat."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1263
-msgid ""
-"This update is needed to fix a security vulnerability with this package."
-msgstr ""
-"Ez a frissítés a csomag biztonsági sebezhetőségének javításához fontos."
+#: ../src/gpk-update-viewer.c:1274
+msgid "This update is needed to fix a security vulnerability with this package."
+msgstr "Ez a frissítés a csomag biztonsági sebezhetőségének javításához fontos."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1267
+#: ../src/gpk-update-viewer.c:1278
 msgid "This update is blocked."
 msgstr "A frissítés blokkolva van"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1276
+#: ../src/gpk-update-viewer.c:1287
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Ez az értesítés %s napon készült, utolsó frissítése: %s"
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1285
+#: ../src/gpk-update-viewer.c:1296
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Ez az értesítés %s napon készült."
 
 #. TRANSLATORS: this is a list of vendor URLs
-#: ../src/gpk-update-viewer.c:1308
+#: ../src/gpk-update-viewer.c:1319
 msgid "For more information about this update please visit this website:"
-msgid_plural ""
-"For more information about this update please visit these websites:"
+msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] ""
 "A frissítéssel kapcsolatos további információkért keresse fel ezt a "
 "weboldalt:"
@@ -4411,7 +4354,7 @@ msgstr[1] ""
 "weboldalakat:"
 
 #. TRANSLATORS: this is a list of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1317
+#: ../src/gpk-update-viewer.c:1328
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4426,11 +4369,9 @@ msgstr[1] ""
 "keresse fel ezeket a weboldalakat:"
 
 #. TRANSLATORS: this is a list of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1326
-msgid ""
-"For more information about this security update please visit this website:"
-msgid_plural ""
-"For more information about this security update please visit these websites:"
+#: ../src/gpk-update-viewer.c:1337
+msgid "For more information about this security update please visit this website:"
+msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] ""
 "A biztonsági frissítéssel kapcsolatos további információkért keresse fel ezt "
 "a weboldalt:"
@@ -4439,7 +4380,7 @@ msgstr[1] ""
 "ezeket a weboldalakat:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1336
+#: ../src/gpk-update-viewer.c:1347
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4448,7 +4389,7 @@ msgstr ""
 "lépéséhez."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1340
+#: ../src/gpk-update-viewer.c:1351
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4457,7 +4398,7 @@ msgstr ""
 "lépéséhez."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1347
+#: ../src/gpk-update-viewer.c:1358
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4466,7 +4407,7 @@ msgstr ""
 "környezetbeli használatra."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1351
+#: ../src/gpk-update-viewer.c:1362
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4475,7 +4416,7 @@ msgstr ""
 "minden problémát vagy regressziót, amit tapasztal."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:1360
+#: ../src/gpk-update-viewer.c:1371
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4484,17 +4425,17 @@ msgstr ""
 "ehhez a frissítéshez:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:1383
+#: ../src/gpk-update-viewer.c:1394
 msgid "Loading..."
 msgstr "Betöltés…"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1450
 msgid "Some updates were not installed"
 msgstr "Egyes frissítések nem kerültek telepítésre"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:1567
+#: ../src/gpk-update-viewer.c:1578
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -4503,12 +4444,12 @@ msgstr ""
 "módosítások életbe lépése előtt."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:1569 ../src/gpk-update-viewer.c:1575
+#: ../src/gpk-update-viewer.c:1580 ../src/gpk-update-viewer.c:1586
 msgid "Restart Computer"
 msgstr "Számítógép újraindítása"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:1573
+#: ../src/gpk-update-viewer.c:1584
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -4517,7 +4458,7 @@ msgstr ""
 "biztonság fenntartása érdekében."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:1579
+#: ../src/gpk-update-viewer.c:1590
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -4526,12 +4467,12 @@ msgstr ""
 "biztonság fenntartása érdekében."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:1581 ../src/gpk-update-viewer.c:1587
+#: ../src/gpk-update-viewer.c:1592 ../src/gpk-update-viewer.c:1598
 msgid "Log Out"
 msgstr "Kijelentkezés"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:1585
+#: ../src/gpk-update-viewer.c:1596
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4540,57 +4481,57 @@ msgstr ""
 "biztonság fenntartása érdekében."
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:1884 ../src/gpk-update-viewer.c:1949
+#: ../src/gpk-update-viewer.c:1898 ../src/gpk-update-viewer.c:1963
 msgid "GNOME PackageKit Update Viewer"
 msgstr "GNOME PackageKit frissítésmegjelenítő"
 
 #. TRANSLATORS: completed all updates
-#: ../src/gpk-update-viewer.c:1914
+#: ../src/gpk-update-viewer.c:1928
 msgid "All selected updates installed..."
 msgstr "Minden kijelölt frissítés telepítve…"
 
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:1937
 msgid "All selected updates installed"
 msgstr "Minden kijelölt frissítés telepítve"
 
 #. TRANSLATORS: software updates installed okay
-#: ../src/gpk-update-viewer.c:1927
+#: ../src/gpk-update-viewer.c:1941
 msgid "All selected updates were successfully installed."
 msgstr "Minden kijelölt frissítés sikeresen telepítve."
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:1951
+#: ../src/gpk-update-viewer.c:1965
 msgid "Failed to update"
 msgstr "A frissítés meghiúsult"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2297
+#: ../src/gpk-update-viewer.c:2311
 msgid "Select all"
 msgstr "Minden kijelölése"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2305
+#: ../src/gpk-update-viewer.c:2319
 msgid "Unselect all"
 msgstr "Kijelölés megszüntetése"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2326
 msgid "Select security updates"
 msgstr "Biztonsági frissítések kiválasztása"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2318
+#: ../src/gpk-update-viewer.c:2332
 msgid "Ignore this update"
 msgstr "Frissítés mellőzése"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2406
+#: ../src/gpk-update-viewer.c:2420
 msgid "Checking for updates..."
 msgstr "Frissítések keresése…"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2569
+#: ../src/gpk-update-viewer.c:2583
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Új disztribúciófrissítő kiadás érhető el: „%s”"
@@ -4696,5 +4637,3 @@ msgstr "S_zámítógép újraindítása"
 msgid "_Hide this icon"
 msgstr "_Ikon elrejtése"
 
-#~ msgid "_Show Updates"
-#~ msgstr "_Frissítések megjelenítése"
