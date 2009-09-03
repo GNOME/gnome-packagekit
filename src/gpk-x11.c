@@ -86,13 +86,13 @@ gpk_x11_get_user_time (GpkX11 *x11)
 {
 	guint32 timestamp = 0;
 	Atom atom = None;
-	guchar *data;
-	Atom type_return;
-	gint format_return;
-	gulong nitems_return;
-	gulong bytes_after_return;
+	Atom type;
+	gint format;
+	gulong nitems;
+	gulong bytes_after;
 	Window *win = NULL;
 	int rc;
+	int err;
 
 	g_return_val_if_fail (GPK_IS_X11 (x11), 0);
 
@@ -103,34 +103,41 @@ gpk_x11_get_user_time (GpkX11 *x11)
 	}
 
 	/* get _NET_WM_USER_TIME_WINDOW which points to a window on which you can find the _NET_WM_USER_TIME property */
+	gdk_error_trap_push ();
 	atom = gdk_x11_get_xatom_by_name_for_display (x11->priv->gdk_display, "_NET_WM_USER_TIME_WINDOW");
 	rc = XGetWindowProperty (x11->priv->display, x11->priv->window, atom, 0, G_MAXLONG, False, XA_WINDOW,
-				 &type_return, &format_return, &nitems_return, &bytes_after_return, &data);
-	if (rc == Success) {
-		if ((type_return == XA_WINDOW) && (format_return == 32) && (data)) {
-			win = (Window *)data;
-			egg_debug ("got window %p", win);
-		}
+				 &type, &format, &nitems, &bytes_after, (void*) &win);
+	err = gdk_error_trap_pop ();
+	if (err != Success || rc != Success) {
+		egg_warning ("couldn't get _NET_WM_USER_TIME_WINDOW");
+		goto out;
 	}
 
-	/* nothing found */
-	if (win == NULL) {
-		egg_warning ("could not find window %i", (gint) x11->priv->window);
+	/* is not a window */
+	if (type != XA_WINDOW) {
+		egg_warning ("not type XA_WINDOW");
 		goto out;
 	}
 
 	/* get _NET_WM_USER_TIME so we can get the user time */
+	gdk_error_trap_push ();
 	atom = gdk_x11_get_xatom_by_name_for_display (x11->priv->gdk_display, "_NET_WM_USER_TIME");
 	rc = XGetWindowProperty (x11->priv->display, *win, atom, 0, G_MAXLONG, False, XA_CARDINAL,
-				 &type_return, &format_return, &nitems_return, &bytes_after_return, &data);
-	if (rc == Success) {
-		if ((type_return == XA_CARDINAL) && (format_return == 32) && (data)) {
-			timestamp = (guint32) *data;
-			egg_debug ("got timestamp %i", timestamp);
-		}
+				 &type, &format, &nitems, &bytes_after, (void*) &timestamp);
+	err = gdk_error_trap_pop ();
+	if (err != Success || rc != Success) {
+		egg_warning ("couldn't get _NET_WM_USER_TIME");
+		goto out;
 	}
 
+	/* is not a window */
+	if (type != XA_CARDINAL) {
+		egg_warning ("not type XA_CARDINAL");
+		goto out;
+	}
 out:
+	if (win != NULL)
+		XFree (win);
 	return timestamp;
 }
 
@@ -143,11 +150,11 @@ gpk_x11_get_title (GpkX11 *x11)
 	gchar *title = NULL;
 	Atom atom = None;
 	Atom atom_type = None;
-	guchar *data;
-	Atom type_return;
-	gint format_return;
-	gulong nitems_return;
-	gulong bytes_after_return;
+	gchar *data;
+	Atom type;
+	gint format;
+	gulong nitems;
+	gulong bytes_after;
 	int rc;
 
 	g_return_val_if_fail (GPK_IS_X11 (x11), NULL);
@@ -159,26 +166,30 @@ gpk_x11_get_title (GpkX11 *x11)
 	}
 
 	/* get _NET_WM_NAME */
+	gdk_error_trap_push ();
 	atom = gdk_x11_get_xatom_by_name_for_display (x11->priv->gdk_display, "_NET_WM_NAME");
 	atom_type = gdk_x11_get_xatom_by_name_for_display (x11->priv->gdk_display, "UTF8_STRING");
 	rc = XGetWindowProperty (x11->priv->display, x11->priv->window, atom, 0, G_MAXLONG, False, atom_type,
-				 &type_return, &format_return, &nitems_return, &bytes_after_return, &data);
-	if (rc == Success && nitems_return > 0) {
-		title = g_strdup ((gchar *)data);
-		XFree (data);
+				 &type, &format, &nitems, &bytes_after, (void*) &data);
+	gdk_error_trap_pop ();
+	if (rc == Success && nitems > 0) {
+		title = g_strdup (data);
 		goto out;
 	}
 
 	/* we failed to get the UTF8 title, try plain old WM_NAME */
+	gdk_error_trap_push ();
 	rc = XGetWindowProperty (x11->priv->display, x11->priv->window, XA_WM_NAME, 0, G_MAXLONG, False, XA_STRING,
-				 &type_return, &format_return, &nitems_return, &bytes_after_return, &data);
-	if (rc == Success && nitems_return > 0) {
-		title = g_strdup ((gchar *)data);
-		XFree (data);
+				 &type, &format, &nitems, &bytes_after, (void*) &data);
+	gdk_error_trap_pop ();
+	if (rc == Success && nitems > 0) {
+		title = g_strdup (data);
 		goto out;
 	}
 	egg_warning ("failed to get X11 name for window %i", (gint) x11->priv->window);
 out:
+	if (data != NULL)
+		XFree (data);
 	return title;
 }
 
