@@ -438,7 +438,9 @@ gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum
 	gchar *message = NULL;
 	NotifyNotification *notification;
 #if PK_CHECK_VERSION(0,5,0)
+	guint j;
 	const PkRequireRestartObj *obj;
+	const PkRequireRestartObj *obj_tmp;
 	PkObjList *array;
 #else
 	PkPackageId *id;
@@ -477,8 +479,25 @@ gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum
 			}
 			for (i=0; i<array->len; i++) {
 				obj = pk_obj_list_index (array, i);
-				if (obj->restart >= restart)
-					g_ptr_array_add (watch->priv->restart_package_names, g_strdup (obj->id->name));
+
+				/* is a lesser restart that what we have already */
+				if (obj->restart != restart)
+					continue;
+
+				/* is already in the list */
+				ret = FALSE;
+				for (j=0; j<array->len; j++) {
+					obj_tmp = pk_obj_list_index (array, j);
+					if (g_strcmp0 (obj_tmp->id->name, obj->id->name) == 0) {
+						ret = TRUE;
+						break;
+					}
+				}
+				if (ret)
+					continue;
+
+				/* add to list */
+				g_ptr_array_add (watch->priv->restart_package_names, g_strdup (obj->id->name));
 			}
 			g_object_unref (array);
 no_data:
