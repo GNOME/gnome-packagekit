@@ -86,7 +86,10 @@ CPPFLAGS="$CPPFLAGS -fexceptions"
 dnl ---------------------------------------------------------------------------
 dnl - xsltproc
 dnl ---------------------------------------------------------------------------
-AC_PATH_PROG([XSLTPROC], [xsltproc])
+AC_PATH_PROG(XSLTPROC, xsltproc, no)
+if test "$XSLTPROC" = "no" ; then
+	AC_MSG_ERROR([xsltproc has not been found])
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl - gettext stuff
@@ -206,10 +209,6 @@ AC_SUBST(GUDEV_LIBS)
 
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
-
-AC_PATH_XTRA
-
-ALL_X_LIBS="$X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS"
 
 dnl ---------------------------------------------------------------------------
 dnl - Make paths available for source files
