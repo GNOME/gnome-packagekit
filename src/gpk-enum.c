@@ -53,6 +53,7 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_COLLECTION_AVAILABLE,	"pk-collection-available"},
 	{PK_INFO_ENUM_FINISHED,			"dialog-information"},
 	{PK_INFO_ENUM_REINSTALLING,		"dialog-information"},
+	{PK_INFO_ENUM_DOWNGRADING,		"pk-package-update"},
 	{0, NULL}
 };
 
