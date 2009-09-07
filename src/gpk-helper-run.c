@@ -211,7 +211,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	gchar *joint = NULL;
 	gchar *menu_path = NULL;
 	GtkTreeIter iter;
-	GKeyFile *file;
+	GKeyFile *file = NULL;
 	PkPackageId *id;
 	gint weight;
 	gboolean hidden;

@@ -633,8 +633,6 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GtkEntryCompletion *completion;
-	PkBitfield roles;
-	PkControl *control;
 	UniqueApp *unique_app;
 	gboolean ret;
 	guint retval;
@@ -695,11 +693,6 @@ main (int argc, char *argv[])
 	client = pk_client_new ();
 	pk_client_set_use_buffer (client, TRUE, NULL);
 	pk_client_set_synchronous (client, TRUE, NULL);
-
-	/* get actions */
-	control = pk_control_new ();
-	roles = pk_control_get_actions (control, NULL);
-	g_object_unref (control);
 
 	/* get UI */
 	builder = gtk_builder_new ();

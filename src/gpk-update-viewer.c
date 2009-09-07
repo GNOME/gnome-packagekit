@@ -583,7 +583,6 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GtkTreeViewColumn *column;
-	GtkWidget *widget;
 	GtkTreePath *path;
 	gboolean selected;
 	gboolean scroll;
@@ -649,7 +648,7 @@ gpk_update_viewer_package_cb (PkClient *client, const PkPackageObj *obj, gpointe
 		gtk_tree_path_free (path);
 
 		/* set package description */
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_package"));
+		//widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_package"));
 		//gtk_label_set_label (GTK_LABEL (widget), obj->summary);
 
 		goto out;
@@ -2262,7 +2261,7 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 	GtkTreeView *treeview;
 	gboolean valid;
 	gboolean update;
-	gboolean clickable;
+	gboolean clickable = FALSE;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 

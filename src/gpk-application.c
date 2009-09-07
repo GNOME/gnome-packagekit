@@ -2082,10 +2082,8 @@ gpk_application_packages_add_columns (GpkApplication *application)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkTreeView *treeview;
-	GtkTreeModel *model;
 
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
-	model = gtk_tree_view_get_model (treeview);
 
 	/* column for installed toggles */
 	renderer = gtk_cell_renderer_toggle_new ();
@@ -2147,7 +2145,6 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkEntry *entry;
-	GtkTreeView *treeview;
 	GtkTreePath *path;
 	gboolean active;
 
@@ -2171,7 +2168,6 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 
 		/* don't search parent groups */
 		if (!active) {
-			treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
 			path = gtk_tree_model_get_path (model, &iter);
 
 			/* select the parent group */
@@ -2367,7 +2363,6 @@ gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *
 static void
 gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 {
-	GtkWidget *icon;
 	GtkWidget *widget;
 	GpkApplication *application = GPK_APPLICATION (data);
 
@@ -2382,7 +2377,6 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: basic search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
-	icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
 }
 
@@ -2392,7 +2386,6 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 static void
 gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 {
-	GtkWidget *icon;
 	GtkWidget *widget;
 	GpkApplication *application = GPK_APPLICATION (data);
 
@@ -2407,7 +2400,6 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: detailed search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
-	icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_EDIT);
 }
 
@@ -2417,7 +2409,6 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 static void
 gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 {
-	GtkWidget *icon;
 	GtkWidget *widget;
 	GpkApplication *application = GPK_APPLICATION (data);
 
@@ -2432,7 +2423,6 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: file search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
-	icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_OPEN);
 }
 
