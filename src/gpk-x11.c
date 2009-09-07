@@ -150,7 +150,7 @@ gpk_x11_get_title (GpkX11 *x11)
 	gchar *title = NULL;
 	Atom atom = None;
 	Atom atom_type = None;
-	gchar *data;
+	gchar *data = NULL;
 	Atom type;
 	gint format;
 	gulong nitems;
