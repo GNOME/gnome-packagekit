@@ -262,11 +262,11 @@ static void
 gpk_firmware_ignore_devices (GpkFirmware *firmware)
 {
 	gboolean ret;
-	gchar *existing;
+	gchar *existing = NULL;
 	GError *error = NULL;
 	GpkFirmwareRequest *req;
 	GPtrArray *array;
-	GString *string;
+	GString *string = NULL;
 	guint i;
 
 	/* get from gconf */
@@ -302,7 +302,8 @@ gpk_firmware_ignore_devices (GpkFirmware *firmware)
 	}
 out:
 	g_free (existing);
-	g_string_free (string, TRUE);
+	if (string != NULL)
+		g_string_free (string, TRUE);
 }
 
 /**
@@ -855,9 +856,9 @@ static void
 gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 {
 	gboolean ret;
-	gchar *filename_path;
-	gchar *missing_path;
-	gchar *sysfs_path;
+	gchar *filename_path = NULL;
+	gchar *missing_path = NULL;
+	gchar *sysfs_path = NULL;
 	GpkFirmwareRequest *req;
 	GPtrArray *array;
 	guint i;
@@ -897,6 +898,7 @@ gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 	req = gpk_firmware_request_new (filename_path, sysfs_path);
 	g_ptr_array_add (firmware->priv->array_requested, req);
 out:
+	g_free (missing_path);
 	g_free (filename_path);
 	g_free (sysfs_path);
 }
