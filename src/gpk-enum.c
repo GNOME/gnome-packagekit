@@ -252,6 +252,7 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,	"dialog-information"},
+	{PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED,	"dialog-warning"},
 	{0, NULL}
 };
 
@@ -878,6 +879,11 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		break;
 	case PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED:
 		text = _("Automatic cleanup is being ignored");
+		break;
+	case PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED:
+		text = _("The package download failed");
+/* string-freeze: uncomment better translation */
+//		text = _("Software source download failed");
 		break;
 	default:
 		egg_warning ("message unrecognised: %i", message);
