@@ -2044,7 +2044,7 @@ gpk_dbus_task_install_files_dep_check (GpkDbusTask *task)
 	/* set timeout */
 	pk_client_set_timeout (task->priv->client_primary, task->priv->timeout, NULL);
 
-#if (!PK_CHECK_VERSION(0,5,2))
+#if (PK_CHECK_VERSION(0,5,2))
 	/* find out if this would drag in other packages */
 	ret = pk_client_simulate_install_files (task->priv->client_primary, task->priv->files, &error_local);
 	if (!ret) {
