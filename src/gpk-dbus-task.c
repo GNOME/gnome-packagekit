@@ -1771,7 +1771,7 @@ gpk_dbus_task_install_package_files_check_type (GpkDbusTask *task, GPtrArray *ar
 	guint i;
 	guint j;
 	const gchar *data;
-	gboolean ret;
+	gboolean ret = FALSE;
 	GPtrArray *array_unknown;
 	const gchar *message_part;
 	const gchar *title;
@@ -2487,7 +2487,7 @@ gpk_dbus_task_install_gstreamer_resources_confirm (GpkDbusTask *task, gchar **co
 			/* TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player" */
 			title = g_strdup_printf (ngettext ("%s requires an additional plugin to encode this file",
 							   "%s requires additional plugins to encode this file", len), task->priv->parent_title);
-		} else if (!is_decoder && is_encoder) {
+		} else {
 			/* TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player" */
 			title = g_strdup_printf (ngettext ("%s requires an additional plugin for this operation",
 							   "%s requires additional plugins for this operation", len), task->priv->parent_title);
@@ -2501,7 +2501,7 @@ gpk_dbus_task_install_gstreamer_resources_confirm (GpkDbusTask *task, gchar **co
 			/* TRANSLATORS: a random program which we can't get the name wants to encode something */
 			title = g_strdup (ngettext ("A program requires an additional plugin to encode this file",
 						    "A program requires additional plugins to encode this file", len));
-		} else if (!is_decoder && is_encoder) {
+		} else {
 			/* TRANSLATORS: a random program which we can't get the name wants to do something (unknown) */
 			title = g_strdup (ngettext ("A program requires an additional plugin for this operation",
 						    "A program requires additional plugins for this operation", len));
