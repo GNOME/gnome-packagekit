@@ -215,7 +215,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 {
 	PkPackageList *list = NULL;
 	gchar *package_id = NULL;
-	gchar **packages;
+	gchar **packages = NULL;
 	GError *error = NULL;
 	const PkPackageObj *obj;
 	gboolean ret = FALSE;
