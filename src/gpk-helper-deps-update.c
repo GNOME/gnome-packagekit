@@ -66,14 +66,25 @@ gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *deps_li
 	gboolean ret;
 	GtkWidget *dialog;
 	GtkResponseType response;
+	const PkPackageObj *obj;
+	guint i;
 
 	/* save deps list */
 	if (helper->priv->list != NULL)
 		g_object_unref (helper->priv->list);
-	helper->priv->list = g_object_ref (deps_list);
+	helper->priv->list = pk_package_list_new ();;
+
+	/* copy only installing, updating etc */
+	length = pk_package_list_get_size (deps_list);
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (deps_list, i);
+		if (obj->info == PK_INFO_ENUM_INSTALLING ||
+		    obj->info == PK_INFO_ENUM_UPDATING)
+			pk_package_list_add (helper->priv->list, obj->info, obj->id, obj->summary);
+	}
 
 	/* empty list */
-	length = pk_package_list_get_size (deps_list);
+	length = pk_package_list_get_size (helper->priv->list);
 	if (length == 0) {
 		g_signal_emit (helper, signals [GPK_HELPER_DEPS_UPDATE_EVENT], 0, GTK_RESPONSE_YES, helper->priv->list);
 		goto out;
@@ -100,7 +111,7 @@ gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *deps_li
 	dialog = gtk_message_dialog_new (helper->priv->window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
-	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), deps_list);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), helper->priv->list);
 	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG (dialog), GPK_CONF_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */
 	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Install"), GTK_RESPONSE_YES);
