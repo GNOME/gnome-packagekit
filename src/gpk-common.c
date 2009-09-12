@@ -214,6 +214,7 @@ gpk_window_get_small_form_factor_mode (void)
 gboolean
 gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 {
+#ifdef PK_BUILD_SMALL_FORM_FACTOR
 	GdkScreen *screen;
 	guint screen_w;
 	guint screen_h;
@@ -238,7 +239,11 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 		small_form_factor_mode = TRUE;
 		goto out;
 	}
-
+#else
+	/* skip invalid values */
+	if (width == 0 || height == 0)
+		goto out;
+#endif
 	/* normal size laptop panel */
 	egg_debug ("using native mode: %ix%i", width, height);
 	gtk_window_set_default_size (window, width, height);

@@ -207,6 +207,16 @@ AM_CONDITIONAL(GPK_BUILD_GUDEV, test x$GPK_BUILD_GUDEV = xyes)
 AC_SUBST(GUDEV_CFLAGS)
 AC_SUBST(GUDEV_LIBS)
 
+dnl ---------------------------------------------------------------------------
+dnl - Enable small form factor code
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(small_form_factor, AS_HELP_STRING([--enable-small-form-factor],[enable small form factor code]),
+	      enable_small_form_factor=$enableval,enable_small_form_factor=no)
+AM_CONDITIONAL(PK_BUILD_SMALL_FORM_FACTOR, test x$enable_small_form_factor = xyes)
+if test x$enable_small_form_factor = xyes; then
+	AC_DEFINE(PK_BUILD_SMALL_FORM_FACTOR,1,[Build small form factor code])
+fi
+
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
