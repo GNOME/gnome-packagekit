@@ -546,7 +546,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 
 	/* use gnome-session for the idle detection */
 	arefresh->priv->session = gpk_session_new ();
-	g_signal_connect (arefresh->priv->session, "idle_changed",
+	g_signal_connect (arefresh->priv->session, "idle-changed",
 			  G_CALLBACK (gpk_auto_refresh_session_idle_changed_cb), arefresh);
 	arefresh->priv->session_idle = gpk_session_get_idle (arefresh->priv->session);
 
