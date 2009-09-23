@@ -67,6 +67,21 @@ gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, PkPackageList *packa
 	gboolean ret;
 	GtkWidget *dialog;
 	GtkResponseType response;
+	gchar *package_id;
+	const PkPackageObj *obj;
+	guint i;
+
+	/* remove cleanup packages */
+	length = pk_package_list_get_size (deps_list);
+	for (i=0; i<length; i++) {
+		obj = pk_package_list_get_obj (deps_list, i);
+		if (obj->info == PK_INFO_ENUM_CLEANUP ||
+		    obj->info == PK_INFO_ENUM_FINISHED) {
+			package_id = pk_package_id_to_string (obj->id);
+			pk_package_list_remove (deps_list, package_id);
+			g_free (package_id);
+		}
+	}
 
 	/* empty list */
 	length = pk_package_list_get_size (deps_list);
