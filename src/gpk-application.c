@@ -2056,11 +2056,13 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 			goto out;
 		}
 
-		/* install */
-#if !PK_CHECK_VERSION(0,5,2)
+		/* remove */
+#if PK_CHECK_VERSION(0,5,2)
+		ret = pk_client_simulate_remove_packages (application->priv->client_primary, package_ids, &error);
+#else
 		application->priv->dep_check_info_only = FALSE;
-#endif
 		ret = pk_client_get_requires (application->priv->client_primary, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), package_ids, TRUE, &error);
+#endif
 		if (!ret) {
 			egg_warning ("failed to get requires: %s", error->message);
 			g_error_free (error);
