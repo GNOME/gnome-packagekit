@@ -211,6 +211,13 @@ gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 		egg_warning ("failed to get cmdline: %s", error->message);
 		g_error_free (error);
 	}
+
+	/* if command line contains (deleted) the original binary is invalid */
+	if (g_strstr_len (cmdline, -1, "(deleted)") != NULL) {
+		g_free (cmdline);
+		cmdline = NULL;
+		goto out;
+	}
 out:
 	g_free (filename);
 	return cmdline;
