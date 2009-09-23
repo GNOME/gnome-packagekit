@@ -271,12 +271,9 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	}
 
 	/* get summary */
-	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
-	if (text == NULL)
-		text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
-	if (text != NULL)
-		summary = g_markup_escape_text (text, -1);
-	g_free (text);
+	summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
+	if (summary == NULL)
+		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
 
 	/* get application path */
 	text = gpk_desktop_get_menu_path (filename);
