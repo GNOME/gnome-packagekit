@@ -982,29 +982,22 @@ static gchar *
 gpk_watch_get_role_text (PkClient *client)
 {
 	const gchar *role_text;
-	gchar *text;
 	gchar *message;
 	PkRoleEnum role;
 	GError *error = NULL;
 	gboolean ret;
 
 	/* get role and text */
-	ret = pk_client_get_role (client, &role, &text, &error);
+	ret = pk_client_get_role (client, &role, NULL, &error);
 	if (!ret) {
 		egg_warning ("failed to get role: %s", error->message);
 		g_error_free (error);
 		return NULL;
 	}
 
-	/* backup */
+	/* present tense localisation */
 	role_text = gpk_role_enum_to_localised_present (role);
-
-	if (!egg_strzero (text) && role != PK_ROLE_ENUM_UPDATE_PACKAGES)
-		message = g_strdup_printf ("%s: %s", role_text, text);
-	else
-		message = g_strdup_printf ("%s", role_text);
-	g_free (text);
-
+	message = g_strdup_printf ("%s", role_text);
 	return message;
 }
 
