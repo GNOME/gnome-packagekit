@@ -213,7 +213,7 @@ gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 	}
 
 	/* if command line contains (deleted) the original binary is invalid */
-	if (g_strstr_len (cmdline, "(deleted)") != NULL) {
+	if (g_strstr_len (cmdline, -1, "(deleted)") != NULL) {
 		g_free (cmdline);
 		cmdline = NULL;
 		goto out;
