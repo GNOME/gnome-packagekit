@@ -1220,6 +1220,13 @@ gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, 
 	egg_debug ("update viewer on the bus: %i", connected);
 	cupdate->priv->icon_inhibit_update_viewer_connected = connected;
 	gpk_check_update_set_icon_visibility (cupdate);
+
+	/* if the update viewer is coming back, do a check for updates so we don't
+	 *  show there are updates when the update viewer just said there were none */
+	if (!connected) {
+		egg_debug ("updatdate viewer back cb");
+		g_idle_add ((GSourceFunc) gpk_check_update_query_updates_idle_cb, cupdate);
+	}
 }
 
 /**
