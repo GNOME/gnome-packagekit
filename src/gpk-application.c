@@ -3381,6 +3381,7 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	guint i;
 	GtkTreeIter iter;
 	const gchar *icon_name;
+	gboolean ret;
 
 	/* set to no indent */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
@@ -3388,7 +3389,8 @@ gpk_application_create_group_list_enum (GpkApplication *application)
 	gtk_tree_view_set_level_indentation  (GTK_TREE_VIEW (widget), 0);
 
 	/* add an "all" entry if we can GetPackages */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
+	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_SHOW_ALL_PACKAGES, NULL);
+	if (ret && pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
@@ -3450,6 +3452,7 @@ gpk_application_categories_finished (GpkApplication *application)
 	guint i, j;
 	GtkTreeView *treeview;
 	const gchar *icon_name;
+	gboolean ret;
 
 	/* set to expanders with indent */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
@@ -3457,7 +3460,8 @@ gpk_application_categories_finished (GpkApplication *application)
 	gtk_tree_view_set_level_indentation  (treeview, 3);
 
 	/* add an "all" entry if we can GetPackages */
-	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
+	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_SHOW_ALL_PACKAGES, NULL);
+	if (ret && pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
