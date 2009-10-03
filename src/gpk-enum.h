@@ -138,6 +138,17 @@ typedef guint PkMediaTypeEnum;
 #define PK_INFO_ENUM_UNKNOWN				(PK_INFO_ENUM_DOWNGRADING + 1)
 #endif
 
+/* constants defined in 0.5.3 */
+#if (!PK_CHECK_VERSION(0,5,3))
+#define PK_INFO_ENUM_PREPARING				(PK_INFO_ENUM_DOWNGRADING + 1)
+#define PK_INFO_ENUM_DECOMPRESSING			(PK_INFO_ENUM_PREPARING + 1)
+#undef PK_INFO_ENUM_UNKNOWN
+#define PK_INFO_ENUM_UNKNOWN				(PK_INFO_ENUM_DECOMPRESSING + 1)
+#define PK_STATUS_ENUM_COPY_FILES			(PK_STATUS_ENUM_CHECK_LIBRARIES + 1)
+#undef PK_STATUS_ENUM_UNKNOWN
+#define PK_STATUS_ENUM_UNKNOWN				(PK_STATUS_ENUM_COPY_FILES + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
