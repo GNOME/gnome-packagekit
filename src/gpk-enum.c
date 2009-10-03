@@ -54,6 +54,8 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_FINISHED,			"dialog-information"},
 	{PK_INFO_ENUM_REINSTALLING,		"dialog-information"},
 	{PK_INFO_ENUM_DOWNGRADING,		"pk-package-update"},
+	{PK_INFO_ENUM_PREPARING,		"dialog-information"},
+	{PK_INFO_ENUM_DECOMPRESSING,		"dialog-information"},
 	{0, NULL}
 };
 
@@ -94,6 +96,7 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
 	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
 	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
+	{PK_STATUS_ENUM_COPY_FILES,		"pk-package-info"},
 	{0, NULL}
 };
 
@@ -134,6 +137,7 @@ static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
 	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
 	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
+	{PK_STATUS_ENUM_COPY_FILES,		"pk-package-info"},
 	{0, NULL}
 };
 
@@ -881,9 +885,7 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		text = _("Automatic cleanup is being ignored");
 		break;
 	case PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED:
-		text = _("The package download failed");
-/* string-freeze: uncomment better translation */
-//		text = _("Software source download failed");
+		text = _("Software source download failed");
 		break;
 	default:
 		egg_warning ("message unrecognised: %i", message);
@@ -1043,6 +1045,10 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: we are checking for libraries in use */
 		text = _("Checking for libraries currently in use");
 		break;
+	case PK_STATUS_ENUM_COPY_FILES:
+		/* TRANSLATORS: we are copying package files to prepare to install */
+		text = _("Copying files");
+		break;
 	default:
 		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
@@ -1179,6 +1185,14 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Reinstalling");
 		break;
+	case PK_INFO_ENUM_PREPARING:
+		/* TRANSLATORS: The action of the package, in present tense */
+		text = _("Preparing");
+		break;
+	case PK_INFO_ENUM_DECOMPRESSING:
+		/* TRANSLATORS: The action of the package, in present tense */
+		text = _("Decompressing");
+		break;
 	default:
 		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
@@ -1220,6 +1234,14 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 	case PK_INFO_ENUM_REINSTALLING:
 		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Reinstalled");
+		break;
+	case PK_INFO_ENUM_PREPARING:
+		/* TRANSLATORS: The action of the package, in past tense */
+		text = _("Prepared");
+		break;
+	case PK_INFO_ENUM_DECOMPRESSING:
+		/* TRANSLATORS: The action of the package, in past tense */
+		text = _("Decompressed");
 		break;
 	default:
 		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
