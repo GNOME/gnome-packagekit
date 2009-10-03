@@ -72,6 +72,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_APPLICATION_FILTER_ARCH	"/apps/gnome-packagekit/application/filter_arch"
 #define GPK_CONF_APPLICATION_CATEGORY_GROUPS	"/apps/gnome-packagekit/application/category_groups"
 #define GPK_CONF_APPLICATION_SEARCH_MODE	"/apps/gnome-packagekit/application/search_mode"
+#define GPK_CONF_APPLICATION_SHOW_ALL_PACKAGES	"/apps/gnome-packagekit/application/show_all_packages"
 #define GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND	"/apps/gnome-packagekit/update-viewer/notify_mobile_connection"
 #define GPK_CONF_UPDATE_VIEWER_ONLY_NEWEST	"/apps/gnome-packagekit/update-viewer/only_newest"
 #define GPK_CONF_UPDATE_VIEWER_SCROLL_ACTIVE	"/apps/gnome-packagekit/update-viewer/scroll_active"
