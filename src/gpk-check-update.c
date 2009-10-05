@@ -854,10 +854,12 @@ gpk_check_update_process_updates (GpkCheckUpdate *cupdate, PkPackageList *list, 
 					obj->id->name, obj->summary);
 		if (++showing == GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
 			more = security_array->len - showing;
-			/* TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing */
-			g_string_append_printf (status_security, ngettext ("and %d other security update",
-									   "and %d other security updates", more), more);
-			g_string_append (status_security, "...\n");
+			if (more > 0) {
+				/* TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing */
+				g_string_append_printf (status_security, ngettext ("and %d other security update",
+										   "and %d other security updates", more), more);
+				g_string_append (status_security, "...\n");
+			}
 			break;
 		}
 	}
