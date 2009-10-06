@@ -828,13 +828,13 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainL
 			else
 				gpk_update_viewer_add_active_row (model, path);
 		}
-
-		size_display = size - ((size * subpercentage) / 100);
-		gtk_list_store_set (array_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage,
-				    GPK_UPDATES_COLUMN_SIZE_DISPLAY, size_display,
-				    -1);
-
+		if (subpercentage > 0) {
+			size_display = size - ((size * subpercentage) / 100);
+			gtk_list_store_set (array_store_updates, &iter,
+					    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage,
+					    GPK_UPDATES_COLUMN_SIZE_DISPLAY, size_display,
+					    -1);
+		}
 		gtk_tree_path_free (path);
 
 	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
