@@ -1150,7 +1150,7 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 		g_source_remove (cupdate->priv->updates_changed_id);
 
 	/* now try to get newest update list */
-	egg_debug ("updates changed, so getting new update list in %ss", GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT);
+	egg_debug ("updates changed, so getting new update list in %is", GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT);
 	cupdate->priv->updates_changed_id =
 		g_timeout_add_seconds (GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT,
 				       (GSourceFunc) gpk_check_update_query_updates_changed_cb, cupdate);
