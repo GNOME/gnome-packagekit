@@ -23,7 +23,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -902,131 +902,131 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 	const gchar *text = NULL;
 	switch (status) {
 	case PK_STATUS_ENUM_UNKNOWN:
-		/* TRANSLATORS: This is when the status is not known */
+		/* TRANSLATORS: This is when the transaction status is not known */
 		text = _("Unknown state");
 		break;
 	case PK_STATUS_ENUM_SETUP:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, the daemon is in the process of starting */
 		text = _("Starting");
 		break;
 	case PK_STATUS_ENUM_WAIT:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, the transaction is waiting for another to complete */
 		text = _("Waiting in queue");
 		break;
 	case PK_STATUS_ENUM_RUNNING:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, just started */
 		text = _("Running");
 		break;
 	case PK_STATUS_ENUM_QUERY:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, is querying data */
 		text = _("Querying");
 		break;
 	case PK_STATUS_ENUM_INFO:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, getting data from a server */
 		text = _("Getting information");
 		break;
 	case PK_STATUS_ENUM_REMOVE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, removing packages */
 		text = _("Removing packages");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading package files */
 		text = _("Downloading packages");
 		break;
 	case PK_STATUS_ENUM_INSTALL:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, installing packages */
 		text = _("Installing packages");
 		break;
 	case PK_STATUS_ENUM_REFRESH_CACHE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, refreshing internal lists */
 		text = _("Refreshing software list");
 		break;
 	case PK_STATUS_ENUM_UPDATE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, installing updates */
 		text = _("Installing updates");
 		break;
 	case PK_STATUS_ENUM_CLEANUP:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, removing old packages, and cleaning config files */
 		text = _("Cleaning up packages");
 		break;
 	case PK_STATUS_ENUM_OBSOLETE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, obsoleting old packages */
 		text = _("Obsoleting packages");
 		break;
 	case PK_STATUS_ENUM_DEP_RESOLVE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, checking the transaction before we do it */
 		text = _("Resolving dependencies");
 		break;
 	case PK_STATUS_ENUM_SIG_CHECK:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, checking if we have all the security keys for the operation */
 		text = _("Checking signatures");
 		break;
 	case PK_STATUS_ENUM_ROLLBACK:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, when we return to a previous system state */
 		text = _("Rolling back");
 		break;
 	case PK_STATUS_ENUM_TEST_COMMIT:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, when we're doing a test transaction */
 		text = _("Testing changes");
 		break;
 	case PK_STATUS_ENUM_COMMIT:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, when we're writing to the system package database */
 		text = _("Committing changes");
 		break;
 	case PK_STATUS_ENUM_REQUEST:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, requesting data from a server */
 		text = _("Requesting data");
 		break;
 	case PK_STATUS_ENUM_FINISHED:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, all done! */
 		text = _("Finished");
 		break;
 	case PK_STATUS_ENUM_CANCEL:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, in the process of cancelling */
 		text = _("Cancelling");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_REPOSITORY:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading repository information");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading list of packages");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_FILELIST:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading file lists");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_CHANGELOG:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading lists of changes");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_GROUP:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading groups");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading update information");
 		break;
 	case PK_STATUS_ENUM_REPACKAGING:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, repackaging delta files */
 		text = _("Repackaging files");
 		break;
 	case PK_STATUS_ENUM_LOADING_CACHE:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, loading databases */
 		text = _("Loading cache");
 		break;
 	case PK_STATUS_ENUM_SCAN_APPLICATIONS:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, scanning for running processes */
 		text = _("Scanning installed applications");
 		break;
 	case PK_STATUS_ENUM_GENERATE_PACKAGE_LIST:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, generating a list of packages installed on the system */
 		text = _("Generating package lists");
 		break;
 	case PK_STATUS_ENUM_WAITING_FOR_LOCK:
-		/* TRANSLATORS: The transaction state */
+		/* TRANSLATORS: transaction state, when we're waiting for the native tools to exit */
 		text = _("Waiting for package manager lock");
 		break;
 	case PK_STATUS_ENUM_WAITING_FOR_AUTH:
