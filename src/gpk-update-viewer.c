@@ -637,25 +637,27 @@ static void
 gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainLoop *_loop)
 {
 	gboolean allow_cancel;
-	gchar *package_id;
+	PkPackage *package;
 	gchar *text;
 	gint percentage;
 	gint subpercentage;
 	GtkWidget *widget;
-	PkInfoEnum info = PK_INFO_ENUM_UNKNOWN;
+	PkInfoEnum info;
 	PkRoleEnum role;
 	PkStatusEnum status;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	g_object_get (progress,
 		      "role", &role,
 		      "status", &status,
 		      "percentage", &percentage,
 		      "subpercentage", &subpercentage,
-		      "package-id", &package_id,
+		      "package", &package,
 		      "allow-cancel", &allow_cancel,
 		      NULL);
 
-	if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
+	if (type == PK_PROGRESS_TYPE_PACKAGE) {
 
 		GtkTreeView *treeview;
 		GtkTreeIter iter;
@@ -668,6 +670,12 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainL
 		if (role == PK_ROLE_ENUM_GET_UPDATES)
 			return;
 
+		g_object_get (package,
+			      "info", &info,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
+
 		/* used for progress */
 		g_free (package_id_last);
 		package_id_last = g_strdup (package_id);
@@ -679,13 +687,13 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainL
 		/* update icon */
 		path = gpk_update_viewer_model_get_path (model, package_id);
 		if (path == NULL) {
-			text = gpk_package_id_format_twoline (package_id, NULL); //TODO: summary
+			text = gpk_package_id_format_twoline (package_id, summary);
 			egg_debug ("adding: id=%s, text=%s", package_id, text);
 			gtk_list_store_append (array_store_updates, &iter);
 			gtk_list_store_set (array_store_updates, &iter,
 					    GPK_UPDATES_COLUMN_TEXT, text,
 					    GPK_UPDATES_COLUMN_ID, package_id,
-					    GPK_UPDATES_COLUMN_INFO, PK_INFO_ENUM_NORMAL, //TODO info
+					    GPK_UPDATES_COLUMN_INFO, info,
 					    GPK_UPDATES_COLUMN_SELECT, TRUE,
 					    GPK_UPDATES_COLUMN_SENSITIVE, FALSE,
 					    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
@@ -720,16 +728,19 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainL
 			gtk_tree_view_scroll_to_cell (treeview, path, column, FALSE, 0.0f, 0.0f);
 		}
 
-		/* if the info is finished, change the status to past tense */
-		if (info == PK_INFO_ENUM_FINISHED) {
-			gtk_tree_model_get (model, &iter,
-					    GPK_UPDATES_COLUMN_STATUS, &info, -1);
-			/* promote to past tense if present tense */
-			if (info < PK_INFO_ENUM_UNKNOWN)
-				info += PK_INFO_ENUM_UNKNOWN;
+		/* only change the status when we're doing the actual update */
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+			/* if the info is finished, change the status to past tense */
+			if (info == PK_INFO_ENUM_FINISHED) {
+				gtk_tree_model_get (model, &iter,
+						    GPK_UPDATES_COLUMN_STATUS, &info, -1);
+				/* promote to past tense if present tense */
+				if (info < PK_INFO_ENUM_LAST)
+					info += PK_INFO_ENUM_LAST;
+			}
+			gtk_list_store_set (array_store_updates, &iter,
+					    GPK_UPDATES_COLUMN_STATUS, info, -1);
 		}
-		gtk_list_store_set (array_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_STATUS, info, -1);
 
 		gtk_tree_path_free (path);
 
@@ -842,7 +853,10 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GMainL
 		gtk_widget_set_sensitive (widget, allow_cancel);
 	}
 out:
+	g_free (summary);
 	g_free (package_id);
+	if (package != NULL)
+		g_object_unref (package);
 }
 
 /**
