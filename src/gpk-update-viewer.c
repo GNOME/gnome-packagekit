@@ -365,6 +365,14 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	if (results == NULL) {
 		egg_warning ("failed to update packages: %s", error->message);
 		g_error_free (error);
+
+		/* re-enable the package list */
+		gpk_update_viewer_undisable_packages ();
+
+		/* allow clicking again */
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
+		gtk_widget_set_sensitive (widget, TRUE);
+
 		goto out;
 	}
 
