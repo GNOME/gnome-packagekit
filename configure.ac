@@ -103,7 +103,7 @@ AM_GLIB_GNU_GETTEXT
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.4.4 # when changing, nuke some compatability entries in gpk-enum.h
+PACKAGEKIT_REQUIRED=0.5.3 # when changing, nuke some compatability entries in gpk-enum.h
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.16.0
 DBUS_REQUIRED=1.1.2
@@ -132,7 +132,7 @@ AC_SUBST(GIO_REQUIRED)
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib >= $PACKAGEKIT_REQUIRED)
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= $PACKAGEKIT_REQUIRED)
 AC_SUBST(PACKAGEKIT_CFLAGS)
 AC_SUBST(PACKAGEKIT_LIBS)
 
