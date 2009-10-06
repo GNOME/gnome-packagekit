@@ -34,7 +34,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <gconf/gconf-client.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <devkit-power-gobject/devicekit-power.h>
 
 #include "egg-debug.h"
@@ -171,142 +171,187 @@ gpk_auto_refresh_get_frequency_prefs (GpkAutoRefresh *arefresh, const gchar *key
 }
 
 /**
+ * gpk_auto_refresh_get_time_refresh_cache_cb:
+ **/
+static void
+gpk_auto_refresh_get_time_refresh_cache_cb (GObject *object, GAsyncResult *res, GpkAutoRefresh *arefresh)
+{
+	PkControl *control = PK_CONTROL (object);
+	GError *error = NULL;
+	guint seconds;
+	guint thresh;
+
+	/* get the result */
+	seconds = pk_control_get_time_since_action_finish (control, res, &error);
+	if (seconds == 0) {
+		egg_warning ("failed to get time: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	/* have we passed the timout? */
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (seconds < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		return;
+	}
+
+	/* send signal */
+	gpk_auto_refresh_signal_refresh_cache (arefresh);
+}
+
+/**
  * gpk_auto_refresh_maybe_refresh_cache:
  **/
-static gboolean
+static void
 gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 {
-	guint time_s;
 	guint thresh;
-	gboolean ret;
 
-	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* if we don't want to auto check for updates, don't do this either */
 	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never refresh");
-		return FALSE;
+		egg_debug ("not when policy is to never get updates");
+		return;
 	}
 
 	/* not on battery */
 	if (arefresh->priv->on_battery) {
 		egg_debug ("not when on battery");
-		return FALSE;
+		return;
 	}
 
 	/* only do the refresh cache when the user is idle */
 	if (!arefresh->priv->session_idle) {
 		egg_debug ("not when session active");
-		return FALSE;
+		return;
 	}
 
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
 	if (thresh == 0) {
 		egg_debug ("not when policy is to never refresh");
-		return FALSE;
+		return;
 	}
 
 	/* get the time since the last refresh */
-	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_REFRESH_CACHE, &time_s, NULL);
-	if (!ret) {
-		egg_warning ("failed to get last time");
-		return FALSE;
+	pk_control_get_time_since_action_async (arefresh->priv->control, PK_ROLE_ENUM_REFRESH_CACHE, NULL,
+						(GAsyncReadyCallback) gpk_auto_refresh_get_time_refresh_cache_cb, arefresh);
+}
+
+/**
+ * gpk_auto_refresh_get_time_get_updates_cb:
+ **/
+static void
+gpk_auto_refresh_get_time_get_updates_cb (GObject *object, GAsyncResult *res, GpkAutoRefresh *arefresh)
+{
+	PkControl *control = PK_CONTROL (object);
+	GError *error = NULL;
+	guint seconds;
+	guint thresh;
+
+	/* get the result */
+	seconds = pk_control_get_time_since_action_finish (control, res, &error);
+	if (seconds == 0) {
+		egg_warning ("failed to get time: %s", error->message);
+		g_error_free (error);
+		return;
 	}
 
 	/* have we passed the timout? */
-	if (time_s < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
-		return FALSE;
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (seconds < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		return;
 	}
 
-	gpk_auto_refresh_signal_refresh_cache (arefresh);
-	return TRUE;
+	/* send signal */
+	gpk_auto_refresh_signal_get_updates (arefresh);
 }
 
 /**
  * gpk_auto_refresh_maybe_get_updates:
  **/
-static gboolean
+static void
 gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 {
-	guint time_s;
 	guint thresh;
-	gboolean ret;
 
-	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	if (!arefresh->priv->force_get_updates_login) {
 		arefresh->priv->force_get_updates_login = TRUE;
 		if (gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL)) {
 			egg_debug ("forcing get update due to GConf");
 			gpk_auto_refresh_signal_get_updates (arefresh);
-			return TRUE;
+			return;
 		}
 	}
 
-	/* get this each time, as it may have changed behind out back */
+	/* if we don't want to auto check for updates, don't do this either */
 	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never get updates");
-		return FALSE;
+		egg_debug ("not when policy is to never get updates");
+		return;
 	}
 
 	/* get the time since the last refresh */
-	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_GET_UPDATES, &time_s, NULL);
-	if (!ret) {
-		egg_warning ("failed to get last time");
-		return FALSE;
+	pk_control_get_time_since_action_async (arefresh->priv->control, PK_ROLE_ENUM_GET_UPDATES, NULL,
+						(GAsyncReadyCallback) gpk_auto_refresh_get_time_get_updates_cb, arefresh);
+}
+
+/**
+ * gpk_auto_refresh_get_time_get_upgrades_cb:
+ **/
+static void
+gpk_auto_refresh_get_time_get_upgrades_cb (GObject *object, GAsyncResult *res, GpkAutoRefresh *arefresh)
+{
+	PkControl *control = PK_CONTROL (object);
+	GError *error = NULL;
+	guint seconds;
+	guint thresh;
+
+	/* get the result */
+	seconds = pk_control_get_time_since_action_finish (control, res, &error);
+	if (seconds == 0) {
+		egg_warning ("failed to get time: %s", error->message);
+		g_error_free (error);
+		return;
 	}
 
 	/* have we passed the timout? */
-	if (time_s < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
-		return FALSE;
+	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	if (seconds < thresh) {
+		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		return;
 	}
 
-	gpk_auto_refresh_signal_get_updates (arefresh);
-	return TRUE;
+	/* send signal */
+	gpk_auto_refresh_signal_get_upgrades (arefresh);
 }
 
 /**
  * gpk_auto_refresh_maybe_get_upgrades:
  **/
-static gboolean
+static void
 gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 {
-	guint time_s;
 	guint thresh;
-	gboolean ret;
 
-	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
+	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* get this each time, as it may have changed behind out back */
 	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never check for upgrades");
-		return FALSE;
+		return;
 	}
 
 	/* get the time since the last refresh */
-	ret = pk_control_get_time_since_action (arefresh->priv->control,
-						PK_ROLE_ENUM_GET_DISTRO_UPGRADES, &time_s, NULL);
-	if (!ret) {
-		egg_debug ("failed to get last time");
-		return FALSE;
-	}
-
-	/* have we passed the timout? */
-	if (time_s < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, time_s);
-		return FALSE;
-	}
-
-	gpk_auto_refresh_signal_get_upgrades (arefresh);
-	return TRUE;
+	pk_control_get_time_since_action_async (arefresh->priv->control, PK_ROLE_ENUM_GET_DISTRO_UPGRADES, NULL,
+						(GAsyncReadyCallback) gpk_auto_refresh_get_time_get_upgrades_cb, arefresh);
 }
 
 /**
@@ -445,13 +490,16 @@ gpk_auto_refresh_convert_network_state (GpkAutoRefresh *arefresh, PkNetworkEnum 
 }
 
 /**
- * gpk_auto_refresh_network_status_changed_cb:
+ * gpk_auto_refresh_notify_network_state_cb:
  **/
 static void
-gpk_auto_refresh_network_status_changed_cb (PkControl *control, PkNetworkEnum state, GpkAutoRefresh *arefresh)
+gpk_auto_refresh_notify_network_state_cb (PkControl *control, GParamSpec *pspec, GpkAutoRefresh *arefresh)
 {
+	PkNetworkEnum state;
+
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
+	g_object_get (control, "network-state", &state, NULL);
 	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
 	egg_debug ("setting online %i", arefresh->priv->network_active);
 	if (arefresh->priv->network_active)
@@ -503,14 +551,41 @@ gpk_auto_refresh_client_changed_cb (DkpClient *client, GpkAutoRefresh *arefresh)
 }
 
 /**
+ * gpk_auto_refresh_get_properties_cb:
+ **/
+static void
+gpk_auto_refresh_get_properties_cb (GObject *object, GAsyncResult *res, GpkAutoRefresh *arefresh)
+{
+	PkNetworkEnum state;
+	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
+	gboolean ret;
+
+	/* get the result */
+	ret = pk_control_get_properties_finish (control, res, &error);
+	if (!ret) {
+		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
+		egg_warning ("could not get properties");
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get values */
+	g_object_get (control,
+		      "network-state", &state,
+		      NULL);
+	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
+out:
+	return;
+}
+
+/**
  * gpk_auto_refresh_init:
  * @auto_refresh: This class instance
  **/
 static void
 gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 {
-	PkNetworkEnum state;
-
 	arefresh->priv = GPK_AUTO_REFRESH_GET_PRIVATE (arefresh);
 	arefresh->priv->on_battery = FALSE;
 	arefresh->priv->network_active = FALSE;
@@ -530,10 +605,11 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 
 	/* we need to query the last cache refresh time */
 	arefresh->priv->control = pk_control_new ();
-	g_signal_connect (arefresh->priv->control, "network-state-changed",
-			  G_CALLBACK (gpk_auto_refresh_network_status_changed_cb), arefresh);
-	state = pk_control_get_network_state (arefresh->priv->control, NULL);
-	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
+	g_signal_connect (arefresh->priv->control, "notify::network-state",
+			  G_CALLBACK (gpk_auto_refresh_notify_network_state_cb), arefresh);
+
+	/* get network state */
+	pk_control_get_properties_async (arefresh->priv->control, NULL, (GAsyncReadyCallback) gpk_auto_refresh_get_properties_cb, arefresh);
 
 	/* use a DkpClient */
 	arefresh->priv->client = dkp_client_new ();

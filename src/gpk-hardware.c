@@ -39,13 +39,14 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #include <dbus/dbus.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-hardware.h"
+#include "gpk-task.h"
 
 static void     gpk_hardware_finalize	(GObject	  *object);
 
@@ -57,6 +58,7 @@ static void     gpk_hardware_finalize	(GObject	  *object);
 
 struct GpkHardwarePrivate
 {
+	PkTask			*task;
 	GConfClient		*gconf_client;
 	DBusGConnection		*connection;
 	DBusGProxy		*proxy;
@@ -66,33 +68,48 @@ struct GpkHardwarePrivate
 
 G_DEFINE_TYPE (GpkHardware, gpk_hardware, G_TYPE_OBJECT)
 
+
+/**
+ * gpk_hardware_install_packages_cb:
+ **/
+static void
+gpk_hardware_install_packages_cb (GObject *object, GAsyncResult *res, GpkHardware *hardware)
+{
+	PkClient *client = PK_CLIENT (object);
+	GError *error = NULL;
+	PkResults *results = NULL;
+	PkItemErrorCode *error_item = NULL;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to install file: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+		goto out;
+	}
+out:
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
 /**
  * gpk_hardware_install_package:
  **/
-static gboolean
+static void
 gpk_hardware_install_package (GpkHardware *hardware)
 {
-	GError *error = NULL;
-	PkClient *client = NULL;
-	gboolean ret;
-
-	client = pk_client_new ();
-
 	/* FIXME: this needs to be async and connect up to the repo signature stuff */
-	pk_client_set_synchronous (client, TRUE, NULL);
-#if PK_CHECK_VERSION(0,5,0)
-	ret = pk_client_install_packages (client, TRUE, hardware->priv->package_ids, &error);
-#else
-	ret = pk_client_install_packages (client, hardware->priv->package_ids, &error);
-#endif
-	if (!ret) {
-		egg_warning ("failed to install package: %s", error->message);
-		g_error_free (error);
-		error = NULL;
-	}
-
-	g_object_unref (client);
-	return ret;
+	pk_client_install_packages_async (PK_CLIENT(hardware->priv->task), TRUE, hardware->priv->package_ids, NULL, NULL, NULL,
+					  (GAsyncReadyCallback) gpk_hardware_install_packages_cb, hardware);
 }
 
 /**
@@ -114,50 +131,53 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 }
 
 /**
- * gpk_hardware_check_for_driver_available:
+ * gpk_hardware_what_provides_cb:
  **/
 static void
-gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi)
+gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *hardware)
 {
+	PkClient *client = PK_CLIENT (object);
+	GError *error = NULL;
+	PkResults *results = NULL;
 	gboolean ret;
-	guint length;
 	gchar *message = NULL;
 	gchar *body = NULL;
 	NotifyNotification *notification;
-	GError *error = NULL;
 	gchar *package = NULL;
-	PkPackageList *list = NULL;
-	const PkPackageObj *obj = NULL;
-	PkClient *client = NULL;
+	GPtrArray *array = NULL;
+	const PkItemPackage *item = NULL;
+	PkItemErrorCode *error_item = NULL;
 
-	client = pk_client_new ();
-	pk_client_set_synchronous (client, TRUE, NULL);
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	ret = pk_client_what_provides (client, pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
-				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, udi, &error);
-	if (!ret) {
-		egg_warning ("Error calling pk_client_what_provides :%s", error->message);
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to get provides: %s", error->message);
 		g_error_free (error);
-		error = NULL;
+		goto out;
+	}
+
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to get provides: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
 		goto out;
 	}
 
 	/* If there are no driver packages available just return */
-	list = pk_client_get_package_list (client);
-	length = pk_package_list_get_size (list);
-	if (length == 0) {
+	array = pk_results_get_package_array (results);
+	if (array->len == 0) {
 		egg_debug ("no drivers available");
 		goto out;
 	}
 
 	/* only install the first one? */
-	obj = pk_package_list_get_obj (list, 0);
-	package = gpk_package_id_format_oneline (obj->id, obj->summary);
+	item = g_ptr_array_index (array, 0);
+	package = gpk_package_id_format_oneline (item->package_id, item->summary);
 
-	/* save list */
+	/* save array */
 	if (hardware->priv->package_ids != NULL)
 		g_strfreev (hardware->priv->package_ids);
-	hardware->priv->package_ids = pk_package_list_to_strv (list);
+	hardware->priv->package_ids = pk_package_array_to_strv (array);
 
 	/* TODO: tell the user what hardware, NOT JUST A UDI */
 	/* TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware */
@@ -178,14 +198,30 @@ gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi
 		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
-
 out:
 	g_free (package);
 	g_free (message);
 	g_free (body);
-	if (list != NULL)
-		g_object_unref (list);
-	g_object_unref (client);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_hardware_check_for_driver_available:
+ **/
+static void
+gpk_hardware_check_for_driver_available (GpkHardware *hardware, const gchar *udi)
+{
+	gchar **values = NULL;
+	values = g_strsplit (udi, "&", -1);
+	pk_client_what_provides_async (PK_CLIENT(hardware->priv->task), pk_bitfield_value (PK_FILTER_ENUM_NOT_INSTALLED),
+				       PK_PROVIDES_ENUM_HARDWARE_DRIVER, values, NULL, NULL, NULL,
+				       (GAsyncReadyCallback) gpk_hardware_what_provides_cb, hardware);
+	g_strfreev (values);
 }
 
 static gboolean
@@ -251,6 +287,10 @@ gpk_hardware_init (GpkHardware *hardware)
 		egg_debug ("hardware driver checking disabled in GConf");
 		return;
 	}
+	hardware->priv->task = PK_TASK(gpk_task_new ());
+	g_object_set (hardware->priv->task,
+		      "background", TRUE,
+		      NULL);
 
 	hardware->priv->connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 	if (error != NULL) {
@@ -298,6 +338,7 @@ gpk_hardware_finalize (GObject *object)
 
 	g_return_if_fail (hardware->priv != NULL);
 	g_object_unref (hardware->priv->gconf_client);
+	g_object_unref (PK_CLIENT(hardware->priv->task));
 	g_strfreev (hardware->priv->package_ids);
 
 	G_OBJECT_CLASS (gpk_hardware_parent_class)->finalize (object);

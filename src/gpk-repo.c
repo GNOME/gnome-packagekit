@@ -21,20 +21,15 @@
 
 #include "config.h"
 
-#include <glib.h>
 #include <glib/gi18n.h>
 #include <locale.h>
 
 #include <gtk/gtk.h>
-#include <math.h>
-#include <string.h>
-#include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
 #include "egg-debug.h"
-#include "egg-string.h"
 
 #include "gpk-gnome.h"
 #include "gpk-common.h"
@@ -44,20 +39,12 @@
 
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
-static PkClient *client_query = NULL;
-#if PK_CHECK_VERSION(0,5,1)
-static PkClientPool *pool = NULL;
-#else
-static GPtrArray *client_array = NULL;
-#endif
+static PkClient *client = NULL;
 static PkBitfield roles;
 static GConfClient *gconf_client;
 static gboolean show_details;
 static GtkTreePath *path_global = NULL;
 static GtkWidget *image_animation = NULL;
-#if !PK_CHECK_VERSION(0,5,1)
-static PkStatusEnum status_last = PK_STATUS_ENUM_UNKNOWN;
-#endif
 static guint status_id = 0;
 
 enum {
@@ -68,10 +55,6 @@ enum {
 	REPO_COLUMN_SENSITIVE,
 	REPO_COLUMN_LAST
 };
-
-#if !PK_CHECK_VERSION(0,5,1)
-static PkClient *gpk_repo_create_client (void);
-#endif
 
 /**
  * gpk_repo_find_iter_model_cb:
@@ -164,6 +147,113 @@ gpk_button_help_cb (GtkWidget *widget, gboolean  data)
 	gpk_gnome_help ("software-sources");
 }
 
+/**
+ * gpk_repo_status_changed_timeout_cb:
+ **/
+static gboolean
+gpk_repo_status_changed_timeout_cb (PkProgress *progress)
+{
+	const gchar *text;
+	GtkWidget *widget;
+	PkStatusEnum status;
+
+	/* get the last status */
+	g_object_get (progress,
+		      "status", &status,
+		      NULL);
+
+	/* set the text and show */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
+	gtk_widget_show (widget);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_animation"));
+	text = gpk_status_enum_to_localised_text (status);
+	gtk_label_set_label (GTK_LABEL (widget), text);
+
+	/* set icon */
+	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
+
+	/* never repeat */
+	status_id = 0;
+	return FALSE;
+}
+
+/**
+ * gpk_repo_progress_cb:
+ **/
+static void
+gpk_repo_progress_cb (PkProgress *progress, PkProgressType type, gpointer user_data)
+{
+	PkStatusEnum status;
+	GtkWidget *widget;
+
+	if (type != PK_PROGRESS_TYPE_STATUS)
+		return;
+
+	/* get value */
+	g_object_get (progress,
+		      "status", &status,
+		      NULL);
+	egg_debug ("now %s", pk_status_enum_to_text (status));
+
+	if (status == PK_STATUS_ENUM_FINISHED) {
+		/* we've not yet shown, so don't bother */
+		if (status_id > 0) {
+			g_source_remove (status_id);
+			status_id = 0;
+		}
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
+		gtk_widget_hide (widget);
+		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (image_animation), FALSE);
+		goto out;
+	}
+
+	/* already pending show */
+	if (status_id > 0)
+		goto out;
+
+	/* only show after some time in the transaction */
+	status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_repo_status_changed_timeout_cb, progress);
+out:
+	return;
+}
+
+/**
+ * gpk_repo_repo_enable_cb
+ **/
+static void
+gpk_repo_repo_enable_cb (GObject *object, GAsyncResult *res, gpointer user_data)
+{
+//	PkClient *client = PK_CLIENT (object);
+	GError *error = NULL;
+	PkResults *results = NULL;
+	PkItemErrorCode *error_item = NULL;
+	GtkWindow *window;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to get set repo: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
+		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
+		gpk_error_dialog_modal (window, _("Failed to change status"),
+					gpk_error_enum_to_localised_text (error_item->code), error_item->details);
+		goto out;
+	}
+out:
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
 static void
 gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer data)
 {
@@ -171,15 +261,12 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 	GtkTreeIter iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean enabled;
-	gchar *repo_id;
-	gboolean ret;
-	GError *error = NULL;
-	PkClient *client;
+	gchar *repo_id = NULL;
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		egg_debug ("can't change state");
-		return;
+		goto out;
 	}
 
 	/* get toggled iter */
@@ -191,56 +278,21 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 	/* do something with the value */
 	enabled ^= 1;
 
-	/* do this to the repo */
-	egg_debug ("setting %s to %i", repo_id, enabled);
-#if PK_CHECK_VERSION(0,5,1)
-	client = pk_client_pool_create (pool);
-#else
-	client = gpk_repo_create_client ();
-#endif
-	ret = pk_client_repo_enable (client, repo_id, enabled, &error);
-	if (!ret) {
-		egg_warning ("could not set repo enabled state: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-	g_object_unref (client);
-
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			    REPO_COLUMN_SENSITIVE, FALSE,
 			    -1);
 
+	/* set the repo */
+	egg_debug ("setting %s to %i", repo_id, enabled);
+	pk_client_repo_enable_async (client, repo_id, enabled, NULL,
+				     gpk_repo_progress_cb, NULL,
+				     gpk_repo_repo_enable_cb, NULL);
+
 out:
 	/* clean up */
 	g_free (repo_id);
 	gtk_tree_path_free (path);
-}
-
-/**
- * gpk_repo_detail_cb:
- **/
-static void
-gpk_repo_detail_cb (PkClient *client, const gchar *repo_id,
-		    const gchar *description, gboolean enabled, gpointer data)
-{
-	GtkTreeIter iter;
-	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
-	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
-
-	egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
-
-	gpk_repo_model_get_iter (model, &iter, repo_id);
-	gtk_list_store_set (list_store, &iter,
-			    REPO_COLUMN_ENABLED, enabled,
-			    REPO_COLUMN_TEXT, description,
-			    REPO_COLUMN_ID, repo_id,
-			    REPO_COLUMN_ACTIVE, TRUE,
-			    REPO_COLUMN_SENSITIVE, TRUE,
-			    -1);
-
-	/* sort after each entry, which is okay as there shouldn't be many */
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
 }
 
 /**
@@ -294,99 +346,71 @@ gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * gpk_repo_finished_cb:
+ * gpk_repo_get_repo_list_cb
  **/
 static void
-gpk_repo_finished_cb (PkClient *client, PkExitEnum exit, guint runtime, gpointer data)
+gpk_repo_get_repo_list_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
+//	PkClient *client = PK_CLIENT (object);
+	GError *error = NULL;
+	PkResults *results = NULL;
+	PkItemErrorCode *error_item = NULL;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+	GtkWindow *window;
+	GPtrArray *array = NULL;
+	guint i;
+	const PkItemRepoDetail *item;
+	GtkTreeIter iter;
 
-	/* remove the items that are not used */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
-	model = gtk_tree_view_get_model (treeview);
-	gpk_repo_remove_nonactive (model);
-}
-
-/**
- * gpk_repo_status_changed_timeout_cb:
- **/
-static gboolean
-gpk_repo_status_changed_timeout_cb (PkClient *client)
-{
-	const gchar *text;
-	GtkWidget *widget;
-	PkStatusEnum status;
-
-#if PK_CHECK_VERSION(0,5,1)
-	/* get the last status */
-	g_object_get (client,
-		      "status", &status,
-		      NULL);
-#else
-	status = status_last;
-#endif
-
-	/* set the text and show */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
-	gtk_widget_show (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_animation"));
-	text = gpk_status_enum_to_localised_text (status);
-	gtk_label_set_label (GTK_LABEL (widget), text);
-
-	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (image_animation), status, GTK_ICON_SIZE_LARGE_TOOLBAR);
-
-	/* never repeat */
-	status_id = 0;
-	return FALSE;
-}
-
-/**
- * gpk_repo_status_changed_cb:
- **/
-static void
-gpk_repo_status_changed_cb (PkClient *client, PkStatusEnum status, gpointer data)
-{
-	GtkWidget *widget;
-
-	if (status == PK_STATUS_ENUM_FINISHED) {
-		/* we've not yet shown, so don't bother */
-		if (status_id > 0) {
-			g_source_remove (status_id);
-			status_id = 0;
-		}
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "viewport_animation_preview"));
-		gtk_widget_hide (widget);
-		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (image_animation), FALSE);
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to get repo list: %s", error->message);
+		g_error_free (error);
 		goto out;
 	}
 
-	/* already pending show */
-	if (status_id > 0)
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
+		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
+		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),
+					gpk_error_enum_to_localised_text (error_item->code), error_item->details);
 		goto out;
+	}
 
-	/* only show after some time in the transaction */
-	status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_repo_status_changed_timeout_cb, client);
+	/* add repos */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
+	model = gtk_tree_view_get_model (treeview);
+	array = pk_results_get_repo_detail_array (results);
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		egg_debug ("repo = %s:%s:%i", item->repo_id, item->description, item->enabled);
+		gpk_repo_model_get_iter (model, &iter, item->repo_id);
+		gtk_list_store_set (list_store, &iter,
+				    REPO_COLUMN_ENABLED, item->enabled,
+				    REPO_COLUMN_TEXT, item->description,
+				    REPO_COLUMN_ID, item->repo_id,
+				    REPO_COLUMN_ACTIVE, TRUE,
+				    REPO_COLUMN_SENSITIVE, TRUE,
+				    -1);
+	}
+
+	/* remove the items that are not now present */
+	gpk_repo_remove_nonactive (model);
+
+	/* sort */
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
 out:
-#if !PK_CHECK_VERSION(0,5,1)
-	/* save for the callback */
-	status_last = status;
-#endif
-	return;
-}
-
-/**
- * gpk_repo_error_code_cb:
- **/
-static void
-gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *details, gpointer data)
-{
-	GtkWindow *window;
-	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
-	/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
-	gpk_error_dialog_modal (window, _("Failed to change status"),
-				gpk_error_enum_to_localised_text (code), details);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
 }
 
 /**
@@ -395,8 +419,6 @@ gpk_repo_error_code_cb (PkClient *client, PkErrorCodeEnum code, const gchar *det
 static void
 gpk_repo_repo_list_refresh (void)
 {
-	gboolean ret;
-	GError *error = NULL;
 	PkBitfield filters;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -407,21 +429,13 @@ gpk_repo_repo_list_refresh (void)
 	gpk_repo_mark_nonactive (model);
 
 	egg_debug ("refreshing list");
-	ret = pk_client_reset (client_query, &error);
-	if (!ret) {
-		egg_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
-		return;
-	}
 	if (!show_details)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	else
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
-	ret = pk_client_get_repo_list (client_query, filters, &error);
-	if (!ret) {
-		egg_warning ("failed to get repo list: %s", error->message);
-		g_error_free (error);
-	}
+	pk_client_get_repo_list_async (client, filters, NULL,
+				       gpk_repo_progress_cb, NULL,
+				       gpk_repo_get_repo_list_cb, NULL);
 }
 
 /**
@@ -458,43 +472,80 @@ gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessa
 	}
 }
 
-#if !PK_CHECK_VERSION(0,5,1)
+
 /**
- * gpk_repo_destroy_cb:
+ * gpk_repo_get_properties_cb:
  **/
 static void
-gpk_repo_destroy_cb (PkClient *client, gpointer data)
+gpk_repo_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
 {
+	GtkWidget *widget;
+	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
 	gboolean ret;
-	egg_debug ("client destroyed");
-	ret = g_ptr_array_remove (client_array, client);
-	if (!ret)
-		egg_warning ("failed to remove %p", client);
-	/* TODO: disconnect signals? */
-	g_object_unref (client);
+//	PkBitfield roles;
+
+	/* get the result */
+	ret = pk_control_get_properties_finish (control, res, &error);
+	if (!ret) {
+		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
+		g_print ("%s: %s\n", _("Exiting as backend details could not be retrieved"), error->message);
+		g_error_free (error);
+		g_main_loop_quit (loop);
+		goto out;
+	}
+
+	/* get values */
+	g_object_get (control,
+		      "roles", &roles,
+		      NULL);
+
+	/* setup GUI */
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
+		/* get the update list */
+		gpk_repo_repo_list_refresh ();
+	} else {
+		GtkTreeIter iter;
+		GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
+		GtkTreeModel *model = gtk_tree_view_get_model (treeview);
+
+		gtk_list_store_append (GTK_LIST_STORE(model), &iter);
+		gtk_list_store_set (list_store, &iter,
+				    REPO_COLUMN_ENABLED, FALSE,
+				    REPO_COLUMN_TEXT, _("Getting software source list not supported by backend"),
+				    REPO_COLUMN_ACTIVE, FALSE,
+				    REPO_COLUMN_SENSITIVE, FALSE,
+				    -1);
+
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
+		gtk_widget_set_sensitive (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
+out:
+	return;
 }
 
 /**
- * gpk_repo_create_client
+ * gpk_repo_close_cb:
  **/
-static PkClient *
-gpk_repo_create_client (void)
+static void
+gpk_repo_close_cb (GtkWidget *widget, gpointer data)
 {
-	PkClient *client;
-	client = pk_client_new ();
-	g_signal_connect (client, "repo-detail",
-			  G_CALLBACK (gpk_repo_detail_cb), NULL);
-	g_signal_connect (client, "status-changed",
-			  G_CALLBACK (gpk_repo_status_changed_cb), NULL);
-	g_signal_connect (client, "error-code",
-			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
-	g_signal_connect (client, "destroy",
-			  G_CALLBACK (gpk_repo_destroy_cb), NULL);
-	g_ptr_array_add (client_array, client);
-	egg_debug ("added %p", client);
-	return g_object_ref (client);
+	GMainLoop *loop = (GMainLoop *) data;
+	egg_debug ("emitting action-close");
+	g_main_loop_quit (loop);
 }
-#endif
+
+/**
+ * gpk_repo_delete_event_cb:
+ **/
+static gboolean
+gpk_repo_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	gpk_repo_close_cb (widget, data);
+	return FALSE;
+}
 
 /**
  * main:
@@ -514,6 +565,7 @@ main (int argc, char *argv[])
 	guint xid = 0;
 	gboolean ret;
 	GtkBox *box;
+	GMainLoop *loop;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -532,7 +584,6 @@ main (int argc, char *argv[])
 
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	dbus_g_thread_init ();
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
@@ -565,37 +616,21 @@ main (int argc, char *argv[])
 
 	gconf_client = gconf_client_get_default ();
 
-	client_query = pk_client_new ();
-	g_signal_connect (client_query, "repo-detail",
-			  G_CALLBACK (gpk_repo_detail_cb), NULL);
-	g_signal_connect (client_query, "status-changed",
-			  G_CALLBACK (gpk_repo_status_changed_cb), NULL);
-	g_signal_connect (client_query, "finished",
-			  G_CALLBACK (gpk_repo_finished_cb), NULL);
-	g_signal_connect (client_query, "error-code",
-			  G_CALLBACK (gpk_repo_error_code_cb), NULL);
+	loop = g_main_loop_new (NULL, FALSE);
 
-#if PK_CHECK_VERSION(0,5,1)
-	pool = pk_client_pool_new ();
-	pk_client_pool_connect (pool, "repo-detail",
-				G_CALLBACK (gpk_repo_detail_cb), NULL);
-	pk_client_pool_connect (pool, "status-changed",
-				G_CALLBACK (gpk_repo_status_changed_cb), NULL);
-	pk_client_pool_connect (pool, "error-code",
-				G_CALLBACK (gpk_repo_error_code_cb), NULL);
-#else
-	client_array = g_ptr_array_new ();
-#endif
+	client = pk_client_new ();
+	g_object_set (client,
+		      "background", FALSE,
+		      NULL);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_repo_repo_list_changed_cb), NULL);
-	roles = pk_control_get_actions (control, NULL);
 
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-repo.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -610,10 +645,11 @@ main (int argc, char *argv[])
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_repo"));
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-
+	g_signal_connect (main_window, "delete_event",
+			  G_CALLBACK (gpk_repo_delete_event_cb), loop);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_repo_close_cb), loop);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_button_help_cb), NULL);
@@ -657,33 +693,19 @@ main (int argc, char *argv[])
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	gtk_widget_grab_focus (widget);
 
-	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
-		/* get the update list */
-		gpk_repo_repo_list_refresh ();
-	} else {
-		gpk_repo_detail_cb (client_query, "default",
-				   _("Getting software source list not supported by backend"), FALSE, NULL);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
+	/* get properties */
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_repo_get_properties_cb, loop);
 
 	/* wait */
-	gtk_main ();
+	g_main_loop_run (loop);
 
 	g_object_unref (list_store);
 out_build:
 	g_object_unref (builder);
 	g_object_unref (gconf_client);
-	g_object_unref (client_query);
 	g_object_unref (control);
-#if PK_CHECK_VERSION(0,5,1)
-	g_object_unref (pool);
-#else
-	g_ptr_array_foreach (client_array, (GFunc) g_object_unref, NULL);
-	g_ptr_array_free (client_array, TRUE);
-#endif
+	g_object_unref (client);
+	g_main_loop_unref (loop);
 unique_out:
 	g_object_unref (unique_app);
 

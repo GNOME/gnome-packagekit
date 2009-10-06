@@ -31,7 +31,7 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
 #include <gpk-common.h>
@@ -158,7 +158,6 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	const gchar *action;
 	GpkUpdateEnum update = GPK_UPDATE_ENUM_UNKNOWN;
 	GConfClient *client;
-	GtkWidget *notify_widget;
 
 	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
@@ -166,7 +165,6 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 		egg_warning ("value NULL");
 		return;
 	}
-	notify_widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_notify_updates"));
 	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
 		update = GPK_UPDATE_ENUM_ALL;
 	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
@@ -361,19 +359,110 @@ gpk_prefs_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMess
 }
 
 /**
- * gpk_prefs_network_status_changed_cb:
+ * gpk_prefs_notify_network_state_cb:
  **/
 static void
-gpk_prefs_network_status_changed_cb (PkControl *control, PkNetworkEnum state, gpointer data)
+gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, gpointer data)
 {
 	GtkWidget *widget;
+	PkNetworkEnum state;
 
 	/* only show label on mobile broadband */
+	g_object_get (control,
+		      "network-state", &state,
+		      NULL);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
 	if (state == PK_NETWORK_ENUM_MOBILE)
 		gtk_widget_show (widget);
 	else
 		gtk_widget_hide (widget);
+}
+
+/**
+ * pk_prefs_get_properties_cb:
+ **/
+static void
+pk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
+{
+	GtkWidget *widget;
+	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
+	gboolean ret;
+	PkBitfield roles;
+
+	/* get the result */
+	ret = pk_control_get_properties_finish (control, res, &error);
+	if (!ret) {
+		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
+		g_print ("%s: %s\n", _("Exiting as backend details could not be retrieved"), error->message);
+		g_error_free (error);
+		g_main_loop_quit (loop);
+		goto out;
+	}
+
+	/* get values */
+	g_object_get (control,
+		      "roles", &roles,
+		      NULL);
+
+	/* hide if not supported */
+	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_upgrade"));
+		gtk_widget_hide (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
+		gtk_widget_hide (widget);
+	}
+out:
+	return;
+}
+
+/**
+ * pk_prefs_get_network_state_cb:
+ **/
+static void
+pk_prefs_get_network_state_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
+{
+	GtkWidget *widget;
+	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
+	PkNetworkEnum state;
+
+	/* get the result */
+	state = pk_control_get_network_state_finish (control, res, &error);
+	if (state == PK_NETWORK_ENUM_UNKNOWN) {
+		egg_warning ("network status unknown: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* only show label on mobile broadband */
+	if (state == PK_NETWORK_ENUM_MOBILE) {
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
+		gtk_widget_show (widget);
+	}
+out:
+	return;
+}
+
+/**
+ * gpk_prefs_close_cb:
+ **/
+static void
+gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
+{
+	GMainLoop *loop = (GMainLoop *) data;
+	egg_debug ("emitting action-close");
+	g_main_loop_quit (loop);
+}
+
+/**
+ * gpk_prefs_delete_event_cb:
+ **/
+static gboolean
+gpk_prefs_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	gpk_prefs_close_cb (widget, data);
+	return FALSE;
 }
 
 /**
@@ -387,13 +476,12 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
-	PkBitfield roles;
 	PkControl *control;
 	UniqueApp *unique_app;
-	PkNetworkEnum state;
 	guint retval;
 	guint xid = 0;
 	GError *error = NULL;
+	GMainLoop *loop;
 
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
@@ -443,16 +531,15 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_prefs_message_received_cb), NULL);
 
 	/* get actions */
+	loop = g_main_loop_new (NULL, FALSE);
 	control = pk_control_new ();
-	g_signal_connect (control, "network-state-changed",
-			  G_CALLBACK (gpk_prefs_network_status_changed_cb), NULL);
-	roles = pk_control_get_actions (control, NULL);
-	state = pk_control_get_network_state (control, NULL);
+	g_signal_connect (control, "notify::network-state",
+			  G_CALLBACK (gpk_prefs_notify_network_state_cb), NULL);
 
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-prefs.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -463,37 +550,23 @@ main (int argc, char *argv[])
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_UPDATE_PREFS);
-
-	/* Get the main window quit */
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (main_window, "delete_event",
+			  G_CALLBACK (gpk_prefs_delete_event_cb), loop);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_mobile_broadband"));
 	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_prefs_close_cb), loop);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (pk_button_help_cb), NULL);
-
-	/* only show label on mobile broadband */
-	if (state == PK_NETWORK_ENUM_MOBILE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
-		gtk_widget_show (widget);
-	}
 
 	/* update the combo boxes */
 	gpk_prefs_update_freq_combo_setup ();
 	gpk_prefs_upgrade_freq_combo_setup ();
 	gpk_prefs_auto_update_combo_setup ();
-
-	/* hide if not supported */
-	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_upgrade"));
-		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
-		gtk_widget_hide (widget);
-	}
 
 	gtk_widget_show (main_window);
 
@@ -503,10 +576,15 @@ main (int argc, char *argv[])
 		gpk_window_set_parent_xid (GTK_WINDOW (main_window), xid);
 	}
 
+	/* get some data */
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) pk_prefs_get_properties_cb, loop);
+	pk_control_get_network_state_async (control, NULL, (GAsyncReadyCallback) pk_prefs_get_network_state_cb, loop);
+
 	/* wait */
-	gtk_main ();
+	g_main_loop_run (loop);
 
 out_build:
+	g_main_loop_unref (loop);
 	g_object_unref (control);
 	g_object_unref (builder);
 unique_out:

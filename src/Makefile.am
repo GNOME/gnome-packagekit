@@ -15,6 +15,7 @@ INCLUDES =						\
 	$(GUDEV_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
 	-DI_KNOW_THE_DEVICEKIT_POWER_API_IS_SUBJECT_TO_CHANGE \
+	-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE	\
 	-DG_UDEV_API_IS_SUBJECT_TO_CHANGE		\
 	$(DEVKIT_CFLAGS)				\
 	$(CANBERRA_CFLAGS)				\
@@ -80,28 +81,16 @@ libgpkshared_a_SOURCES =				\
 	gpk-language.h					\
 	gpk-modal-dialog.c				\
 	gpk-modal-dialog.h				\
-	gpk-helper-repo-signature.c			\
-	gpk-helper-repo-signature.h			\
-	gpk-helper-eula.c				\
-	gpk-helper-eula.h				\
 	gpk-helper-run.c				\
 	gpk-helper-run.h				\
-	gpk-helper-deps-remove.c			\
-	gpk-helper-deps-remove.h			\
-	gpk-helper-deps-install.c			\
-	gpk-helper-deps-install.h			\
-	gpk-helper-deps-update.c			\
-	gpk-helper-deps-update.h			\
-	gpk-helper-untrusted.c				\
-	gpk-helper-untrusted.h				\
 	gpk-helper-chooser.c				\
 	gpk-helper-chooser.h				\
-	gpk-helper-media-change.c			\
-	gpk-helper-media-change.h			\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
 	gpk-common.c					\
 	gpk-common.h					\
+	gpk-task.c					\
+	gpk-task.h					\
 	gpk-error.c					\
 	gpk-error.h					\
 	$(NULL)
@@ -330,24 +319,12 @@ gpk_self_test_SOURCES =					\
 	gpk-vendor.h					\
 	gpk-desktop.c					\
 	gpk-desktop.h					\
-	gpk-helper-repo-signature.c			\
-	gpk-helper-repo-signature.h			\
-	gpk-helper-eula.c				\
-	gpk-helper-eula.h				\
+	gpk-task.c					\
+	gpk-task.h					\
 	gpk-helper-run.c				\
 	gpk-helper-run.h				\
-	gpk-helper-deps-remove.c			\
-	gpk-helper-deps-remove.h			\
-	gpk-helper-deps-install.c			\
-	gpk-helper-deps-install.h			\
-	gpk-helper-deps-update.c			\
-	gpk-helper-deps-update.h			\
-	gpk-helper-untrusted.c				\
-	gpk-helper-untrusted.h				\
 	gpk-helper-chooser.c				\
 	gpk-helper-chooser.h				\
-	gpk-helper-media-change.c			\
-	gpk-helper-media-change.h			\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
 	gpk-dialog.c					\

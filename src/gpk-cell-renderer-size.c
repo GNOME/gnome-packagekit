@@ -91,13 +91,10 @@ gpk_cell_renderer_finalize (GObject *object)
 static void
 gpk_cell_renderer_size_class_init (GpkCellRendererSizeClass *class)
 {
-	GtkCellRendererClass *cell_renderer_class;
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	object_class->finalize = gpk_cell_renderer_finalize;
 
 	parent_class = g_type_class_peek_parent (class);
-
-	cell_renderer_class = GTK_CELL_RENDERER_CLASS (class);
 
 	object_class->get_property = gpk_cell_renderer_size_get_property;
 	object_class->set_property = gpk_cell_renderer_size_set_property;

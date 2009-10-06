@@ -37,19 +37,20 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-console-kit.h"
 
 #include "gpk-common.h"
-#include "gpk-session.h"
-#include "gpk-error.h"
-#include "gpk-watch.h"
-#include "gpk-modal-dialog.h"
-#include "gpk-inhibit.h"
 #include "gpk-enum.h"
+#include "gpk-error.h"
+#include "gpk-inhibit.h"
+#include "gpk-modal-dialog.h"
+#include "gpk-session.h"
+#include "gpk-task.h"
+#include "gpk-watch.h"
 
 static void     gpk_watch_finalize	(GObject       *object);
 
@@ -68,15 +69,17 @@ struct GpkWatchPrivate
 	NotifyNotification	*notification_cached_messages;
 	GpkInhibit		*inhibit;
 	GpkModalDialog		*dialog;
-	PkClient		*client_primary;
-	PkConnection		*pconnection;
-	PkTaskList		*tlist;
+	PkTask			*task;
+	PkTransactionList	*tlist;
 	PkRestartEnum		 restart;
 	GConfClient		*gconf_client;
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
 	gboolean		 hide_warning;
 	EggConsoleKit		*console;
+	GCancellable		*cancellable;
+	GPtrArray		*array_progress;
+	gchar			*transaction_id;
 };
 
 typedef struct {
@@ -162,7 +165,7 @@ gpk_watch_get_restart_required_tooltip (GpkWatch *watch)
 		}
 
 		/* join */
-		text = g_strdup_printf ("%s\n%s", title, message);
+		text = g_strdup_printf ("%s%s", title, message);
 		goto out;
 	}
 
@@ -182,34 +185,33 @@ static gboolean
 gpk_watch_refresh_tooltip (GpkWatch *watch)
 {
 	guint i;
-	PkTaskListItem *item;
-	guint length;
+	PkProgress *progress;
 	guint len;
-	GString *status;
+	GString *string;
+	PkStatusEnum status;
 	const gchar *trailer;
-	const gchar *localised_status;
 	gchar *text;
+	GPtrArray *array;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
-	status = g_string_new ("");
-	length = pk_task_list_get_size (watch->priv->tlist);
-	egg_debug ("refresh tooltip %i", length);
-	if (length == 0) {
+	string = g_string_new ("");
+	array = watch->priv->array_progress;
+	egg_debug ("refresh tooltip %i", array->len);
+	if (array->len == 0) {
 
 		/* any restart required? */
 		text = gpk_watch_get_restart_required_tooltip (watch);
-		if (text != NULL) {
-			g_string_append (status, text);
-		}
+		if (text != NULL)
+			g_string_append (string, text);
 		g_free (text);
 
 		/* do we have any cached messages to show? */
 		len = watch->priv->cached_messages->len;
 		if (len > 0) {
-			if (status->len > 0)
-				g_string_append_c (status, '\n');
-			g_string_append_printf (status, ngettext ("%i message from the package manager",
+			if (string->len > 0)
+				g_string_append_c (string, '\n');
+			g_string_append_printf (string, ngettext ("%i message from the package manager",
 								  "%i messages from the package manager", len), len);
 			goto out;
 		}
@@ -217,42 +219,31 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		egg_debug ("nothing to show");
 		goto out;
 	}
-	for (i=0; i<length; i++) {
-		item = pk_task_list_get_item (watch->priv->tlist, i);
-		if (item == NULL) {
-			egg_warning ("not found item %i", i);
-			break;
-		}
-		localised_status = gpk_status_enum_to_localised_text (item->status);
+
+	/* print all the running transactions */
+	for (i=0; i<array->len; i++) {
+		progress = g_ptr_array_index (array, i);
+		g_object_get (progress,
+			      "status", &status,
+			      NULL);
 
 		/* should we display the text */
-		if (item->role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-		    egg_strzero (item->text)) {
-			g_string_append_printf (status, "%s\n", localised_status);
-		} else {
-			/* display the package name, not the package_id */
-			g_string_append_printf (status, "%s: %s\n", localised_status, item->text);
-		}
+		g_string_append_printf (string, "%s\n", gpk_status_enum_to_localised_text (status));
 		/* don't fill the screen with a giant tooltip */
 		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
 			/* TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting */
 			trailer = ngettext ("(%i more task)", "(%i more tasks)", i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
-			g_string_append_printf (status, "%s\n", trailer);
+			g_string_append_printf (string, "%s\n", trailer);
 			break;
 		}
 	}
-	if (status->len == 0)
-		g_string_append (status, "Doing something...");
-	else
-		g_string_set_size (status, status->len-1);
 
+	/* remove trailing newline */
+	if (string->len > 0)
+		g_string_set_size (string, string->len-1);
 out:
-#if GTK_CHECK_VERSION(2,15,0)
-	gtk_status_icon_set_tooltip_text (watch->priv->status_icon, status->str);
-#else
-	gtk_status_icon_set_tooltip (watch->priv->status_icon, status->str);
-#endif
-	g_string_free (status, TRUE);
+	gtk_status_icon_set_tooltip_text (watch->priv->status_icon, string->str);
+	g_string_free (string, TRUE);
 	return TRUE;
 }
 
@@ -262,46 +253,44 @@ out:
 static PkBitfield
 gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 {
-	gboolean ret;
 	gboolean active;
 	gboolean watch_active;
 	guint i;
-	guint length;
-	PkBitfield status = 0;
-	PkTaskListItem *item;
+	PkBitfield bitfield = 0;
+	PkStatusEnum status;
+	PkProgress *progress;
+	gchar *transaction_id;
+	GPtrArray *array;
 
-	g_return_val_if_fail (GPK_IS_WATCH (watch), PK_STATUS_ENUM_UNKNOWN);
+	g_return_val_if_fail (GPK_IS_WATCH (watch), 0);
 
 	/* shortcut */
-	length = pk_task_list_get_size (watch->priv->tlist);
-	if (length == 0)
+	array = watch->priv->array_progress;
+	if (array->len == 0)
 		goto out;
 
 	/* do we watch active transactions */
 	watch_active = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_WATCH_ACTIVE_TRANSACTIONS, NULL);
 
 	/* add each status to a list */
-	for (i=0; i<length; i++) {
-		item = pk_task_list_get_item (watch->priv->tlist, i);
-		if (item == NULL) {
-			egg_warning ("not found item %i", i);
-			break;
-		}
+	for (i=0; i<array->len; i++) {
+		progress = g_ptr_array_index (array, i);
 
 		/* only show an icon for this if the application isn't still on the bus */
-		ret = pk_client_is_caller_active (item->monitor, &active, NULL);
-
-		/* if we failed to get data, assume bad things happened */
-		if (!ret)
-			active = TRUE;
+		g_object_get (progress,
+			      "caller-active", &active,
+			      "status", &status,
+			      "transaction-id", &transaction_id,
+			      NULL);
 
 		/* add to bitfield calculation */
-		egg_debug ("%s %s (active:%i)", item->tid, pk_status_enum_to_text (item->status), active);
+		egg_debug ("%s %s (active:%i)", transaction_id, pk_status_enum_to_text (status), active);
 		if (!active || watch_active)
-			pk_bitfield_add (status, item->status);
+			pk_bitfield_add (bitfield, status);
+		g_free (transaction_id);
 	}
 out:
-	return status;
+	return bitfield;
 }
 
 /**
@@ -355,7 +344,7 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 						      PK_STATUS_ENUM_REPACKAGING,
 						      PK_STATUS_ENUM_WAIT,
 						      PK_STATUS_ENUM_WAITING_FOR_LOCK,
-						      PK_STATUS_ENUM_FINISHED, -1);
+						      -1);
 	}
 
 	/* only set if in the list and not unknown */
@@ -390,18 +379,6 @@ out:
 }
 
 /**
- * gpk_watch_task_list_changed_cb:
- **/
-static void
-gpk_watch_task_list_changed_cb (PkTaskList *tlist, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	gpk_watch_refresh_icon (watch);
-	gpk_watch_refresh_tooltip (watch);
-}
-
-/**
  * gpk_watch_libnotify_cb:
  **/
 static void
@@ -420,324 +397,6 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
-}
-
-/**
- * gpk_watch_task_list_finished_cb:
- **/
-static void
-gpk_watch_task_list_finished_cb (PkTaskList *tlist, PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
-{
-	guint i;
-	gboolean ret;
-	gboolean value;
-	PkRoleEnum role;
-	PkRestartEnum restart;
-	GError *error = NULL;
-	gchar *text = NULL;
-	gchar *message = NULL;
-	NotifyNotification *notification;
-#if PK_CHECK_VERSION(0,5,0)
-	guint j;
-	const PkRequireRestartObj *obj;
-	const PkRequireRestartObj *obj_tmp;
-	PkObjList *array;
-#else
-	PkPackageId *id;
-	const GPtrArray *array;
-#endif
-
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	/* get the role */
-	ret = pk_client_get_role (client, &role, &text, NULL);
-	if (!ret) {
-		egg_warning ("cannot get role");
-		goto out;
-	}
-	egg_debug ("role=%s, text=%s", pk_role_enum_to_text (role), text);
-
-	/* is it worth processing? */
-	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
-		egg_debug ("not processing, as didn't complete okay");
-		goto out;
-	}
-
-	/* show an icon if the user needs to reboot */
-	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
-	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
-		/* if more important than what we are already showing, then update the icon */
-		restart = pk_client_get_require_restart (client);
-		if (restart > watch->priv->restart) {
-#if PK_CHECK_VERSION(0,5,0)
-			/* list packages requiring this */
-			array = pk_client_get_require_restart_list (client);
-			if (array == NULL) {
-				egg_warning ("no data about restarts, perhaps not buffered");
-				goto no_data;
-			}
-			for (i=0; i<array->len; i++) {
-				obj = pk_obj_list_index (array, i);
-
-				/* is a lesser restart that what we have already */
-				if (obj->restart != restart)
-					continue;
-
-				/* is already in the list */
-				ret = FALSE;
-				for (j=0; j<array->len; j++) {
-					obj_tmp = pk_obj_list_index (array, j);
-					if (g_strcmp0 (obj_tmp->id->name, obj->id->name) == 0) {
-						ret = TRUE;
-						break;
-					}
-				}
-				if (ret)
-					continue;
-
-				/* add to list */
-				g_ptr_array_add (watch->priv->restart_package_names, g_strdup (obj->id->name));
-			}
-			g_object_unref (array);
-no_data:
-#else
-			/* list packages requiring this */
-			array = pk_client_get_require_restart_list (client);
-			for (i=0; i<array->len; i++) {
-				id = g_ptr_array_index (array, i);
-				g_ptr_array_add (watch->priv->restart_package_names, g_strdup (id->name));
-			}
-#endif
-			/* save new restart */
-			watch->priv->restart = restart;
-		}
-	}
-
-	/* is it worth showing a UI? */
-	if (runtime < 3000) {
-		egg_debug ("no notification, too quick");
-		goto out;
-	}
-
-	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
-	if (!value) {
-		egg_debug ("not showing notification as prevented in gconf");
-		goto out;
-	}
-
-	/* is caller able to handle the messages itself? */
-	ret = pk_client_is_caller_active (client, &value, &error);
-	if (!ret) {
-		egg_warning ("could not get caller active status: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-	if (value) {
-		egg_debug ("not showing notification as caller is still present");
-		goto out;
-	}
-
-	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES)
-		/* TRANSLATORS: This is the message in the libnotify body */
-		message = g_strdup_printf (_("Package '%s' has been removed"), text);
-	else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES)
-		/* TRANSLATORS: This is the message in the libnotify body */
-		message = g_strdup_printf (_("Package '%s' has been installed"), text);
-	else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM)
-		/* TRANSLATORS: This is the message in the libnotify body */
-		message = g_strdup (_("System has been updated"));
-
-	/* nothing of interest */
-	if (message == NULL)
-		goto out;
-
-	/* TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble */
-	notification = notify_notification_new (_("Task completed"), message, "help-browser", NULL);
-	notify_notification_set_timeout (notification, 5000);
-	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-	notify_notification_add_action (notification, "do-not-show-notify-complete",
-					_("Do not show this again"), gpk_watch_libnotify_cb, watch, NULL);
-	ret = notify_notification_show (notification, &error);
-	if (!ret) {
-		egg_warning ("error: %s", error->message);
-		g_error_free (error);
-	}
-
-out:
-	g_free (message);
-	g_free (text);
-}
-
-/**
- * gpk_watch_error_code_cb:
- **/
-static void
-gpk_watch_error_code_cb (PkTaskList *tlist, PkClient *client, PkErrorCodeEnum error_code, const gchar *details, GpkWatch *watch)
-{
-	gboolean ret;
-	GError *error = NULL;
-	const gchar *title;
-	gchar *title_prefix;
-	const gchar *message;
-	gboolean is_active;
-	gboolean value;
-	NotifyNotification *notification;
-
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	title = gpk_error_enum_to_localised_text (error_code);
-
-	/* if the client dbus connection is still active */
-	pk_client_is_caller_active (client, &is_active, NULL);
-
-	/* do we ignore this error? */
-	if (is_active) {
-		egg_debug ("client active so leaving error %s\n%s", title, details);
-		return;
-	}
-
-	/* ignore some errors */
-	if (error_code == PK_ERROR_ENUM_NOT_SUPPORTED ||
-	    error_code == PK_ERROR_ENUM_NO_NETWORK ||
-	    error_code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    error_code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_debug ("error ignored %s\n%s", title, details);
-		return;
-	}
-
-	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
-	if (!value) {
-		egg_debug ("not showing notification as prevented in gconf");
-		return;
-	}
-
-	/* we need to format this */
-	message = gpk_error_enum_to_localised_message (error_code);
-
-	/* save this globally */
-	g_free (watch->priv->error_details);
-	watch->priv->error_details = g_markup_escape_text (details, -1);
-
-	/* TRANSLATORS: Prefix to the title shown in the libnotify popup */
-	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
-
-	/* do the bubble */
-	notification = notify_notification_new (title_prefix, message, "help-browser", NULL);
-	notify_notification_set_timeout (notification, 15000);
-	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-	notify_notification_add_action (notification, "show-error-details",
-					/* TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error */
-					_("Show details"), gpk_watch_libnotify_cb, watch, NULL);
-
-	ret = notify_notification_show (notification, &error);
-	if (!ret) {
-		egg_warning ("error: %s", error->message);
-		g_error_free (error);
-	}
-	g_free (title_prefix);
-}
-
-/**
- * gpk_watch_is_message_ignored:
- **/
-static gboolean
-gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
-{
-	guint i;
-	gboolean ret = FALSE;
-	gchar *ignored_str;
-	gchar **ignored = NULL;
-	const gchar *message_str;
-
-	/* get from gconf */
-	ignored_str = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_IGNORED_MESSAGES, NULL);
-	if (ignored_str == NULL) {
-		egg_warning ("could not read ignored list");
-		goto out;
-	}
-
-	/* nothing in list, common case */
-	if (egg_strzero (ignored_str)) {
-		egg_debug ("nothing in ignored list");
-		goto out;
-	}
-
-	/* split using "," */
-	ignored = g_strsplit (ignored_str, ",", 0);
-
-	/* remove any ignored pattern matches */
-	message_str = pk_message_enum_to_text (message);
-	for (i=0; ignored[i] != NULL; i++) {
-		ret = g_pattern_match_simple (ignored[i], message_str);
-		if (ret) {
-			egg_debug ("match %s for %s, ignoring", ignored[i], message_str);
-			break;
-		}
-	}
-out:
-	g_free (ignored_str);
-	g_strfreev (ignored);
-	return ret;
-}
-
-/**
- * gpk_watch_message_cb:
- **/
-static void
-gpk_watch_message_cb (PkTaskList *tlist, PkClient *client, PkMessageEnum message, const gchar *details, GpkWatch *watch)
-{
-	gboolean ret;
-	GError *error = NULL;
-	gboolean value;
-	NotifyNotification *notification;
-	GpkWatchCachedMessage *cached_message;
-
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	/* is ignored */
-	ret = gpk_watch_is_message_ignored (watch, message);
-	if (ret) {
-		egg_debug ("igoring message");
-		return;
-	}
-
-	/* add to list */
-	cached_message = g_new0 (GpkWatchCachedMessage, 1);
-	cached_message->type = message;
-	cached_message->tid = pk_client_get_tid (client);
-	cached_message->details = g_strdup (details);
-	g_ptr_array_add (watch->priv->cached_messages, cached_message);
-
-	/* close existing */
-	if (watch->priv->notification_cached_messages != NULL) {
-		ret = notify_notification_close (watch->priv->notification_cached_messages, &error);
-		if (!ret) {
-			egg_warning ("error: %s", error->message);
-			g_error_free (error);
-			error = NULL;
-		}
-	}
-
-	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
-	if (!value) {
-		egg_debug ("not showing notification as prevented in gconf");
-		return;
-	}
-
-	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (_("New package manager message"), NULL, "emblem-important", watch->priv->status_icon);
-	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
-	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
-	ret = notify_notification_show (notification, &error);
-	if (!ret) {
-		egg_warning ("error: %s", error->message);
-		g_error_free (error);
-	}
-	watch->priv->notification_cached_messages = notification;
 }
 
 /**
@@ -804,8 +463,8 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 	if (!strcmp (translators, "translator-credits"))
 		translators = NULL;
 
-	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
-				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
+	license_trans = g_strconcat (_(license[0]), "", _(license[1]), "",
+				     _(license[2]), "", _(license[3]), "",  NULL);
 
 	gtk_about_dialog_set_url_hook (gpk_watch_about_dialog_url_cb, NULL, NULL);
 	gtk_about_dialog_set_email_hook (gpk_watch_about_dialog_url_cb, (gpointer) "mailto:", NULL);
@@ -882,7 +541,7 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-repo.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -963,7 +622,6 @@ gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
 
 	gtk_widget_hide (main_window);
 
-	g_ptr_array_foreach (watch->priv->cached_messages, (GFunc) gpk_watch_cached_message_free, NULL);
 	g_ptr_array_set_size (watch->priv->cached_messages, 0);
 
 	g_object_unref (list_store);
@@ -973,43 +631,6 @@ out_build:
 	/* refresh UI */
 	gpk_watch_refresh_icon (watch);
 	gpk_watch_refresh_tooltip (watch);
-}
-
-/**
- * gpk_watch_get_role_text:
- **/
-static gchar *
-gpk_watch_get_role_text (PkClient *client)
-{
-	const gchar *role_text;
-	gchar *message;
-	PkRoleEnum role;
-	GError *error = NULL;
-	gboolean ret;
-
-	/* get role and text */
-	ret = pk_client_get_role (client, &role, NULL, &error);
-	if (!ret) {
-		egg_warning ("failed to get role: %s", error->message);
-		g_error_free (error);
-		return NULL;
-	}
-
-	/* present tense localisation */
-	role_text = gpk_role_enum_to_localised_present (role);
-	message = g_strdup_printf ("%s", role_text);
-	return message;
-}
-
-/**
- * gpk_watch_progress_changed_cb:
- **/
-static void
-gpk_watch_progress_changed_cb (PkClient *client, guint percentage, guint subpercentage,
-				guint elapsed, guint remaining, GpkWatch *watch)
-{
-	gpk_modal_dialog_set_percentage (watch->priv->dialog, percentage);
-	gpk_modal_dialog_set_remaining (watch->priv->dialog, remaining);
 }
 
 /**
@@ -1037,7 +658,7 @@ gpk_watch_set_status (GpkWatch *watch, PkStatusEnum status)
 
 	/* spin */
 	if (status == PK_STATUS_ENUM_WAIT)
-		gpk_modal_dialog_set_percentage (watch->priv->dialog, PK_CLIENT_PERCENTAGE_INVALID);
+		gpk_modal_dialog_set_percentage (watch->priv->dialog, -1);
 
 	/* do visual stuff when finished */
 	if (status == PK_STATUS_ENUM_FINISHED) {
@@ -1051,95 +672,75 @@ gpk_watch_set_status (GpkWatch *watch, PkStatusEnum status)
 }
 
 /**
- * gpk_watch_status_changed_cb:
+ * gpk_watch_lookup_progress_from_transaction_id:
  **/
-static void
-gpk_watch_status_changed_cb (PkClient *client, PkStatusEnum status, GpkWatch *watch)
+static PkProgress *
+gpk_watch_lookup_progress_from_transaction_id (GpkWatch *watch, const gchar *transaction_id)
 {
-	gpk_watch_set_status (watch, status);
-}
+	GPtrArray *array;
+	guint i;
+	gchar *tid_tmp;
+	gboolean ret;
+	PkProgress *progress;
 
-/**
- * gpk_watch_package_cb:
- **/
-static void
-gpk_watch_package_cb (PkClient *client, const PkPackageObj *obj, GpkWatch *watch)
-{
-	gchar *text;
-	text = gpk_package_id_format_twoline (obj->id, obj->summary);
-	gpk_modal_dialog_set_message (watch->priv->dialog, text);
-	g_free (text);
+	array = watch->priv->array_progress;
+	for (i=0; i<array->len; i++) {
+		progress = g_ptr_array_index (array, i);
+		g_object_get (progress,
+			      "transaction-id", &tid_tmp,
+			      NULL);
+		ret = (g_strcmp0 (transaction_id, tid_tmp) == 0);
+		g_free (tid_tmp);
+		if (ret)
+			goto out;
+	}
+	progress = NULL;
+out:
+	return progress;
 }
 
 /**
  * gpk_watch_monitor_tid:
  **/
 static gboolean
-gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
+gpk_watch_monitor_tid (GpkWatch *watch, const gchar *transaction_id)
 {
-	PkStatusEnum status;
-	gboolean ret;
 	gboolean allow_cancel;
-	gchar *text;
 	gchar *package_id = NULL;
+	gchar *text;
 	guint percentage;
-	guint subpercentage;
-	guint elapsed;
-	guint remaining;
-	GError *error = NULL;
+	guint remaining_time;
+	PkProgress *progress;
 	PkRoleEnum role;
+	PkStatusEnum status;
 
-	/* reset client */
-	ret = pk_client_reset (watch->priv->client_primary, &error);
-	if (!ret) {
-		egg_warning ("failed to reset client: %s", error->message);
-		g_error_free (error);
+	g_free (watch->priv->transaction_id);
+	watch->priv->transaction_id = g_strdup (transaction_id);
+
+	/* find progress */
+	progress = gpk_watch_lookup_progress_from_transaction_id (watch, transaction_id);
+	if (progress == NULL) {
+		egg_warning ("could not find: %s", transaction_id);
 		return FALSE;
 	}
 
-	ret = pk_client_set_tid (watch->priv->client_primary, tid, &error);
-	if (!ret) {
-		egg_warning ("could not set tid: %s", error->message);
-		g_error_free (error);
-		return FALSE;
-	}
+	/* coldplug */
+	g_object_get (progress,
+		      "role", &role,
+		      "status", &status,
+		      "allow-cancel", &allow_cancel,
+		      "percentage", &percentage,
+		      "remaining-time", &remaining_time,
+		      "package-id", &package_id,
+		      NULL);
 
 	/* fill in role */
-	text = gpk_watch_get_role_text (watch->priv->client_primary);
-	gpk_modal_dialog_set_title (watch->priv->dialog, text);
-	g_free (text);
-
-	/* coldplug */
-	ret = pk_client_get_status (watch->priv->client_primary, &status, NULL);
-	/* no such transaction? */
-	if (!ret) {
-		egg_warning ("could not get status");
-		return FALSE;
-	}
+	gpk_modal_dialog_set_title (watch->priv->dialog, gpk_role_enum_to_localised_present (role));
 
 	/* are we cancellable? */
-	pk_client_get_allow_cancel (watch->priv->client_primary, &allow_cancel, NULL);
 	gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
-
-	/* coldplug */
-	ret = pk_client_get_progress (watch->priv->client_primary,
-				      &percentage, &subpercentage, &elapsed, &remaining, NULL);
-	if (ret) {
-		gpk_watch_progress_changed_cb (watch->priv->client_primary, percentage,
-						subpercentage, elapsed, remaining, watch);
-	} else {
-		egg_warning ("GetProgress failed");
-		gpk_watch_progress_changed_cb (watch->priv->client_primary,
-						PK_CLIENT_PERCENTAGE_INVALID,
-						PK_CLIENT_PERCENTAGE_INVALID, 0, 0, watch);
-	}
-
-	/* get the role */
-	ret = pk_client_get_role (watch->priv->client_primary, &role, NULL, &error);
-	if (!ret) {
-		egg_warning ("failed to get role: %s", error->message);
-		g_error_free (error);
-	}
+	gpk_modal_dialog_set_percentage (watch->priv->dialog, percentage);
+	gpk_modal_dialog_set_remaining (watch->priv->dialog, remaining_time);
 
 	/* setup the UI */
 	if (role == PK_ROLE_ENUM_SEARCH_NAME ||
@@ -1156,23 +757,12 @@ gpk_watch_monitor_tid (GpkWatch *watch, const gchar *tid)
 	gpk_watch_set_status (watch, status);
 
 	/* do the best we can, and get the last package */
-	ret = pk_client_get_package (watch->priv->client_primary, &package_id, NULL);
-	if (ret) {
-		PkPackageId *id;
-		PkPackageObj *obj;
-
-		id = pk_package_id_new_from_string (package_id);
-		if (id != NULL) {
-			obj = pk_package_obj_new (PK_INFO_ENUM_UNKNOWN, id, NULL);
-			egg_warning ("package_id=%s", package_id);
-			gpk_watch_package_cb (watch->priv->client_primary, obj, watch);
-			pk_package_obj_free (obj);
-		}
-		pk_package_id_free (id);
-	}
+	text = gpk_package_id_format_twoline (package_id, NULL);
+	gpk_modal_dialog_set_message (watch->priv->dialog, text);
 
 	gpk_modal_dialog_present (watch->priv->dialog);
-
+	g_free (package_id);
+	g_free (text);
 	return TRUE;
 }
 
@@ -1200,57 +790,56 @@ gpk_watch_menu_job_status_cb (GtkMenuItem *item, GpkWatch *watch)
 /**
  * gpk_watch_populate_menu_with_jobs:
  **/
-static guint
+static void
 gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 {
 	guint i;
-	PkTaskListItem *item;
+	PkProgress *progress;
 	GtkWidget *widget;
 	GtkWidget *image;
-	const gchar *localised_status;
-	const gchar *localised_role;
+	PkRoleEnum role;
+	PkStatusEnum status;
 	const gchar *icon_name;
 	gchar *text;
-	guint length;
+	gchar *transaction_id;
+	GPtrArray *array;
 
-	g_return_val_if_fail (GPK_IS_WATCH (watch), 0);
+	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	length = pk_task_list_get_size (watch->priv->tlist);
-	if (length == 0)
+	array = watch->priv->array_progress;
+	if (array->len == 0)
 		goto out;
 
 	/* do a menu item for each job */
-	for (i=0; i<length; i++) {
-		item = pk_task_list_get_item (watch->priv->tlist, i);
-		if (item == NULL) {
-			egg_warning ("not found item %i", i);
-			break;
-		}
-		localised_role = gpk_role_enum_to_localised_present (item->role);
-		localised_status = gpk_status_enum_to_localised_text (item->status);
+	for (i=0; i<array->len; i++) {
+		progress = g_ptr_array_index (array, i);
+		g_object_get (progress,
+			      "role", &role,
+			      "status", &status,
+			      "transaction-id", &transaction_id,
+			      NULL);
 
-		icon_name = gpk_status_enum_to_icon_name (item->status);
-		if (!egg_strzero (item->text) &&
-		    item->role != PK_ROLE_ENUM_UPDATE_PACKAGES)
-			text = g_strdup_printf ("%s %s (%s)", localised_role, item->text, localised_status);
-		else
-			text = g_strdup_printf ("%s (%s)", localised_role, localised_status);
+		icon_name = gpk_status_enum_to_icon_name (status);
+		text = g_strdup_printf ("%s (%s)",
+					gpk_role_enum_to_localised_present (role),
+					gpk_status_enum_to_localised_text (status));
 
 		/* add a job */
 		widget = gtk_image_menu_item_new_with_mnemonic (text);
 
 		/* we need the job ID so we know what transaction to show */
-		g_object_set_data (G_OBJECT (widget), "tid", (gpointer) item->tid);
+		g_object_set_data_full (G_OBJECT (widget), "tid", g_strdup (transaction_id), g_free);
 
 		image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 		g_signal_connect (G_OBJECT (widget), "activate",
 				  G_CALLBACK (gpk_watch_menu_job_status_cb), watch);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
+		g_free (transaction_id);
 		g_free (text);
 	}
 out:
-	return length;
+	return;
 }
 
 /**
@@ -1321,7 +910,7 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	egg_debug ("icon left clicked");
 
 	/* add jobs as drop down */
-	len = gpk_watch_populate_menu_with_jobs (watch, menu);
+	gpk_watch_populate_menu_with_jobs (watch, menu);
 
 	/* any messages to show? */
 	len = watch->priv->cached_messages->len;
@@ -1380,21 +969,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			gtk_status_icon_position_menu, status_icon,
 			1, gtk_get_current_event_time());
-}
-
-/**
- * gpk_watch_locked_cb:
- **/
-static void
-gpk_watch_locked_cb (PkClient *client, gboolean is_locked, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	egg_debug ("setting locked %i, doing g-p-m (un)inhibit", is_locked);
-	if (is_locked)
-		gpk_inhibit_create (watch->priv->inhibit);
-	else
-		gpk_inhibit_remove (watch->priv->inhibit);
 }
 
 /**
@@ -1515,6 +1089,28 @@ out:
 }
 
 /**
+ * gpk_watch_set_proxy_cb:
+ **/
+static void
+gpk_watch_set_proxy_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
+{
+	PkControl *control = PK_CONTROL (object);
+	GError *error = NULL;
+	gboolean ret;
+
+	/* we can run again */
+	watch->priv->set_proxy_timeout = 0;
+
+	/* get the result */
+	ret = pk_control_set_proxy_finish (control, res, &error);
+	if (!ret) {
+		egg_warning ("failed to set proxies: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+}
+
+/**
  * gpk_watch_set_proxies_ratelimit:
  **/
 static gboolean
@@ -1522,10 +1118,6 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 {
 	gchar *proxy_http;
 	gchar *proxy_ftp;
-	gboolean ret;
-	GError *error = NULL;
-
-	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
 	/* debug so we can catch polling */
 	egg_debug ("polling check");
@@ -1534,17 +1126,10 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
 	egg_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
-	ret = pk_control_set_proxy (watch->priv->control, proxy_http, proxy_ftp, &error);
-	if (!ret) {
-		egg_warning ("setting proxy failed: %s", error->message);
-		g_error_free (error);
-	}
-
+	pk_control_set_proxy_async (watch->priv->control, proxy_http, proxy_ftp, watch->priv->cancellable,
+				    (GAsyncReadyCallback) gpk_watch_set_proxy_cb, watch);
 	g_free (proxy_http);
 	g_free (proxy_ftp);
-
-	/* we can run again */
-	watch->priv->set_proxy_timeout = 0;
 	return FALSE;
 }
 
@@ -1577,32 +1162,6 @@ gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *
 }
 
 /**
- * gpk_watch_allow_cancel_cb:
- **/
-static void
-gpk_watch_allow_cancel_cb (PkClient *client, gboolean allow_cancel, GpkWatch *watch)
-{
-	gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
-}
-
-/**
- * gpk_watch_finished_cb:
- **/
-static void
-gpk_watch_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkWatch *watch)
-{
-	g_return_if_fail (GPK_IS_WATCH (watch));
-
-	/* stop spinning */
-	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
-
-	/* autoclose if success */
-	if (exit_enum == PK_EXIT_ENUM_SUCCESS) {
-		gpk_modal_dialog_close (watch->priv->dialog);
-	}
-}
-
-/**
  * gpk_watch_button_close_cb:
  **/
 static void
@@ -1618,32 +1177,516 @@ gpk_watch_button_close_cb (GtkWidget *widget, GpkWatch *watch)
 static void
 gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 {
-	gboolean ret;
-	GError *error = NULL;
-
 	/* we might have a transaction running */
-	ret = pk_client_cancel (watch->priv->client_primary, &error);
-	if (!ret) {
-		egg_warning ("failed to cancel client: %s", error->message);
-		g_error_free (error);
-	}
+	g_cancellable_cancel (watch->priv->cancellable);
 }
 
 /**
- * gpk_watch_connection_changed_cb:
+ * gpk_watch_set_connected:
  **/
 static void
-gpk_watch_connection_changed_cb (PkConnection *pconnection, gboolean connected, GpkWatch *watch)
+gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
 {
+	if (!connected) {
+		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
+		return;
+	}
+
+	/* daemon has just appeared */
+	egg_debug ("dameon has just appeared");
+	gpk_watch_refresh_icon (watch);
+	gpk_watch_refresh_tooltip (watch);
+	gpk_watch_set_proxies (watch);
+}
+
+/**
+ * gpk_watch_notify_connected_cb:
+ **/
+static void
+gpk_watch_notify_connected_cb (PkControl *control, GParamSpec *pspec, GpkWatch *watch)
+{
+	gboolean connected;
+	g_object_get (control, "connected", &connected, NULL);
+	gpk_watch_set_connected (watch, connected);
+}
+
+/**
+ * gpk_watch_notify_locked_cb:
+ **/
+static void
+gpk_watch_notify_locked_cb (PkControl *control, GParamSpec *pspec, GpkWatch *watch)
+{
+	gboolean locked;
+	g_object_get (control, "locked", &locked, NULL);
+	if (locked)
+		gpk_inhibit_create (watch->priv->inhibit);
+	else
+		gpk_inhibit_remove (watch->priv->inhibit);
+}
+
+/**
+ * gpk_watch_is_message_ignored:
+ **/
+static gboolean
+gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
+{
+	guint i;
+	gboolean ret = FALSE;
+	gchar *ignored_str;
+	gchar **ignored = NULL;
+	const gchar *message_str;
+
+	/* get from gconf */
+	ignored_str = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_IGNORED_MESSAGES, NULL);
+	if (ignored_str == NULL) {
+		egg_warning ("could not read ignored list");
+		goto out;
+	}
+
+	/* nothing in list, common case */
+	if (egg_strzero (ignored_str)) {
+		egg_debug ("nothing in ignored list");
+		goto out;
+	}
+
+	/* split using "," */
+	ignored = g_strsplit (ignored_str, ",", 0);
+
+	/* remove any ignored pattern matches */
+	message_str = pk_message_enum_to_text (message);
+	for (i=0; ignored[i] != NULL; i++) {
+		ret = g_pattern_match_simple (ignored[i], message_str);
+		if (ret) {
+			egg_debug ("match %s for %s, ignoring", ignored[i], message_str);
+			break;
+		}
+	}
+out:
+	g_free (ignored_str);
+	g_strfreev (ignored);
+	return ret;
+}
+
+/**
+ * pk_watch_process_messages_cb:
+ **/
+static void
+pk_watch_process_messages_cb (PkItemMessage *item, GpkWatch *watch)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gboolean value;
+	NotifyNotification *notification;
+	GpkWatchCachedMessage *cached_message;
+
 	g_return_if_fail (GPK_IS_WATCH (watch));
-	egg_debug ("connected=%i", connected);
-	if (connected) {
+
+	/* is ignored */
+	ret = gpk_watch_is_message_ignored (watch, item->type);
+	if (ret) {
+		egg_debug ("ignoring message");
+		return;
+	}
+
+	/* add to list */
+	cached_message = g_new0 (GpkWatchCachedMessage, 1);
+	cached_message->type = item->type;
+	cached_message->tid = NULL;
+	cached_message->details = g_strdup (item->details);
+	g_ptr_array_add (watch->priv->cached_messages, cached_message);
+
+	/* close existing */
+	if (watch->priv->notification_cached_messages != NULL) {
+		ret = notify_notification_close (watch->priv->notification_cached_messages, &error);
+		if (!ret) {
+			egg_warning ("error: %s", error->message);
+			g_error_free (error);
+			error = NULL;
+		}
+	}
+
+	/* are we accepting notifications */
+	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
+	if (!value) {
+		egg_debug ("not showing notification as prevented in gconf");
+		return;
+	}
+
+	/* do the bubble */
+	notification = notify_notification_new_with_status_icon (_("New package manager message"), NULL, "emblem-important", watch->priv->status_icon);
+	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+	watch->priv->notification_cached_messages = notification;
+}
+
+/**
+ * pk_watch_process_error_code:
+ **/
+static void
+pk_watch_process_error_code (GpkWatch *watch, PkItemErrorCode *item)
+{
+	gboolean ret;
+	GError *error = NULL;
+	const gchar *title;
+	gchar *title_prefix = NULL;
+	const gchar *message;
+	gboolean value;
+	NotifyNotification *notification;
+
+	g_return_if_fail (GPK_IS_WATCH (watch));
+
+	title = gpk_error_enum_to_localised_text (item->code);
+
+	/* ignore some errors */
+	if (item->code == PK_ERROR_ENUM_NOT_SUPPORTED ||
+	    item->code == PK_ERROR_ENUM_NO_NETWORK ||
+	    item->code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    item->code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		egg_debug ("error ignored %s%s", title, item->details);
+		goto out;
+	}
+
+	/* are we accepting notifications */
+	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
+	if (!value) {
+		egg_debug ("not showing notification as prevented in gconf");
+		goto out;
+	}
+
+	/* we need to format this */
+	message = gpk_error_enum_to_localised_message (item->code);
+
+	/* save this globally */
+	g_free (watch->priv->error_details);
+	watch->priv->error_details = g_markup_escape_text (item->details, -1);
+
+	/* TRANSLATORS: Prefix to the title shown in the libnotify popup */
+	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
+
+	/* do the bubble */
+	notification = notify_notification_new (title_prefix, message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "show-error-details",
+					/* TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error */
+					_("Show details"), gpk_watch_libnotify_cb, watch, NULL);
+
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	g_free (title_prefix);
+}
+
+/**
+ * pk_watch_process_require_restart_cb:
+ **/
+static void
+pk_watch_process_require_restart_cb (PkItemRequireRestart *item, GpkWatch *watch)
+{
+	GPtrArray *array = NULL;
+	GPtrArray *names = NULL;
+	const gchar *name;
+	gchar **split = NULL;
+	guint i;
+
+	/* if less important than what we are already showing */
+	if (item->restart <= watch->priv->restart)
+		goto out;
+
+	/* add name if not already in the list */
+	split = pk_package_id_split (item->package_id);
+	names = watch->priv->restart_package_names;
+	for (i=0; i<names->len; i++) {
+		name = g_ptr_array_index (names, i);
+		if (g_strcmp0 (name, split[PK_PACKAGE_ID_NAME]) == 0)
+			break;
+	}
+	if (i < names->len) {
+		/* add to list */
+		g_ptr_array_add (names, g_strdup (split[PK_PACKAGE_ID_NAME]));
+	}
+
+	/* save new restart */
+	watch->priv->restart = item->restart;
+out:
+	g_strfreev (split);
+	if (array != NULL)
+		g_object_unref (array);
+}
+
+/**
+ * gpk_watch_adopt_cb:
+ **/
+static void
+gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
+{
+	const gchar *message = NULL;
+	gboolean caller_active;
+	gboolean ret;
+	gchar *transaction_id = NULL;
+	GError *error = NULL;
+	GPtrArray *array;
+	guint elapsed_time;
+	NotifyNotification *notification;
+	PkProgress *progress = NULL;
+	PkResults *results;
+	PkRoleEnum role;
+	PkItemErrorCode *error_item = NULL;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to adopt: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get data about the transaction */
+	g_object_get (results,
+		      "role", &role,
+		      "progress", &progress,
+		      NULL);
+
+	/* get data */
+	g_object_get (progress,
+		      "transaction-id", &transaction_id,
+		      "caller-active", &caller_active,
+		      "elapsed-time", &elapsed_time,
+		      NULL);
+
+	/* is not the watched transaction */
+	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) != 0)
+		goto out;
+
+	/* stop spinning */
+	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
+
+	/* autoclose if success */
+	error_item = pk_results_get_error_code (results);
+	if (error_item == NULL)
+		gpk_modal_dialog_close (watch->priv->dialog);
+
+	/* process messages */
+	if (error_item == NULL) {
+		array = pk_results_get_message_array (results);
+		g_ptr_array_foreach (array, (GFunc) pk_watch_process_messages_cb, watch);
+		g_ptr_array_unref (array);
+	}
+
+	/* only process errors if caller is no longer on the bus */
+	if (error_item != NULL && !caller_active)
+		pk_watch_process_error_code (watch, error_item);
+
+	/* process restarts */
+	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
+	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		array = pk_results_get_require_restart_array (results);
+		g_ptr_array_foreach (array, (GFunc) pk_watch_process_require_restart_cb, watch);
+		g_ptr_array_unref (array);
+	}
+
+	/* are we accepting notifications */
+	ret = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
+	if (!ret) {
+		egg_debug ("not showing notification as prevented in gconf");
+		goto out;
+	}
+
+	/* is it worth showing a UI? */
+	if (elapsed_time < 3000) {
+		egg_debug ("no notification, too quick");
+		goto out;
+	}
+
+	/* is caller able to handle the messages itself? */
+	if (caller_active) {
+		egg_debug ("not showing notification as caller is still present");
+		goto out;
+	}
+
+	if (role == PK_ROLE_ENUM_REMOVE_PACKAGES)
+		/* TRANSLATORS: This is the message in the libnotify body */
+		message = _("Packages have been removed");
+	else if (role == PK_ROLE_ENUM_INSTALL_PACKAGES)
+		/* TRANSLATORS: This is the message in the libnotify body */
+		message = _("Packages have been installed");
+	else if (role == PK_ROLE_ENUM_UPDATE_SYSTEM)
+		/* TRANSLATORS: This is the message in the libnotify body */
+		message = _("System has been updated");
+
+	/* nothing of interest */
+	if (message == NULL)
+		goto out;
+
+	/* TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble */
+	notification = notify_notification_new (_("Task completed"), message, "help-browser", NULL);
+	notify_notification_set_timeout (notification, 5000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+	notify_notification_add_action (notification, "do-not-show-notify-complete",
+					_("Do not show this again"), gpk_watch_libnotify_cb, watch, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+out:
+	g_free (transaction_id);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (progress != NULL)
+		g_object_unref (progress);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_watch_progress_cb:
+ **/
+static void
+gpk_watch_progress_cb (PkProgress *progress, PkProgressType type, GpkWatch *watch)
+{
+	PkStatusEnum status;
+	guint percentage;
+	gboolean allow_cancel;
+	gchar *package_id = NULL;
+	gchar *transaction_id = NULL;
+	GPtrArray *array;
+	guint i;
+	gboolean ret = FALSE;
+	PkProgress *progress_tmp;
+	guint remaining_time;
+	gchar *text = NULL;
+
+	/* add if not already in list */
+	array = watch->priv->array_progress;
+	for (i=0; i<array->len; i++) {
+		progress_tmp = g_ptr_array_index (array, i);
+		if (progress_tmp == progress)
+			ret = TRUE;
+	}
+	if (!ret) {
+		egg_debug ("adding progress %p", progress);
+		g_ptr_array_add (array, g_object_ref (progress));
+	}
+
+	/* get data */
+	g_object_get (progress,
+		      "status", &status,
+		      "percentage", &percentage,
+		      "allow-cancel", &allow_cancel,
+		      "package-id", &package_id,
+		      "remaining-time", &remaining_time,
+		      "transaction-id", &transaction_id,
+		      NULL);
+
+	/* refresh both */
+	if (type == PK_PROGRESS_TYPE_STATUS) {
 		gpk_watch_refresh_icon (watch);
 		gpk_watch_refresh_tooltip (watch);
-		gpk_watch_set_proxies (watch);
-	} else {
-		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
 	}
+
+	/* is not the watched transaction */
+	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) != 0)
+		goto out;
+
+	if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
+		text = gpk_package_id_format_twoline (package_id, NULL);
+		gpk_modal_dialog_set_message (watch->priv->dialog, text);
+	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
+		gpk_modal_dialog_set_percentage (watch->priv->dialog, percentage);
+	} else if (type == PK_PROGRESS_TYPE_REMAINING_TIME) {
+		gpk_modal_dialog_set_remaining (watch->priv->dialog, remaining_time);
+	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
+		gpk_modal_dialog_set_allow_cancel (watch->priv->dialog, allow_cancel);
+	} else if (type == PK_PROGRESS_TYPE_STATUS) {
+		gpk_watch_set_status (watch, status);
+	}
+out:
+	g_free (text);
+	g_free (package_id);
+	g_free (transaction_id);
+}
+
+/**
+ * gpk_watch_transaction_list_added_cb:
+ **/
+static void
+gpk_watch_transaction_list_added_cb (PkTransactionList *tlist, const gchar *transaction_id, GpkWatch *watch)
+{
+	PkProgress *progress;
+
+	/* find progress */
+	progress = gpk_watch_lookup_progress_from_transaction_id (watch, transaction_id);
+	if (progress != NULL) {
+		egg_warning ("already added: %s", transaction_id);
+		return;
+	}
+	egg_debug ("added: %s", transaction_id);
+	pk_client_adopt_async (PK_CLIENT(watch->priv->task), transaction_id, NULL,
+			       (PkProgressCallback) gpk_watch_progress_cb, watch,
+			       (GAsyncReadyCallback) gpk_watch_adopt_cb, watch);
+}
+
+/**
+ * gpk_watch_transaction_list_removed_cb:
+ **/
+static void
+gpk_watch_transaction_list_removed_cb (PkTransactionList *tlist, const gchar *transaction_id, GpkWatch *watch)
+{
+	PkProgress *progress;
+
+	/* find progress */
+	progress = gpk_watch_lookup_progress_from_transaction_id (watch, transaction_id);
+	if (progress == NULL) {
+		egg_warning ("could not find: %s", transaction_id);
+		return;
+	}
+	egg_debug ("removed: %s", transaction_id);
+	g_ptr_array_remove_fast (watch->priv->array_progress, progress);
+
+	/* refresh both */
+	gpk_watch_refresh_icon (watch);
+	gpk_watch_refresh_tooltip (watch);
+}
+
+/**
+ * gpk_check_update_get_properties_cb:
+ **/
+static void
+gpk_check_update_get_properties_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
+{
+	gboolean connected;
+	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
+	gboolean ret;
+
+	/* get the result */
+	ret = pk_control_get_properties_finish (control, res, &error);
+	if (!ret) {
+		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
+		egg_warning ("details could not be retrieved: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* get values */
+	g_object_get (control,
+		      "connected", &connected,
+		      NULL);
+
+	/* coldplug daemon */
+	gpk_watch_set_connected (watch, connected);
+out:
+	return;
 }
 
 /**
@@ -1656,29 +1699,22 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
 	watch->priv->error_details = NULL;
 	watch->priv->notification_cached_messages = NULL;
+	watch->priv->transaction_id = NULL;
 	watch->priv->restart = PK_RESTART_ENUM_NONE;
 	watch->priv->hide_warning = FALSE;
 	watch->priv->console = egg_console_kit_new ();
-
+	watch->priv->cancellable = g_cancellable_new ();
+	watch->priv->array_progress = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	watch->priv->gconf_client = gconf_client_get_default ();
 
 	watch->priv->status_icon = gtk_status_icon_new ();
 	watch->priv->set_proxy_timeout = 0;
-	watch->priv->cached_messages = g_ptr_array_new ();
-	watch->priv->restart_package_names = g_ptr_array_new ();
-
-	watch->priv->client_primary = pk_client_new ();
-	g_signal_connect (watch->priv->client_primary, "finished",
-			  G_CALLBACK (gpk_watch_finished_cb), watch);
-	g_signal_connect (watch->priv->client_primary, "progress-changed",
-			  G_CALLBACK (gpk_watch_progress_changed_cb), watch);
-	g_signal_connect (watch->priv->client_primary, "status-changed",
-			  G_CALLBACK (gpk_watch_status_changed_cb), watch);
-	g_signal_connect (watch->priv->client_primary, "package",
-			  G_CALLBACK (gpk_watch_package_cb), watch);
-	g_signal_connect (watch->priv->client_primary, "allow-cancel",
-			  G_CALLBACK (gpk_watch_allow_cancel_cb), watch);
-
+	watch->priv->cached_messages = g_ptr_array_new_with_free_func ((GDestroyNotify) gpk_watch_cached_message_free);
+	watch->priv->restart_package_names = g_ptr_array_new_with_free_func (g_free);
+	watch->priv->task = PK_TASK(gpk_task_new ());
+	g_object_set (watch->priv->task,
+		      "background", TRUE,
+		      NULL);
 	watch->priv->dialog = gpk_modal_dialog_new ();
 	gpk_modal_dialog_set_window_icon (watch->priv->dialog, "pk-package-installed");
 	g_signal_connect (watch->priv->dialog, "cancel",
@@ -1688,8 +1724,13 @@ gpk_watch_init (GpkWatch *watch)
 
 	/* we need to get ::locked */
 	watch->priv->control = pk_control_new ();
-	g_signal_connect (watch->priv->control, "locked",
-			  G_CALLBACK (gpk_watch_locked_cb), watch);
+	g_signal_connect (watch->priv->control, "notify::locked",
+			  G_CALLBACK (gpk_watch_notify_locked_cb), watch);
+	g_signal_connect (watch->priv->control, "notify::connected",
+			  G_CALLBACK (gpk_watch_notify_connected_cb), watch);
+
+	/* get properties */
+	pk_control_get_properties_async (watch->priv->control, NULL, (GAsyncReadyCallback) gpk_check_update_get_properties_cb, watch);
 
 	/* do session inhibit */
 	watch->priv->inhibit = gpk_inhibit_new ();
@@ -1700,23 +1741,11 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect_object (G_OBJECT (watch->priv->status_icon),
 				 "activate", G_CALLBACK (gpk_watch_activate_status_cb), watch, 0);
 
-	watch->priv->tlist = pk_task_list_new ();
-	g_signal_connect (watch->priv->tlist, "changed",
-			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
-	g_signal_connect (watch->priv->tlist, "status-changed",
-			  G_CALLBACK (gpk_watch_task_list_changed_cb), watch);
-	g_signal_connect (watch->priv->tlist, "finished",
-			  G_CALLBACK (gpk_watch_task_list_finished_cb), watch);
-	g_signal_connect (watch->priv->tlist, "error-code",
-			  G_CALLBACK (gpk_watch_error_code_cb), watch);
-	g_signal_connect (watch->priv->tlist, "message",
-			  G_CALLBACK (gpk_watch_message_cb), watch);
-
-	watch->priv->pconnection = pk_connection_new ();
-	g_signal_connect (watch->priv->pconnection, "connection-changed",
-			  G_CALLBACK (gpk_watch_connection_changed_cb), watch);
-	if (pk_connection_valid (watch->priv->pconnection))
-		gpk_watch_connection_changed_cb (watch->priv->pconnection, TRUE, watch);
+	watch->priv->tlist = pk_transaction_list_new ();
+	g_signal_connect (watch->priv->tlist, "added",
+			  G_CALLBACK (gpk_watch_transaction_list_added_cb), watch);
+	g_signal_connect (watch->priv->tlist, "removed",
+			  G_CALLBACK (gpk_watch_transaction_list_removed_cb), watch);
 
 	/* watch proxy keys */
 	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
@@ -1751,24 +1780,20 @@ gpk_watch_finalize (GObject *object)
 	if (watch->priv->set_proxy_timeout != 0)
 		g_source_remove (watch->priv->set_proxy_timeout);
 
-	/* free cached messages */
-	g_ptr_array_foreach (watch->priv->cached_messages, (GFunc) gpk_watch_cached_message_free, NULL);
-	g_ptr_array_free (watch->priv->cached_messages, TRUE);
-
-	/* free cached restart names */
-	g_ptr_array_foreach (watch->priv->restart_package_names, (GFunc) g_free, NULL);
-	g_ptr_array_free (watch->priv->restart_package_names, TRUE);
-
 	g_free (watch->priv->error_details);
-	g_object_unref (watch->priv->status_icon);
-	g_object_unref (watch->priv->inhibit);
-	g_object_unref (watch->priv->tlist);
-	g_object_unref (watch->priv->control);
-	g_object_unref (watch->priv->pconnection);
-	g_object_unref (watch->priv->gconf_client);
-	g_object_unref (watch->priv->client_primary);
-	g_object_unref (watch->priv->dialog);
+	g_free (watch->priv->transaction_id);
+	g_object_unref (watch->priv->cancellable);
+	g_object_unref (PK_CLIENT(watch->priv->task));
 	g_object_unref (watch->priv->console);
+	g_object_unref (watch->priv->control);
+	g_object_unref (watch->priv->dialog);
+	g_object_unref (watch->priv->gconf_client);
+	g_object_unref (watch->priv->inhibit);
+	g_object_unref (watch->priv->status_icon);
+	g_object_unref (watch->priv->tlist);
+	g_ptr_array_unref (watch->priv->array_progress);
+	g_ptr_array_unref (watch->priv->cached_messages);
+	g_ptr_array_unref (watch->priv->restart_package_names);
 
 	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
 }

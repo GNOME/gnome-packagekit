@@ -23,7 +23,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "gpk-helper-run.h"
 #include "gpk-marshal.h"
@@ -201,7 +201,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 static gboolean
 gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, const gchar *filename)
 {
-	gboolean ret;
+	gboolean ret = FALSE;
 	gchar *icon = NULL;
 	gchar *text = NULL;
 	gchar *fulltext = NULL;
@@ -212,7 +212,6 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	gchar *menu_path = NULL;
 	GtkTreeIter iter;
 	GKeyFile *file = NULL;
-	PkPackageId *id;
 	gint weight;
 	gboolean hidden;
 
@@ -284,15 +283,13 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	/* put formatted text into treeview */
 	gtk_list_store_append (helper->priv->list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
-	id = pk_package_id_new_from_string (package_id);
-	text = gpk_package_id_format_twoline (id, joint);
+	text = gpk_package_id_format_twoline (package_id, joint);
 	if (menu_path != NULL) {
 		/* TRANSLATORS: the path in the menu, e.g. Applications -> Games -> Dave */
 		fulltext = g_strdup_printf("%s\n\n<i>%s</i>", text, menu_path);
 		g_free (text);
 		text = fulltext;
 	}
-	pk_package_id_free (id);
 
 	gtk_list_store_set (helper->priv->list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
@@ -347,8 +344,7 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 				if (ret)
 					added++;
 			}
-			g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-			g_ptr_array_free (array, TRUE);
+			g_ptr_array_unref (array);
 		}
 		g_strfreev (parts);
 	}
@@ -445,7 +441,7 @@ gpk_helper_run_init (GpkHelperRun *helper)
 	/* get UI */
 	helper->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (helper->priv->builder, GPK_DATA "/gpk-log.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}

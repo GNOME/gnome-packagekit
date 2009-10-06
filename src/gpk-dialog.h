@@ -24,12 +24,12 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 G_BEGIN_DECLS
 
 gboolean	 gpk_dialog_embed_package_list_widget	(GtkDialog	*dialog,
-							 PkPackageList	*list);
+							 GPtrArray	*array);
 gboolean	 gpk_dialog_embed_file_list_widget	(GtkDialog	*dialog,
 							 GPtrArray	*files);
 gboolean	 gpk_dialog_embed_do_not_show_widget	(GtkDialog	*dialog,

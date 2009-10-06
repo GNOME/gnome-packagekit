@@ -34,7 +34,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <glib/gi18n.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -390,11 +390,12 @@ gpk_modal_dialog_make_progressbar_pulse (GpkModalDialog *dialog)
  * gpk_modal_dialog_set_percentage:
  **/
 gboolean
-gpk_modal_dialog_set_percentage (GpkModalDialog *dialog, guint percentage)
+gpk_modal_dialog_set_percentage (GpkModalDialog *dialog, gint percentage)
 {
 	GtkProgressBar *progress_bar;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
+	g_return_val_if_fail (percentage <= 100, FALSE);
 
 	egg_debug ("setting percentage: %u", percentage);
 
@@ -405,7 +406,7 @@ gpk_modal_dialog_set_percentage (GpkModalDialog *dialog, guint percentage)
 	}
 
 	/* either pulse or set percentage */
-	if (percentage == PK_CLIENT_PERCENTAGE_INVALID)
+	if (percentage < 0)
 		gpk_modal_dialog_make_progressbar_pulse (dialog);
 	else
 		gtk_progress_bar_set_fraction (progress_bar, (gfloat) percentage / 100.0);
@@ -629,56 +630,53 @@ gpk_modal_dialog_button_cancel_cb (GtkWidget *widget_button, GpkModalDialog *dia
  * gpk_modal_dialog_set_package_list:
  **/
 gboolean
-gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const PkPackageList *list)
+gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list)
 {
 	GtkTreeIter iter;
-	const PkPackageObj *obj;
+	const PkItemPackage *item;
 	PkDesktop *desktop;
 	gchar *icon;
-	gchar *package_id;
 	gchar *text;
-	guint length;
 	guint i;
 	GtkWidget *widget;
+	gchar **split;
 
 	gtk_list_store_clear (dialog->priv->store);
 
-	length = pk_package_list_get_size (list);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "scrolledwindow_packages"));
-	if (length > 5)
+	if (list->len > 5)
 		gtk_widget_set_size_request (widget, -1, 300);
-	else if (length > 1)
+	else if (list->len > 1)
 		gtk_widget_set_size_request (widget, -1, 150);
 
 	desktop = pk_desktop_new ();
-	length = pk_package_list_get_size (list);
 
 	/* add each well */
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
+	for (i=0; i<list->len; i++) {
+		item = g_ptr_array_index (list, i);
 
 		/* not installed, so ignore icon */
-		if (obj->info == PK_INFO_ENUM_DOWNLOADING ||
-		    obj->info == PK_INFO_ENUM_CLEANUP)
+		if (item->info == PK_INFO_ENUM_DOWNLOADING ||
+		    item->info == PK_INFO_ENUM_CLEANUP)
 			continue;
 
-		text = gpk_package_id_format_twoline (obj->id, obj->summary);
-		package_id = pk_package_id_to_string (obj->id);
+		text = gpk_package_id_format_twoline (item->package_id, item->summary);
 
 		/* get the icon */
-		icon = gpk_desktop_guess_icon_name (desktop, obj->id->name);
+		split = pk_package_id_split (item->package_id);
+		icon = gpk_desktop_guess_icon_name (desktop, split[0]);
 		if (icon == NULL)
 			icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED));
 
 		gtk_list_store_append (dialog->priv->store, &iter);
 		gtk_list_store_set (dialog->priv->store, &iter,
 				    GPK_MODAL_DIALOG_STORE_IMAGE, icon,
-				    GPK_MODAL_DIALOG_STORE_ID, package_id,
+				    GPK_MODAL_DIALOG_STORE_ID, item->package_id,
 				    GPK_MODAL_DIALOG_STORE_TEXT, text,
 				    -1);
+		g_strfreev (split);
 		g_free (icon);
 		g_free (text);
-		g_free (package_id);
 	}
 
 	g_object_unref (desktop);
@@ -804,7 +802,7 @@ gpk_modal_dialog_init (GpkModalDialog *dialog)
 	/* get UI */
 	dialog->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (dialog->priv->builder, GPK_DATA "/gpk-client.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -905,8 +903,8 @@ gpk_modal_dialog_test (EggTest *test)
 {
 	GtkResponseType button;
 	GpkModalDialog *dialog = NULL;
-	PkPackageList *list;
-	PkPackageId *id;
+	GPtrArray *array;
+	PkItemPackage *item;
 
 	if (!egg_test_start (test, "GpkModalDialog"))
 		return;
@@ -920,13 +918,13 @@ gpk_modal_dialog_test (EggTest *test)
 		egg_test_failed (test, NULL);
 
 	/* set some packages */
-	list = pk_package_list_new ();
-	id = pk_package_id_new_from_list ("totem", "0.0.1", "i386", "fedora-newkey");
-	pk_package_list_add (list, PK_INFO_ENUM_INSTALLED, id, "Totem is a music player for GNOME");
-	pk_package_list_add (list, PK_INFO_ENUM_AVAILABLE, id, "Amarok is a music player for KDE");
-	gpk_modal_dialog_set_package_list (dialog, list);
-	pk_package_id_free (id);
-	g_object_unref (list);
+	array = g_ptr_array_new_with_free_func ((GDestroyNotify) pk_item_package_unref);
+	item = pk_item_package_new (PK_INFO_ENUM_INSTALLED, "totem;001;i386;fedora", "Totem is a music player for GNOME");
+	g_ptr_array_add (array, item);
+	item = pk_item_package_new (PK_INFO_ENUM_AVAILABLE, "totem;001;i386;fedora", "Amarok is a music player for KDE");
+	g_ptr_array_add (array, item);
+	gpk_modal_dialog_set_package_list (dialog, array);
+	g_ptr_array_unref (array);
 
 	/************************************************************/
 	egg_test_title (test, "help button");
@@ -961,7 +959,7 @@ gpk_modal_dialog_test (EggTest *test)
 	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
 	gpk_modal_dialog_set_title (dialog, "Refresh cache");
 	gpk_modal_dialog_set_image_status (dialog, PK_STATUS_ENUM_REFRESH_CACHE);
-	gpk_modal_dialog_set_percentage (dialog, 101);
+	gpk_modal_dialog_set_percentage (dialog, -1);
 	gpk_modal_dialog_present (dialog);
 	gpk_modal_dialog_run (dialog);
 	egg_test_success (test, NULL);
@@ -986,7 +984,7 @@ gpk_modal_dialog_test (EggTest *test)
 	gpk_modal_dialog_set_title (dialog, "Button press test");
 	gpk_modal_dialog_set_message (dialog, "Please press close");
 	gpk_modal_dialog_set_image_status (dialog, PK_STATUS_ENUM_INSTALL);
-	gpk_modal_dialog_set_percentage (dialog, 101);
+	gpk_modal_dialog_set_percentage (dialog, -1);
 	gpk_modal_dialog_present (dialog);
 	button = gpk_modal_dialog_run (dialog);
 	if (button == GTK_RESPONSE_CLOSE)

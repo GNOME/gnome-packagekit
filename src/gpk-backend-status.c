@@ -21,26 +21,23 @@
 
 #include "config.h"
 
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <dbus/dbus-glib.h>
-#include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 
 #include "gpk-common.h"
 
+static GtkBuilder *builder = NULL;
+
 /**
- * pk_updates_close_cb:
+ * gpk_backend_status_close_cb:
  **/
 static void
-pk_updates_close_cb (GtkWidget *widget, gpointer data)
+gpk_backend_status_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
 	egg_debug ("emitting action-close");
@@ -48,112 +45,53 @@ pk_updates_close_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_updates_delete_event_cb:
- * @event: The event type, unused.
+ * gpk_backend_status_delete_event_cb:
  **/
 static gboolean
-pk_updates_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+gpk_backend_status_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-	pk_updates_close_cb (widget, data);
+	gpk_backend_status_close_cb (widget, data);
 	return FALSE;
 }
 
 /**
- * main:
+ * gpk_backend_status_get_properties_cb:
  **/
-int
-main (int argc, char *argv[])
+static void
+gpk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
 {
-	GMainLoop *loop;
-	gboolean verbose = FALSE;
-	gboolean program_version = FALSE;
-	GOptionContext *context;
 	GtkWidget *widget;
-	GtkBuilder *builder;
-	gchar *name;
-	gchar *author;
-	PkRoleEnum roles;
-	PkBitfield filters;
-	PkControl *control;
-	gboolean ret;
-	guint retval;
 	GError *error = NULL;
+	PkControl *control = PK_CONTROL(object);
+	gboolean ret;
+	PkBitfield filters;
+	PkBitfield roles;
+	gchar *name = NULL;
+	gchar *author = NULL;
 
-	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
-		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  _("Show the program version and exit"), NULL },
-		{ NULL}
-	};
-
-	setlocale (LC_ALL, "");
-
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-
-	if (! g_thread_supported ()) {
-		g_thread_init (NULL);
-	}
-	dbus_g_thread_init ();
-	g_type_init ();
-
-	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("PackageKit Backend Details Viewer"));
-	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_parse (context, &argc, &argv, NULL);
-	g_option_context_free (context);
-
-	if (program_version) {
-		g_print (VERSION "\n");
-		return 0;
-	}
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
-
-	loop = g_main_loop_new (NULL, FALSE);
-
-	control = pk_control_new ();
-	roles = pk_control_get_actions (control, NULL);
-	filters = pk_control_get_filters (control, NULL);
-
-	/* general stuff */
-	ret = pk_control_get_backend_detail (control, &name, &author, NULL);
+	/* get the result */
+	ret = pk_control_get_properties_finish (control, res, &error);
 	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
-		egg_warning (_("Exiting as backend details could not be retrieved"));
-		return 1;
-	}
-
-	/* get UI */
-	builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-backend-status.ui", &error);
-	if (error != NULL) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_print ("%s: %s\n", _("Exiting as backend details could not be retrieved"), error->message);
 		g_error_free (error);
-		goto out_build;
+		g_main_loop_quit (loop);
+		goto out;
 	}
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_backend"));
-	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
+	/* get values */
+	g_object_get (control,
+		      "roles", &roles,
+		      "filters", &filters,
+		      "backend-name", &name,
+		      "backend-author", &author,
+		      NULL);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_updates_close_cb), loop);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_backend"));
-	g_signal_connect (widget, "delete_event",
-			  G_CALLBACK (pk_updates_delete_event_cb), loop);
-	gtk_widget_show (GTK_WIDGET (widget));
-
+	/* setup GUI */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_name"));
 	gtk_label_set_label (GTK_LABEL (widget), name);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_author"));
 	gtk_label_set_label (GTK_LABEL (widget), author);
-	g_free (name);
-	g_free (author);
 
 	/* actions */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_CANCEL)) {
@@ -280,13 +218,88 @@ main (int argc, char *argv[])
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "image_newest"));
 		gtk_image_set_from_icon_name (GTK_IMAGE (widget), "gtk-apply", GTK_ICON_SIZE_MENU);
 	}
+out:
+	g_free (name);
+	g_free (author);
+}
 
-out_build:
+/**
+ * main:
+ **/
+int
+main (int argc, char *argv[])
+{
+	GMainLoop *loop;
+	gboolean verbose = FALSE;
+	gboolean program_version = FALSE;
+	GOptionContext *context;
+	GtkWidget *widget;
+	PkControl *control;
+	guint retval;
+	GError *error = NULL;
+
+	const GOptionEntry options[] = {
+		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
+		  _("Show extra debugging information"), NULL },
+		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
+		  _("Show the program version and exit"), NULL },
+		{ NULL}
+	};
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
+	g_type_init ();
+
+	context = g_option_context_new (NULL);
+	g_option_context_set_summary (context, _("PackageKit Backend Details Viewer"));
+	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_parse (context, &argc, &argv, NULL);
+	g_option_context_free (context);
+
+	if (program_version) {
+		g_print (VERSION "\n");
+		return 0;
+	}
+
+	egg_debug_init (verbose);
+	gtk_init (&argc, &argv);
+
+	loop = g_main_loop_new (NULL, FALSE);
+	control = pk_control_new ();
+
+	/* get UI */
+	builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-backend-status.ui", &error);
+	if (retval == 0) {
+		egg_warning ("failed to load ui: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_backend_status_close_cb), loop);
+
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_backend"));
+	g_signal_connect (widget, "delete_event",
+			  G_CALLBACK (gpk_backend_status_delete_event_cb), loop);
+	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
+	gtk_widget_show (GTK_WIDGET (widget));
+
+	/* get properties */
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_backend_status_get_properties_cb, loop);
+
+	/* wait for results */
+	g_main_loop_run (loop);
+out:
 	g_object_unref (builder);
 	g_object_unref (control);
-
-	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
-
 	return 0;
 }
