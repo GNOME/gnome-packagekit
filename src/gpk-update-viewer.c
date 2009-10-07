@@ -74,6 +74,7 @@ static GConfClient *gconf_client = NULL;
 static gchar **install_package_ids = NULL;
 static EggConsoleKit *console = NULL;
 static GCancellable *cancellable = NULL;
+static gboolean ignore_updates_changed = FALSE;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -474,6 +475,9 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	/* quit after we successfully updated */
 	g_main_loop_quit (loop);
 out:
+	/* no longer updating */
+	ignore_updates_changed = FALSE;
+
 	if (error_item != NULL)
 		pk_item_error_code_unref (error_item);
 	if (array != NULL)
@@ -944,6 +948,9 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer data)
 				       (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
 				       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, loop);
 	g_strfreev (package_ids);
+
+	/* from now on ignore updates-changed signals */
+	ignore_updates_changed = TRUE;
 
 	/* get rid of the array, and free the contents */
 	if (array != NULL)
@@ -2318,6 +2325,10 @@ gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer data)
 {
 	/* now try to get newest update array */
 	egg_debug ("updates changed");
+	if (ignore_updates_changed) {
+		egg_debug ("ignoring");
+		return;
+	}
 	gpk_update_viewer_get_new_update_array ();
 }
 
