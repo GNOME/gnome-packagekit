@@ -441,6 +441,7 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 		gpk_update_viewer_check_restart (restart_update);
 		g_main_loop_quit (loop);
+		goto out;
 	}
 
 	/* hide close button */
