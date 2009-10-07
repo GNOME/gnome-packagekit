@@ -304,7 +304,7 @@ gpk_cell_renderer_spinner_render (GtkCellRenderer *cellr, GdkWindow *window, Gtk
 	pix_rect.height -= ypad * 2;
 
 	if (!gdk_rectangle_intersect (cell_area, &pix_rect, &draw_rect) ||
-			!gdk_rectangle_intersect (expose_area, &draw_rect, &draw_rect))
+			!gdk_rectangle_intersect (expose_area, &pix_rect, &draw_rect))
 		return;
 
 	if (priv->pulse == 0)
