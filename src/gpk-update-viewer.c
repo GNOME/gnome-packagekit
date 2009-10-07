@@ -381,6 +381,14 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	if (error_item != NULL) {
 		egg_warning ("failed to update packages: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
 
+		/* failed sound, using sounds from the naming spec */
+		ca_context_play (ca_gtk_context_get (), 0,
+				 CA_PROP_EVENT_ID, "dialog-warning",
+				 /* TRANSLATORS: this is the application name for libcanberra */
+				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
+				 /* TRANSLATORS: this is the sound description */
+				 CA_PROP_EVENT_DESCRIPTION, _("Failed to update"), NULL);
+
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
 					gpk_error_enum_to_localised_message (error_item->code), error_item->details);
@@ -394,15 +402,6 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 
 		goto out;
 	}
-
-	/* TODO: failed sound */
-	/* play the sound, using sounds from the naming spec */
-	ca_context_play (ca_gtk_context_get (), 0,
-			 CA_PROP_EVENT_ID, "dialog-warning",
-			 /* TRANSLATORS: this is the application name for libcanberra */
-			 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
-			 /* TRANSLATORS: this is the sound description */
-			 CA_PROP_EVENT_DESCRIPTION, _("Failed to update"), NULL);
 
 	gpk_update_viewer_undisable_packages ();
 
