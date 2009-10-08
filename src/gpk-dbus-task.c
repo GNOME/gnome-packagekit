@@ -484,7 +484,8 @@ gpk_dbus_task_install_package_ids (GpkDbusTask *task)
 	if (!ret) {
 		/* TRANSLATORS: error: failed to install, detailed error follows */
 		gpk_dbus_task_error_msg (task, _("Failed to install package"), error_local);
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error_local->message);
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s",
+			error_local ? error_local->message : NULL);
 		dbus_g_method_return_error (task->priv->context, error);
 		goto out;
 	}
