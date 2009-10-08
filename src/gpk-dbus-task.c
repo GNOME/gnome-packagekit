@@ -2004,7 +2004,7 @@ gpk_dbus_task_install_files_dep_check (GpkDbusTask *task)
 	/* are we dumb and can't check for depends? */
 	if (!pk_bitfield_contain (task->priv->roles, PK_ROLE_ENUM_SIMULATE_INSTALL_FILES)) {
 		egg_warning ("skipping depends check");
-		gpk_dbus_task_install_package_ids (task);
+		gpk_dbus_task_install_files (task);
 		goto out;
 	}
 
@@ -2012,7 +2012,7 @@ gpk_dbus_task_install_files_dep_check (GpkDbusTask *task)
 	ret = gconf_client_get_bool (task->priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
 	if (!ret) {
 		egg_warning ("we've said we don't want the dep dialog");
-		gpk_dbus_task_install_package_ids (task);
+		gpk_dbus_task_install_files (task);
 		goto out;
 	}
 
