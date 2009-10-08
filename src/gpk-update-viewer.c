@@ -344,6 +344,30 @@ out:
 }
 
 /**
+ * gpk_update_viewer_are_all_updates_selected:
+ **/
+static gboolean
+gpk_update_viewer_are_all_updates_selected (GtkTreeModel *model)
+{
+	gboolean selected = TRUE;
+	gboolean valid;
+	GtkTreeIter iter;
+
+	/* if there are no entries selected, deselect the button */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_SELECT, &selected,
+				    -1);
+		if (!selected)
+			goto out;
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+out:
+	return selected;
+}
+
+/**
  * gpk_update_viewer_update_packages_cb:
  **/
 static void
@@ -360,6 +384,10 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	gchar *text;
 	PkItemErrorCode *error_item = NULL;
 	GtkWindow *window;
+	gboolean ret;
+	const gchar *message;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -451,20 +479,30 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, GMainLoo
 	/* show a new title */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_header_title"));
 	/* TRANSLATORS: completed all updates */
-	text = g_strdup_printf ("<big><b>%s</b></big>", _("All selected updates installed..."));
+	text = g_strdup_printf ("<big><b>%s</b></big>", _("Updates installed"));
 	gtk_label_set_label (GTK_LABEL (widget), text);
 	g_free (text);
+
+	/* do different text depending on if we deselected any */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+	ret = gpk_update_viewer_are_all_updates_selected (model);
+	if (ret) {
+		/* TRANSLATORS: title: all updates for the machine installed okay */
+		message = _("All updates were installed successfully.");
+	} else {
+		/* TRANSLATORS: title: all the selected updates installed okay */
+		message = _("The selected updates were installed successfully.");
+	}
 
 	/* show modal dialog */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_updates"));
 	dialog = gtk_message_dialog_new (GTK_WINDOW (widget), GTK_DIALOG_MODAL,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 					 /* TRANSLATORS: title: all updates installed okay */
-					 "%s", _("All selected updates installed"));
+					 "%s", _("Updates installed"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
-						  "%s",
-						  /* TRANSLATORS: software updates installed okay */
-						  _("All selected updates were successfully installed."));
+						  "%s", message);
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* setup a callback so we autoclose */
