@@ -848,6 +848,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GpkUpd
 				title = gpk_status_enum_to_localised_text (status);
 			}
 			gtk_label_set_label (GTK_LABEL(widget), title);
+			gtk_widget_show (widget);
 
 			/* set icon */
 			widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "image_progress"));
