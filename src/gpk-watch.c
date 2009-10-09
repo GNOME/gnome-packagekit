@@ -185,11 +185,12 @@ static gboolean
 gpk_watch_refresh_tooltip (GpkWatch *watch)
 {
 	guint i;
+	guint idx = 0;
 	PkProgress *progress;
 	guint len;
 	GString *string;
 	PkStatusEnum status;
-	const gchar *trailer;
+	PkRoleEnum role;
 	gchar *text;
 	GPtrArray *array;
 
@@ -224,18 +225,20 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	for (i=0; i<array->len; i++) {
 		progress = g_ptr_array_index (array, i);
 		g_object_get (progress,
+			      "role", &role,
 			      "status", &status,
 			      NULL);
 
+		/* ignore boring status values */
+		if (status == PK_STATUS_ENUM_FINISHED)
+			continue;
+
 		/* should we display the text */
-		g_string_append_printf (string, "%s\n", gpk_status_enum_to_localised_text (status));
+		g_string_append_printf (string, "%s: %s\n", gpk_role_enum_to_localised_present (role), gpk_status_enum_to_localised_text (status));
+
 		/* don't fill the screen with a giant tooltip */
-		if (i > GPK_WATCH_MAXIMUM_TOOLTIP_LINES) {
-			/* TRANSLATORS: if the menu won't fit, inform the user there are a few more things waiting */
-			trailer = ngettext ("(%i more task)", "(%i more tasks)", i - GPK_WATCH_MAXIMUM_TOOLTIP_LINES);
-			g_string_append_printf (string, "%s\n", trailer);
+		if (idx++ > GPK_WATCH_MAXIMUM_TOOLTIP_LINES)
 			break;
-		}
 	}
 
 	/* remove trailing newline */
@@ -285,7 +288,7 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 
 		/* add to bitfield calculation */
 		egg_debug ("%s %s (active:%i)", transaction_id, pk_status_enum_to_text (status), active);
-		if (!active || watch_active)
+		if ((!active || watch_active) && status != PK_STATUS_ENUM_FINISHED)
 			pk_bitfield_add (bitfield, status);
 		g_free (transaction_id);
 	}
