@@ -102,17 +102,6 @@ out:
 }
 
 /**
- * gpk_hardware_install_package:
- **/
-static void
-gpk_hardware_install_package (GpkHardware *hardware)
-{
-	/* FIXME: this needs to be async and connect up to the repo signature stuff */
-	pk_client_install_packages_async (PK_CLIENT(hardware->priv->task), TRUE, hardware->priv->package_ids, NULL, NULL, NULL,
-					  (GAsyncReadyCallback) gpk_hardware_install_packages_cb, hardware);
-}
-
-/**
  * gpk_hardware_libnotify_cb:
  **/
 static void
@@ -121,7 +110,8 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	GpkHardware *hardware = GPK_HARDWARE (data);
 
 	if (g_strcmp0 (action, GPK_HARDWARE_INSTALL_ACTION) == 0) {
-		gpk_hardware_install_package (hardware);
+		pk_client_install_packages_async (PK_CLIENT(hardware->priv->task), TRUE, hardware->priv->package_ids, NULL, NULL, NULL,
+						  (GAsyncReadyCallback) gpk_hardware_install_packages_cb, hardware);
 	} else if (g_strcmp0 (action, GPK_HARDWARE_DONT_PROMPT_ACTION) == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_HARDWARE);
 		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, FALSE, NULL);

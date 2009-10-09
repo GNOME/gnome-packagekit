@@ -383,86 +383,6 @@ gpk_dbus_task_install_package_ids (GpkDbusTask *dtask)
 					(GAsyncReadyCallback) gpk_dbus_task_install_packages_cb, dtask);
 }
 
-#if 0
-
-/**
- * gpk_dbus_task_finished_cb:
- **/
-static void
-gpk_dbus_task_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkDbusTask *dtask)
-{
-	PkRoleEnum role = PK_ROLE_ENUM_UNKNOWN;
-	gboolean ret;
-	guint len;
-	guint i;
-	const gchar *name = NULL;
-	GError *error_dbus = NULL;
-	GError *error_local = NULL;
-	GPtrArray *array = NULL;
-	const PkItemPackage *item;
-	gboolean already_installed = FALSE;
-	gchar *title = NULL;
-	gchar *message = NULL;
-	gchar *text = NULL;
-	gchar *id = NULL;
-	gchar *info_url = NULL;
-	GtkResponseType button;
-	gchar *package_id = NULL;
-
-	if (exit_enum != PK_EXIT_ENUM_SUCCESS) {
-
-		/* show finished? */
-		if (!dtask->priv->show_finished)
-			gpk_modal_dialog_close (dtask->priv->dialog);
-
-		/* fail the transaction and set the correct error */
-		error = gpk_dbus_task_error_from_exit_enum (exit_enum);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		goto out;
-	}
-
-	/* from InstallPackageIds */
-	if (role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
-	    role == PK_ROLE_ENUM_INSTALL_FILES) {
-
-		/* show summary? */
-		if (dtask->priv->show_finished) {
-			array = pk_results_get_package_array (client);
-			/* TRANSLATORS: list the packages we just installed */
-			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_FINISHED, GPK_MODAL_DIALOG_PACKAGE_LIST);
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The following packages were installed:"));
-
-			/* filter out installed */
-			for (i=0; i<array->len; i++) {
-				item = g_ptr_array_index (array, i);
-				if (item->info != PK_INFO_ENUM_INSTALLING) {
-					pk_item_list_remove_index (list, i);
-					i--;
-				}
-			}
-			gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
-			gpk_modal_dialog_present (dtask->priv->dialog);
-			g_object_unref (list);
-		} else {
-			gpk_modal_dialog_close (dtask->priv->dialog);
-		}
-
-		/* done! */
-		egg_debug ("doing async return");
-		dbus_g_method_return (dtask->priv->context, TRUE); /* FIXME: we send true? */
-		goto out;
-	}
-
-out:
-	if (error != NULL)
-		g_error_free (error);
-	if (error_local != NULL)
-		g_error_free (error_local);
-	if (array != NULL)
-		g_ptr_array_unref (array);
-}
-#endif
-
 /**
  * gpk_dbus_task_set_status:
  **/
@@ -976,7 +896,6 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	array = pk_results_get_package_array (results);
 	if (array->len == 0) {
 		if (!dtask->priv->show_warning) {
-			//FIXME: shows package_id in UI
 			/* TRANSLATORS: couldn't resolve name to package */
 			title = g_strdup_printf (_("Could not find packages"));
 			info_url = gpk_vendor_get_not_found_url (dtask->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
@@ -1018,7 +937,6 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	/* already installed? */
 	if (already_installed) {
 		if (dtask->priv->show_warning) {
-			//FIXME: shows package_id in UI
 			/* TRANSLATORS: title: package is already installed */
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to install packages"));
@@ -1193,7 +1111,6 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 
 	/* get results */
 	array = pk_results_get_package_array (results);
-	//FIXME: do something
 
 	/* found nothing? */
 	if (array->len == 0) {
