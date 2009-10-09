@@ -50,13 +50,11 @@
 #include "gpk-cell-renderer-spinner.h"
 #include "gpk-enum.h"
 #include "gpk-task.h"
+#include "gpk-session.h"
 
 #define GPK_UPDATE_VIEWER_AUTO_QUIT_TIMEOUT	10 /* seconds */
 #define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
 #define GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE	512*1024 /* bytes */
-#define GNOME_SESSION_MANAGER_SERVICE		"org.gnome.SessionManager"
-#define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
-#define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
 static guint auto_shutdown_id = 0;
 static GMainLoop *loop = NULL;
@@ -95,56 +93,6 @@ enum {
 };
 
 static gboolean gpk_update_viewer_get_new_update_array (void);
-
-/**
- * gpk_update_viewer_logout:
- **/
-static void
-gpk_update_viewer_logout (void)
-{
-	DBusGConnection *connection;
-	DBusGProxy *proxy;
-	GError *error = NULL;
-	gboolean ret;
-
-	/* get org.gnome.Session interface */
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
-	proxy = dbus_g_proxy_new_for_name_owner (connection, GNOME_SESSION_MANAGER_SERVICE,
-						 GNOME_SESSION_MANAGER_PATH,
-						 GNOME_SESSION_MANAGER_INTERFACE, &error);
-	if (proxy == NULL) {
-		egg_warning ("cannot connect to proxy %s: %s", GNOME_SESSION_MANAGER_SERVICE, error->message);
-		g_error_free (error);
-		goto out;
-	}
-
-	/* log out of the session */
-	ret = dbus_g_proxy_call (proxy, "Shutdown", &error, G_TYPE_INVALID);
-	if (!ret) {
-		egg_warning ("cannot shutdown session: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-out:
-	g_object_unref (proxy);
-}
-
-/**
- * gpk_update_viewer_shutdown:
- **/
-static void
-gpk_update_viewer_shutdown (void)
-{
-	GError *error = NULL;
-	gboolean ret;
-
-	/* use consolekit to restart */
-	ret = egg_console_kit_restart (console, &error);
-	if (!ret) {
-		egg_warning ("cannot restart: %s", error->message);
-		g_error_free (error);
-	}
-}
 
 /**
  * gpk_update_viewer_button_help_cb:
@@ -226,6 +174,7 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 	const gchar *button;
 	GtkResponseType response;
 	gboolean show_button = TRUE;
+	GError *error = NULL;
 
 	/* get the text */
 	title = gpk_restart_enum_to_localised_text (restart);
@@ -291,9 +240,19 @@ gpk_update_viewer_check_restart (PkRestartEnum restart)
 
 	/* do the action */
 	if (restart == PK_RESTART_ENUM_SYSTEM)
-		gpk_update_viewer_shutdown ();
-	else if (restart == PK_RESTART_ENUM_SESSION)
-		gpk_update_viewer_logout ();
+		/* use consolekit to restart */
+		ret = egg_console_kit_restart (console, &error);
+		if (!ret) {
+			egg_warning ("cannot restart: %s", error->message);
+			g_error_free (error);
+		}
+	else if (restart == PK_RESTART_ENUM_SESSION) {
+		GpkSession *session;
+		session = gpk_session_new ();
+		/* use gnome-session to log out */
+		gpk_session_logout (session);
+		g_object_unref (session);
+	}
 out:
 	return ret;
 }
