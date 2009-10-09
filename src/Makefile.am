@@ -212,7 +212,9 @@ gpk_prefs_LDADD =					\
 	$(NULL)
 
 gpk_update_viewer_SOURCES =				\
+	gpk-update-viewer-main.c			\
 	gpk-update-viewer.c				\
+	gpk-update-viewer.h				\
 	gpk-cell-renderer-size.c			\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\

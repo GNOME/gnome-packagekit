@@ -113,8 +113,8 @@ enum {
 };
 
 enum {
-	ACTION_CLOSE,
-	LAST_SIGNAL
+	SIGNAL_CLOSE,
+	SIGNAL_LAST
 };
 
 enum {
@@ -144,7 +144,7 @@ enum {
 	DETAIL_COLUMN_LAST
 };
 
-static guint	     signals [LAST_SIGNAL] = { 0 };
+static guint	     signals [SIGNAL_LAST] = { 0 };
 
 G_DEFINE_TYPE (GpkApplication, gpk_application, G_TYPE_OBJECT)
 
@@ -161,7 +161,7 @@ gpk_application_class_init (GpkApplicationClass *klass)
 	object_class->finalize = gpk_application_finalize;
 	g_type_class_add_private (klass, sizeof (GpkApplicationPrivate));
 
-	signals [ACTION_CLOSE] =
+	signals [SIGNAL_CLOSE] =
 		g_signal_new ("action-close",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
@@ -1783,7 +1783,7 @@ gpk_application_quit (GpkApplication *application)
 	g_cancellable_cancel (application->priv->cancellable);
 
 	egg_debug ("emitting action-close");
-	g_signal_emit (application, signals [ACTION_CLOSE], 0);
+	g_signal_emit (application, signals [SIGNAL_CLOSE], 0);
 	return TRUE;
 }
 
