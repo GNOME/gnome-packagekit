@@ -901,8 +901,13 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GpkUpd
 		gtk_tree_path_free (path);
 
 	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
+		gboolean idle;
 		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_quit"));
-		gtk_widget_set_sensitive (widget, allow_cancel);
+
+		/* we have to also check for idle as we might be getting the AllowCancel(false)
+		 * signal _after_ the PkClient has been marked as idle */
+		g_object_get (priv->task, "idle", &idle, NULL);
+		gtk_widget_set_sensitive (widget, (allow_cancel || idle));
 	}
 out:
 	g_free (summary);
