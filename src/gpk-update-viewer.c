@@ -909,6 +909,25 @@ out:
 }
 
 /**
+ * gpk_update_viewer_client_notify_idle_cb:
+ **/
+static void
+gpk_update_viewer_client_notify_idle_cb (PkClient *client, GParamSpec *pspec, GpkUpdateViewer *update_viewer)
+{
+	gboolean idle;
+	GtkWidget *widget;
+
+	g_object_get (client,
+		      "idle", &idle,
+		      NULL);
+	/* ensure button is sensitive */
+	if (idle) {
+		widget = GTK_WIDGET(gtk_builder_get_object (update_viewer->priv->builder, "button_quit"));
+		gtk_widget_set_sensitive (widget, TRUE);
+	}
+}
+
+/**
  * gpk_update_viewer_button_install_cb:
  **/
 static void
@@ -2656,6 +2675,8 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 
 	/* this is what we use mainly */
 	priv->task = PK_TASK(gpk_task_new ());
+	g_signal_connect (priv->task, "notify::idle",
+			  G_CALLBACK (gpk_update_viewer_client_notify_idle_cb), update_viewer);
 	g_object_set (priv->task,
 		      "background", FALSE,
 		      NULL);
