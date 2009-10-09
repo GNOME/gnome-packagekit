@@ -59,6 +59,7 @@ struct GpkUpdateViewerPrivate
 	gchar			*package_id_last;
 	guint			 auto_shutdown_id;
 	guint			 size_total;
+	guint			 number_total;
 	EggConsoleKit		*console;
 	EggMarkdown		*markdown;
 	GCancellable		*cancellable;
@@ -70,6 +71,8 @@ struct GpkUpdateViewerPrivate
 	PkControl		*control;
 	PkRestartEnum		 restart_update;
 	PkTask			*task;
+	GtkWidget		*info_bar;
+	GtkWidget		*info_bar_label;
 };
 
 enum {
@@ -1047,6 +1050,53 @@ gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, Gp
 	return TRUE;
 }
 
+
+/**
+ * gpk_update_viewer_check_mobile_broadband:
+ **/
+static void
+gpk_update_viewer_check_mobile_broadband (GpkUpdateViewer *update_viewer)
+{
+	gboolean ret = TRUE;
+	PkNetworkEnum state;
+	const gchar *message;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	/* get network state */
+	g_object_get (priv->control,
+		      "network-state", &state,
+		      NULL);
+
+	/* hide by default */
+	gtk_widget_hide (priv->info_bar);
+
+	/* not on wireless mobile */
+	if (state != PK_NETWORK_ENUM_MOBILE)
+		goto out;
+
+	/* not when small */
+	if (priv->size_total < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
+		goto out;
+
+	/* not when ignored */
+	ret = gconf_client_get_bool (priv->gconf_client, GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND, NULL);
+	if (!ret)
+		goto out;
+
+	/* show a warning message */
+
+	/* TRANSLATORS, are we going to cost the user lots of money? */
+	message = ngettext ("Connectivity is being provided by wireless broadband, and it may be expensive to update this package.",
+			    "Connectivity is being provided by wireless broadband, and it may be expensive to update these packages.",
+			    priv->number_total);
+	gtk_label_set_label (GTK_LABEL(priv->info_bar_label), message);
+
+	gtk_info_bar_set_message_type (GTK_INFO_BAR(priv->info_bar), GTK_MESSAGE_WARNING);
+	gtk_widget_show (priv->info_bar);
+out:
+	return;
+}
+
 /**
  * gpk_update_viewer_reconsider_info:
  **/
@@ -1061,7 +1111,6 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 	gboolean any_selected = FALSE;
 	guint len;
 	guint size;
-	guint number_total = 0;
 	PkRestartEnum restart;
 	PkRestartEnum restart_worst = PK_RESTART_ENUM_NONE;
 	const gchar *title;
@@ -1076,6 +1125,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 
 	/* reset to zero */
 	priv->size_total = 0;
+	priv->number_total = 0;
 
 	/* if there are no entries selected, deselect the button */
 	valid = gtk_tree_model_get_iter_first (model, &iter);
@@ -1088,7 +1138,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 		if (selected) {
 			any_selected = TRUE;
 			priv->size_total += size;
-			number_total++;
+			priv->number_total++;
 			if (restart > restart_worst)
 				restart_worst = restart;
 		}
@@ -1108,7 +1158,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 	/* set the pluralisation of the button */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
 	/* TRANSLATORS: this is the button text when we have updates */
-	title = ngettext ("_Install Update", "_Install Updates", number_total);
+	title = ngettext ("_Install Update", "_Install Updates", priv->number_total);
 	gtk_button_set_label (GTK_BUTTON (widget), title);
 
 	/* no updates */
@@ -1181,14 +1231,14 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 
 	/* total */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_summary"));
-	if (number_total == 0) {
+	if (priv->number_total == 0) {
 		gtk_label_set_label (GTK_LABEL(widget), "");
 	} else {
 		if (priv->size_total == 0) {
 			/* TRANSLATORS: how many updates are selected in the UI */
 			text = g_strdup_printf (ngettext ("%i update selected",
 							  "%i updates selected",
-							  number_total), number_total);
+							  priv->number_total), priv->number_total);
 			gtk_label_set_label (GTK_LABEL(widget), text);
 			g_free (text);
 		} else {
@@ -1196,7 +1246,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 			/* TRANSLATORS: how many updates are selected in the UI, and the size of packages to download */
 			text = g_strdup_printf (ngettext ("%i update selected (%s)",
 							  "%i updates selected (%s)",
-							  number_total), number_total, text_size);
+							  priv->number_total), priv->number_total, text_size);
 			gtk_label_set_label (GTK_LABEL(widget), text);
 			g_free (text);
 			g_free (text_size);
@@ -1206,7 +1256,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_summary"));
 	gtk_widget_show (widget);
 out:
-	return;
+	gpk_update_viewer_check_mobile_broadband (update_viewer);
 }
 
 /**
@@ -2532,55 +2582,6 @@ out:
 }
 
 /**
- * gpk_update_viewer_set_network_state:
- **/
-static void
-gpk_update_viewer_set_network_state (GpkUpdateViewer *update_viewer, PkNetworkEnum state)
-{
-	GtkWindow *window;
-	GtkWidget *dialog;
-	gboolean ret = TRUE;
-	gchar *text_size = NULL;
-	gchar *message = NULL;
-	guint size = 0; //TODO: FIXME
-	GpkUpdateViewerPrivate *priv = update_viewer->priv;
-
-	/* not on wireless mobile */
-	if (state != PK_NETWORK_ENUM_MOBILE)
-		goto out;
-
-	/* not when small */
-	if (size < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
-		goto out;
-
-	/* not when ignored */
-	ret = gconf_client_get_bool (priv->gconf_client, GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND, NULL);
-	if (!ret)
-		goto out;
-
-	/* show modal dialog */
-	window = GTK_WINDOW(gtk_builder_get_object (priv->builder, "dialog_updates"));
-	dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
-					 GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL,
-					 "%s", _("Detected wireless broadband connection"));
-
-	/* TRANSLATORS: this is the button text when we check if it's okay to download */
-	gtk_dialog_add_button (GTK_DIALOG (dialog), _("Update anyway"), GTK_RESPONSE_OK);
-	text_size = g_format_size_for_display (priv->size_total);
-
-	/* TRANSLATORS, the %s is a size, e.g. 13.3Mb */
-	message = g_strdup_printf (_("Connectivity is being provided by wireless broadband, and it may be expensive to download %s."), text_size);
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
-	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG (dialog), GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND);
-	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
-	gtk_dialog_run (GTK_DIALOG(dialog));
-	gtk_widget_destroy (dialog);
-out:
-	g_free (text_size);
-	g_free (message);
-}
-
-/**
  * gpk_update_viewer_get_properties_cb:
  **/
 static void
@@ -2589,7 +2590,6 @@ gpk_update_viewer_get_properties_cb (PkControl *control, GAsyncResult *res, GpkU
 	GError *error = NULL;
 	gboolean ret;
 	PkBitfield roles;
-	PkNetworkEnum state;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
 	/* get the result */
@@ -2605,10 +2605,7 @@ gpk_update_viewer_get_properties_cb (PkControl *control, GAsyncResult *res, GpkU
 	/* get values */
 	g_object_get (control,
 		      "roles", &roles,
-		      "network-state", &state,
 		      NULL);
-
-	gpk_update_viewer_set_network_state (update_viewer, state);
 
 	/* get the distro-upgrades if we support it */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
@@ -2626,13 +2623,7 @@ out:
 static void
 gpk_update_viewer_notify_network_state_cb (PkControl *control, GParamSpec *pspec, GpkUpdateViewer *update_viewer)
 {
-	PkNetworkEnum state;
-
-	/* show icon? */
-	g_object_get (control,
-		      "network-state", &state,
-		      NULL);
-	gpk_update_viewer_set_network_state (update_viewer, state);
+	gpk_update_viewer_check_mobile_broadband (update_viewer);
 }
 
 /**
@@ -2792,6 +2783,21 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 	gtk_widget_set_size_request (widget, -1, 32);
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_info"));
 	gtk_widget_set_size_request (widget, -1, 32);
+
+	/* add info bar: TODO, fix glade to put this in the ui file */
+	priv->info_bar = gtk_info_bar_new ();
+	gtk_widget_set_no_show_all (priv->info_bar, TRUE);
+
+	/* pack label into infobar */
+	priv->info_bar_label = gtk_label_new ("");
+	widget = gtk_info_bar_get_content_area (GTK_INFO_BAR(priv->info_bar));
+	gtk_container_add (GTK_CONTAINER(widget), priv->info_bar_label);
+	gtk_widget_show (priv->info_bar_label);
+
+	/* pack infobar into main UI */
+	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "vbox1"));
+	gtk_box_pack_start (GTK_BOX(widget), priv->info_bar, FALSE, FALSE, 3);
+	gtk_box_reorder_child (GTK_BOX(widget), priv->info_bar, 1);
 
 	/* show window */
 	gtk_widget_show (main_window);
