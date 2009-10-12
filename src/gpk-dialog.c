@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
@@ -51,20 +51,20 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	guint i;
 	guint length;
 	gchar *text;
-	PkPackageId *ident;
 	GPtrArray *array;
 	gchar **array_strv;
+	gchar **split;
 
 	length = g_strv_length (package_ids);
-	array = g_ptr_array_new ();
+	array = g_ptr_array_new_with_free_func (g_free);
 	for (i=0; i<length; i++) {
-		ident = pk_package_id_new_from_string (package_ids[i]);
-		if (ident == NULL) {
+		split = pk_package_id_split (package_ids[i]);
+		if (split == NULL) {
 			egg_warning ("failed to split %s", package_ids[i]);
 			continue;
 		}
-		g_ptr_array_add (array, g_strdup (ident->name));
-		pk_package_id_free (ident);
+		g_ptr_array_add (array, g_strdup (split[0]));
+		g_strfreev (split);
 	}
 	array_strv = pk_ptr_array_to_strv (array);
 	text = gpk_strv_join_locale (array_strv);
@@ -73,50 +73,47 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 		/* TRANSLATORS: This is when we have over 5 items, and we're not interested in detail */
 		text = g_strdup (_("many packages"));
 	}
-	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-	g_ptr_array_free (array, TRUE);
+	g_ptr_array_unref (array);
 	return text;
 }
 
 /**
- * gpk_dialog_package_list_to_list_store:
+ * gpk_dialog_package_array_to_list_store:
  **/
 static GtkListStore *
-gpk_dialog_package_list_to_list_store (PkPackageList *list)
+gpk_dialog_package_array_to_list_store (GPtrArray *array)
 {
 	GtkListStore *store;
 	GtkTreeIter iter;
-	const PkPackageObj *obj;
+	const PkItemPackage *item;
 	PkDesktop *desktop;
 	const gchar *icon;
-	gchar *package_id;
 	gchar *text;
-	guint length;
 	guint i;
+	gchar **split;
 
 	desktop = pk_desktop_new ();
 	store = gtk_list_store_new (GPK_DIALOG_STORE_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
-	length = pk_package_list_get_size (list);
 
 	/* add each well */
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		text = gpk_package_id_format_twoline (obj->id, obj->summary);
-		package_id = pk_package_id_to_string (obj->id);
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		text = gpk_package_id_format_twoline (item->package_id, item->summary);
 
 		/* get the icon */
-		icon = gpk_desktop_guess_icon_name (desktop, obj->id->name);
+		split = pk_package_id_split (item->package_id);
+		icon = gpk_desktop_guess_icon_name (desktop, split[0]);
 		if (icon == NULL)
-			icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
+			icon = gpk_info_enum_to_icon_name (item->info);
 
 		gtk_list_store_append (store, &iter);
 		gtk_list_store_set (store, &iter,
 				    GPK_DIALOG_STORE_IMAGE, icon,
-				    GPK_DIALOG_STORE_ID, package_id,
+				    GPK_DIALOG_STORE_ID, item->package_id,
 				    GPK_DIALOG_STORE_TEXT, text,
 				    -1);
+		g_strfreev (split);
 		g_free (text);
-		g_free (package_id);
 	}
 
 	g_object_unref (desktop);
@@ -170,16 +167,23 @@ gpk_dialog_widget_unrealize_unref_cb (GtkWidget *widget, GObject *obj)
  * gpk_dialog_embed_package_list_widget:
  **/
 gboolean
-gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
+gpk_dialog_embed_package_list_widget (GtkDialog *dialog, GPtrArray *array)
 {
 	GtkWidget *scroll;
 	GtkListStore *store;
 	GtkWidget *widget;
-	guint length;
 	const guint row_height = 48;
+	PkItemPackage *item;
+	guint i;
+
+	/* debug */
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		egg_debug ("add %s,%s", pk_info_enum_to_text (item->info), item->package_id);
+	}
 
 	/* convert to a store */
-	store = gpk_dialog_package_list_to_list_store (list);
+	store = gpk_dialog_package_array_to_list_store (array);
 
 	/* create a treeview to hold the store */
 	widget = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
@@ -196,11 +200,10 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, PkPackageList *list)
 	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
 
 	/* only allow more space if there are a large number of items */
-	length = pk_package_list_get_size (list);
-	if (length > 5) {
+	if (array->len > 5) {
 		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, (row_height * 5) + 8);
-	} else if (length > 1) {
-		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, (row_height * length) + 8);
+	} else if (array->len > 1) {
+		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, (row_height * array->len) + 8);
 	}
 
 	/* add scrolled window */

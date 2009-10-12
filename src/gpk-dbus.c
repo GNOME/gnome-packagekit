@@ -38,7 +38,7 @@
 #include <glib/gi18n.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
@@ -336,10 +336,6 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	egg_debug ("interact=%i", (gint) interact);
 	gpk_dbus_task_set_interaction (task, interact);
 
-	/* set timeout */
-	egg_debug ("timeout=%i", timeout);
-	gpk_dbus_task_set_timeout (task, timeout);
-
 	/* set the parent window */
 	gpk_dbus_task_set_xid (task, xid);
 
@@ -499,7 +495,7 @@ gpk_dbus_init (GpkDbus *dbus)
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->timeout_tmp = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
-	dbus->priv->array = g_ptr_array_new ();
+	dbus->priv->array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	dbus->priv->x11 = gpk_x11_new ();
 
 	/* find out PIDs on the session bus */
@@ -528,8 +524,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
-	g_ptr_array_foreach (dbus->priv->array, (GFunc) g_object_unref, NULL);
-	g_ptr_array_free (dbus->priv->array, TRUE);
+	g_ptr_array_unref (dbus->priv->array);
 	g_object_unref (dbus->priv->gconf_client);
 	g_object_unref (dbus->priv->x11);
 	g_object_unref (dbus->priv->proxy_session_pid);

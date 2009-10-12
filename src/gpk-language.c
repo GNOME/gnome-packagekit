@@ -244,7 +244,7 @@ gpk_language_test (EggTest *test)
 
 	/************************************************************/
 	egg_test_title (test, "get data (missing)");
-	lang = gpk_language_iso639_to_language (language, "XxX");
+	lang = gpk_language_iso639_to_language (language, "notgoingtoexist");
 	if (lang == NULL)
 		egg_test_success (test, NULL);
 	else

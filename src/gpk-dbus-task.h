@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <dbus/dbus-glib.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 G_BEGIN_DECLS
 
@@ -86,37 +86,35 @@ GType		 gpk_dbus_task_error_get_type		(void);
 GpkDbusTask	*gpk_dbus_task_new			(void);
 
 /* methods that expect a DBusGMethodInvocation return */
-void		 gpk_dbus_task_is_installed		(GpkDbusTask	*task,
+void		 gpk_dbus_task_is_installed		(GpkDbusTask	*dtask,
 							 const gchar	*package_name);
-void		 gpk_dbus_task_search_file		(GpkDbusTask	*task,
+void		 gpk_dbus_task_search_file		(GpkDbusTask	*dtask,
 							 const gchar	*search_file);
-void		 gpk_dbus_task_install_package_files	(GpkDbusTask	*task,
+void		 gpk_dbus_task_install_package_files	(GpkDbusTask	*dtask,
 							 gchar		**files_rel);
-void		 gpk_dbus_task_install_provide_files	(GpkDbusTask	*task,
+void		 gpk_dbus_task_install_provide_files	(GpkDbusTask	*dtask,
 							 gchar		**full_paths);
-void		 gpk_dbus_task_install_mime_types	(GpkDbusTask	*task,
+void		 gpk_dbus_task_install_mime_types	(GpkDbusTask	*dtask,
 							 gchar		**mime_types);
-void		 gpk_dbus_task_install_gstreamer_resources (GpkDbusTask	*task,
+void		 gpk_dbus_task_install_gstreamer_resources (GpkDbusTask	*dtask,
 							 gchar		**codec_names);
-void		 gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *task,
+void		 gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask,
 							 gchar		**fonts);
-void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*task,
+void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*dtask,
 							 gchar		**packages);
-void		 gpk_dbus_task_install_catalogs		(GpkDbusTask	*task,
+void		 gpk_dbus_task_install_catalogs		(GpkDbusTask	*dtask,
 							 gchar		**filenames);
 
 /* set state */
-gboolean	 gpk_dbus_task_set_interaction		(GpkDbusTask	*task,
+gboolean	 gpk_dbus_task_set_interaction		(GpkDbusTask	*dtask,
 							 PkBitfield	 interact);
-gboolean	 gpk_dbus_task_set_timeout		(GpkDbusTask	*task,
-							 gint		 timeout);
-gboolean	 gpk_dbus_task_set_timestamp		(GpkDbusTask	*task,
+gboolean	 gpk_dbus_task_set_timestamp		(GpkDbusTask	*dtask,
 							 guint		 timeout);
-gboolean	 gpk_dbus_task_set_context		(GpkDbusTask	*task,
+gboolean	 gpk_dbus_task_set_context		(GpkDbusTask	*dtask,
 							 DBusGMethodInvocation *context);
-gboolean	 gpk_dbus_task_set_xid			(GpkDbusTask	*task,
+gboolean	 gpk_dbus_task_set_xid			(GpkDbusTask	*dtask,
 							 guint		 xid);
-gboolean	 gpk_dbus_task_set_exec			(GpkDbusTask	*task,
+gboolean	 gpk_dbus_task_set_exec			(GpkDbusTask	*dtask,
 							 const gchar	*exec);
 
 G_END_DECLS

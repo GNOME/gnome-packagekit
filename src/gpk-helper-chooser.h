@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 G_BEGIN_DECLS
 
@@ -58,7 +58,7 @@ GpkHelperChooser	*gpk_helper_chooser_new		(void);
 gboolean	 gpk_helper_chooser_set_parent		(GpkHelperChooser	*helper,
 							 GtkWindow		*window);
 gboolean	 gpk_helper_chooser_show		(GpkHelperChooser	*helper,
-							 PkPackageList		*list);
+							 GPtrArray		*list);
 
 G_END_DECLS
 

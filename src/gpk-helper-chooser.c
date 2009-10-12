@@ -23,7 +23,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "gpk-helper-chooser.h"
 #include "gpk-marshal.h"
@@ -159,41 +159,38 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_chooser_show (GpkHelperChooser *helper, PkPackageList *list)
+gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 {
 	GtkWidget *widget;
 	gchar *text;
 	const gchar *icon_name;
-	guint len;
 	guint i;
-	const PkPackageObj *obj;
-	gchar *package_id;
+	const PkItemPackage *item;
 	GtkTreeIter iter;
+	gchar **split;
 
 	g_return_val_if_fail (GPK_IS_HELPER_CHOOSER (helper), FALSE);
 	g_return_val_if_fail (list != NULL, FALSE);
 
 	/* see what we've got already */
-	len = pk_package_list_get_size (list);
-	for (i=0; i<len; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		egg_debug ("package '%s' got:", obj->id->name);
+	for (i=0; i<list->len; i++) {
+		item = g_ptr_array_index (list, i);
+		egg_debug ("package '%s' got:", item->package_id);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (helper->priv->list_store, &iter);
-		text = gpk_package_id_format_twoline (obj->id, obj->summary);
+		text = gpk_package_id_format_twoline (item->package_id, item->summary);
 
 		/* get the icon */
-		icon_name = gpk_desktop_guess_icon_name (helper->priv->desktop, obj->id->name);
+		split = pk_package_id_split (item->package_id);
+		icon_name = gpk_desktop_guess_icon_name (helper->priv->desktop, split[PK_PACKAGE_ID_NAME]);
+		g_strfreev (split);
 		if (icon_name == NULL)
-			icon_name = gpk_info_enum_to_icon_name (obj->info);
+			icon_name = gpk_info_enum_to_icon_name (item->info);
 
-		package_id = pk_package_id_to_string (obj->id);
 		gtk_list_store_set (helper->priv->list_store, &iter,
 				    GPK_CHOOSER_COLUMN_TEXT, text,
-				    GPK_CHOOSER_COLUMN_ID, package_id, -1);
-		g_free (package_id);
-		package_id = NULL;
+				    GPK_CHOOSER_COLUMN_ID, item->package_id, -1);
 		gtk_list_store_set (helper->priv->list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
 		g_free (text);
 	}
@@ -264,7 +261,7 @@ gpk_helper_chooser_init (GpkHelperChooser *helper)
 	/* get UI */
 	helper->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (helper->priv->builder, GPK_DATA "/gpk-log.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}

@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <locale.h>
 
 #include "egg-debug.h"
@@ -50,31 +50,45 @@
 /* static, so local to process */
 static gboolean small_form_factor_mode = FALSE;
 
-#if (!PK_CHECK_VERSION(0,5,0))
-/**
- * gpk_error_code_is_need_untrusted:
- * @error_code: the transactions #PkErrorCodeEnum
- *
- * Return value: if the error code suggests to try with only_trusted %FALSE
- **/
-gboolean
-gpk_error_code_is_need_untrusted (PkErrorCodeEnum error_code)
+gchar **
+pk_package_array_to_strv (GPtrArray *array)
 {
-	gboolean ret = FALSE;
-	switch (error_code) {
-		case PK_ERROR_ENUM_GPG_FAILURE:
-		case PK_ERROR_ENUM_BAD_GPG_SIGNATURE:
-		case PK_ERROR_ENUM_MISSING_GPG_SIGNATURE:
-		case PK_ERROR_ENUM_CANNOT_INSTALL_REPO_UNSIGNED:
-		case PK_ERROR_ENUM_CANNOT_UPDATE_REPO_UNSIGNED:
-			ret = TRUE;
-			break;
-		default:
-			break;
+	const PkItemPackage *item;
+	gchar **results;
+	guint i;
+
+	results = g_new0 (gchar *, array->len+1);
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		results[i] = g_strdup (item->package_id);
 	}
-	return ret;
+	return results;
 }
-#endif
+
+/**
+ * pk_strv_to_ptr_array:
+ * @array: the gchar** array of strings
+ *
+ * Form a GPtrArray array of strings.
+ * The data in the array is copied.
+ *
+ * Return value: the string array, or %NULL if invalid
+ **/
+GPtrArray *
+pk_strv_to_ptr_array (gchar **array)
+{
+	guint i;
+	guint length;
+	GPtrArray *parray;
+
+	g_return_val_if_fail (array != NULL, NULL);
+
+	parray = g_ptr_array_new ();
+	length = g_strv_length (array);
+	for (i=0; i<length; i++)
+		g_ptr_array_add (parray, g_strdup (array[i]));
+	return parray;
+}
 
 /**
  * gtk_text_buffer_insert_markup:
@@ -200,15 +214,6 @@ gtk_text_buffer_insert_markup (GtkTextBuffer *buffer, GtkTextIter *iter, const g
 }
 
 /**
- * gpk_window_get_small_form_factor_mode:
- **/
-gboolean
-gpk_window_get_small_form_factor_mode (void)
-{
-	return small_form_factor_mode;
-}
-
-/**
  * gpk_window_set_size_request:
  **/
 gboolean
@@ -281,31 +286,39 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
  **/
 gchar *
-gpk_package_id_format_twoline (const PkPackageId *id, const gchar *summary)
+gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 {
 	gchar *summary_safe;
-	gchar *text;
+	gchar *text = NULL;
 	GString *string;
+	gchar **split = NULL;
 
-	g_return_val_if_fail (id != NULL, NULL);
+	g_return_val_if_fail (package_id != NULL, NULL);
 
 	/* optional */
-	if (egg_strzero (summary)) {
-		string = g_string_new (id->name);
+	split = pk_package_id_split (package_id);
+	if (split == NULL) {
+		egg_warning ("could not parse %s", package_id);
+		goto out;
+	}
+	if (summary == NULL || summary[PK_PACKAGE_ID_NAME] == '\0') {
+		string = g_string_new (split[PK_PACKAGE_ID_NAME]);
 	} else {
 		string = g_string_new ("");
 		summary_safe = g_markup_escape_text (summary, -1);
-		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, id->name);
+		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, split[PK_PACKAGE_ID_NAME]);
 		g_free (summary_safe);
 	}
 
 	/* some backends don't provide this */
-	if (id->version != NULL)
-		g_string_append_printf (string, "-%s", id->version);
-	if (id->arch != NULL)
-		g_string_append_printf (string, " (%s)", id->arch);
+	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
+		g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
+	if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
+		g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
 
 	text = g_string_free (string, FALSE);
+out:
+	g_strfreev (split);
 	return text;
 }
 
@@ -315,61 +328,25 @@ gpk_package_id_format_twoline (const PkPackageId *id, const gchar *summary)
  * Return value: "<b>GTK Toolkit</b> (gtk2)"
  **/
 gchar *
-gpk_package_id_format_oneline (const PkPackageId *id, const gchar *summary)
+gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 {
 	gchar *summary_safe;
 	gchar *text;
+	gchar **split;
 
-	if (egg_strzero (summary)) {
+	g_return_val_if_fail (package_id != NULL, NULL);
+
+	split = pk_package_id_split (package_id);
+	if (summary == NULL || summary[0] == '\0') {
 		/* just have name */
-		text = g_strdup (id->name);
+		text = g_strdup (split[PK_PACKAGE_ID_NAME]);
 	} else {
 		summary_safe = g_markup_escape_text (summary, -1);
-		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, id->name);
+		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, split[PK_PACKAGE_ID_NAME]);
 		g_free (summary_safe);
 	}
+	g_strfreev (split);
 	return text;
-}
-
-/**
- * gpk_package_id_name_version:
- **/
-gchar *
-gpk_package_id_name_version (const PkPackageId *id)
-{
-	gchar *text;
-	GString *string;
-
-	if (id == NULL)
-		return g_strdup("");
-
-	string = g_string_new (id->name);
-	if (id->version != NULL)
-		g_string_append_printf (string, "-%s", id->version);
-	text = g_string_free (string, FALSE);
-
-	return text;
-}
-
-/**
- * pk_package_id_get_name:
- **/
-gchar *
-gpk_package_get_name (const gchar *package_id)
-{
-	gchar *package = NULL;
-	PkPackageId *id;
-
-	/* pk_package_id_new_from_string can't accept NULL */
-	if (package_id == NULL)
-		return NULL;
-	id = pk_package_id_new_from_string (package_id);
-	if (id == NULL)
-		package = g_strdup (package_id);
-	else
-		package = g_strdup (id->name);
-	pk_package_id_free (id);
-	return package;
 }
 
 /**
@@ -618,6 +595,52 @@ gpk_strv_join_locale (gchar **array)
 }
 
 /**
+ * gpk_package_entry_completion_get_names_from_file:
+ *
+ * Creates a tree model containing completions from the system package list
+ **/
+static GPtrArray *
+gpk_package_entry_completion_get_names_from_file (const gchar *filename)
+{
+	GPtrArray *array = NULL;
+	gboolean ret;
+	GError *error = NULL;
+	gchar *data = NULL;
+	gchar **lines = NULL;
+	guint i;
+	gchar **split;
+	PkItemPackage *item;
+
+	/* get data */
+	ret = g_file_get_contents (filename, &data, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to open package list: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* create array of PkItemPackage's */
+	array = g_ptr_array_new_with_free_func ((GDestroyNotify) pk_item_package_unref);
+
+	/* split */
+	lines = g_strsplit (data, "\n", -1);
+	for (i=0; lines[i] != NULL; i++) {
+		split = g_strsplit (lines[i], "\t", 3);
+		if (g_strv_length (split) != 3)
+			continue;
+		item = pk_item_package_new (pk_info_enum_from_text (split[PK_PACKAGE_ID_NAME]),
+					    split[PK_PACKAGE_ID_VERSION],
+					    split[PK_PACKAGE_ID_ARCH]);
+		g_ptr_array_add (array, item);
+		g_strfreev (split);
+	}
+out:
+	g_free (data);
+	g_strfreev (lines);
+	return array;
+}
+
+/**
  * gpk_package_entry_completion_model_new:
  *
  * Creates a tree model containing completions from the system package list
@@ -625,43 +648,43 @@ gpk_strv_join_locale (gchar **array)
 static GtkTreeModel *
 gpk_package_entry_completion_model_new (void)
 {
-	PkPackageList *list;
+	GPtrArray *list;
 	guint i;
-	guint length;
-	gboolean ret;
-	const PkPackageObj *obj;
+	const PkItemPackage *item;
 	GHashTable *hash;
 	gpointer data;
 	GtkListStore *store;
 	GtkTreeIter iter;
+	gchar **split;
 
 	store = gtk_list_store_new (1, G_TYPE_STRING);
 	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-	list = pk_package_list_new ();
-	ret = pk_obj_list_from_file (PK_OBJ_LIST(list), PK_SYSTEM_PACKAGE_LIST_FILENAME);
-	if (!ret) {
+	list = gpk_package_entry_completion_get_names_from_file (PK_SYSTEM_PACKAGE_LIST_FILENAME);
+	if (list == NULL) {
 		egg_warning ("no package list, try refreshing");
 		return NULL;
 	}
 
-	length = pk_package_list_get_size (list);
-	egg_debug ("loading %i autocomplete items", length);
-	for (i=0; i<length; i++) {
-		obj = pk_package_list_get_obj (list, i);
-		if (obj == NULL || obj->id == NULL || obj->id->name == NULL) {
-			egg_warning ("obj invalid!");
+	egg_debug ("loading %i autocomplete items", list->len);
+	for (i=0; i<list->len; i++) {
+		item = g_ptr_array_index (list, i);
+		if (item == NULL || item->package_id == NULL) {
+			egg_warning ("item invalid!");
 			break;
 		}
-		data = g_hash_table_lookup (hash, (gpointer) obj->id->name);
+
+		split = pk_package_id_split (item->package_id);
+		data = g_hash_table_lookup (hash, (gpointer) split[PK_PACKAGE_ID_NAME]);
 		if (data == NULL) {
 			/* append just the name */
-			g_hash_table_insert (hash, g_strdup (obj->id->name), GINT_TO_POINTER (1));
+			g_hash_table_insert (hash, g_strdup (split[PK_PACKAGE_ID_NAME]), GINT_TO_POINTER (1));
 			gtk_list_store_append (store, &iter);
-			gtk_list_store_set (store, &iter, 0, obj->id->name, -1);
+			gtk_list_store_set (store, &iter, 0, split[PK_PACKAGE_ID_NAME], -1);
 		}
+		g_strfreev (split);
 	}
 	g_hash_table_unref (hash);
-	g_object_unref (list);
+	g_ptr_array_unref (list);
 
 	return GTK_TREE_MODEL (store);
 }
@@ -735,7 +758,6 @@ void
 gpk_common_test (gpointer data)
 {
 	gchar *text;
-	PkPackageId *id;
 	EggTest *test = (EggTest *) data;
 
 	if (!egg_test_start (test, "GpkCommon"))
@@ -845,38 +867,8 @@ gpk_common_test (gpointer data)
 	/************************************************************
 	 ****************     package name text        **************
 	 ************************************************************/
-	egg_test_title (test, "get name null");
-	text = gpk_package_get_name (NULL);
-	if (text == NULL)
-		egg_test_success (test, NULL);
-	else
-		egg_test_failed (test, "failed, got %s", text);
-
-	/************************************************************/
-	egg_test_title (test, "get name not id");
-	text = gpk_package_get_name ("ania");
-	if (text != NULL && strcmp (text, "ania") == 0)
-		egg_test_success (test, NULL);
-	else
-		egg_test_failed (test, "failed, got %s", text);
-	g_free (text);
-
-	/************************************************************/
-	egg_test_title (test, "get name just id");
-	text = gpk_package_get_name ("simon;1.0.0;i386;moo");
-	if (text != NULL && strcmp (text, "simon") == 0)
-		egg_test_success (test, NULL);
-	else
-		egg_test_failed (test, "failed, got %s", text);
-	g_free (text);
-
-	/************************************************************
-	 ****************     package name text        **************
-	 ************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary");
-	id = pk_package_id_new_from_string ("simon;0.0.1;i386;data");
-	text = gpk_package_id_format_twoline (id, NULL);
-	pk_package_id_free (id);
+	text = gpk_package_id_format_twoline ("simon;0.0.1;i386;data", NULL);
 	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -885,9 +877,7 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 2");
-	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
-	text = gpk_package_id_format_twoline (id, NULL);
-	pk_package_id_free (id);
+	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", NULL);
 	if (text != NULL && strcmp (text, "simon-0.0.1") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -896,9 +886,7 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 3");
-	id = pk_package_id_new_from_string ("simon;;;data");
-	text = gpk_package_id_format_twoline (id, NULL);
-	pk_package_id_free (id);
+	text = gpk_package_id_format_twoline ("simon;;;data", NULL);
 	if (text != NULL && strcmp (text, "simon") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -907,9 +895,7 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 4");
-	id = pk_package_id_new_from_string ("simon;0.0.1;;data");
-	text = gpk_package_id_format_twoline (id, "dude");
-	pk_package_id_free (id);
+	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", "dude");
 	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0)
 		egg_test_success (test, NULL);
 	else

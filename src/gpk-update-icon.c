@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 #include <libnotify/notify.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-dbus-monitor.h"
@@ -141,8 +141,8 @@ main (int argc, char *argv[])
 
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	dbus_g_thread_init ();
 	g_type_init ();
+	dbus_g_thread_init ();
 	notify_init ("gpk-update-icon");
 
 	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */

@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 G_BEGIN_DECLS
 
@@ -94,7 +94,7 @@ gboolean	 gpk_modal_dialog_present		(GpkModalDialog		*dialog);
 gboolean	 gpk_modal_dialog_present_with_time	(GpkModalDialog		*dialog,
 							 guint32		 timestamp);
 gboolean	 gpk_modal_dialog_set_package_list	(GpkModalDialog		*dialog,
-							 const PkPackageList	*list);
+							 const GPtrArray	*list);
 gboolean	 gpk_modal_dialog_set_parent		(GpkModalDialog		*dialog,
 							 GdkWindow		*window);
 gboolean	 gpk_modal_dialog_set_window_icon	(GpkModalDialog		*dialog,
@@ -106,7 +106,7 @@ gboolean	 gpk_modal_dialog_set_message		(GpkModalDialog		*dialog,
 gboolean	 gpk_modal_dialog_set_action		(GpkModalDialog		*dialog,
 							 const gchar		*action);
 gboolean	 gpk_modal_dialog_set_percentage	(GpkModalDialog		*dialog,
-							 guint			 percentage);
+							 gint			 percentage);
 gboolean	 gpk_modal_dialog_set_remaining		(GpkModalDialog		*dialog,
 							 guint			 remaining);
 gboolean	 gpk_modal_dialog_set_image		(GpkModalDialog		*dialog,

@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "gpk-animated-icon.h"
 #include "gpk-enum.h"
@@ -94,13 +94,10 @@ void		 gpk_common_test			(gpointer	 data);
 void		 gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
 							 GtkTextIter	*iter,
 							 const gchar	*markup);
-gchar		*gpk_package_get_name			(const gchar	*package_id);
-gchar		*gpk_package_id_format_twoline		(const PkPackageId *id,
+gchar		*gpk_package_id_format_twoline		(const gchar 	*package_id,
 							 const gchar	*summary);
-gchar		*gpk_package_id_format_oneline		(const PkPackageId *id,
+gchar		*gpk_package_id_format_oneline		(const gchar 	*package_id,
 							 const gchar	*summary);
-gchar		*gpk_package_id_name_version		(const PkPackageId *id);
-
 gchar		*gpk_time_to_localised_string		(guint		 time_secs);
 gchar		*gpk_time_to_imprecise_string		(guint		 time_secs);
 gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
@@ -114,12 +111,11 @@ gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
 gboolean	 gpk_ignore_session_error		(GError		*error);
-gboolean	 gpk_window_get_small_form_factor_mode 	(void);
 gboolean	 gpk_window_set_parent_xid		(GtkWindow	*window,
 							 guint32	 xid);
-#if (!PK_CHECK_VERSION(0,5,0))
-gboolean	 gpk_error_code_is_need_untrusted	(PkErrorCodeEnum error_code);
-#endif
+GPtrArray	*pk_strv_to_ptr_array			(gchar		**array)
+							 G_GNUC_WARN_UNUSED_RESULT;
+gchar		**pk_package_array_to_strv		(GPtrArray	*array);
 
 G_END_DECLS
 

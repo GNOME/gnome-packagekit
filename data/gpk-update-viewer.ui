@@ -190,7 +190,6 @@
                     <property name="spacing">9</property>
                     <child>
                       <object class="GtkImage" id="image_progress">
-                        <property name="visible">True</property>
                         <property name="stock">gtk-save</property>
                         <property name="icon-size">5</property>
                       </object>
@@ -209,7 +208,6 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkProgressBar" id="progressbar_progress">
-                                <property name="visible">True</property>
                                 <property name="fraction">0.5</property>
                               </object>
                               <packing>
@@ -233,24 +231,12 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label_status">
-                        <property name="visible">True</property>
-                        <property name="label">&lt;b&gt;Downloading:&lt;/b&gt;</property>
+                        <property name="label">&lt;b&gt;Downloading&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label_package">
-                        <property name="visible">True</property>
-                        <property name="label">data</property>
-                        <property name="use_markup">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
@@ -265,7 +251,6 @@
                     <property name="spacing">9</property>
                     <child>
                       <object class="GtkImage" id="image_info">
-                        <property name="visible">True</property>
                         <property name="stock">gtk-remove</property>
                         <property name="icon-size">5</property>
                       </object>
@@ -277,7 +262,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label_info">
-                        <property name="visible">True</property>
                         <property name="label">data that doesn't need the progressbar</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -288,7 +272,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label_summary">
-                        <property name="visible">True</property>
                         <property name="label">7 updates selected (45Mb)</property>
                         <property name="use_markup">True</property>
                         <property name="justify">right</property>

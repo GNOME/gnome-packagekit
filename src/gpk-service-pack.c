@@ -21,17 +21,17 @@
 
 #include "config.h"
 
-#include <glib.h>
+//#include <glib.h>
 #include <glib/gi18n.h>
 #include <locale.h>
 
 #include <gtk/gtk.h>
-#include <math.h>
-#include <string.h>
+//#include <math.h>
+//#include <string.h>
 #include <sys/utsname.h>
-#include <dbus/dbus-glib.h>
+//#include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
 #include "egg-debug.h"
@@ -88,7 +88,7 @@ gpk_pack_get_default_filename (const gchar *directory)
 		filename = g_strdup_printf ("%s/%s-%s.servicepack", directory, package, distro_id);
 	} else if (action == GPK_ACTION_ENUM_COPY) {
 		nodename = pk_get_node_name ();
-		filename = g_strdup_printf ("%s/%s.package-list", directory, nodename);
+		filename = g_strdup_printf ("%s/%s.package-array", directory, nodename);
 	} else if (action == GPK_ACTION_ENUM_UPDATES) {
 		iso_time = pk_iso8601_present ();
 		/* don't include the time, just use the date prefix */
@@ -135,22 +135,6 @@ gpk_pack_widgets_activate (gboolean enable)
 }
 
 /**
- * gpk_pack_package_cb:
- **/
-static void
-gpk_pack_package_cb (PkServicePack *pack, const PkPackageObj *obj, gpointer data)
-{
-	GtkProgressBar *progress_bar;
-	gchar *text;
-
-	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
-	/* TRANSLATORS: This is the package name that is being downloaded */
-	text = g_strdup_printf ("%s: %s-%s.%s", _("Downloading"), obj->id->name, obj->id->version, obj->id->arch);
-	gtk_progress_bar_set_text (progress_bar, text);
-	g_free (text);
-}
-
-/**
  * gpk_pack_percentage_pulse_cb:
  **/
 static gboolean
@@ -189,74 +173,57 @@ gpk_pack_set_percentage (guint percentage)
 }
 
 /**
- * gpk_pack_percentage_cb:
- **/
-static void
-gpk_pack_percentage_cb (PkServicePack *pack, guint percentage, gpointer data)
-{
-	gpk_pack_set_percentage (percentage);
-}
-
-/**
- * gpk_pack_progress_changed_cb:
- **/
-static void
-gpk_pack_progress_changed_cb (PkClient *_client, guint percentage, guint subpercentage,
-			      guint elapsed, guint remaining, gpointer data)
-{
-	gpk_pack_set_percentage (percentage);
-}
-
-/**
  * gpk_pack_resolve_package_id:
  **/
 static gchar *
 gpk_pack_resolve_package_id (const gchar *package)
 {
-	PkPackageList *list = NULL;
+	GPtrArray *array = NULL;
 	gchar *package_id = NULL;
 	gchar **packages = NULL;
 	GError *error = NULL;
-	const PkPackageObj *obj;
-	gboolean ret = FALSE;
-	guint len;
+	const PkItemPackage *item;
+	PkResults *results;
+	PkItemErrorCode *error_item = NULL;
 
-	/* reset client */
-	ret = pk_client_reset (client, &error);
-	if (!ret) {
-		egg_warning ("could not reset client: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-
-	/* get package list */
+	/* get package array */
 	packages = g_strsplit (package, ";", 0);
-	ret = pk_client_resolve (client, pk_bitfield_value (PK_FILTER_ENUM_NEWEST), packages, &error);
-	if (!ret) {
+	results = pk_client_resolve (client, pk_bitfield_value (PK_FILTER_ENUM_NEWEST), packages, NULL, NULL, NULL, &error);
+	if (results == NULL) {
 		egg_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+		goto out;
+	}
+
 	/* get the deps */
-	list = pk_client_get_package_list (client);
-	len = pk_package_list_get_size (list);
+	array = pk_results_get_package_array (results);
 
 	/* no matches */
-	if (len == 0)
+	if (array->len == 0)
 		goto out;
 
 	/* display warning if not exactly one match */
-	if (len > 1)
+	if (array->len > 1)
 		egg_warning ("More than one possible package for '%s' found!", package);
 
 	/* convert to a text package id */
-	obj = pk_package_list_get_obj (list, 0);
-	package_id = pk_package_id_to_string (obj->id);
+	item = g_ptr_array_index (array, 0);
+	package_id = g_strdup (item->package_id);
 
 out:
-	if (list != NULL)
-		g_object_unref (list);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
 	g_strfreev (packages);
 	return package_id;
 }
@@ -274,7 +241,7 @@ gpk_pack_resolve_package_ids (gchar **package, GError **error)
 	gchar *package_id;
 
 	length = g_strv_length (package);
-	array = g_ptr_array_new ();
+	array = g_ptr_array_new_with_free_func (g_free);
 
 	/* for each package, resolve to a package_id */
 	for (i=0; i<length; i++) {
@@ -309,9 +276,32 @@ gpk_pack_resolve_package_ids (gchar **package, GError **error)
 
 out:
 	/* free temp array */
-	g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-	g_ptr_array_free (array, TRUE);
+	g_ptr_array_unref (array);
 	return package_ids;
+}
+
+/**
+ * gpk_pack_package_array_to_string:
+ **/
+static gchar *
+gpk_pack_package_array_to_string (GPtrArray *array)
+{
+	guint i;
+	const PkItemPackage *item;
+	GString *string;
+
+	string = g_string_new ("");
+	for (i=0; i<array->len; i++) {
+		item = g_ptr_array_index (array, i);
+		g_string_append_printf (string, "%s\t%s\t%s\n",
+					pk_info_enum_to_text (item->info),
+					item->package_id, item->summary);
+	}
+
+	/* remove trailing newline */
+	if (string->len != 0)
+		g_string_set_size (string, string->len-1);
+	return g_string_free (string, FALSE);
 }
 
 /**
@@ -321,41 +311,158 @@ static gboolean
 gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 {
 	gboolean ret = FALSE;
-	PkPackageList *list = NULL;
+	GPtrArray *array = NULL;
 	GError *error_local = NULL;
+	PkResults *results;
+	gchar *data = NULL;
+	PkItemErrorCode *error_item = NULL;
 
-	/* reset client */
-	ret = pk_client_reset (client, &error_local);
-	if (!ret) {
-		/* TRANSLATORS: internal error */
-		*error = g_error_new (1, 0, _("Could not reset client: %s"), error_local->message);
+	/* get package array */
+	results = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), NULL, NULL, NULL, &error_local);
+	if (results == NULL) {
+		/* TRANSLATORS: cannot get package array */
+		*error = g_error_new (1, 0, _("Could not get array of installed packages: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
 
-	/* get package list */
-	ret = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), &error_local);
-	if (!ret) {
-		/* TRANSLATORS: cannot get package list */
-		*error = g_error_new (1, 0, _("Could not get list of installed packages: %s"), error_local->message);
-		g_error_free (error_local);
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
 		goto out;
 	}
 
 	/* get the deps */
-	list = pk_client_get_package_list (client);
+	array = pk_results_get_package_array (results);
 
-	/* write new file : FIXME: return a GError */
-	ret = pk_obj_list_to_file (PK_OBJ_LIST(list), filename);
+	/* convert to a file */
+	data = gpk_pack_package_array_to_string (array);
+	ret = g_file_set_contents (PK_SYSTEM_PACKAGE_LIST_FILENAME, data, -1, &error_local);
 	if (!ret) {
-		/* TRANSLATORS: we could not write to the destination directory for some reason */
-		*error = g_error_new (1, 0, _("Could not write package list"));
+		*error = g_error_new (1, 0, _("Could not save to file: %s"), error_local->message);
+		g_error_free (error_local);
 		goto out;
 	}
 out:
-	if (list != NULL)
-		g_object_unref (list);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
+	g_free (data);
 	return ret;
+}
+
+/**
+ * gpk_pack_ready_cb:
+ **/
+static void
+gpk_pack_ready_cb (GObject *object, GAsyncResult *res, gpointer userdata)
+{
+	GtkWidget *widget;
+	PkServicePack *pack = PK_SERVICE_PACK (object);
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get the results */
+	ret = pk_service_pack_generic_finish (pack, res, &error);
+	if (!ret) {
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
+		/* TRANSLATORS: we could not create the pack file, generic error */
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot create service pack"), error->message);
+		g_error_free (error);
+	}
+
+	/* stop the action */
+	gpk_pack_widgets_activate (TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "frame_progress"));
+	gtk_widget_hide (widget);
+	gpk_pack_set_percentage (100);
+
+	/* blank */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_percentage"));
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
+}
+
+
+/**
+ * gpk_pack_progress_cb:
+ **/
+static void
+gpk_pack_progress_cb (PkProgress *progress, PkProgressType type, gpointer userdata)
+{
+	PkStatusEnum status;
+	gint percentage;
+	GtkProgressBar *progress_bar;
+	gchar *text;
+	gchar **split;
+	gchar *package_id;
+
+	g_object_get (progress,
+		      "status", &status,
+		      "percentage", &percentage,
+		      "package-id", &package_id,
+		      NULL);
+
+	if (type == PK_PROGRESS_TYPE_STATUS) {
+		egg_debug ("now %s", pk_status_enum_to_text (status));
+	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
+		gpk_pack_set_percentage (percentage);
+	} else if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
+		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
+		split = pk_package_id_split (package_id);
+		/* TRANSLATORS: This is the package name that is being downloaded */
+		text = g_strdup_printf ("%s: %s-%s.%s",
+					_("Downloading"),
+					split[PK_PACKAGE_ID_NAME],
+					split[PK_PACKAGE_ID_VERSION],
+					split[PK_PACKAGE_ID_ARCH]);
+		gtk_progress_bar_set_text (progress_bar, text);
+		g_free (text);
+		g_strfreev (split);
+	}
+}
+
+/**
+ * gpk_pack_get_excludes_for_filename:
+ **/
+static gchar **
+gpk_pack_get_excludes_for_filename (const gchar *filename, GError **error)
+{
+	gboolean ret;
+	gchar *data = NULL;
+	gchar **split = NULL;
+	gchar **lines = NULL;
+	gchar **exclude_ids = NULL;
+	GPtrArray *array = NULL;
+	guint i;
+
+	/* get contents */
+	ret = g_file_get_contents (filename, &data, NULL, error);
+	if (!ret)
+		goto out;
+
+	/* split into lines */
+	array = g_ptr_array_new_with_free_func (g_free);
+	lines = g_strsplit (data, "\n", -1);
+	for (i=0; lines[i] != NULL; i++) {
+		/* split into sections */
+		split = g_strsplit (lines[i], "\t", -1);
+		if (g_strv_length (split) == 3)
+			g_ptr_array_add (array, g_strdup (split[1]));
+		g_strfreev (split);
+	}
+
+	/* convert to a string array */
+	exclude_ids = pk_ptr_array_to_strv (array);
+out:
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	g_free (data);
+	g_strfreev (lines);
+	return exclude_ids;
 }
 
 /**
@@ -371,12 +478,13 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	gchar *exclude = NULL;
 	gchar **packages = NULL;
 	gchar **package_ids = NULL;
+	gchar **exclude_ids = NULL;
 	PkServicePack *pack;
-	PkPackageList *list = NULL;
 	GError *error = NULL;
 	gboolean ret;
 	gboolean use_default = FALSE;
 	GtkProgressBar *progress_bar;
+	PkItemErrorCode *error_item = NULL;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_directory"));
 	directory = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
@@ -389,19 +497,19 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "frame_progress"));
 	gtk_widget_show (widget);
 
-	/* copy the system package list */
+	/* copy the system package array */
 	if (action == GPK_ACTION_ENUM_COPY) {
 		ret = gpk_pack_copy_package_lists (filename, &error);
 		if (!ret) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-			/* TRANSLATORS: Could not create package list */
-			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot copy system package list"), error->message);
+			/* TRANSLATORS: Could not create package array */
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot copy system package array"), error->message);
 			g_error_free (error);
 		}
 		goto out;
 	}
 
-	/* get the exclude list, and fall back to the system copy */
+	/* get the exclude array, and fall back to the system copy */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
 	exclude = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
 	if (exclude == NULL) {
@@ -415,95 +523,82 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		package = gtk_entry_get_text (GTK_ENTRY(widget));
 		if (egg_strzero (package)) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-			/* TRANSLATORS: Could not create package list */
+			/* TRANSLATORS: Could not create package array */
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("No package name selected"), NULL);
 			goto out;
 		}
-		/* split the package list with common delimiters */
+		/* split the package array with common delimiters */
 		packages = g_strsplit_set (package, ";, ", 0);
 		package_ids = gpk_pack_resolve_package_ids (packages, &error);
 		if (package_ids == NULL) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-			/* TRANSLATORS: Could not create package list */
+			/* TRANSLATORS: Could not create package array */
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), error->message, NULL);
 			g_error_free (error);
 			goto out;
 		}
 	}
 
-	/* if we're using the default list, and it doesn't exist, refresh and create it */
+	/* if we're using the default array, and it doesn't exist, refresh and create it */
 	if (use_default && !g_file_test (exclude, G_FILE_TEST_EXISTS)) {
-		/* reset client */
-		ret = pk_client_reset (client, &error);
-		if (!ret) {
-			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-			/* TRANSLATORS: we could not reset internal state */
-			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Refresh error"), _("Could not reset client"), error->message);
-			g_error_free (error);
-			goto out;
-		}
+		PkResults *results;
 
 		/* tell the user what we are doing */
 		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
 		/* TRANSLATORS: progressbar text */
-		gtk_progress_bar_set_text (progress_bar, _("Refreshing system package list"));
+		gtk_progress_bar_set_text (progress_bar, _("Refreshing system package array"));
 
-		/* refresh package list */
-		ret = pk_client_refresh_cache (client, TRUE, &error);
-		if (!ret) {
+		/* refresh package array */
+		results = pk_client_refresh_cache (client, TRUE, NULL, NULL, NULL, &error);
+		if (results == NULL) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
 			/* TRANSLATORS: we could not reset internal state */
-			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Refresh error"), _("Could not refresh package list"), error->message);
+			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Refresh error"), _("Could not refresh package array"), error->message);
 			g_error_free (error);
 			goto out;
 		}
+
+		/* check error code */
+		error_item = pk_results_get_error_code (results);
+		if (error_item != NULL) {
+			egg_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+			goto out;
+		}
+
+		g_object_unref (results);
 	}
 
-	/* add the exclude list */
-	list = pk_package_list_new ();
-	ret = pk_obj_list_from_file (PK_OBJ_LIST(list), exclude);
-	if (!ret) {
+	/* add the exclude array */
+	exclude_ids = gpk_pack_get_excludes_for_filename (exclude, &error);
+	if (exclude_ids == NULL) {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-		/* TRANSLATORS: we could not read the file list for the destination computer */
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot read destination package list"), NULL);
+		/* TRANSLATORS: we could not read the file array for the destination computer */
+		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot read destination package array"), error->message);
+		g_error_free (error);
 		goto out;
 	}
 
 	/* create pack and set initial values */
 	pack = pk_service_pack_new ();
-	g_signal_connect (pack, "package", G_CALLBACK (gpk_pack_package_cb), pack);
-	g_signal_connect (pack, "percentage", G_CALLBACK (gpk_pack_percentage_cb), pack);
-	pk_service_pack_set_filename (pack, filename);
 	pk_service_pack_set_temp_directory (pack, NULL);
-	pk_service_pack_set_exclude_list (pack, list);
 
-	if (action == GPK_ACTION_ENUM_UPDATES)
-		ret = pk_service_pack_create_for_updates (pack, &error);
-	else if (action == GPK_ACTION_ENUM_PACKAGE)
-		ret = pk_service_pack_create_for_package_ids (pack, package_ids, &error);
-	if (!ret) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
-		/* TRANSLATORS: we could not create the pack file, generic error */
-		gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot create service pack"), error->message);
-		g_error_free (error);
+	if (action == GPK_ACTION_ENUM_UPDATES) {
+		pk_service_pack_create_for_updates_async (pack, filename, exclude_ids, NULL,
+							  (PkProgressCallback) gpk_pack_progress_cb, NULL,
+							  (GAsyncReadyCallback) gpk_pack_ready_cb, NULL);
+	} else if (action == GPK_ACTION_ENUM_PACKAGE) {
+		pk_service_pack_create_for_package_ids_async (pack, filename, package_ids, exclude_ids, NULL,
+							      (PkProgressCallback) gpk_pack_progress_cb, NULL,
+							      (GAsyncReadyCallback) gpk_pack_ready_cb, NULL);
 	}
 	g_object_unref (pack);
 
 out:
-	/* stop the action */
-	gpk_pack_widgets_activate (TRUE);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "frame_progress"));
-	gtk_widget_hide (widget);
-	gpk_pack_set_percentage (100);
-
-	/* blank */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_percentage"));
-	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
-
-	if (list != NULL)
-		g_object_unref (list);
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
 	g_strfreev (packages);
 	g_strfreev (package_ids);
+	g_strfreev (exclude_ids);
 	g_free (directory);
 	g_free (exclude);
 }
@@ -578,14 +673,12 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkFileFilter *filter;
 	GtkEntryCompletion *completion;
-	PkBitfield roles;
-	PkControl *control = NULL;
 	UniqueApp *unique_app;
 	gboolean ret;
 	GConfClient *gconf_client = NULL;
 	gchar *option = NULL;
 	gchar *package = NULL;
-	gchar *with_list = NULL;
+	gchar *with_array = NULL;
 	gchar *output = NULL;
 	guint retval;
 	GError *error = NULL;
@@ -595,13 +688,13 @@ main (int argc, char *argv[])
 		  _("Show extra debugging information"), NULL },
 		{ "option", 'o', 0, G_OPTION_ARG_STRING, &option,
 		  /* TRANSLATORS: the constants should not be translated */
-		  _("Set the option, allowable values are 'list', 'updates' and 'package'"), NULL },
+		  _("Set the option, allowable values are 'array', 'updates' and 'package'"), NULL },
 		{ "package", 'p', 0, G_OPTION_ARG_STRING, &package,
 		  /* TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack */
 		  _("Add the package name to the text entry box"), NULL },
-		{ "with-list", 'p', 0, G_OPTION_ARG_STRING, &with_list,
-		  /* TRANSLATORS: this is the destination computer package list */
-		  _("Set the remote package list filename"), NULL },
+		{ "with-array", 'p', 0, G_OPTION_ARG_STRING, &with_array,
+		  /* TRANSLATORS: this is the destination computer package array */
+		  _("Set the remote package array filename"), NULL },
 		{ "output", 'p', 0, G_OPTION_ARG_STRING, &output,
 		  /* TRANSLATORS: this is the file output directory */
 		  _("Set the default output directory"), NULL },
@@ -616,7 +709,6 @@ main (int argc, char *argv[])
 
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	dbus_g_thread_init ();
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
@@ -639,19 +731,15 @@ main (int argc, char *argv[])
 	g_signal_connect (unique_app, "message-received",
 			  G_CALLBACK (gpk_pack_message_received_cb), NULL);
 
-	/* get actions */
-	control = pk_control_new ();
-	roles = pk_control_get_actions (control, NULL);
-
 	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_set_synchronous (client, TRUE, NULL);
-	g_signal_connect (client, "progress-changed", G_CALLBACK (gpk_pack_progress_changed_cb), NULL);
+	g_object_set (client,
+		      "background", FALSE,
+		      NULL);
 
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-service-pack.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -669,8 +757,8 @@ main (int argc, char *argv[])
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
 	filter = gtk_file_filter_new ();
 	/* TRANSLATORS: file search type, lists of packages */
-	gtk_file_filter_set_name (filter, _("Package list files"));
-	gtk_file_filter_add_pattern (filter, "*.package-list");
+	gtk_file_filter_set_name (filter, _("Package array files"));
+	gtk_file_filter_add_pattern (filter, "*.package-array");
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER(widget), filter);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_directory"));
@@ -710,7 +798,7 @@ main (int argc, char *argv[])
 
 	/* if command line arguments are set, then setup UI */
 	if (option != NULL) {
-		if (g_strcmp0 (option, "list") == 0) {
+		if (g_strcmp0 (option, "array") == 0) {
 			widget = GTK_WIDGET (gtk_builder_get_object (builder, "radiobutton_copy"));
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
 		} else if (g_strcmp0 (option, "updates") == 0) {
@@ -725,9 +813,9 @@ main (int argc, char *argv[])
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 		gtk_entry_set_text (GTK_ENTRY(widget), package);
 	}
-	if (with_list != NULL) {
+	if (with_array != NULL) {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(widget), with_list);
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(widget), with_array);
 	}
 	if (output != NULL) {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_directory"));
@@ -745,13 +833,11 @@ out_unique:
 	g_object_unref (unique_app);
 	if (gconf_client != NULL)
 		g_object_unref (gconf_client);
-	if (control != NULL)
-		g_object_unref (control);
 	if (client != NULL)
 		g_object_unref (client);
 	g_free (option);
 	g_free (package);
-	g_free (with_list);
+	g_free (with_array);
 	g_free (output);
 
 	return 0;

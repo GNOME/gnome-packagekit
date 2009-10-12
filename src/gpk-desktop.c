@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <locale.h>
 #include <string.h>
 
@@ -267,10 +267,8 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 	best_file = g_strdup (g_ptr_array_index (array, max_index));
 	egg_debug ("using %s", best_file);
 out:
-	if (array != NULL) {
-		g_ptr_array_foreach (array, (GFunc) g_free, NULL);
-		g_ptr_array_free (array, TRUE);
-	}
+	if (array != NULL)
+		g_ptr_array_unref (array);
 	return best_file;
 }
 

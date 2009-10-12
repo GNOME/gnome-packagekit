@@ -25,6 +25,7 @@
 #include "egg-debug.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
+#include "gpk-task.h"
 
 void egg_markdown_test (EggTest *test);
 void egg_string_test (EggTest *test);
@@ -56,6 +57,7 @@ main (int argc, char **argv)
 	gpk_error_test (test);
 //	gpk_client_test (test);
 	gpk_modal_dialog_test (test);
+	gpk_task_test (test);
 
 	return egg_test_finish (test);
 }

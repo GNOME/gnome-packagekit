@@ -25,30 +25,25 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <math.h>
-#include <string.h>
-#include <dbus/dbus-glib.h>
 #include <locale.h>
 #include <sys/types.h>
 #include <pwd.h>
 
 #include <gconf/gconf-client.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
 #include "egg-debug.h"
-#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-gnome.h"
-#include "gpk-enum.h"
 
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
-static PkObjList *transactions = NULL;
+static GPtrArray *transactions = NULL;
 static GtkTreePath *path_global = NULL;
 
 enum
@@ -193,7 +188,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	gchar *text;
 	gchar *whole;
 	gchar **sections;
-	PkPackageId *id;
 
 	string = g_string_new ("");
 	size = g_strv_length (array);
@@ -204,11 +198,9 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_text (sections[0]);
 		if (info_local == info) {
-			id = pk_package_id_new_from_string (sections[1]);
-			text = gpk_package_id_format_oneline (id, NULL);
+			text = gpk_package_id_format_oneline (sections[1], NULL);
 			g_string_append_printf (string, "%s, ", text);
 			g_free (text);
-			pk_package_id_free (id);
 		}
 		g_strfreev (sections);
 	}
@@ -387,18 +379,18 @@ gpk_log_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessag
  * gpk_log_filter:
  **/
 static gboolean
-gpk_log_filter (const PkTransactionObj *obj)
+gpk_log_filter (const PkItemTransaction *item)
 {
 	gboolean ret = FALSE;
 	guint i;
 	guint length;
 	gchar **sections;
 	gchar **packages;
-	PkPackageId *id;
+	gchar **split;
 
 	/* only show transactions that succeeded */
-	if (!obj->succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", obj->tid);
+	if (!item->succeeded) {
+		egg_debug ("tid %s did not succeed, so not adding", item->tid);
 		return FALSE;
 	}
 
@@ -406,11 +398,11 @@ gpk_log_filter (const PkTransactionObj *obj)
 		return TRUE;
 
 	/* matches cmdline */
-	if (obj->cmdline != NULL && g_strrstr (obj->cmdline, filter) != NULL)
+	if (item->cmdline != NULL && g_strrstr (item->cmdline, filter) != NULL)
 		ret = TRUE;
 
 	/* look in all the data for the filter string */
-	packages = g_strsplit (obj->data, "\n", 0);
+	packages = g_strsplit (item->data, "\n", 0);
 	length = g_strv_length (packages);
 	for (i=0; i<length; i++) {
 		sections = g_strsplit (packages[i], "\t", 0);
@@ -420,15 +412,15 @@ gpk_log_filter (const PkTransactionObj *obj)
 			ret = TRUE;
 
 		/* check to see if package name, version or arch matches */
-		id = pk_package_id_new_from_string (sections[1]);
-		if (g_strrstr (id->name, filter) != NULL)
+		split = pk_package_id_split (sections[1]);
+		if (g_strrstr (split[0], filter) != NULL)
 			ret = TRUE;
-		if (id->version != NULL && g_strrstr (id->version, filter) != NULL)
+		if (split[1] != NULL && g_strrstr (split[1], filter) != NULL)
 			ret = TRUE;
-		if (id->arch != NULL && g_strrstr (id->arch, filter) != NULL)
+		if (split[2] != NULL && g_strrstr (split[2], filter) != NULL)
 			ret = TRUE;
 
-		pk_package_id_free (id);
+		g_strfreev (split);
 		g_strfreev (sections);
 
 		/* shortcut for speed */
@@ -442,10 +434,10 @@ gpk_log_filter (const PkTransactionObj *obj)
 }
 
 /**
- * gpk_log_add_obj
+ * gpk_log_add_item
  **/
 static void
-gpk_log_add_obj (const PkTransactionObj *obj)
+gpk_log_add_item (const PkItemTransaction *item)
 {
 	GtkTreeIter iter;
 	gchar *details;
@@ -461,15 +453,15 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* put formatted text into treeview */
-	details = gpk_log_get_details_localised (obj->timespec, obj->data);
-	date = gpk_log_get_localised_date (obj->timespec);
+	details = gpk_log_get_details_localised (item->timespec, item->data);
+	date = gpk_log_get_localised_date (item->timespec);
 	date_part = g_strsplit (date, ", ", 2);
 
-	icon_name = gpk_role_enum_to_icon_name (obj->role);
-	role_text = gpk_role_enum_to_localised_past (obj->role);
+	icon_name = gpk_role_enum_to_icon_name (item->role);
+	role_text = gpk_role_enum_to_localised_past (item->role);
 
 	/* query real name */
-	pw = getpwuid(obj->uid);
+	pw = getpwuid(item->uid);
 	if (pw != NULL) {
 		if (pw->pw_gecos != NULL)
 			username = pw->pw_gecos;
@@ -478,29 +470,29 @@ gpk_log_add_obj (const PkTransactionObj *obj)
 	}
 
 	/* get nice name for tool name */
-	if (g_strcmp0 (obj->cmdline, "pkcon") == 0)
+	if (g_strcmp0 (item->cmdline, "pkcon") == 0)
 		/* TRANSLATORS: short name for pkcon */
 		tool = _("Command line client");
-	else if (g_strcmp0 (obj->cmdline, "gpk-application") == 0)
+	else if (g_strcmp0 (item->cmdline, "gpk-application") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Add/Remove Software");
-	else if (g_strcmp0 (obj->cmdline, "gpk-update-viewer") == 0)
+	else if (g_strcmp0 (item->cmdline, "gpk-update-viewer") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Update System");
-	else if (g_strcmp0 (obj->cmdline, "gpk-update-icon") == 0)
+	else if (g_strcmp0 (item->cmdline, "gpk-update-icon") == 0)
 		/* TRANSLATORS: short name for gpk-update-icon */
 		tool = _("Update Icon");
 	else
-		tool = obj->cmdline;
+		tool = item->cmdline;
 
-	gpk_log_model_get_iter (model, &iter, obj->tid);
+	gpk_log_model_get_iter (model, &iter, item->tid);
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
-			    GPK_LOG_COLUMN_TIMESPEC, obj->timespec,
+			    GPK_LOG_COLUMN_TIMESPEC, item->timespec,
 			    GPK_LOG_COLUMN_DATE, date_part[1],
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DETAILS, details,
-			    GPK_LOG_COLUMN_ID, obj->tid,
+			    GPK_LOG_COLUMN_ID, item->tid,
 			    GPK_LOG_COLUMN_USER, username,
 			    GPK_LOG_COLUMN_TOOL, tool,
 			    GPK_LOG_COLUMN_ACTIVE, TRUE, -1);
@@ -523,7 +515,7 @@ gpk_log_refilter (void)
 {
 	guint i;
 	gboolean ret;
-	const PkTransactionObj *obj;
+	const PkItemTransaction *item;
 	GtkWidget *widget;
 	const gchar *package;
 	GtkTreeView *treeview;
@@ -533,7 +525,7 @@ gpk_log_refilter (void)
 	g_free (filter);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	package = gtk_entry_get_text (GTK_ENTRY(widget));
-	if (!egg_strzero (package))
+	if (package != NULL && package[0] != '\0')
 		filter = g_strdup (package);
 	else
 		filter = NULL;
@@ -547,10 +539,10 @@ gpk_log_refilter (void)
 
 	/* go through the list, adding and removing the items as required */
 	for (i=0; i<transactions->len; i++) {
-		obj = pk_obj_list_index (transactions, i);
-		ret = gpk_log_filter (obj);
+		item = g_ptr_array_index (transactions, i);
+		ret = gpk_log_filter (item);
 		if (ret)
-			gpk_log_add_obj (obj);
+			gpk_log_add_item (item);
 	}
 
 	/* remove the items that are not used */
@@ -558,38 +550,52 @@ gpk_log_refilter (void)
 }
 
 /**
- * gpk_log_refresh
+ * gpk_log_get_old_transactions_cb
  **/
-static gboolean
-gpk_log_refresh (void)
+static void
+gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
-	gboolean ret;
+//	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
+	PkResults *results = NULL;
+	PkItemErrorCode *error_item = NULL;
 
-	ret = pk_client_reset (client, &error);
-	if (!ret) {
-		egg_warning ("failed to reset client: %s", error->message);
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		egg_warning ("failed to get old transactions: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
-	ret = pk_client_get_old_transactions (client, 0, &error);
-	if (!ret) {
-		egg_warning ("failed to get list: %s", error->message);
-		g_error_free (error);
+
+	/* check error code */
+	error_item = pk_results_get_error_code (results);
+	if (error_item != NULL) {
+		egg_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
 		goto out;
 	}
 
 	/* get the list */
 	if (transactions != NULL)
-		g_object_unref (transactions);
-#if PK_CHECK_VERSION(0,5,0)
-	transactions = pk_client_get_transaction_list (client);
-#else
-	transactions = pk_client_get_cached_objects (client); /* removed in 0.5.x */
-#endif
+		g_ptr_array_unref (transactions);
+	transactions = pk_results_get_transaction_array (results);
 	gpk_log_refilter ();
 out:
-	return ret;
+	if (error_item != NULL)
+		pk_item_error_code_unref (error_item);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_log_refresh
+ **/
+static void
+gpk_log_refresh (void)
+{
+	/* get the list async */
+	pk_client_get_old_transactions_async (client, 0, NULL, NULL, NULL,
+					      (GAsyncReadyCallback) gpk_log_get_old_transactions_cb, NULL);
 }
 
 /**
@@ -659,7 +665,6 @@ main (int argc, char *argv[])
 
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
-	dbus_g_thread_init ();
 	g_type_init ();
 
 	context = g_option_context_new (NULL);
@@ -691,13 +696,14 @@ main (int argc, char *argv[])
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	client = pk_client_new ();
-	pk_client_set_use_buffer (client, TRUE, NULL);
-	pk_client_set_synchronous (client, TRUE, NULL);
+	g_object_set (client,
+		      "background", FALSE,
+		      NULL);
 
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -726,6 +732,7 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_help_cb), NULL);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
+	gtk_widget_hide (widget);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_filter"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
@@ -768,9 +775,6 @@ main (int argc, char *argv[])
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store),
 					      GPK_LOG_COLUMN_TIMESPEC, GTK_SORT_DESCENDING);
 
-	/* get the update list */
-	gpk_log_refresh ();
-
 	/* show */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_widget_show (widget);
@@ -781,6 +785,9 @@ main (int argc, char *argv[])
 		gpk_window_set_parent_xid (GTK_WINDOW (widget), xid);
 	}
 
+	/* get the update list */
+	gpk_log_refresh ();
+
 	gtk_main ();
 
 out_build:
@@ -790,7 +797,7 @@ out_build:
 	g_free (transaction_id);
 	g_free (filter);
 	if (transactions != NULL)
-		g_object_unref (transactions);
+		g_ptr_array_unref (transactions);
 unique_out:
 	g_object_unref (unique_app);
 	return 0;

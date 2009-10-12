@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "gpk-inhibit.h"

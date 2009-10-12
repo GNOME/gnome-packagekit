@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -266,12 +266,9 @@ gpk_animated_icon_destroy (GtkObject *object)
 static void
 gpk_animated_icon_class_init (GpkAnimatedIconClass *class)
 {
-	GtkImageClass *image_class;
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (class);
 	object_class->destroy = gpk_animated_icon_destroy;
-
 	parent_class = g_type_class_peek_parent (class);
-	image_class = GTK_IMAGE_CLASS (class);
 }
 
 /**

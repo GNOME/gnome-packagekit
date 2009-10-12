@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 
@@ -140,13 +140,10 @@ gpk_cell_renderer_finalize (GObject *object)
 static void
 gpk_cell_renderer_info_class_init (GpkCellRendererInfoClass *class)
 {
-	GtkCellRendererClass *cell_renderer_class;
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	object_class->finalize = gpk_cell_renderer_finalize;
 
 	parent_class = g_type_class_peek_parent (class);
-
-	cell_renderer_class = GTK_CELL_RENDERER_CLASS (class);
 
 	object_class->get_property = gpk_cell_renderer_info_get_property;
 	object_class->set_property = gpk_cell_renderer_info_set_property;

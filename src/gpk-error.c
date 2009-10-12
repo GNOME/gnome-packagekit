@@ -26,10 +26,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
-#include "egg-string.h"
 
 #include "gpk-common.h"
 #include "gpk-error.h"
@@ -75,7 +74,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
-	if (error != NULL) {
+	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
@@ -115,7 +114,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	gtk_label_set_markup (GTK_LABEL (widget), message);
 
 	/* show text in the expander */
-	if (egg_strzero (details)) {
+	if (details == NULL || details[0] == '\0') {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "expander_details"));
 		gtk_widget_hide (widget);
 	} else {

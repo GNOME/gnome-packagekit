@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib/packagekit.h>
+#include <packagekit-glib2/packagekit.h>
 
 #define GPK_TYPE_CELL_RENDERER_INFO		(gpk_cell_renderer_info_get_type())
 #define GPK_CELL_RENDERER_INFO(obj)		(G_TYPE_CHECK_INSTANCE_CAST((obj), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfo))
