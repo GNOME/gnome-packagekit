@@ -819,6 +819,14 @@ gpk_watch_populate_menu_with_jobs (GpkWatch *watch, GtkMenu *menu)
 		g_object_get (progress,
 			      "role", &role,
 			      "status", &status,
+			      NULL);
+
+		/* ignore boring status values */
+		if (status == PK_STATUS_ENUM_FINISHED)
+			continue;
+
+		/* do this in two steps as this data needs to be freed */
+		g_object_get (progress,
 			      "transaction-id", &transaction_id,
 			      NULL);
 
