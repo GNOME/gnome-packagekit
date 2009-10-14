@@ -113,7 +113,7 @@ main (int argc, char *argv[])
 	ret = dbus_g_proxy_call (proxy, "InstallPackageNames", &error,
 				 G_TYPE_UINT, 0, /* xid */
 				 G_TYPE_STRV, packages, /* data */
-				 G_TYPE_STRING, "", /* interaction */
+				 G_TYPE_STRING, "hide-finished,hide-warnings", /* interaction */
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
 	if (!ret && !gpk_ignore_session_error (error)) {
