@@ -1102,7 +1102,8 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	/* No point if we are already updating */
 	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
 	roles = gpk_check_update_get_active_roles (cupdate, tids);
-	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_UPDATES) ||
+	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
 		egg_debug ("Not checking for updates as already in progress");
 		goto out;
@@ -1362,8 +1363,24 @@ out:
 static void
 gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
 {
+	PkBitfield roles;
+	gchar **tids;
+	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+
+	/* No point if we are already updating */
+	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
+	roles = gpk_check_update_get_active_roles (cupdate, tids);
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
+		egg_debug ("Not checking for upgrades as already in progress");
+		goto out;
+	}
+
+	/* get new distro upgrades list */
 	pk_client_get_distro_upgrades_async (PK_CLIENT(cupdate->priv->task), cupdate->priv->cancellable, NULL, NULL,
 					     (GAsyncReadyCallback) gpk_check_update_get_distro_upgrades_finished_cb, cupdate);
+out:
+	g_strfreev (tids);
+	return;
 }
 
 /**
