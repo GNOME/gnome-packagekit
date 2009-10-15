@@ -1915,6 +1915,7 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 			gpk_update_viewer_check_restart (restart_update);
 			g_main_loop_quit (loop);
+			goto out;
 		}
 
 		/* hide close button */
@@ -1970,6 +1971,8 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_install"));
 		gtk_widget_set_sensitive (widget, TRUE);
 	}
+out:
+	return;
 }
 
 static GSList *active_rows = NULL;
