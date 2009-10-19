@@ -53,7 +53,8 @@
 #include "gpk-vendor.h"
 #include "gpk-x11.h"
 
-static void     gpk_dbus_task_finalize (GObject *object);
+static void gpk_dbus_task_finalize (GObject *object);
+static void gpk_dbus_task_progress_cb (PkProgress *progress, PkProgressType type, GpkDbusTask *dtask);
 
 #define GPK_DBUS_TASK_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_DBUS_TASK, GpkDbusTaskPrivate))
 #define GPK_DBUS_TASK_FINISHED_AUTOCLOSE_DELAY	10 /* seconds */
@@ -358,6 +359,10 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 		gpk_dbus_task_handle_error (dtask, error_item);
 		goto out;
 	}
+
+	/* we're done */
+	egg_debug ("doing async return");
+	dbus_g_method_return (dtask->priv->context, TRUE);
 out:
 	if (error_item != NULL)
 		pk_item_error_code_unref (error_item);
@@ -379,7 +384,8 @@ gpk_dbus_task_install_package_ids (GpkDbusTask *dtask)
 		gpk_modal_dialog_present (dtask->priv->dialog);
 
 	/* install async */
-	pk_task_install_packages_async (dtask->priv->task, dtask->priv->package_ids, NULL, NULL, NULL,
+	pk_task_install_packages_async (dtask->priv->task, dtask->priv->package_ids, NULL,
+					(PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 					(GAsyncReadyCallback) gpk_dbus_task_install_packages_cb, dtask);
 }
 
@@ -844,7 +850,8 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel)
 		gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
 
 	/* install async */
-	pk_task_install_files_async (dtask->priv->task, dtask->priv->files, NULL, NULL, NULL,
+	pk_task_install_files_async (dtask->priv->task, dtask->priv->files, NULL,
+				     (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				     (GAsyncReadyCallback) gpk_dbus_task_install_files_cb, dtask);
 
 	/* wait for async reply */
@@ -2183,7 +2190,8 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* find the package name */
 	values = g_strsplit (exec, "&", -1);
-	results = pk_client_search_file (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL, NULL, NULL, &error);
+	results = pk_client_search_file (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
+					 (PkProgressCallback) gpk_dbus_task_progress_cb, dtask, &error);
 	if (results == NULL) {
 		egg_warning ("failed to search file: %s", error->message);
 		g_error_free (error);
