@@ -69,17 +69,37 @@ gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, PkPackageList *packa
 	GtkResponseType response;
 	gchar *package_id;
 	const PkPackageObj *obj;
-	guint i;
+	const PkPackageObj *obj_tmp;
+	guint i = 0, j;
 
 	/* remove cleanup packages */
-	for (i=0; i<pk_package_list_get_size (deps_list); i++) {
+	while (i<pk_package_list_get_size (deps_list)) {
 		obj = pk_package_list_get_obj (deps_list, i);
 		if (obj->info == PK_INFO_ENUM_CLEANUP ||
 		    obj->info == PK_INFO_ENUM_FINISHED) {
 			package_id = pk_package_id_to_string (obj->id);
 			pk_package_list_remove (deps_list, package_id);
 			g_free (package_id);
+			continue;
 		}
+
+		/* remove original packages */
+		ret = FALSE;
+		length = pk_package_list_get_size (packages);
+		for (j=0; j<length; j++) {
+			obj_tmp = pk_package_list_get_obj (packages, j);
+			if (pk_package_id_equal (obj_tmp->id, obj->id)) {
+				package_id = pk_package_id_to_string (obj->id);
+				pk_package_list_remove (deps_list, package_id);
+				g_free (package_id);
+				ret = TRUE;
+			}
+		}
+		if (ret)
+			continue;
+
+		/* only increment if we didn't remove a package */
+		i++;
 	}
 
 	/* empty list */
