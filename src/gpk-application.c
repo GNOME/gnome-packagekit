@@ -2687,6 +2687,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_name), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
@@ -2697,6 +2698,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_description), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
@@ -2707,6 +2709,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file name"));
 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_file), application);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
