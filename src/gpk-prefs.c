@@ -64,10 +64,10 @@
 static GtkBuilder *builder = NULL;
 
 /**
- * pk_button_help_cb:
+ * gpk_prefs_help_cb:
  **/
 static void
-pk_button_help_cb (GtkWidget *widget, gpointer data)
+gpk_prefs_help_cb (GtkWidget *widget, gpointer data)
 {
 	gpk_gnome_help ("prefs");
 }
@@ -451,7 +451,6 @@ static void
 gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 {
 	GMainLoop *loop = (GMainLoop *) data;
-	egg_debug ("emitting action-close");
 	g_main_loop_quit (loop);
 }
 
@@ -561,7 +560,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_prefs_close_cb), loop);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (pk_button_help_cb), NULL);
+			  G_CALLBACK (gpk_prefs_help_cb), NULL);
 
 	/* update the combo boxes */
 	gpk_prefs_update_freq_combo_setup ();
