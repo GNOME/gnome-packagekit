@@ -717,7 +717,8 @@ gpk_ignore_session_error (GError *error)
 	if (name == NULL)
 		goto out;
 
-	if (g_str_has_prefix (name, "org.freedesktop.PackageKit.Modify.Cancelled")) {
+	if (g_str_has_prefix (name, "org.freedesktop.PackageKit.Modify.Cancelled") ||
+	    g_str_has_prefix (name, "org.freedesktop.PackageKit.Modify.Failed")) {
 		ret = TRUE;
 		goto out;
 	}
