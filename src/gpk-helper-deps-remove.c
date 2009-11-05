@@ -69,8 +69,7 @@ gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, PkPackageList *package
 	guint i;
 
 	/* remove cleanup packages */
-	length = pk_package_list_get_size (deps_list);
-	for (i=0; i<length; i++) {
+	for (i=0; i<pk_package_list_get_size (deps_list); i++) {
 		obj = pk_package_list_get_obj (deps_list, i);
 		if (obj->info == PK_INFO_ENUM_CLEANUP ||
 		    obj->info == PK_INFO_ENUM_FINISHED) {
