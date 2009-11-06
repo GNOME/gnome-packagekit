@@ -61,7 +61,7 @@ static void	gpk_check_update_libnotify_cb (NotifyNotification *notification, gch
 #define GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES	7
 
 /* the amount of time after ::UpdatesChanged we refresh the update list */
-#define GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT	60 /* seconds */
+#define GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT	3 /* seconds */
 
 struct GpkCheckUpdatePrivate
 {
