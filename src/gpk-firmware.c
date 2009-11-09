@@ -356,7 +356,7 @@ gpk_firmware_install_packages_cb (GObject *object, GAsyncResult *res, GpkFirmwar
 	const GpkFirmwareRequest *req;
 	gboolean ret;
 	guint i;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -367,16 +367,16 @@ gpk_firmware_install_packages_cb (GObject *object, GAsyncResult *res, GpkFirmwar
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* ignore some errors */
-		if (error_item->code != PK_ERROR_ENUM_PROCESS_KILL &&
-		    error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    error_item->code != PK_ERROR_ENUM_NOT_AUTHORIZED) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (error_item->code),
-					  gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_NOT_AUTHORIZED) {
+			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -411,8 +411,8 @@ gpk_firmware_install_packages_cb (GObject *object, GAsyncResult *res, GpkFirmwar
 	/* clear array */
 	g_ptr_array_set_size (firmware->priv->array_requested, 0);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -490,17 +490,17 @@ out:
  * @firmware: This class instance
  * @filename: Firmware to search for
  **/
-static PkItemPackage *
+static PkPackage *
 gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 {
 	guint length = 0;
 	GPtrArray *array = NULL;
 	GError *error = NULL;
-	PkItemPackage *item = NULL;
+	PkPackage *item = NULL;
 	PkBitfield filter;
 	PkResults *results;
 	gchar **values = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* search for newest not installed package */
 	filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1);
@@ -513,9 +513,9 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to search file: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to search file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -526,11 +526,11 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	else if (array->len != 1)
 		egg_warning ("not one package providing %s found (%i)", filename, length);
 	else
-		item = pk_item_package_ref (g_ptr_array_index (array, 0));
+		item = g_object_ref (g_ptr_array_index (array, 0));
 out:
 	g_strfreev (values);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_object_unref (array);
 	if (results != NULL)
@@ -572,7 +572,7 @@ gpk_firmware_timeout_cb (gpointer data)
 	NotifyNotification *notification;
 	GPtrArray *array;
 	GError *error = NULL;
-	PkItemPackage *item = NULL;
+	PkPackage *item = NULL;
 	const GpkFirmwareRequest *req;
 	gboolean has_data = FALSE;
 
@@ -587,7 +587,7 @@ gpk_firmware_timeout_cb (gpointer data)
 		item = gpk_firmware_check_available (firmware, req->filename);
 		if (item != NULL) {
 			g_ptr_array_add (firmware->priv->packages_found, item);
-			pk_item_package_unref (item);
+			g_object_unref (item);
 		}
 	}
 
@@ -998,7 +998,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 
 	firmware->priv = GPK_FIRMWARE_GET_PRIVATE (firmware);
 	firmware->priv->timeout_id = 0;
-	firmware->priv->packages_found = g_ptr_array_new_with_free_func ((GDestroyNotify) pk_item_package_unref);
+	firmware->priv->packages_found = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	firmware->priv->array_requested = g_ptr_array_new_with_free_func ((GDestroyNotify) gpk_firmware_request_free);
 	firmware->priv->gconf_client = gconf_client_get_default ();
 	firmware->priv->consolekit = egg_console_kit_new ();

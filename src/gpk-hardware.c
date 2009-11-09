@@ -78,7 +78,7 @@ gpk_hardware_install_packages_cb (GObject *object, GAsyncResult *res, GpkHardwar
 	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
 	PkResults *results = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -89,14 +89,14 @@ gpk_hardware_install_packages_cb (GObject *object, GAsyncResult *res, GpkHardwar
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -135,8 +135,10 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 	NotifyNotification *notification;
 	gchar *package = NULL;
 	GPtrArray *array = NULL;
-	const PkItemPackage *item = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkPackage *item = NULL;
+	PkError *error_code = NULL;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -147,9 +149,9 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get provides: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get provides: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -162,7 +164,14 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 
 	/* only install the first one? */
 	item = g_ptr_array_index (array, 0);
-	package = gpk_package_id_format_oneline (item->package_id, item->summary);
+
+	/* get data */
+	g_object_get (item,
+		      "package-id", &package_id,
+		      "summary", &summary,
+		      NULL);
+
+	package = gpk_package_id_format_oneline (package_id, summary);
 
 	/* save array */
 	if (hardware->priv->package_ids != NULL)
@@ -192,8 +201,10 @@ out:
 	g_free (package);
 	g_free (message);
 	g_free (body);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	g_free (package_id);
+	g_free (summary);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)

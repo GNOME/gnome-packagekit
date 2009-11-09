@@ -379,7 +379,7 @@ gpk_log_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessag
  * gpk_log_filter:
  **/
 static gboolean
-gpk_log_filter (const PkItemTransaction *item)
+gpk_log_filter (PkTransactionPast *item)
 {
 	gboolean ret = FALSE;
 	guint i;
@@ -387,10 +387,22 @@ gpk_log_filter (const PkItemTransaction *item)
 	gchar **sections;
 	gchar **packages;
 	gchar **split;
+	gchar *tid;
+	gboolean succeeded;
+	gchar *cmdline;
+	gchar *data;
+
+	/* get data */
+	g_object_get (item,
+		      "tid", &tid,
+		      "succeeded", &succeeded,
+		      "cmdline", &cmdline,
+		      "data", &data,
+		      NULL);
 
 	/* only show transactions that succeeded */
-	if (!item->succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", item->tid);
+	if (!succeeded) {
+		egg_debug ("tid %s did not succeed, so not adding", tid);
 		return FALSE;
 	}
 
@@ -398,11 +410,11 @@ gpk_log_filter (const PkItemTransaction *item)
 		return TRUE;
 
 	/* matches cmdline */
-	if (item->cmdline != NULL && g_strrstr (item->cmdline, filter) != NULL)
+	if (cmdline != NULL && g_strrstr (cmdline, filter) != NULL)
 		ret = TRUE;
 
 	/* look in all the data for the filter string */
-	packages = g_strsplit (item->data, "\n", 0);
+	packages = g_strsplit (data, "\n", 0);
 	length = g_strv_length (packages);
 	for (i=0; i<length; i++) {
 		sections = g_strsplit (packages[i], "\t", 0);
@@ -428,6 +440,9 @@ gpk_log_filter (const PkItemTransaction *item)
 			break;
 	}
 
+	g_free (tid);
+	g_free (cmdline);
+	g_free (data);
 	g_strfreev (packages);
 
 	return ret;
@@ -437,7 +452,7 @@ gpk_log_filter (const PkItemTransaction *item)
  * gpk_log_add_item
  **/
 static void
-gpk_log_add_item (const PkItemTransaction *item)
+gpk_log_add_item (PkTransactionPast *item)
 {
 	GtkTreeIter iter;
 	gchar *details;
@@ -449,19 +464,39 @@ gpk_log_add_item (const PkItemTransaction *item)
 	const gchar *tool;
 	static guint count;
 	struct passwd *pw;
+	gchar *tid;
+	gchar *timespec;
+	gboolean succeeded;
+	guint duration;
+	gchar *cmdline;
+	guint uid;
+	gchar *data;
+	PkRoleEnum role;
 	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
+	/* get data */
+	g_object_get (item,
+		      "role", &role,
+		      "tid", &tid,
+		      "timespec", &timespec,
+		      "succeeded", &succeeded,
+		      "duration", &duration,
+		      "cmdline", &cmdline,
+		      "uid", &uid,
+		      "data", &data,
+		      NULL);
+
 	/* put formatted text into treeview */
-	details = gpk_log_get_details_localised (item->timespec, item->data);
-	date = gpk_log_get_localised_date (item->timespec);
+	details = gpk_log_get_details_localised (timespec, data);
+	date = gpk_log_get_localised_date (timespec);
 	date_part = g_strsplit (date, ", ", 2);
 
-	icon_name = gpk_role_enum_to_icon_name (item->role);
-	role_text = gpk_role_enum_to_localised_past (item->role);
+	icon_name = gpk_role_enum_to_icon_name (role);
+	role_text = gpk_role_enum_to_localised_past (role);
 
 	/* query real name */
-	pw = getpwuid(item->uid);
+	pw = getpwuid(uid);
 	if (pw != NULL) {
 		if (pw->pw_gecos != NULL)
 			username = pw->pw_gecos;
@@ -470,29 +505,29 @@ gpk_log_add_item (const PkItemTransaction *item)
 	}
 
 	/* get nice name for tool name */
-	if (g_strcmp0 (item->cmdline, "pkcon") == 0)
+	if (g_strcmp0 (cmdline, "pkcon") == 0)
 		/* TRANSLATORS: short name for pkcon */
 		tool = _("Command line client");
-	else if (g_strcmp0 (item->cmdline, "gpk-application") == 0)
+	else if (g_strcmp0 (cmdline, "gpk-application") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Add/Remove Software");
-	else if (g_strcmp0 (item->cmdline, "gpk-update-viewer") == 0)
+	else if (g_strcmp0 (cmdline, "gpk-update-viewer") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Update System");
-	else if (g_strcmp0 (item->cmdline, "gpk-update-icon") == 0)
+	else if (g_strcmp0 (cmdline, "gpk-update-icon") == 0)
 		/* TRANSLATORS: short name for gpk-update-icon */
 		tool = _("Update Icon");
 	else
-		tool = item->cmdline;
+		tool = cmdline;
 
-	gpk_log_model_get_iter (model, &iter, item->tid);
+	gpk_log_model_get_iter (model, &iter, tid);
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
-			    GPK_LOG_COLUMN_TIMESPEC, item->timespec,
+			    GPK_LOG_COLUMN_TIMESPEC, timespec,
 			    GPK_LOG_COLUMN_DATE, date_part[1],
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DETAILS, details,
-			    GPK_LOG_COLUMN_ID, item->tid,
+			    GPK_LOG_COLUMN_ID, tid,
 			    GPK_LOG_COLUMN_USER, username,
 			    GPK_LOG_COLUMN_TOOL, tool,
 			    GPK_LOG_COLUMN_ACTIVE, TRUE, -1);
@@ -503,6 +538,10 @@ gpk_log_add_item (const PkItemTransaction *item)
 			gtk_main_iteration ();
 
 	g_strfreev (date_part);
+	g_free (tid);
+	g_free (timespec);
+	g_free (cmdline);
+	g_free (data);
 	g_free (details);
 	g_free (date);
 }
@@ -515,7 +554,7 @@ gpk_log_refilter (void)
 {
 	guint i;
 	gboolean ret;
-	const PkItemTransaction *item;
+	PkTransactionPast *item;
 	GtkWidget *widget;
 	const gchar *package;
 	GtkTreeView *treeview;
@@ -558,7 +597,7 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 //	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
 	PkResults *results = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -569,9 +608,9 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -581,8 +620,8 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	transactions = pk_results_get_transaction_array (results);
 	gpk_log_refilter ();
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }

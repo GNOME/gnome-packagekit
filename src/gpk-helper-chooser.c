@@ -165,9 +165,12 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 	gchar *text;
 	const gchar *icon_name;
 	guint i;
-	const PkItemPackage *item;
+	PkPackage *item;
 	GtkTreeIter iter;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	g_return_val_if_fail (GPK_IS_HELPER_CHOOSER (helper), FALSE);
 	g_return_val_if_fail (list != NULL, FALSE);
@@ -175,23 +178,30 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 	/* see what we've got already */
 	for (i=0; i<list->len; i++) {
 		item = g_ptr_array_index (list, i);
-		egg_debug ("package '%s' got:", item->package_id);
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
+		egg_debug ("package '%s' got:", package_id);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (helper->priv->list_store, &iter);
-		text = gpk_package_id_format_twoline (item->package_id, item->summary);
+		text = gpk_package_id_format_twoline (package_id, summary);
 
 		/* get the icon */
-		split = pk_package_id_split (item->package_id);
+		split = pk_package_id_split (package_id);
 		icon_name = gpk_desktop_guess_icon_name (helper->priv->desktop, split[PK_PACKAGE_ID_NAME]);
 		g_strfreev (split);
 		if (icon_name == NULL)
-			icon_name = gpk_info_enum_to_icon_name (item->info);
+			icon_name = gpk_info_enum_to_icon_name (info);
 
 		gtk_list_store_set (helper->priv->list_store, &iter,
 				    GPK_CHOOSER_COLUMN_TEXT, text,
-				    GPK_CHOOSER_COLUMN_ID, item->package_id, -1);
+				    GPK_CHOOSER_COLUMN_ID, package_id, -1);
 		gtk_list_store_set (helper->priv->list_store, &iter, GPK_CHOOSER_COLUMN_ICON, icon_name, -1);
+		g_free (package_id);
+		g_free (summary);
 		g_free (text);
 	}
 

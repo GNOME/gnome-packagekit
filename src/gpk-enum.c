@@ -330,7 +330,7 @@ gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
  * gpk_error_enum_to_localised_text:
  **/
 const gchar *
-gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
+gpk_error_enum_to_localised_text (PkErrorEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
@@ -521,7 +521,7 @@ gpk_error_enum_to_localised_text (PkErrorCodeEnum code)
  * gpk_error_enum_to_localised_message:
  **/
 const gchar *
-gpk_error_enum_to_localised_message (PkErrorCodeEnum code)
+gpk_error_enum_to_localised_message (PkErrorEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {

@@ -633,13 +633,16 @@ gboolean
 gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list)
 {
 	GtkTreeIter iter;
-	const PkItemPackage *item;
+	PkPackage *item;
 	PkDesktop *desktop;
 	gchar *icon;
 	gchar *text;
 	guint i;
 	GtkWidget *widget;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	gtk_list_store_clear (dialog->priv->store);
 
@@ -654,16 +657,24 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 	/* add each well */
 	for (i=0; i<list->len; i++) {
 		item = g_ptr_array_index (list, i);
+		g_object_get (item,
+			      "info", &info,
+			      NULL);
 
 		/* not installed, so ignore icon */
-		if (item->info == PK_INFO_ENUM_DOWNLOADING ||
-		    item->info == PK_INFO_ENUM_CLEANUP)
+		if (info == PK_INFO_ENUM_DOWNLOADING ||
+		    info == PK_INFO_ENUM_CLEANUP)
 			continue;
 
-		text = gpk_package_id_format_twoline (item->package_id, item->summary);
+		g_object_get (item,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
+
+		text = gpk_package_id_format_twoline (package_id, summary);
 
 		/* get the icon */
-		split = pk_package_id_split (item->package_id);
+		split = pk_package_id_split (package_id);
 		icon = gpk_desktop_guess_icon_name (desktop, split[0]);
 		if (icon == NULL)
 			icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED));
@@ -671,10 +682,12 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 		gtk_list_store_append (dialog->priv->store, &iter);
 		gtk_list_store_set (dialog->priv->store, &iter,
 				    GPK_MODAL_DIALOG_STORE_IMAGE, icon,
-				    GPK_MODAL_DIALOG_STORE_ID, item->package_id,
+				    GPK_MODAL_DIALOG_STORE_ID, package_id,
 				    GPK_MODAL_DIALOG_STORE_TEXT, text,
 				    -1);
 		g_strfreev (split);
+		g_free (package_id);
+		g_free (summary);
 		g_free (icon);
 		g_free (text);
 	}
@@ -904,7 +917,7 @@ gpk_modal_dialog_test (EggTest *test)
 	GtkResponseType button;
 	GpkModalDialog *dialog = NULL;
 	GPtrArray *array;
-	PkItemPackage *item;
+	PkPackage *item;
 
 	if (!egg_test_start (test, "GpkModalDialog"))
 		return;
@@ -918,10 +931,20 @@ gpk_modal_dialog_test (EggTest *test)
 		egg_test_failed (test, NULL);
 
 	/* set some packages */
-	array = g_ptr_array_new_with_free_func ((GDestroyNotify) pk_item_package_unref);
-	item = pk_item_package_new (PK_INFO_ENUM_INSTALLED, "totem;001;i386;fedora", "Totem is a music player for GNOME");
+	array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
+	item = pk_package_new ();
+	g_object_set (item,
+		      "info", PK_INFO_ENUM_INSTALLED,
+		      "package-id", "totem;001;i386;fedora",
+		      "summary", "Totem is a music player for GNOME",
+		      NULL);
 	g_ptr_array_add (array, item);
-	item = pk_item_package_new (PK_INFO_ENUM_AVAILABLE, "totem;001;i386;fedora", "Amarok is a music player for KDE");
+	item = pk_package_new ();
+	g_object_set (item,
+		      "info", PK_INFO_ENUM_AVAILABLE,
+		      "package-id", "totem;001;i386;fedora",
+		      "summary", "Amarok is a music player for KDE",
+		      NULL);
 	g_ptr_array_add (array, item);
 	gpk_modal_dialog_set_package_list (dialog, array);
 	g_ptr_array_unref (array);

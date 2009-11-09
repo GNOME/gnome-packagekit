@@ -85,12 +85,15 @@ gpk_dialog_package_array_to_list_store (GPtrArray *array)
 {
 	GtkListStore *store;
 	GtkTreeIter iter;
-	const PkItemPackage *item;
+	PkPackage *item;
 	PkDesktop *desktop;
 	const gchar *icon;
 	gchar *text;
 	guint i;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	desktop = pk_desktop_new ();
 	store = gtk_list_store_new (GPK_DIALOG_STORE_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -98,21 +101,28 @@ gpk_dialog_package_array_to_list_store (GPtrArray *array)
 	/* add each well */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		text = gpk_package_id_format_twoline (item->package_id, item->summary);
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
+		text = gpk_package_id_format_twoline (package_id, summary);
 
 		/* get the icon */
-		split = pk_package_id_split (item->package_id);
+		split = pk_package_id_split (package_id);
 		icon = gpk_desktop_guess_icon_name (desktop, split[0]);
 		if (icon == NULL)
-			icon = gpk_info_enum_to_icon_name (item->info);
+			icon = gpk_info_enum_to_icon_name (info);
 
 		gtk_list_store_append (store, &iter);
 		gtk_list_store_set (store, &iter,
 				    GPK_DIALOG_STORE_IMAGE, icon,
-				    GPK_DIALOG_STORE_ID, item->package_id,
+				    GPK_DIALOG_STORE_ID, package_id,
 				    GPK_DIALOG_STORE_TEXT, text,
 				    -1);
 		g_strfreev (split);
+		g_free (package_id);
+		g_free (summary);
 		g_free (text);
 	}
 
@@ -173,14 +183,6 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, GPtrArray *array)
 	GtkListStore *store;
 	GtkWidget *widget;
 	const guint row_height = 48;
-	PkItemPackage *item;
-	guint i;
-
-	/* debug */
-	for (i=0; i<array->len; i++) {
-		item = g_ptr_array_index (array, i);
-		egg_debug ("add %s,%s", pk_info_enum_to_text (item->info), item->package_id);
-	}
 
 	/* convert to a store */
 	store = gpk_dialog_package_array_to_list_store (array);

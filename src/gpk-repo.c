@@ -226,7 +226,7 @@ gpk_repo_repo_enable_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 //	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
 	PkResults *results = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkWindow *window;
 
 	/* get the results */
@@ -238,18 +238,18 @@ gpk_repo_repo_enable_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
 		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
-					gpk_error_enum_to_localised_text (error_item->code), error_item->details);
+					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -354,14 +354,17 @@ gpk_repo_get_repo_list_cb (GObject *object, GAsyncResult *res, gpointer user_dat
 //	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
 	PkResults *results = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkWindow *window;
 	GPtrArray *array = NULL;
 	guint i;
-	const PkItemRepoDetail *item;
+	PkRepoDetail *item;
 	GtkTreeIter iter;
+	gchar *repo_id;
+	gchar *description;
+	gboolean enabled;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -372,13 +375,13 @@ gpk_repo_get_repo_list_cb (GObject *object, GAsyncResult *res, gpointer user_dat
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
 		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
 		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),
-					gpk_error_enum_to_localised_text (error_item->code), error_item->details);
+					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -388,15 +391,23 @@ gpk_repo_get_repo_list_cb (GObject *object, GAsyncResult *res, gpointer user_dat
 	array = pk_results_get_repo_detail_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		egg_debug ("repo = %s:%s:%i", item->repo_id, item->description, item->enabled);
-		gpk_repo_model_get_iter (model, &iter, item->repo_id);
+		g_object_get (item,
+			      "repo-id", &repo_id,
+			      "description", &description,
+			      "enabled", &enabled,
+			      NULL);
+		egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
+		gpk_repo_model_get_iter (model, &iter, repo_id);
 		gtk_list_store_set (list_store, &iter,
-				    REPO_COLUMN_ENABLED, item->enabled,
-				    REPO_COLUMN_TEXT, item->description,
-				    REPO_COLUMN_ID, item->repo_id,
+				    REPO_COLUMN_ENABLED, enabled,
+				    REPO_COLUMN_TEXT, description,
+				    REPO_COLUMN_ID, repo_id,
 				    REPO_COLUMN_ACTIVE, TRUE,
 				    REPO_COLUMN_SENSITIVE, TRUE,
 				    -1);
+
+		g_free (repo_id);
+		g_free (description);
 	}
 
 	/* remove the items that are not now present */
@@ -405,8 +416,8 @@ gpk_repo_get_repo_list_cb (GObject *object, GAsyncResult *res, gpointer user_dat
 	/* sort */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(list_store), REPO_COLUMN_TEXT, GTK_SORT_ASCENDING);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)

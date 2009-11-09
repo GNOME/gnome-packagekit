@@ -536,8 +536,8 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicatio
 	GPtrArray *array_sort = NULL;
 	GtkWidget *dialog;
 	GtkWindow *window;
-	PkItemErrorCode *error_item = NULL;
-	PkItemFiles *item;
+	PkError *error_code = NULL;
+	PkFiles *item;
 	PkResults *results;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
@@ -551,15 +551,15 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicatio
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get files: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get files: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -579,8 +579,13 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicatio
 		goto out;
 	}
 
+	/* get data */
+	g_object_get (item,
+		      "files", &files,
+		      NULL);
+
 	/* convert to pointer array */
-	array_sort = pk_strv_to_ptr_array (item->files);
+	array_sort = pk_strv_to_ptr_array (files);
 	g_ptr_array_sort (array_sort, (GCompareFunc) gpk_application_strcmp_indirect);
 
 	/* title */
@@ -604,8 +609,8 @@ out:
 	g_strfreev (files);
 	g_strfreev (split);
 	g_free (package_id_selected);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (array_sort != NULL)
@@ -890,7 +895,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
 	GtkWindow *window;
 	gchar *name = NULL;
@@ -910,15 +915,15 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get requires: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get requires: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -969,8 +974,8 @@ out:
 	g_free (name);
 	g_free (title);
 	g_free (message);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1013,7 +1018,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
 	GtkWindow *window;
 	gchar *name = NULL;
@@ -1033,15 +1038,15 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get depends: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get depends: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -1087,8 +1092,8 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1250,10 +1255,10 @@ gpk_application_text_format_display (GpkApplication *application, const gchar *a
  * gpk_application_add_item_to_results:
  **/
 static void
-gpk_application_add_item_to_results (GpkApplication *application, const PkItemPackage *item)
+gpk_application_add_item_to_results (GpkApplication *application, PkPackage *item)
 {
 	GtkTreeIter iter;
-	gchar *summary;
+	gchar *summary_markup;
 	const gchar *icon = NULL;
 	gchar *text;
 	gboolean in_queue;
@@ -1263,17 +1268,27 @@ gpk_application_add_item_to_results (GpkApplication *application, const PkItemPa
 	PkBitfield state = 0;
 	static guint package_cnt = 0;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
+
+	/* get data */
+	g_object_get (item,
+		      "info", &info,
+		      "package-id", &package_id,
+		      "summary", &summary,
+		      NULL);
 
 	/* format if required */
 	egg_markdown_set_output (application->priv->markdown, EGG_MARKDOWN_OUTPUT_PANGO);
-	summary = egg_markdown_parse (application->priv->markdown, item->summary);
+	summary_markup = egg_markdown_parse (application->priv->markdown, summary);
 
 	/* mark as got so we don't warn */
 	application->priv->has_package = TRUE;
 
 	/* are we in the package array? */
-	in_queue = (pk_package_sack_find_by_id (application->priv->package_sack, item->package_id) != NULL);
-	installed = (item->info == PK_INFO_ENUM_INSTALLED) || (item->info == PK_INFO_ENUM_COLLECTION_INSTALLED);
+	in_queue = (pk_package_sack_find_by_id (application->priv->package_sack, package_id) != NULL);
+	installed = (info == PK_INFO_ENUM_INSTALLED) || (info == PK_INFO_ENUM_COLLECTION_INSTALLED);
 
 	if (installed)
 		pk_bitfield_add (state, GPK_STATE_INSTALLED);
@@ -1281,11 +1296,11 @@ gpk_application_add_item_to_results (GpkApplication *application, const PkItemPa
 		pk_bitfield_add (state, GPK_STATE_IN_LIST);
 
 	/* special icon */
-	if (item->info == PK_INFO_ENUM_COLLECTION_INSTALLED || item->info == PK_INFO_ENUM_COLLECTION_AVAILABLE)
+	if (info == PK_INFO_ENUM_COLLECTION_INSTALLED || info == PK_INFO_ENUM_COLLECTION_AVAILABLE)
 		pk_bitfield_add (state, GPK_STATE_COLLECTION);
 
 	/* use the application icon if available */
-	split = pk_package_id_split (item->package_id);
+	split = pk_package_id_split (package_id);
 	icon = gpk_desktop_guess_icon_name (application->priv->desktop, split[PK_PACKAGE_ID_NAME]);
 	g_strfreev (split);
 	if (icon == NULL)
@@ -1294,7 +1309,7 @@ gpk_application_add_item_to_results (GpkApplication *application, const PkItemPa
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* use two lines */
-	text = gpk_package_id_format_twoline (item->package_id, summary);
+	text = gpk_package_id_format_twoline (package_id, summary_markup);
 
 	/* can we modify this? */
 	enabled = gpk_application_get_checkbox_enable (application, state);
@@ -1305,8 +1320,8 @@ gpk_application_add_item_to_results (GpkApplication *application, const PkItemPa
 			    PACKAGES_COLUMN_CHECKBOX, checkbox,
 			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled,
 			    PACKAGES_COLUMN_TEXT, text,
-			    PACKAGES_COLUMN_SUMMARY, item->summary,
-			    PACKAGES_COLUMN_ID, item->package_id,
+			    PACKAGES_COLUMN_SUMMARY, summary,
+			    PACKAGES_COLUMN_ID, package_id,
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
 
@@ -1316,6 +1331,8 @@ gpk_application_add_item_to_results (GpkApplication *application, const PkItemPa
 			gtk_main_iteration ();
 	}
 
+	g_free (package_id);
+	g_free (summary_markup);
 	g_free (summary);
 	g_free (text);
 }
@@ -1432,17 +1449,24 @@ gpk_application_run_installed (GpkApplication *application, PkResults *results)
 {
 	guint i;
 	GPtrArray *array;
-	const PkItemPackage *item;
+	PkPackage *item;
 	GPtrArray *package_ids_array;
 	gchar **package_ids = NULL;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
 
 	/* get the package array and filter on INSTALLED */
 	package_ids_array = g_ptr_array_new_with_free_func (g_free);
 	array = pk_results_get_package_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item->info == PK_INFO_ENUM_INSTALLING)
-			g_ptr_array_add (package_ids_array, g_strdup (item->package_id));
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      NULL);
+		if (info == PK_INFO_ENUM_INSTALLING)
+			g_ptr_array_add (package_ids_array, g_strdup (package_id));
+		g_free (package_id);
 	}
 
 	/* nothing to show */
@@ -1498,9 +1522,9 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplication *
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
-	PkItemPackage *item;
+	PkPackage *item;
 	guint i;
 	GtkWidget *widget;
 	GtkWindow *window;
@@ -1514,15 +1538,15 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplication *
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to search: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to search: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -1558,8 +1582,8 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplication *
 	gtk_widget_set_sensitive (widget, TRUE);
 	gpk_application_set_buttons_apply_clear (application);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1675,11 +1699,7 @@ gpk_application_populate_selected (GpkApplication *application)
 {
 	guint i;
 	guint len;
-	PkItemPackage *item;
 	PkPackage *package;
-	PkInfoEnum info;
-	const gchar *package_id;
-	gchar *summary;
 
 	/* get size */
 	len = pk_package_sack_get_size (application->priv->package_sack);
@@ -1693,15 +1713,7 @@ gpk_application_populate_selected (GpkApplication *application)
 	/* dump queue to package window */
 	for (i=0; i<len; i++) {
 		package = pk_package_sack_get_index (application->priv->package_sack, i);
-		package_id = pk_package_get_id (package);
-		g_object_get (package,
-			      "info", &info,
-			      "summary", &summary,
-			      NULL);
-		item = pk_item_package_new (info, package_id, summary);
-		gpk_application_add_item_to_results (application, item);
-		pk_item_package_unref (item);
-		g_free (summary);
+		gpk_application_add_item_to_results (application, package);
 	}
 out:
 	return TRUE;
@@ -1954,7 +1966,7 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkWindow *window;
 
 	/* get the results */
@@ -1966,15 +1978,15 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to install packages: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to install packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -1990,8 +2002,8 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	application->priv->action = PK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -2004,7 +2016,7 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkWindow *window;
 
 	/* get the results */
@@ -2016,15 +2028,15 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to remove packages: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to remove packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -2037,8 +2049,8 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 	application->priv->action = PK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -2201,17 +2213,23 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
-	PkItemDetails *item;
+	PkDetails *item;
 	GtkWidget *widget;
 	gchar *text;
 	gchar *value;
 	const gchar *repo_name;
-	const gchar *group;
+	const gchar *group_text;
 	gboolean installed;
 	gchar **split = NULL;
 	GtkWindow *window;
+	gchar *package_id = NULL;
+	gchar *url = NULL;
+	PkGroupEnum group;
+	gchar *license = NULL;
+	gchar *description = NULL;
+	guint64 size;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
@@ -2224,15 +2242,15 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -2253,7 +2271,17 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 
 	gtk_list_store_clear (application->priv->details_store);
 
-	split = pk_package_id_split (item->package_id);
+	/* get data */
+	g_object_get (item,
+		      "package-id", &package_id,
+		      "url", &url,
+		      "group", &group,
+		      "license", &license,
+		      "description", &description,
+		      "size", &size,
+		      NULL);
+
+	split = pk_package_id_split (package_id);
 	installed = g_strcmp0 (split[PK_PACKAGE_ID_DATA], "installed") == 0;
 
 	/* if a collection, mark as such */
@@ -2263,36 +2291,36 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 
 	/* homepage */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_homepage"));
-	if (egg_strzero (item->url) == FALSE) {
+	if (egg_strzero (url) == FALSE) {
 		gtk_widget_set_sensitive (widget, TRUE);
 
 		/* TRANSLATORS: tooltip: go to the web address */
-		text = g_strdup_printf (_("Visit %s"), item->url);
+		text = g_strdup_printf (_("Visit %s"), url);
 		gtk_widget_set_tooltip_text (widget, text);
 		g_free (text);
 
 		/* TRANSLATORS: add an entry to go to the project home page */
-		gpk_application_add_detail_item (application, _("Project"), _("Homepage"), item->url);
+		gpk_application_add_detail_item (application, _("Project"), _("Homepage"), url);
 
 		/* save the url for the button */
 		g_free (application->priv->url);
-		application->priv->url = g_strdup (item->url);
+		application->priv->url = g_strdup (url);
 
 	} else {
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
 	/* group */
-	if (item->group != PK_GROUP_ENUM_UNKNOWN) {
-		group = gpk_group_enum_to_localised_text (item->group);
+	if (group != PK_GROUP_ENUM_UNKNOWN) {
+		group_text = gpk_group_enum_to_localised_text (group);
 		/* TRANSLATORS: the group the package belongs in */
-		gpk_application_add_detail_item (application, _("Group"), group, NULL);
+		gpk_application_add_detail_item (application, _("Group"), group_text, NULL);
 	}
 
 	/* group */
-	if (!egg_strzero (item->license)) {
+	if (!egg_strzero (license)) {
 		/* TRANSLATORS: the licence string for the package */
-		gpk_application_add_detail_item (application, _("License"), item->license, NULL);
+		gpk_application_add_detail_item (application, _("License"), license, NULL);
 	}
 
 	/* menu path */
@@ -2308,15 +2336,15 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	g_free (value);
 
 	/* set the description */
-	text = gpk_application_text_format_display (application, item->description);
+	text = gpk_application_text_format_display (application, description);
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
 	gpk_application_set_text_buffer (widget, text);
 	g_free (text);
 
 	/* if non-zero, set the size */
-	if (item->size > 0) {
+	if (size > 0) {
 		/* set the size */
-		value = g_format_size_for_display (item->size);
+		value = g_format_size_for_display (size);
 		if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0)
 			/* TRANSLATORS: the size of the meta package */
 			gpk_application_add_detail_item (application, _("Size"), value, NULL);
@@ -2337,9 +2365,13 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 		gpk_application_add_detail_item (application, _("Source"), repo_name, NULL);
 	}
 out:
+	g_free (package_id);
+	g_free (url);
+	g_free (license);
+	g_free (description);
 	g_strfreev (split);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -2813,7 +2845,7 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, GpkApplic
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkWindow *window;
 
 	/* get the results */
@@ -2825,21 +2857,21 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, GpkApplic
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to refresh: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to refresh: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -3261,15 +3293,25 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkAppli
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
 	GtkTreeIter iter;
 	GtkTreeIter iter2;
 	guint i, j;
 	GtkTreeView *treeview;
-	PkItemCategory *item;
-	PkItemCategory *item2;
+	PkCategory *item;
+	PkCategory *item2;
 	GtkWindow *window;
+	gchar *package_id = NULL;
+	gchar *name = NULL;
+	gchar *summary = NULL;
+	gchar *cat_id = NULL;
+	gchar *icon = NULL;
+	gchar *parent_id_tmp = NULL;
+	gchar *name_tmp = NULL;
+	gchar *summary_tmp = NULL;
+	gchar *cat_id_tmp = NULL;
+	gchar *icon_tmp = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -3280,15 +3322,15 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkAppli
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -3302,39 +3344,63 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkAppli
 	array = pk_results_get_category_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
+		g_object_get (item,
+			      "name", &name,
+			      "summary", &summary,
+			      "cat-id", &cat_id,
+			      "icon", &icon,
+			      NULL);
 
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		gtk_tree_store_set (application->priv->groups_store, &iter,
-				    GROUPS_COLUMN_NAME, item->name,
-				    GROUPS_COLUMN_SUMMARY, item->summary,
-				    GROUPS_COLUMN_ID, item->cat_id,
-				    GROUPS_COLUMN_ICON, item->icon,
+				    GROUPS_COLUMN_NAME, name,
+				    GROUPS_COLUMN_SUMMARY, summary,
+				    GROUPS_COLUMN_ID, cat_id,
+				    GROUPS_COLUMN_ICON, icon,
 				    GROUPS_COLUMN_ACTIVE, FALSE,
 				    -1);
 		j = 0;
 		do {
 			/* only allows groups two layers deep */
 			item2 = g_ptr_array_index (array, j);
-			if (g_strcmp0 (item2->parent_id, item->cat_id) == 0) {
+			g_object_get (item2,
+				      "parent-id", &parent_id_tmp,
+				      "cat-id", &cat_id_tmp,
+				      "name", &name_tmp,
+				      "summary", &summary_tmp,
+				      "icon", &icon_tmp,
+				      NULL);
+			if (g_strcmp0 (parent_id_tmp, cat_id) == 0) {
 				gtk_tree_store_append (application->priv->groups_store, &iter2, &iter);
 				gtk_tree_store_set (application->priv->groups_store, &iter2,
-						    GROUPS_COLUMN_NAME, item2->name,
-						    GROUPS_COLUMN_SUMMARY, item2->summary,
-						    GROUPS_COLUMN_ID, item2->cat_id,
-						    GROUPS_COLUMN_ICON, item2->icon,
+						    GROUPS_COLUMN_NAME, name_tmp,
+						    GROUPS_COLUMN_SUMMARY, summary_tmp,
+						    GROUPS_COLUMN_ID, cat_id_tmp,
+						    GROUPS_COLUMN_ICON, icon_tmp,
 						    GROUPS_COLUMN_ACTIVE, TRUE,
 						    -1);
 				g_ptr_array_remove (array, item2);
 			} else
 				j++;
+			g_free (parent_id_tmp);
+			g_free (name_tmp);
+			g_free (summary_tmp);
+			g_free (cat_id_tmp);
+			g_free (icon_tmp);
 		} while (j < array->len);
+
+		g_free (package_id);
+		g_free (name);
+		g_free (summary);
+		g_free (cat_id);
+		g_free (icon);
 	}
 
 	/* open all expanders */
 	gtk_tree_view_collapse_all (treeview);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -3572,11 +3638,13 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplic
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GPtrArray *array = NULL;
-	PkItemRepoDetail *item;
+	PkRepoDetail *item;
 	guint i;
 	GtkWindow *window;
+	gchar *repo_id = NULL;
+	gchar *description = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -3587,15 +3655,15 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplic
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to repo list: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
-		if (error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
 			window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (error_item->code),
-						gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -3604,16 +3672,22 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplic
 	array = pk_results_get_repo_detail_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		egg_debug ("repo = %s:%s", item->repo_id, item->description);
+		g_object_get (item,
+			      "repo-id", &repo_id,
+			      "description", &description,
+			      NULL);
+
+		egg_debug ("repo = %s:%s", repo_id, description);
 		/* no problem, just no point adding as we will fallback to the repo_id */
-		if (item->description == NULL)
-			continue;
-		g_hash_table_insert (application->priv->repos, g_strdup (item->repo_id), g_strdup (item->description));
+		if (description != NULL)
+			g_hash_table_insert (application->priv->repos, g_strdup (repo_id), g_strdup (description));
+		g_free (repo_id);
+		g_free (description);
 	}
 
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)

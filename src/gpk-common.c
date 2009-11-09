@@ -53,14 +53,14 @@ static gboolean small_form_factor_mode = FALSE;
 gchar **
 pk_package_array_to_strv (GPtrArray *array)
 {
-	const PkItemPackage *item;
+	PkPackage *item;
 	gchar **results;
 	guint i;
 
 	results = g_new0 (gchar *, array->len+1);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		results[i] = g_strdup (item->package_id);
+		results[i] = g_strdup (pk_package_get_id (item));
 	}
 	return results;
 }
@@ -609,7 +609,7 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 	gchar **lines = NULL;
 	guint i;
 	gchar **split;
-	PkItemPackage *item;
+	PkPackage *item;
 
 	/* get data */
 	ret = g_file_get_contents (filename, &data, NULL, &error);
@@ -619,8 +619,8 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 		goto out;
 	}
 
-	/* create array of PkItemPackage's */
-	array = g_ptr_array_new_with_free_func ((GDestroyNotify) pk_item_package_unref);
+	/* create array of PkPackage's */
+	array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 
 	/* split */
 	lines = g_strsplit (data, "\n", -1);
@@ -628,9 +628,12 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 		split = g_strsplit (lines[i], "\t", 3);
 		if (g_strv_length (split) != 3)
 			continue;
-		item = pk_item_package_new (pk_info_enum_from_text (split[PK_PACKAGE_ID_NAME]),
-					    split[PK_PACKAGE_ID_VERSION],
-					    split[PK_PACKAGE_ID_ARCH]);
+		item = pk_package_new ();
+		g_object_set (item,
+			      "info", pk_info_enum_from_text (split[0]),
+			      "package-id", split[1],
+			      "summary", split[2],
+			      NULL);
 		g_ptr_array_add (array, item);
 		g_strfreev (split);
 	}
@@ -650,7 +653,7 @@ gpk_package_entry_completion_model_new (void)
 {
 	GPtrArray *list;
 	guint i;
-	const PkItemPackage *item;
+	PkPackage *item;
 	GHashTable *hash;
 	gpointer data;
 	GtkListStore *store;
@@ -668,12 +671,12 @@ gpk_package_entry_completion_model_new (void)
 	egg_debug ("loading %i autocomplete items", list->len);
 	for (i=0; i<list->len; i++) {
 		item = g_ptr_array_index (list, i);
-		if (item == NULL || item->package_id == NULL) {
+		if (item == NULL || pk_package_get_id (item) == NULL) {
 			egg_warning ("item invalid!");
 			break;
 		}
 
-		split = pk_package_id_split (item->package_id);
+		split = pk_package_id_split (pk_package_get_id (item));
 		data = g_hash_table_lookup (hash, (gpointer) split[PK_PACKAGE_ID_NAME]);
 		if (data == NULL) {
 			/* append just the name */

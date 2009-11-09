@@ -182,10 +182,15 @@ static void
 gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 {
 	GPtrArray *array;
-	const PkItemRepoSignatureRequired *item;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 	GtkWidget *widget;
-	gchar *text;
+	gchar *printable = NULL;
+	gchar *package_id = NULL;
+	gchar *repository_name = NULL;
+	gchar *key_url = NULL;
+	gchar *key_userid = NULL;
+	gchar *key_id = NULL;
+	PkRepoSignatureRequired *item;
+	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
 	/* save the current request */
 	priv->request = request;
@@ -199,21 +204,27 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 
 	/* only one item supported */
 	item = g_ptr_array_index (array, 0);
+	g_object_get (item,
+		      "package-id", &package_id,
+		      "repository-name", &repository_name,
+		      "key-url", &key_url,
+		      "key-userid", &key_userid,
+		      "key-id", &key_id,
+		      NULL);
 
 	/* show correct text */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_signature, "label_name"));
-	gtk_label_set_label (GTK_LABEL (widget), item->repository_name);
+	gtk_label_set_label (GTK_LABEL (widget), repository_name);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_signature, "label_url"));
-	gtk_label_set_label (GTK_LABEL (widget), item->key_url);
+	gtk_label_set_label (GTK_LABEL (widget), key_url);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_signature, "label_user"));
-	gtk_label_set_label (GTK_LABEL (widget), item->key_userid);
+	gtk_label_set_label (GTK_LABEL (widget), key_userid);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_signature, "label_id"));
-	gtk_label_set_label (GTK_LABEL (widget), item->key_id);
+	gtk_label_set_label (GTK_LABEL (widget), key_id);
 
-	text = pk_package_id_to_printable (item->package_id);
+	printable = pk_package_id_to_printable (package_id);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_signature, "label_package"));
-	gtk_label_set_label (GTK_LABEL (widget), text);
-	g_free (text);
+	gtk_label_set_label (GTK_LABEL (widget), printable);
 
 	/* show window */
 	priv->current_window = GTK_WINDOW(gtk_builder_get_object (priv->builder_signature, "dialog_gpg"));
@@ -226,6 +237,12 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 	priv->help_id = "gpg-signature";
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
 out:
+	g_free (printable);
+	g_free (package_id);
+	g_free (repository_name);
+	g_free (key_url);
+	g_free (key_userid);
+	g_free (key_id);
 	g_ptr_array_unref (array);
 }
 
@@ -236,12 +253,15 @@ static void
 gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 {
 	GPtrArray *array;
-	const PkItemEulaRequired *item;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
-	gchar *text;
-	gchar **split;
+	gchar *printable = NULL;
+	gchar **split = NULL;
+	PkEulaRequired *item;
+	gchar *package_id = NULL;
+	gchar *vendor_name = NULL;
+	gchar *license_agreement = NULL;
+	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
 	/* save the current request */
 	priv->request = request;
@@ -255,17 +275,21 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 
 	/* only one item supported */
 	item = g_ptr_array_index (array, 0);
+	g_object_get (item,
+		      "package-id", &package_id,
+		      "vendor-name", &vendor_name,
+		      "license-agreement", &license_agreement,
+		      NULL);
 
 	/* title */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_eula, "label_title"));
 
-	split = pk_package_id_split (item->package_id);
-	text = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", split[0], item->vendor_name);
-	gtk_label_set_label (GTK_LABEL (widget), text);
-	g_free (text);
+	split = pk_package_id_split (package_id);
+	printable = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", split[0], vendor_name);
+	gtk_label_set_label (GTK_LABEL (widget), printable);
 
 	buffer = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_insert_at_cursor (buffer, item->license_agreement, strlen (item->license_agreement));
+	gtk_text_buffer_insert_at_cursor (buffer, license_agreement, strlen (license_agreement));
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_eula, "textview_details"));
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 
@@ -284,8 +308,12 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
 
 	g_object_unref (buffer);
-	g_strfreev (split);
 out:
+	g_free (printable);
+	g_free (package_id);
+	g_free (vendor_name);
+	g_free (license_agreement);
+	g_strfreev (split);
 	g_ptr_array_unref (array);
 }
 
@@ -296,10 +324,13 @@ static void
 gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 {
 	GPtrArray *array;
-	const PkItemMediaChangeRequired *item;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	PkMediaChangeRequired *item;
 	const gchar *name;
 	gchar *message = NULL;
+	gchar *media_id;
+	PkMediaTypeEnum media_type;
+	gchar *media_text;
+	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
 	/* save the current request */
 	priv->request = request;
@@ -313,10 +344,15 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 
 	/* only one item supported */
 	item = g_ptr_array_index (array, 0);
+	g_object_get (item,
+		      "media-id", &media_id,
+		      "media-type", &media_type,
+		      "media-text", &media_text,
+		      NULL);
 
-	name = gpk_media_type_enum_to_localised_text (item->media_type);
+	name = gpk_media_type_enum_to_localised_text (media_type);
 	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
-	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' to continue."), name, item->media_text);
+	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' to continue."), name, media_text);
 
 	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
 								   /* TRANSLATORS: this is the window title when a new cd or dvd is required */
@@ -628,9 +664,7 @@ gpk_task_test_install_packages_cb (GObject *object, GAsyncResult *res, EggTest *
 	GError *error = NULL;
 	PkResults *results;
 	GPtrArray *packages;
-	const PkItemPackage *item;
-	guint i;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (PK_TASK(task), res, &error);
@@ -641,27 +675,21 @@ gpk_task_test_install_packages_cb (GObject *object, GAsyncResult *res, EggTest *
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL)
-		egg_test_failed (test, "failed to resolve success: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL)
+		egg_test_failed (test, "failed to resolve success: %s", pk_error_get_details (error_code));
 
 	packages = pk_results_get_package_array (results);
 	if (packages == NULL)
 		egg_test_failed (test, "no packages!");
 
-	/* list, just for shits and giggles */
-	for (i=0; i<packages->len; i++) {
-		item = g_ptr_array_index (packages, i);
-		egg_debug ("%s\t%s\t%s", pk_info_enum_to_text (item->info), item->package_id, item->summary);
-	}
-
-	if (packages->len != 3)
+	if (packages->len != 4)
 		egg_test_failed (test, "invalid number of packages: %i", packages->len);
 
 	g_ptr_array_unref (packages);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 	egg_test_loop_quit (test);

@@ -350,11 +350,15 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	PkRestartEnum restart;
 	guint i;
 	GPtrArray *array;
-	const PkItemPackage *item;
+	PkPackage *item;
 	GString *message_text = NULL;
 	guint skipped_number = 0;
 	const gchar *message;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
+
 
 	/* check we got some packages */
 	array = pk_results_get_package_array (results);
@@ -369,15 +373,22 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	/* find any we skipped */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
 
-		split = pk_package_id_split (item->package_id);
-		egg_debug ("%s, %s, %s", pk_info_enum_to_text (item->info),
-			   split[PK_PACKAGE_ID_NAME], item->summary);
-		if (item->info == PK_INFO_ENUM_BLOCKED) {
+		split = pk_package_id_split (package_id);
+		egg_debug ("%s, %s, %s", pk_info_enum_to_text (info),
+			   split[PK_PACKAGE_ID_NAME], summary);
+		if (info == PK_INFO_ENUM_BLOCKED) {
 			skipped_number++;
 			g_string_append_printf (message_text, "<b>%s</b> - %s\n",
-						split[PK_PACKAGE_ID_NAME], item->summary);
+						split[PK_PACKAGE_ID_NAME], summary);
 		}
+		g_free (package_id);
+		g_free (summary);
 		g_strfreev (split);
 	}
 
@@ -452,7 +463,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 {
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -467,15 +478,15 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to update system: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to update system: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
-		if (error_item->code != PK_ERROR_ENUM_PROCESS_KILL &&
-		    error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    error_item->code != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (error_item->code),
-					  gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
+			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -493,8 +504,8 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	gpk_check_update_finished_notify (cupdate, results);
 	cupdate->priv->number_updates_critical_last_shown = 0;
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -683,8 +694,10 @@ gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, GPtrArray *ar
 {
 	guint i;
 	PkBitfield infos = 0;
-	const PkItemPackage *item;
+	PkPackage *item;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), PK_INFO_ENUM_UNKNOWN);
 
@@ -695,14 +708,15 @@ gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, GPtrArray *ar
 	/* add each status to a array */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item == NULL) {
-			egg_warning ("not found item %i", i);
-			break;
-		}
-		split = pk_package_id_split (item->package_id);
-		egg_debug ("%s %s", split[PK_PACKAGE_ID_NAME], pk_info_enum_to_text (item->info));
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      NULL);
+		split = pk_package_id_split (package_id);
+		egg_debug ("%s %s", split[PK_PACKAGE_ID_NAME], pk_info_enum_to_text (info));
 		g_strfreev (split);
-		pk_bitfield_add (infos, item->info);
+		pk_bitfield_add (infos, info);
+		g_free (package_id);
 	}
 	return infos;
 }
@@ -862,7 +876,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	PkClient *client = PK_CLIENT(object);
 	PkResults *results;
 	GError *error = NULL;
-	const PkItemPackage *item;
+	PkPackage *item;
 	guint i;
 	guint more;
 	guint showing = 0;
@@ -875,7 +889,10 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	gchar **package_ids;
 	gchar **split;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
@@ -886,15 +903,15 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
-		if (error_item->code != PK_ERROR_ENUM_PROCESS_KILL &&
-		    error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    error_item->code != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (error_item->code),
-					  gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
+			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -920,21 +937,35 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* find the security updates first */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item->info == PK_INFO_ENUM_SECURITY) {
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      NULL);
+		if (info == PK_INFO_ENUM_SECURITY) {
 			/* add to array */
-			g_ptr_array_add (security_array, g_strdup (item->package_id));
+			g_ptr_array_add (security_array, g_strdup (package_id));
 		}
+		g_free (package_id);
 	}
 
 	/* get the security update text */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item->info != PK_INFO_ENUM_SECURITY)
+		g_object_get (item,
+			      "info", &info,
+			      NULL);
+		if (info != PK_INFO_ENUM_SECURITY)
 			continue;
 
+		/* get more data */
+		g_object_get (item,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
+
 		/* don't use a huge notification that won't fit on the screen */
-		split = pk_package_id_split (item->package_id);
-		g_string_append_printf (status_security, "<b>%s</b> - %s\n", split[PK_PACKAGE_ID_NAME], item->summary);
+		split = pk_package_id_split (package_id);
+		g_string_append_printf (status_security, "<b>%s</b> - %s\n", split[PK_PACKAGE_ID_NAME], summary);
 		g_strfreev (split);
 		if (++showing == GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
 			more = security_array->len - showing;
@@ -946,6 +977,8 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 			}
 			break;
 		}
+		g_free (package_id);
+		g_free (summary);
 	}
 
 	/* work out icon (cannot be NULL) */
@@ -1044,8 +1077,8 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* shouldn't happen */
 	egg_warning ("unknown update mode");
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (status_security != NULL)
 		g_string_free (status_security, TRUE);
 	if (status_tooltip != NULL)
@@ -1208,7 +1241,7 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 	PkClient *client = PK_CLIENT(object);
 	PkResults *results;
 	GError *error = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
@@ -1219,20 +1252,20 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
-		if (error_item->code != PK_ERROR_ENUM_PROCESS_KILL &&
-		    error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (error_item->code),
-					  gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -1274,11 +1307,13 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	GPtrArray *array = NULL;
 	gboolean ret;
 	guint i;
-	PkItemDistroUpgrade *item;
+	PkDistroUpgrade *item;
 	const gchar *title;
 	NotifyNotification *notification;
 	GString *string = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
+	gchar *name = NULL;
+	PkUpdateStateEnum state;
 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
@@ -1289,14 +1324,14 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
-		if (error_item->code != PK_ERROR_ENUM_PROCESS_KILL &&
-		    error_item->code != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (error_item->code),
-					  gpk_error_enum_to_localised_message (error_item->code), error_item->details);
+		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
+					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
 		goto out;
 	}
@@ -1320,8 +1355,13 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	/* find the upgrade string */
 	string = g_string_new ("");
 	for (i=0; i < array->len; i++) {
-		item = (PkItemDistroUpgrade *) g_ptr_array_index (array, i);
-		g_string_append_printf (string, "%s (%s)\n", item->name, pk_distro_upgrade_enum_to_text (item->state));
+		item = (PkDistroUpgrade *) g_ptr_array_index (array, i);
+		g_object_get (item,
+			      "name", &name,
+			      "state", &state,
+			      NULL);
+		g_string_append_printf (string, "%s (%s)\n", name, pk_distro_upgrade_enum_to_text (state));
+		g_free (name);
 	}
 	if (string->len != 0)
 		g_string_set_size (string, string->len-1);
@@ -1347,8 +1387,8 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 		g_error_free (error);
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (string != NULL)

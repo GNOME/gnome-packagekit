@@ -1282,28 +1282,36 @@ out:
  * pk_watch_process_messages_cb:
  **/
 static void
-pk_watch_process_messages_cb (PkItemMessage *item, GpkWatch *watch)
+pk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 {
 	gboolean ret;
 	GError *error = NULL;
 	gboolean value;
 	NotifyNotification *notification;
 	GpkWatchCachedMessage *cached_message;
+	PkMessageEnum type;
+	gchar *details;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
+	/* get data */
+	g_object_get (item,
+		      "type", &type,
+		      "details", &details,
+		      NULL);
+
 	/* is ignored */
-	ret = gpk_watch_is_message_ignored (watch, item->type);
+	ret = gpk_watch_is_message_ignored (watch, type);
 	if (ret) {
 		egg_debug ("ignoring message");
-		return;
+		goto out;
 	}
 
 	/* add to list */
 	cached_message = g_new0 (GpkWatchCachedMessage, 1);
-	cached_message->type = item->type;
+	cached_message->type = type;
 	cached_message->tid = NULL;
-	cached_message->details = g_strdup (item->details);
+	cached_message->details = g_strdup (details);
 	g_ptr_array_add (watch->priv->cached_messages, cached_message);
 
 	/* close existing */
@@ -1320,7 +1328,7 @@ pk_watch_process_messages_cb (PkItemMessage *item, GpkWatch *watch)
 	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
 	if (!value) {
 		egg_debug ("not showing notification as prevented in gconf");
-		return;
+		goto out;
 	}
 
 	/* do the bubble */
@@ -1333,13 +1341,15 @@ pk_watch_process_messages_cb (PkItemMessage *item, GpkWatch *watch)
 		g_error_free (error);
 	}
 	watch->priv->notification_cached_messages = notification;
+out:
+	g_free (details);
 }
 
 /**
  * pk_watch_process_error_code:
  **/
 static void
-pk_watch_process_error_code (GpkWatch *watch, PkItemErrorCode *item)
+pk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -1348,17 +1358,19 @@ pk_watch_process_error_code (GpkWatch *watch, PkItemErrorCode *item)
 	const gchar *message;
 	gboolean value;
 	NotifyNotification *notification;
+	PkErrorEnum code;
 
 	g_return_if_fail (GPK_IS_WATCH (watch));
 
-	title = gpk_error_enum_to_localised_text (item->code);
+	code = pk_error_get_code (error_code);
+	title = gpk_error_enum_to_localised_text (code);
 
 	/* ignore some errors */
-	if (item->code == PK_ERROR_ENUM_NOT_SUPPORTED ||
-	    item->code == PK_ERROR_ENUM_NO_NETWORK ||
-	    item->code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    item->code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_debug ("error ignored %s%s", title, item->details);
+	if (code == PK_ERROR_ENUM_NOT_SUPPORTED ||
+	    code == PK_ERROR_ENUM_NO_NETWORK ||
+	    code == PK_ERROR_ENUM_PROCESS_KILL ||
+	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		egg_debug ("error ignored %s%s", title, pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -1370,11 +1382,11 @@ pk_watch_process_error_code (GpkWatch *watch, PkItemErrorCode *item)
 	}
 
 	/* we need to format this */
-	message = gpk_error_enum_to_localised_message (item->code);
+	message = gpk_error_enum_to_localised_message (code);
 
 	/* save this globally */
 	g_free (watch->priv->error_details);
-	watch->priv->error_details = g_markup_escape_text (item->details, -1);
+	watch->priv->error_details = g_markup_escape_text (pk_error_get_details (error_code), -1);
 
 	/* TRANSLATORS: Prefix to the title shown in the libnotify popup */
 	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
@@ -1400,20 +1412,28 @@ out:
  * pk_watch_process_require_restart_cb:
  **/
 static void
-pk_watch_process_require_restart_cb (PkItemRequireRestart *item, GpkWatch *watch)
+pk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 {
 	GPtrArray *array = NULL;
 	GPtrArray *names = NULL;
 	const gchar *name;
 	gchar **split = NULL;
 	guint i;
+	PkRestartEnum restart;
+	gchar *package_id = NULL;
+
+	/* get data */
+	g_object_get (item,
+		      "restart", &restart,
+		      "package-id", &package_id,
+		      NULL);
 
 	/* if less important than what we are already showing */
-	if (item->restart <= watch->priv->restart)
+	if (restart <= watch->priv->restart)
 		goto out;
 
 	/* add name if not already in the list */
-	split = pk_package_id_split (item->package_id);
+	split = pk_package_id_split (package_id);
 	names = watch->priv->restart_package_names;
 	for (i=0; i<names->len; i++) {
 		name = g_ptr_array_index (names, i);
@@ -1426,8 +1446,9 @@ pk_watch_process_require_restart_cb (PkItemRequireRestart *item, GpkWatch *watch
 	}
 
 	/* save new restart */
-	watch->priv->restart = item->restart;
+	watch->priv->restart = restart;
 out:
+	g_free (package_id);
 	g_strfreev (split);
 	if (array != NULL)
 		g_object_unref (array);
@@ -1450,7 +1471,7 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	PkProgress *progress = NULL;
 	PkResults *results;
 	PkRoleEnum role;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -1481,20 +1502,20 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
 
 	/* autoclose if success */
-	error_item = pk_results_get_error_code (results);
-	if (error_item == NULL)
+	error_code = pk_results_get_error_code (results);
+	if (error_code == NULL)
 		gpk_modal_dialog_close (watch->priv->dialog);
 
 	/* process messages */
-	if (error_item == NULL) {
+	if (error_code == NULL) {
 		array = pk_results_get_message_array (results);
 		g_ptr_array_foreach (array, (GFunc) pk_watch_process_messages_cb, watch);
 		g_ptr_array_unref (array);
 	}
 
 	/* only process errors if caller is no longer on the bus */
-	if (error_item != NULL && !caller_active)
-		pk_watch_process_error_code (watch, error_item);
+	if (error_code != NULL && !caller_active)
+		pk_watch_process_error_code (watch, error_code);
 
 	/* process restarts */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
@@ -1551,8 +1572,8 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	}
 out:
 	g_free (transaction_id);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (progress != NULL)
 		g_object_unref (progress);
 	if (results != NULL)

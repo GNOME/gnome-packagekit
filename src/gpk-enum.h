@@ -83,9 +83,9 @@ const gchar	*gpk_status_enum_to_icon_name		(PkStatusEnum	 status);
 const gchar	*gpk_status_enum_to_animation		(PkStatusEnum	 status);
 const gchar	*gpk_restart_enum_to_icon_name		(PkRestartEnum	 restart);
 const gchar	*gpk_restart_enum_to_dialog_icon_name	(PkRestartEnum	 restart);
-const gchar	*gpk_error_enum_to_localised_text	(PkErrorCodeEnum code)
+const gchar	*gpk_error_enum_to_localised_text	(PkErrorEnum code)
 							 G_GNUC_CONST;
-const gchar	*gpk_error_enum_to_localised_message	(PkErrorCodeEnum code);
+const gchar	*gpk_error_enum_to_localised_message	(PkErrorEnum code);
 const gchar	*gpk_restart_enum_to_localised_text	(PkRestartEnum	 restart)
 							 G_GNUC_CONST;
 const gchar	*gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)

@@ -182,9 +182,9 @@ gpk_pack_resolve_package_id (const gchar *package)
 	gchar *package_id = NULL;
 	gchar **packages = NULL;
 	GError *error = NULL;
-	const PkItemPackage *item;
+	PkPackage *item;
 	PkResults *results;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get package array */
 	packages = g_strsplit (package, ";", 0);
@@ -196,9 +196,9 @@ gpk_pack_resolve_package_id (const gchar *package)
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -215,11 +215,11 @@ gpk_pack_resolve_package_id (const gchar *package)
 
 	/* convert to a text package id */
 	item = g_ptr_array_index (array, 0);
-	package_id = g_strdup (item->package_id);
+	package_id = g_strdup (pk_package_get_id (item));
 
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -287,15 +287,24 @@ static gchar *
 gpk_pack_package_array_to_string (GPtrArray *array)
 {
 	guint i;
-	const PkItemPackage *item;
+	PkPackage *item;
 	GString *string;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	string = g_string_new ("");
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id,
+			      "summary", &summary,
+			      NULL);
 		g_string_append_printf (string, "%s\t%s\t%s\n",
-					pk_info_enum_to_text (item->info),
-					item->package_id, item->summary);
+					pk_info_enum_to_text (info), package_id, summary);
+		g_free (package_id);
+		g_free (summary);
 	}
 
 	/* remove trailing newline */
@@ -315,7 +324,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	GError *error_local = NULL;
 	PkResults *results;
 	gchar *data = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get package array */
 	results = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), NULL, NULL, NULL, &error_local);
@@ -327,9 +336,9 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -345,8 +354,8 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -484,7 +493,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	gboolean ret;
 	gboolean use_default = FALSE;
 	GtkProgressBar *progress_bar;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_directory"));
 	directory = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
@@ -559,9 +568,9 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		}
 
 		/* check error code */
-		error_item = pk_results_get_error_code (results);
-		if (error_item != NULL) {
-			egg_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
+		error_code = pk_results_get_error_code (results);
+		if (error_code != NULL) {
+			egg_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 			goto out;
 		}
 
@@ -594,8 +603,8 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 	g_object_unref (pack);
 
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	g_strfreev (packages);
 	g_strfreev (package_ids);
 	g_strfreev (exclude_ids);

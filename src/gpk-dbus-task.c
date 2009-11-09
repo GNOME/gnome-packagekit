@@ -85,7 +85,7 @@ struct _GpkDbusTaskPrivate
 	guint			 timestamp;
 	gchar			*parent_title;
 	gchar			*parent_icon_name;
-	PkItemErrorCode		*cached_error_code;
+	PkError		*cached_error_code;
 	gint			 timeout;
 	GpkHelperRun		*helper_run;
 	GpkHelperChooser	*helper_chooser;
@@ -214,7 +214,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 		return;
 	}
 	if (g_strcmp0 (action, "show-error-details") == 0) {
-		details = g_markup_escape_text (task->priv->cached_error_code->details, -1);
+		details = g_markup_escape_text (pk_error_get_details (task->priv->cached_error_code), -1);
 		/* TRANSLATORS: detailed text about the error */
 		gpk_error_dialog (_("Error details"), _("Package Manager error details"), details);
 		g_free (details);
@@ -282,7 +282,7 @@ gpk_dbus_task_error_msg (GpkDbusTask *dtask, const gchar *title, GError *error)
  * gpk_dbus_task_handle_error:
  **/
 static void
-gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkItemErrorCode *error_item)
+gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -292,27 +292,27 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkItemErrorCode *error_item)
 	GtkWidget *widget;
 
 	/* ignore some errors */
-	if (error_item->code == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
-	    error_item->code == PK_ERROR_ENUM_PROCESS_KILL ||
-	    error_item->code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_warning ("ignoring %s", pk_error_enum_to_text (error_item->code));
+	if (pk_error_get_code (error_code) == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
+	    pk_error_get_code (error_code) == PK_ERROR_ENUM_PROCESS_KILL ||
+	    pk_error_get_code (error_code) == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		egg_warning ("ignoring %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
 	}
 
-	egg_debug ("code was %s", pk_error_enum_to_text (error_item->code));
+	egg_debug ("code was %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
 
 	/* use a modal dialog if showing progress, else use libnotify */
-	title = gpk_error_enum_to_localised_text (error_item->code);
-	message = gpk_error_enum_to_localised_message (error_item->code);
+	title = gpk_error_enum_to_localised_text (pk_error_get_code (error_code));
+	message = gpk_error_enum_to_localised_message (pk_error_get_code (error_code));
 	if (dtask->priv->show_progress) {
 		widget = GTK_WIDGET (gpk_modal_dialog_get_window (dtask->priv->dialog));
-		gpk_error_dialog_modal (GTK_WINDOW (widget), title, message, error_item->details);
+		gpk_error_dialog_modal (GTK_WINDOW (widget), title, message, pk_error_get_details (error_code));
 		return;
 	}
 
 	/* save this globally */
 	if (dtask->priv->cached_error_code != NULL)
-		pk_item_error_code_unref (dtask->priv->cached_error_code);
-	dtask->priv->cached_error_code = pk_item_error_code_ref (error_item);
+		g_object_unref (dtask->priv->cached_error_code);
+	dtask->priv->cached_error_code = g_object_ref (error_code);
 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, "help-browser", NULL);
@@ -337,7 +337,7 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	GError *error = NULL;
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -351,12 +351,12 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to install package: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to install package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		gpk_dbus_task_handle_error (dtask, error_item);
+		gpk_dbus_task_handle_error (dtask, error_code);
 		goto out;
 	}
 
@@ -364,8 +364,8 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	egg_debug ("doing async return");
 	dbus_g_method_return (dtask->priv->context, TRUE);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -470,7 +470,7 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 	PkResults *results = NULL;
 	guint length;
 	const gchar *title;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -486,17 +486,17 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		gpk_dbus_task_handle_error (dtask, error_item);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		gpk_dbus_task_handle_error (dtask, error_code);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (results != NULL)
 		g_object_unref (results);
 }
@@ -679,7 +679,7 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
 	gboolean ret;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -692,10 +692,10 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -706,8 +706,8 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	egg_debug ("doing async return");
 	dbus_g_method_return (dtask->priv->context, ret);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -740,9 +740,11 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	gchar **split = NULL;
-	const PkItemPackage *item;
+	PkPackage *item;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -755,10 +757,10 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search file: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search file: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -774,14 +776,19 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 
 	/* get first item */
 	item = g_ptr_array_index (array, 0);
-	split = pk_package_id_split (item->package_id);
+	g_object_get (item,
+		      "info", &info,
+		      "package-id", &package_id,
+		      NULL);
+	split = pk_package_id_split (package_id);
 
 	egg_debug ("doing async return");
-	dbus_g_method_return (dtask->priv->context, (item->info == PK_INFO_ENUM_INSTALLED), split[PK_PACKAGE_ID_NAME]);
+	dbus_g_method_return (dtask->priv->context, (info == PK_INFO_ENUM_INSTALLED), split[PK_PACKAGE_ID_NAME]);
 out:
+	g_free (package_id);
 	g_strfreev (split);
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -871,14 +878,16 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
-	const gchar *package_id = NULL;
+	PkError *error_code = NULL;
+	gchar *package_id = NULL;
 	gchar *title;
 	gchar *info_url;
-	PkItemPackage *item;
+	PkPackage *item;
 	GtkResponseType button;
 	guint i;
 	gboolean already_installed = FALSE;
+	PkInfoEnum info;
+	gchar *package_id_tmp = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -891,10 +900,10 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -932,13 +941,18 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	/* see what we've got already */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item->info == PK_INFO_ENUM_INSTALLED) {
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id_tmp,
+			      NULL);
+		if (info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
-		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			egg_debug ("package '%s' resolved", item->package_id);
-			package_id = item->package_id;
+		} else if (info == PK_INFO_ENUM_AVAILABLE) {
+			egg_debug ("package '%s' resolved", package_id_tmp);
+			package_id = g_strdup (package_id_tmp);
 			//TODO: we need to list these in a gpk-dbus_task-chooser
 		}
+		g_free (package_id_tmp);
 	}
 
 	/* already installed? */
@@ -979,8 +993,9 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	/* install these packages with deps */
 	gpk_dbus_task_install_package_ids (dtask);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	g_free (package_id);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1087,15 +1102,17 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
-	const gchar *package_id = NULL;
+	PkError *error_code = NULL;
 	gchar *info_url;
-	PkItemPackage *item;
+	PkPackage *item;
 	GtkResponseType button;
 	guint i;
 	gboolean already_installed = FALSE;
 	gchar *text;
 	gchar **split;
+	PkInfoEnum info;
+	gchar *package_id = NULL;
+	gchar *package_id_tmp = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -1108,10 +1125,10 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -1149,13 +1166,18 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 	/* see what we've got already */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		if (item->info == PK_INFO_ENUM_INSTALLED) {
+		g_object_get (item,
+			      "info", &info,
+			      "package-id", &package_id_tmp,
+			      NULL);
+		if (info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
-			package_id = item->package_id;
-		} else if (item->info == PK_INFO_ENUM_AVAILABLE) {
-			egg_debug ("package '%s' resolved to:", item->package_id);
-			package_id = item->package_id;
+			package_id = g_strdup (package_id_tmp);
+		} else if (info == PK_INFO_ENUM_AVAILABLE) {
+			egg_debug ("package '%s' resolved to:", package_id_tmp);
+			package_id = g_strdup (package_id_tmp);
 		}
+		g_free (package_id_tmp);
 	}
 
 	/* already installed? */
@@ -1184,8 +1206,9 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 	/* install these packages with deps */
 	gpk_dbus_task_install_package_ids (dtask);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	g_free (package_id);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1383,7 +1406,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	GtkResponseType button;
 	gchar *info_url;
 	const gchar *title;
@@ -1400,10 +1423,10 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -1471,8 +1494,8 @@ skip_checks2:
 	dtask->priv->package_ids = pk_package_array_to_strv (array);
 	gpk_dbus_task_install_package_ids (dtask);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1557,7 +1580,7 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	gchar *info_url;
 	GtkResponseType button;
 
@@ -1574,10 +1597,10 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (error_item->code), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error_item->details);
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -1618,8 +1641,8 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 	egg_debug ("doing async return");
 	dbus_g_method_return (dtask->priv->context, TRUE);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -1805,7 +1828,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	GError *error_dbus = NULL;
 	PkResults *results = NULL;
 	GPtrArray *array = NULL;
-	PkItemErrorCode *error_item = NULL;
+	PkError *error_code = NULL;
 	gchar *title;
 	gchar *info_url;
 	GtkResponseType button;
@@ -1823,11 +1846,11 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	}
 
 	/* check error code */
-	error_item = pk_results_get_error_code (results);
-	if (error_item != NULL) {
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-//		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error_item->details);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", error_item->details);
+//		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", pk_error_get_details (error_code));
 		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		goto out;
 	}
@@ -1894,8 +1917,8 @@ skip_checks:
 	dtask->priv->package_ids = pk_package_array_to_strv (array);
 	gpk_dbus_task_install_package_ids (dtask);
 out:
-	if (error_item != NULL)
-		pk_item_error_code_unref (error_item);
+	if (error_code != NULL)
+		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
@@ -2184,7 +2207,7 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 	gchar *package = NULL;
 	GError *error = NULL;
 	GPtrArray *array = NULL;
-	const PkItemPackage *item;
+	PkPackage *item;
 	PkResults *results = NULL;
 	gchar **values = NULL;
 
@@ -2213,7 +2236,9 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* copy name */
 	item = g_ptr_array_index (array, 0);
-	package = g_strdup (item->package_id);
+	g_object_get (item,
+		      "package-id", &package,
+		      NULL);
 	egg_debug ("got package %s", package);
 out:
 	g_strfreev (values);
@@ -2398,7 +2423,7 @@ gpk_dbus_task_finalize (GObject *object)
 	g_free (dtask->priv->parent_title);
 	g_free (dtask->priv->parent_icon_name);
 	if (dtask->priv->cached_error_code != NULL)
-		pk_item_error_code_unref (dtask->priv->cached_error_code);
+		g_object_unref (dtask->priv->cached_error_code);
 	g_strfreev (dtask->priv->files);
 	g_strfreev (dtask->priv->package_ids);
 	g_object_unref (PK_CLIENT(dtask->priv->task));
