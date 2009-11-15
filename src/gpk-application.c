@@ -299,10 +299,12 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	const gchar *icon;
+	const gchar *icon = NULL;
 	gboolean checkbox;
 	PkBitfield state;
 	gboolean ret;
+	gchar *package_id = NULL;
+	PkPackageId *id;
 
 	/* get the selection and add */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
@@ -313,13 +315,24 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 		return;
 	}
 
-	gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
+	gtk_tree_model_get (model, &iter,
+			    PACKAGES_COLUMN_ID, &package_id,
+			    PACKAGES_COLUMN_STATE, &state,
+			    -1);
 
 	/* do something with the value */
 	pk_bitfield_invert (state, GPK_STATE_IN_LIST);
 
+	/* use the application icon if not selected */
+	if (!pk_bitfield_contain (state, GPK_STATE_IN_LIST)) {
+		id = pk_package_id_new_from_string (package_id);
+		icon = gpk_desktop_guess_icon_name (application->priv->desktop, id->name);
+		pk_package_id_free (id);
+	}
+
 	/* get the new icon */
-	icon = gpk_application_state_get_icon (state);
+	if (icon == NULL)
+		icon = gpk_application_state_get_icon (state);
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* set new value */
@@ -328,6 +341,7 @@ gpk_application_packages_checkbox_invert (GpkApplication *application)
 			    PACKAGES_COLUMN_CHECKBOX, checkbox,
 			    PACKAGES_COLUMN_IMAGE, icon,
 			    -1);
+	g_free (package_id);
 }
 
 /**
