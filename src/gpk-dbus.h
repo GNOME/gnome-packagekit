@@ -110,6 +110,11 @@ void		 gpk_dbus_install_gstreamer_resources	(GpkDbus 	*dbus,
 							 gchar		**codecs,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
+void		 gpk_dbus_remove_package_by_file	(GpkDbus	*dbus,
+							 guint32	 xid,
+							 gchar		**files,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
 
 G_END_DECLS
 

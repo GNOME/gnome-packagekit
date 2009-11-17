@@ -104,6 +104,8 @@ void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*dtask,
 							 gchar		**packages);
 void		 gpk_dbus_task_install_catalogs		(GpkDbusTask	*dtask,
 							 gchar		**filenames);
+void		 gpk_dbus_task_remove_package_by_file	(GpkDbusTask	*dtask,
+							 gchar		**full_paths);
 
 /* set state */
 gboolean	 gpk_dbus_task_set_interaction		(GpkDbusTask	*dtask,

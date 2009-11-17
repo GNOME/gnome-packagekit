@@ -2139,6 +2139,218 @@ out:
 }
 
 /**
+ * gpk_dbus_task_remove_packages_cb:
+ **/
+static void
+gpk_dbus_task_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dtask)
+{
+	GError *error = NULL;
+	GError *error_dbus = NULL;
+	PkResults *results = NULL;
+	PkError *error_code = NULL;
+
+	/* get the results */
+	results = pk_task_generic_finish (task, res, &error);
+	if (results == NULL) {
+		/* TRANSLATORS: error: failed to remove, detailed error follows */
+		gpk_dbus_task_error_msg (dtask, _("Failed to remove package"), error);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* check error code */
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to remove package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", pk_error_get_details (error_code));
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_handle_error (dtask, error_code);
+		goto out;
+	}
+
+	/* we're done */
+	egg_debug ("doing async return");
+	dbus_g_method_return (dtask->priv->context, TRUE);
+out:
+	if (error_code != NULL)
+		g_object_unref (error_code);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_dbus_task_remove_package_ids:
+ * @task: a valid #GpkDbusTask instance
+ **/
+static void
+gpk_dbus_task_remove_package_ids (GpkDbusTask *dtask)
+{
+	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
+	/* TRANSLATORS: title: removing packages */
+	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Removing packages"));
+	if (dtask->priv->show_progress)
+		gpk_modal_dialog_present (dtask->priv->dialog);
+
+	/* remove async */
+	pk_task_remove_packages_async (dtask->priv->task, dtask->priv->package_ids, TRUE, TRUE, NULL,
+					(PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
+					(GAsyncReadyCallback) gpk_dbus_task_remove_packages_cb, dtask);
+}
+
+/**
+ * gpk_dbus_task_remove_package_by_file_search_file_cb:
+ **/
+static void
+gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncResult *res, GpkDbusTask *dtask)
+{
+	GError *error = NULL;
+	GError *error_dbus = NULL;
+	PkResults *results = NULL;
+	GPtrArray *array = NULL;
+	PkError *error_code = NULL;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		egg_warning ("failed to resolve: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+
+	/* check error code */
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		goto out;
+	}
+
+	/* get results */
+	array = pk_results_get_package_array (results);
+
+	/* found nothing? */
+	if (array->len == 0) {
+		if (dtask->priv->show_warning) {
+			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
+			/* TRANSLATORS: failed to fild the package for thefile */
+			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find package for this file"));
+			/* TRANSLATORS: nothing found */
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any packages"));
+			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
+			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
+			gpk_modal_dialog_present (dtask->priv->dialog);
+			gpk_modal_dialog_run (dtask->priv->dialog);
+		}
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no packages found for this file");
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		goto out;
+	}
+
+	/* convert to data */
+	dtask->priv->package_ids = pk_package_array_to_strv (array);
+
+	/* remove these packages with deps */
+	gpk_dbus_task_remove_package_ids (dtask);
+out:
+	if (error_code != NULL)
+		g_object_unref (error_code);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_dbus_task_remove_package_by_file:
+ * @task: a valid #GpkDbusTask instance
+ * @full_path: a file path name such as <literal>/usr/sbin/packagekitd</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Remove a package which provides a file on the system.
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+void
+gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths)
+{
+	gboolean ret;
+	GError *error_dbus = NULL;
+	guint len;
+	guint i;
+	gchar *text;
+	gchar *message;
+	GString *string;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (full_paths != NULL);
+
+	/* optional */
+	if (!dtask->priv->show_confirm_search) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
+	string = g_string_new ("");
+	len = g_strv_length (full_paths);
+
+	/* don't use a bullet for one item */
+	if (len == 1) {
+		g_string_append_printf (string, "%s\n", full_paths[0]);
+	} else {
+		for (i=0; i<len; i++)
+			g_string_append_printf (string, "• %s\n", full_paths[i]);
+	}
+	/* display messagebox  */
+	text = g_string_free (string, FALSE);
+
+	/* check user wanted operation */
+	message = g_strdup_printf ("%s\n\n%s\n\n%s",
+				   /* TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so */
+				   ngettext ("The following file will be removed:", "The following files will be removed:", len),
+				   text,
+				   /* TRANSLATORS: confirm with the user */
+				   ngettext ("Do you want to remove this file now?", "Do you want to remove these files now?", len));
+
+	/* make title using application name */
+	if (dtask->priv->parent_title != NULL) {
+		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
+		text = g_strdup_printf (ngettext ("%s wants to remove a file", "%s wants to remove files", len), dtask->priv->parent_title);
+	} else {
+		/* TRANSLATORS: a random program which we can't get the name wants to do something */
+		text = g_strdup (ngettext ("A program wants to remove a file", "A program wants to remove files", len));
+	}
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_dbus_task_confirm_action (dtask, text, message, _("Remove"));
+	g_free (text);
+	g_free (message);
+	if (!ret) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		goto out;
+	}
+
+skip_checks:
+	/* TRANSLATORS: searching for the package that provides the file */
+	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for file"));
+	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
+
+	/* do search */
+	pk_client_search_file_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, PK_FILTER_ENUM_INSTALLED, -1), full_paths, NULL,
+			             (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
+				     (GAsyncReadyCallback) gpk_dbus_task_remove_package_by_file_search_file_cb, dtask);
+
+	/* wait for async reply */
+out:
+	return;
+}
+
+/**
  * gpk_dbus_task_install_catalogs:
  **/
 void

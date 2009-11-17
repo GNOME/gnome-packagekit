@@ -417,6 +417,17 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 }
 
 /**
+ * gpk_dbus_remove_package_by_file:
+ **/
+void
+gpk_dbus_remove_package_by_file (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_remove_package_by_file (task, files);
+}
+
+/**
  * gpk_dbus_install_catalogs:
  **/
 void
