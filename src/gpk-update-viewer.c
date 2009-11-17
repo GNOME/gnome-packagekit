@@ -1567,6 +1567,42 @@ gpk_update_viewer_get_uris (const gchar *url_string)
 }
 
 /**
+ * gpk_update_viewer_iso8601_format_locale_date:
+ **/
+static gchar *
+gpk_update_viewer_iso8601_format_locale_date (const gchar *iso_date)
+{
+	GDate *date = NULL;
+	GTimeVal timeval;
+	gboolean ret;
+	gchar *text = NULL;
+
+	/* not valid */
+	if (iso_date == NULL || iso_date[0] == '\0')
+		goto out;
+
+	/* parse ISO8601 date */
+	ret = g_time_val_from_iso8601 (iso_date, &timeval);
+	if (!ret) {
+		egg_warning ("failed to parse %s, falling back to ISO8601", iso_date);
+		text = g_strdup (iso_date);
+		goto out;
+	}
+
+	/* convert to a date object */
+	date = g_date_new ();
+	g_date_set_time_val (date, &timeval);
+
+	/* pretty print it */
+	text = g_new0 (gchar, 100);
+	g_date_strftime (text, 100, "%x", date);
+out:
+	if (date != NULL)
+		g_date_free (date);
+	return text;
+}
+
+/**
  * gpk_update_viewer_populate_details:
  **/
 static void
@@ -1595,6 +1631,8 @@ gpk_update_viewer_populate_details (GpkUpdateViewer *update_viewer, PkUpdateDeta
 	PkUpdateStateEnum state;
 	gchar *issued;
 	gchar *updated;
+	gchar *issued_locale = NULL;
+	gchar *updated_locale = NULL;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
 	/* get data */
@@ -1648,16 +1686,22 @@ gpk_update_viewer_populate_details (GpkUpdateViewer *update_viewer, PkUpdateDeta
 		gtk_text_buffer_insert (priv->text_buffer, &iter, "\n", -1);
 	}
 
+	/* convert ISO time to locale time */
+	issued_locale = gpk_update_viewer_iso8601_format_locale_date (issued);
+	updated_locale = gpk_update_viewer_iso8601_format_locale_date (updated);
+
 	/* issued and updated */
-	if (issued != NULL && issued[0] != '\0' && updated != NULL && updated[0] != '\0') {
-		/* TRANSLATORS: this is when the notification was issued and then updated*/
-		line = g_strdup_printf (_("This notification was issued on %s and last updated on %s."), issued, updated);
+	if (issued_locale != NULL && updated_locale != NULL) {
+
+		/* TRANSLATORS: this is when the notification was issued and then updated */
+		line = g_strdup_printf (_("This notification was issued on %s and last updated on %s."), issued_locale, updated_locale);
 		gtk_text_buffer_insert_with_tags_by_name (priv->text_buffer, &iter, line, -1, "para", NULL);
 		gtk_text_buffer_insert (priv->text_buffer, &iter, "\n", -1);
 		g_free (line);
-	} else if (issued != NULL && issued[0] != '\0') {
+	} else if (issued_locale != NULL) {
+
 		/* TRANSLATORS: this is when the update was issued */
-		line = g_strdup_printf (_("This notification was issued on %s."), issued);
+		line = g_strdup_printf (_("This notification was issued on %s."), issued_locale);
 		gtk_text_buffer_insert_with_tags_by_name (priv->text_buffer, &iter, line, -1, "para", NULL);
 		gtk_text_buffer_insert (priv->text_buffer, &iter, "\n", -1);
 		g_free (line);
@@ -1745,6 +1789,8 @@ gpk_update_viewer_populate_details (GpkUpdateViewer *update_viewer, PkUpdateDeta
 	g_free (changelog);
 	g_free (issued);
 	g_free (updated);
+	g_free (issued_locale);
+	g_free (updated_locale);
 }
 
 /**
