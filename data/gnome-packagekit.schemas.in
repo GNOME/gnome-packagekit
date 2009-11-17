@@ -500,6 +500,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnome-packagekit/ignored_dbus_requests</key>
+      <applyto>/apps/gnome-packagekit/ignored_dbus_requests</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>/usr/bin/gnome-terminal,/usr/bin/nm-applet</default>
+      <locale name="C">
+        <short>Programs that should be ignored when they issue session D-Bus requests</short>
+        <long>Programs that should be ignored when they issue session D-Bus requests, separated by commas.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnome-packagekit/enable_codec_helper</key>
       <applyto>/apps/gnome-packagekit/enable_codec_helper</applyto>
       <owner>gnome-packagekit</owner>

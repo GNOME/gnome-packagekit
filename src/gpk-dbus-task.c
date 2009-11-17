@@ -85,7 +85,8 @@ struct _GpkDbusTaskPrivate
 	guint			 timestamp;
 	gchar			*parent_title;
 	gchar			*parent_icon_name;
-	PkError		*cached_error_code;
+	gchar			*exec;
+	PkError			*cached_error_code;
 	gint			 timeout;
 	GpkHelperRun		*helper_run;
 	GpkHelperChooser	*helper_chooser;
@@ -1926,6 +1927,36 @@ out:
 }
 
 /**
+ * gpk_dbus_task_install_check_exec_ignored:
+ **/
+static gboolean
+gpk_dbus_task_install_check_exec_ignored (GpkDbusTask *dtask)
+{
+	gchar *ignored_str;
+	gchar **ignored = NULL;
+	gboolean ret = FALSE;
+	guint i;
+
+	/* check it's not session wide banned in gconf */
+	ignored_str = gconf_client_get_string (dtask->priv->gconf_client, GPK_CONF_IGNORED_DBUS_REQUESTS, NULL);
+	if (ignored_str == NULL)
+		goto out;
+
+	/* check each one */
+	ignored = g_strsplit (ignored_str, ",", -1);
+	for (i=0; ignored[i] != NULL; i++) {
+		if (g_strcmp0 (dtask->priv->exec, ignored[i]) == 0) {
+			ret = TRUE;
+			break;
+		}
+	}
+out:
+	g_free (ignored_str);
+	g_strfreev (ignored);
+	return ret;
+}
+
+/**
  * gpk_dbus_task_install_fontconfig_resources:
  * @task: a valid #GpkDbusTask instance
  * @fonts: font description such as <literal>lang:fr</literal>
@@ -1954,6 +1985,14 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (fonts != NULL);
+
+	/* if this program banned? */
+	ret = gpk_dbus_task_install_check_exec_ignored (dtask);
+	if (!ret) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "skipping ignored program: %s", dtask->priv->exec);
+		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		goto out;
+	}
 
 	/* get number of fonts to install */
 	len = g_strv_length (fonts);
@@ -2490,8 +2529,10 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 	g_return_val_if_fail (GPK_IS_DBUS_TASK (dtask), FALSE);
 
 	/* old values invalid */
+	g_free (dtask->priv->exec);
 	g_free (dtask->priv->parent_title);
 	g_free (dtask->priv->parent_icon_name);
+	dtask->priv->exec = g_strdup (exec);
 	dtask->priv->parent_title = NULL;
 	dtask->priv->parent_icon_name = NULL;
 
@@ -2560,6 +2601,7 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	dtask->priv->files = NULL;
 	dtask->priv->parent_window = NULL;
 	dtask->priv->parent_title = NULL;
+	dtask->priv->exec = NULL;
 	dtask->priv->parent_icon_name = NULL;
 	dtask->priv->cached_error_code = NULL;
 	dtask->priv->context = NULL;
@@ -2634,6 +2676,7 @@ gpk_dbus_task_finalize (GObject *object)
 
 	g_free (dtask->priv->parent_title);
 	g_free (dtask->priv->parent_icon_name);
+	g_free (dtask->priv->exec);
 	if (dtask->priv->cached_error_code != NULL)
 		g_object_unref (dtask->priv->cached_error_code);
 	g_strfreev (dtask->priv->files);
