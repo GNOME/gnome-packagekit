@@ -505,7 +505,7 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	/* search for newest not installed package */
 	filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_NEWEST, -1);
 	values = g_strsplit (filename, "&", -1);
-	results = pk_client_search_file (PK_CLIENT(firmware->priv->task), filter, values, NULL, NULL, NULL, &error);
+	results = pk_client_search_files (PK_CLIENT(firmware->priv->task), filter, values, NULL, NULL, NULL, &error);
 	if (results == NULL) {
 		egg_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);

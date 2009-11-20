@@ -1643,7 +1643,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	/* do the search */
 	searches = g_strsplit (application->priv->search_text, " ", -1);
 	if (application->priv->search_type == PK_SEARCH_NAME) {
-		pk_client_search_name_async (PK_CLIENT(application->priv->task),
+		pk_client_search_names_async (PK_CLIENT(application->priv->task),
 					     application->priv->filters_current,
 					     searches, application->priv->cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, application,
@@ -1655,7 +1655,7 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 					     (PkProgressCallback) gpk_application_progress_cb, application,
 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
 	} else if (application->priv->search_type == PK_SEARCH_FILE) {
-		pk_client_search_file_async (PK_CLIENT(application->priv->task),
+		pk_client_search_files_async (PK_CLIENT(application->priv->task),
 					     application->priv->filters_current,
 					     searches, application->priv->cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, application,
@@ -1692,7 +1692,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 
 	if (application->priv->search_mode == PK_MODE_GROUP) {
 		groups = g_strsplit (application->priv->group, " ", -1);
-		pk_client_search_group_async (PK_CLIENT(application->priv->task),
+		pk_client_search_groups_async (PK_CLIENT(application->priv->task),
 					      application->priv->filters_current, groups, application->priv->cancellable,
 					      (PkProgressCallback) gpk_application_progress_cb, application,
 					      (GAsyncReadyCallback) gpk_application_search_cb, application);

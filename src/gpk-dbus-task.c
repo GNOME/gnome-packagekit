@@ -807,7 +807,7 @@ gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file)
 	/* get the package list for the installed packages */
 	egg_debug ("package_name=%s", search_file);
 	values = g_strsplit (search_file, "&", -1);
-	pk_client_search_file_async (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
+	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
 				     (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				     (GAsyncReadyCallback) gpk_dbus_task_search_file_search_file_cb, dtask);
 	g_strfreev (values);
@@ -1292,7 +1292,7 @@ skip_checks:
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
 
 	/* do search */
-	pk_client_search_file_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1), full_paths, NULL,
+	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1), full_paths, NULL,
 			             (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				     (GAsyncReadyCallback) gpk_dbus_task_install_provide_files_search_file_cb, dtask);
 
@@ -2380,7 +2380,7 @@ skip_checks:
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
 
 	/* do search */
-	pk_client_search_file_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, PK_FILTER_ENUM_INSTALLED, -1), full_paths, NULL,
+	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, PK_FILTER_ENUM_INSTALLED, -1), full_paths, NULL,
 			             (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				     (GAsyncReadyCallback) gpk_dbus_task_remove_package_by_file_search_file_cb, dtask);
 
@@ -2464,7 +2464,7 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* find the package name */
 	values = g_strsplit (exec, "&", -1);
-	results = pk_client_search_file (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
+	results = pk_client_search_files (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
 					 (PkProgressCallback) gpk_dbus_task_progress_cb, dtask, &error);
 	if (results == NULL) {
 		egg_warning ("failed to search file: %s", error->message);
