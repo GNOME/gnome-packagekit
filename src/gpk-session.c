@@ -97,7 +97,9 @@ gpk_session_logout (GpkSession *session)
 	}
 
 	/* we have to use no reply, as the SM calls into g-p-m to get the can_suspend property */
-	dbus_g_proxy_call_no_reply (session->priv->proxy, "Shutdown", G_TYPE_INVALID);
+	dbus_g_proxy_call_no_reply (session->priv->proxy, "Logout",
+				    G_TYPE_UINT, 1, /* no confirmation, but use inhibitors */
+				    G_TYPE_INVALID);
 	return TRUE;
 }
 
