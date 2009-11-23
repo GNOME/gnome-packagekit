@@ -109,7 +109,6 @@ pk_dbus_connection_replaced_cb (EggDbusMonitor *monitor, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	gboolean timed_exit = FALSE;
 	GpkCheckUpdate *cupdate = NULL;
@@ -124,8 +123,6 @@ main (int argc, char *argv[])
 	EggDbusMonitor *monitor;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
 		{ "timed-exit", '\0', 0, G_OPTION_ARG_NONE, &timed_exit,
 		  _("Exit after a small delay"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
@@ -142,6 +139,7 @@ main (int argc, char *argv[])
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
 	g_type_init ();
+	gtk_init (&argc, &argv);
 	dbus_g_thread_init ();
 	notify_init ("gpk-update-icon");
 
@@ -150,6 +148,8 @@ main (int argc, char *argv[])
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Update Applet"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
@@ -157,9 +157,6 @@ main (int argc, char *argv[])
 		g_print (VERSION "\n");
 		return 0;
 	}
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Update applet"), FALSE);

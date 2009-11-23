@@ -564,7 +564,6 @@ gpk_repo_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
@@ -579,8 +578,6 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
 		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
 		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
 		  _("Set the parent window to make this modal"), NULL },
@@ -596,15 +593,15 @@ main (int argc, char *argv[])
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
 	g_type_init ();
+	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Software Source Viewer"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Software source viewer"), TRUE);

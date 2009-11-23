@@ -470,7 +470,6 @@ gpk_prefs_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
@@ -483,8 +482,6 @@ main (int argc, char *argv[])
 	GMainLoop *loop;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
 		  _("Show the program version and exit"), NULL },
 		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
@@ -503,11 +500,14 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	dbus_g_thread_init ();
 	g_type_init ();
+	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
 	/* TRANSLATORS: program name, an application to set per-user policy for updates */
 	g_option_context_set_summary(context, _("Software Update Preferences"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
@@ -515,9 +515,6 @@ main (int argc, char *argv[])
 		g_print (VERSION "\n");
 		return 0;
 	}
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
 	unique_app = unique_app_new ("org.freedesktop.PackageKit.Prefs", NULL);

@@ -65,7 +65,6 @@ gpk_application_message_received_cb (UniqueApp *app, UniqueCommand command, Uniq
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	gboolean program_version = FALSE;
 	GpkApplication *application = NULL;
 	GOptionContext *context;
@@ -73,9 +72,6 @@ main (int argc, char *argv[])
 	gboolean ret;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  /* TRANSLATORS: show the debug data on the console */
-		  _("Show extra debugging information"), NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
 		  /* TRANSLATORS: show the program version */
 		  _("Show the program version and exit"), NULL },
@@ -92,10 +88,13 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	dbus_g_thread_init ();
 	g_type_init ();
+	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Add/Remove Software"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
 
@@ -103,9 +102,6 @@ main (int argc, char *argv[])
 		g_print (VERSION "\n");
 		return 0;
 	}
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Package installer"), TRUE);

@@ -41,15 +41,12 @@ main (int argc, char *argv[])
 {
 	GOptionContext *context;
 	gboolean ret;
-	gboolean verbose = FALSE;
 	GError *error = NULL;
 	gchar **packages = NULL;
 	DBusGConnection *connection;
 	DBusGProxy *proxy = NULL;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
 		{ G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_STRING_ARRAY, &packages,
 		  _("Packages to install"), NULL },
 		{ NULL}
@@ -64,17 +61,17 @@ main (int argc, char *argv[])
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
 	g_type_init ();
+	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: program name: installs a package (or packages) by name */
 	g_set_application_name (_("Package Name Installer"));
 	context = g_option_context_new ("gpk-install-package");
 	g_option_context_set_summary (context, _("Package Name Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: application name to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Package Name Installer"), TRUE);

@@ -672,7 +672,6 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	GOptionContext *context;
 	GConfClient *gconf_client;
 	GtkWidget *widget;
@@ -685,8 +684,6 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  N_("Show extra debugging information"), NULL },
 		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
 		  /* TRANSLATORS: preset the GtktextBox with this filter text */
 		  N_("Set the filter to this value"), NULL },
@@ -705,15 +702,15 @@ main (int argc, char *argv[])
 	if (! g_thread_supported ())
 		g_thread_init (NULL);
 	g_type_init ();
+	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Software Log Viewer"));
 	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
-
-	egg_debug_init (verbose);
-	gtk_init (&argc, &argv);
 
 	/* are we running privileged */
 	ret = gpk_check_privileged_user (_("Log viewer"), TRUE);

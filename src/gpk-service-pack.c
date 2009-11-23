@@ -676,7 +676,6 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 int
 main (int argc, char *argv[])
 {
-	gboolean verbose = FALSE;
 	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
@@ -693,8 +692,6 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 
 	const GOptionEntry options[] = {
-		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
-		  _("Show extra debugging information"), NULL },
 		{ "option", 'o', 0, G_OPTION_ARG_STRING, &option,
 		  /* TRANSLATORS: the constants should not be translated */
 		  _("Set the option, allowable values are 'array', 'updates' and 'package'"), NULL },
@@ -722,12 +719,17 @@ main (int argc, char *argv[])
 
 	context = g_option_context_new (NULL);
 	/* TRANSLATORS: program description, an application to create service packs */
-	g_option_context_set_summary(context, _("Service Pack Creator"));
+	g_option_context_set_summary (context, _("Service Pack Creator"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_parse (context, &argc, &argv, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
+	ret = g_option_context_parse (context, &argc, &argv, &error);
+	if (!ret) {
+		g_error ("failed to parse %s", error->message);
+		g_error_free (error);
+	}
 	g_option_context_free (context);
 
-	egg_debug_init (verbose);
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
