@@ -386,6 +386,9 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	const gchar *title;
 	const gchar *message = NULL;
 
+	/* save the current request */
+	priv->request = request;
+
 	/* get data about the transaction */
 	g_object_get (results,
 		      "role", &role,
@@ -439,9 +442,6 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = _("To process this transaction, additional software is required.");
 	}
-
-	/* save the current request */
-	priv->request = request;
 
 	/* get data */
 	array = pk_results_get_package_array (results);
