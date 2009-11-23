@@ -1257,7 +1257,8 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 		egg_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
 			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
@@ -1329,7 +1330,8 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 		egg_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		/* ignore some errors */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
+		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
 			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		}
