@@ -1888,7 +1888,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	}
 
 	/* optional */
-	if (!dtask->priv->show_confirm_deps) {
+	if (!dtask->priv->show_confirm_install) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
