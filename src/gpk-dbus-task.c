@@ -807,7 +807,7 @@ gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file)
 	/* get the package list for the installed packages */
 	egg_debug ("package_name=%s", search_file);
 	values = g_strsplit (search_file, "&", -1);
-	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
+	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_NEWEST), values, NULL,
 				     (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				     (GAsyncReadyCallback) gpk_dbus_task_search_file_search_file_cb, dtask);
 	g_strfreev (values);
@@ -1464,7 +1464,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	}
 
 	/* optional */
-	if (!dtask->priv->show_confirm_deps) {
+	if (!dtask->priv->show_confirm_install) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
@@ -2144,7 +2144,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 	}
 
 	/* optional */
-	if (!dtask->priv->show_confirm_deps) {
+	if (!dtask->priv->show_confirm_install) {
 		egg_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
