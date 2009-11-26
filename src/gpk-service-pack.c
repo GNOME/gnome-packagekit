@@ -21,15 +21,11 @@
 
 #include "config.h"
 
-//#include <glib.h>
 #include <glib/gi18n.h>
 #include <locale.h>
 
 #include <gtk/gtk.h>
-//#include <math.h>
-//#include <string.h>
 #include <sys/utsname.h>
-//#include <dbus/dbus-glib.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
@@ -50,6 +46,7 @@ typedef enum {
 
 static GtkBuilder *builder = NULL;
 static PkClient *client = NULL;
+static PkControl *control = NULL;
 static GpkActionEnum action = GPK_ACTION_ENUM_UPDATES;
 static guint pulse_id = 0;
 
@@ -81,7 +78,10 @@ gpk_pack_get_default_filename (const gchar *directory)
 	gchar *nodename = NULL;
 	const gchar *package;
 
-	distro_id = pk_get_distro_id ();
+	/* get the distro-id from the daemon */
+	g_object_get (control,
+		      "distro-id", &distro_id,
+		      NULL);
 	if (action == GPK_ACTION_ENUM_PACKAGE) {
 		entry = GTK_ENTRY (gtk_builder_get_object (builder, "entry_package"));
 		package = gtk_entry_get_text (entry);
@@ -742,10 +742,19 @@ main (int argc, char *argv[])
 	g_signal_connect (unique_app, "message-received",
 			  G_CALLBACK (gpk_pack_message_received_cb), NULL);
 
+	/* use a client to download packages */
 	client = pk_client_new ();
 	g_object_set (client,
 		      "background", FALSE,
 		      NULL);
+
+	/* get the properties of the daemon */
+	control = pk_control_new ();
+	ret = pk_control_get_properties (control, NULL, &error);
+	if (!ret) {
+		egg_error ("Failed to contact PackageKit: %s", error->message);
+		g_error_free (error);
+	}
 
 	/* get UI */
 	builder = gtk_builder_new ();
@@ -844,6 +853,8 @@ out_unique:
 	g_object_unref (unique_app);
 	if (gconf_client != NULL)
 		g_object_unref (gconf_client);
+	if (control != NULL)
+		g_object_unref (control);
 	if (client != NULL)
 		g_object_unref (client);
 	g_free (option);
