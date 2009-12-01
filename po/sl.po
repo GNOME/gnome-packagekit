@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
 "POT-Creation-Date: 2009-11-28 23:33+0000\n"
-"PO-Revision-Date: 2009-11-30 14:48+0100\n"
+"PO-Revision-Date: 2009-12-01 09:03+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgstr "Uporabljeni interaktivni načini za razveljavitev zahtev odjemalca"
 #. that is allowed. See ./docs/DBusInterface.txt for more information
 #: ../data/gnome-packagekit.schemas.in.h:33
 msgid "Interaction modes to use by default"
-msgstr "Privzeto uporabljeni interaktivni načini "
+msgstr "Privzeto uporabljeni interaktivni načini"
 
 #: ../data/gnome-packagekit.schemas.in.h:34
 msgid "Messages that should be ignored"
@@ -144,7 +144,7 @@ msgstr "Sporočila, ki naj bodo prezrta"
 
 #: ../data/gnome-packagekit.schemas.in.h:35
 msgid "Messages that should be ignored, separated by commas. These can include '*' and '?' characters"
-msgstr "Z vejico ločen seznam sporočil, ki bodo preztra.  Sporočila lahko vključujejo tudi znaka '*' in '?'."
+msgstr "Z vejico ločen seznam sporočil, ki bodo prezrta. Sporočila lahko vključujejo tudi znaka '*' in '?'."
 
 #: ../data/gnome-packagekit.schemas.in.h:36
 msgid "Notify the user before a large update is done on a mobile broadband connection"
@@ -164,7 +164,7 @@ msgstr "Obvesti uporabnika ob končani nalogi"
 
 #: ../data/gnome-packagekit.schemas.in.h:40
 msgid "Notify the user when an update has failed"
-msgstr "Obvesti uporabnika v primeru neuspešne posodabitve."
+msgstr "Obvesti uporabnika v primeru neuspešne posodobitve."
 
 #: ../data/gnome-packagekit.schemas.in.h:41
 msgid "Notify the user when distribution upgrades are available"
@@ -297,7 +297,7 @@ msgstr "Ključ določa ali program lahko zahteva namestitev pisav"
 
 #: ../data/gnome-packagekit.schemas.in.h:83
 msgid "Use WiFi (wireless LAN) connections to check for updates"
-msgstr "Uporabi brežžično povezavo za preverjanje posodobitev"
+msgstr "Uporabi brezžično povezavo za preverjanje posodobitev"
 
 #: ../data/gnome-packagekit.schemas.in.h:84
 msgid "Use WiFi connections"
@@ -456,7 +456,7 @@ msgstr "_Nameščeno"
 
 #: ../data/gpk-application.ui.h:32
 msgid "_No filter"
-msgstr "_Brez fltra"
+msgstr "_Brez filtra"
 
 #: ../data/gpk-application.ui.h:33
 msgid "_Only free software"
@@ -476,7 +476,7 @@ msgstr "_Sistem"
 
 #: ../data/gpk-backend-status.ui.h:1
 msgid "Backend Status"
-msgstr "Stanje hrbrtišča"
+msgstr "Stanje hrbtišča"
 
 #: ../data/gpk-backend-status.ui.h:2
 msgid "Backend author:"
@@ -529,7 +529,7 @@ msgstr "Pregledovalnik dnevnika programske opreme"
 
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
-msgstr "Pregled zgodovine uporavljanja s paketi"
+msgstr "Pregled zgodovine upravljanja s paketi"
 
 #: ../data/gpk-log.ui.h:1
 msgid "Filter"
@@ -1620,7 +1620,7 @@ msgstr "Datoteke ni mogoče najti v nobenem paketu"
 #: ../src/gpk-dbus-task.c:1189
 #, c-format
 msgid "The %s package already provides this file"
-msgstr "Datoteka je del paketa %s "
+msgstr "Datoteka je del paketa %s"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
 #: ../src/gpk-dbus-task.c:1265
@@ -1918,7 +1918,7 @@ msgstr "Ni treba namestiti dodatnih paketov."
 #. TRANSLATORS: title: allow user to confirm
 #: ../src/gpk-dbus-task.c:2154
 msgid "Install packages in catalog?"
-msgstr "Ali naj bodo nemeščeni paketi kataloga?"
+msgstr "Ali naj bodo nameščeni paketi kataloga?"
 
 #. TRANSLATORS: display a list of packages to install
 #: ../src/gpk-dbus-task.c:2156
@@ -2106,7 +2106,7 @@ msgstr "Neveljaven iskalni filter"
 
 #: ../src/gpk-enum.c:383
 msgid "The package identifier was not well formed"
-msgstr "Določilo paketa ni ustrazno oblikovano"
+msgstr "Določilo paketa ni ustrezno oblikovano"
 
 #: ../src/gpk-enum.c:386
 msgid "Transaction error"
@@ -2375,6 +2375,8 @@ msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Paketa za dokončanje dejanja ni mogoče najti.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:582
 msgid "The search filter was not correctly formed."
@@ -2385,18 +2387,24 @@ msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
 msgstr ""
+"Določilo paketa ni ustrezno oblikovano pred pošiljanjem na strežnik.\n"
+"Običajno je to znak notranje napake, za katero je dobro napisati poročilo o napaki."
 
 #: ../src/gpk-enum.c:589
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Prišlo je do nedoločene napake med prenosom.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:593
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
 msgstr ""
+"Oddaljenega vira programske opreme ni mogoče najti.\n"
+"Predmet je morda treba omogočiti med viri programske opreme."
 
 #: ../src/gpk-enum.c:597
 msgid "Removing a protected system package is not allowed."
@@ -2410,13 +2418,17 @@ msgstr "Dejanje je bilo uspešno preklicano. Noben paket ni bil spremenjen."
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
-msgstr "The action was canceled successfully and no packages were changed.Hrbtišče programa se ni povsem končalo.!"
+msgstr ""
+"Dejanje je bilo uspešno preklicano. Noben paket ni bil spremenjen.\n"
+"Hrbtišče programa se ni povsem končalo."
 
 #: ../src/gpk-enum.c:607
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
 msgstr ""
+"Datoteke nastavitev paketa ni mogoče odpreti.\n"
+"Preverite, da so nastavitve pravilne."
 
 #: ../src/gpk-enum.c:611
 msgid "The action cannot be canceled at this time."
@@ -2427,48 +2439,64 @@ msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
+"Izvorni paketi so običajno nameščeni na ta način.\n"
+"Preverite pripono datoteke, ki jo poskušate namestiti."
 
 #: ../src/gpk-enum.c:618
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
+"Niste sprejeli določil dovoljenja uporabe.\n"
+"Za uporabo tega programa morate dovoljenje potrditi."
 
 #: ../src/gpk-enum.c:622
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
+"Dva paketa imata enako datoteko.\n"
+"Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
 #: ../src/gpk-enum.c:626
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
+"Obstaja več paketov, ki med seboj niso skladni.\n"
+"Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
 #: ../src/gpk-enum.c:630
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
 msgstr ""
+"Prišlo je do napake med povezovanjem z viri programske opreme.\n"
+"Preverite podrobnosti napake."
 
 #: ../src/gpk-enum.c:634
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
+"Napaka med začenjanjem hrbtišča paketnika.\n"
+"Napaka se pojavi, kadar so hkrati zagnani različni upravljalniki paketov."
 
 #: ../src/gpk-enum.c:638
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
+"Napaka med zapiranjem hrbtišča programa.\n"
+"Napako se običajno lahko prezre."
 
 #: ../src/gpk-enum.c:642
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
+"Ni mogoče zakleniti hrbtišča upravljalnika paketov.\n"
+"Zaprite druge upravljalnike paketov in poskusite znova."
 
 #: ../src/gpk-enum.c:646
 msgid "None of the selected packages could be updated."
@@ -2483,6 +2511,8 @@ msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Nameščanje krajevne datoteke ni uspelo.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:656
 msgid "The package security signature could not be verified."
@@ -2493,6 +2523,8 @@ msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
 msgstr ""
+"Manjka podpis paketa, zato paket ni varnostno potrjen.\n"
+"Paket med ustvarjanjem ni bil podpisan."
 
 #: ../src/gpk-enum.c:663
 msgid "Repository configuration was invalid and could not be read."
@@ -2503,10 +2535,12 @@ msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
 msgstr ""
+"Paket ni veljaven.\n"
+"Paket je pokvarjen ali pa ni pravi paket."
 
 #: ../src/gpk-enum.c:670
 msgid "Installation of this package prevented by your packaging system's configuration."
-msgstr ""
+msgstr "Namestitev paketa je preprečilo določilo med sistemskimi nastavitvami nameščanja."
 
 #: ../src/gpk-enum.c:673
 msgid "The package that was downloaded is corrupt and needs to be downloaded again."
@@ -2521,18 +2555,24 @@ msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
 msgstr ""
+"Določene datoteke v sistemu ni mogoče najti.\n"
+"Preverite, da datoteka obstaja."
 
 #: ../src/gpk-enum.c:683
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
+"Zahtevanih podatkov ni mogoče najti med uporabljenimi viri programske opreme.\n"
+"Ni drugih razpoložljivih zrcalnih strežnikov za prejemanje paketov."
 
 #: ../src/gpk-enum.c:687
 msgid ""
 "Required upgrade data could not be found in any of the configured software sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
+"Zahtevane posodobitve ni mogoče najti med uporabljenimi viri programske opreme.\n"
+"Seznam posodobitev ni na voljo."
 
 #: ../src/gpk-enum.c:691
 msgid "The package that is trying to be installed is incompatible with this system."
@@ -2543,22 +2583,28 @@ msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"Ni dovolj prostora na napravi.\n"
+"Sprostiti je treba disk za izvedbo tega dejanja."
 
 #: ../src/gpk-enum.c:698
 msgid "Additional media is required to complete the transaction."
-msgstr ""
+msgstr "Za končanje prenosa je zahtevan dodatni nosilec."
 
 #: ../src/gpk-enum.c:701
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
 msgstr ""
+"Ni navedenih pravilnih podatkov za overitev.\n"
+"Preverite gesla in nastavitve računa."
 
 #: ../src/gpk-enum.c:705
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote server."
 msgstr ""
+"Določene posodobitve ni mogoče najti.\n"
+"Morda je že nameščena ali pa ni več na voljo na oddaljenih strežnikih."
 
 #: ../src/gpk-enum.c:709
 msgid "The package could not be installed from untrusted source."
@@ -2585,30 +2631,40 @@ msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Paketa ni mogoče prejeti samodejno, zato ga je treba namestiti ročno.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:728
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Eden izmed izbranih paketov ni pravilno nastavljen.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:732
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Eden izmed izbranih paketov ni pravilno izgrajen.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:736
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Eden izmed izbranih paketov ni pravilno nameščen.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:740
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Eden izmed izbranih paketov ni pravilno odstranjen.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:759
 msgid "No restart is necessary."
@@ -2624,7 +2680,7 @@ msgstr "Treba se bo odjaviti in ponovno prijaviti v sistem."
 
 #: ../src/gpk-enum.c:768
 msgid "A restart will be required."
-msgstr "Zahtevan bo ponovno zagno sistema."
+msgstr "Zahtevan bo ponovno zagon sistema."
 
 #: ../src/gpk-enum.c:771
 msgid "You will be required to log out and back in due to a security update."
@@ -2640,7 +2696,7 @@ msgstr "Ponovni zagon ni zahtevan."
 
 #: ../src/gpk-enum.c:794
 msgid "A restart is required."
-msgstr "Zahtevan je ponovni zagno."
+msgstr "Zahtevan je ponovni zagon."
 
 #: ../src/gpk-enum.c:797
 msgid "You need to log out and log back in."
@@ -2671,11 +2727,11 @@ msgstr "Razvojna veja"
 #. TRANSLATORS: A distribution stability level
 #: ../src/gpk-enum.c:832
 msgid "Testing"
-msgstr "Preiskusna veja"
+msgstr "Preizkusna veja"
 
 #: ../src/gpk-enum.c:849
 msgid "A mirror is possibly broken"
-msgstr ""
+msgstr "Zrcalni strežnik ne deluje."
 
 #: ../src/gpk-enum.c:852
 msgid "The connection was refused"
@@ -2727,7 +2783,7 @@ msgstr "Samodejno čiščenje paketov je prezrto."
 
 #: ../src/gpk-enum.c:888
 msgid "Software source download failed"
-msgstr "Prejemanje virov programske oprame ni uspelo."
+msgstr "Prejemanje virov programske opreme ni uspelo."
 
 #. TRANSLATORS: This is when the transaction status is not known
 #: ../src/gpk-enum.c:906
@@ -2871,7 +2927,7 @@ msgstr "Nalaganje predpomnilnika"
 #. TRANSLATORS: transaction state, scanning for running processes
 #: ../src/gpk-enum.c:1022
 msgid "Scanning installed applications"
-msgstr "Proučevanje nemeščenih programov"
+msgstr "Proučevanje nameščenih programov"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
 #: ../src/gpk-enum.c:1026
@@ -3168,7 +3224,7 @@ msgstr "Osveževanje pomnilnika paketov"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1318
 msgid "Updating packages"
-msgstr "Posodabljenje paketov"
+msgstr "Posodabljanje paketov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1322
@@ -3353,7 +3409,7 @@ msgstr "Pridobljen seznam skladišč"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1494
 msgid "Enabled repository"
-msgstr "Omogočeno skadišče"
+msgstr "Omogočeno skladišče"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1498
@@ -3630,7 +3686,7 @@ msgstr "Strojna oprema je nameščena in pripravljena za uporabo."
 #. TRANSLATORS: we need another package to keep udev quiet
 #: ../src/gpk-firmware.c:613
 msgid "Additional firmware is required to make hardware in this computer function correctly."
-msgstr ""
+msgstr "Zahtevana je dodatna strojna programska oprema za pravilno delovanje sistema."
 
 #. TRANSLATORS: title of libnotify bubble
 #: ../src/gpk-firmware.c:627
@@ -3685,13 +3741,13 @@ msgstr "Programska oprema ni podpisana s podpisom zaupljivega ponudnika."
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
 #: ../src/gpk-task.c:146
 msgid "Do not update this package unless you are sure it is safe to do so."
-msgstr ""
+msgstr "Ne posodabljajte paketa, v kolikor niste povsem prepričani, da je namestitev varna."
 
 #. TRANSLATORS: warn the user that all bets are off
 #: ../src/gpk-task.c:148
 #: ../src/gpk-task.c:158
 msgid "Malicious software can damage your computer or cause other harm."
-msgstr ""
+msgstr "Zlonamerna programska oprema lahko poškoduje računalnik in uniči vaše podatke."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
 #: ../src/gpk-task.c:150
@@ -3701,7 +3757,7 @@ msgstr "Ali ste <b>povsem</b> prepričani, da želite posodobiti ta paket?"
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
 #: ../src/gpk-task.c:156
 msgid "Do not install this package unless you are sure it is safe to do so."
-msgstr ""
+msgstr "Ne nameščajte paketa, v kolikor niste povsem prepričani, da je namestitev varna."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
 #: ../src/gpk-task.c:160
@@ -3712,7 +3768,7 @@ msgstr "Ali ste <b>povsem</b> prepričani, da želite namestiti ta paket?"
 #: ../src/gpk-task.c:355
 #, c-format
 msgid "Additional media is required. Please insert the %s labeled '%s' to continue."
-msgstr ""
+msgstr "Zahtevan je dodaten nosilec. Za nadaljevanje vstavite %s z oznako '%s'."
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:363
@@ -3840,7 +3896,7 @@ msgstr "Dejanja ni mogoče končati"
 #: ../src/gpk-install-package-name.c:120
 #: ../src/gpk-install-provide-file.c:121
 msgid "The request failed. More details are available in the detailed report."
-msgstr ""
+msgstr "Neuspešna zahteva. Več podrobnosti je zapisanih v poročilu."
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:52
@@ -3863,7 +3919,7 @@ msgstr "Namestilnik krajevnih datotek"
 #: ../src/gpk-install-local-file.c:84
 #: ../src/gpk-install-provide-file.c:84
 msgid "Failed to install a package to provide a file"
-msgstr ""
+msgstr "Prišlo je do napaka med nameščanjem paketa z zahtevano datoteko"
 
 #. TRANSLATORS: nothing selected
 #: ../src/gpk-install-local-file.c:86
@@ -3981,7 +4037,7 @@ msgstr "Nastavi filter na to vrednost"
 #: ../src/gpk-prefs.c:489
 #: ../src/gpk-repo.c:583
 msgid "Set the parent window to make this modal"
-msgstr ""
+msgstr "Določi glavno okno kot vedno na vrhu."
 
 #. are we running privileged
 #: ../src/gpk-log.c:716
@@ -4071,7 +4127,7 @@ msgstr "Ni mogoče najti paketov z imenom '%s'"
 #: ../src/gpk-service-pack.c:269
 #, c-format
 msgid "Could not find any valid package names"
-msgstr "Ni mogoče najti velajvnih imen paketov"
+msgstr "Ni mogoče najti veljavnih imen paketov"
 
 #. TRANSLATORS: cannot get package array
 #: ../src/gpk-service-pack.c:333
@@ -4123,12 +4179,12 @@ msgstr "Ni mogoče osvežiti seznama skupin paketov"
 
 #: ../src/gpk-service-pack.c:585
 msgid "Cannot read destination package array"
-msgstr "Ni mogoče prebrati ciljega seznama skupin paketov"
+msgstr "Ni mogoče prebrati ciljnega seznama skupin paketov"
 
 #. TRANSLATORS: the constants should not be translated
 #: ../src/gpk-service-pack.c:697
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
-msgstr ""
+msgstr "Določitev možnosti; dovoljene vrednosti so 'array' (skupina paketov), 'updates' (posodobitve) and 'package' (paket)"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
 #: ../src/gpk-service-pack.c:700
@@ -4138,7 +4194,7 @@ msgstr "Dodaj ime paketa v vnosno besedilno polje"
 #. TRANSLATORS: this is the destination computer package array
 #: ../src/gpk-service-pack.c:703
 msgid "Set the remote package array filename"
-msgstr ""
+msgstr "Določi ime oddaljene datoteke skupine paketov"
 
 #. TRANSLATORS: this is the file output directory
 #: ../src/gpk-service-pack.c:706
@@ -4168,7 +4224,7 @@ msgstr "Aplet posodobitve"
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-update-icon.c:162
 msgid "Update applet"
-msgstr "Update aplet"
+msgstr "Aplet posodabljanja"
 
 #. TRANSLATORS: the message text for the restart
 #: ../src/gpk-update-viewer.c:210
@@ -4281,7 +4337,7 @@ msgstr "Programska oprema je posodobljena"
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1197
 msgid "There are no software updates available for your computer at this time."
-msgstr ""
+msgstr "Trenutno ni posebnih posodobitev programske opreme."
 
 #: ../src/gpk-update-viewer.c:1233
 #, c-format
@@ -4325,17 +4381,17 @@ msgstr "Stanje"
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1673
 msgid "This update will fix bugs and other non-critical problems."
-msgstr ""
+msgstr "Posodobitev odpravlja hrošče in druge manj kritične napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1677
 msgid "This update is important as it may solve critical problems."
-msgstr ""
+msgstr "Posodobitev je pomembna, saj odpravlja kritične programske napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1681
 msgid "This update is needed to fix a security vulnerability with this package."
-msgstr ""
+msgstr "Zahtevana je posodobitev za varnostne popravke paketa."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1685
@@ -4346,13 +4402,13 @@ msgstr "Posodobitev je ovirana."
 #: ../src/gpk-update-viewer.c:1697
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
-msgstr ""
+msgstr "Opozorilo je bilo izdano %s in je bilo zadnjič posodobljeno %s."
 
 #. TRANSLATORS: this is when the update was issued
 #: ../src/gpk-update-viewer.c:1704
 #, c-format
 msgid "This notification was issued on %s."
-msgstr ""
+msgstr "Opozorilo je bilo izdano %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
 #: ../src/gpk-update-viewer.c:1726
@@ -4376,10 +4432,10 @@ msgstr[3] "Za več podrobnosti o odpravljenih napakah, obiščite spletne strani
 #: ../src/gpk-update-viewer.c:1742
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
-msgstr[0] "Za več podrobnosti o varnostnih posodobitveh, obiščite spletne strani:"
-msgstr[1] "Za več podrobnosti o varnostnih posodobitveh, obiščite spletno stran:"
-msgstr[2] "Za več podrobnosti o varnostnih posodobitveh, obiščite spletni strani:"
-msgstr[3] "Za več podrobnosti o varnostnih posodobitveh, obiščite spletne strani:"
+msgstr[0] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
+msgstr[1] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletno stran:"
+msgstr[2] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletni strani:"
+msgstr[3] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
 
 #. TRANSLATORS: reboot required
 #: ../src/gpk-update-viewer.c:1751
@@ -4394,17 +4450,17 @@ msgstr "Za uveljavitev sprememb se je treba odjaviti in ponovno prijaviti."
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer.c:1762
 msgid "The classifaction of this update is unstable which means it is not designed for production use."
-msgstr ""
+msgstr "Posodobitev je opredeljena kot razvojna različica, kar pomeni, da ni primerna za običajnega uporabnika."
 
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer.c:1766
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
-msgstr ""
+msgstr "To je preizkusna posodobitev in ni primerna za običajno rabo. V primeru težav pošljite poročilo o hroščih."
 
 #. TRANSLATORS: this is a ChangeLog
 #: ../src/gpk-update-viewer.c:1775
 msgid "The developer logs will be shown as no description is available for this update:"
-msgstr ""
+msgstr "Izpisan bo dnevnik beleženja, saj za posodobitev ni ustreznega opisa:"
 
 #. set loading text
 #: ../src/gpk-update-viewer.c:1811
@@ -4507,12 +4563,12 @@ msgstr "_Ponoven zagon"
 #. TRANSLATORS: This hides the 'restart required' icon
 #: ../src/gpk-watch.c:970
 msgid "_Hide this icon"
-msgstr "_Shrij ikono"
+msgstr "_Skrij ikono"
 
 #. do the bubble
 #: ../src/gpk-watch.c:1335
 msgid "New package manager message"
-msgstr "Novo sporočilo uporavljalnika paketov"
+msgstr "Novo sporočilo upravljalnika paketov"
 
 #. TRANSLATORS: Prefix to the title shown in the libnotify popup
 #: ../src/gpk-watch.c:1392
