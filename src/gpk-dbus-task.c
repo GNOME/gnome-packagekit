@@ -1520,6 +1520,12 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	GError *error_dbus = NULL;
 	gchar **parts = NULL;
 	gchar *message = NULL;
+	GPtrArray *array_title = NULL;
+	GPtrArray *array_search = NULL;
+	gchar **search = NULL;
+	gchar **title = NULL;
+	gchar *title_str = NULL;
+	guint i;
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
@@ -1555,20 +1561,36 @@ skip_checks:
 		gpk_modal_dialog_present (dtask->priv->dialog);
 
 	/* get the request */
-	parts = g_strsplit (codec_names[0], "|", 2);
+	array_title = g_ptr_array_new_with_free_func (g_free);
+	array_search = g_ptr_array_new_with_free_func (g_free);
+	for (i=0; codec_names[i] != NULL; i++) {
+		parts = g_strsplit (codec_names[i], "|", 2);
+		g_ptr_array_add (array_title, g_strdup (parts[0]));
+		g_ptr_array_add (array_search, g_strdup (parts[1]));
+		g_strfreev (parts);
+	}
 
 	/* TRANSLATORS: title, searching for codecs */
-	message = g_strdup_printf (_("Searching for plugin: %s"), parts[1]);
+	title = pk_ptr_array_to_strv (array_title);
+	title_str = g_strjoinv (", ", title);
+	message = g_strdup_printf (_("Searching for plugin: %s"), title_str);
 	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
 
 	/* get codec packages */
+	search = pk_ptr_array_to_strv (array_search);
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
-				       PK_PROVIDES_ENUM_CODEC, parts, NULL,
+				       PK_PROVIDES_ENUM_CODEC, search, NULL,
 			               (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_codec_what_provides_cb, dtask);
 out:
-	g_strfreev (parts);
+	if (array_title != NULL)
+		g_ptr_array_unref (array_title);
+	if (array_search != NULL)
+		g_ptr_array_unref (array_search);
+	g_strfreev (search);
+	g_strfreev (title);
 	g_free (message);
+	g_free (title_str);
 }
 
 /**
