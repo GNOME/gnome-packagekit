@@ -166,6 +166,49 @@ gpk_dbus_task_set_timestamp (GpkDbusTask *dtask, guint32 timestamp)
 static void gpk_dbus_task_install_package_ids (GpkDbusTask *dtask);
 
 /**
+ * gpk_dbus_task_dbus_return_error:
+ **/
+static void
+gpk_dbus_task_dbus_return_error (GpkDbusTask *dtask, const GError *error)
+{
+	g_return_if_fail (error != NULL);
+
+	/* already sent or never setup */
+	if (dtask->priv->context == NULL) {
+		egg_error ("context does not exist, cannot return: %s", error->message);
+		goto out;
+	}
+
+	/* send error */
+	egg_debug ("sending async return error in response to %p: %s", dtask->priv->context, error->message);
+	dbus_g_method_return_error (dtask->priv->context, error);
+
+out:
+	/* set context NULL just in case we try to repeat */
+	dtask->priv->context = NULL;
+}
+
+/**
+ * gpk_dbus_task_dbus_return_value:
+ **/
+static void
+gpk_dbus_task_dbus_return_value (GpkDbusTask *dtask, gboolean ret)
+{
+	/* already sent or never setup */
+	if (dtask->priv->context == NULL) {
+		egg_error ("context does not exist, cannot return %i", ret);
+		goto out;
+	}
+
+	/* send error */
+	egg_debug ("sending async return in response to %p: %i", dtask->priv->context, ret);
+	dbus_g_method_return (dtask->priv->context, ret);
+out:
+	/* set context NULL just in case we try to repeat */
+	dtask->priv->context = NULL;
+}
+
+/**
  * gpk_dbus_task_chooser_event_cb:
  **/
 static void
@@ -178,7 +221,8 @@ gpk_dbus_task_chooser_event_cb (GpkHelperChooser *helper_chooser, GtkResponseTyp
 
 		/* failed */
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not choose anything to install");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 
 		if (dtask->priv->show_warning) {
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
@@ -346,8 +390,9 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 		/* TRANSLATORS: error: failed to install, detailed error follows */
 		gpk_dbus_task_error_msg (dtask, _("Failed to install package"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -356,14 +401,14 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	if (error_code != NULL) {
 		egg_warning ("failed to install package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
 		gpk_dbus_task_handle_error (dtask, error_code);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* we're done */
-	egg_debug ("doing async return");
-	dbus_g_method_return (dtask->priv->context, TRUE);
+	gpk_dbus_task_dbus_return_value (dtask, TRUE);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -481,8 +526,9 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 		title = ngettext ("Failed to install file", "Failed to install files", length);
 		gpk_dbus_task_error_msg (dtask, title, error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -492,7 +538,8 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 out:
@@ -686,7 +733,7 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		egg_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		goto out;
@@ -697,15 +744,15 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	if (error_code != NULL) {
 		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* get results */
 	array = pk_results_get_package_array (results);
 	ret = (array->len > 0);
-	egg_debug ("doing async return");
-	dbus_g_method_return (dtask->priv->context, ret);
+	gpk_dbus_task_dbus_return_value (dtask, ret);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -751,9 +798,10 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search file: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		egg_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -762,7 +810,8 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	if (error_code != NULL) {
 		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search file: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -771,7 +820,8 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	if (array->len == 0) {
 		egg_warning ("no packages");
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to find any packages");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -783,8 +833,12 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 		      NULL);
 	split = pk_package_id_split (package_id);
 
-	egg_debug ("doing async return");
+	/* send error */
+	egg_debug ("sending async return in response to %p", dtask->priv->context);
 	dbus_g_method_return (dtask->priv->context, (info == PK_INFO_ENUM_INSTALLED), split[PK_PACKAGE_ID_NAME]);
+
+	/* set context NULL just in case we try to repeat */
+	dtask->priv->context = NULL;
 out:
 	g_free (package_id);
 	g_strfreev (split);
@@ -842,7 +896,10 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel)
 	if (dtask->priv->show_confirm_search) {
 		ret = gpk_dbus_task_install_package_files_verify (dtask, array, &error);
 		if (!ret) {
-			dbus_g_method_return_error (dtask->priv->context, error_dbus);
+			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to verify files: %s", error->message);
+			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+			g_error_free (error);
+			g_error_free (error_dbus);
 			goto out;
 		}
 	}
@@ -865,8 +922,6 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel)
 	/* wait for async reply */
 out:
 	g_ptr_array_unref (array);
-	if (error != NULL)
-		g_error_free (error);
 }
 
 /**
@@ -894,18 +949,18 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -935,7 +990,8 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			g_free (title);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no package found");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -968,7 +1024,8 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "package already found");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -984,7 +1041,8 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "incorrect response from search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1070,7 +1128,8 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages)
 	g_free (message);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1119,18 +1178,18 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1160,7 +1219,8 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 			g_free (info_url);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no files found");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1197,7 +1257,8 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 			g_strfreev (split);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "already provided");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1282,7 +1343,8 @@ gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths)
 	g_free (message);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1417,18 +1479,18 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1459,7 +1521,8 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 			g_free (info_url);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find codec");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1486,7 +1549,8 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1531,7 +1595,8 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_CODEC_HELPER);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1545,7 +1610,8 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	ret = gpk_dbus_task_install_gstreamer_resources_confirm (dtask, codec_names);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1612,19 +1678,19 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 	if (results == NULL) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", pk_error_get_details (error_code));
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1654,15 +1720,15 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 			g_free (info_url);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "nothing was found to handle mime type");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* populate a chooser */
 	gpk_helper_chooser_show (dtask->priv->helper_chooser, array);
 
-	egg_debug ("doing async return");
-	dbus_g_method_return (dtask->priv->context, TRUE);
+	gpk_dbus_task_dbus_return_value (dtask, TRUE);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -1698,7 +1764,8 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types)
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_MIME_TYPE_HELPER, NULL);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_MIME_TYPE_HELPER);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1732,7 +1799,8 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types)
 	ret = gpk_dbus_task_confirm_action (dtask, text, message, _("Search"));
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1862,9 +1930,9 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 //		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1874,7 +1942,8 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
 //		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search for provides: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1905,7 +1974,8 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 			g_free (info_url);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find font");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -1931,7 +2001,8 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2012,7 +2083,8 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 	ret = gpk_dbus_task_install_check_exec_ignored (dtask);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "skipping ignored program: %s", dtask->priv->exec);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2023,7 +2095,8 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_FONT_HELPER);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2038,14 +2111,16 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 		/* correct prefix */
 		if (!g_str_has_prefix (fonts[i], ":lang=")) {
 			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "not recognised prefix: '%s'", fonts[i]);
-			dbus_g_method_return_error (dtask->priv->context, error_dbus);
+			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+			g_error_free (error_dbus);
 			goto out;
 		}
 		/* no lang code */
 		size = strlen (fonts[i]);
 		if (size < 7 || size > 20) {
 			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "lang tag malformed: '%s'", fonts[i]);
-			dbus_g_method_return_error (dtask->priv->context, error_dbus);
+			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+			g_error_free (error_dbus);
 			goto out;
 		}
 	}
@@ -2094,7 +2169,8 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 	g_free (message);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2144,8 +2220,9 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "failed to parse catalog: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2161,7 +2238,8 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "No packages need to be installed");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2186,7 +2264,8 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Action was cancelled");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2215,25 +2294,25 @@ gpk_dbus_task_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *
 	if (results == NULL) {
 		/* TRANSLATORS: error: failed to remove, detailed error follows */
 		gpk_dbus_task_error_msg (dtask, _("Failed to remove package"), error);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to remove package: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to remove package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "%s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to remove package: %s", pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* we're done */
-	egg_debug ("doing async return");
-	dbus_g_method_return (dtask->priv->context, TRUE);
+	gpk_dbus_task_dbus_return_value (dtask, TRUE);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -2275,19 +2354,20 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search by file: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		egg_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to search by file: %s", pk_error_get_details (error_code));
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2308,7 +2388,8 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no packages found for this file");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2392,7 +2473,8 @@ gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths)
 	g_free (message);
 	if (!ret) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2449,7 +2531,8 @@ gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames)
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to install");
-		dbus_g_method_return_error (dtask->priv->context, error_dbus);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
 		goto out;
 	}
 
@@ -2690,11 +2773,19 @@ static void
 gpk_dbus_task_finalize (GObject *object)
 {
 	GpkDbusTask *dtask;
+	GError *error;
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (object));
 
 	dtask = GPK_DBUS_TASK (object);
 	g_return_if_fail (dtask->priv != NULL);
+
+	/* no reply was sent */
+	if (dtask->priv->context != NULL) {
+		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "context never was returned");
+		gpk_dbus_task_dbus_return_error (dtask, error);
+		g_error_free (error);
+	}
 
 	g_free (dtask->priv->parent_title);
 	g_free (dtask->priv->parent_icon_name);
