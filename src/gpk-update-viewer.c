@@ -1402,7 +1402,6 @@ gpk_update_viewer_treeview_add_columns_update (GpkUpdateViewer *update_viewer, G
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
-	GtkTreeModel *model;
 
 	/* restart */
 	renderer = gpk_cell_renderer_restart_new ();
@@ -1433,7 +1432,6 @@ gpk_update_viewer_treeview_add_columns_update (GpkUpdateViewer *update_viewer, G
 
 	/* select toggle */
 	renderer = gtk_cell_renderer_toggle_new ();
-	model = gtk_tree_view_get_model (treeview);
 	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_update_viewer_treeview_update_toggled), update_viewer);
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "active", GPK_UPDATES_COLUMN_SELECT);
