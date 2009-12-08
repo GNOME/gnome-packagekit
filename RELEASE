@@ -2,7 +2,7 @@ PackageKit Release Notes
 
 1. Write NEWS entries for gnome-packagekit in the same format as usual.
 
-git shortlog GNOME_PACKAGEKIT_2_29_0.. | grep -i -v trivial | grep -v Merge > NEWS.new
+git shortlog GNOME_PACKAGEKIT_2_29_0.. | grep -i -v trivial | uniq | grep -v Merge > NEWS.new
 
 3. Commit changes in gnome-packagekit git:
 

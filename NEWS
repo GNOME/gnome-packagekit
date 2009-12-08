@@ -1,3 +1,65 @@
+Version 2.29.1
+~~~~~~~~~~~~~~
+Released: 2009-12-08
+
+* Translations
+ - Added Norwegian bokmål translation (Kjartan Maraas)
+ - Added Shavian translation (Thomas Thurman)
+ - Added Slovenian translation (Matej Urbančič)
+ - Updated Arabic translation (Khaled Hosny)
+ - Updated Bengali India Translations (Runa Bhattacharjee)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated Danish translation (Mads Lundby)
+ - Updated Finnish Translation (Ville-Pekka Vainio)
+ - Updated French translation (Claude Paroz)
+ - Updated Galician translation (Antón Méixome)
+ - Updated German manual translation (Christian Kirbach)
+ - Updated German translation (Christian Kirbach)
+ - Updated Hindi translation (Rajesh Ranjan)
+ - Updated Italian translation (Gianvito Cavasoli)
+ - Updated Kannada(kn) translation (Shankar Prasad)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Romanian translation (alexxed)
+ - Updated Simplified Chinese translation (Wei Mingzhi)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Tamil Translations (ifelix)
+ - Updated Telugu Translation (krishnababu k)
+
+* New Features:
+ - Convert all the client applications to use packagekit-glib2 (Richard Hughes)
+ - When the update viewer is no longer being shown, force an update of the updates (Richard Hughes)
+ - Remove a lot of the helpers and create a GpkTask module that implements PkTask to handle the transaction interactions (Richard Hughes)
+ - Use a GtkInfoBar to display the mobile broadband warning, not a modal dialog box (Richard Hughes)
+ - Add RemovePackageByFile() to match the API provided by KPackageKit (Richard Hughes)
+ - Format the dates in the update viewer according to the users locale. Fixes #601493 (Richard Hughes)
+ - Add a GConf key to add program exec names to ignore all DBus requests from. Fixes rh#501023 (Richard Hughes)
+ - Make the update viewer cope with multiple packages downloading at the same time (Richard Hughes)
+ - Add a new GConf key to control whether we show all packages in the apdd/remove UI (Richard Hughes)
+
+* Bugfix:
+ - Fix thinko in spinner cell renderer's rendering (Bastien Nocera)
+ - Fix duplicate mnemonics in menu. Fixes #601581 (Bruce Cowan)
+ - Use the correct show-confirm key when installing a font (Daniel Nicoletti)
+ - Some more fixes to the session interface (Daniel Nicoletti)
+ - Don't escape the desktop summary in the run dialog. Fixes #596010 (Richard Hughes)
+ - Ignore cleanup and finished packages when we a simulating a remove or install (Richard Hughes)
+ - Never show the role text in the GpkWatch tooltip (Richard Hughes)
+ - Only show 'and n other security updates when there are other updates to list. Fixes rh#527149 (Richard Hughes)
+ - Don't show 4Gb as the file size when we actually get -1, meaning percentage unknown (Richard Hughes)
+ - Use seporate messages when we've finished installing all or some of the updates (Richard Hughes)
+ - If command line contains (deleted) the original binary is invalid, and don't show it in the UI. Fixes rh#524873 (Richard Hughes)
+ - Don't show finished tasks in the menu dropdown (Richard Hughes)
+ - Run the gpk-install-foo helpers with interaction 'hide-finished,hide-warnings' as we are handling failure (Richard Hughes)
+ - Check we're not already doing GetUpdates or GetDistroUpgrades before we try to do the action (Richard Hughes)
+ - Ensure we use the progress callback to update the UI when processing session DBus requests (Richard Hughes)
+ - Use the desktop icon when we unselect the installed application in gpk-application. Fixes fd#25098 (Richard Hughes)
+ - Don't shutdown when we just want to log out. Fixes rh#539800 (Richard Hughes)
+ - Ignore PK_ERROR_ENUM_CANNOT_GET_LOCK for the weekly actions too. Fixes #602717 (Richard Hughes)
+ - Ensure we search for all GStreamer resources, not just the first item (Richard Hughes)
+ - Dont segfault if error_local is not set (Scott Reeves)
+ - Call gpk_dbus_task_install_files when installing local files (Scott Reeves)
+
 Version 2.27.92
 ~~~~~~~~~~~~~~~
 Released: 2009-09-07
