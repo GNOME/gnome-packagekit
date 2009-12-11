@@ -58,7 +58,7 @@ G_DEFINE_TYPE (GpkHelperDepsUpdate, gpk_helper_deps_update, G_TYPE_OBJECT)
  * Return value: if we agreed
  **/
 gboolean
-gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *deps_list)
+gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *packages, PkPackageList *deps_list)
 {
 	gchar *title = NULL;
 	const gchar *message = NULL;
@@ -68,6 +68,7 @@ gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *deps_li
 	GtkResponseType response;
 	const PkPackageObj *obj;
 	guint i;
+	gchar *package_id;
 
 	/* save deps list */
 	if (helper->priv->list != NULL)
@@ -78,6 +79,15 @@ gpk_helper_deps_update_show (GpkHelperDepsUpdate *helper, PkPackageList *deps_li
 	length = pk_package_list_get_size (deps_list);
 	for (i=0; i<length; i++) {
 		obj = pk_package_list_get_obj (deps_list, i);
+
+		/* is the dep listed in the original package list */
+		package_id = pk_package_id_to_string (obj->id);
+		ret = pk_package_list_contains (packages, package_id);
+		g_free (package_id);
+		if (ret)
+			continue;
+
+		/* ignore download and cleanup packages and that sort of thing */
 		if (obj->info == PK_INFO_ENUM_INSTALLING ||
 		    obj->info == PK_INFO_ENUM_UPDATING)
 			pk_package_list_add (helper->priv->list, obj->info, obj->id, obj->summary);

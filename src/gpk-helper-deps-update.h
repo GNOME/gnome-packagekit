@@ -58,6 +58,7 @@ GpkHelperDepsUpdate	*gpk_helper_deps_update_new	(void);
 gboolean	 gpk_helper_deps_update_set_parent	(GpkHelperDepsUpdate	*helper,
 							 GtkWindow		*window);
 gboolean	 gpk_helper_deps_update_show		(GpkHelperDepsUpdate	*helper,
+							 PkPackageList		*packages,
 							 PkPackageList		*deps_list);
 
 G_END_DECLS

@@ -1814,10 +1814,36 @@ gpk_update_viewer_finished_cb (PkClient *client, PkExitEnum exit, guint runtime,
 #else
 	if (exit == PK_EXIT_ENUM_SUCCESS && role == PK_ROLE_ENUM_GET_DEPENDS) {
 #endif
+		gboolean valid;
+		GtkTreeIter iter;
+		gboolean update;
+		PkPackageId *id;
+		gchar *package_id;
+		PkPackageList *selected_list;
+
+		/* get the first iter in the list */
+		valid = gtk_tree_model_get_iter_first (model, &iter);
+
+		/* create list of selected updates */
+		selected_list = pk_package_list_new ();
+		while (valid) {
+			gtk_tree_model_get (model, &iter,
+					    GPK_UPDATES_COLUMN_SELECT, &update,
+					    GPK_UPDATES_COLUMN_ID, &package_id, -1);
+			if (update) {
+				id = pk_package_id_new_from_string (package_id);
+				pk_package_list_add (selected_list, PK_INFO_ENUM_UPDATING, id, "");
+				pk_package_id_free (id);
+			}
+			g_free (package_id);
+			valid = gtk_tree_model_iter_next (model, &iter);
+		}
+
 		/* show deps dialog */
 		list = pk_client_get_package_list (client);
-		gpk_helper_deps_update_show (helper_deps_update, list);
+		gpk_helper_deps_update_show (helper_deps_update, selected_list, list);
 		g_object_unref (list);
+		g_object_unref (selected_list);
 	}
 
 	if (role == PK_ROLE_ENUM_GET_UPDATES) {
