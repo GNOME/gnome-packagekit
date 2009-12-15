@@ -55,10 +55,10 @@ typedef enum {
 	GPK_INFO_ENUM_UNKNOWN
 } GpkInfoStatusEnum;
 
-/* constants defined in 0.5.3 */
-//#if (!PK_CHECK_VERSION(0,5,3))
-//#define PK_INFO_ENUM_UNKNOWN				(PK_INFO_ENUM_DOWNGRADING + 1)
-//#endif
+/* constants defined in 0.5.6 */
+#if (!PK_CHECK_VERSION(0,5,6))
+#define PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS		(PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE + 1)
+#endif
 
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)

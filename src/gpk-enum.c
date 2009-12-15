@@ -334,6 +334,9 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
+	case PK_ERROR_ENUM_UNKNOWN:
+		text = _("Failed with unknown error code");
+		break;
 	case PK_ERROR_ENUM_NO_NETWORK:
 		text = _("No network connection available");
 		break;
@@ -511,6 +514,9 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE:
 		text = _("Package failed to be removed");
 		break;
+	case PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS:
+		text = _("Update failed due to running process");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -525,6 +531,9 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 {
 	const gchar *text = NULL;
 	switch (code) {
+	case PK_ERROR_ENUM_UNKNOWN:
+		text = _("Failed with unknown error code.");
+		break;
 	case PK_ERROR_ENUM_NO_NETWORK:
 		text = _("There is no network connection available.\n"
 			 "Please check your connection settings and try again.");
@@ -738,6 +747,10 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		break;
 	case PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE:
 		text = _("One of the selected packages failed to be removed correctly.\n"
+			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS:
+		text = _("A program is running that has to be closed before the update can proceed.\n"
 			 "More information is available in the detailed report.");
 		break;
 	default:
@@ -1837,7 +1850,7 @@ gpk_enum_test (gpointer data)
 	 ****************     localised enums          **************
 	 ************************************************************/
 	egg_test_title (test, "check we convert all the localised past role enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1848,7 +1861,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised present role enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1859,7 +1872,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the role icon name enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=PK_ROLE_ENUM_UNKNOWN+1; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
@@ -1870,7 +1883,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the status animation enums");
-	for (i=0; i<PK_ROLE_ENUM_UNKNOWN; i++) {
+	for (i=PK_ROLE_ENUM_UNKNOWN+1; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_animation (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
@@ -1881,7 +1894,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the info icon names enums");
-	for (i=0; i<PK_INFO_ENUM_UNKNOWN; i++) {
+	for (i=PK_INFO_ENUM_UNKNOWN+1; i<PK_INFO_ENUM_LAST; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_info_enum_to_text (i));
@@ -1892,7 +1905,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised status enums");
-	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_STATUS_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1903,7 +1916,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the status icon names enums");
-	for (i=0; i<PK_STATUS_ENUM_UNKNOWN; i++) {
+	for (i=PK_STATUS_ENUM_UNKNOWN+1; i<PK_STATUS_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_status_enum_to_text (i));
@@ -1914,7 +1927,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the restart icon names enums");
-	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_text (i));
@@ -1925,7 +1938,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised error enums");
-	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
@@ -1936,7 +1949,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised error messages");
-	for (i=0; i<PK_ERROR_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
@@ -1947,7 +1960,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised restart enums");
-	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_localised_text (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1958,7 +1971,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the message icon name enums");
-	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
+	for (i=PK_MESSAGE_ENUM_UNKNOWN+1; i<PK_MESSAGE_ENUM_LAST; i++) {
 		string = gpk_message_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_message_enum_to_text (i));
@@ -1969,7 +1982,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised message enums");
-	for (i=0; i<PK_MESSAGE_ENUM_UNKNOWN; i++) {
+	for (i=PK_MESSAGE_ENUM_UNKNOWN+1; i<PK_MESSAGE_ENUM_LAST; i++) {
 		string = gpk_message_enum_to_localised_text (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1980,7 +1993,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised restart future enums");
-	for (i=0; i<PK_RESTART_ENUM_UNKNOWN; i++) {
+	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_localised_text_future (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -1991,7 +2004,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the localised group enums");
-	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
+	for (i=0; i<PK_GROUP_ENUM_LAST; i++) {
 		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {
 			egg_test_failed (test, "failed to get %i", i);
@@ -2002,7 +2015,7 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the group icon name enums");
-	for (i=0; i<PK_GROUP_ENUM_UNKNOWN; i++) {
+	for (i=PK_GROUP_ENUM_UNKNOWN+1; i<PK_GROUP_ENUM_LAST; i++) {
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
