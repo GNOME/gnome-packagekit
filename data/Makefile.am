@@ -41,11 +41,20 @@ pkgdata_DATA =						\
 	gpk-client.ui					\
 	$(NULL)
 
+
+servicedir = $(datadir)/dbus-1/services
+service_in_files = org.freedesktop.PackageKit.service.in
+service_DATA = $(service_in_files:.service.in=.service)
+
+$(service_DATA): $(service_in_files) Makefile
+	@sed -e "s|\@servicedir\@|$(bindir)|" $< > $@
+
 EXTRA_DIST =						\
 	$(schema_in_files)				\
 	$(desktop_in_files)				\
 	$(autostart_in_files)				\
 	$(pkgdata_DATA)					\
+	$(service_in_files)				\
 	$(NULL)
 
 if GCONF_SCHEMAS_INSTALL
@@ -74,5 +83,6 @@ DISTCLEANFILES =					\
 	gpk-update-icon.desktop				\
 	gpk-application.desktop				\
 	gnome-packagekit.schemas			\
+	org.freedesktop.PackageKit.service			\
 	$(NULL)
 
