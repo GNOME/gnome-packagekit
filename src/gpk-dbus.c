@@ -57,8 +57,9 @@ struct GpkDbusPrivate
 {
 	GConfClient		*gconf_client;
 	gint			 timeout_tmp;
+	GTimer			*timer;
+	guint			 refcount;
 	GpkX11			*x11;
-	GPtrArray		*array;
 	DBusGProxy		*proxy_session_pid;
 	DBusGProxy		*proxy_system_pid;
 };
@@ -100,6 +101,24 @@ gpk_dbus_error_get_type (void)
 		etype = g_enum_register_static ("GpkDbusError", values);
 	}
 	return etype;
+}
+
+/**
+ * gpk_dbus_get_idle_time:
+ **/
+guint
+gpk_dbus_get_idle_time (GpkDbus	*dbus)
+{
+	guint idle = 0;
+
+	/* we need to return 0 if there is a task in progress */
+	if (dbus->priv->refcount > 0)
+		goto out;
+
+	idle = (guint) g_timer_elapsed (dbus->priv->timer, NULL);
+	egg_debug ("we've been idle for %is", idle);
+out:
+	return idle;
 }
 
 /**
@@ -363,14 +382,30 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	/* unref on delete */
 	//g_signal_connect...
 
-	/* add to array */
-	g_ptr_array_add (dbus->priv->array, task);
+	/* reset time */
+	g_timer_reset (dbus->priv->timer);
+	dbus->priv->refcount++;
 
 	g_free (sender);
 	g_free (exec);
 	return task;
 }
 
+/**
+ * gpk_dbus_task_finished_cb:
+ **/
+static void
+gpk_dbus_task_finished_cb (GpkDbusTask *task, GpkDbus *dbus)
+{
+	/* one context has returned */
+	if (dbus->priv->refcount > 0)
+		dbus->priv->refcount--;
+
+	/* reset time */
+	g_timer_reset (dbus->priv->timer);
+
+	g_object_unref (task);
+}
 
 /**
  * gpk_dbus_is_installed:
@@ -380,7 +415,7 @@ gpk_dbus_is_installed (GpkDbus *dbus, const gchar *package_name, const gchar *in
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, 0, interaction, context);
-	gpk_dbus_task_is_installed (task, package_name);
+	gpk_dbus_task_is_installed (task, package_name, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -391,7 +426,7 @@ gpk_dbus_search_file (GpkDbus *dbus, const gchar *file_name, const gchar *intera
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, 0, interaction, context);
-	gpk_dbus_task_search_file (task, file_name);
+	gpk_dbus_task_search_file (task, file_name, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -402,7 +437,7 @@ gpk_dbus_install_package_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_package_files (task, files);
+	gpk_dbus_task_install_package_files (task, files, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -413,7 +448,7 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_provide_files (task, files);
+	gpk_dbus_task_install_provide_files (task, files, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -424,7 +459,7 @@ gpk_dbus_remove_package_by_file (GpkDbus *dbus, guint32 xid, gchar **files, cons
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_remove_package_by_file (task, files);
+	gpk_dbus_task_remove_package_by_file (task, files, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -435,7 +470,7 @@ gpk_dbus_install_catalogs (GpkDbus *dbus, guint32 xid, gchar **files, const gcha
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_catalogs (task, files);
+	gpk_dbus_task_install_catalogs (task, files, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -446,7 +481,7 @@ gpk_dbus_install_package_names (GpkDbus *dbus, guint32 xid, gchar **packages, co
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_package_names (task, packages);
+	gpk_dbus_task_install_package_names (task, packages, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -457,7 +492,7 @@ gpk_dbus_install_mime_types (GpkDbus *dbus, guint32 xid, gchar **mime_types, con
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_mime_types (task, mime_types);
+	gpk_dbus_task_install_mime_types (task, mime_types, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -468,7 +503,7 @@ gpk_dbus_install_fontconfig_resources (GpkDbus *dbus, guint32 xid, gchar **resou
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_fontconfig_resources (task, resources);
+	gpk_dbus_task_install_fontconfig_resources (task, resources, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -479,7 +514,7 @@ gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resour
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_gstreamer_resources (task, resources);
+	gpk_dbus_task_install_gstreamer_resources (task, resources, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**
@@ -506,8 +541,8 @@ gpk_dbus_init (GpkDbus *dbus)
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->timeout_tmp = -1;
 	dbus->priv->gconf_client = gconf_client_get_default ();
-	dbus->priv->array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	dbus->priv->x11 = gpk_x11_new ();
+	dbus->priv->timer = g_timer_new ();
 
 	/* find out PIDs on the session bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
@@ -535,7 +570,7 @@ gpk_dbus_finalize (GObject *object)
 
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
-	g_ptr_array_unref (dbus->priv->array);
+	g_timer_destroy (dbus->priv->timer);
 	g_object_unref (dbus->priv->gconf_client);
 	g_object_unref (dbus->priv->x11);
 	g_object_unref (dbus->priv->proxy_session_pid);

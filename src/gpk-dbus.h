@@ -64,6 +64,8 @@ GType		 gpk_dbus_error_get_type		(void);
 GType		 gpk_dbus_get_type			(void);
 GpkDbus		*gpk_dbus_new				(void);
 
+guint		 gpk_dbus_get_idle_time			(GpkDbus	*dbus);
+
 /* org.freedesktop.PackageKit.Query */
 void		 gpk_dbus_is_installed			(GpkDbus	*dbus,
 							 const gchar	*package_name,

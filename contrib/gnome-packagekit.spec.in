@@ -161,6 +161,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/gpk-repo
 %{_bindir}/gpk-update-icon
 %{_bindir}/gpk-update-viewer
+%{_bindir}/gpk-dbus-service
 %dir %{_datadir}/gnome-packagekit
 %{_datadir}/gnome-packagekit/gpk-application.ui
 %{_datadir}/gnome-packagekit/gpk-client.ui
@@ -192,6 +193,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-repo.desktop
 %{_datadir}/applications/gpk-update-viewer.desktop
+%{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 
 %files extra
 %defattr(-,root,root,-)

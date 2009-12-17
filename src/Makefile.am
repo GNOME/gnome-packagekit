@@ -43,6 +43,7 @@ bin_PROGRAMS =						\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-backend-status				\
+	gpk-dbus-service					\
 	$(NULL)
 
 noinst_LIBRARIES = libgpkshared.a
@@ -165,13 +166,22 @@ gpk_update_icon_SOURCES =				\
 	gpk-hardware.h					\
 	gpk-inhibit.c					\
 	gpk-inhibit.h					\
+	$(NULL)
+
+gpk_update_icon_LDADD =					\
+	libgpkshared.a					\
+	$(shared_LIBS)					\
+	$(NULL)
+
+gpk_dbus_service_SOURCES =				\
+	gpk-dbus-service.c				\
 	gpk-dbus.c					\
 	gpk-dbus.h					\
 	gpk-dbus-task.c					\
 	gpk-dbus-task.h					\
 	$(NULL)
 
-gpk_update_icon_LDADD =					\
+gpk_dbus_service_LDADD =				\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)

@@ -95,6 +95,8 @@ struct _GpkDbusTaskPrivate
 	gchar			**files;
 	GCancellable		*cancellable;
 	PkCatalog		*catalog;
+	GpkDbusTaskFinishedCb	 finished_cb;
+	gpointer		 finished_userdata;
 };
 
 G_DEFINE_TYPE (GpkDbusTask, gpk_dbus_task, G_TYPE_OBJECT)
@@ -183,9 +185,15 @@ gpk_dbus_task_dbus_return_error (GpkDbusTask *dtask, const GError *error)
 	egg_debug ("sending async return error in response to %p: %s", dtask->priv->context, error->message);
 	dbus_g_method_return_error (dtask->priv->context, error);
 
-out:
 	/* set context NULL just in case we try to repeat */
 	dtask->priv->context = NULL;
+
+	/* do the finish callback */
+	if (dtask->priv->finished_cb)
+		dtask->priv->finished_cb (dtask, dtask->priv->finished_userdata);
+out:
+	/* we can't touch dtask now, as it might have been unreffed in the finished callback */
+	return;
 }
 
 /**
@@ -203,9 +211,16 @@ gpk_dbus_task_dbus_return_value (GpkDbusTask *dtask, gboolean ret)
 	/* send error */
 	egg_debug ("sending async return in response to %p: %i", dtask->priv->context, ret);
 	dbus_g_method_return (dtask->priv->context, ret);
-out:
+
 	/* set context NULL just in case we try to repeat */
 	dtask->priv->context = NULL;
+
+	/* do the finish callback */
+	if (dtask->priv->finished_cb)
+		dtask->priv->finished_cb (dtask, dtask->priv->finished_userdata);
+out:
+	/* we can't touch dtask now, as it might have been unreffed in the finished callback */
+	return;
 }
 
 /**
@@ -766,9 +781,16 @@ out:
  * gpk_dbus_task_is_installed:
  **/
 void
-gpk_dbus_task_is_installed (GpkDbusTask *dtask, const gchar *package_name)
+gpk_dbus_task_is_installed (GpkDbusTask *dtask, const gchar *package_name, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gchar **package_names = NULL;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (package_name != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* get the package list for the installed packages */
 	package_names = g_strsplit (package_name, "|", 1);
@@ -854,9 +876,16 @@ out:
  * gpk_dbus_task_search_file:
  **/
 void
-gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file)
+gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gchar **values = NULL;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (search_file != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* get the package list for the installed packages */
 	egg_debug ("package_name=%s", search_file);
@@ -879,7 +908,7 @@ gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file)
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel)
+gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	GError *error = NULL;
 	GError *error_dbus = NULL;
@@ -889,6 +918,10 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (files_rel != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	array = pk_strv_to_ptr_array (files_rel);
 
@@ -928,7 +961,7 @@ out:
  * gpk_dbus_task_install_package_names_resolve_cb:
  **/
 static void
-gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dtask)
+gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dtask, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	GError *error = NULL;
 	GError *error_dbus = NULL;
@@ -1072,7 +1105,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages)
+gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret;
 	GError *error_dbus = NULL;
@@ -1084,6 +1117,10 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (packages != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
@@ -1288,7 +1325,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths)
+gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret;
 	GError *error_dbus = NULL;
@@ -1300,6 +1337,10 @@ gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (full_paths != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
@@ -1578,7 +1619,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_names)
+gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_names, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret = TRUE;
 	GError *error_dbus = NULL;
@@ -1590,6 +1631,13 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	gchar **title = NULL;
 	gchar *title_str = NULL;
 	guint i;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (codec_names != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
@@ -1749,7 +1797,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types)
+gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret;
 	GError *error_dbus = NULL;
@@ -1759,6 +1807,10 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (mime_types != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* check it's not session wide banned in gconf */
 	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_MIME_TYPE_HELPER, NULL);
@@ -2060,7 +2112,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
+gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret;
 	GPtrArray *array = NULL;
@@ -2078,6 +2130,10 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (fonts != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* if this program banned? */
 	ret = gpk_dbus_task_install_check_exec_ignored (dtask);
@@ -2418,7 +2474,7 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths)
+gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	gboolean ret;
 	GError *error_dbus = NULL;
@@ -2430,6 +2486,10 @@ gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths)
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (full_paths != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
@@ -2497,13 +2557,20 @@ out:
  * gpk_dbus_task_install_catalogs:
  **/
 void
-gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames)
+gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
 	GError *error_dbus = NULL;
 	GtkResponseType button;
 	gchar *message = NULL;
 	const gchar *title;
 	guint len;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (filenames != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
 
 	len = g_strv_length (filenames);
 

@@ -85,27 +85,51 @@ GType		 gpk_dbus_task_get_type			(void);
 GType		 gpk_dbus_task_error_get_type		(void);
 GpkDbusTask	*gpk_dbus_task_new			(void);
 
+/* callback when done */
+typedef void	(*GpkDbusTaskFinishedCb)		(GpkDbusTask	*dtask,
+							 gpointer	 userdata);
+
 /* methods that expect a DBusGMethodInvocation return */
 void		 gpk_dbus_task_is_installed		(GpkDbusTask	*dtask,
-							 const gchar	*package_name);
+							 const gchar	*package_name,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_search_file		(GpkDbusTask	*dtask,
-							 const gchar	*search_file);
+							 const gchar	*search_file,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_package_files	(GpkDbusTask	*dtask,
-							 gchar		**files_rel);
+							 gchar		**files_rel,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_provide_files	(GpkDbusTask	*dtask,
-							 gchar		**full_paths);
+							 gchar		**full_paths,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_mime_types	(GpkDbusTask	*dtask,
-							 gchar		**mime_types);
+							 gchar		**mime_types,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_gstreamer_resources (GpkDbusTask	*dtask,
-							 gchar		**codec_names);
+							 gchar		**codec_names,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask,
-							 gchar		**fonts);
+							 gchar		**fonts,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*dtask,
-							 gchar		**packages);
+							 gchar		**packages,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_install_catalogs		(GpkDbusTask	*dtask,
-							 gchar		**filenames);
+							 gchar		**filenames,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 void		 gpk_dbus_task_remove_package_by_file	(GpkDbusTask	*dtask,
-							 gchar		**full_paths);
+							 gchar		**full_paths,
+							 GpkDbusTaskFinishedCb finished_cb,
+							 gpointer	 userdata);
 
 /* set state */
 gboolean	 gpk_dbus_task_set_interaction		(GpkDbusTask	*dtask,
