@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
-"POT-Creation-Date: 2009-12-09 06:58+0000\n"
-"PO-Revision-Date: 2009-12-16 15:00+0100\n"
+"POT-Creation-Date: 2009-12-20 17:00+0000\n"
+"PO-Revision-Date: 2009-12-21 22:37+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -207,7 +207,7 @@ msgid "Only show native packages in the file lists"
 msgstr "Pokaži le pakete distribucije v seznamu datotek."
 
 #: ../data/gnome-packagekit.schemas.in.h:51
-msgid "Only show native packages maching the machine architecture in the file lists"
+msgid "Only show native packages matching the machine architecture in the file lists"
 msgstr "Pokaži le pakete distribucije v seznamu datotek, ki ustrezajo arhitekturi sistema."
 
 #: ../data/gnome-packagekit.schemas.in.h:52
@@ -898,8 +898,8 @@ msgstr "Ko se okno zapre bodo vse spremembe izgubljene."
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-application.c:2123
-#: ../src/gpk-enum.c:1139
-#: ../src/gpk-enum.c:1220
+#: ../src/gpk-enum.c:1152
+#: ../src/gpk-enum.c:1233
 msgid "Installed"
 msgstr "Nameščeno"
 
@@ -1119,7 +1119,7 @@ msgstr "Prekliči iskanje"
 #: ../src/gpk-application-main.c:77
 #: ../src/gpk-backend-status.c:242
 #: ../src/gpk-prefs.c:486
-#: ../src/gpk-update-icon.c:129
+#: ../src/gpk-update-icon.c:64
 #: ../src/gpk-update-viewer-main.c:69
 msgid "Show the program version and exit"
 msgstr "Pokaži različico nameščenega programa in končaj"
@@ -1295,11 +1295,11 @@ msgstr "Na voljo je posodobitev distribucije"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #: ../src/gpk-check-update.c:1382
-#: ../src/gpk-dbus-task.c:984
-#: ../src/gpk-dbus-task.c:1214
-#: ../src/gpk-dbus-task.c:1516
-#: ../src/gpk-dbus-task.c:1715
-#: ../src/gpk-dbus-task.c:1969
+#: ../src/gpk-dbus-task.c:1017
+#: ../src/gpk-dbus-task.c:1251
+#: ../src/gpk-dbus-task.c:1557
+#: ../src/gpk-dbus-task.c:1763
+#: ../src/gpk-dbus-task.c:2021
 msgid "More information"
 msgstr "Več podrobnosti"
 
@@ -1425,75 +1425,75 @@ msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s in %s"
 
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:230
+#: ../src/gpk-dbus-task.c:245
 msgid "Failed to install software"
 msgstr "Napaka med nameščanjem programske opreme"
 
 #. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:232
+#: ../src/gpk-dbus-task.c:247
 msgid "No applications were chosen to be installed"
 msgstr "Ni izbranih programov za namestitev"
 
 #. TRANSLATORS: detailed text about the error
 #. TRANSLATORS: The detailed error if the user clicks "more info"
-#: ../src/gpk-dbus-task.c:264
+#: ../src/gpk-dbus-task.c:279
 #: ../src/gpk-watch.c:398
 msgid "Error details"
 msgstr "Podrobnosti napake"
 
-#: ../src/gpk-dbus-task.c:264
+#: ../src/gpk-dbus-task.c:279
 msgid "Package Manager error details"
 msgstr "Podrobnosti napake upravljalnika paketov"
 
 #. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:279
+#: ../src/gpk-dbus-task.c:294
 msgid "Unknown error. Please refer to the detailed report and report in your distribution bugtracker."
 msgstr "Neznana napaka. Podrobnosti so zabeležene v poročilu razhroščevalnika."
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:293
+#: ../src/gpk-dbus-task.c:308
 msgid "You don't have the necessary privileges to perform this action."
 msgstr "Ni ustreznih dovoljenj za izvedbo dejanja."
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:297
+#: ../src/gpk-dbus-task.c:312
 msgid "The packagekitd service could not be started."
 msgstr "Storitve packagekitd ni mogoče zagnati."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:301
+#: ../src/gpk-dbus-task.c:316
 msgid "The query is not valid."
 msgstr "Poizvedba ni veljavna"
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:305
+#: ../src/gpk-dbus-task.c:320
 msgid "The file is not valid."
 msgstr "Datoteka ni veljavna."
 
 #. TRANSLATORS: button: show details about the error
 #. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-dbus-task.c:368
+#: ../src/gpk-dbus-task.c:383
 #: ../src/gpk-watch.c:1400
 msgid "Show details"
 msgstr "Pokaži podrobnosti"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:391
-#: ../src/gpk-dbus-task.c:1037
+#: ../src/gpk-dbus-task.c:406
+#: ../src/gpk-dbus-task.c:1070
 msgid "Failed to install package"
 msgstr "Napaka med nameščanjem paketa"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:428
-#: ../src/gpk-enum.c:938
+#: ../src/gpk-dbus-task.c:443
+#: ../src/gpk-enum.c:951
 msgid "Installing packages"
 msgstr "Nameščanje paketov"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:526
-#: ../src/gpk-dbus-task.c:1252
+#: ../src/gpk-dbus-task.c:541
+#: ../src/gpk-dbus-task.c:1289
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Napaka med nameščanjem datotek."
@@ -1502,7 +1502,7 @@ msgstr[2] "Napaka med nameščanjem datotek."
 msgstr[3] "Napaka med nameščanjem datotek."
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:607
+#: ../src/gpk-dbus-task.c:622
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Ali želite namestiti datoteke?"
@@ -1517,19 +1517,19 @@ msgstr[3] "Ali želite namestiti datoteke?"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install catalog
 #. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:616
-#: ../src/gpk-dbus-task.c:1126
-#: ../src/gpk-dbus-task.c:1341
-#: ../src/gpk-dbus-task.c:1544
-#: ../src/gpk-dbus-task.c:1996
-#: ../src/gpk-dbus-task.c:2260
-#: ../src/gpk-dbus-task.c:2526
+#: ../src/gpk-dbus-task.c:631
+#: ../src/gpk-dbus-task.c:1163
+#: ../src/gpk-dbus-task.c:1382
+#: ../src/gpk-dbus-task.c:1585
+#: ../src/gpk-dbus-task.c:2048
+#: ../src/gpk-dbus-task.c:2316
+#: ../src/gpk-dbus-task.c:2593
 #: ../src/gpk-update-viewer.c:1420
 msgid "Install"
 msgstr "Namesti"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:913
+#: ../src/gpk-dbus-task.c:946
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Namesti krajevne datoteke."
@@ -1538,33 +1538,33 @@ msgstr[2] "Namesti krajevni datoteki."
 msgstr[3] "Namesti krajevne datoteke."
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:972
+#: ../src/gpk-dbus-task.c:1005
 #, c-format
 msgid "Could not find packages"
 msgstr "Ni mogoče najti paketov"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:981
+#: ../src/gpk-dbus-task.c:1014
 msgid "The packages could not be found in any software source"
 msgstr "Paketa ni mogoče najti med viri programske opreme."
 
-#: ../src/gpk-dbus-task.c:1020
+#: ../src/gpk-dbus-task.c:1053
 msgid "Failed to install packages"
 msgstr "Napaka med nameščanjem paketov"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1022
-#: ../src/gpk-enum.c:365
+#: ../src/gpk-dbus-task.c:1055
+#: ../src/gpk-enum.c:368
 msgid "The package is already installed"
 msgstr "Paket je že nameščen"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1039
+#: ../src/gpk-dbus-task.c:1072
 msgid "Incorrect response from search"
 msgstr "Neveljaven odgovor iskanja"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1110
+#: ../src/gpk-dbus-task.c:1147
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Zahtevani so dodatni paketi:"
@@ -1573,7 +1573,7 @@ msgstr[2] "Zahtevana sta dodatna paketa:"
 msgstr[3] "Zahtevani so dodatni paketi:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1113
+#: ../src/gpk-dbus-task.c:1150
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Ali želite poiskati in namestiti te pakete?"
@@ -1582,7 +1582,7 @@ msgstr[2] "Ali želite poiskati in namestiti ta paketa?"
 msgstr[3] "Ali želite poiskati in namestiti te pakete?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1119
+#: ../src/gpk-dbus-task.c:1156
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1592,7 +1592,7 @@ msgstr[2] "%s zahteva namestitev paketov"
 msgstr[3] "%s zahteva namestitev paketov"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1122
+#: ../src/gpk-dbus-task.c:1159
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Program zahteva namestitev paketov"
@@ -1601,29 +1601,29 @@ msgstr[2] "Program zahteva namestitev paketov"
 msgstr[3] "Program zahteva namestitev paketov"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1139
+#: ../src/gpk-dbus-task.c:1176
 msgid "Searching for packages"
 msgstr "Iskanje paketov"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1209
+#: ../src/gpk-dbus-task.c:1246
 msgid "Failed to find package"
 msgstr "Napaka med iskanjem paketa"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1211
-#: ../src/gpk-dbus-task.c:2384
+#: ../src/gpk-dbus-task.c:1248
+#: ../src/gpk-dbus-task.c:2440
 msgid "The file could not be found in any packages"
 msgstr "Datoteke ni mogoče najti v nobenem paketu"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1249
+#: ../src/gpk-dbus-task.c:1286
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Datoteka je del paketa %s"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1326
+#: ../src/gpk-dbus-task.c:1367
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Zahtevane so naslednje datoteke:"
@@ -1632,7 +1632,7 @@ msgstr[2] "Zahtevani sta naslednji datoteki:"
 msgstr[3] "Zahtevane so naslednje datoteke:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1329
+#: ../src/gpk-dbus-task.c:1370
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Ali želite takoj iskati te datoteke?"
@@ -1641,7 +1641,7 @@ msgstr[2] "Ali želite takoj iskati ti datoteki?"
 msgstr[3] "Ali želite takoj iskati te datoteke?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1334
+#: ../src/gpk-dbus-task.c:1375
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1651,7 +1651,7 @@ msgstr[2] "%s zahteva namestitev datotek"
 msgstr[3] "%s zahteva namestitev datotek"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1337
+#: ../src/gpk-dbus-task.c:1378
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Program zahteva namestitev datotek"
@@ -1661,14 +1661,14 @@ msgstr[3] "Program zahteva namestitev datotek"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1353
-#: ../src/gpk-dbus-task.c:2483
-#: ../src/gpk-enum.c:1290
+#: ../src/gpk-dbus-task.c:1394
+#: ../src/gpk-dbus-task.c:2543
+#: ../src/gpk-enum.c:1303
 msgid "Searching for file"
 msgstr "Iskanje datoteke"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1396
+#: ../src/gpk-dbus-task.c:1437
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Zahtevani so navedeni vstavki:"
@@ -1677,7 +1677,7 @@ msgstr[2] "Zahtevana sta navedena vstavka:"
 msgstr[3] "Zahtevani so navedeni vstavki:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1414
+#: ../src/gpk-dbus-task.c:1455
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Ali jih želite takoj iskati?"
@@ -1686,7 +1686,7 @@ msgstr[2] "Ali ju želite takoj iskati?"
 msgstr[3] "Ali jih želite takoj iskati?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1427
+#: ../src/gpk-dbus-task.c:1468
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1696,7 +1696,7 @@ msgstr[2] "%s zahteva dodatna vstavka za dekodiranje datoteke"
 msgstr[3] "%s zahteva dodatne vstavke za dekodiranje datoteke"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1431
+#: ../src/gpk-dbus-task.c:1472
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1706,7 +1706,7 @@ msgstr[2] "%s zahteva dodatna vstavka za kodiranje datoteke"
 msgstr[3] "%s zahteva dodatne vstavke za kodiranje datoteke"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1435
+#: ../src/gpk-dbus-task.c:1476
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1716,7 +1716,7 @@ msgstr[2] "%s zahteva dodatna vstavka za to opravilo"
 msgstr[3] "%s zahteva dodatne vstavke za to opravilo"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1441
+#: ../src/gpk-dbus-task.c:1482
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Program zahteva dodatne vstavke za dekodiranje datoteke."
@@ -1725,7 +1725,7 @@ msgstr[2] "Program zahteva dodatna vstavka za dekodiranje datoteke."
 msgstr[3] "Program zahteva dodatne vstavke za dekodiranje datoteke."
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1445
+#: ../src/gpk-dbus-task.c:1486
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Program zahteva dodatne vstavke za kodiranje datoteke."
@@ -1734,7 +1734,7 @@ msgstr[2] "Program zahteva dodatna vstavka za kodiranje datoteke."
 msgstr[3] "Program zahteva dodatne vstavke za kodiranje datoteke."
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1490
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Program zahteva dodatne vstavke za to opravilo."
@@ -1743,23 +1743,23 @@ msgstr[2] "Program zahteva dodatna vstavka za to opravilo."
 msgstr[3] "Program zahteva dodatne vstavke za to opravilo."
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1455
-#: ../src/gpk-dbus-task.c:1799
-#: ../src/gpk-dbus-task.c:2167
+#: ../src/gpk-dbus-task.c:1496
+#: ../src/gpk-dbus-task.c:1851
+#: ../src/gpk-dbus-task.c:2223
 msgid "Search"
 msgstr "Iskanje"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1510
+#: ../src/gpk-dbus-task.c:1551
 msgid "Failed to search for plugin"
 msgstr "Napaka med iskanjem vstavkov"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1512
+#: ../src/gpk-dbus-task.c:1553
 msgid "Could not find plugin in any configured software source"
 msgstr "Vstavka ni mogoče najti med nastavljenimi programskimi viri"
 
-#: ../src/gpk-dbus-task.c:1535
+#: ../src/gpk-dbus-task.c:1576
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Namesti navedene vstavke"
@@ -1768,8 +1768,8 @@ msgstr[2] "Namesti navedena vstavka"
 msgstr[3] "Namesti navedene vstavke"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1536
-#: ../src/gpk-dbus-task.c:1989
+#: ../src/gpk-dbus-task.c:1577
+#: ../src/gpk-dbus-task.c:2041
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Ali želite takoj namestiti pakete?"
@@ -1778,42 +1778,42 @@ msgstr[2] "Ali želite takoj namestiti paketa?"
 msgstr[3] "Ali želite takoj namestiti pakete?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1621
+#: ../src/gpk-dbus-task.c:1669
 msgid "Searching for plugins"
 msgstr "Iskanje vstavkov"
 
-#: ../src/gpk-dbus-task.c:1642
+#: ../src/gpk-dbus-task.c:1690
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Iskanje vstavka: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1680
+#: ../src/gpk-dbus-task.c:1728
 msgid "Failed to search for provides"
 msgstr "Napaka med iskanjem zahtev paketa"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1710
+#: ../src/gpk-dbus-task.c:1758
 msgid "Failed to find software"
 msgstr "Napaka med iskanjem programske opreme"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1712
+#: ../src/gpk-dbus-task.c:1760
 msgid "No new applications can be found to handle this type of file"
 msgstr "Ni programov s katerimi je mogoče upravljati s to vrsto datoteke"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1781
+#: ../src/gpk-dbus-task.c:1833
 msgid "An additional program is required to open this type of file:"
 msgstr "Za odpiranje te vrste datotek je zahtevana namestitev dodatnega programa:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1784
+#: ../src/gpk-dbus-task.c:1836
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Ali želite takoj poiskati program za odpiranje te vrste datotek?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1792
+#: ../src/gpk-dbus-task.c:1844
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1823,7 +1823,7 @@ msgstr[2] "%s zahteva novi mime vrsti."
 msgstr[3] "%s zahteva nove mime vrste."
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1795
+#: ../src/gpk-dbus-task.c:1847
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Program zahteva nove mime vrste."
@@ -1832,22 +1832,22 @@ msgstr[2] "Program zahteva novi mime vrsti."
 msgstr[3] "Program zahteva nove mime vrste."
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1810
+#: ../src/gpk-dbus-task.c:1862
 msgid "Searching for file handlers"
 msgstr "Iskanje upravljalnikov datotek"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:1890
+#: ../src/gpk-dbus-task.c:1942
 msgid "Language tag not parsed"
 msgstr "Značka jezika ni razčlenjena"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:1898
+#: ../src/gpk-dbus-task.c:1950
 msgid "Language code not matched"
 msgstr "Koda jezika se ne sklada"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:1958
+#: ../src/gpk-dbus-task.c:2010
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Ni mogoče najti pisav"
@@ -1856,12 +1856,12 @@ msgstr[2] "Ni mogoče najti pisav"
 msgstr[3] "Ni mogoče najti pisav"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:1966
+#: ../src/gpk-dbus-task.c:2018
 msgid "No new fonts can be found for this document"
 msgstr "Za dokument ni mogoče najti novih pisav"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2146
+#: ../src/gpk-dbus-task.c:2202
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Zahtevane so dodatne pisave za pravilen pregled dokumenta."
@@ -1870,7 +1870,7 @@ msgstr[2] "Zahtevani sta dodatni pisavi za pravilen pregled dokumenta."
 msgstr[3] "Zahtevane so dodatne pisave za pravilen pregled dokumenta."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2150
+#: ../src/gpk-dbus-task.c:2206
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Ali želite takoj poiskati ustrezne pakete?"
@@ -1879,7 +1879,7 @@ msgstr[2] "Ali želite takoj poiskati ustrezna paketa?"
 msgstr[3] "Ali želite takoj poiskati ustrezne pakete?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2160
+#: ../src/gpk-dbus-task.c:2216
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1889,7 +1889,7 @@ msgstr[2] "%s zahteva namestitev novih pisav."
 msgstr[3] "%s zahteva namestitev novih pisav."
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2163
+#: ../src/gpk-dbus-task.c:2219
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Program zahteva namestitev novih pisav."
@@ -1898,7 +1898,7 @@ msgstr[2] "Program zahteva namestitev novih pisav."
 msgstr[3] "Program zahteva namestitev novih pisav."
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2179
+#: ../src/gpk-dbus-task.c:2235
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Iskanje pisav"
@@ -1906,43 +1906,43 @@ msgstr[1] "iskanje pisave"
 msgstr[2] "Iskanje pisav"
 msgstr[3] "Iskanje pisav"
 
-#: ../src/gpk-dbus-task.c:2217
+#: ../src/gpk-dbus-task.c:2273
 msgid "Could not process catalog"
 msgstr "Ni mogoče razčleniti kataloga"
 
-#: ../src/gpk-dbus-task.c:2235
+#: ../src/gpk-dbus-task.c:2291
 msgid "No packages need to be installed"
 msgstr "Ni treba namestiti dodatnih paketov."
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2254
+#: ../src/gpk-dbus-task.c:2310
 msgid "Install packages in catalog?"
 msgstr "Ali naj bodo nameščeni paketi kataloga?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2256
+#: ../src/gpk-dbus-task.c:2312
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Navedeni paketi so označeni za namestitev iz kataloga:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2296
+#: ../src/gpk-dbus-task.c:2352
 msgid "Failed to remove package"
 msgstr "Napaka med odstranjevanjem paketa"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2332
-#: ../src/gpk-enum.c:930
+#: ../src/gpk-dbus-task.c:2388
+#: ../src/gpk-enum.c:943
 msgid "Removing packages"
 msgstr "Odstranjevanje paketov"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2382
+#: ../src/gpk-dbus-task.c:2438
 msgid "Failed to find package for this file"
 msgstr "Napaka iskanja paketa datoteke"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2456
+#: ../src/gpk-dbus-task.c:2516
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Navedene datoteke bodo odstranjene:"
@@ -1951,7 +1951,7 @@ msgstr[2] "Navedeni datoteki bosta odstranjeni:"
 msgstr[3] "Navedene datoteke bodo odstranjene:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2459
+#: ../src/gpk-dbus-task.c:2519
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Ali želite odstraniti datoteke?"
@@ -1960,7 +1960,7 @@ msgstr[2] "Ali želite odstraniti datoteki?"
 msgstr[3] "Ali želite odstraniti datoteke?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2464
+#: ../src/gpk-dbus-task.c:2524
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1970,7 +1970,7 @@ msgstr[2] "Program %s poskuša odstraniti datoteki"
 msgstr[3] "Program %s poskuša odstraniti datoteke"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2467
+#: ../src/gpk-dbus-task.c:2527
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Program poskuša odstraniti datoteke"
@@ -1979,12 +1979,12 @@ msgstr[2] "Program poskuša odstraniti datoteki"
 msgstr[3] "Program poskuša odstraniti datoteke"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2471
+#: ../src/gpk-dbus-task.c:2531
 msgid "Remove"
 msgstr "Odstrani"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2517
+#: ../src/gpk-dbus-task.c:2584
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Ali želite namestiti kataloge?"
@@ -1993,7 +1993,7 @@ msgstr[2] "Ali želite namestiti kataloga?"
 msgstr[3] "Ali želite namestiti kataloge?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2542
+#: ../src/gpk-dbus-task.c:2609
 msgid "Install catalogs"
 msgstr "Namesti kataloge"
 
@@ -2006,7 +2006,7 @@ msgstr "Programi"
 #. TRANSLATORS: The group type
 #: ../src/gpk-desktop.c:119
 #: ../src/gpk-desktop.c:126
-#: ../src/gpk-enum.c:1612
+#: ../src/gpk-enum.c:1625
 msgid "System"
 msgstr "Sistem"
 
@@ -2048,240 +2048,252 @@ msgid "media"
 msgstr "nosilec"
 
 #: ../src/gpk-enum.c:338
+msgid "Failed with unknown error code"
+msgstr "Napaka z neznano kodo napake"
+
+#: ../src/gpk-enum.c:341
 msgid "No network connection available"
 msgstr "Ni omrežne povezave"
 
-#: ../src/gpk-enum.c:341
+#: ../src/gpk-enum.c:344
 msgid "No package cache is available."
 msgstr "Na voljo ni nobenega predpomnilnika paketov"
 
-#: ../src/gpk-enum.c:344
+#: ../src/gpk-enum.c:347
 msgid "Out of memory"
 msgstr "Primanjkuje pomnilnika"
 
-#: ../src/gpk-enum.c:347
+#: ../src/gpk-enum.c:350
 msgid "Failed to create a thread"
 msgstr "Ni mogoče ustvariti niti"
 
-#: ../src/gpk-enum.c:350
+#: ../src/gpk-enum.c:353
 msgid "Not supported by this backend"
 msgstr "Ni podprto s tem hrbtiščem"
 
-#: ../src/gpk-enum.c:353
+#: ../src/gpk-enum.c:356
 msgid "An internal system error has occurred"
 msgstr "Prišlo je do notranje sistemske napake"
 
-#: ../src/gpk-enum.c:356
+#: ../src/gpk-enum.c:359
 msgid "A security signature is not present"
 msgstr "Varnostni podpis ni na voljo"
 
-#: ../src/gpk-enum.c:359
+#: ../src/gpk-enum.c:362
 msgid "The package is not installed"
 msgstr "Paket ni nameščen"
 
-#: ../src/gpk-enum.c:362
+#: ../src/gpk-enum.c:365
 msgid "The package was not found"
 msgstr "Paketa ni mogoče najti"
 
-#: ../src/gpk-enum.c:368
+#: ../src/gpk-enum.c:371
 msgid "The package download failed"
 msgstr "Napaka med prejemanjem paketa"
 
-#: ../src/gpk-enum.c:371
+#: ../src/gpk-enum.c:374
 msgid "The group was not found"
 msgstr "Skupine ni mogoče najti"
 
-#: ../src/gpk-enum.c:374
+#: ../src/gpk-enum.c:377
 msgid "The group list was invalid"
 msgstr "Neveljaven seznam skupin"
 
-#: ../src/gpk-enum.c:377
+#: ../src/gpk-enum.c:380
 msgid "Dependency resolution failed"
 msgstr "Razreševanje odvisnosti ni uspelo"
 
-#: ../src/gpk-enum.c:380
+#: ../src/gpk-enum.c:383
 msgid "Search filter was invalid"
 msgstr "Neveljaven iskalni filter"
 
-#: ../src/gpk-enum.c:383
+#: ../src/gpk-enum.c:386
 msgid "The package identifier was not well formed"
 msgstr "Določilo paketa ni ustrezno oblikovano"
 
-#: ../src/gpk-enum.c:386
+#: ../src/gpk-enum.c:389
 msgid "Transaction error"
 msgstr "Napaka prenosa"
 
-#: ../src/gpk-enum.c:389
+#: ../src/gpk-enum.c:392
 msgid "Repository name was not found"
 msgstr "Imena skladišča ni mogoče najti"
 
-#: ../src/gpk-enum.c:392
+#: ../src/gpk-enum.c:395
 msgid "Could not remove a protected system package"
 msgstr "Ni mogoče odstraniti sistemsko zaščitenega paketa"
 
-#: ../src/gpk-enum.c:395
+#: ../src/gpk-enum.c:398
 msgid "The action was canceled"
 msgstr "Dejanje je preklicano"
 
-#: ../src/gpk-enum.c:398
+#: ../src/gpk-enum.c:401
 msgid "The action was forcibly canceled"
 msgstr "Dejanje je vsiljeno preklicano"
 
-#: ../src/gpk-enum.c:401
+#: ../src/gpk-enum.c:404
 msgid "Reading the configuration file failed"
 msgstr "ni mogoče prebrati nastavitvene datoteke"
 
-#: ../src/gpk-enum.c:404
+#: ../src/gpk-enum.c:407
 msgid "The action cannot be canceled"
 msgstr "Dejanja ni mogoče preklicati"
 
-#: ../src/gpk-enum.c:407
+#: ../src/gpk-enum.c:410
 msgid "Source packages cannot be installed"
 msgstr "Izvornih paketov ni mogoče namestiti"
 
-#: ../src/gpk-enum.c:410
+#: ../src/gpk-enum.c:413
 msgid "The license agreement failed"
 msgstr "Ni mogoče sprejeti dovoljenja uporabe"
 
-#: ../src/gpk-enum.c:413
+#: ../src/gpk-enum.c:416
 msgid "Local file conflict between packages"
 msgstr "Krajevne datoteke so med paketi so v sporu"
 
-#: ../src/gpk-enum.c:416
+#: ../src/gpk-enum.c:419
 msgid "Packages are not compatible"
 msgstr "Paketi niso skladni"
 
-#: ../src/gpk-enum.c:419
+#: ../src/gpk-enum.c:422
 msgid "Problem connecting to a software source"
 msgstr "Napaka med povezovanjem z virom programske opreme"
 
-#: ../src/gpk-enum.c:422
+#: ../src/gpk-enum.c:425
 msgid "Failed to initialize"
 msgstr "Ni mogoče začeti opravila"
 
-#: ../src/gpk-enum.c:425
+#: ../src/gpk-enum.c:428
 msgid "Failed to finalise"
 msgstr "Ni mogoče zaključiti opravila"
 
-#: ../src/gpk-enum.c:428
+#: ../src/gpk-enum.c:431
 msgid "Cannot get lock"
 msgstr "Ni mogoče pridobiti zaklepa"
 
-#: ../src/gpk-enum.c:431
+#: ../src/gpk-enum.c:434
 msgid "No packages to update"
 msgstr "Ni paketov za posodabljanje"
 
-#: ../src/gpk-enum.c:434
+#: ../src/gpk-enum.c:437
 msgid "Cannot write repository configuration"
 msgstr "Ni mogoče zapisati nastavitev skladišča"
 
-#: ../src/gpk-enum.c:437
+#: ../src/gpk-enum.c:440
 msgid "Local install failed"
 msgstr "Krajevno nameščanje ni uspelo"
 
-#: ../src/gpk-enum.c:440
+#: ../src/gpk-enum.c:443
 msgid "Bad security signature"
 msgstr "Slab varnostni podpis"
 
-#: ../src/gpk-enum.c:443
+#: ../src/gpk-enum.c:446
 msgid "Missing security signature"
 msgstr "Manjkajoči varnostni podpis"
 
-#: ../src/gpk-enum.c:446
+#: ../src/gpk-enum.c:449
 msgid "Repository configuration invalid"
 msgstr "Neveljavna nastavitev skladišča"
 
-#: ../src/gpk-enum.c:449
+#: ../src/gpk-enum.c:452
 msgid "Invalid package file"
 msgstr "Neveljavna datoteka paketa"
 
-#: ../src/gpk-enum.c:452
+#: ../src/gpk-enum.c:455
 msgid "Package install blocked"
 msgstr "Namestitev paketa je ovirana."
 
-#: ../src/gpk-enum.c:455
+#: ../src/gpk-enum.c:458
 msgid "Package is corrupt"
 msgstr "paket je pokvarjen"
 
-#: ../src/gpk-enum.c:458
+#: ../src/gpk-enum.c:461
 msgid "All packages are already installed"
 msgstr "Vsi paketi so že nameščeni"
 
-#: ../src/gpk-enum.c:461
+#: ../src/gpk-enum.c:464
 msgid "The specified file could not be found"
 msgstr "Določene datoteke ni mogoče najti."
 
-#: ../src/gpk-enum.c:464
+#: ../src/gpk-enum.c:467
 msgid "No more mirrors are available"
 msgstr "Ni drugih razpoložljivih zrcalnih strežnikov"
 
-#: ../src/gpk-enum.c:467
+#: ../src/gpk-enum.c:470
 msgid "No distribution upgrade data is available"
 msgstr "Ni podatkov o možnosti posodobitvi distribucije"
 
-#: ../src/gpk-enum.c:470
+#: ../src/gpk-enum.c:473
 msgid "Package is incompatible with this system"
 msgstr "Paket ni skladen s tem sistemom"
 
-#: ../src/gpk-enum.c:473
+#: ../src/gpk-enum.c:476
 msgid "No space is left on the disk"
 msgstr "Na disku ni prostora"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:476
+#: ../src/gpk-enum.c:479
 #: ../src/gpk-task.c:359
 msgid "A media change is required"
 msgstr "Zahtevana je zamenjava nosilca"
 
-#: ../src/gpk-enum.c:479
+#: ../src/gpk-enum.c:482
 msgid "Authorization failed"
 msgstr "Overitev ni uspela"
 
-#: ../src/gpk-enum.c:482
+#: ../src/gpk-enum.c:485
 msgid "Update not found"
 msgstr "Posodobitve ni mogoče najti"
 
-#: ../src/gpk-enum.c:485
+#: ../src/gpk-enum.c:488
 msgid "Cannot install from untrusted source"
 msgstr "Ni mogoče namestiti paketov iz nezaupljivih virov"
 
-#: ../src/gpk-enum.c:488
+#: ../src/gpk-enum.c:491
 msgid "Cannot update from untrusted source"
 msgstr "Ni mogoče namestiti posodobitev iz nezaupljivih virov"
 
-#: ../src/gpk-enum.c:491
+#: ../src/gpk-enum.c:494
 msgid "Cannot get the file list"
 msgstr "Ni mogoče pridobiti seznama datotek"
 
-#: ../src/gpk-enum.c:494
+#: ../src/gpk-enum.c:497
 msgid "Cannot get package requires"
 msgstr "Ni mogoče pridobiti zahtevanih paketov"
 
-#: ../src/gpk-enum.c:497
+#: ../src/gpk-enum.c:500
 msgid "Cannot disable source"
 msgstr "Ni mogoče onemogočiti vira"
 
-#: ../src/gpk-enum.c:500
+#: ../src/gpk-enum.c:503
 msgid "The download failed"
 msgstr "Prejemanje ni uspelo"
 
-#: ../src/gpk-enum.c:503
+#: ../src/gpk-enum.c:506
 msgid "Package failed to configure"
 msgstr "Ni mogoče nastaviti paketa"
 
-#: ../src/gpk-enum.c:506
+#: ../src/gpk-enum.c:509
 msgid "Package failed to build"
 msgstr "Ni mogoče izgraditi paketa"
 
-#: ../src/gpk-enum.c:509
+#: ../src/gpk-enum.c:512
 msgid "Package failed to install"
 msgstr "Napaka med nameščanjem paketa"
 
-#: ../src/gpk-enum.c:512
+#: ../src/gpk-enum.c:515
 msgid "Package failed to be removed"
 msgstr "Napaka med odstranjevanjem paketa"
 
-#: ../src/gpk-enum.c:529
+#: ../src/gpk-enum.c:518
+msgid "Update failed due to running process"
+msgstr "Posodobitev ni uspela zaradi zagnanih opravil"
+
+#: ../src/gpk-enum.c:535
+msgid "Failed with unknown error code."
+msgstr "Napaka z neznano kodo napake."
+
+#: ../src/gpk-enum.c:538
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -2289,7 +2301,7 @@ msgstr ""
 "Na voljo ni nobene omrežne povezave.\n"
 "Preverite nastavitve povezav in poskusite znova."
 
-#: ../src/gpk-enum.c:533
+#: ../src/gpk-enum.c:542
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -2297,7 +2309,7 @@ msgstr ""
 "Seznam paketov se mora ponovno izgraditi.\n"
 "Dejanje bi moralo biti samodejno zaključeno preko hrbtišča."
 
-#: ../src/gpk-enum.c:537
+#: ../src/gpk-enum.c:546
 msgid ""
 "The service that is responsible for handling user requests is out of memory.\n"
 "Please restart your computer."
@@ -2305,11 +2317,11 @@ msgstr ""
 "Storitev, ki upravlja z zahtevami uporabnika je brez pomnilnika.\n"
 "Ponovno je treba zagnati računalnik."
 
-#: ../src/gpk-enum.c:541
+#: ../src/gpk-enum.c:550
 msgid "A thread could not be created to service the user request."
 msgstr "Ni mogoče ustvariti niti zna zahtevo uporabnika."
 
-#: ../src/gpk-enum.c:544
+#: ../src/gpk-enum.c:553
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bugtracker as this should not have happened."
@@ -2317,7 +2329,7 @@ msgstr ""
 "Hrbtišče ne podpira dejanja.\n"
 "Pošljite poročilo o hrošču, saj se napake te vrste ne smejo zgoditi."
 
-#: ../src/gpk-enum.c:548
+#: ../src/gpk-enum.c:557
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bugtracker with the error description."
@@ -2325,7 +2337,7 @@ msgstr ""
 "Prišlo je do nepričakovane napake.\n"
 "Pošljite poročilo o hrošču skupaj z opisom napake."
 
-#: ../src/gpk-enum.c:552
+#: ../src/gpk-enum.c:561
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -2333,19 +2345,19 @@ msgstr ""
 "Ni mogoče ustvariti varne vezi z viri programske opreme.\n"
 "Preverite varnostne nastavitve."
 
-#: ../src/gpk-enum.c:556
+#: ../src/gpk-enum.c:565
 msgid "The package that is trying to be removed or updated is not already installed."
 msgstr "Paket, ki je pripravljen za odstranitev ali posodobitev sploh še ni nameščen."
 
-#: ../src/gpk-enum.c:559
+#: ../src/gpk-enum.c:568
 msgid "The package that is being modified was not found on your system or in any software source."
 msgstr "Paketa, ki je pripravljen za spreminjanje, v sistemu in med viri programske opreme ni mogoče najti."
 
-#: ../src/gpk-enum.c:562
+#: ../src/gpk-enum.c:571
 msgid "The package that is trying to be installed is already installed."
 msgstr "Paket, ki je pripravljen za namestitev, je že nameščen."
 
-#: ../src/gpk-enum.c:565
+#: ../src/gpk-enum.c:574
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2353,7 +2365,7 @@ msgstr ""
 "Prejemanje paketa ni uspelo.\n"
 "Preverite omrežne nastavitve in nastavitve povezave."
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:578
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2361,7 +2373,7 @@ msgstr ""
 "Vrste skupine ni mogoče najti.\n"
 "Preverite seznam skupin in poskusite znova."
 
-#: ../src/gpk-enum.c:573
+#: ../src/gpk-enum.c:582
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source error."
@@ -2369,7 +2381,7 @@ msgstr ""
 "Seznama skupin ni mogoče naložiti.\n"
 "poskusite osvežiti predpomnilnik paketov."
 
-#: ../src/gpk-enum.c:578
+#: ../src/gpk-enum.c:587
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2377,11 +2389,11 @@ msgstr ""
 "Paketa za dokončanje dejanja ni mogoče najti.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:582
+#: ../src/gpk-enum.c:591
 msgid "The search filter was not correctly formed."
 msgstr "Filter iskanja ni pravilno oblikovan"
 
-#: ../src/gpk-enum.c:585
+#: ../src/gpk-enum.c:594
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2389,7 +2401,7 @@ msgstr ""
 "Določilo paketa ni ustrezno oblikovano pred pošiljanjem na strežnik.\n"
 "Običajno je to znak notranje napake, za katero je dobro napisati poročilo o napaki."
 
-#: ../src/gpk-enum.c:589
+#: ../src/gpk-enum.c:598
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2397,7 +2409,7 @@ msgstr ""
 "Prišlo je do nedoločene napake med prenosom.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:593
+#: ../src/gpk-enum.c:602
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2405,15 +2417,15 @@ msgstr ""
 "Oddaljenega vira programske opreme ni mogoče najti.\n"
 "Predmet je morda treba omogočiti med viri programske opreme."
 
-#: ../src/gpk-enum.c:597
+#: ../src/gpk-enum.c:606
 msgid "Removing a protected system package is not allowed."
 msgstr "Odstranjevanje zaščitenega sistemskega paketa ni dovoljeno."
 
-#: ../src/gpk-enum.c:600
+#: ../src/gpk-enum.c:609
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "Dejanje je bilo uspešno preklicano. Noben paket ni bil spremenjen."
 
-#: ../src/gpk-enum.c:603
+#: ../src/gpk-enum.c:612
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2421,7 +2433,7 @@ msgstr ""
 "Dejanje je bilo uspešno preklicano. Noben paket ni bil spremenjen.\n"
 "Hrbtišče programa se ni povsem končalo."
 
-#: ../src/gpk-enum.c:607
+#: ../src/gpk-enum.c:616
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2429,11 +2441,11 @@ msgstr ""
 "Datoteke nastavitev paketa ni mogoče odpreti.\n"
 "Preverite, da so nastavitve pravilne."
 
-#: ../src/gpk-enum.c:611
+#: ../src/gpk-enum.c:620
 msgid "The action cannot be canceled at this time."
 msgstr "Dejanja v tem trenutku ni mogoče preklicati."
 
-#: ../src/gpk-enum.c:614
+#: ../src/gpk-enum.c:623
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2441,7 +2453,7 @@ msgstr ""
 "Izvorni paketi so običajno nameščeni na ta način.\n"
 "Preverite pripono datoteke, ki jo poskušate namestiti."
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:627
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2449,7 +2461,7 @@ msgstr ""
 "Niste sprejeli določil dovoljenja uporabe.\n"
 "Za uporabo tega programa morate dovoljenje potrditi."
 
-#: ../src/gpk-enum.c:622
+#: ../src/gpk-enum.c:631
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2457,7 +2469,7 @@ msgstr ""
 "Dva paketa imata enako datoteko.\n"
 "Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
-#: ../src/gpk-enum.c:626
+#: ../src/gpk-enum.c:635
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2465,7 +2477,7 @@ msgstr ""
 "Obstaja več paketov, ki med seboj niso skladni.\n"
 "Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
-#: ../src/gpk-enum.c:630
+#: ../src/gpk-enum.c:639
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2473,7 +2485,7 @@ msgstr ""
 "Prišlo je do napake med povezovanjem z viri programske opreme.\n"
 "Preverite podrobnosti napake."
 
-#: ../src/gpk-enum.c:634
+#: ../src/gpk-enum.c:643
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2481,7 +2493,7 @@ msgstr ""
 "Napaka med začenjanjem hrbtišča paketnika.\n"
 "Napaka se pojavi, kadar so hkrati zagnani različni upravljalniki paketov."
 
-#: ../src/gpk-enum.c:638
+#: ../src/gpk-enum.c:647
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2489,7 +2501,7 @@ msgstr ""
 "Napaka med zapiranjem hrbtišča programa.\n"
 "Napako se običajno lahko prezre."
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:651
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2497,15 +2509,15 @@ msgstr ""
 "Ni mogoče zakleniti hrbtišča upravljalnika paketov.\n"
 "Zaprite druge upravljalnike paketov in poskusite znova."
 
-#: ../src/gpk-enum.c:646
+#: ../src/gpk-enum.c:655
 msgid "None of the selected packages could be updated."
 msgstr "Nobenega izmed izbranih paketov ni mogoče posodobiti"
 
-#: ../src/gpk-enum.c:649
+#: ../src/gpk-enum.c:658
 msgid "The repository configuration could not be modified."
 msgstr "Nastavitev skladišča ni mogoče spreminjati"
 
-#: ../src/gpk-enum.c:652
+#: ../src/gpk-enum.c:661
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2513,11 +2525,11 @@ msgstr ""
 "Nameščanje krajevne datoteke ni uspelo.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:656
+#: ../src/gpk-enum.c:665
 msgid "The package security signature could not be verified."
 msgstr "Ni mogoče overiti varnostnega podpisa paketov."
 
-#: ../src/gpk-enum.c:659
+#: ../src/gpk-enum.c:668
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2525,11 +2537,11 @@ msgstr ""
 "Manjka podpis paketa, zato paket ni varnostno potrjen.\n"
 "Paket med ustvarjanjem ni bil podpisan."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:672
 msgid "Repository configuration was invalid and could not be read."
 msgstr "Nastavitev skladišča je neveljavna in je ni mogoče prebrati."
 
-#: ../src/gpk-enum.c:666
+#: ../src/gpk-enum.c:675
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2537,19 +2549,19 @@ msgstr ""
 "Paket ni veljaven.\n"
 "Paket je pokvarjen ali pa ni pravi paket."
 
-#: ../src/gpk-enum.c:670
+#: ../src/gpk-enum.c:679
 msgid "Installation of this package prevented by your packaging system's configuration."
 msgstr "Namestitev paketa je preprečilo določilo med sistemskimi nastavitvami nameščanja."
 
-#: ../src/gpk-enum.c:673
+#: ../src/gpk-enum.c:682
 msgid "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "Prejeti paket je pokvarjen, zato ga je treba znova prenesti iz omrežja."
 
-#: ../src/gpk-enum.c:676
+#: ../src/gpk-enum.c:685
 msgid "All of the packages selected for install are already installed on the system."
 msgstr "Vsi paketi izbrani za namestitev so že nameščeni v sistem."
 
-#: ../src/gpk-enum.c:679
+#: ../src/gpk-enum.c:688
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2557,7 +2569,7 @@ msgstr ""
 "Določene datoteke v sistemu ni mogoče najti.\n"
 "Preverite, da datoteka obstaja."
 
-#: ../src/gpk-enum.c:683
+#: ../src/gpk-enum.c:692
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2565,7 +2577,7 @@ msgstr ""
 "Zahtevanih podatkov ni mogoče najti med uporabljenimi viri programske opreme.\n"
 "Ni drugih razpoložljivih zrcalnih strežnikov za prejemanje paketov."
 
-#: ../src/gpk-enum.c:687
+#: ../src/gpk-enum.c:696
 msgid ""
 "Required upgrade data could not be found in any of the configured software sources.\n"
 "The list of distribution upgrades will be unavailable."
@@ -2573,11 +2585,11 @@ msgstr ""
 "Zahtevane posodobitve ni mogoče najti med uporabljenimi viri programske opreme.\n"
 "Seznam posodobitev ni na voljo."
 
-#: ../src/gpk-enum.c:691
+#: ../src/gpk-enum.c:700
 msgid "The package that is trying to be installed is incompatible with this system."
 msgstr "Paket, ki je pripravljen za namestitev, ni skladen s tem sistemom."
 
-#: ../src/gpk-enum.c:694
+#: ../src/gpk-enum.c:703
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2585,11 +2597,11 @@ msgstr ""
 "Ni dovolj prostora na napravi.\n"
 "Sprostiti je treba disk za izvedbo tega dejanja."
 
-#: ../src/gpk-enum.c:698
+#: ../src/gpk-enum.c:707
 msgid "Additional media is required to complete the transaction."
 msgstr "Za končanje prenosa je zahtevan dodatni nosilec."
 
-#: ../src/gpk-enum.c:701
+#: ../src/gpk-enum.c:710
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2597,7 +2609,7 @@ msgstr ""
 "Ni navedenih pravilnih podatkov za overitev.\n"
 "Preverite gesla in nastavitve računa."
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:714
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote server."
@@ -2605,27 +2617,27 @@ msgstr ""
 "Določene posodobitve ni mogoče najti.\n"
 "Morda je že nameščena ali pa ni več na voljo na oddaljenih strežnikih."
 
-#: ../src/gpk-enum.c:709
+#: ../src/gpk-enum.c:718
 msgid "The package could not be installed from untrusted source."
 msgstr "Paketa nezaupljivega vira ni dovoljeno namestiti."
 
-#: ../src/gpk-enum.c:712
+#: ../src/gpk-enum.c:721
 msgid "The package could not be updated from untrusted source."
 msgstr "Paketa nezaupljivega vira ni dovoljeno posodobiti."
 
-#: ../src/gpk-enum.c:715
+#: ../src/gpk-enum.c:724
 msgid "The file list is not available for this package."
 msgstr "Za ta paket seznam datotek ni na voljo."
 
-#: ../src/gpk-enum.c:718
+#: ../src/gpk-enum.c:727
 msgid "The information about what requires this package could not be obtained."
 msgstr "Podrobnosti o zahtevah za namestitev tega paketa ni mogoče pridobiti."
 
-#: ../src/gpk-enum.c:721
+#: ../src/gpk-enum.c:730
 msgid "The specified software source could not be disabled."
 msgstr "Določenega vira programske opreme ni mogoče onemogočiti."
 
-#: ../src/gpk-enum.c:724
+#: ../src/gpk-enum.c:733
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2633,7 +2645,7 @@ msgstr ""
 "Paketa ni mogoče prejeti samodejno, zato ga je treba namestiti ročno.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:728
+#: ../src/gpk-enum.c:737
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2641,7 +2653,7 @@ msgstr ""
 "Eden izmed izbranih paketov ni pravilno nastavljen.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:741
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2649,7 +2661,7 @@ msgstr ""
 "Eden izmed izbranih paketov ni pravilno izgrajen.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:736
+#: ../src/gpk-enum.c:745
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2657,7 +2669,7 @@ msgstr ""
 "Eden izmed izbranih paketov ni pravilno nameščen.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:740
+#: ../src/gpk-enum.c:749
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2665,306 +2677,314 @@ msgstr ""
 "Eden izmed izbranih paketov ni pravilno odstranjen.\n"
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
-#: ../src/gpk-enum.c:759
+#: ../src/gpk-enum.c:753
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Zagnan je program, ki mora biti končan preden je mogoče nadaljevati posodobitev.\n"
+"Več podrobnosti je na voljo v podrobnem poročilu."
+
+#: ../src/gpk-enum.c:772
 msgid "No restart is necessary."
 msgstr "Ponovni zagon ni zahtevan."
 
-#: ../src/gpk-enum.c:762
+#: ../src/gpk-enum.c:775
 msgid "You will be required to restart this application."
 msgstr "Ponovno bo treba zagnati program."
 
-#: ../src/gpk-enum.c:765
+#: ../src/gpk-enum.c:778
 msgid "You will be required to log out and back in."
 msgstr "Treba se bo odjaviti in ponovno prijaviti v sistem."
 
-#: ../src/gpk-enum.c:768
+#: ../src/gpk-enum.c:781
 msgid "A restart will be required."
 msgstr "Zahtevan bo ponovno zagon sistema."
 
-#: ../src/gpk-enum.c:771
+#: ../src/gpk-enum.c:784
 msgid "You will be required to log out and back in due to a security update."
 msgstr "Zahtevana bo odjava in ponovna prijava zaradi uveljavljanja varnostnih posodobitev."
 
-#: ../src/gpk-enum.c:774
+#: ../src/gpk-enum.c:787
 msgid "A restart will be required due to a security update."
 msgstr "Zahtevan bo ponovni zagon zaradi uveljavljanja varnostnih posodobitev."
 
-#: ../src/gpk-enum.c:791
+#: ../src/gpk-enum.c:804
 msgid "No restart is required."
 msgstr "Ponovni zagon ni zahtevan."
 
-#: ../src/gpk-enum.c:794
+#: ../src/gpk-enum.c:807
 msgid "A restart is required."
 msgstr "Zahtevan je ponovni zagon."
 
-#: ../src/gpk-enum.c:797
+#: ../src/gpk-enum.c:810
 msgid "You need to log out and log back in."
 msgstr "Morate se odjaviti in ponovno prijaviti."
 
-#: ../src/gpk-enum.c:800
+#: ../src/gpk-enum.c:813
 msgid "You need to restart the application."
 msgstr "Program je treba ponovno zagnati"
 
-#: ../src/gpk-enum.c:803
+#: ../src/gpk-enum.c:816
 msgid "You need to log out and log back in to remain secure."
 msgstr "Za zagon varnostnih posodobitev se je treba odjaviti in ponovno prijaviti."
 
-#: ../src/gpk-enum.c:806
+#: ../src/gpk-enum.c:819
 msgid "A restart is required to remain secure."
 msgstr "Sistem je treba ponovno zagnati za zagon varnostnih posodobitev."
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:824
+#: ../src/gpk-enum.c:837
 msgid "Stable"
 msgstr "Stabilna veja"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:828
+#: ../src/gpk-enum.c:841
 msgid "Unstable"
 msgstr "Razvojna veja"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:832
+#: ../src/gpk-enum.c:845
 msgid "Testing"
 msgstr "Preizkusna veja"
 
-#: ../src/gpk-enum.c:849
+#: ../src/gpk-enum.c:862
 msgid "A mirror is possibly broken"
 msgstr "Zrcalni strežnik ne deluje."
 
-#: ../src/gpk-enum.c:852
+#: ../src/gpk-enum.c:865
 msgid "The connection was refused"
 msgstr "Povezava je zavrnjena"
 
-#: ../src/gpk-enum.c:855
+#: ../src/gpk-enum.c:868
 msgid "The parameter was invalid"
 msgstr "Parameter ni veljaven"
 
-#: ../src/gpk-enum.c:858
+#: ../src/gpk-enum.c:871
 msgid "The priority was invalid"
 msgstr "Prednostno določilo ni veljavno"
 
-#: ../src/gpk-enum.c:861
+#: ../src/gpk-enum.c:874
 msgid "Backend warning"
 msgstr "Opozorilo hrbtišča"
 
-#: ../src/gpk-enum.c:864
+#: ../src/gpk-enum.c:877
 msgid "Daemon warning"
 msgstr "Opozorilo ozadnjega programa"
 
-#: ../src/gpk-enum.c:867
+#: ../src/gpk-enum.c:880
 msgid "The package list cache is being rebuilt"
 msgstr "Seznam predpomnilnika paketov se zapisuje"
 
-#: ../src/gpk-enum.c:870
+#: ../src/gpk-enum.c:883
 msgid "An untrusted package was installed"
 msgstr "Nameščen je paket iz nezaupljivega vira"
 
-#: ../src/gpk-enum.c:873
+#: ../src/gpk-enum.c:886
 msgid "A newer package exists"
 msgstr "Na voljo je novejši paket"
 
-#: ../src/gpk-enum.c:876
+#: ../src/gpk-enum.c:889
 msgid "Could not find package"
 msgstr "Ni mogoče najti paketa"
 
-#: ../src/gpk-enum.c:879
+#: ../src/gpk-enum.c:892
 msgid "Configuration files were changed"
 msgstr "Nastavitvene datoteke so spremenjene"
 
-#: ../src/gpk-enum.c:882
+#: ../src/gpk-enum.c:895
 msgid "Package is already installed"
 msgstr "Paket je že nameščen"
 
-#: ../src/gpk-enum.c:885
+#: ../src/gpk-enum.c:898
 msgid "Automatic cleanup is being ignored"
 msgstr "Samodejno čiščenje paketov je prezrto."
 
-#: ../src/gpk-enum.c:888
+#: ../src/gpk-enum.c:901
 msgid "Software source download failed"
 msgstr "Prejemanje virov programske opreme ni uspelo."
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:906
+#: ../src/gpk-enum.c:919
 msgid "Unknown state"
 msgstr "Neznano stanje"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:910
+#: ../src/gpk-enum.c:923
 msgid "Starting"
 msgstr "Začenjanje"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:914
+#: ../src/gpk-enum.c:927
 msgid "Waiting in queue"
 msgstr "Čakanje v vrsti"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:918
+#: ../src/gpk-enum.c:931
 msgid "Running"
 msgstr "Začeto"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:922
+#: ../src/gpk-enum.c:935
 msgid "Querying"
 msgstr "Poizvedovanje"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:926
+#: ../src/gpk-enum.c:939
 msgid "Getting information"
 msgstr "Pridobivanje podrobnosti"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:934
-#: ../src/gpk-enum.c:1370
+#: ../src/gpk-enum.c:947
+#: ../src/gpk-enum.c:1383
 msgid "Downloading packages"
 msgstr "Prejemanje paketov"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:942
+#: ../src/gpk-enum.c:955
 msgid "Refreshing software list"
 msgstr "Osveževanje seznama programske opreme"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:946
+#: ../src/gpk-enum.c:959
 msgid "Installing updates"
 msgstr "Nameščanje posodobitev"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:950
+#: ../src/gpk-enum.c:963
 msgid "Cleaning up packages"
 msgstr "Čiščenje paketov"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:954
+#: ../src/gpk-enum.c:967
 msgid "Obsoleting packages"
 msgstr "Označevanje zastarelih paketov"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:958
+#: ../src/gpk-enum.c:971
 msgid "Resolving dependencies"
 msgstr "Razreševanje odvisnosti"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:962
+#: ../src/gpk-enum.c:975
 msgid "Checking signatures"
 msgstr "Preverjanje podpisov"
 
 #. TRANSLATORS: transaction state, when we return to a previous system state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:966
-#: ../src/gpk-enum.c:1330
+#: ../src/gpk-enum.c:979
+#: ../src/gpk-enum.c:1343
 msgid "Rolling back"
 msgstr "Povračanje sprememb"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:970
+#: ../src/gpk-enum.c:983
 msgid "Testing changes"
 msgstr "Preizkušanje sprememb"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:974
+#: ../src/gpk-enum.c:987
 msgid "Committing changes"
 msgstr "Uveljavljanje sprememb"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:978
+#: ../src/gpk-enum.c:991
 msgid "Requesting data"
 msgstr "Odobravanje podatkov"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:982
+#: ../src/gpk-enum.c:995
 msgid "Finished"
 msgstr "Končano"
 
 #. TRANSLATORS: transaction state, in the process of cancelling
-#: ../src/gpk-enum.c:986
+#: ../src/gpk-enum.c:999
 msgid "Cancelling"
 msgstr "Preklicevanje"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:990
+#: ../src/gpk-enum.c:1003
 msgid "Downloading repository information"
 msgstr "Prejemanje podrobnosti skladišča"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:994
+#: ../src/gpk-enum.c:1007
 msgid "Downloading list of packages"
 msgstr "Prejemanje seznama paketov"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:998
+#: ../src/gpk-enum.c:1011
 msgid "Downloading file lists"
 msgstr "Prejemanje seznama datotek"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1002
+#: ../src/gpk-enum.c:1015
 msgid "Downloading lists of changes"
 msgstr "Prejemanje seznama sprememb"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1006
+#: ../src/gpk-enum.c:1019
 msgid "Downloading groups"
 msgstr "Prejemanje skupin"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1010
+#: ../src/gpk-enum.c:1023
 msgid "Downloading update information"
 msgstr "Prejemanje podatkov posodobitve"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1014
+#: ../src/gpk-enum.c:1027
 msgid "Repackaging files"
 msgstr "Ponovno pakiranje datotek"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1018
+#: ../src/gpk-enum.c:1031
 msgid "Loading cache"
 msgstr "Nalaganje predpomnilnika"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1022
+#: ../src/gpk-enum.c:1035
 msgid "Scanning installed applications"
 msgstr "Proučevanje nameščenih programov"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1026
+#: ../src/gpk-enum.c:1039
 msgid "Generating package lists"
 msgstr "ustvarjanje seznama paketov"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1030
+#: ../src/gpk-enum.c:1043
 msgid "Waiting for package manager lock"
 msgstr "Čakanje na zaklep upravljalnika paketov"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1034
+#: ../src/gpk-enum.c:1047
 msgid "Waiting for authentication"
 msgstr "Čakanje na overitev"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1038
+#: ../src/gpk-enum.c:1051
 msgid "Updating the list of running applications"
 msgstr "Posodabljanje seznama zagnanih programov"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1042
+#: ../src/gpk-enum.c:1055
 msgid "Checking for applications currently in use"
 msgstr "Preverjanje trenutno zagnanih programov"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1046
+#: ../src/gpk-enum.c:1059
 msgid "Checking for libraries currently in use"
 msgstr "Preverjanje trenutno zagnanih knjižnic"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1050
+#: ../src/gpk-enum.c:1063
 msgid "Copying files"
 msgstr "Kopiranje datotek"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1068
+#: ../src/gpk-enum.c:1081
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2974,7 +2994,7 @@ msgstr[2] "%i manjši posodobitvi"
 msgstr[3] "%i manjše posodobitve"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1072
+#: ../src/gpk-enum.c:1085
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2984,7 +3004,7 @@ msgstr[2] "%i posodobitvi"
 msgstr[3] "%i posodobitve"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1076
+#: ../src/gpk-enum.c:1089
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2994,7 +3014,7 @@ msgstr[2] "%i pomembni posodobitvi"
 msgstr[3] "%i pomembne posodobitve"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1080
+#: ../src/gpk-enum.c:1093
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -3004,7 +3024,7 @@ msgstr[2] "%i varnostni posodobitvi"
 msgstr[3] "%i varnostne posodobitve"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1084
+#: ../src/gpk-enum.c:1097
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -3014,7 +3034,7 @@ msgstr[2] "%i posodobitvi popravkov"
 msgstr[3] "%i posodobitve popravkov"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1088
+#: ../src/gpk-enum.c:1101
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -3024,7 +3044,7 @@ msgstr[2] "%i posodobitvi izboljšav"
 msgstr[3] "%i posodobitve izboljšav"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1092
+#: ../src/gpk-enum.c:1105
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -3034,624 +3054,624 @@ msgstr[2] "%i ovirani posodobitvi"
 msgstr[3] "%i ovirane posodobitve"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1110
+#: ../src/gpk-enum.c:1123
 msgid "Trivial update"
 msgstr "Manjša posodobitev"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1114
+#: ../src/gpk-enum.c:1127
 msgid "Normal update"
 msgstr "Običajna posodobitev"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1118
+#: ../src/gpk-enum.c:1131
 msgid "Important update"
 msgstr "Pomembna posodobitev"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1122
+#: ../src/gpk-enum.c:1135
 msgid "Security update"
 msgstr "Varnostna posodobitev"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1126
+#: ../src/gpk-enum.c:1139
 msgid "Bug fix update"
 msgstr "Posodobitev popravkov"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1130
+#: ../src/gpk-enum.c:1143
 msgid "Enhancement update"
 msgstr "Posodobitev izboljšav"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1134
+#: ../src/gpk-enum.c:1147
 msgid "Blocked update"
 msgstr "Ovirana posodobitev"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1144
+#: ../src/gpk-enum.c:1157
 msgid "Available"
 msgstr "Razpoložljivi paketi"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1162
+#: ../src/gpk-enum.c:1175
 #: ../src/gpk-service-pack.c:427
 msgid "Downloading"
 msgstr "Prejemanje"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1166
+#: ../src/gpk-enum.c:1179
 msgid "Updating"
 msgstr "Posodabljanje"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1170
-#: ../src/gpk-enum.c:1306
+#: ../src/gpk-enum.c:1183
+#: ../src/gpk-enum.c:1319
 msgid "Installing"
 msgstr "Nameščanje"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1174
-#: ../src/gpk-enum.c:1302
+#: ../src/gpk-enum.c:1187
+#: ../src/gpk-enum.c:1315
 msgid "Removing"
 msgstr "Odstranjevanje"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1178
+#: ../src/gpk-enum.c:1191
 msgid "Cleaning up"
 msgstr "Čiščenje"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1182
+#: ../src/gpk-enum.c:1195
 msgid "Obsoleting"
 msgstr "Označevanje zastarelih"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1186
+#: ../src/gpk-enum.c:1199
 msgid "Reinstalling"
 msgstr "Ponovno nameščanje"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1190
+#: ../src/gpk-enum.c:1203
 msgid "Preparing"
 msgstr "Pripravljanje"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1194
+#: ../src/gpk-enum.c:1207
 msgid "Decompressing"
 msgstr "Razširjanje"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1212
+#: ../src/gpk-enum.c:1225
 msgid "Downloaded"
 msgstr "Prejeto"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1216
+#: ../src/gpk-enum.c:1229
 msgid "Updated"
 msgstr "Posodobljeno"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1224
+#: ../src/gpk-enum.c:1237
 msgid "Removed"
 msgstr "Odstranjeno"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1228
+#: ../src/gpk-enum.c:1241
 msgid "Cleaned up"
 msgstr "Počiščeno"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1232
+#: ../src/gpk-enum.c:1245
 msgid "Obsoleted"
 msgstr "Zastarelo"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1236
+#: ../src/gpk-enum.c:1249
 msgid "Reinstalled"
 msgstr "Ponovno nameščeno"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1240
+#: ../src/gpk-enum.c:1253
 msgid "Prepared"
 msgstr "Pripravljeno"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1244
+#: ../src/gpk-enum.c:1257
 msgid "Decompressed"
 msgstr "Razširjeno"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1262
-#: ../src/gpk-enum.c:1418
+#: ../src/gpk-enum.c:1275
+#: ../src/gpk-enum.c:1431
 msgid "Unknown role type"
 msgstr "Neznana vrsta vloge"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1266
+#: ../src/gpk-enum.c:1279
 msgid "Getting dependencies"
 msgstr "Pridobivanje odvisnosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1270
+#: ../src/gpk-enum.c:1283
 msgid "Getting update detail"
 msgstr "Pridobivanje podrobnosti posodobitve"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1274
+#: ../src/gpk-enum.c:1287
 msgid "Getting details"
 msgstr "pridobivanje podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1278
+#: ../src/gpk-enum.c:1291
 msgid "Getting requires"
 msgstr "Pridobivanje zahtev"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1282
+#: ../src/gpk-enum.c:1295
 msgid "Getting updates"
 msgstr "Pridobivanje posodobitev"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1286
+#: ../src/gpk-enum.c:1299
 msgid "Searching details"
 msgstr "Iskanje podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1294
+#: ../src/gpk-enum.c:1307
 msgid "Searching groups"
 msgstr "Iskanje skupin"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1298
+#: ../src/gpk-enum.c:1311
 msgid "Searching for package name"
 msgstr "Iskanje imen paketov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1310
+#: ../src/gpk-enum.c:1323
 msgid "Installing file"
 msgstr "Nameščanje datoteke"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1314
+#: ../src/gpk-enum.c:1327
 msgid "Refreshing package cache"
 msgstr "Osveževanje pomnilnika paketov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1318
+#: ../src/gpk-enum.c:1331
 msgid "Updating packages"
 msgstr "Posodabljanje paketov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1322
+#: ../src/gpk-enum.c:1335
 msgid "Updating system"
 msgstr "Posodabljanje sistema"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1326
+#: ../src/gpk-enum.c:1339
 msgid "Canceling"
 msgstr "Preklicevanje"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1334
+#: ../src/gpk-enum.c:1347
 msgid "Getting list of repositories"
 msgstr "Pridobivanje seznama skladišč"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1338
+#: ../src/gpk-enum.c:1351
 msgid "Enabling repository"
 msgstr "Omogočanje skladišča"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1342
+#: ../src/gpk-enum.c:1355
 msgid "Setting repository data"
 msgstr "Pridobivanje podatkov skladišča"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1346
+#: ../src/gpk-enum.c:1359
 msgid "Resolving"
 msgstr "Razreševanje"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1350
+#: ../src/gpk-enum.c:1363
 msgid "Getting file list"
 msgstr "Pridobivanje seznama datotek"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1354
+#: ../src/gpk-enum.c:1367
 msgid "Getting what provides"
 msgstr "Pridobivanje ponudbe"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1358
+#: ../src/gpk-enum.c:1371
 msgid "Installing signature"
 msgstr "Nameščanje podpisa"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1362
+#: ../src/gpk-enum.c:1375
 msgid "Getting package lists"
 msgstr "Pridobivanje seznama paketov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1366
+#: ../src/gpk-enum.c:1379
 msgid "Accepting EULA"
 msgstr "Sprejemanje uporabniškega dovoljenja (EULA)"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1374
+#: ../src/gpk-enum.c:1387
 msgid "Getting distribution upgrade information"
 msgstr "Pridobivanje podrobnosti posodobitve celotne distribucije"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1378
+#: ../src/gpk-enum.c:1391
 msgid "Getting categories"
 msgstr "Pridobivanje kategorij"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1382
+#: ../src/gpk-enum.c:1395
 msgid "Getting old transactions"
 msgstr "Pridobivanje starejših prenosov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1386
+#: ../src/gpk-enum.c:1399
 msgid "Simulating the install of files"
 msgstr "Navidezno nameščanje datotek"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1390
+#: ../src/gpk-enum.c:1403
 msgid "Simulating the install"
 msgstr "Navidezno nameščanje"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1394
+#: ../src/gpk-enum.c:1407
 msgid "Simulating the remove"
 msgstr "Navidezno odstranjevanje"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1398
+#: ../src/gpk-enum.c:1411
 msgid "Simulating the update"
 msgstr "Navidezno posodabljanje"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1422
+#: ../src/gpk-enum.c:1435
 msgid "Got dependencies"
 msgstr "Pridobljene odvisnosti"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1426
+#: ../src/gpk-enum.c:1439
 msgid "Got update detail"
 msgstr "Pridobljene podrobnosti posodobitve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1430
+#: ../src/gpk-enum.c:1443
 msgid "Got details"
 msgstr "Pridobljene podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1434
+#: ../src/gpk-enum.c:1447
 msgid "Got requires"
 msgstr "Pridobljene zahteve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1438
+#: ../src/gpk-enum.c:1451
 msgid "Got updates"
 msgstr "Pridobljene posodobitve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1442
+#: ../src/gpk-enum.c:1455
 msgid "Searched for package details"
 msgstr "Iskane podrobnosti paketa"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1446
+#: ../src/gpk-enum.c:1459
 msgid "Searched for file"
 msgstr "Iskane datoteke"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1450
+#: ../src/gpk-enum.c:1463
 msgid "Searched groups"
 msgstr "Iskane skupine"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1454
+#: ../src/gpk-enum.c:1467
 msgid "Searched for package name"
 msgstr "Iskano ime paketa"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1458
+#: ../src/gpk-enum.c:1471
 msgid "Removed packages"
 msgstr "Odstranjeni paketi"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1462
+#: ../src/gpk-enum.c:1475
 msgid "Installed packages"
 msgstr "Nameščeni paketi"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1466
+#: ../src/gpk-enum.c:1479
 msgid "Installed local files"
 msgstr "Nameščene krajevne datoteke"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1470
+#: ../src/gpk-enum.c:1483
 msgid "Refreshed package cache"
 msgstr "Osvežen predpomnilnik paketov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1474
+#: ../src/gpk-enum.c:1487
 msgid "Updated packages"
 msgstr "Posodobljeni paketi"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1478
+#: ../src/gpk-enum.c:1491
 msgid "Updated system"
 msgstr "Posodobljen sistem"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1482
+#: ../src/gpk-enum.c:1495
 msgid "Canceled"
 msgstr "Preklicano"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1486
+#: ../src/gpk-enum.c:1499
 msgid "Rolled back"
 msgstr "Povrnjeno"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1490
+#: ../src/gpk-enum.c:1503
 msgid "Got list of repositories"
 msgstr "Pridobljen seznam skladišč"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1494
+#: ../src/gpk-enum.c:1507
 msgid "Enabled repository"
 msgstr "Omogočeno skladišče"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1498
+#: ../src/gpk-enum.c:1511
 msgid "Set repository data"
 msgstr "Določeni podatki skladišča"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1502
+#: ../src/gpk-enum.c:1515
 msgid "Resolved"
 msgstr "Razrešeno"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1506
+#: ../src/gpk-enum.c:1519
 msgid "Got file list"
 msgstr "Pridobljen seznam datotek"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1510
+#: ../src/gpk-enum.c:1523
 msgid "Got what provides"
 msgstr "Pridobljeno ponujeno"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1514
+#: ../src/gpk-enum.c:1527
 msgid "Installed signature"
 msgstr "Nameščen podpis"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1518
+#: ../src/gpk-enum.c:1531
 msgid "Got package lists"
 msgstr "Pridobljen seznam paketov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1522
+#: ../src/gpk-enum.c:1535
 msgid "Accepted EULA"
 msgstr "Sprejeto uporabniško dovoljenje (EULA)"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1526
+#: ../src/gpk-enum.c:1539
 msgid "Downloaded packages"
 msgstr "Prejeti paketi"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1530
+#: ../src/gpk-enum.c:1543
 msgid "Got distribution upgrades"
 msgstr "Pridobljene posodobitve celotne distribucije"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1534
+#: ../src/gpk-enum.c:1547
 msgid "Got categories"
 msgstr "Pridobljene kategorije"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1538
+#: ../src/gpk-enum.c:1551
 msgid "Got old transactions"
 msgstr "Pridobljeni stari prenosi"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1542
+#: ../src/gpk-enum.c:1555
 msgid "Simulated the install of files"
 msgstr "Navidezni preizkus namestitve datotek"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1546
+#: ../src/gpk-enum.c:1559
 msgid "Simulated the install"
 msgstr "Navidezni preizkus namestitve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1550
+#: ../src/gpk-enum.c:1563
 msgid "Simulated the remove"
 msgstr "Navidezni preizkus odstranitve"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1554
+#: ../src/gpk-enum.c:1567
 msgid "Simulated the update"
 msgstr "Navidezni preizkus posodobitve"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1572
+#: ../src/gpk-enum.c:1585
 msgid "Accessibility"
 msgstr "Dostopnost"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1576
+#: ../src/gpk-enum.c:1589
 msgid "Accessories"
 msgstr "Pripomočki"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1580
+#: ../src/gpk-enum.c:1593
 msgid "Education"
 msgstr "Izobraževanje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1584
+#: ../src/gpk-enum.c:1597
 msgid "Games"
 msgstr "Igre"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1588
+#: ../src/gpk-enum.c:1601
 msgid "Graphics"
 msgstr "Grafično oblikovanje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1592
+#: ../src/gpk-enum.c:1605
 msgid "Internet"
 msgstr "Splet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1596
+#: ../src/gpk-enum.c:1609
 msgid "Office"
 msgstr "Pisarniški paketi"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1600
+#: ../src/gpk-enum.c:1613
 msgid "Other"
 msgstr "Ostalo"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1604
+#: ../src/gpk-enum.c:1617
 msgid "Programming"
 msgstr "Programiranje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1608
+#: ../src/gpk-enum.c:1621
 msgid "Multimedia"
 msgstr "Večpredstavnost"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1616
+#: ../src/gpk-enum.c:1629
 msgid "GNOME desktop"
 msgstr "GNOME namizje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1620
+#: ../src/gpk-enum.c:1633
 msgid "KDE desktop"
 msgstr "Namizje KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1624
+#: ../src/gpk-enum.c:1637
 msgid "XFCE desktop"
 msgstr "Namizje XFCE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1628
+#: ../src/gpk-enum.c:1641
 msgid "Other desktops"
 msgstr "Druga namizja"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1632
+#: ../src/gpk-enum.c:1645
 msgid "Publishing"
 msgstr "Založništvo"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1636
+#: ../src/gpk-enum.c:1649
 msgid "Servers"
 msgstr "Strežniki"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1640
+#: ../src/gpk-enum.c:1653
 msgid "Fonts"
 msgstr "Pisave"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1644
+#: ../src/gpk-enum.c:1657
 msgid "Admin tools"
 msgstr "Skrbniška orodja"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1648
+#: ../src/gpk-enum.c:1661
 msgid "Legacy"
 msgstr "Zastarelo"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1652
+#: ../src/gpk-enum.c:1665
 msgid "Localization"
 msgstr "Jezikovno prilagajanje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1656
+#: ../src/gpk-enum.c:1669
 msgid "Virtualization"
 msgstr "Predočenje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1660
+#: ../src/gpk-enum.c:1673
 msgid "Security"
 msgstr "Varnost"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1664
+#: ../src/gpk-enum.c:1677
 msgid "Power management"
 msgstr "Upravljanje napajanja"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1668
+#: ../src/gpk-enum.c:1681
 msgid "Communication"
 msgstr "Sporočanje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1672
+#: ../src/gpk-enum.c:1685
 msgid "Network"
 msgstr "Omrežje"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1676
+#: ../src/gpk-enum.c:1689
 msgid "Maps"
 msgstr "Zemljevidi"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1680
+#: ../src/gpk-enum.c:1693
 msgid "Software sources"
 msgstr "Viri programske opreme"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1684
+#: ../src/gpk-enum.c:1697
 msgid "Science"
 msgstr "Znanost"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1688
+#: ../src/gpk-enum.c:1701
 msgid "Documentation"
 msgstr "Dokumentacija"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1692
+#: ../src/gpk-enum.c:1705
 msgid "Electronics"
 msgstr "Elektronika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1696
+#: ../src/gpk-enum.c:1709
 msgid "Package collections"
 msgstr "Zbirka paketov"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1700
+#: ../src/gpk-enum.c:1713
 msgid "Vendor"
 msgstr "Prodajalec"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1704
+#: ../src/gpk-enum.c:1717
 msgid "Newest packages"
 msgstr "Najnovejši paketi"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1708
+#: ../src/gpk-enum.c:1721
 msgid "Unknown group"
 msgstr "Neznani paketi"
 
@@ -4210,18 +4230,18 @@ msgstr "Datoteke seznama skupin paketov"
 msgid "Service pack files"
 msgstr "Datoteke servisnega paketa popravkov"
 
-#: ../src/gpk-update-icon.c:127
+#: ../src/gpk-update-icon.c:62
 msgid "Exit after a small delay"
 msgstr "Končaj po krajšem zamiku"
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-update-icon.c:147
-#: ../src/gpk-update-icon.c:149
+#: ../src/gpk-update-icon.c:82
+#: ../src/gpk-update-icon.c:84
 msgid "Update Applet"
 msgstr "Aplet posodobitve"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-icon.c:162
+#: ../src/gpk-update-icon.c:97
 msgid "Update applet"
 msgstr "Aplet posodobitve"
 
@@ -4496,6 +4516,16 @@ msgstr "Preverjanje za posodobitve ..."
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Na voljo je nova posodobitev distribucije na '%s'."
+
+#: ../src/gpk-dbus-service.c:136
+msgid "Do not exit after the request has been processed"
+msgstr "Ne končaj po končanih opravilih"
+
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../src/gpk-dbus-service.c:153
+#: ../src/gpk-dbus-service.c:155
+msgid "Session DBus service for PackageKit"
+msgstr "Storitev DBus seje programa PackageKit"
 
 #. TRANSLATORS: a list of packages is shown that need to restarted
 #: ../src/gpk-watch.c:159
