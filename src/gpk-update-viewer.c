@@ -41,7 +41,6 @@
 #include "gpk-cell-renderer-size.h"
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"
-#include "gpk-cell-renderer-spinner.h"
 #include "gpk-enum.h"
 #include "gpk-task.h"
 #include "gpk-session.h"
@@ -1472,7 +1471,7 @@ gpk_update_viewer_treeview_add_columns_update (GpkUpdateViewer *update_viewer, G
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_STATUS);
 
 	/* column for progress */
-	renderer = gpk_cell_renderer_spinner_new ();
+	renderer = gtk_cell_renderer_spinner_new ();
 	g_object_set (renderer, "size", GTK_ICON_SIZE_BUTTON, NULL);
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, renderer, "pulse", GPK_UPDATES_COLUMN_PULSE);
