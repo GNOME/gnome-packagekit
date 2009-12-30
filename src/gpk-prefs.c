@@ -379,16 +379,17 @@ gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, gpoint
 }
 
 /**
- * pk_prefs_get_properties_cb:
+ * gpk_prefs_get_properties_cb:
  **/
 static void
-pk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
+gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
 {
 	GtkWidget *widget;
 	GError *error = NULL;
 	PkControl *control = PK_CONTROL(object);
 	gboolean ret;
 	PkBitfield roles;
+	PkNetworkEnum state;
 
 	/* get the result */
 	ret = pk_control_get_properties_finish (control, res, &error);
@@ -403,7 +404,12 @@ pk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
 	/* get values */
 	g_object_get (control,
 		      "roles", &roles,
+		      "network-state", &state,
 		      NULL);
+
+	/* only show label on mobile broadband */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
+	gtk_widget_set_visible (widget, (state == PK_NETWORK_ENUM_MOBILE));
 
 	/* hide if not supported */
 	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
@@ -411,34 +417,6 @@ pk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
 		gtk_widget_hide (widget);
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
 		gtk_widget_hide (widget);
-	}
-out:
-	return;
-}
-
-/**
- * pk_prefs_get_network_state_cb:
- **/
-static void
-pk_prefs_get_network_state_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
-{
-	GtkWidget *widget;
-	GError *error = NULL;
-	PkControl *control = PK_CONTROL(object);
-	PkNetworkEnum state;
-
-	/* get the result */
-	state = pk_control_get_network_state_finish (control, res, &error);
-	if (state == PK_NETWORK_ENUM_UNKNOWN) {
-		egg_warning ("network status unknown: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
-
-	/* only show label on mobile broadband */
-	if (state == PK_NETWORK_ENUM_MOBILE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
-		gtk_widget_show (widget);
 	}
 out:
 	return;
@@ -573,8 +551,7 @@ main (int argc, char *argv[])
 	}
 
 	/* get some data */
-	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) pk_prefs_get_properties_cb, loop);
-	pk_control_get_network_state_async (control, NULL, (GAsyncReadyCallback) pk_prefs_get_network_state_cb, loop);
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_prefs_get_properties_cb, loop);
 
 	/* wait */
 	g_main_loop_run (loop);
