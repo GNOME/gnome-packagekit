@@ -171,15 +171,15 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 	GtkTreeIter iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean enabled;
-	gchar *repo_id;
+	gchar *repo_id = NULL;
 	gboolean ret;
 	GError *error = NULL;
-	PkClient *client;
+	PkClient *client = NULL;
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		egg_debug ("can't change state");
-		return;
+		goto out;
 	}
 
 	/* get toggled iter */
@@ -204,7 +204,6 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 		g_error_free (error);
 		goto out;
 	}
-	g_object_unref (client);
 
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
@@ -213,6 +212,8 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 
 out:
 	/* clean up */
+	if (client != NULL)
+		g_object_unref (client);
 	g_free (repo_id);
 	gtk_tree_path_free (path);
 }
