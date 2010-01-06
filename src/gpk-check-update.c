@@ -77,7 +77,6 @@ struct GpkCheckUpdatePrivate
 	GConfClient		*gconf_client;
 	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
-	GPtrArray		*important_updates_array;
 	EggDbusMonitor		*dbus_monitor_viewer;
 	guint			 updates_changed_id;
 	GCancellable		*cancellable;
@@ -573,16 +572,6 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 			egg_warning ("Failure launching update viewer: %s", error->message);
 			g_error_free (error);
 		}
-	} else if (g_strcmp0 (action, "update-just-security") == 0) {
-
-		/* just update the important updates */
-		package_ids = pk_ptr_array_to_strv (cupdate->priv->important_updates_array);
-		egg_warning ("package_ids=%p", package_ids);
-		egg_warning ("package_ids[0]=%s", package_ids[0]);
-		pk_client_update_packages_async (PK_CLIENT(cupdate->priv->task), TRUE, package_ids, cupdate->priv->cancellable, NULL, NULL,
-					       (GAsyncReadyCallback) gpk_check_update_update_system_finished_cb, cupdate);
-		g_strfreev (package_ids);
-
 	} else if (g_strcmp0 (action, "distro-upgrade-info") == 0) {
 		ret = g_spawn_command_line_async (DATADIR "/PackageKit/pk-upgrade-distro.sh", &error);
 		if (!ret) {
@@ -629,13 +618,6 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* save for comparison later */
 	cupdate->priv->number_updates_critical_last_shown = array->len;
 
-	/* save for later */
-	g_ptr_array_set_size (cupdate->priv->important_updates_array, 0);
-	for (i=0; i<array->len; i++) {
-		package_id = g_ptr_array_index (array, i);
-		g_ptr_array_add (cupdate->priv->important_updates_array, g_strdup (package_id));
-	}
-
 	/* TRANSLATORS: title in the libnotify popup */
 	title = ngettext ("Security update available", "Security updates available", array->len);
 
@@ -663,18 +645,9 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	}
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
-	notify_notification_add_action (notification, "update-just-security",
-					/* TRANSLATORS: button: only security updates */
-					_("Install only security updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
-//	notify_notification_add_action (notification, "update-all-packages",
-//					/* TRANSLATORS: button: all pending updates */
-//					_("Install all updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	notify_notification_add_action (notification, "show-update-viewer",
-					/* TRANSLATORS: button: open the update viewer */
-					_("Show all software updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
-//	notify_notification_add_action (notification, "do-not-show-notify-critical",
-//					/* TRANSLATORS: button: hide forever */
-//					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
+					/* TRANSLATORS: button: open the update viewer to install updates*/
+					_("Install updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
 		egg_warning ("error: %s", error->message);
@@ -1501,7 +1474,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	cupdate->priv->updates_changed_id = 0;
 	cupdate->priv->notification_updates_available = NULL;
-	cupdate->priv->important_updates_array = g_ptr_array_new_with_free_func (g_free);
 	cupdate->priv->icon_name = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->status_icon = gtk_status_icon_new ();
@@ -1595,7 +1567,6 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->task);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	g_object_unref (cupdate->priv->cancellable);
-	g_ptr_array_unref (cupdate->priv->important_updates_array);
 	g_free (cupdate->priv->icon_name);
 	if (cupdate->priv->updates_changed_id > 0)
 		g_source_remove (cupdate->priv->updates_changed_id);
