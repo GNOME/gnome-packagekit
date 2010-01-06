@@ -536,7 +536,6 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 {
 	gboolean ret;
 	GError *error = NULL;
-	gchar **package_ids;
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (g_strcmp0 (action, "do-not-show-complete-restart") == 0) {
@@ -590,8 +589,6 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 static void
 gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar *details, GPtrArray *array)
 {
-	guint i;
-	const gchar *package_id;
 	const gchar *title;
 	gchar *message;
 	GString *string;
