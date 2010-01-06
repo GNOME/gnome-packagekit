@@ -119,6 +119,7 @@ shared_LIBS =						\
 	$(GNOME_MENUS_LIBS)				\
 	$(DEVKIT_LIBS)					\
 	$(CANBERRA_LIBS)				\
+	$(X11_LIBS)					\
 	$(NULL)
 
 gpk_install_provide_file_SOURCES =			\
