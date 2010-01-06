@@ -661,7 +661,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 		egg_warning ("failed to get bubble");
 		return;
 	}
-	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
+	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_add_action (notification, "update-just-security",
 					/* TRANSLATORS: button: only security updates */
