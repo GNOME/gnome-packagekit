@@ -218,6 +218,31 @@ out:
 }
 
 /**
+ * gpk_repo_process_messages_cb:
+ **/
+static void
+gpk_repo_process_messages_cb (PkMessage *item, gpointer user_data)
+{
+	GtkWindow *window;
+	PkMessageEnum type;
+	gchar *details;
+	const gchar *title;
+
+	/* get data */
+	g_object_get (item,
+		      "type", &type,
+		      "details", &details,
+		      NULL);
+
+	/* show a modal window */
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
+	title = gpk_message_enum_to_localised_text (type);
+	gpk_error_dialog_modal (window, title, details, NULL);
+
+	g_free (details);
+}
+
+/**
  * gpk_repo_repo_enable_cb
  **/
 static void
@@ -228,6 +253,7 @@ gpk_repo_repo_enable_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 	PkResults *results = NULL;
 	PkError *error_code = NULL;
 	GtkWindow *window;
+	GPtrArray *array;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -247,6 +273,11 @@ gpk_repo_repo_enable_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
+
+	/* process messages */
+	array = pk_results_get_message_array (results);
+	g_ptr_array_foreach (array, (GFunc) gpk_repo_process_messages_cb, NULL);
+	g_ptr_array_unref (array);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
