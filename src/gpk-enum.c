@@ -257,6 +257,7 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED,	"dialog-warning"},
+	{PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY,	"dialog-warning"},
 	{0, NULL}
 };
 
@@ -899,6 +900,9 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		break;
 	case PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED:
 		text = _("Software source download failed");
+		break;
+	case PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY:
+		text = _("This software source is for developers only");
 		break;
 	default:
 		egg_warning ("message unrecognised: %i", message);

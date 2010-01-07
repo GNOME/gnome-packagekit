@@ -55,9 +55,13 @@ typedef enum {
 	GPK_INFO_ENUM_UNKNOWN
 } GpkInfoStatusEnum;
 
-/* constants defined in 0.5.6 */
+/* constants defined in previous versions */
 #if (!PK_CHECK_VERSION(0,5,6))
 #define PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS		(PK_ERROR_ENUM_PACKAGE_FAILED_TO_REMOVE + 1)
+#endif
+
+#if (!PK_CHECK_VERSION(0,5,7))
+#define PK_MESSAGE_REPO_FOR_DEVELOPERS_ONLY				(PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED + 1)
 #endif
 
 void		 gpk_enum_test				(gpointer	 data);
