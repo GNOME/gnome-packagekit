@@ -1279,10 +1279,10 @@ out:
 }
 
 /**
- * pk_watch_process_messages_cb:
+ * gpk_watch_process_messages_cb:
  **/
 static void
-pk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
+gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -1346,10 +1346,10 @@ out:
 }
 
 /**
- * pk_watch_process_error_code:
+ * gpk_watch_process_error_code:
  **/
 static void
-pk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
+gpk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -1409,10 +1409,10 @@ out:
 }
 
 /**
- * pk_watch_process_require_restart_cb:
+ * gpk_watch_process_require_restart_cb:
  **/
 static void
-pk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
+gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 {
 	GPtrArray *array = NULL;
 	GPtrArray *names = NULL;
@@ -1495,8 +1495,10 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 		      NULL);
 
 	/* is not the watched transaction */
-	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) != 0)
+	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) != 0) {
+		egg_debug ("not watched transaction %s, instead %s", watch->priv->transaction_id, transaction_id);
 		goto out;
+	}
 
 	/* stop spinning */
 	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
@@ -1509,20 +1511,20 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	/* process messages */
 	if (error_code == NULL) {
 		array = pk_results_get_message_array (results);
-		g_ptr_array_foreach (array, (GFunc) pk_watch_process_messages_cb, watch);
+		g_ptr_array_foreach (array, (GFunc) gpk_watch_process_messages_cb, watch);
 		g_ptr_array_unref (array);
 	}
 
 	/* only process errors if caller is no longer on the bus */
 	if (error_code != NULL && !caller_active)
-		pk_watch_process_error_code (watch, error_code);
+		gpk_watch_process_error_code (watch, error_code);
 
 	/* process restarts */
 	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
 	    role == PK_ROLE_ENUM_INSTALL_PACKAGES ||
 	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 		array = pk_results_get_require_restart_array (results);
-		g_ptr_array_foreach (array, (GFunc) pk_watch_process_require_restart_cb, watch);
+		g_ptr_array_foreach (array, (GFunc) gpk_watch_process_require_restart_cb, watch);
 		g_ptr_array_unref (array);
 	}
 
