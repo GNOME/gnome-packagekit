@@ -1189,6 +1189,7 @@ static void
 gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 {
 	/* we might have a transaction running */
+	egg_debug ("cancelling transaction: %p", watch->priv->cancellable);
 	g_cancellable_cancel (watch->priv->cancellable);
 }
 
@@ -1665,7 +1666,7 @@ gpk_watch_transaction_list_added_cb (PkTransactionList *tlist, const gchar *tran
 		return;
 	}
 	egg_debug ("added: %s", transaction_id);
-	pk_client_adopt_async (PK_CLIENT(watch->priv->task), transaction_id, NULL,
+	pk_client_adopt_async (PK_CLIENT(watch->priv->task), transaction_id, watch->priv->cancellable,
 			       (PkProgressCallback) gpk_watch_progress_cb, watch,
 			       (GAsyncReadyCallback) gpk_watch_adopt_cb, watch);
 }
