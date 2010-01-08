@@ -165,7 +165,7 @@ gpk_watch_get_restart_required_tooltip (GpkWatch *watch)
 		}
 
 		/* join */
-		text = g_strdup_printf ("%s%s", title, message);
+		text = g_strdup_printf ("%s %s", title, message);
 		goto out;
 	}
 
@@ -1430,24 +1430,30 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 		      NULL);
 
 	/* if less important than what we are already showing */
-	if (restart <= watch->priv->restart)
+	if (restart <= watch->priv->restart) {
+		egg_debug ("restart already %s, not processing %s",
+			   pk_restart_enum_to_text (watch->priv->restart),
+			   pk_restart_enum_to_text (restart));
 		goto out;
+	}
+
+	/* save new restart */
+	watch->priv->restart = restart;
 
 	/* add name if not already in the list */
 	split = pk_package_id_split (package_id);
 	names = watch->priv->restart_package_names;
 	for (i=0; i<names->len; i++) {
 		name = g_ptr_array_index (names, i);
-		if (g_strcmp0 (name, split[PK_PACKAGE_ID_NAME]) == 0)
-			break;
-	}
-	if (i < names->len) {
-		/* add to list */
-		g_ptr_array_add (names, g_strdup (split[PK_PACKAGE_ID_NAME]));
+		if (g_strcmp0 (name, split[PK_PACKAGE_ID_NAME]) == 0) {
+			egg_debug ("already got %s", name);
+			goto out;
+		}
 	}
 
-	/* save new restart */
-	watch->priv->restart = restart;
+	/* add to list */
+	egg_warning ("adding %s to restart list", split[PK_PACKAGE_ID_NAME]);
+	g_ptr_array_add (names, g_strdup (split[PK_PACKAGE_ID_NAME]));
 out:
 	g_free (package_id);
 	g_strfreev (split);
@@ -1495,19 +1501,22 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 		      "elapsed-time", &elapsed_time,
 		      NULL);
 
-	/* is not the watched transaction */
-	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) != 0) {
-		egg_debug ("not watched transaction %s, instead %s", watch->priv->transaction_id, transaction_id);
-		goto out;
-	}
+	egg_warning ("%s finished (%s)", transaction_id, pk_role_enum_to_text (role));
 
-	/* stop spinning */
-	gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
-
-	/* autoclose if success */
+	/* get the error */
 	error_code = pk_results_get_error_code (results);
-	if (error_code == NULL)
-		gpk_modal_dialog_close (watch->priv->dialog);
+
+	/* is the watched transaction */
+	if (g_strcmp0 (transaction_id, watch->priv->transaction_id) == 0) {
+		egg_debug ("watched transaction %s", watch->priv->transaction_id);
+
+		/* stop spinning */
+		gpk_modal_dialog_set_percentage (watch->priv->dialog, 100);
+
+		/* autoclose if success */
+		if (error_code == NULL)
+			gpk_modal_dialog_close (watch->priv->dialog);
+	}
 
 	/* process messages */
 	if (error_code == NULL) {
