@@ -2754,6 +2754,7 @@ static void
 gpk_update_viewer_notify_network_state_cb (PkControl *control, GParamSpec *pspec, GpkUpdateViewer *update_viewer)
 {
 	gpk_update_viewer_check_mobile_broadband (update_viewer);
+	gpk_update_viewer_get_new_update_array (update_viewer);
 }
 
 /**
