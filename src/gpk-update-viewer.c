@@ -2937,9 +2937,6 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "vpaned_updates"));
 	g_signal_connect (widget, "realize",
 			  G_CALLBACK (gpk_update_viewer_vpaned_realized_cb), update_viewer);
-
-	/* coldplug */
-	gpk_update_viewer_get_new_update_array (update_viewer);
 out:
 	return;
 }
