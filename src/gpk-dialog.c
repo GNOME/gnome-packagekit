@@ -321,3 +321,35 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	return TRUE;
 }
 
+/**
+ * gpk_dialog_embed_download_size_widget:
+ **/
+gboolean
+gpk_dialog_embed_download_size_widget (GtkDialog *dialog, const gchar *title, guint64 size)
+{
+	GtkWidget *label;
+	GtkWidget *hbox;
+	GtkWidget *widget;
+	gchar *text;
+	gchar *size_str;
+
+	/* add a checkbutton for deps screen */
+	size_str = g_format_size_for_display (size);
+	text = g_strdup_printf ("%s: %s", title, size_str);
+	hbox = gtk_hbox_new (FALSE, 6);
+	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+	gtk_container_add_with_properties (GTK_CONTAINER (widget), hbox,
+					   "expand", FALSE,
+					   "fill", FALSE,
+					   NULL);
+
+	/* add a label */
+	label = gtk_label_new (text);
+	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
+	gtk_widget_show (label);
+	gtk_widget_show (hbox);
+	g_free (text);
+	g_free (size_str);
+	return TRUE;
+}
+
