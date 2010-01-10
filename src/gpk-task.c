@@ -382,9 +382,14 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	GPtrArray *array = NULL;
 	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 	PkRoleEnum role;
+	PkPackageSack *sack = NULL;
 	guint inputs;
+	guint64 size;
 	const gchar *title;
 	const gchar *message = NULL;
+#if PK_CHECK_VERSION(0,6,1)
+	GError *error = NULL;
+#endif
 
 	/* save the current request */
 	priv->request = request;
@@ -450,6 +455,29 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (priv->current_window), "%s", message);
 	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array);
+
+	/* show the size of the packages to download */
+	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES ||
+	    role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES ||
+	    role == PK_ROLE_ENUM_SIMULATE_INSTALL_FILES) {
+
+		/* get the details for all the packages */
+		sack = pk_results_get_package_sack (results);
+#if PK_CHECK_VERSION(0,6,1)
+		ret = pk_package_sack_get_details (sack, NULL, &error);
+		if (!ret) {
+			egg_warning ("failed to get details about packages: %s", error->message);
+			g_error_free (error);
+		}
+#endif
+		/* display the new size */
+		size = pk_package_sack_get_total_bytes (sack);
+		if (size > 0) {
+			/* TRANSLATORS: this the size of extra packages we have to download, e.g. 3.5Mb */
+			gpk_dialog_embed_download_size_widget (GTK_DIALOG(priv->current_window), _("Extra packages to download"), size);
+		}
+	}
+
 	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_CONF_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */
 	gtk_dialog_add_button (GTK_DIALOG(priv->current_window), _("Continue"), GTK_RESPONSE_YES);
@@ -460,6 +488,8 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	g_signal_connect (priv->current_window, "response", G_CALLBACK (gpk_task_dialog_response_cb), task);
 	gtk_widget_show_all (GTK_WIDGET(priv->current_window));
 out:
+	if (sack != NULL)
+		g_object_unref (sack);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 }
