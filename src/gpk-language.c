@@ -109,8 +109,7 @@ gpk_language_populate (GpkLanguage *language, GError **error)
 		filename = g_build_filename ("/usr", "share", "xml", "iso-codes", "iso_639.xml", NULL);
 	}
 	if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-		if (error != NULL)
-			*error = g_error_new (1, 0, "cannot find source file : '%s'", filename);
+		g_set_error (error, 1, 0, "cannot find source file : '%s'", filename);
 		goto out;
 	}
 

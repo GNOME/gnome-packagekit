@@ -76,8 +76,7 @@ egg_console_kit_restart (EggConsoleKit *console, GError **error)
 				 G_TYPE_INVALID, G_TYPE_INVALID);
 	if (!ret) {
 		egg_warning ("Couldn't restart: %s", error_local->message);
-		if (error != NULL)
-			*error = g_error_new (1, 0, "%s", error_local->message);
+		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 	}
 	return ret;
@@ -99,8 +98,7 @@ egg_console_kit_stop (EggConsoleKit *console, GError **error)
 				 G_TYPE_INVALID, G_TYPE_INVALID);
 	if (!ret) {
 		egg_warning ("Couldn't stop: %s", error_local->message);
-		if (error != NULL)
-			*error = g_error_new (1, 0, "%s", error_local->message);
+		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 	}
 	return ret;
@@ -123,8 +121,7 @@ egg_console_kit_can_stop (EggConsoleKit *console, gboolean *can_stop, GError **e
 				 G_TYPE_BOOLEAN, can_stop, G_TYPE_INVALID);
 	if (!ret) {
 		egg_warning ("Couldn't do CanStop: %s", error_local->message);
-		if (error != NULL)
-			*error = g_error_new (1, 0, "%s", error_local->message);
+		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 		/* CanStop was only added in new versions of ConsoleKit,
 		 * so assume true if this failed */
@@ -150,8 +147,7 @@ egg_console_kit_can_restart (EggConsoleKit *console, gboolean *can_restart, GErr
 				 G_TYPE_BOOLEAN, can_restart, G_TYPE_INVALID);
 	if (!ret) {
 		egg_warning ("Couldn't do CanRestart: %s", error_local->message);
-		if (error != NULL)
-			*error = g_error_new (1, 0, "%s", error_local->message);
+		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 		/* CanRestart was only added in new versions of ConsoleKit,
 		 * so assume true if this failed */

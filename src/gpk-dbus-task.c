@@ -636,7 +636,7 @@ gpk_dbus_task_install_package_files_verify (GpkDbusTask *dtask, GPtrArray *array
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		*error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Aborted");
+		g_set_error_literal (error, GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Aborted");
 		ret = FALSE;
 		goto out;
 	}

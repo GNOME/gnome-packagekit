@@ -254,7 +254,7 @@ gpk_pack_resolve_package_ids (gchar **package, GError **error)
 		package_id = gpk_pack_resolve_package_id (package[i]);
 		if (package_id == NULL) {
 			/* TRANSLATORS: cannot resolve name to package name */
-			*error = g_error_new (1, 0, _("Could not find any packages named '%s'"), package[i]);
+			g_set_error (error, 1, 0, _("Could not find any packages named '%s'"), package[i]);
 			ret = FALSE;
 			break;
 		}
@@ -266,7 +266,7 @@ gpk_pack_resolve_package_ids (gchar **package, GError **error)
 	/* no packages */
 	if (array->len == 0) {
 		/* TRANSLATORS: cannot find any valid package names */
-		*error = g_error_new (1, 0, _("Could not find any valid package names"));
+		g_set_error_literal (error, 1, 0, _("Could not find any valid package names"));
 		goto out;
 	}
 
@@ -330,7 +330,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	results = pk_client_get_packages (client, pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), NULL, NULL, NULL, &error_local);
 	if (results == NULL) {
 		/* TRANSLATORS: cannot get package array */
-		*error = g_error_new (1, 0, _("Could not get array of installed packages: %s"), error_local->message);
+		g_set_error (error, 1, 0, _("Could not get array of installed packages: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
@@ -349,7 +349,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	data = gpk_pack_package_array_to_string (array);
 	ret = g_file_set_contents (PK_SYSTEM_PACKAGE_LIST_FILENAME, data, -1, &error_local);
 	if (!ret) {
-		*error = g_error_new (1, 0, _("Could not save to file: %s"), error_local->message);
+		g_set_error (error, 1, 0, _("Could not save to file: %s"), error_local->message);
 		g_error_free (error_local);
 		goto out;
 	}
