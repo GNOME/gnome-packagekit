@@ -452,7 +452,6 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	/* check blocked */
 	array = pk_results_get_package_array (results);
 	gpk_update_viewer_check_blocked_packages (update_viewer, array);
-	g_ptr_array_unref (array);
 
 	/* check restart */
 	if (priv->restart_update == PK_RESTART_ENUM_SYSTEM ||
@@ -583,10 +582,12 @@ static void
 gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
 	GtkTreeRowReference *ref;
-	GSList *link;
+	GSList *link = NULL;
 
 	/* check if already active */
 	ref = gtk_tree_row_reference_new (model, path);
+	if (ref == NULL)
+		goto out;
 	link = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
 	if (link != NULL) {
 		egg_debug ("already active");
@@ -600,7 +601,7 @@ gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 
 	active_rows = g_slist_prepend (active_rows, ref);
 out:
-	g_slist_free (link);
+	return;
 }
 
 /**
