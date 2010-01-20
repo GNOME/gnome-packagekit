@@ -1199,10 +1199,8 @@ gpk_watch_button_cancel_cb (GtkWidget *widget, GpkWatch *watch)
 static void
 gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
 {
-	if (!connected) {
-		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
+	if (!connected)
 		return;
-	}
 
 	/* daemon has just appeared */
 	egg_debug ("dameon has just appeared");
