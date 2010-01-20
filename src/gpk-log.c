@@ -51,6 +51,7 @@ enum
 	GPK_LOG_COLUMN_ICON,
 	GPK_LOG_COLUMN_TIMESPEC,
 	GPK_LOG_COLUMN_DATE,
+	GPK_LOG_COLUMN_DATE_TEXT,
 	GPK_LOG_COLUMN_ROLE,
 	GPK_LOG_COLUMN_DETAILS,
 	GPK_LOG_COLUMN_ID,
@@ -284,7 +285,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "yalign", 0.0, NULL);
 	/* TRANSLATORS: column for the date */
 	column = gtk_tree_view_column_new_with_attributes (_("Date"), renderer,
-							   "markup", GPK_LOG_COLUMN_DATE, NULL);
+							   "markup", GPK_LOG_COLUMN_DATE_TEXT, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, FALSE);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_DATE);
@@ -524,7 +525,8 @@ gpk_log_add_item (PkTransactionPast *item)
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
 			    GPK_LOG_COLUMN_TIMESPEC, timespec,
-			    GPK_LOG_COLUMN_DATE, date_part[1],
+			    GPK_LOG_COLUMN_DATE_TEXT, date_part[1],
+			    GPK_LOG_COLUMN_DATE, timespec,
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DETAILS, details,
 			    GPK_LOG_COLUMN_ID, tid,
@@ -793,7 +795,8 @@ main (int argc, char *argv[])
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
-					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+					 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 
 	/* create transaction_id tree view */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_simple"));
