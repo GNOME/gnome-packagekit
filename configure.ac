@@ -1,9 +1,9 @@
-AC_PREREQ(2.52)
+AC_PREREQ(2.65)
 
-AC_INIT(gnome-packagekit, 2.29.3)
+AC_INIT([gnome-packagekit],[2.29.3])
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # enable nice build output on automake1.11
@@ -11,7 +11,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_PROG_CC
 AC_PROG_INSTALL
-AM_PROG_LIBTOOL
+LT_INIT
 AM_PROG_CC_C_O
 IT_PROG_INTLTOOL([0.35.0])
 
@@ -38,8 +38,7 @@ else
 	default_strict=no
 fi
 
-AC_ARG_ENABLE(strict, AC_HELP_STRING([--enable-strict],
-					[Enable strict compilation options]), enable_strict=$enableval,
+AC_ARG_ENABLE(strict, AS_HELP_STRING([--enable-strict],[Enable strict compilation options]), enable_strict=$enableval,
 					enable_strict=$default_strict)
 if test x$enable_strict != xno; then
 	if test "$GCC" = "yes"; then
@@ -192,8 +191,7 @@ AC_SUBST(X11_LIBS)
 dnl ---------------------------------------------------------------------------
 dnl - GUdev integration (default enabled)
 dnl ---------------------------------------------------------------------------
-AC_ARG_ENABLE(gudev, AC_HELP_STRING([--disable-gudev],
-		[Disable GUdev support]), enable_gudev=$enableval)
+AC_ARG_ENABLE(gudev, AS_HELP_STRING([--disable-gudev],[Disable GUdev support]), enable_gudev=$enableval)
 if test x$enable_gudev != xno; then
 	PKG_CHECK_MODULES(GUDEV, gudev-1.0, GPK_BUILD_GUDEV="yes", GPK_BUILD_GUDEV="no")
 	if test "x$GPK_BUILD_GUDEV" = "xyes"; then
@@ -236,8 +234,7 @@ dnl ---------------------------------------------------------------------------
 dnl - Where should we put documentation ?
 dnl ---------------------------------------------------------------------------
 AC_ARG_WITH(doc-dir,
-              [AC_HELP_STRING([--with-doc-dir=<dir>],
-              [directory to install documentation])])
+              [AS_HELP_STRING([--with-doc-dir=<dir>],[directory to install documentation])])
 if ! test -z "$with_doc_dir"; then
 	DOCDIR="$with_doc_dir/gnome-packagekit-$VERSION"
 else
@@ -267,7 +264,7 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl - Makefiles, etc.
 dnl ---------------------------------------------------------------------------
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 src/Makefile
 help/Makefile
@@ -299,6 +296,7 @@ data/icons/scalable/status/Makefile
 python/Makefile
 python/packagekit/Makefile
 ])
+AC_OUTPUT
 
 dnl ==========================================================================
 echo "
