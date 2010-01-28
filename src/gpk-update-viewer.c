@@ -186,6 +186,26 @@ gpk_update_viewer_auto_shutdown (GtkDialog *dialog)
 }
 
 /**
+ * gpk_update_viewer_error_dialog:
+ **/
+static void
+gpk_update_viewer_error_dialog (GpkUpdateViewer *update_viewer, const gchar *title, const gchar *message, const gchar *details)
+{
+	GtkWindow *window;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	/* fallback */
+	if (message == NULL) {
+		/* TRANSLATORS: we don't have a lot to go on here */
+		message = _("Failed to process request.");
+	}
+
+	egg_warning ("%s: %s", title, details);
+	window = GTK_WINDOW(gtk_builder_get_object (priv->builder, "dialog_updates"));
+	gpk_error_dialog_modal (window, title, message, details);
+}
+
+/**
  * gpk_update_viewer_check_restart:
  **/
 static gboolean
@@ -270,7 +290,8 @@ gpk_update_viewer_check_restart (GpkUpdateViewer *update_viewer)
 		/* use consolekit to restart */
 		ret = egg_console_kit_restart (priv->console, &error);
 		if (!ret) {
-			egg_warning ("cannot restart: %s", error->message);
+			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+			gpk_update_viewer_error_dialog (update_viewer, _("Could not restart"), NULL, error->message);
 			g_error_free (error);
 		}
 	else if (priv->restart_update == PK_RESTART_ENUM_SESSION) {
@@ -391,7 +412,8 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to update packages: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not update packages"), NULL, error->message);
 		g_error_free (error);
 
 		/* re-enable the package list */
@@ -1045,7 +1067,8 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, GpkUpdateViewer *update_
 
 	ret = g_spawn_command_line_async ("/usr/share/PackageKit/pk-upgrade-distro.sh", &error);
 	if (!ret) {
-		egg_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not run upgrade script"), NULL, error->message);
 		g_error_free (error);
 	}
 }
@@ -1846,7 +1869,8 @@ gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get details: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get update details"), NULL, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1938,7 +1962,8 @@ gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, Gpk
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get update details: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get update details"), NULL, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2261,7 +2286,8 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get list of updates: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get updates"), NULL, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2660,7 +2686,8 @@ gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, G
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get list of distro upgrades: %s", error->message);
+		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get list of distribution upgrades"), NULL, error->message);
 		g_error_free (error);
 		goto out;
 	}
