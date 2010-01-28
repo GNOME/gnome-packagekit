@@ -364,11 +364,20 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 	gboolean enabled;
 	gchar *package_id;
 	gint len;
+#if PK_CHECK_VERSION(0,6,1)
+	GPtrArray *array;
+#endif
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	/* okay to apply? */
+#if PK_CHECK_VERSION(0,6,1)
+	array = pk_package_sack_get_array (application->priv->package_sack);
+	len = array->len;
+	g_ptr_array_unref (array);
+#else
 	len = pk_package_sack_get_size (application->priv->package_sack);
+#endif
 	if (len == 0) {
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, FALSE);
@@ -1712,8 +1721,28 @@ static gboolean
 gpk_application_populate_selected (GpkApplication *application)
 {
 	guint i;
-	guint len;
 	PkPackage *package;
+#if PK_CHECK_VERSION(0,6,1)
+	GPtrArray *array;
+
+	/* get size */
+	array = pk_package_sack_get_array (application->priv->package_sack);
+
+	/* nothing in queue */
+	if (array->len == 0) {
+		gpk_application_suggest_better_search (application);
+		goto out;
+	}
+
+	/* dump queue to package window */
+	for (i=0; i<array->len; i++) {
+		package = g_ptr_array_index (array, i);
+		gpk_application_add_item_to_results (application, package);
+	}
+out:
+	g_ptr_array_unref (array);
+#else
+	guint len;
 
 	/* get size */
 	len = pk_package_sack_get_size (application->priv->package_sack);
@@ -1730,6 +1759,7 @@ gpk_application_populate_selected (GpkApplication *application)
 		gpk_application_add_item_to_results (application, package);
 	}
 out:
+#endif
 	return TRUE;
 }
 
@@ -1775,6 +1805,9 @@ gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 static gboolean
 gpk_application_quit (GpkApplication *application)
 {
+#if PK_CHECK_VERSION(0,6,1)
+	GPtrArray *array;
+#endif
 	gint len;
 	GtkResponseType result;
 	GtkWindow *window;
@@ -1783,7 +1816,13 @@ gpk_application_quit (GpkApplication *application)
 	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
 
 	/* do we have any items queued for removal or installation? */
+#if PK_CHECK_VERSION(0,6,1)
+	array = pk_package_sack_get_array (application->priv->package_sack);
+	len = array->len;
+	g_ptr_array_unref (array);
+#else
 	len = pk_package_sack_get_size (application->priv->package_sack);
+#endif
 	if (len != 0) {
 		window = GTK_WINDOW (gtk_builder_get_object (application->priv->builder, "window_manager"));
 		dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,
