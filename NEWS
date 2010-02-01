@@ -1,3 +1,40 @@
+Version 2.29.3
+~~~~~~~~~~~~~~
+Released: 2010-02-01
+
+* Translations
+ - Updated Traditional Chinese translation (Cheng-Chia Tseng)
+ - Updated French translation (Claude Paroz)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Added Bengali translation (Jamil Ahmed)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Slovenian translation (Matej Urbančič)
+ - Update Ukrainian translation (Maxim V. Dziumanenko)
+ - Update simplified Chinese translation (Whistler)
+ - Updated Telugu Translation (krishnababu k)
+
+* New Features:
+ - Remove the 'Install only security updates' button from the security updates popup and open the update viewer instead (Richard Hughes)
+ - Show transaction messages in gpk-repo (Richard Hughes)
+ - Show the size of the extra packages that need to be downloaded as deps (Richard Hughes)
+ - Raise the gtk+ dep to 2.19.3 as we're using gtk_cell_renderer_spinner_new() (Richard Hughes)
+ - Filter by the timespec in gpk-log, not the localised date. Fixes rh#544667 (Richard Hughes)
+ - Show internal errors with modal dialogs, rather than just failing quietly with an error on stderr (Richard Hughes)
+ - Nest child updates in the update viewer so we don't show the same update description multiple times (Richard Hughes)
+
+* Bugfix:
+ - Fix menu entry capitalisation in gpk-application (Philip Withnall)
+ - Make the security update notification dialog timeout after 15 seconds (Richard Hughes)
+ - Ensure we detect and use x11 to fix the compile when linking with --as-needed (Richard Hughes)
+ - Actually cancel the transaction when the GpkWatch cancel button is pressed (Richard Hughes)
+ - Process every transaction finish, even if we're not watching it (Richard Hughes)
+ - Only wait 3 seconds (not 60) when we get the updates changed signal (Richard Hughes)
+ - Re-get the update list in the update viewer if the network state changes. Fixes rh#543871 (Richard Hughes)
+ - Fix two potential crashers when gpk-update-viewer has finished applying updates (Richard Hughes)
+ - Don't hide the restart status icon just because the daemon exited. Fixes rh#553966 (Richard Hughes)
+ - Fix some i18n bugs. Fixes #606629 (Richard Hughes)
+
 Version 2.29.2
 ~~~~~~~~~~~~~~
 Released: 2010-01-05
