@@ -59,6 +59,7 @@ struct GpkUpdateViewerPrivate
 	guint			 auto_shutdown_id;
 	guint			 size_total;
 	guint			 number_total;
+	PkRestartEnum		 restart_worst;
 	EggConsoleKit		*console;
 	EggMarkdown		*markdown;
 	GCancellable		*cancellable;
@@ -147,15 +148,17 @@ gpk_update_viewer_button_quit_cb (GtkWidget *widget, GpkUpdateViewer *update_vie
 }
 
 /**
- * gpk_update_viewer_undisable_packages:
+ * gpk_update_viewer_packages_set_sensitive:
  **/
 static void
-gpk_update_viewer_undisable_packages (GpkUpdateViewer *update_viewer)
+gpk_update_viewer_packages_set_sensitive (GpkUpdateViewer *update_viewer, gboolean sensitive)
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean valid;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
@@ -165,9 +168,20 @@ gpk_update_viewer_undisable_packages (GpkUpdateViewer *update_viewer)
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 	while (valid) {
 		gtk_tree_store_set (priv->array_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_SENSITIVE, TRUE,
-				    GPK_UPDATES_COLUMN_CLICKABLE, TRUE,
+				    GPK_UPDATES_COLUMN_SENSITIVE, sensitive,
+				    GPK_UPDATES_COLUMN_CLICKABLE, sensitive,
 				    -1);
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_store_set (GTK_TREE_STORE(model), &child_iter,
+					    GPK_UPDATES_COLUMN_SENSITIVE, sensitive,
+					    GPK_UPDATES_COLUMN_CLICKABLE, sensitive,
+					    -1);
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 }
@@ -372,6 +386,8 @@ gpk_update_viewer_are_all_updates_selected (GtkTreeModel *model)
 {
 	gboolean selected = TRUE;
 	gboolean valid;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 	GtkTreeIter iter;
 
 	/* if there are no entries selected, deselect the button */
@@ -382,6 +398,17 @@ gpk_update_viewer_are_all_updates_selected (GtkTreeModel *model)
 				    -1);
 		if (!selected)
 			goto out;
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_model_get (model, &child_iter,
+					    GPK_UPDATES_COLUMN_SELECT, &selected,
+					    -1);
+			if (!selected)
+				goto out;
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 out:
@@ -417,7 +444,7 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 		g_error_free (error);
 
 		/* re-enable the package list */
-		gpk_update_viewer_undisable_packages (update_viewer);
+		gpk_update_viewer_packages_set_sensitive (update_viewer, TRUE);
 
 		/* allow clicking again */
 		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
@@ -444,7 +471,7 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 					gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* re-enable the package list */
-		gpk_update_viewer_undisable_packages (update_viewer);
+		gpk_update_viewer_packages_set_sensitive (update_viewer, TRUE);
 
 		/* allow clicking again */
 		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
@@ -453,7 +480,7 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 		goto out;
 	}
 
-	gpk_update_viewer_undisable_packages (update_viewer);
+	gpk_update_viewer_packages_set_sensitive (update_viewer, TRUE);
 
 	/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
 
@@ -732,7 +759,6 @@ gpk_update_viewer_find_parent_name (GpkUpdateViewer *update_viewer, const gchar 
 
 		/* does this equal our query */
 		if (g_strcmp0 (split_tmp[PK_PACKAGE_ID_NAME], package_name) == 0) {
-			egg_warning ("found %s", package_name);
 			*parent = iter;
 			ret = TRUE;
 		}
@@ -1055,23 +1081,73 @@ gpk_update_viewer_client_notify_idle_cb (PkClient *client, GParamSpec *pspec, Gp
 }
 
 /**
+ * gpk_update_viewer_get_install_package_ids:
+ **/
+static GPtrArray *
+gpk_update_viewer_get_install_package_ids (GpkUpdateViewer *update_viewer)
+{
+	PkInfoEnum info;
+	gboolean child_valid;
+	gboolean valid;
+	gboolean update;
+	gchar *package_id;
+	GtkTreeIter child_iter;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GPtrArray *array;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+
+	array = g_ptr_array_new ();
+
+	/* get the first iter in the array */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gtk_tree_model_get (model, &iter,
+				    GPK_UPDATES_COLUMN_INFO, &info,
+				    GPK_UPDATES_COLUMN_SELECT, &update,
+				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
+
+		/* if selected, and not added previously because of deps */
+		if (update && info != PK_INFO_ENUM_AVAILABLE)
+			g_ptr_array_add (array, package_id);
+		else
+			g_free (package_id);
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_model_get (model, &child_iter,
+					    GPK_UPDATES_COLUMN_INFO, &info,
+					    GPK_UPDATES_COLUMN_SELECT, &update,
+					    GPK_UPDATES_COLUMN_ID, &package_id, -1);
+
+			/* if selected, and not added previously because of deps */
+			if (update && info != PK_INFO_ENUM_AVAILABLE)
+				g_ptr_array_add (array, package_id);
+			else
+				g_free (package_id);
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+	return array;
+}
+
+/**
  * gpk_update_viewer_button_install_cb:
  **/
 static void
 gpk_update_viewer_button_install_cb (GtkWidget *widget, GpkUpdateViewer *update_viewer)
 {
-	GtkWindow *window;
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	gboolean valid;
-	gboolean update;
-	gboolean selected_any = FALSE;
-	gchar *package_id;
 	GPtrArray *array = NULL;
+	GtkTreeView *treeview;
 	gchar **package_ids = NULL;
-	PkInfoEnum info;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
 	/* hide the upgrade viewbox from now on */
@@ -1079,71 +1155,32 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, GpkUpdateViewer *update_
 	gtk_widget_hide (widget);
 
 	egg_debug ("Doing the package updates");
-	array = g_ptr_array_new ();
 
-	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
-	model = gtk_tree_view_get_model (treeview);
-
-	/* get the first iter in the array */
-	valid = gtk_tree_model_get_iter_first (model, &iter);
-
-	/* find out how many we should update */
-	while (valid) {
-		gtk_tree_model_get (model, &iter,
-				    GPK_UPDATES_COLUMN_INFO, &info,
-				    GPK_UPDATES_COLUMN_SELECT, &update,
-				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
-
-		/* set all the checkboxes insensitive */
-		gtk_tree_store_set (priv->array_store_updates, &iter,
-				    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
-				    GPK_UPDATES_COLUMN_SENSITIVE, FALSE, -1);
-
-		/* any selected? */
-		if (update)
-			selected_any = TRUE;
-
-		/* if selected, and not added previously because of deps */
-		if (update && info != PK_INFO_ENUM_AVAILABLE) {
-			g_ptr_array_add (array, package_id);
-		} else {
-			/* need to free the one in the array later */
-			g_free (package_id);
-		}
-		valid = gtk_tree_model_iter_next (model, &iter);
-	}
-
-	/* we have no checkboxes selected */
-	if (!selected_any) {
-		window = GTK_WINDOW(gtk_builder_get_object (priv->builder, "dialog_updates"));
-		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: we clicked apply, but had no packages selected */
-					_("No updates selected"),
-					_("No updates are selected"), NULL);
-		return;
-	}
+	/* no not allow to be unclicked at install time */
+	gpk_update_viewer_packages_set_sensitive (update_viewer, FALSE);
 
 	/* disable button */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
 	gtk_widget_set_sensitive (widget, FALSE);
 
 	/* clear the selection */
+	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
 	selection = gtk_tree_view_get_selection (treeview);
 	gtk_tree_selection_unselect_all (selection);
 
-	/* save for finished */
+	/* get the list of updates */
+	array = gpk_update_viewer_get_install_package_ids (update_viewer);
 	package_ids = pk_ptr_array_to_strv (array);
 
 	/* get packages that also have to be updated */
 	pk_task_update_packages_async (priv->task, package_ids, priv->cancellable,
 				       (PkProgressCallback) gpk_update_viewer_progress_cb, update_viewer,
 				       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, update_viewer);
-	g_strfreev (package_ids);
 
 	/* from now on ignore updates-changed signals */
 	priv->ignore_updates_changed = TRUE;
 
-	/* get rid of the array, and free the contents */
+	g_strfreev (package_ids);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 }
@@ -1223,56 +1260,88 @@ out:
 }
 
 /**
+ * gpk_update_viewer_update_global_state_recursive:
+ **/
+static void
+gpk_update_viewer_update_global_state_recursive (GpkUpdateViewer *update_viewer, GtkTreeModel *model, GtkTreeIter *iter)
+{
+	gboolean selected;
+	PkRestartEnum restart;
+	guint size;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	gtk_tree_model_get (model, iter,
+			    GPK_UPDATES_COLUMN_SELECT, &selected,
+			    GPK_UPDATES_COLUMN_RESTART, &restart,
+			    GPK_UPDATES_COLUMN_SIZE, &size,
+			    -1);
+	if (selected) {
+		priv->size_total += size;
+		priv->number_total++;
+		if (restart > priv->restart_worst)
+			priv->restart_worst = restart;
+	}
+
+	/* child entries */
+	child_valid = gtk_tree_model_iter_children (model, &child_iter, iter);
+	while (child_valid) {
+		gpk_update_viewer_update_global_state_recursive (update_viewer, model, &child_iter);
+		child_valid = gtk_tree_model_iter_next (model, &child_iter);
+	}
+
+}
+
+/**
+ * gpk_update_viewer_update_global_state:
+ **/
+static void
+gpk_update_viewer_update_global_state (GpkUpdateViewer *update_viewer)
+{
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	/* reset to zero */
+	priv->size_total = 0;
+	priv->number_total = 0;
+	priv->restart_worst = PK_RESTART_ENUM_NONE;
+
+	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
+
+	/* if there are no entries selected, deselect the button */
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+	while (valid) {
+		gpk_update_viewer_update_global_state_recursive (update_viewer, model, &iter);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+
+/**
  * gpk_update_viewer_reconsider_info:
  **/
 static void
 gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 {
-	GtkTreeIter iter;
 	GtkWidget *widget;
 	GtkWidget *dialog;
-	gboolean valid;
-	gboolean selected;
-	gboolean any_selected = FALSE;
 	guint len;
-	guint size;
-	PkRestartEnum restart;
-	PkRestartEnum restart_worst = PK_RESTART_ENUM_NONE;
 	const gchar *title;
 	gchar *text;
 	gchar *text_size;
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
-	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
-	model = gtk_tree_view_get_model (treeview);
-
-	/* reset to zero */
-	priv->size_total = 0;
-	priv->number_total = 0;
-
-	/* if there are no entries selected, deselect the button */
-	valid = gtk_tree_model_get_iter_first (model, &iter);
-	while (valid) {
-		gtk_tree_model_get (model, &iter,
-				    GPK_UPDATES_COLUMN_SELECT, &selected,
-				    GPK_UPDATES_COLUMN_RESTART, &restart,
-				    GPK_UPDATES_COLUMN_SIZE, &size,
-				    -1);
-		if (selected) {
-			any_selected = TRUE;
-			priv->size_total += size;
-			priv->number_total++;
-			if (restart > restart_worst)
-				restart_worst = restart;
-		}
-		valid = gtk_tree_model_iter_next (model, &iter);
-	}
+	/* update global state */
+	gpk_update_viewer_update_global_state (update_viewer);
 
 	/* action button */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
-	gtk_widget_set_sensitive (widget, any_selected);
+	gtk_widget_set_sensitive (widget, (priv->number_total > 0));
 
 	/* sensitive */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "scrolledwindow_updates"));
@@ -1331,15 +1400,15 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 
 	/* restart */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_info"));
-	if (restart_worst == PK_RESTART_ENUM_NONE) {
+	if (priv->restart_worst == PK_RESTART_ENUM_NONE) {
 		gtk_widget_hide (widget);
 		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "image_info"));
 		gtk_widget_hide (widget);
 	} else {
-		gtk_label_set_label (GTK_LABEL(widget), gpk_restart_enum_to_localised_text_future (restart_worst));
+		gtk_label_set_label (GTK_LABEL(widget), gpk_restart_enum_to_localised_text_future (priv->restart_worst));
 		gtk_widget_show (widget);
 		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "image_info"));
-		gtk_image_set_from_icon_name (GTK_IMAGE(widget), gpk_restart_enum_to_icon_name (restart_worst), GTK_ICON_SIZE_BUTTON);
+		gtk_image_set_from_icon_name (GTK_IMAGE(widget), gpk_restart_enum_to_icon_name (priv->restart_worst), GTK_ICON_SIZE_BUTTON);
 		gtk_widget_show (widget);
 	}
 
@@ -2124,6 +2193,8 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, GpkUpdateVi
 	gboolean valid;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 	PkInfoEnum info;
 
 	/* get the first iter in the array */
@@ -2135,6 +2206,15 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, GpkUpdateVi
 		if (info != PK_INFO_ENUM_BLOCKED)
 			gtk_tree_store_set (GTK_TREE_STORE(model), &iter,
 					    GPK_UPDATES_COLUMN_SELECT, TRUE, -1);
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_store_set (GTK_TREE_STORE(model), &child_iter,
+					    GPK_UPDATES_COLUMN_SELECT, TRUE, -1);
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
@@ -2153,6 +2233,8 @@ gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, GpkUpd
 	gboolean ret;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 	PkInfoEnum info;
 
 	/* get the first iter in the array */
@@ -2164,6 +2246,17 @@ gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, GpkUpd
 		ret = (info == PK_INFO_ENUM_SECURITY);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &iter,
 				    GPK_UPDATES_COLUMN_SELECT, ret, -1);
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_model_get (model, &child_iter, GPK_UPDATES_COLUMN_INFO, &info, -1);
+			ret = (info == PK_INFO_ENUM_SECURITY);
+			gtk_tree_store_set (GTK_TREE_STORE(model), &child_iter,
+					    GPK_UPDATES_COLUMN_SELECT, ret, -1);
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
@@ -2180,6 +2273,8 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, GpkUpdateV
 	GtkTreeView *treeview;
 	gboolean valid;
 	GtkTreeIter iter;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 	GtkTreeModel *model;
 
 	/* get the first iter in the array */
@@ -2190,6 +2285,15 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, GpkUpdateV
 		gtk_tree_model_get (model, &iter, -1);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &iter,
 				    GPK_UPDATES_COLUMN_SELECT, FALSE, -1);
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_store_set (GTK_TREE_STORE(model), &child_iter,
+					    GPK_UPDATES_COLUMN_SELECT, FALSE, -1);
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 
@@ -2209,6 +2313,8 @@ gpk_update_viewer_get_checked_status (GpkUpdateViewer *update_viewer, gboolean *
 	gboolean clickable = FALSE;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	gboolean child_valid;
+	GtkTreeIter child_iter;
 
 	/* get the first iter in the array */
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (update_viewer->priv->builder, "treeview_updates"));
@@ -2224,6 +2330,20 @@ gpk_update_viewer_get_checked_status (GpkUpdateViewer *update_viewer, gboolean *
 			*none_checked = FALSE;
 		else
 			*all_checked = FALSE;
+
+		/* do for children too */
+		child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+		while (child_valid) {
+			gtk_tree_model_get (model, &child_iter,
+					    GPK_UPDATES_COLUMN_SELECT, &update,
+					    GPK_UPDATES_COLUMN_CLICKABLE, &clickable, -1);
+			if (update)
+				*none_checked = FALSE;
+			else
+				*all_checked = FALSE;
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
 	return clickable;
