@@ -372,6 +372,75 @@ out:
 	g_ptr_array_unref (array);
 }
 
+#if PK_CHECK_VERSION(0,6,2)
+/**
+ * gpk_task_add_dialog_deps_section:
+ **/
+static void
+gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum info)
+{
+	PkPackageSack *sack_tmp;
+	GPtrArray *array_tmp = NULL;
+	gboolean ret;
+	GError *error = NULL;
+	guint64 size;
+	const gchar *title;
+	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+
+	sack_tmp = pk_package_sack_filter_by_info (sack, info);
+	if (pk_package_sack_get_size (sack_tmp) == 0) {
+		egg_debug ("no packages with %s", pk_info_enum_to_string (info));
+		goto out;
+	}
+
+	/* get the header */
+	switch (info) {
+	case PK_INFO_ENUM_INSTALLING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be installed");
+		break;
+	case PK_INFO_ENUM_REMOVING:
+	case PK_INFO_ENUM_OBSOLETING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be removed");
+		break;
+	case PK_INFO_ENUM_UPDATING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be updated");
+		break;
+	case PK_INFO_ENUM_REINSTALLING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be re-installed");
+		break;
+	case PK_INFO_ENUM_DOWNGRADING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be downgraded");
+		break;
+	default:
+		/* TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek) */
+		title = _("The following software also needs to be processed");
+		break;
+	}
+
+	/* get the size */
+	ret = pk_package_sack_get_details (sack_tmp, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get details about packages: %s", error->message);
+		g_error_free (error);
+	}
+	size = pk_package_sack_get_total_bytes (sack_tmp);
+
+	/* embed title */
+	array_tmp = pk_package_sack_get_array (sack_tmp);
+	gpk_dialog_embed_download_size_widget (GTK_DIALOG(priv->current_window), title, size);
+	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array_tmp);
+out:
+	if (array_tmp != NULL)
+		g_ptr_array_unref (array_tmp);
+	g_object_unref (sack_tmp);
+}
+#endif
+
 /**
  * gpk_task_simulate_question:
  **/
@@ -384,12 +453,8 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	PkRoleEnum role;
 	PkPackageSack *sack = NULL;
 	guint inputs;
-	guint64 size;
 	const gchar *title;
 	const gchar *message = NULL;
-#if PK_CHECK_VERSION(0,6,1)
-	GError *error = NULL;
-#endif
 
 	/* save the current request */
 	priv->request = request;
@@ -411,72 +476,65 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 		}
 	}
 
+	/* TRANSLATORS: title of a dependency dialog */
+	title = _("Additional confirmation required");
+
 	/* per-role messages */
 	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES) {
-		/* TRANSLATORS: title of a dependency dialog */
-		title = _("Additional software will be installed");
 
 		/* TRANSLATORS: message text of a dependency dialog */
-		message = ngettext ("To install this package, additional software also has to be installed.",
-				    "To install these packages, additional software also has to be installed.", inputs);
+		message = ngettext ("To install this package, additional software also has to be modified.",
+				    "To install these packages, additional software also has to be modified.", inputs);
 	} else if (role == PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES) {
-		/* TRANSLATORS: title of a dependency dialog */
-		title = _("Additional software will be removed");
 
 		/* TRANSLATORS: message text of a dependency dialog */
-		message = ngettext ("To remove this package, additional software also has to be removed.",
-				    "To remove these packages, additional software also has to be removed.", inputs);
+		message = ngettext ("To remove this package, additional software also has to be modified.",
+				    "To remove these packages, additional software also has to be modified.", inputs);
 	} else if (role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES) {
-		/* TRANSLATORS: title of a dependency dialog */
-		title = _("Additional software will be installed");
 
 		/* TRANSLATORS: message text of a dependency dialog */
-		message = ngettext ("To update this package, additional software also has to be installed.",
-				    "To update these packages, additional software also has to be installed.", inputs);
+		message = ngettext ("To update this package, additional software also has to be modified.",
+				    "To update these packages, additional software also has to be modified.", inputs);
 	} else if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_FILES) {
-		/* TRANSLATORS: title of a dependency dialog */
-		title = _("Additional software will be installed");
 
 		/* TRANSLATORS: message text of a dependency dialog */
-		message = ngettext ("To install this file, additional software also has to be installed.",
-				    "To install these file, additional software also has to be installed.", inputs);
+		message = ngettext ("To install this file, additional software also has to be modified.",
+				    "To install these file, additional software also has to be modified.", inputs);
 	} else {
-		/* TRANSLATORS: title of a dependency dialog */
-		title = _("Additional software required");
 
 		/* TRANSLATORS: message text of a dependency dialog */
-		message = _("To process this transaction, additional software is required.");
+		message = _("To process this transaction, additional software also has to be modified.");
 	}
-
-	/* get data */
-	array = pk_results_get_package_array (results);
 
 	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (priv->current_window), "%s", message);
+
+#if PK_CHECK_VERSION(0,6,2)
+	/* get the details for all the packages */
+	sack = pk_results_get_package_sack (results);
+
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_INSTALLING);
+
+	/* TRANSLATORS: additional message text for the deps dialog */
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_REMOVING);
+
+	/* TRANSLATORS: additional message text for the deps dialog */
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_UPDATING);
+
+	/* TRANSLATORS: additional message text for the deps dialog */
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_OBSOLETING);
+
+	/* TRANSLATORS: additional message text for the deps dialog */
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_REINSTALLING);
+
+	/* TRANSLATORS: additional message text for the deps dialog */
+	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_DOWNGRADING);
+#else
+	/* get all the data */
+	array = pk_results_get_package_array (results);
 	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array);
-
-	/* show the size of the packages to download */
-	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES ||
-	    role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES ||
-	    role == PK_ROLE_ENUM_SIMULATE_INSTALL_FILES) {
-
-		/* get the details for all the packages */
-		sack = pk_results_get_package_sack (results);
-#if PK_CHECK_VERSION(0,6,1)
-		ret = pk_package_sack_get_details (sack, NULL, &error);
-		if (!ret) {
-			egg_warning ("failed to get details about packages: %s", error->message);
-			g_error_free (error);
-		}
 #endif
-		/* display the new size */
-		size = pk_package_sack_get_total_bytes (sack);
-		if (size > 0) {
-			/* TRANSLATORS: this the size of extra packages we have to download, e.g. 3.5Mb */
-			gpk_dialog_embed_download_size_widget (GTK_DIALOG(priv->current_window), _("Extra packages to download"), size);
-		}
-	}
 
 	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_CONF_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */
