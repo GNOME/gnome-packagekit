@@ -439,8 +439,11 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
-		gpk_update_viewer_error_dialog (update_viewer, _("Could not update packages"), NULL, error->message);
+		if (error->domain != PK_CLIENT_ERROR ||
+		    error->code != PK_CLIENT_ERROR_DECLINED_SIMULATION) {
+			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+			gpk_update_viewer_error_dialog (update_viewer, _("Could not update packages"), NULL, error->message);
+		}
 		g_error_free (error);
 
 		/* re-enable the package list */

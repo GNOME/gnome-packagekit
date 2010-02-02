@@ -64,6 +64,10 @@ typedef enum {
 #define PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY			(PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED + 1)
 #endif
 
+#if (!PK_CHECK_VERSION(0,6,2))
+#define PK_CLIENT_ERROR_DECLINED_SIMULATION				 PK_CLIENT_ERROR_FAILED
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
