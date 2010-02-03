@@ -1450,7 +1450,7 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 	}
 
 	/* add to list */
-	egg_warning ("adding %s to restart list", split[PK_PACKAGE_ID_NAME]);
+	egg_debug ("adding %s to restart list", split[PK_PACKAGE_ID_NAME]);
 	g_ptr_array_add (names, g_strdup (split[PK_PACKAGE_ID_NAME]));
 out:
 	g_free (package_id);
@@ -1499,7 +1499,7 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 		      "elapsed-time", &elapsed_time,
 		      NULL);
 
-	egg_warning ("%s finished (%s)", transaction_id, pk_role_enum_to_text (role));
+	egg_debug ("%s finished (%s)", transaction_id, pk_role_enum_to_text (role));
 
 	/* get the error */
 	error_code = pk_results_get_error_code (results);
