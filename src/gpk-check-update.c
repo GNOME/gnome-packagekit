@@ -1062,10 +1062,10 @@ out:
 }
 
 /**
- * gpk_check_update_get_active_roles:
+ * gpk_check_update_get_active_roles_for_tids:
  **/
 static PkBitfield
-gpk_check_update_get_active_roles (GpkCheckUpdate *cupdate, gchar **tids)
+gpk_check_update_get_active_roles_for_tids (GpkCheckUpdate *cupdate, gchar **tids)
 {
 	PkRoleEnum role;
 	PkBitfield roles = 0;
@@ -1093,18 +1093,32 @@ out:
 }
 
 /**
+ * gpk_check_update_get_active_roles:
+ **/
+static PkBitfield
+gpk_check_update_get_active_roles (GpkCheckUpdate *cupdate)
+{
+	PkBitfield roles;
+	gchar **tids;
+
+	/* get active transaction id's */
+	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
+	roles = gpk_check_update_get_active_roles_for_tids (cupdate, tids);
+	g_strfreev (tids);
+	return roles;
+}
+
+/**
  * gpk_check_update_query_updates:
  **/
 static void
 gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 {
 	PkBitfield roles;
-	gchar **tids;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* No point if we are already updating */
-	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
-	roles = gpk_check_update_get_active_roles (cupdate, tids);
+	roles = gpk_check_update_get_active_roles (cupdate);
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_UPDATES) ||
 	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
@@ -1116,7 +1130,6 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task), PK_FILTER_ENUM_NONE, cupdate->priv->cancellable, NULL, NULL,
 				     (GAsyncReadyCallback) gpk_check_update_get_updates_finished_cb, cupdate);
 out:
-	g_strfreev (tids);
 	return;
 }
 
@@ -1194,7 +1207,7 @@ gpk_check_update_transaction_list_changed_cb (PkControl *control, gchar **transa
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* inhibit icon if we are updating */
-	roles = gpk_check_update_get_active_roles (cupdate, transaction_ids);
+	roles = gpk_check_update_get_active_roles_for_tids (cupdate, transaction_ids);
 	cupdate->priv->icon_inhibit_update_in_progress =
 		(pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
 		 pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES));
@@ -1247,10 +1260,21 @@ out:
 static void
 gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
 {
+	PkBitfield roles;
+
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
+
+	/* No point if we are already updating */
+	roles = gpk_check_update_get_active_roles (cupdate);
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REFRESH_CACHE)) {
+		egg_debug ("Not refreshing cache as already in progress");
+		goto out;
+	}
 
 	pk_client_refresh_cache_async (PK_CLIENT(cupdate->priv->task), TRUE, cupdate->priv->cancellable, NULL, NULL,
 				       (GAsyncReadyCallback) gpk_check_update_refresh_cache_finished_cb, cupdate);
+out:
+	return;
 }
 
 /**
@@ -1376,12 +1400,10 @@ static void
 gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *cupdate)
 {
 	PkBitfield roles;
-	gchar **tids;
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* No point if we are already updating */
-	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
-	roles = gpk_check_update_get_active_roles (cupdate, tids);
+	roles = gpk_check_update_get_active_roles (cupdate);
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
 		egg_debug ("Not checking for upgrades as already in progress");
 		goto out;
@@ -1391,7 +1413,6 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	pk_client_get_distro_upgrades_async (PK_CLIENT(cupdate->priv->task), cupdate->priv->cancellable, NULL, NULL,
 					     (GAsyncReadyCallback) gpk_check_update_get_distro_upgrades_finished_cb, cupdate);
 out:
-	g_strfreev (tids);
 	return;
 }
 
@@ -1465,7 +1486,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 {
 	gboolean ret;
 	PkBitfield roles;
-	gchar **tids;
 
 	cupdate->priv = GPK_CHECK_UPDATE_GET_PRIVATE (cupdate);
 
@@ -1525,10 +1545,8 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	/* we need the task list so we can hide the update icon when we are doing the update */
 	cupdate->priv->tlist = pk_transaction_list_new ();
 
-	tids = pk_transaction_list_get_ids (cupdate->priv->tlist);
-	roles = gpk_check_update_get_active_roles (cupdate, tids);
-	g_strfreev (tids);
 	/* coldplug update in progress */
+	roles = gpk_check_update_get_active_roles (cupdate);
 	cupdate->priv->icon_inhibit_update_in_progress =
 		(pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
 		 pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES));
