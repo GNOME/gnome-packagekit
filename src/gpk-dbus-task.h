@@ -118,6 +118,10 @@ void		 gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask,
 							 gchar		**fonts,
 							 GpkDbusTaskFinishedCb finished_cb,
 							 gpointer	 userdata);
+void		 gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask,
+							gchar		**ids,
+							GpkDbusTaskFinishedCb finished_cb,
+							gpointer	userdata);
 void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*dtask,
 							 gchar		**packages,
 							 GpkDbusTaskFinishedCb finished_cb,

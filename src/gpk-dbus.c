@@ -518,6 +518,17 @@ gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resour
 }
 
 /**
+ * gpk_dbus_install_printer_drivers:
+ **/
+void
+gpk_dbus_install_printer_drivers (GpkDbus *dbus, guint32 xid, gchar **device_ids, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_printer_drivers (task, device_ids, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
+}
+
+/**
  * gpk_dbus_class_init:
  * @klass: The GpkDbusClass
  **/

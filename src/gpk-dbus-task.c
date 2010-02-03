@@ -2377,6 +2377,196 @@ out:
 }
 
 /**
+ * gpk_dbus_task_printer_driver_what_provides_cb:
+ **/
+static void
+gpk_dbus_task_printer_driver_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbusTask *dtask)
+{
+	GError *error = NULL;
+	GError *error_dbus = NULL;
+	PkResults *results = NULL;
+	GPtrArray *array = NULL;
+	PkError *error_code = NULL;
+	GtkResponseType button;
+	const gchar *title;
+	const gchar *message;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+	/* check error code */
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "failed to resolve: %s", pk_error_get_details (error_code));
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+	/* get results */
+	array = pk_results_get_package_array (results);
+
+	/* found nothing?  No problem*/
+	if (array->len == 0) {
+		gpk_modal_dialog_close (dtask->priv->dialog);
+		gpk_dbus_task_dbus_return_value (dtask, FALSE);
+		goto out;
+	}
+
+	/* optional */
+	if (!dtask->priv->show_confirm_install) {
+		egg_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks2;
+	}
+
+	title = ngettext ("Install the following driver", "Install the following drivers", array->len);
+	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+
+	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
+	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
+	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
+	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
+	gpk_modal_dialog_set_image (dtask->priv->dialog, "dialog-information");
+	/* TRANSLATORS: button: install printer drivers */
+	gpk_modal_dialog_set_action (dtask->priv->dialog, _("Install"));
+	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
+	button = gpk_modal_dialog_run (dtask->priv->dialog);
+
+	/* close, we're going to fail the method */
+	if (button != GTK_RESPONSE_OK) {
+		gpk_modal_dialog_close (dtask->priv->dialog);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+skip_checks2:
+	/* install with deps */
+	dtask->priv->package_ids = pk_package_array_to_strv (array);
+	gpk_dbus_task_install_package_ids (dtask);
+out:
+	if (error_code != NULL)
+		g_object_unref (error_code);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_dbus_task_install_printer_drivers:
+ * @task: a valid #GpkDbusTask instance
+ * @device_ids: list of Device IDs such as <literal>MFG:Foo Inc;MDL:Bar 3000;</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install printer drivers for a given set of models.
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+void
+gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
+{
+	guint i, j;
+	guint len;
+	guint n_tags;
+	guint n_fields;
+	gchar **fields;
+	gchar *mfg;
+	gchar *mdl;
+	gchar *tag;
+	gchar **tags;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (device_ids != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
+
+	gpk_modal_dialog_setup (dtask->priv->dialog,
+				GPK_MODAL_DIALOG_PAGE_PROGRESS,
+				GPK_MODAL_DIALOG_PACKAGE_PADDING);
+	gpk_modal_dialog_set_title (dtask->priv->dialog,
+				    _("Searching for packages"));
+	gpk_modal_dialog_set_image_status (dtask->priv->dialog,
+					   PK_STATUS_ENUM_WAIT);
+	gpk_modal_dialog_set_help_id (dtask->priv->dialog,
+				      "dialog-finding-packages");
+
+	/* setup the UI */
+	if (dtask->priv->show_progress)
+		gpk_modal_dialog_present (dtask->priv->dialog);
+
+	len = g_strv_length (device_ids);
+	if (len > 1)
+		/* hardcode for now as we only support one at a time */
+		len = 1;
+
+	/* make a list of provides tags */
+	tags = g_new0 (gchar *, len);
+	n_tags = 0;
+	for (i=0; i<len; i++) {
+		gchar *p;
+		fields = g_strsplit (device_ids[i], ";", 0);
+		n_fields = g_strv_length (fields);
+		mfg = mdl = NULL;
+		for (j=0; j<n_fields && (!mfg || !mdl); j++) {
+			if (g_str_has_prefix (fields[j], "MFG:"))
+				mfg = g_strdup (fields[j]);
+			else if (g_str_has_prefix (fields[j], "MDL:"))
+				mdl = g_strdup (fields[j]);
+		}
+		g_strfreev (fields);
+
+		if (!mfg || !mdl) {
+			egg_warning("invalid line '%s', missing field",
+				    device_ids[i]);
+			continue;
+		}
+
+		tag = g_strconcat (mfg, ";", mdl, ";", NULL);
+		g_ascii_strdown (tag, -1);
+
+		/* Replace spaces with underscores */
+		for (p = tag; *p != '\0'; p++)
+			if (*p == ' ')
+				*p = '_';
+
+		tags[n_tags++] = g_strdup (tag);
+		g_free (tag);
+	}
+
+	if (n_tags == 0) {
+		gpk_dbus_task_dbus_return_value (dtask, FALSE);
+		goto out;
+	}
+
+	tags = g_renew (gchar *, tags, n_tags);
+
+	/* get driver packages */
+	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task),
+				       pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED,
+							       PK_FILTER_ENUM_ARCH,
+							       PK_FILTER_ENUM_NEWEST,
+							       -1),
+				       PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER,
+				       tags, NULL,
+				       (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
+				       (GAsyncReadyCallback) gpk_dbus_task_printer_driver_what_provides_cb, dtask);
+
+ out:
+	g_strfreev (tags);
+}
+
+/**
  * gpk_dbus_task_remove_package_ids:
  * @task: a valid #GpkDbusTask instance
  **/

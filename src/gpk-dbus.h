@@ -118,6 +118,11 @@ void		 gpk_dbus_remove_package_by_file	(GpkDbus	*dbus,
 							 const gchar	*interaction,
 							 DBusGMethodInvocation *context);
 
+void		 gpk_dbus_install_printer_drivers	(GpkDbus 	*dbus,
+							 guint32	 xid,
+							 gchar		**device_ids,
+							 const gchar	*interaction,
+							 DBusGMethodInvocation *context);
 G_END_DECLS
 
 #endif /* __GPK_DBUS_H */
