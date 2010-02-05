@@ -66,6 +66,7 @@ typedef enum {
 
 #if (!PK_CHECK_VERSION(0,6,2))
 #define PK_CLIENT_ERROR_DECLINED_SIMULATION				 PK_CLIENT_ERROR_FAILED
+#define PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED				 PK_ERROR_ENUM_ENUM_LAST
 #endif
 
 void		 gpk_enum_test				(gpointer	 data);

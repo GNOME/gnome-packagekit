@@ -518,6 +518,9 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS:
 		text = _("Update failed due to running process");
 		break;
+	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
+		text = _("The package database was changed");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -753,6 +756,9 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_UPDATE_FAILED_DUE_TO_RUNNING_PROCESS:
 		text = _("A program is running that has to be closed before the update can proceed.\n"
 			 "More information is available in the detailed report.");
+		break;
+	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
+		text = _("The package database was changed while the request was running.");
 		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
