@@ -1641,8 +1641,6 @@ gpk_watch_connection_changed_cb (PkConnection *pconnection, gboolean connected, 
 		gpk_watch_refresh_icon (watch);
 		gpk_watch_refresh_tooltip (watch);
 		gpk_watch_set_proxies (watch);
-	} else {
-		gtk_status_icon_set_visible (watch->priv->status_icon, FALSE);
 	}
 }
 
