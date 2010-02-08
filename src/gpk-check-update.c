@@ -892,7 +892,8 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
 		if (pk_package_get_info (item) != PK_INFO_ENUM_SECURITY)
-			g_ptr_array_add (security_array, g_strdup (pk_package_get_id (item)));
+			continue;
+		g_ptr_array_add (security_array, g_strdup (pk_package_get_id (item)));
 	}
 
 	/* work out icon (cannot be NULL) */
