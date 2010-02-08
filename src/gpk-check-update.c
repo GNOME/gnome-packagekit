@@ -587,11 +587,10 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
  * gpk_check_update_critical_updates_warning:
  **/
 static void
-gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar *details, GPtrArray *array)
+gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *array)
 {
 	const gchar *title;
-	gchar *message;
-	GString *string;
+	const gchar *message;
 	gboolean ret;
 	GError *error = NULL;
 	NotifyNotification *notification;
@@ -618,14 +617,9 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	/* TRANSLATORS: title in the libnotify popup */
 	title = ngettext ("Security update available", "Security updates available", array->len);
 
-	/* format message text */
-	string = g_string_new ("");
 	/* TRANSLATORS: message when there are security updates */
-	g_string_append (string, ngettext ("The following important update is available for your computer:",
-					   "The following important updates are available for your computer:", array->len));
-	g_string_append (string, "\n\n");
-	g_string_append (string, details);
-	message = g_string_free (string, FALSE);
+	message = ngettext ("An important update is available for your computer:",
+			    "Important updates are available for your computer:", array->len);
 
 	/* close any existing notification */
 	if (cupdate->priv->notification_updates_available != NULL) {
@@ -652,8 +646,6 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, const gchar 
 	}
 	/* track so we can prevent doubled notifications */
 	cupdate->priv->notification_updates_available = notification;
-
-	g_free (message);
 }
 
 /**
@@ -848,21 +840,14 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	GError *error = NULL;
 	PkPackage *item;
 	guint i;
-	guint more;
-	guint showing = 0;
 	gboolean ret;
-	GString *status_security = NULL;
 	GString *status_tooltip = NULL;
 	GpkUpdateEnum update;
 	GPtrArray *security_array = NULL;
 	const gchar *icon;
 	gchar **package_ids;
-	gchar **split;
 	GPtrArray *array = NULL;
 	PkError *error_code = NULL;
-	PkInfoEnum info;
-	gchar *package_id = NULL;
-	gchar *summary = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
@@ -900,64 +885,20 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* we have updates to process */
-	status_security = g_string_new ("");
 	status_tooltip = g_string_new ("");
 	security_array = g_ptr_array_new_with_free_func (g_free);
 
 	/* find the security updates first */
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
-		g_object_get (item,
-			      "info", &info,
-			      "package-id", &package_id,
-			      NULL);
-		if (info == PK_INFO_ENUM_SECURITY) {
-			/* add to array */
-			g_ptr_array_add (security_array, g_strdup (package_id));
-		}
-		g_free (package_id);
-	}
-
-	/* get the security update text */
-	for (i=0; i<array->len; i++) {
-		item = g_ptr_array_index (array, i);
-		g_object_get (item,
-			      "info", &info,
-			      NULL);
-		if (info != PK_INFO_ENUM_SECURITY)
-			continue;
-
-		/* get more data */
-		g_object_get (item,
-			      "package-id", &package_id,
-			      "summary", &summary,
-			      NULL);
-
-		/* don't use a huge notification that won't fit on the screen */
-		split = pk_package_id_split (package_id);
-		g_string_append_printf (status_security, "<b>%s</b> - %s\n", split[PK_PACKAGE_ID_NAME], summary);
-		g_strfreev (split);
-		if (++showing == GPK_CHECK_UPDATE_MAX_NUMBER_SECURITY_ENTRIES) {
-			more = security_array->len - showing;
-			if (more > 0) {
-				/* TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing */
-				g_string_append_printf (status_security, ngettext ("and %d other security update",
-										   "and %d other security updates", more), more);
-				g_string_append (status_security, "...\n");
-			}
-			break;
-		}
-		g_free (package_id);
-		g_free (summary);
+		if (pk_package_get_info (item) != PK_INFO_ENUM_SECURITY)
+			g_ptr_array_add (security_array, g_strdup (pk_package_get_id (item)));
 	}
 
 	/* work out icon (cannot be NULL) */
 	icon = gpk_check_update_get_best_update_icon (cupdate, array);
 	gpk_check_update_set_icon_name (cupdate, icon);
 
-	/* make tooltip */
-	if (status_security->len != 0)
-		g_string_set_size (status_security, status_security->len-1);
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update available",
 							  "There are %d updates available", array->len), array->len);
@@ -993,7 +934,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 
 		/* do we warn the user? */
 		if (security_array->len > 0)
-			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
+			gpk_check_update_critical_updates_warning (cupdate, security_array);
 		goto out;
 	}
 
@@ -1015,7 +956,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 
 		/* do we warn the user? */
 		if (security_array->len > 0)
-			gpk_check_update_critical_updates_warning (cupdate, status_security->str, security_array);
+			gpk_check_update_critical_updates_warning (cupdate, security_array);
 		goto out;
 	}
 
@@ -1049,8 +990,6 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
-	if (status_security != NULL)
-		g_string_free (status_security, TRUE);
 	if (status_tooltip != NULL)
 		g_string_free (status_tooltip, TRUE);
 	if (security_array != NULL)
