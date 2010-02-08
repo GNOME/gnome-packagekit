@@ -1467,7 +1467,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
 
 	/* use an asynchronous query object */
-	cupdate->priv->task = PK_TASK(pk_task_new ());
+	cupdate->priv->task = PK_TASK (gpk_task_new ());
 	g_object_set (cupdate->priv->task,
 		      "background", TRUE,
 		      NULL);
