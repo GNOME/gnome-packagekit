@@ -63,6 +63,9 @@ static void	gpk_check_update_libnotify_cb (NotifyNotification *notification, gch
 /* the amount of time after ::UpdatesChanged we refresh the update list */
 #define GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT	3 /* seconds */
 
+/* the amoutn of time we check for updates after an UpdateSystem call failed */
+#define	GPK_CHECK_UPDATE_FAILED_TASK_RECHECK_DELAY	60*60 /* seconds */
+
 struct GpkCheckUpdatePrivate
 {
 	GtkStatusIcon		*status_icon;
@@ -472,7 +475,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 
 		/* we failed, so re-get the update list */
 		gpk_check_update_set_icon_name (cupdate, NULL);
-		g_timeout_add_seconds (2, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
+		g_timeout_add_seconds (GPK_CHECK_UPDATE_FAILED_TASK_RECHECK_DELAY, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
 		goto out;
 	}
 
