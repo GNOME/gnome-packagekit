@@ -2520,9 +2520,9 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 		mfg = mdl = NULL;
 		for (j=0; j<n_fields && (!mfg || !mdl); j++) {
 			if (g_str_has_prefix (fields[j], "MFG:"))
-				mfg = g_strdup (fields[j]);
+				mfg = g_strdup (fields[j] + 4);
 			else if (g_str_has_prefix (fields[j], "MDL:"))
-				mdl = g_strdup (fields[j]);
+				mdl = g_strdup (fields[j] + 4);
 		}
 		g_strfreev (fields);
 
