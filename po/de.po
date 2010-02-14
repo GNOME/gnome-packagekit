@@ -11,14 +11,15 @@
 # Patrick Niklaus <marex@compiz-fusion.org>, 2008.
 # Mario Blättermann <mariobl@gnome.org>, 2009, 2010.
 # Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-02-06 10:51+0000\n"
-"PO-Revision-Date: 2010-02-06 23:35+0100\n"
-"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
+"POT-Creation-Date: 2010-02-08 12:41+0000\n"
+"PO-Revision-Date: 2010-02-14 12:46+0100\n"
+"Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1310,14 +1311,14 @@ msgstr "Rechner jetzt neu starten"
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:443 ../src/gpk-check-update.c:1379
+#: ../src/gpk-check-update.c:443 ../src/gpk-check-update.c:1318
 #: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1577
 msgid "Do not show this again"
 msgstr "Diese Meldung nicht mehr anzeigen"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:498 ../src/gpk-check-update.c:990
-#: ../src/gpk-check-update.c:1012
+#: ../src/gpk-check-update.c:498 ../src/gpk-check-update.c:931
+#: ../src/gpk-check-update.c:953
 msgid "GNOME PackageKit Update Icon"
 msgstr "GNOME PackageKit Aktualisierungs-Symbol"
 
@@ -1327,28 +1328,28 @@ msgid "Updated successfully"
 msgstr "Erfolgreich aktualisiert"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:619
+#: ../src/gpk-check-update.c:618
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Sicherheitsaktualisierung verfügbar"
 msgstr[1] "Sicherheitsaktualisierungen verfügbar"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:624
-msgid "The following important update is available for your computer:"
-msgid_plural "The following important updates are available for your computer:"
+#: ../src/gpk-check-update.c:621
+msgid "An important update is available for your computer:"
+msgid_plural "Important updates are available for your computer:"
 msgstr[0] ""
-"Die folgende wichtige Aktualisierung ist verfügbar für Ihren Rechner:"
+"Eine wichtige Aktualisierung ist für Ihren Rechner verfügbar:"
 msgstr[1] ""
-"Die folgenden wichtigen Aktualisierungen sind verfügbar für Ihren Rechner:"
+"Wichtige Aktualisierungen sind für Ihren Rechner verfügbar:"
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:647
+#: ../src/gpk-check-update.c:641
 msgid "Install updates"
 msgstr "Aktualisierungen installieren"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:760
+#: ../src/gpk-check-update.c:752
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
@@ -1357,39 +1358,31 @@ msgstr ""
 "im Akkubetrieb befindet"
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:762
+#: ../src/gpk-check-update.c:754
 msgid "Updates not installed"
 msgstr "Aktualisierungen nicht installiert"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:772
+#: ../src/gpk-check-update.c:764
 msgid "Install the updates anyway"
 msgstr "Aktualisierungen trotzdem installieren"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:819
+#: ../src/gpk-check-update.c:811
 msgid "Updates are being installed"
 msgstr "Aktualisierungen werden installiert"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:821
+#: ../src/gpk-check-update.c:813
 msgid "Updates are being automatically installed on your computer"
 msgstr "Aktualisierungen werden automatisch auf Ihrem Rechner installiert"
 
-#: ../src/gpk-check-update.c:827
+#: ../src/gpk-check-update.c:819
 msgid "Cancel update"
 msgstr "Aktualisierung abbrechen"
 
-#. TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing
-#: ../src/gpk-check-update.c:944
-#, c-format
-msgid "and %d other security update"
-msgid_plural "and %d other security updates"
-msgstr[0] "und %d andere Sicherheitsaktualisierung"
-msgstr[1] "und %d andere Sicherheitsaktualisierungen"
-
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:903
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
@@ -1397,17 +1390,17 @@ msgstr[0] "Es ist %d Aktualisierung verfügbar"
 msgstr[1] "Es sind %d Aktualisierungen verfügbar"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:992
+#: ../src/gpk-check-update.c:933
 msgid "Update available"
 msgstr "Aktualisierung verfügbar"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:1014
+#: ../src/gpk-check-update.c:955
 msgid "Update available (on battery)"
 msgstr "Aktualisierung verfügbar (im Akkubetrieb)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1366
+#: ../src/gpk-check-update.c:1305
 msgid "Distribution upgrades available"
 msgstr "Distributionsaktualisierungen verfügbar"
 
@@ -1416,7 +1409,7 @@ msgstr "Distributionsaktualisierungen verfügbar"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1376 ../src/gpk-dbus-task.c:1017
+#: ../src/gpk-check-update.c:1315 ../src/gpk-dbus-task.c:1017
 #: ../src/gpk-dbus-task.c:1251 ../src/gpk-dbus-task.c:1557
 #: ../src/gpk-dbus-task.c:1763 ../src/gpk-dbus-task.c:2021
 msgid "More information"
@@ -4863,6 +4856,11 @@ msgstr "Optionen zur Fehlerdiagnose"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "Informationen zur Fehlerdiagnose anzeigen"
+
+#~ msgid "and %d other security update"
+#~ msgid_plural "and %d other security updates"
+#~ msgstr[0] "und %d andere Sicherheitsaktualisierung"
+#~ msgstr[1] "und %d andere Sicherheitsaktualisierungen"
 
 #~ msgid "Install only security updates"
 #~ msgstr "Nur Sicherheitsaktualisierungen installieren"
