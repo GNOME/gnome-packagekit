@@ -330,10 +330,21 @@ gpk_dialog_embed_download_size_widget (GtkDialog *dialog, const gchar *title, gu
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *widget;
-	gchar *text;
-	gchar *size_str;
+	gchar *text = NULL;
+	gchar *size_str = NULL;
 
-	/* add a checkbutton for deps screen */
+	/* size is zero, don't show "0 bytes" */
+	if (size == 0) {
+		label = gtk_label_new (title);
+		widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
+		gtk_container_add_with_properties (GTK_CONTAINER (widget), label,
+						   "expand", FALSE,
+						   "fill", FALSE,
+						   NULL);
+		goto out;
+	}
+
+	/* add a hbox with the size for deps screen */
 	size_str = g_format_size_for_display (size);
 	text = g_strdup_printf ("%s: %s", title, size_str);
 	hbox = gtk_hbox_new (FALSE, 6);
@@ -346,8 +357,9 @@ gpk_dialog_embed_download_size_widget (GtkDialog *dialog, const gchar *title, gu
 	/* add a label */
 	label = gtk_label_new (text);
 	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
 	gtk_widget_show (hbox);
+out:
+	gtk_widget_show (label);
 	g_free (text);
 	g_free (size_str);
 	return TRUE;
