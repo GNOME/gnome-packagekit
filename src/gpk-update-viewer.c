@@ -439,8 +439,20 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		if (error->domain != PK_CLIENT_ERROR ||
-		    error->code != PK_CLIENT_ERROR_DECLINED_SIMULATION) {
+		/* not a PK error */
+		if (error->domain != PK_CLIENT_ERROR) {
+			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+			gpk_update_viewer_error_dialog (update_viewer, _("Could not update packages"), NULL, error->message);
+		} else if (error->code == PK_CLIENT_ERROR_DECLINED_SIMULATION) {
+			egg_debug ("ignoring the declined-simulation error");
+		} else if (error->code > PK_CLIENT_ERROR_LAST) {
+			gint code = error->code - PK_CLIENT_ERROR_LAST;
+			/* we've passed the PackageKit error code in the GError->code */
+			gpk_update_viewer_error_dialog (update_viewer,
+							gpk_error_enum_to_localised_text (code),
+							gpk_error_enum_to_localised_message (code),
+							error->message);
+		} else {
 			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
 			gpk_update_viewer_error_dialog (update_viewer, _("Could not update packages"), NULL, error->message);
 		}
