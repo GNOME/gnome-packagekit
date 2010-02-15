@@ -6,7 +6,7 @@
 # Robert-André Mauchin <zebob.m@pengzone.org>, 2008.
 # Ivan Buresi <err747@free.fr>, 2008.
 # Laurent Coudeur <laurentc@iol.ie>, 2009.
-# Bruno Brouard <annoa.b@gmail.com>, 2009.
+# Bruno Brouard <annoa.b@gmail.com>, 2009-2010.
 # Pablo Martin-Gomez <pablo.martin-gomez@laposte.net>, 2010.
 # Claude Paroz <claude@2xlibre.net>, 2010.
 #
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-02-05 11:23+0000\n"
+"POT-Creation-Date: 2010-02-08 12:41+0000\n"
 "PO-Revision-Date: 2010-02-06 11:28+0100\n"
 "Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -511,7 +511,7 @@ msgstr "Seulement les logiciels _non-libres"
 
 #: ../data/gpk-application.ui.h:15
 msgid "Only _Non-Source Code"
-msgstr "Seulement les « sans code source »"
+msgstr "Seulement les « sans _code source »"
 
 #: ../data/gpk-application.ui.h:16
 msgid "Only _Text"
@@ -1317,14 +1317,14 @@ msgstr "Redémarrer l'ordinateur maintenant"
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:443 ../src/gpk-check-update.c:1379
+#: ../src/gpk-check-update.c:443 ../src/gpk-check-update.c:1318
 #: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1577
 msgid "Do not show this again"
 msgstr "Ne plus afficher à nouveau"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:498 ../src/gpk-check-update.c:990
-#: ../src/gpk-check-update.c:1012
+#: ../src/gpk-check-update.c:498 ../src/gpk-check-update.c:931
+#: ../src/gpk-check-update.c:953
 msgid "GNOME PackageKit Update Icon"
 msgstr "Icône de mise à jour GNOME PackageKit"
 
@@ -1334,29 +1334,29 @@ msgid "Updated successfully"
 msgstr "Succès de la mise à jour"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:619
+#: ../src/gpk-check-update.c:618
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Mise à jour de sécurité disponible"
 msgstr[1] "Mises à jour de sécurité disponibles"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:624
-msgid "The following important update is available for your computer:"
-msgid_plural "The following important updates are available for your computer:"
+#: ../src/gpk-check-update.c:621
+msgid "An important update is available for your computer:"
+msgid_plural "Important updates are available for your computer:"
 msgstr[0] ""
-"La mise à jour importante suivante est disponible pour votre ordinateur :"
+"Une importante mise à jour est disponible pour votre ordinateur :"
 msgstr[1] ""
-"Les mises à jour importantes suivantes sont disponibles pour votre "
+"Des mises à jour importantes sont disponibles pour votre "
 "ordinateur :"
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:647
+#: ../src/gpk-check-update.c:641
 msgid "Install updates"
 msgstr "Installer les mises à jour"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:760
+#: ../src/gpk-check-update.c:752
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
@@ -1365,41 +1365,33 @@ msgstr ""
 "fonctionne actuellement sur batterie"
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:762
+#: ../src/gpk-check-update.c:754
 msgid "Updates not installed"
 msgstr "Mises à jour non installées"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:772
+#: ../src/gpk-check-update.c:764
 msgid "Install the updates anyway"
 msgstr "Mettre à jour tout de même"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:819
+#: ../src/gpk-check-update.c:811
 msgid "Updates are being installed"
 msgstr "L'installation des mises à jour est en cours"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:821
+#: ../src/gpk-check-update.c:813
 msgid "Updates are being automatically installed on your computer"
 msgstr ""
 "Des mises à jour sont en train d'être installées automatiquement sur votre "
 "ordinateur"
 
-#: ../src/gpk-check-update.c:827
+#: ../src/gpk-check-update.c:819
 msgid "Cancel update"
 msgstr "Annuler la mise à jour"
 
-#. TRANSLATORS: we have a notification that won't fit, so append on how many other we are not showing
-#: ../src/gpk-check-update.c:944
-#, c-format
-msgid "and %d other security update"
-msgid_plural "and %d other security updates"
-msgstr[0] "et %d autre mise à jour de sécurité"
-msgstr[1] "et %d autres mises à jour de sécurité"
-
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:903
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
@@ -1407,17 +1399,17 @@ msgstr[0] "Il y a %d mise à jour disponible"
 msgstr[1] "Il y a %d mises à jour disponibles"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:992
+#: ../src/gpk-check-update.c:933
 msgid "Update available"
 msgstr "Mise à jour disponible"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:1014
+#: ../src/gpk-check-update.c:955
 msgid "Update available (on battery)"
 msgstr "Mise à jour disponible (fonctionnement sur batterie)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1366
+#: ../src/gpk-check-update.c:1305
 msgid "Distribution upgrades available"
 msgstr "Mises à jour de distribution disponibles"
 
@@ -1426,7 +1418,7 @@ msgstr "Mises à jour de distribution disponibles"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1376 ../src/gpk-dbus-task.c:1017
+#: ../src/gpk-check-update.c:1315 ../src/gpk-dbus-task.c:1017
 #: ../src/gpk-dbus-task.c:1251 ../src/gpk-dbus-task.c:1557
 #: ../src/gpk-dbus-task.c:1763 ../src/gpk-dbus-task.c:2021
 msgid "More information"
@@ -2118,7 +2110,7 @@ msgstr "Aucune connexion réseau n'est disponible"
 
 #: ../src/gpk-enum.c:345
 msgid "No package cache is available."
-msgstr "Aucun cache de paquets n'est disponible"
+msgstr "Aucun cache de paquets n'est disponible."
 
 #: ../src/gpk-enum.c:348
 msgid "Out of memory"
@@ -2794,7 +2786,8 @@ msgstr ""
 #: ../src/gpk-enum.c:761
 msgid "The package database was changed while the request was running."
 msgstr ""
-"La base de données des paquets a été modifiée pendant le traitement de la requête."
+"La base de données des paquets a été modifiée pendant le traitement de la "
+"requête."
 
 #: ../src/gpk-enum.c:779
 msgid "No restart is necessary."
@@ -3933,7 +3926,8 @@ msgstr "Les logiciels suivants doivent également être réinstallés"
 #: ../src/gpk-task.c:417
 msgid "The following software also needs to be downgraded"
 msgstr ""
-"Les logiciels suivants doivent également être mis à jour à une version antérieure"
+"Les logiciels suivants doivent également être mis à jour à une version "
+"antérieure"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
 #: ../src/gpk-task.c:421
@@ -3950,8 +3944,7 @@ msgstr "Une confirmation supplémentaire est nécessaire"
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
-msgstr[0] ""
-"Pour installer ce paquet, d'autres logiciels doivent être modifiés."
+msgstr[0] "Pour installer ce paquet, d'autres logiciels doivent être modifiés."
 msgstr[1] ""
 "Pour installer ces paquets, d'autres logiciels doivent être modifiés."
 
@@ -3961,8 +3954,7 @@ msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
 msgstr[0] ""
-"Pour supprimer ce paquet, d'autres logiciels doivent également être "
-"modifiés."
+"Pour supprimer ce paquet, d'autres logiciels doivent également être modifiés."
 msgstr[1] ""
 "Pour supprimer ces paquets, d'autres logiciels doivent également être "
 "modifiés."
@@ -3994,8 +3986,8 @@ msgstr[1] ""
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
-"Pour effectuer cette transaction, des logiciels supplémentaires doivent aussi "
-"être modifiés."
+"Pour effectuer cette transaction, des logiciels supplémentaires doivent "
+"aussi être modifiés."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
 #: ../src/gpk-task.c:591
@@ -4855,3 +4847,8 @@ msgstr "Options de débogage"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "Affiche les informations de débogage"
+
+#~ msgid "and %d other security update"
+#~ msgid_plural "and %d other security updates"
+#~ msgstr[0] "et %d autre mise à jour de sécurité"
+#~ msgstr[1] "et %d autres mises à jour de sécurité"
