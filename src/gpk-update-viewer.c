@@ -2062,11 +2062,17 @@ gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 		goto out;
 	}
 
-	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
-	model = gtk_tree_view_get_model (treeview);
-
 	/* get data */
 	array = pk_results_get_details_array (results);
+	if (array->len == 0) {
+		/* TRANSLATORS: PackageKit did not send any results for the query... */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get package details"), _("No results were returned."), NULL);
+		goto out;
+	}
+
+	/* set data */
+	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
+	model = gtk_tree_view_get_model (treeview);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
 
@@ -2156,9 +2162,16 @@ gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, Gpk
 	}
 
 	/* get data */
+	array = pk_results_get_update_detail_array (results);
+	if (array->len == 0) {
+		/* TRANSLATORS: PackageKit did not send any results for the query... */
+		gpk_update_viewer_error_dialog (update_viewer, _("Could not get update details"), _("No results were returned."), NULL);
+		goto out;
+	}
+
+	/* add data */
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (priv->builder, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
-	array = pk_results_get_update_detail_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
 
