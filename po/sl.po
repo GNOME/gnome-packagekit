@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
-"POT-Creation-Date: 2010-02-14 15:50+0000\n"
-"PO-Revision-Date: 2010-02-15 08:54+0100\n"
+"POT-Creation-Date: 2010-02-16 10:09+0000\n"
+"PO-Revision-Date: 2010-02-17 08:42+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -957,7 +957,7 @@ msgstr "Meni"
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
 #: ../src/gpk-application.c:2403
-#: ../src/gpk-update-viewer.c:1678
+#: ../src/gpk-update-viewer.c:1690
 msgid "Size"
 msgstr "Velikost"
 
@@ -1135,7 +1135,7 @@ msgstr "Namestilnik paketov"
 #: ../src/gpk-backend-status.c:76
 #: ../src/gpk-prefs.c:398
 #: ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:2987
+#: ../src/gpk-update-viewer.c:3012
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Podrobnosti hrbtišča ni mogoče pridobiti"
 
@@ -1195,7 +1195,7 @@ msgstr "Ikona posodobitve GNOME PackageKit"
 
 #. TRANSLATORS: this is the sound description
 #: ../src/gpk-check-update.c:503
-#: ../src/gpk-update-viewer.c:497
+#: ../src/gpk-update-viewer.c:509
 msgid "Updated successfully"
 msgstr "Posodobitev je bila uspešna."
 
@@ -1513,7 +1513,7 @@ msgstr[3] "Ali želite namestiti datoteke?"
 #: ../src/gpk-dbus-task.c:2316
 #: ../src/gpk-dbus-task.c:2438
 #: ../src/gpk-dbus-task.c:2783
-#: ../src/gpk-update-viewer.c:1607
+#: ../src/gpk-update-viewer.c:1619
 msgid "Install"
 msgstr "Namesti"
 
@@ -4322,50 +4322,51 @@ msgstr "Nekatere posodobitve niso bile nameščene"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:445
+#: ../src/gpk-update-viewer.c:457
 msgid "Could not update packages"
 msgstr "Ni mogoče posodobiti paketov"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:468
-#: ../src/gpk-update-viewer.c:495
+#: ../src/gpk-update-viewer.c:480
+#: ../src/gpk-update-viewer.c:507
 msgid "GNOME PackageKit Update Viewer"
 msgstr "Pregledovalnik posodobitev GNOME PackageKit"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:470
+#: ../src/gpk-update-viewer.c:482
 msgid "Failed to update"
 msgstr "Napaka med posodabljanjem"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:525
-#: ../src/gpk-update-viewer.c:546
+#: ../src/gpk-update-viewer.c:537
+#: ../src/gpk-update-viewer.c:558
 msgid "Updates installed"
 msgstr "Posodobitve so nameščene"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:535
+#: ../src/gpk-update-viewer.c:547
 msgid "All updates were installed successfully."
 msgstr "Vse posodobitve so bile uspešno nameščene."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:538
+#: ../src/gpk-update-viewer.c:550
 msgid "The selected updates were installed successfully."
 msgstr "Izbrane posodobitve so bile uspešno nameščene."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:995
+#: ../src/gpk-update-viewer.c:1007
 msgid "Getting the list of updates"
 msgstr "Pridobivanje seznama posodobitev"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1203
+#: ../src/gpk-update-viewer.c:1215
 msgid "Could not run upgrade script"
 msgstr "Ni mogoče zagnati skripta posodobitev"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1254
+#: ../src/gpk-update-viewer.c:1266
 msgid "Connectivity is being provided by wireless broadband, and it may be expensive to update this package."
 msgid_plural "Connectivity is being provided by wireless broadband, and it may be expensive to update these packages."
 msgstr[0] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobitev paketov lahko potratna."
@@ -4374,7 +4375,7 @@ msgstr[2] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobit
 msgstr[3] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobitev paketov lahko potratna."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1358
+#: ../src/gpk-update-viewer.c:1370
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Namesti posodobitve"
@@ -4383,21 +4384,21 @@ msgstr[2] "_Namesti posodobitve"
 msgstr[3] "_Namesti posodobitve"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1371
+#: ../src/gpk-update-viewer.c:1383
 msgid "There are no updates available"
 msgstr "Ni razpoložljivih posodobitev"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1380
+#: ../src/gpk-update-viewer.c:1392
 msgid "All software is up to date"
 msgstr "Programska oprema je posodobljena"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1384
+#: ../src/gpk-update-viewer.c:1396
 msgid "There are no software updates available for your computer at this time."
 msgstr "Trenutno ni posebnih posodobitev programske opreme."
 
-#: ../src/gpk-update-viewer.c:1420
+#: ../src/gpk-update-viewer.c:1432
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4407,7 +4408,7 @@ msgstr[2] "Na voljo sta %i posodobitvi"
 msgstr[3] "Na voljo so %i posodobitve"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1436
+#: ../src/gpk-update-viewer.c:1448
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4417,7 +4418,7 @@ msgstr[2] "%i izbrani posodobitvi"
 msgstr[3] "%i izbrane posodobitve"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1444
+#: ../src/gpk-update-viewer.c:1456
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4427,49 +4428,49 @@ msgstr[2] "%i izbrani posodobitvi (%s)"
 msgstr[3] "%i izbrane posodobitve (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1638
+#: ../src/gpk-update-viewer.c:1650
 msgid "Software"
 msgstr "Programska oprema"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1648
+#: ../src/gpk-update-viewer.c:1660
 msgid "Status"
 msgstr "Stanje"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1858
+#: ../src/gpk-update-viewer.c:1870
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Posodobitev odpravlja hrošče in druge manj kritične napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1862
+#: ../src/gpk-update-viewer.c:1874
 msgid "This update is important as it may solve critical problems."
 msgstr "Posodobitev je pomembna, saj odpravlja kritične programske napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1866
+#: ../src/gpk-update-viewer.c:1878
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "Zahtevana je posodobitev za varnostne popravke paketa."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1870
+#: ../src/gpk-update-viewer.c:1882
 msgid "This update is blocked."
 msgstr "Posodobitev je ovirana."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1882
+#: ../src/gpk-update-viewer.c:1894
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Opozorilo je bilo izdano %s in je bilo zadnjič posodobljeno %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1889
+#: ../src/gpk-update-viewer.c:1901
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Opozorilo je bilo izdano %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1911
+#: ../src/gpk-update-viewer.c:1923
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "Za več podrobnosti o posodobitvi, obiščite spletne strani:"
@@ -4478,7 +4479,7 @@ msgstr[2] "Za več podrobnosti o posodobitvi, obiščite spletni strani:"
 msgstr[3] "Za več podrobnosti o posodobitvi, obiščite spletne strani:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1919
+#: ../src/gpk-update-viewer.c:1931
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "Za več podrobnosti o odpravljenih napakah, obiščite spletne strani:"
@@ -4487,7 +4488,7 @@ msgstr[2] "Za več podrobnosti o odpravljenih napakah, obiščite spletni strani
 msgstr[3] "Za več podrobnosti o odpravljenih napakah, obiščite spletne strani:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1927
+#: ../src/gpk-update-viewer.c:1939
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
@@ -4496,78 +4497,90 @@ msgstr[2] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletni str
 msgstr[3] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1936
+#: ../src/gpk-update-viewer.c:1948
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "Računalnik bo po posodobitvi treba za uveljavitev sprememb ponovno zagnati."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1952
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "Za uveljavitev sprememb se je treba odjaviti in ponovno prijaviti."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1947
+#: ../src/gpk-update-viewer.c:1959
 msgid "The classifaction of this update is unstable which means it is not designed for production use."
 msgstr "Posodobitev je opredeljena kot razvojna različica, kar pomeni, da ni primerna za običajnega uporabnika."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1951
+#: ../src/gpk-update-viewer.c:1963
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "To je preizkusna posodobitev in ni primerna za običajno rabo. V primeru težav pošljite poročilo o hroščih."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:1960
+#: ../src/gpk-update-viewer.c:1972
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "Izpisan bo dnevnik beleženja, saj za posodobitev ni ustreznega opisa:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:1996
+#: ../src/gpk-update-viewer.c:2008
 msgid "Loading..."
 msgstr "Nalaganje ..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2037
-#: ../src/gpk-update-viewer.c:2130
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2049
+#: ../src/gpk-update-viewer.c:2148
+#: ../src/gpk-update-viewer.c:2168
 msgid "Could not get update details"
 msgstr "Ni mogoče pridobiti posodobljenih podrobnosti"
 
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2069
+msgid "Could not get package details"
+msgstr "Ni mogoče pridobiti podrobnosti paketa"
+
+#: ../src/gpk-update-viewer.c:2069
+#: ../src/gpk-update-viewer.c:2168
+msgid "No results were returned."
+msgstr "Ni zadetkov iskanja."
+
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2378
+#: ../src/gpk-update-viewer.c:2403
 msgid "Select all"
 msgstr "Izberi vse"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2386
+#: ../src/gpk-update-viewer.c:2411
 msgid "Unselect all"
 msgstr "Počisti vse"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2393
+#: ../src/gpk-update-viewer.c:2418
 msgid "Select security updates"
 msgstr "Izberi varnostne posodobitve"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2399
+#: ../src/gpk-update-viewer.c:2424
 msgid "Ignore this update"
 msgstr "Prezri posodobitev"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2508
+#: ../src/gpk-update-viewer.c:2533
 msgid "Could not get updates"
 msgstr "Ni mogoče dobiti posodobitev"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2633
+#: ../src/gpk-update-viewer.c:2658
 msgid "Checking for updates..."
 msgstr "Preverjanje za posodobitve ..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2920
+#: ../src/gpk-update-viewer.c:2945
 msgid "Could not get list of distribution upgrades"
 msgstr "Ni mogoče pridobiti seznama posodobitve celotne distribucije"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2951
+#: ../src/gpk-update-viewer.c:2976
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Na voljo je nova posodobitev distribucije na '%s'."
