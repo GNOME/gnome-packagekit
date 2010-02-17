@@ -2514,7 +2514,7 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 	tags = g_new0 (gchar *, len);
 	n_tags = 0;
 	for (i=0; i<len; i++) {
-		gchar *p;
+		gchar *p, *ltag;
 		fields = g_strsplit (device_ids[i], ";", 0);
 		n_fields = g_strv_length (fields);
 		mfg = mdl = NULL;
@@ -2533,15 +2533,16 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 		}
 
 		tag = g_strconcat (mfg, ";", mdl, ";", NULL);
-		g_ascii_strdown (tag, -1);
+		ltag = g_ascii_strdown (tag, -1);
+		g_free (tag);
 
 		/* Replace spaces with underscores */
-		for (p = tag; *p != '\0'; p++)
+		for (p = ltag; *p != '\0'; p++)
 			if (*p == ' ')
 				*p = '_';
 
-		tags[n_tags++] = g_strdup (tag);
-		g_free (tag);
+		tags[n_tags++] = g_strdup (ltag);
+		g_free (ltag);
 	}
 
 	if (n_tags == 0) {
