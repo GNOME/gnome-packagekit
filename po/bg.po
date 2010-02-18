@@ -9,12 +9,15 @@
 # update, upgrade (n)+(countable) обновление
 # update, upgrade (v)+(action) обновявам
 # catalog, source хранилище
+# ignore прескачам
+# package manager управление на пакети
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-17 09:03+0200\n"
-"PO-Revision-Date: 2010-02-17 09:28+0200\n"
+"POT-Creation-Date: 2010-02-18 07:47+0200\n"
+"PO-Revision-Date: 2010-02-18 07:45+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,14 +77,14 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:11
 msgid "Devices that should be ignored"
-msgstr "Устройства, които да бъдат игнорирани"
+msgstr "Устройства, които да бъдат прескачани"
 
 #: ../data/gnome-packagekit.schemas.in.h:12
 msgid ""
 "Devices that should be ignored, separated by commas. These can include '*' "
 "and '?' characters"
 msgstr ""
-"Устройства, които да се игнорират. Изброени с разделител „,“. Имената могат "
+"Устройства, които да се прескачат. Изброени с разделител „,“. Имената могат "
 "да включват знаците „*“ и „?“."
 
 #: ../data/gnome-packagekit.schemas.in.h:13
@@ -170,14 +173,14 @@ msgstr "Стандартни режими на взаимодействие"
 
 #: ../data/gnome-packagekit.schemas.in.h:34
 msgid "Messages that should be ignored"
-msgstr "Съобщения, които да бъдат игнорирани"
+msgstr "Съобщения, които да бъдат прескачани"
 
 #: ../data/gnome-packagekit.schemas.in.h:35
 msgid ""
 "Messages that should be ignored, separated by commas. These can include '*' "
 "and '?' characters"
 msgstr ""
-"Съобщения, които да се игнорират. Изброени с разделител „,“. Имената могат "
+"Съобщения, които да се прескачат. Изброени с разделител „,“. Имената могат "
 "да включват знаците „*“ и „?“."
 
 #: ../data/gnome-packagekit.schemas.in.h:36
@@ -243,7 +246,8 @@ msgstr "Уведомяване на потребителя при наличие
 
 #: ../data/gnome-packagekit.schemas.in.h:48
 msgid "Notify the user when there are messages from the package manager"
-msgstr "Уведомяване на потребителя при наличие на съобщения от управлението на пакети"
+msgstr ""
+"Уведомяване на потребителя при наличие на съобщения от управлението на пакети"
 
 #: ../data/gnome-packagekit.schemas.in.h:49
 msgid "Notify the user when updates are available"
@@ -278,13 +282,16 @@ msgstr "Да се показват само най-новите обновлен
 
 #: ../data/gnome-packagekit.schemas.in.h:55
 msgid "Programs that should be ignored when they issue session D-Bus requests"
-msgstr "Програми, които да се игнорират, когато изпращат сесийни заявки към D-BUS"
+msgstr ""
+"Програми, които да бъдат прескачани, когато изпращат сесийни заявки към D-BUS"
 
 #: ../data/gnome-packagekit.schemas.in.h:56
 msgid ""
 "Programs that should be ignored when they issue session D-Bus requests, "
 "separated by commas."
-msgstr "Програми, които да се игнорират, когато изпращат сесийни заявки към D-BUS, с разделител „,“."
+msgstr ""
+"Програми, които да се прескачат, когато изпращат сесийни заявки към D-BUS, с "
+"разделител „,“."
 
 #: ../data/gnome-packagekit.schemas.in.h:57
 msgid "Scroll to packages as they are downloaded"
@@ -506,7 +513,7 @@ msgstr "Журнал за софтуера"
 
 #: ../data/gpk-application.ui.h:23
 msgid "View previously added or removed software"
-msgstr "Преглед на инсталациите и деинсталациите на софтуер"
+msgstr "Преглед на инсталирането и деинсталирането на софтуер"
 
 #: ../data/gpk-application.ui.h:24
 msgid "Visit the project homepage"
@@ -819,7 +826,9 @@ msgstr[1] "Да се деинсталират ли %i допълнителни �
 msgid ""
 "The software which you want to remove is required to run other software, "
 "which will be removed too."
-msgstr "Програмите, които се нуждаят от софтуера, който искате да деинсталирате, също ще бъдат деинсталирани."
+msgstr ""
+"Програмите, които се нуждаят от софтуера, който искате да деинсталирате, "
+"също ще бъдат деинсталирани."
 
 #. TRANSLATORS: button label, install
 #: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
@@ -1155,7 +1164,9 @@ msgstr "Текст"
 #: ../src/gpk-application.c:3300
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
-msgstr "За начало въведете име на пакет и натиснете върху бутона за търсене или върху група."
+msgstr ""
+"За начало въведете име на пакет и натиснете върху бутона за търсене или "
+"върху група."
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: ../src/gpk-application.c:3303
@@ -1376,7 +1387,6 @@ msgstr "Програмите за управление на пакети са ч
 
 #. TRANSLATORS: and explain why
 #: ../src/gpk-common.c:379
-#, fuzzy
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -1484,7 +1494,7 @@ msgstr "Допълнителна информация за грешката"
 
 #: ../src/gpk-dbus-task.c:279
 msgid "Package Manager error details"
-msgstr "Допълнителна информация за грешката на мениджъра на пакети"
+msgstr "Допълнителна информация за грешката от управлението на пакети"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 #: ../src/gpk-dbus-task.c:294
@@ -1559,7 +1569,7 @@ msgstr[1] "Искате ли да инсталирате тези файлове
 #: ../src/gpk-dbus-task.c:631 ../src/gpk-dbus-task.c:1163
 #: ../src/gpk-dbus-task.c:1382 ../src/gpk-dbus-task.c:1585
 #: ../src/gpk-dbus-task.c:2048 ../src/gpk-dbus-task.c:2316
-#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2783
+#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2784
 #: ../src/gpk-update-viewer.c:1619
 msgid "Install"
 msgstr "Инсталиране"
@@ -1607,8 +1617,8 @@ msgstr[1] "Необходими са допълнителни пакети:"
 #: ../src/gpk-dbus-task.c:1150
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "Искате ли сега да се търси и инсталира този пакет?"
-msgstr[1] "Искате ли сега да се търсят и инсталират тези пакети?"
+msgstr[0] "Искате ли да се търси и инсталира този пакет сега?"
+msgstr[1] "Искате ли да се търсят и инсталират тези пакети сега?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1156
@@ -1636,7 +1646,7 @@ msgid "Failed to find package"
 msgstr "Пакетът не бе открит"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2630
+#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2631
 msgid "The file could not be found in any packages"
 msgstr "Файлът не бе открит в никой пакет"
 
@@ -1657,8 +1667,8 @@ msgstr[1] "Изискват се следните файлове:"
 #: ../src/gpk-dbus-task.c:1370
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
-msgstr[0] "Искате ли сега да се търси този пакет?"
-msgstr[1] "Искате ли сега да се търсят тези пакети?"
+msgstr[0] "Искате ли да се търси този пакет сега?"
+msgstr[1] "Искате ли да се търсят тези пакети сега?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1375
@@ -1677,7 +1687,7 @@ msgstr[1] "Програма иска да инсталира файлове"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2733
+#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2734
 #: ../src/gpk-enum.c:1313
 msgid "Searching for file"
 msgstr "Търсене на файл"
@@ -1770,8 +1780,8 @@ msgstr[1] "Инсталиране на следните приставки"
 #: ../src/gpk-dbus-task.c:2430
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
-msgstr[0] "Искате ли сега да инсталирате този пакет?"
-msgstr[1] "Искате ли сега да инсталирате тези пакети?"
+msgstr[0] "Искате ли да инсталирате този пакет сега?"
+msgstr[1] "Искате ли да инсталирате тези пакети сега?"
 
 #. TRANSLATORS: search for codec
 #: ../src/gpk-dbus-task.c:1669
@@ -1806,7 +1816,7 @@ msgstr "За отварянето на този вид файлове се из�
 #. TRANSLATORS: message: confirm with the user
 #: ../src/gpk-dbus-task.c:1836
 msgid "Do you want to search for a program to open this file type now?"
-msgstr "Искате ли сега да търсите програма за отварянето на този вид файлове?"
+msgstr "Искате ли да търсите програма за отварянето на този вид файлове сега?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1844
@@ -1861,8 +1871,8 @@ msgstr[1] "За разглеждането на този файл са необ�
 #: ../src/gpk-dbus-task.c:2206
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Искате ли сега да се търси подходящ пакет?"
-msgstr[1] "Искате ли сега да се търсят подходящ пакети?"
+msgstr[0] "Искате ли да се търси подходящ пакет сега?"
+msgstr[1] "Искате ли да се търсят подходящ пакети сега?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:2216
@@ -1917,58 +1927,58 @@ msgstr[1] "Инсталиране на следните драйвери"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2578 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:2579 ../src/gpk-enum.c:953
 msgid "Removing packages"
 msgstr "Деинсталиране на пакети"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2628
+#: ../src/gpk-dbus-task.c:2629
 msgid "Failed to find package for this file"
 msgstr "Пакетът за този файл не бе открит"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2706
+#: ../src/gpk-dbus-task.c:2707
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Следният файл ще бъде деинсталиран:"
 msgstr[1] "Следните файлове ще бъдат деинсталирани:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2709
+#: ../src/gpk-dbus-task.c:2710
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Искате ли файлът да бъде деинсталиран сега?"
 msgstr[1] "Искате ли файловете да бъдат деинсталирани сега?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2714
+#: ../src/gpk-dbus-task.c:2715
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
 msgstr[0] "%s иска да деинсталира файл"
-msgstr[1] "%s иска да деинсталиран файлове"
+msgstr[1] "%s иска да деинсталира файлове"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2718
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Програма иска да инсталира файл"
 msgstr[1] "Програма иска да инсталира файлове"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2721
+#: ../src/gpk-dbus-task.c:2722
 msgid "Remove"
 msgstr "Деинсталиране"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2774
+#: ../src/gpk-dbus-task.c:2775
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Искате ли да инсталирате това хранилищe?"
 msgstr[1] "Искате ли да инсталирате тези хранилища?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2799
+#: ../src/gpk-dbus-task.c:2800
 msgid "Install catalogs"
 msgstr "Инсталиране на хранилища"
 
@@ -2018,7 +2028,7 @@ msgstr "диск"
 #. TRANSLATORS: this is generic media of unknown type that we will install from
 #: ../src/gpk-enum.c:322
 msgid "media"
-msgstr "медия"
+msgstr "носител"
 
 #: ../src/gpk-enum.c:339
 msgid "Failed with unknown error code"
@@ -2102,7 +2112,7 @@ msgstr "Действието бе отменено"
 
 #: ../src/gpk-enum.c:402
 msgid "The action was forcibly canceled"
-msgstr "Действието бе изрично отменена"
+msgstr "Действието бе изрично отменено"
 
 #: ../src/gpk-enum.c:405
 msgid "Reading the configuration file failed"
@@ -2267,7 +2277,7 @@ msgstr "Базата от данни с пакетите се промени"
 
 #: ../src/gpk-enum.c:539
 msgid "Failed with unknown error code."
-msgstr "Грешка с непознат код"
+msgstr "Грешка с непознат код."
 
 #: ../src/gpk-enum.c:542
 msgid ""
@@ -2275,7 +2285,7 @@ msgid ""
 "Please check your connection settings and try again."
 msgstr ""
 "Липсва връзка с мрежата.\n"
-"Проверете настройките на връзката и пробвайте отново"
+"Проверете настройките на връзката и пробвайте отново."
 
 #: ../src/gpk-enum.c:546
 msgid ""
@@ -2492,7 +2502,7 @@ msgid ""
 "This error can normally be ignored."
 msgstr ""
 "Стартираното ядро не може да бъде спряно.\n"
-"Обикновено можете да пренебрегнете тази грешка."
+"Обикновено можете да прескочите тази грешка."
 
 #: ../src/gpk-enum.c:655
 msgid ""
@@ -2597,7 +2607,7 @@ msgid ""
 "Free some space on the system disk to perform this operation."
 msgstr ""
 "На устройството липсва свободно пространство.\n"
-"За да извършите това действие, освободете свободно място."
+"За да извършите това действие, освободете място."
 
 #: ../src/gpk-enum.c:711
 msgid "Additional media is required to complete the transaction."
@@ -2638,7 +2648,7 @@ msgstr "Информацията, кои пакети се нуждаят от �
 
 #: ../src/gpk-enum.c:734
 msgid "The specified software source could not be disabled."
-msgstr "Указаното хранилищe не може да бъде изключено"
+msgstr "Указаното хранилищe не може да бъде изключено."
 
 #: ../src/gpk-enum.c:737
 msgid ""
@@ -2812,7 +2822,7 @@ msgstr "Пакетът вече е инсталиран"
 
 #: ../src/gpk-enum.c:905
 msgid "Automatic cleanup is being ignored"
-msgstr "Автоматичното изчистване е игнорирано"
+msgstr "Автоматичното изчистване е прескочено"
 
 #: ../src/gpk-enum.c:908
 msgid "Software source download failed"
@@ -2972,7 +2982,7 @@ msgstr "Генериране на списъците с пакети"
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
 #: ../src/gpk-enum.c:1053
 msgid "Waiting for package manager lock"
-msgstr "Изчакване поради заключване от мениджър на пакети"
+msgstr "Изчакване поради заключване от управлението на пакети"
 
 #. TRANSLATORS: waiting for user to type in a password
 #: ../src/gpk-enum.c:1057
@@ -3145,12 +3155,12 @@ msgstr "Декомпресиране"
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1235
 msgid "Downloaded"
-msgstr "Изтеглено"
+msgstr "Изтеглен"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1239
 msgid "Updated"
-msgstr "Обновено"
+msgstr "Обновен"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1247
@@ -3160,17 +3170,17 @@ msgstr "Деинсталиран"
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1251
 msgid "Cleaned up"
-msgstr "Изчистено"
+msgstr "Изчистен"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1255
 msgid "Obsoleted"
-msgstr "Остаряло"
+msgstr "Остарял"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1259
 msgid "Reinstalled"
-msgstr "Преинсталирани"
+msgstr "Преинсталиран"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1263
@@ -3201,7 +3211,7 @@ msgstr "Получаване на подробна информация за о�
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1297
 msgid "Getting details"
-msgstr "Получавани на подробна информация"
+msgstr "Получаване на подробна информация"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1301
@@ -3251,7 +3261,7 @@ msgstr "Обновяване на системата"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1349
 msgid "Canceling"
-msgstr "Отмяна"
+msgstr "Отменяне"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1357
@@ -3271,7 +3281,7 @@ msgstr "Задаване на данните за хранилища"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1369
 msgid "Resolving"
-msgstr "Зависимости"
+msgstr "Изчисляване на зависимости"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1373
@@ -3311,7 +3321,7 @@ msgstr "Получаване на категориите"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1405
 msgid "Getting old transactions"
-msgstr "Получавани на старите транзакции"
+msgstr "Получаване на старите транзакции"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1409
@@ -3321,12 +3331,12 @@ msgstr "Симулация на инсталирането на файлове"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1413
 msgid "Simulating the install"
-msgstr "Симулация на инсталирането"
+msgstr "Симулиране на инсталирането"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1417
 msgid "Simulating the remove"
-msgstr "Симулация на деинсталирането"
+msgstr "Симулиране на деинсталирането"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1421
@@ -3336,27 +3346,27 @@ msgstr "Симулация на обновяването"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1445
 msgid "Got dependencies"
-msgstr "Зависимостите са получени"
+msgstr "Получени зависимости"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1449
 msgid "Got update detail"
-msgstr "Подробната информация за обновяването е получена"
+msgstr "Получена подробна информация за обновяването"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1453
 msgid "Got details"
-msgstr "Подробната информация е получена"
+msgstr "Получена подробна информация"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1457
 msgid "Got requires"
-msgstr "Изискванията са получени"
+msgstr "Получени изисквания"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1461
 msgid "Got updates"
-msgstr "Обновяванията са получени"
+msgstr "Получени обновления"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1465
@@ -3366,102 +3376,102 @@ msgstr "Търсене за допълнителна информация за �
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1469
 msgid "Searched for file"
-msgstr "Търсенето на файл завърши"
+msgstr "Търсене на файл"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1473
 msgid "Searched groups"
-msgstr "Търсенето в групите завърши"
+msgstr "Търсене в групите"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1477
 msgid "Searched for package name"
-msgstr "Търсенето в имената на пакетите завърши"
+msgstr "Търсене в имената на пакетите"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1481
 msgid "Removed packages"
-msgstr "Пакетите са деинсталирани"
+msgstr "Деинсталирани пакети"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1485
 msgid "Installed packages"
-msgstr "Пакетите са инсталирани"
+msgstr "Инсталиране пакети"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1489
 msgid "Installed local files"
-msgstr "Локалните файлове са инсталирани"
+msgstr "Инсталирани локални файлове"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1493
 msgid "Refreshed package cache"
-msgstr "Кешът с пакетите е обновен"
+msgstr "Обновен кеш с пакетите"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1497
 msgid "Updated packages"
-msgstr "Пакетите са обновени"
+msgstr "Обновени пакети"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1501
 msgid "Updated system"
-msgstr "Системата е обновена"
+msgstr "Обновена система"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1505
 msgid "Canceled"
-msgstr "Отменено"
+msgstr "Отмяна"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1509
 msgid "Rolled back"
-msgstr "Върнато назад"
+msgstr "Връщане назад"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1513
 msgid "Got list of repositories"
-msgstr "Списъкът с хранилищата е получен"
+msgstr "Получен списък с хранилищата"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1517
 msgid "Enabled repository"
-msgstr "Хранилището е включено"
+msgstr "Включено хранилище"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1521
 msgid "Set repository data"
-msgstr "Задаване на данните за хранилище"
+msgstr "Задаване на данни за хранилище"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1525
 msgid "Resolved"
-msgstr "Открито"
+msgstr "Изчисление"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1529
 msgid "Got file list"
-msgstr "Списъкът с файлове е получен"
+msgstr "Получен списък с файлове"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1533
 msgid "Got what provides"
-msgstr "Предоставящият пакет е получен"
+msgstr "Получен предоставящи пакет"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1537
 msgid "Installed signature"
-msgstr "Подписът е инсталиран"
+msgstr "Инсталиран подписът"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1541
 msgid "Got package lists"
-msgstr "Списъците с пакети са получени"
+msgstr "Получени списъци с пакети"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1545
 msgid "Accepted EULA"
-msgstr "Приемане на EULA"
+msgstr "Приет лиценз"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1549
@@ -3471,27 +3481,27 @@ msgstr "Изтеглени пакети"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1553
 msgid "Got distribution upgrades"
-msgstr "Обновленията на дистрибуцията са получени"
+msgstr "Получени обновления на дистрибуцията"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1557
 msgid "Got categories"
-msgstr "Категориите са получени"
+msgstr "Получени категории"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1561
 msgid "Got old transactions"
-msgstr "Получена е стара транзакция"
+msgstr "Получена стари транзакции"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1565
 msgid "Simulated the install of files"
-msgstr "Симулация на инсталация на файлове"
+msgstr "Симулация на инсталиране на файлове"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1569
 msgid "Simulated the install"
-msgstr "Симулация на инсталация"
+msgstr "Симулация на инсталиране"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1573
@@ -3727,14 +3737,13 @@ msgstr "Инсталиране на фърмуер"
 #. TRANSLATORS: we should ignore this device and not ask anymore
 #: ../src/gpk-firmware.c:635
 msgid "Ignore devices"
-msgstr "Игнориране на устройствата"
+msgstr "Прескачане на устройствата"
 
 #. TODO: tell the user what hardware, NOT JUST A UDI
 #. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
 #: ../src/gpk-hardware.c:183
 msgid "Additional packages can be installed to support this hardware"
-msgstr ""
-"За поддръжката този хардуер е необходимо да инсталирате допълнителни пакети"
+msgstr "За поддръжката този хардуер са необходими допълнителни пакети"
 
 #. TRANSLATORS: a new bit of hardware has been plugged in
 #: ../src/gpk-hardware.c:185
@@ -4128,7 +4137,7 @@ msgstr "Неуспешна промяна на състояние"
 #. TRANSLATORS: column if the source is enabled
 #: ../src/gpk-repo.c:344
 msgid "Enabled"
-msgstr "Използване"
+msgstr "Включено"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-repo.c:353
@@ -4224,7 +4233,7 @@ msgstr ""
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
 #: ../src/gpk-service-pack.c:700
 msgid "Add the package name to the text entry box"
-msgstr "Добавяне на името на пакета към кутията за текстов вход"
+msgstr "Добавяне на името на пакета към полето за текст"
 
 #. TRANSLATORS: this is the destination computer package array
 #: ../src/gpk-service-pack.c:703
@@ -4329,7 +4338,7 @@ msgstr "Пакетите не могат да бъдат обновени"
 #. TRANSLATORS: this is the application name for libcanberra
 #: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:507
 msgid "GNOME PackageKit Update Viewer"
-msgstr "Изглед за обновяванrs към GNOME PackageKit"
+msgstr "Изглед за обновления към GNOME PackageKit"
 
 #. TRANSLATORS: this is the sound description
 #: ../src/gpk-update-viewer.c:482
@@ -4345,12 +4354,12 @@ msgstr "Обновленията са инсталирани"
 #. TRANSLATORS: title: all updates for the machine installed okay
 #: ../src/gpk-update-viewer.c:547
 msgid "All updates were installed successfully."
-msgstr "Всички обновления са успешно инсталирани."
+msgstr "Всички обновления са инсталирани успешно."
 
 #. TRANSLATORS: title: all the selected updates installed okay
 #: ../src/gpk-update-viewer.c:550
 msgid "The selected updates were installed successfully."
-msgstr "Избраните обновления са успешно инсталирани."
+msgstr "Избраните обновления са инсталирани успешно."
 
 #. TRANSLATORS: querying update array
 #: ../src/gpk-update-viewer.c:1007
@@ -4388,7 +4397,7 @@ msgstr[1] "_Инсталиране на обновления"
 #. TRANSLATORS: there are no updates
 #: ../src/gpk-update-viewer.c:1383
 msgid "There are no updates available"
-msgstr "В момента няма обновявания"
+msgstr "В момента няма обновления"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
 #: ../src/gpk-update-viewer.c:1392
@@ -4436,19 +4445,19 @@ msgstr "Състояние"
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1870
 msgid "This update will fix bugs and other non-critical problems."
-msgstr "Това обновление коригира грешки и други некритични проблеми."
+msgstr "Това обновление поправя грешки и други некритични проблеми."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1874
 msgid "This update is important as it may solve critical problems."
-msgstr "Това обновление е важно, защото коригира критични проблеми."
+msgstr "Това обновление е важно, защото поправя критични проблеми."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1878
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
-"Това обновление е необходимо, за коригирането на проблем по сигурността на "
+"Това обновление е необходимо, за поправката на проблем по сигурността на "
 "този пакет."
 
 #. TRANSLATORS: this is the update type, e.g. security
@@ -4487,11 +4496,11 @@ msgid_plural ""
 "For more information about bugs fixed by this update please visit these "
 "websites:"
 msgstr[0] ""
-"За повече информация относно грешките коригирани от това обновление посетете "
-"следните адреси:"
+"За повече информация относно грешките поправени от това обновление посетете "
+"следния адрес:"
 msgstr[1] ""
-"За повече информация относно грешките коригирани от това обновление посетете "
-"следния адрес:<"
+"За повече информация относно грешките поправени от това обновление посетете "
+"следните адреси:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
 #: ../src/gpk-update-viewer.c:1939
@@ -4537,7 +4546,7 @@ msgid ""
 "problems or regressions you encounter."
 msgstr ""
 "Това е тестово обновление и не е предназначено за обща употреба. Молим да "
-"докладвате проблемите или грешките, които се появяват при употребата му."
+"докладвате проблемите или грешките, които се появяват при ползването му."
 
 #. TRANSLATORS: this is a ChangeLog
 #: ../src/gpk-update-viewer.c:1972
@@ -4558,7 +4567,7 @@ msgstr "Зареждане…"
 #: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2148
 #: ../src/gpk-update-viewer.c:2168
 msgid "Could not get update details"
-msgstr "Подробната информация за обновяването не бе получена"
+msgstr "Подробната информация за обновлението не бе получена"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
 #: ../src/gpk-update-viewer.c:2069
@@ -4624,7 +4633,7 @@ msgstr "Сесийна услуга за DBus на PackageKit"
 #, c-format
 msgid "This is due to the %s package being updated."
 msgid_plural "This is due to the following packages being updated: %s."
-msgstr[0] "Понеже пакетът %s е обновен."
+msgstr[0] "Понеже следният пакет е обновен: %s."
 msgstr[1] "Понеже следните пакети са обновени: %s."
 
 #. TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here
@@ -4639,12 +4648,12 @@ msgstr[1] "Понеже %i пакета са обновени."
 #, c-format
 msgid "%i message from the package manager"
 msgid_plural "%i messages from the package manager"
-msgstr[0] "%i съобщение от мениджъра на пакети"
-msgstr[1] "%i съобщения от мениджъра на пакети"
+msgstr[0] "%i съобщение от управлението на пакети"
+msgstr[1] "%i съобщения от управлението на пакети"
 
 #: ../src/gpk-watch.c:398
 msgid "Package manager error details"
-msgstr "Допълнителна информация за грешката на мениджъра на пакети"
+msgstr "Допълнителна информация за грешката от управлението на пакети"
 
 #. TRANSLATORS: We couldn't launch the tool, normally a packaging problem
 #: ../src/gpk-watch.c:428
@@ -4653,7 +4662,7 @@ msgstr "Вътрешна грешка"
 
 #: ../src/gpk-watch.c:555
 msgid "Package Manager Messages"
-msgstr "Съобщения от мениджъра на пакети"
+msgstr "Съобщения от управлението на пакети"
 
 #. TRANSLATORS: column for the message type
 #: ../src/gpk-watch.c:585
@@ -4683,7 +4692,7 @@ msgstr "_Скриване на тази икона"
 #. do the bubble
 #: ../src/gpk-watch.c:1334
 msgid "New package manager message"
-msgstr "Ново съобщение от мениджъра на пакети"
+msgstr "Ново съобщение от управлението на пакети"
 
 #. TRANSLATORS: Prefix to the title shown in the libnotify popup
 #: ../src/gpk-watch.c:1391
