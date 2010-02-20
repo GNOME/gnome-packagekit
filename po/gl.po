@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-15 18:45+0100\n"
-"PO-Revision-Date: 2010-02-12 09:33+0100\n"
+"POT-Creation-Date: 2010-02-20 22:28+0100\n"
+"PO-Revision-Date: 2010-02-16 18:25+0100\n"
 "Last-Translator: Fran Diéguez <frandieguez@ubuntu.com>\n"
 "Language-Team: Gallician <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
@@ -1242,7 +1242,7 @@ msgstr "Instalador de paquetes"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:2999
+#: ../src/gpk-update-viewer.c:3012
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Non foi posíbel obter os detalles de saída como backend"
 
@@ -1586,7 +1586,7 @@ msgstr[1] "Desexa instalar estes ficheiros?"
 #: ../src/gpk-dbus-task.c:631 ../src/gpk-dbus-task.c:1163
 #: ../src/gpk-dbus-task.c:1382 ../src/gpk-dbus-task.c:1585
 #: ../src/gpk-dbus-task.c:2048 ../src/gpk-dbus-task.c:2316
-#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2783
+#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2784
 #: ../src/gpk-update-viewer.c:1619
 msgid "Install"
 msgstr "Instalar"
@@ -1663,7 +1663,7 @@ msgid "Failed to find package"
 msgstr "Produciuse un fallo ao buscar un paquete"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2630
+#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2631
 msgid "The file could not be found in any packages"
 msgstr "Non foi posíbel atopar o ficheiro en ningún paquete"
 
@@ -1704,7 +1704,7 @@ msgstr[1] "Un programa quere instalar varios ficheiros"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2733
+#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2734
 #: ../src/gpk-enum.c:1313
 msgid "Searching for file"
 msgstr "Estase a buscar os ficheiros"
@@ -1949,31 +1949,31 @@ msgstr[1] "Instalar os seguintes controladores"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2578 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:2579 ../src/gpk-enum.c:953
 msgid "Removing packages"
 msgstr "Eliminando os paquetes"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2628
+#: ../src/gpk-dbus-task.c:2629
 msgid "Failed to find package for this file"
 msgstr "Produciuse un fallo ao buscar o paquete para este ficheiro"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2706
+#: ../src/gpk-dbus-task.c:2707
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "O seguinte ficheiro eliminarase:"
 msgstr[1] "Os seguintes ficheiros elimininaranse:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2709
+#: ../src/gpk-dbus-task.c:2710
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Desexa eliminar este ficheiro agora?"
 msgstr[1] "Desexa eliminar os seguintes ficheros agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2714
+#: ../src/gpk-dbus-task.c:2715
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1981,26 +1981,26 @@ msgstr[0] "%s quere eliminar un ficheiro"
 msgstr[1] "%s quere eliminar varios ficheiros"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2718
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Un programa quere eliminar un ficheiro"
 msgstr[1] "Un programa quere eliminar varios ficheiros"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2721
+#: ../src/gpk-dbus-task.c:2722
 msgid "Remove"
 msgstr "Eliminar"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2774
+#: ../src/gpk-dbus-task.c:2775
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Quere instalar este catálogo?"
 msgstr[1] "Quere instalar estes catálogos?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2799
+#: ../src/gpk-dbus-task.c:2800
 msgid "Install catalogs"
 msgstr "Instalar os catálogos"
 
@@ -4609,47 +4609,58 @@ msgid "Loading..."
 msgstr "Cargando..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2142
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2148
+#: ../src/gpk-update-viewer.c:2168
 msgid "Could not get update details"
 msgstr "Non foi posíbel actualizar os detalles"
 
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2069
+msgid "Could not get package details"
+msgstr "Non foi posíbel obter os detalles do paquete"
+
+#: ../src/gpk-update-viewer.c:2069 ../src/gpk-update-viewer.c:2168
+msgid "No results were returned."
+msgstr "Non se devolveu ningún resultado."
+
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2390
+#: ../src/gpk-update-viewer.c:2403
 msgid "Select all"
 msgstr "Seleccionar todas"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2398
+#: ../src/gpk-update-viewer.c:2411
 msgid "Unselect all"
 msgstr "Deseleccionar todas"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2405
+#: ../src/gpk-update-viewer.c:2418
 msgid "Select security updates"
 msgstr "Seleccione as actualizacións de seguranza"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2411
+#: ../src/gpk-update-viewer.c:2424
 msgid "Ignore this update"
 msgstr "Ignorar esta actualización"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2520
+#: ../src/gpk-update-viewer.c:2533
 msgid "Could not get updates"
 msgstr "Non foi posíbel obter as actualizacións"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2645
+#: ../src/gpk-update-viewer.c:2658
 msgid "Checking for updates..."
 msgstr "Comprobando as actualizacións..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2932
+#: ../src/gpk-update-viewer.c:2945
 msgid "Could not get list of distribution upgrades"
 msgstr "Non foi posíbel obter a lista de actualizacións da distribución"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2963
+#: ../src/gpk-update-viewer.c:2976
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Hai unha nova versión de actualización da distribución '%s' dispoñíbel"
