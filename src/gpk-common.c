@@ -747,6 +747,12 @@ gpk_ignore_session_error (GError *error)
 		ret = TRUE;
 		goto out;
 	}
+
+	/* DBus-glib hates us */
+	if (g_str_has_prefix (name, "Org.freedesktop.PackageKit.Modify.Cancelled")) {
+		ret = TRUE;
+		goto out;
+	}
 out:
 	return ret;
 }
