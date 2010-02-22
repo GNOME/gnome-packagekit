@@ -354,7 +354,8 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
 	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' to continue."), name, media_text);
 
-	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
+	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window,
+								   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 								   /* TRANSLATORS: this is the window title when a new cd or dvd is required */
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, _("A media change is required")));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(priv->current_window), "%s", message);
@@ -506,7 +507,8 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 		message = _("To process this transaction, additional software also has to be modified.");
 	}
 
-	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
+	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window,
+								   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (priv->current_window), "%s", message);
 

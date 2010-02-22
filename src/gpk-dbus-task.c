@@ -438,11 +438,16 @@ out:
 static void
 gpk_dbus_task_install_package_ids (GpkDbusTask *dtask)
 {
+	GtkWindow *window;
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: installing packages */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Installing packages"));
 	if (dtask->priv->show_progress)
 		gpk_modal_dialog_present (dtask->priv->dialog);
+
+	/* ensure parent is set */
+	window = gpk_modal_dialog_get_window (dtask->priv->dialog);
+	gpk_task_set_parent_window (GPK_TASK (dtask->priv->task), window);
 
 	/* install async */
 	pk_task_install_packages_async (dtask->priv->task, dtask->priv->package_ids, NULL,
@@ -2574,11 +2579,17 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 static void
 gpk_dbus_task_remove_package_ids (GpkDbusTask *dtask)
 {
+	GtkWindow *window;
+
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: removing packages */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Removing packages"));
 	if (dtask->priv->show_progress)
 		gpk_modal_dialog_present (dtask->priv->dialog);
+
+	/* ensure parent is set */
+	window = gpk_modal_dialog_get_window (dtask->priv->dialog);
+	gpk_task_set_parent_window (GPK_TASK (dtask->priv->task), window);
 
 	/* remove async */
 	pk_task_remove_packages_async (dtask->priv->task, dtask->priv->package_ids, TRUE, TRUE, NULL,
