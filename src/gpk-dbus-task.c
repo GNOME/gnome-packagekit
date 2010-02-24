@@ -622,6 +622,9 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 		g_error_free (error_dbus);
 		goto out;
 	}
+
+	/* we're done */
+	gpk_dbus_task_dbus_return_value (dtask, TRUE);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
