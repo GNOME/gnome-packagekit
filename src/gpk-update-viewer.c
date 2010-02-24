@@ -407,6 +407,7 @@ gpk_update_viewer_are_all_updates_selected (GtkTreeModel *model)
 					    -1);
 			if (!selected)
 				goto out;
+			child_valid = gtk_tree_model_iter_next (model, &child_iter);
 		}
 
 		valid = gtk_tree_model_iter_next (model, &iter);
