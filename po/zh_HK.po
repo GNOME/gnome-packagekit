@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit 2.29.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-21 19:47+0800\n"
-"PO-Revision-Date: 2010-02-21 19:48+0800\n"
+"POT-Creation-Date: 2010-02-27 20:58+0800\n"
+"PO-Revision-Date: 2010-02-27 20:58+0800\n"
 "Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (Hong Kong) <community@linuxhall.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=2; plural=1;\n"
+"X-Generator: Virtaal 0.5.0\n"
 
 #: ../data/gnome-packagekit.schemas.in.h:1
 msgid "Allow applications to invoke the codec installer"
@@ -964,7 +965,7 @@ msgstr "選單"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2403 ../src/gpk-update-viewer.c:1690
+#: ../src/gpk-application.c:2403 ../src/gpk-update-viewer.c:1691
 msgid "Size"
 msgstr "大小"
 
@@ -1145,7 +1146,7 @@ msgstr "套件安裝程式"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:3012
+#: ../src/gpk-update-viewer.c:3013
 msgid "Exiting as backend details could not be retrieved"
 msgstr "由於無法接收後端詳細資訊而正在關閉"
 
@@ -1197,7 +1198,7 @@ msgid "GNOME PackageKit Update Icon"
 msgstr "GNOME PackageKit 更新圖示"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:503 ../src/gpk-update-viewer.c:509
+#: ../src/gpk-check-update.c:503 ../src/gpk-update-viewer.c:510
 msgid "Updated successfully"
 msgstr "更新已成功"
 
@@ -1279,9 +1280,9 @@ msgstr "有可用的發行版本更新"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1319 ../src/gpk-dbus-task.c:1017
-#: ../src/gpk-dbus-task.c:1251 ../src/gpk-dbus-task.c:1557
-#: ../src/gpk-dbus-task.c:1763 ../src/gpk-dbus-task.c:2021
+#: ../src/gpk-check-update.c:1319 ../src/gpk-dbus-task.c:1085
+#: ../src/gpk-dbus-task.c:1319 ../src/gpk-dbus-task.c:1625
+#: ../src/gpk-dbus-task.c:1831 ../src/gpk-dbus-task.c:2089
 msgid "More information"
 msgstr "更多資訊"
 
@@ -1418,52 +1419,52 @@ msgid ""
 msgstr "未知的錯誤。請參考詳細的報告並在你的發行版的錯誤追蹤系統中回報。"
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:308
+#: ../src/gpk-dbus-task.c:310
 msgid "You don't have the necessary privileges to perform this action."
 msgstr "你沒有執行這個動作所必須的權限。"
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:312
+#: ../src/gpk-dbus-task.c:314
 msgid "The packagekitd service could not be started."
 msgstr "packagekitd 無法啟動。"
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:316
+#: ../src/gpk-dbus-task.c:318
 msgid "The query is not valid."
 msgstr "查詢是無效的。"
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:320
+#: ../src/gpk-dbus-task.c:322
 msgid "The file is not valid."
 msgstr "該檔案是無效的。"
 
 #. TRANSLATORS: button: show details about the error
 #. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-dbus-task.c:383 ../src/gpk-watch.c:1399
+#: ../src/gpk-dbus-task.c:385 ../src/gpk-watch.c:1399
 msgid "Show details"
 msgstr "顯示詳細資訊"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:406 ../src/gpk-dbus-task.c:1070
+#: ../src/gpk-dbus-task.c:466 ../src/gpk-dbus-task.c:1138
 msgid "Failed to install package"
 msgstr "無法安裝套件"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:443 ../src/gpk-enum.c:961
+#: ../src/gpk-dbus-task.c:504 ../src/gpk-enum.c:961
 msgid "Installing packages"
 msgstr "正在安裝套件"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:541 ../src/gpk-dbus-task.c:1289
+#: ../src/gpk-dbus-task.c:606 ../src/gpk-dbus-task.c:1357
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "安裝檔案失敗"
 msgstr[1] "安裝檔案失敗"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:622
+#: ../src/gpk-dbus-task.c:690
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "你是否要安裝這個檔案？"
@@ -1477,62 +1478,62 @@ msgstr[1] "你是否要安裝這些檔案？"
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
 #. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:631 ../src/gpk-dbus-task.c:1163
-#: ../src/gpk-dbus-task.c:1382 ../src/gpk-dbus-task.c:1585
-#: ../src/gpk-dbus-task.c:2048 ../src/gpk-dbus-task.c:2316
-#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2784
-#: ../src/gpk-update-viewer.c:1619
+#: ../src/gpk-dbus-task.c:699 ../src/gpk-dbus-task.c:1231
+#: ../src/gpk-dbus-task.c:1450 ../src/gpk-dbus-task.c:1653
+#: ../src/gpk-dbus-task.c:2116 ../src/gpk-dbus-task.c:2384
+#: ../src/gpk-dbus-task.c:2506 ../src/gpk-dbus-task.c:2858
+#: ../src/gpk-update-viewer.c:1620
 msgid "Install"
 msgstr "安裝"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:946
+#: ../src/gpk-dbus-task.c:1014
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "安裝本地端檔案"
 msgstr[1] "安裝本地端檔案"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1005
+#: ../src/gpk-dbus-task.c:1073
 #, c-format
 msgid "Could not find packages"
 msgstr "找不到套件"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1014
+#: ../src/gpk-dbus-task.c:1082
 msgid "The packages could not be found in any software source"
 msgstr "此套件在任何軟件來源都找不到"
 
-#: ../src/gpk-dbus-task.c:1053
+#: ../src/gpk-dbus-task.c:1121
 msgid "Failed to install packages"
 msgstr "無法安裝套件"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1055 ../src/gpk-enum.c:369
+#: ../src/gpk-dbus-task.c:1123 ../src/gpk-enum.c:369
 msgid "The package is already installed"
 msgstr "此套件已經安裝"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1072
+#: ../src/gpk-dbus-task.c:1140
 msgid "Incorrect response from search"
 msgstr "來自搜尋的不正確回應"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1147
+#: ../src/gpk-dbus-task.c:1215
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "要求額外的套件："
 msgstr[1] "要求額外的套件："
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1150
+#: ../src/gpk-dbus-task.c:1218
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "是否要立刻搜尋並安裝這個套件？"
 msgstr[1] "是否要立刻搜尋並安裝這些套件？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1156
+#: ../src/gpk-dbus-task.c:1224
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1540,49 +1541,49 @@ msgstr[0] "%s 要求安裝套件"
 msgstr[1] "%s 要求安裝套件"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1159
+#: ../src/gpk-dbus-task.c:1227
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "有程式要求安裝套件"
 msgstr[1] "有程式要求安裝套件"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1176 ../src/gpk-dbus-task.c:2498
+#: ../src/gpk-dbus-task.c:1244 ../src/gpk-dbus-task.c:2566
 msgid "Searching for packages"
 msgstr "正在搜尋套件"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1246
+#: ../src/gpk-dbus-task.c:1314
 msgid "Failed to find package"
 msgstr "無法尋找套件"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2631
+#: ../src/gpk-dbus-task.c:1316 ../src/gpk-dbus-task.c:2705
 msgid "The file could not be found in any packages"
 msgstr "此檔案在任何套件都找不到"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1286
+#: ../src/gpk-dbus-task.c:1354
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "%s 套件已經提供這個檔案"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1367
+#: ../src/gpk-dbus-task.c:1435
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "需要下列檔案："
 msgstr[1] "需要下列檔案："
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1370
+#: ../src/gpk-dbus-task.c:1438
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "是否要現在搜尋這個檔案？"
 msgstr[1] "是否要現在搜尋這些檔案？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1375
+#: ../src/gpk-dbus-task.c:1443
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1590,7 +1591,7 @@ msgstr[0] "%s 要求安裝檔案"
 msgstr[1] "%s 要求安裝檔案"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1378
+#: ../src/gpk-dbus-task.c:1446
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "有程式要求安裝檔案"
@@ -1598,27 +1599,27 @@ msgstr[1] "有程式要求安裝檔案"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2734
+#: ../src/gpk-dbus-task.c:1462 ../src/gpk-dbus-task.c:2808
 #: ../src/gpk-enum.c:1313
 msgid "Searching for file"
 msgstr "正在搜尋檔案"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1437
+#: ../src/gpk-dbus-task.c:1505
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "需要下列外掛程式:"
 msgstr[1] "需要下列外掛程式:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1455
+#: ../src/gpk-dbus-task.c:1523
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "是否要現在搜尋這個？"
 msgstr[1] "是否要現在搜尋這些？"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1468
+#: ../src/gpk-dbus-task.c:1536
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1626,7 +1627,7 @@ msgstr[0] "%s 需要額外的外掛程式才能解碼這個檔案"
 msgstr[1] "%s 需要額外的外掛程式才能解碼這個檔案"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1472
+#: ../src/gpk-dbus-task.c:1540
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1634,7 +1635,7 @@ msgstr[0] "%s 需要額外的外掛程式才能編碼這個檔案"
 msgstr[1] "%s 需要額外的外掛程式才能編碼這個檔案"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1476
+#: ../src/gpk-dbus-task.c:1544
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1642,93 +1643,93 @@ msgstr[0] "%s 需要額外的外掛程式才能進行這個操作"
 msgstr[1] "%s 需要額外的外掛程式才能進行這個操作"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1482
+#: ../src/gpk-dbus-task.c:1550
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "有程式需要額外的外掛程式才能解碼這個檔案"
 msgstr[1] "有程式需要額外的外掛程式才能解碼這個檔案"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1486
+#: ../src/gpk-dbus-task.c:1554
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "有程式需要額外的外掛程式才能編碼這個檔案"
 msgstr[1] "有程式需要額外的外掛程式才能編碼這個檔案"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1490
+#: ../src/gpk-dbus-task.c:1558
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "有程式需要額外的外掛程式才能進行這個操作"
 msgstr[1] "有程式需要額外的外掛程式才能進行這個操作"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1496 ../src/gpk-dbus-task.c:1851
-#: ../src/gpk-dbus-task.c:2223
+#: ../src/gpk-dbus-task.c:1564 ../src/gpk-dbus-task.c:1919
+#: ../src/gpk-dbus-task.c:2291
 msgid "Search"
 msgstr "搜尋"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1551
+#: ../src/gpk-dbus-task.c:1619
 msgid "Failed to search for plugin"
 msgstr "搜尋外掛程式失敗"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1553
+#: ../src/gpk-dbus-task.c:1621
 msgid "Could not find plugin in any configured software source"
 msgstr "在任何設定好的軟件來源都中找不到外掛程式"
 
-#: ../src/gpk-dbus-task.c:1576
+#: ../src/gpk-dbus-task.c:1644
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "安裝下列外掛程式"
 msgstr[1] "安裝下列外掛程式"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1577 ../src/gpk-dbus-task.c:2041
-#: ../src/gpk-dbus-task.c:2430
+#: ../src/gpk-dbus-task.c:1645 ../src/gpk-dbus-task.c:2109
+#: ../src/gpk-dbus-task.c:2498
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "是否要現在安裝這個套件？"
 msgstr[1] "是否要現在安裝這些套件？"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1669
+#: ../src/gpk-dbus-task.c:1737
 msgid "Searching for plugins"
 msgstr "正在搜尋外掛程式"
 
-#: ../src/gpk-dbus-task.c:1690
+#: ../src/gpk-dbus-task.c:1758
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "正在搜尋外掛程式：%s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1728
+#: ../src/gpk-dbus-task.c:1796
 msgid "Failed to search for provides"
 msgstr "無法搜尋提供此項"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1758
+#: ../src/gpk-dbus-task.c:1826
 msgid "Failed to find software"
 msgstr "無法尋找軟件"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1760
+#: ../src/gpk-dbus-task.c:1828
 msgid "No new applications can be found to handle this type of file"
 msgstr "找不到可以處理這個檔案類型的應用程式"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1833
+#: ../src/gpk-dbus-task.c:1901
 msgid "An additional program is required to open this type of file:"
 msgstr "要開啓這個檔案類型必須有額外的程式："
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1836
+#: ../src/gpk-dbus-task.c:1904
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "是否要現在搜尋能開啟這個檔案類型的程式？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1844
+#: ../src/gpk-dbus-task.c:1912
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1736,55 +1737,55 @@ msgstr[0] "%s 需要新的 mime 類型"
 msgstr[1] "%s 需要新的 mime 類型"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1847
+#: ../src/gpk-dbus-task.c:1915
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "有程式需要新的 mime 類型"
 msgstr[1] "有程式需要新的 mime 類型"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1862
+#: ../src/gpk-dbus-task.c:1930
 msgid "Searching for file handlers"
 msgstr "正在搜尋檔案處理程式"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:1942
+#: ../src/gpk-dbus-task.c:2010
 msgid "Language tag not parsed"
 msgstr "無法解析語言標籤"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:1950
+#: ../src/gpk-dbus-task.c:2018
 msgid "Language code not matched"
 msgstr "沒有符合的語言碼"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2010
+#: ../src/gpk-dbus-task.c:2078
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "尋找字型失敗"
 msgstr[1] "尋找字型失敗"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2018
+#: ../src/gpk-dbus-task.c:2086
 msgid "No new fonts can be found for this document"
 msgstr "找不到適用於這個文件的新字型"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2202
+#: ../src/gpk-dbus-task.c:2270
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "要正確的檢視這個檔案需要安裝額外的字型。"
 msgstr[1] "要正確的檢視這個檔案需要安裝額外的字型。"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2206
+#: ../src/gpk-dbus-task.c:2274
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "你想要現在搜尋合適的套件嗎？"
 msgstr[1] "你想要現在搜尋合適的套件嗎？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2216
+#: ../src/gpk-dbus-task.c:2284
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1792,43 +1793,43 @@ msgstr[0] "%s 要求安裝字型"
 msgstr[1] "%s 要求安裝字型"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2219
+#: ../src/gpk-dbus-task.c:2287
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "有程式要求安裝字型"
 msgstr[1] "有程式要求安裝字型"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2235
+#: ../src/gpk-dbus-task.c:2303
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "正在搜尋字型"
 msgstr[1] "正在搜尋字型"
 
-#: ../src/gpk-dbus-task.c:2273
+#: ../src/gpk-dbus-task.c:2341
 msgid "Could not process catalog"
 msgstr "無法處理型錄"
 
-#: ../src/gpk-dbus-task.c:2291
+#: ../src/gpk-dbus-task.c:2359
 msgid "No packages need to be installed"
 msgstr "沒有套件需要安裝"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2378
 msgid "Install packages in catalog?"
 msgstr "是否要安裝型錄內的套件？"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2312
+#: ../src/gpk-dbus-task.c:2380
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "下列套件已標記為從型錄中安裝："
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2352
+#: ../src/gpk-dbus-task.c:2420
 msgid "Failed to remove package"
 msgstr "無法移除套件"
 
-#: ../src/gpk-dbus-task.c:2429
+#: ../src/gpk-dbus-task.c:2497
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "安裝下列驅動程式"
@@ -1836,31 +1837,31 @@ msgstr[1] "安裝下列驅動程式"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2579 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:2649 ../src/gpk-enum.c:953
 msgid "Removing packages"
 msgstr "正在移除套件"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2629
+#: ../src/gpk-dbus-task.c:2703
 msgid "Failed to find package for this file"
 msgstr "找不到這個檔案的套件"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2707
+#: ../src/gpk-dbus-task.c:2781
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "將要移除下列檔案："
 msgstr[1] "將要移除下列檔案："
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2710
+#: ../src/gpk-dbus-task.c:2784
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "是否要現在移除這個檔案？"
 msgstr[1] "是否要現在移除這些檔案？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2715
+#: ../src/gpk-dbus-task.c:2789
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1868,26 +1869,26 @@ msgstr[0] "%s 要求移除檔案"
 msgstr[1] "%s 要求移除檔案"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2718
+#: ../src/gpk-dbus-task.c:2792
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "有程式要求移除檔案"
 msgstr[1] "有程式要求移除檔案"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2722
+#: ../src/gpk-dbus-task.c:2796
 msgid "Remove"
 msgstr "移除"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2775
+#: ../src/gpk-dbus-task.c:2849
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "你是否要安裝這個型錄？"
 msgstr[1] "你是否要安裝這個型錄？"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2800
+#: ../src/gpk-dbus-task.c:2874
 msgid "Install catalogs"
 msgstr "安裝型錄"
 
@@ -2061,7 +2062,7 @@ msgstr "無法完結"
 
 #: ../src/gpk-enum.c:432
 msgid "Cannot get lock"
-msgstr "不能取得鎖定"
+msgstr "無法解鎖"
 
 #: ../src/gpk-enum.c:435
 msgid "No packages to update"
@@ -2124,7 +2125,7 @@ msgid "No space is left on the disk"
 msgstr "這個磁碟已經沒有空間"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:480 ../src/gpk-task.c:359
+#: ../src/gpk-enum.c:480 ../src/gpk-task.c:360
 msgid "A media change is required"
 msgstr "需要更改媒體"
 
@@ -2408,8 +2409,8 @@ msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
-"不能取得套件製作後端的排他鎖定。\n"
-"請關閉任何其他可能開啟的傳統套件製作工具。"
+"無法取得套件製作後端的排他鎖。\n"
+"請關閉任何其他可能開啟的傳統套件包裝工具。"
 
 #: ../src/gpk-enum.c:659
 msgid "None of the selected packages could be updated."
@@ -2871,7 +2872,7 @@ msgstr "正在產生套件清單"
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
 #: ../src/gpk-enum.c:1053
 msgid "Waiting for package manager lock"
-msgstr "正在等待套件管理程式還鎖"
+msgstr "正在等待套件管理程式解鎖"
 
 #. TRANSLATORS: waiting for user to type in a password
 #: ../src/gpk-enum.c:1057
@@ -3688,47 +3689,47 @@ msgid ""
 msgstr "需要額外的媒體。請插入標籤為「%2$s」的 %1$s 並按繼續。"
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:363 ../src/gpk-task.c:541
+#: ../src/gpk-task.c:364 ../src/gpk-task.c:543
 msgid "Continue"
 msgstr "繼續"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:400
+#: ../src/gpk-task.c:401
 msgid "The following software also needs to be installed"
 msgstr "下列軟件也需要被安裝"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:405
+#: ../src/gpk-task.c:406
 msgid "The following software also needs to be removed"
 msgstr "下列軟件也需要被移除"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:409
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be updated"
 msgstr "下列軟件也需要被升級"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:413
+#: ../src/gpk-task.c:414
 msgid "The following software also needs to be re-installed"
 msgstr "下列軟件也需要被重新安裝"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:417
+#: ../src/gpk-task.c:418
 msgid "The following software also needs to be downgraded"
 msgstr "下列軟件也需要被降級"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:421
+#: ../src/gpk-task.c:422
 msgid "The following software also needs to be processed"
 msgstr "下列軟件也需要被處理"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:480
+#: ../src/gpk-task.c:481
 msgid "Additional confirmation required"
 msgstr "需要額外的確認"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:486
+#: ../src/gpk-task.c:487
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3736,7 +3737,7 @@ msgstr[0] "要安裝這個套件，還需要修改額外的軟件。"
 msgstr[1] "要安裝這些套件，還需要修改額外的軟件。"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:491
+#: ../src/gpk-task.c:492
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3744,7 +3745,7 @@ msgstr[0] "要移除這個套件，還需要修改額外的軟件。"
 msgstr[1] "要移除這些套件，還需要修改額外的軟件。"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:496
+#: ../src/gpk-task.c:497
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3752,7 +3753,7 @@ msgstr[0] "要更新這個套件，還需要修改額外的軟件。"
 msgstr[1] "要更新這些套件，還需要修改額外的軟件。"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:501
+#: ../src/gpk-task.c:502
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these file, additional software also has to be modified."
@@ -3760,18 +3761,18 @@ msgstr[0] "要安裝這個檔案，還需要修改額外的軟件。"
 msgstr[1] "要安裝這些檔案，還需要修改額外的軟件。"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:506
+#: ../src/gpk-task.c:507
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr "要處理此處理事項，還需要修改額外的軟件。"
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:591
+#: ../src/gpk-task.c:593
 msgid "_Force install"
 msgstr "強制安裝(_F)"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:595
+#: ../src/gpk-task.c:597
 msgid "Force installing package"
 msgstr "強制安裝套件"
 
@@ -4196,49 +4197,49 @@ msgid "Some updates were not installed"
 msgstr "有些更新沒有安裝"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:445 ../src/gpk-update-viewer.c:457
+#: ../src/gpk-update-viewer.c:446 ../src/gpk-update-viewer.c:458
 msgid "Could not update packages"
 msgstr "無法更新套件"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:507
+#: ../src/gpk-update-viewer.c:481 ../src/gpk-update-viewer.c:508
 msgid "GNOME PackageKit Update Viewer"
 msgstr "GNOME PackageKit 更新檢視器"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:482
+#: ../src/gpk-update-viewer.c:483
 msgid "Failed to update"
 msgstr "無法更新"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:537 ../src/gpk-update-viewer.c:558
+#: ../src/gpk-update-viewer.c:538 ../src/gpk-update-viewer.c:559
 msgid "Updates installed"
 msgstr "更新已安裝"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:547
+#: ../src/gpk-update-viewer.c:548
 msgid "All updates were installed successfully."
 msgstr "所有更新都已經成功的安裝了。"
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:550
+#: ../src/gpk-update-viewer.c:551
 msgid "The selected updates were installed successfully."
 msgstr "選取的更新都已經成功的安裝了。"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1007
+#: ../src/gpk-update-viewer.c:1008
 msgid "Getting the list of updates"
 msgstr "正在取得更新清單"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1215
+#: ../src/gpk-update-viewer.c:1216
 msgid "Could not run upgrade script"
 msgstr "無法執行升級命令稿"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1266
+#: ../src/gpk-update-viewer.c:1267
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4249,28 +4250,28 @@ msgstr[0] "連線能力是由無線寬頻所提供，而要下載這個套件可
 msgstr[1] "連線能力是由無線寬頻所提供，而要下載這些套件可能會花費不少錢。"
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1370
+#: ../src/gpk-update-viewer.c:1371
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "安裝更新(_I)"
 msgstr[1] "安裝更新(_I)"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1383
+#: ../src/gpk-update-viewer.c:1384
 msgid "There are no updates available"
 msgstr "沒有可用的更新"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1392
+#: ../src/gpk-update-viewer.c:1393
 msgid "All software is up to date"
 msgstr "所有的軟件已是最新的"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1396
+#: ../src/gpk-update-viewer.c:1397
 msgid "There are no software updates available for your computer at this time."
 msgstr "目前沒有適用於你電腦的軟件更新。"
 
-#: ../src/gpk-update-viewer.c:1432
+#: ../src/gpk-update-viewer.c:1433
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4278,7 +4279,7 @@ msgstr[0] "有 %i 個可用的更新"
 msgstr[1] "有 %i 個可用的更新"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1448
+#: ../src/gpk-update-viewer.c:1449
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4286,7 +4287,7 @@ msgstr[0] "已選取 %i 個更新"
 msgstr[1] "已選取 %i 個更新"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1456
+#: ../src/gpk-update-viewer.c:1457
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4294,50 +4295,50 @@ msgstr[0] "選取了 %i 個更新 (%s)"
 msgstr[1] "選取了 %i 個更新 (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1650
+#: ../src/gpk-update-viewer.c:1651
 msgid "Software"
 msgstr "軟件"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1660
+#: ../src/gpk-update-viewer.c:1661
 msgid "Status"
 msgstr "狀態"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1870
+#: ../src/gpk-update-viewer.c:1871
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "這個更新會修正錯誤及其他非嚴重性的問題。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1874
+#: ../src/gpk-update-viewer.c:1875
 msgid "This update is important as it may solve critical problems."
 msgstr "此更新相當重要因為它可以解決許多關鍵性的問題。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1878
+#: ../src/gpk-update-viewer.c:1879
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr "此更新藉由此套件來修補某個安全性弱點。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1882
+#: ../src/gpk-update-viewer.c:1883
 msgid "This update is blocked."
 msgstr "此更新被封鎖。"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1894
+#: ../src/gpk-update-viewer.c:1895
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "此通知於 %s 發出，最後更新於 %s。"
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1901
+#: ../src/gpk-update-viewer.c:1902
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "此通知發出於 %s。"
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:1924
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4345,7 +4346,7 @@ msgstr[0] "若要取得更多關於此更新的資訊，請造訪這些網站：
 msgstr[1] "若要取得更多關於此更新的資訊，請造訪這些網站："
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1931
+#: ../src/gpk-update-viewer.c:1932
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4356,7 +4357,7 @@ msgstr[0] "若要取得更多關於此更新所修復的軟件錯誤資訊，請
 msgstr[1] "若要取得更多關於此更新所修復的軟件錯誤資訊，請造訪這些網站："
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1939
+#: ../src/gpk-update-viewer.c:1940
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4365,98 +4366,98 @@ msgstr[0] "若要取得更多關於此安全性更新的資訊，請造訪這些
 msgstr[1] "若要取得更多關於此安全性更新的資訊，請造訪這些網站："
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1949
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "這個電腦在更新之後需要重新啟動來讓所做的更改發揮功效。"
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1952
+#: ../src/gpk-update-viewer.c:1953
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr "在更新之後你將需要先登出後再重新登入，才能讓更改生效。"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1959
+#: ../src/gpk-update-viewer.c:1960
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr "此更新的分級屬於不穩定等級，這代表它不是針對工作生產用途所設計的。"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1963
+#: ../src/gpk-update-viewer.c:1964
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr "這是個測試性更新，並不是針對一般用途所設計的。請回報任何你所遭遇到的問題或是降級。"
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:1972
+#: ../src/gpk-update-viewer.c:1973
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr "開發者紀錄會在這個更新沒有資訊可用時顯示："
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2008
+#: ../src/gpk-update-viewer.c:2009
 msgid "Loading..."
 msgstr "載入中..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2148
-#: ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2050 ../src/gpk-update-viewer.c:2149
+#: ../src/gpk-update-viewer.c:2169
 msgid "Could not get update details"
 msgstr "無法取得更新細節"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2069
+#: ../src/gpk-update-viewer.c:2070
 msgid "Could not get package details"
 msgstr "無法取得套件詳細資訊"
 
-#: ../src/gpk-update-viewer.c:2069 ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2070 ../src/gpk-update-viewer.c:2169
 msgid "No results were returned."
 msgstr "找不到任何結果。"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2403
+#: ../src/gpk-update-viewer.c:2404
 msgid "Select all"
 msgstr "全選"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2411
+#: ../src/gpk-update-viewer.c:2412
 msgid "Unselect all"
 msgstr "取消全選"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2418
+#: ../src/gpk-update-viewer.c:2419
 msgid "Select security updates"
 msgstr "選擇安全性更新"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2424
+#: ../src/gpk-update-viewer.c:2425
 msgid "Ignore this update"
 msgstr "忽略這個更新"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2533
+#: ../src/gpk-update-viewer.c:2534
 msgid "Could not get updates"
 msgstr "無法取得更新"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2658
+#: ../src/gpk-update-viewer.c:2659
 msgid "Checking for updates..."
 msgstr "正在檢查更新..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2945
+#: ../src/gpk-update-viewer.c:2946
 msgid "Could not get list of distribution upgrades"
 msgstr "無法取得發行版升級清單"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2976
+#: ../src/gpk-update-viewer.c:2977
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "有新的發行版「%s」可供升級"
