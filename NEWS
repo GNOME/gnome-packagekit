@@ -1,3 +1,49 @@
+Version 2.29.91
+~~~~~~~~~~~~~~
+Released: 2010-03-01
+
+* Translations
+ - Added Lithuanian translation (Gintautas Miliauskas)
+ - Updated Arabic translation (Khaled Hosny)
+ - Updated Brazilian Portuguese translation (Igor Pires Soares)
+ - Updated British English translation (Bruce Cowan)
+ - Updated Bulgarian translation (Alexander Shopov)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated French translation (Bruno Brouard)
+ - Updated French translation (Claude Paroz)
+ - Updated Galician Translation (Anton Méixome)
+ - Updated Galician Translation (Fran Diéguez)
+ - Updated German doc translation (Mario Blättermann)
+ - Updated German translation (Mario Blättermann)
+ - Updated Gujarati Translations (Sweta Kothari)
+ - Updated Oriya Translation (Manoj Kumar Giri)
+ - Updated Polish translation (Piotr Drąg)
+ - Updated Portuguese translation (António Lima)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Simplified Chinese translation (Ray Wang)
+ - Updated Slovenian translation (Matej Urbančič)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Tamil translation (vasudeven)
+ - Updated Traditional Chinese translation (Chao-Hsiung Liao, Cheng-Chia Tseng)
+ - Update Romanian translation (Lucian Adrian Grijincu)
+
+* New Features:
+ - Add InstallPrinterDrivers into the session API (Tim Waugh)
+
+* Bugfix:
+ - Do not assume that we are just installing when we get the simulate request (Richard Hughes)
+ - Do not schedule a refresh-cache if one is already waiting (Richard Hughes)
+ - Do not show '0 bytes' in the confirmation dialog, just show the message title (Richard Hughes)
+ - Do not show the list of packages in the updates-available bubble. Fixes #609233 (Richard Hughes)
+ - Ensure parent window is set modal when installing packages with deps using the DBus interface. Fixes rh#566741 (Richard Hughes)
+ - Fix an infinite loop in gpk_update_viewer_are_all_updates_selected() (Richard Hughes)
+ - Fixed incorrect use of g_ascii_strdown (Tim Waugh)
+ - If we failed to update the system, wait a lot longer than two seconds before we try again (Richard Hughes)
+ - Read the PkClient error code enum and try to map it to a PkErrorEnum code (Richard Hughes)
+ - Return TRUE when InstallPackageFiles succeeds (Jonathan Conder)
+ - Use correct provides tag for postscriptdriver what-provides query (Tim Waugh)
+
 Version 2.29.3
 ~~~~~~~~~~~~~~
 Released: 2010-02-01
