@@ -32,6 +32,7 @@
 #include <locale.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
+#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-dbus-monitor.h"
@@ -55,6 +56,7 @@ main (int argc, char *argv[])
 	GpkFirmware *firmware = NULL;
 	GpkHardware *hardware = NULL;
 	GOptionContext *context;
+	UniqueApp *unique_app;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -100,6 +102,14 @@ main (int argc, char *argv[])
 		return 1;
 	}
 
+	/* are we already activated? */
+	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateIcon", NULL);
+	if (unique_app_is_running (unique_app)) {
+		egg_debug ("You have another instance running. This program will now close");
+		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
+		goto unique_out;
+	}
+
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
@@ -121,7 +131,8 @@ main (int argc, char *argv[])
 	g_object_unref (watch);
 	g_object_unref (firmware);
 	g_object_unref (hardware);
-
+unique_out:
+	g_object_unref (unique_app);
 	return 0;
 }
 
