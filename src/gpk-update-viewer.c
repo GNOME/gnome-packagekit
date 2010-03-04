@@ -187,15 +187,13 @@ gpk_update_viewer_packages_set_sensitive (GpkUpdateViewer *update_viewer, gboole
 }
 
 /**
- * gpk_update_viewer_auto_shutdown:
+ * gpk_update_viewer_auto_shutdown_cb:
  **/
 static gboolean
-gpk_update_viewer_auto_shutdown (GtkDialog *dialog)
+gpk_update_viewer_auto_shutdown_cb (GtkDialog *dialog)
 {
-	GpkUpdateViewer *update_viewer;
-	update_viewer = GPK_UPDATE_VIEWER(g_object_get_data (G_OBJECT(dialog), "instance"));
+	egg_debug ("autoclosing dialog");
 	gtk_dialog_response (dialog, GTK_RESPONSE_CANCEL);
-	update_viewer->priv->auto_shutdown_id = 0;
 	return FALSE;
 }
 
@@ -287,10 +285,16 @@ gpk_update_viewer_check_restart (GpkUpdateViewer *update_viewer)
 
 	/* setup a callback so we autoclose */
 	g_object_set_data_full (G_OBJECT(dialog), "instance", g_object_ref (update_viewer), (GDestroyNotify) g_object_unref);
-	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
 
 	response = gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
+
+	/* remove auto-shutdown */
+	if (priv->auto_shutdown_id != 0) {
+		g_source_remove (priv->auto_shutdown_id);
+		priv->auto_shutdown_id = 0;
+	}
 
 	/* cancel */
 	if (response != GTK_RESPONSE_OK)
@@ -562,10 +566,16 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* setup a callback so we autoclose */
-	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
 
 	gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
+
+	/* remove auto-shutdown */
+	if (priv->auto_shutdown_id != 0) {
+		g_source_remove (priv->auto_shutdown_id);
+		priv->auto_shutdown_id = 0;
+	}
 
 	/* quit after we successfully updated */
 	gpk_update_viewer_quit (update_viewer);
@@ -1398,10 +1408,16 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 		/* setup a callback so we autoclose */
-		priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown, dialog);
+		priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
 
 		gtk_dialog_run (GTK_DIALOG(dialog));
 		gtk_widget_destroy (dialog);
+
+		/* remove auto-shutdown */
+		if (priv->auto_shutdown_id != 0) {
+			g_source_remove (priv->auto_shutdown_id);
+			priv->auto_shutdown_id = 0;
+		}
 
 		/* exit the program */
 		gpk_update_viewer_quit (update_viewer);
@@ -3238,6 +3254,10 @@ gpk_update_viewer_finalize (GObject *object)
 
 	/* we might have visual stuff running, close it down */
 	g_cancellable_cancel (priv->cancellable);
+
+	/* remove auto-shutdown */
+	if (priv->auto_shutdown_id != 0)
+		g_source_remove (priv->auto_shutdown_id);
 
 	if (priv->update_array != NULL)
 		g_ptr_array_unref (priv->update_array);
