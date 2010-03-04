@@ -80,9 +80,11 @@ struct GpkCheckUpdatePrivate
 	GConfClient		*gconf_client;
 	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
+	NotifyNotification	*notification_error;
 	EggDbusMonitor		*dbus_monitor_viewer;
 	guint			 updates_changed_id;
 	GCancellable		*cancellable;
+	PkError			*error_code;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -458,6 +460,68 @@ out:
 }
 
 /**
+ * gpk_check_update_show_error:
+ **/
+static void
+gpk_check_update_show_error (GpkCheckUpdate *cupdate, PkError *error_code)
+{
+	gboolean ret;
+	GError *error = NULL;
+	PkErrorEnum error_enum;
+	const gchar *title;
+	const gchar *message;
+	NotifyNotification *notification = NULL;
+
+	/* ignore some errors */
+	error_enum = pk_error_get_code (error_code);
+	if (error_enum == PK_ERROR_ENUM_PROCESS_KILL)
+		goto out;
+	if (error_enum == PK_ERROR_ENUM_TRANSACTION_CANCELLED)
+		goto out;
+	if (error_enum == PK_ERROR_ENUM_CANNOT_GET_LOCK)
+		goto out;
+
+	/* get localised versions */
+	title = gpk_error_enum_to_localised_text (error_enum);
+	message = gpk_error_enum_to_localised_message (error_enum);
+
+	/* close any existing notification */
+	if (cupdate->priv->notification_error != NULL) {
+		notify_notification_close (cupdate->priv->notification_error, NULL);
+		cupdate->priv->notification_error = NULL;
+	}
+
+	/* save in case we do more details */
+	if (cupdate->priv->error_code != NULL)
+		g_object_unref (cupdate->priv->error_code);
+	cupdate->priv->error_code = g_object_ref (error_code);
+
+	/* do the bubble */
+	egg_debug ("title=%s, message=%s", title, message);
+	notification = notify_notification_new_with_status_icon (title, message, "help-browser", cupdate->priv->status_icon);
+	if (notification == NULL) {
+		egg_warning ("failed to get bubble");
+		goto out;
+	}
+	notify_notification_set_timeout (notification, 15000);
+	notify_notification_set_urgency (notification, NOTIFY_URGENCY_CRITICAL);
+	notify_notification_add_action (notification, "show-error-details",
+					/* TRANSLATORS: button: show more details about the error */
+					_("Show details"), gpk_check_update_libnotify_cb, cupdate, NULL);
+	ret = notify_notification_show (notification, &error);
+	if (!ret) {
+		egg_warning ("error: %s", error->message);
+		g_error_free (error);
+	}
+	/* track so we can prevent doubled notifications */
+	cupdate->priv->notification_error = g_object_ref (notification);
+out:
+	if (notification != NULL)
+		g_object_unref (notification);
+	return;
+}
+
+/**
  * gpk_check_update_update_system_finished_cb:
  **/
 static void
@@ -483,13 +547,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		egg_warning ("failed to update system: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		/* ignore some errors */
-		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
-					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		}
+		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
 
@@ -539,6 +597,10 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 {
 	gboolean ret;
 	GError *error = NULL;
+	const gchar *title;
+	const gchar *message;
+	const gchar *details;
+
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (g_strcmp0 (action, "do-not-show-complete-restart") == 0) {
@@ -559,9 +621,11 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	} else if (g_strcmp0 (action, "distro-upgrade-do-not-show-available") == 0) {
 		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_DISTRO_UPGRADES);
 		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, FALSE, NULL);
-//	} else if (egg_strequal (action, "show-error-details")) {
-//		/* TRANSLATORS: detailed text about the error */
-//		gpk_error_dialog (_("Error details"), _("Package Manager error details"), cupdate->priv->error_details);
+	} else if (g_strcmp0 (action, "show-error-details") == 0) {
+		title = gpk_error_enum_to_localised_text (pk_error_get_code (cupdate->priv->error_code));
+		message = gpk_error_enum_to_localised_message (pk_error_get_code (cupdate->priv->error_code));
+		details = pk_error_get_details (cupdate->priv->error_code);
+		gpk_error_dialog (title, message, details);
 	} else if (g_strcmp0 (action, "cancel") == 0) {
 		/* try to cancel */
 		g_cancellable_cancel (cupdate->priv->cancellable);
@@ -864,13 +928,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		egg_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		/* ignore some errors */
-		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
-					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		}
+		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
 
@@ -1181,13 +1239,7 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		egg_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		/* ignore some errors */
-		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
-					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		}
+		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
 out:
@@ -1265,13 +1317,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		egg_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		/* ignore some errors */
-		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED &&
-		    pk_error_get_code (error_code) != PK_ERROR_ENUM_CANNOT_GET_LOCK) {
-			gpk_error_dialog (gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
-					  gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		}
+		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
 
@@ -1434,10 +1480,12 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 
 	cupdate->priv->updates_changed_id = 0;
 	cupdate->priv->notification_updates_available = NULL;
+	cupdate->priv->notification_error = NULL;
 	cupdate->priv->icon_name = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->status_icon = gtk_status_icon_new ();
 	cupdate->priv->cancellable = g_cancellable_new ();
+	cupdate->priv->error_code = NULL;
 
 	/* preload all the common GConf keys */
 	cupdate->priv->gconf_client = gconf_client_get_default ();
@@ -1526,8 +1574,12 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	g_object_unref (cupdate->priv->cancellable);
 	g_free (cupdate->priv->icon_name);
+	if (cupdate->priv->error_code != NULL)
+		g_object_unref (cupdate->priv->error_code);
 	if (cupdate->priv->updates_changed_id > 0)
 		g_source_remove (cupdate->priv->updates_changed_id);
+	if (cupdate->priv->notification_error != NULL)
+		g_object_unref (cupdate->priv->notification_error);
 
 	G_OBJECT_CLASS (gpk_check_update_parent_class)->finalize (object);
 }
