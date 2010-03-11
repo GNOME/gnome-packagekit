@@ -2952,7 +2952,7 @@ gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplication *app
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	name = gtk_widget_get_name (widget);
+	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	/* only care about new state */
 	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
@@ -2985,7 +2985,7 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplication *applica
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	name = gtk_widget_get_name (widget);
+	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	/* only care about new state */
 	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
@@ -3018,7 +3018,7 @@ gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplication *applicati
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	name = gtk_widget_get_name (widget);
+	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	/* only care about new state */
 	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
@@ -3051,7 +3051,7 @@ gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplication *applicat
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	name = gtk_widget_get_name (widget);
+	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	/* only care about new state */
 	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
@@ -3084,7 +3084,7 @@ gpk_application_menu_filter_source_cb (GtkWidget *widget, GpkApplication *applic
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	name = gtk_widget_get_name (widget);
+	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	/* only care about new state */
 	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
@@ -3781,7 +3781,7 @@ gpk_application_init (GpkApplication *application)
 
 	application->priv->search_type = PK_SEARCH_UNKNOWN;
 	application->priv->search_mode = PK_MODE_UNKNOWN;
-	application->priv->filters_current = PK_FILTER_ENUM_NONE;
+	application->priv->filters_current = 0;
 
 	application->priv->markdown = egg_markdown_new ();
 	egg_markdown_set_max_lines (application->priv->markdown, 50);
