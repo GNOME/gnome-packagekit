@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the gnome-packagekit
 # package.
 # Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>, 2008-2010
+# Tommi Vainikainen <thv@iki.fi>, 2010
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&component=general\n"
-"POT-Creation-Date: 2010-02-16 10:09+0000\n"
-"PO-Revision-Date: 2010-02-19 13:10+0200\n"
-"Last-Translator: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-19 12:27+0200\n"
+"PO-Revision-Date: 2010-03-19 12:26+0200\n"
+"Last-Translator: Tommi Vainikainen <thv@iki.fi>\n"
 "Language-Team: Finnish <laatu@lokalisointi.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -485,71 +486,84 @@ msgid "Only show the newest available package"
 msgstr "Näytä vain uusin saatavilla oleva paketti"
 
 #: ../data/gpk-application.ui.h:20
+msgid "Refresh Package Lists"
+msgstr "Virkistä pakettiluettelot"
+
+#: ../data/gpk-application.ui.h:21
 msgid "Refresh the list of packages on the system"
 msgstr "Virkistä järjestelmään asennettujen pakettien luettelo"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:22
 msgid "S_election"
 msgstr "_Valinta"
 
-#: ../data/gpk-application.ui.h:22
+#: ../data/gpk-application.ui.h:23
 msgid "Software Log"
 msgstr "Ohjelmistoloki"
 
-#: ../data/gpk-application.ui.h:23
+#: ../data/gpk-application.ui.h:24 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-repo.ui.h:2
+msgid "Software Sources"
+msgstr "Ohjelmistolähteet"
+
+#: ../data/gpk-application.ui.h:25
 msgid "View previously added or removed software"
 msgstr "Katso aiemmin asennettuja tai poistettuja ohjelmistoja"
 
-#: ../data/gpk-application.ui.h:24
+#: ../data/gpk-application.ui.h:26
 msgid "Visit the project homepage"
 msgstr "Vieraile projektin kotisivulla"
 
-#: ../data/gpk-application.ui.h:25
+#: ../data/gpk-application.ui.h:27
+msgid "_Contents"
+msgstr "_Sisällys"
+
+#: ../data/gpk-application.ui.h:28
 msgid "_Development"
 msgstr "_Kehitys"
 
-#: ../data/gpk-application.ui.h:26
+#: ../data/gpk-application.ui.h:29
 msgid "_Filters"
 msgstr "_Suotimet"
 
-#: ../data/gpk-application.ui.h:27
+#: ../data/gpk-application.ui.h:30
 msgid "_Free"
 msgstr "_Vapaa"
 
-#: ../data/gpk-application.ui.h:28
+#: ../data/gpk-application.ui.h:31
 msgid "_Graphical"
 msgstr "_Graafinen"
 
 #. TRANSLATORS: context menu to open the offline help file
-#: ../data/gpk-application.ui.h:29 ../src/gpk-check-update.c:301
+#: ../data/gpk-application.ui.h:32 ../src/gpk-check-update.c:303
 msgid "_Help"
 msgstr "O_hje"
 
-#: ../data/gpk-application.ui.h:30
+#: ../data/gpk-application.ui.h:33
 msgid "_Hide Subpackages"
 msgstr "_Piilota alipaketit"
 
-#: ../data/gpk-application.ui.h:31
+#: ../data/gpk-application.ui.h:34
 msgid "_Installed"
 msgstr "_Asennettu"
 
-#: ../data/gpk-application.ui.h:32
+#: ../data/gpk-application.ui.h:35
 msgid "_No Filter"
 msgstr "_Ei suodinta"
 
-#: ../data/gpk-application.ui.h:33
+#: ../data/gpk-application.ui.h:36
 msgid "_Only Free Software"
 msgstr "Vain _vapaat ohjelmistot"
 
-#: ../data/gpk-application.ui.h:34
+#: ../data/gpk-application.ui.h:37
 msgid "_Only Source Code"
 msgstr "Vain _lähdekoodi"
 
-#: ../data/gpk-application.ui.h:35
+#: ../data/gpk-application.ui.h:38
 msgid "_Source"
 msgstr "_Lähde"
 
-#: ../data/gpk-application.ui.h:36
+#: ../data/gpk-application.ui.h:39
 msgid "_System"
 msgstr "_Järjestelmä"
 
@@ -652,10 +666,6 @@ msgstr "_Asenna automaattisesti:"
 #: ../data/gpk-repo.desktop.in.h:1
 msgid "Enable or disable software sources"
 msgstr "Ota käyttöön tai poista käytöstä ohjelmistolähteitä"
-
-#: ../data/gpk-repo.desktop.in.h:2 ../data/gpk-repo.ui.h:2
-msgid "Software Sources"
-msgstr "Ohjelmistolähteet"
 
 #: ../data/gpk-repo.ui.h:1
 msgid "Shows more software sources that may be interesting"
@@ -978,7 +988,7 @@ msgstr "Asennettu"
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
 #: ../src/gpk-application.c:2178 ../src/gpk-application.c:2200
-#: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:725
+#: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:729
 msgid "Name"
 msgstr "Nimi"
 
@@ -1023,7 +1033,7 @@ msgstr "Valikko"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2403 ../src/gpk-update-viewer.c:1690
+#: ../src/gpk-application.c:2403 ../src/gpk-update-viewer.c:1707
 msgid "Size"
 msgstr "Koko"
 
@@ -1079,17 +1089,17 @@ msgstr "Etsi tiedostonimen perusteella"
 
 #. TRANSLATORS: packaging problem, failed to show link
 #. TRANSLATORS: normally a packaging error, cannot launch link
-#: ../src/gpk-application.c:2750 ../src/gpk-check-update.c:205
+#: ../src/gpk-application.c:2750 ../src/gpk-check-update.c:207
 #: ../src/gpk-watch.c:428
 msgid "Failed to show url"
 msgstr "Osoitteen näyttäminen epäonnistui"
 
-#: ../src/gpk-application.c:2787 ../src/gpk-check-update.c:229
+#: ../src/gpk-application.c:2787 ../src/gpk-check-update.c:231
 #: ../src/gpk-watch.c:448
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Lisensoitu GNU General Public Licensen versiolla 2"
 
-#: ../src/gpk-application.c:2788 ../src/gpk-check-update.c:230
+#: ../src/gpk-application.c:2788 ../src/gpk-check-update.c:232
 #: ../src/gpk-watch.c:449
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
@@ -1102,7 +1112,7 @@ msgstr ""
 "Foundation on ne julkaissut; joko lisenssin version 2, tai (valinnan mukaan) "
 "minkä tahansa myöhemmän version mukaisesti."
 
-#: ../src/gpk-application.c:2792 ../src/gpk-check-update.c:234
+#: ../src/gpk-application.c:2792 ../src/gpk-check-update.c:236
 #: ../src/gpk-watch.c:453
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
@@ -1115,7 +1125,7 @@ msgstr ""
 "hyväksyttävästä laadusta tai soveltuvuudesta tiettyyn tarkoitukseen. Katso "
 "General Public Licensestä lisää yksityiskohtia."
 
-#: ../src/gpk-application.c:2796 ../src/gpk-check-update.c:238
+#: ../src/gpk-application.c:2796 ../src/gpk-check-update.c:240
 #: ../src/gpk-watch.c:457
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
@@ -1127,7 +1137,7 @@ msgstr ""
 "Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2802 ../src/gpk-check-update.c:243
+#: ../src/gpk-application.c:2802 ../src/gpk-check-update.c:245
 #: ../src/gpk-watch.c:462
 msgid "translator-credits"
 msgstr ""
@@ -1136,7 +1146,7 @@ msgstr ""
 "http://www.gnome.fi/"
 
 #. TRANSLATORS: website label
-#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:263
+#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:265
 #: ../src/gpk-watch.c:481
 msgid "PackageKit Website"
 msgstr "PackageKitin verkkosivu"
@@ -1205,7 +1215,7 @@ msgstr "Peru haku"
 
 #. TRANSLATORS: show the program version
 #: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:242
-#: ../src/gpk-prefs.c:464 ../src/gpk-update-icon.c:64
+#: ../src/gpk-prefs.c:464 ../src/gpk-update-icon.c:66
 #: ../src/gpk-update-viewer-main.c:69
 msgid "Show the program version and exit"
 msgstr "Näytä ohjelman versio ja lopeta"
@@ -1217,7 +1227,7 @@ msgstr "Pakettien asennin"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:3012
+#: ../src/gpk-update-viewer.c:3029
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Poistutaan, koska taustajärjestelmätietoja ei voitu hakea"
 
@@ -1226,30 +1236,30 @@ msgid "PackageKit Backend Details Viewer"
 msgstr "PackageKitin taustajärjestelmätietojen katselin"
 
 #. TRANSLATORS: context menu to open the preferences
-#: ../src/gpk-check-update.c:289
+#: ../src/gpk-check-update.c:291
 msgid "_Preferences"
 msgstr "_Asetukset"
 
 #. TRANSLATORS: context menu to show the about screen
 #. TRANSLATORS: this is the right click menu item
-#: ../src/gpk-check-update.c:309 ../src/gpk-watch.c:508
+#: ../src/gpk-check-update.c:311 ../src/gpk-watch.c:508
 msgid "_About"
 msgstr "_Tietoja"
 
 #. TRANSLATORS: we did the update, but some updates were skipped and not applied
-#: ../src/gpk-check-update.c:400
+#: ../src/gpk-check-update.c:402
 msgid "One package was skipped:"
 msgid_plural "Some packages were skipped:"
 msgstr[0] "Yksi paketti ohitettiin:"
 msgstr[1] "Joitakin paketteja ohitettiin:"
 
 #. TRANSLATORS: title: system update completed all okay
-#: ../src/gpk-check-update.c:431
+#: ../src/gpk-check-update.c:433
 msgid "The system update has completed"
 msgstr "Järjestelmän päivitys on valmis"
 
 #. TRANSLATORS: restart computer as system packages need update
-#: ../src/gpk-check-update.c:439
+#: ../src/gpk-check-update.c:441
 msgid "Restart computer now"
 msgstr "Käynnistä tietokone nyt uudelleen"
 
@@ -1257,74 +1267,82 @@ msgstr "Käynnistä tietokone nyt uudelleen"
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:446 ../src/gpk-check-update.c:1322
+#: ../src/gpk-check-update.c:448 ../src/gpk-check-update.c:1368
 #: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1577
 msgid "Do not show this again"
 msgstr "Älä näytä tätä uudelleen"
 
+#. TRANSLATORS: button: show more details about the error
+#. TRANSLATORS: button: show details about the error
+#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
+#: ../src/gpk-check-update.c:510 ../src/gpk-dbus-task.c:385
+#: ../src/gpk-watch.c:1399
+msgid "Show details"
+msgstr "Näytä yksityiskohtaiset tiedot"
+
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:501 ../src/gpk-check-update.c:935
-#: ../src/gpk-check-update.c:957
+#: ../src/gpk-check-update.c:559 ../src/gpk-check-update.c:993
+#: ../src/gpk-check-update.c:1015
 msgid "GNOME PackageKit Update Icon"
 msgstr "Gnome PackageKitin päivityskuvake"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:503 ../src/gpk-update-viewer.c:509
+#: ../src/gpk-check-update.c:561 ../src/gpk-update-viewer.c:514
 msgid "Updated successfully"
 msgstr "Päivitys onnistui"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:621
+#: ../src/gpk-check-update.c:685
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Turvallisuuspäivitys saatavilla"
 msgstr[1] "Turvallisuuspäivityksiä saatavilla"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:624
+#: ../src/gpk-check-update.c:688
 msgid "An important update is available for your computer:"
 msgid_plural "Important updates are available for your computer:"
 msgstr[0] "Tärkeä päivitys on saatavilla tietokoneeseesi:"
 msgstr[1] "Tärkeitä päivityksiä on saatavilla tietokoneeseesi:"
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:644
+#: ../src/gpk-check-update.c:708
 msgid "Install updates"
 msgstr "Asenna päivityksiä"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:755
+#: ../src/gpk-check-update.c:819
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
 msgstr "Automaattisia päivityksiä ei asenneta, koska kone käyttää akkua"
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:757
+#: ../src/gpk-check-update.c:821
 msgid "Updates not installed"
 msgstr "Päivityksiä ei asenneta"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:767
+#: ../src/gpk-check-update.c:831
 msgid "Install the updates anyway"
 msgstr "Asenna päivitykset silti"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:814
+#: ../src/gpk-check-update.c:878
 msgid "Updates are being installed"
 msgstr "Päivityksiä asennetaan"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:816
+#: ../src/gpk-check-update.c:880
 msgid "Updates are being automatically installed on your computer"
 msgstr "Päivityksiä asennetaan automaattisesti tietokoneellesi"
 
-#: ../src/gpk-check-update.c:822
+#: ../src/gpk-check-update.c:886
 msgid "Cancel update"
 msgstr "Peru päivitys"
 
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:907
+#: ../src/gpk-check-update.c:965
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
@@ -1332,17 +1350,17 @@ msgstr[0] "%d päivitys on saatavilla"
 msgstr[1] "%d päivitystä on saatavilla"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:937
+#: ../src/gpk-check-update.c:995
 msgid "Update available"
 msgstr "Päivitys saatavilla"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:959
+#: ../src/gpk-check-update.c:1017
 msgid "Update available (on battery)"
 msgstr "Päivitys saatavilla (käytetään akkua)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1309
+#: ../src/gpk-check-update.c:1355
 msgid "Distribution upgrades available"
 msgstr "Jakelupäivityksiä saatavilla"
 
@@ -1351,9 +1369,9 @@ msgstr "Jakelupäivityksiä saatavilla"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1319 ../src/gpk-dbus-task.c:1017
-#: ../src/gpk-dbus-task.c:1251 ../src/gpk-dbus-task.c:1557
-#: ../src/gpk-dbus-task.c:1763 ../src/gpk-dbus-task.c:2021
+#: ../src/gpk-check-update.c:1365 ../src/gpk-dbus-task.c:1085
+#: ../src/gpk-dbus-task.c:1319 ../src/gpk-dbus-task.c:1625
+#: ../src/gpk-dbus-task.c:1831 ../src/gpk-dbus-task.c:2089
 msgid "More information"
 msgstr "Lisätietoja"
 
@@ -1495,52 +1513,46 @@ msgstr ""
 "jakelusi vikojenraportointijärjestelmään."
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:308
+#: ../src/gpk-dbus-task.c:310
 msgid "You don't have the necessary privileges to perform this action."
 msgstr "Sinulla ei ole tarvittavia oikeuksia tämän toiminnon suorittamiseen."
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:312
+#: ../src/gpk-dbus-task.c:314
 msgid "The packagekitd service could not be started."
 msgstr "Packagekitd-palvelua ei voitu käynnistää."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:316
+#: ../src/gpk-dbus-task.c:318
 msgid "The query is not valid."
 msgstr "Kysely on virheellinen."
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:320
+#: ../src/gpk-dbus-task.c:322
 msgid "The file is not valid."
 msgstr "Tiedosto on virheellinen."
 
-#. TRANSLATORS: button: show details about the error
-#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-dbus-task.c:383 ../src/gpk-watch.c:1399
-msgid "Show details"
-msgstr "Näytä yksityiskohtaiset tiedot"
-
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:406 ../src/gpk-dbus-task.c:1070
+#: ../src/gpk-dbus-task.c:466 ../src/gpk-dbus-task.c:1138
 msgid "Failed to install package"
 msgstr "Paketin asennus epäonnistui"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:443 ../src/gpk-enum.c:961
+#: ../src/gpk-dbus-task.c:504 ../src/gpk-enum.c:961
 msgid "Installing packages"
 msgstr "Asennetaan paketteja"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:541 ../src/gpk-dbus-task.c:1289
+#: ../src/gpk-dbus-task.c:606 ../src/gpk-dbus-task.c:1357
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Tiedoston asennus epäonnistui"
 msgstr[1] "Tiedostojen asennus epäonnistui"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:622
+#: ../src/gpk-dbus-task.c:690
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Haluatko asentaa tämän tiedoston?"
@@ -1554,62 +1566,62 @@ msgstr[1] "Haluatko asentaa nämä tiedostot?"
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
 #. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:631 ../src/gpk-dbus-task.c:1163
-#: ../src/gpk-dbus-task.c:1382 ../src/gpk-dbus-task.c:1585
-#: ../src/gpk-dbus-task.c:2048 ../src/gpk-dbus-task.c:2316
-#: ../src/gpk-dbus-task.c:2438 ../src/gpk-dbus-task.c:2783
-#: ../src/gpk-update-viewer.c:1619
+#: ../src/gpk-dbus-task.c:699 ../src/gpk-dbus-task.c:1231
+#: ../src/gpk-dbus-task.c:1450 ../src/gpk-dbus-task.c:1653
+#: ../src/gpk-dbus-task.c:2116 ../src/gpk-dbus-task.c:2384
+#: ../src/gpk-dbus-task.c:2506 ../src/gpk-dbus-task.c:2858
+#: ../src/gpk-update-viewer.c:1636
 msgid "Install"
 msgstr "Asenna"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:946
+#: ../src/gpk-dbus-task.c:1014
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Asennetaan paikallinen tiedosto"
 msgstr[1] "Asennetaan paikallisia tiedostoja"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1005
+#: ../src/gpk-dbus-task.c:1073
 #, c-format
 msgid "Could not find packages"
 msgstr "Paketteja ei löytynyt"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1014
+#: ../src/gpk-dbus-task.c:1082
 msgid "The packages could not be found in any software source"
 msgstr "Paketteja ei löytynyt mistään ohjelmistolähteestä"
 
-#: ../src/gpk-dbus-task.c:1053
+#: ../src/gpk-dbus-task.c:1121
 msgid "Failed to install packages"
 msgstr "Pakettien asennus epäonnistui"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1055 ../src/gpk-enum.c:369
+#: ../src/gpk-dbus-task.c:1123 ../src/gpk-enum.c:369
 msgid "The package is already installed"
 msgstr "Paketti on jo asennettu"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1072
+#: ../src/gpk-dbus-task.c:1140
 msgid "Incorrect response from search"
 msgstr "Virheellinen vastaus hakuun"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1147
+#: ../src/gpk-dbus-task.c:1215
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Vaaditaan lisäpaketti:"
 msgstr[1] "Vaaditaan lisäpaketteja:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1150
+#: ../src/gpk-dbus-task.c:1218
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Haluatko etsiä ja asentaa tämän paketin nyt?"
 msgstr[1] "Haluatko etsiä ja asentaa nämä paketit nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1156
+#: ../src/gpk-dbus-task.c:1224
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1617,49 +1629,49 @@ msgstr[0] "%s haluaa asentaa paketin"
 msgstr[1] "%s haluaa asentaa paketteja"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1159
+#: ../src/gpk-dbus-task.c:1227
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Ohjelma haluaa asentaa paketin"
 msgstr[1] "Ohjelma haluaa asentaa paketteja"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1176 ../src/gpk-dbus-task.c:2498
+#: ../src/gpk-dbus-task.c:1244 ../src/gpk-dbus-task.c:2566
 msgid "Searching for packages"
 msgstr "Etsitään paketteja"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1246
+#: ../src/gpk-dbus-task.c:1314
 msgid "Failed to find package"
 msgstr "Pakettia ei löytynyt"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1248 ../src/gpk-dbus-task.c:2630
+#: ../src/gpk-dbus-task.c:1316 ../src/gpk-dbus-task.c:2705
 msgid "The file could not be found in any packages"
 msgstr "Tiedostoa ei löytynyt mistään paketista"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1286
+#: ../src/gpk-dbus-task.c:1354
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Paketti %s tarjoaa jo tämän tiedoston"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1367
+#: ../src/gpk-dbus-task.c:1435
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Seuraava tiedosto vaaditaan:"
 msgstr[1] "Seuraavat tiedostot vaaditaan:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1370
+#: ../src/gpk-dbus-task.c:1438
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Haluatko etsiä tätä tiedostoa nyt?"
 msgstr[1] "Haluatko etsiä näitä tiedostoja nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1375
+#: ../src/gpk-dbus-task.c:1443
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1667,7 +1679,7 @@ msgstr[0] "%s haluaa asentaa tiedoston"
 msgstr[1] "%s haluaa asentaa tiedostoja"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1378
+#: ../src/gpk-dbus-task.c:1446
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Ohjelma haluaa asentaa tiedoston"
@@ -1675,27 +1687,27 @@ msgstr[1] "Ohjelma haluaa asentaa tiedostoja"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1394 ../src/gpk-dbus-task.c:2733
+#: ../src/gpk-dbus-task.c:1462 ../src/gpk-dbus-task.c:2808
 #: ../src/gpk-enum.c:1313
 msgid "Searching for file"
 msgstr "Etsitään tiedostoa"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1437
+#: ../src/gpk-dbus-task.c:1505
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Seuraava liitännäinen vaaditaan:"
 msgstr[1] "Seuraavat liitännäiset vaaditaan:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1455
+#: ../src/gpk-dbus-task.c:1523
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Haluatko etsiä sitä nyt?"
 msgstr[1] "Haluatko etsiä niitä nyt?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1468
+#: ../src/gpk-dbus-task.c:1536
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1703,7 +1715,7 @@ msgstr[0] "%s vaatii lisäliitännäisen tämän tiedoston purkamiseen"
 msgstr[1] "%s vaatii lisäliitännäisiä tämän tiedoston purkamiseen"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1472
+#: ../src/gpk-dbus-task.c:1540
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1711,7 +1723,7 @@ msgstr[0] "%s vaatii lisäliitännäisen tämän tiedoston koodaamiseen"
 msgstr[1] "%s vaatii lisäliitännäisiä tämän tiedoston koodaamiseen"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1476
+#: ../src/gpk-dbus-task.c:1544
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1719,94 +1731,94 @@ msgstr[0] "%s vaatii lisäliitännäisen tätä toimintoa varten"
 msgstr[1] "%s vaatii lisäliitännäisiä tätä toimintoa varten"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1482
+#: ../src/gpk-dbus-task.c:1550
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Ohjelma vaatii lisäliitännäisen tämän tiedoston purkamiseen"
 msgstr[1] "Ohjelma vaatii lisäliitännäisiä tämän tiedoston purkamiseen"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1486
+#: ../src/gpk-dbus-task.c:1554
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Ohjelma vaatii lisäliitännäisen tämän tiedoston koodaamiseen"
 msgstr[1] "Ohjelma vaatii lisäliitännäisiä tämän tiedoston koodaamiseen"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1490
+#: ../src/gpk-dbus-task.c:1558
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Ohjelma vaatii lisäliitännäisen tätä toimintoa varten"
 msgstr[1] "Ohjelma vaatii lisäliitännäisiä tätä toimintoa varten"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1496 ../src/gpk-dbus-task.c:1851
-#: ../src/gpk-dbus-task.c:2223
+#: ../src/gpk-dbus-task.c:1564 ../src/gpk-dbus-task.c:1919
+#: ../src/gpk-dbus-task.c:2291
 msgid "Search"
 msgstr "Etsi"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1551
+#: ../src/gpk-dbus-task.c:1619
 msgid "Failed to search for plugin"
 msgstr "Liitännäisen etsiminen epäonnistui"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1553
+#: ../src/gpk-dbus-task.c:1621
 msgid "Could not find plugin in any configured software source"
 msgstr "Liitännäistä ei löytynyt mistään ohjelmistolähteestä"
 
-#: ../src/gpk-dbus-task.c:1576
+#: ../src/gpk-dbus-task.c:1644
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Asennetaanko seuraava liitännäinen?"
 msgstr[1] "Asennetaanko seuraavat liitännäiset?"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1577 ../src/gpk-dbus-task.c:2041
-#: ../src/gpk-dbus-task.c:2430
+#: ../src/gpk-dbus-task.c:1645 ../src/gpk-dbus-task.c:2109
+#: ../src/gpk-dbus-task.c:2498
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Haluatko asentaa tämän paketin nyt?"
 msgstr[1] "Haluatko asentaa nämä paketit nyt?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1669
+#: ../src/gpk-dbus-task.c:1737
 msgid "Searching for plugins"
 msgstr "Etsitään liitännäisiä"
 
-#: ../src/gpk-dbus-task.c:1690
+#: ../src/gpk-dbus-task.c:1758
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Etsitään liitännäistä: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1728
+#: ../src/gpk-dbus-task.c:1796
 msgid "Failed to search for provides"
 msgstr "Tarjoajien etsiminen epäonnistui"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1758
+#: ../src/gpk-dbus-task.c:1826
 msgid "Failed to find software"
 msgstr "Ohjelmistoa ei löytynyt"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1760
+#: ../src/gpk-dbus-task.c:1828
 msgid "No new applications can be found to handle this type of file"
 msgstr "Tämän tiedostotyypin käsittelyyn sopivia uusia ohjelmia ei löydetty"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1833
+#: ../src/gpk-dbus-task.c:1901
 msgid "An additional program is required to open this type of file:"
 msgstr "Tämäntyyppisen tiedoston avaamiseen tarvitaan uusi ohjelma:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1836
+#: ../src/gpk-dbus-task.c:1904
 msgid "Do you want to search for a program to open this file type now?"
 msgstr ""
 "Haluatko etsiä tämän tiedostotyypin avaamiseen tarvittavaa ohjelmaa nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1844
+#: ../src/gpk-dbus-task.c:1912
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1814,7 +1826,7 @@ msgstr[0] "%s vaatii uuden mime-tyypin"
 msgstr[1] "%s vaatii uusia mime-tyyppejä"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1847
+#: ../src/gpk-dbus-task.c:1915
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Ohjelma vaatii uuden mime-tyypin"
@@ -1822,48 +1834,48 @@ msgstr[1] "Ohjelma vaatii uusia mime-tyyppejä"
 
 # paremmin?
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1862
+#: ../src/gpk-dbus-task.c:1930
 msgid "Searching for file handlers"
 msgstr "Etsitään tiedostokäsittelimiä"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:1942
+#: ../src/gpk-dbus-task.c:2010
 msgid "Language tag not parsed"
 msgstr "Kielitunnistetta ei voitu jäsentää"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:1950
+#: ../src/gpk-dbus-task.c:2018
 msgid "Language code not matched"
 msgstr "Kielikoodia ei löytynyt"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2010
+#: ../src/gpk-dbus-task.c:2078
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Kirjasinta ei löytynyt"
 msgstr[1] "Kirjasimia ei löytynyt"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2018
+#: ../src/gpk-dbus-task.c:2086
 msgid "No new fonts can be found for this document"
 msgstr "Tätä asiakirjaa varten ei löydetty uusia kirjasimia"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2202
+#: ../src/gpk-dbus-task.c:2270
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Tämän tiedoston näyttämiseksi oikein tarvitaan lisäkirjasin"
 msgstr[1] "Tämän tiedoston näyttämiseksi oikein tarvitaan lisäkirjasimia"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2206
+#: ../src/gpk-dbus-task.c:2274
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Haluatko etsiä sopivaa pakettia nyt?"
 msgstr[1] "Haluatko etsiä sopivia paketteja nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2216
+#: ../src/gpk-dbus-task.c:2284
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1871,43 +1883,43 @@ msgstr[0] "%s haluaa asentaa kirjasimen"
 msgstr[1] "%s haluaa asentaa kirjasimia"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2219
+#: ../src/gpk-dbus-task.c:2287
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Ohjelma haluaa asentaa kirjasimen"
 msgstr[1] "Ohjelma haluaa asentaa kirjasimia"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2235
+#: ../src/gpk-dbus-task.c:2303
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Etsitään kirjasinta"
 msgstr[1] "Etsitään kirjasimia"
 
-#: ../src/gpk-dbus-task.c:2273
+#: ../src/gpk-dbus-task.c:2341
 msgid "Could not process catalog"
 msgstr "Katalogia ei voitu käsitellä"
 
-#: ../src/gpk-dbus-task.c:2291
+#: ../src/gpk-dbus-task.c:2359
 msgid "No packages need to be installed"
 msgstr "Mitään paketteja ei tarvitse asentaa"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2378
 msgid "Install packages in catalog?"
 msgstr "Asennetaanko katalogin paketit?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2312
+#: ../src/gpk-dbus-task.c:2380
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Seuraavat paketit on merkitty asennettaviksi katalogista:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2352
+#: ../src/gpk-dbus-task.c:2420
 msgid "Failed to remove package"
 msgstr "Paketin poistaminen epäonnistui"
 
-#: ../src/gpk-dbus-task.c:2429
+#: ../src/gpk-dbus-task.c:2497
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Asennetaanko seuraava ajuri?"
@@ -1915,31 +1927,31 @@ msgstr[1] "Asennetaanko seuraavat ajurit?"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2578 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:2649 ../src/gpk-enum.c:953
 msgid "Removing packages"
 msgstr "Poistetaan paketteja"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2628
+#: ../src/gpk-dbus-task.c:2703
 msgid "Failed to find package for this file"
 msgstr "Tätä tiedostoa vastaavaa pakettia ei löytynyt"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2706
+#: ../src/gpk-dbus-task.c:2781
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Seuraava tiedosto poistetaan:"
 msgstr[1] "Seuraavat tiedostot poistetaan:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2709
+#: ../src/gpk-dbus-task.c:2784
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Haluatko poistaa tämän tiedoston nyt?"
 msgstr[1] "Haluatko poistaa nämä tiedostot nyt?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2714
+#: ../src/gpk-dbus-task.c:2789
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1947,27 +1959,27 @@ msgstr[0] "%s haluaa poistaa tiedoston"
 msgstr[1] "%s haluaa poistaa tiedostoja"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2792
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Ohjelma haluaa poistaa tiedoston"
 msgstr[1] "Ohjelma haluaa poistaa tiedostoja"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2721
+#: ../src/gpk-dbus-task.c:2796
 msgid "Remove"
 msgstr "Poista"
 
 # TODO better translation?
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2774
+#: ../src/gpk-dbus-task.c:2849
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Haluatko asentaa tämän katalogin?"
 msgstr[1] "Haluatko asentaa nämä katalogit?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2799
+#: ../src/gpk-dbus-task.c:2874
 msgid "Install catalogs"
 msgstr "Asennetaan katalogeja"
 
@@ -2206,7 +2218,7 @@ msgid "No space is left on the disk"
 msgstr "Levyllä ei ole vapaata tilaa"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:480 ../src/gpk-task.c:359
+#: ../src/gpk-enum.c:480 ../src/gpk-task.c:360
 msgid "A media change is required"
 msgstr "Tallennusvälinettä on vaihdettava"
 
@@ -3802,47 +3814,47 @@ msgstr ""
 "Lisää tallennusvälineitä tarvitaan. Syötä %s nimeltä ”%s” ja napsauta jatka."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:363 ../src/gpk-task.c:541
+#: ../src/gpk-task.c:364 ../src/gpk-task.c:543
 msgid "Continue"
 msgstr "Jatka"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:400
+#: ../src/gpk-task.c:401
 msgid "The following software also needs to be installed"
 msgstr "Seuraavat ohjelmistot on myös asennettava"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:405
+#: ../src/gpk-task.c:406
 msgid "The following software also needs to be removed"
 msgstr "Seuraavat ohjelmistot on myös poistettava"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:409
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be updated"
 msgstr "Seuraavat ohjelmistot on myös päivitettävä"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:413
+#: ../src/gpk-task.c:414
 msgid "The following software also needs to be re-installed"
 msgstr "Seuraavat ohjelmistot on myös asennettava uudelleen"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:417
+#: ../src/gpk-task.c:418
 msgid "The following software also needs to be downgraded"
 msgstr "Seuraavat ohjelmistot on myös varhennettava"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:421
+#: ../src/gpk-task.c:422
 msgid "The following software also needs to be processed"
 msgstr "Seuraavat ohjelmistot on myös käsiteltävä"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:480
+#: ../src/gpk-task.c:481
 msgid "Additional confirmation required"
 msgstr "Tarvitaan varmistus"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:486
+#: ../src/gpk-task.c:487
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3850,7 +3862,7 @@ msgstr[0] "Tämän paketin asentamiseksi lisäohjelmistoja on muokattava."
 msgstr[1] "Näiden pakettien asentamiseksi lisäohjelmistoja on muokattava."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:491
+#: ../src/gpk-task.c:492
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3858,7 +3870,7 @@ msgstr[0] "Tämän paketin poistamiseksi lisäohjelmistoja on muokattava."
 msgstr[1] "Näiden pakettien poistamiseksi lisäpaketteja on muokattava."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:496
+#: ../src/gpk-task.c:497
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3866,7 +3878,7 @@ msgstr[0] "Tämän paketin päivittämiseksi lisäohjelmistoja on muokattava."
 msgstr[1] "Näiden pakettien päivittämiseksi lisäohjelmistoja on muokattava."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:501
+#: ../src/gpk-task.c:502
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these file, additional software also has to be modified."
@@ -3874,18 +3886,18 @@ msgstr[0] "Tämän tiedoston asentamiseksi lisäohjelmistoja on muokattava."
 msgstr[1] "Näiden tiedostojen asentamiseksi lisäohjelmistoja on muokattava."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:506
+#: ../src/gpk-task.c:507
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr "Tämän transaktion käsittelemiseksi lisäohjelmistoja on muokattava."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:591
+#: ../src/gpk-task.c:593
 msgid "_Force install"
 msgstr "_Pakota asennus"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:595
+#: ../src/gpk-task.c:597
 msgid "Force installing package"
 msgstr "Pakota paketin asennus"
 
@@ -4248,27 +4260,27 @@ msgstr "Pakettitaulukkotiedostot"
 msgid "Service pack files"
 msgstr "Huoltopakkaustiedostot"
 
-#: ../src/gpk-update-icon.c:62
+#: ../src/gpk-update-icon.c:64
 msgid "Exit after a small delay"
 msgstr "Lopeta pienen viiveen jälkeen"
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-update-icon.c:82 ../src/gpk-update-icon.c:84
+#: ../src/gpk-update-icon.c:84 ../src/gpk-update-icon.c:86
 msgid "Update Applet"
 msgstr "Päivityssovelma"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-icon.c:97
+#: ../src/gpk-update-icon.c:99
 msgid "Update applet"
 msgstr "Päivityssovelma"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:214
+#: ../src/gpk-update-viewer.c:212
 msgid "Failed to process request."
 msgstr "Pyynnön käsittely epäonnistui."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:243
+#: ../src/gpk-update-viewer.c:241
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -4277,12 +4289,12 @@ msgstr ""
 "jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:245 ../src/gpk-update-viewer.c:251
+#: ../src/gpk-update-viewer.c:243 ../src/gpk-update-viewer.c:249
 msgid "Restart Computer"
 msgstr "Käynnistä tietokone uudelleen"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:249
+#: ../src/gpk-update-viewer.c:247
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -4291,7 +4303,7 @@ msgstr ""
 "turvallisuussyistä."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:255
+#: ../src/gpk-update-viewer.c:253
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -4300,12 +4312,12 @@ msgstr ""
 "takaisin sisään, jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:257 ../src/gpk-update-viewer.c:263
+#: ../src/gpk-update-viewer.c:255 ../src/gpk-update-viewer.c:261
 msgid "Log Out"
 msgstr "Kirjaudu ulos"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:261
+#: ../src/gpk-update-viewer.c:259
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4314,59 +4326,59 @@ msgstr ""
 "takaisin sisään turvallisuussyistä."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:308
+#: ../src/gpk-update-viewer.c:312
 msgid "Could not restart"
 msgstr "Ei voitu käynnistää uudelleen"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:376
+#: ../src/gpk-update-viewer.c:380
 msgid "Some updates were not installed"
 msgstr "Joitakin päivityksiä ei asennettu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:445 ../src/gpk-update-viewer.c:457
+#: ../src/gpk-update-viewer.c:450 ../src/gpk-update-viewer.c:462
 msgid "Could not update packages"
 msgstr "Paketteja ei voitu päivittää"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:507
+#: ../src/gpk-update-viewer.c:485 ../src/gpk-update-viewer.c:512
 msgid "GNOME PackageKit Update Viewer"
 msgstr "Gnome PackageKit -päivityssovelma"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:482
+#: ../src/gpk-update-viewer.c:487
 msgid "Failed to update"
 msgstr "Päivitys epäonnistui"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:537 ../src/gpk-update-viewer.c:558
+#: ../src/gpk-update-viewer.c:542 ../src/gpk-update-viewer.c:563
 msgid "Updates installed"
 msgstr "Päivitykset on asennettu"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:547
+#: ../src/gpk-update-viewer.c:552
 msgid "All updates were installed successfully."
 msgstr "Kaikki päivitykset on asennettu."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:550
+#: ../src/gpk-update-viewer.c:555
 msgid "The selected updates were installed successfully."
 msgstr "Valitut päivitykset on asennettu."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1007
+#: ../src/gpk-update-viewer.c:1018
 msgid "Getting the list of updates"
 msgstr "Haetaan luetteloa päivityksistä"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1215
+#: ../src/gpk-update-viewer.c:1226
 msgid "Could not run upgrade script"
 msgstr "Päivityskomentosarjaa ei voitu suorittaa"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1266
+#: ../src/gpk-update-viewer.c:1277
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4381,29 +4393,29 @@ msgstr[1] ""
 "päivittäminen voi olla kallista."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1370
+#: ../src/gpk-update-viewer.c:1381
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Asenna päivitys"
 msgstr[1] "_Asenna päivitykset"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1383
+#: ../src/gpk-update-viewer.c:1394
 msgid "There are no updates available"
 msgstr "Yhtään päivitystä ei ole saatavilla"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1392
+#: ../src/gpk-update-viewer.c:1403
 msgid "All software is up to date"
 msgstr "Kaikki ohjelmistot ovat ajan tasalla"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1396
+#: ../src/gpk-update-viewer.c:1407
 msgid "There are no software updates available for your computer at this time."
 msgstr ""
 "Tietokoneeseesi ei ole tällä hetkellä saatavilla yhtään ohjelmistopäivitystä."
 
-#: ../src/gpk-update-viewer.c:1432
+#: ../src/gpk-update-viewer.c:1449
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4411,7 +4423,7 @@ msgstr[0] "%i päivitys on saatavilla"
 msgstr[1] "%i päivitystä on saatavilla"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1448
+#: ../src/gpk-update-viewer.c:1465
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4419,7 +4431,7 @@ msgstr[0] "%i päivitys valittuna"
 msgstr[1] "%i päivitystä valittuna"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1456
+#: ../src/gpk-update-viewer.c:1473
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4427,29 +4439,29 @@ msgstr[0] "%i päivitys valittuna (%s)"
 msgstr[1] "%i päivitystä valittuna (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1650
+#: ../src/gpk-update-viewer.c:1667
 msgid "Software"
 msgstr "Ohjelmisto"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1660
+#: ../src/gpk-update-viewer.c:1677
 msgid "Status"
 msgstr "Tila"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1870
+#: ../src/gpk-update-viewer.c:1887
 msgid "This update will fix bugs and other non-critical problems."
 msgstr ""
 "Tämä päivitys korjaa ohjelmavirheitä ja muita ongelmia, jotka eivät ole "
 "vakavia."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1874
+#: ../src/gpk-update-viewer.c:1891
 msgid "This update is important as it may solve critical problems."
 msgstr "Tämä päivitys on täkeä, koska se saattaa korjata vakavia ongelmia."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1878
+#: ../src/gpk-update-viewer.c:1895
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4457,24 +4469,24 @@ msgstr ""
 "korjaamiseksi."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1882
+#: ../src/gpk-update-viewer.c:1899
 msgid "This update is blocked."
 msgstr "Tämä päivitys on estetty."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1894
+#: ../src/gpk-update-viewer.c:1911
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Tämä ilmoitus julkaistiin %s ja sitä on viimeksi päivitetty %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1901
+#: ../src/gpk-update-viewer.c:1918
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Tämä ilmoitus julkaistiin %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:1940
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4482,7 +4494,7 @@ msgstr[0] "Lisätietoja tästä päivityksestä on tällä verkkosivulla:"
 msgstr[1] "Lisätietoja tästä päivityksestä on näillä verkkosivuilla:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1931
+#: ../src/gpk-update-viewer.c:1948
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4497,7 +4509,7 @@ msgstr[1] ""
 "verkkosivuilla:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1939
+#: ../src/gpk-update-viewer.c:1956
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4507,7 +4519,7 @@ msgstr[1] ""
 "Lisätietoja tästä turvallisuuspäivityksestä on näillä verkkosivuilla:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1965
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4516,7 +4528,7 @@ msgstr ""
 "muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1952
+#: ../src/gpk-update-viewer.c:1969
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4525,7 +4537,7 @@ msgstr ""
 "jälkeen, jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1959
+#: ../src/gpk-update-viewer.c:1976
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4534,7 +4546,7 @@ msgstr ""
 "tuotantokäyttöön."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1963
+#: ../src/gpk-update-viewer.c:1980
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4543,7 +4555,7 @@ msgstr ""
 "kaikista löydetyistä ongelmista vikailmoitus."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:1972
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4551,64 +4563,64 @@ msgstr ""
 "Näytetään kehityslokit, koska tälle päivitykselle ei ole annettu kuvausta:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2008
+#: ../src/gpk-update-viewer.c:2025
 msgid "Loading..."
-msgstr "Ladataan..."
+msgstr "Ladataan…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2148
-#: ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2066 ../src/gpk-update-viewer.c:2165
+#: ../src/gpk-update-viewer.c:2185
 msgid "Could not get update details"
 msgstr "Päivitystietoja ei voitu noutaa"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2069
+#: ../src/gpk-update-viewer.c:2086
 msgid "Could not get package details"
 msgstr "Pakettitietoja ei voitu noutaa"
 
-#: ../src/gpk-update-viewer.c:2069 ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2086 ../src/gpk-update-viewer.c:2185
 msgid "No results were returned."
 msgstr "Ei tuloksia."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2403
+#: ../src/gpk-update-viewer.c:2420
 msgid "Select all"
 msgstr "Valitse kaikki"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2411
+#: ../src/gpk-update-viewer.c:2428
 msgid "Unselect all"
 msgstr "Poista valinta kaikista"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2418
+#: ../src/gpk-update-viewer.c:2435
 msgid "Select security updates"
 msgstr "Valitse turvallisuuspäivitykset"
 
 # TODO check
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2424
+#: ../src/gpk-update-viewer.c:2441
 msgid "Ignore this update"
 msgstr "Älä huomioi tätä päivitystä"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2533
+#: ../src/gpk-update-viewer.c:2550
 msgid "Could not get updates"
 msgstr "Päivityksiä ei voitu noutaa"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2658
+#: ../src/gpk-update-viewer.c:2675
 msgid "Checking for updates..."
-msgstr "Etsitään päivityksiä..."
+msgstr "Etsitään päivityksiä…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2945
+#: ../src/gpk-update-viewer.c:2962
 msgid "Could not get list of distribution upgrades"
 msgstr "Jakelupäivitysluetteloiden hakeminen epäonnistui"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2976
+#: ../src/gpk-update-viewer.c:2993
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Jakelun versiopäivitys ”%s” on saatavilla"
@@ -4889,9 +4901,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 #~ msgid "Update anyway"
 #~ msgstr "Päivitä silti"
 
-#~ msgid "All selected updates installed..."
-#~ msgstr "Kaikki valitut päivitykset on asennettu..."
-
 #~ msgid "All selected updates installed"
 #~ msgstr "Kaikki valitut päivitykset on asennettu"
 
@@ -4951,27 +4960,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 #~ msgstr[0] "Tämän sisällön soittamiseen vaaditaan lisäliitännäinen"
 #~ msgstr[1] "Tämän sisällön soittamiseen vaaditaan lisäliitännäisiä"
 
-#~ msgid ""
-#~ "How often to check for distribution upgrades. Options are \"daily\", "
-#~ "\"weekly\", \"never\""
-#~ msgstr ""
-#~ "Kuinka usein etsitään jakelupäivityksiä. Vaihtoehdot ovat "
-#~ "”päivittäin”,”viikoittain”, ”ei koskaan”."
-
-#~ msgid ""
-#~ "How often to check for updates. Options are \"hourly\", \"daily\", "
-#~ "\"weekly\", \"never\""
-#~ msgstr ""
-#~ "Kuinka usein etsitään päivityksiä. Vaihtoehdot ovat ”tunneittain”, "
-#~ "”päivittäin”, ”viikoittain”, ”ei koskaan”."
-
-#~ msgid ""
-#~ "How often to refresh the package cache. Options are \"daily\", \"weekly"
-#~ "\", \"never\""
-#~ msgstr ""
-#~ "Kuinka usein virkistetään pakettivälimuisti. Vaihtoehdot ovat "
-#~ "”päivittäin”, ”viikoittain”, ”ei koskaan”."
-
 #~ msgid "Create service packs for sharing with other computers"
 #~ msgstr "Luo huoltopakkauksia, joita voi jakaa toisille tietokoneille"
 
@@ -5018,9 +5006,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Peru "
-
-#~ msgid "_Contents"
-#~ msgstr "_Sisällys"
 
 #~ msgid "gtk-quit"
 #~ msgstr "gtk-quit"
@@ -5111,10 +5096,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 #~ msgid "The client could not be reset"
 #~ msgstr "Asiakasohjelmaa ei voitu palauttaa alkutilaan"
 
-# TODO ohjelmointikielen "method"? src-tiedostoa ei ollut olemassa...
-#~ msgid "The method failed"
-#~ msgstr "Toimenpide epäonnistui"
-
 #~ msgid "Failed to accept license agreement"
 #~ msgstr "Käyttöoikeussopimuksen hyväksyminen epäonnistui"
 
@@ -5129,13 +5110,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 
 #~ msgid "You can only specify one filename to install"
 #~ msgstr "Vain yhden asennettavan tiedoston nimen voi antaa"
-
-# TODO parempi käännös?
-#~ msgid "_Rollback"
-#~ msgstr "_Peruuta"
-
-#~ msgid "Getting Description..."
-#~ msgstr "Haetaan kuvausta..."
 
 #~ msgid "State"
 #~ msgstr "Tila"
@@ -5621,9 +5595,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 #~ msgid "_Install packages"
 #~ msgstr "_Asenna paketteja"
 
-#~ msgid "_Refresh package lists"
-#~ msgstr "_Virkistä pakettiluettelot"
-
 #~ msgid "_Remove packages"
 #~ msgstr "_Poista paketteja"
 
@@ -5862,17 +5833,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 #~ msgid "UpdateSystem:"
 #~ msgstr "Päivitä järjestelmä:"
 
-# tarkista
-#~ msgid "Visible:"
-#~ msgstr "Näkyvillä:"
-
-# tarkista
-#~ msgid "WhatProvides:"
-#~ msgstr "Mikä tarjoaa:"
-
-#~ msgid "Unknown...."
-#~ msgstr "Tuntematon..."
-
 #~ msgid "Repository Viewer"
 #~ msgstr "Asennuslähteiden katselin"
 
@@ -5895,12 +5855,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 
 #~ msgid "Succeeded"
 #~ msgstr "Onnistui"
-
-#~ msgid "Getting information..."
-#~ msgstr "Haetaan tietoja..."
-
-#~ msgid "Getting Information..."
-#~ msgstr "Haetaan tietoja..."
 
 #~ msgid "Waiting for previous tasks to complete!"
 #~ msgstr "Odotetaan edellisten tehtävien valmistumista!"
@@ -5940,9 +5894,6 @@ msgstr "Näytä ylimääräisiä vianjäljitystietoja"
 
 #~ msgid "Functionality incomplete"
 #~ msgstr "Keskeneräinen toiminnallisuus"
-
-#~ msgid "No help yet, sorry..."
-#~ msgstr "Ohjetta ei ole valitettavasti vielä olemassa"
 
 #~ msgid "Failed to launch transaction viewer"
 #~ msgstr "Transaktioiden katselimen käynnistäminen epäonnistui"
