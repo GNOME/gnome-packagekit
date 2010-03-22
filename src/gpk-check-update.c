@@ -177,49 +177,10 @@ gpk_check_update_show_preferences_cb (GtkMenuItem *item, GpkCheckUpdate *cupdate
 }
 
 /**
- * gpk_check_update_about_dialog_url_cb:
- **/
-static void
-gpk_check_update_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
-{
-	GError *error = NULL;
-	gboolean ret;
-	GdkScreen *gscreen;
-	GtkWidget *error_dialog;
-	gchar *url;
-	gchar *protocol = (gchar*) data;
-
-	if (protocol != NULL)
-		url = g_strconcat (protocol, address, NULL);
-	else
-		url = g_strdup (address);
-
-	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
-
-	ret = gtk_show_uri (gscreen, url, gtk_get_current_event_time (), &error);
-
-	if (!ret) {
-		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
-						       GTK_DIALOG_MODAL,
-						       GTK_MESSAGE_INFO,
-						       GTK_BUTTONS_OK,
-						       /* TRANSLATORS: normally a packaging error, cannot launch link */
-						       _("Failed to show url"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
-							  "%s", error->message);
-		gtk_dialog_run (GTK_DIALOG (error_dialog));
-		gtk_widget_destroy (error_dialog);
-		g_error_free (error);
-	}
-
-	g_free (url);
-}
-
-/**
  * gpk_check_update_show_about_cb:
  **/
 static void
-gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
+gpk_check_update_show_about_cb (GtkMenuItem *item, GpkCheckUpdate *icon)
 {
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
@@ -252,9 +213,6 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
 
-	gtk_about_dialog_set_url_hook (gpk_check_update_about_dialog_url_cb, NULL, NULL);
-	gtk_about_dialog_set_email_hook (gpk_check_update_about_dialog_url_cb, (gpointer) "mailto:", NULL);
-
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_UPDATE);
 	gtk_show_about_dialog (NULL,
 			       "version", VERSION,
@@ -263,7 +221,7 @@ gpk_check_update_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "wrap-license", TRUE,
 				/* TRANSLATORS: website label */
 			       "website-label", _("PackageKit Website"),
-			       "website", "www.packagekit.org",
+			       "website", "http://www.packagekit.org",
 			       "comments", "PackageKit",
 			       "authors", authors,
 			       "documenters", documenters,
