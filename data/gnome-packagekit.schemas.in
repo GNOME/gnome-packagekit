@@ -62,6 +62,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/gnome-packagekit/enable_autoremove</key>
+      <applyto>/apps/gnome-packagekit/enable_autoremove</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Automatically remove unused dependencies</short>
+        <long>When removing a package, also remove those dependencies that are not required by other packages</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/gnome-packagekit/show_depends</key>
       <applyto>/apps/gnome-packagekit/show_depends</applyto>
       <owner>gnome-packagekit</owner>

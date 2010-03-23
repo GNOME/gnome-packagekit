@@ -2115,6 +2115,7 @@ static void
 gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 {
 	gchar **package_ids = NULL;
+	gboolean autoremove;
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
@@ -2132,8 +2133,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	} else if (application->priv->action == PK_ACTION_REMOVE) {
 
-		/* install */
-		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, FALSE, application->priv->cancellable,
+		autoremove = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_ENABLE_AUTOREMOVE, NULL);
+
+		/* remove */
+		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, autoremove, application->priv->cancellable,
 					       (PkProgressCallback) gpk_application_progress_cb, application,
 					       (GAsyncReadyCallback) gpk_application_remove_packages_cb, application);
 
