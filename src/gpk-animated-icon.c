@@ -128,6 +128,12 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 		h = gdk_pixbuf_get_height (pixbuf) / 4;
 	}
 
+	/* we failed to get a valid pixbuf */
+	if (w == 0 || h == 0) {
+		g_object_unref (pixbuf);
+		return FALSE;
+	}
+
 	cols = gdk_pixbuf_get_width (pixbuf) / w;
 	rows = gdk_pixbuf_get_height (pixbuf) / h;
 
