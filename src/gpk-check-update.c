@@ -730,10 +730,14 @@ gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, GPtrArray *array
 					      PK_INFO_ENUM_BUGFIX,
 					      PK_INFO_ENUM_NORMAL,
 					      PK_INFO_ENUM_ENHANCEMENT,
-					      PK_INFO_ENUM_LOW, -1);
+					      PK_INFO_ENUM_LOW,
+					      PK_INFO_ENUM_BLOCKED, -1);
 	if (value == -1) {
 		egg_warning ("should not be possible!");
 		value = PK_INFO_ENUM_LOW;
+	} else if (value == PK_INFO_ENUM_BLOCKED) {
+		/* all updates are blocked */
+		return NULL;
 	}
 
 	/* get the icon */
@@ -915,8 +919,13 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 		g_ptr_array_add (security_array, g_strdup (pk_package_get_id (item)));
 	}
 
-	/* work out icon (cannot be NULL) */
+	/* work out icon */
 	icon = gpk_check_update_get_best_update_icon (cupdate, array);
+	if (icon == NULL) {
+		egg_debug ("all updates blocked");
+		gpk_check_update_set_icon_name (cupdate, NULL);
+		goto out;
+	}
 	gpk_check_update_set_icon_name (cupdate, icon);
 
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
