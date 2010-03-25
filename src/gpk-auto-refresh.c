@@ -150,27 +150,6 @@ gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
 }
 
 /**
- * gpk_auto_refresh_get_frequency_prefs:
- **/
-static guint
-gpk_auto_refresh_get_frequency_prefs (GpkAutoRefresh *arefresh, const gchar *key)
-{
-	guint value;
-
-	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), 0);
-
-	/* get from gconf */
-	value = gconf_client_get_int (arefresh->priv->gconf_client, key, NULL);
-	if (value == 0) {
-		egg_warning ("no schema for %s, using daily", key);
-		value = 86400;
-	}
-
-	/* convert to enum and get seconds */
-	return value;
-}
-
-/**
  * gpk_auto_refresh_get_time_refresh_cache_cb:
  **/
 static void
@@ -190,7 +169,7 @@ gpk_auto_refresh_get_time_refresh_cache_cb (GObject *object, GAsyncResult *res, 
 	}
 
 	/* have we passed the timout? */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -211,9 +190,9 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never get updates");
+		egg_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -230,9 +209,9 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_REFRESH_CACHE);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_REFRESH_CACHE, NULL);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never refresh");
+		egg_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -261,7 +240,7 @@ gpk_auto_refresh_get_time_get_updates_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* have we passed the timout? */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -291,9 +270,9 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	}
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never get updates");
+		egg_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -322,7 +301,7 @@ gpk_auto_refresh_get_time_get_upgrades_cb (GObject *object, GAsyncResult *res, G
 	}
 
 	/* have we passed the timout? */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPDATES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -343,9 +322,9 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gpk_auto_refresh_get_frequency_prefs (arefresh, GPK_CONF_FREQUENCY_GET_UPGRADES);
+	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never check for upgrades");
+		egg_debug ("not when policy is set to never");
 		return;
 	}
 
