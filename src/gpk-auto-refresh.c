@@ -161,10 +161,6 @@ gpk_auto_refresh_get_frequency_prefs (GpkAutoRefresh *arefresh, const gchar *key
 
 	/* get from gconf */
 	value = gconf_client_get_int (arefresh->priv->gconf_client, key, NULL);
-	if (value == 0) {
-		egg_warning ("no schema for %s, using daily", key);
-		value = 86400;
-	}
 
 	/* convert to enum and get seconds */
 	return value;
