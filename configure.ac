@@ -116,77 +116,29 @@ DEVKIT_POWER_REQUIRED=007
 CANBERRA_REQUIRED=0.10
 
 dnl ---------------------------------------------------------------------------
-dnl - Make above strings available for packaging files (e.g. rpm spec files)
-dnl ---------------------------------------------------------------------------
-AC_SUBST(PACKAGEKIT_REQUIRED)
-AC_SUBST(GLIB_REQUIRED)
-AC_SUBST(GTK_REQUIRED)
-AC_SUBST(DBUS_REQUIRED)
-AC_SUBST(DBUS_GLIB_REQUIRED)
-AC_SUBST(LIBNOTIFY_REQUIRED)
-AC_SUBST(UNIQUE_REQUIRED)
-AC_SUBST(GNOME_MENUS_REQUIRED)
-AC_SUBST(GIO_REQUIRED)
-
-dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
 PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= $PACKAGEKIT_REQUIRED)
-AC_SUBST(PACKAGEKIT_CFLAGS)
-AC_SUBST(PACKAGEKIT_LIBS)
-
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
-AC_SUBST(GLIB_CFLAGS)
-AC_SUBST(GLIB_LIBS)
-
 PKG_CHECK_MODULES(GIO, gio-2.0 >= $GIO_REQUIRED)
-AC_SUBST(GIO_CFLAGS)
-AC_SUBST(GIO_LIBS)
-
 PKG_CHECK_MODULES(DBUS, \
  dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
  dbus-1 >= $DBUS_REQUIRED \
  gthread-2.0)
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBS)
-
 PKG_CHECK_MODULES(GTK, \
  gtk+-2.0 >= $GTK_REQUIRED gdk-2.0 fontconfig)
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
-
 PKG_CHECK_MODULES(GCONF, \
  gconf-2.0 >= $GCONF_REQUIRED)
-AC_SUBST(GCONF_CFLAGS)
-AC_SUBST(GCONF_LIBS)
-
 PKG_CHECK_MODULES(LIBNOTIFY, \
  libnotify >= $LIBNOTIFY_REQUIRED)
-AC_SUBST(LIBNOTIFY_CFLAGS)
-AC_SUBST(LIBNOTIFY_LIBS)
-
 PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= $GNOME_MENUS_REQUIRED)
-AC_SUBST(GNOME_MENUS_CFLAGS)
-AC_SUBST(GNOME_MENUS_LIBS)
-
 PKG_CHECK_MODULES(UNIQUE, \
  unique-1.0 >= $UNIQUE_REQUIRED)
-AC_SUBST(UNIQUE_CFLAGS)
-AC_SUBST(UNIQUE_LIBS)
-
 PKG_CHECK_MODULES(DEVKIT, [
  devkit-power-gobject >= $DEVKIT_POWER_REQUIRED])
-AC_SUBST(DEVKIT_CFLAGS)
-AC_SUBST(DEVKIT_LIBS)
-
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk >= $CANBERRA_REQUIRED)
-AC_SUBST(CANBERRA_CFLAGS)
-AC_SUBST(CANBERRA_LIBS)
-
 PKG_CHECK_MODULES(X11, x11)
-AC_SUBST(X11_CFLAGS)
-AC_SUBST(X11_LIBS)
 
 dnl ---------------------------------------------------------------------------
 dnl - GUdev integration (default enabled)
@@ -204,10 +156,7 @@ if test x$enable_gudev != xno; then
 else
 	GPK_BUILD_GUDEV=no
 fi
-
 AM_CONDITIONAL(GPK_BUILD_GUDEV, test x$GPK_BUILD_GUDEV = xyes)
-AC_SUBST(GUDEV_CFLAGS)
-AC_SUBST(GUDEV_LIBS)
 
 dnl ---------------------------------------------------------------------------
 dnl - Enable small form factor code
