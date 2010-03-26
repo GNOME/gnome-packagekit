@@ -1107,6 +1107,29 @@ gpk_update_viewer_client_notify_idle_cb (PkClient *client, GParamSpec *pspec, Gp
 }
 
 /**
+ * gpk_update_viewer_info_is_update_enum:
+ **/
+static gboolean
+gpk_update_viewer_info_is_update_enum (PkInfoEnum info)
+{
+	gboolean ret = FALSE;
+	switch (info) {
+	case PK_INFO_ENUM_LOW:
+	case PK_INFO_ENUM_NORMAL:
+	case PK_INFO_ENUM_IMPORTANT:
+	case PK_INFO_ENUM_SECURITY:
+	case PK_INFO_ENUM_BUGFIX:
+	case PK_INFO_ENUM_ENHANCEMENT:
+	case PK_INFO_ENUM_BLOCKED:
+		ret = TRUE;
+		break;
+	default:
+		break;
+	}
+	return ret;
+}
+
+/**
  * gpk_update_viewer_get_install_package_ids:
  **/
 static GPtrArray *
@@ -1138,7 +1161,7 @@ gpk_update_viewer_get_install_package_ids (GpkUpdateViewer *update_viewer)
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
 		/* if selected, and not added previously because of deps */
-		if (update && info != PK_INFO_ENUM_AVAILABLE)
+		if (update && gpk_update_viewer_info_is_update_enum (info))
 			g_ptr_array_add (array, package_id);
 		else
 			g_free (package_id);
@@ -1152,10 +1175,11 @@ gpk_update_viewer_get_install_package_ids (GpkUpdateViewer *update_viewer)
 					    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
 			/* if selected, and not added previously because of deps */
-			if (update && info != PK_INFO_ENUM_AVAILABLE)
+			if (update && gpk_update_viewer_info_is_update_enum (info))
 				g_ptr_array_add (array, package_id);
 			else
 				g_free (package_id);
+
 			child_valid = gtk_tree_model_iter_next (model, &child_iter);
 		}
 
