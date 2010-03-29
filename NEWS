@@ -1,3 +1,59 @@
+Version 2.30.0
+~~~~~~~~~~~~~~
+Released: 2010-03-29
+
+* Translations
+ - Updated Arabic translation (Khaled Hosny)
+ - Updated Bengali India translation (Runa Bhattacharjee)
+ - Updated Bengali translation (Jamil Ahmed)
+ - Updated Brazilian Portuguese translation (Og B. Maciel)
+ - Updated British English translation (Philip Withnall)
+ - Updated Bulgarian translation (Alexander Shopov)
+ - Updated Catalan translation (Gil Forcada)
+ - Updated Czech translation (Lucas Lommer)
+ - Updated Danish translation (Ask H. Larsen)
+ - Updated Finnish translation (Tommi Vainikainen)
+ - Updated French translation (Claude Paroz)
+ - Updated Galician translation (Fran Diéguez)
+ - Updated German doc translation (Mario Blättermann)
+ - Updated German translation (Mario Blättermann)
+ - Updated Greek doc translation (Nikos Bakaoukas)
+ - Updated Greek translation (Nikos Bakaoukas)
+ - Updated Greek translation (Nikos Charonitakis)
+ - Updated Gujarati translation (Sweta Kothari)
+ - Updated Hungarian translation (Gabor Kelemen)
+ - Updated Italian translation (Gianvito Cavasoli)
+ - Updated Marathi Translations (Sandeep Shedmake)
+ - Updated Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Polish translation (Piotr Drąg)
+ - Updated Portuguese translation (António Lima)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Romanian translation (Adi Roiban)
+ - Updated Russian translation (Alexander Saprykin)
+ - Updated Serbian translations (Branko Kokanović)
+ - Updated Slovenian translation (Matej Urbančič)
+ - Updated Spanish translation (Jorge González)
+ - Updated Swedish translation (Daniel Nylander)
+ - Updated Tamil translation (vasudeven)
+ - Updated Traditional Chinese translation (Hong Kong and Taiwan) (Chao-Hsiung Liao)
+ - Updated Ukrainian translation (Maxim V. Dziumanenko)
+
+* New Features:
+ - Allow the user to select the GPG key information to be able to verify it (Richard Hughes)
+ - Use libunique to ensure we only ever have one update icon running in the session (Richard Hughes)
+
+* Bugfix:
+ - Added and updated screenshots (Marcus Moeller)
+ - Check if we got an invalid pixbuf to prevent a crash (Richard Hughes)
+ - Ensure we close the previous dialog before we show an error dialog. Fixes rh#569842 (Richard Hughes)
+ - Ensure we remove the timeout source of the auto-closing dialogs. Fixes rh#570436 (Richard Hughes)
+ - Fix the error when the user clicks the about menu item (Richard Hughes)
+ - Fix the second install in gpk-update-viewer when a backend is reporting detailed errors (Richard Hughes)
+ - Fix checking for updates every day when the user had specified 'Never'. Fixes rh#544573 (Richard Hughes)
+ - Hide the update icon when all updates are blocked (Jonathan Conder)
+ - Mark a few menu items translatable (Ville-Pekka Vainio)
+ - Use gtk_buildable_get_name() rather than gtk_widget_get_name() (Richard Hughes)
+
 Version 2.29.91
 ~~~~~~~~~~~~~~
 Released: 2010-03-01
