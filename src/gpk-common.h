@@ -37,6 +37,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_SHOW_COPY_CONFIRM		"/apps/gnome-packagekit/show_copy_confirm"
 #define GPK_CONF_DBUS_DEFAULT_INTERACTION	"/apps/gnome-packagekit/dbus_default_interaction"
 #define GPK_CONF_DBUS_ENFORCED_INTERACTION	"/apps/gnome-packagekit/dbus_enforced_interaction"
+#define GPK_CONF_ENABLE_AUTOREMOVE		"/apps/gnome-packagekit/enable_autoremove"
 #define GPK_CONF_ENABLE_FONT_HELPER		"/apps/gnome-packagekit/enable_font_helper"
 #define GPK_CONF_ENABLE_CODEC_HELPER		"/apps/gnome-packagekit/enable_codec_helper"
 #define GPK_CONF_ENABLE_MIME_TYPE_HELPER	"/apps/gnome-packagekit/enable_mime_type_helper"
