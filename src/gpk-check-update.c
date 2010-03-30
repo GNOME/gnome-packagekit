@@ -674,74 +674,40 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 }
 
 /**
- * gpk_check_update_client_info_to_bitfield:
- **/
-static PkBitfield
-gpk_check_update_client_info_to_bitfield (GpkCheckUpdate *cupdate, GPtrArray *array)
-{
-	guint i;
-	PkBitfield infos = 0;
-	PkPackage *item;
-	gchar **split;
-	PkInfoEnum info;
-	gchar *package_id = NULL;
-
-	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), PK_INFO_ENUM_UNKNOWN);
-
-	/* shortcut */
-	if (array->len == 0)
-		return PK_INFO_ENUM_UNKNOWN;
-
-	/* add each status to a array */
-	for (i=0; i<array->len; i++) {
-		item = g_ptr_array_index (array, i);
-		g_object_get (item,
-			      "info", &info,
-			      "package-id", &package_id,
-			      NULL);
-		split = pk_package_id_split (package_id);
-		egg_debug ("%s %s", split[PK_PACKAGE_ID_NAME], pk_info_enum_to_text (info));
-		g_strfreev (split);
-		pk_bitfield_add (infos, info);
-		g_free (package_id);
-	}
-	return infos;
-}
-
-/**
- * gpk_check_update_get_best_update_icon:
+ * gpk_check_update_get_status_icon:
  **/
 static const gchar *
-gpk_check_update_get_best_update_icon (GpkCheckUpdate *cupdate, GPtrArray *array)
+gpk_check_update_get_status_icon (GpkCheckUpdate *cupdate, GPtrArray *array)
 {
-	gint value;
-	PkBitfield infos;
-	const gchar *icon;
+	guint i;
+	PkPackage *package;
+	PkInfoEnum info;
+	const gchar *icon = NULL;
 
-	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), NULL);
-
-	/* get an enumerated array with all the update types */
-	infos = gpk_check_update_client_info_to_bitfield (cupdate, array);
-
-	/* get the most important icon */
-	value = pk_bitfield_contain_priority (infos,
-					      PK_INFO_ENUM_SECURITY,
-					      PK_INFO_ENUM_IMPORTANT,
-					      PK_INFO_ENUM_BUGFIX,
-					      PK_INFO_ENUM_NORMAL,
-					      PK_INFO_ENUM_ENHANCEMENT,
-					      PK_INFO_ENUM_LOW,
-					      PK_INFO_ENUM_BLOCKED, -1);
-	if (value == -1) {
-		egg_warning ("should not be possible!");
-		value = PK_INFO_ENUM_LOW;
-	} else if (value == PK_INFO_ENUM_BLOCKED) {
-		/* all updates are blocked */
-		return NULL;
+	/* look for any urgent updates */
+	for (i = 0; i< array->len; i++) {
+		package = g_ptr_array_index (array, i);
+		info = pk_package_get_info (package);
+		if (info == PK_INFO_ENUM_SECURITY ||
+		    info == PK_INFO_ENUM_IMPORTANT) {
+			icon = "software-update-urgent";
+			goto out;
+		}
 	}
 
-	/* get the icon */
-	icon = gpk_info_enum_to_icon_name (value);
+	/* look for any normal updates */
+	for (i = 0; i< array->len; i++) {
+		package = g_ptr_array_index (array, i);
+		info = pk_package_get_info (package);
+		if (info == PK_INFO_ENUM_BUGFIX ||
+		    info == PK_INFO_ENUM_NORMAL ||
+		    info == PK_INFO_ENUM_ENHANCEMENT ||
+		    info == PK_INFO_ENUM_LOW) {
+			icon = "software-update-available";
+			goto out;
+		}
+	}
+out:
 	return icon;
 }
 
@@ -920,7 +886,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* work out icon */
-	icon = gpk_check_update_get_best_update_icon (cupdate, array);
+	icon = gpk_check_update_get_status_icon (cupdate, array);
 	if (icon == NULL) {
 		egg_debug ("all updates blocked");
 		gpk_check_update_set_icon_name (cupdate, NULL);
