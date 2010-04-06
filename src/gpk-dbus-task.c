@@ -2898,12 +2898,14 @@ out:
 static gchar *
 gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 {
+	const gchar *package_id;
 	gchar *package = NULL;
 	GError *error = NULL;
 	GPtrArray *array = NULL;
 	PkPackage *item;
 	PkResults *results = NULL;
 	gchar **values = NULL;
+	gchar **split = NULL;
 
 	/* find the package name */
 	values = g_strsplit (exec, "&", -1);
@@ -2930,12 +2932,13 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* copy name */
 	item = g_ptr_array_index (array, 0);
-	g_object_get (item,
-		      "package-id", &package,
-		      NULL);
+	package_id = pk_package_get_id (item);
+	split = pk_package_id_split (package_id);
+	package = g_strdup (split[0]);
 	egg_debug ("got package %s", package);
 out:
 	g_strfreev (values);
+	g_strfreev (split);
 	if (array != NULL)
 		g_ptr_array_unref (array);
 	if (results != NULL)
