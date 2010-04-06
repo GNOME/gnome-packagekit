@@ -207,7 +207,6 @@ out:
 static gchar *
 gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 {
-	gboolean ret;
 	gchar *filename = NULL;
 	gchar *cmdline = NULL;
 	GError *error = NULL;
@@ -224,18 +223,11 @@ gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 	}
 
 	/* get command line from proc */
-	filename = g_strdup_printf ("/proc/%i/cmdline", pid);
-	ret = g_file_get_contents (filename, &cmdline, NULL, &error);
-	if (!ret) {
-		egg_warning ("failed to get cmdline: %s", error->message);
+	filename = g_strdup_printf ("/proc/%i/exe", pid);
+	cmdline = g_file_read_link (filename, &error);
+	if (cmdline == NULL) {
+		egg_warning ("failed to find exec: %s", error->message);
 		g_error_free (error);
-	}
-
-	/* if command line contains (deleted) the original binary is invalid */
-	if (g_strstr_len (cmdline, -1, "(deleted)") != NULL) {
-		g_free (cmdline);
-		cmdline = NULL;
-		goto out;
 	}
 out:
 	g_free (filename);
