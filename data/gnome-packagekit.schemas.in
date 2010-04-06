@@ -591,6 +591,21 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/install_root</key>
+      <applyto>/apps/gnome-packagekit/install_root</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>/</default>
+      <locale name="C">
+        <short>
+	  <!-- TRANSLATORS: The install root is the base directory used in the filesystem -->
+	  The install root used when installing and removing packages.
+	</short>
+        <long>Allow the user to change the install root when processing packages, for instance when using LTSP.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
 

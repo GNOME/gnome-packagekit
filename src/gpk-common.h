@@ -44,6 +44,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_ENABLE_CHECK_FIRMWARE		"/apps/gnome-packagekit/enable_check_firmware"
 #define GPK_CONF_ENABLE_CHECK_HARDWARE		"/apps/gnome-packagekit/enable_check_hardware"
 #define GPK_CONF_IGNORED_DBUS_REQUESTS		"/apps/gnome-packagekit/ignored_dbus_requests"
+#define GPK_CONF_INSTALL_ROOT			"/apps/gnome-packagekit/install_root"
 #define GPK_CONF_REPO_SHOW_DETAILS		"/apps/gnome-packagekit/repo/show_details"
 #define GPK_CONF_CONNECTION_USE_MOBILE		"/apps/gnome-packagekit/update-icon/connection_use_mobile"
 #define GPK_CONF_CONNECTION_USE_WIFI		"/apps/gnome-packagekit/update-icon/connection_use_wifi"
