@@ -2141,25 +2141,31 @@ out:
 
 /**
  * gpk_dbus_task_install_check_exec_ignored:
+ *
+ * Returns %FALSE if the executed program is in the ignored list.
  **/
 static gboolean
 gpk_dbus_task_install_check_exec_ignored (GpkDbusTask *dtask)
 {
 	gchar *ignored_str;
 	gchar **ignored = NULL;
-	gboolean ret = FALSE;
+	gboolean ret = TRUE;
+	GError *error = NULL;
 	guint i;
 
 	/* check it's not session wide banned in gconf */
-	ignored_str = gconf_client_get_string (dtask->priv->gconf_client, GPK_CONF_IGNORED_DBUS_REQUESTS, NULL);
-	if (ignored_str == NULL)
+	ignored_str = gconf_client_get_string (dtask->priv->gconf_client, GPK_CONF_IGNORED_DBUS_REQUESTS, &error);
+	if (ignored_str == NULL) {
+		egg_warning ("failed to get ignored requests: %s", error->message);
+		g_error_free (error);
 		goto out;
+	}
 
 	/* check each one */
 	ignored = g_strsplit (ignored_str, ",", -1);
 	for (i=0; ignored[i] != NULL; i++) {
 		if (g_strcmp0 (dtask->priv->exec, ignored[i]) == 0) {
-			ret = TRUE;
+			ret = FALSE;
 			break;
 		}
 	}
