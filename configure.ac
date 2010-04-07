@@ -119,8 +119,11 @@ dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
 PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= $PACKAGEKIT_REQUIRED)
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0)
-PKG_CHECK_MODULES(GIO, gio-2.0 >= $GIO_REQUIRED)
+PKG_CHECK_MODULES(GLIB, \
+ glib-2.0 >= $GLIB_REQUIRED
+ gobject-2.0
+ gio-2.0 >= $GIO_REQUIRED
+ gio-unix-2.0 >= $GIO_REQUIRED)
 PKG_CHECK_MODULES(DBUS, \
  dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
  dbus-1 >= $DBUS_REQUIRED \
