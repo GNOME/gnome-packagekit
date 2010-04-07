@@ -42,13 +42,12 @@ struct GpkHelperRunPrivate
 {
 	GtkBuilder		*builder;
 	GtkListStore		*list_store;
-	gchar			*full_path;
 };
 
 enum {
 	GPK_CHOOSER_COLUMN_ICON,
 	GPK_CHOOSER_COLUMN_TEXT,
-	GPK_CHOOSER_COLUMN_FULL_PATH,
+	GPK_CHOOSER_COLUMN_EXEC,
 	GPK_CHOOSER_COLUMN_LAST
 };
 
@@ -58,18 +57,18 @@ G_DEFINE_TYPE (GpkHelperRun, gpk_helper_run, G_TYPE_OBJECT)
  * gpk_helper_run_path:
  **/
 static gboolean
-gpk_helper_run_path (GpkHelperRun *helper)
+gpk_helper_run_path (GpkHelperRun *helper, const gchar *exec)
 {
 	gboolean ret = FALSE;
 	GError *error = NULL;
 
 	/* check have value */
-	if (helper->priv->full_path == NULL) {
+	if (exec == NULL) {
 		egg_warning ("no full path");
 		goto out;
 	}
 
-	ret = g_spawn_command_line_async (helper->priv->full_path, &error);
+	ret = g_spawn_command_line_async (exec, &error);
 	if (!ret) {
 		egg_warning ("failed to run: %s", error->message);
 		g_error_free (error);
@@ -84,7 +83,25 @@ out:
 static void
 gpk_helper_run_button_run_cb (GtkWidget *widget, GpkHelperRun *helper)
 {
-	gpk_helper_run_path (helper);
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+	gboolean ret;
+	gchar *exec;
+
+	/* get selection */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (helper->priv->builder, "treeview_simple"));
+	selection = gtk_tree_view_get_selection (treeview);
+	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
+	if (!ret) {
+		egg_warning ("failed to get selection");
+		return;
+	}
+
+	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_EXEC, &exec, -1);
+	gpk_helper_run_path (helper, exec);
+	g_free (exec);
 }
 
 /**
@@ -113,10 +130,6 @@ gpk_helper_run_button_help_cb (GtkWidget *widget, GpkHelperRun *helper)
 static gboolean
 gpk_helper_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkHelperRun *helper)
 {
-	/* clear full_path */
-	g_free (helper->priv->full_path);
-	helper->priv->full_path = NULL;
-
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
 	gtk_widget_hide (widget);
 	return FALSE;
@@ -131,17 +144,19 @@ gpk_helper_run_treeview_clicked_cb (GtkTreeSelection *selection, GpkHelperRun *h
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	gchar *exec = NULL;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		g_free (helper->priv->full_path);
-		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &helper->priv->full_path, -1);
+		g_free (exec);
+		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_EXEC, &exec, -1);
 
 		/* show full path */
-		egg_debug ("selected row is: %s", helper->priv->full_path);
+		egg_debug ("selected row is: %s", exec);
 	} else {
 		egg_debug ("no row selected");
 	}
+	g_free (exec);
 }
 
 /**
@@ -154,6 +169,7 @@ gpk_helper_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean ret;
+	gchar *exec;
 
 	/* get selection */
 	model = gtk_tree_view_get_model (treeview);
@@ -163,9 +179,10 @@ gpk_helper_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 		return;
 	}
 
-	g_free (helper->priv->full_path);
-	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FULL_PATH, &helper->priv->full_path, -1);
-	gpk_helper_run_path (helper);
+	g_free (exec);
+	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_EXEC, &exec, -1);
+	gpk_helper_run_path (helper, exec);
+	g_free (exec);
 }
 
 /**
@@ -293,7 +310,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 
 	gtk_list_store_set (helper->priv->list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
-			    GPK_CHOOSER_COLUMN_FULL_PATH, exec,
+			    GPK_CHOOSER_COLUMN_EXEC, exec,
 			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
 out:
 	if (file != NULL)
@@ -369,8 +386,6 @@ gpk_helper_run_show (GpkHelperRun *helper, gchar **package_ids)
 
 	/* clear old list */
 	gtk_list_store_clear (helper->priv->list_store);
-	g_free (helper->priv->full_path);
-	helper->priv->full_path = NULL;
 
 	/* add all the apps */
 	len = gpk_helper_run_add_package_ids (helper, package_ids);
@@ -434,9 +449,6 @@ gpk_helper_run_init (GpkHelperRun *helper)
 	GtkBox *box;
 
 	helper->priv = GPK_HELPER_RUN_GET_PRIVATE (helper);
-
-	/* initially nothing */
-	helper->priv->full_path = NULL;
 
 	/* get UI */
 	helper->priv->builder = gtk_builder_new ();
@@ -521,7 +533,6 @@ gpk_helper_run_finalize (GObject *object)
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	g_free (helper->priv->full_path);
 	g_object_unref (helper->priv->builder);
 	g_object_unref (helper->priv->list_store);
 
