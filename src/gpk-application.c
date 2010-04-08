@@ -4042,6 +4042,7 @@ gpk_application_init (GpkApplication *application)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_cancel"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), application);
+	gtk_widget_set_sensitive (widget, FALSE);
 	/* TRANSLATORS: tooltip on the cancel button */
 	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 
