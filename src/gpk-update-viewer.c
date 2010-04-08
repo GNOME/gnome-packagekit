@@ -962,6 +962,10 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GpkUpd
 		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			/* if the info is finished, change the status to past tense */
 			if (info == PK_INFO_ENUM_FINISHED) {
+				/* clear the remaining size */
+				gtk_tree_store_set (priv->array_store_updates, &iter,
+						    GPK_UPDATES_COLUMN_SIZE_DISPLAY, 0, -1);
+
 				gtk_tree_model_get (model, &iter,
 						    GPK_UPDATES_COLUMN_STATUS, &info, -1);
 				/* promote to past tense if present tense */
