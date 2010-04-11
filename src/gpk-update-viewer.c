@@ -71,8 +71,9 @@ struct GpkUpdateViewerPrivate
 	PkControl		*control;
 	PkRestartEnum		 restart_update;
 	PkTask			*task;
-	GtkWidget		*info_bar;
-	GtkWidget		*info_bar_label;
+	GtkWidget		*info_updates;
+	GtkWidget		*info_mobile;
+	GtkWidget		*info_mobile_label;
 };
 
 enum {
@@ -1284,7 +1285,7 @@ gpk_update_viewer_check_mobile_broadband (GpkUpdateViewer *update_viewer)
 		      NULL);
 
 	/* hide by default */
-	gtk_widget_hide (priv->info_bar);
+	gtk_widget_hide (priv->info_mobile);
 
 	/* not on wireless mobile */
 	if (state != PK_NETWORK_ENUM_MOBILE)
@@ -1305,10 +1306,10 @@ gpk_update_viewer_check_mobile_broadband (GpkUpdateViewer *update_viewer)
 	message = ngettext ("Connectivity is being provided by wireless broadband, and it may be expensive to update this package.",
 			    "Connectivity is being provided by wireless broadband, and it may be expensive to update these packages.",
 			    priv->number_total);
-	gtk_label_set_label (GTK_LABEL(priv->info_bar_label), message);
+	gtk_label_set_label (GTK_LABEL(priv->info_mobile_label), message);
 
-	gtk_info_bar_set_message_type (GTK_INFO_BAR(priv->info_bar), GTK_MESSAGE_WARNING);
-	gtk_widget_show (priv->info_bar);
+	gtk_info_bar_set_message_type (GTK_INFO_BAR(priv->info_mobile), GTK_MESSAGE_WARNING);
+	gtk_widget_show (priv->info_mobile);
 out:
 	return;
 }
@@ -2553,7 +2554,10 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 	PkPackageSack *sack = NULL;
 	GError *error = NULL;
 	GPtrArray *array = NULL;
+	GPtrArray *array_messages = NULL;
 	PkPackage *item;
+	PkMessage *message;
+	PkMessageEnum message_type;
 	gchar *text = NULL;
 	gboolean selected;
 	GtkTreeIter iter;
@@ -2589,6 +2593,17 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
+	}
+
+	/* do we have any important messages we need to show? */
+	array_messages = pk_results_get_message_array (results);
+	for (i=0; i<array_messages->len; i++) {
+		message = g_ptr_array_index (array, i);
+		g_object_get (message,
+			      "type", &message_type,
+			      NULL);
+		if (message_type == PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK)
+			gtk_widget_show (priv->info_mobile);
 	}
 
 	/* get data */
@@ -2676,6 +2691,8 @@ out:
 		g_object_unref (error_code);
 	if (array != NULL)
 		g_ptr_array_unref (array);
+	if (array_messages != NULL)
+		g_ptr_array_unref (array_messages);
 	if (sack != NULL)
 		g_object_unref (sack);
 	if (results != NULL)
@@ -3093,6 +3110,7 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
+	GtkWidget *label;
 	GtkTreeSelection *selection;
 	gboolean ret;
 	guint retval;
@@ -3244,20 +3262,29 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_info"));
 	gtk_widget_set_size_request (widget, -1, 32);
 
-	/* add info bar: TODO, fix glade to put this in the ui file */
-	priv->info_bar = gtk_info_bar_new ();
-	gtk_widget_set_no_show_all (priv->info_bar, TRUE);
+	/* add info bars: TODO, fix glade to put these in the ui file */
+	priv->info_mobile = gtk_info_bar_new ();
+	gtk_widget_set_no_show_all (priv->info_mobile, TRUE);
+	priv->info_updates = gtk_info_bar_new ();
+	gtk_widget_set_no_show_all (priv->info_updates, TRUE);
 
 	/* pack label into infobar */
-	priv->info_bar_label = gtk_label_new ("");
-	widget = gtk_info_bar_get_content_area (GTK_INFO_BAR(priv->info_bar));
-	gtk_container_add (GTK_CONTAINER(widget), priv->info_bar_label);
-	gtk_widget_show (priv->info_bar_label);
+	priv->info_mobile_label = gtk_label_new ("");
+	widget = gtk_info_bar_get_content_area (GTK_INFO_BAR(priv->info_mobile));
+	gtk_container_add (GTK_CONTAINER(widget), priv->info_mobile_label);
+	gtk_widget_show (priv->info_mobile_label);
 
-	/* pack infobar into main UI */
+	/* TRANSLATORS: this is when some updates are not being shown as other packages need updating first */
+	label = gtk_label_new (_("Other updates are held back as some important system packages need to be installed first."));
+	widget = gtk_info_bar_get_content_area (GTK_INFO_BAR(priv->info_updates));
+	gtk_container_add (GTK_CONTAINER(widget), label);
+	gtk_widget_show (label);
+
+	/* pack infobars into main UI */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "vbox1"));
-	gtk_box_pack_start (GTK_BOX(widget), priv->info_bar, FALSE, FALSE, 3);
-	gtk_box_reorder_child (GTK_BOX(widget), priv->info_bar, 1);
+	gtk_box_pack_start (GTK_BOX(widget), priv->info_mobile, FALSE, FALSE, 3);
+	gtk_box_reorder_child (GTK_BOX(widget), priv->info_mobile, 1);
+	gtk_box_pack_start (GTK_BOX(widget), priv->info_updates, FALSE, FALSE, 3);
 
 	/* show window */
 	gtk_widget_show (main_window);
