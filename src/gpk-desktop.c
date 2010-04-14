@@ -90,6 +90,10 @@ gpk_desktop_get_menu_path_submenu (const gchar *filename, const gchar *menu_file
 		goto out;
 	}
 	directory = gmenu_tree_get_root_directory (tree);
+	if (directory == NULL) {
+		egg_warning ("no directory for %s", menu_file);
+		goto out;
+	}
 	text = gpk_desktop_directory_get_menu_path (directory, filename);
 	if (text == NULL) {
 		egg_debug ("no path for %s", filename);
