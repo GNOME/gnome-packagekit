@@ -1,3 +1,24 @@
+Version 2.30.1
+~~~~~~~~~~~~~~
+Released: 2010-04-26
+
+* Translations
+ - Added Catalan (Valencian) translation (Carles Ferrando, Jordi Serratosa)
+ - Added Indonesian translation (Andika Triwidada)
+ - Updated Greek translation (Kostas Papadimas)
+ - Updated Greek translation (Simos Xenitellis)
+ - Updated Kannada translation (Shankar Prasad)
+ - Updated Marathi translation (Sandeep Shedmake)
+
+* Bugfix:
+ - Ensure the session UI always shows a package name rather than a package-id (Richard Hughes)
+ - Ensure we process font requests by correctly processing the session ignore blacklist (Richard Hughes)
+ - Fix a crash where the desktop file that was installed has no root directory. Fixes rh#581682 (Richard Hughes)
+ - Set the cancel button to be initially insensitive (Jonathan Conder)
+ - Use GIO to launch the desktop file application after it is installed. Fixes rh#531878 (Richard Hughes)
+ - Use /proc/%i/exe instead of cmdline when getting the exec of a sender (Richard Hughes)
+ - Zero the size value when the package finished signal is recieved (Jonathan Conder)
+
 Version 2.30.0
 ~~~~~~~~~~~~~~
 Released: 2010-03-29
