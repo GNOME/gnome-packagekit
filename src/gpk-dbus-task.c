@@ -615,9 +615,14 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		egg_warning ("failed to install file: %s, %s",
+			     pk_error_enum_to_text (pk_error_get_code (error_code)),
+			     pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "%s", error->message);
+		error_dbus = g_error_new (GPK_DBUS_ERROR,
+					  gpk_dbus_task_get_code_from_pkerror (error_code),
+					  "failed to install file: %s",
+					  pk_error_get_details (error_code));
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
