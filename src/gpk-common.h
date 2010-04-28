@@ -86,7 +86,6 @@ G_BEGIN_DECLS
 #define GPK_ICON_SOFTWARE_INSTALLER		"system-software-install"
 #define GPK_ICON_SOFTWARE_LOG			"gpk-log"
 #define GPK_ICON_SOFTWARE_UPDATE_PREFS		"gpk-prefs"
-#define GPK_ICON_SOFTWARE_UPDATE_AVAILABLE	"software-update-available"
 #define GPK_ICON_SERVICE_PACK			"gpk-service-pack"
 
 /* any status that is slower than this will not be shown in the UI */

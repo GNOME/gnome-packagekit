@@ -72,7 +72,7 @@ struct GpkCheckUpdatePrivate
 	gboolean		 icon_inhibit_update_in_progress;
 	gboolean		 icon_inhibit_network_offline;
 	gboolean		 icon_inhibit_update_viewer_connected;
-	gchar			*icon_name;
+	GIcon			*gicon;
 	PkTransactionList	*tlist;
 	PkControl		*control;
 	GpkAutoRefresh		*arefresh;
@@ -98,7 +98,7 @@ gpk_check_update_set_icon_visibility (GpkCheckUpdate *cupdate)
 	gboolean ret = FALSE;
 
 	/* check we have data */
-	if (cupdate->priv->icon_name == NULL) {
+	if (cupdate->priv->gicon == NULL) {
 		egg_debug ("not showing icon as nothing to show");
 		goto out;
 	}
@@ -122,7 +122,7 @@ gpk_check_update_set_icon_visibility (GpkCheckUpdate *cupdate)
 out:
 	/* show or hide icon */
 	if (ret) {
-		gtk_status_icon_set_from_icon_name (cupdate->priv->status_icon, cupdate->priv->icon_name);
+		gtk_status_icon_set_from_gicon (cupdate->priv->status_icon, cupdate->priv->gicon);
 		gtk_status_icon_set_visible (cupdate->priv->status_icon, TRUE);
 	} else {
 		gtk_status_icon_set_visible (cupdate->priv->status_icon, FALSE);
@@ -131,13 +131,14 @@ out:
 }
 
 /**
- * gpk_check_update_set_icon_name:
+ * gpk_check_update_set_gicon:
  **/
 static void
-gpk_check_update_set_icon_name (GpkCheckUpdate *cupdate, const gchar *icon_name)
+gpk_check_update_set_gicon (GpkCheckUpdate *cupdate, GIcon *gicon)
 {
-	g_free (cupdate->priv->icon_name);
-	cupdate->priv->icon_name = g_strdup (icon_name);
+	if (cupdate->priv->gicon != NULL)
+		g_object_unref (cupdate->priv->gicon);
+	cupdate->priv->gicon = g_object_ref (gicon);
 	gpk_check_update_set_icon_visibility (cupdate);
 }
 
@@ -496,7 +497,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 		g_error_free (error);
 
 		/* we failed, so re-get the update list */
-		gpk_check_update_set_icon_name (cupdate, NULL);
+		gpk_check_update_set_gicon (cupdate, NULL);
 		g_timeout_add_seconds (GPK_CHECK_UPDATE_FAILED_TASK_RECHECK_DELAY, (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
 		goto out;
 	}
@@ -676,13 +677,13 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 /**
  * gpk_check_update_get_status_icon:
  **/
-static const gchar *
+static GIcon *
 gpk_check_update_get_status_icon (GpkCheckUpdate *cupdate, GPtrArray *array)
 {
 	guint i;
 	PkPackage *package;
 	PkInfoEnum info;
-	const gchar *icon = NULL;
+	GIcon *icon = NULL;
 
 	/* look for any urgent updates */
 	for (i = 0; i< array->len; i++) {
@@ -690,7 +691,7 @@ gpk_check_update_get_status_icon (GpkCheckUpdate *cupdate, GPtrArray *array)
 		info = pk_package_get_info (package);
 		if (info == PK_INFO_ENUM_SECURITY ||
 		    info == PK_INFO_ENUM_IMPORTANT) {
-			icon = "software-update-urgent";
+			icon = g_themed_icon_new_with_default_fallbacks ("software-update-urgent-symbolic");
 			goto out;
 		}
 	}
@@ -703,7 +704,7 @@ gpk_check_update_get_status_icon (GpkCheckUpdate *cupdate, GPtrArray *array)
 		    info == PK_INFO_ENUM_NORMAL ||
 		    info == PK_INFO_ENUM_ENHANCEMENT ||
 		    info == PK_INFO_ENUM_LOW) {
-			icon = "software-update-available";
+			icon = g_themed_icon_new_with_default_fallbacks ("software-update-available-symbolic");
 			goto out;
 		}
 	}
@@ -839,7 +840,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	GString *status_tooltip = NULL;
 	GpkUpdateEnum update;
 	GPtrArray *security_array = NULL;
-	const gchar *icon;
+	GIcon *icon = NULL;
 	gchar **package_ids;
 	GPtrArray *array = NULL;
 	PkError *error_code = NULL;
@@ -869,7 +870,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* we have no updates */
 	if (array->len == 0) {
 		egg_debug ("no updates");
-		gpk_check_update_set_icon_name (cupdate, NULL);
+		gpk_check_update_set_gicon (cupdate, NULL);
 		goto out;
 	}
 
@@ -889,10 +890,10 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	icon = gpk_check_update_get_status_icon (cupdate, array);
 	if (icon == NULL) {
 		egg_debug ("all updates blocked");
-		gpk_check_update_set_icon_name (cupdate, NULL);
+		gpk_check_update_set_gicon (cupdate, NULL);
 		goto out;
 	}
-	gpk_check_update_set_icon_name (cupdate, icon);
+	gpk_check_update_set_gicon (cupdate, icon);
 
 	/* TRANSLATORS: tooltip: how many updates are waiting to be applied */
 	g_string_append_printf (status_tooltip, ngettext ("There is %d update available",
@@ -983,6 +984,8 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* shouldn't happen */
 	egg_warning ("unknown update mode");
 out:
+	if (icon != NULL)
+		g_object_unref (icon);
 	if (error_code != NULL)
 		g_object_unref (error_code);
 	if (status_tooltip != NULL)
@@ -1414,7 +1417,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->updates_changed_id = 0;
 	cupdate->priv->notification_updates_available = NULL;
 	cupdate->priv->notification_error = NULL;
-	cupdate->priv->icon_name = NULL;
+	cupdate->priv->gicon = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
 	cupdate->priv->status_icon = gtk_status_icon_new ();
 	cupdate->priv->cancellable = g_cancellable_new ();
@@ -1506,7 +1509,8 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->task);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	g_object_unref (cupdate->priv->cancellable);
-	g_free (cupdate->priv->icon_name);
+	if (cupdate->priv->gicon != NULL)
+		g_object_unref (cupdate->priv->gicon);
 	if (cupdate->priv->error_code != NULL)
 		g_object_unref (cupdate->priv->error_code);
 	if (cupdate->priv->updates_changed_id > 0)
