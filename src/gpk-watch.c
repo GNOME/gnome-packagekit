@@ -1159,6 +1159,50 @@ gpk_watch_set_proxies (GpkWatch *watch)
 	return TRUE;
 }
 
+#if PK_CHECK_VERSION(0,6,4)
+/**
+ * gpk_watch_set_root_cb:
+ **/
+static void
+gpk_watch_set_root_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
+{
+	PkControl *control = PK_CONTROL (object);
+	GError *error = NULL;
+	gboolean ret;
+
+	/* get the result */
+	ret = pk_control_set_root_finish (control, res, &error);
+	if (!ret) {
+		egg_warning ("failed to set install root: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+}
+
+/**
+ * gpk_watch_set_root:
+ **/
+static void
+gpk_watch_set_root (GpkWatch *watch)
+{
+	gchar *root;
+
+	/* get from GConf */
+	root = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_INSTALL_ROOT, NULL);
+	if (root == NULL) {
+		egg_warning ("could not read install root");
+		goto out;
+	}
+
+	pk_control_set_root_async (watch->priv->control, root, watch->priv->cancellable,
+				   (GAsyncReadyCallback) gpk_watch_set_root_cb, watch);
+out:
+	g_free (root);
+}
+#else
+static void gpk_watch_set_root (GpkWatch *watch) {}
+#endif
+
 /**
  * gpk_watch_gconf_key_changed_cb:
  *
@@ -1168,8 +1212,8 @@ static void
 gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkWatch *watch)
 {
 	egg_debug ("keys have changed");
-	/* set the proxy */
 	gpk_watch_set_proxies (watch);
+	gpk_watch_set_root (watch);
 }
 
 /**
@@ -1207,6 +1251,7 @@ gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
 	gpk_watch_refresh_icon (watch);
 	gpk_watch_refresh_tooltip (watch);
 	gpk_watch_set_proxies (watch);
+	gpk_watch_set_root (watch);
 }
 
 /**
@@ -1801,6 +1846,7 @@ gpk_watch_init (GpkWatch *watch)
 
 	/* set the proxy */
 	gpk_watch_set_proxies (watch);
+	gpk_watch_set_root (watch);
 }
 
 /**
