@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
-#include <devkit-power-gobject/devicekit-power.h>
+#include <libupower-glib/upower.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -66,7 +66,7 @@ struct GpkAutoRefreshPrivate
 	gboolean		 force_get_updates_login;
 	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
-	DkpClient		*client;
+	UpClient		*client;
 	GConfClient		*gconf_client;
 	GpkSession		*session;
 	PkControl		*control;
@@ -509,14 +509,14 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
  * gpk_auto_refresh_client_changed_cb:
  **/
 static void
-gpk_auto_refresh_client_changed_cb (DkpClient *client, GpkAutoRefresh *arefresh)
+gpk_auto_refresh_client_changed_cb (UpClient *client, GpkAutoRefresh *arefresh)
 {
 	gboolean on_battery;
 
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* get the on-battery state */
-	on_battery = dkp_client_on_battery (arefresh->priv->client);
+	on_battery = up_client_get_on_battery (arefresh->priv->client);
 	if (on_battery == arefresh->priv->on_battery) {
 		egg_debug ("same state as before, ignoring");
 		return;
@@ -590,13 +590,13 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	/* get network state */
 	pk_control_get_properties_async (arefresh->priv->control, NULL, (GAsyncReadyCallback) gpk_auto_refresh_get_properties_cb, arefresh);
 
-	/* use a DkpClient */
-	arefresh->priv->client = dkp_client_new ();
+	/* use a UpClient */
+	arefresh->priv->client = up_client_new ();
 	g_signal_connect (arefresh->priv->client, "changed",
 			  G_CALLBACK (gpk_auto_refresh_client_changed_cb), arefresh);
 
 	/* get the battery state */
-	arefresh->priv->on_battery = dkp_client_on_battery (arefresh->priv->client);
+	arefresh->priv->on_battery = up_client_get_on_battery (arefresh->priv->client);
 	egg_debug ("setting on battery %i", arefresh->priv->on_battery);
 
 	/* use gnome-session for the idle detection */

@@ -6,7 +6,7 @@
 %define libnotify_version		0.4.3
 %define unique_version			1.0.0
 %define devicekit_version		003
-%define devicekit_power_version		007
+%define upower_version			0.9.0
 %define libcanberra_version		0.10
 %define alphatag			#ALPHATAG#
 %define polkit_gnome_version		0.92
@@ -37,7 +37,7 @@ Requires:  PackageKit-device-rebind >= %{packagekit_version}
 Requires:  shared-mime-info
 Requires:  iso-codes
 Requires:  libcanberra >= %{libcanberra_version}
-Requires:  DeviceKit-power >= %{devicekit_power_version}
+Requires:  upower >= %{upower_version}
 Requires(post):   scrollkeeper
 Requires(pre):    GConf2
 Requires(post):   GConf2
@@ -70,7 +70,7 @@ BuildRequires: xorg-x11-proto-devel
 BuildRequires: fontconfig-devel
 BuildRequires: libcanberra-devel >= %{libcanberra_version}
 BuildRequires: libgudev1-devel
-BuildRequires: DeviceKit-power-devel >= %{devicekit_power_version}
+BuildRequires: upower-devel >= %{upower_version}
 
 %description
 gnome-packagekit provides session applications for the PackageKit API.
