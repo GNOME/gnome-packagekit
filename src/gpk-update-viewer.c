@@ -2598,7 +2598,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 	/* do we have any important messages we need to show? */
 	array_messages = pk_results_get_message_array (results);
 	for (i=0; i<array_messages->len; i++) {
-		message = g_ptr_array_index (array, i);
+		message = g_ptr_array_index (array_messages, i);
 		g_object_get (message,
 			      "type", &message_type,
 			      NULL);
