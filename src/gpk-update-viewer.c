@@ -1209,6 +1209,9 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, GpkUpdateViewer *update_
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "viewport_upgrade"));
 	gtk_widget_hide (widget);
 
+	/* hide the held-back notice */
+	gtk_widget_hide (priv->info_updates);
+
 	egg_debug ("Doing the package updates");
 
 	/* no not allow to be unclicked at install time */
@@ -2603,7 +2606,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 			      "type", &message_type,
 			      NULL);
 		if (message_type == PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK)
-			gtk_widget_show (priv->info_mobile);
+			gtk_widget_show (priv->info_updates);
 	}
 
 	/* get data */
