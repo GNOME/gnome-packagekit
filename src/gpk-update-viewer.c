@@ -810,7 +810,7 @@ gpk_update_viewer_find_parent (GpkUpdateViewer *update_viewer, const gchar *pack
 	gchar **split = NULL;
 	gchar *found;
 	gchar *name;
-	gboolean ret;
+	gboolean ret = FALSE;
 
 	/* get the name */
 	split = pk_package_id_split (package_id);
