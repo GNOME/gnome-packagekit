@@ -55,6 +55,7 @@
 struct GpkUpdateViewerPrivate
 {
 	gboolean		 ignore_updates_changed;
+	gboolean		 other_updates_held_back;
 	gchar			*package_id_last;
 	guint			 auto_shutdown_id;
 	guint			 size_total;
@@ -530,6 +531,11 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	    priv->restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 		gpk_update_viewer_check_restart (update_viewer);
 		gpk_update_viewer_quit (update_viewer);
+		goto out;
+	} else {
+		/* we want the UI to update with the new list */
+		if (priv->other_updates_held_back)
+			gpk_update_viewer_get_new_update_array (update_viewer);
 		goto out;
 	}
 
@@ -2599,14 +2605,18 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, GpkUpdate
 	}
 
 	/* do we have any important messages we need to show? */
+	priv->other_updates_held_back = FALSE;
 	array_messages = pk_results_get_message_array (results);
 	for (i=0; i<array_messages->len; i++) {
 		message = g_ptr_array_index (array_messages, i);
 		g_object_get (message,
 			      "type", &message_type,
 			      NULL);
-		if (message_type == PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK)
+		if (message_type == PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK) {
+			priv->other_updates_held_back = TRUE;
 			gtk_widget_show (priv->info_updates);
+			break;
+		}
 	}
 
 	/* get data */
