@@ -39,6 +39,7 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
+#include <gio/gio.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -85,6 +86,7 @@ struct GpkCheckUpdatePrivate
 	guint			 updates_changed_id;
 	GCancellable		*cancellable;
 	PkError			*error_code;
+	GVolumeMonitor		*volume_monitor;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -1403,6 +1405,72 @@ out:
 }
 
 /**
+ * gpk_check_update_file_exist_in_root:
+ */
+static gboolean
+gpk_check_update_file_exist_in_root (const gchar *root, const gchar *filename)
+{
+	gboolean ret;
+	GFile *source;
+	gchar *source_path;
+
+	source_path = g_build_filename (root, filename, NULL);
+	source = g_file_new_for_path (source_path);
+
+	/* an interesting file exists */
+	ret = g_file_query_exists (source, NULL);
+	egg_debug ("checking for %s: %s", source_path, ret ? "yes" : "no");
+	if (!ret)
+		goto out;
+out:
+	g_free (source_path);
+	g_object_unref (source);
+	return ret;
+}
+
+/**
+ * gpk_check_update_mount_added_cb:
+ */
+static void
+gpk_check_update_mount_added_cb (GVolumeMonitor *volume_monitor, GMount *mount, GpkCheckUpdate *cupdate)
+{
+	gboolean ret = FALSE;
+	gchar **filenames = NULL;
+	gchar *media_repo_filenames;
+	gchar *root_path;
+	GFile *root;
+	guint i;
+
+	/* check if any installed media is an install disk */
+	root = g_mount_get_root (mount);
+	root_path = g_file_get_path (root);
+
+	/* use settings from gconf */
+	media_repo_filenames = gconf_client_get_string (cupdate->priv->gconf_client, GPK_CONF_MEDIA_REPO_FILENAMES, NULL);
+	if (media_repo_filenames == NULL) {
+		egg_warning ("failed to get media repo filenames");
+		goto out;
+	}
+
+	/* search each possible filename */
+	filenames = g_strsplit (media_repo_filenames, ",", -1);
+	for (i=0; filenames[i] != NULL; i++) {
+		ret = gpk_check_update_file_exist_in_root (root_path, filenames[i]);
+		if (ret)
+			break;
+	}
+
+	/* do an updates check with the new media */
+	if (ret)
+		gpk_check_update_query_updates (cupdate);
+out:
+	g_strfreev (filenames);
+	g_free (media_repo_filenames);
+	g_free (root_path);
+	g_object_unref (root);
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1452,6 +1520,10 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 				 "org.freedesktop.PackageKit.UpdateViewer");
 	g_signal_connect (cupdate->priv->dbus_monitor_viewer, "connection-changed",
 			  G_CALLBACK (gpk_cupdate_connection_changed_cb), cupdate);
+
+	/* get a volume monitor so we can watch media */
+	cupdate->priv->volume_monitor = g_volume_monitor_get ();
+	g_signal_connect (cupdate->priv->volume_monitor, "mount-added", G_CALLBACK (gpk_check_update_mount_added_cb), cupdate);
 
 	/* use an asynchronous query object */
 	cupdate->priv->task = PK_TASK (gpk_task_new ());
@@ -1509,6 +1581,7 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->task);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	g_object_unref (cupdate->priv->cancellable);
+	g_object_unref (cupdate->priv->volume_monitor);
 	if (cupdate->priv->gicon != NULL)
 		g_object_unref (cupdate->priv->gicon);
 	if (cupdate->priv->error_code != NULL)

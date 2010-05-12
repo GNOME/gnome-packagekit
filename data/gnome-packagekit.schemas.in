@@ -606,6 +606,25 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/apps/gnome-packagekit/media_repo_filenames</key>
+      <applyto>/apps/gnome-packagekit/media_repo_filenames</applyto>
+      <owner>gnome-packagekit</owner>
+      <type>string</type>
+      <default>media.repo,.discinfo</default>
+      <locale name="C">
+        <short>
+	  The filenames on removable media that designate it important.
+	</short>
+        <long>
+          When removable media is inserted, it is checked to see if it contains
+          any important filenames in the root directory.
+          If the filename matches, then an updates check is performed.
+          This allows post-install disks to be used to update running systems.
+        </long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
 

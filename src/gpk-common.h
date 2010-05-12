@@ -79,6 +79,7 @@ G_BEGIN_DECLS
 #define GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND	"/apps/gnome-packagekit/update-viewer/notify_mobile_connection"
 #define GPK_CONF_UPDATE_VIEWER_ONLY_NEWEST	"/apps/gnome-packagekit/update-viewer/only_newest"
 #define GPK_CONF_UPDATE_VIEWER_SCROLL_ACTIVE	"/apps/gnome-packagekit/update-viewer/scroll_active"
+#define GPK_CONF_MEDIA_REPO_FILENAMES		"/apps/gnome-packagekit/media_repo_filenames"
 
 #define GPK_BUGZILLA_URL			"https://bugs.freedesktop.org/"
 
