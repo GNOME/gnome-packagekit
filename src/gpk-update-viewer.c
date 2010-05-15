@@ -657,14 +657,14 @@ static void
 gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
 	GtkTreeRowReference *ref;
-	GSList *link = NULL;
+	GSList *row = NULL;
 
 	/* check if already active */
 	ref = gtk_tree_row_reference_new (model, path);
 	if (ref == NULL)
 		goto out;
-	link = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
-	if (link != NULL) {
+	row = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
+	if (row != NULL) {
 		egg_debug ("already active");
 		gtk_tree_row_reference_free (ref);
 		goto out;
@@ -685,7 +685,7 @@ out:
 static void
 gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
-	GSList *link;
+	GSList *row;
 	GtkTreeRowReference *ref;
 	GtkTreeIter iter;
 
@@ -693,16 +693,16 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 	gtk_tree_store_set (GTK_TREE_STORE(model), &iter, GPK_UPDATES_COLUMN_PULSE, -1, -1);
 
 	ref = gtk_tree_row_reference_new (model, path);
-	link = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
+	row = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
 	gtk_tree_row_reference_free (ref);
-	if (link == NULL) {
+	if (row == NULL) {
 		egg_warning ("row not already added");
 		return;
 	}
 
-	active_rows = g_slist_remove_link (active_rows, link);
-	gtk_tree_row_reference_free (link->data);
-	g_slist_free (link);
+	active_rows = g_slist_remove_link (active_rows, row);
+	gtk_tree_row_reference_free (row->data);
+	g_slist_free (row);
 
 	if (active_rows == NULL) {
 		g_source_remove (active_row_timeout_id);
