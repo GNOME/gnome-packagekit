@@ -3529,6 +3529,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	gboolean enabled;
 	GtkTreeIter iter;
 	const gchar *icon_name;
+	gchar *mode = NULL;
 
 	/* get the result */
 	ret = pk_control_get_properties_finish (control, res, &error);
@@ -3685,7 +3686,45 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		gpk_application_create_group_array_categories (application);
 	else
 		gpk_application_create_group_array_enum (application);
+
+	/* set the search mode */
+	mode = gconf_client_get_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, NULL);
+	if (mode == NULL) {
+		egg_warning ("search mode not set, using name");
+		mode = g_strdup ("name");
+	}
+
+	/* search by name */
+	if (g_strcmp0 (mode, "name") == 0) {
+		gpk_application_menu_search_by_name (NULL, application);
+
+	/* set to details if we can we do the action? */
+	} else if (g_strcmp0 (mode, "details") == 0) {
+		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
+			gpk_application_menu_search_by_description (NULL, application);
+		} else {
+			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			gpk_application_menu_search_by_name (NULL, application);
+		}
+
+	/* set to file if we can we do the action? */
+	} else if (g_strcmp0 (mode, "file") == 0) {
+		gpk_application_menu_search_by_file (NULL, application);
+
+		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
+			gpk_application_menu_search_by_file (NULL, application);
+		} else {
+			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			gpk_application_menu_search_by_name (NULL, application);
+		}
+
+	/* mode not recognised */
+	} else {
+		egg_warning ("cannot recognise mode %s, using name", mode);
+		gpk_application_menu_search_by_name (NULL, application);
+	}
 out:
+	g_free (mode);
 	return;
 }
 
@@ -3765,7 +3804,6 @@ gpk_application_init (GpkApplication *application)
 	GtkEntryCompletion *completion;
 	GtkTreeSelection *selection;
 	gboolean ret;
-	gchar *mode;
 	GError *error = NULL;
 	GSList *array;
 	guint retval;
@@ -4150,45 +4188,6 @@ gpk_application_init (GpkApplication *application)
 
 	/* hide details */
 	gpk_application_clear_details (application);
-
-	/* set the search mode */
-	mode = gconf_client_get_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, NULL);
-	if (mode == NULL) {
-		egg_warning ("search mode not set, using name");
-		mode = g_strdup ("name");
-	}
-
-	/* search by name */
-	if (g_strcmp0 (mode, "name") == 0) {
-		gpk_application_menu_search_by_name (NULL, application);
-
-	/* set to details if we can we do the action? */
-	} else if (g_strcmp0 (mode, "details") == 0) {
-		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
-			gpk_application_menu_search_by_description (NULL, application);
-		} else {
-			egg_warning ("cannont use mode %s as not capable, using name", mode);
-			gpk_application_menu_search_by_name (NULL, application);
-		}
-
-	/* set to file if we can we do the action? */
-	} else if (g_strcmp0 (mode, "file") == 0) {
-		gpk_application_menu_search_by_file (NULL, application);
-
-		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
-			gpk_application_menu_search_by_file (NULL, application);
-		} else {
-			egg_warning ("cannont use mode %s as not capable, using name", mode);
-			gpk_application_menu_search_by_name (NULL, application);
-		}
-
-	/* mode not recognised */
-	} else {
-		egg_warning ("cannot recognise mode %s, using name", mode);
-		gpk_application_menu_search_by_name (NULL, application);
-	}
-	g_free (mode);
-
 out_build:
 	/* welcome */
 	gpk_application_add_welcome (application);
