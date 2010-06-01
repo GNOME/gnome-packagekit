@@ -1846,10 +1846,8 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 		goto out;
 	}
 
-	/* populate a chooser */
+	/* populate a chooser and wait for response */
 	gpk_helper_chooser_show (dtask->priv->helper_chooser, array);
-
-	gpk_dbus_task_dbus_return_value (dtask, TRUE);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
