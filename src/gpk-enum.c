@@ -258,6 +258,7 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,	"dialog-information"},
 	{PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED,	"dialog-warning"},
 	{PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY,	"dialog-warning"},
+	{PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK,	"dialog-information"},
 	{0, NULL}
 };
 
@@ -521,6 +522,12 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
 		text = _("The package database was changed");
 		break;
+	case PK_ERROR_ENUM_PROVIDE_TYPE_NOT_SUPPORTED:
+		text = _("Virtual provide type is not supported");
+		break;
+	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
+		text = _("Install root is invalid");
+		break;
 	default:
 		egg_warning ("Unknown error");
 	}
@@ -760,6 +767,12 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
 		text = _("The package database was changed while the request was running.");
 		break;
+	case PK_ERROR_ENUM_PROVIDE_TYPE_NOT_SUPPORTED:
+		text = _("The virtual provide type is not supported by this system.");
+		break;
+	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
+		text = _("The install root is invalid. Please contact your administrator.");
+		break;
 	default:
 		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
 			    "More information is available in the detailed report.");
@@ -909,6 +922,9 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		break;
 	case PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY:
 		text = _("This software source is for developers only");
+		break;
+	case PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK:
+		text = _("Other updates have been held back");
 		break;
 	default:
 		egg_warning ("message unrecognised: %i", message);
