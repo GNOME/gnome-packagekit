@@ -58,6 +58,7 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	UniqueApp *unique_app;
 	gboolean ret;
+	guint timer_id = 0;
 
 	const GOptionEntry options[] = {
 		{ "timed-exit", '\0', 0, G_OPTION_ARG_NONE, &timed_exit,
@@ -121,8 +122,12 @@ main (int argc, char *argv[])
 	hardware = gpk_hardware_new ();
 
 	/* Only timeout if we have specified iton the command line */
-	if (timed_exit)
-		g_timeout_add_seconds (120, (GSourceFunc) gtk_main_quit, NULL);
+	if (timed_exit) {
+		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gtk_main_quit, NULL);
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (timer_id, "[GpkUpdateIcon] timed exit");
+#endif
+	}
 
 	/* wait */
 	gtk_main ();

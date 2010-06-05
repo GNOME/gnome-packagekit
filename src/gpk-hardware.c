@@ -242,14 +242,19 @@ gpk_hardware_device_added_timeout (gpointer data)
 static void
 gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *hardware)
 {
+	guint added_id;
+
 	egg_debug ("hardware added. udi=%s", udi);
 	/* we get multiple hal signals for one device plugin. Ignore all but first one.
 	   TODO: should we act on a different one ?
 	*/
 	if (hardware->priv->udi == NULL) {
 		hardware->priv->udi = g_strdup (udi);
-		g_timeout_add_seconds (GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY,
+		added_id = g_timeout_add_seconds (GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY,
 				       gpk_hardware_device_added_timeout, hardware);
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (added_id, "[GpkHardware] added");
+#endif
 	}
 }
 
@@ -274,6 +279,7 @@ static void
 gpk_hardware_init (GpkHardware *hardware)
 {
 	gboolean ret;
+	guint login_id = 0;
 	GError *error = NULL;
 
 	hardware->priv = GPK_HARDWARE_GET_PRIVATE (hardware);
@@ -308,7 +314,10 @@ gpk_hardware_init (GpkHardware *hardware)
 				     G_CALLBACK (gpk_hardware_device_added_cb), hardware, NULL);
 
 	/* check at startup (plus delay) and see if there is cold plugged hardware needing drivers */
-	g_timeout_add_seconds (GPK_HARDWARE_LOGIN_DELAY, gpk_hardware_timeout_cb, hardware);
+	login_id = g_timeout_add_seconds (GPK_HARDWARE_LOGIN_DELAY, gpk_hardware_timeout_cb, hardware);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (login_id, "[GpkHardware] login");
+#endif
 }
 
 /**

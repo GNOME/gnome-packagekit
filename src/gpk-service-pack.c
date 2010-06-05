@@ -156,8 +156,12 @@ gpk_pack_set_percentage (guint percentage)
 	/* no info */
 	if (percentage == 101) {
 		/* set pulsing */
-		if (pulse_id == 0)
+		if (pulse_id == 0) {
 			pulse_id = g_timeout_add (100, gpk_pack_percentage_pulse_cb, NULL);
+#if GLIB_CHECK_VERSION(2,25,8)
+			g_source_set_name_by_id (pulse_id, "[GpkServicePack] pulse");
+#endif
+		}
 		return;
 	}
 

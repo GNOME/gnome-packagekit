@@ -70,7 +70,7 @@ struct GpkWatchPrivate
 	PkTransactionList	*tlist;
 	PkRestartEnum		 restart;
 	GSettings		*settings;
-	guint			 set_proxy_timeout;
+	guint			 set_proxy_id;
 	gchar			*error_details;
 	gboolean		 hide_warning;
 	EggConsoleKit		*console;
@@ -1111,7 +1111,7 @@ gpk_watch_set_proxy_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
 	gboolean ret;
 
 	/* we can run again */
-	watch->priv->set_proxy_timeout = 0;
+	watch->priv->set_proxy_id = 0;
 
 	/* get the result */
 	ret = pk_control_set_proxy_finish (control, res, &error);
@@ -1151,12 +1151,15 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 static gboolean
 gpk_watch_set_proxies (GpkWatch *watch)
 {
-	if (watch->priv->set_proxy_timeout != 0) {
+	if (watch->priv->set_proxy_id != 0) {
 		egg_debug ("already scheduled");
 		return FALSE;
 	}
-	watch->priv->set_proxy_timeout = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
+	watch->priv->set_proxy_id = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
 							(GSourceFunc) gpk_watch_set_proxies_ratelimit, watch);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (watch->priv->set_proxy_id, "[GpkWatch] set-proxies");
+#endif
 	return TRUE;
 }
 
@@ -1797,7 +1800,7 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->settings, "changed", G_CALLBACK (gpk_watch_key_changed_cb), watch);
 
 	watch->priv->status_icon = gtk_status_icon_new ();
-	watch->priv->set_proxy_timeout = 0;
+	watch->priv->set_proxy_id = 0;
 	watch->priv->cached_messages = g_ptr_array_new_with_free_func ((GDestroyNotify) gpk_watch_cached_message_free);
 	watch->priv->restart_package_names = g_ptr_array_new_with_free_func (g_free);
 	watch->priv->task = PK_TASK(gpk_task_new ());
@@ -1857,8 +1860,8 @@ gpk_watch_finalize (GObject *object)
 	g_return_if_fail (watch->priv != NULL);
 
 	/* we might we waiting for a proxy update */
-	if (watch->priv->set_proxy_timeout != 0)
-		g_source_remove (watch->priv->set_proxy_timeout);
+	if (watch->priv->set_proxy_id != 0)
+		g_source_remove (watch->priv->set_proxy_id);
 
 	g_free (watch->priv->error_details);
 	g_free (watch->priv->transaction_id);

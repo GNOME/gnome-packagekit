@@ -286,7 +286,12 @@ gpk_update_viewer_check_restart (GpkUpdateViewer *update_viewer)
 
 	/* setup a callback so we autoclose */
 	g_object_set_data_full (G_OBJECT(dialog), "instance", g_object_ref (update_viewer), (GDestroyNotify) g_object_unref);
-	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+	priv->auto_shutdown_id =
+		g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
+				       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (priv->auto_shutdown_id, "[GpkUpdateViewer] auto-restart");
+#endif
 
 	response = gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
@@ -572,7 +577,12 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* setup a callback so we autoclose */
-	priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+	priv->auto_shutdown_id =
+		g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
+				       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (priv->auto_shutdown_id, "[GpkUpdateViewer] auto-shutdown");
+#endif
 
 	gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
@@ -677,9 +687,12 @@ gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 	}
 
 	/* add poll */
-	if (active_row_timeout_id == 0)
+	if (active_row_timeout_id == 0) {
 		active_row_timeout_id = g_timeout_add (60, (GSourceFunc)gpk_update_viewer_pulse_active_rows, NULL);
-
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (active_row_timeout_id, "[GpkUpdateViewer] pulse row");
+#endif
+	}
 	active_rows = g_slist_prepend (active_rows, ref);
 out:
 	return;
@@ -1445,7 +1458,12 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 		/* setup a callback so we autoclose */
-		priv->auto_shutdown_id = g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT, (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+		priv->auto_shutdown_id =
+			g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
+					       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (priv->auto_shutdown_id, "[GpkUpdateViewer] shutdown no updates");
+#endif
 
 		gtk_dialog_run (GTK_DIALOG(dialog));
 		gtk_widget_destroy (dialog);

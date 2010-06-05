@@ -130,6 +130,7 @@ main (int argc, char *argv[])
 	guint retval = 0;
 	DBusGConnection *connection;
 	EggDbusMonitor *monitor;
+	guint timer_id = 0;
 
 	const GOptionEntry options[] = {
 		{ "no-timed-exit", '\0', 0, G_OPTION_ARG_NONE, &no_timed_exit,
@@ -189,8 +190,12 @@ main (int argc, char *argv[])
 	}
 
 	/* only timeout if we have specified iton the command line */
-	if (!no_timed_exit)
-		g_timeout_add_seconds (5, (GSourceFunc) gpk_dbus_service_check_idle_cb, dbus);
+	if (!no_timed_exit) {
+		timer_id = g_timeout_add_seconds (5, (GSourceFunc) gpk_dbus_service_check_idle_cb, dbus);
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (timer_id, "[GpkDbusService] timed exit");
+#endif
+	}
 
 	/* wait */
 	g_main_loop_run (loop);

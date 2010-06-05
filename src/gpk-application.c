@@ -736,7 +736,14 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 			goto out;
 
 		/* only show after some time in the transaction */
-		application->priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_application_status_changed_timeout_cb, application);
+		application->priv->status_id =
+			g_timeout_add (GPK_UI_STATUS_SHOW_DELAY,
+				       (GSourceFunc) gpk_application_status_changed_timeout_cb,
+				       application);
+#if GLIB_CHECK_VERSION(2,25,8)
+		g_source_set_name_by_id (application->priv->status_id,
+					 "[GpkApplication] status-changed");
+#endif
 
 		/* save for the callback */
 		application->priv->status_last = status;
@@ -1247,7 +1254,12 @@ gpk_application_clear_details (GpkApplication *application)
 	/* only clear the last data if it takes a little while, else we flicker the display */
 	if (application->priv->details_event_id > 0)
 		g_source_remove (application->priv->details_event_id);
-	application->priv->details_event_id = g_timeout_add (200, (GSourceFunc) gpk_application_clear_details_really, application);
+	application->priv->details_event_id =
+		g_timeout_add (200, (GSourceFunc) gpk_application_clear_details_really, application);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (application->priv->details_event_id,
+				 "[GpkApplication] clear-details");
+#endif
 }
 
 /**
@@ -2020,6 +2032,7 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	GError *error = NULL;
 	PkError *error_code = NULL;
 	GtkWindow *window;
+	guint idle_id;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -2044,7 +2057,10 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	}
 
 	/* idle add in the background */
-	g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
+	idle_id = g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (idle_id, "[GpkApplication] search");
+#endif
 
 	/* find applications that were installed, and offer to run them */
 	gpk_application_run_installed (application, results);
@@ -2070,6 +2086,7 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 	GError *error = NULL;
 	PkError *error_code = NULL;
 	GtkWindow *window;
+	guint idle_id;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -2094,7 +2111,10 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 	}
 
 	/* idle add in the background */
-	g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
+	idle_id = g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, application);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (idle_id, "[GpkApplication] search");
+#endif
 
 	/* clear if success */
 	pk_package_sack_clear (application->priv->package_sack);

@@ -65,6 +65,7 @@ struct GpkAutoRefreshPrivate
 	gboolean		 force_get_updates_login;
 	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
+	guint			 periodic_id;
 	UpClient		*client;
 	GSettings		*settings;
 	GpkSession		*session;
@@ -380,9 +381,16 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 		if (force) {
 			/* don't immediately send the signal, if we are called during object initialization
 			 * we need to wait until upper layers  finish hooking up to the signal first. */
-			if (arefresh->priv->force_get_updates_login_timeout_id == 0)
+			if (arefresh->priv->force_get_updates_login_timeout_id == 0) {
 				arefresh->priv->force_get_updates_login_timeout_id =
-					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT, (GSourceFunc) gpk_auto_refresh_maybe_get_updates_logon_cb, arefresh);
+					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT,
+							       (GSourceFunc) gpk_auto_refresh_maybe_get_updates_logon_cb,
+							       arefresh);
+#if GLIB_CHECK_VERSION(2,25,8)
+				g_source_set_name_by_id (arefresh->priv->force_get_updates_login_timeout_id,
+							 "[GpkAutoRefresh] maybe-get-updates");
+#endif
+			}
 		}
 	}
 
@@ -391,7 +399,11 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 		g_source_remove (arefresh->priv->timeout_id);
 	value = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_SESSION_STARTUP_TIMEOUT);
 	egg_debug ("defering action for %i seconds", value);
-	arefresh->priv->timeout_id = g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
+	arefresh->priv->timeout_id =
+		g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (arefresh->priv->timeout_id, "[GpkAutoRefresh] change-state");
+#endif
 
 	return TRUE;
 }
@@ -567,6 +579,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->network_active = FALSE;
 	arefresh->priv->force_get_updates_login = FALSE;
 	arefresh->priv->timeout_id = 0;
+	arefresh->priv->periodic_id = 0;
 	arefresh->priv->force_get_updates_login_timeout_id = 0;
 
 	/* we need to know the updates frequency */
@@ -597,7 +610,12 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->session_idle = gpk_session_get_idle (arefresh->priv->session);
 
 	/* we check this in case we miss one of the async signals */
-	g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK, gpk_auto_refresh_timeout_cb, arefresh);
+	arefresh->priv->periodic_id =
+		g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK,
+				       gpk_auto_refresh_timeout_cb, arefresh);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (arefresh->priv->periodic_id, "[GpkAutoRefresh] periodic check");
+#endif
 
 	/* check system state */
 	gpk_auto_refresh_change_state (arefresh);
@@ -619,6 +637,8 @@ gpk_auto_refresh_finalize (GObject *object)
 
 	if (arefresh->priv->timeout_id != 0)
 		g_source_remove (arefresh->priv->timeout_id);
+	if (arefresh->priv->periodic_id != 0)
+		g_source_remove (arefresh->priv->periodic_id);
 	if (arefresh->priv->force_get_updates_login_timeout_id != 0)
 		g_source_remove (arefresh->priv->force_get_updates_login_timeout_id);
 
