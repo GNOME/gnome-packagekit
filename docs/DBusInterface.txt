@@ -42,7 +42,7 @@ There are currently three interfaces on the service org.freedesktop.PackageKit.
    - warning		Show the user a warning
 
   These are obviously something that people may want to set per-user defaults,
-  and so the GConf key /apps/gnome-packagekit/dbus_default_interaction is
+  and so the GSettings key org.gnome.packagekit:dbus_default_interaction is
   provided.
   This sets up the default interactions used by clients unless they opt-in
   or opt-out of certain interactions.
@@ -50,7 +50,7 @@ There are currently three interfaces on the service org.freedesktop.PackageKit.
   Of course, we do not want software silently installing things behind our back,
   even if they are signed and trusted. One could imagine an application hiding
   all the interactions do install some software silently.
-  Another GConf key /apps/gnome-packagekit/dbus_enforced_interaction is used
+  Another GSettings key org.gnome.packagekit:dbus_enforced_interaction is used
   to set modes that are absolutely required or suppressed, even when the client
   or defaults specify otherwise.
 

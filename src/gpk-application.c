@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>
-#include <gconf/gconf-client.h>
 #include <math.h>
 #include <string.h>
 #include <packagekit-glib2/packagekit.h>
@@ -76,7 +75,7 @@ typedef enum {
 struct GpkApplicationPrivate
 {
 	GtkBuilder		*builder;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	GtkListStore		*packages_store;
 	GtkTreeStore		*groups_store;
 	GtkListStore		*details_store;
@@ -2133,7 +2132,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	} else if (application->priv->action == PK_ACTION_REMOVE) {
 
-		autoremove = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_ENABLE_AUTOREMOVE, NULL);
+		autoremove = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_ENABLE_AUTOREMOVE);
 
 		/* remove */
 		pk_task_remove_packages_async (application->priv->task, package_ids, TRUE, autoremove, application->priv->cancellable,
@@ -2610,8 +2609,8 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	application->priv->search_type = PK_SEARCH_NAME;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
-	/* save default to GConf */
-	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "name", NULL);
+	/* save default to GSettings */
+	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "name");
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -2633,8 +2632,8 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	application->priv->search_type = PK_SEARCH_DETAILS;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
-	/* save default to GConf */
-	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "details", NULL);
+	/* save default to GSettings */
+	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "details");
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -2656,8 +2655,8 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	application->priv->search_type = PK_SEARCH_FILE;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
-	/* save default to GConf */
-	gconf_client_set_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, "file", NULL);
+	/* save default to GSettings */
+	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "file");
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -3123,10 +3122,10 @@ gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplication *appl
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	/* save users preference to gconf */
+	/* save users preference to GSettings */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	gconf_client_set_bool (application->priv->gconf_client,
-			       GPK_CONF_APPLICATION_FILTER_BASENAME, enabled, NULL);
+	g_settings_set_boolean (application->priv->settings,
+			       GPK_SETTINGS_FILTER_BASENAME, enabled);
 
 	/* change the filter */
 	if (enabled)
@@ -3149,10 +3148,10 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplication *applic
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	/* save users preference to gconf */
+	/* save users preference to GSettings */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	gconf_client_set_bool (application->priv->gconf_client,
-			       GPK_CONF_APPLICATION_FILTER_NEWEST, enabled, NULL);
+	g_settings_set_boolean (application->priv->settings,
+			       GPK_SETTINGS_FILTER_NEWEST, enabled);
 
 	/* change the filter */
 	if (enabled)
@@ -3175,10 +3174,10 @@ gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplication *applicat
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	/* save users preference to gconf */
+	/* save users preference to GSettings */
 	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	gconf_client_set_bool (application->priv->gconf_client,
-			       GPK_CONF_APPLICATION_FILTER_ARCH, enabled, NULL);
+	g_settings_set_boolean (application->priv->settings,
+			       GPK_SETTINGS_FILTER_ARCH, enabled);
 
 	/* change the filter */
 	if (enabled)
@@ -3479,31 +3478,26 @@ gpk_application_create_group_array_categories (GpkApplication *application)
 }
 
 /**
- * gpk_application_gconf_key_changed_cb:
+ * gpk_application_key_changed_cb:
  *
- * We might have to do things when the gconf keys change; do them here.
+ * We might have to do things when the keys change; do them here.
  **/
 static void
-gpk_application_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *gconf_entry, GpkApplication *application)
+gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplication *application)
 {
 	GtkEntryCompletion *completion;
-	GConfValue *value;
 	gboolean ret;
 	GtkEntry *entry;
 
-	value = gconf_entry_get_value (gconf_entry);
-	if (value == NULL)
-		return;
-
-	if (g_strcmp0 (gconf_entry->key, GPK_CONF_APPLICATION_CATEGORY_GROUPS) == 0) {
-		ret = gconf_value_get_bool (value);
+	if (g_strcmp0 (key, GPK_SETTINGS_CATEGORY_GROUPS) == 0) {
+		ret = g_settings_get_boolean (settings, key);
 		gtk_tree_store_clear (application->priv->groups_store);
 		if (ret)
 			gpk_application_create_group_array_categories (application);
 		else
 			gpk_application_create_group_array_enum (application);
-	} else if (g_strcmp0 (gconf_entry->key, GPK_CONF_AUTOCOMPLETE) == 0) {
-		ret = gconf_value_get_bool (value);
+	} else if (g_strcmp0 (key, GPK_SETTINGS_AUTOCOMPLETE) == 0) {
+		ret = g_settings_get_boolean (settings, key);
 		entry = GTK_ENTRY (gtk_builder_get_object (application->priv->builder, "entry_text"));
 		if (ret) {
 			completion = gpk_package_entry_completion_new ();
@@ -3613,8 +3607,8 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	/* BASENAME, use by default, or hide */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_basename"));
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_BASENAME)) {
-		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 GPK_CONF_APPLICATION_FILTER_BASENAME, NULL);
+		enabled = g_settings_get_boolean (application->priv->settings,
+						 GPK_SETTINGS_FILTER_BASENAME);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_basename_cb (widget, application);
@@ -3626,8 +3620,8 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_newest"));
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_NEWEST)) {
 		/* set from remembered state */
-		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 GPK_CONF_APPLICATION_FILTER_NEWEST, NULL);
+		enabled = g_settings_get_boolean (application->priv->settings,
+						  GPK_SETTINGS_FILTER_NEWEST);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_newest_cb (widget, application);
@@ -3639,8 +3633,8 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_arch"));
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_ARCH)) {
 		/* set from remembered state */
-		enabled = gconf_client_get_bool (application->priv->gconf_client,
-						 GPK_CONF_APPLICATION_FILTER_ARCH, NULL);
+		enabled = g_settings_get_boolean (application->priv->settings,
+						  GPK_SETTINGS_FILTER_ARCH);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_arch_cb (widget, application);
@@ -3649,7 +3643,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	}
 
 	/* add an "all" entry if we can GetPackages */
-	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_SHOW_ALL_PACKAGES, NULL);
+	ret = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_SHOW_ALL_PACKAGES);
 	if (ret && pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_PACKAGES)) {
 		gtk_tree_store_append (application->priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
@@ -3681,14 +3675,14 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 					      gpk_application_group_row_separator_func, NULL, NULL);
 
 	/* simple array or category tree? */
-	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_APPLICATION_CATEGORY_GROUPS, NULL);
+	ret = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_CATEGORY_GROUPS);
 	if (ret && pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_GET_CATEGORIES))
 		gpk_application_create_group_array_categories (application);
 	else
 		gpk_application_create_group_array_enum (application);
 
 	/* set the search mode */
-	mode = gconf_client_get_string (application->priv->gconf_client, GPK_CONF_APPLICATION_SEARCH_MODE, NULL);
+	mode = g_settings_get_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE);
 	if (mode == NULL) {
 		egg_warning ("search mode not set, using name");
 		mode = g_strdup ("name");
@@ -3819,7 +3813,7 @@ gpk_application_init (GpkApplication *application)
 	application->priv->status_last = PK_STATUS_ENUM_UNKNOWN;
 	application->priv->package_sack = pk_package_sack_new ();
 
-	application->priv->gconf_client = gconf_client_get_default ();
+	application->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	application->priv->cancellable = g_cancellable_new ();
 	application->priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
@@ -3831,11 +3825,7 @@ gpk_application_init (GpkApplication *application)
 	egg_markdown_set_max_lines (application->priv->markdown, 50);
 
 	/* watch gnome-packagekit keys */
-	gconf_client_add_dir (application->priv->gconf_client, GPK_CONF_DIR,
-			      GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (application->priv->gconf_client, GPK_CONF_DIR,
-				 (GConfClientNotifyFunc) gpk_application_gconf_key_changed_cb,
-				 application, NULL, NULL);
+	g_signal_connect (application->priv->settings, "changed", G_CALLBACK (gpk_application_key_changed_cb), application);
 
 	/* create array stores */
 	application->priv->packages_store = gtk_list_store_new (PACKAGES_COLUMN_LAST,
@@ -4091,7 +4081,7 @@ gpk_application_init (GpkApplication *application)
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
 
 	/* autocompletion can be turned off as it's slow */
-	ret = gconf_client_get_bool (application->priv->gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
+	ret = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_AUTOCOMPLETE);
 	if (ret) {
 		/* create the completion object */
 		completion = gpk_package_entry_completion_new ();
@@ -4188,6 +4178,7 @@ gpk_application_init (GpkApplication *application)
 
 	/* hide details */
 	gpk_application_clear_details (application);
+
 out_build:
 	/* welcome */
 	gpk_application_add_welcome (application);
@@ -4214,7 +4205,7 @@ gpk_application_finalize (GObject *object)
 	g_object_unref (application->priv->control);
 	g_object_unref (PK_CLIENT(application->priv->task));
 	g_object_unref (application->priv->desktop);
-	g_object_unref (application->priv->gconf_client);
+	g_object_unref (application->priv->settings);
 	g_object_unref (application->priv->markdown);
 	g_object_unref (application->priv->builder);
 	g_object_unref (application->priv->helper_run);

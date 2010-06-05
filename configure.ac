@@ -98,6 +98,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 
 AM_GLIB_GNU_GETTEXT
+GLIB_GSETTINGS
 
 dnl ---------------------------------------------------------------------------
 dnl - Library dependencies
@@ -106,12 +107,12 @@ PACKAGEKIT_REQUIRED=0.5.5 # when changing, nuke some compatability entries in gp
 GLIB_REQUIRED=2.14.0
 GTK_REQUIRED=2.19.3
 DBUS_REQUIRED=1.1.2
-GCONF_REQUIRED=0.22
+GCONF_REQUIRED=2.31.1
 DBUS_GLIB_REQUIRED=0.73
 LIBNOTIFY_REQUIRED=0.4.3
 UNIQUE_REQUIRED=1.0.0
 GNOME_MENUS_REQUIRED=2.24.1
-GIO_REQUIRED=2.18.0
+GIO_REQUIRED=2.25.1
 UPOWER_REQUIRED=0.9.0
 CANBERRA_REQUIRED=0.10
 
@@ -130,8 +131,6 @@ PKG_CHECK_MODULES(DBUS, \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
  gtk+-2.0 >= $GTK_REQUIRED gdk-2.0 fontconfig)
-PKG_CHECK_MODULES(GCONF, \
- gconf-2.0 >= $GCONF_REQUIRED)
 PKG_CHECK_MODULES(LIBNOTIFY, \
  libnotify >= $LIBNOTIFY_REQUIRED)
 PKG_CHECK_MODULES(GNOME_MENUS, \
@@ -170,9 +169,6 @@ AM_CONDITIONAL(PK_BUILD_SMALL_FORM_FACTOR, test x$enable_small_form_factor = xye
 if test x$enable_small_form_factor = xyes; then
 	AC_DEFINE(PK_BUILD_SMALL_FORM_FACTOR,1,[Build small form factor code])
 fi
-
-AC_PATH_PROG(GCONFTOOL, gconftool-2)
-AM_GCONF_SOURCE_2
 
 dnl ---------------------------------------------------------------------------
 dnl - Make paths available for source files
@@ -259,6 +255,5 @@ echo "
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
         cppflags:                  ${CPPFLAGS}
-        gconf-schema dir:          $GCONF_SCHEMA_FILE_DIR
 "
 

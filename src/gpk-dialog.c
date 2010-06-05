@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
-#include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -281,14 +280,14 @@ static void
 gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 {
 	gboolean checked;
-	GConfClient *gconf_client;
+	GSettings *settings;
 
 	/* set the policy */
 	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	egg_debug ("Changing %s to %i", key, checked);
-	gconf_client = gconf_client_get_default ();
-	gconf_client_set_bool (gconf_client, key, !checked, NULL);
-	g_object_unref (gconf_client);
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	g_settings_set_boolean (settings, key, !checked);
+	g_object_unref (settings);
 }
 
 /**
@@ -300,7 +299,7 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	GtkWidget *check_button;
 	GtkWidget *widget;
 	gboolean checked;
-	GConfClient *gconf_client;
+	GSettings *settings;
 
 	/* add a checkbutton for deps screen */
 	check_button = gtk_check_button_new_with_label (_("Do not show this again"));
@@ -312,9 +311,9 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 					   NULL);
 
 	/* checked? */
-	gconf_client = gconf_client_get_default ();
-	checked = gconf_client_get_bool (gconf_client, key, NULL);
-	g_object_unref (gconf_client);
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	checked = g_settings_get_boolean (settings, key);
+	g_object_unref (settings);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button), !checked);
 
 	gtk_widget_show (check_button);

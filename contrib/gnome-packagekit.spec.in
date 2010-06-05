@@ -20,8 +20,7 @@ Release:   0.#BUILD#%{?alphatag}%{?dist}
 License:   GPLv2+
 Group:     Applications/System
 URL:       http://www.packagekit.org
-Source0:   http://download.gnome.org/sources/gnome-packagekit/2.27/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:   http://download.gnome.org/sources/gnome-packagekit/2.30/%{name}-%{version}.tar.gz
 
 Requires:  glib2 >= %{glib2_version}
 Requires:  gtk2 >= %{gtk2_version}
@@ -39,12 +38,12 @@ Requires:  iso-codes
 Requires:  libcanberra >= %{libcanberra_version}
 Requires:  upower >= %{upower_version}
 Requires(post):   scrollkeeper
-Requires(pre):    GConf2
-Requires(post):   GConf2
-Requires(preun):  GConf2
 Requires(postun): scrollkeeper
 Obsoletes: pirut < 1.3.31-2
 Provides:  pirut = 1.3.31-2
+
+# required because KPackageKit provides exactly the same interface
+Provides: PackageKit-session-service
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk2-devel >= %{gtk2_version}
@@ -89,14 +88,11 @@ Extra GNOME applications for using PackageKit that are not normally needed.
 %setup -q
 
 %build
-%configure --disable-scrollkeeper --disable-schemas-install
+%configure --disable-scrollkeeper
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT
-unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 
 # nuke the ChangeLog file, it's huge
 rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
@@ -117,39 +113,22 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %post
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-install-rule \
-        %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas >/dev/null || :
-scrollkeeper-update -q &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
     gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
 fi
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
-
-%pre
-if [ "$1" -gt 1 ]; then
-    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-    gconftool-2 --makefile-uninstall-rule \
-      %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas &> /dev/null || :
-fi
-
-%preun
-if [ "$1" -eq 0 ]; then
-    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-    gconftool-2 --makefile-uninstall-rule \
-      %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas &> /dev/null || :
-fi
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %postun
-scrollkeeper-update -q &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
     gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
 fi
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -180,7 +159,6 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/icons/hicolor/*/*/*.png
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
-%config(noreplace) %{_sysconfdir}/gconf/schemas/*.schemas
 %{_datadir}/man/man1/*.1.gz
 %{_datadir}/gnome/help/gnome-packagekit
 %{python_sitelib}/packagekit/*py*
@@ -194,6 +172,8 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/applications/gpk-repo.desktop
 %{_datadir}/applications/gpk-update-viewer.desktop
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
+%{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
+%{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 
 %files extra
 %defattr(-,root,root,-)

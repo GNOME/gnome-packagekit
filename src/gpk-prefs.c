@@ -30,7 +30,6 @@
 #include <math.h>
 #include <string.h>
 #include <dbus/dbus-glib.h>
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
@@ -62,6 +61,7 @@
 #define GPK_PREFS_VALUE_WEEKLY		(60*60*24*7)
 
 static GtkBuilder *builder = NULL;
+static GSettings *settings = NULL;
 
 /**
  * gpk_prefs_help_cb:
@@ -73,26 +73,6 @@ gpk_prefs_help_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * pk_button_checkbutton_clicked_cb:
- **/
-static void
-pk_button_checkbutton_clicked_cb (GtkWidget *widget, gpointer data)
-{
-	gboolean checked;
-	GConfClient *client;
-	const gchar *gconf_key;
-
-	client = gconf_client_get_default ();
-	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-
-	gconf_key = (const char *) g_object_get_data (G_OBJECT (widget), "gconf_key");
-	egg_debug ("Changing %s to %i", gconf_key, checked);
-	gconf_client_set_bool (client, gconf_key, checked, NULL);
-
-	g_object_unref (client);
-}
-
-/**
  * gpk_prefs_update_freq_combo_changed:
  **/
 static void
@@ -100,9 +80,7 @@ gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	guint freq = 0;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0)
 		freq = GPK_PREFS_VALUE_HOURLY;
@@ -115,10 +93,9 @@ gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 	else
 		g_assert (FALSE);
 
-	egg_debug ("Changing %s to %i", GPK_CONF_FREQUENCY_GET_UPDATES, freq);
-	gconf_client_set_int (client, GPK_CONF_FREQUENCY_GET_UPDATES, freq, NULL);
+	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_settings_set_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_free (value);
-	g_object_unref (client);
 }
 
 /**
@@ -129,9 +106,7 @@ gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 {
 	gchar *value;
 	guint freq = 0;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
 		freq = GPK_PREFS_VALUE_DAILY;
@@ -142,10 +117,9 @@ gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 	else
 		g_assert (FALSE);
 
-	egg_debug ("Changing %s to %i", GPK_CONF_FREQUENCY_GET_UPGRADES, freq);
-	gconf_client_set_int (client, GPK_CONF_FREQUENCY_GET_UPGRADES, freq, NULL);
+	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_settings_set_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_free (value);
-	g_object_unref (client);
 }
 
 /**
@@ -157,9 +131,7 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	gchar *value;
 	const gchar *action;
 	GpkUpdateEnum update = GPK_UPDATE_ENUM_UNKNOWN;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	if (value == NULL) {
 		egg_warning ("value NULL");
@@ -176,10 +148,9 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 	}
 
 	action = gpk_update_enum_to_text (update);
-	egg_debug ("Changing %s to %s", GPK_CONF_AUTO_UPDATE, action);
-	gconf_client_set_string (client, GPK_CONF_AUTO_UPDATE, action, NULL);
+	egg_debug ("Changing %s to %s", GPK_SETTINGS_AUTO_UPDATE, action);
+	g_settings_set_string (settings, GPK_SETTINGS_AUTO_UPDATE, action);
 	g_free (value);
-	g_object_unref (client);
 }
 
 /**
@@ -211,14 +182,11 @@ gpk_prefs_update_freq_combo_setup (void)
 	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_check"));
-	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
-	value = gconf_client_get_int (client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
-	egg_debug ("value from gconf %i", value);
-	g_object_unref (client);
+	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	value = g_settings_get_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	egg_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -254,14 +222,11 @@ gpk_prefs_upgrade_freq_combo_setup (void)
 	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
-	is_writable = gconf_client_key_is_writable (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
-	value = gconf_client_get_int (client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
-	egg_debug ("value from gconf %i", value);
-	g_object_unref (client);
+	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	value = g_settings_get_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	egg_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -295,20 +260,17 @@ gpk_prefs_auto_update_combo_setup (void)
 	gboolean is_writable;
 	GtkWidget *widget;
 	GpkUpdateEnum update;
-	GConfClient *client;
 
-	client = gconf_client_get_default ();
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_install"));
-	is_writable = gconf_client_key_is_writable (client, GPK_CONF_AUTO_UPDATE, NULL);
-	value = gconf_client_get_string (client, GPK_CONF_AUTO_UPDATE, NULL);
+	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_AUTO_UPDATE);
+	value = g_settings_get_string (settings, GPK_SETTINGS_AUTO_UPDATE);
 	if (value == NULL) {
 		egg_warning ("invalid schema, please re-install");
 		return;
 	}
-	egg_debug ("value from gconf %s", value);
+	egg_debug ("value from settings %s", value);
 	update = gpk_update_enum_from_text (value);
 	g_free (value);
-	g_object_unref (client);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -324,25 +286,6 @@ gpk_prefs_auto_update_combo_setup (void)
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
 			  G_CALLBACK (gpk_prefs_update_combo_changed), NULL);
-}
-
-/**
- * gpk_prefs_notify_checkbutton_setup:
- **/
-static void
-gpk_prefs_notify_checkbutton_setup (GtkWidget *widget, const gchar *gconf_key)
-{
-	GConfClient *client;
-	gboolean value;
-
-	client = gconf_client_get_default ();
-	value = gconf_client_get_bool (client, gconf_key, NULL);
-	egg_debug ("value from gconf %i for %s", value, gconf_key);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), value);
-
-	g_object_set_data (G_OBJECT (widget), "gconf_key", (gpointer) gconf_key);
-	g_signal_connect (widget, "clicked", G_CALLBACK (pk_button_checkbutton_clicked_cb), NULL);
-	g_object_unref (client);
 }
 
 /**
@@ -504,6 +447,9 @@ main (int argc, char *argv[])
 	g_signal_connect (unique_app, "message-received",
 			  G_CALLBACK (gpk_prefs_message_received_cb), NULL);
 
+	/* load settings */
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+
 	/* get actions */
 	loop = g_main_loop_new (NULL, FALSE);
 	control = pk_control_new ();
@@ -528,7 +474,10 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_prefs_delete_event_cb), loop);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_mobile_broadband"));
-	gpk_prefs_notify_checkbutton_setup (widget, GPK_CONF_CONNECTION_USE_MOBILE);
+	g_settings_bind (settings,
+			 GPK_SETTINGS_CONNECTION_USE_MOBILE,
+			 widget, "active",
+			 G_SETTINGS_BIND_DEFAULT);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
 	g_signal_connect (widget, "clicked",
@@ -560,6 +509,7 @@ out_build:
 	g_main_loop_unref (loop);
 	g_object_unref (control);
 	g_object_unref (builder);
+	g_object_unref (settings);
 unique_out:
 	g_object_unref (unique_app);
 

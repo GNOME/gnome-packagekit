@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
@@ -675,7 +674,7 @@ int
 main (int argc, char *argv[])
 {
 	GOptionContext *context;
-	GConfClient *gconf_client;
+	GSettings *settings;
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GtkEntryCompletion *completion;
@@ -779,8 +778,8 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "activate", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
 	/* autocompletion can be turned off as it's slow */
-	gconf_client = gconf_client_get_default ();
-	ret = gconf_client_get_bool (gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	ret = g_settings_get_boolean (settings, GPK_SETTINGS_AUTOCOMPLETE);
 	if (ret) {
 		/* create the completion object */
 		completion = gpk_package_entry_completion_new ();
@@ -791,7 +790,7 @@ main (int argc, char *argv[])
 		/* use search as you type */
 		g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 	}
-	g_object_unref (gconf_client);
+	g_object_unref (settings);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,

@@ -36,7 +36,6 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 #ifdef GPK_BUILD_GUDEV
@@ -65,7 +64,7 @@ static void     gpk_firmware_finalize	(GObject	  *object);
 struct GpkFirmwarePrivate
 {
 	EggConsoleKit		*consolekit;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	GFileMonitor		*monitor;
 	GPtrArray		*array_requested;
 	PkTask			*task;
@@ -440,21 +439,14 @@ gpk_firmware_install_file (GpkFirmware *firmware)
 static void
 gpk_firmware_ignore_devices (GpkFirmware *firmware)
 {
-	gboolean ret;
 	gchar *existing = NULL;
-	GError *error = NULL;
 	GpkFirmwareRequest *req;
 	GPtrArray *array;
 	GString *string = NULL;
 	guint i;
 
-	/* get from gconf */
-	existing = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, &error);
-	if (error != NULL) {
-		egg_warning ("failed to get ignored devices: %s", error->message);
-		g_error_free (error);
-		goto out;
-	}
+	/* get from settings */
+	existing = g_settings_get_string (firmware->priv->settings, GPK_SETTINGS_IGNORED_DEVICES);
 
 	/* get existing string */
 	string = g_string_new (existing);
@@ -472,14 +464,9 @@ gpk_firmware_ignore_devices (GpkFirmware *firmware)
 	if (string->len > 2)
 		g_string_set_size (string, string->len - 1);
 
-	/* set new string to gconf */
-	ret = gconf_client_set_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, string->str, &error);
-	if (!ret) {
-		egg_warning ("failed to set new string %s: %s", string->str, error->message);
-		g_error_free (error);
-		goto out;
-	}
-out:
+	/* set new string */
+	g_settings_set_string (firmware->priv->settings, GPK_SETTINGS_IGNORED_DEVICES, string->str);
+
 	g_free (existing);
 	if (string != NULL)
 		g_string_free (string, TRUE);
@@ -657,8 +644,8 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 	GpkFirmwareRequest *req;
 	guint i, j;
 
-	/* get from gconf */
-	banned_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_BANNED_FIRMWARE, NULL);
+	/* get from settings */
+	banned_str = g_settings_get_string (firmware->priv->settings, GPK_SETTINGS_BANNED_FIRMWARE);
 	if (banned_str == NULL) {
 		egg_warning ("could not read banned list");
 		goto out;
@@ -703,8 +690,8 @@ gpk_firmware_remove_ignored (GpkFirmware *firmware, GPtrArray *array)
 	GpkFirmwareRequest *req;
 	guint i, j;
 
-	/* get from gconf */
-	ignored_str = gconf_client_get_string (firmware->priv->gconf_client, GPK_CONF_IGNORED_DEVICES, NULL);
+	/* get from settings */
+	ignored_str = g_settings_get_string (firmware->priv->settings, GPK_SETTINGS_IGNORED_DEVICES);
 	if (ignored_str == NULL) {
 		egg_warning ("could not read ignored list");
 		goto out;
@@ -894,9 +881,9 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 	const GpkFirmwareRequest *req;
 
 	/* should we check and show the user */
-	ret = gconf_client_get_bool (firmware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_FIRMWARE, NULL);
+	ret = g_settings_get_boolean (firmware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_FIRMWARE);
 	if (!ret) {
-		egg_debug ("not showing thanks to GConf");
+		egg_debug ("not showing thanks to GSettings");
 		return;
 	}
 
@@ -1000,7 +987,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	firmware->priv->timeout_id = 0;
 	firmware->priv->packages_found = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	firmware->priv->array_requested = g_ptr_array_new_with_free_func ((GDestroyNotify) gpk_firmware_request_free);
-	firmware->priv->gconf_client = gconf_client_get_default ();
+	firmware->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	firmware->priv->consolekit = egg_console_kit_new ();
 	firmware->priv->task = PK_TASK(gpk_task_new ());
 	g_object_set (firmware->priv->task,
@@ -1045,7 +1032,7 @@ gpk_firmware_finalize (GObject *object)
 	g_ptr_array_unref (firmware->priv->array_requested);
 	g_ptr_array_unref (firmware->priv->packages_found);
 	g_object_unref (PK_CLIENT(firmware->priv->task));
-	g_object_unref (firmware->priv->gconf_client);
+	g_object_unref (firmware->priv->settings);
 	g_object_unref (firmware->priv->consolekit);
 	if (firmware->priv->monitor != NULL)
 		g_object_unref (firmware->priv->monitor);

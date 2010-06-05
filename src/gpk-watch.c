@@ -35,7 +35,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
@@ -56,8 +55,6 @@ static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
 #define GPK_WATCH_MAXIMUM_TOOLTIP_LINES		10
-#define GPK_WATCH_GCONF_PROXY_HTTP		"/system/http_proxy"
-#define GPK_WATCH_GCONF_PROXY_FTP		"/system/proxy"
 #define GPK_WATCH_SET_PROXY_RATE_LIMIT		200 /* ms */
 
 struct GpkWatchPrivate
@@ -72,7 +69,7 @@ struct GpkWatchPrivate
 	PkTask			*task;
 	PkTransactionList	*tlist;
 	PkRestartEnum		 restart;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	guint			 set_proxy_timeout;
 	gchar			*error_details;
 	gboolean		 hide_warning;
@@ -273,7 +270,7 @@ gpk_watch_task_list_to_status_bitfield (GpkWatch *watch)
 		goto out;
 
 	/* do we watch active transactions */
-	watch_active = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_WATCH_ACTIVE_TRANSACTIONS, NULL);
+	watch_active = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_WATCH_ACTIVE_TRANSACTIONS);
 
 	/* add each status to a list */
 	for (i=0; i<array->len; i++) {
@@ -390,8 +387,8 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	GpkWatch *watch = GPK_WATCH (data);
 
 	if (g_strcmp0 (action, "do-not-show-notify-complete") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_COMPLETED);
-		gconf_client_set_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_COMPLETED);
+		g_settings_set_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_COMPLETED, FALSE);
 
 	} else if (g_strcmp0 (action, "show-error-details") == 0) {
 		/* TRANSLATORS: The detailed error if the user clicks "more info" */
@@ -989,26 +986,27 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 static gchar *
 gpk_watch_get_proxy_ftp (GpkWatch *watch)
 {
-	gchar *mode = NULL;
 	gchar *connection = NULL;
+#ifdef USE_GCONF_COMPAT_GNOME_VFS
+	gchar *mode = NULL;
 	gchar *host = NULL;
 	gint port;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
 
 	/* common case, a direct connection */
-	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
+	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
 	if (g_strcmp0 (mode, "none") == 0) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}
 
-	host = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/ftp_host", NULL);
+	host = g_settings_get_string (watch->priv->settings, "/system/proxy/ftp_host");
 	if (egg_strzero (host)) {
 		egg_debug ("no hostname for ftp proxy");
 		goto out;
 	}
-	port = gconf_client_get_int (watch->priv->gconf_client, "/system/proxy/ftp_port", NULL);
+	port = g_settings_get_int (watch->priv->settings, "/system/proxy/ftp_port");
 
 	/* ftp has no username or password */
 	if (port == 0)
@@ -1018,6 +1016,7 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 out:
 	g_free (mode);
 	g_free (host);
+#endif
 	return connection;
 }
 
@@ -1028,45 +1027,46 @@ out:
 static gchar *
 gpk_watch_get_proxy_http (GpkWatch *watch)
 {
+	gchar *proxy_http = NULL;
+#ifdef USE_GCONF_COMPAT_GNOME_VFS
 	gchar *mode = NULL;
 	gchar *host = NULL;
 	gchar *auth = NULL;
 	gchar *connection = NULL;
-	gchar *proxy_http = NULL;
 	gint port;
 	gboolean ret;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
 
 	/* common case, a direct connection */
-	mode = gconf_client_get_string (watch->priv->gconf_client, "/system/proxy/mode", NULL);
+	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
 	if (g_strcmp0 (mode, "none") == 0) {
 		egg_debug ("not using session proxy");
 		goto out;
 	}
 
 	/* do we use this? */
-	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_http_proxy", NULL);
+	ret = g_settings_get_boolean (watch->priv->settings, "/system/http_proxy/use_http_proxy");
 	if (!ret) {
 		egg_debug ("not using http proxy");
 		goto out;
 	}
 
 	/* http has 4 parameters */
-	host = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/host", NULL);
+	host = g_settings_get_string (watch->priv->settings, "/system/http_proxy/host");
 	if (egg_strzero (host)) {
 		egg_debug ("no hostname for http proxy");
 		goto out;
 	}
 
 	/* user and password are both optional */
-	ret = gconf_client_get_bool (watch->priv->gconf_client, "/system/http_proxy/use_authentication", NULL);
+	ret = g_settings_get_boolean (watch->priv->settings, "/system/http_proxy/use_authentication");
 	if (ret) {
 		gchar *user = NULL;
 		gchar *password = NULL;
 
-		user = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_user", NULL);
-		password = gconf_client_get_string (watch->priv->gconf_client, "/system/http_proxy/authentication_password", NULL);
+		user = g_settings_get_string (watch->priv->settings, "/system/http_proxy/authentication_user");
+		password = g_settings_get_string (watch->priv->settings, "/system/http_proxy/authentication_password");
 
 		if (user != NULL && password != NULL)
 			auth = g_strdup_printf ("%s:%s", user, password);
@@ -1080,7 +1080,7 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 	}
 
 	/* port is optional too */
-	port = gconf_client_get_int (watch->priv->gconf_client, "/system/http_proxy/port", NULL);
+	port = g_settings_get_int (watch->priv->settings, "/system/http_proxy/port");
 	if (port == 0)
 		connection = g_strdup (host);
 	else
@@ -1096,6 +1096,7 @@ out:
 	g_free (connection);
 	g_free (auth);
 	g_free (host);
+#endif
 	return proxy_http;
 }
 
@@ -1187,8 +1188,8 @@ gpk_watch_set_root (GpkWatch *watch)
 {
 	gchar *root;
 
-	/* get from GConf */
-	root = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_INSTALL_ROOT, NULL);
+	/* get install root */
+	root = g_settings_get_string (watch->priv->settings, GPK_SETTINGS_INSTALL_ROOT);
 	if (root == NULL) {
 		egg_warning ("could not read install root");
 		goto out;
@@ -1204,12 +1205,12 @@ static void gpk_watch_set_root (GpkWatch *watch) {}
 #endif
 
 /**
- * gpk_watch_gconf_key_changed_cb:
+ * gpk_watch_key_changed_cb:
  *
- * We might have to do things when the gconf keys change; do them here.
+ * We might have to do things when the keys change; do them here.
  **/
 static void
-gpk_watch_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkWatch *watch)
+gpk_watch_key_changed_cb (GSettings *client, const gchar *key, GpkWatch *watch)
 {
 	egg_debug ("keys have changed");
 	gpk_watch_set_proxies (watch);
@@ -1291,8 +1292,8 @@ gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
 	gchar **ignored = NULL;
 	const gchar *message_str;
 
-	/* get from gconf */
-	ignored_str = gconf_client_get_string (watch->priv->gconf_client, GPK_CONF_IGNORED_MESSAGES, NULL);
+	/* get from settings */
+	ignored_str = g_settings_get_string (watch->priv->settings, GPK_SETTINGS_IGNORED_MESSAGES);
 	if (ignored_str == NULL) {
 		egg_warning ("could not read ignored list");
 		goto out;
@@ -1369,9 +1370,9 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	}
 
 	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_MESSAGE, NULL);
+	value = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_MESSAGE);
 	if (!value) {
-		egg_debug ("not showing notification as prevented in gconf");
+		egg_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
@@ -1419,9 +1420,9 @@ gpk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 	}
 
 	/* are we accepting notifications */
-	value = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_ERROR, NULL);
+	value = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_ERROR);
 	if (!value) {
-		egg_debug ("not showing notification as prevented in gconf");
+		egg_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
@@ -1582,9 +1583,9 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	}
 
 	/* are we accepting notifications */
-	ret = gconf_client_get_bool (watch->priv->gconf_client, GPK_CONF_NOTIFY_COMPLETED, NULL);
+	ret = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_COMPLETED);
 	if (!ret) {
-		egg_debug ("not showing notification as prevented in gconf");
+		egg_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
@@ -1792,7 +1793,8 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->console = egg_console_kit_new ();
 	watch->priv->cancellable = g_cancellable_new ();
 	watch->priv->array_progress = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
-	watch->priv->gconf_client = gconf_client_get_default ();
+	watch->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	g_signal_connect (watch->priv->settings, "changed", G_CALLBACK (gpk_watch_key_changed_cb), watch);
 
 	watch->priv->status_icon = gtk_status_icon_new ();
 	watch->priv->set_proxy_timeout = 0;
@@ -1834,16 +1836,6 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->tlist, "removed",
 			  G_CALLBACK (gpk_watch_transaction_list_removed_cb), watch);
 
-	/* watch proxy keys */
-	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
-			      GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_add_dir (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_FTP,
-			      GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_HTTP,
-				 (GConfClientNotifyFunc) gpk_watch_gconf_key_changed_cb, watch, NULL, NULL);
-	gconf_client_notify_add (watch->priv->gconf_client, GPK_WATCH_GCONF_PROXY_FTP,
-				 (GConfClientNotifyFunc) gpk_watch_gconf_key_changed_cb, watch, NULL, NULL);
-
 	/* set the proxy */
 	gpk_watch_set_proxies (watch);
 	gpk_watch_set_root (watch);
@@ -1875,7 +1867,7 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->console);
 	g_object_unref (watch->priv->control);
 	g_object_unref (watch->priv->dialog);
-	g_object_unref (watch->priv->gconf_client);
+	g_object_unref (watch->priv->settings);
 	g_object_unref (watch->priv->inhibit);
 	g_object_unref (watch->priv->status_icon);
 	g_object_unref (watch->priv->tlist);

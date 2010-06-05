@@ -23,7 +23,6 @@
 
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>
-#include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
 
@@ -45,7 +44,7 @@ static void     gpk_task_finalize	(GObject     *object);
 struct _GpkTaskPrivate
 {
 	gpointer		 user_data;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	GtkWindow		*parent_window;
 	GtkWindow		*current_window;
 	GtkBuilder		*builder_untrusted;
@@ -469,7 +468,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	/* allow skipping of deps except when we remove other packages */
 	if (role != PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES) {
 		/* have we previously said we don't want to be shown the confirmation */
-		ret = gconf_client_get_bool (priv->gconf_client, GPK_CONF_SHOW_DEPENDS, NULL);
+		ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_SHOW_DEPENDS);
 		if (!ret) {
 			egg_debug ("we've said we don't want the dep dialog");
 			pk_task_user_accepted (PK_TASK(task), priv->request);
@@ -538,7 +537,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array);
 #endif
 
-	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_CONF_SHOW_DEPENDS);
+	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_SETTINGS_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */
 	gtk_dialog_add_button (GTK_DIALOG(priv->current_window), _("Continue"), GTK_RESPONSE_YES);
 
@@ -703,7 +702,7 @@ gpk_task_init (GpkTask *task)
 	task->priv->request = 0;
 	task->priv->parent_window = NULL;
 	task->priv->current_window = NULL;
-	task->priv->gconf_client = gconf_client_get_default ();
+	task->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
 	/* setup dialogs ahead of time */
 	gpk_task_setup_dialog_untrusted (task);
@@ -723,7 +722,7 @@ gpk_task_finalize (GObject *object)
 	g_object_unref (task->priv->builder_untrusted);
 	g_object_unref (task->priv->builder_signature);
 	g_object_unref (task->priv->builder_eula);
-	g_object_unref (task->priv->gconf_client);
+	g_object_unref (task->priv->settings);
 
 	G_OBJECT_CLASS (gpk_task_parent_class)->finalize (object);
 }

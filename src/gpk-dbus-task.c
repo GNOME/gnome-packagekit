@@ -30,7 +30,6 @@
 
 #include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
@@ -67,7 +66,7 @@ static void gpk_dbus_task_progress_cb (PkProgress *progress, PkProgressType type
 struct _GpkDbusTaskPrivate
 {
 	GdkWindow		*parent_window;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	PkTask			*task;
 	PkDesktop		*desktop;
 	PkControl		*control;
@@ -1712,10 +1711,10 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	dtask->priv->finished_cb = finished_cb;
 	dtask->priv->finished_userdata = userdata;
 
-	/* check it's not session wide banned in gconf */
-	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_CODEC_HELPER, NULL);
+	/* check it's not session wide banned */
+	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_CODEC_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_CODEC_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_CODEC_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1883,10 +1882,10 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types, GpkDbu
 	dtask->priv->finished_cb = finished_cb;
 	dtask->priv->finished_userdata = userdata;
 
-	/* check it's not session wide banned in gconf */
-	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_MIME_TYPE_HELPER, NULL);
+	/* check it's not session wide banned */
+	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_MIME_TYPE_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_MIME_TYPE_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_MIME_TYPE_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2153,16 +2152,12 @@ gpk_dbus_task_install_check_exec_ignored (GpkDbusTask *dtask)
 	gchar *ignored_str;
 	gchar **ignored = NULL;
 	gboolean ret = TRUE;
-	GError *error = NULL;
 	guint i;
 
-	/* check it's not session wide banned in gconf */
-	ignored_str = gconf_client_get_string (dtask->priv->gconf_client, GPK_CONF_IGNORED_DBUS_REQUESTS, &error);
-	if (ignored_str == NULL) {
-		egg_warning ("failed to get ignored requests: %s", error->message);
-		g_error_free (error);
+	/* check it's not session wide banned */
+	ignored_str = g_settings_get_string (dtask->priv->settings, GPK_SETTINGS_IGNORED_DBUS_REQUESTS);
+	if (ignored_str == NULL)
 		goto out;
-	}
 
 	/* check each one */
 	ignored = g_strsplit (ignored_str, ",", -1);
@@ -2224,10 +2219,10 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	/* get number of fonts to install */
 	len = g_strv_length (fonts);
 
-	/* check it's not session wide banned in gconf */
-	ret = gconf_client_get_bool (dtask->priv->gconf_client, GPK_CONF_ENABLE_FONT_HELPER, NULL);
+	/* check it's not session wide banned */
+	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_FONT_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GConf : %s", GPK_CONF_ENABLE_FONT_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_FONT_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3093,8 +3088,8 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	dtask->priv->language = gpk_language_new ();
 	gpk_language_populate (dtask->priv->language, NULL);
 
-	/* use gconf for session settings */
-	dtask->priv->gconf_client = gconf_client_get_default ();
+	/* gat session settings */
+	dtask->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
 	/* get actions */
 	dtask->priv->control = pk_control_new ();
@@ -3141,7 +3136,7 @@ gpk_dbus_task_finalize (GObject *object)
 	g_object_unref (PK_CLIENT(dtask->priv->task));
 	g_object_unref (dtask->priv->control);
 	g_object_unref (dtask->priv->desktop);
-	g_object_unref (dtask->priv->gconf_client);
+	g_object_unref (dtask->priv->settings);
 	g_object_unref (dtask->priv->dialog);
 	g_object_unref (dtask->priv->vendor);
 	g_object_unref (dtask->priv->language);

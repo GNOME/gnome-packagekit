@@ -35,7 +35,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
@@ -78,7 +77,7 @@ struct GpkCheckUpdatePrivate
 	PkControl		*control;
 	GpkAutoRefresh		*arefresh;
 	PkTask			*task;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	guint			 number_updates_critical_last_shown;
 	NotifyNotification	*notification_updates_available;
 	NotifyNotification	*notification_error;
@@ -384,9 +383,9 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 		g_string_set_size (message_text, message_text->len-1);
 
 	/* do we do the notification? */
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, NULL);
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE);
 	if (!ret) {
-		egg_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GSettings");
 		goto out;
 	}
 
@@ -565,23 +564,23 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (g_strcmp0 (action, "do-not-show-complete-restart") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE_RESTART);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-complete") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_COMPLETE);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_COMPLETE, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-update-started") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_STARTED);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_STARTED, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_STARTED);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_STARTED, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-notify-critical") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_CRITICAL);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_CRITICAL);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_CRITICAL, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-update-not-battery") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY, FALSE);
 	} else if (g_strcmp0 (action, "distro-upgrade-do-not-show-available") == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_NOTIFY_DISTRO_UPGRADES);
-		gconf_client_set_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES);
+		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES, FALSE);
 	} else if (g_strcmp0 (action, "show-error-details") == 0) {
 		title = gpk_error_enum_to_localised_text (pk_error_get_code (cupdate->priv->error_code));
 		message = gpk_error_enum_to_localised_message (pk_error_get_code (cupdate->priv->error_code));
@@ -626,9 +625,9 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* do we do the notification? */
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_CRITICAL);
 	if (!ret) {
-		egg_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GSettings");
 		return;
 	}
 
@@ -727,7 +726,7 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_UPDATE_BATTERY, NULL);
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_UPDATE_BATTERY);
 	if (ret) {
 		egg_debug ("okay to update due to policy");
 		return TRUE;
@@ -740,9 +739,9 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	}
 
 	/* do we do the notification? */
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_UPDATE_NOT_BATTERY, NULL);
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY);
 	if (!ret) {
-		egg_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GSettings");
 		return FALSE;
 	}
 
@@ -780,9 +779,9 @@ gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
 
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
-	updates = gconf_client_get_string (cupdate->priv->gconf_client, GPK_CONF_AUTO_UPDATE, NULL);
+	updates = g_settings_get_string (cupdate->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 	if (updates == NULL) {
-		egg_warning ("'%s' gconf key is null!", GPK_CONF_AUTO_UPDATE);
+		egg_warning ("'%s' settings key is null!", GPK_SETTINGS_AUTO_UPDATE);
 		return GPK_UPDATE_ENUM_UNKNOWN;
 	}
 	update = gpk_update_enum_from_text (updates);
@@ -800,8 +799,8 @@ gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
 	GError *error = NULL;
 	NotifyNotification *notification;
 
-	/* in GConf? */
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_CRITICAL, NULL);
+	/* in GSettings? */
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_CRITICAL);
 	if (!ret)
 		goto out;
 
@@ -1095,7 +1094,7 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gconf_client_get_int (cupdate->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (cupdate->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is to never get updates");
 		return;
@@ -1269,9 +1268,9 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	}
 
 	/* do we do the notification? */
-	ret = gconf_client_get_bool (cupdate->priv->gconf_client, GPK_CONF_NOTIFY_DISTRO_UPGRADES, NULL);
+	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES);
 	if (!ret) {
-		egg_debug ("ignoring due to GConf");
+		egg_debug ("ignoring due to GSettings");
 		goto out;
 	}
 
@@ -1445,8 +1444,8 @@ gpk_check_update_mount_added_cb (GVolumeMonitor *volume_monitor, GMount *mount, 
 	root = g_mount_get_root (mount);
 	root_path = g_file_get_path (root);
 
-	/* use settings from gconf */
-	media_repo_filenames = gconf_client_get_string (cupdate->priv->gconf_client, GPK_CONF_MEDIA_REPO_FILENAMES, NULL);
+	/* use settings */
+	media_repo_filenames = g_settings_get_string (cupdate->priv->settings, GPK_SETTINGS_MEDIA_REPO_FILENAMES);
 	if (media_repo_filenames == NULL) {
 		egg_warning ("failed to get media repo filenames");
 		goto out;
@@ -1490,11 +1489,7 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->status_icon = gtk_status_icon_new ();
 	cupdate->priv->cancellable = g_cancellable_new ();
 	cupdate->priv->error_code = NULL;
-
-	/* preload all the common GConf keys */
-	cupdate->priv->gconf_client = gconf_client_get_default ();
-	gconf_client_add_dir (cupdate->priv->gconf_client, GPK_CONF_DIR,
-			      GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
+	cupdate->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
 	g_signal_connect (cupdate->priv->arefresh, "refresh-cache",
@@ -1576,7 +1571,7 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->status_icon);
 	g_object_unref (cupdate->priv->tlist);
 	g_object_unref (cupdate->priv->arefresh);
-	g_object_unref (cupdate->priv->gconf_client);
+	g_object_unref (cupdate->priv->settings);
 	g_object_unref (cupdate->priv->control);
 	g_object_unref (cupdate->priv->task);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);

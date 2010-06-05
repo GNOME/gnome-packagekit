@@ -33,7 +33,6 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <libupower-glib/upower.h>
 
@@ -67,7 +66,7 @@ struct GpkAutoRefreshPrivate
 	guint			 force_get_updates_login_timeout_id;
 	guint			 timeout_id;
 	UpClient		*client;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	GpkSession		*session;
 	PkControl		*control;
 };
@@ -169,7 +168,7 @@ gpk_auto_refresh_get_time_refresh_cache_cb (GObject *object, GAsyncResult *res, 
 	}
 
 	/* have we passed the timout? */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -190,7 +189,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never");
 		return;
@@ -209,7 +208,7 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	}
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_REFRESH_CACHE, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_REFRESH_CACHE);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never");
 		return;
@@ -240,7 +239,7 @@ gpk_auto_refresh_get_time_get_updates_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* have we passed the timout? */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -262,15 +261,15 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 
 	if (!arefresh->priv->force_get_updates_login) {
 		arefresh->priv->force_get_updates_login = TRUE;
-		if (gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL)) {
-			egg_debug ("forcing get update due to GConf");
+		if (g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_FORCE_GET_UPDATES_LOGIN)) {
+			egg_debug ("forcing get update due to GSettings");
 			gpk_auto_refresh_signal_get_updates (arefresh);
 			return;
 		}
 	}
 
 	/* if we don't want to auto check for updates, don't do this either */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never");
 		return;
@@ -301,7 +300,7 @@ gpk_auto_refresh_get_time_get_upgrades_cb (GObject *object, GAsyncResult *res, G
 	}
 
 	/* have we passed the timout? */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPDATES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
 		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
@@ -322,7 +321,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
 	/* get this each time, as it may have changed behind out back */
-	thresh = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_FREQUENCY_GET_UPGRADES, NULL);
+	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
 		egg_debug ("not when policy is set to never");
 		return;
@@ -377,7 +376,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* only force a check if the user REALLY, REALLY wants to break
 	 * set policy and have an update at startup */
 	if (!arefresh->priv->force_get_updates_login) {
-		force = gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_FORCE_GET_UPDATES_LOGIN, NULL);
+		force = g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_FORCE_GET_UPDATES_LOGIN);
 		if (force) {
 			/* don't immediately send the signal, if we are called during object initialization
 			 * we need to wait until upper layers  finish hooking up to the signal first. */
@@ -390,7 +389,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	/* wait a little time for things to settle down */
 	if (arefresh->priv->timeout_id != 0)
 		g_source_remove (arefresh->priv->timeout_id);
-	value = gconf_client_get_int (arefresh->priv->gconf_client, GPK_CONF_SESSION_STARTUP_TIMEOUT, NULL);
+	value = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_SESSION_STARTUP_TIMEOUT);
 	egg_debug ("defering action for %i seconds", value);
 	arefresh->priv->timeout_id = g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
 
@@ -398,21 +397,19 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 }
 
 /**
- * gpk_auto_refresh_gconf_key_changed_cb:
- *
- * We might have to do things when the gconf keys change; do them here.
+ * gpk_auto_refresh_key_changed_cb:
  **/
 static void
-gpk_auto_refresh_gconf_key_changed_cb (GConfClient *client, guint cnxn_id, GConfEntry *entry, GpkAutoRefresh *arefresh)
+gpk_auto_refresh_key_changed_cb (GSettings *client, const gchar *key, GpkAutoRefresh *arefresh)
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
-	if (g_strcmp0 (entry->key, GPK_CONF_SESSION_STARTUP_TIMEOUT) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_FORCE_GET_UPDATES_LOGIN) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_GET_UPDATES) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_GET_UPGRADES) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_FREQUENCY_REFRESH_CACHE) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_AUTO_UPDATE) == 0 ||
-	    g_strcmp0 (entry->key, GPK_CONF_UPDATE_BATTERY) == 0)
+	if (g_strcmp0 (key, GPK_SETTINGS_SESSION_STARTUP_TIMEOUT) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_FORCE_GET_UPDATES_LOGIN) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_FREQUENCY_GET_UPDATES) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_FREQUENCY_GET_UPGRADES) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_FREQUENCY_REFRESH_CACHE) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_AUTO_UPDATE) == 0 ||
+	    g_strcmp0 (key, GPK_SETTINGS_UPDATE_BATTERY) == 0)
 		gpk_auto_refresh_change_state (arefresh);
 }
 
@@ -457,11 +454,11 @@ gpk_auto_refresh_convert_network_state (GpkAutoRefresh *arefresh, PkNetworkEnum 
 
 	/* check policy */
 	if (state == PK_NETWORK_ENUM_MOBILE)
-		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_CONNECTION_USE_MOBILE, NULL);
+		return g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_CONNECTION_USE_MOBILE);
 
 	/* check policy */
 	if (state == PK_NETWORK_ENUM_WIFI)
-		return gconf_client_get_bool (arefresh->priv->gconf_client, GPK_CONF_CONNECTION_USE_WIFI, NULL);
+		return g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_CONNECTION_USE_WIFI);
 
 	/* not recognised */
 	egg_warning ("state unknown: %i", state);
@@ -573,14 +570,8 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->force_get_updates_login_timeout_id = 0;
 
 	/* we need to know the updates frequency */
-	arefresh->priv->gconf_client = gconf_client_get_default ();
-
-	/* watch gnome-packagekit keys */
-	gconf_client_add_dir (arefresh->priv->gconf_client, GPK_CONF_DIR,
-			      GCONF_CLIENT_PRELOAD_NONE, NULL);
-	gconf_client_notify_add (arefresh->priv->gconf_client, GPK_CONF_DIR,
-				 (GConfClientNotifyFunc) gpk_auto_refresh_gconf_key_changed_cb,
-				 arefresh, NULL, NULL);
+	arefresh->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	g_signal_connect (arefresh->priv->settings, "changed", G_CALLBACK (gpk_auto_refresh_key_changed_cb), arefresh);
 
 	/* we need to query the last cache refresh time */
 	arefresh->priv->control = pk_control_new ();
@@ -632,7 +623,7 @@ gpk_auto_refresh_finalize (GObject *object)
 		g_source_remove (arefresh->priv->force_get_updates_login_timeout_id);
 
 	g_object_unref (arefresh->priv->control);
-	g_object_unref (arefresh->priv->gconf_client);
+	g_object_unref (arefresh->priv->settings);
 	g_object_unref (arefresh->priv->client);
 	g_object_unref (arefresh->priv->session);
 

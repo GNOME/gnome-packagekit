@@ -25,7 +25,6 @@
 #include <locale.h>
 
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
@@ -41,8 +40,7 @@ static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
 static PkClient *client = NULL;
 static PkBitfield roles;
-static GConfClient *gconf_client;
-static gboolean show_details;
+static GSettings *settings;
 static GtkTreePath *path_global = NULL;
 static GtkWidget *image_animation = NULL;
 static guint status_id = 0;
@@ -462,8 +460,10 @@ static void
 gpk_repo_repo_list_refresh (void)
 {
 	PkBitfield filters;
+	GtkWidget *widget;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+	gboolean show_details;
 
 	/* mark the items as not used */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_repo"));
@@ -471,6 +471,8 @@ gpk_repo_repo_list_refresh (void)
 	gpk_repo_mark_nonactive (model);
 
 	egg_debug ("refreshing list");
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
+	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	if (!show_details)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	else
@@ -490,14 +492,11 @@ gpk_repo_repo_list_changed_cb (PkControl *control, gpointer data)
 }
 
 /**
- * gpk_repo_checkbutton_details:
+ * gpk_repo_checkbutton_detail_cb:
  **/
 static void
-gpk_repo_checkbutton_details (GtkWidget *widget, gpointer data)
+gpk_repo_checkbutton_detail_cb (GtkWidget *widget, gpointer data)
 {
-	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-	egg_debug ("Changing %s to %i", GPK_CONF_REPO_SHOW_DETAILS, show_details);
-	gconf_client_set_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, show_details, NULL);
 	gpk_repo_repo_list_refresh ();
 }
 
@@ -653,7 +652,7 @@ main (int argc, char *argv[])
 	g_signal_connect (unique_app, "message-received",
 			  G_CALLBACK (gpk_repo_message_received_cb), NULL);
 
-	gconf_client = gconf_client_get_default ();
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
 	loop = g_main_loop_new (NULL, FALSE);
 
@@ -694,10 +693,12 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_button_help_cb), NULL);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
-	show_details = gconf_client_get_bool (gconf_client, GPK_CONF_REPO_SHOW_DETAILS, NULL);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), show_details);
+	g_settings_bind (settings,
+			 GPK_SETTINGS_REPO_SHOW_DETAILS,
+			 widget, "active",
+			 G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_repo_checkbutton_details), NULL);
+			  G_CALLBACK (gpk_repo_checkbutton_detail_cb), NULL);
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (main_window), 500, 300);
@@ -741,7 +742,7 @@ main (int argc, char *argv[])
 	g_object_unref (list_store);
 out_build:
 	g_object_unref (builder);
-	g_object_unref (gconf_client);
+	g_object_unref (settings);
 	g_object_unref (control);
 	g_object_unref (client);
 	g_main_loop_unref (loop);

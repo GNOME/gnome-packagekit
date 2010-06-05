@@ -24,7 +24,6 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
 #include <unique/unique.h>
@@ -64,7 +63,7 @@ struct GpkUpdateViewerPrivate
 	EggConsoleKit		*console;
 	EggMarkdown		*markdown;
 	GCancellable		*cancellable;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	GPtrArray		*update_array;
 	GtkBuilder		*builder;
 	GtkTreeStore		*array_store_updates;
@@ -959,7 +958,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, GpkUpd
 		}
 
 		/* scroll to the active cell */
-		scroll = gconf_client_get_bool (priv->gconf_client, GPK_CONF_UPDATE_VIEWER_SCROLL_ACTIVE, NULL);
+		scroll = g_settings_get_boolean (priv->settings, GPK_SETTINGS_SCROLL_ACTIVE);
 		if (scroll) {
 			column = gtk_tree_view_get_column (treeview, 3);
 			gtk_tree_view_scroll_to_cell (treeview, path, column, FALSE, 0.0f, 0.0f);
@@ -1305,7 +1304,7 @@ gpk_update_viewer_check_mobile_broadband (GpkUpdateViewer *update_viewer)
 		goto out;
 
 	/* not when ignored */
-	ret = gconf_client_get_bool (priv->gconf_client, GPK_CONF_UPDATE_VIEWER_MOBILE_BBAND, NULL);
+	ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_NOTIFY_MOBILE_CONNECTION);
 	if (!ret)
 		goto out;
 
@@ -2734,7 +2733,7 @@ gpk_update_viewer_get_new_update_array (GpkUpdateViewer *update_viewer)
 	gtk_label_set_label (GTK_LABEL(widget), text);
 
 	/* only show newest updates? */
-	ret = gconf_client_get_bool (priv->gconf_client, GPK_CONF_UPDATE_VIEWER_ONLY_NEWEST, NULL);
+	ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_ONLY_NEWEST);
 	if (ret) {
 		egg_debug ("only showing newest updates");
 		filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NEWEST, -1);
@@ -3138,7 +3137,7 @@ gpk_update_viewer_init (GpkUpdateViewer *update_viewer)
 	priv->ignore_updates_changed = FALSE;
 	priv->restart_update = PK_RESTART_ENUM_NONE;
 
-	priv->gconf_client = gconf_client_get_default ();
+	priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	priv->console = egg_console_kit_new ();
 	priv->cancellable = g_cancellable_new ();
 	priv->markdown = egg_markdown_new ();
@@ -3335,7 +3334,7 @@ gpk_update_viewer_finalize (GObject *object)
 	g_object_unref (priv->cancellable);
 	g_object_unref (priv->console);
 	g_object_unref (priv->control);
-	g_object_unref (priv->gconf_client);
+	g_object_unref (priv->settings);
 	g_object_unref (priv->markdown);
 	g_object_unref (priv->task);
 	g_object_unref (priv->text_buffer);

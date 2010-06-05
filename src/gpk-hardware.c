@@ -34,7 +34,6 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
@@ -59,7 +58,7 @@ static void     gpk_hardware_finalize	(GObject	  *object);
 struct GpkHardwarePrivate
 {
 	PkTask			*task;
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	DBusGConnection		*connection;
 	DBusGProxy		*proxy;
 	gchar			**package_ids;
@@ -113,8 +112,8 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 		pk_client_install_packages_async (PK_CLIENT(hardware->priv->task), TRUE, hardware->priv->package_ids, NULL, NULL, NULL,
 						  (GAsyncReadyCallback) gpk_hardware_install_packages_cb, hardware);
 	} else if (g_strcmp0 (action, GPK_HARDWARE_DONT_PROMPT_ACTION) == 0) {
-		egg_debug ("set %s to FALSE", GPK_CONF_ENABLE_CHECK_HARDWARE);
-		gconf_client_set_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, FALSE, NULL);
+		egg_debug ("set %s to FALSE", GPK_SETTINGS_ENABLE_CHECK_HARDWARE);
+		g_settings_set_boolean (hardware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_HARDWARE, FALSE);
 	} else {
 		egg_warning ("unknown action id: %s", action);
 	}
@@ -278,14 +277,14 @@ gpk_hardware_init (GpkHardware *hardware)
 	GError *error = NULL;
 
 	hardware->priv = GPK_HARDWARE_GET_PRIVATE (hardware);
-	hardware->priv->gconf_client = gconf_client_get_default ();
+	hardware->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	hardware->priv->package_ids = NULL;
 	hardware->priv->udi = NULL;
 
 	/* should we check and show the user */
-	ret = gconf_client_get_bool (hardware->priv->gconf_client, GPK_CONF_ENABLE_CHECK_HARDWARE, NULL);
+	ret = g_settings_get_boolean (hardware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_HARDWARE);
 	if (!ret) {
-		egg_debug ("hardware driver checking disabled in GConf");
+		egg_debug ("hardware driver checking disabled in GSettings");
 		return;
 	}
 	hardware->priv->task = PK_TASK(gpk_task_new ());
@@ -338,7 +337,7 @@ gpk_hardware_finalize (GObject *object)
 	hardware = GPK_HARDWARE (object);
 
 	g_return_if_fail (hardware->priv != NULL);
-	g_object_unref (hardware->priv->gconf_client);
+	g_object_unref (hardware->priv->settings);
 	g_object_unref (PK_CLIENT(hardware->priv->task));
 	g_strfreev (hardware->priv->package_ids);
 

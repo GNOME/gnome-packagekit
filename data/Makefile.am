@@ -2,10 +2,8 @@ NULL =
 
 SUBDIRS = icons
 
-@INTLTOOL_SCHEMAS_RULE@
-schemadir = $(sysconfdir)/gconf/schemas
-schema_in_files = gnome-packagekit.schemas.in
-schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+migrationdir = $(datadir)/GConf/gsettings
+dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
@@ -41,7 +39,6 @@ pkgdata_DATA =						\
 	gpk-client.ui					\
 	$(NULL)
 
-
 servicedir = $(datadir)/dbus-1/services
 service_in_files = org.freedesktop.PackageKit.service.in
 service_DATA = $(service_in_files:.service.in=.service)
@@ -49,25 +46,16 @@ service_DATA = $(service_in_files:.service.in=.service)
 $(service_DATA): $(service_in_files) Makefile
 	@sed -e "s|\@servicedir\@|$(bindir)|" $< > $@
 
+@GSETTINGS_RULES@
+gsettings_SCHEMAS = org.gnome.packagekit.gschema.xml
+
 EXTRA_DIST =						\
-	$(schema_in_files)				\
-	$(desktop_in_files)				\
+	$(gsettings_SCHEMAS)				\
 	$(autostart_in_files)				\
+	$(desktop_in_files)				\
 	$(pkgdata_DATA)					\
 	$(service_in_files)				\
 	$(NULL)
-
-if GCONF_SCHEMAS_INSTALL
-install-data-local:
-	-GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
-	$(GCONFTOOL) --makefile-install-rule $(schema_DATA)
-endif
-
-if GCONF_SCHEMAS_INSTALL
-uninstall-local:
-	-GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
-	$(GCONFTOOL) --makefile-uninstall-rule $(schema_DATA)
-endif
 
 clean-local :
 	rm -f *~
@@ -82,7 +70,6 @@ DISTCLEANFILES =					\
 	gpk-log.desktop					\
 	gpk-update-icon.desktop				\
 	gpk-application.desktop				\
-	gnome-packagekit.schemas			\
 	org.freedesktop.PackageKit.service			\
 	$(NULL)
 

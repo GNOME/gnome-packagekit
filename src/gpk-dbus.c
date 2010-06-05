@@ -39,7 +39,6 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #include <packagekit-glib2/packagekit.h>
-#include <gconf/gconf-client.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -55,7 +54,7 @@ static void     gpk_dbus_finalize	(GObject	*object);
 
 struct GpkDbusPrivate
 {
-	GConfClient		*gconf_client;
+	GSettings		*settings;
 	gint			 timeout_tmp;
 	GTimer			*timer;
 	guint			 refcount;
@@ -301,8 +300,8 @@ gpk_dbus_parse_interaction (GpkDbus *dbus, const gchar *interaction, PkBitfield 
 	*interact = 0;
 	dbus->priv->timeout_tmp = -1;
 
-	/* get default policy from gconf */
-	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_DEFAULT_INTERACTION, NULL);
+	/* get default policy from settings */
+	policy = g_settings_get_string (dbus->priv->settings, GPK_SETTINGS_DBUS_DEFAULT_INTERACTION);
 	if (policy != NULL) {
 		egg_debug ("default is %s", policy);
 		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
@@ -313,8 +312,8 @@ gpk_dbus_parse_interaction (GpkDbus *dbus, const gchar *interaction, PkBitfield 
 	gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, interaction);
 	egg_debug ("client is %s", interaction);
 
-	/* now override with enforced policy from gconf */
-	policy = gconf_client_get_string (dbus->priv->gconf_client, GPK_CONF_DBUS_ENFORCED_INTERACTION, NULL);
+	/* now override with enforced policy */
+	policy = g_settings_get_string (dbus->priv->settings, GPK_SETTINGS_DBUS_ENFORCED_INTERACTION);
 	if (policy != NULL) {
 		egg_debug ("enforced is %s", policy);
 		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
@@ -543,7 +542,7 @@ gpk_dbus_init (GpkDbus *dbus)
 
 	dbus->priv = GPK_DBUS_GET_PRIVATE (dbus);
 	dbus->priv->timeout_tmp = -1;
-	dbus->priv->gconf_client = gconf_client_get_default ();
+	dbus->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	dbus->priv->x11 = gpk_x11_new ();
 	dbus->priv->timer = g_timer_new ();
 
@@ -574,7 +573,7 @@ gpk_dbus_finalize (GObject *object)
 	dbus = GPK_DBUS (object);
 	g_return_if_fail (dbus->priv != NULL);
 	g_timer_destroy (dbus->priv->timer);
-	g_object_unref (dbus->priv->gconf_client);
+	g_object_unref (dbus->priv->settings);
 	g_object_unref (dbus->priv->x11);
 	g_object_unref (dbus->priv->proxy_session_pid);
 	g_object_unref (dbus->priv->proxy_system_pid);

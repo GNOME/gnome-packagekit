@@ -26,7 +26,6 @@
 
 #include <gtk/gtk.h>
 #include <sys/utsname.h>
-#include <gconf/gconf-client.h>
 #include <packagekit-glib2/packagekit.h>
 #include <unique/unique.h>
 
@@ -683,7 +682,7 @@ main (int argc, char *argv[])
 	GtkEntryCompletion *completion;
 	UniqueApp *unique_app;
 	gboolean ret;
-	GConfClient *gconf_client = NULL;
+	GSettings *settings = NULL;
 	gchar *option = NULL;
 	gchar *package = NULL;
 	gchar *with_array = NULL;
@@ -806,8 +805,8 @@ main (int argc, char *argv[])
 	gtk_widget_hide (widget);
 
 	/* autocompletion can be turned off as it's slow */
-	gconf_client = gconf_client_get_default ();
-	ret = gconf_client_get_bool (gconf_client, GPK_CONF_AUTOCOMPLETE, NULL);
+	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	ret = g_settings_get_boolean (settings, GPK_SETTINGS_AUTOCOMPLETE);
 	if (ret) {
 		/* create the completion object */
 		completion = gpk_package_entry_completion_new ();
@@ -851,8 +850,8 @@ out_build:
 	g_object_unref (builder);
 out_unique:
 	g_object_unref (unique_app);
-	if (gconf_client != NULL)
-		g_object_unref (gconf_client);
+	if (settings != NULL)
+		g_object_unref (settings);
 	if (control != NULL)
 		g_object_unref (control);
 	if (client != NULL)

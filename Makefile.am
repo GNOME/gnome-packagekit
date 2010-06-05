@@ -28,7 +28,7 @@ DISTCLEANFILES =					\
 	intltool-update					\
 	gnome-packagekit-*.tar.gz
 
-DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper
+DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
 distclean-local:
 	if test $(srdcir) = .; then :; else \

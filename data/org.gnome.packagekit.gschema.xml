@@ -1,0 +1,254 @@
+<schemalist>
+  <schema id="FIXME" path="/apps/">
+    <child name="gnome-packagekit" schema="gnome-packagekit"/>
+    <child name="gnome-settings-daemon" schema="gnome-settings-daemon"/>
+  </schema>
+  <schema id="org.gnome.packagekit" path="/apps/gnome-packagekit/">
+    <key name="enable-check-firmware" type="b">
+      <default>true</default>
+      <summary>Ask the user if additional firmware should be installed</summary>
+      <description>Ask the user if additional firmware should be installed.</description>
+    </key>
+    <key name="banned-firmware" type="s">
+      <default>'*/intel-ucode/*'</default>
+      <summary>Firmware files that should not be searched for</summary>
+      <description>Firmware files that should not be searched for, separated by commas. These can include '*' and '?' characters.</description>
+    </key>
+    <key name="ignored-devices" type="s">
+      <default>''</default>
+      <summary>Devices that should be ignored</summary>
+      <description>Devices that should be ignored, separated by commas. These can include '*' and '?' characters.</description>
+    </key>
+    <key name="ignored-messages" type="s">
+      <default>'backend-*,untrusted-package,other-updates-held-back,repo-metadata-download-failed'</default>
+      <summary>Messages that should be ignored</summary>
+      <description>Messages that should be ignored, separated by commas. These can include '*' and '?' characters.</description>
+    </key>
+    <key name="enable-check-hardware" type="b">
+      <default>false</default>
+      <summary>Ask the user if additional hardware drivers should be installed</summary>
+      <description>Ask the user if additional hardware drivers should be installed.</description>
+    </key>
+    <key name="enable-autoremove" type="b">
+      <default>false</default>
+      <summary>Automatically remove unused dependencies</summary>
+      <description>When removing a package, also remove those dependencies that are not required by other packages.</description>
+    </key>
+    <key name="show-depends" type="b">
+      <default>true</default>
+      <summary>Ask the user if additional packages should be installed</summary>
+      <description>Ask the user if additional packages should be installed.</description>
+    </key>
+    <key name="show-copy-confirm" type="b">
+      <default>true</default>
+      <summary>Ask the user if files should be copied to a non-private directory</summary>
+      <description>Ask the user if files should be copied to a non-private directory when installing from a FUSE mount.</description>
+    </key>
+    <key name="notify-update-failed" type="b">
+      <default>true</default>
+      <summary>Notify the user when an update has failed</summary>
+      <description>Notify the user when an update has failed.</description>
+    </key>
+    <key name="notify-update-complete" type="b">
+      <default>false</default>
+      <summary>Notify the user for completed updates</summary>
+      <description>Notify the user for completed updates.</description>
+    </key>
+    <key name="notify-update-complete-restart" type="b">
+      <default>true</default>
+      <summary>Notify the user for completed updates where the user needs to restart</summary>
+      <description>Notify the user for completed updates where the user needs to restart.</description>
+    </key>
+    <key name="notify-update-not-battery" type="b">
+      <default>false</default>
+      <summary>Notify the user when the automatic update was not started on battery power</summary>
+      <description>Notify the user when the update was not automatically started while running on battery power.</description>
+    </key>
+    <key name="notify-update-started" type="b">
+      <default>true</default>
+      <summary>Notify the user when the update was started</summary>
+      <description>Notify the user when the update was started.</description>
+    </key>
+    <key name="notify-message" type="b">
+      <default>false</default>
+      <summary>Notify the user when there are messages</summary>
+      <description>Notify the user when there are messages from the package manager.</description>
+    </key>
+    <key name="notify-errors" type="b">
+      <default>true</default>
+      <summary>Notify the user when there are errors</summary>
+      <description>Notify the user when there are errors.</description>
+    </key>
+    <key name="notify-complete" type="b">
+      <default>true</default>
+      <summary>Notify the user when a task is complete</summary>
+      <description>Notify the user when a task is complete.</description>
+    </key>
+    <key name="notify-available" type="b">
+      <default>true</default>
+      <summary>Notify the user when updates are available</summary>
+      <description>Notify the user when updates are available.</description>
+    </key>
+    <key name="notify-distro-upgrades" type="b">
+      <default>true</default>
+      <summary>Notify the user when distribution upgrades are available</summary>
+      <description>Notify the user when distribution upgrades are available.</description>
+    </key>
+    <key name="notify-critical" type="b">
+      <default>true</default>
+      <summary>Notify the user when security updates are available</summary>
+      <description>Notify the user when security updates are available.</description>
+    </key>
+    <key name="connection-use-mobile" type="b">
+      <default>false</default>
+      <summary>Use mobile broadband connections</summary>
+      <description>Use mobile broadband connections such as GSM and CDMA to check for updates.</description>
+    </key>
+    <key name="connection-use-wifi" type="b">
+      <default>true</default>
+      <summary>Use WiFi connections</summary>
+      <description>Use WiFi (wireless LAN) connections to check for updates.</description>
+    </key>
+    <key name="watch-active-transactions" type="b">
+      <default>false</default>
+      <summary>Show transactions that have the original application running</summary>
+    </key>
+    <key name="autocomplete" type="b">
+      <default>false</default>
+      <summary>If search terms should be completed automatically</summary>
+      <description>If search terms should be completed automatically.</description>
+    </key>
+    <key name="session-startup-timeout" type="i">
+      <default>300</default>
+      <summary>The number of seconds at session startup to wait before checking for updates</summary>
+      <description>The number of seconds at session startup to wait before checking for updates.</description>
+    </key>
+    <key name="force-get-updates-login" type="b">
+      <default>false</default>
+      <summary>Get the update list when the session starts</summary>
+      <description>Get the update list when the session starts, even if not scheduled to. This ensures the user has up to date and valid data in the tray at startup.</description>
+    </key>
+    <key name="frequency-get-updates" type="i">
+      <default>86400</default>
+      <summary>How often to check for updates</summary>
+      <description>How often to check for updates. Value is in seconds.</description>
+    </key>
+    <key name="frequency-get-upgrades" type="i">
+      <default>604800</default>
+      <summary>How often to check for distribution upgrades</summary>
+      <description>How often to check for distribution upgrades. Value is in seconds.</description>
+    </key>
+    <key name="frequency-refresh-cache" type="i">
+      <default>86400</default>
+      <summary>How often to refresh the package cache</summary>
+      <description>How often to refresh the package cache. Value is in seconds.</description>
+    </key>
+    <key name="auto-update" type="s">
+      <default>'none'</default>
+      <summary>Automatically update these types of updates</summary>
+      <description>Automatically update these types of updates. Options are "all", "security", or "none".</description>
+    </key>
+    <key name="update-battery" type="b">
+      <default>false</default>
+      <summary>Install updates automatically when running on battery power</summary>
+      <description>Install updates automatically when running on battery power.</description>
+    </key>
+    <key name="filter-basename" type="b">
+      <default>false</default>
+      <summary>Filter using basename in gpk-application</summary>
+      <description>Filter package lists using basename in gpk-application.</description>
+    </key>
+    <key name="filter-newest" type="b">
+      <default>true</default>
+      <summary>Only show the newest packages in the file lists</summary>
+      <description>Only show the newest packages in the file lists.</description>
+    </key>
+    <key name="filter-arch" type="b">
+      <default>true</default>
+      <summary>Only show native packages in the file lists</summary>
+      <description>Only show native packages matching the machine architecture in the file lists.</description>
+    </key>
+    <key name="category-groups" type="b">
+      <default>false</default>
+      <summary>Show the category group menu</summary>
+      <description>Show the category group menu. This is more complete and custom to the distribution, but takes longer to populate.</description>
+    </key>
+    <key name="show-all-packages" type="b">
+      <default>false</default>
+      <summary>Show the 'All Packages' group menu</summary>
+      <description>Show the all packages menu item. This takes a long time to populate on most backends and is not generally required by end users.</description>
+    </key>
+    <key name="search-mode" type="s">
+      <default>'details'</default>
+      <summary>The search mode used by default</summary>
+      <description>The search mode used by default. Options are "name", "details", or "file".</description>
+    </key>
+    <key name="repo-show-details" type="b">
+      <default>false</default>
+      <summary>Show all repositories in the software source viewer</summary>
+      <description>Show all repositories in the software source viewer.</description>
+    </key>
+    <key name="notify-mobile-connection" type="b">
+      <default>true</default>
+      <summary>Notify the user before a large update is done on a mobile broadband connection</summary>
+      <description>Notify the user before a large update is done on a mobile broadband connection.</description>
+    </key>
+    <key name="only-newest" type="b">
+      <default>true</default>
+      <summary>Only show the newest updates in the list</summary>
+      <description>Only show the newest packages in the update list, and filter out older updates that are still available.</description>
+    </key>
+    <key name="scroll-active" type="b">
+      <default>true</default>
+      <summary>Scroll to packages as they are downloaded</summary>
+      <description>Scroll to packages in the update list as they are downloaded or installed.</description>
+    </key>
+    <key name="enable-font-helper" type="b">
+      <default>true</default>
+      <summary>Allow applications to invoke the font installer</summary>
+      <description>Allow applications to invoke the font installer.</description>
+    </key>
+    <key name="ignored-dbus-requests" type="s">
+      <default>'/usr/bin/gnome-terminal,/usr/bin/nm-applet,/usr/bin/xchat-gnome'</default>
+      <summary>Programs that should be ignored when they issue session D-Bus requests</summary>
+      <description>Programs that should be ignored when they issue session D-Bus requests, separated by commas.</description>
+    </key>
+    <key name="enable-codec-helper" type="b">
+      <default>true</default>
+      <summary>Allow applications to invoke the codec installer</summary>
+      <description>Allow applications to invoke the codec installer.</description>
+    </key>
+    <key name="enable-mime-type-helper" type="b">
+      <default>true</default>
+      <summary>Allow applications to invoke the mime type installer</summary>
+      <description>Allow applications to invoke the mime type installer.</description>
+    </key>
+    <key name="dbus-default-interaction" type="s">
+      <default>'show-confirm-search,show-confirm-deps,show-confirm-install,show-progress,show-finished,show-warning'</default>
+      <description>When displaying UI from a session DBus request, automatically use these options by default.</description>
+    </key>
+    <key name="dbus-enforced-interaction" type="s">
+      <default>'show-confirm-install'</default>
+      <description>When displaying UI from a session DBus request, force these options to be turned on.</description>
+    </key>
+    <key name="install-root" type="s">
+      <default>'/'</default>
+      <description>Allow the user to change the install root when processing packages, for instance when using LTSP.</description>
+    </key>
+    <key name="media-repo-filenames" type="s">
+      <default>'media.repo,.discinfo'</default>
+      <summary>The filenames on removable media that designate it important.</summary>
+      <description>When removable media is inserted, it is checked to see if it contains any important filenames in the root directory. If the filename matches, then an updates check is performed. This allows post-install disks to be used to update running systems.</description>
+    </key>
+  </schema>
+  <schema id="org.gnome.settings-daemon" path="/apps/gnome-settings-daemon/">
+    <child name="gtk-modules" schema="gnome-settings-daemon.gtk-modules"/>
+  </schema>
+  <schema id="gnome-settings-daemon.gtk-modules" path="/apps/gnome-settings-daemon/gtk-modules/">
+    <key name="pk-gtk-module" type="b">
+      <default>true</default>
+      <summary>GTK+ module for font installation</summary>
+      <description>This key determines if applications should be able to prompt for fonts.</description>
+    </key>
+  </schema>
+</schemalist>
