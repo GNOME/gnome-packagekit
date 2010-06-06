@@ -1,15 +1,4 @@
-%define packagekit_version		0.5.0
-%define dbus_version			1.1.2
-%define dbus_glib_version		0.73
-%define glib2_version			2.18.0
-%define gtk2_version			2.16.0
-%define libnotify_version		0.4.3
-%define unique_version			1.0.0
-%define devicekit_version		003
-%define upower_version			0.9.0
-%define libcanberra_version		0.10
 %define alphatag			#ALPHATAG#
-%define polkit_gnome_version		0.92
 
 %{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
@@ -22,21 +11,21 @@ Group:     Applications/System
 URL:       http://www.packagekit.org
 Source0:   http://download.gnome.org/sources/gnome-packagekit/2.30/%{name}-%{version}.tar.gz
 
-Requires:  glib2 >= %{glib2_version}
-Requires:  gtk2 >= %{gtk2_version}
+Requires:  glib2 >= 2.18.0
+Requires:  gtk2 >= 2.16.0
 Requires:  gnome-icon-theme
-Requires:  libnotify >= %{libnotify_version}
-Requires:  unique >= %{unique_version}
-Requires:  dbus-glib >= %{dbus_glib_version}
-Requires:  dbus-x11 >= %{dbus_version}
-Requires:  PackageKit >= %{packagekit_version}
-Requires:  PackageKit-libs >= %{packagekit_version}
-Requires:  PackageKit-gtk-module >= %{packagekit_version}
-Requires:  PackageKit-device-rebind >= %{packagekit_version}
+Requires:  libnotify >= 0.4.3
+Requires:  unique >= 1.0.0
+Requires:  dbus-glib >= 0.73
+Requires:  dbus-x11 >= 1.1.2
+Requires:  PackageKit >= 0.5.0
+Requires:  PackageKit-libs >= 0.5.0
+Requires:  PackageKit-gtk-module >= 0.5.0
+Requires:  PackageKit-device-rebind >= 0.5.0
 Requires:  shared-mime-info
 Requires:  iso-codes
-Requires:  libcanberra >= %{libcanberra_version}
-Requires:  upower >= %{upower_version}
+Requires:  libcanberra >= 0.10
+Requires:  upower >= 0.9.0
 Requires(post):   scrollkeeper
 Requires(postun): scrollkeeper
 Obsoletes: pirut < 1.3.31-2
