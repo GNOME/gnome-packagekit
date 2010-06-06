@@ -1,3 +1,61 @@
+Version 2.31.1
+~~~~~~~~~~~~~~
+Released: 2010-06-06
+
+* Translations
+ - Added Catalan (Valencian) translation (Carles Ferrando)
+ - Added Estonian translation (Priit Laes)
+ - Added Indonesian translation (Andika Triwidada)
+ - Updated Catalan translation (Jordi Serratosa)
+ - Updated Estonian translation (Ivar Smolin)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Galician translations (Francisco Diéguez)
+ - Updated Greek translation (Kostas Papadimas)
+ - Updated Greek translation (Simos Xenitellis)
+ - Updated Gujarati Translations (Sweta Kothari)
+ - Updated Hebrew translation (Yaron Shahrabani)
+ - Updated Hindi translation (Rajesh Ranjan)
+ - Updated Kannada translations (Shankar Prasad)
+ - Updated Malayalam Translation (Ani Peter)
+ - Updated Marathi Translations (Sandeep Shedmake)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Shavian translation (Thomas Thurman)
+ - Updated Slovenian translation (Matej Urbančič)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Spanish translation (Jorge González)
+ - Updated Traditional Chinese translation(Hong Kong and Taiwan) (Cheng-Chia Tseng)
+ - Updated zh_CN translation (Funda Wang)
+
+* New Features:
+ - Port to GSettings (Richard Hughes)
+ - Use GNOME symbolic icons if they are available (Richard Hughes)
+ - Allow the user to select the GPG key information to be able to verify it (Richard Hughes)
+ - Assign names to our idle sources when using new versions of glib2 (Richard Hughes)
+ - Automatically remove unused dependencies when removing packages (Jonathan Conder)
+ - Set the install root at session startup (Richard Hughes)
+ - Show a GtkInfoBar explaining if updates have been held back (Richard Hughes)
+ - Watch when removable discs are inserted and call GetUpdates() if it is detected as repo media (Richard Hughes)
+
+* Bugfix:
+ - Always show the search type menu icons. Fixes rh#530595 (Richard Hughes)
+ - Convert to using libupower-glib, rather than devkit-power-gobject (Richard Hughes)
+ - Do not set the Add/Remove search to name but instead use the GConf defaults (Richard Hughes)
+ - Ensure gpk_dbus_task_get_package_for_exec() returns a package name rather than a package_id (Richard Hughes)
+ - Ensure we process font requests by correctly processing the session ignore blacklist (Richard Hughes)
+ - Ensure we wait for the users response when an application uses InstallMimeTypes. Fixes #28323 (Richard Hughes)
+ - Fix a crash where the desktop file that was installed has no root directory. Fixes rh#581682 (Richard Hughes)
+ - Fix an update viewer crash if the GetUpdates call produced any messages (Richard Hughes)
+ - Fix default value of ignored_messages key (Vincent Untz)
+ - Fix the .desktop files (Javier Jardón)
+ - Fix up a crash where installing a file failed. Fixes rh#586414 (Richard Hughes)
+ - Ignore repo-metadata-download-failed and other-updates-held-back messages (Richard Hughes)
+ - Reget the list of updates in the update viewer if we installed infrastructure packages. Fixes rh#589045 (Richard Hughes)
+ - Set the cancel button to be initially insensitive (Jonathan Conder)
+ - Use GIO to launch the desktop file application after it is installed. Fixes rh#531878 (Richard Hughes)
+ - Use /proc/%i/exe instead of cmdline when getting the exec of a sender (Richard Hughes)
+ - When showing the dep dialog, allow the addition packages to scroll horizontally. Fixes rh#585554 (Richard Hughes)
+ - Zero the size value when the package finished signal is recieved (Jonathan Conder)
+
 Version 2.30.0
 ~~~~~~~~~~~~~~
 Released: 2010-03-29
