@@ -26,7 +26,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"

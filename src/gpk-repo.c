@@ -26,7 +26,6 @@
 
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 
@@ -504,16 +503,15 @@ gpk_repo_checkbutton_detail_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * gpk_repo_message_received_cb
+ * gpk_repo_application_prepare_action_cb:
  **/
 static void
-gpk_repo_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
+gpk_repo_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+					GVariant *platform_data, gpointer user_data)
 {
 	GtkWindow *window;
-	if (command == UNIQUE_ACTIVATE) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
-		gtk_window_present (window);
-	}
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
+	gtk_window_present (window);
 }
 
 
@@ -602,7 +600,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkControl *control;
-	UniqueApp *unique_app;
+	GApplication *application;
 	GError *error = NULL;
 	guint retval;
 	guint xid = 0;
@@ -646,14 +644,9 @@ main (int argc, char *argv[])
                                            GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.Repo", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
-	}
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_repo_message_received_cb), NULL);
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.Repo", argc, argv);
+	g_signal_connect (application, "prepare-activation",
+			  G_CALLBACK (gpk_repo_application_prepare_action_cb), NULL);
 
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
@@ -749,8 +742,7 @@ out_build:
 	g_object_unref (control);
 	g_object_unref (client);
 	g_main_loop_unref (loop);
-unique_out:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 
 	return 0;
 }

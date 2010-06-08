@@ -9,7 +9,6 @@ INCLUDES =						\
 	$(DBUS_CFLAGS)					\
 	$(LIBNOTIFY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
-	$(UNIQUE_CFLAGS)				\
 	$(GTK_CFLAGS)					\
 	$(GUDEV_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
@@ -99,7 +98,6 @@ shared_LIBS =						\
 	$(GUDEV_LIBS)					\
 	$(LIBNOTIFY_LIBS)				\
 	$(PACKAGEKIT_LIBS)				\
-	$(UNIQUE_LIBS)					\
 	$(GNOME_MENUS_LIBS)				\
 	$(UPOWER_LIBS)					\
 	$(CANBERRA_LIBS)				\

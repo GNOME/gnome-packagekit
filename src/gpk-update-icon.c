@@ -32,7 +32,6 @@
 #include <locale.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-dbus-monitor.h"
@@ -42,6 +41,16 @@
 #include "gpk-firmware.h"
 #include "gpk-hardware.h"
 #include "gpk-common.h"
+
+/**
+ * gpk_icon_timed_exit_cb:
+ **/
+static gboolean
+gpk_icon_timed_exit_cb (GApplication *application)
+{
+	g_application_quit (application, 0);
+	return FALSE;
+}
 
 /**
  * main:
@@ -56,7 +65,7 @@ main (int argc, char *argv[])
 	GpkFirmware *firmware = NULL;
 	GpkHardware *hardware = NULL;
 	GOptionContext *context;
-	UniqueApp *unique_app;
+	GApplication *application;
 	gboolean ret;
 	guint timer_id = 0;
 
@@ -104,12 +113,7 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateIcon", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
-	}
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.UpdateIcon", argc, argv);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -123,21 +127,20 @@ main (int argc, char *argv[])
 
 	/* Only timeout if we have specified iton the command line */
 	if (timed_exit) {
-		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gtk_main_quit, NULL);
+		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gpk_icon_timed_exit_cb, application);
 #if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (timer_id, "[GpkUpdateIcon] timed exit");
 #endif
 	}
 
-	/* wait */
-	gtk_main ();
+	/* run */
+	g_application_run (application);
 
 	g_object_unref (cupdate);
 	g_object_unref (watch);
 	g_object_unref (firmware);
 	g_object_unref (hardware);
-unique_out:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 	return 0;
 }
 

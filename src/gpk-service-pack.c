@@ -27,7 +27,6 @@
 #include <gtk/gtk.h>
 #include <sys/utsname.h>
 #include <packagekit-glib2/packagekit.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 #include "egg-string.h"
@@ -616,16 +615,15 @@ out:
 }
 
 /**
- * gpk_pack_message_received_cb
+ * gpk_pack_application_prepare_action_cb:
  **/
 static void
-gpk_pack_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
+gpk_pack_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+					GVariant *platform_data, gpointer user_data)
 {
 	GtkWindow *window;
-	if (command == UNIQUE_ACTIVATE) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "window_prefs"));
-		gtk_window_present (window);
-	}
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "window_prefs"));
+	gtk_window_present (window);
 }
 
 /**
@@ -674,6 +672,25 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 }
 
 /**
+ * gpk_pack_delete_event_cb:
+ **/
+static gboolean
+gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *application)
+{
+	g_application_quit (application, 0);
+	return FALSE;
+}
+
+/**
+ * gpk_pack_button_close_cb:
+ **/
+static void
+gpk_pack_button_close_cb (GtkWidget *widget, GApplication *application)
+{
+	g_application_quit (application, 0);
+}
+
+/**
  * main:
  **/
 int
@@ -684,7 +701,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkFileFilter *filter;
 	GtkEntryCompletion *completion;
-	UniqueApp *unique_app;
+	GApplication *application;
 	gboolean ret;
 	GSettings *settings = NULL;
 	gchar *option = NULL;
@@ -736,14 +753,9 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.ServicePack", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto out_unique;
-	}
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_pack_message_received_cb), NULL);
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.ServicePack", argc, argv);
+	g_signal_connect (application, "prepare-activation",
+			  G_CALLBACK (gpk_pack_application_prepare_action_cb), NULL);
 
 	/* use a client to download packages */
 	client = pk_client_new ();
@@ -775,7 +787,8 @@ main (int argc, char *argv[])
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SERVICE_PACK);
 
 	/* Get the main window quit */
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (main_window, "delete-event",
+			  G_CALLBACK (gpk_pack_delete_event_cb), application);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
 	filter = gtk_file_filter_new ();
@@ -799,7 +812,7 @@ main (int argc, char *argv[])
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_radio_copy_cb), NULL);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_button_close_cb), application);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_create"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_pack_button_create_cb), NULL);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
@@ -847,13 +860,12 @@ main (int argc, char *argv[])
 
 	gtk_widget_show (main_window);
 
-	/* wait */
-	gtk_main ();
+	/* run */
+	g_application_run (application);
 
 out_build:
 	g_object_unref (builder);
-out_unique:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 	if (settings != NULL)
 		g_object_unref (settings);
 	if (control != NULL)

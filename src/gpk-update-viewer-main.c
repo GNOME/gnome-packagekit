@@ -25,7 +25,6 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 
@@ -36,19 +35,19 @@
  * gpk_update_viewer_close_cb
  **/
 static void
-gpk_update_viewer_close_cb (GpkUpdateViewer *update_viewer)
+gpk_update_viewer_close_cb (GpkUpdateViewer *update_viewer, GApplication *application)
 {
-	gtk_main_quit ();
+	g_application_quit (application, 0);
 }
 
 /**
- * gpk_update_viewer_message_received_cb
+ * gpk_update_viewer_application_prepare_action_cb:
  **/
 static void
-gpk_update_viewer_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, GpkUpdateViewer *update_viewer)
+gpk_update_viewer_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+						 GVariant *platform_data, GpkUpdateViewer *update_viewer)
 {
-	if (command == UNIQUE_ACTIVATE)
-		gpk_update_viewer_show (update_viewer);
+	gpk_update_viewer_show (update_viewer);
 }
 
 /**
@@ -60,7 +59,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkUpdateViewer *update_viewer = NULL;
 	GOptionContext *context;
-	UniqueApp *unique_app;
+	GApplication *application;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -104,27 +103,23 @@ main (int argc, char *argv[])
 	if (!ret)
 		return 1;
 
-	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.UpdateViewer", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
-	}
-
 	/* create a new update_viewer object */
 	update_viewer = gpk_update_viewer_new ();
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_update_viewer_message_received_cb), update_viewer);
-	g_signal_connect (update_viewer, "action-close",
-			  G_CALLBACK (gpk_update_viewer_close_cb), NULL);
 
-	/* wait */
-	gtk_main ();
+	/* are we already activated? */
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.UpdateViewer", argc, argv);
+	g_signal_connect (application, "prepare-activation",
+			  G_CALLBACK (gpk_update_viewer_application_prepare_action_cb), update_viewer);
+
+	/* close */
+	g_signal_connect (update_viewer, "action-close",
+			  G_CALLBACK (gpk_update_viewer_close_cb), application);
+
+	/* run */
+	g_application_run (application);
 
 	g_object_unref (update_viewer);
-unique_out:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 	return 0;
 }
 

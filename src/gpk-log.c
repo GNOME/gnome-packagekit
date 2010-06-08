@@ -30,7 +30,6 @@
 #include <pwd.h>
 
 #include <packagekit-glib2/packagekit.h>
-#include <unique/unique.h>
 
 #include "egg-debug.h"
 
@@ -363,16 +362,15 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * gpk_log_message_received_cb
+ * gpk_log_application_prepare_action_cb:
  **/
 static void
-gpk_log_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
+gpk_log_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+				       GVariant *platform_data, gpointer user_data)
 {
 	GtkWindow *window;
-	if (command == UNIQUE_ACTIVATE) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
-		gtk_window_present (window);
-	}
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
+	gtk_window_present (window);
 }
 
 /**
@@ -668,6 +666,25 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 }
 
 /**
+ * gpk_log_delete_event_cb:
+ **/
+static gboolean
+gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *application)
+{
+	g_application_quit (application, 0);
+	return FALSE;
+}
+
+/**
+ * gpk_log_button_close_cb:
+ **/
+static void
+gpk_log_button_close_cb (GtkWidget *widget, GApplication *application)
+{
+	g_application_quit (application, 0);
+}
+
+/**
  * main:
  **/
 int
@@ -678,7 +695,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GtkEntryCompletion *completion;
-	UniqueApp *unique_app;
+	GApplication *application;
 	gboolean ret;
 	guint retval;
 	guint xid = 0;
@@ -719,14 +736,9 @@ main (int argc, char *argv[])
 		return 1;
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.LogViewer", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
-	}
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_log_message_received_cb), NULL);
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.LogViewer", argc, argv);
+	g_signal_connect (application, "prepare-activation",
+			  G_CALLBACK (gpk_log_application_prepare_action_cb), NULL);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -752,17 +764,19 @@ main (int argc, char *argv[])
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 900, 300);
 
+	/* Get the main window quit */
+	g_signal_connect (widget, "delete-event",
+			  G_CALLBACK (gpk_log_delete_event_cb), application);
+
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 		gtk_entry_set_text (GTK_ENTRY(widget), filter);
 	}
 
-	/* Get the main window quit */
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_log_button_close_cb), application);
 	gtk_widget_grab_default (widget);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
@@ -826,7 +840,8 @@ main (int argc, char *argv[])
 	/* get the update list */
 	gpk_log_refresh ();
 
-	gtk_main ();
+	/* run */
+	g_application_run (application);
 
 out_build:
 	g_object_unref (builder);
@@ -836,7 +851,6 @@ out_build:
 	g_free (filter);
 	if (transactions != NULL)
 		g_ptr_array_unref (transactions);
-unique_out:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 	return 0;
 }

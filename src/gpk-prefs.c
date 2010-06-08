@@ -31,7 +31,6 @@
 #include <string.h>
 #include <dbus/dbus-glib.h>
 #include <packagekit-glib2/packagekit.h>
-#include <unique/unique.h>
 
 #include <gpk-common.h>
 #include <gpk-gnome.h>
@@ -289,16 +288,15 @@ gpk_prefs_auto_update_combo_setup (void)
 }
 
 /**
- * gpk_prefs_message_received_cb
+ * gpk_prefs_application_prepare_action_cb:
  **/
 static void
-gpk_prefs_message_received_cb (UniqueApp *app, UniqueCommand command, UniqueMessageData *message_data, guint time_ms, gpointer data)
+gpk_prefs_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+					 GVariant *platform_data, gpointer user_data)
 {
 	GtkWindow *window;
-	if (command == UNIQUE_ACTIVATE) {
-		window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_prefs"));
-		gtk_window_present (window);
-	}
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_prefs"));
+	gtk_window_present (window);
 }
 
 /**
@@ -396,7 +394,7 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkControl *control;
-	UniqueApp *unique_app;
+	GApplication *application;
 	guint retval;
 	guint xid = 0;
 	GError *error = NULL;
@@ -438,14 +436,9 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	unique_app = unique_app_new ("org.freedesktop.PackageKit.Prefs", NULL);
-	if (unique_app_is_running (unique_app)) {
-		egg_debug ("You have another instance running. This program will now close");
-		unique_app_send_message (unique_app, UNIQUE_ACTIVATE, NULL);
-		goto unique_out;
-	}
-	g_signal_connect (unique_app, "message-received",
-			  G_CALLBACK (gpk_prefs_message_received_cb), NULL);
+	application = g_application_new_and_register ("org.freedesktop.PackageKit.Prefs", argc, argv);
+	g_signal_connect (application, "prepare-activation",
+			  G_CALLBACK (gpk_prefs_application_prepare_action_cb), NULL);
 
 	/* load settings */
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
@@ -510,8 +503,7 @@ out_build:
 	g_object_unref (control);
 	g_object_unref (builder);
 	g_object_unref (settings);
-unique_out:
-	g_object_unref (unique_app);
+	g_object_unref (application);
 
 	return 0;
 }
