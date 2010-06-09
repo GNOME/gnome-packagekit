@@ -33,7 +33,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
-
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <libnotify/notify.h>
@@ -81,6 +81,7 @@ struct GpkCheckUpdatePrivate
 	GPtrArray		*important_updates_array;
 	EggDbusMonitor		*dbus_monitor_viewer;
 	guint			 updates_changed_id;
+	GVolumeMonitor		*volume_monitor;
 };
 
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
@@ -1473,6 +1474,61 @@ gpk_check_update_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runt
 }
 
 /**
+ * gpk_check_update_file_exist_in_root:
+ */
+static gboolean
+gpk_check_update_file_exist_in_root (const gchar *root, const gchar *filename)
+{
+	gboolean ret;
+	GFile *source;
+	gchar *source_path;
+
+	source_path = g_build_filename (root, filename, NULL);
+	source = g_file_new_for_path (source_path);
+
+	/* an interesting file exists */
+	ret = g_file_query_exists (source, NULL);
+	egg_debug ("checking for %s: %s", source_path, ret ? "yes" : "no");
+	if (!ret)
+		goto out;
+out:
+	g_free (source_path);
+	g_object_unref (source);
+	return ret;
+}
+
+/**
+ * gpk_check_update_mount_added_cb:
+ */
+static void
+gpk_check_update_mount_added_cb (GVolumeMonitor *volume_monitor, GMount *mount, GpkCheckUpdate *cupdate)
+{
+	gboolean ret = FALSE;
+	const gchar *filenames[] = { "media.repo", ".discinfo", NULL };
+	gchar *root_path;
+	GFile *root;
+	guint i;
+
+	/* check if any installed media is an install disk */
+	root = g_mount_get_root (mount);
+	root_path = g_file_get_path (root);
+
+	/* search each possible filename */
+	for (i=0; filenames[i] != NULL; i++) {
+		ret = gpk_check_update_file_exist_in_root (root_path, filenames[i]);
+		if (ret)
+			break;
+	}
+
+	/* do an updates check with the new media */
+	if (ret)
+		gpk_check_update_query_updates (cupdate, FALSE);
+
+	g_free (root_path);
+	g_object_unref (root);
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1555,6 +1611,10 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	g_signal_connect (cupdate->priv->tlist, "changed",
 			  G_CALLBACK (gpk_check_update_task_list_changed_cb), cupdate);
 
+	/* get a volume monitor so we can watch media */
+	cupdate->priv->volume_monitor = g_volume_monitor_get ();
+	g_signal_connect (cupdate->priv->volume_monitor, "mount-added", G_CALLBACK (gpk_check_update_mount_added_cb), cupdate);
+
 	/* coldplug update in progress */
 	cupdate->priv->icon_inhibit_update_in_progress =
 		(pk_task_list_contains_role (cupdate->priv->tlist, PK_ROLE_ENUM_UPDATE_SYSTEM) ||
@@ -1593,6 +1653,7 @@ gpk_check_update_finalize (GObject *object)
 	g_object_unref (cupdate->priv->client_secondary);
 	g_object_unref (cupdate->priv->dbus_monitor_viewer);
 	g_object_unref (cupdate->priv->helper_repo_signature);
+	g_object_unref (cupdate->priv->volume_monitor);
 	if (cupdate->priv->important_updates_array != NULL) {
 		g_ptr_array_foreach (cupdate->priv->important_updates_array, (GFunc) g_free, NULL);
 		g_ptr_array_free (cupdate->priv->important_updates_array, TRUE);
