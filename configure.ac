@@ -105,7 +105,7 @@ dnl - Library dependencies
 dnl ---------------------------------------------------------------------------
 PACKAGEKIT_REQUIRED=0.5.5 # when changing, nuke some compatability entries in gpk-enum.h
 GLIB_REQUIRED=2.14.0
-GTK_REQUIRED=2.19.3
+GTK_REQUIRED=2.90.2
 DBUS_REQUIRED=1.1.2
 GCONF_REQUIRED=2.31.1
 DBUS_GLIB_REQUIRED=0.73
@@ -129,7 +129,7 @@ PKG_CHECK_MODULES(DBUS, \
  dbus-1 >= $DBUS_REQUIRED \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
- gtk+-2.0 >= $GTK_REQUIRED gdk-2.0 fontconfig)
+ gtk+-3.0 >= $GTK_REQUIRED gdk-2.0 fontconfig)
 PKG_CHECK_MODULES(LIBNOTIFY, \
  libnotify >= $LIBNOTIFY_REQUIRED)
 PKG_CHECK_MODULES(GNOME_MENUS, \
