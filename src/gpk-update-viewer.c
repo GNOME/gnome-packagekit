@@ -1473,7 +1473,7 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 
 	/* not when offline */
 	egg_debug ("network status is %s", pk_network_enum_to_text (state));
-	if (state == PK_NETWORK_ENUM_OFFLINE || 1) {
+	if (state == PK_NETWORK_ENUM_OFFLINE) {
 		gpk_update_viewer_modal_error_with_timeout (update_viewer,
 				/* TRANSLATORS: title: nothing to do */
 				_("No updates are available"),
