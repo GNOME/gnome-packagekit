@@ -1396,6 +1396,58 @@ gpk_update_viewer_update_global_state (GpkUpdateViewer *update_viewer)
 	}
 }
 
+/**
+ * gpk_update_viewer_modal_error_with_timeout:
+ **/
+static void
+gpk_update_viewer_modal_error_with_timeout (GpkUpdateViewer *update_viewer, const gchar *title, const gchar *message)
+{
+	GtkWidget *dialog;
+	GtkWidget *widget;
+	gchar *text;
+	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+
+	/* hide close button */
+	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_quit"));
+	gtk_widget_hide (widget);
+
+	/* show a new title */
+	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_header_title"));
+	/* TRANSLATORS: there are no updates */
+	text = g_strdup_printf ("<big><b>%s</b></big>", _("There are no updates available"));
+	gtk_label_set_label (GTK_LABEL(widget), text);
+	g_free (text);
+
+	/* show modal dialog */
+	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "dialog_updates"));
+	dialog = gtk_message_dialog_new (GTK_WINDOW(widget), GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+					 "%s", title);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+						  "%s", message);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+
+	/* setup a callback so we autoclose */
+	priv->auto_shutdown_id =
+		g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
+				       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
+#if GLIB_CHECK_VERSION(2,25,8)
+	g_source_set_name_by_id (priv->auto_shutdown_id, "[GpkUpdateViewer] shutdown no updates");
+#endif
+
+	gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy (dialog);
+
+	/* remove auto-shutdown */
+	if (priv->auto_shutdown_id != 0) {
+		g_source_remove (priv->auto_shutdown_id);
+		priv->auto_shutdown_id = 0;
+	}
+
+	/* exit the program */
+	gpk_update_viewer_quit (update_viewer);
+}
+
 
 /**
  * gpk_update_viewer_reconsider_info:
@@ -1404,15 +1456,31 @@ static void
 gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 {
 	GtkWidget *widget;
-	GtkWidget *dialog;
 	guint len;
 	const gchar *title;
 	gchar *text;
 	gchar *text_size;
+	PkNetworkEnum state;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
 
 	/* update global state */
 	gpk_update_viewer_update_global_state (update_viewer);
+
+	/* get network state */
+	g_object_get (priv->control,
+		      "network-state", &state,
+		      NULL);
+
+	/* not when offline */
+	egg_debug ("network status is %s", pk_network_enum_to_text (state));
+	if (state == PK_NETWORK_ENUM_OFFLINE || 1) {
+		gpk_update_viewer_modal_error_with_timeout (update_viewer,
+				/* TRANSLATORS: title: nothing to do */
+				_("No updates are available"),
+				/* TRANSLATORS: no network connnection, according to PackageKit */
+				_("No network connection was detected."));
+		goto out;
+	}
 
 	/* action button */
 	widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_install"));
@@ -1433,48 +1501,11 @@ gpk_update_viewer_reconsider_info (GpkUpdateViewer *update_viewer)
 	/* no updates */
 	len = priv->update_array->len;
 	if (len == 0) {
-		/* hide close button */
-		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "button_quit"));
-		gtk_widget_hide (widget);
-
-		/* show a new title */
-		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "label_header_title"));
-		/* TRANSLATORS: there are no updates */
-		text = g_strdup_printf ("<big><b>%s</b></big>", _("There are no updates available"));
-		gtk_label_set_label (GTK_LABEL(widget), text);
-		g_free (text);
-
-		/* show modal dialog */
-		widget = GTK_WIDGET(gtk_builder_get_object (priv->builder, "dialog_updates"));
-		dialog = gtk_message_dialog_new (GTK_WINDOW(widget), GTK_DIALOG_MODAL,
-						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-						 /* TRANSLATORS: title: warn the user they are quitting with unapplied changes */
-						 "%s", _("All software is up to date"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
-							  "%s",
-							  /* TRANSLATORS: tell the user the problem */
-							  _("There are no software updates available for your computer at this time."));
-		gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
-
-		/* setup a callback so we autoclose */
-		priv->auto_shutdown_id =
-			g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
-					       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
-#if GLIB_CHECK_VERSION(2,25,8)
-		g_source_set_name_by_id (priv->auto_shutdown_id, "[GpkUpdateViewer] shutdown no updates");
-#endif
-
-		gtk_dialog_run (GTK_DIALOG(dialog));
-		gtk_widget_destroy (dialog);
-
-		/* remove auto-shutdown */
-		if (priv->auto_shutdown_id != 0) {
-			g_source_remove (priv->auto_shutdown_id);
-			priv->auto_shutdown_id = 0;
-		}
-
-		/* exit the program */
-		gpk_update_viewer_quit (update_viewer);
+		gpk_update_viewer_modal_error_with_timeout (update_viewer,
+				/* TRANSLATORS: title: nothing to do */
+				_("All software is up to date"),
+				/* TRANSLATORS: tell the user the problem */
+				_("There are no software updates available for your computer at this time."));
 		goto out;
 	}
 
