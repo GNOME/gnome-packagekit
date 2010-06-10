@@ -93,6 +93,7 @@ struct GpkApplicationPrivate
 	PkBitfield		 groups;
 	PkBitfield		 filters_current;
 	gboolean		 has_package; /* if we got a package in the search */
+	gboolean		 search_in_progress;
 	PkSearchType		 search_type;
 	PkSearchMode		 search_mode;
 	PkActionMode		 action;
@@ -668,26 +669,6 @@ gpk_application_status_changed_timeout_cb (GpkApplication *application)
 	application->priv->status_id = 0;
 	return FALSE;
 }
-
-#if 0
-	if (application->priv->action == PK_ACTION_INSTALL ||
-	    application->priv->action == PK_ACTION_REMOVE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_groups"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "textview_description"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_detail"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
-#endif
 
 /**
  * gpk_application_progress_cb:
@@ -1549,6 +1530,26 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 }
 
 /**
+ * gpk_application_set_button_find_sensitivity:
+ **/
+static void
+gpk_application_set_button_find_sensitivity (GpkApplication *application)
+{
+	gboolean sensitive;
+	GtkWidget *widget;
+	const gchar *search;
+
+	/* get the text in the search bar */
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
+	search = gtk_entry_get_text (GTK_ENTRY (widget));
+
+	/* only sensitive if not in the middle of a search and has valid text */
+	sensitive = !application->priv->search_in_progress && !egg_strzero (search);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
+	gtk_widget_set_sensitive (widget, sensitive);
+}
+
+/**
  * gpk_application_search_cb:
  **/
 static void
@@ -1616,6 +1617,10 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplication *
 	gtk_widget_set_sensitive (widget, TRUE);
 	gpk_application_set_buttons_apply_clear (application);
 out:
+	/* mark find button sensitive */
+	application->priv->search_in_progress = FALSE;
+	gpk_application_set_button_find_sensitivity (application);
+
 	if (error_code != NULL)
 		g_object_unref (error_code);
 	if (array != NULL)
@@ -1659,6 +1664,10 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 		goto out;
 	}
 	egg_debug ("find %s", application->priv->search_text);
+
+	/* mark find button insensitive */
+	application->priv->search_in_progress = TRUE;
+	gpk_application_set_button_find_sensitivity (application);
 
 	/* do the search */
 	searches = g_strsplit (application->priv->search_text, " ", -1);
@@ -1892,15 +1901,10 @@ gpk_application_menu_quit_cb (GtkAction *action, GpkApplication *application)
 static gboolean
 gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplication *application)
 {
-	gboolean valid;
-	GtkWidget *widget;
 	GtkTreeView *treeview;
-	const gchar *package;
 	GtkTreeSelection *selection;
 
 	g_return_val_if_fail (GPK_IS_APPLICATION (application), FALSE);
-
-	package = gtk_entry_get_text (entry);
 
 	/* clear group selection if we have the tab */
 	if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
@@ -1909,14 +1913,8 @@ gpk_application_text_changed_cb (GtkEntry *entry, GdkEventKey *event, GpkApplica
 		gtk_tree_selection_unselect_all (selection);
 	}
 
-	/* check for invalid chars */
-	valid = !egg_strzero (package);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
-	if (valid == FALSE || egg_strzero (package))
-		gtk_widget_set_sensitive (widget, FALSE);
-	else
-		gtk_widget_set_sensitive (widget, TRUE);
+	/* mark find button sensitive */
+	gpk_application_set_button_find_sensitivity (application);
 	return FALSE;
 }
 
@@ -4127,8 +4125,8 @@ gpk_application_init (GpkApplication *application)
 	g_signal_connect (widget, "key-release-event",
 			  G_CALLBACK (gpk_application_text_changed_cb), application);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_find"));
-	gtk_widget_set_sensitive (widget, FALSE);
+	/* mark find button insensitive */
+	gpk_application_set_button_find_sensitivity (application);
 
 	/* set a size, if the screen allows */
 	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 1000, 500);
