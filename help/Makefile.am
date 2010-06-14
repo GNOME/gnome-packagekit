@@ -22,5 +22,5 @@ DOC_FIGURES = \
 	figures/gpk-service-pack-example.png \
 	figures/gpk-updates-warning.png
 
-DOC_LINGUAS = de el es oc pl sv zh_CN
+DOC_LINGUAS = de el es oc pa pl sv zh_CN
 
