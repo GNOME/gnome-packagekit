@@ -136,7 +136,7 @@ PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= $GNOME_MENUS_REQUIRED)
 PKG_CHECK_MODULES(UPOWER, [
  upower-glib >= $UPOWER_REQUIRED])
-PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk >= $CANBERRA_REQUIRED)
+PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= $CANBERRA_REQUIRED)
 PKG_CHECK_MODULES(X11, x11)
 
 dnl ---------------------------------------------------------------------------
