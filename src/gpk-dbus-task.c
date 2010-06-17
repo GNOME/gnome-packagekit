@@ -2627,7 +2627,8 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 		goto out;
 	}
 
-	tags = g_renew (gchar *, tags, n_tags);
+	tags = g_renew (gchar *, tags, n_tags + 1);
+	tags[n_tags] = NULL;
 
 	/* get driver packages */
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task),
