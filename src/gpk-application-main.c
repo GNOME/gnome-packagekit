@@ -42,7 +42,7 @@
 static void
 gpk_application_close_cb (GpkApplication *app, GApplication *application)
 {
-	g_application_quit (application, 0);
+	g_application_quit_with_data (application, NULL);
 }
 
 /**
@@ -108,7 +108,7 @@ main (int argc, char *argv[])
 	app = gpk_application_new ();
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.Application", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.Application", argc, argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_application_prepare_action_cb), app);
 

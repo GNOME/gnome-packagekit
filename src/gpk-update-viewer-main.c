@@ -37,7 +37,7 @@
 static void
 gpk_update_viewer_close_cb (GpkUpdateViewer *update_viewer, GApplication *application)
 {
-	g_application_quit (application, 0);
+	g_application_quit_with_data (application, NULL);
 }
 
 /**
@@ -107,7 +107,7 @@ main (int argc, char *argv[])
 	update_viewer = gpk_update_viewer_new ();
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.UpdateViewer", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.UpdateViewer", argc, argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_update_viewer_application_prepare_action_cb), update_viewer);
 

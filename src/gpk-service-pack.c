@@ -677,7 +677,7 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 static gboolean
 gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *application)
 {
-	g_application_quit (application, 0);
+	g_application_quit_with_data (application, NULL);
 	return FALSE;
 }
 
@@ -687,7 +687,7 @@ gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *appl
 static void
 gpk_pack_button_close_cb (GtkWidget *widget, GApplication *application)
 {
-	g_application_quit (application, 0);
+	g_application_quit_with_data (application, NULL);
 }
 
 /**
@@ -753,7 +753,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.ServicePack", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.ServicePack", argc, argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_pack_application_prepare_action_cb), NULL);
 

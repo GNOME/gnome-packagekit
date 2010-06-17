@@ -436,7 +436,7 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.Prefs", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.Prefs", argc, argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_prefs_application_prepare_action_cb), NULL);
 

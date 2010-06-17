@@ -644,7 +644,7 @@ main (int argc, char *argv[])
                                            GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.Repo", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.Repo", argc, argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_repo_application_prepare_action_cb), NULL);
 

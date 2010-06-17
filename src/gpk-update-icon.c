@@ -48,7 +48,7 @@
 static gboolean
 gpk_icon_timed_exit_cb (GApplication *application)
 {
-	g_application_quit (application, 0);
+	g_application_quit_with_data (application, NULL);
 	return FALSE;
 }
 
@@ -113,7 +113,7 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	application = g_application_new_and_register ("org.freedesktop.PackageKit.UpdateIcon", argc, argv);
+	application = g_application_new ("org.freedesktop.PackageKit.UpdateIcon", argc, argv);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
