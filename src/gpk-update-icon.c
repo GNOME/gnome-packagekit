@@ -46,9 +46,9 @@
  * gpk_icon_timed_exit_cb:
  **/
 static gboolean
-gpk_icon_timed_exit_cb (GApplication *application)
+gpk_icon_timed_exit_cb (GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 	return FALSE;
 }
 
@@ -65,7 +65,7 @@ main (int argc, char *argv[])
 	GpkFirmware *firmware = NULL;
 	GpkHardware *hardware = NULL;
 	GOptionContext *context;
-	GApplication *application;
+	GtkApplication *application;
 	gboolean ret;
 	guint timer_id = 0;
 
@@ -113,7 +113,7 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.UpdateIcon", argc, argv);
+	application = gtk_application_new ("org.freedesktop.PackageKit.UpdateIcon", &argc, &argv);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -134,7 +134,7 @@ main (int argc, char *argv[])
 	}
 
 	/* run */
-	g_application_run (application);
+	gtk_application_run (application);
 
 	g_object_unref (cupdate);
 	g_object_unref (watch);

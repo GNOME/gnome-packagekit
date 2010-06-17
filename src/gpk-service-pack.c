@@ -615,18 +615,6 @@ out:
 }
 
 /**
- * gpk_pack_application_prepare_action_cb:
- **/
-static void
-gpk_pack_application_prepare_action_cb (GApplication *application, GVariant *arguments,
-					GVariant *platform_data, gpointer user_data)
-{
-	GtkWindow *window;
-	window = GTK_WINDOW (gtk_builder_get_object (builder, "window_prefs"));
-	gtk_window_present (window);
-}
-
-/**
  * gpk_pack_radio_updates_cb:
  **/
 static void
@@ -675,9 +663,9 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
  * gpk_pack_delete_event_cb:
  **/
 static gboolean
-gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *application)
+gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 	return FALSE;
 }
 
@@ -685,9 +673,9 @@ gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *appl
  * gpk_pack_button_close_cb:
  **/
 static void
-gpk_pack_button_close_cb (GtkWidget *widget, GApplication *application)
+gpk_pack_button_close_cb (GtkWidget *widget, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 }
 
 /**
@@ -701,7 +689,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkFileFilter *filter;
 	GtkEntryCompletion *completion;
-	GApplication *application;
+	GtkApplication *application;
 	gboolean ret;
 	GSettings *settings = NULL;
 	gchar *option = NULL;
@@ -753,9 +741,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.ServicePack", argc, argv);
-	g_signal_connect (application, "prepare-activation",
-			  G_CALLBACK (gpk_pack_application_prepare_action_cb), NULL);
+	application = gtk_application_new ("org.freedesktop.PackageKit.ServicePack", &argc, &argv);
 
 	/* use a client to download packages */
 	client = pk_client_new ();
@@ -781,6 +767,7 @@ main (int argc, char *argv[])
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
+	gtk_application_add_window (application, GTK_WINDOW (main_window));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
@@ -861,7 +848,7 @@ main (int argc, char *argv[])
 	gtk_widget_show (main_window);
 
 	/* run */
-	g_application_run (application);
+	gtk_application_run (application);
 
 out_build:
 	g_object_unref (builder);

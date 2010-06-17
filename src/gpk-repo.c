@@ -503,19 +503,6 @@ gpk_repo_checkbutton_detail_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * gpk_repo_application_prepare_action_cb:
- **/
-static void
-gpk_repo_application_prepare_action_cb (GApplication *application, GVariant *arguments,
-					GVariant *platform_data, gpointer user_data)
-{
-	GtkWindow *window;
-	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_repo"));
-	gtk_window_present (window);
-}
-
-
-/**
  * gpk_repo_get_properties_cb:
  **/
 static void
@@ -600,7 +587,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	PkControl *control;
-	GApplication *application;
+	GtkApplication *application;
 	GError *error = NULL;
 	guint retval;
 	guint xid = 0;
@@ -644,9 +631,7 @@ main (int argc, char *argv[])
                                            GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.Repo", argc, argv);
-	g_signal_connect (application, "prepare-activation",
-			  G_CALLBACK (gpk_repo_application_prepare_action_cb), NULL);
+	application = gtk_application_new ("org.freedesktop.PackageKit.Repo", &argc, &argv);
 
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
@@ -678,6 +663,7 @@ main (int argc, char *argv[])
 	gtk_widget_show (image_animation);
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_repo"));
+	gtk_application_add_window (application, GTK_WINDOW (main_window));
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_SOURCES);
 	g_signal_connect (main_window, "delete_event",
 			  G_CALLBACK (gpk_repo_delete_event_cb), loop);

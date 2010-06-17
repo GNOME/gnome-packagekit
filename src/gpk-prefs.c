@@ -288,18 +288,6 @@ gpk_prefs_auto_update_combo_setup (void)
 }
 
 /**
- * gpk_prefs_application_prepare_action_cb:
- **/
-static void
-gpk_prefs_application_prepare_action_cb (GApplication *application, GVariant *arguments,
-					 GVariant *platform_data, gpointer user_data)
-{
-	GtkWindow *window;
-	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_prefs"));
-	gtk_window_present (window);
-}
-
-/**
  * gpk_prefs_notify_network_state_cb:
  **/
 static void
@@ -394,7 +382,7 @@ main (int argc, char *argv[])
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkControl *control;
-	GApplication *application;
+	GtkApplication *application;
 	guint retval;
 	guint xid = 0;
 	GError *error = NULL;
@@ -436,9 +424,7 @@ main (int argc, char *argv[])
 	}
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.Prefs", argc, argv);
-	g_signal_connect (application, "prepare-activation",
-			  G_CALLBACK (gpk_prefs_application_prepare_action_cb), NULL);
+	application = gtk_application_new ("org.freedesktop.PackageKit.Prefs", &argc, &argv);
 
 	/* load settings */
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
@@ -459,6 +445,7 @@ main (int argc, char *argv[])
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_prefs"));
+	gtk_application_add_window (application, GTK_WINDOW (main_window));
 
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);

@@ -35,16 +35,16 @@
  * gpk_update_viewer_close_cb
  **/
 static void
-gpk_update_viewer_close_cb (GpkUpdateViewer *update_viewer, GApplication *application)
+gpk_update_viewer_close_cb (GpkUpdateViewer *update_viewer, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 }
 
 /**
  * gpk_update_viewer_application_prepare_action_cb:
  **/
 static void
-gpk_update_viewer_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+gpk_update_viewer_application_prepare_action_cb (GtkApplication *application, GVariant *arguments,
 						 GVariant *platform_data, GpkUpdateViewer *update_viewer)
 {
 	gpk_update_viewer_show (update_viewer);
@@ -59,7 +59,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkUpdateViewer *update_viewer = NULL;
 	GOptionContext *context;
-	GApplication *application;
+	GtkApplication *application;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -107,7 +107,7 @@ main (int argc, char *argv[])
 	update_viewer = gpk_update_viewer_new ();
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.UpdateViewer", argc, argv);
+	application = gtk_application_new ("org.freedesktop.PackageKit.UpdateViewer", &argc, &argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_update_viewer_application_prepare_action_cb), update_viewer);
 
@@ -116,7 +116,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_update_viewer_close_cb), application);
 
 	/* run */
-	g_application_run (application);
+	gtk_application_run (application);
 
 	g_object_unref (update_viewer);
 	g_object_unref (application);

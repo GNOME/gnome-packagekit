@@ -40,16 +40,16 @@
  * gpk_application_close_cb
  **/
 static void
-gpk_application_close_cb (GpkApplication *app, GApplication *application)
+gpk_application_close_cb (GpkApplication *app, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 }
 
 /**
  * gpk_application_prepare_action_cb:
  **/
 static void
-gpk_application_prepare_action_cb (GApplication *application, GVariant *arguments,
+gpk_application_prepare_action_cb (GtkApplication *application, GVariant *arguments,
 				   GVariant *platform_data, GpkApplication *app)
 {
 	gpk_application_show (app);
@@ -64,7 +64,7 @@ main (int argc, char *argv[])
 	gboolean program_version = FALSE;
 	GpkApplication *app = NULL;
 	GOptionContext *context;
-	GApplication *application;
+	GtkApplication *application;
 	gboolean ret;
 
 	const GOptionEntry options[] = {
@@ -108,7 +108,7 @@ main (int argc, char *argv[])
 	app = gpk_application_new ();
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.Application", argc, argv);
+	application = gtk_application_new ("org.freedesktop.PackageKit.Application", &argc, &argv);
 	g_signal_connect (application, "prepare-activation",
 			  G_CALLBACK (gpk_application_prepare_action_cb), app);
 
@@ -116,7 +116,7 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_application_close_cb), application);
 
 	/* run */
-	g_application_run (application);
+	gtk_application_run (application);
 
 	g_object_unref (app);
 	g_object_unref (application);

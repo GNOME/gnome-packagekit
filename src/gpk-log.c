@@ -362,18 +362,6 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 /**
- * gpk_log_application_prepare_action_cb:
- **/
-static void
-gpk_log_application_prepare_action_cb (GApplication *application, GVariant *arguments,
-				       GVariant *platform_data, gpointer user_data)
-{
-	GtkWindow *window;
-	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
-	gtk_window_present (window);
-}
-
-/**
  * gpk_log_filter:
  **/
 static gboolean
@@ -669,9 +657,9 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
  * gpk_log_delete_event_cb:
  **/
 static gboolean
-gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *application)
+gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 	return FALSE;
 }
 
@@ -679,9 +667,9 @@ gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GApplication *appli
  * gpk_log_button_close_cb:
  **/
 static void
-gpk_log_button_close_cb (GtkWidget *widget, GApplication *application)
+gpk_log_button_close_cb (GtkWidget *widget, GtkApplication *application)
 {
-	g_application_quit_with_data (application, NULL);
+	gtk_application_quit (application);
 }
 
 /**
@@ -695,7 +683,7 @@ main (int argc, char *argv[])
 	GtkWidget *widget;
 	GtkTreeSelection *selection;
 	GtkEntryCompletion *completion;
-	GApplication *application;
+	GtkApplication *application;
 	gboolean ret;
 	guint retval;
 	guint xid = 0;
@@ -736,9 +724,7 @@ main (int argc, char *argv[])
 		return 1;
 
 	/* are we already activated? */
-	application = g_application_new ("org.freedesktop.PackageKit.LogViewer", argc, argv);
-	g_signal_connect (application, "prepare-activation",
-			  G_CALLBACK (gpk_log_application_prepare_action_cb), NULL);
+	application = gtk_application_new ("org.freedesktop.PackageKit.LogViewer", &argc, &argv);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -760,6 +746,7 @@ main (int argc, char *argv[])
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
 	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
+	gtk_application_add_window (application, GTK_WINDOW (widget));
 
 	/* set a size, if the screen allows */
 	gpk_window_set_size_request (GTK_WINDOW (widget), 900, 300);
@@ -841,7 +828,7 @@ main (int argc, char *argv[])
 	gpk_log_refresh ();
 
 	/* run */
-	g_application_run (application);
+	gtk_application_run (application);
 
 out_build:
 	g_object_unref (builder);

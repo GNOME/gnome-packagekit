@@ -101,42 +101,27 @@ AM_GLIB_GNU_GETTEXT
 GLIB_GSETTINGS
 
 dnl ---------------------------------------------------------------------------
-dnl - Library dependencies
-dnl ---------------------------------------------------------------------------
-PACKAGEKIT_REQUIRED=0.5.5 # when changing, nuke some compatability entries in gpk-enum.h
-GLIB_REQUIRED=2.14.0
-GTK_REQUIRED=2.90.2
-DBUS_REQUIRED=1.1.2
-GCONF_REQUIRED=2.31.1
-DBUS_GLIB_REQUIRED=0.73
-LIBNOTIFY_REQUIRED=0.4.3
-GNOME_MENUS_REQUIRED=2.24.1
-GIO_REQUIRED=2.25.8
-UPOWER_REQUIRED=0.9.0
-CANBERRA_REQUIRED=0.10
-
-dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= $PACKAGEKIT_REQUIRED)
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= 0.5.5)
 PKG_CHECK_MODULES(GLIB, \
- glib-2.0 >= $GLIB_REQUIRED
+ glib-2.0 >= 2.14.0
  gobject-2.0
- gio-2.0 >= $GIO_REQUIRED
- gio-unix-2.0 >= $GIO_REQUIRED)
+ gio-2.0 >= 2.25.9
+ gio-unix-2.0)
 PKG_CHECK_MODULES(DBUS, \
- dbus-glib-1 >= $DBUS_GLIB_REQUIRED \
- dbus-1 >= $DBUS_REQUIRED \
+ dbus-glib-1 >= 0.73 \
+ dbus-1 >= 1.1.2 \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
- gtk+-3.0 >= $GTK_REQUIRED gdk-2.0 fontconfig)
+ gtk+-3.0 >= 2.90.3 gdk-3.0 fontconfig)
 PKG_CHECK_MODULES(LIBNOTIFY, \
- libnotify >= $LIBNOTIFY_REQUIRED)
+ libnotify >= 0.4.3)
 PKG_CHECK_MODULES(GNOME_MENUS, \
- libgnome-menu >= $GNOME_MENUS_REQUIRED)
+ libgnome-menu >= 2.24.1)
 PKG_CHECK_MODULES(UPOWER, [
- upower-glib >= $UPOWER_REQUIRED])
-PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= $CANBERRA_REQUIRED)
+ upower-glib >= 0.9.0])
+PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
 PKG_CHECK_MODULES(X11, x11)
 
 dnl ---------------------------------------------------------------------------
