@@ -401,6 +401,13 @@ gpk_dbus_task_get_code_from_gerror (const GError *error)
 {
 	gint code = GPK_DBUS_ERROR_INTERNAL_ERROR;
 
+	/* already correct */
+	if (error->domain == GPK_DBUS_ERROR) {
+		code = error->code;
+		goto out;
+	}
+
+	/* not recognised */
 	if (error->domain != PK_CLIENT_ERROR) {
 		egg_warning ("Not a PkClientError error code");
 		goto out;
