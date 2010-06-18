@@ -115,8 +115,6 @@ PKG_CHECK_MODULES(DBUS, \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
  gtk+-3.0 >= 2.90.3 gdk-3.0 fontconfig)
-PKG_CHECK_MODULES(LIBNOTIFY, \
- libnotify >= 0.4.3)
 PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= 2.24.1)
 PKG_CHECK_MODULES(UPOWER, [
@@ -124,23 +122,30 @@ PKG_CHECK_MODULES(UPOWER, [
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
 PKG_CHECK_MODULES(X11, x11)
 
+dnl **** Check for LIBNOTIFY ****
+PKG_CHECK_MODULES(LIBNOTIFY, libnotify3 >= 0.4.3, has_libnotify=yes, has_libnotify=no)
+AM_CONDITIONAL(HAVE_LIBNOTIFY, test x$libnotify = xyes)
+if test x$has_libnotify = xyes; then
+	AC_DEFINE(HAVE_LIBNOTIFY,1,[Use session notifications])
+fi
+
 dnl ---------------------------------------------------------------------------
 dnl - GUdev integration (default enabled)
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(gudev, AS_HELP_STRING([--disable-gudev],[Disable GUdev support]), enable_gudev=$enableval)
 if test x$enable_gudev != xno; then
-	PKG_CHECK_MODULES(GUDEV, gudev-1.0, GPK_BUILD_GUDEV="yes", GPK_BUILD_GUDEV="no")
-	if test "x$GPK_BUILD_GUDEV" = "xyes"; then
-		AC_DEFINE(GPK_BUILD_GUDEV, 1, [define if GUdev is available])
+	PKG_CHECK_MODULES(GUDEV, gudev-1.0, HAVE_GUDEV="yes", HAVE_GUDEV="no")
+	if test "x$HAVE_GUDEV" = "xyes"; then
+		AC_DEFINE(HAVE_GUDEV, 1, [define if GUdev is available])
 	else
 		if test x$enable_gudev = xyes; then
 			AC_MSG_ERROR([GUdev enabled but not found])
 		fi
 	fi
 else
-	GPK_BUILD_GUDEV=no
+	HAVE_GUDEV=no
 fi
-AM_CONDITIONAL(GPK_BUILD_GUDEV, test x$GPK_BUILD_GUDEV = xyes)
+AM_CONDITIONAL(HAVE_GUDEV, test x$HAVE_GUDEV = xyes)
 
 dnl ---------------------------------------------------------------------------
 dnl - Enable small form factor code
@@ -237,5 +242,6 @@ echo "
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
         cppflags:                  ${CPPFLAGS}
+        libnotify support:         ${has_libnotify}
 "
 

@@ -34,7 +34,9 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #include <dbus/dbus.h>
@@ -67,7 +69,7 @@ struct GpkHardwarePrivate
 
 G_DEFINE_TYPE (GpkHardware, gpk_hardware, G_TYPE_OBJECT)
 
-
+#ifdef HAVE_LIBNOTIFY
 /**
  * gpk_hardware_install_packages_cb:
  **/
@@ -118,6 +120,7 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 		egg_warning ("unknown action id: %s", action);
 	}
 }
+#endif
 
 /**
  * gpk_hardware_what_provides_cb:

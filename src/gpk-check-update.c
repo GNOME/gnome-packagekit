@@ -35,7 +35,9 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
 #include <gio/gio.h>
@@ -53,7 +55,10 @@
 #include "gpk-task.h"
 
 static void     gpk_check_update_finalize	(GObject	     *object);
+
+#ifdef HAVE_LIBNOTIFY
 static void	gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data);
+#endif
 
 #define GPK_CHECK_UPDATE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CHECK_UPDATE, GpkCheckUpdatePrivate))
 
@@ -554,6 +559,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	}
 }
 
+#ifdef HAVE_LIBNOTIFY
 /**
  * gpk_check_update_libnotify_cb:
  **/
@@ -614,6 +620,7 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	}
 	return;
 }
+#endif
 
 /**
  * gpk_check_update_critical_updates_warning:

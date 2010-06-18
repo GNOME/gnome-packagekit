@@ -35,7 +35,9 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
@@ -378,6 +380,7 @@ out:
 	return TRUE;
 }
 
+#ifdef HAVE_LIBNOTIFY
 /**
  * gpk_watch_libnotify_cb:
  **/
@@ -398,6 +401,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 		egg_warning ("unknown action id: %s", action);
 	}
 }
+#endif
 
 /**
  * gpk_watch_about_dialog_url_cb:

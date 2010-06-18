@@ -30,7 +30,9 @@
 
 #include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
@@ -259,6 +261,7 @@ out:
 	return;
 }
 
+#ifdef HAVE_LIBNOTIFY
 /**
  * gpk_dbus_task_libnotify_cb:
  **/
@@ -281,6 +284,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 		egg_warning ("unknown action id: %s", action);
 	}
 }
+#endif
 
 /**
  * gpk_dbus_task_error_msg:

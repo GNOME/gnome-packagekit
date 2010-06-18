@@ -25,12 +25,15 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
 #include "egg-dbus-monitor.h"
 
+#include "gpk-common.h"
 #include "gpk-dbus.h"
 #include "org.freedesktop.PackageKit.h"
 

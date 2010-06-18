@@ -36,9 +36,11 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 #include <packagekit-glib2/packagekit.h>
-#ifdef GPK_BUILD_GUDEV
+#ifdef HAVE_GUDEV
 #include <gudev/gudev.h>
 #endif
 
@@ -88,6 +90,7 @@ typedef struct {
 
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
 
+#ifdef HAVE_LIBNOTIFY
 static void gpk_firmware_install_file (GpkFirmware *firmware);
 static void gpk_firmware_ignore_devices (GpkFirmware *firmware);
 
@@ -101,6 +104,7 @@ gpk_firmware_subsystem_can_replug (GpkFirmwareSubsystem subsystem)
 		return TRUE;
 	return FALSE;
 }
+#endif
 
 /**
  * gpk_firmware_request_new:
@@ -109,7 +113,7 @@ static GpkFirmwareRequest *
 gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 {
 	GpkFirmwareRequest *req;
-#ifdef GPK_BUILD_GUDEV
+#ifdef HAVE_GUDEV
 	GUdevDevice *device;
 	GUdevClient *client;
 	const gchar *subsystem;
@@ -122,7 +126,7 @@ gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 	req->filename = g_strdup (filename);
 	req->sysfs_path = g_strdup (sysfs_path);
 	req->subsystem = GPK_FIRMWARE_SUBSYSTEM_UNKNOWN;
-#ifdef GPK_BUILD_GUDEV
+#ifdef HAVE_GUDEV
 
 	/* get all subsystems */
 	client = g_udev_client_new (NULL);
@@ -173,6 +177,7 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 }
 
 
+#ifdef HAVE_LIBNOTIFY
 /**
  * gpk_firmware_rebind:
  **/
@@ -471,6 +476,7 @@ gpk_firmware_ignore_devices (GpkFirmware *firmware)
 	if (string != NULL)
 		g_string_free (string, TRUE);
 }
+#endif
 
 /**
  * gpk_firmware_check_available:
