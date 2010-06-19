@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2010 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -19,24 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <locale.h>
-
+#include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <math.h>
-#include <string.h>
-#include <dbus/dbus-glib.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include <gpk-common.h>
-#include <gpk-gnome.h>
-
 #include "egg-debug.h"
+
+#include "cc-update-panel.h"
+
+#include "gpk-common.h"
+#include "gpk-gnome.h"
 #include "gpk-enum.h"
+
+struct _CcUpdatePanelPrivate {
+	GtkBuilder		*builder;
+	GSettings		*settings;
+};
+
+G_DEFINE_DYNAMIC_TYPE (CcUpdatePanel, cc_update_panel, CC_TYPE_PANEL)
+
+static void cc_update_panel_finalize (GObject *object);
+
+#define CC_UPDATE_PREFS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), CC_TYPE_UPDATE_PANEL, CcUpdatePanelPrivate))
+
 
 /* TRANSLATORS: check once an hour */
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
@@ -59,23 +68,20 @@
 #define GPK_PREFS_VALUE_DAILY		(60*60*24)
 #define GPK_PREFS_VALUE_WEEKLY		(60*60*24*7)
 
-static GtkBuilder *builder = NULL;
-static GSettings *settings = NULL;
-
 /**
- * gpk_prefs_help_cb:
+ * cc_update_panel_help_cb:
  **/
 static void
-gpk_prefs_help_cb (GtkWidget *widget, gpointer data)
+cc_update_panel_help_cb (GtkWidget *widget, CcUpdatePanel *panel)
 {
 	gpk_gnome_help ("prefs");
 }
 
 /**
- * gpk_prefs_update_freq_combo_changed:
+ * cc_update_panel_update_freq_combo_changed:
  **/
 static void
-gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
+cc_update_panel_update_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
 {
 	gchar *value;
 	guint freq = 0;
@@ -93,15 +99,15 @@ gpk_prefs_update_freq_combo_changed (GtkWidget *widget, gpointer data)
 		g_assert (FALSE);
 
 	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
-	g_settings_set_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_free (value);
 }
 
 /**
- * gpk_prefs_upgrade_freq_combo_changed:
+ * cc_update_panel_upgrade_freq_combo_changed:
  **/
 static void
-gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
+cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
 {
 	gchar *value;
 	guint freq = 0;
@@ -117,15 +123,15 @@ gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, gpointer data)
 		g_assert (FALSE);
 
 	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
-	g_settings_set_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_free (value);
 }
 
 /**
- * gpk_prefs_update_combo_changed:
+ * cc_update_panel_update_combo_changed:
  **/
 static void
-gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
+cc_update_panel_update_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
 {
 	gchar *value;
 	const gchar *action;
@@ -148,15 +154,15 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, gpointer data)
 
 	action = gpk_update_enum_to_text (update);
 	egg_debug ("Changing %s to %s", GPK_SETTINGS_AUTO_UPDATE, action);
-	g_settings_set_string (settings, GPK_SETTINGS_AUTO_UPDATE, action);
+	g_settings_set_string (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE, action);
 	g_free (value);
 }
 
 /**
- * gpk_prefs_set_combo_model_simple_text:
+ * cc_update_panel_set_combo_model_simple_text:
  **/
 static void
-gpk_prefs_update_freq_combo_simple_text (GtkWidget *combo_box)
+cc_update_panel_update_freq_combo_simple_text (GtkWidget *combo_box)
 {
 	GtkCellRenderer *cell;
 	GtkListStore *store;
@@ -173,25 +179,25 @@ gpk_prefs_update_freq_combo_simple_text (GtkWidget *combo_box)
 }
 
 /**
- * gpk_prefs_update_freq_combo_setup:
+ * cc_update_panel_update_freq_combo_setup:
  **/
 static void
-gpk_prefs_update_freq_combo_setup (void)
+cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
 {
 	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_check"));
-	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
-	value = g_settings_get_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_check"));
+	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	egg_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
 	/* set a simple text model */
-	gpk_prefs_update_freq_combo_simple_text (widget);
+	cc_update_panel_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_HOURLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
@@ -209,29 +215,29 @@ gpk_prefs_update_freq_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_update_freq_combo_changed), NULL);
+			  G_CALLBACK (cc_update_panel_update_freq_combo_changed), NULL);
 }
 
 /**
- * gpk_prefs_upgrade_freq_combo_setup:
+ * cc_update_panel_upgrade_freq_combo_setup:
  **/
 static void
-gpk_prefs_upgrade_freq_combo_setup (void)
+cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 {
 	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
-	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
-	value = g_settings_get_int (settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_upgrade"));
+	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
 	egg_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
 	/* set a simple text model */
-	gpk_prefs_update_freq_combo_simple_text (widget);
+	cc_update_panel_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
@@ -246,23 +252,23 @@ gpk_prefs_upgrade_freq_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_upgrade_freq_combo_changed), NULL);
+			  G_CALLBACK (cc_update_panel_upgrade_freq_combo_changed), NULL);
 }
 
 /**
- * gpk_prefs_auto_update_combo_setup:
+ * cc_update_panel_auto_update_combo_setup:
  **/
 static void
-gpk_prefs_auto_update_combo_setup (void)
+cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
 {
 	gchar *value;
 	gboolean is_writable;
 	GtkWidget *widget;
 	GpkUpdateEnum update;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_install"));
-	is_writable = g_settings_is_writable (settings, GPK_SETTINGS_AUTO_UPDATE);
-	value = g_settings_get_string (settings, GPK_SETTINGS_AUTO_UPDATE);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_install"));
+	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
+	value = g_settings_get_string (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 	if (value == NULL) {
 		egg_warning ("invalid schema, please re-install");
 		return;
@@ -275,7 +281,7 @@ gpk_prefs_auto_update_combo_setup (void)
 	gtk_widget_set_sensitive (widget, is_writable);
 
 	/* set a simple text model */
-	gpk_prefs_update_freq_combo_simple_text (widget);
+	cc_update_panel_update_freq_combo_simple_text (widget);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_ALL_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_SECURITY_TEXT);
 	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_NONE_TEXT);
@@ -284,14 +290,14 @@ gpk_prefs_auto_update_combo_setup (void)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_update_combo_changed), NULL);
+			  G_CALLBACK (cc_update_panel_update_combo_changed), NULL);
 }
 
 /**
- * gpk_prefs_notify_network_state_cb:
+ * cc_update_panel_notify_network_state_cb:
  **/
 static void
-gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, gpointer data)
+cc_update_panel_notify_network_state_cb (PkControl *control, GParamSpec *pspec, CcUpdatePanel *panel)
 {
 	GtkWidget *widget;
 	PkNetworkEnum state;
@@ -300,7 +306,7 @@ gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, gpoint
 	g_object_get (control,
 		      "network-state", &state,
 		      NULL);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "hbox_mobile_broadband"));
 	if (state == PK_NETWORK_ENUM_MOBILE)
 		gtk_widget_show (widget);
 	else
@@ -308,10 +314,10 @@ gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, gpoint
 }
 
 /**
- * gpk_prefs_get_properties_cb:
+ * cc_update_panel_get_properties_cb:
  **/
 static void
-gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop)
+cc_update_panel_get_properties_cb (GObject *object, GAsyncResult *res, CcUpdatePanel *panel)
 {
 	GtkWidget *widget;
 	GError *error = NULL;
@@ -326,7 +332,6 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
 		g_print ("%s: %s\n", _("Exiting as backend details could not be retrieved"), error->message);
 		g_error_free (error);
-		g_main_loop_quit (loop);
 		goto out;
 	}
 
@@ -337,160 +342,117 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GMainLoop *loop
 		      NULL);
 
 	/* only show label on mobile broadband */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_mobile_broadband"));
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "hbox_mobile_broadband"));
 	gtk_widget_set_visible (widget, (state == PK_NETWORK_ENUM_MOBILE));
 
 	/* hide if not supported */
 	if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "label_upgrade"));
+		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "label_upgrade"));
 		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "combobox_upgrade"));
+		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_upgrade"));
 		gtk_widget_hide (widget);
 	}
 out:
 	return;
 }
 
-/**
- * gpk_prefs_close_cb:
- **/
 static void
-gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
+cc_update_panel_class_init (CcUpdatePanelClass *klass)
 {
-	GMainLoop *loop = (GMainLoop *) data;
-	g_main_loop_quit (loop);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	g_type_class_add_private (klass, sizeof (CcUpdatePanelPrivate));
+	object_class->finalize = cc_update_panel_finalize;
 }
 
-/**
- * gpk_prefs_delete_event_cb:
- **/
-static gboolean
-gpk_prefs_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+static void
+cc_update_panel_class_finalize (CcUpdatePanelClass *klass)
 {
-	gpk_prefs_close_cb (widget, data);
-	return FALSE;
 }
 
-/**
- * main:
- **/
-int
-main (int argc, char *argv[])
+static void
+cc_update_panel_finalize (GObject *object)
 {
-	gboolean program_version = FALSE;
-	GOptionContext *context;
+	CcUpdatePanel *panel = CC_UPDATE_PANEL (object);
+	g_object_unref (panel->priv->builder);
+	g_object_unref (panel->priv->settings);
+	G_OBJECT_CLASS (cc_update_panel_parent_class)->finalize (object);
+}
+
+static void
+cc_update_panel_init (CcUpdatePanel *panel)
+{
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	PkControl *control;
-	GtkApplication *application;
 	guint retval;
-	guint xid = 0;
 	GError *error = NULL;
-	GMainLoop *loop;
 
-	const GOptionEntry options[] = {
-		{ "version", '\0', 0, G_OPTION_ARG_NONE, &program_version,
-		  _("Show the program version and exit"), NULL },
-		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
-		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
-		  _("Set the parent window to make this modal"), NULL },
-		{ NULL}
-	};
-
-	setlocale (LC_ALL, "");
-
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-
-	if (! g_thread_supported ())
-		g_thread_init (NULL);
-	dbus_g_thread_init ();
-	g_type_init ();
-	gtk_init (&argc, &argv);
-
-	context = g_option_context_new (NULL);
-	/* TRANSLATORS: program name, an application to set per-user policy for updates */
-	g_option_context_set_summary(context, _("Software Update Preferences"));
-	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
-	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-	g_option_context_parse (context, &argc, &argv, NULL);
-	g_option_context_free (context);
-
-	if (program_version) {
-		g_print (VERSION "\n");
-		return 0;
-	}
-
-	/* are we already activated? */
-	application = gtk_application_new ("org.freedesktop.PackageKit.Prefs", &argc, &argv);
+	panel->priv = CC_UPDATE_PREFS_GET_PRIVATE (panel);
 
 	/* load settings */
-	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	panel->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 
 	/* get actions */
-	loop = g_main_loop_new (NULL, FALSE);
 	control = pk_control_new ();
 	g_signal_connect (control, "notify::network-state",
-			  G_CALLBACK (gpk_prefs_notify_network_state_cb), NULL);
+			  G_CALLBACK (cc_update_panel_notify_network_state_cb), panel);
 
 	/* get UI */
-	builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-prefs.ui", &error);
+	panel->priv->builder = gtk_builder_new ();
+	retval = gtk_builder_add_from_file (panel->priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
 	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
-		goto out_build;
+		goto out;
 	}
 
-	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_prefs"));
-	gtk_application_add_window (application, GTK_WINDOW (main_window));
-
-	/* Hide window first so that the dialogue resizes itself without redrawing */
-	gtk_widget_hide (main_window);
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_UPDATE_PREFS);
-	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (gpk_prefs_delete_event_cb), loop);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_mobile_broadband"));
-	g_settings_bind (settings,
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_mobile_broadband"));
+	g_settings_bind (panel->priv->settings,
 			 GPK_SETTINGS_CONNECTION_USE_MOBILE,
 			 widget, "active",
 			 G_SETTINGS_BIND_DEFAULT);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_prefs_close_cb), loop);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_prefs_help_cb), NULL);
+			  G_CALLBACK (cc_update_panel_help_cb), panel);
 
 	/* update the combo boxes */
-	gpk_prefs_update_freq_combo_setup ();
-	gpk_prefs_upgrade_freq_combo_setup ();
-	gpk_prefs_auto_update_combo_setup ();
-
-	gtk_widget_show (main_window);
-
-	/* set the parent window if it is specified */
-	if (xid != 0) {
-		egg_debug ("Setting xid %i", xid);
-		gpk_window_set_parent_xid (GTK_WINDOW (main_window), xid);
-	}
+	cc_update_panel_update_freq_combo_setup (panel);
+	cc_update_panel_upgrade_freq_combo_setup (panel);
+	cc_update_panel_auto_update_combo_setup (panel);
 
 	/* get some data */
-	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_prefs_get_properties_cb, loop);
-
-	/* wait */
-	g_main_loop_run (loop);
-
-out_build:
-	g_main_loop_unref (loop);
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) cc_update_panel_get_properties_cb, panel);
+out:
 	g_object_unref (control);
-	g_object_unref (builder);
-	g_object_unref (settings);
-	g_object_unref (application);
+	main_window = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
+	widget = gtk_dialog_get_content_area (GTK_DIALOG (main_window));
+	gtk_widget_unparent (widget);
 
-	return 0;
+	gtk_container_add (GTK_CONTAINER (panel), widget);
+}
+
+void
+cc_update_panel_register (GIOModule *module)
+{
+	cc_update_panel_register_type (G_TYPE_MODULE (module));
+	g_io_extension_point_implement (CC_SHELL_PANEL_EXTENSION_POINT,
+					CC_TYPE_UPDATE_PANEL,
+					"update", 0);
+}
+
+/* GIO extension stuff */
+void
+g_io_module_load (GIOModule *module)
+{
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+
+	/* register the panel */
+	cc_update_panel_register (module);
+}
+
+void
+g_io_module_unload (GIOModule *module)
+{
 }

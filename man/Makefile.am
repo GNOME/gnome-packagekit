@@ -5,7 +5,6 @@ EXTRA_DIST =						\
 	gpk-install-mime-type.sgml			\
 	gpk-install-package-name.sgml			\
 	gpk-install-provide-file.sgml			\
-	gpk-prefs.sgml					\
 	gpk-repo.sgml					\
 	gpk-update-icon.sgml				\
 	gpk-update-viewer.sgml
@@ -18,7 +17,6 @@ man_MANS =						\
 	gpk-install-mime-type.1			\
 	gpk-install-package-name.1			\
 	gpk-install-provide-file.1			\
-	gpk-prefs.1					\
 	gpk-repo.1					\
 	gpk-update-icon.1				\
 	gpk-update-viewer.1
@@ -36,8 +34,6 @@ gpk-install-package-name.1: gpk-install-package-name.sgml
 gpk-install-provide-file.1: gpk-install-provide-file.sgml
 	docbook2man $? > /dev/null
 gpk-install-mime-type.1: gpk-install-mime-type.sgml
-	docbook2man $? > /dev/null
-gpk-prefs.1: gpk-prefs.sgml
 	docbook2man $? > /dev/null
 gpk-repo.1: gpk-repo.sgml
 	docbook2man $? > /dev/null

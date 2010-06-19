@@ -12,6 +12,7 @@ INCLUDES =						\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(GUDEV_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
+	$(CONTROL_CENTER_CFLAGS)			\
 	-DI_KNOW_THE_UPOWER_API_IS_SUBJECT_TO_CHANGE	\
 	-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE	\
 	-DG_UDEV_API_IS_SUBJECT_TO_CHANGE		\
@@ -27,10 +28,12 @@ INCLUDES =						\
 	-DGPK_DATA=\"$(pkgdatadir)\"			\
 	$(NULL)
 
+ccpanelsdir = $(PANELS_DIR)
+ccpanels_LTLIBRARIES = libupdate.la
+
 bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-repo					\
-	gpk-prefs					\
 	gpk-service-pack				\
 	gpk-install-catalog				\
 	gpk-install-local-file				\
@@ -41,7 +44,7 @@ bin_PROGRAMS =						\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-backend-status				\
-	gpk-dbus-service					\
+	gpk-dbus-service				\
 	$(NULL)
 
 noinst_LIBRARIES = libgpkshared.a
@@ -205,14 +208,20 @@ gpk_service_pack_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 
-gpk_prefs_SOURCES =					\
-	gpk-prefs.c					\
+libupdate_la_SOURCES =					\
+	egg-debug.h					\
+	egg-debug.c					\
+	cc-update-panel.c				\
+	cc-update-panel.h				\
 	$(NULL)
 
-gpk_prefs_LDADD =					\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
+libupdate_la_LIBADD =					\
+	$(GLIB_LIBS)					\
+	$(CONTROL_CENTER_LIBS)				\
+	-lm
+
+libupdate_la_LDFLAGS = -avoid-version -module
+libupdate_la_CFLAGS = $(WARNINGFLAGS)
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer-main.c			\

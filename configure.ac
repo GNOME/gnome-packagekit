@@ -122,6 +122,12 @@ PKG_CHECK_MODULES(UPOWER, [
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
 PKG_CHECK_MODULES(X11, x11)
 
+dnl Required for the properties window
+PKG_CHECK_MODULES(CONTROL_CENTER, [
+ libgnome-control-center >= 2.31.3])
+PANELS_DIR="${libdir}/control-center-1/panels"
+AC_SUBST(PANELS_DIR)
+
 dnl **** Check for LIBNOTIFY ****
 PKG_CHECK_MODULES(LIBNOTIFY, libnotify3 >= 0.4.3, has_libnotify=yes, has_libnotify=no)
 AM_CONDITIONAL(HAVE_LIBNOTIFY, test x$libnotify = xyes)
