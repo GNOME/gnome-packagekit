@@ -217,6 +217,7 @@ libupdate_la_SOURCES =					\
 
 libupdate_la_LIBADD =					\
 	$(GLIB_LIBS)					\
+	$(PACKAGEKIT_LIBS)				\
 	$(CONTROL_CENTER_LIBS)				\
 	-lm
 
