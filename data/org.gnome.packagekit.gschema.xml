@@ -1,4 +1,14 @@
 <schemalist>
+  <enum id="org.gnome.packagekit.AutoUpdateType">
+    <value nick="all" value="0"/>
+    <value nick="security" value="1"/>
+    <value nick="none" value="2"/>
+  </enum>
+  <enum id="org.gnome.packagekit.SearchType">
+    <value nick="name" value="0"/>
+    <value nick="details" value="1"/>
+    <value nick="file" value="2"/>
+  </enum>
   <schema id="FIXME" path="/apps/">
     <child name="gnome-packagekit" schema="gnome-packagekit"/>
     <child name="gnome-settings-daemon" schema="gnome-settings-daemon"/>
@@ -143,10 +153,10 @@
       <summary>How often to refresh the package cache</summary>
       <description>How often to refresh the package cache. Value is in seconds.</description>
     </key>
-    <key name="auto-update" type="s">
+    <key name="auto-update" enum="org.gnome.packagekit.AutoUpdateType">
       <default>'none'</default>
       <summary>Automatically update these types of updates</summary>
-      <description>Automatically update these types of updates. Options are "all", "security", or "none".</description>
+      <description>Automatically update these types of updates.</description>
     </key>
     <key name="update-battery" type="b">
       <default>false</default>
@@ -178,7 +188,7 @@
       <summary>Show the 'All Packages' group menu</summary>
       <description>Show the all packages menu item. This takes a long time to populate on most backends and is not generally required by end users.</description>
     </key>
-    <key name="search-mode" type="s">
+    <key name="search-mode" enum="org.gnome.packagekit.SearchType">
       <default>'details'</default>
       <summary>The search mode used by default</summary>
       <description>The search mode used by default. Options are "name", "details", or "file".</description>

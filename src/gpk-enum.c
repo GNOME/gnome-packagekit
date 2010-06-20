@@ -262,42 +262,6 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{0, NULL}
 };
 
-static const PkEnumMatch enum_update[] = {
-	{GPK_UPDATE_ENUM_UNKNOWN,		"unknown"},	/* fall though value */
-	{GPK_UPDATE_ENUM_ALL,			"all"},
-	{GPK_UPDATE_ENUM_SECURITY,		"security"},
-	{GPK_UPDATE_ENUM_NONE,			"none"},
-	{0, NULL}
-};
-
-/**
- * gpk_update_enum_from_text:
- * @update: Text describing the enumerated type
- *
- * Converts a text enumerated type to its unsigned integer representation
- *
- * Return value: the enumerated constant value, e.g. PK_SIGTYPE_ENUM_GPG
- **/
-GpkUpdateEnum
-gpk_update_enum_from_text (const gchar *update)
-{
-	return pk_enum_find_value (enum_update, update);
-}
-
-/**
- * gpk_update_enum_to_text:
- * @update: The enumerated type value
- *
- * Converts a enumerated type to its text representation
- *
- * Return value: the enumerated constant value, e.g. "available"
- **/
-const gchar *
-gpk_update_enum_to_text (GpkUpdateEnum update)
-{
-	return pk_enum_find_string (enum_update, update);
-}
-
 /**
  * gpk_media_type_enum_to_localised_text:
  **/
@@ -2045,17 +2009,6 @@ gpk_enum_test (gpointer data)
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
-			break;
-		}
-	}
-	egg_test_success (test, NULL);
-
-	/************************************************************/
-	egg_test_title (test, "check we convert all the update bitfield");
-	for (i=0; i<=GPK_UPDATE_ENUM_UNKNOWN; i++) {
-		string = gpk_update_enum_to_text (i);
-		if (string == NULL) {
-			egg_test_failed (test, "failed to get %i", i);
 			break;
 		}
 	}

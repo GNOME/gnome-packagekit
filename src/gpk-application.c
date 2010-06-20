@@ -51,26 +51,26 @@ static void     gpk_application_finalize   (GObject	    *object);
 #define GPK_APPLICATION_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_APPLICATION, GpkApplicationPrivate))
 
 typedef enum {
-	PK_SEARCH_NAME,
-	PK_SEARCH_DETAILS,
-	PK_SEARCH_FILE,
-	PK_SEARCH_UNKNOWN
-} PkSearchType;
+	GPK_SEARCH_NAME,
+	GPK_SEARCH_DETAILS,
+	GPK_SEARCH_FILE,
+	GPK_SEARCH_UNKNOWN
+} GpkSearchType;
 
 typedef enum {
-	PK_MODE_NAME_DETAILS_FILE,
-	PK_MODE_GROUP,
-	PK_MODE_ALL_PACKAGES,
-	PK_MODE_SELECTED,
-	PK_MODE_UNKNOWN
-} PkSearchMode;
+	GPK_MODE_NAME_DETAILS_FILE,
+	GPK_MODE_GROUP,
+	GPK_MODE_ALL_PACKAGES,
+	GPK_MODE_SELECTED,
+	GPK_MODE_UNKNOWN
+} GpkSearchMode;
 
 typedef enum {
-	PK_ACTION_NONE,
-	PK_ACTION_INSTALL,
-	PK_ACTION_REMOVE,
-	PK_ACTION_UNKNOWN
-} PkActionMode;
+	GPK_ACTION_NONE,
+	GPK_ACTION_INSTALL,
+	GPK_ACTION_REMOVE,
+	GPK_ACTION_UNKNOWN
+} GpkActionMode;
 
 struct GpkApplicationPrivate
 {
@@ -94,9 +94,9 @@ struct GpkApplicationPrivate
 	PkBitfield		 filters_current;
 	gboolean		 has_package; /* if we got a package in the search */
 	gboolean		 search_in_progress;
-	PkSearchType		 search_type;
-	PkSearchMode		 search_mode;
-	PkActionMode		 action;
+	GpkSearchType		 search_type;
+	GpkSearchMode		 search_mode;
+	GpkActionMode		 action;
 	PkPackageSack		*package_sack;
 	GtkWidget		*image_status;
 	GpkHelperRun		*helper_run;
@@ -339,9 +339,9 @@ gpk_application_get_checkbox_enable (GpkApplication *application, PkBitfield sta
 	gboolean enable_installed = TRUE;
 	gboolean enable_available = TRUE;
 
-	if (application->priv->action == PK_ACTION_INSTALL)
+	if (application->priv->action == GPK_ACTION_INSTALL)
 		enable_installed = FALSE;
-	else if (application->priv->action == PK_ACTION_REMOVE)
+	else if (application->priv->action == GPK_ACTION_REMOVE)
 		enable_available = FALSE;
 
 	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED))
@@ -383,7 +383,7 @@ gpk_application_set_buttons_apply_clear (GpkApplication *application)
 		gtk_widget_set_sensitive (widget, FALSE);
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_clear"));
 		gtk_widget_set_sensitive (widget, FALSE);
-		application->priv->action = PK_ACTION_NONE;
+		application->priv->action = GPK_ACTION_NONE;
 	} else {
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, TRUE);
@@ -477,7 +477,7 @@ gpk_application_install (GpkApplication *application)
 	}
 
 	/* changed mind, or wrong mode */
-	if (application->priv->action == PK_ACTION_REMOVE) {
+	if (application->priv->action == GPK_ACTION_REMOVE) {
 		ret = pk_package_sack_remove_package_by_id (application->priv->package_sack, package_id_selected);
 		if (ret) {
 			egg_debug ("removed %s from package array", package_id_selected);
@@ -501,7 +501,7 @@ gpk_application_install (GpkApplication *application)
 	}
 
 	/* set mode */
-	application->priv->action = PK_ACTION_INSTALL;
+	application->priv->action = GPK_ACTION_INSTALL;
 
 	/* add to array */
 	package = pk_package_new ();
@@ -796,7 +796,7 @@ gpk_application_remove (GpkApplication *application)
 	}
 
 	/* changed mind, or wrong mode */
-	if (application->priv->action == PK_ACTION_INSTALL) {
+	if (application->priv->action == GPK_ACTION_INSTALL) {
 		ret = pk_package_sack_remove_package_by_id (application->priv->package_sack, package_id_selected);
 		if (ret) {
 			egg_debug ("removed %s from package array", package_id_selected);
@@ -819,7 +819,7 @@ gpk_application_remove (GpkApplication *application)
 		goto out;
 	}
 
-	application->priv->action = PK_ACTION_REMOVE;
+	application->priv->action = GPK_ACTION_REMOVE;
 	package = pk_package_new ();
 	pk_package_set_id (package, package_id_selected, NULL);
 	g_object_set (package,
@@ -1365,16 +1365,16 @@ gpk_application_suggest_better_search (GpkApplication *application)
 	gchar *text;
 	PkBitfield state = 0;
 
-	if (application->priv->search_mode == PK_MODE_GROUP ||
-	    application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
+	if (application->priv->search_mode == GPK_MODE_GROUP ||
+	    application->priv->search_mode == GPK_MODE_ALL_PACKAGES) {
 		/* TRANSLATORS: be helpful, but this shouldn't happen */
 		message = _("Try entering a package name in the search bar.");
-	}  else if (application->priv->search_mode == PK_MODE_SELECTED) {
+	}  else if (application->priv->search_mode == GPK_MODE_SELECTED) {
 		/* TRANSLATORS: nothing in the package queue */
 		message = _("There are no packages queued to be installed or removed.");
 	} else {
-		if (application->priv->search_type == PK_SEARCH_NAME ||
-		    application->priv->search_type == PK_SEARCH_FILE)
+		if (application->priv->search_type == GPK_SEARCH_NAME ||
+		    application->priv->search_type == GPK_SEARCH_FILE)
 			/* TRANSLATORS: tell the user to switch to details search mode */
 			message = _("Try searching package descriptions by clicking the icon next to the search text.");
 		else
@@ -1526,7 +1526,7 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplication *application
 	g_cancellable_cancel (application->priv->cancellable);
 
 	/* switch buttons around */
-	application->priv->search_mode = PK_MODE_UNKNOWN;
+	application->priv->search_mode = GPK_MODE_UNKNOWN;
 }
 
 /**
@@ -1671,19 +1671,19 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 
 	/* do the search */
 	searches = g_strsplit (application->priv->search_text, " ", -1);
-	if (application->priv->search_type == PK_SEARCH_NAME) {
+	if (application->priv->search_type == GPK_SEARCH_NAME) {
 		pk_client_search_names_async (PK_CLIENT(application->priv->task),
 					     application->priv->filters_current,
 					     searches, application->priv->cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, application,
 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
-	} else if (application->priv->search_type == PK_SEARCH_DETAILS) {
+	} else if (application->priv->search_type == GPK_SEARCH_DETAILS) {
 		pk_client_search_details_async (PK_CLIENT(application->priv->task),
 					     application->priv->filters_current,
 					     searches, application->priv->cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, application,
 					     (GAsyncReadyCallback) gpk_application_search_cb, application);
-	} else if (application->priv->search_type == PK_SEARCH_FILE) {
+	} else if (application->priv->search_type == GPK_SEARCH_FILE) {
 		pk_client_search_files_async (PK_CLIENT(application->priv->task),
 					     application->priv->filters_current,
 					     searches, application->priv->cancellable,
@@ -1719,7 +1719,7 @@ gpk_application_perform_search_others (GpkApplication *application)
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 	g_return_if_fail (application->priv->group != NULL);
 
-	if (application->priv->search_mode == PK_MODE_GROUP) {
+	if (application->priv->search_mode == GPK_MODE_GROUP) {
 		groups = g_strsplit (application->priv->group, " ", -1);
 		pk_client_search_groups_async (PK_CLIENT(application->priv->task),
 					      application->priv->filters_current, groups, application->priv->cancellable,
@@ -1794,12 +1794,12 @@ gpk_application_perform_search (GpkApplication *application)
 	gpk_application_clear_details (application);
 	gpk_application_clear_packages (application);
 
-	if (application->priv->search_mode == PK_MODE_NAME_DETAILS_FILE) {
+	if (application->priv->search_mode == GPK_MODE_NAME_DETAILS_FILE) {
 		gpk_application_perform_search_name_details_file (application);
-	} else if (application->priv->search_mode == PK_MODE_GROUP ||
-		   application->priv->search_mode == PK_MODE_ALL_PACKAGES) {
+	} else if (application->priv->search_mode == GPK_MODE_GROUP ||
+		   application->priv->search_mode == GPK_MODE_ALL_PACKAGES) {
 		gpk_application_perform_search_others (application);
-	} else if (application->priv->search_mode == PK_MODE_SELECTED) {
+	} else if (application->priv->search_mode == GPK_MODE_SELECTED) {
 		gpk_application_populate_selected (application);
 	} else {
 		egg_debug ("doing nothing");
@@ -1814,7 +1814,7 @@ gpk_application_find_cb (GtkWidget *button_widget, GpkApplication *application)
 {
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
-	application->priv->search_mode = PK_MODE_NAME_DETAILS_FILE;
+	application->priv->search_mode = GPK_MODE_NAME_DETAILS_FILE;
 	gpk_application_perform_search (application);
 }
 
@@ -2065,7 +2065,7 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 
 	/* clear if success */
 	pk_package_sack_clear (application->priv->package_sack);
-	application->priv->action = PK_ACTION_NONE;
+	application->priv->action = GPK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
 out:
 	if (error_code != NULL)
@@ -2116,7 +2116,7 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 
 	/* clear if success */
 	pk_package_sack_clear (application->priv->package_sack);
-	application->priv->action = PK_ACTION_NONE;
+	application->priv->action = GPK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
 out:
 	if (error_code != NULL)
@@ -2137,7 +2137,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
 	package_ids = pk_package_sack_get_ids (application->priv->package_sack);
-	if (application->priv->action == PK_ACTION_INSTALL) {
+	if (application->priv->action == GPK_ACTION_INSTALL) {
 
 		/* install */
 		pk_task_install_packages_async (application->priv->task, package_ids, application->priv->cancellable,
@@ -2148,7 +2148,7 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 		gtk_widget_set_sensitive (widget, FALSE);
 
-	} else if (application->priv->action == PK_ACTION_REMOVE) {
+	} else if (application->priv->action == GPK_ACTION_REMOVE) {
 
 		autoremove = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_ENABLE_AUTOREMOVE);
 
@@ -2267,11 +2267,11 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 
 		/* GetPackages? */
 		if (g_strcmp0 (application->priv->group, "all-packages") == 0)
-			application->priv->search_mode = PK_MODE_ALL_PACKAGES;
+			application->priv->search_mode = GPK_MODE_ALL_PACKAGES;
 		else if (g_strcmp0 (application->priv->group, "selected") == 0)
-			application->priv->search_mode = PK_MODE_SELECTED;
+			application->priv->search_mode = GPK_MODE_SELECTED;
 		else
-			application->priv->search_mode = PK_MODE_GROUP;
+			application->priv->search_mode = GPK_MODE_GROUP;
 
 		/* actually do the search */
 		gpk_application_perform_search (application);
@@ -2503,9 +2503,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	show_remove = (state == pk_bitfield_value (GPK_STATE_INSTALLED) ||
 		       state == pk_bitfield_value (GPK_STATE_IN_LIST));
 
-	if (application->priv->action == PK_ACTION_INSTALL && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
+	if (application->priv->action == GPK_ACTION_INSTALL && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
 		show_remove = FALSE;
-	if (application->priv->action == PK_ACTION_REMOVE && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
+	if (application->priv->action == GPK_ACTION_REMOVE && !pk_bitfield_contain (state, GPK_STATE_IN_LIST))
 		show_install = FALSE;
 
 	/* only show buttons if we are in the correct mode */
@@ -2624,11 +2624,13 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* change type */
-	application->priv->search_type = PK_SEARCH_NAME;
+	application->priv->search_type = GPK_SEARCH_NAME;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* save default to GSettings */
-	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "name");
+	g_settings_set_enum (application->priv->settings,
+			     GPK_SETTINGS_SEARCH_MODE,
+			     application->priv->search_type);
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -2647,11 +2649,13 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* set type */
-	application->priv->search_type = PK_SEARCH_DETAILS;
+	application->priv->search_type = GPK_SEARCH_DETAILS;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* save default to GSettings */
-	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "details");
+	g_settings_set_enum (application->priv->settings,
+			     GPK_SETTINGS_SEARCH_MODE,
+			     application->priv->search_type);
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -2670,11 +2674,13 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 	GpkApplication *application = GPK_APPLICATION (data);
 
 	/* set type */
-	application->priv->search_type = PK_SEARCH_FILE;
+	application->priv->search_type = GPK_SEARCH_FILE;
 	egg_debug ("set search type=%i", application->priv->search_type);
 
 	/* save default to GSettings */
-	g_settings_set_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE, "file");
+	g_settings_set_enum (application->priv->settings,
+			     GPK_SETTINGS_SEARCH_MODE,
+			     application->priv->search_type);
 
 	/* set the new icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "entry_text"));
@@ -3495,7 +3501,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	gboolean enabled;
 	GtkTreeIter iter;
 	const gchar *icon_name;
-	gchar *mode = NULL;
+	GpkSearchType search_type;
 
 	/* get the result */
 	ret = pk_control_get_properties_finish (control, res, &error);
@@ -3548,7 +3554,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_sources"));
 		gtk_widget_hide (widget);
 	}
-
 
 	/* hide the filters we can't support */
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
@@ -3654,43 +3659,38 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		gpk_application_create_group_array_enum (application);
 
 	/* set the search mode */
-	mode = g_settings_get_string (application->priv->settings, GPK_SETTINGS_SEARCH_MODE);
-	if (mode == NULL) {
-		egg_warning ("search mode not set, using name");
-		mode = g_strdup ("name");
-	}
+	search_type = g_settings_get_enum (application->priv->settings, GPK_SETTINGS_SEARCH_MODE);
 
 	/* search by name */
-	if (g_strcmp0 (mode, "name") == 0) {
+	if (search_type == GPK_SEARCH_NAME) {
 		gpk_application_menu_search_by_name (NULL, application);
 
 	/* set to details if we can we do the action? */
-	} else if (g_strcmp0 (mode, "details") == 0) {
+	} else if (search_type == GPK_SEARCH_DETAILS) {
 		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 			gpk_application_menu_search_by_description (NULL, application);
 		} else {
-			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			egg_warning ("cannont use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, application);
 		}
 
 	/* set to file if we can we do the action? */
-	} else if (g_strcmp0 (mode, "file") == 0) {
+	} else if (search_type == GPK_SEARCH_FILE) {
 		gpk_application_menu_search_by_file (NULL, application);
 
 		if (pk_bitfield_contain (application->priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 			gpk_application_menu_search_by_file (NULL, application);
 		} else {
-			egg_warning ("cannont use mode %s as not capable, using name", mode);
+			egg_warning ("cannont use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, application);
 		}
 
 	/* mode not recognised */
 	} else {
-		egg_warning ("cannot recognise mode %s, using name", mode);
+		egg_warning ("cannot recognise mode %i, using name", search_type);
 		gpk_application_menu_search_by_name (NULL, application);
 	}
 out:
-	g_free (mode);
 	return;
 }
 
@@ -3789,8 +3789,8 @@ gpk_application_init (GpkApplication *application)
 	application->priv->cancellable = g_cancellable_new ();
 	application->priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
-	application->priv->search_type = PK_SEARCH_UNKNOWN;
-	application->priv->search_mode = PK_MODE_UNKNOWN;
+	application->priv->search_type = GPK_SEARCH_UNKNOWN;
+	application->priv->search_mode = GPK_MODE_UNKNOWN;
 	application->priv->filters_current = 0;
 
 	application->priv->markdown = egg_markdown_new ();
@@ -4145,7 +4145,7 @@ gpk_application_init (GpkApplication *application)
 				       (GAsyncReadyCallback) gpk_application_get_repo_list_cb, application);
 
 	/* set current action */
-	application->priv->action = PK_ACTION_NONE;
+	application->priv->action = GPK_ACTION_NONE;
 	gpk_application_set_buttons_apply_clear (application);
 
 	/* hide details */

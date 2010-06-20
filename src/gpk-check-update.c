@@ -781,27 +781,6 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 }
 
 /**
- * gpk_check_update_get_update_policy:
- **/
-static GpkUpdateEnum
-gpk_check_update_get_update_policy (GpkCheckUpdate *cupdate)
-{
-	GpkUpdateEnum update;
-	gchar *updates;
-
-	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
-
-	updates = g_settings_get_string (cupdate->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
-	if (updates == NULL) {
-		egg_warning ("'%s' settings key is null!", GPK_SETTINGS_AUTO_UPDATE);
-		return GPK_UPDATE_ENUM_UNKNOWN;
-	}
-	update = gpk_update_enum_from_text (updates);
-	g_free (updates);
-	return update;
-}
-
-/**
  * gpk_check_update_notify_doing_updates:
  **/
 static void
@@ -920,7 +899,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* do we do the automatic updates? */
-	update = gpk_check_update_get_update_policy (cupdate);
+	update = g_settings_get_enum (cupdate->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 	if (update == GPK_UPDATE_ENUM_UNKNOWN) {
 		egg_warning ("policy unknown");
 		goto out;

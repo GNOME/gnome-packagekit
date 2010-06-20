@@ -84,8 +84,6 @@ const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
-GpkUpdateEnum	 gpk_update_enum_from_text		(const gchar	*update);
-const gchar	*gpk_update_enum_to_text		(GpkUpdateEnum	 update);
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
 const gchar	*gpk_media_type_enum_to_localised_text	(PkMediaTypeEnum type)
 							 G_GNUC_CONST;

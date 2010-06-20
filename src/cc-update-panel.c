@@ -133,29 +133,12 @@ cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pa
 static void
 cc_update_panel_update_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
 {
-	gchar *value;
-	const gchar *action;
-	GpkUpdateEnum update = GPK_UPDATE_ENUM_UNKNOWN;
+	GpkUpdateEnum update;
 
-	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
-	if (value == NULL) {
-		egg_warning ("value NULL");
+	update = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+	if (update == -1)
 		return;
-	}
-	if (strcmp (value, PK_UPDATE_ALL_TEXT) == 0) {
-		update = GPK_UPDATE_ENUM_ALL;
-	} else if (strcmp (value, PK_UPDATE_SECURITY_TEXT) == 0) {
-		update = GPK_UPDATE_ENUM_SECURITY;
-	} else if (strcmp (value, PK_UPDATE_NONE_TEXT) == 0) {
-		update = GPK_UPDATE_ENUM_NONE;
-	} else {
-		g_assert (FALSE);
-	}
-
-	action = gpk_update_enum_to_text (update);
-	egg_debug ("Changing %s to %s", GPK_SETTINGS_AUTO_UPDATE, action);
-	g_settings_set_string (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE, action);
-	g_free (value);
+	g_settings_set_enum (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE, update);
 }
 
 /**
@@ -261,21 +244,13 @@ cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 static void
 cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
 {
-	gchar *value;
 	gboolean is_writable;
 	GtkWidget *widget;
 	GpkUpdateEnum update;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_install"));
 	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
-	value = g_settings_get_string (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
-	if (value == NULL) {
-		egg_warning ("invalid schema, please re-install");
-		return;
-	}
-	egg_debug ("value from settings %s", value);
-	update = gpk_update_enum_from_text (value);
-	g_free (value);
+	update = g_settings_get_enum (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
