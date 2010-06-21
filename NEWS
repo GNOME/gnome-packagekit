@@ -1,3 +1,30 @@
+Version 2.31.3
+~~~~~~~~~~~~~~
+Released: 2010-06-21
+
+* Translations
+ - Added Punjabi help translation (A S Alam)
+ - Added Norwegian bokmål translation (Kjartan Maraas)
+ - Updated Estonian translation (Ivar Smolin)
+ - Updated Finnish translation (Ville-Pekka Vainio)
+ - Updated Hebrew translation (Yaron Shahrabani)
+ - Updated Punjabi Translation (A S Alam)
+ - Updated Spanish translation (Daniel Mustieles)
+ - Updated Estonian translation (Ivar Smolin)
+ - Updated Galician translations (Fran Diéguez)
+
+* New Features:
+ - Require GTK3 as per the GNOME release team announcement (Richard Hughes)
+ - Require libcanberra-gtk3 for GNOME3 (Richard Hughes)
+ - Port to GtkApplication (Richard Hughes)
+ - Make libnotify an optional dependency as it relies on gtk-2.0 (Richard Hughes)
+
+* Bugfix:
+ - Only mark the find button sensitive if we are not searching at this time. Fixes rh#602422 (Richard Hughes)
+ - Add a modal error box to the update viewer if there is no network. Fixes rh#602507 (Richard Hughes)
+ - Fix crash in gpk-dbus-service when looking for printer drivers (Vincent Untz)
+ - Do not try to map the PkClientError to a GpkDbusError if the domain is already correct. Fixes rh#598677 (Richard Hughes)
+
 Version 2.31.1
 ~~~~~~~~~~~~~~
 Released: 2010-06-06
