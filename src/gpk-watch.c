@@ -404,36 +404,6 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 #endif
 
 /**
- * gpk_watch_about_dialog_url_cb:
- **/
-static void
-gpk_watch_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
-{
-	GError *error = NULL;
-	gboolean ret;
-	GdkScreen *gscreen;
-	gchar *url;
-	gchar *protocol = (gchar*) data;
-
-	if (protocol != NULL)
-		url = g_strconcat (protocol, address, NULL);
-	else
-		url = g_strdup (address);
-
-	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
-
-	ret = gtk_show_uri (gscreen, url, gtk_get_current_event_time (), &error);
-
-	if (!ret) {
-		/* TRANSLATORS: We couldn't launch the tool, normally a packaging problem */
-		gpk_error_dialog (_("Internal error"), _("Failed to show url"), error->message);
-		g_error_free (error);
-	}
-
-	g_free (url);
-}
-
-/**
  * gpk_watch_show_about_cb:
  **/
 static void
@@ -469,9 +439,6 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 
 	license_trans = g_strconcat (_(license[0]), "", _(license[1]), "",
 				     _(license[2]), "", _(license[3]), "",  NULL);
-
-	gtk_about_dialog_set_url_hook (gpk_watch_about_dialog_url_cb, NULL, NULL);
-	gtk_about_dialog_set_email_hook (gpk_watch_about_dialog_url_cb, (gpointer) "mailto:", NULL);
 
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_LOG);
 	gtk_show_about_dialog (NULL,

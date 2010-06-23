@@ -2742,45 +2742,6 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 }
 
 /**
- *  * gpk_application_about_dialog_url_cb:
- *   **/
-static void
-gpk_application_about_dialog_url_cb (GtkAboutDialog *about, const char *address, gpointer data)
-{
-	GError *error = NULL;
-	gboolean ret;
-
-	GdkScreen *gscreen;
-	GtkWidget *error_dialog;
-	gchar *url;
-	gchar *protocol = (gchar*) data;
-
-	if (protocol != NULL)
-		url = g_strconcat (protocol, address, NULL);
-	else
-		url = g_strdup (address);
-
-	gscreen = gtk_window_get_screen (GTK_WINDOW (about));
-
-	ret = gtk_show_uri (gscreen, url, gtk_get_current_event_time (), &error);
-
-	if (!ret) {
-		error_dialog = gtk_message_dialog_new (GTK_WINDOW (about),
-						       GTK_DIALOG_MODAL,
-						       GTK_MESSAGE_INFO,
-						       GTK_BUTTONS_OK,
-						       /* TRANSLATORS: packaging problem, failed to show link */
-						       _("Failed to show url"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (error_dialog),
-							  "%s", error->message);
-		gtk_dialog_run (GTK_DIALOG (error_dialog));
-		gtk_widget_destroy (error_dialog);
-		g_error_free (error);
-	}
-	g_free (url);
-}
-
-/**
  * gpk_application_menu_help_cb:
  **/
 static void
@@ -2795,7 +2756,6 @@ gpk_application_menu_help_cb (GtkAction *action, GpkApplication *application)
 static void
 gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 {
-	static gboolean been_here = FALSE;
 	GtkWidget *main_window;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
@@ -2832,12 +2792,6 @@ gpk_application_menu_about_cb (GtkAction *action, GpkApplication *application)
 
 	license_trans = g_strconcat (_(license[0]), "\n\n", _(license[1]), "\n\n",
 				     _(license[2]), "\n\n", _(license[3]), "\n",  NULL);
-
-	if (!been_here) {
-		been_here = TRUE;
-		gtk_about_dialog_set_url_hook (gpk_application_about_dialog_url_cb, NULL, NULL);
-		gtk_about_dialog_set_email_hook (gpk_application_about_dialog_url_cb, (gpointer) "mailto:", NULL);
-	}
 
 	/* use parent */
 	main_window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
