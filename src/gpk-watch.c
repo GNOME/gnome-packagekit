@@ -480,7 +480,7 @@ gpk_watch_show_about_cb (GtkMenuItem *item, gpointer data)
 			       "license", license_trans,
 			       "wrap-license", TRUE,	
 			       "website-label", _("PackageKit Website"),
-			       "website", "www.packagekit.org",
+			       "website", "http://www.packagekit.org",
 			       "comments", "PackageKit",
 			       "authors", authors,
 			       "documenters", documenters,
