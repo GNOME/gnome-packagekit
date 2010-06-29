@@ -168,7 +168,8 @@ gpk_log_get_localised_date (const gchar *timespec)
 	g_date_set_time_val (date, &timeval);
 
 	/* TRANSLATORS: strftime formatted please */
-	g_date_strftime (buffer, 100, _("%A, %d %B %Y"), date);
+	g_date_strftime (buffer, 100, _("%d %B %Y"), date);
+
 	g_date_free (date);
 	return g_strdup (buffer);
 }
@@ -443,7 +444,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	GtkTreeIter iter;
 	gchar *details;
 	gchar *date;
-	gchar **date_part;
 	const gchar *icon_name;
 	const gchar *role_text;
 	const gchar *username = NULL;
@@ -476,7 +476,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	/* put formatted text into treeview */
 	details = gpk_log_get_details_localised (timespec, data);
 	date = gpk_log_get_localised_date (timespec);
-	date_part = g_strsplit (date, ", ", 2);
 
 	icon_name = gpk_role_enum_to_icon_name (role);
 	role_text = gpk_role_enum_to_localised_past (role);
@@ -510,7 +509,7 @@ gpk_log_add_item (PkTransactionPast *item)
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
 			    GPK_LOG_COLUMN_TIMESPEC, timespec,
-			    GPK_LOG_COLUMN_DATE_TEXT, date_part[1],
+			    GPK_LOG_COLUMN_DATE_TEXT, date,
 			    GPK_LOG_COLUMN_DATE, timespec,
 			    GPK_LOG_COLUMN_ROLE, role_text,
 			    GPK_LOG_COLUMN_DETAILS, details,
@@ -524,7 +523,6 @@ gpk_log_add_item (PkTransactionPast *item)
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
 
-	g_strfreev (date_part);
 	g_free (tid);
 	g_free (timespec);
 	g_free (cmdline);
