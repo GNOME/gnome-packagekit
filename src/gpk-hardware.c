@@ -34,7 +34,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <dbus/dbus-glib.h>
@@ -69,7 +69,7 @@ struct GpkHardwarePrivate
 
 G_DEFINE_TYPE (GpkHardware, gpk_hardware, G_TYPE_OBJECT)
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 /**
  * gpk_hardware_install_packages_cb:
  **/

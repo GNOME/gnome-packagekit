@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <packagekit-glib2/packagekit.h>
@@ -380,7 +380,7 @@ out:
 	return TRUE;
 }
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 /**
  * gpk_watch_libnotify_cb:
  **/

@@ -94,7 +94,7 @@ G_BEGIN_DECLS
 #define GPK_UI_STATUS_SHOW_DELAY		250 /* ms */
 
 /* libnotify dummy code */
-#ifndef HAVE_LIBNOTIFY
+#ifndef HAVE_NOTIFY
 #define	notify_init(f1)						/* nothing */
 #define	notify_is_initted(f1)					FALSE
 #define	notify_notification_close(f1,f2)			TRUE

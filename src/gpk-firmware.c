@@ -36,7 +36,7 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <packagekit-glib2/packagekit.h>
@@ -90,7 +90,7 @@ typedef struct {
 
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 static void gpk_firmware_install_file (GpkFirmware *firmware);
 static void gpk_firmware_ignore_devices (GpkFirmware *firmware);
 
@@ -177,7 +177,7 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 }
 
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 /**
  * gpk_firmware_rebind:
  **/

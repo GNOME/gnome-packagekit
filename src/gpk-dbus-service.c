@@ -25,7 +25,7 @@
 #include <dbus/dbus-glib.h>
 #include <gtk/gtk.h>
 #include <locale.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <packagekit-glib2/packagekit.h>

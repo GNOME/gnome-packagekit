@@ -30,7 +30,7 @@
 
 #include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <packagekit-glib2/packagekit.h>
@@ -261,7 +261,7 @@ out:
 	return;
 }
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 /**
  * gpk_dbus_task_libnotify_cb:
  **/

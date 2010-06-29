@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
 #endif
 #include <packagekit-glib2/packagekit.h>
@@ -56,7 +56,7 @@
 
 static void     gpk_check_update_finalize	(GObject	     *object);
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 static void	gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data);
 #endif
 
@@ -559,7 +559,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	}
 }
 
-#ifdef HAVE_LIBNOTIFY
+#ifdef HAVE_NOTIFY
 /**
  * gpk_check_update_libnotify_cb:
  **/
