@@ -371,6 +371,25 @@ out:
 }
 
 /**
+ * gpk_pack_reset_ui:
+ **/
+static void
+gpk_pack_reset_ui (void)
+{
+	GtkWidget *widget;
+
+	/* stop the action */
+	gpk_pack_widgets_activate (TRUE);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "frame_progress"));
+	gtk_widget_hide (widget);
+	gpk_pack_set_percentage (100);
+
+	/* blank */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_percentage"));
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
+}
+
+/**
  * gpk_pack_ready_cb:
  **/
 static void
@@ -390,15 +409,8 @@ gpk_pack_ready_cb (GObject *object, GAsyncResult *res, gpointer userdata)
 		g_error_free (error);
 	}
 
-	/* stop the action */
-	gpk_pack_widgets_activate (TRUE);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "frame_progress"));
-	gtk_widget_hide (widget);
-	gpk_pack_set_percentage (100);
-
-	/* blank */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "progressbar_percentage"));
-	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (widget), "");
+	/* reset regardless of success/failure */
+	gpk_pack_reset_ui ();
 }
 
 
@@ -521,6 +533,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 			gpk_error_dialog_modal (GTK_WINDOW (widget), _("Create error"), _("Cannot copy system package array"), error->message);
 			g_error_free (error);
 		}
+		gpk_pack_reset_ui ();
 		goto out;
 	}
 
