@@ -82,6 +82,10 @@ gpk_pack_get_default_filename (const gchar *directory)
 	g_object_get (control,
 		      "distro-id", &distro_id,
 		      NULL);
+
+	/* make a sane filename */
+	g_strdelimit (distro_id, ";", '-');
+
 	if (action == GPK_ACTION_ENUM_PACKAGE) {
 		entry = GTK_ENTRY (gtk_builder_get_object (builder, "entry_package"));
 		package = gtk_entry_get_text (entry);
