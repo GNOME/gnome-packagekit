@@ -351,7 +351,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 
 	/* convert to a file */
 	data = gpk_pack_package_array_to_string (array);
-	ret = g_file_set_contents (PK_SYSTEM_PACKAGE_LIST_FILENAME, data, -1, &error_local);
+	ret = g_file_set_contents (filename, data, -1, &error_local);
 	if (!ret) {
 		g_set_error (error, 1, 0, _("Could not save to file: %s"), error_local->message);
 		g_error_free (error_local);
