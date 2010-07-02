@@ -1299,6 +1299,12 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 		      "details", &details,
 		      NULL);
 
+	/* this is message unrecognised */
+	if (gpk_message_enum_to_localised_text (type) == NULL) {
+		egg_warning ("message unrecognized, and thus ignored: %i", type);
+		goto out;
+	}
+
 	/* is ignored */
 	ret = gpk_watch_is_message_ignored (watch, type);
 	if (ret) {
