@@ -83,7 +83,7 @@ desktop-file-install --delete-original                   \
   --dir=$RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/                    \
   $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/gpk-update-icon.desktop
 
-for i in gpk-application gpk-update-viewer gpk-install-file gpk-log gpk-prefs gpk-repo ; do
+for i in gpk-application gpk-update-viewer gpk-install-file gpk-log gpk-prefs ; do
   desktop-file-install --delete-original                                \
     --dir=$RPM_BUILD_ROOT%{_datadir}/applications/                      \
     $RPM_BUILD_ROOT%{_datadir}/applications/$i.desktop
@@ -121,7 +121,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gpk-application
 %{_bindir}/gpk-install-*
 %{_bindir}/gpk-log
-%{_bindir}/gpk-repo
 %{_bindir}/gpk-update-icon
 %{_bindir}/gpk-update-viewer
 %{_bindir}/gpk-dbus-service
@@ -154,7 +153,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/applications/gpk-prefs.desktop
 %{_datadir}/applications/gpk-install-catalog.desktop
 %{_datadir}/applications/gpk-log.desktop
-%{_datadir}/applications/gpk-repo.desktop
 %{_datadir}/applications/gpk-update-viewer.desktop
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml

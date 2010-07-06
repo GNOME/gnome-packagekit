@@ -33,7 +33,6 @@ ccpanels_LTLIBRARIES = libupdate.la
 
 bin_PROGRAMS =						\
 	gpk-application					\
-	gpk-repo					\
 	gpk-service-pack				\
 	gpk-install-catalog				\
 	gpk-install-local-file				\
@@ -211,6 +210,14 @@ gpk_service_pack_LDADD =				\
 libupdate_la_SOURCES =					\
 	egg-debug.h					\
 	egg-debug.c					\
+	gpk-animated-icon.c				\
+	gpk-animated-icon.h				\
+	gpk-enum.c					\
+	gpk-enum.h					\
+	gpk-common.c					\
+	gpk-common.h					\
+	gpk-error.c					\
+	gpk-error.h					\
 	cc-update-panel.c				\
 	cc-update-panel.h				\
 	$(NULL)
@@ -237,15 +244,6 @@ gpk_update_viewer_SOURCES =				\
 	$(NULL)
 
 gpk_update_viewer_LDADD =				\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_repo_SOURCES =					\
-	gpk-repo.c					\
-	$(NULL)
-
-gpk_repo_LDADD =					\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)

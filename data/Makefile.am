@@ -14,7 +14,6 @@ desktop_in_files =					\
 	gpk-prefs.desktop.in				\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
-	gpk-repo.desktop.in				\
 	gpk-log.desktop.in				\
 	$(NULL)
 
@@ -26,11 +25,11 @@ autostart_in_files = gpk-update-icon.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
-	gpk-repo.ui					\
 	gpk-eula.ui					\
 	gpk-application.ui				\
 	gpk-update-viewer.ui				\
 	gpk-prefs.ui					\
+	gpk-repo.ui					\
 	gpk-service-pack.ui				\
 	gpk-signature.ui				\
 	gpk-error.ui					\
@@ -61,7 +60,6 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
-	gpk-repo.desktop				\
 	gpk-prefs.desktop				\
 	gpk-service-pack.desktop			\
 	gpk-update-viewer.desktop			\
