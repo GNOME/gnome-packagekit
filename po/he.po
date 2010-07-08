@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-04 17:23+0300\n"
-"PO-Revision-Date: 2010-07-06 17:24+0200\n"
+"POT-Creation-Date: 2010-07-08 12:32+0300\n"
+"PO-Revision-Date: 2010-07-08 12:33+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "ב_חירה"
 msgid "Software Log"
 msgstr "יומן תכנה"
 
-#: ../data/gpk-application.ui.h:24 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-application.ui.h:24 ../data/gpk-prefs.ui.h:6
 #: ../data/gpk-repo.ui.h:2
 msgid "Software Sources"
 msgstr "מקורות תכנה"
@@ -240,53 +240,55 @@ msgid "Filter"
 msgstr "מסנן"
 
 #: ../data/gpk-prefs.desktop.in.h:1
-msgid "Change software update preferences"
-msgstr "שינוי ההעדפות של עדכוני התכנה"
+msgid ""
+"Change software update preferences and enable or disable software sources"
+msgstr "שינוי העדפות עדכוני התכנה והפעלה או נטרול של מקורות תכנה"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
 msgstr "עדכוני תכנה"
 
 #: ../data/gpk-prefs.ui.h:1
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr "מקור תכנה מכיל חבילות שניתן להתקין על מחשב זה."
+
+#: ../data/gpk-prefs.ui.h:2
 msgid "C_heck for updates:"
 msgstr "ב_דיקה אחר עדכונים:"
 
-#: ../data/gpk-prefs.ui.h:2
+#: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
 msgstr "בדיקת _שדרוגים עיקריים:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
 msgstr "בדיקה אחר עדכונים בעת שימוש בפס רחב נייד"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:5
 msgid "Currently using mobile broadband"
 msgstr "כרגע נעשה שימוש בפס רחב נייד"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Software Update Preferences"
 msgstr "העדפות עדכוני תכנה"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "הגדרות עדכונים"
 
-#: ../data/gpk-prefs.ui.h:7
+#: ../data/gpk-prefs.ui.h:9
 msgid "_Automatically install:"
 msgstr "התקנה _אוטומטית:"
 
-#: ../data/gpk-repo.desktop.in.h:1
-msgid "Enable or disable software sources"
-msgstr "הפעלה או ביטול של מקורות תכנה"
+#. shows extra -source, -debuginfo, and -devel software sources
+#: ../data/gpk-prefs.ui.h:11 ../data/gpk-repo.ui.h:4
+msgid "_Show debug and development software sources"
+msgstr "ה_צגת מקורות ניפוי שגיאות ופיתוח"
 
 #: ../data/gpk-repo.ui.h:1
 msgid "Shows more software sources that may be interesting"
 msgstr "יוצגו מקורות תכנה נוספים שעלולים לעניין אותך"
-
-#. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-repo.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "ה_צגת מקורות ניפוי שגיאות ופיתוח"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
 #: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
@@ -448,45 +450,69 @@ msgid ""
 msgstr "התכנה המועמדת להתקנה דורשת התקנה של תוכנות נוספות כדי לרוץ ראוי."
 
 #. TRANSLATORS: check once an hour
-#: ../src/cc-update-panel.c:51
+#: ../src/cc-update-panel.c:70
 msgid "Hourly"
 msgstr "כל שעה"
 
 #. TRANSLATORS: check once a day
-#: ../src/cc-update-panel.c:53
+#: ../src/cc-update-panel.c:72
 msgid "Daily"
 msgstr "כל יום"
 
 #. TRANSLATORS: check once a week
-#: ../src/cc-update-panel.c:55
+#: ../src/cc-update-panel.c:74
 msgid "Weekly"
 msgstr "כל שבוע"
 
 #. TRANSLATORS: never check for updates/upgrades
-#: ../src/cc-update-panel.c:57
+#: ../src/cc-update-panel.c:76
 msgid "Never"
 msgstr "אף פעם"
 
 #. TRANSLATORS: update everything
-#: ../src/cc-update-panel.c:60
+#: ../src/cc-update-panel.c:79
 msgid "All updates"
 msgstr "כל העדכונים"
 
 #. TRANSLATORS: update just security updates
-#: ../src/cc-update-panel.c:62
+#: ../src/cc-update-panel.c:81
 msgid "Only security updates"
 msgstr "רק עדכוני אבטחה"
 
 #. TRANSLATORS: don't update anything
-#: ../src/cc-update-panel.c:64
+#: ../src/cc-update-panel.c:83
 msgid "Nothing"
 msgstr "כלום"
 
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/cc-update-panel.c:519
+msgid "Failed to change status"
+msgstr "ארע כשל בשינוי המצב"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/cc-update-panel.c:593
+msgid "Enabled"
+msgstr "מופעל"
+
+#. TRANSLATORS: column for the source description
+#: ../src/cc-update-panel.c:602
+msgid "Software Source"
+msgstr "מקור תכנה"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/cc-update-panel.c:664
+msgid "Failed to get the list of sources"
+msgstr "ארע כשל בקבלת רשימת המקורות"
+
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/cc-update-panel.c:308 ../src/gpk-backend-status.c:76
-#: ../src/gpk-repo.c:521 ../src/gpk-update-viewer.c:3134
+#: ../src/cc-update-panel.c:771 ../src/gpk-backend-status.c:76
+#: ../src/gpk-update-viewer.c:3134
 msgid "Exiting as backend details could not be retrieved"
 msgstr "התכנה תיסגר כיוון שלא ניתן לקבל פריטים על המנגנון"
+
+#: ../src/cc-update-panel.c:805
+msgid "Getting software source list not supported by backend"
+msgstr "קריאת רשימת המאגרים לא נתמכת על ידי המנוע"
 
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:617
@@ -3686,7 +3712,7 @@ msgid "Set the filter to this value"
 msgstr "הגדרת המסנן לערך זה"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:696 ../src/gpk-repo.c:601
+#: ../src/gpk-log.c:696
 msgid "Set the parent window to make this modal"
 msgstr "הגדרת החלון הראשי כך שזה יהפך לעליון"
 
@@ -3699,39 +3725,6 @@ msgstr "מציג היומן"
 #, c-format
 msgid "Remaining time : %s"
 msgstr "זמן שנותר : %s"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-repo.c:272
-msgid "Failed to change status"
-msgstr "ארע כשל בשינוי המצב"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-repo.c:344
-msgid "Enabled"
-msgstr "מופעל"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-repo.c:353
-msgid "Software Source"
-msgstr "מקור תכנה"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-repo.c:414
-msgid "Failed to get the list of sources"
-msgstr "ארע כשל בקבלת רשימת המקורות"
-
-#: ../src/gpk-repo.c:544
-msgid "Getting software source list not supported by backend"
-msgstr "קריאת רשימת המאגרים לא נתמכת על ידי המנוע"
-
-#: ../src/gpk-repo.c:617
-msgid "Software Source Viewer"
-msgstr "מציג מקורות התכנה"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-repo.c:625
-msgid "Software source viewer"
-msgstr "מציג מקורות התכנה"
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:263
@@ -4306,6 +4299,15 @@ msgstr "אפשרויות ניפוי השגיאות"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
+
+#~ msgid "Enable or disable software sources"
+#~ msgstr "הפעלה או ביטול של מקורות תכנה"
+
+#~ msgid "Software Source Viewer"
+#~ msgstr "מציג מקורות התכנה"
+
+#~ msgid "Software source viewer"
+#~ msgstr "מציג מקורות התכנה"
 
 #~ msgid "Failed to show url"
 #~ msgstr "נכשל בהצגת כתובת"
