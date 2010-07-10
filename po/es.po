@@ -4,21 +4,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Javier Mazorra Rodríguez <mazi.debian@gmail.com>, 2007.
-# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2009, 2010.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2008, 2009, 2010.
+# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2009, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-07-02 07:55+0000\n"
-"PO-Revision-Date: 2010-07-01 12:49+0200\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: es <gnome-es-list@gmail.com>\n"
+"POT-Creation-Date: 2010-07-07 16:38+0000\n"
+"PO-Revision-Date: 2010-07-10 10:30+0200\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/gpk-application.desktop.in.h:1
@@ -122,7 +122,7 @@ msgstr "_Selección"
 msgid "Software Log"
 msgstr "Registro de software"
 
-#: ../data/gpk-application.ui.h:24 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-application.ui.h:24 ../data/gpk-prefs.ui.h:6
 #: ../data/gpk-repo.ui.h:2
 msgid "Software Sources"
 msgstr "Repositorios de software"
@@ -247,53 +247,59 @@ msgid "Filter"
 msgstr "Filtros"
 
 #: ../data/gpk-prefs.desktop.in.h:1
-msgid "Change software update preferences"
-msgstr "Cambiar las preferencias de actualizaciones de software"
+msgid ""
+"Change software update preferences and enable or disable software sources"
+msgstr ""
+"Cambiar las preferencias de actualizaciones de software y activar o "
+"desactivar los repositorios de software"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
 msgstr "Actualizaciones de software"
 
 #: ../data/gpk-prefs.ui.h:1
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr ""
+"Un repositorio de software contiene paquetes que se pueden instalar en este "
+"equipo."
+
+#: ../data/gpk-prefs.ui.h:2
 msgid "C_heck for updates:"
 msgstr "Comprobar si _hay actualizaciones:"
 
-#: ../data/gpk-prefs.ui.h:2
+#: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
 msgstr "Comprobar si hay actualizaciones _importantes:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
 msgstr "Buscar actualizaciones cuando se use banda ancha móvil"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:5
 msgid "Currently using mobile broadband"
 msgstr "Actualmente usando banda ancha móvil"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Software Update Preferences"
 msgstr "Preferencias de actualización de software"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "Actualizar configuración"
 
-#: ../data/gpk-prefs.ui.h:7
+#: ../data/gpk-prefs.ui.h:9
 msgid "_Automatically install:"
 msgstr "Instalar _automáticamente:"
 
-#: ../data/gpk-repo.desktop.in.h:1
-msgid "Enable or disable software sources"
-msgstr "Habilitar o deshabilitar repositorios de software"
+#. shows extra -source, -debuginfo, and -devel software sources
+#: ../data/gpk-prefs.ui.h:11 ../data/gpk-repo.ui.h:4
+msgid "_Show debug and development software sources"
+msgstr "_Mostrar repositorios de software de depuración y desarrollo"
 
 #: ../data/gpk-repo.ui.h:1
 msgid "Shows more software sources that may be interesting"
 msgstr "Muestra más repositorios de software que pueden ser interesantes"
-
-#. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-repo.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "_Mostrar repositorios de software de depuración y desarrollo"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
 #: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
@@ -461,45 +467,70 @@ msgstr ""
 "correctamente."
 
 #. TRANSLATORS: check once an hour
-#: ../src/cc-update-panel.c:51
+#: ../src/cc-update-panel.c:70
 msgid "Hourly"
 msgstr "Cada hora"
 
 #. TRANSLATORS: check once a day
-#: ../src/cc-update-panel.c:53
+#: ../src/cc-update-panel.c:72
 msgid "Daily"
 msgstr "Diariamente"
 
 #. TRANSLATORS: check once a week
-#: ../src/cc-update-panel.c:55
+#: ../src/cc-update-panel.c:74
 msgid "Weekly"
 msgstr "Semanalmente"
 
 #. TRANSLATORS: never check for updates/upgrades
-#: ../src/cc-update-panel.c:57
+#: ../src/cc-update-panel.c:76
 msgid "Never"
 msgstr "Nunca"
 
 #. TRANSLATORS: update everything
-#: ../src/cc-update-panel.c:60
+#: ../src/cc-update-panel.c:79
 msgid "All updates"
 msgstr "Todas las actualizaciones"
 
 #. TRANSLATORS: update just security updates
-#: ../src/cc-update-panel.c:62
+#: ../src/cc-update-panel.c:81
 msgid "Only security updates"
 msgstr "Sólo actualizaciones de seguridad"
 
 #. TRANSLATORS: don't update anything
-#: ../src/cc-update-panel.c:64
+#: ../src/cc-update-panel.c:83
 msgid "Nothing"
 msgstr "Nada"
 
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/cc-update-panel.c:519
+msgid "Failed to change status"
+msgstr "Falló al cambiar el estado"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/cc-update-panel.c:593
+msgid "Enabled"
+msgstr "Activado"
+
+#. TRANSLATORS: column for the source description
+#: ../src/cc-update-panel.c:602
+msgid "Software Source"
+msgstr "Repositorios de software"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/cc-update-panel.c:664
+msgid "Failed to get the list of sources"
+msgstr "Falló al obtener la lista de fuentes"
+
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/cc-update-panel.c:308 ../src/gpk-backend-status.c:76
-#: ../src/gpk-repo.c:521 ../src/gpk-update-viewer.c:3134
+#: ../src/cc-update-panel.c:771 ../src/gpk-backend-status.c:76
+#: ../src/gpk-update-viewer.c:3134
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Saliendo puesto que no se pudieron obtener los detalles del «backend»"
+
+#: ../src/cc-update-panel.c:805
+msgid "Getting software source list not supported by backend"
+msgstr ""
+"El «backend» no soporta la obtención de listas de repositorios de software"
 
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:617
@@ -3766,7 +3797,7 @@ msgid "Set the filter to this value"
 msgstr "Establecer el filtro a este valor"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:696 ../src/gpk-repo.c:601
+#: ../src/gpk-log.c:696
 msgid "Set the parent window to make this modal"
 msgstr "Establecer la ventana padre para hacer esta modal"
 
@@ -3779,40 +3810,6 @@ msgstr "Visor de sucesos"
 #, c-format
 msgid "Remaining time : %s"
 msgstr "Tiempo restante : %s"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-repo.c:272
-msgid "Failed to change status"
-msgstr "Falló al cambiar el estado"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-repo.c:344
-msgid "Enabled"
-msgstr "Activado"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-repo.c:353
-msgid "Software Source"
-msgstr "Repositorios de software"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-repo.c:414
-msgid "Failed to get the list of sources"
-msgstr "Falló al obtener la lista de fuentes"
-
-#: ../src/gpk-repo.c:544
-msgid "Getting software source list not supported by backend"
-msgstr ""
-"El «backend» no soporta la obtención de listas de repositorios de software"
-
-#: ../src/gpk-repo.c:617
-msgid "Software Source Viewer"
-msgstr "Visor de repositorios de software"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-repo.c:625
-msgid "Software source viewer"
-msgstr "Visor de repositorios de software"
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:263
@@ -4421,6 +4418,15 @@ msgstr "Opciones de depuración"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "Mostrar las opciones de depuración"
+
+#~ msgid "Enable or disable software sources"
+#~ msgstr "Habilitar o deshabilitar repositorios de software"
+
+#~ msgid "Software Source Viewer"
+#~ msgstr "Visor de repositorios de software"
+
+#~ msgid "Software source viewer"
+#~ msgstr "Visor de repositorios de software"
 
 #~ msgid "Failed to show url"
 #~ msgstr "Falló al mostrar la url"
