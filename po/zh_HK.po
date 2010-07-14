@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-packagekit 2.31.4\n"
+"Project-Id-Version: gnome-packagekit 2.31.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-26 13:57+0800\n"
-"PO-Revision-Date: 2010-06-26 13:58+0800\n"
+"POT-Creation-Date: 2010-07-14 20:08+0800\n"
+"PO-Revision-Date: 2010-07-14 20:09+0800\n"
 "Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (Hong Kong) <community@linuxhall.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "加入或移除系統上安裝的軟件"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application-main.c:90 ../src/gpk-log.c:499
+#: ../src/gpk-application-main.c:90 ../src/gpk-log.c:498
 #: ../src/gpk-update-viewer-main.c:85
 msgid "Add/Remove Software"
 msgstr "加入或移除軟件"
@@ -117,7 +117,7 @@ msgstr "選取項目(_E)"
 msgid "Software Log"
 msgstr "軟件紀錄"
 
-#: ../data/gpk-application.ui.h:24 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-application.ui.h:24 ../data/gpk-prefs.ui.h:6
 #: ../data/gpk-repo.ui.h:2
 msgid "Software Sources"
 msgstr "軟件來源"
@@ -229,7 +229,7 @@ msgstr "安裝選取的軟件到系統中"
 msgid "Package Installer"
 msgstr "套件安裝程式"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:714
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:712
 msgid "Software Log Viewer"
 msgstr "軟件紀錄檔檢視器"
 
@@ -242,56 +242,58 @@ msgid "Filter"
 msgstr "過濾條件"
 
 #: ../data/gpk-prefs.desktop.in.h:1
-msgid "Change software update preferences"
-msgstr "改變軟件更新偏好設定"
+msgid ""
+"Change software update preferences and enable or disable software sources"
+msgstr "更改軟件更新偏好設定，以及啟用或停用軟件來源"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
 msgstr "軟件更新"
 
 #: ../data/gpk-prefs.ui.h:1
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr "軟件來源包含可以安裝在此電腦上的套件。"
+
+#: ../data/gpk-prefs.ui.h:2
 msgid "C_heck for updates:"
 msgstr "檢查是否有更新(_H)："
 
-#: ../data/gpk-prefs.ui.h:2
+#: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
 msgstr "檢查是否有重大升級(_U)："
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
 msgstr "當使用行動寬頻時，檢查是否有更新可用"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:5
 msgid "Currently using mobile broadband"
 msgstr "目前正在使用行動寬頻"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Software Update Preferences"
 msgstr "軟件更新偏好設定"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "更新設定值"
 
-#: ../data/gpk-prefs.ui.h:7
+#: ../data/gpk-prefs.ui.h:9
 msgid "_Automatically install:"
 msgstr "自動安裝(_A)："
 
-#: ../data/gpk-repo.desktop.in.h:1
-msgid "Enable or disable software sources"
-msgstr "啟用或停用軟件來源"
+#. shows extra -source, -debuginfo, and -devel software sources
+#: ../data/gpk-prefs.ui.h:11 ../data/gpk-repo.ui.h:4
+msgid "_Show debug and development software sources"
+msgstr "顯示除錯與開發相關的軟件來源(_S)"
 
 #: ../data/gpk-repo.ui.h:1
 msgid "Shows more software sources that may be interesting"
 msgstr "顯示更多可能有興趣的軟件來源"
 
-#. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-repo.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "顯示除錯與開發相關的軟件來源(_S)"
-
 #. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:294
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
 msgid "Action"
 msgstr "動作"
 
@@ -317,7 +319,7 @@ msgstr "目的端套件清單:"
 
 #. TRANSLATORS: column for what packages were upgraded
 #. TRANSLATORS: column for the message description
-#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:321 ../src/gpk-watch.c:565
+#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:322 ../src/gpk-watch.c:565
 msgid "Details"
 msgstr "詳細資料"
 
@@ -342,7 +344,7 @@ msgid "Select A Package List File"
 msgstr "選擇一個套件清單檔案"
 
 #. TRANSLATORS: program description, an application to create service packs
-#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:730
+#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:747
 msgid "Service Pack Creator"
 msgstr "服務包製作程式"
 
@@ -449,45 +451,69 @@ msgid ""
 msgstr "你想要安裝的軟件需要額外的軟件才能正確執行。"
 
 #. TRANSLATORS: check once an hour
-#: ../src/cc-update-panel.c:51
+#: ../src/cc-update-panel.c:70
 msgid "Hourly"
 msgstr "每小時"
 
 #. TRANSLATORS: check once a day
-#: ../src/cc-update-panel.c:53
+#: ../src/cc-update-panel.c:72
 msgid "Daily"
 msgstr "每天"
 
 #. TRANSLATORS: check once a week
-#: ../src/cc-update-panel.c:55
+#: ../src/cc-update-panel.c:74
 msgid "Weekly"
 msgstr "每週"
 
 #. TRANSLATORS: never check for updates/upgrades
-#: ../src/cc-update-panel.c:57
+#: ../src/cc-update-panel.c:76
 msgid "Never"
 msgstr "永不"
 
 #. TRANSLATORS: update everything
-#: ../src/cc-update-panel.c:60
+#: ../src/cc-update-panel.c:79
 msgid "All updates"
 msgstr "所有更新"
 
 #. TRANSLATORS: update just security updates
-#: ../src/cc-update-panel.c:62
+#: ../src/cc-update-panel.c:81
 msgid "Only security updates"
 msgstr "只有安全性更新"
 
 #. TRANSLATORS: don't update anything
-#: ../src/cc-update-panel.c:64
+#: ../src/cc-update-panel.c:83
 msgid "Nothing"
 msgstr "無"
 
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/cc-update-panel.c:519
+msgid "Failed to change status"
+msgstr "無法更改狀態"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/cc-update-panel.c:593
+msgid "Enabled"
+msgstr "啟用"
+
+#. TRANSLATORS: column for the source description
+#: ../src/cc-update-panel.c:602
+msgid "Software Source"
+msgstr "軟件來源"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/cc-update-panel.c:664
+msgid "Failed to get the list of sources"
+msgstr "無法取得來源清單"
+
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/cc-update-panel.c:308 ../src/gpk-backend-status.c:76
-#: ../src/gpk-repo.c:521 ../src/gpk-update-viewer.c:3134
+#: ../src/cc-update-panel.c:771 ../src/gpk-backend-status.c:76
+#: ../src/gpk-update-viewer.c:3134
 msgid "Exiting as backend details could not be retrieved"
 msgstr "由於無法接收後端詳細資訊而正在關閉"
+
+#: ../src/cc-update-panel.c:805
+msgid "Getting software source list not supported by backend"
+msgstr "後端程式不支援取得軟件來源清單"
 
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:617
@@ -878,7 +904,7 @@ msgstr "立刻重新啟動電腦"
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
 #: ../src/gpk-check-update.c:413 ../src/gpk-check-update.c:1300
-#: ../src/gpk-dialog.c:305 ../src/gpk-hardware.c:196 ../src/gpk-watch.c:1597
+#: ../src/gpk-dialog.c:305 ../src/gpk-hardware.c:196 ../src/gpk-watch.c:1603
 msgid "Do not show this again"
 msgstr "不要再顯示此訊息"
 
@@ -886,7 +912,7 @@ msgstr "不要再顯示此訊息"
 #. TRANSLATORS: button: show details about the error
 #. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
 #: ../src/gpk-check-update.c:475 ../src/gpk-dbus-task.c:388
-#: ../src/gpk-watch.c:1419
+#: ../src/gpk-watch.c:1425
 msgid "Show details"
 msgstr "顯示詳細資訊"
 
@@ -2709,7 +2735,7 @@ msgid "Available"
 msgstr "可用"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1165 ../src/gpk-service-pack.c:429
+#: ../src/gpk-enum.c:1165 ../src/gpk-service-pack.c:445
 msgid "Downloading"
 msgstr "正在下載"
 
@@ -3630,51 +3656,51 @@ msgstr "你需要指定要安裝的檔案名稱"
 
 #. TRANSLATORS: strftime formatted please
 #: ../src/gpk-log.c:171
-msgid "%A, %d %B %Y"
-msgstr "%Y%B%d %A"
+msgid "%d %B %Y"
+msgstr "%Y%B%d"
 
 #. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:285
+#: ../src/gpk-log.c:286
 msgid "Date"
 msgstr "日期"
 
 #. TRANSLATORS: column for the username, e.g. Richard Hughes
-#: ../src/gpk-log.c:327
+#: ../src/gpk-log.c:328
 msgid "Username"
 msgstr "使用者名稱"
 
 #. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:334
+#: ../src/gpk-log.c:335
 msgid "Application"
 msgstr "應用程式"
 
 #. TRANSLATORS: short name for pkcon
-#: ../src/gpk-log.c:496
+#: ../src/gpk-log.c:495
 msgid "Command line client"
 msgstr "命令列客戶端程式"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:502
+#: ../src/gpk-log.c:501
 msgid "Update System"
 msgstr "更新系統"
 
 #. TRANSLATORS: short name for gpk-update-icon
-#: ../src/gpk-log.c:505
+#: ../src/gpk-log.c:504
 msgid "Update Icon"
 msgstr "更新圖示"
 
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:695
+#: ../src/gpk-log.c:693
 msgid "Set the filter to this value"
 msgstr "設定此值的過濾條件"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:698 ../src/gpk-repo.c:601
+#: ../src/gpk-log.c:696
 msgid "Set the parent window to make this modal"
 msgstr "設定親代視窗為最上層"
 
 #. are we running privileged
-#: ../src/gpk-log.c:722
+#: ../src/gpk-log.c:720
 msgid "Log viewer"
 msgstr "紀錄檔檢視器"
 
@@ -3683,57 +3709,24 @@ msgstr "紀錄檔檢視器"
 msgid "Remaining time : %s"
 msgstr "剩餘時間：%s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-repo.c:272
-msgid "Failed to change status"
-msgstr "無法更改狀態"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-repo.c:344
-msgid "Enabled"
-msgstr "啟用"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-repo.c:353
-msgid "Software Source"
-msgstr "軟件來源"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-repo.c:414
-msgid "Failed to get the list of sources"
-msgstr "無法取得來源清單"
-
-#: ../src/gpk-repo.c:544
-msgid "Getting software source list not supported by backend"
-msgstr "後端程式不支援取得軟件來源清單"
-
-#: ../src/gpk-repo.c:617
-msgid "Software Source Viewer"
-msgstr "軟件來源檢視器"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-repo.c:625
-msgid "Software source viewer"
-msgstr "軟件來源檢視程器"
-
 #. TRANSLATORS: cannot resolve name to package name
-#: ../src/gpk-service-pack.c:259
+#: ../src/gpk-service-pack.c:263
 #, c-format
 msgid "Could not find any packages named '%s'"
 msgstr "找不到任何名為「%s」的套件"
 
 #. TRANSLATORS: cannot find any valid package names
-#: ../src/gpk-service-pack.c:271
+#: ../src/gpk-service-pack.c:275
 msgid "Could not find any valid package names"
 msgstr "找不到任何有效的套件名稱"
 
 #. TRANSLATORS: cannot get package array
-#: ../src/gpk-service-pack.c:335
+#: ../src/gpk-service-pack.c:339
 #, c-format
 msgid "Could not get array of installed packages: %s"
 msgstr "無法取得已安裝套件的陣列：%s"
 
-#: ../src/gpk-service-pack.c:354
+#: ../src/gpk-service-pack.c:358
 #, c-format
 msgid "Could not save to file: %s"
 msgstr "無法儲存至檔案：%s"
@@ -3741,69 +3734,69 @@ msgstr "無法儲存至檔案：%s"
 #. TRANSLATORS: we could not create the pack file, generic error
 #. TRANSLATORS: Could not create package array
 #. TRANSLATORS: we could not read the file array for the destination computer
-#: ../src/gpk-service-pack.c:385 ../src/gpk-service-pack.c:517
-#: ../src/gpk-service-pack.c:538 ../src/gpk-service-pack.c:547
-#: ../src/gpk-service-pack.c:587
+#: ../src/gpk-service-pack.c:408 ../src/gpk-service-pack.c:533
+#: ../src/gpk-service-pack.c:555 ../src/gpk-service-pack.c:564
+#: ../src/gpk-service-pack.c:604
 msgid "Create error"
 msgstr "建立時發生錯誤"
 
-#: ../src/gpk-service-pack.c:385
+#: ../src/gpk-service-pack.c:408
 msgid "Cannot create service pack"
 msgstr "無法建立服務包"
 
-#: ../src/gpk-service-pack.c:517
+#: ../src/gpk-service-pack.c:533
 msgid "Cannot copy system package array"
 msgstr "無法複製系統套件陣列"
 
-#: ../src/gpk-service-pack.c:538
+#: ../src/gpk-service-pack.c:555
 msgid "No package name selected"
 msgstr "尚未選擇套件名稱"
 
 #. TRANSLATORS: progressbar text
-#: ../src/gpk-service-pack.c:560
+#: ../src/gpk-service-pack.c:577
 msgid "Refreshing system package array"
 msgstr "正在重新整理系統套件陣列"
 
 #. TRANSLATORS: we could not reset internal state
-#: ../src/gpk-service-pack.c:567
+#: ../src/gpk-service-pack.c:584
 msgid "Refresh error"
 msgstr "重新整理發生錯誤"
 
-#: ../src/gpk-service-pack.c:567
+#: ../src/gpk-service-pack.c:584
 msgid "Could not refresh package array"
 msgstr "無法重新整理套件陣列"
 
-#: ../src/gpk-service-pack.c:587
+#: ../src/gpk-service-pack.c:604
 msgid "Cannot read destination package array"
 msgstr "無法讀取目的端套件陣列"
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:705
+#: ../src/gpk-service-pack.c:722
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr "設定選項，可用的數值有「array」(陣列)、「updates」(更新) 和「package」(套件)"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:708
+#: ../src/gpk-service-pack.c:725
 msgid "Add the package name to the text entry box"
 msgstr "在文字項目方框中加入套件的名稱"
 
 #. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:711
+#: ../src/gpk-service-pack.c:728
 msgid "Set the remote package array filename"
 msgstr "設定遠端套件陣列檔案名稱"
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:714
+#: ../src/gpk-service-pack.c:731
 msgid "Set the default output directory"
 msgstr "設定預設的輸出目錄"
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:783
+#: ../src/gpk-service-pack.c:800
 msgid "Package array files"
 msgstr "套件陣列檔案"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:790
+#: ../src/gpk-service-pack.c:807
 msgid "Service pack files"
 msgstr "服務包檔案"
 
@@ -4228,32 +4221,32 @@ msgid "_Hide this icon"
 msgstr "隱藏此圖示(_H)"
 
 #. do the bubble
-#: ../src/gpk-watch.c:1354
+#: ../src/gpk-watch.c:1360
 msgid "New package manager message"
 msgstr "新的套件管理程式訊息"
 
 #. TRANSLATORS: Prefix to the title shown in the libnotify popup
-#: ../src/gpk-watch.c:1411
+#: ../src/gpk-watch.c:1417
 msgid "Package Manager"
 msgstr "套件管理程式"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1580
+#: ../src/gpk-watch.c:1586
 msgid "Packages have been removed"
 msgstr "套件已經移除"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1583
+#: ../src/gpk-watch.c:1589
 msgid "Packages have been installed"
 msgstr "套件已經安裝"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1586
+#: ../src/gpk-watch.c:1592
 msgid "System has been updated"
 msgstr "系統已經更新"
 
 #. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
-#: ../src/gpk-watch.c:1593
+#: ../src/gpk-watch.c:1599
 msgid "Task completed"
 msgstr "工作已完成"
 
@@ -4284,6 +4277,15 @@ msgstr "除錯選項"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "顯示除錯選項"
+
+#~ msgid "Enable or disable software sources"
+#~ msgstr "啟用或停用軟體來源"
+
+#~ msgid "Software Source Viewer"
+#~ msgstr "軟體來源檢視器"
+
+#~ msgid "Software source viewer"
+#~ msgstr "軟體來源檢視程器"
 
 #~ msgid "Allow applications to invoke the codec installer"
 #~ msgstr "允許應用程式呼叫編解碼器安裝程式"
