@@ -1,3 +1,25 @@
+Version 2.30.3
+~~~~~~~~~~~~~~
+Released: 2010-07-20
+
+* Translations
+ - Added Malay translation (Ahmed Noor Kader Mustajir Md Eusoff)
+ - Added Estonian translation (Ivar Smolin)
+ - Added Latvian translation (Peteris Krisjanis)
+ - Updated Czech translation (Marek Cernocky)
+
+* Bugfix:
+ - Ensure we wait for the users resopnse when an application uses InstallMimeTypes. Fixes #28323 (Richard Hughes)
+ - Fix an important bug that stopped GetUpdates from working correctly. Fixes rh#615099 (Richard Hughes)
+ - Ignore message types we do not recognize. Fixes rh#575669 (Richard Hughes)
+ - Ensure files created with gpk-service-pack do not have ';' in them (Richard Hughes)
+ - Save the package lists to the specified directory, not the system default. Fixes rh#609531 (Richard Hughes)
+ - Ensure we reset the UI to sensitive after creating the system package list (Richard Hughes)
+ - Use the correct URL in the about dialog to fix an error. Fixes rh#598261 (Richard Hughes)
+ - Only mark the find button sensitive if we have valid text _and_ are not searching. Fixes rh#602422 (Richard Hughes)
+ - Fix default value of ignored_messages key (Vincent Untz)
+ - Fix crash in gpk-dbus-service when looking for printer drivers (Vincent Untz)
+
 Version 2.30.2
 ~~~~~~~~~~~~~~
 Released: 2010-05-27
