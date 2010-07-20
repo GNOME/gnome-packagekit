@@ -1794,7 +1794,7 @@ gpk_message_enum_to_icon_name (PkMessageEnum message)
 const gchar *
 gpk_info_status_enum_to_text (GpkInfoStatusEnum info)
 {
-	if (info >= PK_INFO_ENUM_LAST)
+	if ((PkInfoEnum)info >= PK_INFO_ENUM_LAST)
 		return gpk_info_enum_to_localised_past (info - PK_INFO_ENUM_LAST);
 	return gpk_info_enum_to_localised_present (info);
 }
@@ -1813,7 +1813,7 @@ gpk_info_status_enum_to_icon_name (GpkInfoStatusEnum info)
 		return "pk-package-installed";
 
 	/* use normal icon as a fallback */
-	if (info >= PK_INFO_ENUM_LAST)
+	if ((PkInfoEnum)info >= PK_INFO_ENUM_LAST)
 		return gpk_info_enum_to_icon_name (info - PK_INFO_ENUM_LAST);
 
 	/* regular PkInfoEnum */

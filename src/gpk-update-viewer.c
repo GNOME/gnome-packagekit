@@ -3034,7 +3034,7 @@ gpk_update_viewer_get_distro_upgrades_best (GPtrArray *array)
 			      "state", &state,
 			      NULL);
 
-		if (state == PK_UPDATE_STATE_ENUM_STABLE)
+		if (state == PK_DISTRO_UPGRADE_ENUM_STABLE)
 			goto out;
 	}
 	item = NULL;
