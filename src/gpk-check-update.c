@@ -1056,7 +1056,9 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	}
 
 	/* get new update list */
-	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task), PK_FILTER_ENUM_NONE, cupdate->priv->cancellable, NULL, NULL,
+	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task),
+				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
+				     cupdate->priv->cancellable, NULL, NULL,
 				     (GAsyncReadyCallback) gpk_check_update_get_updates_finished_cb, cupdate);
 out:
 	return;
