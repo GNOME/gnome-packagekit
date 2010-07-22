@@ -1,4 +1,4 @@
-# Slovenian translation of gnome-packagekit
+# Slovenian translations for gnome-packagekit.
 # Copyright (C) 2009 gnome-packagekit's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-packagekit package.
 #
@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-packagekit\n"
+"Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
-"POT-Creation-Date: 2010-07-03 10:32+0000\n"
-"PO-Revision-Date: 2010-07-05 07:09+0100\n"
+"POT-Creation-Date: 2010-07-20 20:12+0000\n"
+"PO-Revision-Date: 2010-07-22 09:48+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +122,7 @@ msgid "Software Log"
 msgstr "Dnevnik programske opreme"
 
 #: ../data/gpk-application.ui.h:24
-#: ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-prefs.ui.h:6
 #: ../data/gpk-repo.ui.h:2
 msgid "Software Sources"
 msgstr "Viri programske opreme"
@@ -251,53 +251,54 @@ msgid "Filter"
 msgstr "Filter"
 
 #: ../data/gpk-prefs.desktop.in.h:1
-msgid "Change software update preferences"
-msgstr "Spreminjanje možnosti posodabljanja programske opreme"
+msgid "Change software update preferences and enable or disable software sources"
+msgstr "Spreminjanje možnosti posodabljanja programske opreme in programskih virov"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
 msgstr "Programske posodobitve"
 
 #: ../data/gpk-prefs.ui.h:1
+msgid "A software source contains packages that can be installed on this computer."
+msgstr "Vir programske opreme vsebuje pakete, ki jih je mogoče namestiti."
+
+#: ../data/gpk-prefs.ui.h:2
 msgid "C_heck for updates:"
 msgstr "_Preveri za posodobitve:"
 
-#: ../data/gpk-prefs.ui.h:2
+#: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
 msgstr "Preveri za _večje posodobitve:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
 msgstr "Preveri za posodobitve ob uporabi mobilnega omrežja"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:5
 msgid "Currently using mobile broadband"
 msgstr "Trenutno je uporabljeno mobilno omrežje"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Software Update Preferences"
 msgstr "Možnosti posodobitev programske opreme"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "Nastavitve posodabljanja"
 
-#: ../data/gpk-prefs.ui.h:7
+#: ../data/gpk-prefs.ui.h:9
 msgid "_Automatically install:"
 msgstr "_Samodejna namestitev:"
 
-#: ../data/gpk-repo.desktop.in.h:1
-msgid "Enable or disable software sources"
-msgstr "Omogočanje in onemogočanje virov programske opreme"
+#. shows extra -source, -debuginfo, and -devel software sources
+#: ../data/gpk-prefs.ui.h:11
+#: ../data/gpk-repo.ui.h:4
+msgid "_Show debug and development software sources"
+msgstr "_Pokaži vire razhroščevanja in razvoja programske opreme"
 
 #: ../data/gpk-repo.ui.h:1
 msgid "Shows more software sources that may be interesting"
 msgstr "Pokaže več programskih virov, kot je običajno zanimivih"
-
-#. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-repo.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "_Pokaži vire razhroščevanja in razvoja programske opreme"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
 #: ../data/gpk-service-pack.ui.h:1
@@ -463,47 +464,70 @@ msgid "The software that you want to install requires additional software to run
 msgstr "Program, ki ga želite namestiti, zahteva dodatne programe za pravilno delovanje."
 
 #. TRANSLATORS: check once an hour
-#: ../src/cc-update-panel.c:51
+#: ../src/cc-update-panel.c:70
 msgid "Hourly"
 msgstr "Vsako uro"
 
 #. TRANSLATORS: check once a day
-#: ../src/cc-update-panel.c:53
+#: ../src/cc-update-panel.c:72
 msgid "Daily"
 msgstr "Dnevno"
 
 #. TRANSLATORS: check once a week
-#: ../src/cc-update-panel.c:55
+#: ../src/cc-update-panel.c:74
 msgid "Weekly"
 msgstr "Tedensko"
 
 #. TRANSLATORS: never check for updates/upgrades
-#: ../src/cc-update-panel.c:57
+#: ../src/cc-update-panel.c:76
 msgid "Never"
 msgstr "Nikoli"
 
 #. TRANSLATORS: update everything
-#: ../src/cc-update-panel.c:60
+#: ../src/cc-update-panel.c:79
 msgid "All updates"
 msgstr "Vse posodobitve"
 
 #. TRANSLATORS: update just security updates
-#: ../src/cc-update-panel.c:62
+#: ../src/cc-update-panel.c:81
 msgid "Only security updates"
 msgstr "Le varnostne posodobitve"
 
 #. TRANSLATORS: don't update anything
-#: ../src/cc-update-panel.c:64
+#: ../src/cc-update-panel.c:83
 msgid "Nothing"
 msgstr "Ničesar"
 
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/cc-update-panel.c:519
+msgid "Failed to change status"
+msgstr "Napaka med spreminjanjem stanja"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/cc-update-panel.c:593
+msgid "Enabled"
+msgstr "Omogočeno"
+
+#. TRANSLATORS: column for the source description
+#: ../src/cc-update-panel.c:602
+msgid "Software Source"
+msgstr "Programski viri"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/cc-update-panel.c:664
+msgid "Failed to get the list of sources"
+msgstr "Napaka med pridobivanjem seznama virov"
+
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/cc-update-panel.c:308
+#: ../src/cc-update-panel.c:771
 #: ../src/gpk-backend-status.c:76
-#: ../src/gpk-repo.c:521
 #: ../src/gpk-update-viewer.c:3134
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Podrobnosti hrbtišča ni mogoče pridobiti"
+
+#: ../src/cc-update-panel.c:805
+msgid "Getting software source list not supported by backend"
+msgstr "Pridobivanje seznama virov programske opreme ni podprto."
 
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:617
@@ -905,7 +929,7 @@ msgstr "Ponovni zagon računalnika"
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
 #: ../src/gpk-check-update.c:413
-#: ../src/gpk-check-update.c:1300
+#: ../src/gpk-check-update.c:1302
 #: ../src/gpk-dialog.c:305
 #: ../src/gpk-hardware.c:196
 #: ../src/gpk-watch.c:1603
@@ -1007,7 +1031,7 @@ msgid "Update available (on battery)"
 msgstr "Posodobitev je na voljo (pri uporabi baterije)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1287
+#: ../src/gpk-check-update.c:1289
 msgid "Distribution upgrades available"
 msgstr "Na voljo je posodobitev distribucije"
 
@@ -1016,7 +1040,7 @@ msgstr "Na voljo je posodobitev distribucije"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1297
+#: ../src/gpk-check-update.c:1299
 #: ../src/gpk-dbus-task.c:1100
 #: ../src/gpk-dbus-task.c:1334
 #: ../src/gpk-dbus-task.c:1640
@@ -3830,7 +3854,6 @@ msgstr "Nastavi filter na to vrednost"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
 #: ../src/gpk-log.c:696
-#: ../src/gpk-repo.c:601
 msgid "Set the parent window to make this modal"
 msgstr "Določi glavno okno kot vedno na vrhu."
 
@@ -3843,39 +3866,6 @@ msgstr "Pregledovalnik dnevnikov"
 #, c-format
 msgid "Remaining time : %s"
 msgstr "Preostal čas : %s"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-repo.c:272
-msgid "Failed to change status"
-msgstr "Napaka med spreminjanjem stanja"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-repo.c:344
-msgid "Enabled"
-msgstr "Omogočeno"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-repo.c:353
-msgid "Software Source"
-msgstr "Programski viri"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-repo.c:414
-msgid "Failed to get the list of sources"
-msgstr "Napaka med pridobivanjem seznama virov"
-
-#: ../src/gpk-repo.c:544
-msgid "Getting software source list not supported by backend"
-msgstr "Pridobivanje seznama virov programske opreme ni podprto."
-
-#: ../src/gpk-repo.c:617
-msgid "Software Source Viewer"
-msgstr "Pregledovalnik programskih virov"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-repo.c:625
-msgid "Software source viewer"
-msgstr "Pregledovalnik programskih virov"
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:263
@@ -4446,6 +4436,15 @@ msgstr "Možnosti razhroščevanja"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "Pokaži možnosti razhrošlevanja"
+
+#~ msgid "Enable or disable software sources"
+#~ msgstr "Omogočanje in onemogočanje virov programske opreme"
+
+#~ msgid "Software Source Viewer"
+#~ msgstr "Pregledovalnik programskih virov"
+
+#~ msgid "Software source viewer"
+#~ msgstr "Pregledovalnik programskih virov"
 
 #~ msgid "Allow applications to invoke the codec installer"
 #~ msgstr "Dovoli programom zagon namestilnika kodekov"
