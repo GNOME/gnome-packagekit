@@ -29,7 +29,6 @@ pkgdata_DATA =						\
 	gpk-application.ui				\
 	gpk-update-viewer.ui				\
 	gpk-prefs.ui					\
-	gpk-repo.ui					\
 	gpk-service-pack.ui				\
 	gpk-signature.ui				\
 	gpk-error.ui					\
