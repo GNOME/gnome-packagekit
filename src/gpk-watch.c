@@ -64,35 +64,21 @@ struct GpkWatchPrivate
 {
 	PkControl		*control;
 	GtkStatusIcon		*status_icon;
-	GPtrArray		*cached_messages;
 	GPtrArray		*restart_package_names;
-	NotifyNotification	*notification_cached_messages;
+	NotifyNotification	*notification_message;
 	GpkInhibit		*inhibit;
 	GpkModalDialog		*dialog;
 	PkTask			*task;
 	PkTransactionList	*tlist;
 	PkRestartEnum		 restart;
 	GConfClient		*gconf_client;
-	guint			 set_proxy_timeout;
+	guint			 set_proxy_id;
 	gchar			*error_details;
 	gboolean		 hide_warning;
 	EggConsoleKit		*console;
 	GCancellable		*cancellable;
 	GPtrArray		*array_progress;
 	gchar			*transaction_id;
-};
-
-typedef struct {
-	PkMessageEnum	 type;
-	gchar		*tid;
-	gchar		*details;
-} GpkWatchCachedMessage;
-
-enum {
-	GPK_WATCH_COLUMN_TEXT,
-	GPK_WATCH_COLUMN_TID,
-	GPK_WATCH_COLUMN_DETAILS,
-	GPK_WATCH_COLUMN_LAST
 };
 
 G_DEFINE_TYPE (GpkWatch, gpk_watch, G_TYPE_OBJECT)
@@ -107,19 +93,6 @@ gpk_watch_class_init (GpkWatchClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = gpk_watch_finalize;
 	g_type_class_add_private (klass, sizeof (GpkWatchPrivate));
-}
-
-/**
- * gpk_watch_cached_message_free:
- **/
-static void
-gpk_watch_cached_message_free (GpkWatchCachedMessage *cached_message)
-{
-	if (cached_message == NULL)
-		return;
-	g_free (cached_message->tid);
-	g_free (cached_message->details);
-	g_free (cached_message);
 }
 
 /**
@@ -187,7 +160,6 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 	guint i;
 	guint idx = 0;
 	PkProgress *progress;
-	guint len;
 	GString *string;
 	PkStatusEnum status;
 	PkRoleEnum role;
@@ -206,16 +178,6 @@ gpk_watch_refresh_tooltip (GpkWatch *watch)
 		if (text != NULL)
 			g_string_append (string, text);
 		g_free (text);
-
-		/* do we have any cached messages to show? */
-		len = watch->priv->cached_messages->len;
-		if (len > 0) {
-			if (string->len > 0)
-				g_string_append_c (string, '\n');
-			g_string_append_printf (string, ngettext ("%i message from the package manager",
-								  "%i messages from the package manager", len), len);
-			goto out;
-		}
 
 		egg_debug ("nothing to show");
 		goto out;
@@ -305,7 +267,6 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 	const gchar *icon_name = NULL;
 	PkBitfield status;
 	gint value = -1;
-	guint len;
 
 	g_return_val_if_fail (GPK_IS_WATCH (watch), FALSE);
 
@@ -362,14 +323,6 @@ gpk_watch_refresh_icon (GpkWatch *watch)
 		icon_name = gpk_restart_enum_to_icon_name (watch->priv->restart);
 		goto out;
 	}
-
-	/* do we have any cached messages to show? */
-	len = watch->priv->cached_messages->len;
-	if (len > 0) {
-		icon_name = "pk-setup";
-		goto out;
-	}
-
 out:
 	/* no icon, hide */
 	if (icon_name == NULL) {
@@ -519,121 +472,6 @@ gpk_watch_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint32 times
 			button, timestamp);
 	if (button == 0)
 		gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
-}
-
-/**
- * gpk_watch_menu_show_messages_cb:
- **/
-static void
-gpk_watch_menu_show_messages_cb (GtkMenuItem *item, gpointer data)
-{
-	GpkWatch *watch = GPK_WATCH (data);
-	GtkBuilder *builder;
-	GtkWidget *main_window;
-	GtkWidget *widget;
-	GtkListStore *list_store;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	guint i;
-	GpkWatchCachedMessage *cached_message;
-	guint retval;
-	GError *error = NULL;
-
-	/* get UI */
-	builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-repo.ui", &error);
-	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
-		goto out_build;
-	}
-
-	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_repo"));
-	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_LOG);
-	gtk_window_set_title (GTK_WINDOW (main_window), _("Package Manager Messages"));
-
-	/* set a size, if the screen allows */
-	gpk_window_set_size_request (GTK_WINDOW(main_window), 500, 200);
-
-	/* Get the main window quit */
-	g_signal_connect_swapped (main_window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
-	gtk_widget_hide (widget);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "checkbutton_detail"));
-	gtk_widget_hide (widget);
-
-	/* create list stores */
-	list_store = gtk_list_store_new (GPK_WATCH_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
-
-	/* create repo tree view */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "treeview_repo"));
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (list_store));
-
-	/* column for text */
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_object_set (renderer, "wrap-width", 400, NULL);
-
-	/* TRANSLATORS: column for the message type */
-	column = gtk_tree_view_column_new_with_attributes (_("Message"), renderer,
-							   "markup", GPK_WATCH_COLUMN_TEXT, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, GPK_WATCH_COLUMN_TEXT);
-	gtk_tree_view_append_column (GTK_TREE_VIEW(widget), column);
-
-	/* column for details */
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (renderer, "yalign", 0.0, NULL);
-	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_object_set (renderer, "wrap-width", 400, NULL);
-
-	/* TRANSLATORS: column for the message description */
-	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
-							   "markup", GPK_WATCH_COLUMN_DETAILS, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, GPK_WATCH_COLUMN_TEXT);
-	gtk_tree_view_append_column (GTK_TREE_VIEW(widget), column);
-
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW(widget));
-
-	/* add items to treeview */
-	model = gtk_tree_view_get_model (GTK_TREE_VIEW(widget));
-	for (i=0; i<watch->priv->cached_messages->len; i++) {
-		cached_message = g_ptr_array_index (watch->priv->cached_messages, i);
-		gtk_list_store_append (GTK_LIST_STORE(model), &iter);
-		gtk_list_store_set (list_store, &iter,
-				    GPK_WATCH_COLUMN_TEXT, gpk_message_enum_to_localised_text (cached_message->type),
-				    GPK_WATCH_COLUMN_TID, cached_message->tid,
-				    GPK_WATCH_COLUMN_DETAILS, cached_message->details,
-				    -1);
-	}
-
-	/* show window */
-	gtk_widget_show (main_window);
-
-	/* focus back to the close button */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	gtk_widget_grab_focus (widget);
-
-	/* wait */
-	gtk_main ();
-
-	gtk_widget_hide (main_window);
-
-	g_ptr_array_set_size (watch->priv->cached_messages, 0);
-
-	g_object_unref (list_store);
-out_build:
-	g_object_unref (builder);
-
-	/* refresh UI */
-	gpk_watch_refresh_icon (watch);
-	gpk_watch_refresh_tooltip (watch);
 }
 
 /**
@@ -912,7 +750,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *widget;
 	GtkWidget *image;
-	guint len;
 	gboolean show_hide = FALSE;
 	gboolean can_restart = FALSE;
 
@@ -922,19 +759,6 @@ gpk_watch_activate_status_cb (GtkStatusIcon *status_icon, GpkWatch *watch)
 
 	/* add jobs as drop down */
 	gpk_watch_populate_menu_with_jobs (watch, menu);
-
-	/* any messages to show? */
-	len = watch->priv->cached_messages->len;
-	if (len > 0) {
-		/* TRANSLATORS: messages from the transaction */
-		widget = gtk_image_menu_item_new_with_mnemonic (_("_Show messages"));
-		image = gtk_image_new_from_icon_name ("edit-paste", GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
-		g_signal_connect (G_OBJECT (widget), "activate",
-				  G_CALLBACK (gpk_watch_menu_show_messages_cb), watch);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), widget);
-		show_hide = TRUE;
-	}
 
 	/* log out session */
 	if (watch->priv->restart == PK_RESTART_ENUM_SESSION ||
@@ -1110,7 +934,7 @@ gpk_watch_set_proxy_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
 	gboolean ret;
 
 	/* we can run again */
-	watch->priv->set_proxy_timeout = 0;
+	watch->priv->set_proxy_id = 0;
 
 	/* get the result */
 	ret = pk_control_set_proxy_finish (control, res, &error);
@@ -1150,11 +974,11 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 static gboolean
 gpk_watch_set_proxies (GpkWatch *watch)
 {
-	if (watch->priv->set_proxy_timeout != 0) {
+	if (watch->priv->set_proxy_id != 0) {
 		egg_debug ("already scheduled");
 		return FALSE;
 	}
-	watch->priv->set_proxy_timeout = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
+	watch->priv->set_proxy_id = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
 							(GSourceFunc) gpk_watch_set_proxies_ratelimit, watch);
 	return TRUE;
 }
@@ -1287,7 +1111,6 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	GError *error = NULL;
 	gboolean value;
 	NotifyNotification *notification;
-	GpkWatchCachedMessage *cached_message;
 	PkMessageEnum type;
 	gchar *details;
 
@@ -1312,16 +1135,9 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 		goto out;
 	}
 
-	/* add to list */
-	cached_message = g_new0 (GpkWatchCachedMessage, 1);
-	cached_message->type = type;
-	cached_message->tid = NULL;
-	cached_message->details = g_strdup (details);
-	g_ptr_array_add (watch->priv->cached_messages, cached_message);
-
 	/* close existing */
-	if (watch->priv->notification_cached_messages != NULL) {
-		ret = notify_notification_close (watch->priv->notification_cached_messages, &error);
+	if (watch->priv->notification_message != NULL) {
+		ret = notify_notification_close (watch->priv->notification_message, &error);
 		if (!ret) {
 			egg_warning ("error: %s", error->message);
 			g_error_free (error);
@@ -1337,7 +1153,7 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	}
 
 	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (_("New package manager message"), NULL, "emblem-important", watch->priv->status_icon);
+	notification = notify_notification_new_with_status_icon (gpk_message_enum_to_localised_text (type), details, "emblem-important", watch->priv->status_icon);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
@@ -1345,7 +1161,7 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 		egg_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
-	watch->priv->notification_cached_messages = notification;
+	watch->priv->notification_message = notification;
 out:
 	g_free (details);
 }
@@ -1746,7 +1562,7 @@ gpk_watch_init (GpkWatch *watch)
 {
 	watch->priv = GPK_WATCH_GET_PRIVATE (watch);
 	watch->priv->error_details = NULL;
-	watch->priv->notification_cached_messages = NULL;
+	watch->priv->notification_message = NULL;
 	watch->priv->transaction_id = NULL;
 	watch->priv->restart = PK_RESTART_ENUM_NONE;
 	watch->priv->hide_warning = FALSE;
@@ -1756,8 +1572,7 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->gconf_client = gconf_client_get_default ();
 
 	watch->priv->status_icon = gtk_status_icon_new ();
-	watch->priv->set_proxy_timeout = 0;
-	watch->priv->cached_messages = g_ptr_array_new_with_free_func ((GDestroyNotify) gpk_watch_cached_message_free);
+	watch->priv->set_proxy_id = 0;
 	watch->priv->restart_package_names = g_ptr_array_new_with_free_func (g_free);
 	watch->priv->task = PK_TASK(gpk_task_new ());
 	g_object_set (watch->priv->task,
@@ -1825,8 +1640,8 @@ gpk_watch_finalize (GObject *object)
 	g_return_if_fail (watch->priv != NULL);
 
 	/* we might we waiting for a proxy update */
-	if (watch->priv->set_proxy_timeout != 0)
-		g_source_remove (watch->priv->set_proxy_timeout);
+	if (watch->priv->set_proxy_id != 0)
+		g_source_remove (watch->priv->set_proxy_id);
 
 	g_free (watch->priv->error_details);
 	g_free (watch->priv->transaction_id);
@@ -1840,7 +1655,6 @@ gpk_watch_finalize (GObject *object)
 	g_object_unref (watch->priv->status_icon);
 	g_object_unref (watch->priv->tlist);
 	g_ptr_array_unref (watch->priv->array_progress);
-	g_ptr_array_unref (watch->priv->cached_messages);
 	g_ptr_array_unref (watch->priv->restart_package_names);
 
 	G_OBJECT_CLASS (gpk_watch_parent_class)->finalize (object);
