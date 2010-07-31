@@ -142,9 +142,12 @@ out:
 static void
 gpk_check_update_set_gicon (GpkCheckUpdate *cupdate, GIcon *gicon)
 {
-	if (cupdate->priv->gicon != NULL)
+	if (cupdate->priv->gicon != NULL) {
 		g_object_unref (cupdate->priv->gicon);
-	cupdate->priv->gicon = g_object_ref (gicon);
+		cupdate->priv->gicon = NULL;
+	}
+	if (gicon != NULL)
+		cupdate->priv->gicon = g_object_ref (gicon);
 	gpk_check_update_set_icon_visibility (cupdate);
 }
 
