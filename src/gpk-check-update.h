@@ -50,6 +50,8 @@ typedef struct
 
 GType		 gpk_check_update_get_type		  	(void);
 GpkCheckUpdate	*gpk_check_update_new				(void);
+void		 gpk_check_update_set_status_icon		(GpkCheckUpdate	*check_update,
+								 GtkStatusIcon	*status_icon);
 
 G_END_DECLS
 

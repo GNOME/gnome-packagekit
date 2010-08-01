@@ -79,7 +79,6 @@ G_BEGIN_DECLS
 #define GPK_SETTINGS_SHOW_COPY_CONFIRM			"show-copy-confirm"
 #define GPK_SETTINGS_SHOW_DEPENDS			"show-depends"
 #define GPK_SETTINGS_UPDATE_BATTERY			"update-battery"
-#define GPK_SETTINGS_WATCH_ACTIVE_TRANSACTIONS		"watch-active-transactions"
 
 #define GPK_BUGZILLA_URL			"https://bugs.freedesktop.org/"
 

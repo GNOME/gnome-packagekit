@@ -50,6 +50,8 @@ typedef struct
 
 GType		 gpk_watch_get_type		  	(void);
 GpkWatch	*gpk_watch_new				(void);
+void		 gpk_watch_set_status_icon		(GpkWatch	*watch,
+							 GtkStatusIcon	*status_icon);
 
 G_END_DECLS
 

@@ -427,7 +427,6 @@ cc_update_panel_status_changed_timeout_cb (CcUpdatePanel *panel)
 static void
 cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdatePanel *panel)
 {
-	PkStatusEnum status;
 	GtkWidget *widget;
 
 	if (type != PK_PROGRESS_TYPE_STATUS)
@@ -437,7 +436,7 @@ cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdate
 	g_object_get (progress,
 		      "status", &panel->priv->status,
 		      NULL);
-	egg_debug ("now %s", pk_status_enum_to_text (status));
+	egg_debug ("now %s", pk_status_enum_to_text (panel->priv->status));
 
 	if (panel->priv->status == PK_STATUS_ENUM_FINISHED) {
 		/* we've not yet shown, so don't bother */

@@ -66,6 +66,7 @@ main (int argc, char *argv[])
 	GpkWatch *watch = NULL;
 	GpkFirmware *firmware = NULL;
 	GpkHardware *hardware = NULL;
+	GtkStatusIcon *status_icon;
 	GOptionContext *context;
 	GtkApplication *application;
 	gboolean ret;
@@ -127,6 +128,11 @@ main (int argc, char *argv[])
 	firmware = gpk_firmware_new ();
 	hardware = gpk_hardware_new ();
 
+	/* assign status area notification */
+	status_icon = gtk_status_icon_new ();
+	gpk_watch_set_status_icon (watch, status_icon);
+	gpk_check_update_set_status_icon (cupdate, status_icon);
+
 	/* Only timeout if we have specified iton the command line */
 	if (timed_exit) {
 		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gpk_icon_timed_exit_cb, application);
@@ -138,6 +144,7 @@ main (int argc, char *argv[])
 	/* run */
 	gtk_application_run (application);
 
+	g_object_unref (status_icon);
 	g_object_unref (cupdate);
 	g_object_unref (watch);
 	g_object_unref (firmware);

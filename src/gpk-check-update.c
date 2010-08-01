@@ -1470,6 +1470,26 @@ out:
 }
 
 /**
+ * gpk_check_update_set_status_icon:
+ **/
+void
+gpk_check_update_set_status_icon (GpkCheckUpdate *cupdate, GtkStatusIcon *status_icon)
+{
+	g_assert (cupdate->priv->status_icon == NULL);
+	cupdate->priv->status_icon = g_object_ref (status_icon);
+
+	/* right click actions are common */
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
+				 "popup_menu",
+				 G_CALLBACK (gpk_check_update_popup_menu_cb),
+				 cupdate, 0);
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
+				 "activate",
+				 G_CALLBACK (gpk_check_update_activate_update_cb),
+				 cupdate, 0);
+}
+
+/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1486,7 +1506,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->notification_error = NULL;
 	cupdate->priv->gicon = NULL;
 	cupdate->priv->number_updates_critical_last_shown = 0;
-	cupdate->priv->status_icon = gtk_status_icon_new ();
 	cupdate->priv->cancellable = g_cancellable_new ();
 	cupdate->priv->error_code = NULL;
 	cupdate->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
@@ -1498,16 +1517,6 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 			  G_CALLBACK (gpk_check_update_auto_get_updates_cb), cupdate);
 	g_signal_connect (cupdate->priv->arefresh, "get-upgrades",
 			  G_CALLBACK (gpk_check_update_auto_get_upgrades_cb), cupdate);
-
-	/* right click actions are common */
-	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
-				 "popup_menu",
-				 G_CALLBACK (gpk_check_update_popup_menu_cb),
-				 cupdate, 0);
-	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
-				 "activate",
-				 G_CALLBACK (gpk_check_update_activate_update_cb),
-				 cupdate, 0);
 
 	cupdate->priv->dbus_monitor_viewer = egg_dbus_monitor_new ();
 	egg_dbus_monitor_assign (cupdate->priv->dbus_monitor_viewer,
@@ -1568,7 +1577,8 @@ gpk_check_update_finalize (GObject *object)
 
 	g_return_if_fail (cupdate->priv != NULL);
 
-	g_object_unref (cupdate->priv->status_icon);
+	if (cupdate->priv->status_icon != NULL)
+		g_object_unref (cupdate->priv->status_icon);
 	g_object_unref (cupdate->priv->tlist);
 	g_object_unref (cupdate->priv->arefresh);
 	g_object_unref (cupdate->priv->settings);
