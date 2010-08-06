@@ -1136,6 +1136,9 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 	if (cupdate->priv->updates_changed_id > 0)
 		g_source_remove (cupdate->priv->updates_changed_id);
 
+	/* hiding icon, as it's probably inaccurate */
+	gpk_check_update_set_gicon (cupdate, NULL);
+
 	/* now try to get newest update list */
 	egg_debug ("updates changed, so getting new update list in %is", GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT);
 	cupdate->priv->updates_changed_id =
