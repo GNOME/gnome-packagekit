@@ -1,764 +1,438 @@
-# Lithuanian translation for gnome-packagekit.
-# Copyright (C) 2010 gnome-packagekit's COPYRIGHT HOLDER
-# This file is distributed under the same license as the gnome-packagekit package.
-# Gintautas Miliauskas <gintautas@miliauskas.lt>, 2010.
-#
+# Lithuanian translation for packagekit.
+# Copyright (C) 2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the packagekit package.
+# Aurimas Černius <aurisc4@gmail.com>, 2010.
+# Žygimantas Beručka <zygis@gnome.org>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-packagekit master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-22 17:40+0200\n"
-"PO-Revision-Date: 2010-02-22 17:40+0200\n"
-"Last-Translator: Gintautas Miliauskas <gintautas@miliauskas.lt>\n"
+"Project-Id-Version: packagekit master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"packagekit&component=general\n"
+"POT-Creation-Date: 2010-08-23 11:00+0000\n"
+"PO-Revision-Date: 2010-08-23 13:59+0300\n"
+"Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
 "Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: UTF-8\n"
+"Language: lt\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%"
 "100<10 || n%100>=20) ? 1 : 2);\n"
-
-#: ../data/gnome-packagekit.schemas.in.h:1
-msgid "Allow applications to invoke the codec installer"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:2
-msgid "Allow applications to invoke the font installer"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:3
-msgid "Allow applications to invoke the mime type installer"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:4
-msgid "Ask the user if additional firmware should be installed"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:5
-msgid "Ask the user if additional hardware drivers should be installed"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:6
-msgid "Ask the user if additional packages should be installed"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:7
-msgid "Ask the user if files should be copied to a non-private directory"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:8
-msgid ""
-"Ask the user if files should be copied to a non-private directory when "
-"installing from a FUSE mount"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:9
-msgid "Automatically update these types of updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:10
-msgid ""
-"Automatically update these types of updates. Options are \"all\", \"security"
-"\", or \"none\""
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:11
-msgid "Devices that should be ignored"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:12
-msgid ""
-"Devices that should be ignored, separated by commas. These can include '*' "
-"and '?' characters"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:13
-msgid "Filter package lists using basename in gpk-application"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:14
-msgid "Filter using basename in gpk-application"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:15
-msgid "Firmware files that should not be searched for"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:16
-msgid ""
-"Firmware files that should not be searched for, separated by commas. These "
-"can include '*' and '?' characters"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:17
-msgid "GTK+ module for font installation"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:18
-msgid "Get the update list when the session starts"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:19
-msgid ""
-"Get the update list when the session starts, even if not scheduled to. This "
-"ensures the user has up to date and valid data in the tray at startup."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:20
-msgid "How often to check for distribution upgrades"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:21
-msgid "How often to check for distribution upgrades. Value is in seconds."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:22
-msgid "How often to check for updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:23
-msgid "How often to check for updates. Value is in seconds."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:24
-msgid "How often to refresh the package cache"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:25
-msgid "How often to refresh the package cache. Value is in seconds."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:26
-msgid "If search terms should be completed automatically"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:27
-msgid "Install updates automatically when running on battery power"
-msgstr ""
-
-#. TRANSLATORS: An interaction mode is the level of user interaction
-#. that is allowed. See ./docs/DBusInterface.txt for more information
-#: ../data/gnome-packagekit.schemas.in.h:30
-msgid "Interaction modes that must be used, overriding requests from client"
-msgstr ""
-
-#. TRANSLATORS: An interaction mode is the level of user interaction
-#. that is allowed. See ./docs/DBusInterface.txt for more information
-#: ../data/gnome-packagekit.schemas.in.h:33
-msgid "Interaction modes to use by default"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:34
-msgid "Messages that should be ignored"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:35
-msgid ""
-"Messages that should be ignored, separated by commas. These can include '*' "
-"and '?' characters"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:36
-msgid ""
-"Notify the user before a large update is done on a mobile broadband "
-"connection"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:37
-msgid "Notify the user for completed updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:38
-msgid "Notify the user for completed updates where the user needs to restart"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:39
-msgid "Notify the user when a task is complete"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:40
-msgid "Notify the user when an update has failed"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:41
-msgid "Notify the user when distribution upgrades are available"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:42
-msgid "Notify the user when security updates are available"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:43
-msgid ""
-"Notify the user when the automatic update was not started on battery power"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:44
-msgid ""
-"Notify the user when the update was not automatically started while running "
-"on battery power"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:45
-msgid "Notify the user when the update was started"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:46
-msgid "Notify the user when there are errors"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:47
-msgid "Notify the user when there are messages"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:48
-msgid "Notify the user when there are messages from the package manager"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:49
-msgid "Notify the user when updates are available"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:50
-msgid "Only show native packages in the file lists"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:51
-msgid ""
-"Only show native packages matching the machine architecture in the file lists"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:52
-msgid "Only show the newest packages in the file lists"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:53
-msgid ""
-"Only show the newest packages in the update list, and filter out older "
-"updates that are still available."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:54
-msgid "Only show the newest updates in the list"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:55
-msgid "Programs that should be ignored when they issue session D-Bus requests"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:56
-msgid ""
-"Programs that should be ignored when they issue session D-Bus requests, "
-"separated by commas."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:57
-msgid "Scroll to packages as they are downloaded"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:58
-msgid ""
-"Scroll to packages in the update list as they are downloaded or installed."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:59
-msgid "Show all repositories in the software source viewer"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:60
-msgid "Show the 'All Packages' group menu"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:61
-msgid ""
-"Show the all packages menu item. This takes a long time to populate on most "
-"backends and is not generally required by end users"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:62
-msgid "Show the category group menu"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:63
-msgid ""
-"Show the category group menu. This is more complete and custom to the "
-"distribution, but takes longer to populate"
-msgstr ""
-
-#. TRANSLATORS:
-#. The original application is the program that was opened by the user,
-#. and that requested the PackageKit action.
-#. If the user then closes the application, but the task is still running
-#. (for instance, updating the system) then the original application is
-#. marked as not running.
-#. This is the only time we should show the progress icon in the tray,
-#. as the user would have no other way to interact with, or cancel the task.
-#.
-#. Some people like being able to interact with the task for debugging
-#. or just because they want to know what is happening in other user sessions.
-#. Those sort of people (not typical users) should enable this option.
-#.
-#: ../data/gnome-packagekit.schemas.in.h:77
-msgid ""
-"Show the transaction progress icon in the tray when the original application "
-"is still running."
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:78
-msgid "Show transactions that have the original application running"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:79
-msgid ""
-"The number of seconds at session startup to wait before checking for updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:80
-msgid "The search mode used by default"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:81
-msgid ""
-"The search mode used by default. Options are \"name\", \"details\", or \"file"
-"\""
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:82
-msgid "This key determines if applications should be able to prompt for fonts"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:83
-msgid "Use WiFi (wireless LAN) connections to check for updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:84
-msgid "Use WiFi connections"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:85
-msgid "Use mobile broadband connections"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:86
-msgid ""
-"Use mobile broadband connections such as GSM and CDMA to check for updates"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:87
-msgid ""
-"When displaying UI from a session DBus request, automatically use these "
-"options by default"
-msgstr ""
-
-#: ../data/gnome-packagekit.schemas.in.h:88
-msgid ""
-"When displaying UI from a session DBus request, force these options to be "
-"turned on"
-msgstr ""
+"X-Generator: Virtaal 0.6.1\n"
 
 #: ../data/gpk-application.desktop.in.h:1
 msgid "Add or remove software installed on the system"
-msgstr ""
+msgstr "Įdiegti ar šalinti sistemoje įdiegtą programinę įrangą"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application-main.c:94 ../src/gpk-log.c:514
-#: ../src/gpk-update-viewer-main.c:86
+#: ../src/gpk-application-main.c:90 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer-main.c:85
 msgid "Add/Remove Software"
-msgstr ""
+msgstr "Įdiegti / šalinti programinę įrangą"
 
 #: ../data/gpk-application.ui.h:1
 msgid "About this software"
-msgstr ""
+msgstr "Apie šią programą"
 
 #: ../data/gpk-application.ui.h:3
 msgid "Edit list of software sources"
-msgstr ""
+msgstr "Taisyti programinės įrangos šaltinių sąrašą"
 
 #: ../data/gpk-application.ui.h:4
 msgid "Execute graphical applications"
-msgstr ""
+msgstr "Vykdyti programas, turinčias grafinę sąsają"
 
 #: ../data/gpk-application.ui.h:5
 msgid "Fi_nd"
-msgstr ""
+msgstr "I_ieškoti"
 
 #: ../data/gpk-application.ui.h:6
 msgid "Help with this software"
-msgstr ""
+msgstr "Padėti naudotis šia programa"
 
 #: ../data/gpk-application.ui.h:7
 msgid "Only N_ative Packages"
-msgstr ""
+msgstr "Tik _savieji paketai"
 
 #: ../data/gpk-application.ui.h:8
 msgid "Only _Available"
-msgstr ""
+msgstr "Tik _prieinami"
 
 #: ../data/gpk-application.ui.h:9
 msgid "Only _Development"
-msgstr ""
+msgstr "Tik p_rogramuotojų"
 
 #: ../data/gpk-application.ui.h:10
 msgid "Only _End User Files"
-msgstr ""
+msgstr "Tik _galutinio naudotojo failai"
 
 #: ../data/gpk-application.ui.h:11
 msgid "Only _Graphical"
-msgstr ""
+msgstr "Tik _turintys grafinę sąsąją"
 
 #: ../data/gpk-application.ui.h:12
 msgid "Only _Installed"
-msgstr ""
+msgstr "Tik į_diegti"
 
 #: ../data/gpk-application.ui.h:13
 msgid "Only _Newest Packages"
-msgstr ""
+msgstr "Tik _naujausi paketai"
 
 #: ../data/gpk-application.ui.h:14
 msgid "Only _Non-Free Software"
-msgstr ""
+msgstr "Tik _nelaisva programinė įranga"
 
 #: ../data/gpk-application.ui.h:15
 msgid "Only _Non-Source Code"
-msgstr ""
+msgstr "Tik _ne pirminis programos tekstas"
 
 #: ../data/gpk-application.ui.h:16
 msgid "Only _Text"
-msgstr ""
+msgstr "Tik _tekstas"
 
 #: ../data/gpk-application.ui.h:17
 msgid "Only show one package, not subpackages"
-msgstr ""
+msgstr "Rodyti tik vieną paketą, ne papakečius"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Only show packages matching the machine architecture"
-msgstr ""
+msgstr "Rodyti tik tuos paketus, kurie atitinka kompiuterio architektūrą"
 
 #: ../data/gpk-application.ui.h:19
 msgid "Only show the newest available package"
-msgstr ""
+msgstr "Rodyti tik naujausią prieinamą paketą"
 
 #: ../data/gpk-application.ui.h:20
-msgid "Refresh the list of packages on the system"
-msgstr ""
+msgid "Refresh Package Lists"
+msgstr "Atnaujinti paketų sąrašus"
 
 #: ../data/gpk-application.ui.h:21
-msgid "S_election"
-msgstr ""
+msgid "Refresh the list of packages on the system"
+msgstr "Atnaujinti sistemos paketų sąrašą"
 
 #: ../data/gpk-application.ui.h:22
-msgid "Software Log"
-msgstr ""
+msgid "S_election"
+msgstr "_Pažymėjimas"
 
 #: ../data/gpk-application.ui.h:23
-msgid "View previously added or removed software"
-msgstr ""
+msgid "Software Log"
+msgstr "Programinės įrangos žurnalai"
 
-#: ../data/gpk-application.ui.h:24
-msgid "Visit the project homepage"
-msgstr ""
+#: ../data/gpk-application.ui.h:24 ../data/gpk-prefs.ui.h:6
+msgid "Software Sources"
+msgstr "Programinės įrangos šaltiniai"
 
 #: ../data/gpk-application.ui.h:25
-msgid "_Development"
-msgstr ""
+msgid "View previously added or removed software"
+msgstr "Rodyti anksčiau įdiegtą ar pašalintą programinę įrangą"
 
 #: ../data/gpk-application.ui.h:26
-msgid "_Filters"
-msgstr ""
+msgid "Visit the project homepage"
+msgstr "Aplankyti projekto tinklalapį"
 
 #: ../data/gpk-application.ui.h:27
-msgid "_Free"
-msgstr ""
+msgid "_Contents"
+msgstr "_Turinys"
 
 #: ../data/gpk-application.ui.h:28
-msgid "_Graphical"
-msgstr ""
+msgid "_Development"
+msgstr "_Programavimas"
 
-#. TRANSLATORS: context menu to open the offline help file
-#: ../data/gpk-application.ui.h:29 ../src/gpk-check-update.c:301
-msgid "_Help"
-msgstr ""
+#: ../data/gpk-application.ui.h:29
+msgid "_Filters"
+msgstr "_Filtrai"
 
 #: ../data/gpk-application.ui.h:30
-msgid "_Hide Subpackages"
-msgstr ""
+msgid "_Free"
+msgstr "_Laisva"
 
 #: ../data/gpk-application.ui.h:31
-msgid "_Installed"
-msgstr ""
+msgid "_Graphical"
+msgstr "_Su grafine sąsaja"
 
-#: ../data/gpk-application.ui.h:32
-msgid "_No Filter"
-msgstr ""
+#. TRANSLATORS: context menu to open the offline help file
+#: ../data/gpk-application.ui.h:32 ../src/gpk-check-update.c:271
+msgid "_Help"
+msgstr "_Pagalba"
 
 #: ../data/gpk-application.ui.h:33
-msgid "_Only Free Software"
-msgstr ""
+msgid "_Hide Subpackages"
+msgstr "_Paslėpti papakečius"
 
 #: ../data/gpk-application.ui.h:34
-msgid "_Only Source Code"
-msgstr ""
+msgid "_Installed"
+msgstr "Į_diegta"
 
 #: ../data/gpk-application.ui.h:35
-msgid "_Source"
-msgstr ""
+msgid "_No Filter"
+msgstr "_Jokių filtrų"
 
 #: ../data/gpk-application.ui.h:36
+msgid "_Only Free Software"
+msgstr "_Tik laisva programinė įranga"
+
+#: ../data/gpk-application.ui.h:37
+msgid "_Only Source Code"
+msgstr "_Tik pirminis programos tekstas"
+
+#: ../data/gpk-application.ui.h:38
+msgid "_Source"
+msgstr "Ša_ltinis"
+
+#: ../data/gpk-application.ui.h:39
 msgid "_System"
-msgstr ""
+msgstr "_Sistema"
 
 #: ../data/gpk-backend-status.ui.h:1
 msgid "Backend Status"
-msgstr ""
+msgstr "Posistemės būsena"
 
 #: ../data/gpk-backend-status.ui.h:2
 msgid "Backend author:"
-msgstr ""
+msgstr "Posistemės autorius:"
 
 #: ../data/gpk-backend-status.ui.h:3
 msgid "Backend name:"
-msgstr ""
+msgstr "Posistemės pavadinimas:"
 
 #: ../data/gpk-client.ui.h:1
 msgid "Install Package"
-msgstr ""
+msgstr "Įdiegti paketą"
 
 #: ../data/gpk-error.ui.h:1
 msgid "More details"
-msgstr ""
+msgstr "Išsamesnė informacija"
 
 #: ../data/gpk-eula.ui.h:1
 msgid "License Agreement Required"
-msgstr ""
+msgstr "Būtina sutikti su licencijos sąlygomis"
 
 #: ../data/gpk-eula.ui.h:2
 msgid "_Accept Agreement"
-msgstr ""
+msgstr "_Sutikti su sąlygomis"
 
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:69
 #: ../src/gpk-install-catalog.c:71
 msgid "Catalog Installer"
-msgstr ""
+msgstr "Katalogų diegyklė"
 
 #: ../data/gpk-install-catalog.desktop.in.h:2
 msgid "Install a catalog of software on the system"
-msgstr ""
+msgstr "Įdiegti programinės įrangos katalogą sistemoje"
 
 #: ../data/gpk-install-file.desktop.in.h:1
 msgid "Install selected software on the system"
-msgstr ""
+msgstr "Įdiegti pasirinktą programinę įrangą sistemoje"
 
 #: ../data/gpk-install-file.desktop.in.h:2
 msgid "Package Installer"
-msgstr ""
+msgstr "Paketų diegyklė"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:710
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:712
 msgid "Software Log Viewer"
-msgstr ""
+msgstr "Programinės įrangos žurnalų peržiūra"
 
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
-msgstr ""
+msgstr "Rodyti ankstesnes paketų tvarkymo užduotis"
 
 #: ../data/gpk-log.ui.h:1
 msgid "Filter"
-msgstr ""
+msgstr "Filtras"
 
 #: ../data/gpk-prefs.desktop.in.h:1
-msgid "Change software update preferences"
-msgstr ""
+#, fuzzy
+#| msgid "Change software update preferences"
+msgid ""
+"Change software update preferences and enable or disable software sources"
+msgstr "Keisti programinės įrangos atnaujinimo nustatymus"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
-msgstr ""
+msgstr "Programinės įrangos atnaujinimai"
 
 #: ../data/gpk-prefs.ui.h:1
-msgid "C_heck for updates:"
+msgid ""
+"A software source contains packages that can be installed on this computer."
 msgstr ""
 
 #: ../data/gpk-prefs.ui.h:2
+msgid "C_heck for updates:"
+msgstr "_Tikrinti, ar yra atnaujinimų:"
+
+#: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
 msgstr ""
 
-#: ../data/gpk-prefs.ui.h:3
-msgid "Check for updates when using mobile broadband"
-msgstr ""
-
 #: ../data/gpk-prefs.ui.h:4
+msgid "Check for updates when using mobile broadband"
+msgstr "Ieškoti atnaujinimų naudojant mobilųjį ryšį"
+
+#: ../data/gpk-prefs.ui.h:5
 msgid "Currently using mobile broadband"
-msgstr ""
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:5 ../src/gpk-prefs.c:485
-msgid "Software Update Preferences"
-msgstr ""
-
-#: ../data/gpk-prefs.ui.h:6
-msgid "Update Settings"
-msgstr ""
+msgstr "Dabar naudojamas mobilusis ryšys"
 
 #: ../data/gpk-prefs.ui.h:7
+msgid "Software Update Preferences"
+msgstr "Programinės įrangos atnaujinimo nustatymai"
+
+#: ../data/gpk-prefs.ui.h:8
+msgid "Update Settings"
+msgstr "Atnaujinimo parametrai"
+
+#: ../data/gpk-prefs.ui.h:9
 msgid "_Automatically install:"
-msgstr ""
-
-#: ../data/gpk-repo.desktop.in.h:1
-msgid "Enable or disable software sources"
-msgstr ""
-
-#: ../data/gpk-repo.desktop.in.h:2 ../data/gpk-repo.ui.h:2
-msgid "Software Sources"
-msgstr ""
-
-#: ../data/gpk-repo.ui.h:1
-msgid "Shows more software sources that may be interesting"
-msgstr ""
+msgstr "_Automatiškai įdiegti:"
 
 #. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-repo.ui.h:4
+#: ../data/gpk-prefs.ui.h:11
 msgid "_Show debug and development software sources"
-msgstr ""
+msgstr "_Rodyti derinimo ir programuotojų programinės įrangos šaltinius"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:296
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
 msgid "Action"
-msgstr ""
+msgstr "Veiksmas"
 
 #: ../data/gpk-service-pack.ui.h:2
 msgid "Create"
-msgstr ""
+msgstr "Sukurti"
 
 #: ../data/gpk-service-pack.ui.h:3
 msgid "Create a copy of this computers package list"
-msgstr ""
+msgstr "Sukurti šio kompiuterio paketų sąrašo kopiją"
 
 #: ../data/gpk-service-pack.ui.h:4
 msgid "Create an archive of a specific package"
-msgstr ""
+msgstr "Sukurti konkretaus paketo archyvą"
 
 #: ../data/gpk-service-pack.ui.h:5
 msgid "Create an archive of all the pending updates"
-msgstr ""
+msgstr "Sukurti visų laukiančių atnaujinimų archyvą"
 
 #: ../data/gpk-service-pack.ui.h:6
 msgid "Destination package list:"
-msgstr ""
+msgstr "Paskirties paketų sąrašas:"
 
 #. TRANSLATORS: column for what packages were upgraded
-#. TRANSLATORS: column for the message description
-#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:323 ../src/gpk-watch.c:597
+#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:322
 msgid "Details"
-msgstr ""
+msgstr "Išsamiau"
 
 #: ../data/gpk-service-pack.ui.h:8
 msgid "Multiple packages can be specified using a comma delimited list"
-msgstr ""
+msgstr "Galima nurodyti daugiau nei vieną paketą skiriant juos kableliais"
 
 #: ../data/gpk-service-pack.ui.h:9
 msgid "Output directory:"
-msgstr ""
+msgstr "Išvesties katalogas:"
 
 #: ../data/gpk-service-pack.ui.h:10
 msgid "Progress"
-msgstr ""
+msgstr "Pažanga"
 
 #: ../data/gpk-service-pack.ui.h:11
+#, fuzzy
 msgid "Save New Service Pack"
-msgstr ""
+msgstr "PackageKit atnaujinimų rinkinys"
 
 #: ../data/gpk-service-pack.ui.h:12
+#, fuzzy
 msgid "Select A Package List File"
-msgstr ""
+msgstr "PackageKit paketų sąrašas"
 
 #. TRANSLATORS: program description, an application to create service packs
-#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:722
+#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:747
+#, fuzzy
 msgid "Service Pack Creator"
-msgstr ""
+msgstr "Atnaujinimų rinkinys „%s“ sukurtas"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Do you recognise the user and trust this key?"
-msgstr ""
+msgstr "Ar atpažįstate šį naudotoją ir pasitikite šiuo raktu?"
 
 #: ../data/gpk-signature.ui.h:2
 msgid "Do you trust the source of the packages?"
-msgstr ""
+msgstr "Ar pasitikite paketų šaltiniu>"
 
 #: ../data/gpk-signature.ui.h:3
 msgid "Package:"
-msgstr ""
+msgstr "Paketas:"
 
 #: ../data/gpk-signature.ui.h:4
 msgid "Repository name:"
-msgstr ""
+msgstr "Saugyklos pavadinimas:"
 
 #: ../data/gpk-signature.ui.h:5
 msgid "Signature URL:"
-msgstr ""
+msgstr "Parašo URL:"
 
 #: ../data/gpk-signature.ui.h:6
 msgid "Signature identifier:"
-msgstr ""
+msgstr "Parašo identifikatorius:"
 
 #: ../data/gpk-signature.ui.h:7
 msgid "Signature user identifier:"
-msgstr ""
+msgstr "Pasirašiusiojo naudotojo identifikatorius"
 
 #: ../data/gpk-signature.ui.h:8
 msgid "Software signature is required"
-msgstr ""
+msgstr "Reikalingas programinės įrangos parašas"
 
 #: ../data/gpk-update-icon.desktop.in.h:1
 msgid "PackageKit Update Applet"
-msgstr "PackageKit atnaujinimo įtaisas"
+msgstr "PackageKit atnaujinimų įtaisas"
 
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
 msgstr "Programinės įrangos atnaujinimas"
 
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:2
-#: ../src/gpk-update-viewer-main.c:103
-msgid "Software Update Viewer"
-msgstr "Programinės įrangos atnaujinimo rodytuvas"
-
-#: ../data/gpk-update-viewer.desktop.in.h:3
 msgid "Update software installed on the system"
-msgstr ""
+msgstr "Atnaujinti sistemoje įdiegtą programinę įrangą"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
 "provide new features."
 msgstr ""
+"Programinės įrangos atnaujinimai ištaiso klaidas, pašalina saugumo spragas "
+"ir suteikia naujų funkcijų."
 
 #: ../data/gpk-update-viewer.ui.h:3
+msgid "_Install Update(s)"
+msgstr "Į_diegti atnaujinimą (-us)"
+
+#: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
-msgstr ""
+msgstr "_Atnaujinti"
 
 #. TRANSLATORS: expander label in the error dialog
 #: ../python/packagekit/gtkwidgets.py:413
 msgid "_Details"
-msgstr ""
+msgstr "_Išsamiau"
 
 #. Application column (icon, name, description)
 #. TRANSLATORS: column for the application name
 #. TRANSLATORS: column for the package name
 #: ../python/packagekit/gtkwidgets.py:510 ../src/gpk-helper-chooser.c:149
-#: ../src/gpk-helper-run.c:191
+#: ../src/gpk-helper-run.c:219
 msgid "Package"
-msgstr ""
+msgstr "Paketas"
 
 #: ../python/packagekit/gtkwidgets.py:609
 msgid "_Remove"
-msgstr ""
+msgstr "P_ašalinti"
 
 #: ../python/packagekit/gtkwidgets.py:610
 #, python-format
 msgid "Remove %i additional package?"
 msgid_plural "Remove %i additional packages?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Pašalinti %i papildomą paketą?"
+msgstr[1] "Pašalinti %i papildomus paketus?"
+msgstr[2] "Pašalinti %i papildomų paketų?"
 
 #: ../python/packagekit/gtkwidgets.py:615
 msgid ""
@@ -769,20 +443,86 @@ msgstr ""
 #. TRANSLATORS: button label, install
 #: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
 msgid "_Install"
-msgstr ""
+msgstr "Į_diegti"
 
 #: ../python/packagekit/gtkwidgets.py:647
 #, python-format
 msgid "Install %i additional package?"
 msgid_plural "Install %i additional packages?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Įdiegti %i papildomą paketą?"
+msgstr[1] "Įdiegti %i papildomus paketus?"
+msgstr[2] "Įdiegti %i papildomų paketų?"
 
 #: ../python/packagekit/gtkwidgets.py:652
 msgid ""
 "The software that you want to install requires additional software to run "
 "correctly."
+msgstr ""
+
+#. TRANSLATORS: check once an hour
+#: ../src/cc-update-panel.c:70
+msgid "Hourly"
+msgstr "Kas valandą"
+
+#. TRANSLATORS: check once a day
+#: ../src/cc-update-panel.c:72
+msgid "Daily"
+msgstr "Kasdien"
+
+#. TRANSLATORS: check once a week
+#: ../src/cc-update-panel.c:74
+msgid "Weekly"
+msgstr "Kas savaitę"
+
+#. TRANSLATORS: never check for updates/upgrades
+#: ../src/cc-update-panel.c:76
+msgid "Never"
+msgstr "Niekada"
+
+#. TRANSLATORS: update everything
+#: ../src/cc-update-panel.c:79
+msgid "All updates"
+msgstr "Visi atnaujinimai"
+
+#. TRANSLATORS: update just security updates
+#: ../src/cc-update-panel.c:81
+msgid "Only security updates"
+msgstr "Tik saugumo atnaujinimai"
+
+#. TRANSLATORS: don't update anything
+#: ../src/cc-update-panel.c:83
+msgid "Nothing"
+msgstr "Niekas"
+
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/cc-update-panel.c:518
+msgid "Failed to change status"
+msgstr "Nepavyko pakeisti būsenos"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/cc-update-panel.c:592
+msgid "Enabled"
+msgstr "Įjungta"
+
+#. TRANSLATORS: column for the source description
+#: ../src/cc-update-panel.c:601
+msgid "Software Source"
+msgstr "Programinės įrangos šaltinis"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/cc-update-panel.c:663
+#, fuzzy
+msgid "Failed to get the list of sources"
+msgstr "Nepavyko gauti tarnybos būsenos"
+
+#. TRANSLATORS: backend is broken, and won't tell us what it supports
+#: ../src/cc-update-panel.c:770 ../src/gpk-backend-status.c:76
+#: ../src/gpk-update-viewer.c:3134
+msgid "Exiting as backend details could not be retrieved"
+msgstr ""
+
+#: ../src/cc-update-panel.c:804
+msgid "Getting software source list not supported by backend"
 msgstr ""
 
 #. TRANSLATORS: title: how many files are installed by the application
@@ -795,26 +535,26 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:969 ../src/gpk-application.c:1092
+#: ../src/gpk-application.c:956 ../src/gpk-application.c:1079
 msgid "No packages"
-msgstr ""
+msgstr "Jokių paketų"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:971
+#: ../src/gpk-application.c:958
 msgid "No other packages require this package"
-msgstr ""
+msgstr "Jokiems kitiems paketams nereikia šio paketo"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:978
-#, c-format
+#: ../src/gpk-application.c:965
+#, fuzzy, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Reikia nurodyti paketo pavadinimą"
+msgstr[1] "Reikia nurodyti paketo pavadinimą"
+msgstr[2] "Reikia nurodyti paketo pavadinimą"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:983
+#: ../src/gpk-application.c:970
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -823,21 +563,21 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1094
+#: ../src/gpk-application.c:1081
 msgid "This package does not depends on any others"
-msgstr ""
+msgstr "Šis paketas nepriklauso nuo jokių kitų paketų"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1101
-#, c-format
+#: ../src/gpk-application.c:1088
+#, fuzzy, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nereikia jokių papildomų paketų."
+msgstr[1] "Nereikia jokių papildomų paketų."
+msgstr[2] "Nereikia jokių papildomų paketų."
 
 #. TRANSLATORS: message: show the array of dependant packages for this package
-#: ../src/gpk-application.c:1106
+#: ../src/gpk-application.c:1093
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -846,377 +586,383 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1171
+#: ../src/gpk-application.c:1158
 msgid "Invalid"
-msgstr ""
+msgstr "Netinkamas"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1371
+#: ../src/gpk-application.c:1363
 msgid "No results were found."
 msgstr ""
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1379
+#: ../src/gpk-application.c:1371
 msgid "Try entering a package name in the search bar."
 msgstr ""
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1382
+#: ../src/gpk-application.c:1374
 msgid "There are no packages queued to be installed or removed."
-msgstr ""
+msgstr "Nėra įdiegtinų ar pašalintinų paketų."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1387
+#: ../src/gpk-application.c:1379
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
 msgstr ""
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1390
+#: ../src/gpk-application.c:1382
 msgid "Try again with a different search term."
 msgstr ""
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1645
+#: ../src/gpk-application.c:1661
 msgid "Invalid search text"
-msgstr ""
+msgstr "Netinkamas paieškos tekstas"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1647
+#: ../src/gpk-application.c:1663
 msgid "The search text contains invalid characters"
-msgstr ""
+msgstr "Paieškos tekste yra netinkamų simbolių"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1681
+#: ../src/gpk-application.c:1701
+#, fuzzy
 msgid "The search could not be completed"
-msgstr ""
+msgstr "Nepavyko nustatyti įgaliotosios programos"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1683
+#: ../src/gpk-application.c:1703
 msgid "Running the transaction failed"
-msgstr ""
+msgstr "Operacijos atlikti nepavyko"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1831
+#: ../src/gpk-application.c:1851
 msgid "Changes not applied"
-msgstr ""
+msgstr "Pakeitimai nepritaikyti"
 
-#: ../src/gpk-application.c:1832
+#: ../src/gpk-application.c:1852
 msgid "Close _Anyway"
-msgstr ""
+msgstr "_Vis tiek užverti"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1836
+#: ../src/gpk-application.c:1856
 msgid "You have made changes that have not yet been applied."
 msgstr ""
 
-#: ../src/gpk-application.c:1837
+#: ../src/gpk-application.c:1857
 msgid "These changes will be lost if you close this window."
 msgstr ""
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2162 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
+#: ../src/gpk-application.c:2182 ../src/gpk-enum.c:1142 ../src/gpk-enum.c:1223
 msgid "Installed"
-msgstr ""
+msgstr "Įdiegtas"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2178 ../src/gpk-application.c:2200
-#: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:725
+#: ../src/gpk-application.c:2198 ../src/gpk-application.c:2220
+#: ../src/gpk-dialog.c:152 ../src/gpk-modal-dialog.c:732
 msgid "Name"
-msgstr ""
+msgstr "Pavadinimas"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2343
+#: ../src/gpk-application.c:2363
 msgid "Type"
-msgstr ""
+msgstr "Tipas"
 
-#: ../src/gpk-application.c:2343
+#: ../src/gpk-application.c:2363
 msgid "Collection"
-msgstr ""
+msgstr "Rinkinys"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2351
+#: ../src/gpk-application.c:2371
 #, c-format
 msgid "Visit %s"
-msgstr ""
+msgstr "Aplankyti %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2356
+#: ../src/gpk-application.c:2376
 msgid "Project"
-msgstr ""
+msgstr "Projektas"
 
-#: ../src/gpk-application.c:2356
+#: ../src/gpk-application.c:2376
 msgid "Homepage"
-msgstr ""
+msgstr "Tinklalapis"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2370
+#: ../src/gpk-application.c:2390
 msgid "Group"
-msgstr ""
+msgstr "Grupė"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2376
+#: ../src/gpk-application.c:2396
 msgid "License"
-msgstr ""
+msgstr "Licencija"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:2385
+#: ../src/gpk-application.c:2405
 msgid "Menu"
-msgstr ""
+msgstr "Meniu"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2403 ../src/gpk-update-viewer.c:1690
+#: ../src/gpk-application.c:2423 ../src/gpk-update-viewer.c:1792
 msgid "Size"
-msgstr ""
+msgstr "Dydis"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2406
+#: ../src/gpk-application.c:2426
 msgid "Installed size"
-msgstr ""
+msgstr "Įdiegto dydis"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2409
+#: ../src/gpk-application.c:2429
 msgid "Download size"
-msgstr ""
+msgstr "Atsiųstino dydis"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2418
+#: ../src/gpk-application.c:2438
 msgid "Source"
-msgstr ""
+msgstr "Šaltinis"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2564
+#: ../src/gpk-application.c:2584
 msgid "Selected packages"
-msgstr ""
+msgstr "Pažymėti paketai"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2616
+#: ../src/gpk-application.c:2638
 msgid "Searching by name"
-msgstr ""
+msgstr "Ieškoma pagal pavadinimą"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2639
+#: ../src/gpk-application.c:2663
 msgid "Searching by description"
-msgstr ""
+msgstr "Ieškoma pagal aprašymą"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2662
+#: ../src/gpk-application.c:2688
 msgid "Searching by file"
-msgstr ""
+msgstr "Ieškoma pagal failą"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2687
+#: ../src/gpk-application.c:2713
 msgid "Search by name"
-msgstr ""
+msgstr "Ieškoti pagal pavadinimą"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2697
+#: ../src/gpk-application.c:2724
 msgid "Search by description"
-msgstr ""
+msgstr "Ieškoti pagal aprašymą"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2735
 msgid "Search by file name"
-msgstr ""
+msgstr "Ieškoti pagal failo vardą"
 
-#. TRANSLATORS: packaging problem, failed to show link
-#. TRANSLATORS: normally a packaging error, cannot launch link
-#: ../src/gpk-application.c:2750 ../src/gpk-check-update.c:205
-#: ../src/gpk-watch.c:428
-msgid "Failed to show url"
-msgstr ""
-
-#: ../src/gpk-application.c:2787 ../src/gpk-check-update.c:229
-#: ../src/gpk-watch.c:448
+#: ../src/gpk-application.c:2776 ../src/gpk-check-update.c:202
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr ""
+"Platinamas GNU Bendrosios viešosios licencijos 2-ios versijos sąlygomis"
 
-#: ../src/gpk-application.c:2788 ../src/gpk-check-update.c:230
-#: ../src/gpk-watch.c:449
+#: ../src/gpk-application.c:2777 ../src/gpk-check-update.c:203
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 msgstr ""
+"PackageKit yra laisva programinė įranga; galite ją platinti ir / ar "
+"modifikuoti GNU Bendrosios viešosios licencijos sąlygomis, paskelbtomis "
+"Laisvosios programinės įrangos fondo; 2-osios arba (savo pasirinkimu) bet "
+"kurios naujesnės licencijos versijos sąlygomis."
 
-#: ../src/gpk-application.c:2792 ../src/gpk-check-update.c:234
-#: ../src/gpk-watch.c:453
+#: ../src/gpk-application.c:2781 ../src/gpk-check-update.c:207
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 msgstr ""
+"PackageKit yra platinama tikintis, kad ji bus naudinga, tačiau NETEIKIANT "
+"JOKIŲ GARANTIJŲ; netgi numanomų PARDAVIMO arba TINKAMUMO TAM TIKRAM TIKSLUI "
+"garantijų. Daugiau informacijos rasite GNU Bendrojoje viešojoje licencijoje."
 
-#: ../src/gpk-application.c:2796 ../src/gpk-check-update.c:238
-#: ../src/gpk-watch.c:457
+#: ../src/gpk-application.c:2785 ../src/gpk-check-update.c:211
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
+"Jūs turėjote gauti GNU Bendrosios viešosios licencijos kopiją kartu su šia "
+"programa; jeigu negavote, rašykite laišką Free Software Foundation, Inc., 51 "
+"Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2802 ../src/gpk-check-update.c:243
-#: ../src/gpk-watch.c:462
+#: ../src/gpk-application.c:2791 ../src/gpk-check-update.c:216
 msgid "translator-credits"
 msgstr ""
+"Aurimas Černius <aurisc4@gmail.com>, 2010 m.\n"
+"Žygimantas Beručka <zygis@gnome.org>, 2010 m."
 
 #. TRANSLATORS: website label
-#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:263
-#: ../src/gpk-watch.c:481
+#: ../src/gpk-application.c:2811 ../src/gpk-check-update.c:233
 msgid "PackageKit Website"
-msgstr ""
+msgstr "PackageKit tinklalapis"
 
 #. TRANSLATORS: description of application, gpk-application that is
-#: ../src/gpk-application.c:2831
+#: ../src/gpk-application.c:2814
 msgid "Package Manager for GNOME"
-msgstr ""
+msgstr "GNOME aplinkai skirta paketų tvarkymo programa"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3277
+#: ../src/gpk-application.c:3260
 msgid "Text"
-msgstr ""
+msgstr "Tekstas"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3300
+#: ../src/gpk-application.c:3283
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
+"Iš pradžių įveskite paketo pavadinimą, tuomet spustelėkite „Ieškoti“, arba "
+"spustelėkite grupę."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3303
+#: ../src/gpk-application.c:3286
 msgid "Enter a package name and then click find to get started."
-msgstr ""
+msgstr "Iš pradžių įveskite paketo pavadinimą ir spustelėkite „Ieškoti“."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3531
+#: ../src/gpk-application.c:3510
 msgid "Exiting as properties could not be retrieved"
-msgstr ""
+msgstr "Išeinama, kadangi nepavyko gauti ypatybių"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3651
+#: ../src/gpk-application.c:3629
 msgid "All packages"
-msgstr ""
+msgstr "Visi paketai"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3653
+#: ../src/gpk-application.c:3631
 msgid "Show all packages"
-msgstr ""
+msgstr "Rodyti visus paketus"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3877
+#: ../src/gpk-application.c:3883
 msgid "Clear current selection"
-msgstr ""
+msgstr "Išvalyti dabartinį pasirinkimą"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3902
+#: ../src/gpk-application.c:3908
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
+"Pakeitimai pritaikomi neiškart, spustelėjus šį mygtuką pritaikomi visi "
+"pakeitimai"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3928
+#: ../src/gpk-application.c:3934
 msgid "Visit home page for selected package"
-msgstr ""
+msgstr "Aplankyti pasirinkto paketo tinklalapį"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:4036
+#: ../src/gpk-application.c:4042
 msgid "Find packages"
-msgstr ""
+msgstr "Ieškoti paketų"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:4043
+#: ../src/gpk-application.c:4050
 msgid "Cancel search"
-msgstr ""
+msgstr "Atšaukti paiešką"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:242
-#: ../src/gpk-prefs.c:464 ../src/gpk-update-icon.c:64
-#: ../src/gpk-update-viewer-main.c:69
+#: ../src/gpk-application-main.c:73 ../src/gpk-backend-status.c:242
+#: ../src/gpk-update-icon.c:79 ../src/gpk-update-viewer-main.c:68
 msgid "Show the program version and exit"
-msgstr ""
+msgstr "Parodyti programos versiją ir išeiti"
 
 #. are we running privileged
-#: ../src/gpk-application-main.c:107
+#: ../src/gpk-application-main.c:103
 msgid "Package installer"
-msgstr ""
-
-#. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:3012
-msgid "Exiting as backend details could not be retrieved"
-msgstr ""
+msgstr "Paketų diegyklė"
 
 #: ../src/gpk-backend-status.c:258
 msgid "PackageKit Backend Details Viewer"
-msgstr ""
+msgstr "PackageKit posistemės informacijos peržiūra"
 
 #. TRANSLATORS: context menu to open the preferences
-#: ../src/gpk-check-update.c:289
+#: ../src/gpk-check-update.c:259
 msgid "_Preferences"
-msgstr ""
+msgstr "_Nustatymai"
 
 #. TRANSLATORS: context menu to show the about screen
-#. TRANSLATORS: this is the right click menu item
-#: ../src/gpk-check-update.c:309 ../src/gpk-watch.c:508
+#: ../src/gpk-check-update.c:279
 msgid "_About"
-msgstr ""
+msgstr "_Apie"
 
 #. TRANSLATORS: we did the update, but some updates were skipped and not applied
-#: ../src/gpk-check-update.c:400
+#: ../src/gpk-check-update.c:370
+#, fuzzy
 msgid "One package was skipped:"
 msgid_plural "Some packages were skipped:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Reikia nurodyti paketo pavadinimą"
+msgstr[1] "Reikia nurodyti paketo pavadinimą"
+msgstr[2] "Reikia nurodyti paketo pavadinimą"
 
 #. TRANSLATORS: title: system update completed all okay
-#: ../src/gpk-check-update.c:431
+#: ../src/gpk-check-update.c:401
 msgid "The system update has completed"
-msgstr ""
+msgstr "Sistema buvo atnaujinta"
 
 #. TRANSLATORS: restart computer as system packages need update
-#: ../src/gpk-check-update.c:439
+#: ../src/gpk-check-update.c:409
 msgid "Restart computer now"
-msgstr ""
+msgstr "Paleisti kompiuterį iš naujo dabar"
 
 #. TRANSLATORS: don't show this option again (when finished)
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:446 ../src/gpk-check-update.c:1322
-#: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1577
+#: ../src/gpk-check-update.c:416 ../src/gpk-check-update.c:1308
+#: ../src/gpk-dialog.c:305 ../src/gpk-hardware.c:196 ../src/gpk-watch.c:830
 msgid "Do not show this again"
-msgstr ""
+msgstr "Daugiau šito nerodyti"
+
+#. TRANSLATORS: button: show more details about the error
+#. TRANSLATORS: button: show details about the error
+#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
+#: ../src/gpk-check-update.c:478 ../src/gpk-dbus-task.c:388
+#: ../src/gpk-watch.c:607
+msgid "Show details"
+msgstr "Rodyti išsamesnę informaciją"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:501 ../src/gpk-check-update.c:935
-#: ../src/gpk-check-update.c:957
+#: ../src/gpk-check-update.c:532 ../src/gpk-check-update.c:922
+#: ../src/gpk-check-update.c:944
 msgid "GNOME PackageKit Update Icon"
-msgstr ""
+msgstr "GNOME PackageKit atnaujinimo piktograma"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:503 ../src/gpk-update-viewer.c:509
+#: ../src/gpk-check-update.c:534 ../src/gpk-update-viewer.c:519
 msgid "Updated successfully"
-msgstr ""
+msgstr "Sėkmingai atnaujinta"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:621
+#: ../src/gpk-check-update.c:660
 msgid "Security update available"
 msgid_plural "Security updates available"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Yra prieinamas saugumo atnaujinimas"
+msgstr[1] "Yra prieinama saugumo atnaujinimų"
+msgstr[2] "Yra prieinama saugumo atnaujinimų"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:624
+#: ../src/gpk-check-update.c:663
 msgid "An important update is available for your computer:"
 msgid_plural "Important updates are available for your computer:"
 msgstr[0] ""
@@ -1224,75 +970,75 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:644
+#: ../src/gpk-check-update.c:683
 msgid "Install updates"
-msgstr ""
+msgstr "Įdiegti atnaujinimus"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:755
+#: ../src/gpk-check-update.c:764
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
 msgstr ""
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:757
+#: ../src/gpk-check-update.c:766
 msgid "Updates not installed"
-msgstr ""
+msgstr "Atnaujinimai neįdiegti"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:767
+#: ../src/gpk-check-update.c:776
 msgid "Install the updates anyway"
-msgstr ""
+msgstr "Vis tiek įdiegti atnaujinimus"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:814
+#: ../src/gpk-check-update.c:802
 msgid "Updates are being installed"
-msgstr ""
+msgstr "Atnaujinimai diegiami"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:816
+#: ../src/gpk-check-update.c:804
 msgid "Updates are being automatically installed on your computer"
-msgstr ""
+msgstr "Jūsų kompiuteryje automatiškai diegiami atnaujinimai"
 
-#: ../src/gpk-check-update.c:822
+#: ../src/gpk-check-update.c:810
 msgid "Cancel update"
-msgstr ""
+msgstr "Atšaukti atnaujinimą"
 
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:907
-#, c-format
+#: ../src/gpk-check-update.c:894
+#, fuzzy, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šiuo metu nėra atnaujinimų."
+msgstr[1] "Šiuo metu nėra atnaujinimų."
+msgstr[2] "Šiuo metu nėra atnaujinimų."
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:937
+#: ../src/gpk-check-update.c:924
 msgid "Update available"
-msgstr ""
+msgstr "Prieinama atnaujinimų"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:959
+#: ../src/gpk-check-update.c:946
 msgid "Update available (on battery)"
-msgstr ""
+msgstr "Prieinama atnaujinimų (naudojant baterijos energiją)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1309
+#: ../src/gpk-check-update.c:1295
 msgid "Distribution upgrades available"
-msgstr ""
+msgstr "Prieinamas distribucijos atnaujinimas"
 
 #. TRANSLATORS: provides more information about the upgrade
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1319 ../src/gpk-dbus-task.c:1082
-#: ../src/gpk-dbus-task.c:1316 ../src/gpk-dbus-task.c:1622
-#: ../src/gpk-dbus-task.c:1828 ../src/gpk-dbus-task.c:2086
+#: ../src/gpk-check-update.c:1305 ../src/gpk-dbus-task.c:1100
+#: ../src/gpk-dbus-task.c:1334 ../src/gpk-dbus-task.c:1640
+#: ../src/gpk-dbus-task.c:1846 ../src/gpk-dbus-task.c:2102
 msgid "More information"
-msgstr ""
+msgstr "Išsamesnė informacija"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
 #: ../src/gpk-common.c:371
@@ -1320,40 +1066,40 @@ msgstr ""
 #. TRANSLATORS: button: allow the user to run this, even when insecure
 #: ../src/gpk-common.c:385
 msgid "Continue _Anyway"
-msgstr ""
+msgstr "_Vis tiek tęsti"
 
 #. TRANSLATORS: The actions has just literally happened
 #: ../src/gpk-common.c:455 ../src/gpk-common.c:505
 #, c-format
 msgid "Now"
-msgstr ""
+msgstr "Dabar"
 
 #. TRANSLATORS: time
 #: ../src/gpk-common.c:465 ../src/gpk-common.c:515
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i sekundė"
+msgstr[1] "%i sekundės"
+msgstr[2] "%i sekundžių"
 
 #. TRANSLATORS: time
 #: ../src/gpk-common.c:475 ../src/gpk-common.c:528
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i minutė"
+msgstr[1] "%i minutės"
+msgstr[2] "%i minučių"
 
 #. TRANSLATORS: time
 #: ../src/gpk-common.c:481 ../src/gpk-common.c:547
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i valanda"
+msgstr[1] "%i valandos"
+msgstr[2] "%i valandų"
 
 #. TRANSLATOR: "%i %s %i %s" are "%i minutes %i seconds"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
@@ -1362,129 +1108,125 @@ msgstr[2] ""
 #: ../src/gpk-common.c:534 ../src/gpk-common.c:553
 #, c-format
 msgid "%i %s %i %s"
-msgstr ""
+msgstr "%i %s %i %s"
 
 #: ../src/gpk-common.c:535 ../src/gpk-common.c:555
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "minutė"
+msgstr[1] "minutės"
+msgstr[2] "minučių"
 
 #: ../src/gpk-common.c:536
 msgid "second"
 msgid_plural "seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "sekundė"
+msgstr[1] "sekundės"
+msgstr[2] "sekundžių"
 
 #: ../src/gpk-common.c:554
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "valanda"
+msgstr[1] "valandos"
+msgstr[2] "valandų"
 
 #: ../src/gpk-common.c:581
 #, c-format
 msgid "%s and %s"
-msgstr ""
+msgstr "%s ir %s"
 
 #: ../src/gpk-common.c:584
 #, c-format
 msgid "%s, %s and %s"
-msgstr ""
+msgstr "%s, %s ir %s"
 
 #: ../src/gpk-common.c:587
 #, c-format
 msgid "%s, %s, %s and %s"
-msgstr ""
+msgstr "%s, %s, %s ir %s"
 
 #: ../src/gpk-common.c:591
 #, c-format
 msgid "%s, %s, %s, %s and %s"
-msgstr ""
+msgstr "%s, %s, %s, %s ir %s"
 
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:245
+#: ../src/gpk-dbus-task.c:246
 msgid "Failed to install software"
-msgstr ""
+msgstr "Nepavyko įdiegti programinės įrangos"
 
 #. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:247
+#: ../src/gpk-dbus-task.c:248
 msgid "No applications were chosen to be installed"
 msgstr ""
 
 #. TRANSLATORS: detailed text about the error
 #. TRANSLATORS: The detailed error if the user clicks "more info"
-#: ../src/gpk-dbus-task.c:279 ../src/gpk-watch.c:398
+#: ../src/gpk-dbus-task.c:281 ../src/gpk-watch.c:112
 msgid "Error details"
-msgstr ""
+msgstr "Klaidos informacija"
 
-#: ../src/gpk-dbus-task.c:279
+#: ../src/gpk-dbus-task.c:281
 msgid "Package Manager error details"
 msgstr ""
 
 #. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:294
+#: ../src/gpk-dbus-task.c:297
 msgid ""
 "Unknown error. Please refer to the detailed report and report in your "
 "distribution bugtracker."
 msgstr ""
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:310
+#: ../src/gpk-dbus-task.c:313
 msgid "You don't have the necessary privileges to perform this action."
 msgstr ""
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:314
+#: ../src/gpk-dbus-task.c:317
 msgid "The packagekitd service could not be started."
-msgstr ""
+msgstr "Nepavyko paleisti packagekitd tarnybos."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:318
+#: ../src/gpk-dbus-task.c:321
 msgid "The query is not valid."
 msgstr ""
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:322
+#: ../src/gpk-dbus-task.c:325
 msgid "The file is not valid."
-msgstr ""
-
-#. TRANSLATORS: button: show details about the error
-#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-dbus-task.c:385 ../src/gpk-watch.c:1399
-msgid "Show details"
-msgstr ""
+msgstr "Failas yra netinkamas."
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:466 ../src/gpk-dbus-task.c:1135
+#: ../src/gpk-dbus-task.c:476 ../src/gpk-dbus-task.c:1153
 msgid "Failed to install package"
-msgstr ""
+msgstr "Nepavyko įdiegti paketo"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:504 ../src/gpk-enum.c:961
+#: ../src/gpk-dbus-task.c:514 ../src/gpk-enum.c:941
 msgid "Installing packages"
-msgstr ""
+msgstr "Diegiami paketai"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:606 ../src/gpk-dbus-task.c:1354
+#: ../src/gpk-dbus-task.c:616 ../src/gpk-dbus-task.c:1372
+#, fuzzy
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nepavyko įdiegti paketų"
+msgstr[1] "Nepavyko įdiegti paketų"
+msgstr[2] "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:687
+#: ../src/gpk-dbus-task.c:705
+#, fuzzy
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[1] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[2] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
 
 #. TRANSLATORS: title: installing local files
 #. TRANSLATORS: button: confirm to search for packages
@@ -1494,119 +1236,125 @@ msgstr[2] ""
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
 #. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:696 ../src/gpk-dbus-task.c:1228
-#: ../src/gpk-dbus-task.c:1447 ../src/gpk-dbus-task.c:1650
-#: ../src/gpk-dbus-task.c:2113 ../src/gpk-dbus-task.c:2381
-#: ../src/gpk-dbus-task.c:2503 ../src/gpk-dbus-task.c:2855
-#: ../src/gpk-update-viewer.c:1619
+#: ../src/gpk-dbus-task.c:714 ../src/gpk-dbus-task.c:1246
+#: ../src/gpk-dbus-task.c:1465 ../src/gpk-dbus-task.c:1668
+#: ../src/gpk-dbus-task.c:2129 ../src/gpk-dbus-task.c:2399
+#: ../src/gpk-dbus-task.c:2521 ../src/gpk-dbus-task.c:2874
+#: ../src/gpk-update-viewer.c:1721
 msgid "Install"
-msgstr ""
+msgstr "Įdiegti"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1011
+#: ../src/gpk-dbus-task.c:1029
 msgid "Install local file"
 msgid_plural "Install local files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Įdiegti vietinį failą"
+msgstr[1] "Įdiegti vietinius failus"
+msgstr[2] "Įdiegti vietinius failus"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1070
+#: ../src/gpk-dbus-task.c:1088
 #, c-format
 msgid "Could not find packages"
-msgstr ""
+msgstr "Nepavyko rasti paketų"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1079
+#: ../src/gpk-dbus-task.c:1097
 msgid "The packages could not be found in any software source"
 msgstr ""
 
-#: ../src/gpk-dbus-task.c:1118
+#: ../src/gpk-dbus-task.c:1136
 msgid "Failed to install packages"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1120 ../src/gpk-enum.c:369
+#: ../src/gpk-dbus-task.c:1138 ../src/gpk-enum.c:334
 msgid "The package is already installed"
-msgstr ""
+msgstr "Paketas jau yra įdiegtas"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1137
+#: ../src/gpk-dbus-task.c:1155
 msgid "Incorrect response from search"
 msgstr ""
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1212
+#: ../src/gpk-dbus-task.c:1230
+#, fuzzy
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Reikia nurodyti paketo pavadinimą"
+msgstr[1] "Reikia nurodyti paketo pavadinimą"
+msgstr[2] "Reikia nurodyti paketo pavadinimą"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1215
+#: ../src/gpk-dbus-task.c:1233
+#, fuzzy
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[1] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[2] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1221
-#, c-format
+#: ../src/gpk-dbus-task.c:1239
+#, fuzzy, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nepavyko įdiegti paketų"
+msgstr[1] "Nepavyko įdiegti paketų"
+msgstr[2] "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1224
+#: ../src/gpk-dbus-task.c:1242
+#, fuzzy
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nepavyko įdiegti paketų"
+msgstr[1] "Nepavyko įdiegti paketų"
+msgstr[2] "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1241 ../src/gpk-dbus-task.c:2563
+#: ../src/gpk-dbus-task.c:1259 ../src/gpk-dbus-task.c:2581
 msgid "Searching for packages"
-msgstr ""
+msgstr "Ieškoma paketų"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1311
+#: ../src/gpk-dbus-task.c:1329
 msgid "Failed to find package"
-msgstr ""
+msgstr "Nepavyko rasti paketo"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1313 ../src/gpk-dbus-task.c:2702
+#: ../src/gpk-dbus-task.c:1331 ../src/gpk-dbus-task.c:2721
+#, fuzzy
 msgid "The file could not be found in any packages"
-msgstr ""
+msgstr "Šiai priemonei nepavyko rasti paketo: %s"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1351
-#, c-format
+#: ../src/gpk-dbus-task.c:1369
+#, fuzzy, c-format
 msgid "The %s package already provides this file"
-msgstr ""
+msgstr "Paketas, suteikiantis šį failą yra:"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1432
+#: ../src/gpk-dbus-task.c:1450
+#, fuzzy
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šie paketai turi būti pašalinti:"
+msgstr[1] "Šie paketai turi būti pašalinti:"
+msgstr[2] "Šie paketai turi būti pašalinti:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1435
+#: ../src/gpk-dbus-task.c:1453
+#, fuzzy
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nepavyko rasti failo"
+msgstr[1] "Nepavyko rasti failo"
+msgstr[2] "Nepavyko rasti failo"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1440
+#: ../src/gpk-dbus-task.c:1458
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1615,30 +1363,33 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1443
+#: ../src/gpk-dbus-task.c:1461
+#, fuzzy
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Reikia nurodyti diegtino paketo pavadinimą"
+msgstr[1] "Reikia nurodyti diegtino paketo pavadinimą"
+msgstr[2] "Reikia nurodyti diegtino paketo pavadinimą"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1459 ../src/gpk-dbus-task.c:2805
-#: ../src/gpk-enum.c:1313
+#: ../src/gpk-dbus-task.c:1477 ../src/gpk-dbus-task.c:2824
+#: ../src/gpk-enum.c:1293
+#, fuzzy
 msgid "Searching for file"
-msgstr ""
+msgstr "Ieškoma pagal failą"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1502
+#: ../src/gpk-dbus-task.c:1520
+#, fuzzy
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šie paketai turi būti pašalinti:"
+msgstr[1] "Šie paketai turi būti pašalinti:"
+msgstr[2] "Šie paketai turi būti pašalinti:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1520
+#: ../src/gpk-dbus-task.c:1538
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] ""
@@ -1646,7 +1397,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1533
+#: ../src/gpk-dbus-task.c:1551
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1655,7 +1406,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1537
+#: ../src/gpk-dbus-task.c:1555
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1664,7 +1415,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1541
+#: ../src/gpk-dbus-task.c:1559
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1673,7 +1424,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1547
+#: ../src/gpk-dbus-task.c:1565
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] ""
@@ -1681,7 +1432,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1551
+#: ../src/gpk-dbus-task.c:1569
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] ""
@@ -1689,7 +1440,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1555
+#: ../src/gpk-dbus-task.c:1573
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] ""
@@ -1697,22 +1448,23 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1561 ../src/gpk-dbus-task.c:1916
-#: ../src/gpk-dbus-task.c:2288
+#: ../src/gpk-dbus-task.c:1579 ../src/gpk-dbus-task.c:1932
+#: ../src/gpk-dbus-task.c:2306
 msgid "Search"
 msgstr ""
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1616
+#: ../src/gpk-dbus-task.c:1634
+#, fuzzy
 msgid "Failed to search for plugin"
-msgstr ""
+msgstr "Nepavyko rasti failo"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1618
+#: ../src/gpk-dbus-task.c:1636
 msgid "Could not find plugin in any configured software source"
 msgstr ""
 
-#: ../src/gpk-dbus-task.c:1641
+#: ../src/gpk-dbus-task.c:1659
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] ""
@@ -1720,51 +1472,55 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1642 ../src/gpk-dbus-task.c:2106
-#: ../src/gpk-dbus-task.c:2495
+#: ../src/gpk-dbus-task.c:1660 ../src/gpk-dbus-task.c:2122
+#: ../src/gpk-dbus-task.c:2513
+#, fuzzy
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[1] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[2] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1734
+#: ../src/gpk-dbus-task.c:1752
+#, fuzzy
 msgid "Searching for plugins"
-msgstr ""
+msgstr "Ieškoma grupių"
 
-#: ../src/gpk-dbus-task.c:1755
-#, c-format
+#: ../src/gpk-dbus-task.c:1773
+#, fuzzy, c-format
 msgid "Searching for plugin: %s"
-msgstr ""
+msgstr "Ieškoma grupių"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1793
+#: ../src/gpk-dbus-task.c:1811
+#, fuzzy
 msgid "Failed to search for provides"
-msgstr ""
+msgstr "Nepavyko rasti failo"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1823
+#: ../src/gpk-dbus-task.c:1841
+#, fuzzy
 msgid "Failed to find software"
-msgstr ""
+msgstr "Nepavyko atveri failo"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1825
+#: ../src/gpk-dbus-task.c:1843
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1898
+#: ../src/gpk-dbus-task.c:1914
 msgid "An additional program is required to open this type of file:"
 msgstr ""
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1901
+#: ../src/gpk-dbus-task.c:1917
 msgid "Do you want to search for a program to open this file type now?"
 msgstr ""
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1909
+#: ../src/gpk-dbus-task.c:1925
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1773,7 +1529,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1912
+#: ../src/gpk-dbus-task.c:1928
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] ""
@@ -1781,35 +1537,37 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1927
+#: ../src/gpk-dbus-task.c:1943
+#, fuzzy
 msgid "Searching for file handlers"
-msgstr ""
+msgstr "Ieškoma pagal failą"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2007
+#: ../src/gpk-dbus-task.c:2023
 msgid "Language tag not parsed"
 msgstr ""
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2015
+#: ../src/gpk-dbus-task.c:2031
 msgid "Language code not matched"
 msgstr ""
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2075
+#: ../src/gpk-dbus-task.c:2091
+#, fuzzy
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nepavyko atveri failo"
+msgstr[1] "Nepavyko atveri failo"
+msgstr[2] "Nepavyko atveri failo"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2083
+#: ../src/gpk-dbus-task.c:2099
 msgid "No new fonts can be found for this document"
 msgstr ""
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2267
+#: ../src/gpk-dbus-task.c:2285
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] ""
@@ -1817,7 +1575,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2271
+#: ../src/gpk-dbus-task.c:2289
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] ""
@@ -1825,7 +1583,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2281
+#: ../src/gpk-dbus-task.c:2299
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1834,7 +1592,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2284
+#: ../src/gpk-dbus-task.c:2302
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] ""
@@ -1842,37 +1600,42 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2300
+#: ../src/gpk-dbus-task.c:2318
+#, fuzzy
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ieškoma grupių"
+msgstr[1] "Ieškoma grupių"
+msgstr[2] "Ieškoma grupių"
 
-#: ../src/gpk-dbus-task.c:2338
+#: ../src/gpk-dbus-task.c:2356
 msgid "Could not process catalog"
 msgstr ""
 
-#: ../src/gpk-dbus-task.c:2356
+#: ../src/gpk-dbus-task.c:2374
+#, fuzzy
 msgid "No packages need to be installed"
-msgstr ""
+msgstr "Šie paketai turi būti įdiegti:"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2375
+#: ../src/gpk-dbus-task.c:2393
+#, fuzzy
 msgid "Install packages in catalog?"
-msgstr ""
+msgstr "Diegiami paketai"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2377
+#: ../src/gpk-dbus-task.c:2395
+#, fuzzy
 msgid "The following packages are marked to be installed from the catalog:"
-msgstr ""
+msgstr "Šie paketai turi būti įdiegti:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2417
+#: ../src/gpk-dbus-task.c:2435
+#, fuzzy
 msgid "Failed to remove package"
-msgstr ""
+msgstr "Nepavyko atverti paketų sąrašo."
 
-#: ../src/gpk-dbus-task.c:2494
+#: ../src/gpk-dbus-task.c:2512
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] ""
@@ -1881,33 +1644,36 @@ msgstr[2] ""
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2646 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:2665 ../src/gpk-enum.c:933
 msgid "Removing packages"
-msgstr ""
+msgstr "Šalinami paketai"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2700
+#: ../src/gpk-dbus-task.c:2719
+#, fuzzy
 msgid "Failed to find package for this file"
-msgstr ""
+msgstr "Nepavyko rasti paketo „%s“: %s"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2778
+#: ../src/gpk-dbus-task.c:2797
+#, fuzzy
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šie paketai turi būti pašalinti:"
+msgstr[1] "Šie paketai turi būti pašalinti:"
+msgstr[2] "Šie paketai turi būti pašalinti:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2781
+#: ../src/gpk-dbus-task.c:2800
+#, fuzzy
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[1] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[2] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2786
+#: ../src/gpk-dbus-task.c:2805
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1916,1000 +1682,1086 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2789
+#: ../src/gpk-dbus-task.c:2808
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Programa ketina pašalinti failą"
+msgstr[1] "Programa ketina pašalinti failus"
+msgstr[2] "Programa ketina pašalinti failus"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2793
+#: ../src/gpk-dbus-task.c:2812
 msgid "Remove"
-msgstr ""
+msgstr "Pašalinti"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2846
+#: ../src/gpk-dbus-task.c:2865
+#, fuzzy
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[1] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
+msgstr[2] "Ar norite leisti įdiegti nepasirašytą programinę įrangą?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2871
+#: ../src/gpk-dbus-task.c:2890
 msgid "Install catalogs"
-msgstr ""
+msgstr "Įdiegti katalogus"
 
 #. TRANSLATORS: the menu item, Applications, Places, System etc
-#: ../src/gpk-desktop.c:114
+#: ../src/gpk-desktop.c:118
 msgid "Applications"
-msgstr ""
+msgstr "Programos"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
 #. TRANSLATORS: The group type
-#: ../src/gpk-desktop.c:119 ../src/gpk-desktop.c:126 ../src/gpk-enum.c:1635
+#: ../src/gpk-desktop.c:123 ../src/gpk-desktop.c:130 ../src/gpk-enum.c:1615
 msgid "System"
-msgstr ""
+msgstr "Sistema"
 
-#: ../src/gpk-desktop.c:119
+#: ../src/gpk-desktop.c:123
 msgid "Preferences"
-msgstr ""
+msgstr "Nustatymai"
 
-#: ../src/gpk-desktop.c:126
+#: ../src/gpk-desktop.c:130
 msgid "Administration"
-msgstr ""
+msgstr "Administravimas"
 
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
-#: ../src/gpk-dialog.c:74
+#: ../src/gpk-dialog.c:73
 msgid "many packages"
-msgstr ""
+msgstr "daug paketų"
 
-#: ../src/gpk-dialog.c:243
+#: ../src/gpk-dialog.c:242
 msgid "No files"
-msgstr ""
+msgstr "Nėra failų"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:275
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:314
+#: ../src/gpk-enum.c:279
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:318
+#: ../src/gpk-enum.c:283
 msgid "disc"
-msgstr ""
+msgstr "diskas"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:287
 msgid "media"
-msgstr ""
+msgstr "laikmena"
 
-#: ../src/gpk-enum.c:339
+#: ../src/gpk-enum.c:304
 msgid "Failed with unknown error code"
 msgstr ""
 
-#: ../src/gpk-enum.c:342
+#: ../src/gpk-enum.c:307
 msgid "No network connection available"
 msgstr ""
 
-#: ../src/gpk-enum.c:345
+#: ../src/gpk-enum.c:310
+#, fuzzy
 msgid "No package cache is available."
-msgstr ""
+msgstr "Reikia nurodyti paketo pavadinimą"
 
-#: ../src/gpk-enum.c:348
+#: ../src/gpk-enum.c:313
 msgid "Out of memory"
 msgstr ""
 
-#: ../src/gpk-enum.c:351
+#: ../src/gpk-enum.c:316
+#, fuzzy
 msgid "Failed to create a thread"
-msgstr ""
+msgstr "Nepavyko sukurti aplanko:"
 
-#: ../src/gpk-enum.c:354
+#: ../src/gpk-enum.c:319
 msgid "Not supported by this backend"
 msgstr ""
 
-#: ../src/gpk-enum.c:357
+#: ../src/gpk-enum.c:322
 msgid "An internal system error has occurred"
 msgstr ""
 
-#: ../src/gpk-enum.c:360
+#: ../src/gpk-enum.c:325
+#, fuzzy
 msgid "A security signature is not present"
-msgstr ""
+msgstr "Parašas nepriimtas."
 
-#: ../src/gpk-enum.c:363
+#: ../src/gpk-enum.c:328
+#, fuzzy
 msgid "The package is not installed"
-msgstr ""
+msgstr "Nerasta diegtinų paketų."
 
-#: ../src/gpk-enum.c:366
+#: ../src/gpk-enum.c:331
+#, fuzzy
 msgid "The package was not found"
-msgstr ""
+msgstr "Rinkinys nebuvo perrašytas."
 
-#: ../src/gpk-enum.c:372
+#: ../src/gpk-enum.c:337
+#, fuzzy
 msgid "The package download failed"
-msgstr ""
+msgstr "Paketas, suteikiantis šį failą yra:"
 
-#: ../src/gpk-enum.c:375
+#: ../src/gpk-enum.c:340
+#, fuzzy
 msgid "The group was not found"
-msgstr ""
+msgstr "Įrenginio kelias nerastas"
 
-#: ../src/gpk-enum.c:378
+#: ../src/gpk-enum.c:343
+#, fuzzy
 msgid "The group list was invalid"
-msgstr ""
+msgstr "Nurodytas filtras buvo netinkamas"
 
-#: ../src/gpk-enum.c:381
+#: ../src/gpk-enum.c:346
+#, fuzzy
 msgid "Dependency resolution failed"
-msgstr ""
+msgstr "Operacija nepavyko"
 
-#: ../src/gpk-enum.c:384
+#: ../src/gpk-enum.c:349
+#, fuzzy
 msgid "Search filter was invalid"
-msgstr ""
+msgstr "Nurodytas filtras buvo netinkamas"
 
-#: ../src/gpk-enum.c:387
+#: ../src/gpk-enum.c:352
+#, fuzzy
 msgid "The package identifier was not well formed"
-msgstr ""
+msgstr "Su sąlygomis nesutikta."
 
-#: ../src/gpk-enum.c:390
+#: ../src/gpk-enum.c:355
+#, fuzzy
 msgid "Transaction error"
-msgstr ""
+msgstr "Operacija"
 
-#: ../src/gpk-enum.c:393
+#: ../src/gpk-enum.c:358
+#, fuzzy
 msgid "Repository name was not found"
-msgstr ""
+msgstr "Reikia nurodyti saugyklos pavadinimą"
 
-#: ../src/gpk-enum.c:396
+#: ../src/gpk-enum.c:361
 msgid "Could not remove a protected system package"
 msgstr ""
 
-#: ../src/gpk-enum.c:399
+#: ../src/gpk-enum.c:364
+#, fuzzy
 msgid "The action was canceled"
-msgstr ""
+msgstr "Operacija nepavyko"
 
-#: ../src/gpk-enum.c:402
+#: ../src/gpk-enum.c:367
 msgid "The action was forcibly canceled"
 msgstr ""
 
-#: ../src/gpk-enum.c:405
+#: ../src/gpk-enum.c:370
 msgid "Reading the configuration file failed"
 msgstr ""
 
-#: ../src/gpk-enum.c:408
+#: ../src/gpk-enum.c:373
+#, fuzzy
 msgid "The action cannot be canceled"
-msgstr ""
+msgstr "Operacija neprasidėjo."
 
-#: ../src/gpk-enum.c:411
+#: ../src/gpk-enum.c:376
+#, fuzzy
 msgid "Source packages cannot be installed"
-msgstr ""
+msgstr "Šie paketai turi būti įdiegti:"
 
-#: ../src/gpk-enum.c:414
+#: ../src/gpk-enum.c:379
+#, fuzzy
 msgid "The license agreement failed"
-msgstr ""
+msgstr "Būtina sutikti su licencijos sąlygomis"
 
-#: ../src/gpk-enum.c:417
+#: ../src/gpk-enum.c:382
 msgid "Local file conflict between packages"
 msgstr ""
 
-#: ../src/gpk-enum.c:420
+#: ../src/gpk-enum.c:385
 msgid "Packages are not compatible"
 msgstr ""
 
-#: ../src/gpk-enum.c:423
+#: ../src/gpk-enum.c:388
+#, fuzzy
 msgid "Problem connecting to a software source"
-msgstr ""
+msgstr "Atsiunčiama informacija apie programinės įrangos šaltinius."
 
-#: ../src/gpk-enum.c:426
+#: ../src/gpk-enum.c:391
+#, fuzzy
 msgid "Failed to initialize"
-msgstr ""
+msgstr "Nepavyko atveri failo"
 
-#: ../src/gpk-enum.c:429
+#: ../src/gpk-enum.c:394
+#, fuzzy
 msgid "Failed to finalise"
-msgstr ""
+msgstr "Nepavyko atveri failo"
 
-#: ../src/gpk-enum.c:432
+#: ../src/gpk-enum.c:397
 msgid "Cannot get lock"
 msgstr ""
 
-#: ../src/gpk-enum.c:435
+#: ../src/gpk-enum.c:400
+#, fuzzy
 msgid "No packages to update"
-msgstr ""
+msgstr "Šie paketai turi būti atnaujinti:"
 
-#: ../src/gpk-enum.c:438
+#: ../src/gpk-enum.c:403
+#, fuzzy
 msgid "Cannot write repository configuration"
-msgstr ""
+msgstr "Atsiunčiama saugyklų informacija"
 
-#: ../src/gpk-enum.c:441
+#: ../src/gpk-enum.c:406
+#, fuzzy
 msgid "Local install failed"
-msgstr ""
+msgstr "Diegiami failai"
 
-#: ../src/gpk-enum.c:444
+#: ../src/gpk-enum.c:409
+#, fuzzy
 msgid "Bad security signature"
-msgstr ""
+msgstr "Tikrinami parašai"
 
-#: ../src/gpk-enum.c:447
+#: ../src/gpk-enum.c:412
+#, fuzzy
 msgid "Missing security signature"
-msgstr ""
+msgstr "Diegiamas parašas"
 
-#: ../src/gpk-enum.c:450
+#: ../src/gpk-enum.c:415
 msgid "Repository configuration invalid"
 msgstr ""
 
-#: ../src/gpk-enum.c:453
+#: ../src/gpk-enum.c:418
+#, fuzzy
 msgid "Invalid package file"
-msgstr ""
+msgstr "Paketų failai"
 
-#: ../src/gpk-enum.c:456
+#: ../src/gpk-enum.c:421
+#, fuzzy
 msgid "Package install blocked"
-msgstr ""
+msgstr "Paketų failai"
 
-#: ../src/gpk-enum.c:459
+#: ../src/gpk-enum.c:424
+#, fuzzy
 msgid "Package is corrupt"
-msgstr ""
+msgstr "Paketo aprašymas"
 
-#: ../src/gpk-enum.c:462
+#: ../src/gpk-enum.c:427
+#, fuzzy
 msgid "All packages are already installed"
-msgstr ""
+msgstr "Nepavyko rasti paketo %s arba jis jau įdiegtas: %s"
 
-#: ../src/gpk-enum.c:465
+#: ../src/gpk-enum.c:430
+#, fuzzy
 msgid "The specified file could not be found"
-msgstr ""
+msgstr "Įrenginys nerastas"
 
-#: ../src/gpk-enum.c:468
+#: ../src/gpk-enum.c:433
 msgid "No more mirrors are available"
 msgstr ""
 
-#: ../src/gpk-enum.c:471
+#: ../src/gpk-enum.c:436
 msgid "No distribution upgrade data is available"
 msgstr ""
 
-#: ../src/gpk-enum.c:474
+#: ../src/gpk-enum.c:439
 msgid "Package is incompatible with this system"
 msgstr ""
 
-#: ../src/gpk-enum.c:477
+#: ../src/gpk-enum.c:442
 msgid "No space is left on the disk"
 msgstr ""
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:480 ../src/gpk-task.c:360
+#: ../src/gpk-enum.c:445 ../src/gpk-task.c:359
+#, fuzzy
 msgid "A media change is required"
-msgstr ""
+msgstr "Reikia pakeisti laikmeną"
 
-#: ../src/gpk-enum.c:483
+#: ../src/gpk-enum.c:448
+#, fuzzy
 msgid "Authorization failed"
-msgstr ""
+msgstr "Operacija nepavyko"
 
-#: ../src/gpk-enum.c:486
+#: ../src/gpk-enum.c:451
+#, fuzzy
 msgid "Update not found"
-msgstr ""
+msgstr "Įrenginio kelias nerastas"
 
-#: ../src/gpk-enum.c:489
+#: ../src/gpk-enum.c:454
+#, fuzzy
 msgid "Cannot install from untrusted source"
-msgstr ""
+msgstr "Ši programinė įranga nėra iš patikimo šaltinio."
 
-#: ../src/gpk-enum.c:492
+#: ../src/gpk-enum.c:457
+#, fuzzy
 msgid "Cannot update from untrusted source"
-msgstr ""
+msgstr "Ši programinė įranga nėra iš patikimo šaltinio."
 
-#: ../src/gpk-enum.c:495
+#: ../src/gpk-enum.c:460
+#, fuzzy
 msgid "Cannot get the file list"
-msgstr ""
+msgstr "Gaunamas failų sąrašas"
 
-#: ../src/gpk-enum.c:498
+#: ../src/gpk-enum.c:463
+#, fuzzy
 msgid "Cannot get package requires"
-msgstr ""
+msgstr "Nereikia jokių papildomų paketų."
 
-#: ../src/gpk-enum.c:501
+#: ../src/gpk-enum.c:466
 msgid "Cannot disable source"
 msgstr ""
 
-#: ../src/gpk-enum.c:504
+#: ../src/gpk-enum.c:469
+#, fuzzy
 msgid "The download failed"
-msgstr ""
+msgstr "Operacija nepavyko"
 
-#: ../src/gpk-enum.c:507
+#: ../src/gpk-enum.c:472
+#, fuzzy
 msgid "Package failed to configure"
-msgstr ""
+msgstr "PackageKit stebyklė"
 
-#: ../src/gpk-enum.c:510
+#: ../src/gpk-enum.c:475
+#, fuzzy
 msgid "Package failed to build"
-msgstr ""
+msgstr "Paketų failai"
 
-#: ../src/gpk-enum.c:513
+#: ../src/gpk-enum.c:478
+#, fuzzy
 msgid "Package failed to install"
-msgstr ""
+msgstr "Paketų failai"
 
-#: ../src/gpk-enum.c:516
+#: ../src/gpk-enum.c:481
+#, fuzzy
 msgid "Package failed to be removed"
-msgstr ""
+msgstr "Šie paketai turi būti pašalinti:"
 
-#: ../src/gpk-enum.c:519
+#: ../src/gpk-enum.c:484
 msgid "Update failed due to running process"
 msgstr ""
 
-#: ../src/gpk-enum.c:522
+#: ../src/gpk-enum.c:487
 msgid "The package database was changed"
 msgstr ""
 
-#: ../src/gpk-enum.c:539
+#: ../src/gpk-enum.c:490
+#, fuzzy
+#| msgid "Option '%s' is not supported"
+msgid "Virtual provide type is not supported"
+msgstr "Parinktis „%s“ nepalaikoma"
+
+#: ../src/gpk-enum.c:493
+#, fuzzy
+#| msgid "Installed version"
+msgid "Install root is invalid"
+msgstr "Įdiegta versija"
+
+#: ../src/gpk-enum.c:510
 msgid "Failed with unknown error code."
 msgstr ""
 
-#: ../src/gpk-enum.c:542
+#: ../src/gpk-enum.c:513
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
 msgstr ""
 
-#: ../src/gpk-enum.c:546
+#: ../src/gpk-enum.c:517
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
 msgstr ""
 
-#: ../src/gpk-enum.c:550
+#: ../src/gpk-enum.c:521
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
 "Please restart your computer."
 msgstr ""
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:525
 msgid "A thread could not be created to service the user request."
 msgstr ""
 
-#: ../src/gpk-enum.c:557
+#: ../src/gpk-enum.c:528
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bugtracker as this should not have "
 "happened."
 msgstr ""
 
-#: ../src/gpk-enum.c:561
+#: ../src/gpk-enum.c:532
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bugtracker with the error "
 "description."
 msgstr ""
 
-#: ../src/gpk-enum.c:565
+#: ../src/gpk-enum.c:536
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
 msgstr ""
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:540
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:543
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
 msgstr ""
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:546
 msgid "The package that is trying to be installed is already installed."
 msgstr ""
 
-#: ../src/gpk-enum.c:578
+#: ../src/gpk-enum.c:549
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
 msgstr ""
 
-#: ../src/gpk-enum.c:582
+#: ../src/gpk-enum.c:553
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
 msgstr ""
 
-#: ../src/gpk-enum.c:586
+#: ../src/gpk-enum.c:557
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
 "error."
 msgstr ""
 
-#: ../src/gpk-enum.c:591
+#: ../src/gpk-enum.c:562
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:595
+#: ../src/gpk-enum.c:566
 msgid "The search filter was not correctly formed."
-msgstr ""
+msgstr "Paieškos filtras netinkamai suformuotas."
 
-#: ../src/gpk-enum.c:598
+#: ../src/gpk-enum.c:569
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
 msgstr ""
 
-#: ../src/gpk-enum.c:602
+#: ../src/gpk-enum.c:573
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:606
+#: ../src/gpk-enum.c:577
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
 msgstr ""
 
-#: ../src/gpk-enum.c:610
+#: ../src/gpk-enum.c:581
 msgid "Removing a protected system package is not allowed."
 msgstr ""
 
-#: ../src/gpk-enum.c:613
+#: ../src/gpk-enum.c:584
 msgid "The action was canceled successfully and no packages were changed."
 msgstr ""
 
-#: ../src/gpk-enum.c:616
+#: ../src/gpk-enum.c:587
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
 
-#: ../src/gpk-enum.c:620
+#: ../src/gpk-enum.c:591
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
 msgstr ""
 
-#: ../src/gpk-enum.c:624
+#: ../src/gpk-enum.c:595
 msgid "The action cannot be canceled at this time."
-msgstr ""
+msgstr "Šiuo metu veiksmo atšaukti negalima."
 
-#: ../src/gpk-enum.c:627
+#: ../src/gpk-enum.c:598
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
 
-#: ../src/gpk-enum.c:631
+#: ../src/gpk-enum.c:602
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
 
-#: ../src/gpk-enum.c:635
+#: ../src/gpk-enum.c:606
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
 
-#: ../src/gpk-enum.c:639
+#: ../src/gpk-enum.c:610
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
 
-#: ../src/gpk-enum.c:643
+#: ../src/gpk-enum.c:614
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
 msgstr ""
 
-#: ../src/gpk-enum.c:647
+#: ../src/gpk-enum.c:618
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
 
-#: ../src/gpk-enum.c:651
+#: ../src/gpk-enum.c:622
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
 
-#: ../src/gpk-enum.c:655
+#: ../src/gpk-enum.c:626
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
 
-#: ../src/gpk-enum.c:659
+#: ../src/gpk-enum.c:630
 msgid "None of the selected packages could be updated."
 msgstr ""
 
-#: ../src/gpk-enum.c:662
+#: ../src/gpk-enum.c:633
 msgid "The repository configuration could not be modified."
 msgstr ""
 
-#: ../src/gpk-enum.c:665
+#: ../src/gpk-enum.c:636
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:669
+#: ../src/gpk-enum.c:640
 msgid "The package security signature could not be verified."
 msgstr ""
 
-#: ../src/gpk-enum.c:672
+#: ../src/gpk-enum.c:643
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
 msgstr ""
 
-#: ../src/gpk-enum.c:676
+#: ../src/gpk-enum.c:647
 msgid "Repository configuration was invalid and could not be read."
 msgstr ""
 
-#: ../src/gpk-enum.c:679
+#: ../src/gpk-enum.c:650
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
 msgstr ""
 
-#: ../src/gpk-enum.c:683
+#: ../src/gpk-enum.c:654
+#, fuzzy
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
-msgstr ""
+msgstr "Įdiegti paketus neklausiant patvirtinimo"
 
-#: ../src/gpk-enum.c:686
+#: ../src/gpk-enum.c:657
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr ""
 
-#: ../src/gpk-enum.c:689
+#: ../src/gpk-enum.c:660
+#, fuzzy
 msgid ""
 "All of the packages selected for install are already installed on the system."
-msgstr ""
+msgstr "Nepavyko rasti paketo %s arba jis jau įdiegtas: %s"
 
-#: ../src/gpk-enum.c:692
+#: ../src/gpk-enum.c:663
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
 msgstr ""
 
-#: ../src/gpk-enum.c:696
+#: ../src/gpk-enum.c:667
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
 
-#: ../src/gpk-enum.c:700
+#: ../src/gpk-enum.c:671
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
 
-#: ../src/gpk-enum.c:704
+#: ../src/gpk-enum.c:675
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr ""
 
-#: ../src/gpk-enum.c:707
+#: ../src/gpk-enum.c:678
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
 
-#: ../src/gpk-enum.c:711
+#: ../src/gpk-enum.c:682
+#, fuzzy
 msgid "Additional media is required to complete the transaction."
-msgstr ""
+msgstr "Reikia patvirtinti tapatybę, norint grąžinti būseną prieš operaciją"
 
-#: ../src/gpk-enum.c:714
+#: ../src/gpk-enum.c:685
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
 msgstr ""
 
-#: ../src/gpk-enum.c:718
+#: ../src/gpk-enum.c:689
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
 "server."
 msgstr ""
 
-#: ../src/gpk-enum.c:722
+#: ../src/gpk-enum.c:693
+#, fuzzy
 msgid "The package could not be installed from untrusted source."
-msgstr ""
+msgstr "Ši programinė įranga nėra iš patikimo šaltinio."
 
-#: ../src/gpk-enum.c:725
+#: ../src/gpk-enum.c:696
+#, fuzzy
 msgid "The package could not be updated from untrusted source."
-msgstr ""
+msgstr "Ši programinė įranga nėra iš patikimo šaltinio."
 
-#: ../src/gpk-enum.c:728
+#: ../src/gpk-enum.c:699
+#, fuzzy
 msgid "The file list is not available for this package."
-msgstr ""
+msgstr "Šiuo metu nėra atnaujinimų."
 
-#: ../src/gpk-enum.c:731
+#: ../src/gpk-enum.c:702
 msgid "The information about what requires this package could not be obtained."
 msgstr ""
 
-#: ../src/gpk-enum.c:734
+#: ../src/gpk-enum.c:705
+#, fuzzy
 msgid "The specified software source could not be disabled."
-msgstr ""
+msgstr "Nepasirašyta programinė įranga nebus diegiama."
 
-#: ../src/gpk-enum.c:737
+#: ../src/gpk-enum.c:708
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:741
+#: ../src/gpk-enum.c:712
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:745
+#: ../src/gpk-enum.c:716
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:749
+#: ../src/gpk-enum.c:720
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:753
+#: ../src/gpk-enum.c:724
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:757
+#: ../src/gpk-enum.c:728
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
 msgstr ""
 
-#: ../src/gpk-enum.c:761
+#: ../src/gpk-enum.c:732
 msgid "The package database was changed while the request was running."
 msgstr ""
 
-#: ../src/gpk-enum.c:779
+#: ../src/gpk-enum.c:735
+msgid "The virtual provide type is not supported by this system."
+msgstr ""
+
+#: ../src/gpk-enum.c:738
+msgid "The install root is invalid. Please contact your administrator."
+msgstr ""
+
+#: ../src/gpk-enum.c:756
 msgid "No restart is necessary."
 msgstr ""
 
-#: ../src/gpk-enum.c:782
+#: ../src/gpk-enum.c:759
 msgid "You will be required to restart this application."
 msgstr ""
 
-#: ../src/gpk-enum.c:785
+#: ../src/gpk-enum.c:762
 msgid "You will be required to log out and back in."
 msgstr ""
 
-#: ../src/gpk-enum.c:788
+#: ../src/gpk-enum.c:765
 msgid "A restart will be required."
-msgstr ""
+msgstr "Reikės paleisti iš naujo."
 
-#: ../src/gpk-enum.c:791
+#: ../src/gpk-enum.c:768
 msgid "You will be required to log out and back in due to a security update."
 msgstr ""
 
-#: ../src/gpk-enum.c:794
+#: ../src/gpk-enum.c:771
 msgid "A restart will be required due to a security update."
 msgstr ""
 
-#: ../src/gpk-enum.c:811
+#: ../src/gpk-enum.c:788
 msgid "No restart is required."
-msgstr ""
+msgstr "Paleisti iš naujo nereikia."
 
-#: ../src/gpk-enum.c:814
+#: ../src/gpk-enum.c:791
 msgid "A restart is required."
-msgstr ""
+msgstr "Reikia paleisti iš naujo."
 
-#: ../src/gpk-enum.c:817
+#: ../src/gpk-enum.c:794
 msgid "You need to log out and log back in."
 msgstr ""
 
-#: ../src/gpk-enum.c:820
+#: ../src/gpk-enum.c:797
 msgid "You need to restart the application."
 msgstr ""
 
-#: ../src/gpk-enum.c:823
+#: ../src/gpk-enum.c:800
 msgid "You need to log out and log back in to remain secure."
 msgstr ""
 
-#: ../src/gpk-enum.c:826
+#: ../src/gpk-enum.c:803
+#, fuzzy
 msgid "A restart is required to remain secure."
-msgstr ""
+msgstr "Reikia patvirtinti tapatybę, norint pašalinti paketus"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:844
+#: ../src/gpk-enum.c:821
+#, fuzzy
 msgid "Stable"
-msgstr ""
+msgstr "Būsena"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:848
+#: ../src/gpk-enum.c:825
+#, fuzzy
 msgid "Unstable"
-msgstr ""
+msgstr "Įdiegtas"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:852
+#: ../src/gpk-enum.c:829
+#, fuzzy
 msgid "Testing"
-msgstr ""
+msgstr "Tikrinami pakeitimai"
 
-#: ../src/gpk-enum.c:869
+#: ../src/gpk-enum.c:846
 msgid "A mirror is possibly broken"
 msgstr ""
 
-#: ../src/gpk-enum.c:872
+#: ../src/gpk-enum.c:849
 msgid "The connection was refused"
 msgstr ""
 
-#: ../src/gpk-enum.c:875
+#: ../src/gpk-enum.c:852
+#, fuzzy
 msgid "The parameter was invalid"
-msgstr ""
+msgstr "Nurodytas filtras buvo netinkamas"
 
-#: ../src/gpk-enum.c:878
+#: ../src/gpk-enum.c:855
+#, fuzzy
 msgid "The priority was invalid"
-msgstr ""
+msgstr "Nurodytas filtras buvo netinkamas"
 
-#: ../src/gpk-enum.c:881
+#: ../src/gpk-enum.c:858
 msgid "Backend warning"
 msgstr ""
 
-#: ../src/gpk-enum.c:884
+#: ../src/gpk-enum.c:861
 msgid "Daemon warning"
 msgstr ""
 
-#: ../src/gpk-enum.c:887
+#: ../src/gpk-enum.c:864
 msgid "The package list cache is being rebuilt"
 msgstr ""
 
-#: ../src/gpk-enum.c:890
+#: ../src/gpk-enum.c:867
+#, fuzzy
 msgid "An untrusted package was installed"
-msgstr ""
+msgstr "Pakeisti paketų diegimo vietą"
 
-#: ../src/gpk-enum.c:893
+#: ../src/gpk-enum.c:870
+#, fuzzy
 msgid "A newer package exists"
-msgstr ""
+msgstr "Kuriami paketų sąrašai"
 
-#: ../src/gpk-enum.c:896
+#: ../src/gpk-enum.c:873
+#, fuzzy
 msgid "Could not find package"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
-#: ../src/gpk-enum.c:899
+#: ../src/gpk-enum.c:876
 msgid "Configuration files were changed"
 msgstr ""
 
-#: ../src/gpk-enum.c:902
+#: ../src/gpk-enum.c:879
+#, fuzzy
 msgid "Package is already installed"
-msgstr ""
+msgstr "Nepavyko rasti paketo %s arba jis jau įdiegtas: %s"
 
-#: ../src/gpk-enum.c:905
+#: ../src/gpk-enum.c:882
 msgid "Automatic cleanup is being ignored"
 msgstr ""
 
-#: ../src/gpk-enum.c:908
+#: ../src/gpk-enum.c:885
+#, fuzzy
 msgid "Software source download failed"
-msgstr ""
+msgstr "Programinės įrangos šaltinio pavadinimas"
 
-#: ../src/gpk-enum.c:911
+#: ../src/gpk-enum.c:888
+#, fuzzy
 msgid "This software source is for developers only"
+msgstr "Pakeisti programinės įrangos šaltinių parametrus"
+
+#: ../src/gpk-enum.c:891
+msgid "Other updates have been held back"
 msgstr ""
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:929
+#: ../src/gpk-enum.c:909
 msgid "Unknown state"
-msgstr ""
+msgstr "Nežinoma būsena"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:933
+#: ../src/gpk-enum.c:913
 msgid "Starting"
-msgstr ""
+msgstr "Paleidžiama"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:937
+#: ../src/gpk-enum.c:917
 msgid "Waiting in queue"
-msgstr ""
+msgstr "Laukiama eilėje"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:941
+#: ../src/gpk-enum.c:921
 msgid "Running"
-msgstr ""
+msgstr "Vykdoma"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:945
+#: ../src/gpk-enum.c:925
 msgid "Querying"
-msgstr ""
+msgstr "Užklausiama"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:949
+#: ../src/gpk-enum.c:929
 msgid "Getting information"
-msgstr ""
+msgstr "Gaunama informacija"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:957 ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:937 ../src/gpk-enum.c:1373
 msgid "Downloading packages"
-msgstr ""
+msgstr "Atsiunčiami paketai"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:965
+#: ../src/gpk-enum.c:945
 msgid "Refreshing software list"
-msgstr ""
+msgstr "Atnaujinamas programinės įrangos sąrašas"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:969
+#: ../src/gpk-enum.c:949
 msgid "Installing updates"
-msgstr ""
+msgstr "Diegiami atnaujinimai"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:973
+#: ../src/gpk-enum.c:953
 msgid "Cleaning up packages"
-msgstr ""
+msgstr "Išvalomi paketai"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:977
+#: ../src/gpk-enum.c:957
 msgid "Obsoleting packages"
-msgstr ""
+msgstr "Žymimo pasenę paketai"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:981
+#: ../src/gpk-enum.c:961
 msgid "Resolving dependencies"
-msgstr ""
+msgstr "Tikrinamos priklausomybės"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:985
+#: ../src/gpk-enum.c:965
 msgid "Checking signatures"
-msgstr ""
+msgstr "Tikrinami parašai"
 
 #. TRANSLATORS: transaction state, when we return to a previous system state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:989 ../src/gpk-enum.c:1353
+#: ../src/gpk-enum.c:969 ../src/gpk-enum.c:1333
 msgid "Rolling back"
-msgstr ""
+msgstr "Grįžtama"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:993
+#: ../src/gpk-enum.c:973
 msgid "Testing changes"
-msgstr ""
+msgstr "Tikrinami pakeitimai"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:997
+#: ../src/gpk-enum.c:977
 msgid "Committing changes"
-msgstr ""
+msgstr "Išsaugomi pakeitimai"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:1001
+#: ../src/gpk-enum.c:981
 msgid "Requesting data"
-msgstr ""
+msgstr "Užklausiama duomenų"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:1005
+#: ../src/gpk-enum.c:985
 msgid "Finished"
-msgstr ""
+msgstr "Baigta"
 
 #. TRANSLATORS: transaction state, in the process of cancelling
-#: ../src/gpk-enum.c:1009
+#: ../src/gpk-enum.c:989
 msgid "Cancelling"
-msgstr ""
+msgstr "Atšaukiama"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:993
+msgid "Downloading repository information"
+msgstr "Atsiunčiama saugyklų informacija"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:997
+msgid "Downloading list of packages"
+msgstr "Atsiunčiamas paketų sąrašas"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1001
+msgid "Downloading file lists"
+msgstr "Atsiunčiami failų sąrašai"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1005
+msgid "Downloading lists of changes"
+msgstr "Atsiunčiami pakeitimų sąrašai"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1009
+msgid "Downloading groups"
+msgstr "Atsiunčiamos grupės"
 
 #. TRANSLATORS: transaction state, downloading metadata
 #: ../src/gpk-enum.c:1013
-msgid "Downloading repository information"
-msgstr ""
-
-#. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1017
-msgid "Downloading list of packages"
-msgstr ""
-
-#. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1021
-msgid "Downloading file lists"
-msgstr ""
-
-#. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1025
-msgid "Downloading lists of changes"
-msgstr ""
-
-#. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1029
-msgid "Downloading groups"
-msgstr ""
-
-#. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1033
 msgid "Downloading update information"
-msgstr ""
+msgstr "Atsiunčiama atnaujinimo informacija"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1037
+#: ../src/gpk-enum.c:1017
 msgid "Repackaging files"
-msgstr ""
+msgstr "Perpakuojami failai"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1041
+#: ../src/gpk-enum.c:1021
 msgid "Loading cache"
-msgstr ""
+msgstr "Įkeliamas podėlis"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1045
+#: ../src/gpk-enum.c:1025
 msgid "Scanning installed applications"
-msgstr ""
+msgstr "Apžvelgiamos įdiegtos programos"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1049
+#: ../src/gpk-enum.c:1029
 msgid "Generating package lists"
-msgstr ""
+msgstr "Kuriami paketų sąrašai"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1053
+#: ../src/gpk-enum.c:1033
 msgid "Waiting for package manager lock"
-msgstr ""
+msgstr "Laukiama paketų tvarkyklės užrakto"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1057
+#: ../src/gpk-enum.c:1037
 msgid "Waiting for authentication"
-msgstr ""
+msgstr "Laukiama tapatybės patvirtinimo"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1061
+#: ../src/gpk-enum.c:1041
 msgid "Updating the list of running applications"
-msgstr ""
+msgstr "Atnaujinamas veikiančių programų sąrašas"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1065
+#: ../src/gpk-enum.c:1045
 msgid "Checking for applications currently in use"
-msgstr ""
+msgstr "Ieškoma dabar naudojamų programų"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1069
+#: ../src/gpk-enum.c:1049
 msgid "Checking for libraries currently in use"
-msgstr ""
+msgstr "Ieškoma dabar naudojamų bibliotekų"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1073
+#: ../src/gpk-enum.c:1053
 msgid "Copying files"
-msgstr ""
+msgstr "Kopijuojami failai"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1091
+#: ../src/gpk-enum.c:1071
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i nereikšmingas atnaujinimas"
+msgstr[1] "%i nereikšmingi atnaujinimai"
+msgstr[2] "%i nereikšmingų atnaujinimų"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1095
+#: ../src/gpk-enum.c:1075
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i atnaujinimas"
+msgstr[1] "%i atnaujinimai"
+msgstr[2] "%i atnaujinimų"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1099
+#: ../src/gpk-enum.c:1079
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i svarbus atnaujinimas"
+msgstr[1] "%i svarbūs atnaujinimai"
+msgstr[2] "%i svarbių atnaujinimų"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1103
+#: ../src/gpk-enum.c:1083
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%i saugumo atnaujinimas"
+msgstr[1] "%i saugumo atnaujinimai"
+msgstr[2] "%i saugumo atnaujinimų"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1107
+#: ../src/gpk-enum.c:1087
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2918,16 +2770,16 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1111
-#, c-format
+#: ../src/gpk-enum.c:1091
+#, fuzzy, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Patobulinimas"
+msgstr[1] "Patobulinimas"
+msgstr[2] "Patobulinimas"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1115
+#: ../src/gpk-enum.c:1095
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2936,789 +2788,803 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1133
+#: ../src/gpk-enum.c:1113
 msgid "Trivial update"
-msgstr ""
+msgstr "Kasdienis atnaujinimas"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1117
+msgid "Normal update"
+msgstr "Normalus atnaujinimas"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1121
+msgid "Important update"
+msgstr "Svarbus atnaujinimas"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1125
+msgid "Security update"
+msgstr "Saugumo atnaujinimas"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1129
+msgid "Bug fix update"
+msgstr "Klaidų ištaisymo atnaujinimas"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1133
+msgid "Enhancement update"
+msgstr "Patobulinimų atnaujinimas"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:1137
-msgid "Normal update"
-msgstr ""
-
-#. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1141
-msgid "Important update"
-msgstr ""
-
-#. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1145
-msgid "Security update"
-msgstr ""
-
-#. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1149
-msgid "Bug fix update"
-msgstr ""
-
-#. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1153
-msgid "Enhancement update"
-msgstr ""
-
-#. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1157
 msgid "Blocked update"
-msgstr ""
+msgstr "Blokuotas atnaujinimas"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1167
+#: ../src/gpk-enum.c:1147
 msgid "Available"
-msgstr ""
+msgstr "Prieinamas"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1185 ../src/gpk-service-pack.c:427
+#: ../src/gpk-enum.c:1165 ../src/gpk-service-pack.c:445
 msgid "Downloading"
-msgstr ""
+msgstr "Atsiunčiamas"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1169
+msgid "Updating"
+msgstr "Atnaujinamas"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1173 ../src/gpk-enum.c:1309
+msgid "Installing"
+msgstr "Diegiamas"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1177 ../src/gpk-enum.c:1305
+msgid "Removing"
+msgstr "Šalinamas"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1181
+msgid "Cleaning up"
+msgstr "Išvalomas"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1185
+msgid "Obsoleting"
+msgstr "Žymimas pasenusiu"
 
 #. TRANSLATORS: The action of the package, in present tense
 #: ../src/gpk-enum.c:1189
-msgid "Updating"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in present tense
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1193 ../src/gpk-enum.c:1329
-msgid "Installing"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in present tense
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1197 ../src/gpk-enum.c:1325
-msgid "Removing"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1201
-msgid "Cleaning up"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1205
-msgid "Obsoleting"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1209
 msgid "Reinstalling"
-msgstr ""
+msgstr "Diegiamas iš naujo"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1213
+#: ../src/gpk-enum.c:1193
 msgid "Preparing"
-msgstr ""
+msgstr "Ruošiama"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1217
+#: ../src/gpk-enum.c:1197
 msgid "Decompressing"
-msgstr ""
+msgstr "Išglaudinama"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1215
+msgid "Downloaded"
+msgstr "Atsiųstas"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1219
+msgid "Updated"
+msgstr "Atnaujintas"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1227
+msgid "Removed"
+msgstr "Pašalintas"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1231
+msgid "Cleaned up"
+msgstr "Išvalytas"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1235
-msgid "Downloaded"
-msgstr ""
+msgid "Obsoleted"
+msgstr "Pasenęs"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1239
-msgid "Updated"
-msgstr ""
+msgid "Reinstalled"
+msgstr "Įdiegtas iš naujo"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1243
+msgid "Prepared"
+msgstr "Paruoštas"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1247
-msgid "Removed"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1251
-msgid "Cleaned up"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1255
-msgid "Obsoleted"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1259
-msgid "Reinstalled"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1263
-msgid "Prepared"
-msgstr ""
-
-#. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1267
 msgid "Decompressed"
-msgstr ""
+msgstr "Išglaudintas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1285 ../src/gpk-enum.c:1441
+#: ../src/gpk-enum.c:1265 ../src/gpk-enum.c:1421
 msgid "Unknown role type"
-msgstr ""
+msgstr "Nežinomas vaidmens tipas"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1269
+msgid "Getting dependencies"
+msgstr "Gaunamos priklausomybės"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1273
+msgid "Getting update detail"
+msgstr "Gaunama atnaujinimo informacija"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1277
+msgid "Getting details"
+msgstr "Gaunama informacija"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1281
+msgid "Getting requires"
+msgstr "Gaunami reikalavimai"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1285
+msgid "Getting updates"
+msgstr "Gaunami atnaujinimai"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1289
-msgid "Getting dependencies"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1293
-msgid "Getting update detail"
-msgstr ""
+msgid "Searching details"
+msgstr "Ieškoma informacijos"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1297
-msgid "Getting details"
-msgstr ""
+msgid "Searching groups"
+msgstr "Ieškoma grupių"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1301
-msgid "Getting requires"
-msgstr ""
+msgid "Searching for package name"
+msgstr "Ieškoma paketo pavadinimo"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1305
-msgid "Getting updates"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1309
-msgid "Searching details"
-msgstr ""
+#: ../src/gpk-enum.c:1313
+msgid "Installing file"
+msgstr "Diegiamas failas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1317
-msgid "Searching groups"
-msgstr ""
+msgid "Refreshing package cache"
+msgstr "Atnaujinamas paketų podėlis"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1321
-msgid "Searching for package name"
-msgstr ""
+msgid "Updating packages"
+msgstr "Atnaujinami paketai"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1333
-msgid "Installing file"
-msgstr ""
+#: ../src/gpk-enum.c:1325
+msgid "Updating system"
+msgstr "Atnaujinama sistema"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1329
+msgid "Canceling"
+msgstr "Atšaukiama"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1337
-msgid "Refreshing package cache"
-msgstr ""
+msgid "Getting list of repositories"
+msgstr "Gaunamas saugyklų sąrašas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1341
-msgid "Updating packages"
-msgstr ""
+msgid "Enabling repository"
+msgstr "Įjungiamos saugyklos"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1345
-msgid "Updating system"
-msgstr ""
+msgid "Setting repository data"
+msgstr "Nustatomi saugyklų duomenys"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1349
-msgid "Canceling"
-msgstr ""
+msgid "Resolving"
+msgstr "Nustatoma"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1353
+msgid "Getting file list"
+msgstr "Gaunamas failų sąrašas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1357
-msgid "Getting list of repositories"
-msgstr ""
+msgid "Getting what provides"
+msgstr "Gaunami suteikiami paketai"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1361
-msgid "Enabling repository"
-msgstr ""
+msgid "Installing signature"
+msgstr "Diegiamas parašas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1365
-msgid "Setting repository data"
-msgstr ""
+msgid "Getting package lists"
+msgstr "Gaunami paketų sąrašai"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1369
-msgid "Resolving"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1373
-msgid "Getting file list"
-msgstr ""
+msgid "Accepting EULA"
+msgstr "Sutinkama su licencija"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1377
-msgid "Getting what provides"
-msgstr ""
+msgid "Getting distribution upgrade information"
+msgstr "Gaunama distribucijos atnaujinimo informacija"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1381
-msgid "Installing signature"
-msgstr ""
+msgid "Getting categories"
+msgstr "Gaunamos kategorijos"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1385
-msgid "Getting package lists"
-msgstr ""
+msgid "Getting old transactions"
+msgstr "Gaunamos senos operacijos"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1389
-msgid "Accepting EULA"
-msgstr ""
+msgid "Simulating the install of files"
+msgstr "Imituojamas failų diegimas"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1393
+msgid "Simulating the install"
+msgstr "Imituojamas diegimas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1397
-msgid "Getting distribution upgrade information"
-msgstr ""
+msgid "Simulating the remove"
+msgstr "Imituojamas šalinimas"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1401
-msgid "Getting categories"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1405
-msgid "Getting old transactions"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1409
-msgid "Simulating the install of files"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1413
-msgid "Simulating the install"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1417
-msgid "Simulating the remove"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1421
 msgid "Simulating the update"
-msgstr ""
+msgstr "Imituojamas atnaujinimas"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1425
+msgid "Got dependencies"
+msgstr "Gautos priklausomybės"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1429
+msgid "Got update detail"
+msgstr "Gauta atnaujinimo informacija"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1433
+msgid "Got details"
+msgstr "Gauta informacija"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1437
+msgid "Got requires"
+msgstr "Gauti reikalavimai"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1441
+msgid "Got updates"
+msgstr "Gauti atnaujinimai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1445
-msgid "Got dependencies"
-msgstr ""
+msgid "Searched for package details"
+msgstr "Ieškoma paketų informacijos"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1449
-msgid "Got update detail"
-msgstr ""
+msgid "Searched for file"
+msgstr "Ieškoma failo"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1453
-msgid "Got details"
-msgstr ""
+msgid "Searched groups"
+msgstr "Ieškoma grupių"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1457
-msgid "Got requires"
-msgstr ""
+msgid "Searched for package name"
+msgstr "Ieškoma paketo pavadinimo"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1461
-msgid "Got updates"
-msgstr ""
+msgid "Removed packages"
+msgstr "Pašalinti paketai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1465
-msgid "Searched for package details"
-msgstr ""
+msgid "Installed packages"
+msgstr "Įdiegti paketai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1469
-msgid "Searched for file"
-msgstr ""
+msgid "Installed local files"
+msgstr "Įdiegti vietiniai failai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1473
-msgid "Searched groups"
-msgstr ""
+msgid "Refreshed package cache"
+msgstr "Atnaujintas paketų podėlis"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1477
-msgid "Searched for package name"
-msgstr ""
+msgid "Updated packages"
+msgstr "Atnaujinti paketai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1481
-msgid "Removed packages"
-msgstr ""
+msgid "Updated system"
+msgstr "Atnaujinta sistema"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1485
-msgid "Installed packages"
-msgstr ""
+msgid "Canceled"
+msgstr "Atšaukta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1489
-msgid "Installed local files"
-msgstr ""
+msgid "Rolled back"
+msgstr "Sugrąžinta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1493
-msgid "Refreshed package cache"
-msgstr ""
+msgid "Got list of repositories"
+msgstr "Gautas saugyklų sąrašas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1497
-msgid "Updated packages"
-msgstr ""
+msgid "Enabled repository"
+msgstr "Įjungta saugykla"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1501
-msgid "Updated system"
-msgstr ""
+msgid "Set repository data"
+msgstr "Nustatyti saugyklos duomenys"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1505
-msgid "Canceled"
-msgstr ""
+msgid "Resolved"
+msgstr "Išspręsta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1509
-msgid "Rolled back"
-msgstr ""
+msgid "Got file list"
+msgstr "Gautas failų sąrašas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1513
-msgid "Got list of repositories"
-msgstr ""
+msgid "Got what provides"
+msgstr "Gauti suteikiami paketai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1517
-msgid "Enabled repository"
-msgstr ""
+msgid "Installed signature"
+msgstr "Įdiegtas parašas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1521
-msgid "Set repository data"
-msgstr ""
+msgid "Got package lists"
+msgstr "Gauti paketų sąrašai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1525
-msgid "Resolved"
-msgstr ""
+msgid "Accepted EULA"
+msgstr "Sutikta su licencija"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1529
-msgid "Got file list"
-msgstr ""
+msgid "Downloaded packages"
+msgstr "Atsiųsti paketai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1533
-msgid "Got what provides"
-msgstr ""
+msgid "Got distribution upgrades"
+msgstr "Gauti distribucijos atnaujinimai"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1537
-msgid "Installed signature"
-msgstr ""
+msgid "Got categories"
+msgstr "Gautos kategorijos"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1541
-msgid "Got package lists"
-msgstr ""
+msgid "Got old transactions"
+msgstr "Gautos senos operacijos"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1545
-msgid "Accepted EULA"
-msgstr ""
+msgid "Simulated the install of files"
+msgstr "Imituotas failų diegimas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1549
-msgid "Downloaded packages"
-msgstr ""
+msgid "Simulated the install"
+msgstr "Imituotas diegimas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1553
-msgid "Got distribution upgrades"
-msgstr ""
+msgid "Simulated the remove"
+msgstr "Imituotas šalinimas"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1557
-msgid "Got categories"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1561
-msgid "Got old transactions"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1565
-msgid "Simulated the install of files"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1569
-msgid "Simulated the install"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1573
-msgid "Simulated the remove"
-msgstr ""
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1577
 msgid "Simulated the update"
-msgstr ""
+msgstr "Imituotas atnaujinimas"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1575
+msgid "Accessibility"
+msgstr "Pritaikymas neįgaliesiems"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1579
+msgid "Accessories"
+msgstr "Reikmenys"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1583
+msgid "Education"
+msgstr "Švietimas"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1587
+msgid "Games"
+msgstr "Žaidimai"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1591
+msgid "Graphics"
+msgstr "Grafika"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1595
-msgid "Accessibility"
-msgstr ""
+msgid "Internet"
+msgstr "Internetas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1599
-msgid "Accessories"
-msgstr ""
+msgid "Office"
+msgstr "Raštinė"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1603
-msgid "Education"
-msgstr ""
+msgid "Other"
+msgstr "Kita"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1607
-msgid "Games"
-msgstr ""
+msgid "Programming"
+msgstr "Programavimas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1611
-msgid "Graphics"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1615
-msgid "Internet"
-msgstr ""
+msgid "Multimedia"
+msgstr "Daugialypė terpė"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1619
-msgid "Office"
-msgstr ""
+msgid "GNOME desktop"
+msgstr "GNOME aplinka"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1623
-msgid "Other"
-msgstr ""
+msgid "KDE desktop"
+msgstr "KDE aplinka"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1627
-msgid "Programming"
-msgstr ""
+msgid "XFCE desktop"
+msgstr "XFCE aplinka"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1631
-msgid "Multimedia"
-msgstr ""
+msgid "Other desktops"
+msgstr "Kitos darbo aplinkos"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1635
+msgid "Publishing"
+msgstr "Leidyba"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1639
-msgid "GNOME desktop"
-msgstr ""
+msgid "Servers"
+msgstr "Serveriai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1643
-msgid "KDE desktop"
-msgstr ""
+msgid "Fonts"
+msgstr "Šriftai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1647
-msgid "XFCE desktop"
-msgstr ""
+msgid "Admin tools"
+msgstr "Administravimo priemonės"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1651
-msgid "Other desktops"
-msgstr ""
+msgid "Legacy"
+msgstr "Palikimas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1655
-msgid "Publishing"
-msgstr ""
+msgid "Localization"
+msgstr "Lokalizavimas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1659
-msgid "Servers"
-msgstr ""
+msgid "Virtualization"
+msgstr "Virtualizavimas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1663
-msgid "Fonts"
-msgstr ""
+msgid "Security"
+msgstr "Saugumas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1667
-msgid "Admin tools"
-msgstr ""
+msgid "Power management"
+msgstr "Energijos valdymas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1671
-msgid "Legacy"
-msgstr ""
+msgid "Communication"
+msgstr "Komunikavimas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1675
-msgid "Localization"
-msgstr ""
+msgid "Network"
+msgstr "Tinklas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1679
-msgid "Virtualization"
-msgstr ""
+msgid "Maps"
+msgstr "Žemėlapiai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1683
-msgid "Security"
-msgstr ""
+msgid "Software sources"
+msgstr "Programinės įrangos šaltiniai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1687
-msgid "Power management"
-msgstr ""
+msgid "Science"
+msgstr "Mokslas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1691
-msgid "Communication"
-msgstr ""
+msgid "Documentation"
+msgstr "Dokumentacija"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1695
-msgid "Network"
-msgstr ""
+msgid "Electronics"
+msgstr "Elektronika"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1699
-msgid "Maps"
-msgstr ""
+msgid "Package collections"
+msgstr "Paketų rinkiniai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1703
-msgid "Software sources"
-msgstr ""
+msgid "Vendor"
+msgstr "Tiekėjas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1707
-msgid "Science"
-msgstr ""
+msgid "Newest packages"
+msgstr "Naujausi paketai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1711
-msgid "Documentation"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1715
-msgid "Electronics"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1719
-msgid "Package collections"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1723
-msgid "Vendor"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1727
-msgid "Newest packages"
-msgstr ""
-
-#. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1731
 msgid "Unknown group"
-msgstr ""
+msgstr "Nežinoma grupė"
 
 #. TRANSLATORS: we need to restart so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:268
+#: ../src/gpk-firmware.c:272
 msgid ""
 "You will need to restart this computer before the hardware will work "
 "correctly."
 msgstr ""
 
 #. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:271 ../src/gpk-firmware.c:306
-#: ../src/gpk-firmware.c:333
+#: ../src/gpk-firmware.c:275 ../src/gpk-firmware.c:310
+#: ../src/gpk-firmware.c:337
 msgid "Additional software was installed"
 msgstr ""
 
 #. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:280
+#: ../src/gpk-firmware.c:284
 msgid "Restart now"
-msgstr ""
+msgstr "Paleisti iš naujo dabar"
 
 #. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:303
+#: ../src/gpk-firmware.c:307
 msgid ""
 "You will need to remove and then reinsert the hardware before it will work "
 "correctly."
 msgstr ""
 
 #. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:330
+#: ../src/gpk-firmware.c:334
 msgid "Your hardware has been set up and is now ready to use."
 msgstr ""
 
 #. TRANSLATORS: we need another package to keep udev quiet
-#: ../src/gpk-firmware.c:613
+#: ../src/gpk-firmware.c:606
 msgid ""
 "Additional firmware is required to make hardware in this computer function "
 "correctly."
 msgstr ""
 
 #. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:627
+#: ../src/gpk-firmware.c:620
+#, fuzzy
 msgid "Additional firmware required"
-msgstr ""
+msgstr "Paleisti programą iš naujo reikalauja:"
 
 #. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:632
+#: ../src/gpk-firmware.c:625
+#, fuzzy
 msgid "Install firmware"
-msgstr ""
+msgstr "Diegiami failai"
 
 #. TRANSLATORS: we should ignore this device and not ask anymore
-#: ../src/gpk-firmware.c:635
+#: ../src/gpk-firmware.c:628
 msgid "Ignore devices"
-msgstr ""
+msgstr "Nepaisyti prietaisų"
 
 #. TODO: tell the user what hardware, NOT JUST A UDI
 #. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
-#: ../src/gpk-hardware.c:183
+#: ../src/gpk-hardware.c:185
 msgid "Additional packages can be installed to support this hardware"
 msgstr ""
 
 #. TRANSLATORS: a new bit of hardware has been plugged in
-#: ../src/gpk-hardware.c:185
+#: ../src/gpk-hardware.c:187
 msgid "New hardware attached"
 msgstr ""
 
 #. TRANSLATORS: button text, install the packages needed for the hardware to work
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-hardware.c:191 ../src/gpk-helper-chooser.c:302
+#: ../src/gpk-hardware.c:193 ../src/gpk-helper-chooser.c:302
 msgid "Install package"
-msgstr ""
+msgstr "Įdiegti paketą"
 
 #. TRANSLATORS: column for the application icon
-#: ../src/gpk-helper-chooser.c:142 ../src/gpk-helper-run.c:184
+#: ../src/gpk-helper-chooser.c:142 ../src/gpk-helper-run.c:212
 msgid "Icon"
-msgstr ""
+msgstr "Piktograma"
 
 #: ../src/gpk-helper-chooser.c:286
 msgid "Applications that can open this type of file"
-msgstr ""
+msgstr "Programos, galinčios atverti šio tipo failus"
 
 #. TRANSLATORS: is not GPG signed
-#: ../src/gpk-task.c:144 ../src/gpk-task.c:154 ../src/gpk-task.c:174
+#: ../src/gpk-task.c:143 ../src/gpk-task.c:153 ../src/gpk-task.c:173
 msgid "The software is not signed by a trusted provider."
-msgstr ""
+msgstr "Šios programinės įrangos nepasirašęs joks patikimas tiekėjas."
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:146
+#: ../src/gpk-task.c:145
 msgid "Do not update this package unless you are sure it is safe to do so."
-msgstr ""
+msgstr "Neatnaujinkite šio paketo, nebent esate tikri, kad tai saugu."
 
 #. TRANSLATORS: warn the user that all bets are off
-#: ../src/gpk-task.c:148 ../src/gpk-task.c:158
+#: ../src/gpk-task.c:147 ../src/gpk-task.c:157
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:150
+#: ../src/gpk-task.c:149
 msgid "Are you <b>sure</b> you want to update this package?"
 msgstr ""
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:156
+#: ../src/gpk-task.c:155
 msgid "Do not install this package unless you are sure it is safe to do so."
-msgstr ""
+msgstr "Neįdiekite šio paketo, nebent esate tikri, kad tai saugu."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:160
+#: ../src/gpk-task.c:159
 msgid "Are you <b>sure</b> you want to install this package?"
 msgstr ""
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
-#: ../src/gpk-task.c:355
+#: ../src/gpk-task.c:354
 #, c-format
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
 msgstr ""
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:364 ../src/gpk-task.c:543
+#: ../src/gpk-task.c:363 ../src/gpk-task.c:542
+#, fuzzy
 msgid "Continue"
-msgstr ""
+msgstr "Komandų eilutė"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:401
+#: ../src/gpk-task.c:400
+#, fuzzy
 msgid "The following software also needs to be installed"
-msgstr ""
+msgstr "Šie paketai turi būti įdiegti:"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:405
+#, fuzzy
 msgid "The following software also needs to be removed"
-msgstr ""
+msgstr "Šie paketai turi būti pašalinti:"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:409
+#, fuzzy
 msgid "The following software also needs to be updated"
-msgstr ""
+msgstr "Šie paketai turi būti atnaujinti:"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:413
+#, fuzzy
 msgid "The following software also needs to be re-installed"
-msgstr ""
+msgstr "Šie paketai turi būti įdiegti iš naujo:"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:417
+#, fuzzy
 msgid "The following software also needs to be downgraded"
-msgstr ""
+msgstr "Šių paketų turi būti grąžintos senesnės versijos:"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:422
+#: ../src/gpk-task.c:421
+#, fuzzy
 msgid "The following software also needs to be processed"
-msgstr ""
+msgstr "Šie paketai turi būti pašalinti:"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:481
+#: ../src/gpk-task.c:480
+#, fuzzy
 msgid "Additional confirmation required"
-msgstr ""
+msgstr "Reikia pakeisti laikmeną"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:486
+#, fuzzy
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
 msgstr[0] ""
+"Norint įdiegti derinimo paketus, reikia įjungti papildomus šaltinius"
 msgstr[1] ""
+"Norint įdiegti derinimo paketus, reikia įjungti papildomus šaltinius"
 msgstr[2] ""
+"Norint įdiegti derinimo paketus, reikia įjungti papildomus šaltinius"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:491
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3727,7 +3593,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:496
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3736,7 +3602,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:501
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these file, additional software also has to be modified."
@@ -3745,37 +3611,41 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
+#: ../src/gpk-task.c:506
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:593
+#: ../src/gpk-task.c:592
 msgid "_Force install"
-msgstr ""
+msgstr "_Priverstinai įdiegti"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:597
+#: ../src/gpk-task.c:596
+#, fuzzy
 msgid "Force installing package"
-msgstr ""
+msgstr "Diegiami paketai"
 
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:477
+#: ../src/gpk-helper-run.c:500
+#, fuzzy
 msgid "Run new application?"
-msgstr ""
+msgstr "Apžvelgiamos programos"
 
 #. add run button
-#: ../src/gpk-helper-run.c:480
+#: ../src/gpk-helper-run.c:503
+#, fuzzy
 msgid "_Run"
-msgstr ""
+msgstr "Paleisti %s"
 
 #. app-id
 #. xid
 #. TRANSLATORS: the reason why we've inhibited it
 #: ../src/gpk-inhibit.c:99
+#, fuzzy
 msgid "A transaction that cannot be interrupted is running"
-msgstr ""
+msgstr "Reikia nurodyti operacijos identifikatorių (tid)"
 
 #. TRANSLATORS: command line option: a list of catalogs to install
 #: ../src/gpk-install-catalog.c:53
@@ -3784,24 +3654,28 @@ msgstr ""
 
 #. are we running privileged
 #: ../src/gpk-install-catalog.c:79
+#, fuzzy
 msgid "Catalog installer"
-msgstr ""
+msgstr "Pradedama diegti"
 
 #: ../src/gpk-install-catalog.c:84
+#, fuzzy
 msgid "Failed to install catalog"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: no filename was supplied
 #: ../src/gpk-install-catalog.c:86
+#, fuzzy
 msgid "You need to specify a file name to install"
-msgstr ""
+msgstr "Reikia nurodyti bent vieną tinkamą įrenginio kelią"
 
 #. TRANSLATORS: This is when the specified DBus method did not execute successfully
 #: ../src/gpk-install-catalog.c:119 ../src/gpk-install-local-file.c:119
 #: ../src/gpk-install-mime-type.c:119 ../src/gpk-install-package-name.c:118
 #: ../src/gpk-install-provide-file.c:119
+#, fuzzy
 msgid "The action could not be completed"
-msgstr ""
+msgstr "Nepavyko nustatyti įgaliotosios programos"
 
 #. TRANSLATORS: we don't have anything more useful to translate. sorry.
 #: ../src/gpk-install-catalog.c:121 ../src/gpk-install-local-file.c:121
@@ -3813,12 +3687,13 @@ msgstr ""
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:52
 msgid "Files to install"
-msgstr ""
+msgstr "Įdiegtini failai"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #: ../src/gpk-install-local-file.c:68 ../src/gpk-install-local-file.c:70
+#, fuzzy
 msgid "PackageKit File Installer"
-msgstr ""
+msgstr "PackageKit Debuginfo diegyklė"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-install-local-file.c:78
@@ -3828,18 +3703,21 @@ msgstr ""
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
 #: ../src/gpk-install-local-file.c:84 ../src/gpk-install-provide-file.c:84
+#, fuzzy
 msgid "Failed to install a package to provide a file"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: nothing selected
 #: ../src/gpk-install-local-file.c:86
+#, fuzzy
 msgid "You need to specify a file to install"
-msgstr ""
+msgstr "Nerasta diegtinų paketų."
 
 #. TRANSLATORS: command line option: a list of catalogs to install
 #: ../src/gpk-install-mime-type.c:52
+#, fuzzy
 msgid "Mime types to install"
-msgstr ""
+msgstr "Rasta %i diegtinų paketų:"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
 #: ../src/gpk-install-mime-type.c:68 ../src/gpk-install-mime-type.c:70
@@ -3848,8 +3726,9 @@ msgstr ""
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-install-mime-type.c:78
+#, fuzzy
 msgid "Mime type installer"
-msgstr ""
+msgstr "Įdiegtas iš naujo"
 
 #. TRANSLATORS: could not install program supporting this type
 #: ../src/gpk-install-mime-type.c:84
@@ -3858,372 +3737,330 @@ msgstr ""
 
 #. TRANSLATORS: no type given
 #: ../src/gpk-install-mime-type.c:86
+#, fuzzy
 msgid "You need to specify a mime-type to install"
-msgstr ""
+msgstr "Reikia nurodyti bent vieną tinkamą įrenginio kelią"
 
 #: ../src/gpk-install-package-name.c:51
+#, fuzzy
 msgid "Packages to install"
-msgstr ""
+msgstr "Nerasta diegtinų paketų."
 
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
 #: ../src/gpk-install-package-name.c:67 ../src/gpk-install-package-name.c:69
 #: ../src/gpk-install-package-name.c:77
+#, fuzzy
 msgid "Package Name Installer"
-msgstr ""
+msgstr "PackageKit Debuginfo diegyklė"
 
 #. TRANSLATORS: failed
 #: ../src/gpk-install-package-name.c:83
+#, fuzzy
 msgid "Failed to install package from name"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų"
 
 #. TRANSLATORS: nothing was specified
 #: ../src/gpk-install-package-name.c:85
+#, fuzzy
 msgid "You need to specify a package to install"
-msgstr ""
+msgstr "Pasirinkite diegtiną paketą"
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-provide-file.c:52
+#, fuzzy
 msgid "Local files to install"
-msgstr ""
+msgstr "Nerasta diegtinų paketų."
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
 #: ../src/gpk-install-provide-file.c:68 ../src/gpk-install-provide-file.c:70
 #: ../src/gpk-install-provide-file.c:78
+#, fuzzy
 msgid "Single File Installer"
-msgstr ""
+msgstr "Pradedama diegti"
 
 #. TRANSLATORS: nothig was specified
 #: ../src/gpk-install-provide-file.c:86
+#, fuzzy
 msgid "You need to specify a filename to install"
-msgstr ""
+msgstr "Reikia nurodyti bent vieną tinkamą įrenginio kelią"
 
 #. TRANSLATORS: strftime formatted please
-#: ../src/gpk-log.c:173
-msgid "%A, %d %B %Y"
+#: ../src/gpk-log.c:171
+msgid "%d %B %Y"
 msgstr ""
 
 #. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:287
+#: ../src/gpk-log.c:286
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. TRANSLATORS: column for the username, e.g. Richard Hughes
-#: ../src/gpk-log.c:329
+#: ../src/gpk-log.c:328
 msgid "Username"
-msgstr ""
+msgstr "Naudotojo vardas"
 
 #. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:336
+#: ../src/gpk-log.c:335
+#, fuzzy
 msgid "Application"
-msgstr ""
+msgstr "Apžvelgiamos programos"
 
 #. TRANSLATORS: short name for pkcon
-#: ../src/gpk-log.c:511
+#: ../src/gpk-log.c:495
+#, fuzzy
 msgid "Command line client"
-msgstr ""
+msgstr "Komandų eilutė"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:517
+#: ../src/gpk-log.c:501
+#, fuzzy
 msgid "Update System"
-msgstr ""
+msgstr "Atnaujinama sistema"
 
 #. TRANSLATORS: short name for gpk-update-icon
-#: ../src/gpk-log.c:520
+#: ../src/gpk-log.c:504
+#, fuzzy
 msgid "Update Icon"
-msgstr ""
+msgstr "Atnaujinimai"
 
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:691
+#: ../src/gpk-log.c:693
+#, fuzzy
 msgid "Set the filter to this value"
-msgstr ""
+msgstr "Nustatyti filtrą, pvz., įdiegta"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:694 ../src/gpk-prefs.c:467 ../src/gpk-repo.c:614
+#: ../src/gpk-log.c:696
 msgid "Set the parent window to make this modal"
 msgstr ""
 
 #. are we running privileged
-#: ../src/gpk-log.c:718
+#: ../src/gpk-log.c:720
 msgid "Log viewer"
-msgstr ""
+msgstr "Žurnalų peržiūra"
 
-#: ../src/gpk-modal-dialog.c:439
+#: ../src/gpk-modal-dialog.c:442
 #, c-format
 msgid "Remaining time : %s"
-msgstr ""
-
-#. TRANSLATORS: check once an hour
-#: ../src/gpk-prefs.c:44
-msgid "Hourly"
-msgstr ""
-
-#. TRANSLATORS: check once a day
-#: ../src/gpk-prefs.c:46
-msgid "Daily"
-msgstr ""
-
-#. TRANSLATORS: check once a week
-#: ../src/gpk-prefs.c:48
-msgid "Weekly"
-msgstr ""
-
-#. TRANSLATORS: never check for updates/upgrades
-#: ../src/gpk-prefs.c:50
-msgid "Never"
-msgstr ""
-
-#. TRANSLATORS: update everything
-#: ../src/gpk-prefs.c:53
-msgid "All updates"
-msgstr ""
-
-#. TRANSLATORS: update just security updates
-#: ../src/gpk-prefs.c:55
-msgid "Only security updates"
-msgstr ""
-
-#. TRANSLATORS: don't update anything
-#: ../src/gpk-prefs.c:57
-msgid "Nothing"
-msgstr ""
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-repo.c:272
-msgid "Failed to change status"
-msgstr ""
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-repo.c:344
-msgid "Enabled"
-msgstr ""
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-repo.c:353
-msgid "Software Source"
-msgstr ""
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-repo.c:414
-msgid "Failed to get the list of sources"
-msgstr ""
-
-#: ../src/gpk-repo.c:557
-msgid "Getting software source list not supported by backend"
-msgstr ""
-
-#: ../src/gpk-repo.c:630
-msgid "Software Source Viewer"
-msgstr ""
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-repo.c:638
-msgid "Software source viewer"
-msgstr ""
+msgstr "Likęs laikas: %s"
 
 #. TRANSLATORS: cannot resolve name to package name
-#: ../src/gpk-service-pack.c:257
-#, c-format
+#: ../src/gpk-service-pack.c:263
+#, fuzzy, c-format
 msgid "Could not find any packages named '%s'"
-msgstr ""
+msgstr "Nepavyko rasti priklausomų paketų: %s"
 
 #. TRANSLATORS: cannot find any valid package names
-#: ../src/gpk-service-pack.c:269
+#: ../src/gpk-service-pack.c:275
+#, fuzzy
 msgid "Could not find any valid package names"
-msgstr ""
+msgstr "Nepavyko rasti priklausomų paketų: %s"
 
 #. TRANSLATORS: cannot get package array
-#: ../src/gpk-service-pack.c:333
-#, c-format
+#: ../src/gpk-service-pack.c:339
+#, fuzzy, c-format
 msgid "Could not get array of installed packages: %s"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
-#: ../src/gpk-service-pack.c:352
-#, c-format
+#: ../src/gpk-service-pack.c:358
+#, fuzzy, c-format
 msgid "Could not save to file: %s"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
 #. TRANSLATORS: we could not create the pack file, generic error
 #. TRANSLATORS: Could not create package array
 #. TRANSLATORS: we could not read the file array for the destination computer
-#: ../src/gpk-service-pack.c:383 ../src/gpk-service-pack.c:515
-#: ../src/gpk-service-pack.c:536 ../src/gpk-service-pack.c:545
-#: ../src/gpk-service-pack.c:585
+#: ../src/gpk-service-pack.c:408 ../src/gpk-service-pack.c:533
+#: ../src/gpk-service-pack.c:555 ../src/gpk-service-pack.c:564
+#: ../src/gpk-service-pack.c:604
+#, fuzzy
 msgid "Create error"
-msgstr ""
+msgstr "Lemtinga klaida"
 
-#: ../src/gpk-service-pack.c:383
+#: ../src/gpk-service-pack.c:408
+#, fuzzy
 msgid "Cannot create service pack"
-msgstr ""
+msgstr "Kuriamas atnaujinimų rinkinys..."
 
-#: ../src/gpk-service-pack.c:515
+#: ../src/gpk-service-pack.c:533
 msgid "Cannot copy system package array"
 msgstr ""
 
-#: ../src/gpk-service-pack.c:536
+#: ../src/gpk-service-pack.c:555
+#, fuzzy
 msgid "No package name selected"
-msgstr ""
+msgstr "Reikia nurodyti paketo pavadinimą"
 
 #. TRANSLATORS: progressbar text
-#: ../src/gpk-service-pack.c:558
+#: ../src/gpk-service-pack.c:577
+#, fuzzy
 msgid "Refreshing system package array"
-msgstr ""
+msgstr "Atnaujinti sistemos šaltinius"
 
 #. TRANSLATORS: we could not reset internal state
-#: ../src/gpk-service-pack.c:565
+#: ../src/gpk-service-pack.c:584
+#, fuzzy
 msgid "Refresh error"
-msgstr ""
+msgstr "Atnaujinti sistemos šaltinius"
 
-#: ../src/gpk-service-pack.c:565
+#: ../src/gpk-service-pack.c:584
+#, fuzzy
 msgid "Could not refresh package array"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
-#: ../src/gpk-service-pack.c:585
+#: ../src/gpk-service-pack.c:604
 msgid "Cannot read destination package array"
 msgstr ""
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:697
+#: ../src/gpk-service-pack.c:722
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr ""
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:700
+#: ../src/gpk-service-pack.c:725
 msgid "Add the package name to the text entry box"
 msgstr ""
 
 #. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:703
+#: ../src/gpk-service-pack.c:728
 msgid "Set the remote package array filename"
 msgstr ""
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:706
+#: ../src/gpk-service-pack.c:731
 msgid "Set the default output directory"
 msgstr ""
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:780
+#: ../src/gpk-service-pack.c:800
+#, fuzzy
 msgid "Package array files"
-msgstr ""
+msgstr "Paketų failai"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:787
+#: ../src/gpk-service-pack.c:807
+#, fuzzy
 msgid "Service pack files"
-msgstr ""
+msgstr "Atnaujinimų rinkinys „%s“ sukurtas"
 
-#: ../src/gpk-update-icon.c:62
+#: ../src/gpk-update-icon.c:77
 msgid "Exit after a small delay"
-msgstr ""
+msgstr "Išeiti šiek tiek palaukus"
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-update-icon.c:82 ../src/gpk-update-icon.c:84
+#: ../src/gpk-update-icon.c:97 ../src/gpk-update-icon.c:99
+#, fuzzy
 msgid "Update Applet"
-msgstr ""
+msgstr "Atnaujinimo tekstas"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-icon.c:97
+#: ../src/gpk-update-icon.c:112
+#, fuzzy
 msgid "Update applet"
-msgstr ""
+msgstr "Atnaujinimo tekstas"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:214
+#: ../src/gpk-update-viewer.c:212
+#, fuzzy
 msgid "Failed to process request."
-msgstr ""
+msgstr "Nepavyko atverti paketų sąrašo."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:243
+#: ../src/gpk-update-viewer.c:241
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
 msgstr ""
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:245 ../src/gpk-update-viewer.c:251
+#: ../src/gpk-update-viewer.c:243 ../src/gpk-update-viewer.c:249
+#, fuzzy
 msgid "Restart Computer"
-msgstr ""
+msgstr "Paleisti iš naujo"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:249
+#: ../src/gpk-update-viewer.c:247
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
 msgstr ""
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:255
+#: ../src/gpk-update-viewer.c:253
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
 msgstr ""
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:257 ../src/gpk-update-viewer.c:263
+#: ../src/gpk-update-viewer.c:255 ../src/gpk-update-viewer.c:261
 msgid "Log Out"
 msgstr ""
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:261
+#: ../src/gpk-update-viewer.c:259
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
 msgstr ""
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:308
+#: ../src/gpk-update-viewer.c:317
 msgid "Could not restart"
-msgstr ""
+msgstr "Nepavyko paleisti iš naujo"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:376
+#: ../src/gpk-update-viewer.c:385
 msgid "Some updates were not installed"
-msgstr ""
+msgstr "Kai kurie atnaujinimai buvo neįdiegti"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:445 ../src/gpk-update-viewer.c:457
+#: ../src/gpk-update-viewer.c:455 ../src/gpk-update-viewer.c:467
 msgid "Could not update packages"
-msgstr ""
+msgstr "Nepavyko atnaujinti paketų"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:507
+#: ../src/gpk-update-viewer.c:490 ../src/gpk-update-viewer.c:517
 msgid "GNOME PackageKit Update Viewer"
-msgstr ""
+msgstr "GNOME PackageKit atnaujinimų peržiūra"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:482
+#: ../src/gpk-update-viewer.c:492
 msgid "Failed to update"
-msgstr ""
+msgstr "Nepavyko atnaujinti"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:537 ../src/gpk-update-viewer.c:558
+#: ../src/gpk-update-viewer.c:552 ../src/gpk-update-viewer.c:573
 msgid "Updates installed"
-msgstr ""
+msgstr "Atnaujinimai įdiegti"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:547
+#: ../src/gpk-update-viewer.c:562
 msgid "All updates were installed successfully."
-msgstr ""
+msgstr "Visi atnaujinimai įdiegti sėkmingai."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:550
+#: ../src/gpk-update-viewer.c:565
 msgid "The selected updates were installed successfully."
-msgstr ""
+msgstr "Pasirinkti atnaujinimai įdiegti sėkmingai."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1007
+#: ../src/gpk-update-viewer.c:1040
 msgid "Getting the list of updates"
-msgstr ""
+msgstr "Gaunamas atnaujinimų sąrašas"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1215
+#: ../src/gpk-update-viewer.c:1275
 msgid "Could not run upgrade script"
-msgstr ""
+msgstr "Nepavyko paleisti atnaujinimo scenarijaus"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1266
+#: ../src/gpk-update-viewer.c:1326
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4234,48 +4071,60 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
+#. TRANSLATORS: there are no updates
+#: ../src/gpk-update-viewer.c:1417
+msgid "There are no updates available"
+msgstr "Nėra jokių atnaujinimų"
+
+#. TRANSLATORS: title: nothing to do
+#: ../src/gpk-update-viewer.c:1479
+#, fuzzy
+#| msgid "Update available"
+msgid "No updates are available"
+msgstr "Prieinama atnaujinimų"
+
+#. TRANSLATORS: no network connnection, according to PackageKit
+#: ../src/gpk-update-viewer.c:1481
+msgid "No network connection was detected."
+msgstr ""
+
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1370
+#: ../src/gpk-update-viewer.c:1498
 msgid "_Install Update"
 msgid_plural "_Install Updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Į_diegti atnaujinimus"
+msgstr[1] "Į_diegti atnaujinimus"
+msgstr[2] "Į_diegti atnaujinimus"
 
-#. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1383
-msgid "There are no updates available"
-msgstr ""
-
-#. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1392
+#. TRANSLATORS: title: nothing to do
+#: ../src/gpk-update-viewer.c:1506
 msgid "All software is up to date"
-msgstr ""
+msgstr "Visa programinė įranga atnaujinta"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1396
+#: ../src/gpk-update-viewer.c:1508
 msgid "There are no software updates available for your computer at this time."
-msgstr ""
+msgstr "Šiuo metu jūsų kompiuteriui nėra jokių atnaujinimų."
 
-#: ../src/gpk-update-viewer.c:1432
-#, c-format
+#: ../src/gpk-update-viewer.c:1534
+#, fuzzy, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šiuo metu nėra atnaujinimų."
+msgstr[1] "Šiuo metu nėra atnaujinimų."
+msgstr[2] "Šiuo metu nėra atnaujinimų."
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1448
-#, c-format
+#: ../src/gpk-update-viewer.c:1550
+#, fuzzy, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Pasirinktos abi parinktys."
+msgstr[1] "Pasirinktos abi parinktys."
+msgstr[2] "Pasirinktos abi parinktys."
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1456
+#: ../src/gpk-update-viewer.c:1558
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4284,50 +4133,50 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1650
+#: ../src/gpk-update-viewer.c:1752
 msgid "Software"
-msgstr ""
+msgstr "Programinė įranga"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1660
+#: ../src/gpk-update-viewer.c:1762
 msgid "Status"
-msgstr ""
+msgstr "Būsena"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1870
+#: ../src/gpk-update-viewer.c:1972
 msgid "This update will fix bugs and other non-critical problems."
 msgstr ""
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1874
+#: ../src/gpk-update-viewer.c:1976
 msgid "This update is important as it may solve critical problems."
 msgstr ""
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1878
+#: ../src/gpk-update-viewer.c:1980
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1882
+#: ../src/gpk-update-viewer.c:1984
 msgid "This update is blocked."
 msgstr ""
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1894
+#: ../src/gpk-update-viewer.c:1996
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr ""
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1901
+#: ../src/gpk-update-viewer.c:2003
 #, c-format
 msgid "This notification was issued on %s."
 msgstr ""
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:2025
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4336,7 +4185,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1931
+#: ../src/gpk-update-viewer.c:2033
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4348,7 +4197,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1939
+#: ../src/gpk-update-viewer.c:2041
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4358,229 +4207,793 @@ msgstr[1] ""
 msgstr[2] ""
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:2050
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr ""
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1952
+#: ../src/gpk-update-viewer.c:2054
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr ""
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1959
+#: ../src/gpk-update-viewer.c:2061
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1963
+#: ../src/gpk-update-viewer.c:2065
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:1972
+#: ../src/gpk-update-viewer.c:2074
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2008
+#: ../src/gpk-update-viewer.c:2110
 msgid "Loading..."
-msgstr ""
+msgstr "Įkeliama..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2049 ../src/gpk-update-viewer.c:2148
-#: ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2151 ../src/gpk-update-viewer.c:2250
+#: ../src/gpk-update-viewer.c:2270
+#, fuzzy
 msgid "Could not get update details"
-msgstr ""
+msgstr "Gaunama atnaujinimo informacija"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2069
+#: ../src/gpk-update-viewer.c:2171
+#, fuzzy
 msgid "Could not get package details"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
-#: ../src/gpk-update-viewer.c:2069 ../src/gpk-update-viewer.c:2168
+#: ../src/gpk-update-viewer.c:2171 ../src/gpk-update-viewer.c:2270
 msgid "No results were returned."
 msgstr ""
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2403
+#: ../src/gpk-update-viewer.c:2505
 msgid "Select all"
 msgstr ""
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2411
+#: ../src/gpk-update-viewer.c:2513
 msgid "Unselect all"
 msgstr ""
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2418
+#: ../src/gpk-update-viewer.c:2520
 msgid "Select security updates"
 msgstr ""
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2424
+#: ../src/gpk-update-viewer.c:2526
+#, fuzzy
 msgid "Ignore this update"
-msgstr ""
+msgstr "Diegiami atnaujinimai"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2533
+#: ../src/gpk-update-viewer.c:2638
+#, fuzzy
 msgid "Could not get updates"
-msgstr ""
+msgstr "Nepavyko įdiegti paketų: %s"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2658
+#: ../src/gpk-update-viewer.c:2780
+#, fuzzy
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Gaunami atnaujinimai"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2945
+#: ../src/gpk-update-viewer.c:3067
 msgid "Could not get list of distribution upgrades"
 msgstr ""
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:2976
+#: ../src/gpk-update-viewer.c:3098
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr ""
 
-#: ../src/gpk-dbus-service.c:136
-msgid "Do not exit after the request has been processed"
+#. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
+#: ../src/gpk-update-viewer.c:3338
+msgid ""
+"Other updates are held back as some important system packages need to be "
+"installed first."
 msgstr ""
 
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-update-viewer-main.c:102
+msgid "Software Update Viewer"
+msgstr "Programinės įrangos atnaujinimo rodytuvas"
+
+#: ../src/gpk-dbus-service.c:140
+#, fuzzy
+msgid "Do not exit after the request has been processed"
+msgstr "Išeiti įkėlus modulį"
+
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:155
+#: ../src/gpk-dbus-service.c:157 ../src/gpk-dbus-service.c:159
 msgid "Session DBus service for PackageKit"
 msgstr ""
 
-#. TRANSLATORS: a list of packages is shown that need to restarted
-#: ../src/gpk-watch.c:159
-#, c-format
-msgid "This is due to the %s package being updated."
-msgid_plural "This is due to the following packages being updated: %s."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#. TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here
-#: ../src/gpk-watch.c:163
-#, c-format
-msgid "This is because %i package has been updated."
-msgid_plural "This is because %i packages have been updated."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: ../src/gpk-watch.c:215
-#, c-format
-msgid "%i message from the package manager"
-msgid_plural "%i messages from the package manager"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: ../src/gpk-watch.c:398
+#: ../src/gpk-watch.c:112
 msgid "Package manager error details"
-msgstr ""
-
-#. TRANSLATORS: We couldn't launch the tool, normally a packaging problem
-#: ../src/gpk-watch.c:428
-msgid "Internal error"
-msgstr ""
-
-#: ../src/gpk-watch.c:555
-msgid "Package Manager Messages"
-msgstr ""
-
-#. TRANSLATORS: column for the message type
-#: ../src/gpk-watch.c:585
-msgid "Message"
-msgstr ""
-
-#. TRANSLATORS: messages from the transaction
-#: ../src/gpk-watch.c:930
-msgid "_Show messages"
-msgstr ""
-
-#. TRANSLATORS: log out of the session
-#: ../src/gpk-watch.c:943
-msgid "_Log out"
-msgstr ""
-
-#. TRANSLATORS: this menu item restarts the computer after an update
-#: ../src/gpk-watch.c:958
-msgid "_Restart computer"
-msgstr ""
-
-#. TRANSLATORS: This hides the 'restart required' icon
-#: ../src/gpk-watch.c:970
-msgid "_Hide this icon"
-msgstr ""
-
-#. do the bubble
-#: ../src/gpk-watch.c:1334
-msgid "New package manager message"
-msgstr ""
+msgstr "Paketų valdymo programos klaidos informacija"
 
 #. TRANSLATORS: Prefix to the title shown in the libnotify popup
-#: ../src/gpk-watch.c:1391
+#: ../src/gpk-watch.c:598
 msgid "Package Manager"
-msgstr ""
+msgstr "Paketų valdymo programa"
+
+#. TRANSLATORS: log out of the session
+#: ../src/gpk-watch.c:701
+#, fuzzy
+#| msgid "_Log out"
+msgid "Log out"
+msgstr "_Atsijungti"
+
+#. TRANSLATORS: restart the computer
+#: ../src/gpk-watch.c:706
+#, fuzzy
+#| msgid "Restart now"
+msgid "Restart"
+msgstr "Paleisti iš naujo dabar"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1560
+#: ../src/gpk-watch.c:811
 msgid "Packages have been removed"
-msgstr ""
+msgstr "Paketai pašalinti"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1563
+#: ../src/gpk-watch.c:814
 msgid "Packages have been installed"
-msgstr ""
+msgstr "Paketai įdiegti"
 
 #. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:1566
+#: ../src/gpk-watch.c:817
 msgid "System has been updated"
-msgstr ""
+msgstr "Sistema atnaujinta"
 
 #. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
-#: ../src/gpk-watch.c:1573
+#: ../src/gpk-watch.c:824
 msgid "Task completed"
-msgstr ""
+msgstr "Užduotis įvykdyta"
 
 #. TRANSLATORS: turn on all debugging
 #: ../src/egg-debug.c:364
 msgid "Show debugging information for all files"
-msgstr ""
+msgstr "Rodyti visų failų derinimo informaciją"
 
 #. TRANSLATORS: a list of modules to debug
 #: ../src/egg-debug.c:440
 msgid "Debug these specific modules"
-msgstr ""
+msgstr "Derinti šiuos konkrečius modulius"
 
 #. TRANSLATORS: a list of functions to debug
 #: ../src/egg-debug.c:443
 msgid "Debug these specific functions"
-msgstr ""
+msgstr "Derinti šias konkrečias funkcijas"
 
 #. TRANSLATORS: save to a log
 #: ../src/egg-debug.c:446
 msgid "Log debugging data to a file"
-msgstr ""
+msgstr "Įrašyti derinimo informaciją į failą"
 
 #: ../src/egg-debug.c:450
 msgid "Debugging Options"
-msgstr ""
+msgstr "Derinimo parinktys"
 
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
-msgstr ""
+msgstr "Rodyti derinimo parinktis"
+
+#~ msgid "Ask the user if additional packages should be installed"
+#~ msgstr "Paklausti naudotojo, ar turi būti įdiegti papildomi paketai:"
+
+#~ msgid "Devices that should be ignored"
+#~ msgstr "Įrenginiai, kurių reikėtų nepaisyti"
+
+#~ msgid "Notify the user for completed updates"
+#~ msgstr "Pranešti naudotojui apie įdiegtus atnaujinimus"
+
+#, fuzzy
+#~ msgid "Only show native packages in the file lists"
+#~ msgstr "Paketas, suteikiantis šį failą yra:"
+
+#, fuzzy
+#~ msgid "Scroll to packages as they are downloaded"
+#~ msgstr "Šių paketų turi būti grąžintos senesnės versijos:"
+
+#~ msgid "Enable or disable software sources"
+#~ msgstr "Įjungti arba išjungti programinės įrangos šaltinius"
+
+#~ msgid "Shows more software sources that may be interesting"
+#~ msgstr "Rodo daugiau galinčių dominti programinės įrangos šaltinių"
+
+#~ msgid "Failed to show url"
+#~ msgstr "Nepavyko atverti URL"
+
+#, fuzzy
+#~ msgid "Software Source Viewer"
+#~ msgstr "Programinės įrangos šaltinio pavadinimas"
+
+#, fuzzy
+#~ msgid "Software source viewer"
+#~ msgstr "Programinės įrangos šaltinio pavadinimas"
+
+#, fuzzy
+#~ msgid "This is because %i package has been updated."
+#~ msgid_plural "This is because %i packages have been updated."
+#~ msgstr[0] "Šie paketai turi būti atnaujinti:"
+#~ msgstr[1] "Šie paketai turi būti atnaujinti:"
+#~ msgstr[2] "Šie paketai turi būti atnaujinti:"
+
+#~ msgid "Internal error"
+#~ msgstr "Vidinė klaida"
+
+#~ msgid "_Restart computer"
+#~ msgstr "_Paleisti kompiuterį iš naujo"
+
+#~ msgid "_Hide this icon"
+#~ msgstr "_Paslėpti šią piktogramą"
+
+#~ msgid "Succeeded"
+#~ msgstr "Sėkminga"
+
+#~ msgid "True"
+#~ msgstr "Teigiama"
+
+#~ msgid "False"
+#~ msgstr "Neigiama"
+
+#~ msgid "Role"
+#~ msgstr "Vaidmuo"
+
+#~ msgid "User ID"
+#~ msgstr "Naudotojo ID"
+
+#~ msgid "Real name"
+#~ msgstr "Tikrasis vardas"
+
+#~ msgid "Summary"
+#~ msgstr "Santrauka"
+
+#~ msgid "Category"
+#~ msgstr "Kategorija"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Details about the update:"
+#~ msgstr "Informacija apie atnaujinimą:"
+
+#~ msgid "Obsoletes"
+#~ msgstr "Pasenę"
+
+#~ msgid "Bugzilla"
+#~ msgstr "Bugzilla"
+
+#~ msgid "CVE"
+#~ msgstr "CVE"
+
+#~ msgid "Changes"
+#~ msgstr "Pakeitimai"
+
+#~ msgid "Issued"
+#~ msgstr "Išleistas"
+
+#~ msgid "Disabled"
+#~ msgstr "Išjungta"
+
+#~ msgid "System restart required by:"
+#~ msgstr "Paleisti sistemą iš naujo reikalauja:"
+
+#~ msgid "System restart (security) required by:"
+#~ msgstr "Paleisti sistemą iš naujo (saugumo sumetimais) reikalauja:"
+
+#~ msgid "Session restart (security) required:"
+#~ msgstr "Paleisti seansą iš naujo (saugumo sumetimais) reikalauja:"
+
+#~ msgid "Message:"
+#~ msgstr "Pranešimas:"
+
+#~ msgid "Percentage"
+#~ msgstr "Procentai"
+
+#~ msgid "Results:"
+#~ msgstr "Rezultatai:"
+
+#~ msgid "There are no upgrades available at this time."
+#~ msgstr "Šiuo metu nėra atnaujinimų."
+
+#~ msgid "Please logout and login to complete the update."
+#~ msgstr "Atnaujinimui užbaigti, atsijunkite ir vėl prisijunkite."
+
+#~ msgid ""
+#~ "Please restart the computer to complete the update as important security "
+#~ "updates have been installed."
+#~ msgstr ""
+#~ "Atnaujinimui užbaigti, paleiskite sistemą iš naujo, kadangi buvo įdiegta "
+#~ "svarbių saugumo atnaujinimų."
+
+#~ msgid ""
+#~ "Please logout and login to complete the update as important security "
+#~ "updates have been installed."
+#~ msgstr ""
+#~ "Atnaujinimui užbaigti, atsijunkite ir vėl prisijunkite, kadangi buvo "
+#~ "įdiegta svarbių saugumo atnaujinimų."
+
+#~ msgid ""
+#~ "Expected package name, actually got file. Try using 'pkcon install-local %"
+#~ "s' instead."
+#~ msgstr ""
+#~ "Tikėtasi paketo pavadinimo, bet gautas failas. Mėginkite „pkcon install-"
+#~ "local %s“."
+
+#~ msgid "This tool could not find any available package: %s"
+#~ msgstr "Šiai priemonei nepavyko rasti jokių prieinamų paketų: %s"
+
+#~ msgid "This tool could not find the installed package: %s"
+#~ msgstr "Šiai priemonei nepavyko rasti įdiegto paketo: %s"
+
+#~ msgid "This tool could not find all the packages: %s"
+#~ msgstr "Šiai priemonei nepavyko rasti visų paketų: %s"
+
+#~ msgid "The daemon crashed mid-transaction!"
+#~ msgstr "Tarnyba nulūžo atliekant operaciją!"
+
+#~ msgid "PackageKit Console Interface"
+#~ msgstr "PackageKit pulto sąsaja"
+
+#~ msgid "Subcommands:"
+#~ msgstr "Pakomandės:"
+
+#~ msgid "Failed to get the time since this action was last completed"
+#~ msgstr "Nepavyko gauti laiko, kada šis veiksmas paskutinį kartą baigtas"
+
+#~ msgid "Set the install root, e.g. '/' or '/mnt/ltsp'"
+#~ msgstr "Nustatyti šakninį diegimo katalogą, pvz., „/“ arba „/mnt/ltsp“"
+
+#~ msgid "Exit without waiting for actions to complete"
+#~ msgstr "Išeiti nelaukiant veiksmų pabaigos"
+
+#~ msgid ""
+#~ "Run the command using idle network bandwidth and also using less power"
+#~ msgstr ""
+#~ "Paleisti komandą naudojant laisvą tinklo ryšį ir naudojant mažiau "
+#~ "energijos"
+
+#~ msgid ""
+#~ "Print to screen a machine readable output, rather than using animated "
+#~ "widgets"
+#~ msgstr ""
+#~ "Parodyti ekrane kompiuterio skaitomą išvestį, užuot rodžius animuotus "
+#~ "valdymo elementus"
+
+#~ msgid "Failed to contact PackageKit"
+#~ msgstr "Nepavyko susisiekti su PackageKit"
+
+#~ msgid "The install root could not be set"
+#~ msgstr "Nepavyko nustatyti diegimo šakninio katalogo"
+
+#~ msgid "A search type is required, e.g. name"
+#~ msgstr "Reikia nurodyti paieškos tipą, pvz., pavadinimas"
+
+#~ msgid "A filename to install is required"
+#~ msgstr "Reikia nurodyti diegtino failo pavadinimą"
+
+#~ msgid "A type, key_id and package_id are required"
+#~ msgstr "Reikia nurodyti tipą, key_id ir package_id"
+
+#~ msgid "A package name to remove is required"
+#~ msgstr "Reikia nurodyti šalintino paketo pavadinimą"
+
+#~ msgid ""
+#~ "A destination directory and the package names to download are required"
+#~ msgstr ""
+#~ "Reikia nurodyti paskirties katalogą ir atsiųstinų paketų pavadinimus"
+
+#~ msgid "Directory not found"
+#~ msgstr "Katalogas nerastas"
+
+#~ msgid "A licence identifier (eula-id) is required"
+#~ msgstr "Reikia nurodyti licencijos identifikatorių (eula-id)"
+
+#~ msgid "A package name to resolve is required"
+#~ msgstr "Reikia nurodyti ieškomo paketo pavadinimą"
+
+#~ msgid "A repo name, parameter and value are required"
+#~ msgstr "Reikia nurodyti saugyklos pavadinimą, parametrą ir reikšmę"
+
+#~ msgid "An action, e.g. 'update-system' is required"
+#~ msgstr "Reikia nurodyti veiksmą, pvz., „update-system“"
+
+#~ msgid "A correct role is required"
+#~ msgstr "Reikia nurodyti teisingą vaidmenį"
+
+#~ msgid "A package provide string is required"
+#~ msgstr "Reikia nurodyti paketo suteikiamą eilutę"
+
+#~ msgid "Command failed"
+#~ msgstr "Komandos įvykdyti nepavyko"
+
+#~ msgid "Set the file name of dependencies to be excluded"
+#~ msgstr "Nustatyti praleistinų priklausomybių failo vardą"
+
+#~ msgid ""
+#~ "The output file or directory (the current directory is used if omitted)"
+#~ msgstr ""
+#~ "Išvesties failas arba katalogas (jei praleista, naudojamas dabartinis "
+#~ "katalogas)"
+
+#~ msgid "The package to be put into the service pack"
+#~ msgstr "Paketas, įtrauktinas į atnaujinimų rinkinį"
+
+#~ msgid "Put all updates available in the service pack"
+#~ msgstr "Įtraukti visus atnaujinimus į atnaujinimų rinkinį"
+
+#~ msgid "Neither --package or --updates option selected."
+#~ msgstr "Nei --package, nei --updates parinktis nepasirinkta."
+
+#~ msgid "A output directory or file name is required"
+#~ msgstr "Reikia nurodyti išvesties katalogą arba failo vardą"
+
+#~ msgid "The daemon failed to startup"
+#~ msgstr "Nepavyko paleisti tarnybos"
+
+#~ msgid "The package manager cannot perform this type of operation."
+#~ msgstr "Paketų tvarkyklė negali atlikti šio tipo veiksmų."
+
+#~ msgid ""
+#~ "Service packs cannot be created as PackageKit was not built with "
+#~ "libarchive support."
+#~ msgstr ""
+#~ "Atnaujinimų rinkinių negalima sukurti, kadangi PackageKit buvo "
+#~ "sukompiliuota be libarchive palaikymo."
+
+#~ msgid "If specifying a file, the service pack name must end with"
+#~ msgstr "Jei nurodomas failas, atnaujinimo rinkinio pavadinimas turi baigtis"
+
+#~ msgid ""
+#~ "A pack with the same name already exists, do you want to overwrite it?"
+#~ msgstr "Rinkinys tokiu pavadinimu jau yra, ar norite jį perrašyti?"
+
+#~ msgid "Finding package name."
+#~ msgstr "Ieškoma paketo pavadinimo."
+
+#~ msgid "Failed to create '%s': %s"
+#~ msgstr "Nepavyko sukurti „%s“: %s"
+
+#~ msgid "Run version %s now"
+#~ msgstr "Paleisti versiją %s dabar"
+
+#~ msgid "Run now"
+#~ msgstr "Paleisti dabar"
+
+#~ msgid "Update to version %s"
+#~ msgstr "Atnaujinti į versiją %s"
+
+#~ msgid "Install %s now"
+#~ msgstr "Įdiegti %s dabar"
+
+#~ msgid "Version"
+#~ msgstr "Versija"
+
+#~ msgid "No packages found for your system"
+#~ msgstr "Jūsų sistemoje nerasta paketų"
+
+#~ msgid "Downloading filelists (this may take some time to complete)."
+#~ msgstr "Atsiunčiami failų sąrašai (tai gali šiek tiek užtrukti)."
+
+#~ msgid "Waiting for package manager lock."
+#~ msgstr "Laukiama paketų tvarkyklės užrakto."
+
+#~ msgid "Loading list of packages."
+#~ msgstr "Įkeliamas paketų sąrašas."
+
+#~ msgid "Failed to launch:"
+#~ msgstr "Nepavyko paleisti:"
+
+#~ msgid "PackageKit Command Not Found"
+#~ msgstr "PackageKit komanda nerasta"
+
+#~ msgid "Command not found."
+#~ msgstr "Komanda nerasta."
+
+#~ msgid "Similar command is:"
+#~ msgstr "Panaši komanda yra:"
+
+#~ msgid "Run similar command:"
+#~ msgstr "Paleisti panašią komanda:"
+
+#~ msgid "Similar commands are:"
+#~ msgstr "Panašios komandos yra:"
+
+#~ msgid "Please choose a command to run"
+#~ msgstr "Pasirinkite paleistiną komandą"
+
+#~ msgid "Install package '%s' to provide command '%s'?"
+#~ msgstr "Įdiegti paketą „%s“, suteikiantį komandą „%s“?"
+
+#~ msgid "Packages providing this file are:"
+#~ msgstr "Paketai, suteikiantys šį failą yra:"
+
+#~ msgid "Suitable packages are:"
+#~ msgstr "Tinkami paketai yra:"
+
+#~ msgid ""
+#~ "Don't actually install any packages, only simulate what would be installed"
+#~ msgstr "Nediegti jokių paketų, tik imituoti, kas būtų įdiegta"
+
+#~ msgid "Do not display information or progress"
+#~ msgstr "Nerodyti informacijos arba pažangos"
+
+#~ msgid "ERROR: Specify package names to install."
+#~ msgstr "KLAIDA: nurodykite diegtinų paketų pavadinimus."
+
+#~ msgid "Getting sources list"
+#~ msgstr "Gaunamas šaltinių sąrašas"
+
+#~ msgid "FAILED."
+#~ msgstr "NEPAVYKO."
+
+#~ msgid "OK."
+#~ msgstr "SĖKMINGA."
+
+#~ msgid "Found %i enabled and %i disabled sources."
+#~ msgstr "Rasta %i įjungtų ir %i išjungtų šaltinių."
+
+#~ msgid "Finding debugging sources"
+#~ msgstr "Ieškoma derinimo šaltinių"
+
+#~ msgid "Found %i disabled debuginfo repos."
+#~ msgstr "Rasta %i išjungtų debuginfo saugyklų."
+
+#~ msgid "Enabling debugging sources"
+#~ msgstr "Įjungiami derinimo šaltiniai"
+
+#~ msgid "Enabled %i debugging sources."
+#~ msgstr "Įjungta %i derinimo šaltinių."
+
+#~ msgid "Finding debugging packages"
+#~ msgstr "Ieškoma derinimo paketų"
+
+#~ msgid "Failed to find the package %s: %s"
+#~ msgstr "Nepavyko rasti paketo %s: %s"
+
+#~ msgid "Failed to find the debuginfo package %s: %s"
+#~ msgstr "Nepavyko rasti debuginfo paketo %s: %s"
+
+#~ msgid "Found %i extra packages."
+#~ msgstr "Rasta %i papildomų paketų."
+
+#~ msgid "Not installing packages in simulate mode"
+#~ msgstr "Imitavimo veiksenoje paketai nediegiami"
+
+#~ msgid "Disabling sources previously enabled"
+#~ msgstr "Išjungiami anksčiau įjungti šaltiniai"
+
+#~ msgid "Could not disable the debugging sources: %s"
+#~ msgstr "Nepavyko išjungti derinimo šaltinių: %s"
+
+#~ msgid "Disabled %i debugging sources."
+#~ msgstr "Išjungta %i derinimo šaltinių."
+
+#~ msgid "Failed to write to the file"
+#~ msgstr "Nepavyko įrašyti į failą"
+
+#~ msgid "Failed to write to device"
+#~ msgstr "Nepavyko įrašyti į įrenginį"
+
+#~ msgid "Failed to unregister driver"
+#~ msgstr "Nepavyko išregistruoti tvarkyklės"
+
+#~ msgid "Failed to register driver"
+#~ msgstr "Nepavyko registruoti tvarkyklės"
+
+#~ msgid "Incorrect device path specified"
+#~ msgstr "Nurodytas neteisingas įrenginio kelias"
+
+#~ msgid "Show extra debugging information"
+#~ msgstr "Rodyti papildomą derinimo informaciją"
+
+#~ msgid "Don't actually touch the hardware, only simulate what would be done"
+#~ msgstr "Neliesti aparatinės įrangos, tik imituoti, kas būtų atlikta"
+
+#~ msgid "Device paths"
+#~ msgstr "Įrenginių keliai"
+
+#~ msgid "PackageKit Device Reloader"
+#~ msgstr "PackageKit įrenginių perkroviklis"
+
+#~ msgid "This script can only be used by the root user"
+#~ msgstr "Šį scenarijų gali naudoti tik root naudotojas"
+
+#~ msgid "Verifying device path"
+#~ msgstr "Tikrinamas įrenginio kelias"
+
+#~ msgid "Failed to verify device path"
+#~ msgstr "Nepavyko patikrinti įrenginio kelia"
+
+#~ msgid "Attempting to rebind device"
+#~ msgstr "Bandoma iš naujo susieti įrenginį"
+
+#~ msgid "Failed to rebind device"
+#~ msgstr "Nepavyko iš naujo susieti įrenginio"
+
+#~ msgid "Please enter a number from 1 to %i: "
+#~ msgstr "Įveskite numerį nuo 1 iki %i: "
+
+#~ msgid "More than one package matches:"
+#~ msgstr "Atitinka daugiau nei vienas paketas:"
+
+#~ msgid "Please choose the correct package: "
+#~ msgstr "Pasirinkite teisingą paketą: "
+
+#~ msgid "Setting data"
+#~ msgstr "Nustatomi duomenys"
+
+#~ msgid "Key URL"
+#~ msgstr "Rakto URL"
+
+#~ msgid "Key user"
+#~ msgstr "Rakto naudotojas"
+
+#~ msgid "Key ID"
+#~ msgstr "Rakto ID"
+
+#~ msgid "Key fingerprint"
+#~ msgstr "Rakto kontrolinis kodas"
+
+#~ msgid "Key Timestamp"
+#~ msgstr "Rakto data ir laikas"
+
+#~ msgid "Do you accept this signature?"
+#~ msgstr "Ar priimate šį parašą?"
+
+#~ msgid "Do you accept this agreement?"
+#~ msgstr "Ar sutinkate su sąlygomis?"
+
+#~ msgid "Media type"
+#~ msgstr "Laikmenos tipas"
+
+#~ msgid "Media label"
+#~ msgstr "Laikmenos etiketė"
+
+#~ msgid "Please insert the correct media"
+#~ msgstr "Įdėkite tinkamą laikmeną"
+
+#~ msgid "The correct media was not inserted."
+#~ msgstr "Tinkama laikmena nebuvo įdėta."
+
+#~ msgid "Proceed with changes?"
+#~ msgstr "Atlikti pakeitimus?"
+
+#~ msgid "Authentication is required to accept a EULA"
+#~ msgstr "Reikia patvirtinti tapatybę, norint sutikti su licencija"
+
+#~ msgid ""
+#~ "Authentication is required to cancel a task that was not started by "
+#~ "yourself"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint atšaukti veiksmą, kurį pradėjote ne "
+#~ "jūs"
+
+#~ msgid "Authentication is required to change software source parameters"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint pakeisti programinės įrangos šaltinių "
+#~ "parametrus"
+
+#~ msgid ""
+#~ "Authentication is required to change the location used to decompress "
+#~ "packages"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint pakeisti vietą, kurioje išpakuojami "
+#~ "paketai"
+
+#~ msgid ""
+#~ "Authentication is required to consider a key used for signing packages as "
+#~ "trusted"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint patvirtinti paketų pasirašymo raktą "
+#~ "kaip patikimą"
+
+#~ msgid "Authentication is required to install a signed package"
+#~ msgstr "Reikia patvirtinti tapatybę, norint įdiegti pasirašytą paketą"
+
+#~ msgid "Authentication is required to install an untrusted package"
+#~ msgstr "Reikia patvirtinti tapatybę, norint įdiegti nepatikimą paketą"
+
+#~ msgid "Authentication is required to refresh the system sources"
+#~ msgstr "Reikia patvirtinti tapatybę, norint atnaujinti sistemos šaltinius"
+
+#~ msgid "Authentication is required to reload the device with a new driver"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint iš naujo įkelti įrenginį su nauja "
+#~ "tvarkykle"
+
+#~ msgid ""
+#~ "Authentication is required to set the network proxy used for downloading "
+#~ "packages"
+#~ msgstr ""
+#~ "Reikia patvirtinti tapatybę, norint nustatyti tinklo proxy, naudotiną "
+#~ "paketų parsiuntimui"
+
+#~ msgid "Authentication is required to update packages"
+#~ msgstr "Reikia patvirtinti tapatybę, norint atnaujinti paketus"
+
+#~ msgid "Cancel foreign task"
+#~ msgstr "Atšaukti kito naudotojo paleistą užduotį"
+
+#~ msgid "Install signed package"
+#~ msgstr "Įdiegti pasirašytą paketą"
+
+#~ msgid "Reload a device"
+#~ msgstr "Iš naujo įkelti įrenginį"
+
+#~ msgid "Rollback to a previous transaction"
+#~ msgstr "Grąžinti į būseną prieš operaciją"
+
+#~ msgid "Set network proxy"
+#~ msgstr "Nustatyti įgaliotąjį tinklo serverį"
+
+#~ msgid "Trust a key used for signing packages"
+#~ msgstr "Pasitikėti paketų pasirašymo raktu"
+
+#~ msgid "Startup failed due to security policies on this machine."
+#~ msgstr "Nepavyko paleisti dėl šio kompiuterio sistemos saugumo politikos."
+
+#~ msgid "This can happen for two reasons:"
+#~ msgstr "Taip gali nutikti dėl dviejų priežasčių:"
+
+#~ msgid "The correct user is not launching the executable (usually root)"
+#~ msgstr "Programą paleidžia ne tinkamas naudotojas (paprastai – root)"
+
+#~ msgid ""
+#~ "The org.freedesktop.PackageKit.conf file is not installed in the system "
+#~ "directory:"
+#~ msgstr ""
+#~ "Failas org.freedesktop.PackageKit.conf neįdiegtas sistemos kataloge:"
+
+#~ msgid "Packaging backend to use, e.g. dummy"
+#~ msgstr "Naudotina pakavimo posistemė, pvz., fiktyvi"
+
+#~ msgid "Daemonize and detach from the terminal"
+#~ msgstr "Paversti tarnyba ir atsisieti nuo terminalo"
+
+#~ msgid "Disable the idle timer"
+#~ msgstr "Išjungti laisvo laiko matuoklį"
+
+#~ msgid "Show version and exit"
+#~ msgstr "Parodyti versiją ir išeiti"
+
+#~ msgid "Cannot connect to the system bus"
+#~ msgstr "Nepavyko prisijungti prie sistemos magistralės"
+
+#~ msgid "Error trying to start:"
+#~ msgstr "Klaida bandant paleisti:"
+
+#~ msgid ""
+#~ "Do not update these packages unless you are sure it is safe to do so."
+#~ msgstr "Neatnaujinkite šių paketo, nebent esate tikri, kad tai saugu."
+
+#~ msgid ""
+#~ "Do not install these packages unless you are sure it is safe to do so."
+#~ msgstr "Neįdiekite šių paketų, nebent esate tikri, kad tai saugu."
+
+#~ msgid "Only trusted"
+#~ msgstr "Tik patikimus"
