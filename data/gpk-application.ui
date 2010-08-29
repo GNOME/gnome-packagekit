@@ -31,21 +31,19 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_sources">
-                        <property name="label" translatable="yes">Software Sources</property>
+                      <object class="GtkMenuItem" id="menuitem_sources">
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Edit list of software sources</property>
+                        <property name="label" translatable="yes">Software Sources</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_refresh">
-                        <property name="label" translatable="yes">Refresh Package Lists</property>
+                      <object class="GtkMenuItem" id="menuitem_refresh">
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Refresh the list of packages on the system</property>
+                        <property name="label" translatable="yes">Refresh Package Lists</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
@@ -325,61 +323,54 @@
                   <object class="GtkMenu" id="menu9">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_install">
+                      <object class="GtkMenuItem" id="menuitem_install">
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Install</property>
-                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_remove">
+                      <object class="GtkMenuItem" id="menuitem_remove">
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Remove</property>
-                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_homepage">
-                        <property name="label" translatable="yes">Project homepage</property>
+                      <object class="GtkMenuItem" id="menuitem_homepage">
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Visit the project homepage</property>
+                        <property name="label" translatable="yes">Project homepage</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_run">
-                        <property name="label" translatable="yes">Run program</property>
+                      <object class="GtkMenuItem" id="menuitem_run">
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Execute graphical applications</property>
+                        <property name="label" translatable="yes">Run program</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_files">
+                      <object class="GtkMenuItem" id="menuitem_files">
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Get file list</property>
-                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_depends">
+                      <object class="GtkMenuItem" id="menuitem_depends">
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Depends on</property>
-                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="menuitem_requires">
-                        <property name="label" translatable="yes">Required by</property>
+                      <object class="GtkMenuItem" id="menuitem_requires">
                         <property name="visible">True</property>
+                        <property name="label" translatable="yes">Required by</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                   </object>
@@ -402,7 +393,8 @@
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Help with this software</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
                       </object>
                     </child>
                     <child>
@@ -711,5 +703,10 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-help</property>
+    <property name="icon-size">1</property>
   </object>
 </interface>
