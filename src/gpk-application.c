@@ -4173,7 +4173,9 @@ gpk_application_init (GpkApplication *application)
 			  G_CALLBACK (gpk_application_groups_treeview_changed_cb), application);
 
 	/* get repos, so we can show the full name in the software source box */
-	pk_client_get_repo_list_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE, application->priv->cancellable,
+	pk_client_get_repo_list_async (PK_CLIENT(application->priv->task),
+				       pk_bitfield_value (PK_FILTER_ENUM_NONE),
+				       application->priv->cancellable,
 				       (PkProgressCallback) gpk_application_progress_cb, application,
 				       (GAsyncReadyCallback) gpk_application_get_repo_list_cb, application);
 
