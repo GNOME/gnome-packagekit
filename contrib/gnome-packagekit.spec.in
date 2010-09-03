@@ -5,7 +5,6 @@
 %define gtk2_version			2.16.0
 %define libnotify_version		0.4.3
 %define unique_version			1.0.0
-%define devicekit_version		003
 %define upower_version			0.9.0
 %define libcanberra_version		0.10
 %define alphatag			#ALPHATAG#
@@ -93,7 +92,6 @@ Extra GNOME applications for using PackageKit that are not normally needed.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT
 unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
@@ -113,14 +111,10 @@ done
 
 %find_lang %name --with-gnome
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule \
         %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas >/dev/null || :
-scrollkeeper-update -q &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
     gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
@@ -143,7 +137,6 @@ if [ "$1" -eq 0 ]; then
 fi
 
 %postun
-scrollkeeper-update -q &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x /usr/bin/gtk-update-icon-cache ]; then
     gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
