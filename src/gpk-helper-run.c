@@ -169,7 +169,7 @@ gpk_helper_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean ret;
-	gchar *exec;
+	gchar *exec = NULL;
 
 	/* get selection */
 	model = gtk_tree_view_get_model (treeview);
@@ -179,7 +179,6 @@ gpk_helper_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 		return;
 	}
 
-	g_free (exec);
 	gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_EXEC, &exec, -1);
 	gpk_helper_run_path (helper, exec);
 	g_free (exec);
