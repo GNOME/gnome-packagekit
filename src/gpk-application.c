@@ -1011,7 +1011,8 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
-	pk_client_get_requires_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE,
+	pk_client_get_requires_async (PK_CLIENT(application->priv->task),
+				      pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				      package_ids, TRUE, application->priv->cancellable,
 				      (PkProgressCallback) gpk_application_progress_cb, application,
 				      (GAsyncReadyCallback) gpk_application_get_requires_cb, application);
@@ -1134,7 +1135,8 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
-	pk_client_get_depends_async (PK_CLIENT(application->priv->task), PK_FILTER_ENUM_NONE,
+	pk_client_get_depends_async (PK_CLIENT(application->priv->task),
+				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				     package_ids, TRUE, application->priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, application,
 				     (GAsyncReadyCallback) gpk_application_get_depends_cb, application);
