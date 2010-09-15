@@ -488,6 +488,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	PkResults *results;
 	GError *error = NULL;
 	PkError *error_code = NULL;
+	ca_context *context;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -510,7 +511,8 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	}
 
 	/* play the sound, using sounds from the naming spec */
-	ca_context_play (ca_gtk_context_get (), 0,
+	context = ca_gtk_context_get_for_screen (gdk_screen_get_default ());
+	ca_context_play (context, 0,
 			 /* TODO: add a new sound to the spec */
 			 CA_PROP_EVENT_ID, "complete-download",
 			 /* TRANSLATORS: this is the application name for libcanberra */
@@ -877,6 +879,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	gchar **package_ids;
 	GPtrArray *array = NULL;
 	PkError *error_code = NULL;
+	ca_context *context;
 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
@@ -950,10 +953,9 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	if (update == GPK_UPDATE_ENUM_NONE) {
 		egg_debug ("not updating as policy NONE");
 
-		/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
-
 		/* play the sound, using sounds from the naming spec */
-		ca_context_play (ca_gtk_context_get (), 0,
+		context = ca_gtk_context_get_for_screen (gdk_screen_get_default ());
+		ca_context_play (context, 0,
 				 /* TODO: add a new sound to the spec */
 				 CA_PROP_EVENT_ID, "software-update-available",
 				 /* TRANSLATORS: this is the application name for libcanberra */
@@ -975,7 +977,8 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 		egg_debug ("on battery so not doing update");
 
 		/* play the sound, using sounds from the naming spec */
-		ca_context_play (ca_gtk_context_get (), 0,
+		context = ca_gtk_context_get_for_screen (gdk_screen_get_default ());
+		ca_context_play (context, 0,
 				 /* TODO: add a new sound to the spec */
 				 CA_PROP_EVENT_ID, "software-update-available",
 				 /* TRANSLATORS: this is the application name for libcanberra */

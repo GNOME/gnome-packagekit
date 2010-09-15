@@ -441,6 +441,7 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GpkUpdateViewerPrivate *priv = update_viewer->priv;
+	ca_context *context;
 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
@@ -480,7 +481,8 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 		egg_warning ("failed to update packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* failed sound, using sounds from the naming spec */
-		ca_context_play (ca_gtk_context_get (), 0,
+		context = ca_gtk_context_get_for_screen (gdk_screen_get_default ());
+		ca_context_play (context, 0,
 				 CA_PROP_EVENT_ID, "dialog-warning",
 				 /* TRANSLATORS: this is the application name for libcanberra */
 				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
@@ -506,7 +508,8 @@ gpk_update_viewer_update_packages_cb (PkTask *task, GAsyncResult *res, GpkUpdate
 	/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
 
 	/* play the sound, using sounds from the naming spec */
-	ca_context_play (ca_gtk_context_get (), 0,
+	context = ca_gtk_context_get_for_screen (gdk_screen_get_default ());
+	ca_context_play (context, 0,
 			 /* TODO: add a new sound to the spec */
 			 CA_PROP_EVENT_ID, "complete-download",
 			 /* TRANSLATORS: this is the application name for libcanberra */
