@@ -2,11 +2,11 @@ PackageKit Release Notes
 
 1. Write NEWS entries for gnome-packagekit in the same format as usual.
 
-git shortlog GNOME_PACKAGEKIT_2_31_91.. | grep -i -v trivial | uniq | grep -v Merge > NEWS.new
+git shortlog GNOME_PACKAGEKIT_2_31_92.. | grep -i -v trivial | uniq | grep -v Merge > NEWS.new
 
 --------------------------------------------------------------------------------
-Version 2.31.92
-~~~~~~~~~~~~~~~
+Version 2.32.0
+~~~~~~~~~~~~~~
 Released: 2010-xx-xx
 
 * Translations
@@ -18,8 +18,8 @@ Released: 2010-xx-xx
 
 3. Commit changes in gnome-packagekit git:
 
-git commit -a -m "Release version 2.31.92"
-git tag -s GNOME_PACKAGEKIT_2_31_92 -m "==== Version 2.31.9 ===="
+git commit -a -m "Release version 2.32.0"
+git tag -s GNOME_PACKAGEKIT_2_32_0 -m "==== Version 2.32.0 ===="
 <wait>
 git push --tags
 git push
@@ -30,7 +30,6 @@ make distcheck
 
 5. Upload tarballs:
 
-scp *.tar.gz packagekit.org:/srv/www/html/releases/
 scp *.tar.gz rhughes@master.gnome.org:
 
 6. Install module
