@@ -765,6 +765,9 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplication *application)
 		goto out;
 	}
 
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	/* set correct view */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	pk_client_get_files_async (PK_CLIENT(application->priv->task), package_ids, application->priv->cancellable,
@@ -1009,6 +1012,9 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplication *application
 		goto out;
 	}
 
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	pk_client_get_requires_async (PK_CLIENT(application->priv->task),
@@ -1132,6 +1138,9 @@ gpk_application_menu_depends_cb (GtkAction *action, GpkApplication *application)
 		egg_warning ("no package selected");
 		goto out;
 	}
+
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
 
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
@@ -1671,6 +1680,9 @@ gpk_application_perform_search_name_details_file (GpkApplication *application)
 	application->priv->search_in_progress = TRUE;
 	gpk_application_set_button_find_sensitivity (application);
 
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	/* do the search */
 	searches = g_strsplit (application->priv->search_text, " ", -1);
 	if (application->priv->search_type == GPK_SEARCH_NAME) {
@@ -1720,6 +1732,9 @@ gpk_application_perform_search_others (GpkApplication *application)
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 	g_return_if_fail (application->priv->group != NULL);
+
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
 
 	if (application->priv->search_mode == GPK_MODE_GROUP) {
 		groups = g_strsplit (application->priv->group, " ", -1);
@@ -2138,6 +2153,9 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 	g_return_if_fail (GPK_IS_APPLICATION (application));
 
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	package_ids = pk_package_sack_get_ids (application->priv->package_sack);
 	if (application->priv->action == GPK_ACTION_INSTALL) {
 
@@ -2521,6 +2539,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "menuitem_run"));
 	gtk_widget_set_sensitive (widget, ret);
+
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
 
 	/* get the details */
 	package_ids = pk_package_ids_from_id (package_id);
@@ -2921,9 +2942,13 @@ static void
 gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
 	g_return_if_fail (GPK_IS_APPLICATION (application));
+
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	pk_task_refresh_cache_async (application->priv->task, TRUE, application->priv->cancellable,
-				       (PkProgressCallback) gpk_application_progress_cb, application,
-				       (GAsyncReadyCallback) gpk_application_refresh_cache_cb, application);
+				     (PkProgressCallback) gpk_application_progress_cb, application,
+				     (GAsyncReadyCallback) gpk_application_refresh_cache_cb, application);
 }
 
 /**
@@ -3451,6 +3476,9 @@ out:
 static void
 gpk_application_create_group_array_categories (GpkApplication *application)
 {
+	/* ensure new action succeeds */
+	g_cancellable_reset (application->priv->cancellable);
+
 	/* get categories supported */
 	pk_client_get_categories_async (PK_CLIENT(application->priv->task), application->priv->cancellable,
 				        (PkProgressCallback) gpk_application_progress_cb, application,
