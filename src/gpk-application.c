@@ -2919,7 +2919,7 @@ static void
 gpk_application_menu_refresh_cb (GtkAction *action, GpkApplication *application)
 {
 	g_return_if_fail (GPK_IS_APPLICATION (application));
-	pk_client_refresh_cache_async (PK_CLIENT(application->priv->task), TRUE, application->priv->cancellable,
+	pk_task_refresh_cache_async (application->priv->task, TRUE, application->priv->cancellable,
 				       (PkProgressCallback) gpk_application_progress_cb, application,
 				       (GAsyncReadyCallback) gpk_application_refresh_cache_cb, application);
 }
