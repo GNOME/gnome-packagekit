@@ -698,6 +698,10 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 			widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 			gtk_widget_set_sensitive (widget, TRUE);
 
+			/* make apply button sensitive */
+			widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
+			gtk_widget_set_sensitive (widget, TRUE);
+
 			/* we've not yet shown, so don't bother */
 			if (application->priv->status_id > 0) {
 				g_source_remove (application->priv->status_id);
@@ -2168,6 +2172,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
 		gtk_widget_set_sensitive (widget, FALSE);
 
+		/* make apply button insensitive */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
+		gtk_widget_set_sensitive (widget, FALSE);
+
 	} else if (application->priv->action == GPK_ACTION_REMOVE) {
 
 		autoremove = g_settings_get_boolean (application->priv->settings, GPK_SETTINGS_ENABLE_AUTOREMOVE);
@@ -2179,6 +2187,10 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplication *application)
 
 		/* make package array insensitive */
 		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "treeview_packages"));
+		gtk_widget_set_sensitive (widget, FALSE);
+
+		/* make apply button insensitive */
+		widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 	g_strfreev (package_ids);
