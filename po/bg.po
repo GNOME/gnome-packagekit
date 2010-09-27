@@ -1,6 +1,7 @@
 # Bulgarian translation of gnome-packagekit po-file.
 # Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
 # Alexander Shopov <ash@kambanaira.org>, 2008, 2009, 2010.
+# Damyan Ivanov <dam+gnome@ktnx.net>, 2010.
 #
 #
 # install инсталирам
@@ -14,11 +15,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-packagekit master\n"
+"Project-Id-Version: gnome-packagekit gnome-2-32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-26 23:03+0300\n"
-"PO-Revision-Date: 2010-03-14 11:53+0200\n"
-"Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
+"POT-Creation-Date: 2010-09-26 18:06+0300\n"
+"PO-Revision-Date: 2010-09-08 21:10+0300\n"
+"Last-Translator: Damyan Ivanov <dam+gnome@ktnx.net>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -28,28 +29,28 @@ msgstr ""
 
 #: ../data/gnome-packagekit.schemas.in.h:1
 msgid "Allow applications to invoke the codec installer"
-msgstr "Позволяване на приложенията да стартират инсталирането на кодек"
+msgstr "Позволяване на приложенията да стартират инсталиране на кодек"
 
 #: ../data/gnome-packagekit.schemas.in.h:2
 msgid "Allow applications to invoke the font installer"
-msgstr "Позволяване на приложенията да стартират инсталирането на шрифт"
+msgstr "Позволяване на приложенията да стартират инсталиране на шрифт"
 
 #: ../data/gnome-packagekit.schemas.in.h:3
 msgid "Allow applications to invoke the mime type installer"
-msgstr "Позволяване на приложенията да стартират инсталирането на вид mime"
+msgstr "Позволяване на приложенията да стартират инсталиране на вид mime"
 
 #: ../data/gnome-packagekit.schemas.in.h:4
 msgid "Ask the user if additional firmware should be installed"
-msgstr "Питане на потребителя при инсталирането на допълнителен фърмуер"
+msgstr "Питане на потребителя при инсталиране на допълнителен фърмуер"
 
 #: ../data/gnome-packagekit.schemas.in.h:5
 msgid "Ask the user if additional hardware drivers should be installed"
 msgstr ""
-"Питане на потребителя при инсталирането на допълнителни драйвери за хардуера"
+"Питане на потребителя при инсталиране на допълнителни драйвери за хардуера"
 
 #: ../data/gnome-packagekit.schemas.in.h:6
 msgid "Ask the user if additional packages should be installed"
-msgstr "Питане на потребителя при инсталирането на допълнителни пакети"
+msgstr "Питане на потребителя при инсталиране на допълнителни пакети"
 
 #: ../data/gnome-packagekit.schemas.in.h:7
 msgid "Ask the user if files should be copied to a non-private directory"
@@ -433,152 +434,193 @@ msgid "About this software"
 msgstr "Относно тази програма"
 
 #: ../data/gpk-application.ui.h:3
+msgid "Depends on"
+msgstr "Зависи от"
+
+#: ../data/gpk-application.ui.h:4
 msgid "Edit list of software sources"
 msgstr "Редактиране на списъка с хранилища"
 
-#: ../data/gpk-application.ui.h:4
+#: ../data/gpk-application.ui.h:5
 msgid "Execute graphical applications"
 msgstr "Изпълняване на графични приложения"
 
-#: ../data/gpk-application.ui.h:5
+#: ../data/gpk-application.ui.h:6
 msgid "Fi_nd"
 msgstr "_Търсене"
 
-#: ../data/gpk-application.ui.h:6
+#: ../data/gpk-application.ui.h:7
+msgid "Get file list"
+msgstr "Списък на файловете"
+
+#: ../data/gpk-application.ui.h:8
 msgid "Help with this software"
 msgstr "Помощ за програмата"
 
-#: ../data/gpk-application.ui.h:7
+#. TRANSLATORS: title: installing local files
+#. TRANSLATORS: button: confirm to search for packages
+#. TRANSLATORS: button: install codecs
+#. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install packages in catalog
+#. TRANSLATORS: button: install printer drivers
+#. TRANSLATORS: button: install catalog
+#. TRANSLATORS: if the update should be installed
+#: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:704
+#: ../src/gpk-dbus-task.c:1236 ../src/gpk-dbus-task.c:1455
+#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2119
+#: ../src/gpk-dbus-task.c:2393 ../src/gpk-dbus-task.c:2515
+#: ../src/gpk-dbus-task.c:2868 ../src/gpk-update-viewer.c:1668
+msgid "Install"
+msgstr "Инсталиране"
+
+#: ../data/gpk-application.ui.h:10
 msgid "Only N_ative Packages"
 msgstr "Само за _конкретната архитектура"
 
-#: ../data/gpk-application.ui.h:8
+#: ../data/gpk-application.ui.h:11
 msgid "Only _Available"
 msgstr "Само _налични"
 
-#: ../data/gpk-application.ui.h:9
+#: ../data/gpk-application.ui.h:12
 msgid "Only _Development"
 msgstr "Само за _разработчици"
 
-#: ../data/gpk-application.ui.h:10
+#: ../data/gpk-application.ui.h:13
 msgid "Only _End User Files"
 msgstr "Само за _крайни потребители"
 
-#: ../data/gpk-application.ui.h:11
+#: ../data/gpk-application.ui.h:14
 msgid "Only _Graphical"
 msgstr "Само _графични"
 
-#: ../data/gpk-application.ui.h:12
+#: ../data/gpk-application.ui.h:15
 msgid "Only _Installed"
 msgstr "Само _инсталирани"
 
-#: ../data/gpk-application.ui.h:13
+#: ../data/gpk-application.ui.h:16
 msgid "Only _Newest Packages"
 msgstr "Само _най-нови пакети"
 
-#: ../data/gpk-application.ui.h:14
+#: ../data/gpk-application.ui.h:17
 msgid "Only _Non-Free Software"
 msgstr "Само _несвободен софтуер"
 
-#: ../data/gpk-application.ui.h:15
+#: ../data/gpk-application.ui.h:18
 msgid "Only _Non-Source Code"
 msgstr "Само _без изходен код"
 
-#: ../data/gpk-application.ui.h:16
+#: ../data/gpk-application.ui.h:19
 msgid "Only _Text"
 msgstr "Само _текстови"
 
-#: ../data/gpk-application.ui.h:17
+#: ../data/gpk-application.ui.h:20
 msgid "Only show one package, not subpackages"
 msgstr "Да се показва само един пакет, а не и подпакетите"
 
-#: ../data/gpk-application.ui.h:18
+#: ../data/gpk-application.ui.h:21
 msgid "Only show packages matching the machine architecture"
 msgstr "Да се показват само пакетите подходящи за архитектурата на машината"
 
-#: ../data/gpk-application.ui.h:19
+#: ../data/gpk-application.ui.h:22
 msgid "Only show the newest available package"
 msgstr "Да се показват само най-новите пакети"
 
-#: ../data/gpk-application.ui.h:20
+#: ../data/gpk-application.ui.h:23
+msgid "Project homepage"
+msgstr "Уеб страницата на проекта"
+
+#: ../data/gpk-application.ui.h:24
 msgid "Refresh Package Lists"
 msgstr "Обновяване на списъците с пакетите"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:25
 msgid "Refresh the list of packages on the system"
 msgstr "Обновяване на списъка с пакети на системата"
 
-#: ../data/gpk-application.ui.h:22
+#. TRANSLATORS: button: confirm to search for packages
+#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:2806
+msgid "Remove"
+msgstr "Деинсталиране"
+
+#: ../data/gpk-application.ui.h:27
+msgid "Required by"
+msgstr "Изисква се от"
+
+#: ../data/gpk-application.ui.h:28
+msgid "Run program"
+msgstr "Изпълняване на програма"
+
+#: ../data/gpk-application.ui.h:29
 msgid "S_election"
 msgstr "_Избор"
 
-#: ../data/gpk-application.ui.h:23
+#: ../data/gpk-application.ui.h:30
 msgid "Software Log"
 msgstr "Журнал за софтуера"
 
-#: ../data/gpk-application.ui.h:24 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-application.ui.h:31 ../data/gpk-repo.desktop.in.h:2
 #: ../data/gpk-repo.ui.h:2
 msgid "Software Sources"
 msgstr "Хранилища"
 
-#: ../data/gpk-application.ui.h:25
+#: ../data/gpk-application.ui.h:32
 msgid "View previously added or removed software"
-msgstr "Преглед на инсталирането и деинсталирането на софтуер"
+msgstr "Журнал на инсталирането и деинсталирането на софтуер"
 
-#: ../data/gpk-application.ui.h:26
+#: ../data/gpk-application.ui.h:33
 msgid "Visit the project homepage"
 msgstr "Посещаване на уеб страницата на проекта"
 
-#: ../data/gpk-application.ui.h:27
+#: ../data/gpk-application.ui.h:34
 msgid "_Contents"
 msgstr "_Ръководство"
 
-#: ../data/gpk-application.ui.h:28
+#: ../data/gpk-application.ui.h:35
 msgid "_Development"
 msgstr "_Разработка"
 
-#: ../data/gpk-application.ui.h:29
+#: ../data/gpk-application.ui.h:36
 msgid "_Filters"
 msgstr "_Филтри"
 
-#: ../data/gpk-application.ui.h:30
+#: ../data/gpk-application.ui.h:37
 msgid "_Free"
 msgstr "_Свободни"
 
-#: ../data/gpk-application.ui.h:31
+#: ../data/gpk-application.ui.h:38
 msgid "_Graphical"
 msgstr "_Графични"
 
 #. TRANSLATORS: context menu to open the offline help file
-#: ../data/gpk-application.ui.h:32 ../src/gpk-check-update.c:261
+#: ../data/gpk-application.ui.h:39 ../src/gpk-check-update.c:261
 msgid "_Help"
 msgstr "Помо_щ"
 
-#: ../data/gpk-application.ui.h:33
+#: ../data/gpk-application.ui.h:40
 msgid "_Hide Subpackages"
 msgstr "Скриване на _подпакетите"
 
-#: ../data/gpk-application.ui.h:34
+#: ../data/gpk-application.ui.h:41
 msgid "_Installed"
 msgstr "_Инсталирани"
 
-#: ../data/gpk-application.ui.h:35
+#: ../data/gpk-application.ui.h:42
 msgid "_No Filter"
 msgstr "_Без филтри"
 
-#: ../data/gpk-application.ui.h:36
+#: ../data/gpk-application.ui.h:43
 msgid "_Only Free Software"
 msgstr "Само _свободен софтуер"
 
-#: ../data/gpk-application.ui.h:37
+#: ../data/gpk-application.ui.h:44
 msgid "_Only Source Code"
 msgstr "Само с _изходен код"
 
-#: ../data/gpk-application.ui.h:38
+#: ../data/gpk-application.ui.h:45
 msgid "_Source"
 msgstr "_Изходен код"
 
-#: ../data/gpk-application.ui.h:39
+#: ../data/gpk-application.ui.h:46
 msgid "_System"
 msgstr "_Системни"
 
@@ -785,13 +827,7 @@ msgstr "Аплет за обновяване към PackageKit"
 msgid "Software Update"
 msgstr "Обновление на софтуера"
 
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:2
-#: ../src/gpk-update-viewer-main.c:103
-msgid "Software Update Viewer"
-msgstr "Преглед на софтуерните обновявания"
-
-#: ../data/gpk-update-viewer.desktop.in.h:3
 msgid "Update software installed on the system"
 msgstr "Обновяване на софтуера инсталиран върху системата"
 
@@ -804,10 +840,6 @@ msgstr ""
 "и предоставят нови възможности."
 
 #: ../data/gpk-update-viewer.ui.h:3
-msgid "_Install Update(s)"
-msgstr "_Инсталиране на обновленията"
-
-#: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
 msgstr "_Обновяване"
 
@@ -870,17 +902,17 @@ msgstr[0] "%i файл инсталиран от %s"
 msgstr[1] "%i файла инсталирани от %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:950 ../src/gpk-application.c:1073
+#: ../src/gpk-application.c:957 ../src/gpk-application.c:1084
 msgid "No packages"
 msgstr "Няма пакети"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:952
+#: ../src/gpk-application.c:959
 msgid "No other packages require this package"
 msgstr "Никой друг пакет не изисква този"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:959
+#: ../src/gpk-application.c:966
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -888,7 +920,7 @@ msgstr[0] "%i допълнителен пакет изисква %s"
 msgstr[1] "%i допълнителни пакета изискват %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:964
+#: ../src/gpk-application.c:971
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -896,12 +928,12 @@ msgstr[0] "Пакетът изброен по-долу изисква %s, за �
 msgstr[1] "Пакетите изброени по-долу изискват %s, за да работят правилно."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1075
+#: ../src/gpk-application.c:1086
 msgid "This package does not depends on any others"
 msgstr "Този пакет не зависи от никой друг"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1082
+#: ../src/gpk-application.c:1093
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -909,7 +941,7 @@ msgstr[0] "%2$s изисква %1$i допълнителен пакет"
 msgstr[1] "%2$s изисква %1$i допълнителни пакета"
 
 #. TRANSLATORS: message: show the array of dependant packages for this package
-#: ../src/gpk-application.c:1087
+#: ../src/gpk-application.c:1098
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -917,27 +949,27 @@ msgstr[0] "За да работи %s правилно, е необходим с�
 msgstr[1] "За да работи %s правилно, са необходими следните пакети."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1152
+#: ../src/gpk-application.c:1167
 msgid "Invalid"
 msgstr "Неправилен"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1352
+#: ../src/gpk-application.c:1367
 msgid "No results were found."
 msgstr "Не е открито хранилище"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1360
+#: ../src/gpk-application.c:1375
 msgid "Try entering a package name in the search bar."
 msgstr "Пробвайте да въведете името на пакета в лентата за търсене."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1363
+#: ../src/gpk-application.c:1378
 msgid "There are no packages queued to be installed or removed."
 msgstr "В опашката няма пакети за инсталиране или деинсталиране."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1368
+#: ../src/gpk-application.c:1383
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -946,169 +978,169 @@ msgstr ""
 "текста за търсене."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1371
+#: ../src/gpk-application.c:1386
 msgid "Try again with a different search term."
 msgstr "Пробвайте отново с различен текст."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1650
+#: ../src/gpk-application.c:1665
 msgid "Invalid search text"
 msgstr "Неправилен текст за търсене"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1652
+#: ../src/gpk-application.c:1667
 msgid "The search text contains invalid characters"
 msgstr "Текстът за търсене съдържа неправилни знаци"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1690
+#: ../src/gpk-application.c:1708
 msgid "The search could not be completed"
 msgstr "Търсеният текст не може да бъде дописан"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1692
+#: ../src/gpk-application.c:1710
 msgid "Running the transaction failed"
 msgstr "Неуспешно изпълнение на транзакция"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1840
+#: ../src/gpk-application.c:1861
 msgid "Changes not applied"
 msgstr "Промените не са приложени"
 
-#: ../src/gpk-application.c:1841
+#: ../src/gpk-application.c:1862
 msgid "Close _Anyway"
 msgstr "_Затваряне независимо от това"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1845
+#: ../src/gpk-application.c:1866
 msgid "You have made changes that have not yet been applied."
 msgstr "Направихте промени, които все още не са приложени."
 
-#: ../src/gpk-application.c:1846
+#: ../src/gpk-application.c:1867
 msgid "These changes will be lost if you close this window."
 msgstr "Промените ще бъдат загубени, ако затворите прозореца."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2160 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
+#: ../src/gpk-application.c:2192 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
 msgid "Installed"
 msgstr "Инсталирани"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2176 ../src/gpk-application.c:2198
+#: ../src/gpk-application.c:2208 ../src/gpk-application.c:2230
 #: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:729
 msgid "Name"
 msgstr "Име"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2341
+#: ../src/gpk-application.c:2373
 msgid "Type"
 msgstr "Вид"
 
-#: ../src/gpk-application.c:2341
+#: ../src/gpk-application.c:2373
 msgid "Collection"
 msgstr "Комплект"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2349
+#: ../src/gpk-application.c:2381
 #, c-format
 msgid "Visit %s"
 msgstr "Посещаване на %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2354
+#: ../src/gpk-application.c:2386
 msgid "Project"
 msgstr "Проект"
 
-#: ../src/gpk-application.c:2354
+#: ../src/gpk-application.c:2386
 msgid "Homepage"
 msgstr "Лична страница"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2368
+#: ../src/gpk-application.c:2400
 msgid "Group"
 msgstr "Група"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2374
+#: ../src/gpk-application.c:2406
 msgid "License"
 msgstr "Лиценз"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:2383
+#: ../src/gpk-application.c:2415
 msgid "Menu"
 msgstr "Меню"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2401 ../src/gpk-update-viewer.c:1735
+#: ../src/gpk-application.c:2433 ../src/gpk-update-viewer.c:1739
 msgid "Size"
 msgstr "Размер"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2404
+#: ../src/gpk-application.c:2436
 msgid "Installed size"
 msgstr "Размер при инсталация"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2407
+#: ../src/gpk-application.c:2439
 msgid "Download size"
 msgstr "Размер при изтегляне"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2416
+#: ../src/gpk-application.c:2448
 msgid "Source"
 msgstr "Хранилище"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2562
+#: ../src/gpk-application.c:2597
 msgid "Selected packages"
 msgstr "Избраните пакети"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2614
+#: ../src/gpk-application.c:2649
 msgid "Searching by name"
 msgstr "Търсене по име"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2637
+#: ../src/gpk-application.c:2672
 msgid "Searching by description"
 msgstr "Търсене по описание"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2660
+#: ../src/gpk-application.c:2695
 msgid "Searching by file"
 msgstr "Търсене по файл"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2685
+#: ../src/gpk-application.c:2720
 msgid "Search by name"
 msgstr "Търсене по име"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2696
+#: ../src/gpk-application.c:2731
 msgid "Search by description"
 msgstr "Търсене по описание"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2742
 msgid "Search by file name"
 msgstr "Търсене по име на файл"
 
 #. TRANSLATORS: packaging problem, failed to show link
-#: ../src/gpk-application.c:2751 ../src/gpk-watch.c:381
+#: ../src/gpk-application.c:2786 ../src/gpk-watch.c:381
 msgid "Failed to show url"
 msgstr "Адресът не може да бъде показан"
 
-#: ../src/gpk-application.c:2788 ../src/gpk-check-update.c:192
+#: ../src/gpk-application.c:2823 ../src/gpk-check-update.c:192
 #: ../src/gpk-watch.c:401
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Лицензиран по условията на ОПЛ 2 на GNU (GNU GPL), версия 2"
 
-#: ../src/gpk-application.c:2789 ../src/gpk-check-update.c:193
+#: ../src/gpk-application.c:2824 ../src/gpk-check-update.c:193
 #: ../src/gpk-watch.c:402
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
@@ -1121,7 +1153,7 @@ msgstr ""
 "както е публикуван от Фондацията за свободен софтуер — версия 2 на лиценза "
 "или (по ваше решение) по-късна версия."
 
-#: ../src/gpk-application.c:2793 ../src/gpk-check-update.c:197
+#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:197
 #: ../src/gpk-watch.c:406
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
@@ -1133,7 +1165,7 @@ msgstr ""
 "НИКАКВИ ГАРАНЦИИ, дори и косвените за ПРОДАЖБА или СЪОТВЕТСТВИЕ С КАКВАТО И "
 "ДА Е УПОТРЕБА. За подробности погледнете Общия публичен лиценз на GNU."
 
-#: ../src/gpk-application.c:2797 ../src/gpk-check-update.c:201
+#: ../src/gpk-application.c:2832 ../src/gpk-check-update.c:201
 #: ../src/gpk-watch.c:410
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
@@ -1145,7 +1177,7 @@ msgstr ""
 "Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2803 ../src/gpk-check-update.c:206
+#: ../src/gpk-application.c:2838 ../src/gpk-check-update.c:206
 #: ../src/gpk-watch.c:415
 msgid "translator-credits"
 msgstr ""
@@ -1156,23 +1188,23 @@ msgstr ""
 "Докладвайте за грешки на http://gnome.cult.bg/bugs"
 
 #. TRANSLATORS: website label
-#: ../src/gpk-application.c:2829 ../src/gpk-check-update.c:223
+#: ../src/gpk-application.c:2864 ../src/gpk-check-update.c:223
 #: ../src/gpk-watch.c:434
 msgid "PackageKit Website"
 msgstr "Уеб страница на PackageKit"
 
 #. TRANSLATORS: description of application, gpk-application that is
-#: ../src/gpk-application.c:2832
+#: ../src/gpk-application.c:2867
 msgid "Package Manager for GNOME"
 msgstr "Управление на пакети в GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3278
+#: ../src/gpk-application.c:3317
 msgid "Text"
 msgstr "Текст"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3301
+#: ../src/gpk-application.c:3340
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
@@ -1180,47 +1212,47 @@ msgstr ""
 "върху група."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3304
+#: ../src/gpk-application.c:3343
 msgid "Enter a package name and then click find to get started."
 msgstr "За начало въведете име на пакет и натиснете бутона за търсене."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3533
+#: ../src/gpk-application.c:3575
 msgid "Exiting as properties could not be retrieved"
 msgstr "Спиране на програмата, защото настройките не бяха получени"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3653
+#: ../src/gpk-application.c:3695
 msgid "All packages"
 msgstr "Всички пакети"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3655
+#: ../src/gpk-application.c:3697
 msgid "Show all packages"
 msgstr "Показване на всички пакети"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3916
+#: ../src/gpk-application.c:3958
 msgid "Clear current selection"
 msgstr "Изчистване на текущия избор"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3941
+#: ../src/gpk-application.c:3983
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Промените не се прилагат незабавно. Този бутон прилага всички промени"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3967
+#: ../src/gpk-application.c:4009
 msgid "Visit home page for selected package"
 msgstr "Посещаване на уеб страницата на избрания пакет"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:4075
+#: ../src/gpk-application.c:4117
 msgid "Find packages"
 msgstr "Търсене на пакети"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:4083
+#: ../src/gpk-application.c:4125
 msgid "Cancel search"
 msgstr "Преустановяване на търсенето"
 
@@ -1238,7 +1270,7 @@ msgstr "Инсталатор на пакети"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:3057
+#: ../src/gpk-update-viewer.c:3077
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Спиране на програмата, защото информацията за ядрото не бе получена"
 
@@ -1278,7 +1310,7 @@ msgstr "Рестартиране на компютъра"
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:406 ../src/gpk-check-update.c:1340
+#: ../src/gpk-check-update.c:406 ../src/gpk-check-update.c:1343
 #: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1399
 msgid "Do not show this again"
 msgstr "Това да не се показва повече"
@@ -1292,37 +1324,37 @@ msgid "Show details"
 msgstr "Допълнителна информация"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:517 ../src/gpk-check-update.c:960
-#: ../src/gpk-check-update.c:982
+#: ../src/gpk-check-update.c:519 ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:985
 msgid "GNOME PackageKit Update Icon"
 msgstr "Икона за обновяване към GNOME PackageKit"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:519 ../src/gpk-update-viewer.c:514
+#: ../src/gpk-check-update.c:521 ../src/gpk-update-viewer.c:518
 msgid "Updated successfully"
 msgstr "Успешно обновяване"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:643
+#: ../src/gpk-check-update.c:645
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "Налично е обновление по сигурността."
 msgstr[1] "Налични са обновления по сигурността."
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:646
+#: ../src/gpk-check-update.c:648
 msgid "An important update is available for your computer:"
 msgid_plural "Important updates are available for your computer:"
 msgstr[0] "Налично е важно обновление за компютъра ви:"
 msgstr[1] "Налични са важни обновления за компютъра ви:"
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:666
+#: ../src/gpk-check-update.c:668
 msgid "Install updates"
 msgstr "Инсталиране на обновления"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:781
+#: ../src/gpk-check-update.c:783
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
@@ -1331,31 +1363,31 @@ msgstr ""
 "автоматично."
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:783
+#: ../src/gpk-check-update.c:785
 msgid "Updates not installed"
 msgstr "Обновления не се инсталират"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:793
+#: ../src/gpk-check-update.c:795
 msgid "Install the updates anyway"
 msgstr "Обновленията да се инсталират"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:840
+#: ../src/gpk-check-update.c:842
 msgid "Updates are being installed"
 msgstr "Инсталират се обновления"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:842
+#: ../src/gpk-check-update.c:844
 msgid "Updates are being automatically installed on your computer"
 msgstr "Автоматично се инсталират обновления"
 
-#: ../src/gpk-check-update.c:848
+#: ../src/gpk-check-update.c:850
 msgid "Cancel update"
 msgstr "Преустановяване на обновяването"
 
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:932
+#: ../src/gpk-check-update.c:935
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
@@ -1363,17 +1395,17 @@ msgstr[0] "Налично е %d обновление"
 msgstr[1] "Налични са %d обновления"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:964
 msgid "Update available"
 msgstr "Налично е обновление"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:984
+#: ../src/gpk-check-update.c:987
 msgid "Update available (on battery)"
 msgstr "Налично е обновление (захранване от батерии)"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1327
+#: ../src/gpk-check-update.c:1330
 msgid "Distribution upgrades available"
 msgstr "Налични са обновления на дистрибуцията"
 
@@ -1382,7 +1414,7 @@ msgstr "Налични са обновления на дистрибуцията
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1337 ../src/gpk-dbus-task.c:1090
+#: ../src/gpk-check-update.c:1340 ../src/gpk-dbus-task.c:1090
 #: ../src/gpk-dbus-task.c:1324 ../src/gpk-dbus-task.c:1630
 #: ../src/gpk-dbus-task.c:1836 ../src/gpk-dbus-task.c:2092
 msgid "More information"
@@ -1570,22 +1602,6 @@ msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Искате ли да инсталирате този файл?"
 msgstr[1] "Искате ли да инсталирате тези файлове?"
-
-#. TRANSLATORS: title: installing local files
-#. TRANSLATORS: button: confirm to search for packages
-#. TRANSLATORS: button: install codecs
-#. TRANSLATORS: button: install a font
-#. TRANSLATORS: button: install packages in catalog
-#. TRANSLATORS: button: install printer drivers
-#. TRANSLATORS: button: install catalog
-#. TRANSLATORS: if the update should be installed
-#: ../src/gpk-dbus-task.c:704 ../src/gpk-dbus-task.c:1236
-#: ../src/gpk-dbus-task.c:1455 ../src/gpk-dbus-task.c:1658
-#: ../src/gpk-dbus-task.c:2119 ../src/gpk-dbus-task.c:2393
-#: ../src/gpk-dbus-task.c:2515 ../src/gpk-dbus-task.c:2868
-#: ../src/gpk-update-viewer.c:1664
-msgid "Install"
-msgstr "Инсталиране"
 
 #. TRANSLATORS: title: installing a local file
 #: ../src/gpk-dbus-task.c:1019
@@ -1977,11 +1993,6 @@ msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Програма иска да инсталира файл"
 msgstr[1] "Програма иска да инсталира файлове"
-
-#. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2806
-msgid "Remove"
-msgstr "Деинсталиране"
 
 #. TRANSLATORS: title to install package catalogs
 #: ../src/gpk-dbus-task.c:2859
@@ -4283,12 +4294,12 @@ msgid "Update applet"
 msgstr "Аплет за обновяване"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:212
+#: ../src/gpk-update-viewer.c:213
 msgid "Failed to process request."
 msgstr "Заявката не бе обработена."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:241
+#: ../src/gpk-update-viewer.c:242
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -4297,12 +4308,12 @@ msgstr ""
 "приложени."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:243 ../src/gpk-update-viewer.c:249
+#: ../src/gpk-update-viewer.c:244 ../src/gpk-update-viewer.c:250
 msgid "Restart Computer"
 msgstr "Рестартиране на компютъра"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:247
+#: ../src/gpk-update-viewer.c:248
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -4311,7 +4322,7 @@ msgstr ""
 "защитени."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:253
+#: ../src/gpk-update-viewer.c:254
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -4320,12 +4331,12 @@ msgstr ""
 "бъдат приложени."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:255 ../src/gpk-update-viewer.c:261
+#: ../src/gpk-update-viewer.c:256 ../src/gpk-update-viewer.c:262
 msgid "Log Out"
 msgstr "Излизане от системата"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:259
+#: ../src/gpk-update-viewer.c:260
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4334,59 +4345,59 @@ msgstr ""
 "бъдете защитени."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:312
+#: ../src/gpk-update-viewer.c:313
 msgid "Could not restart"
 msgstr "Неуспешно рестартиране"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:380
+#: ../src/gpk-update-viewer.c:381
 msgid "Some updates were not installed"
 msgstr "Някои обновления не са инсталирани"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:450 ../src/gpk-update-viewer.c:462
+#: ../src/gpk-update-viewer.c:452 ../src/gpk-update-viewer.c:464
 msgid "Could not update packages"
 msgstr "Пакетите не могат да бъдат обновени"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:485 ../src/gpk-update-viewer.c:512
+#: ../src/gpk-update-viewer.c:488 ../src/gpk-update-viewer.c:516
 msgid "GNOME PackageKit Update Viewer"
 msgstr "Изглед за обновления към GNOME PackageKit"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:487
+#: ../src/gpk-update-viewer.c:490
 msgid "Failed to update"
 msgstr "Неуспешно обновяване"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:542 ../src/gpk-update-viewer.c:563
+#: ../src/gpk-update-viewer.c:546 ../src/gpk-update-viewer.c:567
 msgid "Updates installed"
 msgstr "Обновленията са инсталирани"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:552
+#: ../src/gpk-update-viewer.c:556
 msgid "All updates were installed successfully."
 msgstr "Всички обновления са инсталирани успешно."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:555
+#: ../src/gpk-update-viewer.c:559
 msgid "The selected updates were installed successfully."
 msgstr "Избраните обновления са инсталирани успешно."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1022
+#: ../src/gpk-update-viewer.c:1026
 msgid "Getting the list of updates"
 msgstr "Получаване на списък с обновленията"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1254
+#: ../src/gpk-update-viewer.c:1258
 msgid "Could not run upgrade script"
 msgstr "Скриптът за обновяване не можа да бъде изпълнен"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1305
+#: ../src/gpk-update-viewer.c:1309
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4401,28 +4412,28 @@ msgstr[1] ""
 "е скъпо."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1409
+#: ../src/gpk-update-viewer.c:1413
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Инсталиране на обновление"
 msgstr[1] "_Инсталиране на обновления"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1422
+#: ../src/gpk-update-viewer.c:1426
 msgid "There are no updates available"
 msgstr "В момента няма обновления"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1431
+#: ../src/gpk-update-viewer.c:1435
 msgid "All software is up to date"
 msgstr "Всички програми са с последни версии"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1435
+#: ../src/gpk-update-viewer.c:1439
 msgid "There are no software updates available for your computer at this time."
 msgstr "Няма обновления за софтуера на компютъра ви в момента."
 
-#: ../src/gpk-update-viewer.c:1477
+#: ../src/gpk-update-viewer.c:1481
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4430,7 +4441,7 @@ msgstr[0] "Налично е %i обновление"
 msgstr[1] "Налични са %i обновления"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1493
+#: ../src/gpk-update-viewer.c:1497
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4438,7 +4449,7 @@ msgstr[0] "Избрано е %i обновление"
 msgstr[1] "Избрани са %i обновления"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1501
+#: ../src/gpk-update-viewer.c:1505
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4446,27 +4457,27 @@ msgstr[0] "Избрано е %i обновление (%s)"
 msgstr[1] "Избрани са %i обновления (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1695
+#: ../src/gpk-update-viewer.c:1699
 msgid "Software"
 msgstr "Софтуер"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1705
+#: ../src/gpk-update-viewer.c:1709
 msgid "Status"
 msgstr "Състояние"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1915
+#: ../src/gpk-update-viewer.c:1919
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Това обновление поправя грешки и други некритични проблеми."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1919
+#: ../src/gpk-update-viewer.c:1923
 msgid "This update is important as it may solve critical problems."
 msgstr "Това обновление е важно, защото поправя критични проблеми."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:1927
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4474,24 +4485,24 @@ msgstr ""
 "този пакет."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1927
+#: ../src/gpk-update-viewer.c:1931
 msgid "This update is blocked."
 msgstr "Това обновление е блокирано."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1939
+#: ../src/gpk-update-viewer.c:1943
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Това уведомление е публикувано на %s и последно е обновено на %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1946
+#: ../src/gpk-update-viewer.c:1950
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Това уведомление е публикувано на %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1968
+#: ../src/gpk-update-viewer.c:1972
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4501,7 +4512,7 @@ msgstr[1] ""
 "За повече информация относно това обновление посетете следните адреси:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1976
+#: ../src/gpk-update-viewer.c:1980
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4516,7 +4527,7 @@ msgstr[1] ""
 "следните адреси:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1984
+#: ../src/gpk-update-viewer.c:1988
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4529,14 +4540,14 @@ msgstr[1] ""
 "следните адреси:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:1997
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "След това обновяване ще е необходимо да рестартирате системата."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1997
+#: ../src/gpk-update-viewer.c:2001
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4544,7 +4555,7 @@ msgstr ""
 "След това обновяване ще е необходимо да излезете и да влезете в системата."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2004
+#: ../src/gpk-update-viewer.c:2008
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4553,7 +4564,7 @@ msgstr ""
 "предназначено за обща употреба."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2008
+#: ../src/gpk-update-viewer.c:2012
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4562,7 +4573,7 @@ msgstr ""
 "докладвате проблемите или грешките, които се появяват при ползването му."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2017
+#: ../src/gpk-update-viewer.c:2021
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4571,66 +4582,80 @@ msgstr ""
 "налична друга информация за обновлението:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2053
+#: ../src/gpk-update-viewer.c:2057
 msgid "Loading..."
 msgstr "Зареждане…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2094 ../src/gpk-update-viewer.c:2193
-#: ../src/gpk-update-viewer.c:2213
+#: ../src/gpk-update-viewer.c:2098 ../src/gpk-update-viewer.c:2197
+#: ../src/gpk-update-viewer.c:2217
 msgid "Could not get update details"
 msgstr "Подробната информация за обновлението не бе получена"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2114
+#: ../src/gpk-update-viewer.c:2118
 msgid "Could not get package details"
 msgstr "Подробната информация за пакета не бе получена"
 
-#: ../src/gpk-update-viewer.c:2114 ../src/gpk-update-viewer.c:2213
+#: ../src/gpk-update-viewer.c:2118 ../src/gpk-update-viewer.c:2217
 msgid "No results were returned."
 msgstr "Няма резултати."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2448
+#: ../src/gpk-update-viewer.c:2452
 msgid "Select all"
 msgstr "Избор на всички"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2456
+#: ../src/gpk-update-viewer.c:2460
 msgid "Unselect all"
 msgstr "Махане на избора"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2463
+#: ../src/gpk-update-viewer.c:2467
 msgid "Select security updates"
 msgstr "Избиране на обновленията по сигурността"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2469
+#: ../src/gpk-update-viewer.c:2473
 msgid "Ignore this update"
 msgstr "Прескачане на този пакет"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2578
+#: ../src/gpk-update-viewer.c:2585
 msgid "Could not get updates"
 msgstr "Обновленията не бяха получени"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2703
+#: ../src/gpk-update-viewer.c:2723
 msgid "Checking for updates..."
 msgstr "Проверка за обновления…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2990
+#: ../src/gpk-update-viewer.c:3010
 msgid "Could not get list of distribution upgrades"
 msgstr "Списъкът с обновления на дистрибуцията не бе получен"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3021
+#: ../src/gpk-update-viewer.c:3041
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
-msgstr "Налично е  обновление на дистрибуцията към версия „%s“"
+msgstr "Налично е обновление на дистрибуцията към версия „%s“"
+
+#. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
+#: ../src/gpk-update-viewer.c:3281
+msgid ""
+"Other updates are held back as some important system packages need to be "
+"installed first."
+msgstr ""
+"Някои обновления са скрити, защото е необходимо преди тях да се инсталират "
+"важни системни пакети."
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-update-viewer-main.c:103
+msgid "Software Update Viewer"
+msgstr "Преглед на софтуерните обновявания"
 
 #: ../src/gpk-dbus-service.c:136
 msgid "Do not exit after the request has been processed"
@@ -4733,3 +4758,6 @@ msgstr "Опции за изчистване на грешки"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "Извеждане на опциите за изчистване на грешки"
+
+#~ msgid "_Install Update(s)"
+#~ msgstr "_Инсталиране на обновленията"
