@@ -120,14 +120,14 @@ gpk_desktop_get_menu_path (const gchar *filename)
 		goto out;
 
 	/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
-	text = g_strdup_printf ("%s \342\236\231 %s",  _("System"), _("Preferences"));
+	text = g_strdup_printf ("%s \342\236\231 %s",  C_("Main menu", "System"), _("Preferences"));
 	path = gpk_desktop_get_menu_path_submenu (filename, "preferences.menu", text);
 	g_free (text);
 	if (path != NULL)
 		goto out;
 
 	/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
-	text = g_strdup_printf ("%s \342\236\231 %s",  _("System"), _("Administration"));
+	text = g_strdup_printf ("%s \342\236\231 %s",  C_("Main menu", "System"), _("Administration"));
 	path = gpk_desktop_get_menu_path_submenu (filename, "system-settings.menu", text);
 	g_free (text);
 	if (path != NULL)
