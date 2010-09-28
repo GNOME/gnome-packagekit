@@ -499,7 +499,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = ngettext ("To install this file, additional software also has to be modified.",
-				    "To install these file, additional software also has to be modified.", inputs);
+				    "To install these files, additional software also has to be modified.", inputs);
 	} else {
 
 		/* TRANSLATORS: message text of a dependency dialog */
