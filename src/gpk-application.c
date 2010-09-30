@@ -34,7 +34,6 @@
 #include "egg-string.h"
 #include "egg-markdown.h"
 
-#include "gpk-animated-icon.h"
 #include "gpk-application.h"
 #include "gpk-cell-renderer-uri.h"
 #include "gpk-common.h"
@@ -98,7 +97,6 @@ struct GpkApplicationPrivate
 	GpkSearchMode		 search_mode;
 	GpkActionMode		 action;
 	PkPackageSack		*package_sack;
-	GtkWidget		*image_status;
 	GpkHelperRun		*helper_run;
 	guint			 status_id;
 	PkStatusEnum		 status_last;
@@ -658,8 +656,10 @@ gpk_application_status_changed_timeout_cb (GpkApplication *application)
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (application->priv->image_status),
-					   application->priv->status_last, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "image_status"));
+	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
+				      gpk_status_enum_to_icon_name (application->priv->status_last),
+				      GTK_ICON_SIZE_BUTTON);
 
 	/* show containing box */
 	widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "hbox_status"));
@@ -712,7 +712,6 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 			gtk_widget_hide (widget);
 			widget = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "progressbar_progress"));
 			gtk_widget_hide (widget);
-			gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (application->priv->image_status), FALSE);
 			goto out;
 		}
 
@@ -3815,7 +3814,6 @@ gpk_application_init (GpkApplication *application)
 	GError *error = NULL;
 	GSList *array;
 	guint retval;
-	GtkBox *box;
 
 	application->priv = GPK_APPLICATION_GET_PRIVATE (application);
 	application->priv->group = NULL;
@@ -3894,13 +3892,6 @@ gpk_application_init (GpkApplication *application)
 		g_error_free (error);
 		goto out_build;
 	}
-
-	/* add animated widget */
-	application->priv->image_status = gpk_animated_icon_new ();
-	box = GTK_BOX (gtk_builder_get_object (application->priv->builder, "hbox_status"));
-	gtk_box_pack_start (box, application->priv->image_status, FALSE, FALSE, 0);
-	gtk_box_reorder_child (box, application->priv->image_status, 0);
-	gtk_widget_show (application->priv->image_status);
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (application->priv->builder, "window_manager"));
 
