@@ -35,7 +35,6 @@
 #include "gpk-gnome.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-animated-icon.h"
 
 struct _CcUpdatePanelPrivate {
 	GtkBuilder		*builder;
@@ -46,7 +45,6 @@ struct _CcUpdatePanelPrivate {
 	GtkTreePath		*path_tmp;
 	const gchar		*id_tmp;
 	PkStatusEnum		 status;
-	GtkWidget		*image_animation;
 	guint			 status_id;
 };
 
@@ -407,14 +405,19 @@ cc_update_panel_status_changed_timeout_cb (CcUpdatePanel *panel)
 	GtkWidget *widget;
 
 	/* set the text and show */
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_animation_preview"));
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "scrolledwindow_repo"));
+	gtk_widget_hide (widget);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_status"));
 	gtk_widget_show (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "label_animation"));
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "label_status"));
 	text = gpk_status_enum_to_localised_text (panel->priv->status);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	gpk_set_animated_icon_from_status (GPK_ANIMATED_ICON (panel->priv->image_animation), panel->priv->status, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "image_status"));
+	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
+				      gpk_status_enum_to_icon_name (panel->priv->status),
+				      GTK_ICON_SIZE_DIALOG);
 
 	/* never repeat */
 	panel->priv->status_id = 0;
@@ -444,9 +447,10 @@ cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdate
 			g_source_remove (panel->priv->status_id);
 			panel->priv->status_id = 0;
 		}
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_animation_preview"));
+		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_status"));
 		gtk_widget_hide (widget);
-		gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (panel->priv->image_animation), FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "scrolledwindow_repo"));
+		gtk_widget_show (widget);
 		goto out;
 	}
 
@@ -848,7 +852,6 @@ cc_update_panel_init (CcUpdatePanel *panel)
 	guint retval;
 	GError *error = NULL;
 	GtkTreeSelection *selection;
-	GtkBox *box;
 
 	panel->priv = CC_UPDATE_PREFS_GET_PRIVATE (panel);
 
@@ -894,13 +897,6 @@ cc_update_panel_init (CcUpdatePanel *panel)
 	cc_update_panel_update_freq_combo_setup (panel);
 	cc_update_panel_upgrade_freq_combo_setup (panel);
 	cc_update_panel_auto_update_combo_setup (panel);
-
-	/* add animated widget */
-	panel->priv->image_animation = gpk_animated_icon_new ();
-	box = GTK_BOX (gtk_builder_get_object (panel->priv->builder, "hbox_animation"));
-	gtk_box_pack_start (box, panel->priv->image_animation, FALSE, FALSE, 0);
-	gtk_box_reorder_child (box, panel->priv->image_animation, 0);
-	gtk_widget_show (panel->priv->image_animation);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_detail"));
 	g_settings_bind (panel->priv->settings,
