@@ -95,6 +95,25 @@ cc_update_panel_help_cb (GtkWidget *widget, CcUpdatePanel *panel)
 }
 
 /**
+ * cc_update_panel_check_now_cb:
+ **/
+static void
+cc_update_panel_check_now_cb (GtkWidget *widget, CcUpdatePanel *panel)
+{
+	gboolean ret;
+	GError *error = NULL;
+	gchar *command;
+
+	command = g_build_filename (BINDIR, "gpk-update-viewer", NULL);
+	ret = g_spawn_command_line_async (command, &error);
+	if (!ret) {
+		egg_warning ("Couldn't execute %s: %s", command, error->message);
+		g_error_free (error);
+	}
+	g_free (command);
+}
+
+/**
  * cc_update_panel_update_freq_combo_changed:
  **/
 static void
@@ -892,6 +911,9 @@ cc_update_panel_init (CcUpdatePanel *panel)
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (cc_update_panel_help_cb), panel);
+	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "button_check_now"));
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (cc_update_panel_check_now_cb), panel);
 
 	/* update the combo boxes */
 	cc_update_panel_update_freq_combo_setup (panel);
