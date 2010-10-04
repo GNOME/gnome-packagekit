@@ -2981,7 +2981,7 @@ static void
 gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, GpkUpdateViewer *update_viewer)
 {
 	GtkRequisition req;
-	gtk_widget_size_request (widget, &req);
+	gtk_widget_get_preferred_size (widget, &req, NULL);
 	egg_debug ("req.height=%i", req.height);
 	if (req.height != 0)
 		gtk_paned_set_position (GTK_PANED (widget), 166);

@@ -259,7 +259,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
  * @object: The object to destroy
  **/
 static void
-gpk_animated_icon_destroy (GtkObject *object)
+gpk_animated_icon_destroy (GtkWidget *object)
 {
 	GpkAnimatedIcon *icon;
 	icon = GPK_ANIMATED_ICON (object);
@@ -272,14 +272,14 @@ gpk_animated_icon_destroy (GtkObject *object)
 	icon->filename = NULL;
 	gpk_animated_icon_free_pixbufs (icon);
 
-	GTK_OBJECT_CLASS (parent_class)->destroy (object);
+	GTK_WIDGET_CLASS (parent_class)->destroy (object);
 }
 
 static void
 gpk_animated_icon_class_init (GpkAnimatedIconClass *class)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (class);
-	object_class->destroy = gpk_animated_icon_destroy;
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+	widget_class->destroy = gpk_animated_icon_destroy;
 	parent_class = g_type_class_peek_parent (class);
 }
 

@@ -171,7 +171,7 @@ gpk_x11_get_title (GpkX11 *x11)
 	atom_type = gdk_x11_get_xatom_by_name_for_display (x11->priv->gdk_display, "UTF8_STRING");
 	rc = XGetWindowProperty (x11->priv->display, x11->priv->window, atom, 0, G_MAXLONG, False, atom_type,
 				 &type, &format, &nitems, &bytes_after, (void*) &data);
-	gdk_error_trap_pop ();
+	gdk_error_trap_pop_ignored ();
 	if (rc == Success && nitems > 0) {
 		title = g_strdup (data);
 		goto out;
@@ -181,7 +181,7 @@ gpk_x11_get_title (GpkX11 *x11)
 	gdk_error_trap_push ();
 	rc = XGetWindowProperty (x11->priv->display, x11->priv->window, XA_WM_NAME, 0, G_MAXLONG, False, XA_STRING,
 				 &type, &format, &nitems, &bytes_after, (void*) &data);
-	gdk_error_trap_pop ();
+	gdk_error_trap_pop_ignored ();
 	if (rc == Success && nitems > 0) {
 		title = g_strdup (data);
 		goto out;

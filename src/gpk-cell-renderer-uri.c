@@ -162,29 +162,18 @@ gpk_cell_renderer_uri_set_link_color (GdkColor *color, gboolean visited)
 
 static void
 gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
-			     GdkWindow *window,
-			     GtkWidget *widget,
-			     GdkRectangle *background_area,
-			     GdkRectangle *cell_area,
-			     GdkRectangle *expose_area,
-			     GtkCellRendererState flags)
+			      cairo_t *cr,
+			      GtkWidget *widget,
+			      const GdkRectangle *background_area,
+			      const GdkRectangle *cell_area,
+			      GtkCellRendererState flags)
 {
 	gboolean ret;
-	GdkDisplay *display;
-	GdkCursor *cursor;
 	GtkStyle *style;
 	GdkColor *color;
 	gchar *color_string;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
-	/* set cursor */
-	display = gdk_display_get_default ();
-	if (cru->uri == NULL)
-		cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
-	else
-		cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
-	gdk_window_set_cursor (window, cursor);
-	gdk_cursor_unref (cursor);
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
 	/* get a copy of the widget color */
@@ -230,7 +219,7 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 		g_object_set (G_OBJECT(cru), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
 	}
 
-	GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, window, widget, background_area, cell_area, expose_area, flags);
+	GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, cr, widget, background_area, cell_area, flags);
 }
 
 /**

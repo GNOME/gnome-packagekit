@@ -2640,7 +2640,7 @@ gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *
 	/* find the location */
 	window = gtk_widget_get_window (widget);
 	gdk_window_get_origin (window, &menu_xpos, &menu_ypos);
-	gtk_widget_size_request (GTK_WIDGET (widget), &requisition);
+	gtk_widget_get_preferred_size (GTK_WIDGET (widget), &requisition, NULL);
 
 	/* set the position */
 	*x = menu_xpos;
