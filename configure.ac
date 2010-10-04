@@ -114,7 +114,7 @@ PKG_CHECK_MODULES(DBUS, \
  dbus-1 >= 1.1.2 \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
- gtk+-3.0 >= 2.90.3 gdk-3.0 fontconfig)
+ gtk+-3.0 >= 2.91.0 gdk-3.0 fontconfig)
 PKG_CHECK_MODULES(GNOME_MENUS, \
  libgnome-menu >= 2.24.1)
 PKG_CHECK_MODULES(UPOWER, [
