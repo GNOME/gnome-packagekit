@@ -2956,11 +2956,20 @@ out:
 static gboolean
 gpk_dbus_task_path_is_trusted (const gchar *exec)
 {
+	gboolean res = FALSE;
+	gchar *path;
+
 	/* special case the plugin helper -- it's trusted */
-	if (g_strcmp0 (exec, "/usr/libexec/gst-install-plugins-helper") == 0 ||
-	    g_strcmp0 (exec, "/usr/libexec/pk-gstreamer-install") == 0)
-		return TRUE;
-	return FALSE;
+
+	path = g_build_filename (LIBEXECDIR, "gst-install-plugins-helper", NULL);
+	res = res || (g_strcmp0 (exec, path) == 0);
+	g_free (path);
+
+	path = g_build_filename (LIBEXECDIR, "pk-gstreamer-install", NULL);
+	res = res || (g_strcmp0 (exec, path) == 0);
+	g_free (path);
+
+	return res;
 }
 
 /**
