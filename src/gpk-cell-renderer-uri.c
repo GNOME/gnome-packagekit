@@ -68,8 +68,8 @@ gpk_cell_renderer_uri_set_clicked (GpkCellRendererUri *cru, gboolean clicked)
 static gboolean
 gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 			        GtkWidget *widget, const gchar *path,
-			        GdkRectangle *background_area,
-			        GdkRectangle *cell_area, GtkCellRendererState flags)
+			        const GdkRectangle *background_area,
+			        const GdkRectangle *cell_area, GtkCellRendererState flags)
 {
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
 
