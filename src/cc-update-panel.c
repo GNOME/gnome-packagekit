@@ -46,6 +46,7 @@ struct _CcUpdatePanelPrivate {
 	const gchar		*id_tmp;
 	PkStatusEnum		 status;
 	guint			 status_id;
+	GCancellable		*cancellable;
 };
 
 enum {
@@ -588,7 +589,8 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, CcUpdate
 
 	/* set the repo */
 	egg_debug ("setting %s to %i", repo_id, enabled);
-	pk_client_repo_enable_async (panel->priv->client, repo_id, enabled, NULL,
+	pk_client_repo_enable_async (panel->priv->client, repo_id, enabled,
+				     panel->priv->cancellable,
 				     (PkProgressCallback) cc_update_panel_progress_cb, panel,
 				     (GAsyncReadyCallback) cc_update_panel_repo_enable_cb, panel);
 
@@ -751,7 +753,8 @@ cc_update_panel_repo_list_refresh (CcUpdatePanel *panel)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	else
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
-	pk_client_get_repo_list_async (panel->priv->client, filters, NULL,
+	pk_client_get_repo_list_async (panel->priv->client, filters,
+				       panel->priv->cancellable,
 				       (PkProgressCallback) cc_update_panel_progress_cb, panel,
 				       (GAsyncReadyCallback) cc_update_panel_get_repo_list_cb, panel);
 }
@@ -855,6 +858,8 @@ static void
 cc_update_panel_finalize (GObject *object)
 {
 	CcUpdatePanel *panel = CC_UPDATE_PANEL (object);
+	g_cancellable_cancel (panel->priv->cancellable);
+	g_object_unref (panel->priv->cancellable);
 	g_object_unref (panel->priv->builder);
 	g_object_unref (panel->priv->settings);
 	g_object_unref (panel->priv->list_store);
@@ -873,6 +878,7 @@ cc_update_panel_init (CcUpdatePanel *panel)
 	GtkTreeSelection *selection;
 
 	panel->priv = CC_UPDATE_PREFS_GET_PRIVATE (panel);
+	panel->priv->cancellable = g_cancellable_new ();
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
