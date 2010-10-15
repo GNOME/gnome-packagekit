@@ -351,6 +351,7 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 	gchar **parts;
 	gboolean ret;
 	PkDesktop *desktop;
+	GError *error = NULL;
 
 	/* open database */
 	desktop = pk_desktop_new ();
@@ -364,7 +365,7 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 	length = g_strv_length (package_ids);
 	for (i=0; i<length; i++) {
 		parts = g_strsplit (package_ids[i], ";", 0);
-		array = pk_desktop_get_files_for_package (desktop, parts[0], NULL);
+		array = pk_desktop_get_files_for_package (desktop, parts[0], &error);
 		if (array != NULL) {
 			for (j=0; j<array->len; j++) {
 				filename = g_ptr_array_index (array, j);
@@ -373,6 +374,9 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 					added++;
 			}
 			g_ptr_array_unref (array);
+		} else {
+			egg_warning ("failed to get files for %s: %s", parts[0], error->message);
+			g_clear_error (&error);
 		}
 		g_strfreev (parts);
 	}
