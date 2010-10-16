@@ -1,0 +1,4586 @@
+# gnome-packagekit Korean translation
+# This file is distributed under the same license as the gnome-packagekit package.
+#
+# Changwoo Ryu <cwryu@debian.org>, 2010.
+#
+# 주의
+# - 이 프로그램의 이름인 PackageKit는 "패키지키트"로 음역
+# - Package Manager는 "패키지 관리 프로그램"으로 번역 ("관리자"가 아니라)
+# - source는 (소스 코드가 아니고) 패키지 저장소를 나타내는 경우
+#   "공급원"으로 번역 
+# - mirror는 "미러 사이트"라고 번역
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-packagekit\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
+"POT-Creation-Date: 2010-10-17 00:08+0900\n"
+"PO-Revision-Date: 2010-10-17 00:40+0900\n"
+"Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
+"Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
+"Language: Korean\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../data/gnome-packagekit.schemas.in.h:1
+msgid "Allow applications to invoke the codec installer"
+msgstr "프로그램이 요청하는 코덱 설치를 허용합니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:2
+msgid "Allow applications to invoke the font installer"
+msgstr "프로그램이 요청하는 글꼴 설치를 허용합니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:3
+msgid "Allow applications to invoke the mime type installer"
+msgstr "프로그램이 요청하는 MIME 형식 설치를 허용합니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:4
+msgid "Ask the user if additional firmware should be installed"
+msgstr "추가 펌웨어를 설치해야 할 때 물어봅니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:5
+msgid "Ask the user if additional hardware drivers should be installed"
+msgstr "추가 하드웨어 드라이버를 설치해야 할 때 물어봅니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:6
+msgid "Ask the user if additional packages should be installed"
+msgstr "추가 패키지를 설치해야 할 때 물어봅니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:7
+msgid "Ask the user if files should be copied to a non-private directory"
+msgstr "파일을 개인용이 아닌 디렉터리에 복사해야 할 때 물어봅니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:8
+msgid ""
+"Ask the user if files should be copied to a non-private directory when "
+"installing from a FUSE mount"
+msgstr "FUSE 마운트에서 설치할 때 파일을 개인용이 아닌 디렉터리에 복사해야 할 때 물어봅니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:9
+msgid "Automatically update these types of updates"
+msgstr "자동으로 설치할 종류의 업데이트"
+
+#: ../data/gnome-packagekit.schemas.in.h:10
+msgid ""
+"Automatically update these types of updates. Options are \"all\", \"security"
+"\", or \"none\""
+msgstr "자동으로 설치할 종류의 업데이트. 쓸 수 있는 값은 \"all\", \"security\" 혹은 \"none\""
+
+#: ../data/gnome-packagekit.schemas.in.h:11
+msgid "Devices that should be ignored"
+msgstr "무시할 장치 목록"
+
+#: ../data/gnome-packagekit.schemas.in.h:12
+msgid ""
+"Devices that should be ignored, separated by commas. These can include '*' "
+"and '?' characters"
+msgstr "무시할 장치 목록, 쉼표로 구분. '*' 및 '?' 문자 포함 가능"
+
+#: ../data/gnome-packagekit.schemas.in.h:13
+msgid "Filter package lists using basename in gpk-application"
+msgstr "gpk-application에서 파일 이름으로 패키지 목록 필터링"
+
+#: ../data/gnome-packagekit.schemas.in.h:14
+msgid "Filter using basename in gpk-application"
+msgstr "gpk-application에서 파일 이름으로 필터링"
+
+#: ../data/gnome-packagekit.schemas.in.h:15
+msgid "Firmware files that should not be searched for"
+msgstr "검색하지 말아야 할 패키지 파일"
+
+#: ../data/gnome-packagekit.schemas.in.h:16
+msgid ""
+"Firmware files that should not be searched for, separated by commas. These "
+"can include '*' and '?' characters"
+msgstr "검색하지 말아야 할 펌웨어 파일, 쉼표로 구분. '*' 및 '?' 문자 포함 가능"
+
+#: ../data/gnome-packagekit.schemas.in.h:17
+msgid "GTK+ module for font installation"
+msgstr "글꼴 설치 GTK+ 모듈"
+
+#: ../data/gnome-packagekit.schemas.in.h:18
+msgid "Get the update list when the session starts"
+msgstr "세션이 시작할 때 업데이트 목록 받기"
+
+#: ../data/gnome-packagekit.schemas.in.h:19
+msgid ""
+"Get the update list when the session starts, even if not scheduled to. This "
+"ensures the user has up to date and valid data in the tray at startup."
+msgstr "세션이 시작할 때 예정이 아니더라도 업데이트 목록을 받습니다. 이렇게 하면 시작할 때 올바른 최신 데이터를 가지고 시작합니다."
+
+#: ../data/gnome-packagekit.schemas.in.h:20
+msgid "How often to check for distribution upgrades"
+msgstr "배포판 업그레이드 검사 주기"
+
+#: ../data/gnome-packagekit.schemas.in.h:21
+msgid "How often to check for distribution upgrades. Value is in seconds."
+msgstr "배포판 업그레이드 검사 주기. 초 단위."
+
+#: ../data/gnome-packagekit.schemas.in.h:22
+msgid "How often to check for updates"
+msgstr "업데이트 확인 주기"
+
+#: ../data/gnome-packagekit.schemas.in.h:23
+msgid "How often to check for updates. Value is in seconds."
+msgstr "업데이트를 확인하는 주기. 초 단위."
+
+#: ../data/gnome-packagekit.schemas.in.h:24
+msgid "How often to refresh the package cache"
+msgstr "패키지 캐시를 새로 고칠 주기"
+
+#: ../data/gnome-packagekit.schemas.in.h:25
+msgid "How often to refresh the package cache. Value is in seconds."
+msgstr "패키지 캐시를 새로 고칠 주기. 초 단위."
+
+#: ../data/gnome-packagekit.schemas.in.h:26
+msgid "If search terms should be completed automatically"
+msgstr "검색어를 자동으로 완성할 지 여부"
+
+#: ../data/gnome-packagekit.schemas.in.h:27
+msgid "Install updates automatically when running on battery power"
+msgstr "컴퓨터가 배터리 전원으로 동작하고 있을 때 자동 업데이트를 설치"
+
+#. TRANSLATORS: An interaction mode is the level of user interaction
+#. that is allowed. See ./docs/DBusInterface.txt for more information
+#: ../data/gnome-packagekit.schemas.in.h:30
+msgid "Interaction modes that must be used, overriding requests from client"
+msgstr "사용할 사용자 입출력 모드. 클라이언트 요청 무시."
+
+#. TRANSLATORS: An interaction mode is the level of user interaction
+#. that is allowed. See ./docs/DBusInterface.txt for more information
+#: ../data/gnome-packagekit.schemas.in.h:33
+msgid "Interaction modes to use by default"
+msgstr "기본값으로 사용할 사용할 사용자 입출력 모드"
+
+#: ../data/gnome-packagekit.schemas.in.h:34
+msgid "Messages that should be ignored"
+msgstr "무시해야 할 메시지"
+
+#: ../data/gnome-packagekit.schemas.in.h:35
+msgid ""
+"Messages that should be ignored, separated by commas. These can include '*' "
+"and '?' characters"
+msgstr "무시해야 할 메시지, 쉼표로 구분. '*' 및 '?' 문자 포함"
+
+#: ../data/gnome-packagekit.schemas.in.h:36
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection"
+msgstr "휴대전화 네트워크 연결을 통해 대용량 업데이트를 하기 전에 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:37
+msgid "Notify the user for completed updates"
+msgstr "업데이트를 마쳤을 때 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:38
+msgid "Notify the user for completed updates where the user needs to restart"
+msgstr "업데이트를 마쳤을 때 컴퓨터를 다시 시작해야 하면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:39
+msgid "Notify the user when a task is complete"
+msgstr "작업을 마쳤을 때 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:40
+msgid "Notify the user when an update has failed"
+msgstr "업데이트가 실패했을 때 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:41
+msgid "Notify the user when distribution upgrades are available"
+msgstr "배포판 업그레이드가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:42
+msgid "Notify the user when security updates are available"
+msgstr "보안 업데이트가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:43
+msgid ""
+"Notify the user when the automatic update was not started on battery power"
+msgstr "배터리 전원을 사용할 때 자동 업데이트를 시작하지 않으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:44
+msgid ""
+"Notify the user when the update was not automatically started while running "
+"on battery power"
+msgstr "배터리 전원을 사용할 때 자동 업데이트를 시작하지 않으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:45
+msgid "Notify the user when the update was started"
+msgstr "업데이트를 시작하면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:46
+msgid "Notify the user when there are errors"
+msgstr "오류가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:47
+msgid "Notify the user when there are messages"
+msgstr "메시지가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:48
+msgid "Notify the user when there are messages from the package manager"
+msgstr "패키지 관리자에서 온 메시지가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:49
+msgid "Notify the user when updates are available"
+msgstr "업데이트가 있으면 사용자에게 알리기"
+
+#: ../data/gnome-packagekit.schemas.in.h:50
+msgid "Only show native packages in the file lists"
+msgstr "파일 목록에서 해당 아키텍처의 패키지만 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:51
+msgid ""
+"Only show native packages matching the machine architecture in the file lists"
+msgstr "파일 목록에서 해당 컴퓨터의 아키텍처에 맞는 패키지만 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:52
+msgid "Only show the newest packages in the file lists"
+msgstr "파일 목록에서 최신 패키지만 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:53
+msgid ""
+"Only show the newest packages in the update list, and filter out older "
+"updates that are still available."
+msgstr "업데이트 목록에서 최신 패키지만 표시. 사용 가능한 과거 업데이트는 필터링."
+
+#: ../data/gnome-packagekit.schemas.in.h:54
+msgid "Only show the newest updates in the list"
+msgstr "목록에서 최신 업데이트만 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:55
+msgid "Programs that should be ignored when they issue session D-Bus requests"
+msgstr "세션 D-버스 요청을 해도 무시할 프로그램 목록"
+
+#: ../data/gnome-packagekit.schemas.in.h:56
+msgid ""
+"Programs that should be ignored when they issue session D-Bus requests, "
+"separated by commas."
+msgstr "세션 D-버스 요청을 해도 무시할 프로그램 목록, 쉼표로 구분."
+
+#: ../data/gnome-packagekit.schemas.in.h:57
+msgid "Scroll to packages as they are downloaded"
+msgstr "다운로드한 패키지로 스크롤"
+
+#: ../data/gnome-packagekit.schemas.in.h:58
+msgid ""
+"Scroll to packages in the update list as they are downloaded or installed."
+msgstr "업데이트 목록에서 다운로드했거나 설치한 패키지로 스크롤합니다."
+
+#: ../data/gnome-packagekit.schemas.in.h:59
+msgid "Show all repositories in the software source viewer"
+msgstr "소프트웨어 공급원 보기에서 모든 저장소 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:60
+msgid "Show the 'All Packages' group menu"
+msgstr "'모든 패키지' 그룹 메뉴 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:61
+msgid ""
+"Show the all packages menu item. This takes a long time to populate on most "
+"backends and is not generally required by end users"
+msgstr "모든 패키지 메뉴 항목을 표시합니다. 대부분의 백엔드에서 모두 표시하려면 시간이 오래 걸리고, 일반 사용자는 모두 표시할 필요가 없습니다."
+
+#: ../data/gnome-packagekit.schemas.in.h:62
+msgid "Show the category group menu"
+msgstr "분류 그룹 메뉴 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:63
+msgid ""
+"Show the category group menu. This is more complete and custom to the "
+"distribution, but takes longer to populate"
+msgstr "분류 그룹 메뉴를 표시합니다. 분류 그룹 메뉴는 한정되어 있고 배포판마다 다릅니다. 표시하는데 더 오래 걸립니다."
+
+#. TRANSLATORS:
+#. The original application is the program that was opened by the user,
+#. and that requested the PackageKit action.
+#. If the user then closes the application, but the task is still running
+#. (for instance, updating the system) then the original application is
+#. marked as not running.
+#. This is the only time we should show the progress icon in the tray,
+#. as the user would have no other way to interact with, or cancel the task.
+#.
+#. Some people like being able to interact with the task for debugging
+#. or just because they want to know what is happening in other user sessions.
+#. Those sort of people (not typical users) should enable this option.
+#.
+#: ../data/gnome-packagekit.schemas.in.h:77
+msgid ""
+"Show the transaction progress icon in the tray when the original application "
+"is still running."
+msgstr "기존 프로그램이 계속 실행 중일 때, 처리 진행 상황 아이콘을 알림 영역에 표시합니다."
+
+#: ../data/gnome-packagekit.schemas.in.h:78
+msgid "Show transactions that have the original application running"
+msgstr "기존 프로그램이 계속 실행 중일 때 처리 표시"
+
+#: ../data/gnome-packagekit.schemas.in.h:79
+msgid ""
+"The number of seconds at session startup to wait before checking for updates"
+msgstr "세션이 시작할 때 업데이트를 확인할 때까지 기다릴 시간, 초 단위"
+
+#: ../data/gnome-packagekit.schemas.in.h:80
+msgid "The search mode used by default"
+msgstr "기본값으로 사용할 검색 모드"
+
+#: ../data/gnome-packagekit.schemas.in.h:81
+msgid ""
+"The search mode used by default. Options are \"name\", \"details\", or \"file"
+"\""
+msgstr "기본값으로 사용할 검색 모드. 사용 가능한 값은 \"name\", \"detail\" 혹은 \"file\"입니다."
+
+#: ../data/gnome-packagekit.schemas.in.h:82
+msgid "This key determines if applications should be able to prompt for fonts"
+msgstr "이 키가 참이면 프로그램이 글꼴 설치를 요청할 수 있습니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:83
+msgid "Use WiFi (wireless LAN) connections to check for updates"
+msgstr "업데이트 확인에 와이파이 (무선 LAN) 연결 사용"
+
+#: ../data/gnome-packagekit.schemas.in.h:84
+msgid "Use WiFi connections"
+msgstr "와이파이 연결 사용"
+
+#: ../data/gnome-packagekit.schemas.in.h:85
+msgid "Use mobile broadband connections"
+msgstr "휴대전화 네트워크 연결 사용"
+
+#: ../data/gnome-packagekit.schemas.in.h:86
+msgid ""
+"Use mobile broadband connections such as GSM and CDMA to check for updates"
+msgstr "업데이트하는데 GSM이나 CDMA와 같은 휴대전화 네트워크 연결을 사용합니다"
+
+#: ../data/gnome-packagekit.schemas.in.h:87
+msgid ""
+"When displaying UI from a session DBus request, automatically use these "
+"options by default"
+msgstr "세션 D-버스 요청을 사용자 인터페이스로 표시할 때, 이 옵션을 기본값으로 사용"
+
+#: ../data/gnome-packagekit.schemas.in.h:88
+msgid ""
+"When displaying UI from a session DBus request, force these options to be "
+"turned on"
+msgstr "세션 D-버스 요청을 사용자 인터페이스로 표시할 때, 이 옵션을 기본값으로 켭니다."
+
+#: ../data/gpk-application.desktop.in.h:1
+msgid "Add or remove software installed on the system"
+msgstr "시스템에 설치하는 소프트웨어를 추가하거나 제거합니다"
+
+#. TRANSLATORS: short name for gpk-update-viewer
+#: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
+#: ../src/gpk-application-main.c:94 ../src/gpk-log.c:514
+#: ../src/gpk-update-viewer-main.c:86
+msgid "Add/Remove Software"
+msgstr "소프트웨어 추가/제거"
+
+#: ../data/gpk-application.ui.h:1
+msgid "About this software"
+msgstr "이 소프트웨어 정보"
+
+#: ../data/gpk-application.ui.h:3
+msgid "Depends on"
+msgstr "의존하는 패키지"
+
+#: ../data/gpk-application.ui.h:4
+msgid "Edit list of software sources"
+msgstr "소프트웨어 공급원 목록을 편집합니다"
+
+# tooltip
+#: ../data/gpk-application.ui.h:5
+msgid "Execute graphical applications"
+msgstr "그래픽 프로그램을 실행합니다"
+
+#: ../data/gpk-application.ui.h:6
+msgid "Fi_nd"
+msgstr "찾기(_N)"
+
+# menu item
+#: ../data/gpk-application.ui.h:7
+msgid "Get file list"
+msgstr "파일 목록 받기"
+
+#: ../data/gpk-application.ui.h:8
+msgid "Help with this software"
+msgstr "이 소프트웨어의 도움말"
+
+#. TRANSLATORS: title: installing local files
+#. TRANSLATORS: button: confirm to search for packages
+#. TRANSLATORS: button: install codecs
+#. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install packages in catalog
+#. TRANSLATORS: button: install printer drivers
+#. TRANSLATORS: button: install catalog
+#. TRANSLATORS: if the update should be installed
+#: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:704
+#: ../src/gpk-dbus-task.c:1236 ../src/gpk-dbus-task.c:1455
+#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2119
+#: ../src/gpk-dbus-task.c:2393 ../src/gpk-dbus-task.c:2515
+#: ../src/gpk-dbus-task.c:2868 ../src/gpk-update-viewer.c:1668
+msgid "Install"
+msgstr "설치"
+
+#: ../data/gpk-application.ui.h:10
+msgid "Only N_ative Packages"
+msgstr "전용 패키지만(_A)"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Only _Available"
+msgstr "사용 가능 패키지만(_A)"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Only _Development"
+msgstr "개발용 패키지만(_D)"
+
+#: ../data/gpk-application.ui.h:13
+msgid "Only _End User Files"
+msgstr "일반 사용자 패키지만(_E)"
+
+#: ../data/gpk-application.ui.h:14
+msgid "Only _Graphical"
+msgstr "그래픽 프로그램만(_G)"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Only _Installed"
+msgstr "설치한 패키지만(_I)"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Only _Newest Packages"
+msgstr "최신 패키지만(_N)"
+
+#: ../data/gpk-application.ui.h:17
+msgid "Only _Non-Free Software"
+msgstr "자유 소프트웨어 아닌 경우만(_N)"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Only _Non-Source Code"
+msgstr "소스 코드 아닌 경우만(_N)"
+
+#: ../data/gpk-application.ui.h:19
+msgid "Only _Text"
+msgstr "텍스트 프로그램만(_T)"
+
+#: ../data/gpk-application.ui.h:20
+msgid "Only show one package, not subpackages"
+msgstr "단일 패키지만 표시, 하위 패키지는 제외"
+
+#: ../data/gpk-application.ui.h:21
+msgid "Only show packages matching the machine architecture"
+msgstr "컴퓨터의 아키텍처에 맞는 패키지만 표시"
+
+#: ../data/gpk-application.ui.h:22
+msgid "Only show the newest available package"
+msgstr "최신 버전 패키지만 표시"
+
+#: ../data/gpk-application.ui.h:23
+msgid "Project homepage"
+msgstr "프로젝트 홈페이지"
+
+#: ../data/gpk-application.ui.h:24
+msgid "Refresh Package Lists"
+msgstr "패키지 목록 새로 고치기"
+
+#: ../data/gpk-application.ui.h:25
+msgid "Refresh the list of packages on the system"
+msgstr "시스템의 패키지 목록을 새로 고칩니다"
+
+#. TRANSLATORS: button: confirm to search for packages
+#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:2806
+msgid "Remove"
+msgstr "제거"
+
+#: ../data/gpk-application.ui.h:27
+msgid "Required by"
+msgstr "이 패키지가 필요"
+
+#: ../data/gpk-application.ui.h:28
+msgid "Run program"
+msgstr "프로그램 실행"
+
+#: ../data/gpk-application.ui.h:29
+msgid "S_election"
+msgstr "선택(_E)"
+
+#: ../data/gpk-application.ui.h:30
+msgid "Software Log"
+msgstr "소프트웨어 기록"
+
+#: ../data/gpk-application.ui.h:31 ../data/gpk-repo.desktop.in.h:2
+#: ../data/gpk-repo.ui.h:2
+msgid "Software Sources"
+msgstr "소프트웨어 공급원"
+
+#: ../data/gpk-application.ui.h:32
+msgid "View previously added or removed software"
+msgstr "이전에 추가했거나 제거한 패키지를 봅니다"
+
+#: ../data/gpk-application.ui.h:33
+msgid "Visit the project homepage"
+msgstr "프로젝트 홈페이지를 봅니다"
+
+#: ../data/gpk-application.ui.h:34
+msgid "_Contents"
+msgstr "차례(_C)"
+
+#: ../data/gpk-application.ui.h:35
+msgid "_Development"
+msgstr "개발(_D)"
+
+#: ../data/gpk-application.ui.h:36
+msgid "_Filters"
+msgstr "필터(_F)"
+
+#: ../data/gpk-application.ui.h:37
+msgid "_Free"
+msgstr "자유 라이선스(_F)"
+
+#: ../data/gpk-application.ui.h:38
+msgid "_Graphical"
+msgstr "그래픽(_G)"
+
+#. TRANSLATORS: context menu to open the offline help file
+#: ../data/gpk-application.ui.h:39 ../src/gpk-check-update.c:261
+msgid "_Help"
+msgstr "도움말(_H)"
+
+#: ../data/gpk-application.ui.h:40
+msgid "_Hide Subpackages"
+msgstr "하위 패키지 숨기기(_H)"
+
+#: ../data/gpk-application.ui.h:41
+msgid "_Installed"
+msgstr "설치됨(_I)"
+
+#: ../data/gpk-application.ui.h:42
+msgid "_No Filter"
+msgstr "필터 없음(_N)"
+
+#: ../data/gpk-application.ui.h:43
+msgid "_Only Free Software"
+msgstr "자유 소프트웨어만(_O)"
+
+#: ../data/gpk-application.ui.h:44
+msgid "_Only Source Code"
+msgstr "소스 코드만(_O)"
+
+# 소스 코드를 말함
+#: ../data/gpk-application.ui.h:45
+msgid "_Source"
+msgstr "소스(_S)"
+
+#: ../data/gpk-application.ui.h:46
+msgid "_System"
+msgstr "시스템(_S)"
+
+#: ../data/gpk-backend-status.ui.h:1
+msgid "Backend Status"
+msgstr "백엔드 상태"
+
+#: ../data/gpk-backend-status.ui.h:2
+msgid "Backend author:"
+msgstr "백엔드 개발자:"
+
+#: ../data/gpk-backend-status.ui.h:3
+msgid "Backend name:"
+msgstr "백엔드 이름:"
+
+#: ../data/gpk-client.ui.h:1
+msgid "Install Package"
+msgstr "패키지 설치"
+
+#: ../data/gpk-error.ui.h:1
+msgid "More details"
+msgstr "더 자세히"
+
+#: ../data/gpk-eula.ui.h:1
+msgid "License Agreement Required"
+msgstr "라이선스 동의가 필요합니다"
+
+#: ../data/gpk-eula.ui.h:2
+msgid "_Accept Agreement"
+msgstr "동의(_A)"
+
+#. TRANSLATORS: program name: application to install a catalog of software
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:69
+#: ../src/gpk-install-catalog.c:71
+msgid "Catalog Installer"
+msgstr "소프트웨어 목록 설치"
+
+#: ../data/gpk-install-catalog.desktop.in.h:2
+msgid "Install a catalog of software on the system"
+msgstr "소프트웨어 목록을 시스템에 설치합니다"
+
+#: ../data/gpk-install-file.desktop.in.h:1
+msgid "Install selected software on the system"
+msgstr "선택한 소프트웨어를 시스템에 설치합니다"
+
+#: ../data/gpk-install-file.desktop.in.h:2
+msgid "Package Installer"
+msgstr "패키지 설치 프로그램"
+
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:710
+msgid "Software Log Viewer"
+msgstr "소프트웨어 기록 보기"
+
+#: ../data/gpk-log.desktop.in.h:2
+msgid "View past package management tasks"
+msgstr "패키지 관리 작업 내역을 봅니다"
+
+#: ../data/gpk-log.ui.h:1
+msgid "Filter"
+msgstr "필터"
+
+#: ../data/gpk-prefs.desktop.in.h:1
+msgid "Change software update preferences"
+msgstr "소프트웨어 업데이트 기본 설정 바꾸기"
+
+#: ../data/gpk-prefs.desktop.in.h:2
+msgid "Software Updates"
+msgstr "소프트웨어 업데이트"
+
+#: ../data/gpk-prefs.ui.h:1
+msgid "C_heck for updates:"
+msgstr "업데이트 확인(_H):"
+
+#: ../data/gpk-prefs.ui.h:2
+msgid "Check for major _upgrades:"
+msgstr "주요 업그레이드 확인(_U):"
+
+#: ../data/gpk-prefs.ui.h:3
+msgid "Check for updates when using mobile broadband"
+msgstr "휴대전화 네트워크를 사용할 때 업데이트 확인"
+
+#: ../data/gpk-prefs.ui.h:4
+msgid "Currently using mobile broadband"
+msgstr "현재 휴대전화 네트워크 사용 중"
+
+#. TRANSLATORS: program name, an application to set per-user policy for updates
+#: ../data/gpk-prefs.ui.h:5 ../src/gpk-prefs.c:485
+msgid "Software Update Preferences"
+msgstr "소프트웨어 업데이트 기본 설정"
+
+#: ../data/gpk-prefs.ui.h:6
+msgid "Update Settings"
+msgstr "업데이트 설정"
+
+#: ../data/gpk-prefs.ui.h:7
+msgid "_Automatically install:"
+msgstr "자동으로 설치(_A):"
+
+#: ../data/gpk-repo.desktop.in.h:1
+msgid "Enable or disable software sources"
+msgstr "소프트웨어 공급원 사용 여부를 설정합니다"
+
+#: ../data/gpk-repo.ui.h:1
+msgid "Shows more software sources that may be interesting"
+msgstr "흥미로운 소프트웨어 공급원 표시"
+
+#. shows extra -source, -debuginfo, and -devel software sources
+#: ../data/gpk-repo.ui.h:4
+msgid "_Show debug and development software sources"
+msgstr "디버깅용 및 개발용 소프트웨어 공급원 표시(_S)"
+
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:296
+msgid "Action"
+msgstr "동작"
+
+#: ../data/gpk-service-pack.ui.h:2
+msgid "Create"
+msgstr "만들기"
+
+#: ../data/gpk-service-pack.ui.h:3
+msgid "Create a copy of this computers package list"
+msgstr "이 컴퓨터의 패키지 목록 복사본 만들기"
+
+#: ../data/gpk-service-pack.ui.h:4
+msgid "Create an archive of a specific package"
+msgstr "특정 패키지 압축 파일 만들기"
+
+#: ../data/gpk-service-pack.ui.h:5
+msgid "Create an archive of all the pending updates"
+msgstr "대기 중인 모든 업데이트의 압축 파일 만들기"
+
+#: ../data/gpk-service-pack.ui.h:6
+msgid "Destination package list:"
+msgstr "대상 패키지 목록:"
+
+#. TRANSLATORS: column for what packages were upgraded
+#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:323
+msgid "Details"
+msgstr "자세히"
+
+#: ../data/gpk-service-pack.ui.h:8
+msgid "Multiple packages can be specified using a comma delimited list"
+msgstr "여러 개 패키지를 쉼표로 구분해서 지정할 수 있습니다"
+
+#: ../data/gpk-service-pack.ui.h:9
+msgid "Output directory:"
+msgstr "출력 디렉터리:"
+
+#: ../data/gpk-service-pack.ui.h:10
+msgid "Progress"
+msgstr "진행 상황"
+
+#: ../data/gpk-service-pack.ui.h:11
+msgid "Save New Service Pack"
+msgstr "새 서비스 팩 저장"
+
+#: ../data/gpk-service-pack.ui.h:12
+msgid "Select A Package List File"
+msgstr "패키지 목록 파일 선택"
+
+#. TRANSLATORS: program description, an application to create service packs
+#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:739
+msgid "Service Pack Creator"
+msgstr "서비스 팩 만들기"
+
+#: ../data/gpk-signature.ui.h:1
+msgid "Do you recognise the user and trust this key?"
+msgstr "이 사용자를 알고 키를 신뢰하십니까?"
+
+#: ../data/gpk-signature.ui.h:2
+msgid "Do you trust the source of the packages?"
+msgstr "패키지 공급원을 신뢰하십니까?"
+
+#: ../data/gpk-signature.ui.h:3
+msgid "Package:"
+msgstr "패키지:"
+
+#: ../data/gpk-signature.ui.h:4
+msgid "Repository name:"
+msgstr "저장소 이름:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature URL:"
+msgstr "서명 URL:"
+
+#: ../data/gpk-signature.ui.h:6
+msgid "Signature identifier:"
+msgstr "서명 신원:"
+
+#: ../data/gpk-signature.ui.h:7
+msgid "Signature user identifier:"
+msgstr "서명 사용자 신원:"
+
+#: ../data/gpk-signature.ui.h:8
+msgid "Software signature is required"
+msgstr "소프트웨어 서명이 필요합니다"
+
+#: ../data/gpk-update-icon.desktop.in.h:1
+msgid "PackageKit Update Applet"
+msgstr "패키지키트 업데이트 애플릿"
+
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+msgid "Software Update"
+msgstr "소프트웨어 업데이트"
+
+#: ../data/gpk-update-viewer.desktop.in.h:2
+msgid "Update software installed on the system"
+msgstr "시스템에 설치한 소프트웨어를 업데이트합니다"
+
+#: ../data/gpk-update-viewer.ui.h:2
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities and "
+"provide new features."
+msgstr ""
+"소프트웨어를 업데이트하면 오류를 수정하고, 보안 취약점을 해결하고, 새로운 기"
+"능이 추가됩니다."
+
+#: ../data/gpk-update-viewer.ui.h:3
+msgid "_Upgrade"
+msgstr "업그레이드(_U)"
+
+#. TRANSLATORS: expander label in the error dialog
+#: ../python/packagekit/gtkwidgets.py:413
+msgid "_Details"
+msgstr "자세히(_D)"
+
+#. Application column (icon, name, description)
+#. TRANSLATORS: column for the application name
+#. TRANSLATORS: column for the package name
+#: ../python/packagekit/gtkwidgets.py:510 ../src/gpk-helper-chooser.c:149
+#: ../src/gpk-helper-run.c:219
+msgid "Package"
+msgstr "패키지"
+
+#: ../python/packagekit/gtkwidgets.py:609
+msgid "_Remove"
+msgstr "제거(_R)"
+
+#: ../python/packagekit/gtkwidgets.py:610
+#, python-format
+msgid "Remove %i additional package?"
+msgid_plural "Remove %i additional packages?"
+msgstr[0] "%i개 패키지를 추가로 제거하시겠습니까?"
+
+#: ../python/packagekit/gtkwidgets.py:615
+msgid ""
+"The software which you want to remove is required to run other software, "
+"which will be removed too."
+msgstr ""
+"지금 제거하는 소프트웨어는 다른 소프트웨어를 실행하는데 필요합니다. 다른 소프"
+"트웨어도 함께 지웁니다."
+
+#. TRANSLATORS: button label, install
+#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
+msgid "_Install"
+msgstr "설치(_I)"
+
+#: ../python/packagekit/gtkwidgets.py:647
+#, python-format
+msgid "Install %i additional package?"
+msgid_plural "Install %i additional packages?"
+msgstr[0] "%i개 패키지를 추가로 설치하시겠습니까?"
+
+#: ../python/packagekit/gtkwidgets.py:652
+msgid ""
+"The software that you want to install requires additional software to run "
+"correctly."
+msgstr ""
+"설치하려는 소프트웨어가 올바르게 동작하려면 추가 소프트웨어 설치가 필요합니"
+"다."
+
+#. TRANSLATORS: title: how many files are installed by the application
+#: ../src/gpk-application.c:618
+#, c-format
+msgid "%i file installed by %s"
+msgid_plural "%i files installed by %s"
+msgstr[0] "파일 %i개를 %s 패키지가 설치"
+
+#. TRANSLATORS: no packages returned
+#: ../src/gpk-application.c:957 ../src/gpk-application.c:1084
+msgid "No packages"
+msgstr "패키지 없음"
+
+#. TRANSLATORS: this package is not required by any others
+#: ../src/gpk-application.c:959
+msgid "No other packages require this package"
+msgstr "이 패키지가 필요한 다른 패키지가 없습니다"
+
+#. TRANSLATORS: title: how many packages require this package
+#: ../src/gpk-application.c:966
+#, c-format
+msgid "%i package requires %s"
+msgid_plural "%i packages require %s"
+msgstr[0] "%i개의 패키지가 %s 패키지를 필요"
+
+#. TRANSLATORS: show a array of packages for the package
+#: ../src/gpk-application.c:971
+#, c-format
+msgid "Packages listed below require %s to function correctly."
+msgid_plural "Packages listed below require %s to function correctly."
+msgstr[0] "아래 패키지가 올바르게 동작하려면 %s 패키지가 필요합니다."
+
+#. TRANSLATORS: this package does not depend on any others
+#: ../src/gpk-application.c:1086
+msgid "This package does not depends on any others"
+msgstr "이 패키지는 다른 패키지에 의존하지 않습니다"
+
+#. TRANSLATORS: title: show the number of other packages we depend on
+#: ../src/gpk-application.c:1093
+#, c-format
+msgid "%i additional package is required for %s"
+msgid_plural "%i additional packages are required for %s"
+msgstr[0] "%i개의 추가 패키지가 %s 패키지에 필요"
+
+#. TRANSLATORS: message: show the array of dependant packages for this package
+#: ../src/gpk-application.c:1098
+#, c-format
+msgid "Packages listed below are required for %s to function correctly."
+msgid_plural "Packages listed below are required for %s to function correctly."
+msgstr[0] "%s 패키지가 올바르게 동작하려면 아래 패키지가 필요합니다."
+
+#. TRANSLATORS: the repo name is invalid or not found, fall back to this
+#: ../src/gpk-application.c:1167
+msgid "Invalid"
+msgstr "잘못됨"
+
+#. TRANSLATORS: no results were found for this search
+#: ../src/gpk-application.c:1367
+msgid "No results were found."
+msgstr "검색 결과가 없습니다."
+
+#. TRANSLATORS: be helpful, but this shouldn't happen
+#: ../src/gpk-application.c:1375
+msgid "Try entering a package name in the search bar."
+msgstr "검색 창에 패키지 이름을 입력해 보십시오."
+
+#. TRANSLATORS: nothing in the package queue
+#: ../src/gpk-application.c:1378
+msgid "There are no packages queued to be installed or removed."
+msgstr "설치하거나 제거하기로 예정된 패키지가 없습니다."
+
+#. TRANSLATORS: tell the user to switch to details search mode
+#: ../src/gpk-application.c:1383
+msgid ""
+"Try searching package descriptions by clicking the icon next to the search "
+"text."
+msgstr "검색어 옆의 아이콘을 눌러 패키지 설명을 검색해 보십시오."
+
+#. TRANSLATORS: tell the user to try harder
+#: ../src/gpk-application.c:1386
+msgid "Try again with a different search term."
+msgstr "다른 검색어로 다시 시도해 보십시오."
+
+#. TRANSLATORS: title: invlid text in the search bar
+#: ../src/gpk-application.c:1665
+msgid "Invalid search text"
+msgstr "검색어가 올바르지 않습니다"
+
+#. TRANSLATORS: message: tell the user that's not allowed
+#: ../src/gpk-application.c:1667
+msgid "The search text contains invalid characters"
+msgstr "검색어에 쓸 수 없는 문자가 들어 있습니다"
+
+#. TRANSLATORS: title: we failed to execute the mthod
+#: ../src/gpk-application.c:1708
+msgid "The search could not be completed"
+msgstr "검색을 마칠 수 없습니다"
+
+#. TRANSLATORS: low level failure, details to follow
+#: ../src/gpk-application.c:1710
+msgid "Running the transaction failed"
+msgstr "처리 사항을 실행하는데 실패했습니다"
+
+#. TRANSLATORS: title: warn the user they are quitting with unapplied changes
+#: ../src/gpk-application.c:1861
+msgid "Changes not applied"
+msgstr "바뀐 사항을 적용하지 않았습니다"
+
+#: ../src/gpk-application.c:1862
+msgid "Close _Anyway"
+msgstr "그래도 닫기(_A)"
+
+#. TRANSLATORS: tell the user the problem
+#: ../src/gpk-application.c:1866
+msgid "You have made changes that have not yet been applied."
+msgstr "바뀐 사항 중에 적용하지 않은 부분이 있습니다."
+
+#: ../src/gpk-application.c:1867
+msgid "These changes will be lost if you close this window."
+msgstr "이 창을 닫으면 다음 바뀐 사항을 잃어버립니다."
+
+#. TRANSLATORS: column for installed status
+#. TRANSLATORS: The state of a package
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-application.c:2192 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
+msgid "Installed"
+msgstr "설치됨"
+
+#. TRANSLATORS: column for package name
+#. TRANSLATORS: column for group name
+#. TRANSLATORS: column for the package name
+#: ../src/gpk-application.c:2208 ../src/gpk-application.c:2230
+#: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:729
+msgid "Name"
+msgstr "이름"
+
+#. TRANSLATORS: the type of package is a collection (metagroup)
+#: ../src/gpk-application.c:2373
+msgid "Type"
+msgstr "종류"
+
+#: ../src/gpk-application.c:2373
+msgid "Collection"
+msgstr "모음"
+
+#. TRANSLATORS: tooltip: go to the web address
+#: ../src/gpk-application.c:2381
+#, c-format
+msgid "Visit %s"
+msgstr "%s 사이트를 봅니다"
+
+#. TRANSLATORS: add an entry to go to the project home page
+#: ../src/gpk-application.c:2386
+msgid "Project"
+msgstr "프로젝트"
+
+#: ../src/gpk-application.c:2386
+msgid "Homepage"
+msgstr "홈페이지"
+
+#. TRANSLATORS: the group the package belongs in
+#: ../src/gpk-application.c:2400
+msgid "Group"
+msgstr "그룹"
+
+#. TRANSLATORS: the licence string for the package
+#: ../src/gpk-application.c:2406
+msgid "License"
+msgstr "라이선스"
+
+#. TRANSLATORS: the path in the menu, e.g. Applications -> Games
+#: ../src/gpk-application.c:2415
+msgid "Menu"
+msgstr "메뉴"
+
+#. TRANSLATORS: the size of the meta package
+#. TRANSLATORS: a column that has size of each package
+#: ../src/gpk-application.c:2433 ../src/gpk-update-viewer.c:1739
+msgid "Size"
+msgstr "크기"
+
+#. TRANSLATORS: the installed size in bytes of the package
+#: ../src/gpk-application.c:2436
+msgid "Installed size"
+msgstr "설치 크기"
+
+#. TRANSLATORS: the download size of the package
+#: ../src/gpk-application.c:2439
+msgid "Download size"
+msgstr "다운로드 크기"
+
+#. TRANSLATORS: where the package came from, the software source name
+#: ../src/gpk-application.c:2448
+msgid "Source"
+msgstr "공급원"
+
+#. TRANSLATORS: this is a menu group of packages in the queue
+#: ../src/gpk-application.c:2597
+msgid "Selected packages"
+msgstr "선택한 패키지"
+
+#. TRANSLATORS: entry tooltip: basic search
+#: ../src/gpk-application.c:2649
+msgid "Searching by name"
+msgstr "이름으로 찾는 중"
+
+#. TRANSLATORS: entry tooltip: detailed search
+#: ../src/gpk-application.c:2672
+msgid "Searching by description"
+msgstr "설명으로 찾는 중"
+
+#. TRANSLATORS: entry tooltip: file search
+#: ../src/gpk-application.c:2695
+msgid "Searching by file"
+msgstr "파일로 검색하는 중"
+
+#. TRANSLATORS: context menu item for the search type icon
+#: ../src/gpk-application.c:2720
+msgid "Search by name"
+msgstr "이름으로 검색"
+
+#. TRANSLATORS: context menu item for the search type icon
+#: ../src/gpk-application.c:2731
+msgid "Search by description"
+msgstr "설명으로 검색"
+
+#. TRANSLATORS: context menu item for the search type icon
+#: ../src/gpk-application.c:2742
+msgid "Search by file name"
+msgstr "파일 이름으로 검색"
+
+#. TRANSLATORS: packaging problem, failed to show link
+#: ../src/gpk-application.c:2786 ../src/gpk-watch.c:381
+msgid "Failed to show url"
+msgstr "URL 표시에 실패했습니다"
+
+#: ../src/gpk-application.c:2823 ../src/gpk-check-update.c:192
+#: ../src/gpk-watch.c:401
+msgid "Licensed under the GNU General Public License Version 2"
+msgstr ""
+"라이선스는 GNU 일반 공중 사용 허가서 (GNU General Public License) 버전 2입니"
+"다."
+
+#: ../src/gpk-application.c:2824 ../src/gpk-check-update.c:193
+#: ../src/gpk-watch.c:402
+msgid ""
+"PackageKit is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
+msgstr ""
+"PackageKit is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
+
+#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:197
+#: ../src/gpk-watch.c:406
+msgid ""
+"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
+msgstr ""
+"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
+
+#: ../src/gpk-application.c:2832 ../src/gpk-check-update.c:201
+#: ../src/gpk-watch.c:410
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 51 "
+"Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+msgstr ""
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 51 "
+"Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+
+#. TRANSLATORS: put your own name here -- you deserve credit!
+#: ../src/gpk-application.c:2838 ../src/gpk-check-update.c:206
+#: ../src/gpk-watch.c:415
+msgid "translator-credits"
+msgstr "GNOME Korea <http://gnome.or.kr/>"
+
+#. TRANSLATORS: website label
+#: ../src/gpk-application.c:2864 ../src/gpk-check-update.c:223
+#: ../src/gpk-watch.c:434
+msgid "PackageKit Website"
+msgstr "패키지키트 홈페이지"
+
+#. TRANSLATORS: description of application, gpk-application that is
+#: ../src/gpk-application.c:2867
+msgid "Package Manager for GNOME"
+msgstr "그놈 패키지 관리 프로그램"
+
+#. TRANSLATORS: single column for the package details, not visible at the moment
+#: ../src/gpk-application.c:3317
+msgid "Text"
+msgstr "텍스트"
+
+#. TRANSLATORS: welcome text if we can click the group array
+#: ../src/gpk-application.c:3340
+msgid ""
+"Enter a package name and then click find, or click a group to get started."
+msgstr "패키지 이름을 입력하고 찾기 단추 혹은 그룹을 누르면 시작합니다."
+
+#. TRANSLATORS: welcome text if we have to search by name
+#: ../src/gpk-application.c:3343
+msgid "Enter a package name and then click find to get started."
+msgstr "패키지 이름을 입력하고 찾기 단추를 누르십시오."
+
+#. TRANSLATORS: daemon is broken
+#: ../src/gpk-application.c:3575
+msgid "Exiting as properties could not be retrieved"
+msgstr "속성을 읽을 수 없으므로 프로그램을 끝냅니다"
+
+#. TRANSLATORS: title: all of the packages on the system and availble in sources
+#: ../src/gpk-application.c:3695
+msgid "All packages"
+msgstr "모든 패키지"
+
+#. TRANSLATORS: tooltip: all packages
+#: ../src/gpk-application.c:3697
+msgid "Show all packages"
+msgstr "패키지를 모두 표시합니다"
+
+#. TRANSLATORS: tooltip on the clear button
+#: ../src/gpk-application.c:3958
+msgid "Clear current selection"
+msgstr "현재 선택을 지웁니다"
+
+#. TRANSLATORS: tooltip on the apply button
+#: ../src/gpk-application.c:3983
+msgid "Changes are not applied instantly, this button applies all changes"
+msgstr "바뀐 사항은 즉시 적용되지 않고, 이 단추를 눌러야 적용됩니다"
+
+#. TRANSLATORS: tooltip on the homepage button
+#: ../src/gpk-application.c:4009
+msgid "Visit home page for selected package"
+msgstr "선택한 패키지의 홈페이지를 엽니다"
+
+#. TRANSLATORS: tooltip on the find button
+#: ../src/gpk-application.c:4117
+msgid "Find packages"
+msgstr "패키지를 찾습니다"
+
+#. TRANSLATORS: tooltip on the cancel button
+#: ../src/gpk-application.c:4125
+msgid "Cancel search"
+msgstr "검색을 취소합니다"
+
+#. TRANSLATORS: show the program version
+#: ../src/gpk-application-main.c:77 ../src/gpk-backend-status.c:242
+#: ../src/gpk-prefs.c:464 ../src/gpk-update-icon.c:66
+#: ../src/gpk-update-viewer-main.c:69
+msgid "Show the program version and exit"
+msgstr "프로그램 버전을 표시하고 끝납니다"
+
+#. are we running privileged
+#: ../src/gpk-application-main.c:107
+msgid "Package installer"
+msgstr "패키지 설치 프로그램"
+
+#. TRANSLATORS: backend is broken, and won't tell us what it supports
+#: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
+#: ../src/gpk-update-viewer.c:3077
+msgid "Exiting as backend details could not be retrieved"
+msgstr "백엔드 상세 정보를 가져올 수 없습니다."
+
+#: ../src/gpk-backend-status.c:258
+msgid "PackageKit Backend Details Viewer"
+msgstr "패키지키트 백엔드 자세히 보기"
+
+#. TRANSLATORS: context menu to open the preferences
+#: ../src/gpk-check-update.c:249
+msgid "_Preferences"
+msgstr "기본 설정(_P)"
+
+#. TRANSLATORS: context menu to show the about screen
+#. TRANSLATORS: this is the right click menu item
+#: ../src/gpk-check-update.c:269 ../src/gpk-watch.c:461
+msgid "_About"
+msgstr "정보(_A)"
+
+#. TRANSLATORS: we did the update, but some updates were skipped and not applied
+#: ../src/gpk-check-update.c:360
+msgid "One package was skipped:"
+msgid_plural "Some packages were skipped:"
+msgstr[0] "패키지를 건너 뜁니다:"
+
+#. TRANSLATORS: title: system update completed all okay
+#: ../src/gpk-check-update.c:391
+msgid "The system update has completed"
+msgstr "시스템 업데이트를 마쳤습니다"
+
+#. TRANSLATORS: restart computer as system packages need update
+#: ../src/gpk-check-update.c:399
+msgid "Restart computer now"
+msgstr "지금 컴퓨터 다시 시작"
+
+#. TRANSLATORS: don't show this option again (when finished)
+#. TRANSLATORS: hides forever
+#. add a checkbutton for deps screen
+#. TRANSLATORS: don't pop-up the same message twice
+#: ../src/gpk-check-update.c:406 ../src/gpk-check-update.c:1343
+#: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1399
+msgid "Do not show this again"
+msgstr "이 메시지 다시 보지 않기"
+
+#. TRANSLATORS: button: show more details about the error
+#. TRANSLATORS: button: show details about the error
+#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
+#: ../src/gpk-check-update.c:468 ../src/gpk-dbus-task.c:385
+#: ../src/gpk-watch.c:1221
+msgid "Show details"
+msgstr "자세히 보기"
+
+#. TRANSLATORS: this is the application name for libcanberra
+#: ../src/gpk-check-update.c:519 ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:985
+msgid "GNOME PackageKit Update Icon"
+msgstr "그놈 패키지키트 업데이트 아이콘"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:521 ../src/gpk-update-viewer.c:518
+msgid "Updated successfully"
+msgstr "성공적으로 업데이트했습니다"
+
+#. TRANSLATORS: title in the libnotify popup
+#: ../src/gpk-check-update.c:645
+msgid "Security update available"
+msgid_plural "Security updates available"
+msgstr[0] "보안 업데이트가 있습니다"
+
+#. TRANSLATORS: message when there are security updates
+#: ../src/gpk-check-update.c:648
+msgid "An important update is available for your computer:"
+msgid_plural "Important updates are available for your computer:"
+msgstr[0] "컴퓨터에 중요 업데이트가 있습니다:"
+
+#. TRANSLATORS: button: open the update viewer to install updates
+#: ../src/gpk-check-update.c:668
+msgid "Install updates"
+msgstr "업데이트 설치"
+
+#. TRANSLATORS: policy says update, but we are on battery and so prompt
+#: ../src/gpk-check-update.c:783
+msgid ""
+"Automatic updates are not being installed as the computer is running on "
+"battery power"
+msgstr ""
+"컴퓨터가 배터리 전원으로 동작하고 있으므로 자동 업데이트를 설치하지 않습니다"
+
+#. TRANSLATORS: informs user will not install by default
+#: ../src/gpk-check-update.c:785
+msgid "Updates not installed"
+msgstr "업데이트를 설치하지 않습니다"
+
+#. TRANSLATORS: to hell with my battery life, just do it
+#: ../src/gpk-check-update.c:795
+msgid "Install the updates anyway"
+msgstr "그래도 업데이트 설치"
+
+#. TRANSLATORS: title: notification when we scheduled an automatic update
+#: ../src/gpk-check-update.c:842
+msgid "Updates are being installed"
+msgstr "업데이트를 설치하는 중"
+
+#. TRANSLATORS: tell the user why the hard disk is grinding...
+#: ../src/gpk-check-update.c:844
+msgid "Updates are being automatically installed on your computer"
+msgstr "컴퓨터에 업데이트를 자동으로 설치하는 중입니다"
+
+#: ../src/gpk-check-update.c:850
+msgid "Cancel update"
+msgstr "업데이트 취소"
+
+#. TRANSLATORS: tooltip: how many updates are waiting to be applied
+#: ../src/gpk-check-update.c:935
+#, c-format
+msgid "There is %d update available"
+msgid_plural "There are %d updates available"
+msgstr[0] "%d개 업데이트가 있습니다"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:964
+msgid "Update available"
+msgstr "업데이트가 있습니다"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-check-update.c:987
+msgid "Update available (on battery)"
+msgstr "업데이트가 있습니다 (배터리 사용 중)"
+
+#. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
+#: ../src/gpk-check-update.c:1330
+msgid "Distribution upgrades available"
+msgstr "배포판 업그레이드가 있습니다"
+
+#. TRANSLATORS: provides more information about the upgrade
+#. TRANSLATORS: button: a link to the help file
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#: ../src/gpk-check-update.c:1340 ../src/gpk-dbus-task.c:1090
+#: ../src/gpk-dbus-task.c:1324 ../src/gpk-dbus-task.c:1630
+#: ../src/gpk-dbus-task.c:1836 ../src/gpk-dbus-task.c:2092
+msgid "More information"
+msgstr "추가 정보"
+
+#. TRANSLATORS: these tools cannot run as root (unknown name)
+#: ../src/gpk-common.c:371
+msgid "This application is running as a privileged user"
+msgstr "이 프로그램이 관리자 권한으로 실행 중입니다."
+
+#. TRANSLATORS: cannot run as root user, and we display the applicaiton name
+#: ../src/gpk-common.c:374
+#, c-format
+msgid "%s is running as a privileged user"
+msgstr "%s 프로그램이 관리자 권한으로 실행 중입니다."
+
+#. TRANSLATORS: tell the user off
+#: ../src/gpk-common.c:377
+msgid "Package management applications are security sensitive."
+msgstr "패키지 관리 프로그램은 보안 문제에 민감합니다."
+
+#. TRANSLATORS: and explain why
+#: ../src/gpk-common.c:379
+msgid ""
+"Running graphical applications as a privileged user should be avoided for "
+"security reasons."
+msgstr ""
+"보안 문제가 있으므로 그래픽 프로그램을 관리자 권한으로 실행하는 일은 피해야 "
+"합니다."
+
+#. TRANSLATORS: button: allow the user to run this, even when insecure
+#: ../src/gpk-common.c:385
+msgid "Continue _Anyway"
+msgstr "그래도 계속(_A)"
+
+#. TRANSLATORS: The actions has just literally happened
+#: ../src/gpk-common.c:455 ../src/gpk-common.c:505
+#, c-format
+msgid "Now"
+msgstr "지금"
+
+#. TRANSLATORS: time
+#: ../src/gpk-common.c:465 ../src/gpk-common.c:515
+#, c-format
+msgid "%i second"
+msgid_plural "%i seconds"
+msgstr[0] "%i초"
+
+#. TRANSLATORS: time
+#: ../src/gpk-common.c:475 ../src/gpk-common.c:528
+#, c-format
+msgid "%i minute"
+msgid_plural "%i minutes"
+msgstr[0] "%i분"
+
+#. TRANSLATORS: time
+#: ../src/gpk-common.c:481 ../src/gpk-common.c:547
+#, c-format
+msgid "%i hour"
+msgid_plural "%i hours"
+msgstr[0] "%i시간"
+
+#. TRANSLATOR: "%i %s %i %s" are "%i minutes %i seconds"
+#. * Swap order with "%2$s %2$i %1$s %1$i if needed
+#. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
+#. * Swap order with "%2$s %2$i %1$s %1$i if needed
+#: ../src/gpk-common.c:534 ../src/gpk-common.c:553
+#, c-format
+msgid "%i %s %i %s"
+msgstr "%i%s %i%s"
+
+#: ../src/gpk-common.c:535 ../src/gpk-common.c:555
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "분"
+
+#: ../src/gpk-common.c:536
+msgid "second"
+msgid_plural "seconds"
+msgstr[0] "초"
+
+#: ../src/gpk-common.c:554
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "시간"
+
+#: ../src/gpk-common.c:581
+#, c-format
+msgid "%s and %s"
+msgstr "%s 및 %s"
+
+#: ../src/gpk-common.c:584
+#, c-format
+msgid "%s, %s and %s"
+msgstr "%s, %s 및 %s"
+
+#: ../src/gpk-common.c:587
+#, c-format
+msgid "%s, %s, %s and %s"
+msgstr "%s, %s, %s 및 %s"
+
+#: ../src/gpk-common.c:591
+#, c-format
+msgid "%s, %s, %s, %s and %s"
+msgstr "%s, %s, %s, %s 및 %s"
+
+#. TRANSLATORS: we failed to install
+#: ../src/gpk-dbus-task.c:245
+msgid "Failed to install software"
+msgstr "소프트웨어 설치에 실패했습니다"
+
+#. TRANSLATORS: we didn't select any applications that were returned
+#: ../src/gpk-dbus-task.c:247
+msgid "No applications were chosen to be installed"
+msgstr "설치할 소프트웨어를 선택하지 않았습니다"
+
+#. TRANSLATORS: detailed text about the error
+#. TRANSLATORS: The detailed error if the user clicks "more info"
+#: ../src/gpk-dbus-task.c:279 ../src/gpk-watch.c:351
+msgid "Error details"
+msgstr "자세한 오류 정보"
+
+#: ../src/gpk-dbus-task.c:279
+msgid "Package Manager error details"
+msgstr "패키지 관리 프로그램 오류 상세 정보"
+
+#. TRANSLATORS: default fallback error -- this should never happen
+#: ../src/gpk-dbus-task.c:294
+msgid ""
+"Unknown error. Please refer to the detailed report and report in your "
+"distribution bugtracker."
+msgstr ""
+"알 수 없는 오류. 보고서를 참고하고 배포판의 버그 추적 시스템을 이용해 알려 주"
+"십시오."
+
+#. TRANSLATORS: failed authentication
+#: ../src/gpk-dbus-task.c:310
+msgid "You don't have the necessary privileges to perform this action."
+msgstr "이 동작을 실행할 수 있는 관리 권한이 없습니다."
+
+#. TRANSLATORS: could not start system service
+#: ../src/gpk-dbus-task.c:314
+msgid "The packagekitd service could not be started."
+msgstr "packagekitd 서비스를 시작할 수 없습니다."
+
+#. TRANSLATORS: the user tried to query for something invalid
+#: ../src/gpk-dbus-task.c:318
+msgid "The query is not valid."
+msgstr "질의가 올바르지 않습니다."
+
+#. TRANSLATORS: the user tried to install a file that was not compatable or broken
+#: ../src/gpk-dbus-task.c:322
+msgid "The file is not valid."
+msgstr "파일이 올바르지 않습니다."
+
+#. TRANSLATORS: error: failed to install, detailed error follows
+#. TRANSLATORS: failed to install, shouldn't be shown
+#: ../src/gpk-dbus-task.c:466 ../src/gpk-dbus-task.c:1143
+msgid "Failed to install package"
+msgstr "패키지 설치에 실패했습니다"
+
+#. TRANSLATORS: title: installing packages
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-dbus-task.c:504 ../src/gpk-enum.c:961
+msgid "Installing packages"
+msgstr "패키지를 설치하는 중"
+
+#. TRANSLATORS: title
+#: ../src/gpk-dbus-task.c:606 ../src/gpk-dbus-task.c:1362
+msgid "Failed to install file"
+msgid_plural "Failed to install files"
+msgstr[0] "파일 설치에 실패했습니다"
+
+#. TRANSLATORS: title: confirm the user want's to install a local file
+#: ../src/gpk-dbus-task.c:695
+msgid "Do you want to install this file?"
+msgid_plural "Do you want to install these files?"
+msgstr[0] "다음 파일을 설치하시겠습니까?"
+
+#. TRANSLATORS: title: installing a local file
+#: ../src/gpk-dbus-task.c:1019
+msgid "Install local file"
+msgid_plural "Install local files"
+msgstr[0] "컴퓨터의 파일 설치"
+
+#. TRANSLATORS: couldn't resolve name to package
+#: ../src/gpk-dbus-task.c:1078
+#, c-format
+msgid "Could not find packages"
+msgstr "패키지를 찾을 수 없습니다"
+
+#. TRANSLATORS: message: could not find
+#: ../src/gpk-dbus-task.c:1087
+msgid "The packages could not be found in any software source"
+msgstr "소프트웨어 공급처 어디에서도 해당 패키지를 찾을 수 없습니다"
+
+#: ../src/gpk-dbus-task.c:1126
+msgid "Failed to install packages"
+msgstr "패키지 설치에 실패했습니다"
+
+#. TRANSLATORS: message: package is already installed
+#: ../src/gpk-dbus-task.c:1128 ../src/gpk-enum.c:369
+msgid "The package is already installed"
+msgstr "패키지를 이미 설치했습니다"
+
+#. TRANSLATORS: the search gave us the wrong result. internal error. barf.
+#: ../src/gpk-dbus-task.c:1145
+msgid "Incorrect response from search"
+msgstr "검색에 대한 응답이 올바르지 않습니다"
+
+#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
+#: ../src/gpk-dbus-task.c:1220
+msgid "An additional package is required:"
+msgid_plural "Additional packages are required:"
+msgstr[0] "추가 패키지가 필요합니다:"
+
+#. TRANSLATORS: ask the user if it's okay to search
+#: ../src/gpk-dbus-task.c:1223
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "지금 이 패키지를 검색해 설치하시겠습니까?"
+
+#. TRANSLATORS: string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1229
+#, c-format
+msgid "%s wants to install a package"
+msgid_plural "%s wants to install packages"
+msgstr[0] "%s 프로그램에서 패키지를 설치하려 합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something
+#: ../src/gpk-dbus-task.c:1232
+msgid "A program wants to install a package"
+msgid_plural "A program wants to install packages"
+msgstr[0] "어떤 프로그램에서 패키지를 설치하려 합니다"
+
+#. TRANSLATORS: title, searching
+#: ../src/gpk-dbus-task.c:1249 ../src/gpk-dbus-task.c:2575
+msgid "Searching for packages"
+msgstr "패키지를 검색하는 중입니다"
+
+#. TRANSLATORS: failed to fild the package for thefile
+#: ../src/gpk-dbus-task.c:1319
+msgid "Failed to find package"
+msgstr "패키지를 찾는데 실패했습니다"
+
+#. TRANSLATORS: nothing found
+#: ../src/gpk-dbus-task.c:1321 ../src/gpk-dbus-task.c:2715
+msgid "The file could not be found in any packages"
+msgstr "어느 패키지에서도 파일을 찾을 수 없습니다"
+
+#. TRANSLATORS: we've already got a package that provides this file
+#: ../src/gpk-dbus-task.c:1359
+#, c-format
+msgid "The %s package already provides this file"
+msgstr "이 파일은 %s 패키지에 이미 들어 있습니다"
+
+#. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
+#: ../src/gpk-dbus-task.c:1440
+msgid "The following file is required:"
+msgid_plural "The following files are required:"
+msgstr[0] "다음 파일이 필요합니다:"
+
+#. TRANSLATORS: confirm with the user
+#: ../src/gpk-dbus-task.c:1443
+msgid "Do you want to search for this file now?"
+msgid_plural "Do you want to search for these files now?"
+msgstr[0] "이 파일을 지금 검색하시겠습니까?"
+
+#. TRANSLATORS: string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1448
+#, c-format
+msgid "%s wants to install a file"
+msgid_plural "%s wants to install files"
+msgstr[0] "%s 프로그램에서 파일을 설치하려 합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something
+#: ../src/gpk-dbus-task.c:1451
+msgid "A program wants to install a file"
+msgid_plural "A program wants to install files"
+msgstr[0] "어떤 프로그램에서 파일을 설치하려 합니다"
+
+#. TRANSLATORS: searching for the package that provides the file
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-dbus-task.c:1467 ../src/gpk-dbus-task.c:2818
+#: ../src/gpk-enum.c:1313
+msgid "Searching for file"
+msgstr "파일을 검색하는 중"
+
+#. TRANSLATORS: we are listing the plugins in a box
+#: ../src/gpk-dbus-task.c:1510
+msgid "The following plugin is required:"
+msgid_plural "The following plugins are required:"
+msgstr[0] "다음 확장 기능이 필요합니다:"
+
+#. TRANSLATORS: ask for confirmation
+#: ../src/gpk-dbus-task.c:1528
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "지금 검색하시겠습니까?"
+
+#. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1541
+#, c-format
+msgid "%s requires an additional plugin to decode this file"
+msgid_plural "%s requires additional plugins to decode this file"
+msgstr[0] "%s 프로그램에서 이 파일을 디코딩하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1545
+#, c-format
+msgid "%s requires an additional plugin to encode this file"
+msgid_plural "%s requires additional plugins to encode this file"
+msgstr[0] "%s 프로그램에서 이 파일을 인코딩하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1549
+#, c-format
+msgid "%s requires an additional plugin for this operation"
+msgid_plural "%s requires additional plugins for this operation"
+msgstr[0] "%s 프로그램에서 이 동작을 하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to decode something
+#: ../src/gpk-dbus-task.c:1555
+msgid "A program requires an additional plugin to decode this file"
+msgid_plural "A program requires additional plugins to decode this file"
+msgstr[0] ""
+"어떤 프로그램에서 이 파일을 디코딩하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to encode something
+#: ../src/gpk-dbus-task.c:1559
+msgid "A program requires an additional plugin to encode this file"
+msgid_plural "A program requires additional plugins to encode this file"
+msgstr[0] ""
+"어떤 프로그램에서 이 파일을 인코딩하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
+#: ../src/gpk-dbus-task.c:1563
+msgid "A program requires an additional plugin for this operation"
+msgid_plural "A program requires additional plugins for this operation"
+msgstr[0] "어떤 프로그램에서 이 동작을 하려면 추가 확장 기능이 필요합니다"
+
+#. TRANSLATORS: button: confirm to search for packages
+#: ../src/gpk-dbus-task.c:1569 ../src/gpk-dbus-task.c:1922
+#: ../src/gpk-dbus-task.c:2300
+msgid "Search"
+msgstr "검색"
+
+#. TRANSLATORS: failed to search for codec
+#: ../src/gpk-dbus-task.c:1624
+msgid "Failed to search for plugin"
+msgstr "확장 기능 검색에 실패했습니다"
+
+#. TRANSLATORS: no software sources have the wanted codec
+#: ../src/gpk-dbus-task.c:1626
+msgid "Could not find plugin in any configured software source"
+msgstr "소프트웨어 공급원 어디에서도 확장 기능을 찾을 수 없습니다"
+
+#: ../src/gpk-dbus-task.c:1649
+msgid "Install the following plugin"
+msgid_plural "Install the following plugins"
+msgstr[0] "다음 확장 기능 설치"
+
+#. TRANSLATORS: title: show a list of fonts
+#: ../src/gpk-dbus-task.c:1650 ../src/gpk-dbus-task.c:2112
+#: ../src/gpk-dbus-task.c:2507
+msgid "Do you want to install this package now?"
+msgid_plural "Do you want to install these packages now?"
+msgstr[0] "이 패키지를 지금 설치하시겠습니까?"
+
+#. TRANSLATORS: search for codec
+#: ../src/gpk-dbus-task.c:1742
+msgid "Searching for plugins"
+msgstr "확장 기능 검색하는 중"
+
+#: ../src/gpk-dbus-task.c:1763
+#, c-format
+msgid "Searching for plugin: %s"
+msgstr "확장 기능 검색하는 중: %s"
+
+#. TRANSLATORS: we failed to find the package, this shouldn't happen
+#: ../src/gpk-dbus-task.c:1801
+msgid "Failed to search for provides"
+msgstr "제공하는 패키지 검색에 실패했습니다"
+
+#. TRANSLATORS: title
+#: ../src/gpk-dbus-task.c:1831
+msgid "Failed to find software"
+msgstr "소프트웨어 찾기에 실패했습니다"
+
+#. TRANSLATORS: nothing found in the software sources that helps
+#: ../src/gpk-dbus-task.c:1833
+msgid "No new applications can be found to handle this type of file"
+msgstr "이 종류의 파일을 처리할 수 있는 프로그램을 찾을 수 없습니다"
+
+#. TRANSLATORS: message: mime type opener required
+#: ../src/gpk-dbus-task.c:1904
+msgid "An additional program is required to open this type of file:"
+msgstr "이 종류의 파일을 여는데 추가 프로그램이 필요합니다:"
+
+#. TRANSLATORS: message: confirm with the user
+#: ../src/gpk-dbus-task.c:1907
+msgid "Do you want to search for a program to open this file type now?"
+msgstr "이 종류의 파일을 열 프로그램을 지금 검색하시겠습니까?"
+
+#. TRANSLATORS: string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:1915
+#, c-format
+msgid "%s requires a new mime type"
+msgid_plural "%s requires new mime types"
+msgstr[0] "%s 프로그램이 새 MIME 형식이 필요합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something
+#: ../src/gpk-dbus-task.c:1918
+msgid "A program requires a new mime type"
+msgid_plural "A program requires new mime types"
+msgstr[0] "어떤 프로그램이 새 MIME 형식이 필요합니다"
+
+#. TRANSLATORS: title: searching for mime type handlers
+#: ../src/gpk-dbus-task.c:1933
+msgid "Searching for file handlers"
+msgstr "파일 처리 프로그램을 검색하는 중입니다"
+
+#. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
+#: ../src/gpk-dbus-task.c:2013
+msgid "Language tag not parsed"
+msgstr "언어 꼬리표를 파싱할 수 없습니다"
+
+#. TRANSLATORS: we could not find en_US string for ISO639 code
+#: ../src/gpk-dbus-task.c:2021
+msgid "Language code not matched"
+msgstr "언어 꼬리표가 일치하지 않습니다"
+
+#. TRANSLATORS: title: cannot find in sources
+#: ../src/gpk-dbus-task.c:2081
+msgid "Failed to find font"
+msgid_plural "Failed to find fonts"
+msgstr[0] "글꼴 찾는데 실패했습니다"
+
+#. TRANSLATORS: message: tell the user we suck
+#: ../src/gpk-dbus-task.c:2089
+msgid "No new fonts can be found for this document"
+msgstr "이 문서에 필요한 새 글꼴을 찾을 수 없습니다"
+
+#. TRANSLATORS: we need to download a new font package to display a document
+#: ../src/gpk-dbus-task.c:2279
+msgid "An additional font is required to view this document correctly."
+msgid_plural "Additional fonts are required to view this document correctly."
+msgstr[0] "이 문서를 제대로 보려면 글꼴을 추가로 설치해야 합니다."
+
+#. TRANSLATORS: we need to download a new font package to display a document
+#: ../src/gpk-dbus-task.c:2283
+msgid "Do you want to search for a suitable package now?"
+msgid_plural "Do you want to search for suitable packages now?"
+msgstr[0] "지금 필요 패키지를 검색하시겠습니까?"
+
+#. TRANSLATORS: string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:2293
+#, c-format
+msgid "%s wants to install a font"
+msgid_plural "%s wants to install fonts"
+msgstr[0] "%s 프로그램이 글꼴을 설치하려 합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something
+#: ../src/gpk-dbus-task.c:2296
+msgid "A program wants to install a font"
+msgid_plural "A program wants to install fonts"
+msgstr[0] "프로그램이 글꼴을 설치하려 합니다"
+
+#. TRANSLATORS: title to show when searching for font files
+#: ../src/gpk-dbus-task.c:2312
+msgid "Searching for font"
+msgid_plural "Searching for fonts"
+msgstr[0] "글꼴을 찾는 중"
+
+#: ../src/gpk-dbus-task.c:2350
+msgid "Could not process catalog"
+msgstr "소프트웨어 목록을 처리할 수 없습니다"
+
+#: ../src/gpk-dbus-task.c:2368
+msgid "No packages need to be installed"
+msgstr "패키지를 설치할 필요가 없습니다"
+
+#. TRANSLATORS: title: allow user to confirm
+#: ../src/gpk-dbus-task.c:2387
+msgid "Install packages in catalog?"
+msgstr "소프트웨어 목록의 패키지를 설치하시겠습니까?"
+
+#. TRANSLATORS: display a list of packages to install
+#: ../src/gpk-dbus-task.c:2389
+msgid "The following packages are marked to be installed from the catalog:"
+msgstr "소프트웨어 목록에서 다음 패키지를 설치한다고 표시했습니다:"
+
+#. TRANSLATORS: error: failed to remove, detailed error follows
+#: ../src/gpk-dbus-task.c:2429
+msgid "Failed to remove package"
+msgstr "패키지 제거에 실패했습니다"
+
+#: ../src/gpk-dbus-task.c:2506
+msgid "Install the following driver"
+msgid_plural "Install the following drivers"
+msgstr[0] "다음 드라이버 설치"
+
+#. TRANSLATORS: title: removing packages
+#. TRANSLATORS: transaction state, removing packages
+#: ../src/gpk-dbus-task.c:2659 ../src/gpk-enum.c:953
+msgid "Removing packages"
+msgstr "패키지를 제거하는 중"
+
+#. TRANSLATORS: failed to fild the package for thefile
+#: ../src/gpk-dbus-task.c:2713
+msgid "Failed to find package for this file"
+msgstr "이 파일이 들어 있는 패키지를 찾는데 실패했습니다"
+
+#. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
+#: ../src/gpk-dbus-task.c:2791
+msgid "The following file will be removed:"
+msgid_plural "The following files will be removed:"
+msgstr[0] "다음 파일을 제거합니다:"
+
+#. TRANSLATORS: confirm with the user
+#: ../src/gpk-dbus-task.c:2794
+msgid "Do you want to remove this file now?"
+msgid_plural "Do you want to remove these files now?"
+msgstr[0] "이 파일을 지금 제거하시겠습니까?"
+
+#. TRANSLATORS: string is a program name, e.g. "Movie Player"
+#: ../src/gpk-dbus-task.c:2799
+#, c-format
+msgid "%s wants to remove a file"
+msgid_plural "%s wants to remove files"
+msgstr[0] "%s 프로그램이 파일을 제거하려 합니다"
+
+#. TRANSLATORS: a random program which we can't get the name wants to do something
+#: ../src/gpk-dbus-task.c:2802
+msgid "A program wants to remove a file"
+msgid_plural "A program wants to remove files"
+msgstr[0] "어떤 프로그램이 파일을 제거하려 합니다"
+
+#. TRANSLATORS: title to install package catalogs
+#: ../src/gpk-dbus-task.c:2859
+msgid "Do you want to install this catalog?"
+msgid_plural "Do you want to install these catalogs?"
+msgstr[0] "이 소프트웨어 목록을 설치하시겠습니까?"
+
+#. TRANSLATORS: title: install package catalogs, that is, instructions for installing
+#: ../src/gpk-dbus-task.c:2884
+msgid "Install catalogs"
+msgstr "소프트웨어 목록 설치"
+
+#. TRANSLATORS: the menu item, Applications, Places, System etc
+#: ../src/gpk-desktop.c:118
+msgid "Applications"
+msgstr "프로그램"
+
+#. TRANSLATORS: the path in the menu, e.g. Applications -> Games
+#. TRANSLATORS: The group type
+#: ../src/gpk-desktop.c:123 ../src/gpk-desktop.c:130 ../src/gpk-enum.c:1635
+msgid "System"
+msgstr "시스템"
+
+#: ../src/gpk-desktop.c:123
+msgid "Preferences"
+msgstr "기본 설정"
+
+#: ../src/gpk-desktop.c:130
+msgid "Administration"
+msgstr "관리"
+
+#. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
+#: ../src/gpk-dialog.c:74
+msgid "many packages"
+msgstr "여러 패키지"
+
+#: ../src/gpk-dialog.c:243
+msgid "No files"
+msgstr "파일 없음"
+
+#. TRANSLATORS: this is compact disk (CD) media
+#: ../src/gpk-enum.c:310
+msgid "CD"
+msgstr "CD"
+
+#. TRANSLATORS: this is digital versatile disk (DVD) media
+#: ../src/gpk-enum.c:314
+msgid "DVD"
+msgstr "DVD"
+
+#. TRANSLATORS: this is either CD or DVD media
+#: ../src/gpk-enum.c:318
+msgid "disc"
+msgstr "디스크"
+
+#. TRANSLATORS: this is generic media of unknown type that we will install from
+#: ../src/gpk-enum.c:322
+msgid "media"
+msgstr "미디어"
+
+#: ../src/gpk-enum.c:339
+msgid "Failed with unknown error code"
+msgstr "알 수 없는 오류 코드로 실패했습니다"
+
+#: ../src/gpk-enum.c:342
+msgid "No network connection available"
+msgstr "사용 가능한 네트워크 연결이 없습니다"
+
+#: ../src/gpk-enum.c:345
+msgid "No package cache is available."
+msgstr "사용 가능한 패키지 캐시가 없습니다."
+
+#: ../src/gpk-enum.c:348
+msgid "Out of memory"
+msgstr "메모리가 부족합니다"
+
+#: ../src/gpk-enum.c:351
+msgid "Failed to create a thread"
+msgstr "스레드를 만드는데 실패했습니다"
+
+#: ../src/gpk-enum.c:354
+msgid "Not supported by this backend"
+msgstr "이 백엔드가 지원하지 않습니다"
+
+#: ../src/gpk-enum.c:357
+msgid "An internal system error has occurred"
+msgstr "내부 시스템 오류가 발생했습니다"
+
+#: ../src/gpk-enum.c:360
+msgid "A security signature is not present"
+msgstr "보안 서명이 없습니다"
+
+#: ../src/gpk-enum.c:363
+msgid "The package is not installed"
+msgstr "패키지를 설치하지 않았습니다"
+
+#: ../src/gpk-enum.c:366
+msgid "The package was not found"
+msgstr "패키지가 없습니다"
+
+#: ../src/gpk-enum.c:372
+msgid "The package download failed"
+msgstr "패키지 다운로드가 실패했습니다"
+
+#: ../src/gpk-enum.c:375
+msgid "The group was not found"
+msgstr "그룹이 없습니다"
+
+#: ../src/gpk-enum.c:378
+msgid "The group list was invalid"
+msgstr "그룹 목록이 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:381
+msgid "Dependency resolution failed"
+msgstr "의존성 찾기가 실패했습니다"
+
+#: ../src/gpk-enum.c:384
+msgid "Search filter was invalid"
+msgstr "검색 필터가 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:387
+msgid "The package identifier was not well formed"
+msgstr "패키지 아이디의 형식이 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:390
+msgid "Transaction error"
+msgstr "처리 오류"
+
+#: ../src/gpk-enum.c:393
+msgid "Repository name was not found"
+msgstr "저장소 이름이 없습니다"
+
+#: ../src/gpk-enum.c:396
+msgid "Could not remove a protected system package"
+msgstr "제한된 시스템 패키지는 제거할 수 없습니다"
+
+#: ../src/gpk-enum.c:399
+msgid "The action was canceled"
+msgstr "동작을 취소했습니다"
+
+#: ../src/gpk-enum.c:402
+msgid "The action was forcibly canceled"
+msgstr "동작을 강제로 취소했습니다"
+
+#: ../src/gpk-enum.c:405
+msgid "Reading the configuration file failed"
+msgstr "설정 파일 읽기가 실패했습니다"
+
+#: ../src/gpk-enum.c:408
+msgid "The action cannot be canceled"
+msgstr "동작을 취소할 수 없습니다"
+
+# 소스 코드
+#: ../src/gpk-enum.c:411
+msgid "Source packages cannot be installed"
+msgstr "소스 패키지를 설치할 수 없습니다"
+
+#: ../src/gpk-enum.c:414
+msgid "The license agreement failed"
+msgstr "라이선스 동의가 실패했습니다"
+
+#: ../src/gpk-enum.c:417
+msgid "Local file conflict between packages"
+msgstr "패키지 사이에 로컬 파일 충돌"
+
+#: ../src/gpk-enum.c:420
+msgid "Packages are not compatible"
+msgstr "패키지가 호환되지 않습니다"
+
+#: ../src/gpk-enum.c:423
+msgid "Problem connecting to a software source"
+msgstr "소프트웨어 공급원에 연결하는데 문제가 있습니다"
+
+#: ../src/gpk-enum.c:426
+msgid "Failed to initialize"
+msgstr "초기화에 실패했습니다"
+
+#: ../src/gpk-enum.c:429
+msgid "Failed to finalise"
+msgstr "마치는데 실패했습니다"
+
+#: ../src/gpk-enum.c:432
+msgid "Cannot get lock"
+msgstr "잠금을 얻을 수 없습니다"
+
+#: ../src/gpk-enum.c:435
+msgid "No packages to update"
+msgstr "업데이트할 패키지가 없습니다"
+
+#: ../src/gpk-enum.c:438
+msgid "Cannot write repository configuration"
+msgstr "저장소 설정을 쓸 수 없습니다"
+
+#: ../src/gpk-enum.c:441
+msgid "Local install failed"
+msgstr "로컬 설치가 실패했습니다"
+
+#: ../src/gpk-enum.c:444
+msgid "Bad security signature"
+msgstr "보안 서명이 틀렸습니다"
+
+#: ../src/gpk-enum.c:447
+msgid "Missing security signature"
+msgstr "보안 서명이 없습니다"
+
+#: ../src/gpk-enum.c:450
+msgid "Repository configuration invalid"
+msgstr "저장소 설정이 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:453
+msgid "Invalid package file"
+msgstr "패키지 파일이 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:456
+msgid "Package install blocked"
+msgstr "패키지 설치가 막혔습니다"
+
+#: ../src/gpk-enum.c:459
+msgid "Package is corrupt"
+msgstr "패키지가 손상되었습니다"
+
+#: ../src/gpk-enum.c:462
+msgid "All packages are already installed"
+msgstr "모든 패키지를 이미 설치했습니다"
+
+#: ../src/gpk-enum.c:465
+msgid "The specified file could not be found"
+msgstr "지정한 파일을 찾을 수 없습니다"
+
+#: ../src/gpk-enum.c:468
+msgid "No more mirrors are available"
+msgstr "미러 사이트가 더 이상 없습니다"
+
+#: ../src/gpk-enum.c:471
+msgid "No distribution upgrade data is available"
+msgstr "배포판 업그레이드 데이터가 없습니다"
+
+#: ../src/gpk-enum.c:474
+msgid "Package is incompatible with this system"
+msgstr "패키지가 이 시스템과 호환되지 않습니다"
+
+#: ../src/gpk-enum.c:477
+msgid "No space is left on the disk"
+msgstr "디스크에 남은 공간이 없습니다"
+
+#. TRANSLATORS: this is the window title when a new cd or dvd is required
+#: ../src/gpk-enum.c:480 ../src/gpk-task.c:360
+msgid "A media change is required"
+msgstr "미디어를 바꿔야 합니다"
+
+#: ../src/gpk-enum.c:483
+msgid "Authorization failed"
+msgstr "권한이 허가되지 않습니다"
+
+#: ../src/gpk-enum.c:486
+msgid "Update not found"
+msgstr "업데이트가 없습니다"
+
+#: ../src/gpk-enum.c:489
+msgid "Cannot install from untrusted source"
+msgstr "신뢰하지 않는 공급원에서 설치할 수 없습니다"
+
+#: ../src/gpk-enum.c:492
+msgid "Cannot update from untrusted source"
+msgstr "신뢰하지 않는 공급원에서 업데이트할 수 없습니다"
+
+#: ../src/gpk-enum.c:495
+msgid "Cannot get the file list"
+msgstr "파일 목록을 받을 수 없습니다"
+
+#: ../src/gpk-enum.c:498
+msgid "Cannot get package requires"
+msgstr "패키지 필요 사항을 받을 수 없습니다"
+
+#: ../src/gpk-enum.c:501
+msgid "Cannot disable source"
+msgstr "공급원을 사용 해제할 수 없습니다"
+
+#: ../src/gpk-enum.c:504
+msgid "The download failed"
+msgstr "다운로드가 실패했습니다"
+
+#: ../src/gpk-enum.c:507
+msgid "Package failed to configure"
+msgstr "패키지 설정에 실패했습니다"
+
+#: ../src/gpk-enum.c:510
+msgid "Package failed to build"
+msgstr "패키지 빌드에 실패했습니다"
+
+#: ../src/gpk-enum.c:513
+msgid "Package failed to install"
+msgstr "패키지 설치에 실패했습니다"
+
+#: ../src/gpk-enum.c:516
+msgid "Package failed to be removed"
+msgstr "패키지 제거에 실패했습니다"
+
+#: ../src/gpk-enum.c:519
+msgid "Update failed due to running process"
+msgstr "실행 중인 프로세스 때문에 업데이트에 실패했습니다"
+
+#: ../src/gpk-enum.c:522
+msgid "The package database was changed"
+msgstr "패키지 데이터베이스가 바뀌었습니다"
+
+#: ../src/gpk-enum.c:539
+msgid "Failed with unknown error code."
+msgstr "알 수 없는 오류 코드로 실패했습니다."
+
+#: ../src/gpk-enum.c:542
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again."
+msgstr ""
+"사용할 수 있는 네트워크 연결이 없습니다.\n"
+"연결 설정을 확인하시고 다시 시도하십시오."
+
+#: ../src/gpk-enum.c:546
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"패키지 목록을 다시 만들어야 합니다.\n"
+"백엔드에서 자동으로 만듭니다."
+
+#: ../src/gpk-enum.c:550
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please restart your computer."
+msgstr ""
+"사용자 요청을 처리하는 서비스에 필요한 메모리가 부족합니다.\n"
+"컴퓨터를 다시 시작하십시오."
+
+#: ../src/gpk-enum.c:554
+msgid "A thread could not be created to service the user request."
+msgstr "사용자 요청을 처리하는데 필요한 스레드를 만들지 못했습니다."
+
+#: ../src/gpk-enum.c:557
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug in your distribution bugtracker as this should not have "
+"happened."
+msgstr ""
+"이 동작은 백엔드에서 지원하지 않습니다.\n"
+"이 문제가 발생하면 안 됩니다. 배포판의 버그 추적 시스템을 이용해 알려 주십시"
+"오."
+
+#: ../src/gpk-enum.c:561
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug in your distribution bugtracker with the error "
+"description."
+msgstr ""
+"예상치 못한 문제가 발생했습니다.\n"
+"배포판의 버그 추적 시스템을 이용해 해당 오류의 내용을 알려 주십시오."
+
+#: ../src/gpk-enum.c:565
+msgid ""
+"A security trust relationship could not be made with software source.\n"
+"Please check your security settings."
+msgstr ""
+"소프트웨어 공급원의 보안 신뢰를 확인할 수 없습니다.\n"
+"보안 설정을 확인하십시오."
+
+#: ../src/gpk-enum.c:569
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr "제거하거나 업데이트하려는 패키지가 설치되어 있지 않습니다."
+
+#: ../src/gpk-enum.c:572
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software source."
+msgstr "수정하려는 패키지가 시스템이나 소프트웨어 공급원 어디에도 없습니다."
+
+#: ../src/gpk-enum.c:575
+msgid "The package that is trying to be installed is already installed."
+msgstr "설치하려는 패키지가 이미 설치되어 있습니다."
+
+#: ../src/gpk-enum.c:578
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"패키지 다운로드가 실패했습니다.\n"
+"네트워크 연결을 확인하십시오."
+
+#: ../src/gpk-enum.c:582
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"그룹 종류를 찾을 수 없습니다.\n"
+"그룹 목록을 확인하시고 다시 시도하십시오."
+
+#: ../src/gpk-enum.c:586
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software source "
+"error."
+msgstr ""
+"그룹 목록을 읽어들일 수 없습니다.\n"
+"캐시를 새로 고치면 동작할 수도 있습니다. 하지만 보통 소프트웨어 공급원의 오"
+"류 때문에 이런 일이 발생합니다."
+
+#: ../src/gpk-enum.c:591
+msgid ""
+"A package could not be found that allows the action to complete.\n"
+"More information is available in the detailed report."
+msgstr ""
+"동작을 마치는데 필요한 패키지가 없습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:595
+msgid "The search filter was not correctly formed."
+msgstr "검색 필터 형식이 올바르지 않습니다."
+
+#: ../src/gpk-enum.c:598
+msgid ""
+"The package identifier was not well formed when sent to the server.\n"
+"This normally indicates an internal error and should be reported."
+msgstr ""
+"서버에 보내는 패키지 아이디 형식이 올바르지 않습니다.\n"
+"내부 오류가 발생했으므로 알려야 합니다."
+
+#: ../src/gpk-enum.c:602
+msgid ""
+"An unspecified transaction error has occurred.\n"
+"More information is available in the detailed report."
+msgstr ""
+"명확하지 않은 처리 오류가 발생했습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:606
+msgid ""
+"The remote software source name was not found.\n"
+"You may need to enable an item in Software Sources."
+msgstr ""
+"원격 소프트웨어 공급원 이름을 찾을 수 없습니다.\n"
+"소프트웨어 공급원에서 항목을 사용하도록 선택해야 합니다."
+
+#: ../src/gpk-enum.c:610
+msgid "Removing a protected system package is not allowed."
+msgstr "제한된 시스템 패키지는 제거할 수 없습니다."
+
+#: ../src/gpk-enum.c:613
+msgid "The action was canceled successfully and no packages were changed."
+msgstr "해당 동작을 성공적으로 취소했고 바뀐 패키지가 없습니다."
+
+#: ../src/gpk-enum.c:616
+msgid ""
+"The action was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"해당 동작을 성공적으로 취소했고 바뀐 패키지가 없습니다.\n"
+"백엔드가 제대로 끝나지 않았습니다."
+
+#: ../src/gpk-enum.c:620
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure configuration is valid."
+msgstr ""
+"시스템의 패키지 설정 파일을 열 수 없습니다.\n"
+"설정 파일이 올바른지 확인하십시오."
+
+#: ../src/gpk-enum.c:624
+msgid "The action cannot be canceled at this time."
+msgstr "해당 동작은 지금 취소할 수 없습니다."
+
+#: ../src/gpk-enum.c:627
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"소스 패키지는 이 방법으로 설치하지 않습니다.\n"
+"설치하려는 파일의 확장자를 확인하십시오."
+
+#: ../src/gpk-enum.c:631
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"라이선스에 동의하지 않았습니다.\n"
+"이 소프트웨어를 사용하려면 라이선스에 동의해야 합니다."
+
+#: ../src/gpk-enum.c:635
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages from different software sources."
+msgstr ""
+"같은 파일이 두 패키지에 들어 있습니다.\n"
+"여러 소프트웨어 공급처에서 패키지를 설치할 경우 특히 이런 일이 발생합니다."
+
+#: ../src/gpk-enum.c:639
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software sources."
+msgstr ""
+"서로 호환되지 않는 패키지가 있습니다.\n"
+"여러 소프트웨어 공급처에서 패키지를 설치할 경우 특히 이런 일이 발생합니다."
+
+#: ../src/gpk-enum.c:643
+msgid ""
+"There was a (possibly temporary) problem connecting to a software source.\n"
+"Please check the detailed error for further details."
+msgstr ""
+"소프트웨어 공급원에 연결하는데 (아마도 일시적인) 문제가 있습니다.\n"
+"더 자세한 정보는 오류 메시지를 확인하십시오."
+
+#: ../src/gpk-enum.c:647
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+"패키지 백엔드 초기화에 실패했습니다.\n"
+"다른 패키지 도구를 동시에 사용할 경우 이런 일이 발생합니다."
+
+#: ../src/gpk-enum.c:651
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr ""
+"백엔드 인스턴스를 닫는데 실패했습니다.\n"
+"이 오류는 무시해도 좋습니다."
+
+#: ../src/gpk-enum.c:655
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+"패키지 백엔드에 필요한 잠금을 얻을 수 없습니다.\n"
+"다른 패키지 도구가 열려 있으면 닫으십시오."
+
+#: ../src/gpk-enum.c:659
+msgid "None of the selected packages could be updated."
+msgstr "선택한 패키지를 업데이트할 수 없습니다."
+
+#: ../src/gpk-enum.c:662
+msgid "The repository configuration could not be modified."
+msgstr "저장소 설정을 수정할 수 없습니다."
+
+#: ../src/gpk-enum.c:665
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"로컬 파일 설치가 실패했습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:669
+msgid "The package security signature could not be verified."
+msgstr "패키지 보안 서명을 검증할 수 없습니다."
+
+#: ../src/gpk-enum.c:672
+msgid ""
+"The package security signature is missing and this package is untrusted.\n"
+"This package was not signed when created."
+msgstr ""
+"패키지 보안 서명이 없으므로 이 패키지를 신뢰할 수 없습니다.\n"
+"이 패키지는 서명 없이 만들어졌습니다."
+
+#: ../src/gpk-enum.c:676
+msgid "Repository configuration was invalid and could not be read."
+msgstr "저장소 설정이 올바르지 않으므로 읽을 수 없습니다."
+
+#: ../src/gpk-enum.c:679
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"설치하려는 패키지가 올바르지 않습니다.\n"
+"패키지 파일이 손상되었거나, 올바른 형식의 패키지가 아닙니다."
+
+#: ../src/gpk-enum.c:683
+msgid ""
+"Installation of this package prevented by your packaging system's "
+"configuration."
+msgstr "패키지 시스템의 설정에 따라 이 패키지 설치를 금지합니다."
+
+#: ../src/gpk-enum.c:686
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "다운로드한 패키지가 손상되어 다시 다운로드해야 합니다."
+
+#: ../src/gpk-enum.c:689
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr "설치를 선택한 패키지 모두가 이미 시스템에 설치되어 있습니다."
+
+#: ../src/gpk-enum.c:692
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check the file still exists and has not been deleted."
+msgstr ""
+"지정한 파일이 시스템에 없습니다.\n"
+"파일이 있고 삭제하지 않았는지 확인하십시오."
+
+#: ../src/gpk-enum.c:696
+msgid ""
+"Required data could not be found on any of the configured software sources.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+"설정한 소프트웨어 공급원에서 필요한 데이터를 찾을 수 없습니다.\n"
+"시도할 수 있는 다운로드 미러 사이트가 더 이상 없습니다."
+
+#: ../src/gpk-enum.c:700
+msgid ""
+"Required upgrade data could not be found in any of the configured software "
+"sources.\n"
+"The list of distribution upgrades will be unavailable."
+msgstr ""
+"설정한 소프트웨어 공급원에서 필요한 업그레이드 데이터를 찾을 수 없습니다.\n"
+"배포판 업그레이드 목록이 없습니다."
+
+#: ../src/gpk-enum.c:704
+msgid ""
+"The package that is trying to be installed is incompatible with this system."
+msgstr "설치하려는 패키지가 이 시스템과 호환되지 않습니다."
+
+#: ../src/gpk-enum.c:707
+msgid ""
+"There is insufficient space on the device.\n"
+"Free some space on the system disk to perform this operation."
+msgstr ""
+"이 장치에 남은 공간이 충분하지 않습니다.\n"
+"이 동작을 수행하려면 시스템 디스크에 공간을 더 확보하십시오."
+
+#: ../src/gpk-enum.c:711
+msgid "Additional media is required to complete the transaction."
+msgstr "처리를 마치려면 추가 미디어가 필요합니다."
+
+#: ../src/gpk-enum.c:714
+msgid ""
+"You have failed to provide correct authentication.\n"
+"Please check any passwords or account settings."
+msgstr ""
+"올바른 인증 정보를 입력하는데 실패했습니다.\n"
+"암호 계정 설정을 확인하십시오."
+
+#: ../src/gpk-enum.c:718
+msgid ""
+"The specified update could not be found.\n"
+"It could have already been installed or no longer available on the remote "
+"server."
+msgstr ""
+"지정한 업데이트가 없습니다.\n"
+"벌써 설치했을 수도 있고 원격 서버에 더 이상 없을 수도 있습니다."
+
+#: ../src/gpk-enum.c:722
+msgid "The package could not be installed from untrusted source."
+msgstr "신뢰하지 않는 공급원에서 패키지를 설치할 수 없습니다."
+
+#: ../src/gpk-enum.c:725
+msgid "The package could not be updated from untrusted source."
+msgstr "신뢰하지 않는 공급원에서 패키지를 업데이트할 수 없습니다."
+
+#: ../src/gpk-enum.c:728
+msgid "The file list is not available for this package."
+msgstr "이 패키지에 파일 목록이 없습니다."
+
+#: ../src/gpk-enum.c:731
+msgid "The information about what requires this package could not be obtained."
+msgstr "어떤 패키지에서 이 패키지가 필요한지 정보를 얻을 수 없습니다."
+
+#: ../src/gpk-enum.c:734
+msgid "The specified software source could not be disabled."
+msgstr "지정한 소프트웨어 공급원은 사용 해제할 수 없습니다."
+
+#: ../src/gpk-enum.c:737
+msgid ""
+"The download could not be done automatically and should be done manually.\n"
+"More information is available in the detailed report."
+msgstr ""
+"자동으로 다운로드할 수 없어 수동으로 다운로드해야 합니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:741
+msgid ""
+"One of the selected packages failed to configure correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"선택한 패키지 중 설정에 실패한 패키지가 있습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:745
+msgid ""
+"One of the selected packages failed to build correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"선택한 패키지 중 빌드에 실패한 패키지가 있습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:749
+msgid ""
+"One of the selected packages failed to install correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"선택한 패키지 중 설치에 실패한 패키지가 있습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:753
+msgid ""
+"One of the selected packages failed to be removed correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"선택한 패키지 중 제거에 실패한 패키지가 있습니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:757
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"업데이트를 계속 진행하기 전에 닫아야 하는 프로그램이 실행 중입니다.\n"
+"보고서에 더 자세한 정보가 있습니다."
+
+#: ../src/gpk-enum.c:761
+msgid "The package database was changed while the request was running."
+msgstr "요청을 진행하는 중에 패키지 데이터베이스가 바뀌었습니다."
+
+#: ../src/gpk-enum.c:779
+msgid "No restart is necessary."
+msgstr "컴퓨터를 다시 시작하지 않아도 됩니다."
+
+#: ../src/gpk-enum.c:782
+msgid "You will be required to restart this application."
+msgstr "이 프로그램을 다시 시작해야 합니다."
+
+#: ../src/gpk-enum.c:785
+msgid "You will be required to log out and back in."
+msgstr "로그아웃하고 다시 로그인해야 합니다."
+
+#: ../src/gpk-enum.c:788
+msgid "A restart will be required."
+msgstr "컴퓨터를 다시 시작해야 합니다."
+
+#: ../src/gpk-enum.c:791
+msgid "You will be required to log out and back in due to a security update."
+msgstr "보안 업데이트 때문에 로그아웃하고 다시 로그인해야 합니다."
+
+#: ../src/gpk-enum.c:794
+msgid "A restart will be required due to a security update."
+msgstr "보안 업데이트 때문에 컴퓨터를 다시 시작해야 합니다."
+
+#: ../src/gpk-enum.c:811
+msgid "No restart is required."
+msgstr "컴퓨터를 다시 시작하지 않아도 됩니다."
+
+#: ../src/gpk-enum.c:814
+msgid "A restart is required."
+msgstr "컴퓨터를 다시 시작해야 합니다."
+
+#: ../src/gpk-enum.c:817
+msgid "You need to log out and log back in."
+msgstr "로그아웃하고 다시 로그인해야 합니다."
+
+#: ../src/gpk-enum.c:820
+msgid "You need to restart the application."
+msgstr "이 프로그램을 다시 시작해야 합니다."
+
+#: ../src/gpk-enum.c:823
+msgid "You need to log out and log back in to remain secure."
+msgstr "보안에 안전하려면 로그아웃하고 다시 로그인해야 합니다."
+
+#: ../src/gpk-enum.c:826
+msgid "A restart is required to remain secure."
+msgstr "보안에 안전하려면 컴퓨터를 다시 시작해야 합니다."
+
+#. TRANSLATORS: A distribution stability level
+#: ../src/gpk-enum.c:844
+msgid "Stable"
+msgstr "안정"
+
+#. TRANSLATORS: A distribution stability level
+#: ../src/gpk-enum.c:848
+msgid "Unstable"
+msgstr "불안정"
+
+#. TRANSLATORS: A distribution stability level
+#: ../src/gpk-enum.c:852
+msgid "Testing"
+msgstr "시험"
+
+#: ../src/gpk-enum.c:869
+msgid "A mirror is possibly broken"
+msgstr "미러 사이트가 망가진 것으로 보입니다"
+
+#: ../src/gpk-enum.c:872
+msgid "The connection was refused"
+msgstr "연결이 거부되었습니다"
+
+#: ../src/gpk-enum.c:875
+msgid "The parameter was invalid"
+msgstr "매개 변수가 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:878
+msgid "The priority was invalid"
+msgstr "우선 순위가 올바르지 않습니다"
+
+#: ../src/gpk-enum.c:881
+msgid "Backend warning"
+msgstr "백엔드 경고"
+
+#: ../src/gpk-enum.c:884
+msgid "Daemon warning"
+msgstr "데몬 경고"
+
+#: ../src/gpk-enum.c:887
+msgid "The package list cache is being rebuilt"
+msgstr "패키지 목록 캐시를 다시 만드는 중입니다"
+
+#: ../src/gpk-enum.c:890
+msgid "An untrusted package was installed"
+msgstr "신뢰할 수 없는 패키지를 설치했습니다"
+
+#: ../src/gpk-enum.c:893
+msgid "A newer package exists"
+msgstr "더 최신 버전 패키지가 있습니다"
+
+#: ../src/gpk-enum.c:896
+msgid "Could not find package"
+msgstr "패키지를 찾을 수 없습니다"
+
+#: ../src/gpk-enum.c:899
+msgid "Configuration files were changed"
+msgstr "설정 파일이 바뀌었습니다"
+
+#: ../src/gpk-enum.c:902
+msgid "Package is already installed"
+msgstr "패키지를 이미 설치했습니다"
+
+#: ../src/gpk-enum.c:905
+msgid "Automatic cleanup is being ignored"
+msgstr "자동 패키지 정리를 무시합니다"
+
+# 공급원
+#: ../src/gpk-enum.c:908
+msgid "Software source download failed"
+msgstr "소프트웨어 공급원 다운로드가 실패했습니다"
+
+# 공급원
+#: ../src/gpk-enum.c:911
+msgid "This software source is for developers only"
+msgstr "이 소프트웨어 공급원은 개발자 전용입니다"
+
+#. TRANSLATORS: This is when the transaction status is not known
+#: ../src/gpk-enum.c:929
+msgid "Unknown state"
+msgstr "알 수 없는 상태"
+
+#. TRANSLATORS: transaction state, the daemon is in the process of starting
+#: ../src/gpk-enum.c:933
+msgid "Starting"
+msgstr "시작하는 중"
+
+#. TRANSLATORS: transaction state, the transaction is waiting for another to complete
+#: ../src/gpk-enum.c:937
+msgid "Waiting in queue"
+msgstr "대기하는 중"
+
+#. TRANSLATORS: transaction state, just started
+#: ../src/gpk-enum.c:941
+msgid "Running"
+msgstr "실행하는 중"
+
+#. TRANSLATORS: transaction state, is querying data
+#: ../src/gpk-enum.c:945
+msgid "Querying"
+msgstr "질의하는 중"
+
+#. TRANSLATORS: transaction state, getting data from a server
+#: ../src/gpk-enum.c:949
+msgid "Getting information"
+msgstr "정보를 받는 중"
+
+#. TRANSLATORS: transaction state, downloading package files
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:957 ../src/gpk-enum.c:1393
+msgid "Downloading packages"
+msgstr "패키지를 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, refreshing internal lists
+#: ../src/gpk-enum.c:965
+msgid "Refreshing software list"
+msgstr "소프트웨어 목록을 새로 고치는 중"
+
+#. TRANSLATORS: transaction state, installing updates
+#: ../src/gpk-enum.c:969
+msgid "Installing updates"
+msgstr "업데이트를 설치하는 중"
+
+#. TRANSLATORS: transaction state, removing old packages, and cleaning config files
+#: ../src/gpk-enum.c:973
+msgid "Cleaning up packages"
+msgstr "패키지를 지우는 중"
+
+#. TRANSLATORS: transaction state, obsoleting old packages
+#: ../src/gpk-enum.c:977
+msgid "Obsoleting packages"
+msgstr "패키지를 사용 중지하는 중"
+
+#. TRANSLATORS: transaction state, checking the transaction before we do it
+#: ../src/gpk-enum.c:981
+msgid "Resolving dependencies"
+msgstr "의존성을 분석하는 중"
+
+#. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
+#: ../src/gpk-enum.c:985
+msgid "Checking signatures"
+msgstr "서명을 확인하는 중"
+
+#. TRANSLATORS: transaction state, when we return to a previous system state
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:989 ../src/gpk-enum.c:1353
+msgid "Rolling back"
+msgstr "되돌리는 중"
+
+#. TRANSLATORS: transaction state, when we're doing a test transaction
+#: ../src/gpk-enum.c:993
+msgid "Testing changes"
+msgstr "바꾼 사항을 검사하는 중"
+
+#. TRANSLATORS: transaction state, when we're writing to the system package database
+#: ../src/gpk-enum.c:997
+msgid "Committing changes"
+msgstr "바꾼 사항을 적용하는 중"
+
+#. TRANSLATORS: transaction state, requesting data from a server
+#: ../src/gpk-enum.c:1001
+msgid "Requesting data"
+msgstr "데이터를 요청하는 중"
+
+#. TRANSLATORS: transaction state, all done!
+#: ../src/gpk-enum.c:1005
+msgid "Finished"
+msgstr "마쳤음"
+
+#. TRANSLATORS: transaction state, in the process of cancelling
+#: ../src/gpk-enum.c:1009
+msgid "Cancelling"
+msgstr "취소하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1013
+msgid "Downloading repository information"
+msgstr "저장소 정보를 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1017
+msgid "Downloading list of packages"
+msgstr "패키지 목록을 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1021
+msgid "Downloading file lists"
+msgstr "파일 목록을 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1025
+msgid "Downloading lists of changes"
+msgstr "바뀐 사항 목록을 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1029
+msgid "Downloading groups"
+msgstr "그룹을 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, downloading metadata
+#: ../src/gpk-enum.c:1033
+msgid "Downloading update information"
+msgstr "업데이트 정보를 다운로드하는 중"
+
+#. TRANSLATORS: transaction state, repackaging delta files
+#: ../src/gpk-enum.c:1037
+msgid "Repackaging files"
+msgstr "파일을 다시 패키지로 묶는 중"
+
+#. TRANSLATORS: transaction state, loading databases
+#: ../src/gpk-enum.c:1041
+msgid "Loading cache"
+msgstr "캐시를 읽어들이는 중"
+
+#. TRANSLATORS: transaction state, scanning for running processes
+#: ../src/gpk-enum.c:1045
+msgid "Scanning installed applications"
+msgstr "설치한 프로그램 목록을 읽는 중"
+
+#. TRANSLATORS: transaction state, generating a list of packages installed on the system
+#: ../src/gpk-enum.c:1049
+msgid "Generating package lists"
+msgstr "패키지 목록을 만드는 중"
+
+#. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
+#: ../src/gpk-enum.c:1053
+msgid "Waiting for package manager lock"
+msgstr "패키지 관리 프로그램 잠금을 기다리는 중"
+
+#. TRANSLATORS: waiting for user to type in a password
+#: ../src/gpk-enum.c:1057
+msgid "Waiting for authentication"
+msgstr "인증을 기다리는 중"
+
+#. TRANSLATORS: we are updating the list of processes
+#: ../src/gpk-enum.c:1061
+msgid "Updating the list of running applications"
+msgstr "실행 중인 프로그램 목록을 업데이트하는 중"
+
+#. TRANSLATORS: we are checking executable files in use
+#: ../src/gpk-enum.c:1065
+msgid "Checking for applications currently in use"
+msgstr "현재 사용 중인 프로그램 확인하는 중"
+
+#. TRANSLATORS: we are checking for libraries in use
+#: ../src/gpk-enum.c:1069
+msgid "Checking for libraries currently in use"
+msgstr "현재 사용 중인 라이브러리 확인하는 중"
+
+#. TRANSLATORS: we are copying package files to prepare to install
+#: ../src/gpk-enum.c:1073
+msgid "Copying files"
+msgstr "파일을 복사하는 중"
+
+#. TRANSLATORS: type of update
+#: ../src/gpk-enum.c:1091
+#, c-format
+msgid "%i trivial update"
+msgid_plural "%i trivial updates"
+msgstr[0] "사소한 업데이트 %i개"
+
+#. TRANSLATORS: type of update in the case that we don't have any data
+#: ../src/gpk-enum.c:1095
+#, c-format
+msgid "%i update"
+msgid_plural "%i updates"
+msgstr[0] "업데이트 %i개"
+
+#. TRANSLATORS: type of update
+#: ../src/gpk-enum.c:1099
+#, c-format
+msgid "%i important update"
+msgid_plural "%i important updates"
+msgstr[0] "중요 업데이트 %i개"
+
+#. TRANSLATORS: type of update
+#: ../src/gpk-enum.c:1103
+#, c-format
+msgid "%i security update"
+msgid_plural "%i security updates"
+msgstr[0] "보안 업데이트 %i개"
+
+#. TRANSLATORS: type of update
+#: ../src/gpk-enum.c:1107
+#, c-format
+msgid "%i bug fix update"
+msgid_plural "%i bug fix updates"
+msgstr[0] "문제 수정 업데이트 %i개"
+
+#. TRANSLATORS: type of update
+#: ../src/gpk-enum.c:1111
+#, c-format
+msgid "%i enhancement update"
+msgid_plural "%i enhancement updates"
+msgstr[0] "기능 업데이트 %i개"
+
+#. TRANSLATORS: number of updates that cannot be installed due to deps
+#: ../src/gpk-enum.c:1115
+#, c-format
+msgid "%i blocked update"
+msgid_plural "%i blocked updates"
+msgstr[0] "설치 불가 업데이트 %i개"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1133
+msgid "Trivial update"
+msgstr "사소한 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1137
+msgid "Normal update"
+msgstr "일반 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1141
+msgid "Important update"
+msgstr "중요 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1145
+msgid "Security update"
+msgstr "보안 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1149
+msgid "Bug fix update"
+msgstr "문제 수정 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1153
+msgid "Enhancement update"
+msgstr "기능 업데이트"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-enum.c:1157
+msgid "Blocked update"
+msgstr "설치 불가 업데이트"
+
+#. TRANSLATORS: The state of a package, i.e. not installed
+#: ../src/gpk-enum.c:1167
+msgid "Available"
+msgstr "사용 가능"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1185 ../src/gpk-service-pack.c:443
+msgid "Downloading"
+msgstr "다운로드하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1189
+msgid "Updating"
+msgstr "업데이트하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1193 ../src/gpk-enum.c:1329
+msgid "Installing"
+msgstr "설치하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1197 ../src/gpk-enum.c:1325
+msgid "Removing"
+msgstr "제거하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1201
+msgid "Cleaning up"
+msgstr "지우는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1205
+msgid "Obsoleting"
+msgstr "사용 중지하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1209
+msgid "Reinstalling"
+msgstr "다시 설치하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1213
+msgid "Preparing"
+msgstr "준비하는 중"
+
+#. TRANSLATORS: The action of the package, in present tense
+#: ../src/gpk-enum.c:1217
+msgid "Decompressing"
+msgstr "압축 푸는 중"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1235
+msgid "Downloaded"
+msgstr "다운로드함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1239
+msgid "Updated"
+msgstr "업데이트함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1247
+msgid "Removed"
+msgstr "제거함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1251
+msgid "Cleaned up"
+msgstr "지움"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1255
+msgid "Obsoleted"
+msgstr "사용 중지함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1259
+msgid "Reinstalled"
+msgstr "다시 설치함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1263
+msgid "Prepared"
+msgstr "준비함"
+
+#. TRANSLATORS: The action of the package, in past tense
+#: ../src/gpk-enum.c:1267
+msgid "Decompressed"
+msgstr "압축 해제함"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1285 ../src/gpk-enum.c:1441
+msgid "Unknown role type"
+msgstr "알 수 없는 역할 종류"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1289
+msgid "Getting dependencies"
+msgstr "의존성을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1293
+msgid "Getting update detail"
+msgstr "업데이트 상세 정보를 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1297
+msgid "Getting details"
+msgstr "상세 정보를 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1301
+msgid "Getting requires"
+msgstr "필요한 사항을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1305
+msgid "Getting updates"
+msgstr "업데이트를 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1309
+msgid "Searching details"
+msgstr "상세 정보를 검색하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1317
+msgid "Searching groups"
+msgstr "그룹을 검색하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1321
+msgid "Searching for package name"
+msgstr "패키지 이름을 검색하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1333
+msgid "Installing file"
+msgstr "파일을 설치하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1337
+msgid "Refreshing package cache"
+msgstr "패키지 캐시를 새로 고치는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1341
+msgid "Updating packages"
+msgstr "패키지를 업데이트하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1345
+msgid "Updating system"
+msgstr "시스템을 업데이트하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1349
+msgid "Canceling"
+msgstr "취소하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1357
+msgid "Getting list of repositories"
+msgstr "저장소 목록을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1361
+msgid "Enabling repository"
+msgstr "저장소를 사용하기 시작하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1365
+msgid "Setting repository data"
+msgstr "저장소 데이터를 설정하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1369
+msgid "Resolving"
+msgstr "찾는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1373
+msgid "Getting file list"
+msgstr "파일 목록을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1377
+msgid "Getting what provides"
+msgstr "제공하는 사항을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1381
+msgid "Installing signature"
+msgstr "서명을 설치하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1385
+msgid "Getting package lists"
+msgstr "패키지 목록을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1389
+msgid "Accepting EULA"
+msgstr "사용자 약관 동의하는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1397
+msgid "Getting distribution upgrade information"
+msgstr "배포판 업그레이드 정보를 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1401
+msgid "Getting categories"
+msgstr "분류를 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1405
+msgid "Getting old transactions"
+msgstr "과거 처리 사항을 받는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1409
+msgid "Simulating the install of files"
+msgstr "파일 설치를 흉내내는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1413
+msgid "Simulating the install"
+msgstr "설치를 흉내내는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1417
+msgid "Simulating the remove"
+msgstr "제거를 흉내내는 중"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1421
+msgid "Simulating the update"
+msgstr "업데이트를 흉내내는 중"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1445
+msgid "Got dependencies"
+msgstr "의존성을 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1449
+msgid "Got update detail"
+msgstr "업데이트 상세 정보를 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1453
+msgid "Got details"
+msgstr "상세 정보를 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1457
+msgid "Got requires"
+msgstr "필요한 사항을 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1461
+msgid "Got updates"
+msgstr "업데이트를 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1465
+msgid "Searched for package details"
+msgstr "패키지 정보를 검색함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1469
+msgid "Searched for file"
+msgstr "파일을 검색함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1473
+msgid "Searched groups"
+msgstr "그룹을 검색함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1477
+msgid "Searched for package name"
+msgstr "패키지 이름을 검색함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1481
+msgid "Removed packages"
+msgstr "패키지를 제거함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1485
+msgid "Installed packages"
+msgstr "패키지를 설치함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1489
+msgid "Installed local files"
+msgstr "로컬 파일을 설치함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1493
+msgid "Refreshed package cache"
+msgstr "패키지 캐시를 새로 고침"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1497
+msgid "Updated packages"
+msgstr "패키지를 업데이트함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1501
+msgid "Updated system"
+msgstr "시스템을 업데이트함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1505
+msgid "Canceled"
+msgstr "취소함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1509
+msgid "Rolled back"
+msgstr "되돌림"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1513
+msgid "Got list of repositories"
+msgstr "저장소 목록을 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1517
+msgid "Enabled repository"
+msgstr "저장소를 사용하기 시작함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1521
+msgid "Set repository data"
+msgstr "저장소 데이터를 설정함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1525
+msgid "Resolved"
+msgstr "해결함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1529
+msgid "Got file list"
+msgstr "파일 목록을 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1533
+msgid "Got what provides"
+msgstr "제공하는 사항을 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1537
+msgid "Installed signature"
+msgstr "서명을 설치함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1541
+msgid "Got package lists"
+msgstr "패키지 목록 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1545
+msgid "Accepted EULA"
+msgstr "사용자 약관 동의함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1549
+msgid "Downloaded packages"
+msgstr "패키지를 다운로드함"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1553
+msgid "Got distribution upgrades"
+msgstr "배포판 업그레이드를 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1557
+msgid "Got categories"
+msgstr "분류를 받음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1561
+msgid "Got old transactions"
+msgstr "과거 처리 사항을 받았음"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1565
+msgid "Simulated the install of files"
+msgstr "파일 설치를 흉내냄"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1569
+msgid "Simulated the install"
+msgstr "설치를 흉내냄"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1573
+msgid "Simulated the remove"
+msgstr "제거를 흉내냄"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1577
+msgid "Simulated the update"
+msgstr "업데이트를 흉내냄"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1595
+msgid "Accessibility"
+msgstr "접근성"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1599
+msgid "Accessories"
+msgstr "보조 프로그램"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1603
+msgid "Education"
+msgstr "교육"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1607
+msgid "Games"
+msgstr "게임"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1611
+msgid "Graphics"
+msgstr "그래픽"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1615
+msgid "Internet"
+msgstr "인터넷"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1619
+msgid "Office"
+msgstr "업무"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1623
+msgid "Other"
+msgstr "기타"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1627
+msgid "Programming"
+msgstr "프로그래밍"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1631
+msgid "Multimedia"
+msgstr "멀티미디어"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1639
+msgid "GNOME desktop"
+msgstr "그놈 데스크톱"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1643
+msgid "KDE desktop"
+msgstr "KDE 데스크톱"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1647
+msgid "XFCE desktop"
+msgstr "XFCE 데스크톱"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1651
+msgid "Other desktops"
+msgstr "기타 데스크톱"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1655
+msgid "Publishing"
+msgstr "출판"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1659
+msgid "Servers"
+msgstr "서버"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1663
+msgid "Fonts"
+msgstr "글꼴"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1667
+msgid "Admin tools"
+msgstr "관리자 도구"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1671
+msgid "Legacy"
+msgstr "구식"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1675
+msgid "Localization"
+msgstr "지역화"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1679
+msgid "Virtualization"
+msgstr "가상화"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1683
+msgid "Security"
+msgstr "보안"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1687
+msgid "Power management"
+msgstr "전원 관리"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1691
+msgid "Communication"
+msgstr "통신"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1695
+msgid "Network"
+msgstr "네트워크"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1699
+msgid "Maps"
+msgstr "지도"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1703
+msgid "Software sources"
+msgstr "소프트웨어 공급원"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1707
+msgid "Science"
+msgstr "과학"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1711
+msgid "Documentation"
+msgstr "문서"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1715
+msgid "Electronics"
+msgstr "전기전자"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1719
+msgid "Package collections"
+msgstr "패키지 모음"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1723
+msgid "Vendor"
+msgstr "제조사"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1727
+msgid "Newest packages"
+msgstr "최신 패키지"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1731
+msgid "Unknown group"
+msgstr "알 수 없는 그룹"
+
+#. TRANSLATORS: we need to restart so the new hardware can re-request the firmware
+#: ../src/gpk-firmware.c:268
+msgid ""
+"You will need to restart this computer before the hardware will work "
+"correctly."
+msgstr "해당 하드웨어가 올바르게 동작하려면 컴퓨터를 다시 시작해야 합니다."
+
+#. TRANSLATORS: title of libnotify bubble
+#: ../src/gpk-firmware.c:271 ../src/gpk-firmware.c:306
+#: ../src/gpk-firmware.c:333
+msgid "Additional software was installed"
+msgstr "추가 소프트웨어를 설치했습니다"
+
+#. TRANSLATORS: button label
+#: ../src/gpk-firmware.c:280
+msgid "Restart now"
+msgstr "지금 다시 시작"
+
+#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
+#: ../src/gpk-firmware.c:303
+msgid ""
+"You will need to remove and then reinsert the hardware before it will work "
+"correctly."
+msgstr ""
+"해당 하드웨어가 올바르게 동작하려면 해당 하드웨어를 제거한 후에 다시 연결해"
+"야 합니다."
+
+#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
+#: ../src/gpk-firmware.c:330
+msgid "Your hardware has been set up and is now ready to use."
+msgstr "하드웨어가 설정되었고 이제 사용할 준비가 되었습니다."
+
+#. TRANSLATORS: we need another package to keep udev quiet
+#: ../src/gpk-firmware.c:613
+msgid ""
+"Additional firmware is required to make hardware in this computer function "
+"correctly."
+msgstr "이 컴퓨터의 하드웨어가 올바르게 동작하려면 추가 펌웨어가 필요합니다."
+
+#. TRANSLATORS: title of libnotify bubble
+#: ../src/gpk-firmware.c:627
+msgid "Additional firmware required"
+msgstr "추가 펌웨어가 필요합니다"
+
+#. TRANSLATORS: button label
+#: ../src/gpk-firmware.c:632
+msgid "Install firmware"
+msgstr "펌웨어 설치"
+
+#. TRANSLATORS: we should ignore this device and not ask anymore
+#: ../src/gpk-firmware.c:635
+msgid "Ignore devices"
+msgstr "장치 무시"
+
+#. TODO: tell the user what hardware, NOT JUST A UDI
+#. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
+#: ../src/gpk-hardware.c:183
+msgid "Additional packages can be installed to support this hardware"
+msgstr "이 하드웨어를 지원하는 패키지를 설치할 수 있습니다"
+
+#. TRANSLATORS: a new bit of hardware has been plugged in
+#: ../src/gpk-hardware.c:185
+msgid "New hardware attached"
+msgstr "새 하드웨어 연결"
+
+#. TRANSLATORS: button text, install the packages needed for the hardware to work
+#. TRANSLATORS: button tooltip
+#: ../src/gpk-hardware.c:191 ../src/gpk-helper-chooser.c:302
+msgid "Install package"
+msgstr "패키지 설치"
+
+#. TRANSLATORS: column for the application icon
+#: ../src/gpk-helper-chooser.c:142 ../src/gpk-helper-run.c:212
+msgid "Icon"
+msgstr "아이콘"
+
+#: ../src/gpk-helper-chooser.c:286
+msgid "Applications that can open this type of file"
+msgstr "이 종류의 파일을 열 수 있는 프로그램"
+
+#. TRANSLATORS: is not GPG signed
+#: ../src/gpk-task.c:144 ../src/gpk-task.c:154 ../src/gpk-task.c:174
+msgid "The software is not signed by a trusted provider."
+msgstr "이 소프트웨어는 신뢰하는 공급자가 서명하지 않았습니다."
+
+#. TRANSLATORS: user has to trust provider -- I know, this sucks
+#: ../src/gpk-task.c:146
+msgid "Do not update this package unless you are sure it is safe to do so."
+msgstr ""
+"정말로 업데이트가 안전하다고 확신하지 않는다면 이 패키지를 업데이트하지 마십"
+"시오."
+
+#. TRANSLATORS: warn the user that all bets are off
+#: ../src/gpk-task.c:148 ../src/gpk-task.c:158
+msgid "Malicious software can damage your computer or cause other harm."
+msgstr "악성 소프트웨어가 컴퓨터를 손상시키거나 기타 피해를 입힐 수 있습니다."
+
+#. TRANSLATORS: ask if they are absolutely sure they want to do this
+#: ../src/gpk-task.c:150
+msgid "Are you <b>sure</b> you want to update this package?"
+msgstr "<b>정말로</b> 이 패키지를 업데이트하시겠습니까?"
+
+#. TRANSLATORS: user has to trust provider -- I know, this sucks
+#: ../src/gpk-task.c:156
+msgid "Do not install this package unless you are sure it is safe to do so."
+msgstr "안전하다고 확신하지 않는다면 이 패키지를 설치하지 마십시오."
+
+#. TRANSLATORS: ask if they are absolutely sure they want to do this
+#: ../src/gpk-task.c:160
+msgid "Are you <b>sure</b> you want to install this package?"
+msgstr "<b>정말로</b> 이 패키지를 설치하시겠습니까?"
+
+#. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
+#: ../src/gpk-task.c:355
+#, c-format
+msgid ""
+"Additional media is required. Please insert the %s labeled '%s' to continue."
+msgstr "추가 미디어가 필요합니다. 레이블이 '%2$s'인 %1$s 미디어를 넣으십시오."
+
+#. TRANSLATORS: this is button text
+#: ../src/gpk-task.c:364 ../src/gpk-task.c:543
+msgid "Continue"
+msgstr "계속"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:401
+msgid "The following software also needs to be installed"
+msgstr "다음 소프트웨어도 설치해야 합니다"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:406
+msgid "The following software also needs to be removed"
+msgstr "다음 소프트웨어도 제거해야 합니다"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:410
+msgid "The following software also needs to be updated"
+msgstr "다음 소프트웨어도 업데이트해야 합니다"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:414
+msgid "The following software also needs to be re-installed"
+msgstr "다음 소프트웨어도 다시 설치해야 합니다"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:418
+msgid "The following software also needs to be downgraded"
+msgstr "다음 소프트웨어도 다운그레이드해야 합니다"
+
+#. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
+#: ../src/gpk-task.c:422
+msgid "The following software also needs to be processed"
+msgstr "다음 소프트웨어도 처리해야 합니다."
+
+#. TRANSLATORS: title of a dependency dialog
+#: ../src/gpk-task.c:481
+msgid "Additional confirmation required"
+msgstr "추가 확인이 필요합니다"
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:487
+msgid "To install this package, additional software also has to be modified."
+msgid_plural ""
+"To install these packages, additional software also has to be modified."
+msgstr[0] "이 패키지를 설치하려면, 추가 소프트웨어도 수정해야 합니다."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:492
+msgid "To remove this package, additional software also has to be modified."
+msgid_plural ""
+"To remove these packages, additional software also has to be modified."
+msgstr[0] "이 소프트웨어를 제거하려면, 추가 소프트웨어도 수정해야 합니다."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:497
+msgid "To update this package, additional software also has to be modified."
+msgid_plural ""
+"To update these packages, additional software also has to be modified."
+msgstr[0] "이 소프트웨어를 업데이트하려면, 추가 소프트웨어도 수정해야 합니다."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:502
+msgid "To install this file, additional software also has to be modified."
+msgid_plural ""
+"To install these file, additional software also has to be modified."
+msgstr[0] "이 파일을 설치하려면, 추가 소프트웨어도 수정해야 합니다."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:507
+msgid ""
+"To process this transaction, additional software also has to be modified."
+msgstr "이 요청을 처리하려면, 추가 소프트웨어도 수정해야 합니다."
+
+#. TRANSLATORS: button label, force the install, even though it's untrusted
+#: ../src/gpk-task.c:593
+msgid "_Force install"
+msgstr "강제 설치(_F)"
+
+#. TRANSLATORS: button tooltip
+#: ../src/gpk-task.c:597
+msgid "Force installing package"
+msgstr "패키지를 강제로 설치합니다"
+
+#. TRANSLATORS: window title: do we want to execute a program we just installed?
+#: ../src/gpk-helper-run.c:500
+msgid "Run new application?"
+msgstr "새 프로그램을 실행하시겠습니까?"
+
+#. add run button
+#: ../src/gpk-helper-run.c:503
+msgid "_Run"
+msgstr "실행(_R)"
+
+#. app-id
+#. xid
+#. TRANSLATORS: the reason why we've inhibited it
+#: ../src/gpk-inhibit.c:99
+msgid "A transaction that cannot be interrupted is running"
+msgstr "중단할 수 없는 처리 사항이 실행 중입니다"
+
+#. TRANSLATORS: command line option: a list of catalogs to install
+#: ../src/gpk-install-catalog.c:53
+msgid "Catalogs files to install"
+msgstr "설치할 소프트웨어 목록 파일"
+
+#. are we running privileged
+#: ../src/gpk-install-catalog.c:79
+msgid "Catalog installer"
+msgstr "소프트웨어 목록 설치"
+
+#: ../src/gpk-install-catalog.c:84
+msgid "Failed to install catalog"
+msgstr "소프트웨어 목록 설치에 실패했습니다"
+
+#. TRANSLATORS: no filename was supplied
+#: ../src/gpk-install-catalog.c:86
+msgid "You need to specify a file name to install"
+msgstr "설치할 파일 이름을 지정해야 합니다"
+
+#. TRANSLATORS: This is when the specified DBus method did not execute successfully
+#: ../src/gpk-install-catalog.c:119 ../src/gpk-install-local-file.c:119
+#: ../src/gpk-install-mime-type.c:119 ../src/gpk-install-package-name.c:118
+#: ../src/gpk-install-provide-file.c:119
+msgid "The action could not be completed"
+msgstr "해당 동작을 완료할 수 없습니다"
+
+#. TRANSLATORS: we don't have anything more useful to translate. sorry.
+#: ../src/gpk-install-catalog.c:121 ../src/gpk-install-local-file.c:121
+#: ../src/gpk-install-mime-type.c:121 ../src/gpk-install-package-name.c:120
+#: ../src/gpk-install-provide-file.c:121
+msgid "The request failed. More details are available in the detailed report."
+msgstr "요청이 실패했습니다. 보고서에 더 자세한 정보가 있습니다."
+
+#. TRANSLATORS: command line option: a list of files to install
+#: ../src/gpk-install-local-file.c:52
+msgid "Files to install"
+msgstr "설치할 파일"
+
+#. TRANSLATORS: program name: application to install a package to provide a file
+#: ../src/gpk-install-local-file.c:68 ../src/gpk-install-local-file.c:70
+msgid "PackageKit File Installer"
+msgstr "패키지키트 파일 설치 프로그램"
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-install-local-file.c:78
+msgid "Local file installer"
+msgstr "로컬 파일 설치"
+
+#. TRANSLATORS: could not install a package that contained the file we wanted
+#. TRANSLATORS: nothing done
+#: ../src/gpk-install-local-file.c:84 ../src/gpk-install-provide-file.c:84
+msgid "Failed to install a package to provide a file"
+msgstr "파일이 들어 있는 패키지 설치에 실패했습니다"
+
+#. TRANSLATORS: nothing selected
+#: ../src/gpk-install-local-file.c:86
+msgid "You need to specify a file to install"
+msgstr "설치하려는 파일을 지정해야 합니다"
+
+#. TRANSLATORS: command line option: a list of catalogs to install
+#: ../src/gpk-install-mime-type.c:52
+msgid "Mime types to install"
+msgstr "설치할 MIME 형식"
+
+#. TRANSLATORS: program name: application to install a package to provide a mime type
+#: ../src/gpk-install-mime-type.c:68 ../src/gpk-install-mime-type.c:70
+msgid "Mime Type Installer"
+msgstr "MIME 형식 설치 프로그램"
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-install-mime-type.c:78
+msgid "Mime type installer"
+msgstr "MIME 형식 설치 프로그램"
+
+#. TRANSLATORS: could not install program supporting this type
+#: ../src/gpk-install-mime-type.c:84
+msgid "Failed to install a program to handle this file type"
+msgstr "이 종류의 파일을 처리하는 프로그램을 설치하는데 실패했습니다"
+
+#. TRANSLATORS: no type given
+#: ../src/gpk-install-mime-type.c:86
+msgid "You need to specify a mime-type to install"
+msgstr "설치할 MIME 형식을 지정해야 합니다"
+
+#: ../src/gpk-install-package-name.c:51
+msgid "Packages to install"
+msgstr "설치할 패키지"
+
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: application name to pass to to the user if there are not enough privs
+#: ../src/gpk-install-package-name.c:67 ../src/gpk-install-package-name.c:69
+#: ../src/gpk-install-package-name.c:77
+msgid "Package Name Installer"
+msgstr "패키지 이름 설치 프로그램"
+
+#. TRANSLATORS: failed
+#: ../src/gpk-install-package-name.c:83
+msgid "Failed to install package from name"
+msgstr "해당 이름의 패키지를 설치하는데 실패했습니다"
+
+#. TRANSLATORS: nothing was specified
+#: ../src/gpk-install-package-name.c:85
+msgid "You need to specify a package to install"
+msgstr "설치할 패키지를 지정해야 합니다"
+
+#. TRANSLATORS: command line option: a list of files to install
+#: ../src/gpk-install-provide-file.c:52
+msgid "Local files to install"
+msgstr "설치할 로컬 파일"
+
+#. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
+#. TRANSLATORS: application name to pass to to the user if there are not enough privs
+#: ../src/gpk-install-provide-file.c:68 ../src/gpk-install-provide-file.c:70
+#: ../src/gpk-install-provide-file.c:78
+msgid "Single File Installer"
+msgstr "단일 파일 설치"
+
+#. TRANSLATORS: nothig was specified
+#: ../src/gpk-install-provide-file.c:86
+msgid "You need to specify a filename to install"
+msgstr "설치할 파일 이름을 지정해야 합니다"
+
+#. TRANSLATORS: strftime formatted please
+#: ../src/gpk-log.c:173
+msgid "%A, %d %B %Y"
+msgstr "%Y년 %B %d일, %A"
+
+#. TRANSLATORS: column for the date
+#: ../src/gpk-log.c:287
+msgid "Date"
+msgstr "날짜"
+
+#. TRANSLATORS: column for the username, e.g. Richard Hughes
+#: ../src/gpk-log.c:329
+msgid "Username"
+msgstr "사용자 이름"
+
+#. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
+#: ../src/gpk-log.c:336
+msgid "Application"
+msgstr "프로그램"
+
+#. TRANSLATORS: short name for pkcon
+#: ../src/gpk-log.c:511
+msgid "Command line client"
+msgstr "명령행 클라이언트"
+
+#. TRANSLATORS: short name for gpk-update-viewer
+#: ../src/gpk-log.c:517
+msgid "Update System"
+msgstr "시스템 업데이트"
+
+#. TRANSLATORS: short name for gpk-update-icon
+#: ../src/gpk-log.c:520
+msgid "Update Icon"
+msgstr "아이콘 업데이트"
+
+#. TRANSLATORS: preset the GtktextBox with this filter text
+#: ../src/gpk-log.c:691
+msgid "Set the filter to this value"
+msgstr "필터를 이 값으로 설정합니다"
+
+#. TRANSLATORS: we can make this modal (stay on top of) another window
+#: ../src/gpk-log.c:694 ../src/gpk-prefs.c:467 ../src/gpk-repo.c:614
+msgid "Set the parent window to make this modal"
+msgstr "모달로 설정할 상위 창을 지정합니다"
+
+#. are we running privileged
+#: ../src/gpk-log.c:718
+msgid "Log viewer"
+msgstr "기록 보기"
+
+#: ../src/gpk-modal-dialog.c:439
+#, c-format
+msgid "Remaining time : %s"
+msgstr "남은 시간 : %s"
+
+#. TRANSLATORS: check once an hour
+#: ../src/gpk-prefs.c:44
+msgid "Hourly"
+msgstr "매 시간"
+
+#. TRANSLATORS: check once a day
+#: ../src/gpk-prefs.c:46
+msgid "Daily"
+msgstr "매일"
+
+#. TRANSLATORS: check once a week
+#: ../src/gpk-prefs.c:48
+msgid "Weekly"
+msgstr "매주"
+
+#. TRANSLATORS: never check for updates/upgrades
+#: ../src/gpk-prefs.c:50
+msgid "Never"
+msgstr "하지 않기"
+
+#. TRANSLATORS: update everything
+#: ../src/gpk-prefs.c:53
+msgid "All updates"
+msgstr "모두 업데이트"
+
+#. TRANSLATORS: update just security updates
+#: ../src/gpk-prefs.c:55
+msgid "Only security updates"
+msgstr "보안 업데이트만"
+
+#. TRANSLATORS: don't update anything
+#: ../src/gpk-prefs.c:57
+msgid "Nothing"
+msgstr "하지 않기"
+
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/gpk-repo.c:272
+msgid "Failed to change status"
+msgstr "상태를 바꾸는데 실패했습니다"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/gpk-repo.c:344
+msgid "Enabled"
+msgstr "사용"
+
+#. TRANSLATORS: column for the source description
+#: ../src/gpk-repo.c:353
+msgid "Software Source"
+msgstr "소프트웨어 공급원"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/gpk-repo.c:414
+msgid "Failed to get the list of sources"
+msgstr "공급원 목록을 읽는데 실패했습니다"
+
+#: ../src/gpk-repo.c:557
+msgid "Getting software source list not supported by backend"
+msgstr "백엔드가 지원하지 않는 소프트웨어 공급원 목록을 받는 중입니다"
+
+#: ../src/gpk-repo.c:630
+msgid "Software Source Viewer"
+msgstr "소프트웨어 공급원 보기"
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-repo.c:638
+msgid "Software source viewer"
+msgstr "소프트웨어 공급원 보기"
+
+#. TRANSLATORS: cannot resolve name to package name
+#: ../src/gpk-service-pack.c:261
+#, c-format
+msgid "Could not find any packages named '%s'"
+msgstr "이름이 '%s'인 패키지를 찾을 수 없습니다"
+
+#. TRANSLATORS: cannot find any valid package names
+#: ../src/gpk-service-pack.c:273
+msgid "Could not find any valid package names"
+msgstr "올바른 패키지 이름을 찾을 수 없습니다"
+
+#. TRANSLATORS: cannot get package array
+#: ../src/gpk-service-pack.c:337
+#, c-format
+msgid "Could not get array of installed packages: %s"
+msgstr "설치한 패키지 모음을 읽을 수 없습니다: %s"
+
+#: ../src/gpk-service-pack.c:356
+#, c-format
+msgid "Could not save to file: %s"
+msgstr "파일에 저장할 수 없습니다: %s"
+
+#. TRANSLATORS: we could not create the pack file, generic error
+#. TRANSLATORS: Could not create package array
+#. TRANSLATORS: we could not read the file array for the destination computer
+#: ../src/gpk-service-pack.c:406 ../src/gpk-service-pack.c:531
+#: ../src/gpk-service-pack.c:553 ../src/gpk-service-pack.c:562
+#: ../src/gpk-service-pack.c:602
+msgid "Create error"
+msgstr "만들기 오류"
+
+#: ../src/gpk-service-pack.c:406
+msgid "Cannot create service pack"
+msgstr "서비스 팩을 만들 수 없습니다"
+
+#: ../src/gpk-service-pack.c:531
+msgid "Cannot copy system package array"
+msgstr "시스템 패키지 모음을 복사할 수 없습니다"
+
+#: ../src/gpk-service-pack.c:553
+msgid "No package name selected"
+msgstr "패키지 이름을 선택하지 않았습니다"
+
+#. TRANSLATORS: progressbar text
+#: ../src/gpk-service-pack.c:575
+msgid "Refreshing system package array"
+msgstr "시스템 패키지 모음을 새로 고치는 중"
+
+#. TRANSLATORS: we could not reset internal state
+#: ../src/gpk-service-pack.c:582
+msgid "Refresh error"
+msgstr "오류 새로 고침"
+
+#: ../src/gpk-service-pack.c:582
+msgid "Could not refresh package array"
+msgstr "패키지 모음을 새로 고칠 수 없습니다"
+
+#: ../src/gpk-service-pack.c:602
+msgid "Cannot read destination package array"
+msgstr "대상 패키지 모음을 읽을 수 없습니다"
+
+#. TRANSLATORS: the constants should not be translated
+#: ../src/gpk-service-pack.c:714
+msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
+msgstr "옵션을 설정합니다. 가능한 값은 'array', 'updates', 'package'"
+
+#. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
+#: ../src/gpk-service-pack.c:717
+msgid "Add the package name to the text entry box"
+msgstr "패키지 이름을 텍스트 입력란에 추가합니다"
+
+#. TRANSLATORS: this is the destination computer package array
+#: ../src/gpk-service-pack.c:720
+msgid "Set the remote package array filename"
+msgstr "원격 패키지 모음 파일 이름을 지정합니다"
+
+#. TRANSLATORS: this is the file output directory
+#: ../src/gpk-service-pack.c:723
+msgid "Set the default output directory"
+msgstr "기본 출력 디렉터리를 지정합니다"
+
+#. TRANSLATORS: file search type, lists of packages
+#: ../src/gpk-service-pack.c:797
+msgid "Package array files"
+msgstr "패키지 모음 파일"
+
+#. TRANSLATORS: file search type, service pack destination file type
+#: ../src/gpk-service-pack.c:804
+msgid "Service pack files"
+msgstr "서비스 팩 파일"
+
+# 커맨드라인 옵션 설명
+#: ../src/gpk-update-icon.c:64
+msgid "Exit after a small delay"
+msgstr "약간 지연 시간 뒤에 끝냅니다"
+
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../src/gpk-update-icon.c:84 ../src/gpk-update-icon.c:86
+msgid "Update Applet"
+msgstr "업데이트 애플릿"
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-update-icon.c:99
+msgid "Update applet"
+msgstr "업데이트 애플릿"
+
+#. TRANSLATORS: we don't have a lot to go on here
+#: ../src/gpk-update-viewer.c:213
+msgid "Failed to process request."
+msgstr "요청을 처리하는데 실패했습니다."
+
+#. TRANSLATORS: the message text for the restart
+#: ../src/gpk-update-viewer.c:242
+msgid ""
+"Some of the updates that were installed require the computer to be restarted "
+"before the changes will be applied."
+msgstr ""
+"설치한 업데이트 일부는 바뀐 사항을 적용하려면 컴퓨터를 다시 시작해야 합니다."
+
+#. TRANSLATORS: the button text for the restart
+#: ../src/gpk-update-viewer.c:244 ../src/gpk-update-viewer.c:250
+msgid "Restart Computer"
+msgstr "컴퓨터 다시 시작"
+
+#. TRANSLATORS: the message text for the restart
+#: ../src/gpk-update-viewer.c:248
+msgid ""
+"Some of the updates that were installed require the computer to be restarted "
+"to remain secure."
+msgstr ""
+"설치한 업데이트 중 일부는 보안 문제에서 안전하려면 컴퓨터를 다시 시작해야 합"
+"니다."
+
+#. TRANSLATORS: the message text for the logout
+#: ../src/gpk-update-viewer.c:254
+msgid ""
+"Some of the updates that were installed require you to log out and back in "
+"before the changes will be applied."
+msgstr ""
+"설치한 업데이트 중 일부는 바뀐 사항을 적용하려면 로그아웃하고 다시 로그인해"
+"야 합니다."
+
+#. TRANSLATORS: the button text for the logout
+#: ../src/gpk-update-viewer.c:256 ../src/gpk-update-viewer.c:262
+msgid "Log Out"
+msgstr "로그아웃"
+
+#. TRANSLATORS: the message text for the logout
+#: ../src/gpk-update-viewer.c:260
+msgid ""
+"Some of the updates that were installed require you to log out and back in "
+"to remain secure."
+msgstr ""
+"설치한 업데이트 중 일부는 보안 문제에서 안전하려면 로그아웃하고 다시 로그인해"
+"야 합니다."
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#: ../src/gpk-update-viewer.c:313
+msgid "Could not restart"
+msgstr "다시 시작할 수 없습니다"
+
+#. TRANSLATORS: we failed to install all the updates we requested
+#: ../src/gpk-update-viewer.c:381
+msgid "Some updates were not installed"
+msgstr "설치하지 못한 업데이트가 있습니다"
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#: ../src/gpk-update-viewer.c:452 ../src/gpk-update-viewer.c:464
+msgid "Could not update packages"
+msgstr "패키지를 업데이트할 수 없습니다"
+
+#. TRANSLATORS: this is the application name for libcanberra
+#: ../src/gpk-update-viewer.c:488 ../src/gpk-update-viewer.c:516
+msgid "GNOME PackageKit Update Viewer"
+msgstr "그놈 패키지키트 업데이트 보기"
+
+#. TRANSLATORS: this is the sound description
+#: ../src/gpk-update-viewer.c:490
+msgid "Failed to update"
+msgstr "업데이트에 실패했습니다"
+
+#. TRANSLATORS: completed all updates
+#. TRANSLATORS: title: all updates installed okay
+#: ../src/gpk-update-viewer.c:546 ../src/gpk-update-viewer.c:567
+msgid "Updates installed"
+msgstr "업데이트를 설치했습니다"
+
+#. TRANSLATORS: title: all updates for the machine installed okay
+#: ../src/gpk-update-viewer.c:556
+msgid "All updates were installed successfully."
+msgstr "모든 업데이트를 성공적으로 설치했습니다."
+
+#. TRANSLATORS: title: all the selected updates installed okay
+#: ../src/gpk-update-viewer.c:559
+msgid "The selected updates were installed successfully."
+msgstr "선택한 업데이트를 성공적으로 설치했습니다."
+
+#. TRANSLATORS: querying update array
+#: ../src/gpk-update-viewer.c:1026
+msgid "Getting the list of updates"
+msgstr "업데이트 목록을 받는 중"
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#: ../src/gpk-update-viewer.c:1258
+msgid "Could not run upgrade script"
+msgstr "업그레이드 스크립트를 실행할 수 없습니다"
+
+#. show a warning message
+#. TRANSLATORS, are we going to cost the user lots of money?
+#: ../src/gpk-update-viewer.c:1309
+msgid ""
+"Connectivity is being provided by wireless broadband, and it may be "
+"expensive to update this package."
+msgid_plural ""
+"Connectivity is being provided by wireless broadband, and it may be "
+"expensive to update these packages."
+msgstr[0] ""
+"무선 네트워크를 통해 연결 중인 상태이므로, 이 패키지를 업데이트하면 이용 요금"
+"이 많이 부과될 수 있습니다."
+
+#. TRANSLATORS: this is the button text when we have updates
+#: ../src/gpk-update-viewer.c:1413
+msgid "_Install Update"
+msgid_plural "_Install Updates"
+msgstr[0] "업데이트 설치(_I)"
+
+#. TRANSLATORS: there are no updates
+#: ../src/gpk-update-viewer.c:1426
+msgid "There are no updates available"
+msgstr "사용 가능한 업데이트가 없습니다"
+
+#. TRANSLATORS: title: warn the user they are quitting with unapplied changes
+#: ../src/gpk-update-viewer.c:1435
+msgid "All software is up to date"
+msgstr "모든 소프트웨어가 업데이트되어 있습니다"
+
+#. TRANSLATORS: tell the user the problem
+#: ../src/gpk-update-viewer.c:1439
+msgid "There are no software updates available for your computer at this time."
+msgstr "현재 이 컴퓨터에 필요한 소프트웨어 업데이트가 없습니다."
+
+#: ../src/gpk-update-viewer.c:1481
+#, c-format
+msgid "There is %i update available"
+msgid_plural "There are %i updates available"
+msgstr[0] "업데이트가 %i개 있습니다"
+
+#. TRANSLATORS: how many updates are selected in the UI
+#: ../src/gpk-update-viewer.c:1497
+#, c-format
+msgid "%i update selected"
+msgid_plural "%i updates selected"
+msgstr[0] "업데이트 %i개 선택"
+
+#. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
+#: ../src/gpk-update-viewer.c:1505
+#, c-format
+msgid "%i update selected (%s)"
+msgid_plural "%i updates selected (%s)"
+msgstr[0] "업데이트 %i개 선택 (%s)"
+
+#. TRANSLATORS: a column that has name of the package that will be updated
+#: ../src/gpk-update-viewer.c:1699
+msgid "Software"
+msgstr "소프트웨어"
+
+#. TRANSLATORS: a column that has state of each package
+#: ../src/gpk-update-viewer.c:1709
+msgid "Status"
+msgstr "상태"
+
+#. TRANSLATORS: this is the update type, e.g. security
+#: ../src/gpk-update-viewer.c:1919
+msgid "This update will fix bugs and other non-critical problems."
+msgstr "이 업데이트는 버그 및 기타 중요하지 않은 문제점을 수정합니다."
+
+#. TRANSLATORS: this is the update type, e.g. security
+#: ../src/gpk-update-viewer.c:1923
+msgid "This update is important as it may solve critical problems."
+msgstr "이 중요 업데이트는 치명적인 문제점을 수정합니다."
+
+#. TRANSLATORS: this is the update type, e.g. security
+#: ../src/gpk-update-viewer.c:1927
+msgid ""
+"This update is needed to fix a security vulnerability with this package."
+msgstr "이 패키지의 보안 취약점을 수정하려면 이 업데이트가 필요합니다."
+
+#. TRANSLATORS: this is the update type, e.g. security
+#: ../src/gpk-update-viewer.c:1931
+msgid "This update is blocked."
+msgstr "이 업데이트는 설치 불가 상태입니다."
+
+#. TRANSLATORS: this is when the notification was issued and then updated
+#: ../src/gpk-update-viewer.c:1943
+#, c-format
+msgid "This notification was issued on %s and last updated on %s."
+msgstr "이 알림 메시지가 %s에서 발생했고 %s에서 업데이트했습니다."
+
+#. TRANSLATORS: this is when the update was issued
+#: ../src/gpk-update-viewer.c:1950
+#, c-format
+msgid "This notification was issued on %s."
+msgstr "이 알림 메시지가 %s에서 발생했습니다."
+
+#. TRANSLATORS: this is a array of vendor URLs
+#: ../src/gpk-update-viewer.c:1972
+msgid "For more information about this update please visit this website:"
+msgid_plural ""
+"For more information about this update please visit these websites:"
+msgstr[0] "이 업데이트에 관한 정보를 더 보려면 다음 웹 사이트를 보십시오:"
+
+#. TRANSLATORS: this is a array of bugzilla URLs
+#: ../src/gpk-update-viewer.c:1980
+msgid ""
+"For more information about bugs fixed by this update please visit this "
+"website:"
+msgid_plural ""
+"For more information about bugs fixed by this update please visit these "
+"websites:"
+msgstr[0] ""
+"이 업데이트에서 수정한 버그에 관한 정보를 더 보려면 다음 웹 사이트를 보십시"
+"오:"
+
+#. TRANSLATORS: this is a array of CVE (security) URLs
+#: ../src/gpk-update-viewer.c:1988
+msgid ""
+"For more information about this security update please visit this website:"
+msgid_plural ""
+"For more information about this security update please visit these websites:"
+msgstr[0] "이 보안 업데이트에 관한 정보를 더 보려면 다음 웹 사이트를 보십시오:"
+
+#. TRANSLATORS: reboot required
+#: ../src/gpk-update-viewer.c:1997
+msgid ""
+"The computer will have to be restarted after the update for the changes to "
+"take effect."
+msgstr ""
+"업데이트한 후에 컴퓨터를 다시 시작해야 해야 바뀐 사항이 효과가 있습니다."
+
+#. TRANSLATORS: log out required
+#: ../src/gpk-update-viewer.c:2001
+msgid ""
+"You will need to log out and back in after the update for the changes to "
+"take effect."
+msgstr ""
+"업데이트한 후에 로그아웃하고 다시 로그인해야 바뀐 사항이 효과가 있습니다."
+
+#. TRANSLATORS: this is the stability status of the update
+#: ../src/gpk-update-viewer.c:2008
+msgid ""
+"The classifaction of this update is unstable which means it is not designed "
+"for production use."
+msgstr ""
+"이 업데이트는 불안정 버전으로 분류되어 있습니다. 즉 제품 목적으로 사용하기에 "
+"부적합합니다."
+
+#. TRANSLATORS: this is the stability status of the update
+#: ../src/gpk-update-viewer.c:2012
+msgid ""
+"This is a test update, and is not designed for normal use. Please report any "
+"problems or regressions you encounter."
+msgstr ""
+"이 업데이트는 시험 버전입니다. 즉 일반 사용에 부적합합니다. 문제점을 발견하"
+"면 알려 주십시오."
+
+#. TRANSLATORS: this is a ChangeLog
+#: ../src/gpk-update-viewer.c:2021
+msgid ""
+"The developer logs will be shown as no description is available for this "
+"update:"
+msgstr "이 업데이트에 대한 설명이 없으므로 개발자 기록을 표시합니다:"
+
+#. set loading text
+#: ../src/gpk-update-viewer.c:2057
+msgid "Loading..."
+msgstr "읽어들이는 중..."
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2098 ../src/gpk-update-viewer.c:2197
+#: ../src/gpk-update-viewer.c:2217
+msgid "Could not get update details"
+msgstr "업데이트 상세 정보를 받을 수 없습니다"
+
+#. TRANSLATORS: PackageKit did not send any results for the query...
+#: ../src/gpk-update-viewer.c:2118
+msgid "Could not get package details"
+msgstr "패키지 상세 정보를 받을 수 없습니다"
+
+#: ../src/gpk-update-viewer.c:2118 ../src/gpk-update-viewer.c:2217
+msgid "No results were returned."
+msgstr "결과가 없습니다."
+
+#. TRANSLATORS: right click menu, select all the updates
+#: ../src/gpk-update-viewer.c:2452
+msgid "Select all"
+msgstr "모두 선택"
+
+#. TRANSLATORS: right click menu, unselect all the updates
+#: ../src/gpk-update-viewer.c:2460
+msgid "Unselect all"
+msgstr "모두 해제"
+
+#. TRANSLATORS: right click menu, select only security updates
+#: ../src/gpk-update-viewer.c:2467
+msgid "Select security updates"
+msgstr "보안 업데이트 선택"
+
+#. TRANSLATORS: right click option, ignore this update name, not currently used
+#: ../src/gpk-update-viewer.c:2473
+msgid "Ignore this update"
+msgstr "이 업데이트 무시"
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#: ../src/gpk-update-viewer.c:2585
+msgid "Could not get updates"
+msgstr "업데이트를 받을 수 없습니다"
+
+#. TRANSLATORS: this is the header
+#: ../src/gpk-update-viewer.c:2723
+msgid "Checking for updates..."
+msgstr "업데이트를 확인하는 중입니다..."
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#: ../src/gpk-update-viewer.c:3010
+msgid "Could not get list of distribution upgrades"
+msgstr "배포판 업그레이드 목록을 받을 수 없습니다"
+
+#. TRANSLATORS: new distro available, e.g. F9 to F10
+#: ../src/gpk-update-viewer.c:3041
+#, c-format
+msgid "New distribution upgrade release '%s' is available"
+msgstr "배포판 업그레이드 '%s' 릴리스가 새로 나왔습니다"
+
+#. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
+#: ../src/gpk-update-viewer.c:3281
+msgid ""
+"Other updates are held back as some important system packages need to be "
+"installed first."
+msgstr "중요 시스템 패키지를 먼저 설치해야 하므로 기타 업데이트를 보류합니다."
+
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#: ../src/gpk-update-viewer-main.c:103
+msgid "Software Update Viewer"
+msgstr "소프트웨어 업데이트 보기"
+
+#: ../src/gpk-dbus-service.c:136
+msgid "Do not exit after the request has been processed"
+msgstr "요청을 처리한 뒤에 프로그램을 끝내지 않습니다"
+
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:155
+msgid "Session DBus service for PackageKit"
+msgstr "패키지키트 세션 D-버스 서비스"
+
+#. TRANSLATORS: a list of packages is shown that need to restarted
+#: ../src/gpk-watch.c:132
+#, c-format
+msgid "This is due to the %s package being updated."
+msgid_plural "This is due to the following packages being updated: %s."
+msgstr[0] "다음 패키지를 업데이트하기 때문입니다: %s."
+
+#. TRANSLATORS: over 5 packages require the system to be restarted, don't list them all here
+#: ../src/gpk-watch.c:136
+#, c-format
+msgid "This is because %i package has been updated."
+msgid_plural "This is because %i packages have been updated."
+msgstr[0] "%i개 패키지를 업데이트하기 때문입니다."
+
+#: ../src/gpk-watch.c:351
+msgid "Package manager error details"
+msgstr "패키지 관리 프로그램 오류 상세 정보"
+
+#. TRANSLATORS: We couldn't launch the tool, normally a packaging problem
+#: ../src/gpk-watch.c:381
+msgid "Internal error"
+msgstr "내부 오류"
+
+#. TRANSLATORS: log out of the session
+#: ../src/gpk-watch.c:767
+msgid "_Log out"
+msgstr "로그아웃(_L)"
+
+#. TRANSLATORS: this menu item restarts the computer after an update
+#: ../src/gpk-watch.c:782
+msgid "_Restart computer"
+msgstr "컴퓨터 다시 시작(_R)"
+
+#. TRANSLATORS: This hides the 'restart required' icon
+#: ../src/gpk-watch.c:794
+msgid "_Hide this icon"
+msgstr "이 아이콘 숨기기(_H)"
+
+#. TRANSLATORS: Prefix to the title shown in the libnotify popup
+#: ../src/gpk-watch.c:1213
+msgid "Package Manager"
+msgstr "패키지 관리 프로그램"
+
+#. TRANSLATORS: This is the message in the libnotify body
+#: ../src/gpk-watch.c:1382
+msgid "Packages have been removed"
+msgstr "패키지를 제거했습니다"
+
+#. TRANSLATORS: This is the message in the libnotify body
+#: ../src/gpk-watch.c:1385
+msgid "Packages have been installed"
+msgstr "패키지를 설치했습니다"
+
+#. TRANSLATORS: This is the message in the libnotify body
+#: ../src/gpk-watch.c:1388
+msgid "System has been updated"
+msgstr "시스템을 업데이트했습니다"
+
+#. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
+#: ../src/gpk-watch.c:1395
+msgid "Task completed"
+msgstr "작업을 마쳤습니다"
+
+#. TRANSLATORS: turn on all debugging
+#: ../src/egg-debug.c:364
+msgid "Show debugging information for all files"
+msgstr "모든 파일에 대해 디버깅 정보를 표시합니다"
+
+#. TRANSLATORS: a list of modules to debug
+#: ../src/egg-debug.c:440
+msgid "Debug these specific modules"
+msgstr "지정한 모듈을 디버깅합니다"
+
+#. TRANSLATORS: a list of functions to debug
+#: ../src/egg-debug.c:443
+msgid "Debug these specific functions"
+msgstr "지정한 함수를 디버깅합니다"
+
+#. TRANSLATORS: save to a log
+#: ../src/egg-debug.c:446
+msgid "Log debugging data to a file"
+msgstr "디버깅 데이터를 파일에 기록"
+
+#: ../src/egg-debug.c:450
+msgid "Debugging Options"
+msgstr "디버깅 옵션"
+
+#: ../src/egg-debug.c:450
+msgid "Show debugging options"
+msgstr "디버깅 옵션 표시"
