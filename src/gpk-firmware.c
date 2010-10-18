@@ -36,9 +36,7 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
-#endif
 #include <packagekit-glib2/packagekit.h>
 #ifdef HAVE_GUDEV
 #include <gudev/gudev.h>
@@ -90,7 +88,6 @@ typedef struct {
 
 G_DEFINE_TYPE (GpkFirmware, gpk_firmware, G_TYPE_OBJECT)
 
-#ifdef HAVE_NOTIFY
 static void gpk_firmware_install_file (GpkFirmware *firmware);
 static void gpk_firmware_ignore_devices (GpkFirmware *firmware);
 
@@ -104,7 +101,6 @@ gpk_firmware_subsystem_can_replug (GpkFirmwareSubsystem subsystem)
 		return TRUE;
 	return FALSE;
 }
-#endif
 
 /**
  * gpk_firmware_request_new:
@@ -177,7 +173,6 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 }
 
 
-#ifdef HAVE_NOTIFY
 /**
  * gpk_firmware_rebind:
  **/
@@ -272,7 +267,7 @@ gpk_firmware_require_restart (GpkFirmware *firmware)
 	message = _("You will need to restart this computer before the hardware will work correctly.");
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional software was installed"), message, NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 
@@ -307,7 +302,7 @@ gpk_firmware_require_replug (GpkFirmware *firmware)
 	message = _("You will need to remove and then reinsert the hardware before it will work correctly.");
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional software was installed"), message, NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 
@@ -334,7 +329,7 @@ gpk_firmware_require_nothing (GpkFirmware *firmware)
 	message = _("Your hardware has been set up and is now ready to use.");
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional software was installed"), message, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional software was installed"), message, NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 
@@ -476,7 +471,6 @@ gpk_firmware_ignore_devices (GpkFirmware *firmware)
 	if (string != NULL)
 		g_string_free (string, TRUE);
 }
-#endif
 
 /**
  * gpk_firmware_check_available:
@@ -617,7 +611,7 @@ gpk_firmware_timeout_cb (gpointer data)
 	}
 
 	/* TRANSLATORS: title of libnotify bubble */
-	notification = notify_notification_new (_("Additional firmware required"), string->str, "help-browser", NULL);
+	notification = notify_notification_new (_("Additional firmware required"), string->str, NULL);
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "install-firmware",

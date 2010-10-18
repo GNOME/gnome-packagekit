@@ -35,9 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
-#endif
 #include <packagekit-glib2/packagekit.h>
 #include <canberra-gtk.h>
 #include <gio/gio.h>
@@ -56,9 +54,7 @@
 
 static void     gpk_check_update_finalize	(GObject	     *object);
 
-#ifdef HAVE_NOTIFY
 static void	gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, gpointer data);
-#endif
 
 #define GPK_CHECK_UPDATE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_CHECK_UPDATE, GpkCheckUpdatePrivate))
 
@@ -398,18 +394,14 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	}
 
 	/* TRANSLATORS: title: system update completed all okay */
-	notification = notify_notification_new_with_status_icon (_("The system update has completed"),
-								 message_text->str, "help-browser",
-								 cupdate->priv->status_icon);
+	notification = notify_notification_new (_("The system update has completed"),
+						 message_text->str, NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
 		notify_notification_add_action (notification, "restart",
 						/* TRANSLATORS: restart computer as system packages need update */
 						_("Restart computer now"), gpk_check_update_libnotify_cb, cupdate, NULL);
-//		notify_notification_add_action (notification, "do-not-show-complete-restart",
-//						/* TRANSLATORS: don't show this option again (for restart) */
-//						_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	} else {
 		notify_notification_add_action (notification, "do-not-show-complete",
 						/* TRANSLATORS: don't show this option again (when finished)  */
@@ -466,7 +458,7 @@ gpk_check_update_show_error (GpkCheckUpdate *cupdate, PkError *error_code)
 
 	/* do the bubble */
 	egg_debug ("title=%s, message=%s", title, message);
-	notification = notify_notification_new_with_status_icon (title, message, "help-browser", cupdate->priv->status_icon);
+	notification = notify_notification_new (title, message, NULL);
 	if (notification == NULL) {
 		egg_warning ("failed to get bubble");
 		goto out;
@@ -562,7 +554,6 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 	}
 }
 
-#ifdef HAVE_NOTIFY
 /**
  * gpk_check_update_libnotify_cb:
  **/
@@ -623,7 +614,6 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	}
 	return;
 }
-#endif
 
 /**
  * gpk_check_update_critical_updates_warning:
@@ -671,7 +661,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 
 	/* do the bubble */
 	egg_debug ("title=%s, message=%s", title, message);
-	notification = notify_notification_new_with_status_icon (title, message, "help-browser", cupdate->priv->status_icon);
+	notification = notify_notification_new (title, message, NULL);
 	if (notification == NULL) {
 		egg_warning ("failed to get bubble");
 		return;
@@ -763,9 +753,8 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 	/* TRANSLATORS: policy says update, but we are on battery and so prompt */
 	message = _("Automatic updates are not being installed as the computer is running on battery power");
 	/* TRANSLATORS: informs user will not install by default */
-	notification = notify_notification_new_with_status_icon (_("Updates not installed"),
-								 message, "help-browser",
-								 cupdate->priv->status_icon);
+	notification = notify_notification_new (_("Updates not installed"),
+						message, NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 //	notify_notification_add_action (notification, "do-not-show-update-not-battery",
@@ -799,10 +788,10 @@ gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
 		goto out;
 
 	/* TRANSLATORS: title: notification when we scheduled an automatic update */
-	notification = notify_notification_new_with_status_icon (_("Updates are being installed"),
+	notification = notify_notification_new (_("Updates are being installed"),
 						/* TRANSLATORS: tell the user why the hard disk is grinding... */
 						_("Updates are being automatically installed on your computer"),
-						"software-update-urgent", cupdate->priv->status_icon);
+						"software-update-urgent");
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	/* TRANSLATORS: button: cancel the update system */
@@ -1293,7 +1282,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 
 	/* TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9 */
 	title = _("Distribution upgrades available");
-	notification = notify_notification_new_with_status_icon (title, string->str, "help-browser", cupdate->priv->status_icon);
+	notification = notify_notification_new (title, string->str, NULL);
 	if (notification == NULL) {
 		egg_warning ("failed to make bubble");
 		goto out;

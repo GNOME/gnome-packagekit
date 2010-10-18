@@ -30,9 +30,7 @@
 
 #include <fontconfig/fontconfig.h>
 #include <gtk/gtk.h>
-#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
-#endif
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
@@ -261,7 +259,6 @@ out:
 	return;
 }
 
-#ifdef HAVE_NOTIFY
 /**
  * gpk_dbus_task_libnotify_cb:
  **/
@@ -284,7 +281,6 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 		egg_warning ("unknown action id: %s", action);
 	}
 }
-#endif
 
 /**
  * gpk_dbus_task_error_msg:
@@ -380,7 +376,7 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 	dtask->priv->cached_error_code = g_object_ref (error_code);
 
 	/* do the bubble */
-	notification = notify_notification_new (title, message, "help-browser", NULL);
+	notification = notify_notification_new (title, message, NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
@@ -1135,8 +1131,8 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			/* TRANSLATORS: title: package is already installed */
 			gpk_modal_dialog_set_title (dtask->priv->dialog,
 						    ngettext ("The package is already installed",
-							      "The packages are already installed"),
-							      g_strv_length (dtask->priv->package_ids));
+							      "The packages are already installed",
+							      g_strv_length (dtask->priv->package_ids)));
 			/* TRANSLATORS: message: package is already installed */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Nothing to do."));
 			gpk_modal_dialog_present (dtask->priv->dialog);

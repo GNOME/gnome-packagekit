@@ -35,9 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#ifdef HAVE_NOTIFY
 #include <libnotify/notify.h>
-#endif
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-debug.h"
@@ -92,7 +90,6 @@ gpk_watch_class_init (GpkWatchClass *klass)
 	g_type_class_add_private (klass, sizeof (GpkWatchPrivate));
 }
 
-#ifdef HAVE_NOTIFY
 /**
  * gpk_watch_libnotify_cb:
  **/
@@ -130,7 +127,6 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 		egg_warning ("unknown action id: %s", action);
 	}
 }
-#endif
 
 /**
  * gpk_watch_lookup_progress_from_transaction_id:
@@ -535,10 +531,9 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	}
 
 	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (gpk_message_enum_to_localised_text (type),
-								 details,
-								 "emblem-important",
-								 watch->priv->status_icon);
+	notification = notify_notification_new (gpk_message_enum_to_localised_text (type),
+						details,
+						"emblem-important");
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
@@ -598,8 +593,7 @@ gpk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 	title_prefix = g_strdup_printf ("%s: %s", _("Package Manager"), title);
 
 	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (title_prefix, message, "help-browser",
-								 watch->priv->status_icon);
+	notification = notify_notification_new (title_prefix, message, NULL);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
@@ -688,8 +682,7 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 	}
 
 	/* do the bubble */
-	notification = notify_notification_new_with_status_icon (title, message,
-								 icon, watch->priv->status_icon);
+	notification = notify_notification_new (title, message, icon);
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	if (restart == PK_RESTART_ENUM_APPLICATION ||
@@ -821,9 +814,8 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 		goto out;
 
 	/* TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble */
-	notification = notify_notification_new_with_status_icon (_("Task completed"),
-								 message, "help-browser",
-								 watch->priv->status_icon);
+	notification = notify_notification_new (_("Task completed"),
+						message, NULL);
 	notify_notification_set_timeout (notification, 5000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "do-not-show-notify-complete",

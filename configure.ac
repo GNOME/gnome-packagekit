@@ -128,12 +128,8 @@ PKG_CHECK_MODULES(CONTROL_CENTER, [
 PANELS_DIR="${libdir}/control-center-1/panels"
 AC_SUBST(PANELS_DIR)
 
-dnl **** Check for NOTIFY ****
-PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.5.0, has_libnotify=yes, has_libnotify=no)
-AM_CONDITIONAL(HAVE_NOTIFY, test x$libnotify = xyes)
-if test x$has_libnotify = xyes; then
-	AC_DEFINE(HAVE_NOTIFY,1,[Use session notifications])
-fi
+dnl **** Check for libnotify ****
+PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.7.0)
 
 dnl ---------------------------------------------------------------------------
 dnl - GUdev integration (default enabled)
@@ -248,6 +244,5 @@ echo "
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
         cppflags:                  ${CPPFLAGS}
-        libnotify support:         ${has_libnotify}
 "
 
