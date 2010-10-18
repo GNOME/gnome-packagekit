@@ -59,7 +59,6 @@ static void     gpk_watch_finalize	(GObject       *object);
 struct GpkWatchPrivate
 {
 	PkControl		*control;
-	GtkStatusIcon		*status_icon;
 	GPtrArray		*restart_package_names;
 	NotifyNotification	*notification_message;
 	NotifyNotification	*notification_restart;
@@ -610,16 +609,6 @@ out:
 }
 
 /**
- * gpk_watch_set_status_icon:
- **/
-void
-gpk_watch_set_status_icon (GpkWatch *watch, GtkStatusIcon *status_icon)
-{
-	g_assert (watch->priv->status_icon == NULL);
-	watch->priv->status_icon = g_object_ref (status_icon);
-}
-
-/**
  * gpk_watch_process_require_restart_cb:
  **/
 static void
@@ -996,8 +985,6 @@ gpk_watch_finalize (GObject *object)
 	/* we might we waiting for a proxy update */
 	if (watch->priv->set_proxy_id != 0)
 		g_source_remove (watch->priv->set_proxy_id);
-	if (watch->priv->status_icon != NULL)
-		g_object_unref (watch->priv->status_icon);
 	g_free (watch->priv->error_details);
 	g_object_unref (watch->priv->cancellable);
 	g_object_unref (watch->priv->task);

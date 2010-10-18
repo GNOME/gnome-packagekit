@@ -1462,26 +1462,6 @@ out:
 }
 
 /**
- * gpk_check_update_set_status_icon:
- **/
-void
-gpk_check_update_set_status_icon (GpkCheckUpdate *cupdate, GtkStatusIcon *status_icon)
-{
-	g_assert (cupdate->priv->status_icon == NULL);
-	cupdate->priv->status_icon = g_object_ref (status_icon);
-
-	/* right click actions are common */
-	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
-				 "popup_menu",
-				 G_CALLBACK (gpk_check_update_popup_menu_cb),
-				 cupdate, 0);
-	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
-				 "activate",
-				 G_CALLBACK (gpk_check_update_activate_update_cb),
-				 cupdate, 0);
-}
-
-/**
  * gpk_check_update_init:
  * @cupdate: This class instance
  **/
@@ -1501,6 +1481,17 @@ gpk_check_update_init (GpkCheckUpdate *cupdate)
 	cupdate->priv->cancellable = g_cancellable_new ();
 	cupdate->priv->error_code = NULL;
 	cupdate->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+
+	/* right click actions are common */
+	cupdate->priv->status_icon = gtk_status_icon_new ();
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
+				 "popup_menu",
+				 G_CALLBACK (gpk_check_update_popup_menu_cb),
+				 cupdate, 0);
+	g_signal_connect_object (G_OBJECT (cupdate->priv->status_icon),
+				 "activate",
+				 G_CALLBACK (gpk_check_update_activate_update_cb),
+				 cupdate, 0);
 
 	cupdate->priv->arefresh = gpk_auto_refresh_new ();
 	g_signal_connect (cupdate->priv->arefresh, "refresh-cache",
