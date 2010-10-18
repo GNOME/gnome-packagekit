@@ -1131,11 +1131,14 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	/* already installed? */
 	if (already_installed) {
 		if (dtask->priv->show_warning) {
+			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_FINISHED, 0);
 			/* TRANSLATORS: title: package is already installed */
-			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to install packages"));
+			gpk_modal_dialog_set_title (dtask->priv->dialog,
+						    ngettext ("The package is already installed",
+							      "The packages are already installed"),
+							      g_strv_length (dtask->priv->package_ids));
 			/* TRANSLATORS: message: package is already installed */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The package is already installed"));
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Nothing to do."));
 			gpk_modal_dialog_present (dtask->priv->dialog);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
