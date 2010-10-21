@@ -53,18 +53,14 @@ BuildRequires: libgudev1-devel
 BuildRequires: upower-devel >= 0.9.0
 BuildRequires: control-center-devel >= 2.31.4
 
+# obsolete sub-package
+Obsoletes: gnome-packagekit-extra <= 2.91.1
+Provides: gnome-packagekit-extra
+
 %description
 gnome-packagekit provides session applications for the PackageKit API.
 There are several utilities designed for installing, updating and
 removing packages on your system.
-
-%package extra
-Summary: Session applications to manage packages (extra bits)
-Group: Applications/System
-Requires: %{name} = %{version}-%{release}
-
-%description extra
-Extra GNOME applications for using PackageKit that are not normally needed.
 
 %prep
 %setup -q
@@ -118,22 +114,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING NEWS README
-%{_bindir}/gpk-application
-%{_bindir}/gpk-install-*
-%{_bindir}/gpk-log
-%{_bindir}/gpk-update-icon
-%{_bindir}/gpk-update-viewer
-%{_bindir}/gpk-dbus-service
+%{_bindir}/gpk-*
 %{_libdir}/control-center-1/panels/*.so
 %dir %{_datadir}/gnome-packagekit
-%{_datadir}/gnome-packagekit/gpk-application.ui
-%{_datadir}/gnome-packagekit/gpk-client.ui
-%{_datadir}/gnome-packagekit/gpk-eula.ui
-%{_datadir}/gnome-packagekit/gpk-prefs.ui
-%{_datadir}/gnome-packagekit/gpk-update-viewer.ui
-%{_datadir}/gnome-packagekit/gpk-error.ui
-%{_datadir}/gnome-packagekit/gpk-log.ui
-%{_datadir}/gnome-packagekit/gpk-signature.ui
+%{_datadir}/gnome-packagekit/gpk-*.ui
 %dir %{_datadir}/gnome-packagekit/icons
 %dir %{_datadir}/gnome-packagekit/icons/hicolor
 %dir %{_datadir}/gnome-packagekit/icons/hicolor/*
@@ -147,24 +131,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{python_sitelib}/packagekit/*py*
 %{_datadir}/omf/gnome-packagekit
 %{_sysconfdir}/xdg/autostart/gpk-update-icon.desktop
-%{_datadir}/applications/gpk-application.desktop
-%{_datadir}/applications/gpk-install-file.desktop
-%{_datadir}/applications/gpk-prefs.desktop
-%{_datadir}/applications/gpk-install-catalog.desktop
-%{_datadir}/applications/gpk-log.desktop
-%{_datadir}/applications/gpk-update-viewer.desktop
+%{_datadir}/applications/gpk-*.desktop
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
-
-%files extra
-%defattr(-,root,root,-)
-%doc AUTHORS COPYING NEWS README
-%{_bindir}/gpk-backend-status
-%{_bindir}/gpk-service-pack
 %{_datadir}/gnome-packagekit/gpk-service-pack.ui
-%{_datadir}/gnome-packagekit/gpk-backend-status.ui
-%{_datadir}/applications/gpk-service-pack.desktop
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#

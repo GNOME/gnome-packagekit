@@ -33,7 +33,6 @@ pkgdata_DATA =						\
 	gpk-signature.ui				\
 	gpk-error.ui					\
 	gpk-log.ui					\
-	gpk-backend-status.ui				\
 	gpk-client.ui					\
 	$(NULL)
 

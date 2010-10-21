@@ -43,7 +43,6 @@ bin_PROGRAMS =						\
 	gpk-update-icon					\
 	gpk-update-viewer				\
 	gpk-log						\
-	gpk-backend-status				\
 	gpk-dbus-service				\
 	$(NULL)
 
@@ -254,17 +253,6 @@ gpk_log_SOURCES =					\
 	$(NULL)
 
 gpk_log_LDADD =						\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_backend_status_SOURCES =				\
-	egg-debug.c					\
-	egg-debug.h					\
-	gpk-backend-status.c				\
-	$(NULL)
-
-gpk_backend_status_LDADD =				\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
