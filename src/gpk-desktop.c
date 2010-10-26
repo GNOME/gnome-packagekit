@@ -31,7 +31,6 @@
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE
 #include <gnome-menus/gmenu-tree.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-desktop.h"
@@ -86,17 +85,17 @@ gpk_desktop_get_menu_path_submenu (const gchar *filename, const gchar *menu_file
 
 	tree = gmenu_tree_lookup (menu_file, GMENU_TREE_FLAGS_INCLUDE_EXCLUDED);
 	if (tree == NULL) {
-		egg_warning ("no tree for %s", menu_file);
+		g_warning ("no tree for %s", menu_file);
 		goto out;
 	}
 	directory = gmenu_tree_get_root_directory (tree);
 	if (directory == NULL) {
-		egg_warning ("no directory for %s", menu_file);
+		g_warning ("no directory for %s", menu_file);
 		goto out;
 	}
 	text = gpk_desktop_directory_get_menu_path (directory, filename);
 	if (text == NULL) {
-		egg_debug ("no path for %s", filename);
+		g_debug ("no path for %s", filename);
 		goto out;
 	}
 	path = g_strdup_printf ("%s \342\236\231 %s", label, text);
@@ -158,7 +157,7 @@ gpk_desktop_check_icon_valid (const gchar *icon)
 	/* default to 32x32 */
 	icon_info = gtk_icon_theme_lookup_icon (icon_theme, icon, 32, GTK_ICON_LOOKUP_USE_BUILTIN);
 	if (icon_info == NULL) {
-		egg_debug ("ignoring broken icon %s", icon);
+		g_debug ("ignoring broken icon %s", icon);
 		ret = FALSE;
 	} else {
 		/* we only used this to see if it was valid */
@@ -188,7 +187,7 @@ gpk_desktop_get_file_weight (const gchar *filename)
 	file = g_key_file_new ();
 	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_KEEP_TRANSLATIONS, NULL);
 	if (!ret) {
-		egg_debug ("failed to open %s", filename);
+		g_debug ("failed to open %s", filename);
 		weight = G_MININT;
 		goto out;
 	}
@@ -256,7 +255,7 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 	for (i=0; i<array->len; i++) {
 		filename = g_ptr_array_index (array, i);
 		weight = gpk_desktop_get_file_weight (filename);
-		egg_debug ("file %s has weight %i", filename, weight);
+		g_debug ("file %s has weight %i", filename, weight);
 		if (weight > max) {
 			max = weight;
 			max_index = i;
@@ -269,7 +268,7 @@ gpk_desktop_guess_best_file (PkDesktop *desktop, const gchar *package)
 
 	/* we've got a best */
 	best_file = g_strdup (g_ptr_array_index (array, max_index));
-	egg_debug ("using %s", best_file);
+	g_debug ("using %s", best_file);
 out:
 	if (array != NULL)
 		g_ptr_array_unref (array);
@@ -295,7 +294,7 @@ gpk_desktop_guess_icon_name (PkDesktop *desktop, const gchar *package)
 	file = g_key_file_new ();
 	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_NONE, NULL);
 	if (!ret) {
-		egg_warning ("failed to open %s", filename);
+		g_warning ("failed to open %s", filename);
 		goto out;
 	}
 	data = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
@@ -330,7 +329,7 @@ gpk_desktop_guess_localised_name (PkDesktop *desktop, const gchar *package)
 	file = g_key_file_new ();
 	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_KEEP_TRANSLATIONS, NULL);
 	if (!ret) {
-		egg_warning ("failed to open %s", filename);
+		g_warning ("failed to open %s", filename);
 		goto out;
 	}
 	data = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL);

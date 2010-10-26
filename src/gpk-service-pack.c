@@ -28,7 +28,6 @@
 #include <sys/utsname.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -194,7 +193,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 	packages = g_strsplit (package, ";", 0);
 	results = pk_client_resolve (client, pk_bitfield_value (PK_FILTER_ENUM_NEWEST), packages, NULL, NULL, NULL, &error);
 	if (results == NULL) {
-		egg_warning ("failed to resolve: %s", error->message);
+		g_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -202,7 +201,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -215,7 +214,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 
 	/* display warning if not exactly one match */
 	if (array->len > 1)
-		egg_warning ("More than one possible package for '%s' found!", package);
+		g_warning ("More than one possible package for '%s' found!", package);
 
 	/* convert to a text package id */
 	item = g_ptr_array_index (array, 0);
@@ -342,7 +341,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -411,7 +410,6 @@ gpk_pack_ready_cb (GObject *object, GAsyncResult *res, gpointer userdata)
 	gpk_pack_reset_ui ();
 }
 
-
 /**
  * gpk_pack_progress_cb:
  **/
@@ -432,7 +430,7 @@ gpk_pack_progress_cb (PkProgress *progress, PkProgressType type, gpointer userda
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_STATUS) {
-		egg_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_text (status));
 	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
 		gpk_pack_set_percentage (percentage);
 	} else if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
@@ -587,7 +585,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		/* check error code */
 		error_code = pk_results_get_error_code (results);
 		if (error_code != NULL) {
-			egg_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+			g_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 			goto out;
 		}
 
@@ -636,7 +634,7 @@ static void
 gpk_pack_radio_updates_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
-	egg_debug ("got updates");
+	g_debug ("got updates");
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	gtk_widget_set_sensitive (widget, FALSE);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
@@ -651,7 +649,7 @@ static void
 gpk_pack_radio_package_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
-	egg_debug ("got package");
+	g_debug ("got package");
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
@@ -666,7 +664,7 @@ static void
 gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 {
 	GtkWidget *widget;
-	egg_debug ("got copy");
+	g_debug ("got copy");
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	gtk_widget_set_sensitive (widget, FALSE);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
@@ -718,7 +716,7 @@ gpk_pack_startup_cb (GtkApplication *application, gpointer user_data)
 	control = pk_control_new ();
 	ret = pk_control_get_properties (control, NULL, &error);
 	if (!ret) {
-		egg_error ("Failed to contact PackageKit: %s", error->message);
+		g_error ("Failed to contact PackageKit: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -726,7 +724,7 @@ gpk_pack_startup_cb (GtkApplication *application, gpointer user_data)
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-service-pack.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}

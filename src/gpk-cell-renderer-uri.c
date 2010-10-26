@@ -24,7 +24,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "egg-debug.h"
 
 #include "gpk-cell-renderer-uri.h"
 
@@ -79,7 +78,7 @@ gpk_cell_renderer_uri_activate (GtkCellRenderer *cell, GdkEvent *event,
 
 	gpk_cell_renderer_uri_set_clicked (cru, TRUE);
 
-	egg_debug ("emit: %s", cru->uri);
+	g_debug ("emit: %s", cru->uri);
 	g_signal_emit (cell, signals [CLICKED], 0, cru->uri);
 	return TRUE;
 }
@@ -157,7 +156,7 @@ gpk_cell_renderer_uri_set_link_color (GdkColor *color, gboolean visited)
 			return;
 		}
 	}
-	egg_debug ("cannot get color for %i,%i,%i", color->red, color->blue, color->green);
+	g_debug ("cannot get color for %i,%i,%i", color->red, color->blue, color->green);
 }
 
 static void

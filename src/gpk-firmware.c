@@ -42,7 +42,6 @@
 #include <gudev/gudev.h>
 #endif
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-console-kit.h"
 
@@ -137,7 +136,7 @@ gpk_firmware_request_new (const gchar *filename, const gchar *sysfs_path)
 	} else if (g_strcmp0 (subsystem, "pci") == 0) {
 		req->subsystem = GPK_FIRMWARE_SUBSYSTEM_PCI;
 	} else {
-		egg_warning ("subsystem unrecognised: %s", subsystem);
+		g_warning ("subsystem unrecognised: %s", subsystem);
 	}
 
 	/* get model, so we can show something sensible */
@@ -171,7 +170,6 @@ gpk_firmware_request_free (GpkFirmwareRequest *req)
 	g_free (req->id);
 	g_free (req);
 }
-
 
 /**
  * gpk_firmware_rebind:
@@ -207,14 +205,14 @@ gpk_firmware_rebind (GpkFirmware *firmware)
 	command = g_strdup_printf ("pkexec %s %s", GPK_FIRMWARE_DEVICE_REBIND_PROGRAM, string->str);
 	ret = g_spawn_command_line_sync (command, &rebind_stdout, &rebind_stderr, &exit_status, &error);
 	if (!ret) {
-		egg_warning ("failed to spawn '%s': %s", command, error->message);
+		g_warning ("failed to spawn '%s': %s", command, error->message);
 		g_error_free (error);
 		goto out;
 	}
 
 	/* if we failed to rebind the device */
 	if (exit_status != 0) {
-		egg_warning ("failed to rebind: %s, %s", rebind_stdout, rebind_stderr);
+		g_warning ("failed to rebind: %s, %s", rebind_stdout, rebind_stderr);
 		ret = FALSE;
 		goto out;
 	}
@@ -243,11 +241,11 @@ gpk_firmware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 	} else if (g_strcmp0 (action, "restart-now") == 0) {
 		ret = egg_console_kit_restart (firmware->priv->consolekit, &error);
 		if (!ret) {
-			egg_warning ("failed to reset: %s", error->message);
+			g_warning ("failed to reset: %s", error->message);
 			g_error_free (error);
 		}
 	} else {
-		egg_warning ("unknown action id: %s", action);
+		g_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -282,7 +280,7 @@ gpk_firmware_require_restart (GpkFirmware *firmware)
 	/* show the bubble */
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -309,7 +307,7 @@ gpk_firmware_require_replug (GpkFirmware *firmware)
 	/* show the bubble */
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -336,7 +334,7 @@ gpk_firmware_require_nothing (GpkFirmware *firmware)
 	/* show the bubble */
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -360,7 +358,7 @@ gpk_firmware_install_packages_cb (GObject *object, GAsyncResult *res, GpkFirmwar
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to install file: %s", error->message);
+		g_warning ("failed to install file: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -368,7 +366,7 @@ gpk_firmware_install_packages_cb (GObject *object, GAsyncResult *res, GpkFirmwar
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* ignore some errors */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_PROCESS_KILL &&
@@ -494,7 +492,7 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	values = g_strsplit (filename, "&", -1);
 	results = pk_client_search_files (PK_CLIENT(firmware->priv->task), filter, values, NULL, NULL, NULL, &error);
 	if (results == NULL) {
-		egg_warning ("failed to search file %s: %s", filename, error->message);
+		g_warning ("failed to search file %s: %s", filename, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -502,16 +500,16 @@ gpk_firmware_check_available (GpkFirmware *firmware, const gchar *filename)
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to search file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to search file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
 	/* make sure we have one package */
 	array = pk_results_get_package_array (results);
 	if (array->len == 0)
-		egg_debug ("no package providing %s found", filename);
+		g_debug ("no package providing %s found", filename);
 	else if (array->len != 1)
-		egg_warning ("not one package providing %s found (%i)", filename, length);
+		g_warning ("not one package providing %s found (%i)", filename, length);
 	else
 		item = g_object_ref (g_ptr_array_index (array, 0));
 out:
@@ -580,7 +578,7 @@ gpk_firmware_timeout_cb (gpointer data)
 
 	/* nothing to do */
 	if (firmware->priv->packages_found->len == 0) {
-		egg_debug ("no packages providing any of the missing firmware");
+		g_debug ("no packages providing any of the missing firmware");
 		goto out;
 	}
 
@@ -622,7 +620,7 @@ gpk_firmware_timeout_cb (gpointer data)
 					_("Ignore devices"), gpk_firmware_libnotify_cb, firmware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -647,13 +645,13 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 	/* get from settings */
 	banned_str = g_settings_get_string (firmware->priv->settings, GPK_SETTINGS_BANNED_FIRMWARE);
 	if (banned_str == NULL) {
-		egg_warning ("could not read banned list");
+		g_warning ("could not read banned list");
 		goto out;
 	}
 
 	/* nothing in list, common case */
 	if (egg_strzero (banned_str)) {
-		egg_debug ("nothing in banned list");
+		g_debug ("nothing in banned list");
 		goto out;
 	}
 
@@ -666,7 +664,7 @@ gpk_firmware_remove_banned (GpkFirmware *firmware, GPtrArray *array)
 		for (j=0; banned[j] != NULL; j++) {
 			ret = g_pattern_match_simple (banned[j], req->filename);
 			if (ret) {
-				egg_debug ("match %s for %s, removing", banned[j], req->filename);
+				g_debug ("match %s for %s, removing", banned[j], req->filename);
 				gpk_firmware_request_free (req);
 				g_ptr_array_remove_index_fast (array, i);
 				break;
@@ -693,13 +691,13 @@ gpk_firmware_remove_ignored (GpkFirmware *firmware, GPtrArray *array)
 	/* get from settings */
 	ignored_str = g_settings_get_string (firmware->priv->settings, GPK_SETTINGS_IGNORED_DEVICES);
 	if (ignored_str == NULL) {
-		egg_warning ("could not read ignored list");
+		g_warning ("could not read ignored list");
 		goto out;
 	}
 
 	/* nothing in list, common case */
 	if (egg_strzero (ignored_str)) {
-		egg_debug ("nothing in ignored list");
+		g_debug ("nothing in ignored list");
 		goto out;
 	}
 
@@ -712,7 +710,7 @@ gpk_firmware_remove_ignored (GpkFirmware *firmware, GPtrArray *array)
 		for (j=0; ignored[j] != NULL; j++) {
 			ret = g_pattern_match_simple (ignored[j], req->id);
 			if (ret) {
-				egg_debug ("match %s for %s, removing", ignored[j], req->id);
+				g_debug ("match %s for %s, removing", ignored[j], req->id);
 				gpk_firmware_request_free (req);
 				g_ptr_array_remove_index_fast (array, i);
 				break;
@@ -771,7 +769,7 @@ gpk_firmware_get_device (GpkFirmware *firmware, const gchar *filename)
 	file = g_file_new_for_path (filename);
 	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET, G_FILE_QUERY_INFO_NONE, NULL, &error);
 	if (info == NULL) {
-		egg_warning ("Failed to get symlink: %s", error->message);
+		g_warning ("Failed to get symlink: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -779,7 +777,7 @@ gpk_firmware_get_device (GpkFirmware *firmware, const gchar *filename)
 	/* /devices/pci0000:00/0000:00:1d.0/usb5/5-2/firmware/5-2 */
 	symlink_path = g_file_info_get_symlink_target (info);
 	if (symlink_path == NULL) {
-		egg_warning ("failed to get symlink target");
+		g_warning ("failed to get symlink target");
 		goto out;
 	}
 
@@ -794,7 +792,7 @@ gpk_firmware_get_device (GpkFirmware *firmware, const gchar *filename)
 	for (i=len; i>1; i--) {
 		split[i] = NULL;
 		target = g_strjoinv ("/", split);
-		egg_debug ("testing %s", target);
+		g_debug ("testing %s", target);
 		if (g_file_test (target, G_FILE_TEST_EXISTS))
 			goto out;
 		g_free (target);
@@ -835,7 +833,7 @@ gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 
 	/* this is the file that udev created for us */
 	missing_path = g_build_filename (GPK_FIRMWARE_MISSING_DIR, filename_no_path, NULL);
-	egg_debug ("filename=%s -> %s", missing_path, filename_path);
+	g_debug ("filename=%s -> %s", missing_path, filename_path);
 
 	/* get symlink target */
 	sysfs_path = gpk_firmware_get_device (firmware, missing_path);
@@ -847,11 +845,11 @@ gpk_firmware_add_file (GpkFirmware *firmware, const gchar *filename_no_path)
 	for (i=0; i<array->len; i++) {
 		req = g_ptr_array_index (array, i);
 		if (g_strcmp0 (sysfs_path, req->sysfs_path) == 0) {
-			egg_debug ("ignoring previous sysfs request for %s", sysfs_path);
+			g_debug ("ignoring previous sysfs request for %s", sysfs_path);
 			goto out;
 		}
 		if (g_strcmp0 (filename_path, req->filename) == 0) {
-			egg_debug ("ignoring previous filename request for %s", filename_path);
+			g_debug ("ignoring previous filename request for %s", filename_path);
 			goto out;
 		}
 	}
@@ -884,14 +882,14 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 	/* should we check and show the user */
 	ret = g_settings_get_boolean (firmware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_FIRMWARE);
 	if (!ret) {
-		egg_debug ("not showing thanks to GSettings");
+		g_debug ("not showing thanks to GSettings");
 		return;
 	}
 
 	/* open the directory of requests */
 	dir = g_dir_open (GPK_FIRMWARE_MISSING_DIR, 0, &error);
 	if (dir == NULL) {
-		egg_warning ("failed to open directory: %s", error->message);
+		g_warning ("failed to open directory: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -913,7 +911,7 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
 		req = g_ptr_array_index (array, i);
-		egg_debug ("requested: %s", req->filename);
+		g_debug ("requested: %s", req->filename);
 	}
 
 	/* remove banned files */
@@ -926,7 +924,7 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 	array = firmware->priv->array_requested;
 	for (i=0; i<array->len; i++) {
 		req = g_ptr_array_index (array, i);
-		egg_debug ("searching for: %s", req->filename);
+		g_debug ("searching for: %s", req->filename);
 	}
 
 	/* don't spam the user at startup, so wait a little delay */
@@ -955,7 +953,7 @@ gpk_firmware_monitor_changed_cb (GFileMonitor *monitor, GFile *file, GFile *othe
 				 GFileMonitorEvent event_type, GpkFirmware *firmware)
 {
 	if (firmware->priv->timeout_id > 0) {
-		egg_debug ("clearing timeout as device changed");
+		g_debug ("clearing timeout as device changed");
 		g_source_remove (firmware->priv->timeout_id);
 	}
 
@@ -1002,7 +1000,7 @@ gpk_firmware_init (GpkFirmware *firmware)
 	file = g_file_new_for_path (GPK_FIRMWARE_MISSING_DIR);
 	firmware->priv->monitor = g_file_monitor (file, G_FILE_MONITOR_NONE, NULL, &error);
 	if (firmware->priv->monitor == NULL) {
-		egg_warning ("failed to setup monitor: %s", error->message);
+		g_warning ("failed to setup monitor: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}

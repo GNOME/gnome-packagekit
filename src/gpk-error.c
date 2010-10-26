@@ -28,8 +28,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
-
 #include "gpk-common.h"
 #include "gpk-error.h"
 
@@ -75,7 +73,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
 	}

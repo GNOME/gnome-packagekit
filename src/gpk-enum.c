@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-enum.h"
@@ -287,7 +286,7 @@ gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
 		text = _("media");
 		break;
 	default:
-		egg_warning ("Unknown media type");
+		g_warning ("Unknown media type");
 	}
 	return text;
 }
@@ -493,7 +492,7 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 		text = _("Install root is invalid");
 		break;
 	default:
-		egg_warning ("Unknown error");
+		g_warning ("Unknown error");
 	}
 	return text;
 }
@@ -738,7 +737,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		text = _("The install root is invalid. Please contact your administrator.");
 		break;
 	default:
-		egg_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
+		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
 			    "More information is available in the detailed report.");
 	}
 	return text;
@@ -771,7 +770,7 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("A restart will be required due to a security update.");
 		break;
 	default:
-		egg_warning ("restart unrecognised: %i", restart);
+		g_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -803,7 +802,7 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("A restart is required to remain secure.");
 		break;
 	default:
-		egg_warning ("restart unrecognised: %i", restart);
+		g_warning ("restart unrecognised: %i", restart);
 	}
 	return text;
 }
@@ -829,7 +828,7 @@ gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 		text = _("Testing");
 		break;
 	default:
-		egg_warning ("state unrecognised: %i", state);
+		g_warning ("state unrecognised: %i", state);
 	}
 	return text;
 }
@@ -891,7 +890,7 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		text = _("Other updates have been held back");
 		break;
 	default:
-		egg_warning ("message unrecognised: %i", message);
+		g_warning ("message unrecognised: %i", message);
 	}
 	return text;
 }
@@ -1053,7 +1052,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Copying files");
 		break;
 	default:
-		egg_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
+		g_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
 	}
 	return text;
 }
@@ -1095,7 +1094,7 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i blocked update", "%i blocked updates", number), number);
 		break;
 	default:
-		egg_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -1147,7 +1146,7 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Available");
 		break;
 	default:
-		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -1197,7 +1196,7 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		text = _("Decompressing");
 		break;
 	default:
-		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -1247,7 +1246,7 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 		text = _("Decompressed");
 		break;
 	default:
-		egg_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
 	}
 	return text;
 }
@@ -1401,7 +1400,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Simulating the update");
 		break;
 	default:
-		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
@@ -1557,7 +1556,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Simulated the update");
 		break;
 	default:
-		egg_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
 	return text;
 }
@@ -1711,7 +1710,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Unknown group");
 		break;
 	default:
-		egg_warning ("group unrecognised: %i", group);
+		g_warning ("group unrecognised: %i", group);
 	}
 	return text;
 }

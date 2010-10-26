@@ -32,7 +32,6 @@
 #include <packagekit-glib2/packagekit.h>
 #include <locale.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-console-kit.h"
 
@@ -234,11 +233,11 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 	/* find percentage of screen area */
 	percent_w = (width * 100) / screen_w;
 	percent_h = (height * 100) / screen_h;
-	egg_debug ("window coverage x:%i%% y:%i%%", percent_w, percent_h);
+	g_debug ("window coverage x:%i%% y:%i%%", percent_w, percent_h);
 
 	if (percent_w > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT ||
 	    percent_h > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT) {
-		egg_debug ("using small form factor mode as %ix%i and requested %ix%i",
+		g_debug ("using small form factor mode as %ix%i and requested %ix%i",
 			   screen_w, screen_h, width, height);
 		gtk_window_maximize (window);
 		small_form_factor_mode = TRUE;
@@ -250,7 +249,7 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 		goto out;
 #endif
 	/* normal size laptop panel */
-	egg_debug ("using native mode: %ix%i", width, height);
+	g_debug ("using native mode: %ix%i", width, height);
 	gtk_window_set_default_size (window, width, height);
 	small_form_factor_mode = FALSE;
 out:
@@ -279,7 +278,6 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
 	return TRUE;
 }
 
-
 /**
  * gpk_package_id_format_twoline:
  *
@@ -298,7 +296,7 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 	/* optional */
 	split = pk_package_id_split (package_id);
 	if (split == NULL) {
-		egg_warning ("could not parse %s", package_id);
+		g_warning ("could not parse %s", package_id);
 		goto out;
 	}
 	if (summary == NULL || summary[PK_PACKAGE_ID_NAME] == '\0') {
@@ -391,7 +389,7 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 		/* user did not agree to run insecure */
 		if (result != GTK_RESPONSE_OK) {
 			ret = FALSE;
-			egg_warning ("uid=%i so closing", uid);
+			g_warning ("uid=%i so closing", uid);
 			goto out;
 		}
 	}
@@ -614,7 +612,7 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 	/* get data */
 	ret = g_file_get_contents (filename, &data, NULL, &error);
 	if (!ret) {
-		egg_warning ("failed to open package list: %s", error->message);
+		g_warning ("failed to open package list: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -664,15 +662,15 @@ gpk_package_entry_completion_model_new (void)
 	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	list = gpk_package_entry_completion_get_names_from_file (PK_SYSTEM_PACKAGE_LIST_FILENAME);
 	if (list == NULL) {
-		egg_warning ("no package list, try refreshing");
+		g_warning ("no package list, try refreshing");
 		return NULL;
 	}
 
-	egg_debug ("loading %i autocomplete items", list->len);
+	g_debug ("loading %i autocomplete items", list->len);
 	for (i=0; i<list->len; i++) {
 		item = g_ptr_array_index (list, i);
 		if (item == NULL || pk_package_get_id (item) == NULL) {
-			egg_warning ("item invalid!");
+			g_warning ("item invalid!");
 			break;
 		}
 

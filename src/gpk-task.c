@@ -24,8 +24,6 @@
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
-
 #include "gpk-task.h"
 #include "gpk-gnome.h"
 #include "gpk-common.h"
@@ -197,7 +195,7 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 	/* get data */
 	array = pk_results_get_repo_signature_required_array (results);
 	if (array->len != 1) {
-		egg_warning ("array length %i, aborting", array->len);
+		g_warning ("array length %i, aborting", array->len);
 		goto out;
 	}
 
@@ -268,7 +266,7 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	/* get data */
 	array = pk_results_get_eula_required_array (results);
 	if (array->len != 1) {
-		egg_warning ("array length %i, aborting", array->len);
+		g_warning ("array length %i, aborting", array->len);
 		goto out;
 	}
 
@@ -337,7 +335,7 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 	/* get data */
 	array = pk_results_get_media_change_required_array (results);
 	if (array->len != 1) {
-		egg_warning ("array length %i, aborting", array->len);
+		g_warning ("array length %i, aborting", array->len);
 		goto out;
 	}
 
@@ -389,7 +387,7 @@ gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum 
 
 	sack_tmp = pk_package_sack_filter_by_info (sack, info);
 	if (pk_package_sack_get_size (sack_tmp) == 0) {
-		egg_debug ("no packages with %s", pk_info_enum_to_string (info));
+		g_debug ("no packages with %s", pk_info_enum_to_string (info));
 		goto out;
 	}
 
@@ -425,7 +423,7 @@ gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum 
 	/* get the size */
 	ret = pk_package_sack_get_details (sack_tmp, NULL, &error);
 	if (!ret) {
-		egg_warning ("failed to get details about packages: %s", error->message);
+		g_warning ("failed to get details about packages: %s", error->message);
 		g_error_free (error);
 	}
 	size = pk_package_sack_get_total_bytes (sack_tmp);
@@ -470,7 +468,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 		/* have we previously said we don't want to be shown the confirmation */
 		ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_SHOW_DEPENDS);
 		if (!ret) {
-			egg_debug ("we've said we don't want the dep dialog");
+			g_debug ("we've said we don't want the dep dialog");
 			pk_task_user_accepted (PK_TASK(task), priv->request);
 			goto out;
 		}
@@ -568,7 +566,7 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	task->priv->builder_untrusted = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_untrusted, GPK_DATA "/gpk-error.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -616,7 +614,7 @@ gpk_task_setup_dialog_signature (GpkTask *task)
 	task->priv->builder_signature = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_signature, GPK_DATA "/gpk-signature.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -651,7 +649,7 @@ gpk_task_setup_dialog_eula (GpkTask *task)
 	task->priv->builder_eula = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_eula, GPK_DATA "/gpk-eula.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -792,7 +790,7 @@ gpk_task_test_progress_cb (PkProgress *progress, PkProgressType type, EggTest *t
 		g_object_get (progress,
 			      "status", &status,
 			      NULL);
-		egg_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_text (status));
 	}
 }
 

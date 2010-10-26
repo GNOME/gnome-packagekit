@@ -33,7 +33,6 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -116,7 +115,7 @@ gpk_dbus_task_set_interaction (GpkDbusTask *dtask, PkBitfield interact)
 	dtask->priv->show_warning = pk_bitfield_contain (interact, GPK_CLIENT_INTERACT_WARNING);
 
 	/* debug */
-	egg_debug ("confirm_search:%i, confirm_deps:%i, confirm_install:%i, progress:%i, finished:%i, warning:%i",
+	g_debug ("confirm_search:%i, confirm_deps:%i, confirm_install:%i, progress:%i, finished:%i, warning:%i",
 		   dtask->priv->show_confirm_search, dtask->priv->show_confirm_deps,
 		   dtask->priv->show_confirm_install, dtask->priv->show_progress,
 		   dtask->priv->show_finished, dtask->priv->show_warning);
@@ -148,7 +147,7 @@ gpk_dbus_task_set_xid (GpkDbusTask *dtask, guint32 xid)
 
 	display = gdk_display_get_default ();
 	dtask->priv->parent_window = gdk_window_foreign_new_for_display (display, xid);
-	egg_debug ("parent_window=%p", dtask->priv->parent_window);
+	g_debug ("parent_window=%p", dtask->priv->parent_window);
 	gpk_modal_dialog_set_parent (dtask->priv->dialog, dtask->priv->parent_window);
 	return TRUE;
 }
@@ -176,12 +175,12 @@ gpk_dbus_task_dbus_return_error (GpkDbusTask *dtask, const GError *error)
 
 	/* already sent or never setup */
 	if (dtask->priv->context == NULL) {
-		egg_error ("context does not exist, cannot return: %s", error->message);
+		g_error ("context does not exist, cannot return: %s", error->message);
 		goto out;
 	}
 
 	/* send error */
-	egg_debug ("sending async return error in response to %p: %s", dtask->priv->context, error->message);
+	g_debug ("sending async return error in response to %p: %s", dtask->priv->context, error->message);
 	dbus_g_method_return_error (dtask->priv->context, error);
 
 	/* set context NULL just in case we try to repeat */
@@ -203,12 +202,12 @@ gpk_dbus_task_dbus_return_value (GpkDbusTask *dtask, gboolean ret)
 {
 	/* already sent or never setup */
 	if (dtask->priv->context == NULL) {
-		egg_error ("context does not exist, cannot return %i", ret);
+		g_error ("context does not exist, cannot return %i", ret);
 		goto out;
 	}
 
 	/* send error */
-	egg_debug ("sending async return in response to %p: %i", dtask->priv->context, ret);
+	g_debug ("sending async return in response to %p: %i", dtask->priv->context, ret);
 	dbus_g_method_return (dtask->priv->context, ret);
 
 	/* set context NULL just in case we try to repeat */
@@ -269,7 +268,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 	gchar *details;
 
 	if (task->priv->cached_error_code == NULL) {
-		egg_warning ("called show error with no error!");
+		g_warning ("called show error with no error!");
 		return;
 	}
 	if (g_strcmp0 (action, "show-error-details") == 0) {
@@ -278,7 +277,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 		gpk_error_dialog (_("Error details"), _("Package Manager error details"), details);
 		g_free (details);
 	} else {
-		egg_warning ("unknown action id: %s", action);
+		g_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -356,10 +355,10 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 	if (pk_error_get_code (error_code) == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
 	    pk_error_get_code (error_code) == PK_ERROR_ENUM_PROCESS_KILL ||
 	    pk_error_get_code (error_code) == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_warning ("ignoring %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
+		g_warning ("ignoring %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
 	}
 
-	egg_debug ("code was %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
+	g_debug ("code was %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
 
 	/* use a modal dialog if showing progress, else use libnotify */
 	title = gpk_error_enum_to_localised_text (pk_error_get_code (error_code));
@@ -384,7 +383,7 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 					_("Show details"), gpk_dbus_task_libnotify_cb, dtask, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -405,7 +404,7 @@ gpk_dbus_task_get_code_from_gerror (const GError *error)
 
 	/* not recognised */
 	if (error->domain != PK_CLIENT_ERROR) {
-		egg_warning ("Not a PkClientError error code");
+		g_warning ("Not a PkClientError error code");
 		goto out;
 	}
 
@@ -480,7 +479,7 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "%s", pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
@@ -546,7 +545,7 @@ gpk_dbus_task_set_status (GpkDbusTask *dtask, PkStatusEnum status)
 
 	/* ignore */
 	if (!dtask->priv->show_progress) {
-		egg_warning ("not showing progress");
+		g_warning ("not showing progress");
 		return FALSE;
 	}
 
@@ -621,7 +620,7 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install file: %s, %s",
+		g_warning ("failed to install file: %s, %s",
 			     pk_error_enum_to_text (pk_error_get_code (error_code)),
 			     pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
@@ -787,7 +786,7 @@ gpk_dbus_task_progress_cb (PkProgress *progress, PkProgressType type, GpkDbusTas
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
-		egg_debug ("_package");
+		g_debug ("_package");
 	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
 		gpk_modal_dialog_set_percentage (dtask->priv->dialog, percentage);
 	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
@@ -828,7 +827,7 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to resolve: %s", error->message);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		g_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -836,7 +835,7 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "failed to resolve: %s", pk_error_get_details (error_code));
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
@@ -900,7 +899,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to search file: %s", error->message);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		g_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		g_error_free (error_dbus);
 		goto out;
@@ -909,7 +908,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "failed to search file: %s", pk_error_get_details (error_code));
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
@@ -919,7 +918,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	/* get results */
 	array = pk_results_get_package_array (results);
 	if (array->len == 0) {
-		egg_warning ("no packages");
+		g_warning ("no packages");
 		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "failed to find any packages");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
@@ -935,7 +934,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	split = pk_package_id_split (package_id);
 
 	/* send error */
-	egg_debug ("sending async return in response to %p", dtask->priv->context);
+	g_debug ("sending async return in response to %p", dtask->priv->context);
 	dbus_g_method_return (dtask->priv->context, (info == PK_INFO_ENUM_INSTALLED), split[PK_PACKAGE_ID_NAME]);
 
 	/* set context NULL just in case we try to repeat */
@@ -967,7 +966,7 @@ gpk_dbus_task_search_file (GpkDbusTask *dtask, const gchar *search_file, GpkDbus
 	dtask->priv->finished_userdata = userdata;
 
 	/* get the package list for the installed packages */
-	egg_debug ("package_name=%s", search_file);
+	g_debug ("package_name=%s", search_file);
 	values = g_strsplit (search_file, "&", -1);
 	pk_client_search_files_async (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_NEWEST), values, NULL,
 				     (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
@@ -1117,7 +1116,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 		if (info == PK_INFO_ENUM_INSTALLED) {
 			already_installed = TRUE;
 		} else if (info == PK_INFO_ENUM_AVAILABLE) {
-			egg_debug ("package '%s' resolved", package_id_tmp);
+			g_debug ("package '%s' resolved", package_id_tmp);
 			package_id = g_strdup (package_id_tmp);
 			//TODO: we need to list these in a gpk-dbus_task-chooser
 		}
@@ -1206,7 +1205,7 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages, GpkDb
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -1354,7 +1353,7 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 			already_installed = TRUE;
 			package_id = g_strdup (package_id_tmp);
 		} else if (info == PK_INFO_ENUM_AVAILABLE) {
-			egg_debug ("package '%s' resolved to:", package_id_tmp);
+			g_debug ("package '%s' resolved to:", package_id_tmp);
 			package_id = g_strdup (package_id_tmp);
 		}
 		g_free (package_id_tmp);
@@ -1426,7 +1425,7 @@ gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths, Gpk
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -1651,7 +1650,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
 
@@ -1732,7 +1731,7 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -1903,7 +1902,7 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types, GpkDbu
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -1977,13 +1976,13 @@ gpk_dbus_task_font_tag_to_lang (const gchar *tag)
 	/* parse the tag */
 	pat = FcNameParse ((FcChar8 *) tag);
 	if (pat == NULL) {
-		egg_warning ("cannot parse: '%s'", tag);
+		g_warning ("cannot parse: '%s'", tag);
 		goto out;
 	}
 	FcPatternPrint (pat);
 	res = FcPatternGetString (pat, FC_LANG, 0, &fclang);
 	if (res != FcResultMatch) {
-		egg_warning ("failed to get string for: '%s': %i", tag, res);
+		g_warning ("failed to get string for: '%s': %i", tag, res);
 		goto out;
 	}
 	lang = g_strdup ((gchar *) fclang);
@@ -2003,7 +2002,6 @@ out:
 #endif
 	return lang;
 }
-
 
 /**
  * gpk_dbus_task_font_tag_to_localised_name:
@@ -2113,7 +2111,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -2240,7 +2238,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -2383,7 +2381,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -2504,7 +2502,7 @@ gpk_dbus_task_printer_driver_what_provides_cb (PkClient *client, GAsyncResult *r
 
 	/* optional */
 	if (!dtask->priv->show_confirm_install) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks2;
 	}
 
@@ -2609,7 +2607,7 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 		g_strfreev (fields);
 
 		if (!mfg || !mdl) {
-			egg_warning("invalid line '%s', missing field",
+			g_warning("invalid line '%s', missing field",
 				    device_ids[i]);
 			continue;
 		}
@@ -2692,7 +2690,7 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 	if (results == NULL) {
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to search by file: %s", error->message);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		egg_warning ("failed to resolve: %s", error->message);
+		g_warning ("failed to resolve: %s", error->message);
 		g_error_free (error);
 		g_error_free (error_dbus);
 		goto out;
@@ -2773,7 +2771,7 @@ gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths, Gp
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -2856,7 +2854,7 @@ gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames, GpkDbusTa
 
 	/* optional */
 	if (!dtask->priv->show_confirm_search) {
-		egg_debug ("skip confirm as not allowed to interact with user");
+		g_debug ("skip confirm as not allowed to interact with user");
 		goto skip_checks;
 	}
 
@@ -2921,7 +2919,7 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 	results = pk_client_search_files (PK_CLIENT(dtask->priv->task), pk_bitfield_value (PK_FILTER_ENUM_INSTALLED), values, NULL,
 					 (PkProgressCallback) gpk_dbus_task_progress_cb, dtask, &error);
 	if (results == NULL) {
-		egg_warning ("failed to search file: %s", error->message);
+		g_warning ("failed to search file: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2931,20 +2929,20 @@ gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* nothing found */
 	if (array->len == 0) {
-		egg_debug ("cannot find installed package that provides : %s", exec);
+		g_debug ("cannot find installed package that provides : %s", exec);
 		goto out;
 	}
 
 	/* check we have one */
 	if (array->len != 1)
-		egg_warning ("not one return, using first");
+		g_warning ("not one return, using first");
 
 	/* copy name */
 	item = g_ptr_array_index (array, 0);
 	package_id = pk_package_get_id (item);
 	split = pk_package_id_split (package_id);
 	package = g_strdup (split[0]);
-	egg_debug ("got package %s", package);
+	g_debug ("got package %s", package);
 out:
 	g_strfreev (values);
 	g_strfreev (split);
@@ -3002,7 +3000,7 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* is the binary trusted, i.e. can we probe it's window properties */
 	if (gpk_dbus_task_path_is_trusted (exec)) {
-		egg_debug ("using application window properties");
+		g_debug ("using application window properties");
 		/* get from window properties */
 		x11 = gpk_x11_new ();
 		gpk_x11_set_window (x11, dtask->priv->parent_window);
@@ -3013,7 +3011,7 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 
 	/* get from installed database */
 	package = gpk_dbus_task_get_package_for_exec (dtask, exec);
-	egg_debug ("got package %s", package);
+	g_debug ("got package %s", package);
 
 	/* try to get from PkDesktop */
 	if (package != NULL) {
@@ -3021,19 +3019,19 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 		dtask->priv->parent_icon_name = gpk_desktop_guess_icon_name (dtask->priv->desktop, package);
 		/* fallback to package name */
 		if (dtask->priv->parent_title == NULL) {
-			egg_debug ("did not get localised description for %s", package);
+			g_debug ("did not get localised description for %s", package);
 			dtask->priv->parent_title = g_strdup (package);
 		}
 	}
 
 	/* fallback to exec - eugh... */
 	if (dtask->priv->parent_title == NULL) {
-		egg_debug ("did not get package for %s, using exec basename", package);
+		g_debug ("did not get package for %s, using exec basename", package);
 		dtask->priv->parent_title = g_path_get_basename (exec);
 	}
 out:
 	g_free (package);
-	egg_debug ("got name=%s, icon=%s", dtask->priv->parent_title, dtask->priv->parent_icon_name);
+	g_debug ("got name=%s, icon=%s", dtask->priv->parent_title, dtask->priv->parent_icon_name);
 	return TRUE;
 }
 
@@ -3121,7 +3119,7 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	dtask->priv->desktop = pk_desktop_new ();
 	ret = pk_desktop_open_database (dtask->priv->desktop, NULL);
 	if (!ret)
-		egg_warning ("failed to open desktop database");
+		g_warning ("failed to open desktop database");
 }
 
 /**
@@ -3212,7 +3210,7 @@ gpk_dbus_task_test (gpointer data)
 	if (dtask != NULL)
 		egg_test_success (test, NULL);
 	else
-		egg_warning (NULL);
+		g_warning (NULL);
 
 	/************************************************************/
 	egg_test_title (test, "convert tag to lang");
@@ -3220,7 +3218,7 @@ gpk_dbus_task_test (gpointer data)
 	if (g_strcmp0 (lang, "mn") == 0)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("lang '%s'", lang);
+		g_warning ("lang '%s'", lang);
 	g_free (lang);
 
 	/************************************************************/
@@ -3229,7 +3227,7 @@ gpk_dbus_task_test (gpointer data)
 	if (g_strcmp0 (language, "Mongolian") == 0)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("language '%s'", language);
+		g_warning ("language '%s'", language);
 	g_free (language);
 
 	/************************************************************/
@@ -3238,7 +3236,7 @@ gpk_dbus_task_test (gpointer data)
 	if (ret)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("failed to identify trusted");
+		g_warning ("failed to identify trusted");
 
 	/************************************************************/
 	egg_test_title (test, "test trusted path");
@@ -3246,7 +3244,7 @@ gpk_dbus_task_test (gpointer data)
 	if (!ret)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("identify untrusted as trusted!");
+		g_warning ("identify untrusted as trusted!");
 
 	/************************************************************/
 	egg_test_title (test, "get package for exec");
@@ -3254,7 +3252,7 @@ gpk_dbus_task_test (gpointer data)
 	if (g_strcmp0 (package, "totem") == 0)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("package '%s'", package);
+		g_warning ("package '%s'", package);
 	g_free (package);
 
 	/************************************************************/
@@ -3263,7 +3261,7 @@ gpk_dbus_task_test (gpointer data)
 	if (ret)
 		egg_test_success (test, NULL);
 	else
-		egg_warning ("failed to set exec");
+		g_warning ("failed to set exec");
 
 #if 0
 	/************************************************************/

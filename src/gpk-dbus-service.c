@@ -28,11 +28,12 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-dbus-monitor.h"
 
 #include "gpk-common.h"
 #include "gpk-dbus.h"
+#include "gpk-debug.h"
+
 #include "org.freedesktop.PackageKit.h"
 
 static GMainLoop *loop = NULL;
@@ -69,7 +70,7 @@ gpk_dbus_service_object_register (DBusGConnection *connection, GObject *object)
 				 G_TYPE_INVALID);
 	if (!ret) {
 		/* abort as the DBUS method failed */
-		egg_warning ("RequestName failed: %s", error->message);
+		g_warning ("RequestName failed: %s", error->message);
 		g_error_free (error);
 		return FALSE;
 	}
@@ -99,7 +100,7 @@ gpk_dbus_service_check_idle_cb (GpkDbus *dbus)
 	/* get the idle time */
 	idle = gpk_dbus_get_idle_time (dbus);
 	if (idle > GPK_SESSION_IDLE_EXIT) {
-		egg_debug ("exiting loop as idle");
+		g_debug ("exiting loop as idle");
 		g_main_loop_quit (loop);
 		return FALSE;
 	}
@@ -113,7 +114,7 @@ gpk_dbus_service_check_idle_cb (GpkDbus *dbus)
 static void
 gpk_dbus_service_connection_replaced_cb (EggDbusMonitor *monitor, gpointer data)
 {
-	egg_warning ("exiting as we have been replaced");
+	g_warning ("exiting as we have been replaced");
 	g_main_loop_quit (loop);
 }
 
@@ -156,7 +157,7 @@ main (int argc, char *argv[])
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Session DBus service for PackageKit"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -176,7 +177,7 @@ main (int argc, char *argv[])
 	/* get the bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error) {
-		egg_warning ("%s", error->message);
+		g_warning ("%s", error->message);
 		g_error_free (error);
 		retval = 1;
 		goto out;
@@ -185,7 +186,7 @@ main (int argc, char *argv[])
 	/* try to register */
 	ret = gpk_dbus_service_object_register (connection, G_OBJECT (dbus));
 	if (!ret) {
-		egg_warning ("failed to replace running instance.");
+		g_warning ("failed to replace running instance.");
 		retval = 1;
 		goto out;
 	}

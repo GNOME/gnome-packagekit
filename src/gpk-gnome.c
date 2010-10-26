@@ -25,7 +25,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include "egg-debug.h"
 #include "gpk-gnome.h"
 
 /**
@@ -43,7 +42,7 @@ gpk_gnome_open (const gchar *url)
 	ret = gtk_show_uri (NULL, url, GDK_CURRENT_TIME, &error);
 
 	if (!ret) {
-		egg_warning ("spawn of '%s' failed", url);
+		g_warning ("spawn of '%s' failed", url);
 		g_error_free (error);
 	}
 	return ret;
@@ -64,7 +63,7 @@ gpk_gnome_help (const gchar *link_id)
 		uri = g_strconcat ("ghelp:gnome-packagekit?", link_id, NULL);
 	else
 		uri = g_strdup ("ghelp:gnome-packagekit");
-	egg_debug ("opening uri %s", uri);
+	g_debug ("opening uri %s", uri);
 
 	gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
 

@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-animated-icon.h"
@@ -47,7 +46,7 @@ gpk_animated_icon_free_pixbufs (GpkAnimatedIcon *icon)
 
 	/* none loaded */
 	if (icon->frames == NULL) {
-		egg_debug ("nothing to free");
+		g_debug ("nothing to free");
 		return FALSE;
 	}
 
@@ -94,7 +93,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 
 	/* have we already set the same icon */
 	if (g_strcmp0 (icon->filename, name) == 0) {
-		egg_debug ("already set the same icon name %s, ignoring", name);
+		g_debug ("already set the same icon name %s, ignoring", name);
 		return FALSE;
 	}
 
@@ -110,7 +109,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 		gpk_animated_icon_free_pixbufs (icon);
 	}
 
-	egg_debug ("loading from %s", name);
+	g_debug ("loading from %s", name);
 	screen = gdk_screen_get_default ();
 	settings = gtk_settings_get_for_screen (screen);
 	gtk_icon_size_lookup_for_settings (settings, size, &w, &h);
@@ -118,7 +117,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), name, w, 0, NULL);
 	/* can't load from gnome-icon-theme */
 	if (pixbuf == NULL) {
-		egg_warning ("can't load %s", name);
+		g_warning ("can't load %s", name);
 		return FALSE;
 	}
 
@@ -154,7 +153,6 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	return TRUE;
 }
 
-
 /**
  * gpk_animated_icon_visible_notify_cb:
  **/
@@ -164,7 +162,7 @@ gpk_animated_icon_visible_notify_cb (GObject *object, GParamSpec *param, GpkAnim
 	gboolean ret;
 	g_object_get (object, "visible", &ret, NULL);
 	if (!ret && icon->animation_id != 0) {
-		egg_debug ("disabling animation as hidden");
+		g_debug ("disabling animation as hidden");
 		gpk_animated_icon_enable_animation (icon, FALSE);
 	}
 }
@@ -179,11 +177,11 @@ gpk_animated_icon_update (GpkAnimatedIcon *icon)
 
 	/* debug so we can catch polling */
 	if (rate_limit++ % 20 == 0)
-		egg_debug ("polling check");
+		g_debug ("polling check");
 
 	/* have we loaded a file */
 	if (icon->frames == NULL) {
-		egg_warning ("no frames to process");
+		g_warning ("no frames to process");
 		return FALSE;
 	}
 
@@ -204,7 +202,7 @@ gpk_animated_icon_set_frame_delay (GpkAnimatedIcon *icon, guint delay_ms)
 {
 	g_return_val_if_fail (GPK_IS_ANIMATED_ICON (icon), FALSE);
 
-	egg_debug ("frame delay set to %ims", delay_ms);
+	g_debug ("frame delay set to %ims", delay_ms);
 	icon->frame_delay = delay_ms;
 
 	/* do we have to change a running icon? */
@@ -227,7 +225,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 
 	if (!enabled) {
 		if (icon->animation_id == 0) {
-			egg_debug ("ignoring stop on stopped icon");
+			g_debug ("ignoring stop on stopped icon");
 			return FALSE;
 		}
 
@@ -238,7 +236,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 
 	/* don't double queue */
 	if (icon->animation_id != 0) {
-		egg_debug ("ignoring start on started icon");
+		g_debug ("ignoring start on started icon");
 		return FALSE;
 	}
 

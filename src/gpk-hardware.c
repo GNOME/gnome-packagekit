@@ -40,7 +40,6 @@
 #include <dbus/dbus.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -81,7 +80,7 @@ gpk_hardware_install_packages_cb (GObject *object, GAsyncResult *res, GpkHardwar
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to install file: %s", error->message);
+		g_warning ("failed to install file: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -89,7 +88,7 @@ gpk_hardware_install_packages_cb (GObject *object, GAsyncResult *res, GpkHardwar
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install file: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 out:
@@ -111,10 +110,10 @@ gpk_hardware_libnotify_cb (NotifyNotification *notification, gchar *action, gpoi
 		pk_client_install_packages_async (PK_CLIENT(hardware->priv->task), TRUE, hardware->priv->package_ids, NULL, NULL, NULL,
 						  (GAsyncReadyCallback) gpk_hardware_install_packages_cb, hardware);
 	} else if (g_strcmp0 (action, GPK_HARDWARE_DONT_PROMPT_ACTION) == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_ENABLE_CHECK_HARDWARE);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_ENABLE_CHECK_HARDWARE);
 		g_settings_set_boolean (hardware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_HARDWARE, FALSE);
 	} else {
-		egg_warning ("unknown action id: %s", action);
+		g_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -141,7 +140,7 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get provides: %s", error->message);
+		g_warning ("failed to get provides: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -149,14 +148,14 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get provides: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get provides: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
 	/* If there are no driver packages available just return */
 	array = pk_results_get_package_array (results);
 	if (array->len == 0) {
-		egg_debug ("no drivers available");
+		g_debug ("no drivers available");
 		goto out;
 	}
 
@@ -192,7 +191,7 @@ gpk_hardware_what_provides_cb (GObject *object, GAsyncResult *res, GpkHardware *
 					_("Do not show this again"), gpk_hardware_libnotify_cb, hardware, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -227,7 +226,7 @@ static gboolean
 gpk_hardware_device_added_timeout (gpointer data)
 {
 	GpkHardware *hardware = GPK_HARDWARE (data);
-	egg_debug ("multiple signal timeout callback");
+	g_debug ("multiple signal timeout callback");
 	gpk_hardware_check_for_driver_available (hardware, hardware->priv->udi);
 
 	g_free (hardware->priv->udi);
@@ -243,7 +242,7 @@ gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *
 {
 	guint added_id;
 
-	egg_debug ("hardware added. udi=%s", udi);
+	g_debug ("hardware added. udi=%s", udi);
 	/* we get multiple hal signals for one device plugin. Ignore all but first one.
 	   TODO: should we act on a different one ?
 	*/
@@ -262,7 +261,7 @@ gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *
 static gboolean
 gpk_hardware_timeout_cb (gpointer data)
 {
-	egg_debug ("hardware timout callback");
+	g_debug ("hardware timout callback");
 	/* TODO: need to coldplug for any hardware without drivers */
 	gpk_hardware_check_for_driver_available (GPK_HARDWARE (data), "unavailable");
 	return FALSE;
@@ -287,7 +286,7 @@ gpk_hardware_init (GpkHardware *hardware)
 	/* should we check and show the user */
 	ret = g_settings_get_boolean (hardware->priv->settings, GPK_SETTINGS_ENABLE_CHECK_HARDWARE);
 	if (!ret) {
-		egg_debug ("hardware driver checking disabled in GSettings");
+		g_debug ("hardware driver checking disabled in GSettings");
 		return;
 	}
 	hardware->priv->task = PK_TASK(gpk_task_new ());
@@ -297,7 +296,7 @@ gpk_hardware_init (GpkHardware *hardware)
 
 	hardware->priv->connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 	if (error != NULL) {
-		egg_warning ("Cannot connect to bus: %s", error->message);
+		g_warning ("Cannot connect to bus: %s", error->message);
 		g_error_free (error);
 		return;
 	}

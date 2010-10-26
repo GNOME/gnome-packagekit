@@ -33,8 +33,6 @@
 #include "gpk-desktop.h"
 #include "gpk-enum.h"
 
-#include "egg-debug.h"
-
 static void     gpk_helper_run_finalize	(GObject	  *object);
 
 #define GPK_HELPER_RUN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_HELPER_RUN, GpkHelperRunPrivate))
@@ -67,7 +65,7 @@ gpk_helper_run_path (GpkHelperRun *helper, const gchar *filename)
 
 	/* check have value */
 	if (filename == NULL) {
-		egg_warning ("no full path");
+		g_warning ("no full path");
 		goto out;
 	}
 
@@ -78,7 +76,7 @@ gpk_helper_run_path (GpkHelperRun *helper, const gchar *filename)
 //	context = (GAppLaunchContext*)gdk_app_launch_context_new ();
 	ret = g_app_info_launch (app, NULL, context, &error);
 	if (!ret) {
-		egg_warning ("failed to launch: %s", error->message);
+		g_warning ("failed to launch: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -107,7 +105,7 @@ gpk_helper_run_button_run_cb (GtkWidget *widget, GpkHelperRun *helper)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		egg_warning ("failed to get selection");
+		g_warning ("failed to get selection");
 		return;
 	}
 
@@ -147,7 +145,6 @@ gpk_helper_run_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkHelperRun
 	return FALSE;
 }
 
-
 /**
  * gpk_helper_run_treeview_clicked_cb:
  **/
@@ -164,9 +161,9 @@ gpk_helper_run_treeview_clicked_cb (GtkTreeSelection *selection, GpkHelperRun *h
 		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_FILENAME, &filename, -1);
 
 		/* show full path */
-		egg_debug ("selected row is: %s", filename);
+		g_debug ("selected row is: %s", filename);
 	} else {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 	}
 	g_free (filename);
 }
@@ -187,7 +184,7 @@ gpk_helper_run_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 	model = gtk_tree_view_get_model (treeview);
 	ret = gtk_tree_model_get_iter (model, &iter, path);
 	if (!ret) {
-		egg_warning ("failed to get selection");
+		g_warning ("failed to get selection");
 		return;
 	}
 
@@ -246,7 +243,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	/* get weight */
 	weight = gpk_desktop_get_file_weight (filename);
 	if (weight < 0) {
-		egg_debug ("ignoring %s", filename);
+		g_debug ("ignoring %s", filename);
 		goto out;
 	}
 
@@ -254,14 +251,14 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	file = g_key_file_new ();
 	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_NONE, NULL);
 	if (!ret) {
-		egg_debug ("failed to load %s", filename);
+		g_debug ("failed to load %s", filename);
 		goto out;
 	}
 
 	/* get hidden */
 	hidden = g_key_file_get_boolean (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_HIDDEN, NULL);
 	if (hidden) {
-		egg_debug ("hidden, so ignoring %s", filename);
+		g_debug ("hidden, so ignoring %s", filename);
 		ret = FALSE;
 		goto out;
 	}
@@ -269,7 +266,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	/* is WM? */
 	ret = !g_key_file_has_group (file, "Window Manager");
 	if (!ret) {
-		egg_debug ("ignoring Window Manager");
+		g_debug ("ignoring Window Manager");
 		goto out;
 	}
 
@@ -357,7 +354,7 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 	desktop = pk_desktop_new ();
 	ret = pk_desktop_open_database (desktop, NULL);
 	if (!ret) {
-		egg_debug ("failed to open desktop DB");
+		g_debug ("failed to open desktop DB");
 		goto out;
 	}
 
@@ -375,7 +372,7 @@ gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 			}
 			g_ptr_array_unref (array);
 		} else {
-			egg_warning ("failed to get files for %s: %s", parts[0], error->message);
+			g_warning ("failed to get files for %s: %s", parts[0], error->message);
 			g_clear_error (&error);
 		}
 		g_strfreev (parts);
@@ -405,7 +402,7 @@ gpk_helper_run_show (GpkHelperRun *helper, gchar **package_ids)
 	/* add all the apps */
 	len = gpk_helper_run_add_package_ids (helper, package_ids);
 	if (len == 0) {
-		egg_debug ("no executable file for %s", package_ids[0]);
+		g_debug ("no executable file for %s", package_ids[0]);
 		goto out;
 	}
 
@@ -469,7 +466,7 @@ gpk_helper_run_init (GpkHelperRun *helper)
 	helper->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (helper->priv->builder, GPK_DATA "/gpk-log.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}
 

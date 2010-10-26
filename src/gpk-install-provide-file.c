@@ -27,11 +27,10 @@
 #include <locale.h>
 #include <dbus/dbus-glib.h>
 
-#include "egg-debug.h"
-
 #include "gpk-common.h"
 #include "gpk-error.h"
 #include "gpk-dbus.h"
+#include "gpk-debug.h"
 
 /**
  * main:
@@ -69,7 +68,7 @@ main (int argc, char *argv[])
 	context = g_option_context_new ("gpk-install-provide-file");
 	g_option_context_set_summary (context, _("Single File Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -90,7 +89,7 @@ main (int argc, char *argv[])
 	/* check dbus connections, exit if not valid */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (connection == NULL) {
-		egg_warning ("%s", error->message);
+		g_warning ("%s", error->message);
 		goto out;
 	}
 
@@ -100,7 +99,7 @@ main (int argc, char *argv[])
 					   "/org/freedesktop/PackageKit",
 					   "org.freedesktop.PackageKit.Modify");
 	if (proxy == NULL) {
-		egg_warning ("Cannot connect to session service");
+		g_warning ("Cannot connect to session service");
 		goto out;
 	}
 
@@ -120,7 +119,7 @@ main (int argc, char *argv[])
 				  /* TRANSLATORS: we don't have anything more useful to translate. sorry. */
 				  _("The request failed. More details are available in the detailed report."),
 				  error->message);
-		egg_warning ("%s", error->message);
+		g_warning ("%s", error->message);
 		goto out;
 	}
 out:

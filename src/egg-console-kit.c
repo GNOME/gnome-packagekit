@@ -28,7 +28,6 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
 
-#include "egg-debug.h"
 #include "egg-console-kit.h"
 
 static void     egg_console_kit_finalize	(GObject		*object);
@@ -75,7 +74,7 @@ egg_console_kit_restart (EggConsoleKit *console, GError **error)
 	ret = dbus_g_proxy_call (console->priv->proxy_manager, "Restart", &error_local,
 				 G_TYPE_INVALID, G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("Couldn't restart: %s", error_local->message);
+		g_warning ("Couldn't restart: %s", error_local->message);
 		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 	}
@@ -97,7 +96,7 @@ egg_console_kit_stop (EggConsoleKit *console, GError **error)
 	ret = dbus_g_proxy_call (console->priv->proxy_manager, "Stop", &error_local,
 				 G_TYPE_INVALID, G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("Couldn't stop: %s", error_local->message);
+		g_warning ("Couldn't stop: %s", error_local->message);
 		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 	}
@@ -120,7 +119,7 @@ egg_console_kit_can_stop (EggConsoleKit *console, gboolean *can_stop, GError **e
 				 G_TYPE_INVALID,
 				 G_TYPE_BOOLEAN, can_stop, G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("Couldn't do CanStop: %s", error_local->message);
+		g_warning ("Couldn't do CanStop: %s", error_local->message);
 		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 		/* CanStop was only added in new versions of ConsoleKit,
@@ -146,7 +145,7 @@ egg_console_kit_can_restart (EggConsoleKit *console, gboolean *can_restart, GErr
 				 G_TYPE_INVALID,
 				 G_TYPE_BOOLEAN, can_restart, G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("Couldn't do CanRestart: %s", error_local->message);
+		g_warning ("Couldn't do CanRestart: %s", error_local->message);
 		g_set_error (error, 1, 0, "%s", error_local->message);
 		g_error_free (error_local);
 		/* CanRestart was only added in new versions of ConsoleKit,
@@ -172,7 +171,7 @@ egg_console_kit_is_local (EggConsoleKit *console)
 
 	/* maybe console kit does not know about our session */
 	if (console->priv->proxy_session == NULL) {
-		egg_warning ("no ConsoleKit session");
+		g_warning ("no ConsoleKit session");
 		goto out;
 	}
 
@@ -207,7 +206,7 @@ egg_console_kit_is_active (EggConsoleKit *console)
 
 	/* maybe console kit does not know about our session */
 	if (console->priv->proxy_session == NULL) {
-		egg_warning ("no ConsoleKit session");
+		g_warning ("no ConsoleKit session");
 		goto out;
 	}
 
@@ -232,7 +231,7 @@ out:
 static void
 egg_console_kit_active_changed_cb (DBusGProxy *proxy, gboolean active, EggConsoleKit *console)
 {
-	egg_debug ("emitting active: %i", active);
+	g_debug ("emitting active: %i", active);
 	g_signal_emit (console, signals [EGG_CONSOLE_KIT_ACTIVE_CHANGED], 0, active);
 }
 
@@ -271,7 +270,7 @@ egg_console_kit_init (EggConsoleKit *console)
 	/* connect to D-Bus */
 	console->priv->connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
 	if (console->priv->connection == NULL) {
-		egg_warning ("Failed to connect to the D-Bus daemon: %s", error->message);
+		g_warning ("Failed to connect to the D-Bus daemon: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -281,7 +280,7 @@ egg_console_kit_init (EggConsoleKit *console)
 		dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
 					   CONSOLEKIT_MANAGER_PATH, CONSOLEKIT_MANAGER_INTERFACE);
 	if (console->priv->proxy_manager == NULL) {
-		egg_warning ("cannot connect to ConsoleKit");
+		g_warning ("cannot connect to ConsoleKit");
 		goto out;
 	}
 
@@ -293,18 +292,18 @@ egg_console_kit_init (EggConsoleKit *console)
 				 DBUS_TYPE_G_OBJECT_PATH, &console->priv->session_id,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("Failed to get session for pid %i: %s", pid, error->message);
+		g_warning ("Failed to get session for pid %i: %s", pid, error->message);
 		g_error_free (error);
 		goto out;
 	}
-	egg_debug ("ConsoleKit session ID: %s", console->priv->session_id);
+	g_debug ("ConsoleKit session ID: %s", console->priv->session_id);
 
 	/* connect to session */
 	console->priv->proxy_session =
 		dbus_g_proxy_new_for_name (console->priv->connection, CONSOLEKIT_NAME,
 					   console->priv->session_id, CONSOLEKIT_SESSION_INTERFACE);
 	if (console->priv->proxy_session == NULL) {
-		egg_warning ("cannot connect to: %s", console->priv->session_id);
+		g_warning ("cannot connect to: %s", console->priv->session_id);
 		goto out;
 	}
 	dbus_g_proxy_add_signal (console->priv->proxy_session, "ActiveChanged", G_TYPE_BOOLEAN, G_TYPE_INVALID);

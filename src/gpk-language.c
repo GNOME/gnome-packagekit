@@ -24,8 +24,6 @@
 #include <string.h>
 #include <glib.h>
 
-#include "egg-debug.h"
-
 #include "gpk-language.h"
 
 static void     gpk_language_finalize	(GObject	  *object);

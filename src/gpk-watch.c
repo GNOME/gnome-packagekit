@@ -38,7 +38,6 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-console-kit.h"
 
@@ -100,7 +99,7 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 	GpkWatch *watch = GPK_WATCH (data);
 
 	if (g_strcmp0 (action, "do-not-show-notify-complete") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_COMPLETED);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_COMPLETED);
 		g_settings_set_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_COMPLETED, FALSE);
 
 	} else if (g_strcmp0 (action, "show-error-details") == 0) {
@@ -118,12 +117,12 @@ gpk_watch_libnotify_cb (NotifyNotification *notification, gchar *action, gpointe
 		/* restart using ConsoleKit */
 		ret = egg_console_kit_restart (watch->priv->console, &error);
 		if (!ret) {
-			egg_warning ("restarting failed: %s", error->message);
+			g_warning ("restarting failed: %s", error->message);
 			g_error_free (error);
 		}
 
 	} else {
-		egg_warning ("unknown action id: %s", action);
+		g_warning ("unknown action id: %s", action);
 	}
 }
 
@@ -173,13 +172,13 @@ gpk_watch_get_proxy_ftp (GpkWatch *watch)
 	/* common case, a direct connection */
 	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
 	if (g_strcmp0 (mode, "none") == 0) {
-		egg_debug ("not using session proxy");
+		g_debug ("not using session proxy");
 		goto out;
 	}
 
 	host = g_settings_get_string (watch->priv->settings, "/system/proxy/ftp_host");
 	if (egg_strzero (host)) {
-		egg_debug ("no hostname for ftp proxy");
+		g_debug ("no hostname for ftp proxy");
 		goto out;
 	}
 	port = g_settings_get_int (watch->priv->settings, "/system/proxy/ftp_port");
@@ -217,21 +216,21 @@ gpk_watch_get_proxy_http (GpkWatch *watch)
 	/* common case, a direct connection */
 	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
 	if (g_strcmp0 (mode, "none") == 0) {
-		egg_debug ("not using session proxy");
+		g_debug ("not using session proxy");
 		goto out;
 	}
 
 	/* do we use this? */
 	ret = g_settings_get_boolean (watch->priv->settings, "/system/http_proxy/use_http_proxy");
 	if (!ret) {
-		egg_debug ("not using http proxy");
+		g_debug ("not using http proxy");
 		goto out;
 	}
 
 	/* http has 4 parameters */
 	host = g_settings_get_string (watch->priv->settings, "/system/http_proxy/host");
 	if (egg_strzero (host)) {
-		egg_debug ("no hostname for http proxy");
+		g_debug ("no hostname for http proxy");
 		goto out;
 	}
 
@@ -292,7 +291,7 @@ gpk_watch_set_proxy_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
 	/* get the result */
 	ret = pk_control_set_proxy_finish (control, res, &error);
 	if (!ret) {
-		egg_warning ("failed to set proxies: %s", error->message);
+		g_warning ("failed to set proxies: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -308,12 +307,12 @@ gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
 	gchar *proxy_ftp;
 
 	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	g_debug ("polling check");
 
 	proxy_http = gpk_watch_get_proxy_http (watch);
 	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
 
-	egg_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
+	g_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
 	pk_control_set_proxy_async (watch->priv->control, proxy_http, proxy_ftp, watch->priv->cancellable,
 				    (GAsyncReadyCallback) gpk_watch_set_proxy_cb, watch);
 	g_free (proxy_http);
@@ -328,7 +327,7 @@ static gboolean
 gpk_watch_set_proxies (GpkWatch *watch)
 {
 	if (watch->priv->set_proxy_id != 0) {
-		egg_debug ("already scheduled");
+		g_debug ("already scheduled");
 		return FALSE;
 	}
 	watch->priv->set_proxy_id = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
@@ -351,7 +350,7 @@ gpk_watch_set_root_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
 	/* get the result */
 	ret = pk_control_set_root_finish (control, res, &error);
 	if (!ret) {
-		egg_warning ("failed to set install root: %s", error->message);
+		g_warning ("failed to set install root: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -368,7 +367,7 @@ gpk_watch_set_root (GpkWatch *watch)
 	/* get install root */
 	root = g_settings_get_string (watch->priv->settings, GPK_SETTINGS_INSTALL_ROOT);
 	if (root == NULL) {
-		egg_warning ("could not read install root");
+		g_warning ("could not read install root");
 		goto out;
 	}
 
@@ -389,7 +388,7 @@ static void gpk_watch_set_root (GpkWatch *watch) {}
 static void
 gpk_watch_key_changed_cb (GSettings *client, const gchar *key, GpkWatch *watch)
 {
-	egg_debug ("keys have changed");
+	g_debug ("keys have changed");
 	gpk_watch_set_proxies (watch);
 	gpk_watch_set_root (watch);
 }
@@ -404,7 +403,7 @@ gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
 		return;
 
 	/* daemon has just appeared */
-	egg_debug ("dameon has just appeared");
+	g_debug ("dameon has just appeared");
 	gpk_watch_set_proxies (watch);
 	gpk_watch_set_root (watch);
 }
@@ -449,13 +448,13 @@ gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
 	/* get from settings */
 	ignored_str = g_settings_get_string (watch->priv->settings, GPK_SETTINGS_IGNORED_MESSAGES);
 	if (ignored_str == NULL) {
-		egg_warning ("could not read ignored list");
+		g_warning ("could not read ignored list");
 		goto out;
 	}
 
 	/* nothing in list, common case */
 	if (egg_strzero (ignored_str)) {
-		egg_debug ("nothing in ignored list");
+		g_debug ("nothing in ignored list");
 		goto out;
 	}
 
@@ -467,7 +466,7 @@ gpk_watch_is_message_ignored (GpkWatch *watch, PkMessageEnum message)
 	for (i=0; ignored[i] != NULL; i++) {
 		ret = g_pattern_match_simple (ignored[i], message_str);
 		if (ret) {
-			egg_debug ("match %s for %s, ignoring", ignored[i], message_str);
+			g_debug ("match %s for %s, ignoring", ignored[i], message_str);
 			break;
 		}
 	}
@@ -500,14 +499,14 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 
 	/* this is message unrecognised */
 	if (gpk_message_enum_to_localised_text (type) == NULL) {
-		egg_warning ("message unrecognized, and thus ignored: %i", type);
+		g_warning ("message unrecognized, and thus ignored: %i", type);
 		goto out;
 	}
 
 	/* is ignored */
 	ret = gpk_watch_is_message_ignored (watch, type);
 	if (ret) {
-		egg_debug ("ignoring message");
+		g_debug ("ignoring message");
 		goto out;
 	}
 
@@ -515,7 +514,7 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	if (watch->priv->notification_message != NULL) {
 		ret = notify_notification_close (watch->priv->notification_message, &error);
 		if (!ret) {
-			egg_warning ("error: %s", error->message);
+			g_warning ("error: %s", error->message);
 			g_clear_error (&error);
 		}
 	}
@@ -523,7 +522,7 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	/* are we accepting notifications */
 	value = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_MESSAGE);
 	if (!value) {
-		egg_debug ("not showing notification as prevented in settings");
+		g_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
@@ -535,7 +534,7 @@ gpk_watch_process_messages_cb (PkMessage *item, GpkWatch *watch)
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	watch->priv->notification_message = notification;
@@ -568,14 +567,14 @@ gpk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 	    code == PK_ERROR_ENUM_NO_NETWORK ||
 	    code == PK_ERROR_ENUM_PROCESS_KILL ||
 	    code == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		egg_debug ("error ignored %s%s", title, pk_error_get_details (error_code));
+		g_debug ("error ignored %s%s", title, pk_error_get_details (error_code));
 		goto out;
 	}
 
 	/* are we accepting notifications */
 	value = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_ERROR);
 	if (!value) {
-		egg_debug ("not showing notification as prevented in settings");
+		g_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
@@ -599,7 +598,7 @@ gpk_watch_process_error_code (GpkWatch *watch, PkError *error_code)
 
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -634,7 +633,7 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 
 	/* if less important than what we are already showing */
 	if (restart <= watch->priv->restart) {
-		egg_debug ("restart already %s, not processing %s",
+		g_debug ("restart already %s, not processing %s",
 			   pk_restart_enum_to_text (watch->priv->restart),
 			   pk_restart_enum_to_text (restart));
 		goto out;
@@ -649,7 +648,7 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 	for (i=0; i<names->len; i++) {
 		name = g_ptr_array_index (names, i);
 		if (g_strcmp0 (name, split[PK_PACKAGE_ID_NAME]) == 0) {
-			egg_debug ("already got %s", name);
+			g_debug ("already got %s", name);
 			goto out;
 		}
 	}
@@ -663,7 +662,7 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 	if (watch->priv->notification_restart != NULL) {
 		ret = notify_notification_close (watch->priv->notification_restart, &error);
 		if (!ret) {
-			egg_warning ("error: %s", error->message);
+			g_warning ("error: %s", error->message);
 			g_clear_error (&error);
 		}
 	}
@@ -685,17 +684,17 @@ gpk_watch_process_require_restart_cb (PkRequireRestart *item, GpkWatch *watch)
 						/* TRANSLATORS: restart the computer */
 						_("Restart"), gpk_watch_libnotify_cb, watch, NULL);
 	} else {
-		egg_warning ("failed to handle restart action: %s", pk_restart_enum_to_string (restart));
+		g_warning ("failed to handle restart action: %s", pk_restart_enum_to_string (restart));
 	}
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	watch->priv->notification_restart = notification;
 
 	/* add to list */
-	egg_debug ("adding %s to restart list", split[PK_PACKAGE_ID_NAME]);
+	g_debug ("adding %s to restart list", split[PK_PACKAGE_ID_NAME]);
 	g_ptr_array_add (names, g_strdup (split[PK_PACKAGE_ID_NAME]));
 out:
 	g_free (package_id);
@@ -726,7 +725,7 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to adopt: %s", error->message);
+		g_warning ("failed to adopt: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -744,7 +743,7 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 		      "elapsed-time", &elapsed_time,
 		      NULL);
 
-	egg_debug ("%s finished (%s)", transaction_id, pk_role_enum_to_text (role));
+	g_debug ("%s finished (%s)", transaction_id, pk_role_enum_to_text (role));
 
 	/* get the error */
 	error_code = pk_results_get_error_code (results);
@@ -770,19 +769,19 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 	/* are we accepting notifications */
 	ret = g_settings_get_boolean (watch->priv->settings, GPK_SETTINGS_NOTIFY_COMPLETED);
 	if (!ret) {
-		egg_debug ("not showing notification as prevented in settings");
+		g_debug ("not showing notification as prevented in settings");
 		goto out;
 	}
 
 	/* is it worth showing a UI? */
 	if (elapsed_time < 3000) {
-		egg_debug ("no notification, too quick");
+		g_debug ("no notification, too quick");
 		goto out;
 	}
 
 	/* is caller able to handle the messages itself? */
 	if (caller_active) {
-		egg_debug ("not showing notification as caller is still present");
+		g_debug ("not showing notification as caller is still present");
 		goto out;
 	}
 
@@ -809,7 +808,7 @@ gpk_watch_adopt_cb (PkClient *client, GAsyncResult *res, GpkWatch *watch)
 					_("Do not show this again"), gpk_watch_libnotify_cb, watch, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -842,7 +841,7 @@ gpk_watch_progress_cb (PkProgress *progress, PkProgressType type, GpkWatch *watc
 			ret = TRUE;
 	}
 	if (!ret) {
-		egg_debug ("adding progress %p", progress);
+		g_debug ("adding progress %p", progress);
 		g_ptr_array_add (array, g_object_ref (progress));
 	}
 	g_free (text);
@@ -859,10 +858,10 @@ gpk_watch_transaction_list_added_cb (PkTransactionList *tlist, const gchar *tran
 	/* find progress */
 	progress = gpk_watch_lookup_progress_from_transaction_id (watch, transaction_id);
 	if (progress != NULL) {
-		egg_warning ("already added: %s", transaction_id);
+		g_warning ("already added: %s", transaction_id);
 		return;
 	}
-	egg_debug ("added: %s", transaction_id);
+	g_debug ("added: %s", transaction_id);
 	pk_client_adopt_async (PK_CLIENT(watch->priv->task), transaction_id, watch->priv->cancellable,
 			       (PkProgressCallback) gpk_watch_progress_cb, watch,
 			       (GAsyncReadyCallback) gpk_watch_adopt_cb, watch);
@@ -879,10 +878,10 @@ gpk_watch_transaction_list_removed_cb (PkTransactionList *tlist, const gchar *tr
 	/* find progress */
 	progress = gpk_watch_lookup_progress_from_transaction_id (watch, transaction_id);
 	if (progress == NULL) {
-		egg_warning ("could not find: %s", transaction_id);
+		g_warning ("could not find: %s", transaction_id);
 		return;
 	}
-	egg_debug ("removed: %s", transaction_id);
+	g_debug ("removed: %s", transaction_id);
 	g_ptr_array_remove_fast (watch->priv->array_progress, progress);
 }
 
@@ -901,7 +900,7 @@ gpk_check_update_get_properties_cb (GObject *object, GAsyncResult *res, GpkWatch
 	ret = pk_control_get_properties_finish (control, res, &error);
 	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
-		egg_warning ("details could not be retrieved: %s", error->message);
+		g_warning ("details could not be retrieved: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}

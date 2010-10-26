@@ -31,10 +31,9 @@
 
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
-
 #include "gpk-common.h"
 #include "gpk-gnome.h"
+#include "gpk-debug.h"
 
 static GtkBuilder *builder = NULL;
 static GtkListStore *list_store = NULL;
@@ -356,10 +355,10 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 		gtk_tree_model_get (model, &iter, GPK_LOG_COLUMN_ID, &id, -1);
 
 		/* show transaction_id */
-		egg_debug ("selected row is: %s", id);
+		g_debug ("selected row is: %s", id);
 		g_free (id);
 	} else {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 	}
 }
 
@@ -390,7 +389,7 @@ gpk_log_filter (PkTransactionPast *item)
 
 	/* only show transactions that succeeded */
 	if (!succeeded) {
-		egg_debug ("tid %s did not succeed, so not adding", tid);
+		g_debug ("tid %s did not succeed, so not adding", tid);
 		return FALSE;
 	}
 
@@ -555,7 +554,7 @@ gpk_log_refilter (void)
 	else
 		filter = NULL;
 
-	egg_debug ("len=%i", transactions->len);
+	g_debug ("len=%i", transactions->len);
 
 	/* mark the items as not used */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
@@ -588,7 +587,7 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get old transactions: %s", error->message);
+		g_warning ("failed to get old transactions: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -596,7 +595,7 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -706,7 +705,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -787,7 +786,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* set the parent window if it is specified */
 	if (xid != 0) {
-		egg_debug ("Setting xid %i", xid);
+		g_debug ("Setting xid %i", xid);
 		gpk_window_set_parent_xid (GTK_WINDOW (widget), xid);
 	}
 
@@ -837,7 +836,7 @@ main (int argc, char *argv[])
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Software Log Viewer"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

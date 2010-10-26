@@ -22,7 +22,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "egg-test.h"
-#include "egg-debug.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
 #include "gpk-task.h"
@@ -46,7 +45,7 @@ main (int argc, char **argv)
 	g_type_init ();
 	gtk_init (&argc, &argv);
 	test = egg_test_init ();
-	egg_debug_init (&argc, &argv);
+	g_debug_init (&argc, &argv);
 
 	/* tests go here */
 	egg_markdown_test (test);

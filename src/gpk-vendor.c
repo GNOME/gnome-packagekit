@@ -23,7 +23,6 @@
 
 #include <glib/gi18n.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "gpk-vendor.h"
 
@@ -95,7 +94,7 @@ gpk_vendor_get_not_found_url (GpkVendor *vendor, GpkVendorUrlType type)
 		goto out;
 
 	/* get fallback data */
-	egg_debug ("using fallback");
+	g_debug ("using fallback");
 	key = gpk_vendor_type_to_string (GPK_VENDOR_URL_TYPE_DEFAULT);
 	url = g_key_file_get_string (vendor->priv->file, "PackagesNotFound", key, NULL);
 
@@ -105,7 +104,7 @@ gpk_vendor_get_not_found_url (GpkVendor *vendor, GpkVendorUrlType type)
 		url = NULL;
 	}
 out:
-	egg_debug ("url=%s", url);
+	g_debug ("url=%s", url);
 	return url;
 }
 
@@ -123,7 +122,7 @@ gpk_vendor_init (GpkVendor *vendor)
 	vendor->priv->file = g_key_file_new ();
 	ret = g_key_file_load_from_file (vendor->priv->file, "/etc/PackageKit/Vendor.conf", G_KEY_FILE_NONE, NULL);
 	if (!ret)
-		egg_warning ("file not found");
+		g_warning ("file not found");
 }
 
 /**

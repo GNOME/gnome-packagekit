@@ -27,8 +27,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
-
 #include "cc-update-panel.h"
 
 #include "gpk-common.h"
@@ -63,7 +61,6 @@ G_DEFINE_DYNAMIC_TYPE (CcUpdatePanel, cc_update_panel, CC_TYPE_PANEL)
 static void cc_update_panel_finalize (GObject *object);
 
 #define CC_UPDATE_PREFS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), CC_TYPE_UPDATE_PANEL, CcUpdatePanelPrivate))
-
 
 /* TRANSLATORS: check once an hour */
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
@@ -108,7 +105,7 @@ cc_update_panel_check_now_cb (GtkWidget *widget, CcUpdatePanel *panel)
 	command = g_build_filename (BINDIR, "gpk-update-viewer", NULL);
 	ret = g_spawn_command_line_async (command, &error);
 	if (!ret) {
-		egg_warning ("Couldn't execute %s: %s", command, error->message);
+		g_warning ("Couldn't execute %s: %s", command, error->message);
 		g_error_free (error);
 	}
 	g_free (command);
@@ -135,7 +132,7 @@ cc_update_panel_update_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pan
 	else
 		g_assert (FALSE);
 
-	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_free (value);
 }
@@ -159,7 +156,7 @@ cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pa
 	else
 		g_assert (FALSE);
 
-	egg_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_free (value);
 }
@@ -191,7 +188,7 @@ cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_check"));
 	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
-	egg_debug ("value from settings %i", value);
+	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -230,7 +227,7 @@ cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_upgrade"));
 	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
 	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
-	egg_debug ("value from settings %i", value);
+	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -301,7 +298,6 @@ cc_update_panel_notify_network_state_cb (PkControl *control, GParamSpec *pspec, 
 	else
 		gtk_widget_hide (widget);
 }
-
 
 /**
  * cc_update_panel_find_iter_model_cb:
@@ -436,7 +432,7 @@ cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdate
 	g_object_get (progress,
 		      "status", &panel->priv->status,
 		      NULL);
-	egg_debug ("now %s", pk_status_enum_to_text (panel->priv->status));
+	g_debug ("now %s", pk_status_enum_to_text (panel->priv->status));
 
 	if (panel->priv->status == PK_STATUS_ENUM_FINISHED) {
 		/* we've not yet shown, so don't bother */
@@ -503,7 +499,7 @@ cc_update_panel_repo_enable_cb (GObject *object, GAsyncResult *res, CcUpdatePane
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get set repo: %s", error->message);
+		g_warning ("failed to get set repo: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -511,7 +507,7 @@ cc_update_panel_repo_enable_cb (GObject *object, GAsyncResult *res, CcUpdatePane
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
@@ -542,7 +538,7 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, CcUpdate
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (panel->priv->roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
-		egg_debug ("can't change state");
+		g_debug ("can't change state");
 		goto out;
 	}
 
@@ -563,7 +559,7 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, CcUpdate
 			    -1);
 
 	/* set the repo */
-	egg_debug ("setting %s to %i", repo_id, enabled);
+	g_debug ("setting %s to %i", repo_id, enabled);
 	pk_client_repo_enable_async (panel->priv->client, repo_id, enabled,
 				     panel->priv->cancellable,
 				     (PkProgressCallback) cc_update_panel_progress_cb, panel,
@@ -618,10 +614,10 @@ gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, CcUpdatePanel *panel
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter, GPK_COLUMN_ID, &repo_id, -1);
-		egg_debug ("selected row is: %s", repo_id);
+		g_debug ("selected row is: %s", repo_id);
 		g_free (repo_id);
 	} else {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 	}
 }
 
@@ -649,7 +645,7 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get repo list: %s", error->message);
+		g_warning ("failed to get repo list: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -657,7 +653,7 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
 		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),
@@ -676,7 +672,7 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 			      "description", &description,
 			      "enabled", &enabled,
 			      NULL);
-		egg_debug ("repo = %s:%s:%i", repo_id, description, enabled);
+		g_debug ("repo = %s:%s:%i", repo_id, description, enabled);
 		cc_update_panel_model_get_iter (panel, model, &iter, repo_id);
 		gtk_list_store_set (panel->priv->list_store, &iter,
 				    GPK_COLUMN_ENABLED, enabled,
@@ -721,7 +717,7 @@ cc_update_panel_repo_list_refresh (CcUpdatePanel *panel)
 	model = gtk_tree_view_get_model (treeview);
 	cc_update_panel_mark_nonactive (panel, model);
 
-	egg_debug ("refreshing list");
+	g_debug ("refreshing list");
 	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_detail"));
 	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	if (!show_details)
@@ -878,7 +874,7 @@ cc_update_panel_init (CcUpdatePanel *panel)
 	panel->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (panel->priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}

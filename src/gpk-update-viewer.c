@@ -31,7 +31,6 @@
 #include <locale.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-markdown.h"
 #include "egg-console-kit.h"
@@ -46,6 +45,7 @@
 #include "gpk-gnome.h"
 #include "gpk-session.h"
 #include "gpk-task.h"
+#include "gpk-debug.h"
 
 #define GPK_UPDATE_VIEWER_AUTO_QUIT_TIMEOUT	10 /* seconds */
 #define GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT	60 /* seconds */
@@ -168,7 +168,7 @@ gpk_update_viewer_packages_set_sensitive (gboolean sensitive)
 static gboolean
 gpk_update_viewer_auto_shutdown_cb (GtkDialog *dialog)
 {
-	egg_debug ("autoclosing dialog");
+	g_debug ("autoclosing dialog");
 	gtk_dialog_response (dialog, GTK_RESPONSE_CANCEL);
 	return FALSE;
 }
@@ -187,7 +187,7 @@ gpk_update_viewer_error_dialog (const gchar *title, const gchar *message, const 
 		message = _("Failed to process request.");
 	}
 
-	egg_warning ("%s: %s", title, details);
+	g_warning ("%s: %s", title, details);
 	window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 	gpk_error_dialog_modal (window, title, message, details);
 }
@@ -235,7 +235,7 @@ gpk_update_viewer_check_restart (void)
 		button = _("Log Out");
 
 	} else {
-		egg_warning ("unknown restart enum");
+		g_warning ("unknown restart enum");
 		goto out;
 	}
 
@@ -424,7 +424,7 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
 			gpk_update_viewer_error_dialog (_("Could not update packages"), NULL, error->message);
 		} else if (error->code == PK_CLIENT_ERROR_DECLINED_SIMULATION) {
-			egg_debug ("ignoring the declined-simulation error");
+			g_debug ("ignoring the declined-simulation error");
 		} else if (error->code > PK_CLIENT_ERROR_LAST) {
 			gint code = error->code - PK_CLIENT_ERROR_LAST;
 			/* we've passed the PackageKit error code in the GError->code */
@@ -450,7 +450,7 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to update packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to update packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* failed sound, using sounds from the naming spec */
 		ca_context_play (ca_gtk_context_get (), 0,
@@ -573,7 +573,6 @@ out:
 		g_object_unref (results);
 }
 
-
 static GSList *active_rows = NULL;
 static guint active_row_timeout_id = 0;
 
@@ -647,7 +646,7 @@ gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 		goto out;
 	row = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
 	if (row != NULL) {
-		egg_debug ("already active");
+		g_debug ("already active");
 		gtk_tree_row_reference_free (ref);
 		goto out;
 	}
@@ -679,7 +678,7 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 	row = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
 	gtk_tree_row_reference_free (ref);
 	if (row == NULL) {
-		egg_warning ("row not already added");
+		g_warning ("row not already added");
 		return;
 	}
 
@@ -894,7 +893,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 			ret = gpk_update_viewer_find_parent (package_id, &parent);
 
 			text = gpk_package_id_format_twoline (package_id, summary);
-			egg_debug ("adding: id=%s, text=%s", package_id, text);
+			g_debug ("adding: id=%s, text=%s", package_id, text);
 
 			/* do we add to a parent? */
 			if (ret)
@@ -918,7 +917,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 			g_free (text);
 			path = gpk_update_viewer_model_get_path (model, package_id);
 			if (path == NULL) {
-				egg_warning ("found no package %s", package_id);
+				g_warning ("found no package %s", package_id);
 				goto out;
 			}
 		}
@@ -966,7 +965,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		GdkDisplay *display;
 		GdkCursor *cursor;
 
-		egg_debug ("status %s", pk_status_enum_to_text (status));
+		g_debug ("status %s", pk_status_enum_to_text (status));
 
 		/* use correct status pane */
 		widget = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_status"));
@@ -1033,13 +1032,13 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		model = gtk_tree_view_get_model (treeview);
 
 		if (package_id_last == NULL) {
-			egg_debug ("no last package");
+			g_debug ("no last package");
 			return;
 		}
 
 		path = gpk_update_viewer_model_get_path (model, package_id_last);
 		if (path == NULL) {
-			egg_debug ("not found ID for package");
+			g_debug ("not found ID for package");
 			return;
 		}
 
@@ -1190,7 +1189,7 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer user_data)
 	/* hide the held-back notice */
 	gtk_widget_hide (info_updates);
 
-	egg_debug ("Doing the package updates");
+	g_debug ("Doing the package updates");
 
 	/* no not allow to be unclicked at install time */
 	gpk_update_viewer_packages_set_sensitive (FALSE);
@@ -1402,7 +1401,6 @@ gpk_update_viewer_modal_error_with_timeout (const gchar *title, const gchar *mes
 	gpk_update_viewer_quit ();
 }
 
-
 /**
  * gpk_update_viewer_reconsider_info:
  **/
@@ -1425,7 +1423,7 @@ gpk_update_viewer_reconsider_info (void)
 		      NULL);
 
 	/* not when offline */
-	egg_debug ("network status is %s", pk_network_enum_to_text (state));
+	g_debug ("network status is %s", pk_network_enum_to_text (state));
 	if (state == PK_NETWORK_ENUM_OFFLINE) {
 		gpk_update_viewer_modal_error_with_timeout (
 				/* TRANSLATORS: title: nothing to do */
@@ -1547,7 +1545,7 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 	/* unstage */
 	update ^= 1;
 
-	egg_debug ("update %s[%i]", package_id, update);
+	g_debug ("update %s[%i]", package_id, update);
 	g_free (package_id);
 
 	/* set new value */
@@ -1574,7 +1572,7 @@ gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAlloc
 	width = gtk_tree_view_column_get_width (column);
 	wrap_width = allocation->width - width - 200;
 	if (wrap_width < 10) {
-		egg_warning ("wrap_width is impossibly small %i", wrap_width);
+		g_warning ("wrap_width is impossibly small %i", wrap_width);
 		return;
 	}
 	g_object_set (cell, "wrap-width", wrap_width, NULL);
@@ -1807,7 +1805,7 @@ gpk_update_viewer_get_uris (const gchar *url_string)
 
 	/* could we have malformed descriptions with ';' in them? */
 	if (length % 2 != 0) {
-		egg_warning ("length not correct, correcting");
+		g_warning ("length not correct, correcting");
 		length--;
 	}
 
@@ -1836,7 +1834,7 @@ gpk_update_viewer_iso8601_format_locale_date (const gchar *iso_date)
 	/* parse ISO8601 date */
 	ret = g_time_val_from_iso8601 (iso_date, &timeval);
 	if (!ret) {
-		egg_warning ("failed to parse %s, falling back to ISO8601", iso_date);
+		g_warning ("failed to parse %s, falling back to ISO8601", iso_date);
 		text = g_strdup (iso_date);
 		goto out;
 	}
@@ -2064,12 +2062,12 @@ gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer user_dat
 		gtk_tree_model_get (model, &iter,
 				    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &item,
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
-		egg_debug ("selected row is: %s, %p", package_id, item);
+		g_debug ("selected row is: %s, %p", package_id, item);
 		g_free (package_id);
 		if (item != NULL)
 			gpk_update_viewer_populate_details (item);
 	} else {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 	}
 }
 
@@ -2107,7 +2105,7 @@ gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -2137,7 +2135,7 @@ gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, gpointer 
 
 		path = gpk_update_viewer_model_get_path (model, package_id);
 		if (path == NULL) {
-			egg_debug ("not found ID for details");
+			g_debug ("not found ID for details");
 		} else {
 			gtk_tree_model_get_iter (model, &iter, path);
 			gtk_tree_path_free (path);
@@ -2205,7 +2203,7 @@ gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, gpo
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get update details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get update details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -2235,7 +2233,7 @@ gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, gpo
 
 		path = gpk_update_viewer_model_get_path (model, package_id);
 		if (path == NULL) {
-			egg_warning ("not found ID for update detail");
+			g_warning ("not found ID for update detail");
 		} else {
 			gtk_tree_model_get_iter (model, &iter, path);
 			gtk_tree_path_free (path);
@@ -2446,7 +2444,7 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 	/* we don't want to show 'Select all' if they are all checked */
 	ret = gpk_update_viewer_get_checked_status (&all_checked, &none_checked);
 	if (!ret) {
-		egg_debug ("ignoring as we are locked down");
+		g_debug ("ignoring as we are locked down");
 		return;
 	}
 
@@ -2500,7 +2498,7 @@ gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *ev
 		return FALSE;
 	}
 
-	egg_debug ("Single right click on the tree view");
+	g_debug ("Single right click on the tree view");
 
 	/* select the row */
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(treeview));
@@ -2592,7 +2590,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -2634,7 +2632,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 
 		/* add to array store */
 		text = gpk_package_id_format_twoline (package_id, summary);
-		egg_debug ("adding: id=%s, text=%s", package_id, text);
+		g_debug ("adding: id=%s, text=%s", package_id, text);
 		selected = (info != PK_INFO_ENUM_BLOCKED);
 
 		/* do we add to a parent? */
@@ -2731,7 +2729,7 @@ gpk_update_viewer_get_new_update_array (void)
 	/* only show newest updates? */
 	ret = g_settings_get_boolean (settings, GPK_SETTINGS_ONLY_NEWEST);
 	if (ret) {
-		egg_debug ("only showing newest updates");
+		g_debug ("only showing newest updates");
 		filter = pk_bitfield_from_enums (PK_FILTER_ENUM_NEWEST, -1);
 	}
 
@@ -2914,9 +2912,9 @@ static void
 gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer user_data)
 {
 	/* now try to get newest update array */
-	egg_debug ("updates changed");
+	g_debug ("updates changed");
 	if (ignore_updates_changed) {
-		egg_debug ("ignoring");
+		g_debug ("ignoring");
 		return;
 	}
 	gpk_update_viewer_get_new_update_array ();
@@ -2930,7 +2928,7 @@ gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer user_data)
 {
 	GtkRequisition req;
 	gtk_widget_get_preferred_size (widget, &req, NULL);
-	egg_debug ("req.height=%i", req.height);
+	g_debug ("req.height=%i", req.height);
 	if (req.height != 0)
 		gtk_paned_set_position (GTK_PANED (widget), 166);
 }
@@ -3019,7 +3017,7 @@ gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, g
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get list of distro upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get list of distro upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -3032,7 +3030,6 @@ gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, g
 	item = gpk_update_viewer_get_distro_upgrades_best (array);
 	if (item == NULL)
 		goto out;
-
 
 	/* get data */
 	g_object_get (item,
@@ -3169,7 +3166,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-update-viewer.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -3264,7 +3261,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	/* set a size, if the screen allows */
 	ret = gpk_window_set_size_request (GTK_WINDOW(main_window), 700, 600);
 	if (!ret) {
-		egg_debug ("small form factor mode");
+		g_debug ("small form factor mode");
 		/* hide the header in SFF mode */
 		widget = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_header"));
 		gtk_widget_hide (widget);
@@ -3344,7 +3341,7 @@ main (int argc, char *argv[])
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Add/Remove Software"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);

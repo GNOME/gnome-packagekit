@@ -26,8 +26,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
-
 #include "gpk-enum.h"
 #include "gpk-cell-renderer-info.h"
 

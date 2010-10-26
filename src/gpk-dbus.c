@@ -40,7 +40,6 @@
 #include <dbus/dbus-glib-lowlevel.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-dbus.h"
@@ -115,7 +114,7 @@ gpk_dbus_get_idle_time (GpkDbus	*dbus)
 		goto out;
 
 	idle = (guint) g_timer_elapsed (dbus->priv->timer, NULL);
-	egg_debug ("we've been idle for %is", idle);
+	g_debug ("we've been idle for %is", idle);
 out:
 	return idle;
 }
@@ -137,7 +136,7 @@ gpk_dbus_get_pid_session (GpkDbus *dbus, const gchar *sender)
 				 G_TYPE_UINT, &pid,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_debug ("failed to get pid from session: %s", error->message);
+		g_debug ("failed to get pid from session: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -162,7 +161,7 @@ gpk_dbus_get_pid_system (GpkDbus *dbus, const gchar *sender)
 				 G_TYPE_UINT, &pid,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_debug ("failed to get pid from system: %s", error->message);
+		g_debug ("failed to get pid from system: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -194,11 +193,10 @@ gpk_dbus_get_pid (GpkDbus *dbus, const gchar *sender)
 		goto out;
 
 	/* should be impossible */
-	egg_warning ("could not find pid!");
+	g_warning ("could not find pid!");
 out:
 	return pid;
 }
-
 
 /**
  * gpk_dbus_get_exec_for_sender:
@@ -217,7 +215,7 @@ gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 	/* get pid */
 	pid = gpk_dbus_get_pid (dbus, sender);
 	if (pid == G_MAXUINT) {
-		egg_warning ("failed to get PID");
+		g_warning ("failed to get PID");
 		goto out;
 	}
 
@@ -225,7 +223,7 @@ gpk_dbus_get_exec_for_sender (GpkDbus *dbus, const gchar *sender)
 	filename = g_strdup_printf ("/proc/%i/exe", pid);
 	cmdline = g_file_read_link (filename, &error);
 	if (cmdline == NULL) {
-		egg_warning ("failed to find exec: %s", error->message);
+		g_warning ("failed to find exec: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -303,19 +301,19 @@ gpk_dbus_parse_interaction (GpkDbus *dbus, const gchar *interaction, PkBitfield 
 	/* get default policy from settings */
 	policy = g_settings_get_string (dbus->priv->settings, GPK_SETTINGS_DBUS_DEFAULT_INTERACTION);
 	if (policy != NULL) {
-		egg_debug ("default is %s", policy);
+		g_debug ("default is %s", policy);
 		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
 	}
 	g_free (policy);
 
 	/* now override with policy from client */
 	gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, interaction);
-	egg_debug ("client is %s", interaction);
+	g_debug ("client is %s", interaction);
 
 	/* now override with enforced policy */
 	policy = g_settings_get_string (dbus->priv->settings, GPK_SETTINGS_DBUS_ENFORCED_INTERACTION);
 	if (policy != NULL) {
-		egg_debug ("enforced is %s", policy);
+		g_debug ("enforced is %s", policy);
 		gpk_dbus_set_interaction_from_text (interact, &dbus->priv->timeout_tmp, policy);
 	}
 	g_free (policy);
@@ -343,7 +341,7 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	gpk_dbus_parse_interaction (dbus, interaction, &interact, &timeout);
 
 	/* set interaction mode */
-	egg_debug ("interact=%i", (gint) interact);
+	g_debug ("interact=%i", (gint) interact);
 	gpk_dbus_task_set_interaction (task, interact);
 
 	/* set the parent window */

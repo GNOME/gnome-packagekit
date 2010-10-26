@@ -28,7 +28,6 @@
 
 #include "gpk-session.h"
 #include "gpk-common.h"
-#include "egg-debug.h"
 
 static void     gpk_session_finalize   (GObject		*object);
 
@@ -92,7 +91,7 @@ gpk_session_logout (GpkSession *session)
 
 	/* no gnome-session */
 	if (session->priv->proxy == NULL) {
-		egg_warning ("no gnome-session");
+		g_warning ("no gnome-session");
 		return FALSE;
 	}
 
@@ -132,7 +131,7 @@ gpk_session_presence_status_changed_cb (DBusGProxy *proxy, guint status, GpkSess
 	gboolean is_idle;
 	is_idle = (status == GPK_SESSION_STATUS_ENUM_IDLE);
 	if (is_idle != session->priv->is_idle_old) {
-		egg_debug ("emitting idle-changed : (%i)", is_idle);
+		g_debug ("emitting idle-changed : (%i)", is_idle);
 		session->priv->is_idle_old = is_idle;
 		g_signal_emit (session, signals [IDLE_CHANGED], 0, is_idle);
 	}
@@ -151,7 +150,7 @@ gpk_session_is_idle (GpkSession *session)
 
 	/* no gnome-session */
 	if (session->priv->proxy_prop == NULL) {
-		egg_warning ("no gnome-session");
+		g_warning ("no gnome-session");
 		goto out;
 	}
 
@@ -164,7 +163,7 @@ gpk_session_is_idle (GpkSession *session)
 				 G_TYPE_VALUE, value,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("failed to get idle status: %s", error->message);
+		g_warning ("failed to get idle status: %s", error->message);
 		g_error_free (error);
 		is_idle = FALSE;
 		goto out;
@@ -187,7 +186,7 @@ gpk_session_is_inhibited (GpkSession *session)
 
 	/* no gnome-session */
 	if (session->priv->proxy == NULL) {
-		egg_warning ("no gnome-session");
+		g_warning ("no gnome-session");
 		goto out;
 	}
 
@@ -198,7 +197,7 @@ gpk_session_is_inhibited (GpkSession *session)
 				 G_TYPE_BOOLEAN, &is_inhibited,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("failed to get inhibit status: %s", error->message);
+		g_warning ("failed to get inhibit status: %s", error->message);
 		g_error_free (error);
 		is_inhibited = FALSE;
 	}
@@ -212,7 +211,7 @@ out:
 static void
 gpk_session_stop_cb (DBusGProxy *proxy, GpkSession *session)
 {
-	egg_debug ("emitting ::stop()");
+	g_debug ("emitting ::stop()");
 	g_signal_emit (session, signals [STOP], 0);
 }
 
@@ -222,7 +221,7 @@ gpk_session_stop_cb (DBusGProxy *proxy, GpkSession *session)
 static void
 gpk_session_query_end_session_cb (DBusGProxy *proxy, guint flags, GpkSession *session)
 {
-	egg_debug ("emitting ::query-end-session(%i)", flags);
+	g_debug ("emitting ::query-end-session(%i)", flags);
 	g_signal_emit (session, signals [QUERY_END_SESSION], 0, flags);
 }
 
@@ -232,7 +231,7 @@ gpk_session_query_end_session_cb (DBusGProxy *proxy, guint flags, GpkSession *se
 static void
 gpk_session_end_session_cb (DBusGProxy *proxy, guint flags, GpkSession *session)
 {
-	egg_debug ("emitting ::end-session(%i)", flags);
+	g_debug ("emitting ::end-session(%i)", flags);
 	g_signal_emit (session, signals [END_SESSION], 0, flags);
 }
 
@@ -250,7 +249,7 @@ gpk_session_end_session_response (GpkSession *session, gboolean is_okay, const g
 
 	/* no gnome-session */
 	if (session->priv->proxy_client_private == NULL) {
-		egg_warning ("no gnome-session proxy");
+		g_warning ("no gnome-session proxy");
 		goto out;
 	}
 
@@ -261,7 +260,7 @@ gpk_session_end_session_response (GpkSession *session, gboolean is_okay, const g
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("failed to send session response: %s", error->message);
+		g_warning ("failed to send session response: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -284,7 +283,7 @@ gpk_session_register_client (GpkSession *session, const gchar *app_id, const gch
 
 	/* no gnome-session */
 	if (session->priv->proxy == NULL) {
-		egg_warning ("no gnome-session");
+		g_warning ("no gnome-session");
 		goto out;
 	}
 
@@ -296,7 +295,7 @@ gpk_session_register_client (GpkSession *session, const gchar *app_id, const gch
 				 DBUS_TYPE_G_OBJECT_PATH, &client_id,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		egg_warning ("failed to register client '%s': %s", client_startup_id, error->message);
+		g_warning ("failed to register client '%s': %s", client_startup_id, error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -306,7 +305,7 @@ gpk_session_register_client (GpkSession *session, const gchar *app_id, const gch
 	session->priv->proxy_client_private = dbus_g_proxy_new_for_name_owner (connection, GPK_SESSION_MANAGER_SERVICE,
 									       client_id, GPK_SESSION_MANAGER_CLIENT_PRIVATE_INTERFACE, &error);
 	if (session->priv->proxy_client_private == NULL) {
-		egg_warning ("DBUS error: %s", error->message);
+		g_warning ("DBUS error: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -323,7 +322,7 @@ gpk_session_register_client (GpkSession *session, const gchar *app_id, const gch
 	dbus_g_proxy_add_signal (session->priv->proxy_client_private, "EndSession", G_TYPE_UINT, G_TYPE_INVALID);
 	dbus_g_proxy_connect_signal (session->priv->proxy_client_private, "EndSession", G_CALLBACK (gpk_session_end_session_cb), session, NULL);
 
-	egg_debug ("registered startup '%s' to client id '%s'", client_startup_id, client_id);
+	g_debug ("registered startup '%s' to client id '%s'", client_startup_id, client_id);
 out:
 	g_free (client_id);
 	return ret;
@@ -339,7 +338,7 @@ gpk_session_inhibit_changed_cb (DBusGProxy *proxy, const gchar *id, GpkSession *
 
 	is_inhibited = gpk_session_is_inhibited (session);
 	if (is_inhibited != session->priv->is_inhibited_old) {
-		egg_debug ("emitting inhibited-changed : (%i)", is_inhibited);
+		g_debug ("emitting inhibited-changed : (%i)", is_inhibited);
 		session->priv->is_inhibited_old = is_inhibited;
 		g_signal_emit (session, signals [INHIBITED_CHANGED], 0, is_inhibited);
 	}
@@ -422,7 +421,7 @@ gpk_session_init (GpkSession *session)
 								GPK_SESSION_MANAGER_PATH,
 								GPK_SESSION_MANAGER_INTERFACE, &error);
 	if (session->priv->proxy == NULL) {
-		egg_warning ("DBUS error: %s", error->message);
+		g_warning ("DBUS error: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -432,7 +431,7 @@ gpk_session_init (GpkSession *session)
 									 GPK_SESSION_MANAGER_PRESENCE_PATH,
 									 GPK_SESSION_MANAGER_PRESENCE_INTERFACE, &error);
 	if (session->priv->proxy_presence == NULL) {
-		egg_warning ("DBUS error: %s", error->message);
+		g_warning ("DBUS error: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -442,7 +441,7 @@ gpk_session_init (GpkSession *session)
 								     GPK_SESSION_MANAGER_PRESENCE_PATH,
 								     GPK_DBUS_PROPERTIES_INTERFACE, &error);
 	if (session->priv->proxy_prop == NULL) {
-		egg_warning ("DBUS error: %s", error->message);
+		g_warning ("DBUS error: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -462,7 +461,7 @@ gpk_session_init (GpkSession *session)
 	/* coldplug */
 	session->priv->is_inhibited_old = gpk_session_is_inhibited (session);
 	session->priv->is_idle_old = gpk_session_is_idle (session);
-	egg_debug ("idle: %i, inhibited: %i", session->priv->is_idle_old, session->priv->is_inhibited_old);
+	g_debug ("idle: %i, inhibited: %i", session->priv->is_idle_old, session->priv->is_inhibited_old);
 }
 
 /**

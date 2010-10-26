@@ -33,7 +33,6 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-dbus-monitor.h"
 
 #include "gpk-check-update.h"
@@ -41,6 +40,7 @@
 #include "gpk-firmware.h"
 #include "gpk-hardware.h"
 #include "gpk-common.h"
+#include "gpk-debug.h"
 
 static GpkCheckUpdate *cupdate = NULL;
 static GpkWatch *watch = NULL;
@@ -106,7 +106,7 @@ gpm_pack_commandline_cb (GApplication *application,
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Update Applet"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
@@ -119,7 +119,7 @@ gpm_pack_commandline_cb (GApplication *application,
 	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Update applet"), FALSE);
 	if (!ret) {
-		egg_warning ("Exit: gpk_check_privileged_user returned FALSE");
+		g_warning ("Exit: gpk_check_privileged_user returned FALSE");
 		return 1;
 	}
 

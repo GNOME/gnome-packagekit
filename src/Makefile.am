@@ -27,6 +27,7 @@ INCLUDES =						\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DGPK_DATA=\"$(pkgdatadir)\"			\
+	-DG_LOG_DOMAIN=\"GnomePackageKit\"		\
 	$(NULL)
 
 ccpanelsdir = $(PANELS_DIR)
@@ -48,8 +49,6 @@ bin_PROGRAMS =						\
 
 noinst_LIBRARIES = libgpkshared.a
 libgpkshared_a_SOURCES =				\
-	egg-debug.c					\
-	egg-debug.h					\
 	egg-string.c					\
 	egg-string.h					\
 	egg-markdown.c					\
@@ -58,6 +57,8 @@ libgpkshared_a_SOURCES =				\
 	egg-console-kit.h				\
 	egg-dbus-monitor.c				\
 	egg-dbus-monitor.h				\
+	gpk-debug.c					\
+	gpk-debug.h					\
 	gpk-enum.c					\
 	gpk-enum.h					\
 	gpk-x11.c					\
@@ -206,8 +207,8 @@ gpk_service_pack_LDADD =				\
 	$(NULL)
 
 libupdate_la_SOURCES =					\
-	egg-debug.h					\
-	egg-debug.c					\
+	gpk-debug.h					\
+	gpk-debug.c					\
 	gpk-animated-icon.c				\
 	gpk-animated-icon.h				\
 	gpk-enum.c					\
@@ -289,8 +290,8 @@ gpk_self_test_SOURCES =					\
 	egg-string.h					\
 	egg-markdown.c					\
 	egg-markdown.h					\
-	egg-debug.c					\
-	egg-debug.h					\
+	gpk-debug.c					\
+	gpk-debug.h					\
 	gpk-enum.c					\
 	gpk-enum.h					\
 	gpk-common.c					\

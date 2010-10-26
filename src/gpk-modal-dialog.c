@@ -36,7 +36,6 @@
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-animated-icon.h"
@@ -194,7 +193,6 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 	gtk_widget_realize (widget);
 	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
 
-
 	return TRUE;
 }
 
@@ -223,7 +221,7 @@ gpk_modal_dialog_set_parent (GpkModalDialog *dialog, GdkWindow *window)
 
 	/* not sure what to do here, should probably unparent somehow */
 	if (window == NULL) {
-		egg_warning ("parent set NULL when already modal with another window, setting non-modal");
+		g_warning ("parent set NULL when already modal with another window, setting non-modal");
 		widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
 		dialog->priv->has_parent = FALSE;
@@ -237,7 +235,7 @@ gpk_modal_dialog_set_parent (GpkModalDialog *dialog, GdkWindow *window)
 
 	/* check we are a valid window */
 	if (!GDK_WINDOW (window)) {
-		egg_warning ("not a valid GdkWindow!");
+		g_warning ("not a valid GdkWindow!");
 		return FALSE;
 	}
 
@@ -261,7 +259,7 @@ gpk_modal_dialog_set_window_title (GpkModalDialog *dialog, const gchar *title)
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (title != NULL, FALSE);
 
-	egg_debug ("setting window title: %s", title);
+	g_debug ("setting window title: %s", title);
 	window = GTK_WINDOW (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_window_set_title (window, title);
 	return TRUE;
@@ -278,7 +276,7 @@ gpk_modal_dialog_set_window_icon (GpkModalDialog *dialog, const gchar *icon)
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (icon != NULL, FALSE);
 
-	egg_debug ("setting window icon: %s", icon);
+	g_debug ("setting window icon: %s", icon);
 	window = GTK_WINDOW (gtk_builder_get_object (dialog->priv->builder, "dialog_client"));
 	gtk_window_set_icon_name (window, icon);
 	return TRUE;
@@ -305,7 +303,7 @@ gpk_modal_dialog_set_title (GpkModalDialog *dialog, const gchar *title)
 	dialog->priv->title = g_strdup (title);
 
 	title_bold = g_strdup_printf ("<b><big>%s</big></b>", title);
-	egg_debug ("setting title: %s", title_bold);
+	g_debug ("setting title: %s", title_bold);
 	label = GTK_LABEL (gtk_builder_get_object (dialog->priv->builder, "label_title"));
 	gtk_label_set_markup (label, title_bold);
 	g_free (title_bold);
@@ -327,7 +325,7 @@ gpk_modal_dialog_set_message (GpkModalDialog *dialog, const gchar *message)
 	if (!dialog->priv->show_progress_files)
 		return FALSE;
 
-	egg_debug ("setting message: %s", message);
+	g_debug ("setting message: %s", message);
 	label = GTK_LABEL (gtk_builder_get_object (dialog->priv->builder, "label_message"));
 	gtk_label_set_markup (label, message);
 	return TRUE;
@@ -343,7 +341,7 @@ gpk_modal_dialog_set_action (GpkModalDialog *dialog, const gchar *action)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	egg_debug ("setting action: %s", action);
+	g_debug ("setting action: %s", action);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_action"));
 	if (action != NULL)
 		gtk_button_set_label (GTK_BUTTON (widget), action);
@@ -365,7 +363,7 @@ gpk_modal_dialog_pulse_progress (GpkModalDialog *dialog)
 
 	/* debug so we can catch polling */
 	if (rate_limit++ % 20 == 0)
-		egg_debug ("polling check");
+		g_debug ("polling check");
 
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (widget));
@@ -398,7 +396,7 @@ gpk_modal_dialog_set_percentage (GpkModalDialog *dialog, gint percentage)
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (percentage <= 100, FALSE);
 
-	egg_debug ("setting percentage: %u", percentage);
+	g_debug ("setting percentage: %u", percentage);
 
 	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 	if (dialog->priv->pulse_timer_id != 0) {
@@ -426,7 +424,7 @@ gpk_modal_dialog_set_remaining (GpkModalDialog *dialog, guint remaining)
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
-	egg_debug ("setting remaining: %u", remaining);
+	g_debug ("setting remaining: %u", remaining);
 	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 
 	/* unknown */
@@ -457,7 +455,7 @@ gpk_modal_dialog_set_image (GpkModalDialog *dialog, const gchar *image)
 	/* set state */
 	dialog->priv->set_image = TRUE;
 
-	egg_debug ("setting image: %s", image);
+	g_debug ("setting image: %s", image);
 	gpk_animated_icon_enable_animation (GPK_ANIMATED_ICON (dialog->priv->image_status), FALSE);
 	gtk_image_set_from_icon_name (GTK_IMAGE (dialog->priv->image_status), image, GTK_ICON_SIZE_DIALOG);
 	return TRUE;
@@ -702,7 +700,6 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 	return TRUE;
 }
 
-
 /**
  * gpk_dialog_treeview_for_package_list:
  **/
@@ -821,7 +818,7 @@ gpk_modal_dialog_init (GpkModalDialog *dialog)
 	dialog->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (dialog->priv->builder, GPK_DATA "/gpk-client.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out_build;
 	}
@@ -884,7 +881,7 @@ gpk_modal_dialog_finalize (GObject *object)
 
 	/* shouldn't be, but just in case */
 	if (g_main_loop_is_running (dialog->priv->loop)) {
-		egg_warning ("mainloop running on exit");
+		g_warning ("mainloop running on exit");
 		g_main_loop_quit (dialog->priv->loop);
 	}
 

@@ -37,7 +37,6 @@
 #include <dbus/dbus-glib.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "gpk-inhibit.h"
 #include "gpk-common.h"
 
@@ -81,13 +80,13 @@ gpk_inhibit_create (GpkInhibit *inhibit)
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy == NULL) {
-		egg_debug ("no connection to gnome-session");
+		g_debug ("no connection to gnome-session");
 		return FALSE;
 	}
 
 	/* check we are not trying to do this twice... */
 	if (inhibit->priv->cookie != 0) {
-		egg_debug ("cookie already set as %i", inhibit->priv->cookie);
+		g_debug ("cookie already set as %i", inhibit->priv->cookie);
 		return FALSE;
 	}
 
@@ -120,13 +119,13 @@ gpk_inhibit_remove (GpkInhibit *inhibit)
 	g_return_val_if_fail (PK_IS_INHIBIT (inhibit), FALSE);
 
 	if (inhibit->priv->proxy == NULL) {
-		egg_debug ("no connection to gnome-session");
+		g_debug ("no connection to gnome-session");
 		return FALSE;
 	}
 
 	/* check we are not trying to do this twice... */
 	if (inhibit->priv->cookie == 0) {
-		egg_debug ("cookie not already set");
+		g_debug ("cookie not already set");
 		return FALSE;
 	}
 
@@ -158,7 +157,7 @@ gpk_inhibit_init (GpkInhibit *inhibit)
 	/* connect to session bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		egg_warning ("Cannot connect to session bus: %s", error->message);
+		g_warning ("Cannot connect to session bus: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -168,7 +167,7 @@ gpk_inhibit_init (GpkInhibit *inhibit)
 				  GS_DBUS_SERVICE, GS_DBUS_PATH_INHIBIT,
 				  GS_DBUS_INTERFACE_INHIBIT, &error);
 	if (error != NULL) {
-		egg_warning ("Cannot connect to gnome-session: %s", error->message);
+		g_warning ("Cannot connect to gnome-session: %s", error->message);
 		g_error_free (error);
 	}
 }

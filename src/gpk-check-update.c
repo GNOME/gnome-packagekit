@@ -40,7 +40,6 @@
 #include <canberra-gtk.h>
 #include <gio/gio.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-dbus-monitor.h"
 
@@ -101,21 +100,21 @@ gpk_check_update_set_icon_visibility (GpkCheckUpdate *cupdate)
 
 	/* check we have data */
 	if (cupdate->priv->gicon == NULL) {
-		egg_debug ("not showing icon as nothing to show");
+		g_debug ("not showing icon as nothing to show");
 		goto out;
 	}
 
 	/* check we have no inhibits */
 	if (cupdate->priv->icon_inhibit_update_in_progress) {
-		egg_debug ("not showing icon as update in progress");
+		g_debug ("not showing icon as update in progress");
 		goto out;
 	}
 	if (cupdate->priv->icon_inhibit_network_offline) {
-		egg_debug ("not showing icon as network offline");
+		g_debug ("not showing icon as network offline");
 		goto out;
 	}
 	if (cupdate->priv->icon_inhibit_update_viewer_connected) {
-		egg_debug ("not showing icon as update viewer showing");
+		g_debug ("not showing icon as update viewer showing");
 		goto out;
 	}
 
@@ -179,7 +178,7 @@ gpk_check_update_show_preferences_cb (GtkMenuItem *item, GpkCheckUpdate *cupdate
 {
 	const gchar *command = "gpk-prefs";
 	if (!g_spawn_command_line_async (command, NULL))
-		egg_warning ("Couldn't execute command: %s", command);
+		g_warning ("Couldn't execute command: %s", command);
 }
 
 /**
@@ -249,7 +248,7 @@ gpk_check_update_popup_menu_cb (GtkStatusIcon *status_icon, guint button, guint3
 	GtkWidget *item;
 	GtkWidget *image;
 
-	egg_debug ("icon right clicked");
+	g_debug ("icon right clicked");
 
 	/* TRANSLATORS: context menu to open the preferences */
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Preferences"));
@@ -299,12 +298,11 @@ gpk_check_update_get_updates_post_update_cb (GpkCheckUpdate *cupdate)
 	g_return_val_if_fail (GPK_IS_CHECK_UPDATE (cupdate), FALSE);
 
 	/* debug so we can catch polling */
-	egg_debug ("post updates check");
+	g_debug ("post updates check");
 
 	gpk_check_update_query_updates (cupdate);
 	return FALSE;
 }
-
 
 /**
  * gpk_check_update_finished_notify:
@@ -327,12 +325,11 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	gchar *package_id = NULL;
 	gchar *summary = NULL;
 
-
 	/* check we got some packages */
 	array = pk_results_get_package_array (results);
-	egg_debug ("length=%i", array->len);
+	g_debug ("length=%i", array->len);
 	if (array->len == 0) {
-		egg_debug ("no updates");
+		g_debug ("no updates");
 		goto out;
 	}
 
@@ -348,7 +345,7 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 			      NULL);
 
 		split = pk_package_id_split (package_id);
-		egg_debug ("%s, %s, %s", pk_info_enum_to_text (info),
+		g_debug ("%s, %s, %s", pk_info_enum_to_text (info),
 			   split[PK_PACKAGE_ID_NAME], summary);
 		if (info == PK_INFO_ENUM_BLOCKED) {
 			skipped_number++;
@@ -389,7 +386,7 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	/* do we do the notification? */
 	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE);
 	if (!ret) {
-		egg_debug ("ignoring due to GSettings");
+		g_debug ("ignoring due to GSettings");
 		goto out;
 	}
 
@@ -409,7 +406,7 @@ gpk_check_update_finished_notify (GpkCheckUpdate *cupdate, PkResults *results)
 	}
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -457,10 +454,10 @@ gpk_check_update_show_error (GpkCheckUpdate *cupdate, PkError *error_code)
 	cupdate->priv->error_code = g_object_ref (error_code);
 
 	/* do the bubble */
-	egg_debug ("title=%s, message=%s", title, message);
+	g_debug ("title=%s, message=%s", title, message);
 	notification = notify_notification_new (title, message, NULL);
 	if (notification == NULL) {
-		egg_warning ("failed to get bubble");
+		g_warning ("failed to get bubble");
 		goto out;
 	}
 	notify_notification_set_timeout (notification, 15000);
@@ -470,7 +467,7 @@ gpk_check_update_show_error (GpkCheckUpdate *cupdate, PkError *error_code)
 					_("Show details"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	/* track so we can prevent doubled notifications */
@@ -495,7 +492,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to update system: %s", error->message);
+		g_warning ("failed to update system: %s", error->message);
 		g_error_free (error);
 
 		/* we failed, so re-get the update list */
@@ -509,7 +506,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to update system: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to update system: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
@@ -547,7 +544,7 @@ gpk_check_update_activate_update_cb (GtkStatusIcon *status_icon, GpkCheckUpdate 
 
 	ret = g_spawn_command_line_async (command, &error);
 	if (!ret) {
-		egg_warning ("Couldn't execute %s: %s", command, error->message);
+		g_warning ("Couldn't execute %s: %s", command, error->message);
 		g_error_free (error);
 	}
 }
@@ -567,22 +564,22 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	GpkCheckUpdate *cupdate = GPK_CHECK_UPDATE (data);
 
 	if (g_strcmp0 (action, "do-not-show-complete-restart") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE_RESTART);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE_RESTART);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE_RESTART, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-complete") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_COMPLETE, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-update-started") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_STARTED);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_STARTED);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_STARTED, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-notify-critical") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_CRITICAL);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_CRITICAL);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_CRITICAL, FALSE);
 	} else if (g_strcmp0 (action, "do-not-show-update-not-battery") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY, FALSE);
 	} else if (g_strcmp0 (action, "distro-upgrade-do-not-show-available") == 0) {
-		egg_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES);
+		g_debug ("set %s to FALSE", GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES);
 		g_settings_set_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES, FALSE);
 	} else if (g_strcmp0 (action, "show-error-details") == 0) {
 		title = gpk_error_enum_to_localised_text (pk_error_get_code (cupdate->priv->error_code));
@@ -598,17 +595,17 @@ gpk_check_update_libnotify_cb (NotifyNotification *notification, gchar *action, 
 	} else if (g_strcmp0 (action, "show-update-viewer") == 0) {
 		ret = g_spawn_command_line_async (BINDIR "/gpk-update-viewer", &error);
 		if (!ret) {
-			egg_warning ("Failure launching update viewer: %s", error->message);
+			g_warning ("Failure launching update viewer: %s", error->message);
 			g_error_free (error);
 		}
 	} else if (g_strcmp0 (action, "distro-upgrade-info") == 0) {
 		ret = g_spawn_command_line_async (DATADIR "/PackageKit/pk-upgrade-distro.sh", &error);
 		if (!ret) {
-			egg_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);
+			g_warning ("Failure launching pk-upgrade-distro.sh: %s", error->message);
 			g_error_free (error);
 		}
 	} else {
-		egg_warning ("unknown action id: %s", action);
+		g_warning ("unknown action id: %s", action);
 	}
 	return;
 }
@@ -630,14 +627,14 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 	/* do we do the notification? */
 	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_CRITICAL);
 	if (!ret) {
-		egg_debug ("ignoring due to GSettings");
+		g_debug ("ignoring due to GSettings");
 		return;
 	}
 
 	/* if the number of critical updates is the same as the last notification,
 	 * then skip the notifcation as we don't want to bombard the user every hour */
 	if (array->len == cupdate->priv->number_updates_critical_last_shown) {
-		egg_debug ("ignoring as user ignored last warning");
+		g_debug ("ignoring as user ignored last warning");
 		return;
 	}
 
@@ -658,10 +655,10 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 	}
 
 	/* do the bubble */
-	egg_debug ("title=%s, message=%s", title, message);
+	g_debug ("title=%s, message=%s", title, message);
 	notification = notify_notification_new (title, message, NULL);
 	if (notification == NULL) {
-		egg_warning ("failed to get bubble");
+		g_warning ("failed to get bubble");
 		return;
 	}
 	notify_notification_set_timeout (notification, 15000);
@@ -671,7 +668,7 @@ gpk_check_update_critical_updates_warning (GpkCheckUpdate *cupdate, GPtrArray *a
 					_("Install updates"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 	/* track so we can prevent doubled notifications */
@@ -731,20 +728,20 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 
 	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_UPDATE_BATTERY);
 	if (ret) {
-		egg_debug ("okay to update due to policy");
+		g_debug ("okay to update due to policy");
 		return TRUE;
 	}
 
 	ret = gpk_auto_refresh_get_on_battery (cupdate->priv->arefresh);
 	if (!ret) {
-		egg_debug ("okay to update as on AC");
+		g_debug ("okay to update as on AC");
 		return TRUE;
 	}
 
 	/* do we do the notification? */
 	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_UPDATE_NOT_BATTERY);
 	if (!ret) {
-		egg_debug ("ignoring due to GSettings");
+		g_debug ("ignoring due to GSettings");
 		return FALSE;
 	}
 
@@ -763,7 +760,7 @@ gpk_check_update_check_on_battery (GpkCheckUpdate *cupdate)
 					_("Install the updates anyway"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 
@@ -800,7 +797,7 @@ gpk_check_update_notify_doing_updates (GpkCheckUpdate *cupdate)
 //					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -830,7 +827,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get updates: %s", error->message);
+		g_warning ("failed to get updates: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -838,7 +835,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
@@ -851,7 +848,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 
 	/* we have no updates */
 	if (array->len == 0) {
-		egg_debug ("no updates");
+		g_debug ("no updates");
 		gpk_check_update_set_gicon (cupdate, NULL);
 		goto out;
 	}
@@ -871,7 +868,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* work out icon */
 	icon = gpk_check_update_get_status_icon (cupdate, array);
 	if (icon == NULL) {
-		egg_debug ("all updates blocked");
+		g_debug ("all updates blocked");
 		gpk_check_update_set_gicon (cupdate, NULL);
 		goto out;
 	}
@@ -884,20 +881,20 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 
 	/* if we are just refreshing after a failed update, don't try to do the actions */
 	if (FALSE) { //TODO
-		egg_debug ("skipping actions");
+		g_debug ("skipping actions");
 		goto out;
 	}
 
 	/* do we do the automatic updates? */
 	update = g_settings_get_enum (cupdate->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 	if (update == GPK_UPDATE_ENUM_UNKNOWN) {
-		egg_warning ("policy unknown");
+		g_warning ("policy unknown");
 		goto out;
 	}
 
 	/* is policy none? */
 	if (update == GPK_UPDATE_ENUM_NONE) {
-		egg_debug ("not updating as policy NONE");
+		g_debug ("not updating as policy NONE");
 
 		/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
 
@@ -921,7 +918,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	if (!ret &&
 	    ((update == GPK_UPDATE_ENUM_SECURITY && security_array->len > 0) ||
 	      update == GPK_UPDATE_ENUM_ALL)) {
-		egg_debug ("on battery so not doing update");
+		g_debug ("on battery so not doing update");
 
 		/* play the sound, using sounds from the naming spec */
 		ca_context_play (ca_gtk_context_get (), 0,
@@ -941,7 +938,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	/* just do security updates */
 	if (update == GPK_UPDATE_ENUM_SECURITY) {
 		if (security_array->len == 0) {
-			egg_debug ("policy security, but none available");
+			g_debug ("policy security, but none available");
 			goto out;
 		}
 
@@ -956,7 +953,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 
 	/* just do everything */
 	if (update == GPK_UPDATE_ENUM_ALL) {
-		egg_debug ("we should do the update automatically!");
+		g_debug ("we should do the update automatically!");
 		pk_task_update_system_async (cupdate->priv->task, cupdate->priv->cancellable, NULL, NULL,
 					     (GAsyncReadyCallback) gpk_check_update_update_system_finished_cb, cupdate);
 		gpk_check_update_notify_doing_updates (cupdate);
@@ -964,7 +961,7 @@ gpk_check_update_get_updates_finished_cb (GObject *object, GAsyncResult *res, Gp
 	}
 
 	/* shouldn't happen */
-	egg_warning ("unknown update mode");
+	g_warning ("unknown update mode");
 out:
 	if (icon != NULL)
 		g_object_unref (icon);
@@ -996,7 +993,7 @@ gpk_check_update_get_active_roles_for_tids (GpkCheckUpdate *cupdate, gchar **tid
 		/* get progress */
 		progress = pk_client_get_progress (PK_CLIENT(cupdate->priv->task), tids[i], cupdate->priv->cancellable, &error);
 		if (progress == NULL) {
-			egg_warning ("failed to get progress of %s: %s", tids[i], error->message);
+			g_warning ("failed to get progress of %s: %s", tids[i], error->message);
 			g_error_free (error);
 			goto out;
 		}
@@ -1041,7 +1038,7 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_UPDATES) ||
 	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES) ||
 	    pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_SYSTEM)) {
-		egg_debug ("Not checking for updates as already in progress");
+		g_debug ("Not checking for updates as already in progress");
 		goto out;
 	}
 
@@ -1060,7 +1057,7 @@ out:
 static gboolean
 gpk_check_update_query_updates_changed_cb (GpkCheckUpdate *cupdate)
 {
-	egg_debug ("getting new update list (after we waited a short delay)");
+	g_debug ("getting new update list (after we waited a short delay)");
 	cupdate->priv->updates_changed_id = 0;
 	gpk_check_update_query_updates (cupdate);
 	return FALSE;
@@ -1079,7 +1076,7 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 	/* if we don't want to auto check for updates, don't do this either */
 	thresh = g_settings_get_int (cupdate->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is to never get updates");
+		g_debug ("not when policy is to never get updates");
 		return;
 	}
 
@@ -1091,7 +1088,7 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 	gpk_check_update_set_gicon (cupdate, NULL);
 
 	/* now try to get newest update list */
-	egg_debug ("updates changed, so getting new update list in %is", GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT);
+	g_debug ("updates changed, so getting new update list in %is", GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT);
 	cupdate->priv->updates_changed_id =
 		g_timeout_add_seconds (GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT,
 				       (GSourceFunc) gpk_check_update_query_updates_changed_cb, cupdate);
@@ -1115,10 +1112,10 @@ gpk_check_update_restart_schedule_cb (PkClient *client, GpkCheckUpdate *cupdate)
 	g_usleep (2*G_USEC_PER_SEC);
 
 	file = BINDIR "/gpk-update-icon";
-	egg_debug ("trying to spawn: %s", file);
+	g_debug ("trying to spawn: %s", file);
 	ret = g_spawn_command_line_async (file, &error);
 	if (!ret) {
-		egg_warning ("failed to spawn new instance: %s", error->message);
+		g_warning ("failed to spawn new instance: %s", error->message);
 		g_error_free (error);
 	}
 }
@@ -1140,7 +1137,6 @@ gpk_check_update_transaction_list_changed_cb (PkControl *control, gchar **transa
 	gpk_check_update_set_icon_visibility (cupdate);
 }
 
-
 /**
  * gpk_check_update_refresh_cache_finished_cb:
  **/
@@ -1155,7 +1151,7 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to refresh the cache: %s", error->message);
+		g_warning ("failed to refresh the cache: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1163,7 +1159,7 @@ gpk_check_update_refresh_cache_finished_cb (GObject *object, GAsyncResult *res, 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to refresh the cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
@@ -1187,7 +1183,7 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 	/* No point if we are already updating */
 	roles = gpk_check_update_get_active_roles (cupdate);
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_REFRESH_CACHE)) {
-		egg_debug ("Not refreshing cache as already in progress");
+		g_debug ("Not refreshing cache as already in progress");
 		goto out;
 	}
 
@@ -1206,7 +1202,7 @@ gpk_check_update_auto_get_updates_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate *
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 
 	/* show the icon at login time */
-	egg_debug ("login cb");
+	g_debug ("login cb");
 	gpk_check_update_query_updates (cupdate);
 }
 
@@ -1233,7 +1229,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	/* get the results */
 	results = pk_client_generic_finish (PK_CLIENT(client), res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get upgrades: %s", error->message);
+		g_warning ("failed to get upgrades: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1241,7 +1237,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_check_update_show_error (cupdate, error_code);
 		goto out;
 	}
@@ -1251,14 +1247,14 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 
 	/* any updates? */
 	if (array->len == 0) {
-		egg_debug ("no upgrades");
+		g_debug ("no upgrades");
 		goto out;
 	}
 
 	/* do we do the notification? */
 	ret = g_settings_get_boolean (cupdate->priv->settings, GPK_SETTINGS_NOTIFY_DISTRO_UPGRADES);
 	if (!ret) {
-		egg_debug ("ignoring due to GSettings");
+		g_debug ("ignoring due to GSettings");
 		goto out;
 	}
 
@@ -1280,7 +1276,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 	title = _("Distribution upgrades available");
 	notification = notify_notification_new (title, string->str, NULL);
 	if (notification == NULL) {
-		egg_warning ("failed to make bubble");
+		g_warning ("failed to make bubble");
 		goto out;
 	}
 	notify_notification_set_timeout (notification, NOTIFY_EXPIRES_NEVER);
@@ -1293,7 +1289,7 @@ gpk_check_update_get_distro_upgrades_finished_cb (GObject *object, GAsyncResult 
 					_("Do not show this again"), gpk_check_update_libnotify_cb, cupdate, NULL);
 	ret = notify_notification_show (notification, &error);
 	if (!ret) {
-		egg_warning ("error: %s", error->message);
+		g_warning ("error: %s", error->message);
 		g_error_free (error);
 	}
 out:
@@ -1319,7 +1315,7 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 	/* No point if we are already updating */
 	roles = gpk_check_update_get_active_roles (cupdate);
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		egg_debug ("Not checking for upgrades as already in progress");
+		g_debug ("Not checking for upgrades as already in progress");
 		goto out;
 	}
 
@@ -1353,7 +1349,7 @@ gpk_cupdate_connection_changed_cb (EggDbusMonitor *monitor, gboolean connected, 
 {
 	g_return_if_fail (GPK_IS_CHECK_UPDATE (cupdate));
 	/* inhibit icon when update viewer open */
-	egg_debug ("update viewer on the bus: %i", connected);
+	g_debug ("update viewer on the bus: %i", connected);
 	cupdate->priv->icon_inhibit_update_viewer_connected = connected;
 	gpk_check_update_set_icon_visibility (cupdate);
 }
@@ -1374,7 +1370,7 @@ gpk_check_update_get_properties_cb (GObject *object, GAsyncResult *res, GpkCheck
 	ret = pk_control_get_properties_finish (control, res, &error);
 	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
-		egg_warning ("details could not be retrieved: %s", error->message);
+		g_warning ("details could not be retrieved: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1406,7 +1402,7 @@ gpk_check_update_file_exist_in_root (const gchar *root, const gchar *filename)
 
 	/* an interesting file exists */
 	ret = g_file_query_exists (source, NULL);
-	egg_debug ("checking for %s: %s", source_path, ret ? "yes" : "no");
+	g_debug ("checking for %s: %s", source_path, ret ? "yes" : "no");
 	if (!ret)
 		goto out;
 out:
@@ -1435,7 +1431,7 @@ gpk_check_update_mount_added_cb (GVolumeMonitor *volume_monitor, GMount *mount, 
 	/* use settings */
 	media_repo_filenames = g_settings_get_string (cupdate->priv->settings, GPK_SETTINGS_MEDIA_REPO_FILENAMES);
 	if (media_repo_filenames == NULL) {
-		egg_warning ("failed to get media repo filenames");
+		g_warning ("failed to get media repo filenames");
 		goto out;
 	}
 

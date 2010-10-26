@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -59,7 +58,7 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	for (i=0; i<length; i++) {
 		split = pk_package_id_split (package_ids[i]);
 		if (split == NULL) {
-			egg_warning ("failed to split %s", package_ids[i]);
+			g_warning ("failed to split %s", package_ids[i]);
 			continue;
 		}
 		g_ptr_array_add (array, g_strdup (split[0]));
@@ -284,7 +283,7 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 
 	/* set the policy */
 	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
-	egg_debug ("Changing %s to %i", key, checked);
+	g_debug ("Changing %s to %i", key, checked);
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	g_settings_set_boolean (settings, key, !checked);
 	g_object_unref (settings);

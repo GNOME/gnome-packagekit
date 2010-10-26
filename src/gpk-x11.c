@@ -26,7 +26,6 @@
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-x11.h"
@@ -98,7 +97,7 @@ gpk_x11_get_user_time (GpkX11 *x11)
 
 	/* check we have a window */
 	if (x11->priv->window == None) {
-		egg_debug ("no window, so cannot get user_time");
+		g_debug ("no window, so cannot get user_time");
 		goto out;
 	}
 
@@ -109,13 +108,13 @@ gpk_x11_get_user_time (GpkX11 *x11)
 				 &type, &format, &nitems, &bytes_after, (void*) &win);
 	err = gdk_error_trap_pop ();
 	if (err != Success || rc != Success) {
-		egg_warning ("couldn't get _NET_WM_USER_TIME_WINDOW");
+		g_warning ("couldn't get _NET_WM_USER_TIME_WINDOW");
 		goto out;
 	}
 
 	/* is not a window */
 	if (type != XA_WINDOW) {
-		egg_warning ("not type XA_WINDOW");
+		g_warning ("not type XA_WINDOW");
 		goto out;
 	}
 
@@ -126,13 +125,13 @@ gpk_x11_get_user_time (GpkX11 *x11)
 				 &type, &format, &nitems, &bytes_after, (void*) &timestamp);
 	err = gdk_error_trap_pop ();
 	if (err != Success || rc != Success) {
-		egg_warning ("couldn't get _NET_WM_USER_TIME");
+		g_warning ("couldn't get _NET_WM_USER_TIME");
 		goto out;
 	}
 
 	/* is not a window */
 	if (type != XA_CARDINAL) {
-		egg_warning ("not type XA_CARDINAL");
+		g_warning ("not type XA_CARDINAL");
 		goto out;
 	}
 out:
@@ -161,7 +160,7 @@ gpk_x11_get_title (GpkX11 *x11)
 
 	/* check we have a window */
 	if (x11->priv->window == None) {
-		egg_debug ("no window, so cannot get user_time");
+		g_debug ("no window, so cannot get user_time");
 		goto out;
 	}
 
@@ -186,7 +185,7 @@ gpk_x11_get_title (GpkX11 *x11)
 		title = g_strdup (data);
 		goto out;
 	}
-	egg_warning ("failed to get X11 name for window %i", (gint) x11->priv->window);
+	g_warning ("failed to get X11 name for window %i", (gint) x11->priv->window);
 out:
 	if (data != NULL)
 		XFree (data);

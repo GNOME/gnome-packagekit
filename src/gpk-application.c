@@ -35,8 +35,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "egg-debug.h"
-#include "egg-debug.h"
 #include "egg-markdown.h"
 #include "egg-string.h"
 
@@ -50,6 +48,7 @@
 #include "gpk-gnome.h"
 #include "gpk-helper-run.h"
 #include "gpk-task.h"
+#include "gpk-debug.h"
 
 typedef enum {
 	GPK_SEARCH_NAME,
@@ -251,7 +250,7 @@ gpk_application_packages_checkbox_invert (gpointer user_data)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		egg_warning ("no selection");
+		g_warning ("no selection");
 		return;
 	}
 
@@ -369,7 +368,6 @@ gpk_application_set_buttons_apply_clear (gpointer user_data)
 	}
 }
 
-
 /**
  * gpk_application_get_selected_package:
  **/
@@ -387,7 +385,7 @@ gpk_application_get_selected_package (gchar **package_id, gchar **summary)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		egg_warning ("no selection");
+		g_warning ("no selection");
 		goto out;
 	}
 
@@ -420,7 +418,7 @@ gpk_application_install (gpointer user_data)
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, &summary_selected);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -428,7 +426,7 @@ gpk_application_install (gpointer user_data)
 	if (action == GPK_ACTION_REMOVE) {
 		ret = pk_package_sack_remove_package_by_id (package_sack, package_id_selected);
 		if (ret) {
-			egg_debug ("removed %s from package array", package_id_selected);
+			g_debug ("removed %s from package array", package_id_selected);
 
 			/* correct buttons */
 			gpk_application_allow_install (FALSE);
@@ -437,14 +435,14 @@ gpk_application_install (gpointer user_data)
 			gpk_application_set_buttons_apply_clear (NULL);
 			return TRUE;
 		}
-		egg_warning ("wrong mode and not in array");
+		g_warning ("wrong mode and not in array");
 		return FALSE;
 	}
 
 	/* already added */
 	package = pk_package_sack_find_by_id (package_sack, package_id_selected);
 	if (package != NULL) {
-		egg_warning ("already added");
+		g_warning ("already added");
 		goto out;
 	}
 
@@ -513,7 +511,7 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, gpointer user
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get files: %s", error->message);
+		g_warning ("failed to get files: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -521,7 +519,7 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, gpointer user
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get files: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get files: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -543,7 +541,7 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, gpointer user
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -634,7 +632,7 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, gpointer
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_STATUS) {
-		egg_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_text (status));
 
 		if (status == PK_STATUS_ENUM_FINISHED) {
 			/* re-enable UI */
@@ -703,7 +701,7 @@ gpk_application_menu_files_cb (GtkAction *_action, gpointer user_data)
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -734,7 +732,7 @@ gpk_application_remove (gpointer user_data)
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, &summary_selected);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -742,7 +740,7 @@ gpk_application_remove (gpointer user_data)
 	if (action == GPK_ACTION_INSTALL) {
 		ret = pk_package_sack_remove_package_by_id (package_sack, package_id_selected);
 		if (ret) {
-			egg_debug ("removed %s from package array", package_id_selected);
+			g_debug ("removed %s from package array", package_id_selected);
 
 			/* correct buttons */
 			gpk_application_allow_install (TRUE);
@@ -751,14 +749,14 @@ gpk_application_remove (gpointer user_data)
 			gpk_application_set_buttons_apply_clear (NULL);
 			return TRUE;
 		}
-		egg_warning ("wrong mode and not in array");
+		g_warning ("wrong mode and not in array");
 		return FALSE;
 	}
 
 	/* already added */
 	ret = (pk_package_sack_find_by_id (package_sack, package_id_selected) == NULL);
 	if (!ret) {
-		egg_warning ("already added");
+		g_warning ("already added");
 		goto out;
 	}
 
@@ -821,7 +819,7 @@ gpk_application_menu_run_cb (GtkAction *_action, gpointer user_data)
 	selection = gtk_tree_view_get_selection (treeview);
 	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
 	if (!ret) {
-		egg_warning ("no selection");
+		g_warning ("no selection");
 		return;
 	}
 
@@ -862,7 +860,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, gpointer u
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get requires: %s", error->message);
+		g_warning ("failed to get requires: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -870,7 +868,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, gpointer u
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get requires: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get requires: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -884,7 +882,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, gpointer u
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -948,7 +946,7 @@ gpk_application_menu_requires_cb (GtkAction *_action, gpointer user_data)
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -989,7 +987,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get depends: %s", error->message);
+		g_warning ("failed to get depends: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -997,7 +995,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get depends: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get depends: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -1014,7 +1012,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -1075,7 +1073,7 @@ gpk_application_menu_depends_cb (GtkAction *_action, gpointer user_data)
 	/* get selection */
 	ret = gpk_application_get_selected_package (&package_id_selected, NULL);
 	if (!ret) {
-		egg_warning ("no package selected");
+		g_warning ("no package selected");
 		goto out;
 	}
 
@@ -1104,7 +1102,7 @@ gpk_application_get_full_repo_name (const gchar *data)
 
 	/* if no data, we can't look up in the hash table */
 	if (egg_strzero (data)) {
-		egg_warning ("no ident data");
+		g_warning ("no ident data");
 		/* TRANSLATORS: the repo name is invalid or not found, fall back to this */
 		return _("Invalid");
 	}
@@ -1112,7 +1110,7 @@ gpk_application_get_full_repo_name (const gchar *data)
 	/* try to find in cached repo array */
 	repo_name = (const gchar *) g_hash_table_lookup (repos, data);
 	if (repo_name == NULL) {
-		egg_warning ("no repo name, falling back to %s", data);
+		g_warning ("no repo name, falling back to %s", data);
 		return data;
 	}
 	return repo_name;
@@ -1138,7 +1136,7 @@ gpk_application_add_detail_item (const gchar *title, const gchar *text, const gc
 	/* format */
 	markup = g_strdup_printf ("<b>%s:</b>", title);
 
-	egg_debug ("%s %s %s", markup, text, uri);
+	g_debug ("%s %s %s", markup, text, uri);
 	gtk_list_store_append (details_store, &iter);
 	gtk_list_store_set (details_store, &iter,
 			    DETAIL_COLUMN_TITLE, markup,
@@ -1431,7 +1429,7 @@ gpk_application_run_installed (PkResults *results)
 
 	/* nothing to show */
 	if (package_ids_array->len == 0) {
-		egg_debug ("nothing to do");
+		g_debug ("nothing to do");
 		goto out;
 	}
 
@@ -1509,7 +1507,7 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, gpointer user_da
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to search: %s", error->message);
+		g_warning ("failed to search: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1517,7 +1515,7 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, gpointer user_da
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to search: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to search: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -1589,13 +1587,13 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 
 	/* have we got input? */
 	if (egg_strzero (search_text)) {
-		egg_debug ("no input");
+		g_debug ("no input");
 		goto out;
 	}
 
 	ret = !egg_strzero (search_text);
 	if (!ret) {
-		egg_debug ("invalid input text, will fail");
+		g_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "window_manager"));
 		gpk_error_dialog_modal (window,
@@ -1605,7 +1603,7 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 					_("The search text contains invalid characters"), NULL);
 		goto out;
 	}
-	egg_debug ("find %s", search_text);
+	g_debug ("find %s", search_text);
 
 	/* mark find button insensitive */
 	search_in_progress = TRUE;
@@ -1635,7 +1633,7 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 					     (PkProgressCallback) gpk_application_progress_cb, NULL,
 					     (GAsyncReadyCallback) gpk_application_search_cb, NULL);
 	} else {
-		egg_warning ("invalid search type");
+		g_warning ("invalid search type");
 		goto out;
 	}
 
@@ -1745,7 +1743,7 @@ gpk_application_perform_search (gpointer user_data)
 	} else if (search_mode == GPK_MODE_SELECTED) {
 		gpk_application_populate_selected (NULL);
 	} else {
-		egg_debug ("doing nothing");
+		g_debug ("doing nothing");
 	}
 }
 
@@ -1961,7 +1959,7 @@ gpk_application_install_packages_cb (PkTask *_task, GAsyncResult *res, gpointer 
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to install packages: %s", error->message);
+		g_warning ("failed to install packages: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1969,7 +1967,7 @@ gpk_application_install_packages_cb (PkTask *_task, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to install packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2013,7 +2011,7 @@ gpk_application_remove_packages_cb (PkTask *_task, GAsyncResult *res, gpointer u
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to remove packages: %s", error->message);
+		g_warning ("failed to remove packages: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2021,7 +2019,7 @@ gpk_application_remove_packages_cb (PkTask *_task, GAsyncResult *res, gpointer u
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to remove packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to remove packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2180,7 +2178,7 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, gpointe
 		gtk_tree_model_get (model, &iter,
 				    GROUPS_COLUMN_ID, &search_group,
 				    GROUPS_COLUMN_ACTIVE, &active, -1);
-		egg_debug ("selected row is: %s (%i)", search_group, active);
+		g_debug ("selected row is: %s (%i)", search_group, active);
 
 		/* don't search parent groups */
 		if (!active) {
@@ -2234,7 +2232,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get list of categories: %s", error->message);
+		g_warning ("failed to get list of categories: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2242,7 +2240,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2256,7 +2254,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* get data */
 	array = pk_results_get_details_array (results);
 	if (array->len != 1) {
-		egg_warning ("not one entry %i", array->len);
+		g_warning ("not one entry %i", array->len);
 		goto out;
 	}
 
@@ -2394,7 +2392,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpoin
 
 	/* This will only work in single or browse selection mode! */
 	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 
 		/* we cannot now add it */
 		gpk_application_allow_install (FALSE);
@@ -2413,7 +2411,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpoin
 			    PACKAGES_COLUMN_ID, &package_id,
 			    -1);
 	if (package_id == NULL) {
-		egg_debug ("ignoring help click");
+		g_debug ("ignoring help click");
 		goto out;
 	}
 
@@ -2468,7 +2466,7 @@ gpk_application_notify_network_state_cb (PkControl *_control, GParamSpec *pspec,
 	g_object_get (control,
 		      "network-state", &state,
 		      NULL);
-	egg_debug ("state=%i", state);
+	g_debug ("state=%i", state);
 }
 
 /**
@@ -2548,7 +2546,7 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, gpointer data)
 
 	/* change type */
 	search_type = GPK_SEARCH_NAME;
-	egg_debug ("set search type=%i", search_type);
+	g_debug ("set search type=%i", search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (settings,
@@ -2572,7 +2570,7 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, gpointer data)
 
 	/* set type */
 	search_type = GPK_SEARCH_DETAILS;
-	egg_debug ("set search type=%i", search_type);
+	g_debug ("set search type=%i", search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (settings,
@@ -2596,7 +2594,7 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, gpointer data)
 
 	/* set type */
 	search_type = GPK_SEARCH_FILE;
-	egg_debug ("set search type=%i", search_type);
+	g_debug ("set search type=%i", search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (settings,
@@ -2624,7 +2622,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 	if (event->button != 1)
 		return;
 
-	egg_debug ("icon_pos=%i", icon_pos);
+	g_debug ("icon_pos=%i", icon_pos);
 
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		/* TRANSLATORS: context menu item for the search type icon */
@@ -2755,10 +2753,10 @@ gpk_application_menu_sources_cb (GtkAction *_action, gpointer user_data)
 	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
 
 	command = g_strdup_printf ("%s/gnome-control-center update --parent-window %u", BINDIR, xid);
-	egg_debug ("running: %s", command);
+	g_debug ("running: %s", command);
 	ret = g_spawn_command_line_async (command, NULL);
 	if (!ret) {
-		egg_warning ("spawn of %s failed", command);
+		g_warning ("spawn of %s failed", command);
 	}
 	g_free (command);
 }
@@ -2779,10 +2777,10 @@ gpk_application_menu_log_cb (GtkAction *_action, gpointer user_data)
 	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
 
 	command = g_strdup_printf ("%s/gpk-log --parent-window %u", BINDIR, xid);
-	egg_debug ("running: %s", command);
+	g_debug ("running: %s", command);
 	ret = g_spawn_command_line_async (command, NULL);
 	if (!ret) {
-		egg_warning ("spawn of %s failed", command);
+		g_warning ("spawn of %s failed", command);
 	}
 	g_free (command);
 }
@@ -2801,7 +2799,7 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to refresh: %s", error->message);
+		g_warning ("failed to refresh: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -2809,7 +2807,7 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to refresh: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to refresh: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -3084,7 +3082,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 	model = gtk_tree_view_get_model (treeview);
 	ret = gtk_tree_model_get_iter (model, &iter, path);
 	if (!ret) {
-		egg_warning ("failed to get selection");
+		g_warning ("failed to get selection");
 		return;
 	}
 
@@ -3096,7 +3094,7 @@ gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *pa
 
 	/* check we aren't a help line */
 	if (package_id == NULL) {
-		egg_debug ("ignoring help click");
+		g_debug ("ignoring help click");
 		goto out;
 	}
 
@@ -3128,7 +3126,7 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 static void
 gpk_application_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, gpointer user_data)
 {
-	egg_debug ("clicked %s", uri);
+	g_debug ("clicked %s", uri);
 	gpk_gnome_open (uri);
 }
 
@@ -3250,7 +3248,7 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, gpointer
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get list of categories: %s", error->message);
+		g_warning ("failed to get list of categories: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -3258,7 +3256,7 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, gpointer
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -3570,7 +3568,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 			gpk_application_menu_search_by_description (NULL, NULL);
 		} else {
-			egg_warning ("cannont use mode %i as not capable, using name", search_type);
+			g_warning ("cannont use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, NULL);
 		}
 
@@ -3581,13 +3579,13 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 			gpk_application_menu_search_by_file (NULL, NULL);
 		} else {
-			egg_warning ("cannont use mode %i as not capable, using name", search_type);
+			g_warning ("cannont use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, NULL);
 		}
 
 	/* mode not recognised */
 	} else {
-		egg_warning ("cannot recognise mode %i, using name", search_type);
+		g_warning ("cannot recognise mode %i, using name", search_type);
 		gpk_application_menu_search_by_name (NULL, NULL);
 	}
 out:
@@ -3613,7 +3611,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		egg_warning ("failed to get list of repos: %s", error->message);
+		g_warning ("failed to get list of repos: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -3621,7 +3619,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		egg_warning ("failed to repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -3641,7 +3639,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, gpointer 
 			      "description", &description,
 			      NULL);
 
-		egg_debug ("repo = %s:%s", repo_id, description);
+		g_debug ("repo = %s:%s", repo_id, description);
 		/* no problem, just no point adding as we will fallback to the repo_id */
 		if (description != NULL)
 			g_hash_table_insert (repos, g_strdup (repo_id), g_strdup (description));
@@ -3739,13 +3737,13 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	desktop = pk_desktop_new ();
 	ret = pk_desktop_open_database (desktop, NULL);
 	if (!ret)
-		egg_warning ("Failure opening database");
+		g_warning ("Failure opening database");
 
 	/* get UI */
 	builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-application.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -4082,10 +4080,13 @@ main (int argc, char *argv[])
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Add/Remove Software"));
 	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 	g_option_context_parse (context, &argc, &argv, NULL);
 	g_option_context_free (context);
+
+	/* add PackageKit */
+	gpk_debug_add_log_domain ("PackageKit");
 
 	if (program_version) {
 		g_print (VERSION "\n");

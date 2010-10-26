@@ -32,8 +32,6 @@
 #include "gpk-enum.h"
 #include "gpk-desktop.h"
 
-#include "egg-debug.h"
-
 static void     gpk_helper_chooser_finalize	(GObject	  *object);
 
 #define GPK_HELPER_CHOOSER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_HELPER_CHOOSER, GpkHelperChooserPrivate))
@@ -120,9 +118,9 @@ gpk_helper_chooser_treeview_clicked_cb (GtkTreeSelection *selection, GpkHelperCh
 		gtk_tree_model_get (model, &iter, GPK_CHOOSER_COLUMN_ID, &helper->priv->package_id, -1);
 
 		/* show package_id */
-		egg_debug ("selected row is: %s", helper->priv->package_id);
+		g_debug ("selected row is: %s", helper->priv->package_id);
 	} else {
-		egg_debug ("no row selected");
+		g_debug ("no row selected");
 	}
 }
 
@@ -183,7 +181,7 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 			      "package-id", &package_id,
 			      "summary", &summary,
 			      NULL);
-		egg_debug ("package '%s' got:", package_id);
+		g_debug ("package '%s' got:", package_id);
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (helper->priv->list_store, &iter);
@@ -272,7 +270,7 @@ gpk_helper_chooser_init (GpkHelperChooser *helper)
 	helper->priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (helper->priv->builder, GPK_DATA "/gpk-log.ui", &error);
 	if (retval == 0) {
-		egg_warning ("failed to load ui: %s", error->message);
+		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 	}
 

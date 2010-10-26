@@ -24,7 +24,6 @@
 #include <string.h>
 #include <glib.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 #include "egg-markdown.h"
 
@@ -625,7 +624,7 @@ egg_markdown_flush_pending (EggMarkdown *self)
 		self->priv->line_count++;
 	}
 
-	egg_debug ("adding '%s'", temp);
+	g_debug ("adding '%s'", temp);
 
 	/* clear */
 	g_string_truncate (self->priv->pending, 0);
@@ -644,7 +643,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* blank */
 	ret = egg_markdown_to_text_line_is_blank (line);
 	if (ret) {
-		egg_debug ("blank: '%s'", line);
+		g_debug ("blank: '%s'", line);
 		egg_markdown_flush_pending (self);
 		/* a new line after a list is the end of list, not a gap */
 		if (self->priv->mode != EGG_MARKDOWN_MODE_BULLETT)
@@ -656,7 +655,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* header1_type2 */
 	ret = egg_markdown_to_text_line_is_header1_type2 (line);
 	if (ret) {
-		egg_debug ("header1_type2: '%s'", line);
+		g_debug ("header1_type2: '%s'", line);
 		if (self->priv->mode == EGG_MARKDOWN_MODE_PARA)
 			self->priv->mode = EGG_MARKDOWN_MODE_H1;
 		goto out;
@@ -665,7 +664,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* header2_type2 */
 	ret = egg_markdown_to_text_line_is_header2_type2 (line);
 	if (ret) {
-		egg_debug ("header2_type2: '%s'", line);
+		g_debug ("header2_type2: '%s'", line);
 		if (self->priv->mode == EGG_MARKDOWN_MODE_PARA)
 			self->priv->mode = EGG_MARKDOWN_MODE_H2;
 		goto out;
@@ -674,7 +673,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* rule */
 	ret = egg_markdown_to_text_line_is_rule (line);
 	if (ret) {
-		egg_debug ("rule: '%s'", line);
+		g_debug ("rule: '%s'", line);
 		egg_markdown_flush_pending (self);
 		self->priv->mode = EGG_MARKDOWN_MODE_RULE;
 		ret = egg_markdown_add_pending (self, self->priv->tags.rule);
@@ -684,7 +683,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* bullett */
 	ret = egg_markdown_to_text_line_is_bullett (line);
 	if (ret) {
-		egg_debug ("bullett: '%s'", line);
+		g_debug ("bullett: '%s'", line);
 		egg_markdown_flush_pending (self);
 		self->priv->mode = EGG_MARKDOWN_MODE_BULLETT;
 		ret = egg_markdown_add_pending (self, &line[2]);
@@ -694,7 +693,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* header1 */
 	ret = egg_markdown_to_text_line_is_header1 (line);
 	if (ret) {
-		egg_debug ("header1: '%s'", line);
+		g_debug ("header1: '%s'", line);
 		egg_markdown_flush_pending (self);
 		self->priv->mode = EGG_MARKDOWN_MODE_H1;
 		ret = egg_markdown_add_pending_header (self, &line[2]);
@@ -704,7 +703,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	/* header2 */
 	ret = egg_markdown_to_text_line_is_header2 (line);
 	if (ret) {
-		egg_debug ("header2: '%s'", line);
+		g_debug ("header2: '%s'", line);
 		egg_markdown_flush_pending (self);
 		self->priv->mode = EGG_MARKDOWN_MODE_H2;
 		ret = egg_markdown_add_pending_header (self, &line[3]);
@@ -718,7 +717,7 @@ egg_markdown_to_text_line_process (EggMarkdown *self, const gchar *line)
 	}
 
 	/* add to pending */
-	egg_debug ("continue: '%s'", line);
+	g_debug ("continue: '%s'", line);
 	ret = egg_markdown_add_pending (self, line);
 out:
 	/* if we failed to add, we don't know the mode */
@@ -786,7 +785,7 @@ egg_markdown_set_output (EggMarkdown *self, EggMarkdownOutput output)
 
 	/* unknown */
 	} else {
-		egg_warning ("unknown output enum");
+		g_warning ("unknown output enum");
 		ret = FALSE;
 	}
 
@@ -855,7 +854,7 @@ egg_markdown_parse (EggMarkdown *self, const gchar *markdown)
 	g_return_val_if_fail (EGG_IS_MARKDOWN (self), NULL);
 	g_return_val_if_fail (self->priv->output != EGG_MARKDOWN_OUTPUT_UNKNOWN, NULL);
 
-	egg_debug ("input='%s'", markdown);
+	g_debug ("input='%s'", markdown);
 
 	/* process */
 	self->priv->mode = EGG_MARKDOWN_MODE_UNKNOWN;
@@ -883,7 +882,7 @@ egg_markdown_parse (EggMarkdown *self, const gchar *markdown)
 	g_string_truncate (self->priv->pending, 0);
 	g_string_truncate (self->priv->processed, 0);
 
-	egg_debug ("output='%s'", temp);
+	g_debug ("output='%s'", temp);
 
 	return temp;
 }
@@ -1019,7 +1018,6 @@ egg_markdown_test (EggTest *test)
 	ret = egg_markdown_to_text_line_is_blank ("ccccccccc");
 	egg_test_title_assert (test, "is blank (full)", !ret);
 
-
 	/************************************************************
 	 ****************           replace            **************
 	 ************************************************************/
@@ -1139,7 +1137,6 @@ egg_markdown_test (EggTest *test)
 	else
 		egg_test_failed (test, "failed, got '%s', expected '%s'", text, markdown_expected);
 	g_free (text);
-
 
 	/************************************************************/
 	markdown = "this is http://www.hughsie.com/with_spaces_in_url inline link\n";

@@ -36,7 +36,6 @@
 #include <packagekit-glib2/packagekit.h>
 #include <libupower-glib/upower.h>
 
-#include "egg-debug.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -118,7 +117,7 @@ gpk_auto_refresh_signal_refresh_cache (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	egg_debug ("emitting refresh-cache");
+	g_debug ("emitting refresh-cache");
 	g_signal_emit (arefresh, signals [REFRESH_CACHE], 0);
 	return TRUE;
 }
@@ -131,7 +130,7 @@ gpk_auto_refresh_signal_get_updates (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	egg_debug ("emitting get-updates");
+	g_debug ("emitting get-updates");
 	g_signal_emit (arefresh, signals [GET_UPDATES], 0);
 	return TRUE;
 }
@@ -144,7 +143,7 @@ gpk_auto_refresh_signal_get_upgrades (GpkAutoRefresh *arefresh)
 {
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
-	egg_debug ("emitting get-upgrades");
+	g_debug ("emitting get-upgrades");
 	g_signal_emit (arefresh, signals [GET_UPGRADES], 0);
 	return TRUE;
 }
@@ -163,7 +162,7 @@ gpk_auto_refresh_get_time_refresh_cache_cb (GObject *object, GAsyncResult *res, 
 	/* get the result */
 	seconds = pk_control_get_time_since_action_finish (control, res, &error);
 	if (seconds == 0) {
-		egg_warning ("failed to get time: %s", error->message);
+		g_warning ("failed to get time: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -171,7 +170,7 @@ gpk_auto_refresh_get_time_refresh_cache_cb (GObject *object, GAsyncResult *res, 
 	/* have we passed the timout? */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		g_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
 	}
 
@@ -192,26 +191,26 @@ gpk_auto_refresh_maybe_refresh_cache (GpkAutoRefresh *arefresh)
 	/* if we don't want to auto check for updates, don't do this either */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never");
+		g_debug ("not when policy is set to never");
 		return;
 	}
 
 	/* not on battery */
 	if (arefresh->priv->on_battery) {
-		egg_debug ("not when on battery");
+		g_debug ("not when on battery");
 		return;
 	}
 
 	/* only do the refresh cache when the user is idle */
 	if (!arefresh->priv->session_idle) {
-		egg_debug ("not when session active");
+		g_debug ("not when session active");
 		return;
 	}
 
 	/* get this each time, as it may have changed behind out back */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_REFRESH_CACHE);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never");
+		g_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -234,7 +233,7 @@ gpk_auto_refresh_get_time_get_updates_cb (GObject *object, GAsyncResult *res, Gp
 	/* get the result */
 	seconds = pk_control_get_time_since_action_finish (control, res, &error);
 	if (seconds == 0) {
-		egg_warning ("failed to get time: %s", error->message);
+		g_warning ("failed to get time: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -242,7 +241,7 @@ gpk_auto_refresh_get_time_get_updates_cb (GObject *object, GAsyncResult *res, Gp
 	/* have we passed the timout? */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		g_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
 	}
 
@@ -263,7 +262,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	if (!arefresh->priv->force_get_updates_login) {
 		arefresh->priv->force_get_updates_login = TRUE;
 		if (g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_FORCE_GET_UPDATES_LOGIN)) {
-			egg_debug ("forcing get update due to GSettings");
+			g_debug ("forcing get update due to GSettings");
 			gpk_auto_refresh_signal_get_updates (arefresh);
 			return;
 		}
@@ -272,7 +271,7 @@ gpk_auto_refresh_maybe_get_updates (GpkAutoRefresh *arefresh)
 	/* if we don't want to auto check for updates, don't do this either */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never");
+		g_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -295,7 +294,7 @@ gpk_auto_refresh_get_time_get_upgrades_cb (GObject *object, GAsyncResult *res, G
 	/* get the result */
 	seconds = pk_control_get_time_since_action_finish (control, res, &error);
 	if (seconds == 0) {
-		egg_warning ("failed to get time: %s", error->message);
+		g_warning ("failed to get time: %s", error->message);
 		g_error_free (error);
 		return;
 	}
@@ -303,7 +302,7 @@ gpk_auto_refresh_get_time_get_upgrades_cb (GObject *object, GAsyncResult *res, G
 	/* have we passed the timout? */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	if (seconds < thresh) {
-		egg_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
+		g_debug ("not before timeout, thresh=%u, now=%u", thresh, seconds);
 		return;
 	}
 
@@ -324,7 +323,7 @@ gpk_auto_refresh_maybe_get_upgrades (GpkAutoRefresh *arefresh)
 	/* get this each time, as it may have changed behind out back */
 	thresh = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
 	if (thresh == 0) {
-		egg_debug ("not when policy is set to never");
+		g_debug ("not when policy is set to never");
 		return;
 	}
 
@@ -370,7 +369,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 
 	/* no point continuing if we have no network */
 	if (!arefresh->priv->network_active) {
-		egg_debug ("not when no network");
+		g_debug ("not when no network");
 		return FALSE;
 	}
 
@@ -396,7 +395,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	if (arefresh->priv->timeout_id != 0)
 		g_source_remove (arefresh->priv->timeout_id);
 	value = g_settings_get_int (arefresh->priv->settings, GPK_SETTINGS_SESSION_STARTUP_TIMEOUT);
-	egg_debug ("defering action for %i seconds", value);
+	g_debug ("defering action for %i seconds", value);
 	arefresh->priv->timeout_id =
 		g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
 	g_source_set_name_by_id (arefresh->priv->timeout_id, "[GpkAutoRefresh] change-state");
@@ -429,7 +428,7 @@ gpk_auto_refresh_session_idle_changed_cb (GpkSession *session, gboolean is_idle,
 {
 	g_return_if_fail (GPK_IS_AUTO_REFRESH (arefresh));
 
-	egg_debug ("setting is_idle %i", is_idle);
+	g_debug ("setting is_idle %i", is_idle);
 	arefresh->priv->session_idle = is_idle;
 	if (arefresh->priv->session_idle)
 		gpk_auto_refresh_change_state (arefresh);
@@ -469,7 +468,7 @@ gpk_auto_refresh_convert_network_state (GpkAutoRefresh *arefresh, PkNetworkEnum 
 		return g_settings_get_boolean (arefresh->priv->settings, GPK_SETTINGS_CONNECTION_USE_WIFI);
 
 	/* not recognised */
-	egg_warning ("state unknown: %i", state);
+	g_warning ("state unknown: %i", state);
 	return TRUE;
 }
 
@@ -485,7 +484,7 @@ gpk_auto_refresh_notify_network_state_cb (PkControl *control, GParamSpec *pspec,
 
 	g_object_get (control, "network-state", &state, NULL);
 	arefresh->priv->network_active = gpk_auto_refresh_convert_network_state (arefresh, state);
-	egg_debug ("setting online %i", arefresh->priv->network_active);
+	g_debug ("setting online %i", arefresh->priv->network_active);
 	if (arefresh->priv->network_active)
 		gpk_auto_refresh_change_state (arefresh);
 }
@@ -501,7 +500,7 @@ gpk_auto_refresh_timeout_cb (gpointer user_data)
 	g_return_val_if_fail (GPK_IS_AUTO_REFRESH (arefresh), FALSE);
 
 	/* debug so we can catch polling */
-	egg_debug ("polling check");
+	g_debug ("polling check");
 
 	/* triggered once an hour */
 	gpk_auto_refresh_change_state (arefresh);
@@ -523,12 +522,12 @@ gpk_auto_refresh_client_changed_cb (UpClient *client, GpkAutoRefresh *arefresh)
 	/* get the on-battery state */
 	on_battery = up_client_get_on_battery (arefresh->priv->client);
 	if (on_battery == arefresh->priv->on_battery) {
-		egg_debug ("same state as before, ignoring");
+		g_debug ("same state as before, ignoring");
 		return;
 	}
 
 	/* save in local cache */
-	egg_debug ("setting on_battery %i", on_battery);
+	g_debug ("setting on_battery %i", on_battery);
 	arefresh->priv->on_battery = on_battery;
 	if (!on_battery)
 		gpk_auto_refresh_change_state (arefresh);
@@ -549,7 +548,7 @@ gpk_auto_refresh_get_properties_cb (GObject *object, GAsyncResult *res, GpkAutoR
 	ret = pk_control_get_properties_finish (control, res, &error);
 	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
-		egg_warning ("could not get properties");
+		g_warning ("could not get properties");
 		g_error_free (error);
 		goto out;
 	}
@@ -597,7 +596,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 
 	/* get the battery state */
 	arefresh->priv->on_battery = up_client_get_on_battery (arefresh->priv->client);
-	egg_debug ("setting on battery %i", arefresh->priv->on_battery);
+	g_debug ("setting on battery %i", arefresh->priv->on_battery);
 
 	/* use gnome-session for the idle detection */
 	arefresh->priv->session = gpk_session_new ();
