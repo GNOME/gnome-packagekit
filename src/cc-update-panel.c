@@ -123,7 +123,7 @@ cc_update_panel_update_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pan
 	gchar *value;
 	guint freq = 0;
 
-	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	value = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT (widget));
 	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0)
 		freq = GPK_PREFS_VALUE_HOURLY;
 	else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
@@ -149,7 +149,7 @@ cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pa
 	gchar *value;
 	guint freq = 0;
 
-	value = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+	value = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT (widget));
 	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
 		freq = GPK_PREFS_VALUE_DAILY;
 	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
@@ -218,10 +218,10 @@ cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
 
 	/* set a simple text model */
 	cc_update_panel_update_freq_combo_simple_text (widget);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_HOURLY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_HOURLY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_NEVER_TEXT);
 
 	/* select the correct entry */
 	if (value == GPK_PREFS_VALUE_HOURLY)
@@ -258,9 +258,9 @@ cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 
 	/* set a simple text model */
 	cc_update_panel_update_freq_combo_simple_text (widget);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_DAILY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_WEEKLY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_FREQ_NEVER_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_NEVER_TEXT);
 
 	/* select the correct entry */
 	if (value == GPK_PREFS_VALUE_DAILY)
@@ -294,9 +294,9 @@ cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
 
 	/* set a simple text model */
 	cc_update_panel_update_freq_combo_simple_text (widget);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_ALL_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_SECURITY_TEXT);
-	gtk_combo_box_append_text (GTK_COMBO_BOX (widget), PK_UPDATE_NONE_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_ALL_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_SECURITY_TEXT);
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_NONE_TEXT);
 	/* we can do this as it's the same order */
 	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), update);
 
