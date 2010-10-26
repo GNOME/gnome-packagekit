@@ -179,26 +179,6 @@ cc_update_panel_update_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
 }
 
 /**
- * cc_update_panel_set_combo_model_simple_text:
- **/
-static void
-cc_update_panel_update_freq_combo_simple_text (GtkWidget *combo_box)
-{
-	GtkCellRenderer *cell;
-	GtkListStore *store;
-
-	store = gtk_list_store_new (1, G_TYPE_STRING);
-	gtk_combo_box_set_model (GTK_COMBO_BOX (combo_box), GTK_TREE_MODEL (store));
-	g_object_unref (store);
-
-	cell = gtk_cell_renderer_text_new ();
-	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box), cell, TRUE);
-	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo_box), cell,
-					"text", 0,
-					NULL);
-}
-
-/**
  * cc_update_panel_update_freq_combo_setup:
  **/
 static void
@@ -216,8 +196,7 @@ cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
-	/* set a simple text model */
-	cc_update_panel_update_freq_combo_simple_text (widget);
+	/* use a simple text model */
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_HOURLY_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
@@ -256,8 +235,7 @@ cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
-	/* set a simple text model */
-	cc_update_panel_update_freq_combo_simple_text (widget);
+	/* use a simple text model */
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_NEVER_TEXT);
@@ -292,8 +270,7 @@ cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
 
-	/* set a simple text model */
-	cc_update_panel_update_freq_combo_simple_text (widget);
+	/* use a simple text model */
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_ALL_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_SECURITY_TEXT);
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_NONE_TEXT);
