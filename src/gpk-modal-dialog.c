@@ -383,9 +383,7 @@ gpk_modal_dialog_make_progressbar_pulse (GpkModalDialog *dialog)
 		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (dialog->priv->builder, "progressbar_percent"));
 		gtk_progress_bar_set_pulse_step (progress_bar, 0.04);
 		dialog->priv->pulse_timer_id = g_timeout_add (75, (GSourceFunc) gpk_modal_dialog_pulse_progress, dialog);
-#if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (dialog->priv->pulse_timer_id, "[GpkModalDialog] pulse");
-#endif
 	}
 }
 

@@ -43,6 +43,7 @@ static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
 static GPtrArray *transactions = NULL;
 static GtkTreePath *path_global = NULL;
+static guint xid = 0;
 
 enum
 {
@@ -657,7 +658,7 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 static gboolean
 gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
 {
-	gtk_application_quit (application);
+	g_application_release (G_APPLICATION (application));
 	return FALSE;
 }
 
@@ -667,66 +668,34 @@ gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *app
 static void
 gpk_log_button_close_cb (GtkWidget *widget, GtkApplication *application)
 {
-	gtk_application_quit (application);
+	g_application_release (G_APPLICATION (application));
 }
 
 /**
- * main:
+ * gpk_log_activate_cb:
  **/
-int
-main (int argc, char *argv[])
+static void
+gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 {
-	GOptionContext *context;
-	GSettings *settings;
-	GtkWidget *widget;
-	GtkTreeSelection *selection;
-	GtkEntryCompletion *completion;
-	GtkApplication *application;
+	GtkWindow *window;
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
+	gtk_window_present (window);
+}
+
+/**
+ * gpk_log_startup_cb:
+ **/
+static void
+gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
+{
 	gboolean ret;
-	guint retval;
-	guint xid = 0;
 	GError *error = NULL;
-
-	const GOptionEntry options[] = {
-		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
-		  /* TRANSLATORS: preset the GtktextBox with this filter text */
-		  N_("Set the filter to this value"), NULL },
-		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
-		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
-		  _("Set the parent window to make this modal"), NULL },
-		{ NULL}
-	};
-
-	setlocale (LC_ALL, "");
-
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-
-	if (! g_thread_supported ())
-		g_thread_init (NULL);
-	g_type_init ();
-	gtk_init (&argc, &argv);
-
-	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Software Log Viewer"));
-	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
-	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-	g_option_context_parse (context, &argc, &argv, NULL);
-	g_option_context_free (context);
-
-	/* are we running privileged */
-	ret = gpk_check_privileged_user (_("Log viewer"), TRUE);
-	if (!ret)
-		return 1;
-
-	/* are we already activated? */
-	application = gtk_application_new ("org.freedesktop.PackageKit.LogViewer", &argc, &argv);
-
-	/* add application specific icons to search path */
-	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   GPK_DATA G_DIR_SEPARATOR_S "icons");
+	GSettings *settings;
+	GtkEntryCompletion *completion;
+	GtkTreeSelection *selection;
+	GtkWidget *widget;
+	GtkWindow *window;
+	guint retval;
 
 	client = pk_client_new ();
 	g_object_set (client,
@@ -739,18 +708,18 @@ main (int argc, char *argv[])
 	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
-		goto out_build;
+		goto out;
 	}
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
-	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_LOG);
-	gtk_application_add_window (application, GTK_WINDOW (widget));
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_simple"));
+	gtk_window_set_icon_name (window, GPK_ICON_SOFTWARE_LOG);
+	gtk_window_set_application (window, application);
 
 	/* set a size, if the screen allows */
-	gpk_window_set_size_request (GTK_WINDOW (widget), 900, 300);
+	gpk_window_set_size_request (window, 900, 300);
 
 	/* Get the main window quit */
-	g_signal_connect (widget, "delete-event",
+	g_signal_connect (window, "delete-event",
 			  G_CALLBACK (gpk_log_delete_event_cb), application);
 
 	/* if command line arguments are set, then setup UI */
@@ -824,18 +793,76 @@ main (int argc, char *argv[])
 
 	/* get the update list */
 	gpk_log_refresh ();
-
-	/* run */
-	gtk_application_run (application);
-
-out_build:
-	g_object_unref (builder);
+out:
 	g_object_unref (list_store);
 	g_object_unref (client);
 	g_free (transaction_id);
 	g_free (filter);
 	if (transactions != NULL)
 		g_ptr_array_unref (transactions);
+}
+
+/**
+ * main:
+ **/
+int
+main (int argc, char *argv[])
+{
+	gboolean ret;
+	gint status = 1;
+	GOptionContext *context;
+	GtkApplication *application;
+
+	const GOptionEntry options[] = {
+		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
+		  /* TRANSLATORS: preset the GtktextBox with this filter text */
+		  N_("Set the filter to this value"), NULL },
+		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
+		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
+		  _("Set the parent window to make this modal"), NULL },
+		{ NULL}
+	};
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
+	g_type_init ();
+	gtk_init (&argc, &argv);
+
+	context = g_option_context_new (NULL);
+	g_option_context_set_summary (context, _("Software Log Viewer"));
+	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, egg_debug_get_option_group ());
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
+	g_option_context_parse (context, &argc, &argv, NULL);
+	g_option_context_free (context);
+
+	/* are we running privileged */
+	ret = gpk_check_privileged_user (_("Log viewer"), TRUE);
+	if (!ret)
+		goto out;
+
+	/* add application specific icons to search path */
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
+
+	/* are we already activated? */
+	application = gtk_application_new ("org.freedesktop.PackageKit.LogViewer", 0);
+	g_signal_connect (application, "startup",
+			  G_CALLBACK (gpk_log_startup_cb), NULL);
+	g_signal_connect (application, "activate",
+			  G_CALLBACK (gpk_log_activate_cb), NULL);
+
+	/* run */
+	status = g_application_run (G_APPLICATION (application), argc, argv);
+out:
+	if (builder != NULL)
+		g_object_unref (builder);
 	g_object_unref (application);
-	return 0;
+	return status;
 }

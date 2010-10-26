@@ -386,10 +386,8 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 					g_timeout_add_seconds (GPK_UPDATES_LOGIN_TIMEOUT,
 							       (GSourceFunc) gpk_auto_refresh_maybe_get_updates_logon_cb,
 							       arefresh);
-#if GLIB_CHECK_VERSION(2,25,8)
 				g_source_set_name_by_id (arefresh->priv->force_get_updates_login_timeout_id,
 							 "[GpkAutoRefresh] maybe-get-updates");
-#endif
 			}
 		}
 	}
@@ -401,9 +399,7 @@ gpk_auto_refresh_change_state (GpkAutoRefresh *arefresh)
 	egg_debug ("defering action for %i seconds", value);
 	arefresh->priv->timeout_id =
 		g_timeout_add_seconds (value, (GSourceFunc) gpk_auto_refresh_change_state_cb, arefresh);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (arefresh->priv->timeout_id, "[GpkAutoRefresh] change-state");
-#endif
 
 	return TRUE;
 }
@@ -613,9 +609,7 @@ gpk_auto_refresh_init (GpkAutoRefresh *arefresh)
 	arefresh->priv->periodic_id =
 		g_timeout_add_seconds (GPK_AUTO_REFRESH_PERIODIC_CHECK,
 				       gpk_auto_refresh_timeout_cb, arefresh);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (arefresh->priv->periodic_id, "[GpkAutoRefresh] periodic check");
-#endif
 
 	/* check system state */
 	gpk_auto_refresh_change_state (arefresh);

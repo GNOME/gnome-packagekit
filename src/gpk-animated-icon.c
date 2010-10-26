@@ -211,9 +211,7 @@ gpk_animated_icon_set_frame_delay (GpkAnimatedIcon *icon, guint delay_ms)
 	if (icon->animation_id != 0) {
 		g_source_remove (icon->animation_id);
 		icon->animation_id = g_timeout_add (icon->frame_delay, (GSourceFunc) gpk_animated_icon_update, icon);
-#if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (icon->animation_id, "[GpkAnimatedIcon] update from delay change");
-#endif
 	}
 
 	return TRUE;
@@ -247,9 +245,7 @@ gpk_animated_icon_enable_animation (GpkAnimatedIcon *icon, gboolean enabled)
 	/* start */
 	icon->frame_counter = 0;
 	icon->animation_id = g_timeout_add (icon->frame_delay, (GSourceFunc) gpk_animated_icon_update, icon);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (icon->animation_id, "[GpkAnimatedIcon] start update");
-#endif
 	gpk_animated_icon_update (icon);
 	return TRUE;
 }

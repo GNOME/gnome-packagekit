@@ -251,9 +251,7 @@ gpk_hardware_device_added_cb (DBusGProxy *proxy, const gchar *udi, GpkHardware *
 		hardware->priv->udi = g_strdup (udi);
 		added_id = g_timeout_add_seconds (GPK_HARDWARE_MULTIPLE_HAL_SIGNALS_DELAY,
 				       gpk_hardware_device_added_timeout, hardware);
-#if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (added_id, "[GpkHardware] added");
-#endif
 	}
 }
 
@@ -314,9 +312,7 @@ gpk_hardware_init (GpkHardware *hardware)
 
 	/* check at startup (plus delay) and see if there is cold plugged hardware needing drivers */
 	login_id = g_timeout_add_seconds (GPK_HARDWARE_LOGIN_DELAY, gpk_hardware_timeout_cb, hardware);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (login_id, "[GpkHardware] login");
-#endif
 }
 
 /**
@@ -346,7 +342,8 @@ gpk_hardware_finalize (GObject *object)
 
 	g_return_if_fail (hardware->priv != NULL);
 	g_object_unref (hardware->priv->settings);
-	g_object_unref (PK_CLIENT(hardware->priv->task));
+	if (hardware->priv->task != NULL)
+		g_object_unref (hardware->priv->task);
 	g_strfreev (hardware->priv->package_ids);
 
 	G_OBJECT_CLASS (gpk_hardware_parent_class)->finalize (object);

@@ -98,7 +98,7 @@ shared_LIBS =						\
 	$(DBUS_LIBS)					\
 	$(GTK_LIBS)					\
 	$(GUDEV_LIBS)					\
-	$(NOTIFY_LIBS)				\
+	$(NOTIFY_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
 	$(UPOWER_LIBS)					\
@@ -186,9 +186,7 @@ gpk_dbus_service_LDADD =				\
 	$(NULL)
 
 gpk_application_SOURCES =				\
-	gpk-application-main.c				\
 	gpk-application.c				\
-	gpk-application.h				\
 	gpk-cell-renderer-uri.c				\
 	gpk-cell-renderer-uri.h				\
 	$(NULL)
@@ -232,9 +230,7 @@ libupdate_la_LDFLAGS = -avoid-version -module
 libupdate_la_CFLAGS = $(WARNINGFLAGS)
 
 gpk_update_viewer_SOURCES =				\
-	gpk-update-viewer-main.c			\
 	gpk-update-viewer.c				\
-	gpk-update-viewer.h				\
 	gpk-cell-renderer-size.c			\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\

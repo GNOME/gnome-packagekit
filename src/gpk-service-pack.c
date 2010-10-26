@@ -161,9 +161,7 @@ gpk_pack_set_percentage (guint percentage)
 		/* set pulsing */
 		if (pulse_id == 0) {
 			pulse_id = g_timeout_add (100, gpk_pack_percentage_pulse_cb, NULL);
-#if GLIB_CHECK_VERSION(2,25,8)
 			g_source_set_name_by_id (pulse_id, "[GpkServicePack] pulse");
-#endif
 		}
 		return;
 	}
@@ -682,7 +680,7 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 static gboolean
 gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
 {
-	gtk_application_quit (application);
+	g_application_release (G_APPLICATION (application));
 	return FALSE;
 }
 
@@ -692,73 +690,23 @@ gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *ap
 static void
 gpk_pack_button_close_cb (GtkWidget *widget, GtkApplication *application)
 {
-	gtk_application_quit (application);
+	g_application_release (G_APPLICATION (application));
 }
 
 /**
- * main:
+ * gpk_pack_startup_cb:
  **/
-int
-main (int argc, char *argv[])
+static void
+gpk_pack_startup_cb (GtkApplication *application, gpointer user_data)
 {
-	GOptionContext *context;
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	GtkFileFilter *filter;
 	GtkEntryCompletion *completion;
-	GtkApplication *application;
 	gboolean ret;
-	GSettings *settings = NULL;
-	gchar *option = NULL;
-	gchar *package = NULL;
-	gchar *with_array = NULL;
-	gchar *output = NULL;
 	guint retval;
+	GSettings *settings = NULL;
 	GError *error = NULL;
-
-	const GOptionEntry options[] = {
-		{ "option", 'o', 0, G_OPTION_ARG_STRING, &option,
-		  /* TRANSLATORS: the constants should not be translated */
-		  _("Set the option, allowable values are 'array', 'updates' and 'package'"), NULL },
-		{ "package", 'p', 0, G_OPTION_ARG_STRING, &package,
-		  /* TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack */
-		  _("Add the package name to the text entry box"), NULL },
-		{ "with-array", 'p', 0, G_OPTION_ARG_STRING, &with_array,
-		  /* TRANSLATORS: this is the destination computer package array */
-		  _("Set the remote package array filename"), NULL },
-		{ "output", 'p', 0, G_OPTION_ARG_STRING, &output,
-		  /* TRANSLATORS: this is the file output directory */
-		  _("Set the default output directory"), NULL },
-		{ NULL}
-	};
-
-	setlocale (LC_ALL, "");
-
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-
-	if (! g_thread_supported ())
-		g_thread_init (NULL);
-	g_type_init ();
-
-	context = g_option_context_new (NULL);
-	/* TRANSLATORS: program description, an application to create service packs */
-	g_option_context_set_summary (context, _("Service Pack Creator"));
-	g_option_context_add_main_entries (context, options, NULL);
-	g_option_context_add_group (context, egg_debug_get_option_group ());
-	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-	ret = g_option_context_parse (context, &argc, &argv, &error);
-	if (!ret) {
-		g_error ("failed to parse %s", error->message);
-		g_error_free (error);
-	}
-	g_option_context_free (context);
-
-	gtk_init (&argc, &argv);
-
-	/* are we already activated? */
-	application = gtk_application_new ("org.freedesktop.PackageKit.ServicePack", &argc, &argv);
 
 	/* use a client to download packages */
 	client = pk_client_new ();
@@ -780,7 +728,7 @@ main (int argc, char *argv[])
 	if (retval == 0) {
 		egg_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
-		goto out_build;
+		goto out;
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_pack"));
@@ -836,6 +784,59 @@ main (int argc, char *argv[])
 		g_object_unref (completion);
 	}
 
+	gtk_widget_show (main_window);
+out:
+	if (settings != NULL)
+		g_object_unref (settings);
+}
+
+/**
+ * gpm_pack_commandline_cb:
+ **/
+static int
+gpm_pack_commandline_cb (GApplication *application,
+			 GApplicationCommandLine *cmdline,
+			 gpointer user_data)
+{
+	gboolean ret;
+	gchar **argv;
+	gchar *option = NULL;
+	gchar *package = NULL;
+	gchar *with_array = NULL;
+	gchar *output = NULL;
+	gint argc;
+	GOptionContext *context;
+	GtkWidget *widget;
+	GtkWindow *window;
+
+	const GOptionEntry options[] = {
+		{ "option", 'o', 0, G_OPTION_ARG_STRING, &option,
+		  /* TRANSLATORS: the constants should not be translated */
+		  _("Set the option, allowable values are 'array', 'updates' and 'package'"), NULL },
+		{ "package", 'p', 0, G_OPTION_ARG_STRING, &package,
+		  /* TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack */
+		  _("Add the package name to the text entry box"), NULL },
+		{ "with-array", 'p', 0, G_OPTION_ARG_STRING, &with_array,
+		  /* TRANSLATORS: this is the destination computer package array */
+		  _("Set the remote package array filename"), NULL },
+		{ "output", 'p', 0, G_OPTION_ARG_STRING, &output,
+		  /* TRANSLATORS: this is the file output directory */
+		  _("Set the default output directory"), NULL },
+		{ NULL}
+	};
+
+	/* get arguments */
+	argv = g_application_command_line_get_arguments (cmdline, &argc);
+
+	context = g_option_context_new (NULL);
+	/* TRANSLATORS: the program name */
+	g_option_context_set_summary (context, _("Service Pack Creator"));
+	g_option_context_add_main_entries (context, options, NULL);
+//	g_option_context_add_group (context, gpk_debug_get_option_group ());
+	ret = g_option_context_parse (context, &argc, &argv, NULL);
+	if (!ret)
+		goto out;
+
 	/* if command line arguments are set, then setup UI */
 	if (option != NULL) {
 		if (g_strcmp0 (option, "array") == 0) {
@@ -862,24 +863,58 @@ main (int argc, char *argv[])
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(widget), output);
 	}
 
-	gtk_widget_show (main_window);
-
-	/* run */
-	gtk_application_run (application);
-
-out_build:
-	g_object_unref (builder);
-	g_object_unref (application);
-	if (settings != NULL)
-		g_object_unref (settings);
-	if (control != NULL)
-		g_object_unref (control);
-	if (client != NULL)
-		g_object_unref (client);
+	/* make sure the window is raised */
+	window = GTK_WINDOW (gtk_builder_get_object (builder, "dialog_pack"));
+	gtk_window_present (window);
+out:
 	g_free (option);
 	g_free (package);
 	g_free (with_array);
 	g_free (output);
+	g_strfreev (argv);
+	g_option_context_free (context);
+	return ret;
+}
 
-	return 0;
+/**
+ * main:
+ **/
+int
+main (int argc, char *argv[])
+{
+	GtkApplication *application;
+	gint status = 0;
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
+	g_type_init ();
+
+	gtk_init (&argc, &argv);
+
+	/* are we already activated? */
+	application = gtk_application_new ("org.freedesktop.PackageKit.ServicePack",
+					   G_APPLICATION_HANDLES_COMMAND_LINE);
+	g_signal_connect (application, "startup",
+			  G_CALLBACK (gpk_pack_startup_cb), NULL);
+	g_signal_connect (application, "command-line",
+			  G_CALLBACK (gpm_pack_commandline_cb), NULL);
+
+	/* run */
+	status = g_application_run (G_APPLICATION (application), argc, argv);
+
+	g_object_unref (application);
+	if (builder != NULL)
+		g_object_unref (builder);
+	if (control != NULL)
+		g_object_unref (control);
+	if (client != NULL)
+		g_object_unref (client);
+
+	return status;
 }

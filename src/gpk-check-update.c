@@ -502,9 +502,7 @@ gpk_check_update_update_system_finished_cb (PkTask *task, GAsyncResult *res, Gpk
 		gpk_check_update_set_gicon (cupdate, NULL);
 		timer_id = g_timeout_add_seconds (GPK_CHECK_UPDATE_FAILED_TASK_RECHECK_DELAY,
 						  (GSourceFunc) gpk_check_update_get_updates_post_update_cb, cupdate);
-#if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (timer_id, "[GpkCheckUpdate] failed");
-#endif
 		goto out;
 	}
 
@@ -1097,10 +1095,8 @@ gpk_check_update_updates_changed_cb (PkControl *control, GpkCheckUpdate *cupdate
 	cupdate->priv->updates_changed_id =
 		g_timeout_add_seconds (GPK_CHECK_UPDATE_UPDATES_CHANGED_TIMEOUT,
 				       (GSourceFunc) gpk_check_update_query_updates_changed_cb, cupdate);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (cupdate->priv->updates_changed_id,
 				 "[GpkCheckUpdate] updates-changed");
-#endif
 }
 
 /**

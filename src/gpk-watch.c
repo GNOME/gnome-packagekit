@@ -333,9 +333,7 @@ gpk_watch_set_proxies (GpkWatch *watch)
 	}
 	watch->priv->set_proxy_id = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
 							(GSourceFunc) gpk_watch_set_proxies_ratelimit, watch);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (watch->priv->set_proxy_id, "[GpkWatch] set-proxies");
-#endif
 	return TRUE;
 }
 

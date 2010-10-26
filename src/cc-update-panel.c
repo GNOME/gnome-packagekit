@@ -480,9 +480,7 @@ cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdate
 
 	/* only show after some time in the transaction */
 	panel->priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) cc_update_panel_status_changed_timeout_cb, panel);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (panel->priv->status_id, "[GpkRepo] status");
-#endif
 out:
 	return;
 }

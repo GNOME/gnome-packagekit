@@ -932,9 +932,7 @@ gpk_firmware_scan_directory (GpkFirmware *firmware)
 	/* don't spam the user at startup, so wait a little delay */
 	if (array->len > 0) {
 		scan_id = g_timeout_add_seconds (GPK_FIRMWARE_PROCESS_DELAY, gpk_firmware_timeout_cb, firmware);
-#if GLIB_CHECK_VERSION(2,25,8)
 		g_source_set_name_by_id (scan_id, "[GpkFirmware] process");
-#endif
 	}
 }
 
@@ -964,9 +962,7 @@ gpk_firmware_monitor_changed_cb (GFileMonitor *monitor, GFile *file, GFile *othe
 	/* wait for the device to settle */
 	firmware->priv->timeout_id =
 		g_timeout_add_seconds (GPK_FIRMWARE_INSERT_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (firmware->priv->timeout_id, "[GpkFirmware] changed");
-#endif
 }
 
 /**
@@ -1021,9 +1017,7 @@ out:
 	g_object_unref (file);
 	firmware->priv->timeout_id =
 		g_timeout_add_seconds (GPK_FIRMWARE_LOGIN_DELAY, (GSourceFunc) gpk_firmware_scan_directory_cb, firmware);
-#if GLIB_CHECK_VERSION(2,25,8)
 	g_source_set_name_by_id (firmware->priv->timeout_id, "[GpkFirmware] login coldplug");
-#endif
 }
 
 /**

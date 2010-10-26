@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2007-2009 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2007-2010 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -42,32 +42,55 @@
 #include "gpk-hardware.h"
 #include "gpk-common.h"
 
+static GpkCheckUpdate *cupdate = NULL;
+static GpkWatch *watch = NULL;
+static GpkFirmware *firmware = NULL;
+static GpkHardware *hardware = NULL;
+static guint timer_id = 0;
+static gboolean timed_exit = FALSE;
+
 /**
  * gpk_icon_timed_exit_cb:
  **/
 static gboolean
 gpk_icon_timed_exit_cb (GtkApplication *application)
 {
-	gtk_application_quit (application);
+	g_application_release (G_APPLICATION (application));
 	return FALSE;
 }
 
 /**
- * main:
+ * gpk_icon_startup_cb:
  **/
-int
-main (int argc, char *argv[])
+static void
+gpk_icon_startup_cb (GtkApplication *application, gpointer user_data)
 {
+	/* create new objects */
+	cupdate = gpk_check_update_new ();
+	watch = gpk_watch_new ();
+	firmware = gpk_firmware_new ();
+	hardware = gpk_hardware_new ();
+
+	/* Only timeout if we have specified iton the command line */
+	if (timed_exit) {
+		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gpk_icon_timed_exit_cb, application);
+		g_source_set_name_by_id (timer_id, "[GpkUpdateIcon] timed exit");
+	}
+}
+
+/**
+ * gpm_pack_commandline_cb:
+ **/
+static int
+gpm_pack_commandline_cb (GApplication *application,
+			 GApplicationCommandLine *cmdline,
+			 gpointer user_data)
+{
+	gchar **argv;
+	gint argc;
 	gboolean program_version = FALSE;
-	gboolean timed_exit = FALSE;
-	GpkCheckUpdate *cupdate = NULL;
-	GpkWatch *watch = NULL;
-	GpkFirmware *firmware = NULL;
-	GpkHardware *hardware = NULL;
 	GOptionContext *context;
-	GtkApplication *application;
 	gboolean ret;
-	guint timer_id = 0;
 
 	const GOptionEntry options[] = {
 		{ "timed-exit", '\0', 0, G_OPTION_ARG_NONE, &timed_exit,
@@ -77,21 +100,9 @@ main (int argc, char *argv[])
 		{ NULL}
 	};
 
-	setlocale (LC_ALL, "");
+	/* get arguments */
+	argv = g_application_command_line_get_arguments (cmdline, &argc);
 
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-
-	if (! g_thread_supported ())
-		g_thread_init (NULL);
-	g_type_init ();
-	gtk_init (&argc, &argv);
-	dbus_g_thread_init ();
-	notify_init ("gpk-update-icon");
-
-	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
-	g_set_application_name (_("Update Applet"));
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Update Applet"));
 	g_option_context_add_main_entries (context, options, NULL);
@@ -112,35 +123,62 @@ main (int argc, char *argv[])
 		return 1;
 	}
 
+	g_strfreev (argv);
+	return 0;
+}
+
+/**
+ * main:
+ **/
+int
+main (int argc, char *argv[])
+{
+	GtkApplication *application;
+	gint status = 0;
+
+	setlocale (LC_ALL, "");
+
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
+	g_type_init ();
+	gtk_init (&argc, &argv);
+	dbus_g_thread_init ();
+	notify_init ("gpk-update-icon");
+
+	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
+	g_set_application_name (_("Update Applet"));
+
 	/* are we already activated? */
-	application = gtk_application_new ("org.freedesktop.PackageKit.UpdateIcon", &argc, &argv);
+	application = gtk_application_new ("org.freedesktop.PackageKit.UpdateIcon",
+					   G_APPLICATION_HANDLES_COMMAND_LINE);
+	g_signal_connect (application, "startup",
+			  G_CALLBACK (gpk_icon_startup_cb), NULL);
+	g_signal_connect (application, "command-line",
+			  G_CALLBACK (gpm_pack_commandline_cb), NULL);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* create new objects */
-	cupdate = gpk_check_update_new ();
-	watch = gpk_watch_new ();
-	firmware = gpk_firmware_new ();
-	hardware = gpk_hardware_new ();
-
-	/* Only timeout if we have specified iton the command line */
-	if (timed_exit) {
-		timer_id = g_timeout_add_seconds (120, (GSourceFunc) gpk_icon_timed_exit_cb, application);
-#if GLIB_CHECK_VERSION(2,25,8)
-		g_source_set_name_by_id (timer_id, "[GpkUpdateIcon] timed exit");
-#endif
-	}
+	/* we don't have any windows to assign */
+	g_application_hold (G_APPLICATION (application));
 
 	/* run */
-	gtk_application_run (application);
+	status = g_application_run (G_APPLICATION (application), argc, argv);
 
-	g_object_unref (cupdate);
-	g_object_unref (watch);
-	g_object_unref (firmware);
-	g_object_unref (hardware);
+	if (cupdate != NULL)
+		g_object_unref (cupdate);
+	if (watch != NULL)
+		g_object_unref (watch);
+	if (firmware != NULL)
+		g_object_unref (firmware);
+	if (hardware != NULL)
+		g_object_unref (hardware);
 	g_object_unref (application);
-	return 0;
+	return status;
 }
 
