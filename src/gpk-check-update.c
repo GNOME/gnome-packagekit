@@ -1042,6 +1042,13 @@ gpk_check_update_query_updates (GpkCheckUpdate *cupdate)
 		goto out;
 	}
 
+#if PK_CHECK_VERSION(0,6,10)
+	/* optimize the amount of downloaded data by setting the cache age */
+	pk_client_set_cache_age (PK_CLIENT(cupdate->priv->task),
+				 g_settings_get_int (cupdate->priv->settings,
+						     GPK_SETTINGS_FREQUENCY_GET_UPDATES));
+#endif
+
 	/* get new update list */
 	pk_client_get_updates_async (PK_CLIENT(cupdate->priv->task),
 				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
@@ -1187,6 +1194,13 @@ gpk_check_update_auto_refresh_cache_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate
 		goto out;
 	}
 
+#if PK_CHECK_VERSION(0,6,10)
+	/* optimize the amount of downloaded data by setting the cache age */
+	pk_client_set_cache_age (PK_CLIENT(cupdate->priv->task),
+				 g_settings_get_int (cupdate->priv->settings,
+						     GPK_SETTINGS_FREQUENCY_REFRESH_CACHE));
+#endif
+
 	pk_client_refresh_cache_async (PK_CLIENT(cupdate->priv->task), TRUE, cupdate->priv->cancellable, NULL, NULL,
 				       (GAsyncReadyCallback) gpk_check_update_refresh_cache_finished_cb, cupdate);
 out:
@@ -1318,6 +1332,13 @@ gpk_check_update_auto_get_upgrades_cb (GpkAutoRefresh *arefresh, GpkCheckUpdate 
 		g_debug ("Not checking for upgrades as already in progress");
 		goto out;
 	}
+
+#if PK_CHECK_VERSION(0,6,10)
+	/* optimize the amount of downloaded data by setting the cache age */
+	pk_client_set_cache_age (PK_CLIENT(cupdate->priv->task),
+				 g_settings_get_int (cupdate->priv->settings,
+						     GPK_SETTINGS_FREQUENCY_GET_UPGRADES));
+#endif
 
 	/* get new distro upgrades list */
 	pk_client_get_distro_upgrades_async (PK_CLIENT(cupdate->priv->task), cupdate->priv->cancellable, NULL, NULL,
