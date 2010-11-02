@@ -45,6 +45,7 @@ bin_PROGRAMS =						\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-dbus-service				\
+	gpk-distro-upgrade				\
 	$(NULL)
 
 noinst_LIBRARIES = libgpkshared.a
@@ -151,6 +152,13 @@ gpk_install_package_name_LDADD =			\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
+
+gpk_distro_upgrade_SOURCES =				\
+	gpk-distro-upgrade.c
+
+gpk_distro_upgrade_LDADD =				\
+	libgpkshared.a					\
+	$(shared_LIBS)
 
 gpk_update_icon_SOURCES =				\
 	gpk-update-icon.c				\
