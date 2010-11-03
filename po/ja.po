@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit gnome-2-32\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-09-13 13:51+0000\n"
-"PO-Revision-Date: 2010-09-13 23:20+0900\n"
+"POT-Creation-Date: 2010-10-29 00:18+0000\n"
+"PO-Revision-Date: 2010-11-01 23:05+0900\n"
 "Last-Translator: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>\n"
 "Language-Team: Momonga Project <meke@momonga-linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -136,11 +136,11 @@ msgstr "更新を調査する頻度です。値は秒単位。"
 
 #: ../data/gnome-packagekit.schemas.in.h:24
 msgid "How often to refresh the package cache"
-msgstr "パッケージのキャッシュをリフレッシュする頻度"
+msgstr "パッケージのキャッシュを更新する頻度"
 
 #: ../data/gnome-packagekit.schemas.in.h:25
 msgid "How often to refresh the package cache. Value is in seconds."
-msgstr "パッケージのキャッシュをリフレッシュする頻度です。値は秒単位。"
+msgstr "パッケージのキャッシュを更新する頻度です。値は秒単位。"
 
 #: ../data/gnome-packagekit.schemas.in.h:26
 msgid "If search terms should be completed automatically"
@@ -438,7 +438,7 @@ msgstr "このソフトウェアについて"
 #: ../src/gpk-dbus-task.c:1236 ../src/gpk-dbus-task.c:1455
 #: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2119
 #: ../src/gpk-dbus-task.c:2393 ../src/gpk-dbus-task.c:2515
-#: ../src/gpk-dbus-task.c:2868 ../src/gpk-update-viewer.c:1665
+#: ../src/gpk-dbus-task.c:2868 ../src/gpk-update-viewer.c:1668
 msgid "Install"
 msgstr "インストール"
 
@@ -808,10 +808,6 @@ msgstr ""
 "エラー修正のソフトウェアを更新し、セキュリティの脆弱性と新機能は除外する。"
 
 #: ../data/gpk-update-viewer.ui.h:3
-msgid "_Install Update(s)"
-msgstr "更新をインストール(_I)"
-
-#: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
 msgstr "更新(_U)"
 
@@ -872,70 +868,70 @@ msgid_plural "%i files installed by %s"
 msgstr[0] "%i個のファイルが%sによってインストールされました"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:950 ../src/gpk-application.c:1073
+#: ../src/gpk-application.c:957 ../src/gpk-application.c:1084
 msgid "No packages"
 msgstr "パッケージが見つかりません"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:952
+#: ../src/gpk-application.c:959
 msgid "No other packages require this package"
 msgstr "このパッケージを要求するパッケージはありません。"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:959
+#: ../src/gpk-application.c:966
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
 msgstr[0] "%i個のパッケージが%sを要求しています。"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:964
+#: ../src/gpk-application.c:971
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
 msgstr[0] "以下のリストのパッケージが%sを正しく使用するために必要です。"
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1075
+#: ../src/gpk-application.c:1086
 msgid "This package does not depends on any others"
 msgstr "このパッケージは他のパッケージから依存されてるとは思われていません"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1082
+#: ../src/gpk-application.c:1093
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
 msgstr[0] "%i個のパッケージが%sに要求されています。"
 
 #. TRANSLATORS: message: show the array of dependant packages for this package
-#: ../src/gpk-application.c:1087
+#: ../src/gpk-application.c:1098
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
 msgstr[0] "以下のリストのパッケージが%sの機能を正しく使用するために必要です。"
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1152
+#: ../src/gpk-application.c:1167
 msgid "Invalid"
 msgstr "無効"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1352
+#: ../src/gpk-application.c:1367
 msgid "No results were found."
 msgstr "見つかりませんでした"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1360
+#: ../src/gpk-application.c:1375
 msgid "Try entering a package name in the search bar."
 msgstr "サーチバーにパッケージ名を入力してください"
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1363
+#: ../src/gpk-application.c:1378
 msgid "There are no packages queued to be installed or removed."
 msgstr "インストールまたは削除するパッケージはありません。"
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1368
+#: ../src/gpk-application.c:1383
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -944,171 +940,171 @@ msgstr ""
 "ます。"
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1371
+#: ../src/gpk-application.c:1386
 msgid "Try again with a different search term."
 msgstr "異なる文字列で再検索してください"
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1650
+#: ../src/gpk-application.c:1665
 msgid "Invalid search text"
 msgstr "検索文字列が無効です"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1652
+#: ../src/gpk-application.c:1667
 msgid "The search text contains invalid characters"
 msgstr "検索文字列に無効な文字列が含まれています"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1690
+#: ../src/gpk-application.c:1708
 msgid "The search could not be completed"
 msgstr "検索が完了しませんでした"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1692
+#: ../src/gpk-application.c:1710
 msgid "Running the transaction failed"
 msgstr "トランザクションの実行に失敗しました"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1840
+#: ../src/gpk-application.c:1861
 msgid "Changes not applied"
 msgstr "変更は適用されませんでした"
 
-#: ../src/gpk-application.c:1841
+#: ../src/gpk-application.c:1862
 msgid "Close _Anyway"
 msgstr "無視して閉じる(_A)"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1845
+#: ../src/gpk-application.c:1866
 msgid "You have made changes that have not yet been applied."
 msgstr "適用していない変更があります。"
 
-#: ../src/gpk-application.c:1846
+#: ../src/gpk-application.c:1867
 msgid "These changes will be lost if you close this window."
 msgstr "これらの変更は、このウィンドウを閉じると失われます。"
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2160 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
+#: ../src/gpk-application.c:2192 ../src/gpk-enum.c:1162 ../src/gpk-enum.c:1243
 msgid "Installed"
 msgstr "インストール"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2176 ../src/gpk-application.c:2198
+#: ../src/gpk-application.c:2208 ../src/gpk-application.c:2230
 #: ../src/gpk-dialog.c:153 ../src/gpk-modal-dialog.c:729
 msgid "Name"
 msgstr "名前"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2341
+#: ../src/gpk-application.c:2373
 msgid "Type"
 msgstr "タイプ"
 
-#: ../src/gpk-application.c:2341
+#: ../src/gpk-application.c:2373
 msgid "Collection"
 msgstr "コレクション"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2349
+#: ../src/gpk-application.c:2381
 #, c-format
 msgid "Visit %s"
 msgstr "%sにアクセスする"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2354
+#: ../src/gpk-application.c:2386
 msgid "Project"
 msgstr "プロジェクト"
 
-#: ../src/gpk-application.c:2354
+#: ../src/gpk-application.c:2386
 msgid "Homepage"
 msgstr "ホームページ"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2368
+#: ../src/gpk-application.c:2400
 msgid "Group"
 msgstr "グループ"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2374
+#: ../src/gpk-application.c:2406
 msgid "License"
 msgstr "ライセンス"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:2383
+#: ../src/gpk-application.c:2415
 msgid "Menu"
 msgstr "メニュー"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2401 ../src/gpk-update-viewer.c:1736
+#: ../src/gpk-application.c:2433 ../src/gpk-update-viewer.c:1739
 msgid "Size"
 msgstr "サイズ"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2404
+#: ../src/gpk-application.c:2436
 msgid "Installed size"
 msgstr "インストール後のサイズ"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2407
+#: ../src/gpk-application.c:2439
 msgid "Download size"
 msgstr "ダウンロード時のサイズ"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2416
+#: ../src/gpk-application.c:2448
 msgid "Source"
 msgstr "ソース "
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2562
+#: ../src/gpk-application.c:2597
 msgid "Selected packages"
 msgstr "選択されたパッケージ"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2614
+#: ../src/gpk-application.c:2649
 msgid "Searching by name"
 msgstr "名前から検索"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2637
+#: ../src/gpk-application.c:2672
 msgid "Searching by description"
 msgstr "説明から検索"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2660
+#: ../src/gpk-application.c:2695
 msgid "Searching by file"
 msgstr "ファイルから検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2685
+#: ../src/gpk-application.c:2720
 msgid "Search by name"
 msgstr "名前で検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2696
+#: ../src/gpk-application.c:2731
 msgid "Search by description"
 msgstr "説明から検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2742
 msgid "Search by file name"
 msgstr "ファイル名で検索"
 
 #. TRANSLATORS: packaging problem, failed to show link
-#: ../src/gpk-application.c:2751 ../src/gpk-watch.c:381
+#: ../src/gpk-application.c:2786 ../src/gpk-watch.c:381
 msgid "Failed to show url"
 msgstr "URLの表示に失敗しました"
 
-#: ../src/gpk-application.c:2788 ../src/gpk-check-update.c:192
+#: ../src/gpk-application.c:2823 ../src/gpk-check-update.c:192
 #: ../src/gpk-watch.c:401
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr ""
 "このソフトウエアは GNU 一般公衆利用許諾契約書バージョン2の元にライセンスされ"
 "ています。"
 
-#: ../src/gpk-application.c:2789 ../src/gpk-check-update.c:193
+#: ../src/gpk-application.c:2824 ../src/gpk-check-update.c:193
 #: ../src/gpk-watch.c:402
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
@@ -1121,7 +1117,7 @@ msgstr ""
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 
-#: ../src/gpk-application.c:2793 ../src/gpk-check-update.c:197
+#: ../src/gpk-application.c:2828 ../src/gpk-check-update.c:197
 #: ../src/gpk-watch.c:406
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
@@ -1134,7 +1130,7 @@ msgstr ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 
-#: ../src/gpk-application.c:2797 ../src/gpk-check-update.c:201
+#: ../src/gpk-application.c:2832 ../src/gpk-check-update.c:201
 #: ../src/gpk-watch.c:410
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
@@ -1146,33 +1142,33 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2803 ../src/gpk-check-update.c:206
+#: ../src/gpk-application.c:2838 ../src/gpk-check-update.c:206
 #: ../src/gpk-watch.c:415
 msgid "translator-credits"
 msgstr ""
 "Yohsuke Ooi <meke@momonga-linux.org>\n"
 "Nishio Futoshi <futoshi@momonga-linux.org>\n"
 "草野 貴之 <AE5T-KSN@asahi-net.or.jp>\n"
-"日本GNOMEユーザ会 <http://www.gnome.gr.jp/>"
+"日本GNOMEユーザー会 <http://www.gnome.gr.jp/>"
 
 #. TRANSLATORS: website label
-#: ../src/gpk-application.c:2829 ../src/gpk-check-update.c:223
+#: ../src/gpk-application.c:2864 ../src/gpk-check-update.c:223
 #: ../src/gpk-watch.c:434
 msgid "PackageKit Website"
 msgstr "PackageKitのウェブサイト"
 
 #. TRANSLATORS: description of application, gpk-application that is
-#: ../src/gpk-application.c:2832
+#: ../src/gpk-application.c:2867
 msgid "Package Manager for GNOME"
 msgstr "GNOMEのパッケージマネジャー"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3278
+#: ../src/gpk-application.c:3317
 msgid "Text"
 msgstr "テキスト"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3301
+#: ../src/gpk-application.c:3340
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
@@ -1180,47 +1176,47 @@ msgstr ""
 "い"
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3304
+#: ../src/gpk-application.c:3343
 msgid "Enter a package name and then click find to get started."
 msgstr "パッケージめを入力し、検索開始をクリックしてください"
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3533
+#: ../src/gpk-application.c:3575
 msgid "Exiting as properties could not be retrieved"
 msgstr "プロパティが取得不能なので終了します"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3653
+#: ../src/gpk-application.c:3695
 msgid "All packages"
 msgstr "すべてのパッケージ"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3655
+#: ../src/gpk-application.c:3697
 msgid "Show all packages"
 msgstr "すべてのパッケージを表示"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3916
+#: ../src/gpk-application.c:3958
 msgid "Clear current selection"
 msgstr "選択しているものをクリアします"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3941
+#: ../src/gpk-application.c:3983
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "変更はすぐに適用されませんが、このボタンですべての変更を適用します"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3967
+#: ../src/gpk-application.c:4009
 msgid "Visit home page for selected package"
 msgstr "選択されたパッケージのホームページを訪問する"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:4075
+#: ../src/gpk-application.c:4117
 msgid "Find packages"
 msgstr "パッケージの検索"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:4083
+#: ../src/gpk-application.c:4125
 msgid "Cancel search"
 msgstr "検索のキャンセル"
 
@@ -1238,7 +1234,7 @@ msgstr "パッケージインストーラ"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-backend-status.c:76 ../src/gpk-prefs.c:398 ../src/gpk-repo.c:534
-#: ../src/gpk-update-viewer.c:3074
+#: ../src/gpk-update-viewer.c:3077
 msgid "Exiting as backend details could not be retrieved"
 msgstr "バックエンドの詳細が取得不能なので終了します"
 
@@ -1277,7 +1273,7 @@ msgstr "コンピューターを再起動してください."
 #. TRANSLATORS: hides forever
 #. add a checkbutton for deps screen
 #. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:406 ../src/gpk-check-update.c:1340
+#: ../src/gpk-check-update.c:406 ../src/gpk-check-update.c:1343
 #: ../src/gpk-dialog.c:306 ../src/gpk-hardware.c:194 ../src/gpk-watch.c:1399
 msgid "Do not show this again"
 msgstr "二度と表示しない"
@@ -1291,83 +1287,83 @@ msgid "Show details"
 msgstr "詳細の表示"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:517 ../src/gpk-check-update.c:960
-#: ../src/gpk-check-update.c:982
+#: ../src/gpk-check-update.c:519 ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:985
 msgid "GNOME PackageKit Update Icon"
 msgstr "パッケージキット更新アイコン"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:519 ../src/gpk-update-viewer.c:515
+#: ../src/gpk-check-update.c:521 ../src/gpk-update-viewer.c:518
 msgid "Updated successfully"
 msgstr "更新は成功しました"
 
 #. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:643
+#: ../src/gpk-check-update.c:645
 msgid "Security update available"
 msgid_plural "Security updates available"
 msgstr[0] "セキュリティアップデートが見つかりました"
 
 #. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:646
+#: ../src/gpk-check-update.c:648
 msgid "An important update is available for your computer:"
 msgid_plural "Important updates are available for your computer:"
 msgstr[0] "以下の重要な更新がこのコンピュータで利用可能です:"
 
 #. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:666
+#: ../src/gpk-check-update.c:668
 msgid "Install updates"
 msgstr "更新をインストール"
 
 #. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:781
+#: ../src/gpk-check-update.c:783
 msgid ""
 "Automatic updates are not being installed as the computer is running on "
 "battery power"
 msgstr "コンピュータがバッテリ動作中なので、自動更新でインストールされません"
 
 #. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:783
+#: ../src/gpk-check-update.c:785
 msgid "Updates not installed"
 msgstr "更新をインストールしません"
 
 #. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:793
+#: ../src/gpk-check-update.c:795
 msgid "Install the updates anyway"
 msgstr "あらゆる更新をインストール"
 
 #. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:840
+#: ../src/gpk-check-update.c:842
 msgid "Updates are being installed"
 msgstr "更新されたものがインストールされます"
 
 #. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:842
+#: ../src/gpk-check-update.c:844
 msgid "Updates are being automatically installed on your computer"
 msgstr "更新されたものは、コンピュータに自動的にインストールされます"
 
-#: ../src/gpk-check-update.c:848
+#: ../src/gpk-check-update.c:850
 msgid "Cancel update"
 msgstr "更新のキャンセル"
 
 #. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:932
+#: ../src/gpk-check-update.c:935
 #, c-format
 msgid "There is %d update available"
 msgid_plural "There are %d updates available"
 msgstr[0] "%d 個の更新が利用可能です"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:962
+#: ../src/gpk-check-update.c:964
 msgid "Update available"
 msgstr "利用可能な更新"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:984
+#: ../src/gpk-check-update.c:987
 msgid "Update available (on battery)"
 msgstr "(バッテリーで)利用可能な更新"
 
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1327
+#: ../src/gpk-check-update.c:1330
 msgid "Distribution upgrades available"
 msgstr "利用可能なディストリビューションの更新"
 
@@ -1376,7 +1372,7 @@ msgstr "利用可能なディストリビューションの更新"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1337 ../src/gpk-dbus-task.c:1090
+#: ../src/gpk-check-update.c:1340 ../src/gpk-dbus-task.c:1090
 #: ../src/gpk-dbus-task.c:1324 ../src/gpk-dbus-task.c:1630
 #: ../src/gpk-dbus-task.c:1836 ../src/gpk-dbus-task.c:2092
 msgid "More information"
@@ -2317,8 +2313,8 @@ msgid ""
 "error."
 msgstr ""
 "グループリストがロードできません。\n"
-"キャッシュをリフレッシュすることも有効ですが、これは通常はソフトウェアソース"
-"のエラーです"
+"キャッシュを更新することも有効ですが、これは通常はソフトウェアソースのエラー"
+"です"
 
 #: ../src/gpk-enum.c:591
 msgid ""
@@ -4254,49 +4250,49 @@ msgid "Some updates were not installed"
 msgstr "それらのパッケージはインストールされていません"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:451 ../src/gpk-update-viewer.c:463
+#: ../src/gpk-update-viewer.c:452 ../src/gpk-update-viewer.c:464
 msgid "Could not update packages"
 msgstr "パッケージを更新できませんでした"
 
 #. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-update-viewer.c:486 ../src/gpk-update-viewer.c:513
+#: ../src/gpk-update-viewer.c:488 ../src/gpk-update-viewer.c:516
 msgid "GNOME PackageKit Update Viewer"
 msgstr "GNOMEパッケージキット更新ビュアー"
 
 #. TRANSLATORS: this is the sound description
-#: ../src/gpk-update-viewer.c:488
+#: ../src/gpk-update-viewer.c:490
 msgid "Failed to update"
 msgstr "更新に失敗しました"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:543 ../src/gpk-update-viewer.c:564
+#: ../src/gpk-update-viewer.c:546 ../src/gpk-update-viewer.c:567
 msgid "Updates installed"
 msgstr "インストールされているものを更新します"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:553
+#: ../src/gpk-update-viewer.c:556
 msgid "All updates were installed successfully."
 msgstr "インストールされているもののすべての更新が成功しました。"
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:556
+#: ../src/gpk-update-viewer.c:559
 msgid "The selected updates were installed successfully."
 msgstr "選択された更新のインストールに成功しました。"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1023
+#: ../src/gpk-update-viewer.c:1026
 msgid "Getting the list of updates"
 msgstr "更新リストの取得中"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1255
+#: ../src/gpk-update-viewer.c:1258
 msgid "Could not run upgrade script"
 msgstr "更新スクリプトが実行できません"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1306
+#: ../src/gpk-update-viewer.c:1309
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4308,99 +4304,99 @@ msgstr[0] ""
 "るかもしれません。"
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1410
+#: ../src/gpk-update-viewer.c:1413
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "更新をインストール(_I)"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1423
+#: ../src/gpk-update-viewer.c:1426
 msgid "There are no updates available"
 msgstr "利用可能な更新はありません"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-update-viewer.c:1432
+#: ../src/gpk-update-viewer.c:1435
 msgid "All software is up to date"
 msgstr "すべてのソフトウェアは最新です"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1436
+#: ../src/gpk-update-viewer.c:1439
 msgid "There are no software updates available for your computer at this time."
 msgstr "現在コンピュータで利用可能なソフトウェアの更新はありません。"
 
-#: ../src/gpk-update-viewer.c:1478
+#: ../src/gpk-update-viewer.c:1481
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
 msgstr[0] "%i個の更新が利用可能です"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1497
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
 msgstr[0] "%i個の更新が選択されました"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1502
+#: ../src/gpk-update-viewer.c:1505
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
 msgstr[0] "%i個の更新が選択されてました (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1696
+#: ../src/gpk-update-viewer.c:1699
 msgid "Software"
 msgstr "ソフトウェア"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1706
+#: ../src/gpk-update-viewer.c:1709
 msgid "Status"
 msgstr "状態"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1916
+#: ../src/gpk-update-viewer.c:1919
 msgid "This update will fix bugs and other non-critical problems."
 msgstr ""
 "この更新はバグフィックスとその他のクリティカルではない問題についてです。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1920
+#: ../src/gpk-update-viewer.c:1923
 msgid "This update is important as it may solve critical problems."
 msgstr "この更新はクリティカルな問題を解決する重要なものです。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1924
+#: ../src/gpk-update-viewer.c:1927
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr "この更新は、パッケージのセキュリティの脆弱性を修正するために必要です。"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1928
+#: ../src/gpk-update-viewer.c:1931
 msgid "This update is blocked."
 msgstr "この更新はブロックされました。"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1943
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "この通知は、%sで発生しており、前回の%sの更新によるものです。"
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1947
+#: ../src/gpk-update-viewer.c:1950
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "この通知は、%sで発生しました。"
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1969
+#: ../src/gpk-update-viewer.c:1972
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
 msgstr[0] "この更新の詳細はウェブサイトを確認してください:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1977
+#: ../src/gpk-update-viewer.c:1980
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4410,7 +4406,7 @@ msgid_plural ""
 msgstr[0] "このバグフィックス更新の詳細はウェブサイトを確認してください:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1985
+#: ../src/gpk-update-viewer.c:1988
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4418,14 +4414,14 @@ msgid_plural ""
 msgstr[0] "このセキュリティ更新の詳細はウェブサイトを確認してください:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1994
+#: ../src/gpk-update-viewer.c:1997
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "変更を有効にするために、コンピュータを再起動する必要があります。"
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1998
+#: ../src/gpk-update-viewer.c:2001
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4433,14 +4429,14 @@ msgstr ""
 "変更を有効にするために、更新終了後に一度ログオンしなおす必要があります。"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2005
+#: ../src/gpk-update-viewer.c:2008
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr "この更新の分類は、不安定版で、製品として使用する品質ではありません。"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2009
+#: ../src/gpk-update-viewer.c:2012
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4449,76 +4445,76 @@ msgstr ""
 "を報告してください。"
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2018
+#: ../src/gpk-update-viewer.c:2021
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr "更新の説明が利用可能ではないので、開発用ログが表示されます。"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2054
+#: ../src/gpk-update-viewer.c:2057
 msgid "Loading..."
 msgstr "ログ採取中..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2095 ../src/gpk-update-viewer.c:2194
-#: ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2098 ../src/gpk-update-viewer.c:2197
+#: ../src/gpk-update-viewer.c:2217
 msgid "Could not get update details"
 msgstr "更新の詳細を取得できませんでした"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2115
+#: ../src/gpk-update-viewer.c:2118
 msgid "Could not get package details"
 msgstr "パッケージの詳細を取得できませんでした"
 
-#: ../src/gpk-update-viewer.c:2115 ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2118 ../src/gpk-update-viewer.c:2217
 msgid "No results were returned."
 msgstr "結果とが返ってきませんでした。"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2449
+#: ../src/gpk-update-viewer.c:2452
 msgid "Select all"
 msgstr "すべて選択"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2457
+#: ../src/gpk-update-viewer.c:2460
 msgid "Unselect all"
 msgstr "すべて未選択"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2464
+#: ../src/gpk-update-viewer.c:2467
 msgid "Select security updates"
 msgstr "セキュリティーアップデートを更新する"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2470
+#: ../src/gpk-update-viewer.c:2473
 msgid "Ignore this update"
 msgstr "この更新を無視する"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2582
+#: ../src/gpk-update-viewer.c:2585
 msgid "Could not get updates"
 msgstr "更新できませんでした"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2720
+#: ../src/gpk-update-viewer.c:2723
 msgid "Checking for updates..."
 msgstr "更新の調査..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3007
+#: ../src/gpk-update-viewer.c:3010
 msgid "Could not get list of distribution upgrades"
 msgstr "ディストリビューションの更新リストが取得できませんでした"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3038
+#: ../src/gpk-update-viewer.c:3041
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "新規ディストリビューションの更新'%s'が利用可能です"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3278
+#: ../src/gpk-update-viewer.c:3281
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4630,6 +4626,9 @@ msgstr "デバッグオプション"
 #: ../src/egg-debug.c:450
 msgid "Show debugging options"
 msgstr "デバッグオプションを表示する"
+
+#~ msgid "_Install Update(s)"
+#~ msgstr "更新をインストール(_I)"
 
 #~ msgid "%i message from the package manager"
 #~ msgid_plural "%i messages from the package manager"
