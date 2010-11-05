@@ -147,7 +147,10 @@ gpk_distro_upgrade_upgrade_system_cb (PkClient *client, GAsyncResult *res, GpkDi
 					 GTK_BUTTONS_CLOSE,
 					 "%s", _("The upgrade completed successfully"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  "%s", _("To continue the system upgrade, you will need to restart this computer."));
+						  "%s\n\n%s %s",
+						  _("Your system now has the required software needed to complete the operating system upgrade."),
+						  _("When you are ready, you can restart your system and continue the upgrade process."),
+						  _("Make sure you have saved any unsaved work before restarting."));
 
 	/* check with ConsoleKit we can restart */
 	ret = egg_console_kit_can_restart (priv->console_kit, &can_restart, &error);
