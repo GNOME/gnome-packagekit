@@ -45,7 +45,6 @@ main (int argc, char **argv)
 	g_type_init ();
 	gtk_init (&argc, &argv);
 	test = egg_test_init ();
-	g_debug_init (&argc, &argv);
 
 	/* tests go here */
 	egg_markdown_test (test);

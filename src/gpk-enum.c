@@ -176,6 +176,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES, "pk-package-add"},
 	{PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES,	"pk-package-delete"},
 	{PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES,	"pk-package-update"},
+	{PK_ROLE_ENUM_UPGRADE_SYSTEM,		"system-software-update"},
 	{0, NULL}
 };
 
@@ -1399,6 +1400,10 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Simulating the update");
 		break;
+	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Upgrading system");
+		break;
 	default:
 		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
 	}
@@ -1554,6 +1559,10 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Simulated the update");
+		break;
+	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Upgraded system");
 		break;
 	default:
 		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
