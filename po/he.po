@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-04 14:44+0200\n"
-"PO-Revision-Date: 2010-11-04 14:45+0200\n"
+"POT-Creation-Date: 2010-11-06 17:15+0200\n"
+"PO-Revision-Date: 2010-11-06 17:16+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1671,32 +1671,44 @@ msgstr "לא ניתן לשדרג את המערכת"
 msgid "The upgrade completed successfully"
 msgstr "השדרוג הושלם בהצלחה"
 
-#: ../src/gpk-distro-upgrade.c:150
-msgid "To continue the system upgrade, you will need to restart this computer."
-msgstr "כדי להמשיך בשדרוג המערכת, יהיה עליך להפעיל מחדש את המחשב."
+#: ../src/gpk-distro-upgrade.c:151
+msgid ""
+"Your system now has the required software needed to complete the operating "
+"system upgrade."
+msgstr "כעת במערכת שלך מותקנת התכנה הנחוצה להשלמת שדרוג מערכת ההפעלה."
+
+#: ../src/gpk-distro-upgrade.c:152
+msgid ""
+"When you are ready, you can restart your system and continue the upgrade "
+"process."
+msgstr "בזמנך החופשי, באפשרות להפעיל מחדש את המערכת שלך ולהמשיך בתהליך השדרוג."
+
+#: ../src/gpk-distro-upgrade.c:153
+msgid "Make sure you have saved any unsaved work before restarting."
+msgstr "נא לוודא ששמרת כל עבודה שביצעת אך לא שמרת בטרם ההפעלה מחדש."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-distro-upgrade.c:162
+#: ../src/gpk-distro-upgrade.c:165
 msgid "Restart Now"
 msgstr "הפעלה מחדש כעת"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-distro-upgrade.c:270
+#: ../src/gpk-distro-upgrade.c:273
 msgid "Could not get distribution upgrades"
 msgstr "לא ניתן לקבל את פריטי שדרוג ההפצה"
 
 #. TRANSLATORS: nothing to do
-#: ../src/gpk-distro-upgrade.c:291
+#: ../src/gpk-distro-upgrade.c:294
 msgid "No releases available for upgrade"
 msgstr "אין שחרורים הזמינים לשדרוג"
 
 #. TRANSLATORS: this is the window title
-#: ../src/gpk-distro-upgrade.c:352
+#: ../src/gpk-distro-upgrade.c:355
 #, c-format
 msgid "Upgrade your system (%d of %d)"
 msgstr "שדרוג המערכת שלך (%d מתוך %d)"
 
-#: ../src/gpk-distro-upgrade.c:382
+#: ../src/gpk-distro-upgrade.c:385
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
@@ -1704,14 +1716,14 @@ msgstr ""
 "כלי סיוע זה ידריך אותך במהלך שדרוג מערכת ההפעלה המותקנת הנוכחית שלך לשחרור "
 "עדכני יותר."
 
-#: ../src/gpk-distro-upgrade.c:383
+#: ../src/gpk-distro-upgrade.c:386
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection."
 msgstr ""
 "תהליך זה עלול לארוך מספר שעות עד שיושלם בהתאם למהירות חיבור האינטרנט שלך."
 
-#: ../src/gpk-distro-upgrade.c:384
+#: ../src/gpk-distro-upgrade.c:387
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
@@ -1719,7 +1731,7 @@ msgstr ""
 "תהיה באפשרותך להמשיך ולהשתמש במערכת שלך בזמן שכלי סיוע זה מוריד את החבילות "
 "הדרושות לשדרוג המערכת שלך."
 
-#: ../src/gpk-distro-upgrade.c:385
+#: ../src/gpk-distro-upgrade.c:388
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
@@ -1727,86 +1739,86 @@ msgstr ""
 "עם השלמת ההורדה, תופיע בקשה לאתחול המערכת מחדש כדי להשלים את תהליך השדרוג."
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:397
+#: ../src/gpk-distro-upgrade.c:400
 msgid "Upgrade your system"
 msgstr "שדרוג המערכת שלך"
 
-#: ../src/gpk-distro-upgrade.c:452
+#: ../src/gpk-distro-upgrade.c:455
 msgid "Available operating system _releases:"
 msgstr "ש_חרורי מערכת ההפעלה הזמינים:"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:461
+#: ../src/gpk-distro-upgrade.c:464
 msgid "Loading list of upgrades"
 msgstr "רשימת פריטי השדרוג נטענת"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:479
+#: ../src/gpk-distro-upgrade.c:482
 msgid "Choose desired operating system version"
 msgstr "נא לבחור את גרסת מערכת ההפעלה הרצויה"
 
-#: ../src/gpk-distro-upgrade.c:504
+#: ../src/gpk-distro-upgrade.c:507
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
 msgstr "כלי שדרוג מערכת ההפעלה יבצע כעת את הפעולות הבאות:"
 
-#: ../src/gpk-distro-upgrade.c:505
+#: ../src/gpk-distro-upgrade.c:508
 msgid "Request authentication from a privileged user"
 msgstr "בקשת אימות ממשתמש מורשה"
 
-#: ../src/gpk-distro-upgrade.c:506
+#: ../src/gpk-distro-upgrade.c:509
 msgid "Download installer images"
 msgstr "הורדת תמונות התקנה"
 
-#: ../src/gpk-distro-upgrade.c:507
+#: ../src/gpk-distro-upgrade.c:510
 msgid "Download packages"
 msgstr "הורדת חבילות"
 
-#: ../src/gpk-distro-upgrade.c:508
+#: ../src/gpk-distro-upgrade.c:511
 msgid "Prepare and test the upgrade"
 msgstr "הכנה ובדיקת השדרוג"
 
-#: ../src/gpk-distro-upgrade.c:509
+#: ../src/gpk-distro-upgrade.c:512
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "יהיה עליך להפעיל מחדש את מחשבך עם סיום השדרוג."
 
-#: ../src/gpk-distro-upgrade.c:510
+#: ../src/gpk-distro-upgrade.c:513
 msgid "Press 'Apply' to apply changes."
 msgstr "יש ללחוץ על 'החלה' כדי להחיל את השינויים."
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:523
+#: ../src/gpk-distro-upgrade.c:526
 msgid "Confirmation"
 msgstr "אישור"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:560
+#: ../src/gpk-distro-upgrade.c:563
 msgid "Applying changes"
 msgstr "השינויים חלים"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:625
+#: ../src/gpk-distro-upgrade.c:628
 msgid "Cannot perform operating system upgrade"
 msgstr "לא ניתן לשדרג את מערכת ההפעלה"
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:637
+#: ../src/gpk-distro-upgrade.c:640
 msgid "Upgrading the operating system is not supported."
 msgstr "שדרוג מערכת ההפעלה אינו נתמך."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:641
+#: ../src/gpk-distro-upgrade.c:644
 msgid "Cannot get operating system upgrade information."
 msgstr "לא ניתן לקבל את פרטי שדרוג מערכת ההפעלה."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:645
+#: ../src/gpk-distro-upgrade.c:648
 msgid "Unsupported daemon version."
 msgstr "גרסת הסוכן אינה נתמכת."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:697 ../src/gpk-distro-upgrade.c:700
+#: ../src/gpk-distro-upgrade.c:700 ../src/gpk-distro-upgrade.c:703
 msgid "Distribution Upgrade Tool"
 msgstr "כלי שדרוג ההפצה"
 
@@ -4398,6 +4410,10 @@ msgstr "אפשרויות ניפוי השגיאות"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
+
+#~ msgid ""
+#~ "To continue the system upgrade, you will need to restart this computer."
+#~ msgstr "כדי להמשיך בשדרוג המערכת, יהיה עליך להפעיל מחדש את המחשב."
 
 #~ msgid "Backend Status"
 #~ msgstr "מצב המנוע"
