@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-11-03 15:49+0000\n"
-"PO-Revision-Date: 2010-11-03 18:16+0100\n"
+"POT-Creation-Date: 2010-11-05 17:39+0000\n"
+"PO-Revision-Date: 2010-11-06 11:31+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1716,137 +1716,163 @@ msgstr "No se pudo actualizar el sistema"
 msgid "The upgrade completed successfully"
 msgstr "La actualización se completó satisfactoriamente"
 
-#: ../src/gpk-distro-upgrade.c:150
-msgid "To continue the system upgrade, you will need to restart this computer."
+#: ../src/gpk-distro-upgrade.c:151
+msgid ""
+"Your system now has the required software needed to complete the operating "
+"system upgrade."
+msgstr ""
+
+#: ../src/gpk-distro-upgrade.c:152
+#| msgid ""
+#| "When the download has completed, you will be prompted to restart your "
+#| "system in order to complete the upgrade process."
+msgid ""
+"When you are ready, you can restart your system and continue the upgrade "
+"process."
+msgstr ""
+"Cuando esté listo puede reiniciar su sistema y continuar con el proceso de "
+"actualización."
+
+#: ../src/gpk-distro-upgrade.c:153
+msgid "Make sure you have saved any unsaved work before restarting."
 msgstr ""
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-distro-upgrade.c:162
+#: ../src/gpk-distro-upgrade.c:165
 msgid "Restart Now"
 msgstr "Reiniciar ahora"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-distro-upgrade.c:270
+#: ../src/gpk-distro-upgrade.c:273
 msgid "Could not get distribution upgrades"
 msgstr "No se pudieron obtener las actualizaciones de la distribuición"
 
 #. TRANSLATORS: nothing to do
-#: ../src/gpk-distro-upgrade.c:291
+#: ../src/gpk-distro-upgrade.c:294
 msgid "No releases available for upgrade"
 msgstr "No existen versiones disponibles para actualizar"
 
 #. TRANSLATORS: this is the window title
-#: ../src/gpk-distro-upgrade.c:352
+#: ../src/gpk-distro-upgrade.c:355
 #, c-format
 msgid "Upgrade your system (%d of %d)"
 msgstr "Actualizar su sistema (%d de %d)"
 
-#: ../src/gpk-distro-upgrade.c:382
+#: ../src/gpk-distro-upgrade.c:385
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
 msgstr ""
+"Este asistente le guiará mientras se actualiza su sistema operativo "
+"instalado actualmente a una versión nueva."
 
-#: ../src/gpk-distro-upgrade.c:383
+#: ../src/gpk-distro-upgrade.c:386
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection."
 msgstr ""
+"Este proceso puede tardar varias horas en completarse, dependiendo de la "
+"velocidad de su conexión a internet."
 
-#: ../src/gpk-distro-upgrade.c:384
+#: ../src/gpk-distro-upgrade.c:387
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
 msgstr ""
+"Podrá continuar usando su sistema mientras el asistente descarga los "
+"paquetes necesarios para actualizar su sistema."
 
-#: ../src/gpk-distro-upgrade.c:385
+#: ../src/gpk-distro-upgrade.c:388
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
 msgstr ""
+"Cuando finalice la descarga, se le pedirá reiniciar el sistema para "
+"completar el proceso de actualización."
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:397
+#: ../src/gpk-distro-upgrade.c:400
 msgid "Upgrade your system"
 msgstr "Actualizar su sistema"
 
-#: ../src/gpk-distro-upgrade.c:452
+#: ../src/gpk-distro-upgrade.c:455
 msgid "Available operating system _releases:"
-msgstr ""
+msgstr "_Versiones nuevas del sistema operativo disponibles:"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:461
+#: ../src/gpk-distro-upgrade.c:464
 msgid "Loading list of upgrades"
 msgstr "Cargando lista de actualizaciones"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:479
+#: ../src/gpk-distro-upgrade.c:482
 msgid "Choose desired operating system version"
-msgstr ""
+msgstr "Seleccionar la versión del sistema operativo que quiere"
 
-#: ../src/gpk-distro-upgrade.c:504
+#: ../src/gpk-distro-upgrade.c:507
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
 msgstr ""
+"La operación de actualización del sistema realizará las siguientes acciones:"
 
-#: ../src/gpk-distro-upgrade.c:505
+#: ../src/gpk-distro-upgrade.c:508
 msgid "Request authentication from a privileged user"
 msgstr "Solicitud de autenticación de un usuario con privilegios"
 
-#: ../src/gpk-distro-upgrade.c:506
+#: ../src/gpk-distro-upgrade.c:509
 msgid "Download installer images"
 msgstr "Descargar imágenes del instalador"
 
-#: ../src/gpk-distro-upgrade.c:507
+#: ../src/gpk-distro-upgrade.c:510
 msgid "Download packages"
 msgstr "Descargar paquetes"
 
-#: ../src/gpk-distro-upgrade.c:508
+#: ../src/gpk-distro-upgrade.c:511
 msgid "Prepare and test the upgrade"
-msgstr ""
+msgstr "Preparar y probar la actualización"
 
-#: ../src/gpk-distro-upgrade.c:509
+#: ../src/gpk-distro-upgrade.c:512
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "Deberá reiniciar el equipo cuando termine la actualización."
 
-#: ../src/gpk-distro-upgrade.c:510
+#: ../src/gpk-distro-upgrade.c:513
 msgid "Press 'Apply' to apply changes."
 msgstr "Pulse «Aplicar» para aplicar los cambios."
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:523
+#: ../src/gpk-distro-upgrade.c:526
 msgid "Confirmation"
 msgstr "Confirmación"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:560
+#: ../src/gpk-distro-upgrade.c:563
 msgid "Applying changes"
 msgstr "Aplicando cambios"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:625
+#: ../src/gpk-distro-upgrade.c:628
 msgid "Cannot perform operating system upgrade"
-msgstr ""
+msgstr "No se pudo realizar la actualización del sistema operativo"
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:637
+#: ../src/gpk-distro-upgrade.c:640
 msgid "Upgrading the operating system is not supported."
 msgstr "No está soportada la actualización del sistema operativo."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:641
+#: ../src/gpk-distro-upgrade.c:644
 msgid "Cannot get operating system upgrade information."
 msgstr ""
 "No se puede obtener información de actualización del sistema operativo."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:645
+#: ../src/gpk-distro-upgrade.c:648
 msgid "Unsupported daemon version."
 msgstr "La versión del demonio no está soportada."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:697 ../src/gpk-distro-upgrade.c:700
+#: ../src/gpk-distro-upgrade.c:700 ../src/gpk-distro-upgrade.c:703
 msgid "Distribution Upgrade Tool"
 msgstr "Herramienta de actualización de la distribución"
 
@@ -4512,6 +4538,11 @@ msgstr "Opciones de depuración"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostrar las opciones de depuración"
+
+#~ msgid ""
+#~ "To continue the system upgrade, you will need to restart this computer."
+#~ msgstr ""
+#~ "Para continuar la actualización del sistema, deberá reiniciar el equipo."
 
 #~ msgid "Backend Status"
 #~ msgstr "Estado del «backend»:"
