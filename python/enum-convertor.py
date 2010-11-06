@@ -31,82 +31,82 @@ gettext.textdomain("gnome-packagekit")
 
 GPK_BUGZILLA_URL = "https://bugs.freedesktop.org/"
 '''
-print header
+print(header)
 
 # Extract icon names
 for (name, data) in icons.findall(inp):
-    print "ICONS_%s = {" % name.upper()
+    print("ICONS_%s = {" % name.upper())
     for match in values.findall(data):
-        print "    %s_%s:'%s'," % match
-    print "    }\n"
-    print "def get_%s_icon_name_from_enum(enum):" % name
-    print "   if ICONS_%s.has_key(enum):" % name.upper()
-    print "       return ICONS_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:'%s'," % match)
+    print("    }\n")
+    print("def get_%s_icon_name_from_enum(enum):" % name)
+    print("   if ICONS_%s.has_key(enum):" % name.upper())
+    print("       return ICONS_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
 
 # Extract animations
 for (name, data) in animations.findall(inp):
-    print "ANIMATIONS_%s = {" % name.upper()
+    print("ANIMATIONS_%s = {" % name.upper())
     for match in values.findall(data):
-        print "    %s_%s:'%s'," % match
-    print "    }\n"
-    print "def get_%s_animation_name_from_enum(enum):" % name
-    print "   if ANIMATIONS_%s.has_key(enum):" % name.upper()
-    print "       return ANIMATIONS_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:'%s'," % match)
+    print("    }\n")
+    print("def get_%s_animation_name_from_enum(enum):" % name)
+    print("   if ANIMATIONS_%s.has_key(enum):" % name.upper())
+    print("       return ANIMATIONS_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
 
 # Extract past messages
 for (name, data) in past.findall(inp):
-    print "PAST_%s = {" % name.upper()
+    print("PAST_%s = {" % name.upper())
     for match in string_sub_values.findall(data):
-        print "    %s_%s:%s %% %s," % match
+        print("    %s_%s:%s %% %s," % match)
     for match in string_values.findall(data):
-        print "    %s_%s:%s," % match
-    print "    }\n"
-    print "def get_%s_localised_past_from_enum(enum):" % name
-    print "   if PAST_%s.has_key(enum):" % name.upper()
-    print "       return PAST_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:%s," % match)
+    print("    }\n")
+    print("def get_%s_localised_past_from_enum(enum):" % name)
+    print("   if PAST_%s.has_key(enum):" % name.upper())
+    print("       return PAST_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
 
 
 # Extract present messages
 for (name, data) in present.findall(inp):
-    print "PRESENT_%s = {" % name.upper()
+    print("PRESENT_%s = {" % name.upper())
     for match in string_sub_values.findall(data):
-        print "    %s_%s:%s %% %s," % match
+        print("    %s_%s:%s %% %s," % match)
     for match in string_values.findall(data):
-        print "    %s_%s:%s," % match
-    print "    }\n"
-    print "def get_%s_localised_present_from_enum(enum):" % name
-    print "   if PRESENT_%s.has_key(enum):" % name.upper()
-    print "       return PRESENT_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:%s," % match)
+    print("    }\n")
+    print("def get_%s_localised_present_from_enum(enum):" % name)
+    print("   if PRESENT_%s.has_key(enum):" % name.upper())
+    print("       return PRESENT_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
 
 # Extract messages
 for (name, data) in descs.findall(inp):
-    print "DESCS_%s = {" % name.upper()
+    print("DESCS_%s = {" % name.upper())
     for match in string_sub_values.findall(data):
-        print "    %s_%s:%s %% %s," % match
+        print("    %s_%s:%s %% %s," % match)
     for match in string_values.findall(data):
-        print "    %s_%s:%s," % match
-    print "    }\n"
-    print "def get_%s_description_from_enum(enum):" % name
-    print "   if DESCS_%s.has_key(enum):" % name.upper()
-    print "       return DESCS_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:%s," % match)
+    print("    }\n")
+    print("def get_%s_description_from_enum(enum):" % name)
+    print("   if DESCS_%s.has_key(enum):" % name.upper())
+    print("       return DESCS_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
 
 for (name, data) in strings.findall(inp):
-    print "STRINGS_%s = {" % name.upper()
+    print("STRINGS_%s = {" % name.upper())
     for match in string_values.findall(data):
-        print "    %s_%s:%s," % match
-    print "    }\n"
-    print "def get_%s_string_from_enum(enum):" % name
-    print "   if STRINGS_%s.has_key(enum):" % name.upper()
-    print "       return STRINGS_%s[enum]" % name.upper()
-    print "   else:"
-    print "       return None\n"
+        print("    %s_%s:%s," % match)
+    print("    }\n")
+    print("def get_%s_string_from_enum(enum):" % name)
+    print("   if STRINGS_%s.has_key(enum):" % name.upper())
+    print("       return STRINGS_%s[enum]" % name.upper())
+    print("   else:")
+    print("       return None\n")
