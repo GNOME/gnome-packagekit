@@ -45,14 +45,26 @@ typedef struct {
 	GtkListStore	*distro_upgrade_store;
 	GtkWidget	*assistant;
 	GtkWidget	*checkbutton;
+	GtkWidget	*radio_minimal;
+	GtkWidget	*radio_default;
+	GtkWidget	*radio_complete;
 	GtkWidget	*combobox;
 	GtkWidget	*page_choose_vbox;
 	GtkWidget	*progress_bar;
 	GtkWidget	*status_icon;
 	GtkWidget	*status_label;
+	GtkWidget	*info_bar;
 	PkBitfield	 roles;
 	PkClient	*client;
 } GpkDistroUpgradePrivate;
+
+enum {
+	GPK_DISTRO_UPGRADE_PAGE_INTRODUCTION,
+	GPK_DISTRO_UPGRADE_PAGE_CHOOSE,
+	GPK_DISTRO_UPGRADE_PAGE_KIND,
+	GPK_DISTRO_UPGRADE_PAGE_CONFIRM,
+	GPK_DISTRO_UPGRADE_PAGE_PROGRESS,
+};
 
 /**
  * gpk_distro_upgrade_progress_cb:
@@ -183,6 +195,7 @@ gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivat
 {
 	GtkTreeIter iter;
 	gchar *id;
+	PkUpgradeKindEnum upgrade_kind = PK_UPGRADE_KIND_ENUM_MINIMAL;
 
 	if (!pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_UPGRADE_SYSTEM)) {
 		g_debug ("no support");
@@ -195,9 +208,15 @@ gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivat
 			    GPK_DISTRO_UPGRADE_COMBO_COLUMN_ID, &id,
 			    -1);
 
+	/* get the kind of upgrade */
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->radio_default)))
+		upgrade_kind = PK_UPGRADE_KIND_ENUM_DEFAULT;
+	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->radio_complete)))
+		upgrade_kind = PK_UPGRADE_KIND_ENUM_COMPLETE;
+
 	/* upgrade */
 	g_debug ("upgrade to %s", id);
-	pk_client_upgrade_system_async (priv->client, id, priv->cancellable,
+	pk_client_upgrade_system_async (priv->client, id, upgrade_kind, priv->cancellable,
 					(PkProgressCallback) gpk_distro_upgrade_progress_cb, priv,
 					(GAsyncReadyCallback) gpk_distro_upgrade_upgrade_system_cb, priv);
 	g_free (id);
@@ -356,13 +375,13 @@ gpk_distro_upgrade_assistant_page_prepare_cb (GtkWidget *widget, GtkWidget *page
 	gtk_window_set_title (GTK_WINDOW (widget), title);
 	g_free (title);
 
-	if (current_page == 1) {
+	if (current_page == GPK_DISTRO_UPGRADE_PAGE_CHOOSE) {
 		/* reset to false */
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->checkbutton), FALSE);
 		gpk_distro_upgrade_get_distro_upgrades (priv);
 	}
 
-	/* fourth page is the progress page */
+	/* progress page */
 	if (current_page == 3)
 		gtk_assistant_commit (GTK_ASSISTANT (widget));
 }
@@ -383,7 +402,7 @@ gpk_distro_upgrade_create_page_introduction (GpkDistroUpgradePrivate *priv)
 	/* TRANSLATORS: this is a intro page title */
 	text = g_strdup_printf ("%s %s\n\n%s %s",
 				_("This assistant will guide you through upgrading your currently installed operating system to a newer release."),
-				_("This process may take several hours to complete, depending on the speed of your internet connection."),
+				_("This process may take several hours to complete, depending on the speed of your internet connection and the options selected."),
 				_("You will be able to continue using your system while this assistant downloads the packages needed to upgrade your system."),
 				_("When the download has completed, you will be prompted to restart your system in order to complete the upgrade process."));
 	label = gtk_label_new (text);
@@ -490,6 +509,84 @@ gpk_distro_upgrade_create_page_choose (GpkDistroUpgradePrivate *priv)
 }
 
 /**
+ * gpk_distro_upgrade_additional_download_toggled_cb:
+ **/
+static void
+gpk_distro_upgrade_additional_download_toggled_cb (GtkToggleButton *toggle_button, GpkDistroUpgradePrivate *priv)
+{
+	gtk_widget_set_visible (priv->info_bar,
+				!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->radio_complete)));
+}
+
+/**
+ * gpk_distro_upgrade_create_page_kind:
+ **/
+static void
+gpk_distro_upgrade_create_page_kind (GpkDistroUpgradePrivate *priv)
+{
+	GtkWidget *vbox, *box, *label, *content_area, *message_label;
+	GdkPixbuf *pixbuf;
+	gchar *text;
+	GSList *group;
+
+	vbox = gtk_vbox_new (FALSE, 12);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
+
+	/* label and combobox */
+	label = gtk_label_new (_("The upgrade tool can operate with three different modes:"));
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	box = gtk_box_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
+
+	/* TRANSLATORS: this is a radio button */
+	priv->radio_minimal = gtk_radio_button_new_with_mnemonic (group, "Download the smallest amount of data now.");
+	g_signal_connect (G_OBJECT (priv->radio_minimal), "toggled",
+			  G_CALLBACK (gpk_distro_upgrade_additional_download_toggled_cb), priv);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->radio_minimal, FALSE, FALSE, 0);
+	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (priv->radio_minimal));
+
+	/* TRANSLATORS: this is a radio button */
+	priv->radio_default = gtk_radio_button_new_with_mnemonic (group, "Download the default amount of data.");
+	g_signal_connect (G_OBJECT (priv->radio_default), "toggled",
+			  G_CALLBACK (gpk_distro_upgrade_additional_download_toggled_cb), priv);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->radio_default, FALSE, FALSE, 0);
+	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (priv->radio_minimal));
+
+	/* TRANSLATORS: this is a radio button */
+	priv->radio_complete = gtk_radio_button_new_with_mnemonic (group, "Download all of the data the upgrade process is going to need.");
+	g_signal_connect (G_OBJECT (priv->radio_complete), "toggled",
+			  G_CALLBACK (gpk_distro_upgrade_additional_download_toggled_cb), priv);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->radio_complete, FALSE, FALSE, 0);
+
+	/* TRANSLATORS: this is a checkbox */
+	priv->info_bar = gtk_info_bar_new ();
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->info_bar), GTK_MESSAGE_INFO);
+	text = g_strdup_printf ("%s\n%s",
+				_("The selected option will require the installer to download additional data."),
+				_("Do not continue with this option if the network will not be available at upgrade time."));
+	message_label = gtk_label_new (text);
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (priv->info_bar));
+	gtk_container_add (GTK_CONTAINER (content_area), message_label);
+	gtk_widget_show (message_label);
+	g_free (text);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->info_bar, FALSE, FALSE, 0);
+
+	/* use the default */
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->radio_default), TRUE);
+
+	gtk_widget_show_all (vbox);
+	gtk_assistant_append_page (GTK_ASSISTANT (priv->assistant), vbox);
+	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
+	/* TRANSLATORS: this is a choose page title */
+	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Choose desired download options"));
+
+	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
+	g_object_unref (pixbuf);
+}
+
+/**
  * gpk_distro_upgrade_create_page_confirmation:
  **/
 static void
@@ -584,6 +681,7 @@ gpk_distro_upgrade_startup_cb (GtkApplication *application, GpkDistroUpgradePriv
 	gtk_window_set_icon_name (GTK_WINDOW (priv->assistant), GTK_STOCK_REFRESH);
 	gpk_distro_upgrade_create_page_introduction (priv);
 	gpk_distro_upgrade_create_page_choose (priv);
+	gpk_distro_upgrade_create_page_kind (priv);
 	gpk_distro_upgrade_create_page_confirmation (priv);
 	gpk_distro_upgrade_create_page_action (priv);
 
