@@ -1,3 +1,42 @@
+Version 2.91.2
+~~~~~~~~~~~~~~
+Released: 2010-11-08
+
+* Translations
+ - Added French doc translation (Bruno Brouard)
+ - Added Korean translation (Changwoo Ryu)
+ - Added Slovenian translation (Matej Urbančič)
+ - Updated Catalan (Valencian) translation (Carles Ferrando)
+ - Updated Galician translations (Fran Diéguez)
+ - Updated German documentation translation (Wolfgang Stöggl)
+ - Updated German translation, fixed bug #631402 (Mario Blättermann)
+ - Updated Hebrew translation (Yaron Shahrabani)
+ - Updated Japanese translation (Takayuki KUSANO)
+ - Updated Punjabi translation (A S Alam)
+ - Updated Spanish translation (Daniel Mustieles)
+
+* New Features:
+ - Add a simple distribution upgrade tool that uses PackageKit (Richard Hughes)
+ - Add the ability to choose the upgrade mode in the operating system upgrade tool (Richard Hughes)
+
+* Bugfix:
+ - Adapt to minor GtkCellRenderer api change (Matthias Clasen)
+ - Add the X-GNOME-Settings-Panel category so the control center panel is not in 'Other' (Richard Hughes)
+ - Do not hardcode /usr/libexec as libexecdir (Vincent Untz)
+ - Don't crash the control center if the PackageKit reply happens when we've unloaded (Richard Hughes)
+ - Fix python3 compile (Jonathan Conder)
+ - Fix singular / plural mismatch in _success_ dialog. Fixes #628814 (Richard Hughes)
+ - Fix some spacing issues in the update viewer (Matthias Clasen)
+ - Install a desktop file for new versions of gnome-settings-daemon. Fixes #633195 (Richard Hughes)
+ - Port from EggDebug to the built-in GLib logging framework (Richard Hughes)
+ - Port to GtkComboBoxText (Richard Hughes)
+ - Port to libnotify 0.7.0 (William Jon McCann)
+ - Port to the new GtkApplication API (Richard Hughes)
+ - Remove gpk-backend-status (Richard Hughes)
+ - Remove status icon use in GpkWatch (William Jon McCann)
+ - Split up the update settings into two tabs to declutter the UI (Richard Hughes)
+ - Use pk_client_set_cache_age() to optimize the amount of downloaded data (Richard Hughes)
+
 Version 2.91.1
 ~~~~~~~~~~~~~~
 Released: 2010-10-05
