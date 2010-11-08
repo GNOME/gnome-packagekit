@@ -79,6 +79,10 @@ typedef enum {
 #define PK_ERROR_ENUM_INSTALL_ROOT_INVALID				(PK_ERROR_ENUM_PROVIDE_TYPE_NOT_SUPPORTED + 1)
 #endif
 
+#if (!PK_CHECK_VERSION(0,6,11))
+#define PK_ROLE_ENUM_UPGRADE_SYSTEM					(PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES + 1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
