@@ -193,6 +193,7 @@ out:
 static void
 gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivate *priv)
 {
+#if PK_CHECK_VERSION(0,6,11)
 	GtkTreeIter iter;
 	gchar *id;
 	PkUpgradeKindEnum upgrade_kind = PK_UPGRADE_KIND_ENUM_MINIMAL;
@@ -220,6 +221,7 @@ gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivat
 					(PkProgressCallback) gpk_distro_upgrade_progress_cb, priv,
 					(GAsyncReadyCallback) gpk_distro_upgrade_upgrade_system_cb, priv);
 	g_free (id);
+#endif
 }
 
 /**
