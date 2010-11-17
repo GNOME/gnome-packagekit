@@ -255,7 +255,7 @@ gpk_update_viewer_check_restart (void)
 	if (show_button)
 		gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
-	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_UPDATE);
 
 	/* setup a callback so we autoclose */
 	auto_shutdown_id =
@@ -542,7 +542,7 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 					 "%s", _("Updates installed"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 						  "%s", message);
-	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_UPDATE);
 
 	/* setup a callback so we autoclose */
 	auto_shutdown_id =
@@ -1380,7 +1380,7 @@ gpk_update_viewer_modal_error_with_timeout (const gchar *title, const gchar *mes
 					 "%s", title);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
 						  "%s", message);
-	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_UPDATE);
 
 	/* setup a callback so we autoclose */
 	auto_shutdown_id =
@@ -3173,7 +3173,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 
 	main_window = GTK_WIDGET(gtk_builder_get_object (builder, "dialog_updates"));
 	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_delete_event_cb), NULL);
-	gtk_window_set_icon_name (GTK_WINDOW(main_window), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_icon_name (GTK_WINDOW(main_window), GPK_ICON_SOFTWARE_UPDATE);
 	gtk_application_add_window (application, GTK_WINDOW(main_window));
 
 	/* create array stores */
