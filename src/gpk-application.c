@@ -1753,6 +1753,10 @@ gpk_application_perform_search (gpointer user_data)
 static void
 gpk_application_find_cb (GtkWidget *button_widget, gpointer user_data)
 {
+	/*if we are in the middle of a search, just return*/
+	if (search_in_progress == TRUE)
+		return;
+
 	search_mode = GPK_MODE_NAME_DETAILS_FILE;
 	gpk_application_perform_search (NULL);
 }
