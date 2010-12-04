@@ -2754,7 +2754,7 @@ gpk_application_menu_sources_cb (GtkAction *_action, gpointer user_data)
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (builder, "window_manager"));
-	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
+	xid = gdk_x11_window_get_xid (gtk_widget_get_window (window));
 
 	command = g_strdup_printf ("%s/gnome-control-center update --parent-window %u", BINDIR, xid);
 	g_debug ("running: %s", command);
@@ -2778,7 +2778,7 @@ gpk_application_menu_log_cb (GtkAction *_action, gpointer user_data)
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (builder, "window_manager"));
-	xid = gdk_x11_drawable_get_xid (gtk_widget_get_window (window));
+	xid = gdk_x11_window_get_xid (gtk_widget_get_window (window));
 
 	command = g_strdup_printf ("%s/gpk-log --parent-window %u", BINDIR, xid);
 	g_debug ("running: %s", command);
