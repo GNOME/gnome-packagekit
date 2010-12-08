@@ -1023,7 +1023,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 					/* TRANSLATORS: no packages returned */
 					_("No packages"),
 					/* TRANSLATORS: this package does not depend on any others */
-					_("This package does not depends on any others"), NULL);
+					_("This package does not depend on any others"), NULL);
 		goto out;
 	}
 
