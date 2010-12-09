@@ -2365,7 +2365,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 		      NULL);
 
 	split = pk_package_id_split (package_id);
-	installed = g_strcmp0 (split[PK_PACKAGE_ID_DATA], "installed") == 0;
+	installed = g_str_has_prefix (split[PK_PACKAGE_ID_DATA], "installed");
 
 	/* if a collection, mark as such */
 	if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0)
