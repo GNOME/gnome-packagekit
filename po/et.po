@@ -13,10 +13,11 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&component=general\n"
-"POT-Creation-Date: 2010-09-10 21:41+0000\n"
+"POT-Creation-Date: 2010-12-15 21:07+0000\n"
 "PO-Revision-Date: 2010-09-11 11:26+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -175,15 +176,6 @@ msgstr "_Allikas"
 msgid "_System"
 msgstr "_Süsteem"
 
-msgid "Backend Status"
-msgstr "Taustaprogrammi seisund"
-
-msgid "Backend author:"
-msgstr "Taustaprogrammi autor:"
-
-msgid "Backend name:"
-msgstr "Taustaprogrammi nimi:"
-
 msgid "Install Package"
 msgstr "Paki paigaldamine"
 
@@ -252,6 +244,9 @@ msgstr "Uuenduste sätted"
 msgid "_Automatically install:"
 msgstr "_Automaatselt paigaldatakse:"
 
+msgid "_Check Now"
+msgstr ""
+
 #. shows extra -source, -debuginfo, and -devel software sources
 msgid "_Show debug and development software sources"
 msgstr "_Näidatakse ka silumis- ja arendustarkvara allikaid"
@@ -294,7 +289,7 @@ msgstr ""
 msgid "Select A Package List File"
 msgstr "Pakkide nimekirja faili valimine"
 
-#. TRANSLATORS: program description, an application to create service packs
+#. TRANSLATORS: the program name
 msgid "Service Pack Creator"
 msgstr ""
 
@@ -329,6 +324,13 @@ msgid "Software Update"
 msgstr "Tarkvarauuendus"
 
 msgid "Update software installed on the system"
+msgstr ""
+
+#, fuzzy
+msgid "Operating System Upgrade"
+msgstr "Süsteemi uuendamine"
+
+msgid "Upgrade the operating system to a new version"
 msgstr ""
 
 msgid ""
@@ -466,7 +468,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: this package does not depend on any others
-msgid "This package does not depends on any others"
+msgid "This package does not depend on any others"
 msgstr ""
 
 #. TRANSLATORS: title: show the number of other packages we depend on
@@ -671,7 +673,7 @@ msgstr "Ivar Smolin <okul linux ee>, 2010."
 msgid "PackageKit Website"
 msgstr ""
 
-#. TRANSLATORS: description of application, gpk-application that is
+#. TRANSLATORS: description of NULL, gpk-application that is
 msgid "Package Manager for GNOME"
 msgstr "GNOME pakihaldur"
 
@@ -726,9 +728,6 @@ msgstr ""
 
 #. are we running privileged
 msgid "Package installer"
-msgstr ""
-
-msgid "PackageKit Backend Details Viewer"
 msgstr ""
 
 #. TRANSLATORS: context menu to open the preferences
@@ -1005,12 +1004,15 @@ msgstr "Pakke pole võimalik leida"
 msgid "The packages could not be found in any software source"
 msgstr ""
 
-msgid "Failed to install packages"
-msgstr "Tõrge pakkide paigaldamisel"
+msgid "The package is already installed"
+msgid_plural "The packages are already installed"
+msgstr[0] ""
+msgstr[1] ""
 
 #. TRANSLATORS: message: package is already installed
-msgid "The package is already installed"
-msgstr ""
+#, fuzzy
+msgid "Nothing to do."
+msgstr "Mitte midagi"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
 msgid "Incorrect response from search"
@@ -1328,7 +1330,8 @@ msgid "Applications"
 msgstr "Rakendused"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#. TRANSLATORS: The group type
+#, fuzzy
+msgctxt "Main menu"
 msgid "System"
 msgstr "Süsteem"
 
@@ -1344,6 +1347,158 @@ msgstr "palju pakke"
 
 msgid "No files"
 msgstr "Faile pole"
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#, fuzzy
+msgid "Could not upgrade the system"
+msgstr "Uuendamisskripti pole võimalik käivitada"
+
+#, fuzzy
+msgid "The upgrade completed successfully"
+msgstr "Valitud uuendused on edukalt paigaldatud."
+
+msgid ""
+"Your system now has the required software needed to complete the operating "
+"system upgrade."
+msgstr ""
+
+msgid ""
+"When you are ready, you can restart your system and continue the upgrade "
+"process."
+msgstr ""
+
+msgid "Make sure you have saved any unsaved work before restarting."
+msgstr ""
+
+#. TRANSLATORS: this is button text
+#, fuzzy
+msgid "Restart Now"
+msgstr "Taaskäivita kohe"
+
+#. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
+#, fuzzy
+msgid "Could not get distribution upgrades"
+msgstr "Uuendamisskripti pole võimalik käivitada"
+
+#. TRANSLATORS: nothing to do
+msgid "No releases available for upgrade"
+msgstr ""
+
+#. TRANSLATORS: this is the window title
+#, c-format
+msgid "Upgrade your system (%d of %d)"
+msgstr ""
+
+msgid ""
+"This assistant will guide you through upgrading your currently installed "
+"operating system to a newer release."
+msgstr ""
+
+msgid ""
+"This process may take several hours to complete, depending on the speed of "
+"your internet connection and the options selected."
+msgstr ""
+
+msgid ""
+"You will be able to continue using your system while this assistant "
+"downloads the packages needed to upgrade your system."
+msgstr ""
+
+msgid ""
+"When the download has completed, you will be prompted to restart your system "
+"in order to complete the upgrade process."
+msgstr ""
+
+#. TRANSLATORS: this is a intro page title
+#, fuzzy
+msgid "Upgrade your system"
+msgstr "Uuendatud süsteem"
+
+msgid "Available operating system _releases:"
+msgstr ""
+
+#. TRANSLATORS: this is in the combobox
+#, fuzzy
+msgid "Loading list of upgrades"
+msgstr "Pakkide nimekirja allalaadimine"
+
+#. TRANSLATORS: this is a choose page title
+msgid "Choose desired operating system version"
+msgstr ""
+
+#. label and combobox
+msgid "The upgrade tool can operate with three different modes:"
+msgstr ""
+
+msgid ""
+"The selected option will require the installer to download additional data."
+msgstr ""
+
+msgid ""
+"Do not continue with this option if the network will not be available at "
+"upgrade time."
+msgstr ""
+
+#. TRANSLATORS: this is a choose page title
+msgid "Choose desired download options"
+msgstr ""
+
+msgid ""
+"The operating system upgrade tool will now perform the following actions:"
+msgstr ""
+
+msgid "Request authentication from a privileged user"
+msgstr ""
+
+#, fuzzy
+msgid "Download installer images"
+msgstr "Pakkide allalaadimine"
+
+#, fuzzy
+msgid "Download packages"
+msgstr "Allalaaditud failid"
+
+msgid "Prepare and test the upgrade"
+msgstr ""
+
+msgid "You will have to restart your computer at the end of the upgrade."
+msgstr ""
+
+msgid "Press 'Apply' to apply changes."
+msgstr ""
+
+#. TRANSLATORS: button text
+#, fuzzy
+msgid "Confirmation"
+msgstr "Suhtlus"
+
+#. TRANSLATORS: title text
+#, fuzzy
+msgid "Applying changes"
+msgstr "Muudatuste testimine"
+
+#. TRANSLATORS: title, we're unable to do this action
+msgid "Cannot perform operating system upgrade"
+msgstr ""
+
+#. TRANSLATORS: message, we're unable to do this action
+msgid "Upgrading the operating system is not supported."
+msgstr ""
+
+#. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
+#, fuzzy
+msgid "Cannot get operating system upgrade information."
+msgstr "Distributsiooniuuenduse andmete hankimine"
+
+#. TRANSLATORS: message, we're unable to do this action
+msgid "Unsupported daemon version."
+msgstr ""
+
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#. TRANSLATORS: title to pass to to the user if there are not enough privs
+#, fuzzy
+msgid "Distribution Upgrade Tool"
+msgstr "Distributsiooniuuenduse andmete hankimine"
 
 #. TRANSLATORS: this is compact disk (CD) media
 msgid "CD"
@@ -2345,6 +2500,11 @@ msgstr "Eemaldamise simuleerimine"
 msgid "Simulating the update"
 msgstr "Uuendamise simuleerimine"
 
+#. TRANSLATORS: The role of the transaction, in present tense
+#, fuzzy
+msgid "Upgrading system"
+msgstr "Süsteemi uuendamine"
+
 #. TRANSLATORS: The role of the transaction, in past tense
 msgid "Got dependencies"
 msgstr "Saadi sõltuvused"
@@ -2481,6 +2641,11 @@ msgstr ""
 msgid "Simulated the update"
 msgstr ""
 
+#. TRANSLATORS: The role of the transaction, in past tense
+#, fuzzy
+msgid "Upgraded system"
+msgstr "Uuendatud süsteem"
+
 #. TRANSLATORS: The group type
 msgid "Accessibility"
 msgstr "Hõlbustused"
@@ -2520,6 +2685,10 @@ msgstr "Programmeerimine"
 #. TRANSLATORS: The group type
 msgid "Multimedia"
 msgstr "Multimeedia"
+
+#. TRANSLATORS: The group type
+msgid "System"
+msgstr "Süsteem"
 
 #. TRANSLATORS: The group type
 msgid "GNOME desktop"
@@ -2766,7 +2935,7 @@ msgstr[1] ""
 #. TRANSLATORS: message text of a dependency dialog
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
-"To install these file, additional software also has to be modified."
+"To install these files, additional software also has to be modified."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2981,6 +3150,14 @@ msgstr ""
 msgid "Cannot read destination package array"
 msgstr ""
 
+#. TRANSLATORS: file search type, lists of packages
+msgid "Package array files"
+msgstr ""
+
+#. TRANSLATORS: file search type, service pack destination file type
+msgid "Service pack files"
+msgstr ""
+
 #. TRANSLATORS: the constants should not be translated
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr ""
@@ -2995,14 +3172,6 @@ msgstr ""
 
 #. TRANSLATORS: this is the file output directory
 msgid "Set the default output directory"
-msgstr ""
-
-#. TRANSLATORS: file search type, lists of packages
-msgid "Package array files"
-msgstr ""
-
-#. TRANSLATORS: file search type, service pack destination file type
-msgid "Service pack files"
 msgstr ""
 
 msgid "Exit after a small delay"
@@ -3352,20 +3521,29 @@ msgstr "Ülesanne lõpetatud"
 msgid "Show debugging information for all files"
 msgstr "Kõikide failide kohta silumisandmete näitamine"
 
-#. TRANSLATORS: a list of modules to debug
-msgid "Debug these specific modules"
-msgstr "Määratud moodulite silumine"
-
-#. TRANSLATORS: a list of functions to debug
-msgid "Debug these specific functions"
-msgstr "Määratud funktsioonide silumine"
-
-#. TRANSLATORS: save to a log
-msgid "Log debugging data to a file"
-msgstr "Silumisandmete logimine faili"
-
 msgid "Debugging Options"
 msgstr "Silumisvalikud"
 
 msgid "Show debugging options"
 msgstr "Silumisvõtmete näitamine"
+
+#~ msgid "Backend Status"
+#~ msgstr "Taustaprogrammi seisund"
+
+#~ msgid "Backend author:"
+#~ msgstr "Taustaprogrammi autor:"
+
+#~ msgid "Backend name:"
+#~ msgstr "Taustaprogrammi nimi:"
+
+#~ msgid "Failed to install packages"
+#~ msgstr "Tõrge pakkide paigaldamisel"
+
+#~ msgid "Debug these specific modules"
+#~ msgstr "Määratud moodulite silumine"
+
+#~ msgid "Debug these specific functions"
+#~ msgstr "Määratud funktsioonide silumine"
+
+#~ msgid "Log debugging data to a file"
+#~ msgstr "Silumisandmete logimine faili"
