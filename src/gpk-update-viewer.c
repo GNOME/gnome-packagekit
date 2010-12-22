@@ -981,7 +981,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 			display = gdk_display_get_default ();
 			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
 			gdk_window_set_cursor (window, cursor);
-			gdk_cursor_unref (cursor);
+			g_object_unref (cursor);
 		}
 
 		/* set status */
@@ -2861,7 +2861,7 @@ gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
 		else
 			cursor = gdk_cursor_new_for_display (gdk_display_get_default (), GDK_XTERM);
 		gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), cursor);
-		gdk_cursor_unref (cursor);
+		g_object_unref (cursor);
 	}
 
 	if (tags != NULL)

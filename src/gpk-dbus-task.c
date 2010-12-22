@@ -29,6 +29,7 @@
 #include <gio/gio.h>
 
 #include <fontconfig/fontconfig.h>
+#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
@@ -146,7 +147,7 @@ gpk_dbus_task_set_xid (GpkDbusTask *dtask, guint32 xid)
 	g_return_val_if_fail (GPK_IS_DBUS_TASK (dtask), FALSE);
 
 	display = gdk_display_get_default ();
-	dtask->priv->parent_window = gdk_window_foreign_new_for_display (display, xid);
+	dtask->priv->parent_window = gdk_x11_window_foreign_new_for_display (display, xid);
 	g_debug ("parent_window=%p", dtask->priv->parent_window);
 	gpk_modal_dialog_set_parent (dtask->priv->dialog, dtask->priv->parent_window);
 	return TRUE;

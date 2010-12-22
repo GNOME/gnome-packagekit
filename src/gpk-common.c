@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #include <dbus/dbus-glib.h>
 #include <packagekit-glib2/packagekit.h>
 #include <locale.h>
@@ -269,7 +270,7 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
 	g_return_val_if_fail (xid != 0, FALSE);
 
 	display = gdk_display_get_default ();
-	parent_window = gdk_window_foreign_new_for_display (display, xid);
+	parent_window = gdk_x11_window_foreign_new_for_display (display, xid);
 	our_window = gtk_widget_get_window (GTK_WIDGET (window));
 
 	/* set this above our parent */

@@ -422,7 +422,7 @@ gpk_distro_upgrade_create_page_introduction (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_INTRO);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
 
-	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
 	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -505,7 +505,7 @@ gpk_distro_upgrade_create_page_choose (GpkDistroUpgradePrivate *priv)
 	/* we need this for later */
 	priv->page_choose_vbox = vbox;
 
-	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
 	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -583,7 +583,7 @@ gpk_distro_upgrade_create_page_kind (GpkDistroUpgradePrivate *priv)
 	/* TRANSLATORS: this is a choose page title */
 	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Choose desired download options"));
 
-	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
 	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -626,7 +626,7 @@ gpk_distro_upgrade_create_page_confirmation (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_CONFIRM);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
 
-	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
 	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -663,7 +663,7 @@ gpk_distro_upgrade_create_page_action (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_PROGRESS);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
 
-	pixbuf = gtk_widget_render_icon (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG, NULL);
+	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
 	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
 	g_object_unref (pixbuf);
 
