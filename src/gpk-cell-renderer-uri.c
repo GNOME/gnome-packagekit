@@ -130,10 +130,10 @@ gpk_cell_renderer_uri_set_property (GObject *object, guint param_id,
 
 /* we can't hardcode colours, so just make blue-er and purple-er */
 static void
-gpk_cell_renderer_uri_set_link_color (GdkColor *color, gboolean visited)
+gpk_cell_renderer_uri_set_link_rgba (GdkRGBA *color, gboolean visited)
 {
-	const guint color_half = 65535/2;
-	const guint offset = 65535/3;
+	const gdouble color_half = 0.5;
+	const gdouble offset = 1.0 / 3;
 
 	if (visited) {
 		if (color->red < color_half && color->blue < color_half) {
@@ -156,7 +156,8 @@ gpk_cell_renderer_uri_set_link_color (GdkColor *color, gboolean visited)
 			return;
 		}
 	}
-	g_debug ("cannot get color for %i,%i,%i", color->red, color->blue, color->green);
+
+	g_debug ("cannot get color for %f,%f,%f", color->red, color->blue, color->green);
 }
 
 static void
@@ -168,7 +169,8 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 			      GtkCellRendererState flags)
 {
 	gboolean ret;
-	GtkStyle *style;
+	GtkStyleContext *style;
+	GdkRGBA rgba;
 	GdkColor *color;
 	gchar *color_string;
 	GpkCellRendererUri *cru = GPK_CELL_RENDERER_URI (cell);
@@ -176,38 +178,50 @@ gpk_cell_renderer_uri_render (GtkCellRenderer *cell,
 	ret = gpk_cell_renderer_uri_is_clicked (cru);
 
 	/* get a copy of the widget color */
-	gtk_widget_ensure_style (GTK_WIDGET (widget));
-	style = gtk_rc_get_style (GTK_WIDGET (widget));
+	style = gtk_widget_get_style_context (GTK_WIDGET (widget));
 
 	/* set colour */
 	if (cru->uri == NULL) {
-		color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
-		color_string = gdk_color_to_string (color);
+		gtk_style_context_get_color (style, 0, &rgba);
+		color_string = gdk_rgba_to_string (&rgba);
 		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_NONE, NULL);
 	} else if (ret) {
 		/* if we defined this in our theme, else find a compromise */
-		gtk_widget_style_get (GTK_WIDGET (widget), "visited-link-color", &color, NULL);
+		gtk_style_context_get_style (style,
+					     "visited-link-color", &color,
+                                             NULL);
 		if (color == NULL) {
-			color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
-			gpk_cell_renderer_uri_set_link_color (color, TRUE);
+			gtk_style_context_get_color (style, 0, &rgba);
+			gpk_cell_renderer_uri_set_link_rgba (&rgba, TRUE);
+
+			color_string = gdk_rgba_to_string (&rgba);
+		} else {
+			color_string = gdk_color_to_string (color);
+			gdk_color_free (color);
 		}
-		color_string = gdk_color_to_string (color);
+
 		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	} else {
 		/* if we defined this in our theme, else find a compromise */
-		gtk_widget_style_get (GTK_WIDGET (widget), "link-color", &color, NULL);
+		gtk_style_context_get_style (style,
+					     "link-color", &color,
+                                             NULL);
 		if (color == NULL) {
-			color = gdk_color_copy (&style->text[GTK_STATE_NORMAL]);
-			gpk_cell_renderer_uri_set_link_color (color, FALSE);
+			gtk_style_context_get_color (style, 0, &rgba);
+			gpk_cell_renderer_uri_set_link_rgba (&rgba, FALSE);
+
+			color_string = gdk_rgba_to_string (&rgba);
+		} else {
+			color_string = gdk_color_to_string (color);
+			gdk_color_free (color);
 		}
-		color_string = gdk_color_to_string (color);
+
 		g_object_set (G_OBJECT (cru), "foreground", color_string, NULL);
 		g_object_set (G_OBJECT (cru), "underline", PANGO_UNDERLINE_SINGLE, NULL);
 	}
 
-	gdk_color_free (color);
 	g_free (color_string);
 
 	/* can we select the text or click it? */
