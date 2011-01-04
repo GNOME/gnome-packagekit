@@ -61,7 +61,6 @@ gpk_helper_run_path (GpkHelperRun *helper, const gchar *filename)
 	gboolean ret = FALSE;
 	GError *error = NULL;
 	GAppInfo *app = NULL;
-	GAppLaunchContext *context = NULL;
 
 	/* check have value */
 	if (filename == NULL) {
@@ -71,10 +70,7 @@ gpk_helper_run_path (GpkHelperRun *helper, const gchar *filename)
 
 	/* launch application */
 	app = G_APP_INFO(g_desktop_app_info_new_from_filename (filename));
-	context = G_APP_LAUNCH_CONTEXT(gdk_app_launch_context_new ());
-//	app = (GAppInfo*)g_desktop_app_info_new_from_filename (filename);
-//	context = (GAppLaunchContext*)gdk_app_launch_context_new ();
-	ret = g_app_info_launch (app, NULL, context, &error);
+	ret = g_app_info_launch (app, NULL, NULL, &error);
 	if (!ret) {
 		g_warning ("failed to launch: %s", error->message);
 		g_error_free (error);
@@ -82,8 +78,6 @@ gpk_helper_run_path (GpkHelperRun *helper, const gchar *filename)
 out:
 	if (app != NULL)
 		g_object_unref (app);
-	if (context != NULL)
-		g_object_unref (context);
 	return ret;
 }
 
