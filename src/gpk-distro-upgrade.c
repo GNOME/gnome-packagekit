@@ -529,7 +529,7 @@ gpk_distro_upgrade_create_page_kind (GpkDistroUpgradePrivate *priv)
 	GtkWidget *vbox, *box, *label, *content_area, *message_label;
 	GdkPixbuf *pixbuf;
 	gchar *text;
-	GSList *group;
+	GSList *group = NULL;
 
 	vbox = gtk_vbox_new (FALSE, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
