@@ -1,24 +1,27 @@
 # Czech translation of gnome-packagekit.
 # Copyright (C) 2008, 2009, 2010 the author(s) of gnome-packagekit.
 # This file is distributed under the same license as the gnome-packagekit package.
+#
 # Honza Steuer <honza.steuer@gmail.com>, 2008.
 # Petr Kovar <pknbe@volny.cz>, 2008.
 # Marek Lisy <marek.lisy@centrum.cz>, 2008.
 # Lucas Lommer <llommer@svn.gnome.org>, 2010.
 # Ondrej Kopka <ondrej.kopka@gmail.com>, 2010.
-# Marek Černocký <marek@manet.cz>, 2010.
+# Marek Černocký <marek@manet.cz>, 2010, 2011.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-27 21:21+0100\n"
-"PO-Revision-Date: 2010-12-19 23:20+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"packagekit&component=general\n"
+"POT-Creation-Date: 2010-12-30 09:18+0000\n"
+"PO-Revision-Date: 2011-01-27 21:04+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../data/gpk-application.desktop.in.h:1
@@ -295,7 +298,7 @@ msgstr "_Zkontrolovat aktualizace"
 
 #: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
-msgstr "Vyhledat významnější _akltualizace:"
+msgstr "Vyhledat hlavní _povýšení:"
 
 #: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
@@ -319,7 +322,7 @@ msgstr "_Automaticky instalovat:"
 
 #: ../data/gpk-prefs.ui.h:10
 msgid "_Check Now"
-msgstr ""
+msgstr "_Zkontrolovat ihned"
 
 #. shows extra -source, -debuginfo, and -devel software sources
 #: ../data/gpk-prefs.ui.h:12
@@ -426,13 +429,12 @@ msgid "Update software installed on the system"
 msgstr "Aktualizovat software instalovaný v tomto systému"
 
 #: ../data/gpk-distro-upgrade.desktop.in.h:1
-#, fuzzy
 msgid "Operating System Upgrade"
-msgstr "Aktualizuje se systém"
+msgstr "Povýšení operačního systému"
 
 #: ../data/gpk-distro-upgrade.desktop.in.h:2
 msgid "Upgrade the operating system to a new version"
-msgstr ""
+msgstr "Povýšit operační systém na novou verzi"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid ""
@@ -448,7 +450,7 @@ msgstr "_Instalovat aktualizace"
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
-msgstr "Akt_ualizace"
+msgstr "_Povýšit"
 
 #. TRANSLATORS: expander label in the error dialog
 #: ../python/packagekit/gtkwidgets.py:413
@@ -607,7 +609,6 @@ msgstr[2] "Níže vypsané balíčky vyžadují %s ke správné funkčnosti."
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
-#, fuzzy
 msgid "This package does not depend on any others"
 msgstr "Tento balíček nezávisí na žádných dalších"
 
@@ -853,7 +854,8 @@ msgid "translator-credits"
 msgstr ""
 "Honza Steuer <honza.steuer@gmail.com>\n"
 "Marek Lisý <marek.lisy@centrum.cz>\n"
-"Lucas Lommer <llommer@svn.gnome.org>"
+"Lucas Lommer <llommer@svn.gnome.org>\n"
+"Marek Černocký <marek@manet.cz>"
 
 #. TRANSLATORS: website label
 #: ../src/gpk-application.c:2731 ../src/gpk-check-update.c:228
@@ -1065,7 +1067,7 @@ msgstr "Aktualizovat dostupné (při práci na baterii)"
 #. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
 #: ../src/gpk-check-update.c:1290
 msgid "Distribution upgrades available"
-msgstr "Dostupná aktualizace distribuce"
+msgstr "Dostupné povýšení distribuce"
 
 #. TRANSLATORS: provides more information about the upgrade
 #. TRANSLATORS: button: a link to the help file
@@ -1288,18 +1290,16 @@ msgid "The packages could not be found in any software source"
 msgstr "Balíček nebyl nalezen v žádném zdroji softwaru"
 
 #: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:334
-#, fuzzy
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Balíček je již nainstalován"
-msgstr[1] "Balíček je již nainstalován"
-msgstr[2] "Balíček je již nainstalován"
+msgstr[1] "Balíčky jsou již nainstalovány"
+msgstr[2] "Balíčky jsou již nainstalovány"
 
 #. TRANSLATORS: message: package is already installed
 #: ../src/gpk-dbus-task.c:1137
-#, fuzzy
 msgid "Nothing to do."
-msgstr "Nic"
+msgstr "Není zapotřebí nic dělat."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
 #: ../src/gpk-dbus-task.c:1154
@@ -1719,7 +1719,6 @@ msgstr "Aplikace"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
 #: ../src/gpk-desktop.c:122 ../src/gpk-desktop.c:129
-#, fuzzy
 msgctxt "Main menu"
 msgid "System"
 msgstr "Systém"
@@ -1743,193 +1742,192 @@ msgstr "Žádné soubory"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-distro-upgrade.c:139
-#, fuzzy
 msgid "Could not upgrade the system"
-msgstr "Nelze spustit aktualizační skript"
+msgstr "Nelze povýšit systém"
 
 #: ../src/gpk-distro-upgrade.c:160
-#, fuzzy
 msgid "The upgrade completed successfully"
-msgstr "Úspěšná aktualizace"
+msgstr "Povýšení bylo úspěšně dokončeno"
 
 #: ../src/gpk-distro-upgrade.c:163
 msgid ""
 "Your system now has the required software needed to complete the operating "
 "system upgrade."
 msgstr ""
+"Nyní má váš systém k dispozici software potřebný k dokončení povýšení verze "
+"operačního systému."
 
 #: ../src/gpk-distro-upgrade.c:164
 msgid ""
 "When you are ready, you can restart your system and continue the upgrade "
 "process."
 msgstr ""
+"Pokud jste připraveni, můžete restartovat svůj systém a pokračovat v procesu "
+"povýšení."
 
 #: ../src/gpk-distro-upgrade.c:165
 msgid "Make sure you have saved any unsaved work before restarting."
 msgstr ""
+"Před restartováním se ujistěte, že jste si uložili všechnu rozdělanou práci."
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-distro-upgrade.c:177
-#, fuzzy
 msgid "Restart Now"
 msgstr "Restartovat ihned"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-distro-upgrade.c:294
-#, fuzzy
 msgid "Could not get distribution upgrades"
-msgstr "Nelze získat seznam aktualizací distribuce"
+msgstr "Nelze získat povýšení distribuce"
 
 #. TRANSLATORS: nothing to do
 #: ../src/gpk-distro-upgrade.c:315
 msgid "No releases available for upgrade"
-msgstr ""
+msgstr "Není dostupné žádné vydání použitelné k povýšení"
 
 #. TRANSLATORS: this is the window title
 #: ../src/gpk-distro-upgrade.c:376
 #, c-format
 msgid "Upgrade your system (%d of %d)"
-msgstr ""
+msgstr "Povýšení vašeho systému (%d z %d)"
 
 #: ../src/gpk-distro-upgrade.c:406
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
 msgstr ""
+"Tento průvodce vás provede povýšením vašeho operačního systému z verze, "
+"kterou máte v současnosti nainstalovanou, na novu."
 
 #: ../src/gpk-distro-upgrade.c:407
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
 msgstr ""
+"Dokončení procesu může zabrat i několik hodin, záleží na rychlosti "
+"Internetového připojení a vybraných volbách."
 
 #: ../src/gpk-distro-upgrade.c:408
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
 msgstr ""
+"Zatím, co průvodce bude stahovat balíčky potřebné k povýšené vašeho systému, "
+"můžete svůj systém normálně používat."
 
 #: ../src/gpk-distro-upgrade.c:409
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
 msgstr ""
+"Až bude stahování dokončeno, budete vyzváni k restartování svého systému, "
+"aby mohl být proces povýšení dokončen."
 
 #. TRANSLATORS: this is a intro page title
 #: ../src/gpk-distro-upgrade.c:421
-#, fuzzy
 msgid "Upgrade your system"
-msgstr "Systém byl aktualizován"
+msgstr "Povýšení vašeho systému"
 
 #: ../src/gpk-distro-upgrade.c:476
 msgid "Available operating system _releases:"
-msgstr ""
+msgstr "Dostupná vydání ope_račního systému:"
 
 #. TRANSLATORS: this is in the combobox
 #: ../src/gpk-distro-upgrade.c:485
-#, fuzzy
 msgid "Loading list of upgrades"
-msgstr "Stahuje se seznam balíčků"
+msgstr "Načítá se seznam možných povýšení"
 
 #. TRANSLATORS: this is a choose page title
 #: ../src/gpk-distro-upgrade.c:503
 msgid "Choose desired operating system version"
-msgstr ""
+msgstr "Výběr požadované verze operačního systému"
 
 #. label and combobox
 #: ../src/gpk-distro-upgrade.c:538
 msgid "The upgrade tool can operate with three different modes:"
-msgstr ""
+msgstr "Nástroj na povyšování může pracovat ve třech různých režimech:"
 
 #: ../src/gpk-distro-upgrade.c:568
 msgid ""
 "The selected option will require the installer to download additional data."
-msgstr ""
+msgstr "Vybraná volba bude požadovat, aby instalátor stáhl dodatečná data."
 
 #: ../src/gpk-distro-upgrade.c:569
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
 msgstr ""
+"S touto volbou nepokračujte, pokud během povyšování nebude dostupná síť."
 
 #. TRANSLATORS: this is a choose page title
 #: ../src/gpk-distro-upgrade.c:584
 msgid "Choose desired download options"
-msgstr ""
+msgstr "Výběr požadovaných voleb stahování"
 
 #: ../src/gpk-distro-upgrade.c:606
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
-msgstr ""
+msgstr "Nástroj na povýšení operačního systému nyní provede následující akce:"
 
 #: ../src/gpk-distro-upgrade.c:607
-#, fuzzy
 msgid "Request authentication from a privileged user"
-msgstr "Tato aplikace běží pod privilegovaným uživatelem"
+msgstr "Vyžádá si ověření od privilegovaného uživatele"
 
 #: ../src/gpk-distro-upgrade.c:608
-#, fuzzy
 msgid "Download installer images"
-msgstr "Stahují se balíčky"
+msgstr "Stáhne instalační obrazy"
 
 #: ../src/gpk-distro-upgrade.c:609
-#, fuzzy
 msgid "Download packages"
-msgstr "Balíčky byly staženy"
+msgstr "Stáhne balíčky"
 
 #: ../src/gpk-distro-upgrade.c:610
 msgid "Prepare and test the upgrade"
-msgstr ""
+msgstr "Připraví a otestuje povýšení"
 
 #: ../src/gpk-distro-upgrade.c:611
-#, fuzzy
 msgid "You will have to restart your computer at the end of the upgrade."
-msgstr "Aby mohl hardware pracovat správně, je nutno restartovat počítač."
+msgstr "Na konec procesu povýšení budete muset svůj počítač restartovat."
 
 #: ../src/gpk-distro-upgrade.c:612
 msgid "Press 'Apply' to apply changes."
-msgstr ""
+msgstr "Zmáčknutím „Použít“ se změny provedou."
 
 #. TRANSLATORS: button text
 #: ../src/gpk-distro-upgrade.c:625
-#, fuzzy
 msgid "Confirmation"
-msgstr "Komunikace"
+msgstr "Potvrzení"
 
 #. TRANSLATORS: title text
 #: ../src/gpk-distro-upgrade.c:662
-#, fuzzy
 msgid "Applying changes"
-msgstr "Změny se testují"
+msgstr "Provádějí se změny"
 
 #. TRANSLATORS: title, we're unable to do this action
 #: ../src/gpk-distro-upgrade.c:728
 msgid "Cannot perform operating system upgrade"
-msgstr ""
+msgstr "Nelze provést povýšení operačního systému"
 
 #. TRANSLATORS: message, we're unable to do this action
 #: ../src/gpk-distro-upgrade.c:740
-#, fuzzy
 msgid "Upgrading the operating system is not supported."
-msgstr "Virtuální typ poskytování není podporován"
+msgstr "Povyšování operačního systému není podporováno."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
 #: ../src/gpk-distro-upgrade.c:744
-#, fuzzy
 msgid "Cannot get operating system upgrade information."
-msgstr "Získávají se informace o aktualizaci distribuce"
+msgstr "Nelze získat informace pro povýšení verze operačního systému."
 
 #. TRANSLATORS: message, we're unable to do this action
 #: ../src/gpk-distro-upgrade.c:748
 msgid "Unsupported daemon version."
-msgstr ""
+msgstr "Nepodporovaná verze démona."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-distro-upgrade.c:800 ../src/gpk-distro-upgrade.c:803
-#, fuzzy
 msgid "Distribution Upgrade Tool"
-msgstr "Dostupná aktualizace distribuce"
+msgstr "Nástroj na povyšování distribuce"
 
 #. TRANSLATORS: this is compact disk (CD) media
 #: ../src/gpk-enum.c:275
@@ -2125,7 +2123,7 @@ msgstr "Nejsou dostupná žádná zrcadla"
 
 #: ../src/gpk-enum.c:436
 msgid "No distribution upgrade data is available"
-msgstr "Nejsou dostupné žádné aktualizace distribuce"
+msgstr "Nejsou dostupná žádná povýšení distribuce"
 
 #: ../src/gpk-enum.c:439
 msgid "Package is incompatible with this system"
@@ -2519,9 +2517,9 @@ msgid ""
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"Vyžadovaná data aktualizace nebyla nalezena v žádném z nastavených zdrojů "
+"Vyžadované údaje o povýšení nebyly nalezeny v žádném z nastavených zdrojů "
 "softwaru.\n"
-"Seznam aktualizací distribuce nebude dostupný."
+"Seznam povýšení verze distribuce nebude dostupný."
 
 #: ../src/gpk-enum.c:675
 msgid ""
@@ -3254,7 +3252,7 @@ msgstr "Potvrzuje se EULA"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1377
 msgid "Getting distribution upgrade information"
-msgstr "Získávají se informace o aktualizaci distribuce"
+msgstr "Získávají se informace o povýšení distribuce"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1381
@@ -3288,9 +3286,8 @@ msgstr "Simuluje se aktualizace"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1405
-#, fuzzy
 msgid "Upgrading system"
-msgstr "Aktualizuje se systém"
+msgstr "Povyšuje se verze systému"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1429
@@ -3430,7 +3427,7 @@ msgstr "Balíčky byly staženy"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1537
 msgid "Got distribution upgrades"
-msgstr "Aktualizace distribuce byla nalezena"
+msgstr "Bylo nalezeno povýšení distribuce"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1541
@@ -3464,9 +3461,8 @@ msgstr "Simulace aktualizace byla provedena"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1565
-#, fuzzy
 msgid "Upgraded system"
-msgstr "Systém byl aktualizován"
+msgstr "Systém byl povýšen"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1583
@@ -3843,7 +3839,6 @@ msgstr[2] ""
 
 #. TRANSLATORS: message text of a dependency dialog
 #: ../src/gpk-task.c:499
-#, fuzzy
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -4269,7 +4264,7 @@ msgstr "Získává se seznam aktualizací"
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:1235
 msgid "Could not run upgrade script"
-msgstr "Nelze spustit aktualizační skript"
+msgstr "Nelze spustit skript povýšení"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
@@ -4528,7 +4523,7 @@ msgstr "Kontrolují se aktualizace…"
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:3012
 msgid "Could not get list of distribution upgrades"
-msgstr "Nelze získat seznam aktualizací distribuce"
+msgstr "Nelze získat seznam povýšení distribuce"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
 #: ../src/gpk-update-viewer.c:3042
