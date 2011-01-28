@@ -91,6 +91,34 @@ struct GpkCheckUpdatePrivate
 G_DEFINE_TYPE (GpkCheckUpdate, gpk_check_update, G_TYPE_OBJECT)
 
 /**
+ * gpk_check_update_server_has_persistence:
+ *
+ * This returns %TRUE if the server supports persistance and there is
+ * no need to show an icon.
+ **/
+static gboolean
+gpk_check_update_server_has_persistence (void)
+{
+	gboolean ret;
+	GList   *caps;
+	GList   *l;
+
+	/* query the notification-daemon to get the caps */
+	caps = notify_get_server_caps ();
+	if (caps == NULL) {
+		g_warning ("Failed to get libnotify server caps");
+		return FALSE;
+	}
+	l = g_list_find_custom (caps, "persistence",
+				(GCompareFunc) g_strcmp0);
+	ret = l != NULL;
+
+	g_list_foreach (caps, (GFunc) g_free, NULL);
+	g_list_free (caps);
+	return ret;
+}
+
+/**
  * gpk_check_update_set_icon_visibility:
  **/
 static gboolean
@@ -118,8 +146,12 @@ gpk_check_update_set_icon_visibility (GpkCheckUpdate *cupdate)
 		goto out;
 	}
 
-	/* all okay, show icon */
-	ret = TRUE;
+	/* do not show an icon if we have persistance support */
+	ret = !gpk_check_update_server_has_persistence ();
+	if (!ret) {
+		g_debug ("not showing icon as server has persistence");
+		goto out;
+	}
 out:
 	/* show or hide icon */
 	if (ret) {
