@@ -21,7 +21,6 @@
 
 #include "config.h"
 
-#include <canberra-gtk.h>
 #include <dbus/dbus-glib.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
@@ -450,15 +449,9 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to update packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-
-		/* failed sound, using sounds from the naming spec */
-		ca_context_play (ca_gtk_context_get (), 0,
-				 CA_PROP_EVENT_ID, "dialog-warning",
-				 /* TRANSLATORS: this is the application name for libcanberra */
-				 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
-				 /* TRANSLATORS: this is the sound description */
-				 CA_PROP_EVENT_DESCRIPTION, _("Failed to update"), NULL);
+		g_warning ("failed to update packages: %s, %s",
+			   pk_error_enum_to_text (pk_error_get_code (error_code)),
+			   pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -475,17 +468,6 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 	}
 
 	gpk_update_viewer_packages_set_sensitive (TRUE);
-
-	/* TODO: use ca_gtk_context_get_for_screen to allow use of GDK_MULTIHEAD_SAFE */
-
-	/* play the sound, using sounds from the naming spec */
-	ca_context_play (ca_gtk_context_get (), 0,
-			 /* TODO: add a new sound to the spec */
-			 CA_PROP_EVENT_ID, "complete-download",
-			 /* TRANSLATORS: this is the application name for libcanberra */
-			 CA_PROP_APPLICATION_NAME, _("GNOME PackageKit Update Viewer"),
-			 /* TRANSLATORS: this is the sound description */
-			 CA_PROP_EVENT_DESCRIPTION, _("Updated successfully"), NULL);
 
 	/* get the worst restart case */
 	restart = pk_results_get_require_restart_worst (results);
