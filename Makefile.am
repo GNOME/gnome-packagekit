@@ -7,6 +7,8 @@ SUBDIRS =						\
 	data						\
 	help
 
+ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
+
 EXTRA_DIST =						\
 	MAINTAINERS					\
 	intltool-extract.in				\
