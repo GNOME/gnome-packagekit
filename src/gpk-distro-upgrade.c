@@ -760,7 +760,7 @@ gpk_distro_upgrade_activate_cb (GApplication *application, GpkDistroUpgradePriva
 		g_signal_connect_swapped (dialog,
 					  "response",
 					  G_CALLBACK (g_application_release),
-					  priv);
+					  application);
 		gtk_widget_show (dialog);
 	}
 out:
@@ -773,7 +773,7 @@ out:
 int
 main (int argc, char *argv[])
 {
-	GtkApplication *application;
+	GtkApplication *application = NULL;
 	gint status = 0;
 	gboolean ret;
 	GpkDistroUpgradePrivate *priv;
@@ -826,7 +826,8 @@ out:
 	g_object_unref (priv->client);
 	g_object_unref (priv->console_kit);
 	g_free (priv);
-	g_object_unref (application);
+        if (application)
+                g_object_unref (application);
 	return status;
 }
 
