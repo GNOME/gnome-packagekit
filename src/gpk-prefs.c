@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2010 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2010-2011 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -23,29 +23,30 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n-lib.h>
+#include <glib/gi18n.h>
+#include <locale.h>
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "cc-update-panel.h"
-
 #include "gpk-common.h"
-#include "gpk-gnome.h"
+#include "gpk-debug.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
+#include "gpk-gnome.h"
 
-struct _CcUpdatePanelPrivate {
-	GtkBuilder		*builder;
-	GSettings		*settings;
-	GtkListStore		*list_store;
-	PkClient		*client;
-	PkBitfield		 roles;
-	GtkTreePath		*path_tmp;
+typedef struct {
 	const gchar		*id_tmp;
-	PkStatusEnum		 status;
-	guint			 status_id;
 	GCancellable		*cancellable;
-};
+	GSettings		*settings;
+	GtkApplication		*application;
+	GtkBuilder		*builder;
+	GtkListStore		*list_store;
+	GtkTreePath		*path_tmp;
+	guint			 status_id;
+	PkBitfield		 roles;
+	PkClient		*client;
+	PkStatusEnum		 status;
+} GpkPrefsPrivate;
 
 enum {
 	GPK_COLUMN_ENABLED,
@@ -55,12 +56,6 @@ enum {
 	GPK_COLUMN_SENSITIVE,
 	GPK_COLUMN_LAST
 };
-
-G_DEFINE_DYNAMIC_TYPE (CcUpdatePanel, cc_update_panel, CC_TYPE_PANEL)
-
-static void cc_update_panel_finalize (GObject *object);
-
-#define CC_UPDATE_PREFS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), CC_TYPE_UPDATE_PANEL, CcUpdatePanelPrivate))
 
 /* TRANSLATORS: check once an hour */
 #define PK_FREQ_HOURLY_TEXT		_("Hourly")
@@ -84,19 +79,19 @@ static void cc_update_panel_finalize (GObject *object);
 #define GPK_PREFS_VALUE_WEEKLY		(60*60*24*7)
 
 /**
- * cc_update_panel_help_cb:
+ * gpk_prefs_help_cb:
  **/
 static void
-cc_update_panel_help_cb (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_help_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gpk_gnome_help ("prefs");
 }
 
 /**
- * cc_update_panel_check_now_cb:
+ * gpk_prefs_check_now_cb:
  **/
 static void
-cc_update_panel_check_now_cb (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_check_now_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gboolean ret;
 	GError *error = NULL;
@@ -112,10 +107,10 @@ cc_update_panel_check_now_cb (GtkWidget *widget, CcUpdatePanel *panel)
 }
 
 /**
- * cc_update_panel_update_freq_combo_changed:
+ * gpk_prefs_update_freq_combo_changed:
  **/
 static void
-cc_update_panel_update_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_update_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gchar *value;
 	guint freq = 0;
@@ -133,15 +128,15 @@ cc_update_panel_update_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pan
 		g_assert (FALSE);
 
 	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
-	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_settings_set_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_free (value);
 }
 
 /**
- * cc_update_panel_upgrade_freq_combo_changed:
+ * gpk_prefs_upgrade_freq_combo_changed:
  **/
 static void
-cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gchar *value;
 	guint freq = 0;
@@ -157,37 +152,37 @@ cc_update_panel_upgrade_freq_combo_changed (GtkWidget *widget, CcUpdatePanel *pa
 		g_assert (FALSE);
 
 	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
-	g_settings_set_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_settings_set_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_free (value);
 }
 
 /**
- * cc_update_panel_update_combo_changed:
+ * gpk_prefs_update_combo_changed:
  **/
 static void
-cc_update_panel_update_combo_changed (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_update_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	GpkUpdateEnum update;
 
 	update = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 	if (update == -1)
 		return;
-	g_settings_set_enum (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE, update);
+	g_settings_set_enum (priv->settings, GPK_SETTINGS_AUTO_UPDATE, update);
 }
 
 /**
- * cc_update_panel_update_freq_combo_setup:
+ * gpk_prefs_update_freq_combo_setup:
  **/
 static void
-cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
+gpk_prefs_update_freq_combo_setup (GpkPrefsPrivate *priv)
 {
-	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
+	guint value;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_check"));
-	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
-	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_check"));
+	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	value = g_settings_get_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
 	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
@@ -211,22 +206,22 @@ cc_update_panel_update_freq_combo_setup (CcUpdatePanel *panel)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (cc_update_panel_update_freq_combo_changed), panel);
+			  G_CALLBACK (gpk_prefs_update_freq_combo_changed), priv);
 }
 
 /**
- * cc_update_panel_upgrade_freq_combo_setup:
+ * gpk_prefs_upgrade_freq_combo_setup:
  **/
 static void
-cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
+gpk_prefs_upgrade_freq_combo_setup (GpkPrefsPrivate *priv)
 {
-	guint value;
 	gboolean is_writable;
 	GtkWidget *widget;
+	guint value;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_upgrade"));
-	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
-	value = g_settings_get_int (panel->priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_upgrade"));
+	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	value = g_settings_get_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
 	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
@@ -247,22 +242,22 @@ cc_update_panel_upgrade_freq_combo_setup (CcUpdatePanel *panel)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (cc_update_panel_upgrade_freq_combo_changed), panel);
+			  G_CALLBACK (gpk_prefs_upgrade_freq_combo_changed), priv);
 }
 
 /**
- * cc_update_panel_auto_update_combo_setup:
+ * gpk_prefs_auto_update_combo_setup:
  **/
 static void
-cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
+gpk_prefs_auto_update_combo_setup (GpkPrefsPrivate *priv)
 {
 	gboolean is_writable;
-	GtkWidget *widget;
 	GpkUpdateEnum update;
+	GtkWidget *widget;
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_install"));
-	is_writable = g_settings_is_writable (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
-	update = g_settings_get_enum (panel->priv->settings, GPK_SETTINGS_AUTO_UPDATE);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_install"));
+	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_AUTO_UPDATE);
+	update = g_settings_get_enum (priv->settings, GPK_SETTINGS_AUTO_UPDATE);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -276,14 +271,14 @@ cc_update_panel_auto_update_combo_setup (CcUpdatePanel *panel)
 
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (cc_update_panel_update_combo_changed), panel);
+			  G_CALLBACK (gpk_prefs_update_combo_changed), priv);
 }
 
 /**
- * cc_update_panel_notify_network_state_cb:
+ * gpk_prefs_notify_network_state_cb:
  **/
 static void
-cc_update_panel_notify_network_state_cb (PkControl *control, GParamSpec *pspec, CcUpdatePanel *panel)
+gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, GpkPrefsPrivate *priv)
 {
 	GtkWidget *widget;
 	PkNetworkEnum state;
@@ -292,7 +287,7 @@ cc_update_panel_notify_network_state_cb (PkControl *control, GParamSpec *pspec, 
 	g_object_get (control,
 		      "network-state", &state,
 		      NULL);
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "hbox_mobile_broadband"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_mobile_broadband"));
 	if (state == PK_NETWORK_ENUM_MOBILE)
 		gtk_widget_show (widget);
 	else
@@ -300,27 +295,27 @@ cc_update_panel_notify_network_state_cb (PkControl *control, GParamSpec *pspec, 
 }
 
 /**
- * cc_update_panel_find_iter_model_cb:
+ * gpk_prefs_find_iter_model_cb:
  **/
 static gboolean
-cc_update_panel_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, CcUpdatePanel *panel)
+gpk_prefs_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GpkPrefsPrivate *priv)
 {
 	gchar *repo_id_tmp = NULL;
 	gtk_tree_model_get (model, iter,
 			    GPK_COLUMN_ID, &repo_id_tmp,
 			    -1);
-	if (strcmp (repo_id_tmp, panel->priv->id_tmp) == 0) {
-		panel->priv->path_tmp = gtk_tree_path_copy (path);
+	if (strcmp (repo_id_tmp, priv->id_tmp) == 0) {
+		priv->path_tmp = gtk_tree_path_copy (path);
 		return TRUE;
 	}
 	return FALSE;
 }
 
 /**
- * cc_update_panel_mark_nonactive_cb:
+ * gpk_prefs_mark_nonactive_cb:
  **/
 static gboolean
-cc_update_panel_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, CcUpdatePanel *panel)
+gpk_prefs_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GpkPrefsPrivate *priv)
 {
 	gtk_list_store_set (GTK_LIST_STORE(model), iter,
 			    GPK_COLUMN_ACTIVE, FALSE,
@@ -329,38 +324,38 @@ cc_update_panel_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTr
 }
 
 /**
- * cc_update_panel_mark_nonactive:
+ * gpk_prefs_mark_nonactive:
  **/
 static void
-cc_update_panel_mark_nonactive (CcUpdatePanel *panel, GtkTreeModel *model)
+gpk_prefs_mark_nonactive (GpkPrefsPrivate *priv, GtkTreeModel *model)
 {
-	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) cc_update_panel_mark_nonactive_cb, panel);
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_prefs_mark_nonactive_cb, priv);
 }
 
 /**
- * cc_update_panel_model_get_iter:
+ * gpk_prefs_model_get_iter:
  **/
 static gboolean
-cc_update_panel_model_get_iter (CcUpdatePanel *panel, GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
+gpk_prefs_model_get_iter (GpkPrefsPrivate *priv, GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 {
 	gboolean ret = TRUE;
-	panel->priv->id_tmp = id;
-	panel->priv->path_tmp = NULL;
-	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) cc_update_panel_find_iter_model_cb, panel);
-	if (panel->priv->path_tmp == NULL) {
+	priv->id_tmp = id;
+	priv->path_tmp = NULL;
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_prefs_find_iter_model_cb, priv);
+	if (priv->path_tmp == NULL) {
 		gtk_list_store_append (GTK_LIST_STORE(model), iter);
 	} else {
-		ret = gtk_tree_model_get_iter (model, iter, panel->priv->path_tmp);
-		gtk_tree_path_free (panel->priv->path_tmp);
+		ret = gtk_tree_model_get_iter (model, iter, priv->path_tmp);
+		gtk_tree_path_free (priv->path_tmp);
 	}
 	return ret;
 }
 
 /**
- * cc_update_panel_remove_nonactive_cb:
+ * gpk_prefs_remove_nonactive_cb:
  **/
 static gboolean
-cc_update_panel_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
+gpk_prefs_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
 {
 	gboolean active;
 	gtk_tree_model_get (model, iter,
@@ -375,53 +370,53 @@ cc_update_panel_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, Gtk
 }
 
 /**
- * cc_update_panel_remove_nonactive:
+ * gpk_prefs_remove_nonactive:
  **/
 static void
-cc_update_panel_remove_nonactive (GtkTreeModel *model)
+gpk_prefs_remove_nonactive (GtkTreeModel *model)
 {
 	gboolean ret;
 	/* do this again and again as removing in gtk_tree_model_foreach causes errors */
 	do {
 		ret = FALSE;
-		gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) cc_update_panel_remove_nonactive_cb, &ret);
+		gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_prefs_remove_nonactive_cb, &ret);
 	} while (ret);
 }
 
 /**
- * cc_update_panel_status_changed_timeout_cb:
+ * gpk_prefs_status_changed_timeout_cb:
  **/
 static gboolean
-cc_update_panel_status_changed_timeout_cb (CcUpdatePanel *panel)
+gpk_prefs_status_changed_timeout_cb (GpkPrefsPrivate *priv)
 {
 	const gchar *text;
 	GtkWidget *widget;
 
 	/* set the text and show */
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "scrolledwindow_repo"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_repo"));
 	gtk_widget_hide (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_status"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "viewport_status"));
 	gtk_widget_show (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "label_status"));
-	text = gpk_status_enum_to_localised_text (panel->priv->status);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_status"));
+	text = gpk_status_enum_to_localised_text (priv->status);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
 	/* set icon */
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "image_status"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "image_status"));
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
-				      gpk_status_enum_to_icon_name (panel->priv->status),
+				      gpk_status_enum_to_icon_name (priv->status),
 				      GTK_ICON_SIZE_DIALOG);
 
 	/* never repeat */
-	panel->priv->status_id = 0;
+	priv->status_id = 0;
 	return FALSE;
 }
 
 /**
- * cc_update_panel_progress_cb:
+ * gpk_prefs_progress_cb:
  **/
 static void
-cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdatePanel *panel)
+gpk_prefs_progress_cb (PkProgress *progress, PkProgressType type, GpkPrefsPrivate *priv)
 {
 	GtkWidget *widget;
 
@@ -430,44 +425,44 @@ cc_update_panel_progress_cb (PkProgress *progress, PkProgressType type, CcUpdate
 
 	/* get value */
 	g_object_get (progress,
-		      "status", &panel->priv->status,
+		      "status", &priv->status,
 		      NULL);
-	g_debug ("now %s", pk_status_enum_to_text (panel->priv->status));
+	g_debug ("now %s", pk_status_enum_to_text (priv->status));
 
-	if (panel->priv->status == PK_STATUS_ENUM_FINISHED) {
+	if (priv->status == PK_STATUS_ENUM_FINISHED) {
 		/* we've not yet shown, so don't bother */
-		if (panel->priv->status_id > 0) {
-			g_source_remove (panel->priv->status_id);
-			panel->priv->status_id = 0;
+		if (priv->status_id > 0) {
+			g_source_remove (priv->status_id);
+			priv->status_id = 0;
 		}
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "viewport_status"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "viewport_status"));
 		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "scrolledwindow_repo"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_repo"));
 		gtk_widget_show (widget);
 		goto out;
 	}
 
 	/* already pending show */
-	if (panel->priv->status_id > 0)
+	if (priv->status_id > 0)
 		goto out;
 
 	/* only show after some time in the transaction */
-	panel->priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) cc_update_panel_status_changed_timeout_cb, panel);
-	g_source_set_name_by_id (panel->priv->status_id, "[GpkRepo] status");
+	priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_prefs_status_changed_timeout_cb, priv);
+	g_source_set_name_by_id (priv->status_id, "[GpkRepo] status");
 out:
 	return;
 }
 
 /**
- * cc_update_panel_process_messages_cb:
+ * gpk_prefs_process_messages_cb:
  **/
 static void
-cc_update_panel_process_messages_cb (PkMessage *item, CcUpdatePanel *panel)
+gpk_prefs_process_messages_cb (PkMessage *item, GpkPrefsPrivate *priv)
 {
+	const gchar *title;
+	gchar *details;
 	GtkWindow *window;
 	PkMessageEnum type;
-	gchar *details;
-	const gchar *title;
 
 	/* get data */
 	g_object_get (item,
@@ -476,7 +471,7 @@ cc_update_panel_process_messages_cb (PkMessage *item, CcUpdatePanel *panel)
 		      NULL);
 
 	/* show a modal window */
-	window = GTK_WINDOW (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
+	window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
 	title = gpk_message_enum_to_localised_text (type);
 	gpk_error_dialog_modal (window, title, details, NULL);
 
@@ -484,17 +479,17 @@ cc_update_panel_process_messages_cb (PkMessage *item, CcUpdatePanel *panel)
 }
 
 /**
- * cc_update_panel_repo_enable_cb
+ * gpk_prefs_repo_enable_cb
  **/
 static void
-cc_update_panel_repo_enable_cb (GObject *object, GAsyncResult *res, CcUpdatePanel *panel)
+gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
-	PkClient *client = PK_CLIENT (object);
 	GError *error = NULL;
-	PkResults *results = NULL;
-	PkError *error_code = NULL;
-	GtkWindow *window;
 	GPtrArray *array;
+	GtkWindow *window;
+	PkClient *client = PK_CLIENT (object);
+	PkError *error_code = NULL;
+	PkResults *results = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -508,7 +503,7 @@ cc_update_panel_repo_enable_cb (GObject *object, GAsyncResult *res, CcUpdatePane
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		g_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		window = GTK_WINDOW (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
+		window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
@@ -517,7 +512,7 @@ cc_update_panel_repo_enable_cb (GObject *object, GAsyncResult *res, CcUpdatePane
 
 	/* process messages */
 	array = pk_results_get_message_array (results);
-	g_ptr_array_foreach (array, (GFunc) cc_update_panel_process_messages_cb, panel);
+	g_ptr_array_foreach (array, (GFunc) gpk_prefs_process_messages_cb, priv);
 	g_ptr_array_unref (array);
 out:
 	if (error_code != NULL)
@@ -527,23 +522,23 @@ out:
 }
 
 static void
-gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, CcUpdatePanel *panel)
+gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, GpkPrefsPrivate *priv)
 {
-	GtkTreeModel *model;
-	GtkTreeView *treeview;
-	GtkTreeIter iter;
-	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean enabled;
 	gchar *repo_id = NULL;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	GtkTreeView *treeview;
 
 	/* do we have the capability? */
-	if (pk_bitfield_contain (panel->priv->roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		g_debug ("can't change state");
 		goto out;
 	}
 
 	/* get toggled iter */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
 	gtk_tree_model_get_iter (model, &iter, path);
 	gtk_tree_model_get (model, &iter,
@@ -560,10 +555,10 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, CcUpdate
 
 	/* set the repo */
 	g_debug ("setting %s to %i", repo_id, enabled);
-	pk_client_repo_enable_async (panel->priv->client, repo_id, enabled,
-				     panel->priv->cancellable,
-				     (PkProgressCallback) cc_update_panel_progress_cb, panel,
-				     (GAsyncReadyCallback) cc_update_panel_repo_enable_cb, panel);
+	pk_client_repo_enable_async (priv->client, repo_id, enabled,
+				     priv->cancellable,
+				     (PkProgressCallback) gpk_prefs_progress_cb, priv,
+				     (GAsyncReadyCallback) gpk_prefs_repo_enable_cb, priv);
 
 out:
 	/* clean up */
@@ -575,14 +570,14 @@ out:
  * gpk_treeview_add_columns:
  **/
 static void
-gpk_treeview_add_columns (CcUpdatePanel *panel, GtkTreeView *treeview)
+gpk_treeview_add_columns (GpkPrefsPrivate *priv, GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
 	/* column for enabled toggles */
 	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_misc_enabled_toggled), panel);
+	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_misc_enabled_toggled), priv);
 
 	/* TRANSLATORS: column if the source is enabled */
 	column = gtk_tree_view_column_new_with_attributes (_("Enabled"), renderer,
@@ -605,11 +600,11 @@ gpk_treeview_add_columns (CcUpdatePanel *panel, GtkTreeView *treeview)
  * gpk_repos_treeview_clicked_cb:
  **/
 static void
-gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, CcUpdatePanel *panel)
+gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, GpkPrefsPrivate *priv)
 {
-	GtkTreeModel *model;
-	GtkTreeIter iter;
 	gchar *repo_id;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
 
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -622,25 +617,25 @@ gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, CcUpdatePanel *panel
 }
 
 /**
- * cc_update_panel_get_repo_list_cb
+ * gpk_prefs_get_repo_list_cb
  **/
 static void
-cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePanel *panel)
+gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
-	PkClient *client = PK_CLIENT (object);
-	GError *error = NULL;
-	PkResults *results = NULL;
-	PkError *error_code = NULL;
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkWindow *window;
-	GPtrArray *array = NULL;
-	guint i;
-	PkRepoDetail *item;
-	GtkTreeIter iter;
-	gchar *repo_id;
-	gchar *description;
 	gboolean enabled;
+	gchar *description;
+	gchar *repo_id;
+	GError *error = NULL;
+	GPtrArray *array = NULL;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GtkTreeView *treeview;
+	GtkWindow *window;
+	guint i;
+	PkClient *client = PK_CLIENT (object);
+	PkError *error_code = NULL;
+	PkRepoDetail *item;
+	PkResults *results = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -654,7 +649,7 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		g_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		window = GTK_WINDOW (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
+		window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
 		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
@@ -662,7 +657,7 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 	}
 
 	/* add repos */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
 	array = pk_results_get_repo_detail_array (results);
 	for (i=0; i<array->len; i++) {
@@ -673,8 +668,8 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 			      "enabled", &enabled,
 			      NULL);
 		g_debug ("repo = %s:%s:%i", repo_id, description, enabled);
-		cc_update_panel_model_get_iter (panel, model, &iter, repo_id);
-		gtk_list_store_set (panel->priv->list_store, &iter,
+		gpk_prefs_model_get_iter (priv, model, &iter, repo_id);
+		gtk_list_store_set (priv->list_store, &iter,
 				    GPK_COLUMN_ENABLED, enabled,
 				    GPK_COLUMN_TEXT, description,
 				    GPK_COLUMN_ID, repo_id,
@@ -687,10 +682,10 @@ cc_update_panel_get_repo_list_cb (GObject *object, GAsyncResult *res, CcUpdatePa
 	}
 
 	/* remove the items that are not now present */
-	cc_update_panel_remove_nonactive (model);
+	gpk_prefs_remove_nonactive (model);
 
 	/* sort */
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(panel->priv->list_store), GPK_COLUMN_TEXT, GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(priv->list_store), GPK_COLUMN_TEXT, GTK_SORT_ASCENDING);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -701,63 +696,63 @@ out:
 }
 
 /**
- * cc_update_panel_repo_list_refresh:
+ * gpk_prefs_repo_list_refresh:
  **/
 static void
-cc_update_panel_repo_list_refresh (CcUpdatePanel *panel)
+gpk_prefs_repo_list_refresh (GpkPrefsPrivate *priv)
 {
-	PkBitfield filters;
-	GtkWidget *widget;
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
 	gboolean show_details;
+	GtkTreeModel *model;
+	GtkTreeView *treeview;
+	GtkWidget *widget;
+	PkBitfield filters;
 
 	/* mark the items as not used */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
-	cc_update_panel_mark_nonactive (panel, model);
+	gpk_prefs_mark_nonactive (priv, model);
 
 	g_debug ("refreshing list");
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_detail"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 	show_details = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	if (!show_details)
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NOT_DEVELOPMENT);
 	else
 		filters = pk_bitfield_value (PK_FILTER_ENUM_NONE);
-	pk_client_get_repo_list_async (panel->priv->client, filters,
-				       panel->priv->cancellable,
-				       (PkProgressCallback) cc_update_panel_progress_cb, panel,
-				       (GAsyncReadyCallback) cc_update_panel_get_repo_list_cb, panel);
+	pk_client_get_repo_list_async (priv->client, filters,
+				       priv->cancellable,
+				       (PkProgressCallback) gpk_prefs_progress_cb, priv,
+				       (GAsyncReadyCallback) gpk_prefs_get_repo_list_cb, priv);
 }
 
 /**
- * cc_update_panel_repo_list_changed_cb:
+ * gpk_prefs_repo_list_changed_cb:
  **/
 static void
-cc_update_panel_repo_list_changed_cb (PkControl *control, CcUpdatePanel *panel)
+gpk_prefs_repo_list_changed_cb (PkControl *control, GpkPrefsPrivate *priv)
 {
-	cc_update_panel_repo_list_refresh (panel);
+	gpk_prefs_repo_list_refresh (priv);
 }
 
 /**
- * cc_update_panel_checkbutton_detail_cb:
+ * gpk_prefs_checkbutton_detail_cb:
  **/
 static void
-cc_update_panel_checkbutton_detail_cb (GtkWidget *widget, CcUpdatePanel *panel)
+gpk_prefs_checkbutton_detail_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
-	cc_update_panel_repo_list_refresh (panel);
+	gpk_prefs_repo_list_refresh (priv);
 }
 
 /**
- * cc_update_panel_get_properties_cb:
+ * gpk_prefs_get_properties_cb:
  **/
 static void
-cc_update_panel_get_properties_cb (GObject *object, GAsyncResult *res, CcUpdatePanel *panel)
+gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
-	GtkWidget *widget;
-	GError *error = NULL;
-	PkControl *control = PK_CONTROL(object);
 	gboolean ret;
+	GError *error = NULL;
+	GtkWidget *widget;
+	PkControl *control = PK_CONTROL(object);
 	PkNetworkEnum state;
 
 	/* get the result */
@@ -771,190 +766,257 @@ cc_update_panel_get_properties_cb (GObject *object, GAsyncResult *res, CcUpdateP
 
 	/* get values */
 	g_object_get (control,
-		      "roles", &panel->priv->roles,
+		      "roles", &priv->roles,
 		      "network-state", &state,
 		      NULL);
 
 	/* only show label on mobile broadband */
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "hbox_mobile_broadband"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_mobile_broadband"));
 	gtk_widget_set_visible (widget, (state == PK_NETWORK_ENUM_MOBILE));
 
 	/* hide if not supported */
-	if (!pk_bitfield_contain (panel->priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "label_upgrade"));
+	if (!pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_upgrade"));
 		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "combobox_upgrade"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_upgrade"));
 		gtk_widget_hide (widget);
 	}
 
 	/* setup sources GUI elements */
-	if (pk_bitfield_contain (panel->priv->roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
-		cc_update_panel_repo_list_refresh (panel);
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
+		gpk_prefs_repo_list_refresh (priv);
 	} else {
 		GtkTreeIter iter;
-		GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+		GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_repo"));
 		GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 		gtk_list_store_append (GTK_LIST_STORE(model), &iter);
-		gtk_list_store_set (panel->priv->list_store, &iter,
+		gtk_list_store_set (priv->list_store, &iter,
 				    GPK_COLUMN_ENABLED, FALSE,
 				    GPK_COLUMN_TEXT, _("Getting software source list not supported by backend"),
 				    GPK_COLUMN_ACTIVE, FALSE,
 				    GPK_COLUMN_SENSITIVE, FALSE,
 				    -1);
 
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_repo"));
 		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_detail"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 out:
 	return;
 }
 
+/**
+ * gpk_prefs_close_cb:
+ **/
 static void
-cc_update_panel_class_init (CcUpdatePanelClass *klass)
+gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	g_type_class_add_private (klass, sizeof (CcUpdatePanelPrivate));
-	object_class->finalize = cc_update_panel_finalize;
+	GpkPrefsPrivate *priv = (GpkPrefsPrivate *) data;
+	g_application_release (G_APPLICATION (priv->application));
 }
 
-static void
-cc_update_panel_class_finalize (CcUpdatePanelClass *klass)
+/**
+ * gpk_prefs_delete_event_cb:
+ **/
+static gboolean
+gpk_prefs_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkPrefsPrivate *priv)
 {
+	gpk_prefs_close_cb (widget, priv);
+	return FALSE;
 }
 
-static void
-cc_update_panel_finalize (GObject *object)
-{
-	CcUpdatePanel *panel = CC_UPDATE_PANEL (object);
-	g_cancellable_cancel (panel->priv->cancellable);
-	g_object_unref (panel->priv->cancellable);
-	g_object_unref (panel->priv->builder);
-	g_object_unref (panel->priv->settings);
-	g_object_unref (panel->priv->list_store);
-	g_object_unref (panel->priv->client);
-	G_OBJECT_CLASS (cc_update_panel_parent_class)->finalize (object);
-}
 
+/**
+ * gpk_pack_startup_cb:
+ **/
 static void
-cc_update_panel_init (CcUpdatePanel *panel)
+gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 {
-	GtkWidget *main_window;
-	GtkWidget *widget;
-	PkControl *control;
-	guint retval;
 	GError *error = NULL;
 	GtkTreeSelection *selection;
-
-	panel->priv = CC_UPDATE_PREFS_GET_PRIVATE (panel);
-	panel->priv->cancellable = g_cancellable_new ();
+	GtkWidget *main_window;
+	GtkWidget *widget;
+	guint retval;
+	PkControl *control;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           GPK_DATA G_DIR_SEPARATOR_S "icons");
-
-	/* load settings */
-	panel->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
 	/* get actions */
 	control = pk_control_new ();
 	g_signal_connect (control, "notify::network-state",
-			  G_CALLBACK (cc_update_panel_notify_network_state_cb), panel);
+			  G_CALLBACK (gpk_prefs_notify_network_state_cb), priv);
 	g_signal_connect (control, "repo-list-changed",
-			  G_CALLBACK (cc_update_panel_repo_list_changed_cb), panel);
-
-	panel->priv->client = pk_client_new ();
-	g_object_set (panel->priv->client,
-		      "background", FALSE,
-		      NULL);
+			  G_CALLBACK (gpk_prefs_repo_list_changed_cb), priv);
 
 	/* get UI */
-	panel->priv->builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (panel->priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
+	retval = gtk_builder_add_from_file (priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_mobile_broadband"));
-	g_settings_bind (panel->priv->settings,
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
+	g_settings_bind (priv->settings,
 			 GPK_SETTINGS_CONNECTION_USE_MOBILE,
 			 widget, "active",
 			 G_SETTINGS_BIND_DEFAULT);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "button_help"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (cc_update_panel_help_cb), panel);
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "button_check_now"));
+			  G_CALLBACK (gpk_prefs_close_cb), priv);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (cc_update_panel_check_now_cb), panel);
+			  G_CALLBACK (gpk_prefs_help_cb), priv);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_check_now"));
+	g_signal_connect (widget, "clicked",
+			  G_CALLBACK (gpk_prefs_check_now_cb), priv);
 
 	/* update the combo boxes */
-	cc_update_panel_update_freq_combo_setup (panel);
-	cc_update_panel_upgrade_freq_combo_setup (panel);
-	cc_update_panel_auto_update_combo_setup (panel);
+	gpk_prefs_update_freq_combo_setup (priv);
+	gpk_prefs_upgrade_freq_combo_setup (priv);
+	gpk_prefs_auto_update_combo_setup (priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "checkbutton_detail"));
-	g_settings_bind (panel->priv->settings,
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
+	g_settings_bind (priv->settings,
 			 GPK_SETTINGS_REPO_SHOW_DETAILS,
 			 widget, "active",
 			 G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (cc_update_panel_checkbutton_detail_cb), panel);
-
-	/* create list stores */
-	panel->priv->list_store = gtk_list_store_new (GPK_COLUMN_LAST, G_TYPE_BOOLEAN,
-						      G_TYPE_STRING, G_TYPE_STRING,
-						      G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
+			  G_CALLBACK (gpk_prefs_checkbutton_detail_cb), priv);
 
 	/* create repo tree view */
-	widget = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "treeview_repo"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_repo"));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (widget),
-				 GTK_TREE_MODEL (panel->priv->list_store));
+				 GTK_TREE_MODEL (priv->list_store));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	g_signal_connect (selection, "changed",
-			  G_CALLBACK (gpk_repos_treeview_clicked_cb), panel);
+			  G_CALLBACK (gpk_repos_treeview_clicked_cb), priv);
 
 	/* add columns to the tree view */
-	gpk_treeview_add_columns (panel, GTK_TREE_VIEW (widget));
+	gpk_treeview_add_columns (priv, GTK_TREE_VIEW (widget));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
+	main_window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "dialog_prefs"));
+	g_signal_connect (main_window, "delete_event",
+			  G_CALLBACK (gpk_prefs_delete_event_cb), priv);
+	gtk_application_add_window (application, GTK_WINDOW (main_window));
+
+	gtk_widget_show (main_window);
+
 	/* get some data */
-	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) cc_update_panel_get_properties_cb, panel);
+	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_prefs_get_properties_cb, priv);
 out:
 	g_object_unref (control);
-	main_window = GTK_WIDGET (gtk_builder_get_object (panel->priv->builder, "dialog_prefs"));
-	widget = gtk_dialog_get_content_area (GTK_DIALOG (main_window));
-	gtk_widget_unparent (widget);
-
-	gtk_container_add (GTK_CONTAINER (panel), widget);
 }
 
-void
-cc_update_panel_register (GIOModule *module)
+
+/**
+ * gpm_prefs_commandline_cb:
+ **/
+static int
+gpm_prefs_commandline_cb (GApplication *application,
+			  GApplicationCommandLine *cmdline,
+			  GpkPrefsPrivate *priv)
 {
-	cc_update_panel_register_type (G_TYPE_MODULE (module));
-	g_io_extension_point_implement (CC_SHELL_PANEL_EXTENSION_POINT,
-					CC_TYPE_UPDATE_PANEL,
-					"update", 0);
+	gboolean ret;
+	gchar **argv;
+	gint argc;
+	GOptionContext *context;
+	GtkWindow *window;
+	guint xid = 0;
+
+	const GOptionEntry options[] = {
+		{ "parent-window", 'p', 0, G_OPTION_ARG_INT, &xid,
+		  /* TRANSLATORS: we can make this modal (stay on top of) another window */
+		  _("Set the parent window to make this modal"), NULL },
+		{ NULL}
+	};
+
+	/* get arguments */
+	argv = g_application_command_line_get_arguments (cmdline, &argc);
+
+	context = g_option_context_new (NULL);
+	/* TRANSLATORS: program name, an application to set per-user policy for updates */
+	g_option_context_set_summary(context, _("Software Update Preferences"));
+	g_option_context_add_main_entries (context, options, NULL);
+	g_option_context_add_group (context, gpk_debug_get_option_group ());
+	ret = g_option_context_parse (context, &argc, &argv, NULL);
+	if (!ret)
+		goto out;
+
+	/* make sure the window is raised */
+	window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
+	gtk_window_present (window);
+
+	/* set the parent window if it is specified */
+	if (xid != 0) {
+		g_debug ("Setting xid %i", xid);
+		gpk_window_set_parent_xid (window, xid);
+	}
+out:
+	g_strfreev (argv);
+	g_option_context_free (context);
+	return ret;
 }
 
-/* GIO extension stuff */
-void
-g_io_module_load (GIOModule *module)
+/**
+ * main:
+ **/
+int
+main (int argc, char *argv[])
 {
+	gint status = 0;
+	GpkPrefsPrivate *priv = NULL;
+
+	setlocale (LC_ALL, "");
+
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 
-	/* register the panel */
-	cc_update_panel_register (module);
-}
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
+	g_type_init ();
 
-void
-g_io_module_unload (GIOModule *module)
-{
+	gtk_init (&argc, &argv);
+
+	priv = g_new0 (GpkPrefsPrivate, 1);
+	priv->cancellable = g_cancellable_new ();
+	priv->builder = gtk_builder_new ();
+	priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	priv->list_store = gtk_list_store_new (GPK_COLUMN_LAST, G_TYPE_BOOLEAN,
+					       G_TYPE_STRING, G_TYPE_STRING,
+					       G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
+	priv->client = pk_client_new ();
+	g_object_set (priv->client,
+		      "background", FALSE,
+		      NULL);
+
+	/* are we already activated? */
+	priv->application = gtk_application_new ("org.freedesktop.PackageKit.Prefs",
+						 G_APPLICATION_HANDLES_COMMAND_LINE);
+	g_signal_connect (priv->application, "startup",
+			  G_CALLBACK (gpk_pack_startup_cb), priv);
+	g_signal_connect (priv->application, "command-line",
+			  G_CALLBACK (gpm_prefs_commandline_cb), priv);
+
+	/* run */
+	status = g_application_run (G_APPLICATION (priv->application), argc, argv);
+
+	if (priv != NULL) {
+		g_cancellable_cancel (priv->cancellable);
+		g_object_unref (priv->cancellable);
+		g_object_unref (priv->builder);
+		g_object_unref (priv->settings);
+		g_object_unref (priv->list_store);
+		g_object_unref (priv->client);
+		g_free (priv);
+	}
+	return status;
 }

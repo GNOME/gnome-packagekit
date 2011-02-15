@@ -2756,7 +2756,7 @@ gpk_application_menu_sources_cb (GtkAction *_action, gpointer user_data)
 	window = GTK_WIDGET (gtk_builder_get_object (builder, "window_manager"));
 	xid = gdk_x11_window_get_xid (gtk_widget_get_window (window));
 
-	command = g_strdup_printf ("%s/gnome-control-center update --parent-window %u", BINDIR, xid);
+	command = g_strdup_printf ("%s/gpk-prefs --parent-window %u", BINDIR, xid);
 	g_debug ("running: %s", command);
 	ret = g_spawn_command_line_async (command, NULL);
 	if (!ret) {

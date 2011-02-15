@@ -12,7 +12,6 @@ INCLUDES =						\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(GUDEV_CFLAGS)					\
 	$(GNOME_MENUS_CFLAGS)				\
-	$(CONTROL_CENTER_CFLAGS)			\
 	-DI_KNOW_THE_UPOWER_API_IS_SUBJECT_TO_CHANGE	\
 	-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE	\
 	-DG_UDEV_API_IS_SUBJECT_TO_CHANGE		\
@@ -30,11 +29,9 @@ INCLUDES =						\
 	-DG_LOG_DOMAIN=\"GnomePackageKit\"		\
 	$(NULL)
 
-ccpanelsdir = $(PANELS_DIR)
-ccpanels_LTLIBRARIES = libupdate.la
-
 bin_PROGRAMS =						\
 	gpk-application					\
+	gpk-prefs					\
 	gpk-service-pack				\
 	gpk-install-catalog				\
 	gpk-install-local-file				\
@@ -214,7 +211,7 @@ gpk_service_pack_LDADD =				\
 	$(shared_LIBS)					\
 	$(NULL)
 
-libupdate_la_SOURCES =					\
+gpk_prefs_SOURCES =					\
 	gpk-debug.h					\
 	gpk-debug.c					\
 	gpk-animated-icon.c				\
@@ -225,18 +222,13 @@ libupdate_la_SOURCES =					\
 	gpk-common.h					\
 	gpk-error.c					\
 	gpk-error.h					\
-	cc-update-panel.c				\
-	cc-update-panel.h				\
+	gpk-prefs.c					\
 	$(NULL)
 
-libupdate_la_LIBADD =					\
-	$(GLIB_LIBS)					\
-	$(PACKAGEKIT_LIBS)				\
-	$(CONTROL_CENTER_LIBS)				\
+gpk_prefs_LDADD =					\
+	libgpkshared.a					\
+	$(shared_LIBS)					\
 	-lm
-
-libupdate_la_LDFLAGS = -avoid-version -module
-libupdate_la_CFLAGS = $(WARNINGFLAGS)
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
