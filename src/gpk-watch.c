@@ -53,7 +53,6 @@
 static void     gpk_watch_finalize	(GObject       *object);
 
 #define GPK_WATCH_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_WATCH, GpkWatchPrivate))
-#define GPK_WATCH_SET_PROXY_RATE_LIMIT		200 /* ms */
 
 struct GpkWatchPrivate
 {
@@ -66,7 +65,6 @@ struct GpkWatchPrivate
 	PkTransactionList	*tlist;
 	PkRestartEnum		 restart;
 	GSettings		*settings;
-	guint			 set_proxy_id;
 	gchar			*error_details;
 	EggConsoleKit		*console;
 	GCancellable		*cancellable;
@@ -154,188 +152,6 @@ out:
 	return progress;
 }
 
-/**
- * gpk_watch_get_proxy_ftp:
- * Return value: server.lan:8080
- **/
-static gchar *
-gpk_watch_get_proxy_ftp (GpkWatch *watch)
-{
-	gchar *connection = NULL;
-#ifdef USE_GCONF_COMPAT_GNOME_VFS
-	gchar *mode = NULL;
-	gchar *host = NULL;
-	gint port;
-
-	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
-
-	/* common case, a direct connection */
-	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
-	if (g_strcmp0 (mode, "none") == 0) {
-		g_debug ("not using session proxy");
-		goto out;
-	}
-
-	host = g_settings_get_string (watch->priv->settings, "/system/proxy/ftp_host");
-	if (egg_strzero (host)) {
-		g_debug ("no hostname for ftp proxy");
-		goto out;
-	}
-	port = g_settings_get_int (watch->priv->settings, "/system/proxy/ftp_port");
-
-	/* ftp has no username or password */
-	if (port == 0)
-		connection = g_strdup (host);
-	else
-		connection = g_strdup_printf ("%s:%i", host, port);
-out:
-	g_free (mode);
-	g_free (host);
-#endif
-	return connection;
-}
-
-/**
- * gpk_watch_get_proxy_ftp:
- * Return value: username:password@server.lan:8080
- **/
-static gchar *
-gpk_watch_get_proxy_http (GpkWatch *watch)
-{
-	gchar *proxy_http = NULL;
-#ifdef USE_GCONF_COMPAT_GNOME_VFS
-	gchar *mode = NULL;
-	gchar *host = NULL;
-	gchar *auth = NULL;
-	gchar *connection = NULL;
-	gint port;
-	gboolean ret;
-
-	g_return_val_if_fail (GPK_IS_WATCH (watch), NULL);
-
-	/* common case, a direct connection */
-	mode = g_settings_get_string (watch->priv->settings, "/system/proxy/mode");
-	if (g_strcmp0 (mode, "none") == 0) {
-		g_debug ("not using session proxy");
-		goto out;
-	}
-
-	/* do we use this? */
-	ret = g_settings_get_boolean (watch->priv->settings, "/system/http_proxy/use_http_proxy");
-	if (!ret) {
-		g_debug ("not using http proxy");
-		goto out;
-	}
-
-	/* http has 4 parameters */
-	host = g_settings_get_string (watch->priv->settings, "/system/http_proxy/host");
-	if (egg_strzero (host)) {
-		g_debug ("no hostname for http proxy");
-		goto out;
-	}
-
-	/* user and password are both optional */
-	ret = g_settings_get_boolean (watch->priv->settings, "/system/http_proxy/use_authentication");
-	if (ret) {
-		gchar *user = NULL;
-		gchar *password = NULL;
-
-		user = g_settings_get_string (watch->priv->settings, "/system/http_proxy/authentication_user");
-		password = g_settings_get_string (watch->priv->settings, "/system/http_proxy/authentication_password");
-
-		if (user != NULL && password != NULL)
-			auth = g_strdup_printf ("%s:%s", user, password);
-		else if (user != NULL)
-			auth = g_strdup (user);
-		else if (password != NULL)
-			auth = g_strdup_printf (":%s", user);
-
-		g_free (user);
-		g_free (password);
-	}
-
-	/* port is optional too */
-	port = g_settings_get_int (watch->priv->settings, "/system/http_proxy/port");
-	if (port == 0)
-		connection = g_strdup (host);
-	else
-		connection = g_strdup_printf ("%s:%i", host, port);
-
-	/* the whole auth section is optional */
-	if (egg_strzero (auth))
-		proxy_http = g_strdup (connection);
-	else
-		proxy_http = g_strdup_printf ("%s@%s", auth, connection);
-out:
-	g_free (mode);
-	g_free (connection);
-	g_free (auth);
-	g_free (host);
-#endif
-	return proxy_http;
-}
-
-/**
- * gpk_watch_set_proxy_cb:
- **/
-static void
-gpk_watch_set_proxy_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
-{
-	PkControl *control = PK_CONTROL (object);
-	GError *error = NULL;
-	gboolean ret;
-
-	/* we can run again */
-	watch->priv->set_proxy_id = 0;
-
-	/* get the result */
-	ret = pk_control_set_proxy_finish (control, res, &error);
-	if (!ret) {
-		g_warning ("failed to set proxies: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-}
-
-/**
- * gpk_watch_set_proxies_ratelimit:
- **/
-static gboolean
-gpk_watch_set_proxies_ratelimit (GpkWatch *watch)
-{
-	gchar *proxy_http;
-	gchar *proxy_ftp;
-
-	/* debug so we can catch polling */
-	g_debug ("polling check");
-
-	proxy_http = gpk_watch_get_proxy_http (watch);
-	proxy_ftp = gpk_watch_get_proxy_ftp (watch);
-
-	g_debug ("set proxy_http=%s, proxy_ftp=%s", proxy_http, proxy_ftp);
-	pk_control_set_proxy_async (watch->priv->control, proxy_http, proxy_ftp, watch->priv->cancellable,
-				    (GAsyncReadyCallback) gpk_watch_set_proxy_cb, watch);
-	g_free (proxy_http);
-	g_free (proxy_ftp);
-	return FALSE;
-}
-
-/**
- * gpk_watch_set_proxies:
- **/
-static gboolean
-gpk_watch_set_proxies (GpkWatch *watch)
-{
-	if (watch->priv->set_proxy_id != 0) {
-		g_debug ("already scheduled");
-		return FALSE;
-	}
-	watch->priv->set_proxy_id = g_timeout_add (GPK_WATCH_SET_PROXY_RATE_LIMIT,
-							(GSourceFunc) gpk_watch_set_proxies_ratelimit, watch);
-	g_source_set_name_by_id (watch->priv->set_proxy_id, "[GpkWatch] set-proxies");
-	return TRUE;
-}
-
 #if PK_CHECK_VERSION(0,6,4)
 /**
  * gpk_watch_set_root_cb:
@@ -389,7 +205,6 @@ static void
 gpk_watch_key_changed_cb (GSettings *client, const gchar *key, GpkWatch *watch)
 {
 	g_debug ("keys have changed");
-	gpk_watch_set_proxies (watch);
 	gpk_watch_set_root (watch);
 }
 
@@ -404,7 +219,6 @@ gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
 
 	/* daemon has just appeared */
 	g_debug ("dameon has just appeared");
-	gpk_watch_set_proxies (watch);
 	gpk_watch_set_root (watch);
 }
 
@@ -933,7 +747,6 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	g_signal_connect (watch->priv->settings, "changed", G_CALLBACK (gpk_watch_key_changed_cb), watch);
 
-	watch->priv->set_proxy_id = 0;
 	watch->priv->restart_package_names = g_ptr_array_new_with_free_func (g_free);
 	watch->priv->task = PK_TASK(gpk_task_new ());
 	g_object_set (watch->priv->task,
@@ -959,8 +772,7 @@ gpk_watch_init (GpkWatch *watch)
 	g_signal_connect (watch->priv->tlist, "removed",
 			  G_CALLBACK (gpk_watch_transaction_list_removed_cb), watch);
 
-	/* set the proxy */
-	gpk_watch_set_proxies (watch);
+	/* set the root */
 	gpk_watch_set_root (watch);
 }
 
@@ -979,9 +791,6 @@ gpk_watch_finalize (GObject *object)
 
 	g_return_if_fail (watch->priv != NULL);
 
-	/* we might we waiting for a proxy update */
-	if (watch->priv->set_proxy_id != 0)
-		g_source_remove (watch->priv->set_proxy_id);
 	g_free (watch->priv->error_details);
 	g_object_unref (watch->priv->cancellable);
 	g_object_unref (watch->priv->task);
