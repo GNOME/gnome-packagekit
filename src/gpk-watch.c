@@ -152,87 +152,6 @@ out:
 	return progress;
 }
 
-#if PK_CHECK_VERSION(0,6,4)
-/**
- * gpk_watch_set_root_cb:
- **/
-static void
-gpk_watch_set_root_cb (GObject *object, GAsyncResult *res, GpkWatch *watch)
-{
-	PkControl *control = PK_CONTROL (object);
-	GError *error = NULL;
-	gboolean ret;
-
-	/* get the result */
-	ret = pk_control_set_root_finish (control, res, &error);
-	if (!ret) {
-		g_warning ("failed to set install root: %s", error->message);
-		g_error_free (error);
-		return;
-	}
-}
-
-/**
- * gpk_watch_set_root:
- **/
-static void
-gpk_watch_set_root (GpkWatch *watch)
-{
-	gchar *root;
-
-	/* get install root */
-	root = g_settings_get_string (watch->priv->settings, GPK_SETTINGS_INSTALL_ROOT);
-	if (root == NULL) {
-		g_warning ("could not read install root");
-		goto out;
-	}
-
-	pk_control_set_root_async (watch->priv->control, root, watch->priv->cancellable,
-				   (GAsyncReadyCallback) gpk_watch_set_root_cb, watch);
-out:
-	g_free (root);
-}
-#else
-static void gpk_watch_set_root (GpkWatch *watch) {}
-#endif
-
-/**
- * gpk_watch_key_changed_cb:
- *
- * We might have to do things when the keys change; do them here.
- **/
-static void
-gpk_watch_key_changed_cb (GSettings *client, const gchar *key, GpkWatch *watch)
-{
-	g_debug ("keys have changed");
-	gpk_watch_set_root (watch);
-}
-
-/**
- * gpk_watch_set_connected:
- **/
-static void
-gpk_watch_set_connected (GpkWatch *watch, gboolean connected)
-{
-	if (!connected)
-		return;
-
-	/* daemon has just appeared */
-	g_debug ("dameon has just appeared");
-	gpk_watch_set_root (watch);
-}
-
-/**
- * gpk_watch_notify_connected_cb:
- **/
-static void
-gpk_watch_notify_connected_cb (PkControl *control, GParamSpec *pspec, GpkWatch *watch)
-{
-	gboolean connected;
-	g_object_get (control, "connected", &connected, NULL);
-	gpk_watch_set_connected (watch, connected);
-}
-
 /**
  * gpk_watch_notify_locked_cb:
  **/
@@ -723,9 +642,6 @@ gpk_check_update_get_properties_cb (GObject *object, GAsyncResult *res, GpkWatch
 	g_object_get (control,
 		      "connected", &connected,
 		      NULL);
-
-	/* coldplug daemon */
-	gpk_watch_set_connected (watch, connected);
 out:
 	return;
 }
@@ -745,7 +661,6 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->cancellable = g_cancellable_new ();
 	watch->priv->array_progress = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	watch->priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
-	g_signal_connect (watch->priv->settings, "changed", G_CALLBACK (gpk_watch_key_changed_cb), watch);
 
 	watch->priv->restart_package_names = g_ptr_array_new_with_free_func (g_free);
 	watch->priv->task = PK_TASK(gpk_task_new ());
@@ -757,8 +672,6 @@ gpk_watch_init (GpkWatch *watch)
 	watch->priv->control = pk_control_new ();
 	g_signal_connect (watch->priv->control, "notify::locked",
 			  G_CALLBACK (gpk_watch_notify_locked_cb), watch);
-	g_signal_connect (watch->priv->control, "notify::connected",
-			  G_CALLBACK (gpk_watch_notify_connected_cb), watch);
 
 	/* get properties */
 	pk_control_get_properties_async (watch->priv->control, NULL, (GAsyncReadyCallback) gpk_check_update_get_properties_cb, watch);
@@ -771,9 +684,6 @@ gpk_watch_init (GpkWatch *watch)
 			  G_CALLBACK (gpk_watch_transaction_list_added_cb), watch);
 	g_signal_connect (watch->priv->tlist, "removed",
 			  G_CALLBACK (gpk_watch_transaction_list_removed_cb), watch);
-
-	/* set the root */
-	gpk_watch_set_root (watch);
 }
 
 /**

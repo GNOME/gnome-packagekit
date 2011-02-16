@@ -56,7 +56,6 @@ G_BEGIN_DECLS
 #define GPK_SETTINGS_IGNORED_DBUS_REQUESTS		"ignored-dbus-requests"
 #define GPK_SETTINGS_IGNORED_DEVICES			"ignored-devices"
 #define GPK_SETTINGS_IGNORED_MESSAGES			"ignored-messages"
-#define GPK_SETTINGS_INSTALL_ROOT			"install-root"
 #define GPK_SETTINGS_MEDIA_REPO_FILENAMES		"media-repo-filenames"
 #define GPK_SETTINGS_NOTIFY_AVAILABLE			"notify-available"
 #define GPK_SETTINGS_NOTIFY_COMPLETED			"notify-complete"
