@@ -3967,9 +3967,7 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 			  G_CALLBACK (gpk_application_entry_text_icon_press_cb), NULL);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_text"));
-	g_signal_connect (widget, "key-press-event",
-			  G_CALLBACK (gpk_application_text_changed_cb), NULL);
-	g_signal_connect (widget, "key-release-event",
+	g_signal_connect (GTK_EDITABLE (widget), "changed",
 			  G_CALLBACK (gpk_application_text_changed_cb), NULL);
 
 	/* mark find button insensitive */
