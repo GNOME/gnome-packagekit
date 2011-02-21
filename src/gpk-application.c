@@ -317,18 +317,13 @@ gpk_application_set_buttons_apply_clear (gpointer user_data)
 	gboolean enabled;
 	gchar *package_id;
 	gint len;
-#if PK_CHECK_VERSION(0,6,1)
 	GPtrArray *array;
-#endif
 
 	/* okay to apply? */
-#if PK_CHECK_VERSION(0,6,1)
 	array = pk_package_sack_get_array (package_sack);
 	len = array->len;
 	g_ptr_array_unref (array);
-#else
-	len = pk_package_sack_get_size (package_sack);
-#endif
+
 	if (len == 0) {
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_apply"));
 		gtk_widget_set_sensitive (widget, FALSE);
@@ -1685,7 +1680,6 @@ gpk_application_populate_selected (gpointer user_data)
 {
 	guint i;
 	PkPackage *package;
-#if PK_CHECK_VERSION(0,6,1)
 	GPtrArray *array;
 
 	/* get size */
@@ -1702,27 +1696,9 @@ gpk_application_populate_selected (gpointer user_data)
 		package = g_ptr_array_index (array, i);
 		gpk_application_add_item_to_results (package);
 	}
+
 out:
 	g_ptr_array_unref (array);
-#else
-	guint len;
-
-	/* get size */
-	len = pk_package_sack_get_size (package_sack);
-
-	/* nothing in queue */
-	if (len == 0) {
-		gpk_application_suggest_better_search (NULL);
-		goto out;
-	}
-
-	/* dump queue to package window */
-	for (i=0; i<len; i++) {
-		package = pk_package_sack_get_index (package_sack, i);
-		gpk_application_add_item_to_results (package);
-	}
-out:
-#endif
 	return TRUE;
 }
 
@@ -1768,22 +1744,17 @@ gpk_application_find_cb (GtkWidget *button_widget, gpointer user_data)
 static gboolean
 gpk_application_quit (GtkApplication *application)
 {
-#if PK_CHECK_VERSION(0,6,1)
 	GPtrArray *array;
-#endif
 	gint len;
 	GtkResponseType result;
 	GtkWindow *window;
 	GtkWidget *dialog;
 
 	/* do we have any items queued for removal or installation? */
-#if PK_CHECK_VERSION(0,6,1)
 	array = pk_package_sack_get_array (package_sack);
 	len = array->len;
 	g_ptr_array_unref (array);
-#else
-	len = pk_package_sack_get_size (package_sack);
-#endif
+
 	if (len != 0) {
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "window_manager"));
 		dialog = gtk_message_dialog_new (window, GTK_DIALOG_MODAL,

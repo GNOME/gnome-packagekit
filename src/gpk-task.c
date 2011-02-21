@@ -370,7 +370,6 @@ out:
 	g_ptr_array_unref (array);
 }
 
-#if PK_CHECK_VERSION(0,6,2)
 /**
  * gpk_task_add_dialog_deps_section:
  **/
@@ -437,7 +436,6 @@ out:
 		g_ptr_array_unref (array_tmp);
 	g_object_unref (sack_tmp);
 }
-#endif
 
 /**
  * gpk_task_simulate_question:
@@ -509,7 +507,6 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (priv->current_window), "%s", message);
 
-#if PK_CHECK_VERSION(0,6,2)
 	/* get the details for all the packages */
 	sack = pk_results_get_package_sack (results);
 
@@ -529,11 +526,6 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_DOWNGRADING);
-#else
-	/* get all the data */
-	array = pk_results_get_package_array (results);
-	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array);
-#endif
 
 	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_SETTINGS_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */
