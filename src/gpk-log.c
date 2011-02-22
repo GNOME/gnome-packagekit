@@ -502,6 +502,9 @@ gpk_log_add_item (PkTransactionPast *item)
 	else if (g_strcmp0 (cmdline, "gpk-update-icon") == 0)
 		/* TRANSLATORS: short name for gpk-update-icon */
 		tool = _("Update Icon");
+	else if (g_strcmp0 (cmdline, "/usr/libexec/pk-command-not-found") == 0)
+		/* TRANSLATORS: short name for the command not found plugin */
+		tool = _("Bash - Command Not Found");
 	else
 		tool = cmdline;
 
