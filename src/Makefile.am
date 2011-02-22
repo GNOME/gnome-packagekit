@@ -38,7 +38,6 @@ bin_PROGRAMS =						\
 	gpk-install-mime-type				\
 	gpk-install-provide-file			\
 	gpk-install-package-name			\
-	gpk-update-icon					\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-dbus-service				\
@@ -156,27 +155,6 @@ gpk_distro_upgrade_SOURCES =				\
 gpk_distro_upgrade_LDADD =				\
 	libgpkshared.a					\
 	$(shared_LIBS)
-
-gpk_update_icon_SOURCES =				\
-	gpk-update-icon.c				\
-	gpk-check-update.c				\
-	gpk-check-update.h				\
-	gpk-auto-refresh.c				\
-	gpk-auto-refresh.h				\
-	gpk-watch.c					\
-	gpk-watch.h					\
-	gpk-firmware.c					\
-	gpk-firmware.h					\
-	gpk-hardware.c					\
-	gpk-hardware.h					\
-	gpk-inhibit.c					\
-	gpk-inhibit.h					\
-	$(NULL)
-
-gpk_update_icon_LDADD =					\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
 
 gpk_dbus_service_SOURCES =				\
 	gpk-dbus-service.c				\

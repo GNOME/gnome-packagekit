@@ -37,7 +37,8 @@
 typedef struct {
 	const gchar		*id_tmp;
 	GCancellable		*cancellable;
-	GSettings		*settings;
+	GSettings		*settings_gsd;
+	GSettings		*settings_gpk;
 	GtkApplication		*application;
 	GtkBuilder		*builder;
 	GtkListStore		*list_store;
@@ -127,8 +128,8 @@ gpk_prefs_update_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 	else
 		g_assert (FALSE);
 
-	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
-	g_settings_set_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_debug ("Changing %s to %i", GSD_SETTINGS_FREQUENCY_GET_UPDATES, freq);
+	g_settings_set_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES, freq);
 	g_free (value);
 }
 
@@ -151,8 +152,8 @@ gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 	else
 		g_assert (FALSE);
 
-	g_debug ("Changing %s to %i", GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
-	g_settings_set_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_debug ("Changing %s to %i", GSD_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
+	g_settings_set_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
 	g_free (value);
 }
 
@@ -167,7 +168,7 @@ gpk_prefs_update_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 	update = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 	if (update == -1)
 		return;
-	g_settings_set_enum (priv->settings, GPK_SETTINGS_AUTO_UPDATE, update);
+	g_settings_set_enum (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE, update);
 }
 
 /**
@@ -181,8 +182,8 @@ gpk_prefs_update_freq_combo_setup (GpkPrefsPrivate *priv)
 	guint value;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_check"));
-	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
-	value = g_settings_get_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPDATES);
+	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES);
+	value = g_settings_get_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES);
 	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
@@ -220,8 +221,8 @@ gpk_prefs_upgrade_freq_combo_setup (GpkPrefsPrivate *priv)
 	guint value;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_upgrade"));
-	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
-	value = g_settings_get_int (priv->settings, GPK_SETTINGS_FREQUENCY_GET_UPGRADES);
+	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES);
+	value = g_settings_get_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES);
 	g_debug ("value from settings %i", value);
 
 	/* do we have permission to write? */
@@ -256,8 +257,8 @@ gpk_prefs_auto_update_combo_setup (GpkPrefsPrivate *priv)
 	GtkWidget *widget;
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_install"));
-	is_writable = g_settings_is_writable (priv->settings, GPK_SETTINGS_AUTO_UPDATE);
-	update = g_settings_get_enum (priv->settings, GPK_SETTINGS_AUTO_UPDATE);
+	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE);
+	update = g_settings_get_enum (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE);
 
 	/* do we have permission to write? */
 	gtk_widget_set_sensitive (widget, is_writable);
@@ -861,8 +862,8 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
-	g_settings_bind (priv->settings,
-			 GPK_SETTINGS_CONNECTION_USE_MOBILE,
+	g_settings_bind (priv->settings_gsd,
+			 GSD_SETTINGS_CONNECTION_USE_MOBILE,
 			 widget, "active",
 			 G_SETTINGS_BIND_DEFAULT);
 
@@ -882,7 +883,7 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	gpk_prefs_auto_update_combo_setup (priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
-	g_settings_bind (priv->settings,
+	g_settings_bind (priv->settings_gpk,
 			 GPK_SETTINGS_REPO_SHOW_DETAILS,
 			 widget, "active",
 			 G_SETTINGS_BIND_DEFAULT);
@@ -989,7 +990,8 @@ main (int argc, char *argv[])
 	priv = g_new0 (GpkPrefsPrivate, 1);
 	priv->cancellable = g_cancellable_new ();
 	priv->builder = gtk_builder_new ();
-	priv->settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+	priv->settings_gsd = g_settings_new (GSD_SETTINGS_SCHEMA);
+	priv->settings_gpk = g_settings_new (GPK_SETTINGS_SCHEMA);
 	priv->list_store = gtk_list_store_new (GPK_COLUMN_LAST, G_TYPE_BOOLEAN,
 					       G_TYPE_STRING, G_TYPE_STRING,
 					       G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
@@ -1013,7 +1015,8 @@ main (int argc, char *argv[])
 		g_cancellable_cancel (priv->cancellable);
 		g_object_unref (priv->cancellable);
 		g_object_unref (priv->builder);
-		g_object_unref (priv->settings);
+		g_object_unref (priv->settings_gsd);
+		g_object_unref (priv->settings_gpk);
 		g_object_unref (priv->list_store);
 		g_object_unref (priv->client);
 		g_free (priv);

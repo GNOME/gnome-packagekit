@@ -24,9 +24,6 @@ desktop_in_files =					\
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
-autostartdir = $(datadir)/gnome/autostart
-autostart_in_files = gpk-update-icon.desktop.in
-autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 pkgdata_DATA =						\
 	gpk-eula.ui					\
@@ -68,7 +65,6 @@ DISTCLEANFILES =					\
 	gpk-install-catalog.desktop			\
 	gpk-install-file.desktop			\
 	gpk-log.desktop					\
-	gpk-update-icon.desktop				\
 	gpk-application.desktop				\
 	gpk-distro-upgrade.desktop			\
 	org.freedesktop.PackageKit.service		\
