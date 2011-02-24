@@ -1509,9 +1509,10 @@ out:
 static void
 gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer user_data)
 {
-	GtkTreeIter iter;
+	GtkTreeIter iter, child_iter;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	gboolean update;
+	gboolean child_valid;
 	gchar *package_id;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -1532,6 +1533,14 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 
 	/* set new value */
 	gtk_tree_store_set (GTK_TREE_STORE(model), &iter, GPK_UPDATES_COLUMN_SELECT, update, -1);
+
+	/* do the same for any children */
+	child_valid = gtk_tree_model_iter_children (model, &child_iter, &iter);
+	while (child_valid) {
+		gtk_tree_store_set (GTK_TREE_STORE(model), &child_iter,
+				    GPK_UPDATES_COLUMN_SELECT, update, -1);
+		child_valid = gtk_tree_model_iter_next (model, &child_iter);
+	}
 
 	/* clean up */
 	gtk_tree_path_free (path);
