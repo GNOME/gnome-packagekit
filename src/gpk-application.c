@@ -759,7 +759,7 @@ gpk_application_remove (gpointer user_data)
 	package = pk_package_new ();
 	pk_package_set_id (package, package_id_selected, NULL);
 	g_object_set (package,
-		      "info", PK_INFO_ENUM_AVAILABLE,
+		      "info", PK_INFO_ENUM_INSTALLED,
 		      "summary", summary_selected,
 		      NULL);
 	pk_package_sack_add_package (package_sack, package);
