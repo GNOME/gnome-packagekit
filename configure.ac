@@ -1,6 +1,6 @@
 AC_PREREQ(2.65)
 
-AC_INIT([gnome-packagekit],[2.91.91])
+AC_INIT([gnome-packagekit],[2.91.92])
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AC_CONFIG_HEADERS([config.h])
