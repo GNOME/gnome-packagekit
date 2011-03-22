@@ -3084,7 +3084,7 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 
 	/* only initialise if the application didn't do it before */
 	if (!notify_is_initted ())
-		notify_init ("gpk-dbus_task");
+		notify_init (_("Software Install"));
 
 	dtask->priv->vendor = gpk_vendor_new ();
 	dtask->priv->dialog = gpk_modal_dialog_new ();

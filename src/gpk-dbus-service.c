@@ -150,10 +150,10 @@ main (int argc, char *argv[])
 		g_thread_init (NULL);
 	dbus_g_thread_init ();
 	g_type_init ();
-	notify_init ("gpk-dbus-service");
+	notify_init (_("Software Install"));
 
 	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
-	g_set_application_name (_("Session DBus service for PackageKit"));
+	g_set_application_name (_("Software Install"));
 	context = g_option_context_new (NULL);
 	g_option_context_set_summary (context, _("Session DBus service for PackageKit"));
 	g_option_context_add_main_entries (context, options, NULL);

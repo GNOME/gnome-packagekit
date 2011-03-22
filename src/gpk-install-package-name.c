@@ -63,7 +63,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: program name: installs a package (or packages) by name */
-	g_set_application_name (_("Package Name Installer"));
+	g_set_application_name (_("Software Install"));
 	context = g_option_context_new ("gpk-install-package");
 	g_option_context_set_summary (context, _("Package Name Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
