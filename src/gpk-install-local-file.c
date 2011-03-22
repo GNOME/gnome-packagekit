@@ -64,7 +64,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: program name: application to install a package to provide a file */
-	g_set_application_name (_("PackageKit File Installer"));
+	g_set_application_name (_("Software Install"));
 	context = g_option_context_new ("gpk-install-local-file");
 	g_option_context_set_summary (context, _("PackageKit File Installer"));
 	g_option_context_add_main_entries (context, options, NULL);
