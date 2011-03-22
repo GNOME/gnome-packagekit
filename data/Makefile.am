@@ -12,6 +12,7 @@ dist_gtkmodule_DATA = gpk-pk-gtk-module.desktop
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-local-file.desktop.in		\
+	gpk-dbus-service.desktop.in			\
 	gpk-install-catalog.desktop.in			\
 	gpk-service-pack.desktop.in			\
 	gpk-prefs.desktop.in				\
@@ -64,6 +65,7 @@ DISTCLEANFILES =					\
 	gpk-update-viewer.desktop			\
 	gpk-install-catalog.desktop			\
 	gpk-install-local-file.desktop			\
+	gpk-dbus-service.desktop			\
 	gpk-log.desktop					\
 	gpk-application.desktop				\
 	gpk-distro-upgrade.desktop			\
