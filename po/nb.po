@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit 2.92.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-17 13:51+0100\n"
-"PO-Revision-Date: 2011-02-17 14:01+0100\n"
+"POT-Creation-Date: 2011-03-23 18:45+0100\n"
+"PO-Revision-Date: 2011-03-23 21:34+0100\n"
 "Last-Translator: Torstein Adolf Winterseth <kvikende@fsfe.org>\n"
 "Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -25,8 +25,8 @@ msgstr "Legg til eller fjern programvare på systemet"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4085 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3324
+#: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3333
 msgid "Add/Remove Software"
 msgstr "Legg til/fjern programvare"
 
@@ -70,7 +70,7 @@ msgstr "Hjelp for denne programvaren"
 #: ../src/gpk-dbus-task.c:1245 ../src/gpk-dbus-task.c:1464
 #: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
 #: ../src/gpk-dbus-task.c:2397 ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1654
+#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1663
 msgid "Install"
 msgstr "Installer"
 
@@ -191,8 +191,7 @@ msgstr "_Fri"
 msgid "_Graphical"
 msgstr "_Grafisk:"
 
-#. TRANSLATORS: context menu to open the offline help file
-#: ../data/gpk-application.ui.h:39 ../src/gpk-check-update.c:298
+#: ../data/gpk-application.ui.h:39
 msgid "_Help"
 msgstr "_Hjelp"
 
@@ -250,15 +249,20 @@ msgstr "Kataloginstallering"
 msgid "Install a catalog of software on the system"
 msgstr "Installer en katalog med programvare på systemet"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Installer valgt programvare på systemet"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Pakkeinstallering"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Programvareinstallasjon"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:837
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
 msgstr "Loggvisning for programvare"
 
@@ -304,7 +308,7 @@ msgid "Currently using mobile broadband"
 msgstr "Bruker mobilt bredbånd"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:946
+#: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:947
 msgid "Software Update Preferences"
 msgstr "Brukervalg for programvareoppdatering"
 
@@ -412,10 +416,6 @@ msgstr "Identifikator for signaturbruker:"
 msgid "Software signature is required"
 msgstr "Programvaresignatur kreves"
 
-#: ../data/gpk-update-icon.desktop.in.h:1
-msgid "PackageKit Update Applet"
-msgstr "Panelprogram for oppdatering med PackageKit"
-
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
 msgstr "Programvareoppdatering"
@@ -499,7 +499,7 @@ msgstr ""
 "kjøre korrekt."
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:560
+#: ../src/gpk-application.c:555
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -507,17 +507,17 @@ msgstr[0] "%i fil installert av %s"
 msgstr[1] "%i filer installert av %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:897 ../src/gpk-application.c:1024
+#: ../src/gpk-application.c:892 ../src/gpk-application.c:1019
 msgid "No packages"
 msgstr "Ingen pakker"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:899
+#: ../src/gpk-application.c:894
 msgid "No other packages require this package"
 msgstr "Ingen andre pakker krever denne pakken"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:906
+#: ../src/gpk-application.c:901
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -525,7 +525,7 @@ msgstr[0] "%i pakke krever %s"
 msgstr[1] "%i pakker krever %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:911
+#: ../src/gpk-application.c:906
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -533,12 +533,12 @@ msgstr[0] "Pakkene under krever %s for å fungere korrekt."
 msgstr[1] "Pakkene under krever %s for å fungere korrekt."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1026
+#: ../src/gpk-application.c:1021
 msgid "This package does not depend on any others"
 msgstr "Denne pakken er ikke avhengig av andre pakker"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1033
+#: ../src/gpk-application.c:1028
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -546,7 +546,7 @@ msgstr[0] "%i annen pakke kreves for %s"
 msgstr[1] "%i andre pakker kreves for %s"
 
 #. TRANSLATORS: message: show the array of dependant packages for this package
-#: ../src/gpk-application.c:1038
+#: ../src/gpk-application.c:1033
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -554,27 +554,27 @@ msgstr[0] "Pakker listet under kreves for at %s skal fungere korrekt."
 msgstr[1] "Pakker listet under kreves for at %s skal fungere korrekt."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1107
+#: ../src/gpk-application.c:1102
 msgid "Invalid"
 msgstr "Ugyldig"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1310
+#: ../src/gpk-application.c:1305
 msgid "No results were found."
 msgstr "Ingen resultater funnet."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1318
+#: ../src/gpk-application.c:1313
 msgid "Try entering a package name in the search bar."
 msgstr "Prøv å oppgi et pakkenavn i søkelinjen."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1321
+#: ../src/gpk-application.c:1316
 msgid "There are no packages queued to be installed or removed."
 msgstr "Ingen pakker i kø for å installeres eller fjernes."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1326
+#: ../src/gpk-application.c:1321
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -583,163 +583,163 @@ msgstr ""
 "søketeksten."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1329
+#: ../src/gpk-application.c:1324
 msgid "Try again with a different search term."
 msgstr "Prøv igjen med et annet søkebegrep."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1601
+#: ../src/gpk-application.c:1596
 msgid "Invalid search text"
 msgstr "Ugyldig søketekst"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1603
+#: ../src/gpk-application.c:1598
 msgid "The search text contains invalid characters"
 msgstr "Søketeksten inneholder ugyldige tegn"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1644
+#: ../src/gpk-application.c:1639
 msgid "The search could not be completed"
 msgstr "Søk kunne ikke fullføres"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1646
+#: ../src/gpk-application.c:1641
 msgid "Running the transaction failed"
 msgstr "Kjøring av transaksjonen feilet"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1792
+#: ../src/gpk-application.c:1763
 msgid "Changes not applied"
 msgstr "Endringer ikke tatt i bruk"
 
-#: ../src/gpk-application.c:1793
+#: ../src/gpk-application.c:1764
 msgid "Close _Anyway"
 msgstr "L_ukk likevel"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1797
+#: ../src/gpk-application.c:1768
 msgid "You have made changes that have not yet been applied."
 msgstr "Du har utført endringer som ikke er i bruk ennå."
 
-#: ../src/gpk-application.c:1798
+#: ../src/gpk-application.c:1769
 msgid "These changes will be lost if you close this window."
 msgstr "Disse endringene vil gå tapt hvis du lukker dette vinduet."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2113 ../src/gpk-enum.c:1142 ../src/gpk-enum.c:1223
+#: ../src/gpk-application.c:2084 ../src/gpk-enum.c:1142 ../src/gpk-enum.c:1223
 msgid "Installed"
 msgstr "Installert"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2129 ../src/gpk-application.c:2151
+#: ../src/gpk-application.c:2100 ../src/gpk-application.c:2122
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:727
 msgid "Name"
 msgstr "Navn"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2290
+#: ../src/gpk-application.c:2261
 msgid "Type"
 msgstr "Type"
 
-#: ../src/gpk-application.c:2290
+#: ../src/gpk-application.c:2261
 msgid "Collection"
 msgstr "Samling"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2269
 #, c-format
 msgid "Visit %s"
 msgstr "Besøk %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2303
+#: ../src/gpk-application.c:2274
 msgid "Project"
 msgstr "Prosjekt"
 
-#: ../src/gpk-application.c:2303
+#: ../src/gpk-application.c:2274
 msgid "Homepage"
 msgstr "Hjemmeside"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2317
+#: ../src/gpk-application.c:2288
 msgid "Group"
 msgstr "Gruppe"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2323
+#: ../src/gpk-application.c:2294
 msgid "License"
 msgstr "Lisens"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:2332
+#: ../src/gpk-application.c:2303
 msgid "Menu"
 msgstr "Meny"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2350 ../src/gpk-update-viewer.c:1725
+#: ../src/gpk-application.c:2321 ../src/gpk-update-viewer.c:1734
 msgid "Size"
 msgstr "Størrelse"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2353
+#: ../src/gpk-application.c:2324
 msgid "Installed size"
 msgstr "Installert størrelse"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2356
+#: ../src/gpk-application.c:2327
 msgid "Download size"
 msgstr "Størrelse på nedlasting"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2365
+#: ../src/gpk-application.c:2336
 msgid "Source"
 msgstr "Kilde"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2510
+#: ../src/gpk-application.c:2481
 msgid "Selected packages"
 msgstr "Valgte pakker"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2563
+#: ../src/gpk-application.c:2534
 msgid "Searching by name"
 msgstr "Søker etter navn"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2587
+#: ../src/gpk-application.c:2558
 msgid "Searching by description"
 msgstr "Søker etter beskrivelse"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2611
+#: ../src/gpk-application.c:2582
 msgid "Searching by file"
 msgstr "Søker etter fil"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2633
+#: ../src/gpk-application.c:2604
 msgid "Search by name"
 msgstr "Søk etter navn:"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2644
+#: ../src/gpk-application.c:2615
 msgid "Search by description"
 msgstr "Søk etter beskrivelse"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2655
+#: ../src/gpk-application.c:2626
 msgid "Search by file name"
 msgstr "Søk på filnavn"
 
-#: ../src/gpk-application.c:2696 ../src/gpk-check-update.c:229
+#: ../src/gpk-application.c:2667
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Lisensiert under GNU General Public License Version 2"
 
-#: ../src/gpk-application.c:2697 ../src/gpk-check-update.c:230
+#: ../src/gpk-application.c:2668
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -747,7 +747,7 @@ msgid ""
 "any later version."
 msgstr ""
 
-#: ../src/gpk-application.c:2701 ../src/gpk-check-update.c:234
+#: ../src/gpk-application.c:2672
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -755,7 +755,7 @@ msgid ""
 "more details."
 msgstr ""
 
-#: ../src/gpk-application.c:2705 ../src/gpk-check-update.c:238
+#: ../src/gpk-application.c:2676
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -763,29 +763,28 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2711 ../src/gpk-check-update.c:243
+#: ../src/gpk-application.c:2682
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Torstein Adolf Winterseth <kvikende@fsfe.org>"
 
-#. TRANSLATORS: website label
-#: ../src/gpk-application.c:2731 ../src/gpk-check-update.c:260
+#: ../src/gpk-application.c:2702
 msgid "PackageKit Website"
 msgstr "Nettsted for PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2734
+#: ../src/gpk-application.c:2705
 msgid "Package Manager for GNOME"
 msgstr "Pakkehåndtering for GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3160
+#: ../src/gpk-application.c:3131
 msgid "Text"
 msgstr "Tekst"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3183
+#: ../src/gpk-application.c:3154
 msgid ""
 "Enter a package name and then click find, or click a group to get started."
 msgstr ""
@@ -793,203 +792,61 @@ msgstr ""
 "gang."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3186
+#: ../src/gpk-application.c:3157
 msgid "Enter a package name and then click find to get started."
 msgstr "Oppgi et pakkenavn og klikk på søk for å komme i gang."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3412
+#: ../src/gpk-application.c:3383
 msgid "Exiting as properties could not be retrieved"
 msgstr "Avslutter siden egenskaper ikke kunne hentes"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3531
+#: ../src/gpk-application.c:3502
 msgid "All packages"
 msgstr "Alle pakker"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3533
+#: ../src/gpk-application.c:3504
 msgid "Show all packages"
 msgstr "Vis alle pakker"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3776
+#: ../src/gpk-application.c:3747
 msgid "Clear current selection"
 msgstr "Tøm utvalget"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3801
+#: ../src/gpk-application.c:3772
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Endringene blir ikke tatt i bruk med det samme. Denne knappen aktiverer alle "
 "endringer"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3827
+#: ../src/gpk-application.c:3798
 msgid "Visit home page for selected package"
 msgstr "Gå til hjemmesiden for valgt pakke"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3935
+#: ../src/gpk-application.c:3906
 msgid "Find packages"
 msgstr "Finn pakker"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3943
+#: ../src/gpk-application.c:3914
 msgid "Cancel search"
 msgstr "Avbryt søk"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4068 ../src/gpk-update-icon.c:99
-#: ../src/gpk-update-viewer.c:3307
+#: ../src/gpk-application.c:4037 ../src/gpk-update-viewer.c:3316
 msgid "Show the program version and exit"
 msgstr "Vis versjon og avslutt"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4101
+#: ../src/gpk-application.c:4070
 msgid "Package installer"
 msgstr "Pakkeinstallering"
-
-#. TRANSLATORS: context menu to open the preferences
-#: ../src/gpk-check-update.c:286
-msgid "_Preferences"
-msgstr "_Brukervalg"
-
-#. TRANSLATORS: context menu to show the about screen
-#: ../src/gpk-check-update.c:306
-msgid "_About"
-msgstr "_Om"
-
-#. TRANSLATORS: we did the update, but some updates were skipped and not applied
-#: ../src/gpk-check-update.c:395
-msgid "One package was skipped:"
-msgid_plural "Some packages were skipped:"
-msgstr[0] "Hoppet over en pakke:"
-msgstr[1] "Hoppet over noen pakker:"
-
-#. TRANSLATORS: title: system update completed all okay
-#: ../src/gpk-check-update.c:426
-msgid "The system update has completed"
-msgstr "Systemoppdatering fullført"
-
-#. TRANSLATORS: restart computer as system packages need update
-#: ../src/gpk-check-update.c:433
-msgid "Restart computer now"
-msgstr "Start datamaskinen på nytt nå"
-
-#. TRANSLATORS: don't show this option again (when finished)
-#. TRANSLATORS: hides forever
-#. add a checkbutton for deps screen
-#. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:437 ../src/gpk-check-update.c:1335
-#: ../src/gpk-dialog.c:304 ../src/gpk-hardware.c:191 ../src/gpk-watch.c:622
-msgid "Do not show this again"
-msgstr "Ikke vis dette igjen"
-
-#. TRANSLATORS: button: show more details about the error
-#. TRANSLATORS: button: show details about the error
-#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-check-update.c:499 ../src/gpk-dbus-task.c:384
-#: ../src/gpk-watch.c:411
-msgid "Show details"
-msgstr "Vis detaljer"
-
-#. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:551 ../src/gpk-check-update.c:938
-#: ../src/gpk-check-update.c:960
-msgid "GNOME PackageKit Update Icon"
-msgstr "Panelprogram for oppdatering med PackageKit"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:553
-msgid "Updated successfully"
-msgstr "Oppdatert uten problemer"
-
-#. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:677
-msgid "Security update available"
-msgid_plural "Security updates available"
-msgstr[0] "Sikkerhetsoppdatering tilgjengelig"
-msgstr[1] "Sikkerhetsoppdateringer tilgjengelig"
-
-#. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:680
-msgid "An important update is available for your computer:"
-msgid_plural "Important updates are available for your computer:"
-msgstr[0] "En viktig oppdatering er tilgjengelig for din datamaskin:"
-msgstr[1] "Viktige oppdateringer er tilgjengelig for din datamaskin:"
-
-#. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:700
-msgid "Install updates"
-msgstr "Installerer oppdateringer"
-
-#. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:781
-msgid ""
-"Automatic updates are not being installed as the computer is running on "
-"battery power"
-msgstr ""
-"Automatiske oppdateringer blir ikke installert siden datamaskinen kjører på "
-"batteristrøm"
-
-#. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:783
-msgid "Updates not installed"
-msgstr "Oppdateringer som ikke ble installert"
-
-#. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:792
-msgid "Install the updates anyway"
-msgstr "Installer oppdateringene likevel"
-
-#. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:818
-msgid "Updates are being installed"
-msgstr "Oppdateringer holder på å installeres"
-
-#. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:820
-msgid "Updates are being automatically installed on your computer"
-msgstr "Oppdateringer blir installert automatisk på din datamaskin"
-
-#: ../src/gpk-check-update.c:826
-msgid "Cancel update"
-msgstr "Avbryt oppdatering"
-
-#. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:910
-#, c-format
-msgid "There is %d update available"
-msgid_plural "There are %d updates available"
-msgstr[0] "%d oppdatering tilgjengelig"
-msgstr[1] "%d oppdateringer tilgjengelig"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:940
-msgid "Update available"
-msgstr "Oppdatering tilgjengelig"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:962
-msgid "Update available (on battery)"
-msgstr "Oppdatering tilgjengelig (på batteri)"
-
-#. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1322
-msgid "Distribution upgrades available"
-msgstr "Oppgradering for distribusjonen tilgjengelig"
-
-#. TRANSLATORS: provides more information about the upgrade
-#. TRANSLATORS: button: a link to the help file
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1332 ../src/gpk-dbus-task.c:1096
-#: ../src/gpk-dbus-task.c:1333 ../src/gpk-dbus-task.c:1639
-#: ../src/gpk-dbus-task.c:1845 ../src/gpk-dbus-task.c:2100
-msgid "More information"
-msgstr "Mer informasjon"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
 #: ../src/gpk-common.c:370
@@ -1107,8 +964,7 @@ msgid "No applications were chosen to be installed"
 msgstr "Ingen programmer var valgt for installasjon"
 
 #. TRANSLATORS: detailed text about the error
-#. TRANSLATORS: The detailed error if the user clicks "more info"
-#: ../src/gpk-dbus-task.c:278 ../src/gpk-watch.c:105
+#: ../src/gpk-dbus-task.c:278
 msgid "Error details"
 msgstr "Detaljer for feil"
 
@@ -1142,6 +998,11 @@ msgstr "Ugyldig spørring."
 #: ../src/gpk-dbus-task.c:321
 msgid "The file is not valid."
 msgstr "Filen er ikke gyldig."
+
+#. TRANSLATORS: button: show details about the error
+#: ../src/gpk-dbus-task.c:384
+msgid "Show details"
+msgstr "Vis detaljer"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
@@ -1186,6 +1047,16 @@ msgstr "Kunne ikke finne pakker"
 #: ../src/gpk-dbus-task.c:1093
 msgid "The packages could not be found in any software source"
 msgstr "Pakkene ble ikke funnet i noen programvarekilder"
+
+#. TRANSLATORS: button: a link to the help file
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#: ../src/gpk-dbus-task.c:1096 ../src/gpk-dbus-task.c:1333
+#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1845
+#: ../src/gpk-dbus-task.c:2100
+msgid "More information"
+msgstr "Mer informasjon"
 
 #: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:334
 msgid "The package is already installed"
@@ -1601,6 +1472,11 @@ msgstr "mange pakker"
 msgid "No files"
 msgstr "Ingen filer"
 
+#. add a checkbutton for deps screen
+#: ../src/gpk-dialog.c:304
+msgid "Do not show this again"
+msgstr "Ikke vis dette igjen"
+
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-distro-upgrade.c:139
 msgid "Could not upgrade the system"
@@ -1714,7 +1590,9 @@ msgstr "Velg ønskede alternativer for nedlasting"
 #: ../src/gpk-distro-upgrade.c:606
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
-msgstr "Oppgraderingsverktøyet for systemoppgradering vil nå utføre følgende handlinger:"
+msgstr ""
+"Oppgraderingsverktøyet for systemoppgradering vil nå utføre følgende "
+"handlinger:"
 
 #: ../src/gpk-distro-upgrade.c:607
 msgid "Request authentication from a privileged user"
@@ -3410,78 +3288,6 @@ msgstr "Nyeste pakker"
 msgid "Unknown group"
 msgstr "Ukjent gruppe"
 
-#. TRANSLATORS: we need to restart so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:265
-msgid ""
-"You will need to restart this computer before the hardware will work "
-"correctly."
-msgstr "Du må starte datamaskinen på nytt før maskinvaren vil fungere korrekt."
-
-#. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:268 ../src/gpk-firmware.c:303
-#: ../src/gpk-firmware.c:330
-msgid "Additional software was installed"
-msgstr "Annen programvare ble installert"
-
-#. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:277
-msgid "Restart now"
-msgstr "Start på nytt nå"
-
-#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:300
-msgid ""
-"You will need to remove and then reinsert the hardware before it will work "
-"correctly."
-msgstr ""
-"Du må fjerne og legge til maskinvaren på nytt før den vil fungere korrekt."
-
-#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:327
-msgid "Your hardware has been set up and is now ready to use."
-msgstr "Maskinvaren din er satt opp og er klar til bruk."
-
-#. TRANSLATORS: we need another package to keep udev quiet
-#: ../src/gpk-firmware.c:598
-msgid ""
-"Additional firmware is required to make hardware in this computer function "
-"correctly."
-msgstr ""
-"Ekstra fastvare kreves for å få maskinvaren i denne datamaskinen til å "
-"fungere korrekt."
-
-#. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:612
-msgid "Additional firmware required"
-msgstr "Ekstra fastvare kreves"
-
-#. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:617
-msgid "Install firmware"
-msgstr "Installer fastvare"
-
-#. TRANSLATORS: we should ignore this device and not ask anymore
-#: ../src/gpk-firmware.c:620
-msgid "Ignore devices"
-msgstr "Ignorer enheter"
-
-#. TODO: tell the user what hardware, NOT JUST A UDI
-#. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
-#: ../src/gpk-hardware.c:180
-msgid "Additional packages can be installed to support this hardware"
-msgstr "Tilleggspakker kan installeres for å støtte denne maskinvaren"
-
-#. TRANSLATORS: a new bit of hardware has been plugged in
-#: ../src/gpk-hardware.c:182
-msgid "New hardware attached"
-msgstr "Ny maskinvare lagt til"
-
-#. TRANSLATORS: button text, install the packages needed for the hardware to work
-#. TRANSLATORS: button tooltip
-#: ../src/gpk-hardware.c:188 ../src/gpk-helper-chooser.c:300
-msgid "Install package"
-msgstr "Installer pakke"
-
 #. TRANSLATORS: column for the application icon
 #: ../src/gpk-helper-chooser.c:140 ../src/gpk-helper-run.c:203
 msgid "Icon"
@@ -3490,6 +3296,11 @@ msgstr "Ikon"
 #: ../src/gpk-helper-chooser.c:284
 msgid "Applications that can open this type of file"
 msgstr "Programmer som kan åpne denne type fil"
+
+#. TRANSLATORS: button tooltip
+#: ../src/gpk-helper-chooser.c:300
+msgid "Install package"
+msgstr "Installer pakke"
 
 #. TRANSLATORS: is not GPG signed
 #: ../src/gpk-task.c:141 ../src/gpk-task.c:151 ../src/gpk-task.c:171
@@ -3534,47 +3345,47 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:361 ../src/gpk-task.c:540
+#: ../src/gpk-task.c:361 ../src/gpk-task.c:532
 msgid "Continue"
 msgstr "Fortsett"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:398
+#: ../src/gpk-task.c:397
 msgid "The following software also needs to be installed"
 msgstr "Følgende programvare må også installeres"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:403
+#: ../src/gpk-task.c:402
 msgid "The following software also needs to be removed"
 msgstr "Følgende programvare vil måtte fjernes"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:407
+#: ../src/gpk-task.c:406
 msgid "The following software also needs to be updated"
 msgstr "Følgende programvare vil også måtte oppdateres"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:411
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be re-installed"
 msgstr "Følgende programvare vil også måtte installeres på nytt"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:415
+#: ../src/gpk-task.c:414
 msgid "The following software also needs to be downgraded"
 msgstr "Følgende programvare vil også måtte nedgraderes"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:419
+#: ../src/gpk-task.c:418
 msgid "The following software also needs to be processed"
 msgstr "Følgende programvare vil også måtte prosesseres"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:478
+#: ../src/gpk-task.c:476
 msgid "Additional confirmation required"
 msgstr "Ekstra bekreftelse kreves"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:484
+#: ../src/gpk-task.c:482
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3582,7 +3393,7 @@ msgstr[0] "For å installere denne pakken må du også endre andre programmer."
 msgstr[1] "For å installere disse pakkene må du også endre andre programmer."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:489
+#: ../src/gpk-task.c:487
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3590,7 +3401,7 @@ msgstr[0] "For å fjerne denne pakken vil annen programvare også måtte endres.
 msgstr[1] "For å fjerne disse pakkene vil annen programvare også måtte endres."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:494
+#: ../src/gpk-task.c:492
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3600,7 +3411,7 @@ msgstr[1] ""
 "For å oppdatere disse pakkene vil annen programvare også måtte endres."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:499
+#: ../src/gpk-task.c:497
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3610,19 +3421,19 @@ msgstr[1] ""
 "For å installere disse filene vil annen programvare også måtte endres."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:504
+#: ../src/gpk-task.c:502
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
 "For å prosessere denne transaksjonen vil annen programvare også måtte endres."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:590
+#: ../src/gpk-task.c:582
 msgid "_Force install"
 msgstr "_Tvungen installering"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:594
+#: ../src/gpk-task.c:586
 msgid "Force installing package"
 msgstr "Tvungen installasjon av pakke"
 
@@ -3635,13 +3446,6 @@ msgstr "Kjør nytt program?"
 #: ../src/gpk-helper-run.c:498
 msgid "_Run"
 msgstr "Kjø_r"
-
-#. app-id
-#. xid
-#. TRANSLATORS: the reason why we've inhibited it
-#: ../src/gpk-inhibit.c:98
-msgid "A transaction that cannot be interrupted is running"
-msgstr "En transaksjon som ikke kan avbrytes kjører"
 
 #. TRANSLATORS: command line option: a list of catalogs to install
 #: ../src/gpk-install-catalog.c:52
@@ -3681,10 +3485,9 @@ msgstr ""
 msgid "Files to install"
 msgstr "Filer som skal installeres"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
-msgstr ""
+msgstr "Filinstallasjon for PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-install-local-file.c:77
@@ -3715,7 +3518,7 @@ msgstr "MIME-type installering"
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-install-mime-type.c:77
 msgid "Mime type installer"
-msgstr ""
+msgstr "MIME-type installasjon"
 
 #. TRANSLATORS: could not install program supporting this type
 #: ../src/gpk-install-mime-type.c:83
@@ -3731,10 +3534,8 @@ msgstr "Du må oppgi en MIME-type som skal installeres"
 msgid "Packages to install"
 msgstr "Pakker som skal installeres"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Installering av pakke etter navn"
 
@@ -3800,18 +3601,23 @@ msgstr "Oppdater system"
 msgid "Update Icon"
 msgstr "Oppdateringsikon"
 
+#. TRANSLATORS: short name for the command not found plugin
+#: ../src/gpk-log.c:507
+msgid "Bash - Command Not Found"
+msgstr "Bash - kommandoen ble ikke funnet"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:818
+#: ../src/gpk-log.c:821
 msgid "Set the filter to this value"
 msgstr "Sett filter til denne verdien"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:821 ../src/gpk-prefs.c:937
+#: ../src/gpk-log.c:824 ../src/gpk-prefs.c:938
 msgid "Set the parent window to make this modal"
 msgstr ""
 
 #. are we running privileged
-#: ../src/gpk-log.c:845
+#: ../src/gpk-log.c:848
 msgid "Log viewer"
 msgstr "Loggvisning"
 
@@ -3821,66 +3627,66 @@ msgid "Remaining time : %s"
 msgstr "Gjenværende tid: %s"
 
 #. TRANSLATORS: check once an hour
-#: ../src/gpk-prefs.c:61
+#: ../src/gpk-prefs.c:62
 msgid "Hourly"
 msgstr "Hver time"
 
 #. TRANSLATORS: check once a day
-#: ../src/gpk-prefs.c:63
+#: ../src/gpk-prefs.c:64
 msgid "Daily"
 msgstr "Daglig"
 
 #. TRANSLATORS: check once a week
-#: ../src/gpk-prefs.c:65
+#: ../src/gpk-prefs.c:66
 msgid "Weekly"
 msgstr "Ukentlig"
 
 #. TRANSLATORS: never check for updates/upgrades
-#: ../src/gpk-prefs.c:67
+#: ../src/gpk-prefs.c:68
 msgid "Never"
 msgstr "Aldri"
 
 #. TRANSLATORS: update everything
-#: ../src/gpk-prefs.c:70
+#: ../src/gpk-prefs.c:71
 msgid "All updates"
 msgstr "Alle oppdateringer"
 
 #. TRANSLATORS: update just security updates
-#: ../src/gpk-prefs.c:72
+#: ../src/gpk-prefs.c:73
 msgid "Only security updates"
 msgstr "Kun sikkerhetsoppdateringer"
 
 #. TRANSLATORS: don't update anything
-#: ../src/gpk-prefs.c:74
+#: ../src/gpk-prefs.c:75
 msgid "Nothing"
 msgstr "Ingenting"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-prefs.c:508
+#: ../src/gpk-prefs.c:509
 msgid "Failed to change status"
 msgstr "Klarte ikke å endre status"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:583
+#: ../src/gpk-prefs.c:584
 msgid "Enabled"
 msgstr "Aktivert"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:592
+#: ../src/gpk-prefs.c:593
 msgid "Software Source"
 msgstr "Programvarekilde"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:654
+#: ../src/gpk-prefs.c:655
 msgid "Failed to get the list of sources"
 msgstr "Klarte ikke å hente liste med kilder"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:762 ../src/gpk-update-viewer.c:3059
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3068
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Avslutter siden detaljer om motor ikke kunne hentes"
 
-#: ../src/gpk-prefs.c:796
+#: ../src/gpk-prefs.c:797
 msgid "Getting software source list not supported by backend"
 msgstr "Henting av liste med programvarekilder er ikke støttet av motoren"
 
@@ -3975,20 +3781,6 @@ msgstr "Søkte etter pakkenavn"
 #: ../src/gpk-service-pack.c:822
 msgid "Set the default output directory"
 msgstr "Sett forvalgt katalog for utdata"
-
-#: ../src/gpk-update-icon.c:97
-msgid "Exit after a small delay"
-msgstr "Avslutt etter en liten pause"
-
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-update-icon.c:107 ../src/gpk-update-icon.c:153
-msgid "Update Applet"
-msgstr "Panelprogram for oppdatering"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-icon.c:120
-msgid "Update applet"
-msgstr "Panelprogram for oppdatering"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:186
@@ -4151,27 +3943,27 @@ msgstr[0] "%i oppdatering valgt (%s)"
 msgstr[1] "%i oppdateringer valgt (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1685
+#: ../src/gpk-update-viewer.c:1694
 msgid "Software"
 msgstr "Programvare"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1695
+#: ../src/gpk-update-viewer.c:1704
 msgid "Status"
 msgstr "Status"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1904
+#: ../src/gpk-update-viewer.c:1913
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Denne oppdateringen vil rette feil og andre ikke-kritiske problemer."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1908
+#: ../src/gpk-update-viewer.c:1917
 msgid "This update is important as it may solve critical problems."
 msgstr "Denne oppdateringen er viktig da den kan løse kritiske problemer."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1912
+#: ../src/gpk-update-viewer.c:1921
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4179,24 +3971,24 @@ msgstr ""
 "denne pakken."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1916
+#: ../src/gpk-update-viewer.c:1925
 msgid "This update is blocked."
 msgstr "Denne oppdateringen er blokkert."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1928
+#: ../src/gpk-update-viewer.c:1937
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Varsling ble gitt på %s og sist oppdatert på %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1935
+#: ../src/gpk-update-viewer.c:1944
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Dette varselet ble utsendt %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1957
+#: ../src/gpk-update-viewer.c:1966
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4204,7 +3996,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1965
+#: ../src/gpk-update-viewer.c:1974
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4215,7 +4007,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:1982
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4224,14 +4016,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1982
+#: ../src/gpk-update-viewer.c:1991
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "Datamaskinen må startes på nytt for at endringene skal tre i kraft."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1986
+#: ../src/gpk-update-viewer.c:1995
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4240,21 +4032,21 @@ msgstr ""
 "kraft."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:2002
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1997
+#: ../src/gpk-update-viewer.c:2006
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2006
+#: ../src/gpk-update-viewer.c:2015
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4263,76 +4055,76 @@ msgstr ""
 "oppdateringen:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2042
+#: ../src/gpk-update-viewer.c:2051
 msgid "Loading..."
 msgstr "Laster …"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2082 ../src/gpk-update-viewer.c:2180
-#: ../src/gpk-update-viewer.c:2200
+#: ../src/gpk-update-viewer.c:2091 ../src/gpk-update-viewer.c:2189
+#: ../src/gpk-update-viewer.c:2209
 msgid "Could not get update details"
 msgstr "Kunne ikke hente detaljer om oppdatering"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2102
+#: ../src/gpk-update-viewer.c:2111
 msgid "Could not get package details"
 msgstr "Kunne ikke hente detaljer om pakke"
 
-#: ../src/gpk-update-viewer.c:2102 ../src/gpk-update-viewer.c:2200
+#: ../src/gpk-update-viewer.c:2111 ../src/gpk-update-viewer.c:2209
 msgid "No results were returned."
 msgstr "Ingen resultater ble funnet."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2435
+#: ../src/gpk-update-viewer.c:2444
 msgid "Select all"
 msgstr "Velg alle"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2443
+#: ../src/gpk-update-viewer.c:2452
 msgid "Unselect all"
 msgstr "Velg bort alle"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2450
+#: ../src/gpk-update-viewer.c:2459
 msgid "Select security updates"
 msgstr "Velg sikkerhetsoppdateringer"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2456
+#: ../src/gpk-update-viewer.c:2465
 msgid "Ignore this update"
 msgstr "Ignorer denne oppdateringen"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2567
+#: ../src/gpk-update-viewer.c:2576
 msgid "Could not get updates"
 msgstr "Kunne ikke hente oppdateringer"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2708
+#: ../src/gpk-update-viewer.c:2717
 msgid "Checking for updates..."
 msgstr "Ser etter oppdateringer …"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2994
+#: ../src/gpk-update-viewer.c:3003
 msgid "Could not get list of distribution upgrades"
 msgstr "Fant ikke liste med oppgraderinger for distribusjonen"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3024
+#: ../src/gpk-update-viewer.c:3033
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Ny oppgradering for distribusjonen med navn «%s» er tilgjengelig"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3271
+#: ../src/gpk-update-viewer.c:3280
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
 msgstr ""
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3341
+#: ../src/gpk-update-viewer.c:3350
 msgid "Software Update Viewer"
 msgstr "Vis programvareoppdateringer"
 
@@ -4340,49 +4132,9 @@ msgstr "Vis programvareoppdateringer"
 msgid "Do not exit after the request has been processed"
 msgstr "Ikke avslutt etter at forespørselen er prosessert"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr ""
-
-#: ../src/gpk-watch.c:105
-msgid "Package manager error details"
-msgstr "Feildetaljer for pakkehåndtering"
-
-#. TRANSLATORS: Prefix to the title shown in the libnotify popup
-#: ../src/gpk-watch.c:403
-msgid "Package Manager"
-msgstr "Pakkehåndtering"
-
-#. TRANSLATORS: log out of the session
-#: ../src/gpk-watch.c:494
-msgid "Log out"
-msgstr "Logg ut"
-
-#. TRANSLATORS: restart the computer
-#: ../src/gpk-watch.c:499
-msgid "Restart"
-msgstr "Start på nytt"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:604
-msgid "Packages have been removed"
-msgstr "Pakken er fjernet"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:607
-msgid "Packages have been installed"
-msgstr "Pakken er installert"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:610
-msgid "System has been updated"
-msgstr "Systemet er oppdatert"
-
-#. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
-#: ../src/gpk-watch.c:617
-msgid "Task completed"
-msgstr "Oppgave fullført"
 
 #. TRANSLATORS: turn on all debugging
 #: ../src/gpk-debug.c:131
