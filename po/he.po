@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-27 22:51+0200\n"
-"PO-Revision-Date: 2011-02-27 22:51+0200\n"
+"POT-Creation-Date: 2011-03-26 00:59+0200\n"
+"PO-Revision-Date: 2011-03-26 00:59+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -246,13 +246,18 @@ msgstr "מתקין הקטלוגים"
 msgid "Install a catalog of software on the system"
 msgstr "התקנת קטלוג תכנה על המערכת"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "התקנת התוכנות הנבחרות על המערכת"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "מתקין החבילות"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "התקנת תכנה"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -3531,8 +3536,7 @@ msgstr "הבקשה נכשלה. פרטים נוספים זמינים בדוח ה�
 msgid "Files to install"
 msgstr "קבצים להתקנה"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "מתקין הקבצים של PackageKit"
 
@@ -3581,10 +3585,8 @@ msgstr "עליך לציין סוג mime להתקנה"
 msgid "Packages to install"
 msgstr "חבילות להתקנה"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "מתקין החבילות לפי שם"
 
@@ -4170,8 +4172,7 @@ msgstr "מציג עדכוני תכנה"
 msgid "Do not exit after the request has been processed"
 msgstr "אין לצאת לאחר עיבוד הבקשה"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "שירות הפעלת DBus עבור PackageKit"
 
@@ -4187,6 +4188,9 @@ msgstr "אפשרויות ניפוי השגיאות"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
+
+#~ msgid "Package Installer"
+#~ msgstr "מתקין החבילות"
 
 #~ msgid "PackageKit Update Applet"
 #~ msgstr "יישומון העדכונים של PackageKit"
