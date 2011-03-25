@@ -1,18 +1,17 @@
 # Copyright (C) 2009, Wei Mingzhi
-# Copyright (C) 2010 Free Software Foundation, Inc.
+# Copyright (C) 2010, 2011 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gnome-packagekit package.
-# Wei Mingzhi <whistler@openoffice.org>, 2010.
+# Wei Mingzhi <whistler@openoffice.org>, 2009, 2010.
 # Yinghua Wang <wantinghard@gmail.com>, 2010.
-# Aron Xu <aronxu@gnome.org>, 2010.
+# Aron Xu <aronxu@gnome.org>, 2010, 2011.
 # wei Li <lw124124@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-21 00:05+0000\n"
-"PO-Revision-Date: 2011-03-21 04:22+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-25 04:12+0000\n"
+"PO-Revision-Date: 2011-03-25 04:13+0000\n"
 "Last-Translator: liwei <lw124124@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -250,13 +249,18 @@ msgstr "目录安装器"
 msgid "Install a catalog of software on the system"
 msgstr "在系统中安装一个软件目录"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "在系统中安装选定的软件"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "软件包安装程序"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "软件安装程序"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -3455,8 +3459,7 @@ msgstr "请求失败。更多细节可在细节报告中查询。"
 msgid "Files to install"
 msgstr "欲安装的文件"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "PackageKit 文件安装程序"
 
@@ -3505,10 +3508,8 @@ msgstr "您需要指定一种 mime 类型来安装"
 msgid "Packages to install"
 msgstr "欲安装的软件包"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "软件包名安装程序"
 
@@ -4083,8 +4084,7 @@ msgstr "软件更新查看器"
 msgid "Do not exit after the request has been processed"
 msgstr "请求被处理之后不退出"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "PackageKit 会话 DBus 服务"
 
@@ -4100,6 +4100,9 @@ msgstr "调试选项"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "显示调试选项"
+
+#~ msgid "Package Installer"
+#~ msgstr "软件包安装程序"
 
 #~ msgid "PackageKit Update Applet"
 #~ msgstr "PackageKit 更新小应用程序"
