@@ -4,7 +4,7 @@
     <value nick="details" value="1"/>
     <value nick="file" value="2"/>
   </enum>
-  <schema id="org.gnome.packagekit" path="/apps/gnome-packagekit/">
+  <schema id="org.gnome.packagekit" path="/org/gnome/packagekit/">
     <key name="enable-autoremove" type="b">
       <default>false</default>
       <summary>Automatically remove unused dependencies</summary>
@@ -104,10 +104,10 @@
       <description>When displaying UI from a session DBus request, force these options to be turned on.</description>
     </key>
   </schema>
-  <schema id="org.gnome.settings-daemon" path="/apps/gnome-settings-daemon/">
+  <schema id="org.gnome.settings-daemon" path="/org/gnome/settings-daemon/">
     <child name="gtk-modules" schema="gnome-settings-daemon.gtk-modules"/>
   </schema>
-  <schema id="gnome-settings-daemon.gtk-modules" path="/apps/gnome-settings-daemon/gtk-modules/">
+  <schema id="gnome-settings-daemon.gtk-modules" path="/org/gnome/settings-daemon/gtk-modules/">
     <key name="pk-gtk-module" type="b">
       <default>true</default>
       <summary>GTK+ module for font installation</summary>
