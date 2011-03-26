@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-11 12:39+0000\n"
-"PO-Revision-Date: 2011-03-15 14:57+0100\n"
-"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
+"POT-Creation-Date: 2011-03-25 23:03+0000\n"
+"PO-Revision-Date: 2011-03-26 20:28+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -261,13 +261,21 @@ msgstr "Namestilnik katalogov"
 msgid "Install a catalog of software on the system"
 msgstr "Namestitev kataloga programske opreme v sistem"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Namestitev izbrane programske opreme v sistem"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Namestilnik paketov"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2
+#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153
+#: ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Nameščanje programske opreme"
 
 #: ../data/gpk-log.desktop.in.h:1
 #: ../data/gpk-log.ui.h:2
@@ -3628,8 +3636,6 @@ msgstr "Neuspešna zahteva. Več podrobnosti je zapisanih v poročilu."
 msgid "Files to install"
 msgstr "Datoteke za namestitev"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Namestilnik datotek PackageKit"
@@ -3681,9 +3687,7 @@ msgstr "Določiti je treba mime vrsto za namestitev"
 msgid "Packages to install"
 msgstr "Paketi za namestitev"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66
 #: ../src/gpk-install-package-name.c:68
 #: ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
@@ -4261,8 +4265,6 @@ msgstr "Pregledovalnik posodobitve programske opreme"
 msgid "Do not exit after the request has been processed"
 msgstr "Ne končaj po končanih opravilih"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156
 #: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "Storitev DBus seje programa PackageKit"
@@ -4280,315 +4282,228 @@ msgstr "Možnosti razhroščevanja"
 msgid "Show debugging options"
 msgstr "Pokaži možnosti razhroščevanja"
 
+#~ msgid "Package Installer"
+#~ msgstr "Namestilnik paketov"
 #~ msgid "Backend Status"
 #~ msgstr "Stanje zaledja programa"
-
 #~ msgid "Backend author:"
 #~ msgstr "Avtor zaledja programa:"
-
 #~ msgid "Backend name:"
 #~ msgstr "Ime zaledja programa:"
-
 #~ msgid "PackageKit Update Applet"
 #~ msgstr "Aplet PackageKit posodobitve"
-
 #~ msgid "PackageKit Backend Details Viewer"
 #~ msgstr "Pregledovalnik podrobnosti zaledja programa PackageKit"
-
 #~ msgid "_Preferences"
 #~ msgstr "_Možnosti"
-
 #~ msgid "_About"
 #~ msgstr "_O Programu"
-
 #~ msgid "One package was skipped:"
-
 #~ msgid_plural "Some packages were skipped:"
 #~ msgstr[0] "Izpuščeni so bili paketi:"
 #~ msgstr[1] "Izpuščen je bil paket:"
 #~ msgstr[2] "Izpuščena sta bila paketa:"
 #~ msgstr[3] "Izpuščeni so bili paketi:"
-
 #~ msgid "The system update has completed"
 #~ msgstr "Sistemska posodobitev je končana."
-
 #~ msgid "Restart computer now"
 #~ msgstr "Ponovni zagon računalnika"
-
 #~ msgid "GNOME PackageKit Update Icon"
 #~ msgstr "Ikona posodobitve GNOME PackageKit"
-
 #~ msgid "Security update available"
-
 #~ msgid_plural "Security updates available"
 #~ msgstr[0] "Na voljo so varnostne posodobitve"
 #~ msgstr[1] "Na voljo je varnostna posodobitev"
 #~ msgstr[2] "Na voljo sta varnostni posodobitvi"
 #~ msgstr[3] "Na voljo so varnostne posodobitve"
-
 #~ msgid "An important update is available for your computer:"
-
 #~ msgid_plural "Important updates are available for your computer:"
 #~ msgstr[0] "Na voljo so pomembne posodobitve sistema:"
 #~ msgstr[1] "Na voljo je pomembna posodobitev sistema:"
 #~ msgstr[2] "Na voljo sta pomembni posodobitvi sistema:"
 #~ msgstr[3] "Na voljo so pomembne posodobitve sistema:"
-
 #~ msgid "Install updates"
 #~ msgstr "Namesti posodobitve"
-
 #~ msgid ""
 #~ "Automatic updates are not being installed as the computer is running on "
 #~ "battery power"
 #~ msgstr ""
 #~ "Samodejne posodobitve ne bodo nameščene, saj računalnik uporablja "
 #~ "napetost baterije."
-
 #~ msgid "Updates not installed"
 #~ msgstr "Posodobitve niso nameščene"
-
 #~ msgid "Install the updates anyway"
 #~ msgstr "Vseeno namesti posodobitve."
-
 #~ msgid "Updates are being installed"
 #~ msgstr "Posodobitve se nameščajo."
-
 #~ msgid "Updates are being automatically installed on your computer"
 #~ msgstr "Posodobitve se samodejno nameščajo v sistem"
-
 #~ msgid "Cancel update"
 #~ msgstr "Prekliči posodobitev"
-
 #~ msgid "There is %d update available"
-
 #~ msgid_plural "There are %d updates available"
 #~ msgstr[0] "Na voljo je %d posodobitev"
 #~ msgstr[1] "Na voljo je %d posodobitev"
 #~ msgstr[2] "Na voljo sta %d posodobitvi"
 #~ msgstr[3] "Na voljo so %d posodobitve"
-
 #~ msgid "Update available"
 #~ msgstr "Na voljo so posodobitve"
-
 #~ msgid "Update available (on battery)"
 #~ msgstr "Posodobitev je na voljo (pri uporabi baterije)"
-
 #~ msgid "Failed to install packages"
 #~ msgstr "Napaka med nameščanjem paketov"
-
 #~ msgid "Additional software was installed"
 #~ msgstr "Nameščena je bila dodatna programska oprema"
-
 #~ msgid ""
 #~ "You will need to remove and then reinsert the hardware before it will "
 #~ "work correctly."
 #~ msgstr "Za pravilno delovanje je treba strojno opremo ponovno vstaviti."
-
 #~ msgid "Your hardware has been set up and is now ready to use."
 #~ msgstr "Strojna oprema je nameščena in pripravljena za uporabo."
-
 #~ msgid ""
 #~ "Additional firmware is required to make hardware in this computer "
 #~ "function correctly."
 #~ msgstr ""
 #~ "Zahtevana je dodatna strojna programska oprema za pravilno delovanje "
 #~ "sistema."
-
 #~ msgid "Additional firmware required"
 #~ msgstr "Zahtevana je dodatna strojna programska oprema"
-
 #~ msgid "Install firmware"
 #~ msgstr "Namesti strojno programsko opremo"
-
 #~ msgid "Ignore devices"
 #~ msgstr "prezri naprave"
-
 #~ msgid "Additional packages can be installed to support this hardware"
 #~ msgstr "Za podporo strojni opremi je mogoče namestiti dodatne pakete."
-
 #~ msgid "New hardware attached"
 #~ msgstr "Pripeta je nova strojna oprema"
-
 #~ msgid "A transaction that cannot be interrupted is running"
 #~ msgstr "Dejaven je prenos, ki ga ni mogoče prekiniti"
-
 #~ msgid "Exit after a small delay"
 #~ msgstr "Končaj po krajšem zamiku"
-
 #~ msgid "Update Applet"
 #~ msgstr "Aplet posodobitve"
-
 #~ msgid "Update applet"
 #~ msgstr "Aplet posodobitve"
-
 #~ msgid "GNOME PackageKit Update Viewer"
 #~ msgstr "Pregledovalnik posodobitev GNOME PackageKit"
-
 #~ msgid "Failed to update"
 #~ msgstr "Napaka med posodabljanjem"
-
 #~ msgid "Package manager error details"
 #~ msgstr "Podrobnosti napake upravljalnika paketov"
-
 #~ msgid "Package Manager"
 #~ msgstr "Upravljalnik paketov"
-
 #~ msgid "Log out"
 #~ msgstr "Odjava"
-
 #~ msgid "Restart"
 #~ msgstr "Ponoven zagon"
-
 #~ msgid "Packages have been removed"
 #~ msgstr "Paketi so bili odstranjeni"
-
 #~ msgid "Packages have been installed"
 #~ msgstr "Paketi so bili nameščeni"
-
 #~ msgid "System has been updated"
 #~ msgstr "Sistem je posodobljen"
-
 #~ msgid "Task completed"
 #~ msgstr "Opravilo zaključeno"
-
 #~ msgid "Debug these specific modules"
 #~ msgstr "Razhroščevanje posebnih modulov"
-
 #~ msgid "Debug these specific functions"
 #~ msgstr "Razhroščevanje posebnih funkcij"
-
 #~ msgid "Log debugging data to a file"
 #~ msgstr "Zapiši podatke razhroščevanja v dnevniško datoteko"
-
 #~ msgid "Shows more software sources that may be interesting"
 #~ msgstr "Pokaže več programskih virov, kot je običajno zanimivih"
-
 #~ msgid "This is due to the %s package being updated."
-
 #~ msgid_plural "This is due to the following packages being updated: %s."
 #~ msgstr[0] "To je zaradi posodobitve naslednjih paketov: %s."
 #~ msgstr[1] "To je zaradi posodobitve naslednjega paketa: %s."
 #~ msgstr[2] "To je zaradi posodobitve naslednjih paketov: %s."
 #~ msgstr[3] "To je zaradi posodobitve naslednjih paketov: %s."
-
 #~ msgid "This is because %i package has been updated."
-
 #~ msgid_plural "This is because %i packages have been updated."
 #~ msgstr[0] "To je zaradi %i paketov, ki so bili posodobljeni."
 #~ msgstr[1] "To je zaradi %i paketa, ki je bil posodobljen."
 #~ msgstr[2] "To je zaradi %i paketov, ki sta bila posodobljena."
 #~ msgstr[3] "To je zaradi %i paketov, ki so bili posodobljeni."
-
 #~ msgid "%i message from the package manager"
-
 #~ msgid_plural "%i messages from the package manager"
 #~ msgstr[0] "%i sporočil upravljalnika paketov"
 #~ msgstr[1] "%i sporočilo upravljalnika paketov"
 #~ msgstr[2] "%i sporočili upravljalnika paketov"
 #~ msgstr[3] "%i sporočila upravljalnika paketov"
-
 #~ msgid "Package Manager Messages"
 #~ msgstr "Sporočila upravljalnika paketov"
-
 #~ msgid "Message"
 #~ msgstr "Sporočilo"
-
 #~ msgid "_Show messages"
 #~ msgstr "_Pokaži sporočila"
-
 #~ msgid "_Restart computer"
 #~ msgstr "_Ponovni zagon"
-
 #~ msgid "_Hide this icon"
 #~ msgstr "_Skrij ikono"
-
 #~ msgid "New package manager message"
 #~ msgstr "Novo sporočilo upravljalnika paketov"
-
 #~ msgid "Enable or disable software sources"
 #~ msgstr "Omogočanje in onemogočanje virov programske opreme"
-
 #~ msgid "Software Source Viewer"
 #~ msgstr "Pregledovalnik programskih virov"
-
 #~ msgid "Software source viewer"
 #~ msgstr "Pregledovalnik programskih virov"
-
 #~ msgid "Allow applications to invoke the codec installer"
 #~ msgstr "Dovoli programom zagon namestilnika kodekov"
-
 #~ msgid "Allow applications to invoke the font installer"
 #~ msgstr "Dovoli programom zagon namestilnika pisav"
-
 #~ msgid "Allow applications to invoke the mime type installer"
 #~ msgstr "Dovoli programom zagon namestilnika mime vrst"
-
 #~ msgid "Ask the user if additional firmware should be installed"
 #~ msgstr "Vprašaj uporabnika ali naj bo nameščena strojna programska oprema"
-
 #~ msgid "Ask the user if additional hardware drivers should be installed"
 #~ msgstr ""
 #~ "Vprašaj uporabnika ali naj bodo nameščeni dodatni gonilniki strojne opreme"
-
 #~ msgid "Ask the user if additional packages should be installed"
 #~ msgstr "Vprašaj uporabnika ali naj bodo nameščeni dodatni paketi"
-
 #~ msgid "Ask the user if files should be copied to a non-private directory"
 #~ msgstr "Vprašaj uporabnika ali se datoteke lahko namestijo v sistemske mape"
-
 #~ msgid ""
 #~ "Ask the user if files should be copied to a non-private directory when "
 #~ "installing from a FUSE mount"
 #~ msgstr ""
 #~ "Vprašaj uporabnika ali se datoteke lahko namestijo v sistemske mape ob "
 #~ "nameščanju preko FUSE priklopne točke"
-
 #~ msgid "Automatically remove unused dependencies"
 #~ msgstr "Samodejno odstrani neuporabljene odvisnosti"
-
 #~ msgid "Automatically update these types of updates"
 #~ msgstr "Samodejno posodobi to vrsto posodobitev"
-
 #~ msgid ""
 #~ "Automatically update these types of updates. Options are \"all\", "
 #~ "\"security\", or \"none\""
 #~ msgstr ""
 #~ "Samodejno posodobi posodobitve. Možnosti so \"vse\", \"varnostne\", or "
 #~ "\"nobenih\""
-
 #~ msgid "Devices that should be ignored"
 #~ msgstr "Naprave, ki bodo prezrte"
-
 #~ msgid ""
 #~ "Devices that should be ignored, separated by commas. These can include "
 #~ "'*' and '?' characters"
 #~ msgstr ""
 #~ "Naprave, ki bodo prezrte zapisane ločeno z vejicami. Vključena sta lahko "
 #~ "znaka '*' in '?'"
-
 #~ msgid "Filter package lists using basename in gpk-application"
 #~ msgstr ""
 #~ "Filtriranje seznama paketov z uporabo osnovnih imen v gpk-application"
-
 #~ msgid "Filter using basename in gpk-application"
 #~ msgstr "Filtriranje z uporabo imen v gpk-application"
-
 #~ msgid "Firmware files that should not be searched for"
 #~ msgstr "Datoteke strojne programske opreme, ki jih ni mogoče iskati"
-
 #~ msgid ""
 #~ "Firmware files that should not be searched for, separated by commas. "
 #~ "These can include '*' and '?' characters"
 #~ msgstr ""
 #~ "Z vejico ločen seznam datotek strojne programske opreme, ki bodo "
 #~ "izpuščene med iskanjem. Imena lahko vključujejo tudi znaka '*' in '?'."
-
 #~ msgid "GTK+ module for font installation"
 #~ msgstr "GTK+ modul namestitve pisav"
-
 #~ msgid "Get the update list when the session starts"
 #~ msgstr "Pridobi posodobljen seznam ob zagonu seje"
-
 #~ msgid ""
 #~ "Get the update list when the session starts, even if not scheduled to. "
 #~ "This ensures the user has up to date and valid data in the tray at "
@@ -4596,271 +4511,207 @@ msgstr "Pokaži možnosti razhroščevanja"
 #~ msgstr ""
 #~ "Sistem pridobi posodobljen seznam ob zagonu seje. Možnost omogoči "
 #~ "uporabniku posodobljene podatke takoj, ko se sistem zažene."
-
 #~ msgid "How often to check for distribution upgrades"
 #~ msgstr "Kako pogosto naj se preveri za posodobitve celotne distribucije"
-
 #~ msgid "How often to check for distribution upgrades. Value is in seconds."
 #~ msgstr ""
 #~ "Pogostost preverjanja za posodobitve celotne distribucije izražena v "
 #~ "sekundah."
-
 #~ msgid "How often to check for updates"
 #~ msgstr "Kako pogosto naj se preveri za posodobitve"
-
 #~ msgid "How often to check for updates. Value is in seconds."
 #~ msgstr "Pogostost preverjanja za posodobitve izražena v sekundah."
-
 #~ msgid "How often to refresh the package cache"
 #~ msgstr "Kako pogosto naj se osveži pomnilnik paketov"
-
 #~ msgid "How often to refresh the package cache. Value is in seconds."
 #~ msgstr "Pogostost osveževanja pomnilnika paketov izražena v sekundah."
-
 #~ msgid "If search terms should be completed automatically"
 #~ msgstr "Ali naj se iskalni nizi samodejno dopolnjujejo"
-
 #~ msgid "Install updates automatically when running on battery power"
 #~ msgstr ""
 #~ "Samodejno namesti posodobitve, kadar se sistem napaja preko baterije."
-
 #~ msgid "Interaction modes that must be used, overriding requests from client"
 #~ msgstr "Uporabljeni interaktivni načini za razveljavitev zahtev odjemalca"
-
 #~ msgid "Interaction modes to use by default"
 #~ msgstr "Privzeto uporabljeni interaktivni načini"
-
 #~ msgid "Messages that should be ignored"
 #~ msgstr "Sporočila, ki naj bodo prezrta"
-
 #~ msgid ""
 #~ "Messages that should be ignored, separated by commas. These can include "
 #~ "'*' and '?' characters"
 #~ msgstr ""
 #~ "Z vejico ločen seznam sporočil, ki bodo prezrta. Sporočila lahko "
 #~ "vključujejo tudi znaka '*' in '?'."
-
 #~ msgid ""
 #~ "Notify the user before a large update is done on a mobile broadband "
 #~ "connection"
 #~ msgstr ""
 #~ "Obvesti uporabnika pred večjo posodobitvijo ob uporabi širokopasovne "
 #~ "mobilne povezave."
-
 #~ msgid "Notify the user for completed updates"
 #~ msgstr "Obvesti uporabnika ob končanem posodabljanju"
-
 #~ msgid ""
 #~ "Notify the user for completed updates where the user needs to restart"
 #~ msgstr ""
 #~ "Obvesti uporabnika ob končanem posodabljanju, kadar je sistem treba "
 #~ "ponovno zagnati."
-
 #~ msgid "Notify the user when a task is complete"
 #~ msgstr "Obvesti uporabnika ob končani nalogi"
-
 #~ msgid "Notify the user when an update has failed"
 #~ msgstr "Obvesti uporabnika v primeru neuspešne posodobitve."
-
 #~ msgid "Notify the user when distribution upgrades are available"
 #~ msgstr ""
 #~ "Obvesti uporabnika, da je na voljo nova posodobitev celotne distribucije."
-
 #~ msgid "Notify the user when security updates are available"
 #~ msgstr "Obvesti uporabnika, da so na voljo varnostne posodobitve."
-
 #~ msgid ""
 #~ "Notify the user when the automatic update was not started on battery power"
 #~ msgstr ""
 #~ "Obvesti uporabnika, da samodejno posodabljanje ni zagnano, kadar se "
 #~ "sistem napaja preko baterije."
-
 #~ msgid ""
 #~ "Notify the user when the update was not automatically started while "
 #~ "running on battery power"
 #~ msgstr ""
 #~ "Obvesti uporabnika, kadar posodobitev ni bila samodejno zagnana zaradi "
 #~ "uporabe napajanja preko baterije."
-
 #~ msgid "Notify the user when the update was started"
 #~ msgstr "Obvesti uporabnika, da je posodobitev zagnana."
-
 #~ msgid "Notify the user when there are errors"
 #~ msgstr "Obvesti uporabnika, da so se med posodabljanjem pojavile napake."
-
 #~ msgid "Notify the user when there are messages"
 #~ msgstr "Obvesti uporabnika, da so se med posodabljanjem pojavila sporočila."
-
 #~ msgid "Notify the user when there are messages from the package manager"
 #~ msgstr ""
 #~ "Obvesti uporabnika, da so se med posodabljanjem pojavila sporočila "
 #~ "upravljalnika."
-
 #~ msgid "Notify the user when updates are available"
 #~ msgstr "Obvesti uporabnika, da so na voljo posodobitve."
-
 #~ msgid "Only show native packages in the file lists"
 #~ msgstr "Pokaži le pakete distribucije v seznamu datotek."
-
 #~ msgid ""
 #~ "Only show native packages matching the machine architecture in the file "
 #~ "lists"
 #~ msgstr ""
 #~ "Pokaži le pakete distribucije v seznamu datotek, ki ustrezajo arhitekturi "
 #~ "sistema."
-
 #~ msgid "Only show the newest packages in the file lists"
 #~ msgstr "Pokaži le najnovejše pakete v seznamu datotek."
-
 #~ msgid ""
 #~ "Only show the newest packages in the update list, and filter out older "
 #~ "updates that are still available."
 #~ msgstr ""
 #~ "Pokaži le najnovejše pakete v seznamu posodobitve in filtriraj starejše "
 #~ "posodobitve, ki so še na voljo."
-
 #~ msgid "Only show the newest updates in the list"
 #~ msgstr "Pokaži le najnovejše posodobitve v seznamu."
-
 #~ msgid ""
 #~ "Programs that should be ignored when they issue session D-Bus requests"
 #~ msgstr "Programi, katerih zahteve po dodeljevanju D-Bus seje bodo prezrte"
-
 #~ msgid ""
 #~ "Programs that should be ignored when they issue session D-Bus requests, "
 #~ "separated by commas."
 #~ msgstr ""
 #~ "Z vejico ločen seznam programov, katerih zahteve po dodeljevanju D-Bus "
 #~ "seje bodo prezrte"
-
 #~ msgid "Scroll to packages as they are downloaded"
 #~ msgstr "Prikaz paketov ki so prejeti"
-
 #~ msgid ""
 #~ "Scroll to packages in the update list as they are downloaded or installed."
 #~ msgstr ""
 #~ "Prikaz paketov iz seznama posodobitev, ki so prejeti oziroma nameščeni"
-
 #~ msgid "Show all repositories in the software source viewer"
 #~ msgstr "Pokaži vsa odložišča v pregledovalniku programskih virov"
-
 #~ msgid "Show the 'All Packages' group menu"
 #~ msgstr "Pokaži skupino menija 'Vsi paketi'"
-
 #~ msgid ""
 #~ "Show the all packages menu item. This takes a long time to populate on "
 #~ "most backends and is not generally required by end users"
 #~ msgstr ""
 #~ "Pokaži predmet menija vseh paketov. Seznam je obsežen in se počasneje "
 #~ "zapolni, uporabniki pa ga tudi redkeje potrebujejo."
-
 #~ msgid "Show the category group menu"
 #~ msgstr "Pokaži skupino menija kategorij"
-
 #~ msgid ""
 #~ "Show the category group menu. This is more complete and custom to the "
 #~ "distribution, but takes longer to populate"
 #~ msgstr ""
 #~ "Pokaži predmet menija 'kategorije'. Seznam je obsežen in popolno opredeli "
 #~ "distribucijo, vendar se počasneje zapolni."
-
 #~ msgid ""
 #~ "Show the transaction progress icon in the tray when the original "
 #~ "application is still running."
 #~ msgstr ""
 #~ "Pokaži ikono napredka v sistemski vrstici, kadar je osnovni program, ki "
 #~ "zahteva posodabljanja, še vedno dejavna"
-
 #~ msgid "Show transactions that have the original application running"
 #~ msgstr "Pokaži posodobitve, katerih osnovni program je še vedno dejaven"
-
 #~ msgid ""
 #~ "The number of seconds at session startup to wait before checking for "
 #~ "updates"
 #~ msgstr "Čas v sekundah po prijavi, ko program preveri za posodobitve"
-
 #~ msgid "The search mode used by default"
 #~ msgstr "Privzeto uporabljen iskalni način."
-
 #~ msgid ""
 #~ "The search mode used by default. Options are \"name\", \"details\", or "
 #~ "\"file\""
 #~ msgstr ""
 #~ "Privzeto uporabljen iskalni način. možnosti so \"imensko\", \"podrobnosti"
 #~ "\", or \"datoteke\""
-
 #~ msgid ""
 #~ "This key determines if applications should be able to prompt for fonts"
 #~ msgstr "Ključ določa ali program lahko zahteva namestitev pisav"
-
 #~ msgid "Use WiFi (wireless LAN) connections to check for updates"
 #~ msgstr "Uporabi brezžično povezavo za preverjanje posodobitev"
-
 #~ msgid "Use WiFi connections"
 #~ msgstr "Uporabi brezžično povezavo"
-
 #~ msgid "Use mobile broadband connections"
 #~ msgstr "Uporabi širokopasovne mobilne povezave"
-
 #~ msgid ""
 #~ "Use mobile broadband connections such as GSM and CDMA to check for updates"
 #~ msgstr ""
 #~ "Uporabi širokopasovne povezave kot sta GSM in CDMA za preverjanje "
 #~ "posodobitev"
-
 #~ msgid ""
 #~ "When displaying UI from a session DBus request, automatically use these "
 #~ "options by default"
 #~ msgstr ""
 #~ "Med prikazovanjem uporabniškega vmesnika preko zahtev D-Bus seje, "
 #~ "privzeto samodejno uporabi možnosti"
-
 #~ msgid ""
 #~ "When displaying UI from a session DBus request, force these options to be "
 #~ "turned on"
 #~ msgstr ""
 #~ "Med prikazovanjem uporabniškega vmesnika preko zahtev D-Bus seje, vsili "
 #~ "uporabo možnosti"
-
 #~ msgid ""
 #~ "When removing a package, also remove those dependencies that are not "
 #~ "required by other packages"
 #~ msgstr "Med odstranjevanjem paketa odstrani tudi osirotele odvisne pakete."
-
 #~ msgid "Failed to show url"
 #~ msgstr "Napaka med prikazovanjem naslova URL."
-
 #~ msgid "Internal error"
 #~ msgstr "Notranja napaka"
-
 #~ msgid "and %d other security update"
-
 #~ msgid_plural "and %d other security updates"
 #~ msgstr[0] "in %d drugih varnostnih posodobitev"
 #~ msgstr[1] "in %d druga varnostna posodobitev"
 #~ msgstr[2] "in %d drugi varnostni posodobitvi"
 #~ msgstr[3] "in %d druge varnostne posodobitve"
-
 #~ msgid "Additional software will be installed"
 #~ msgstr "Nameščena bo dodatna programska oprema"
-
 #~ msgid "Additional software will be removed"
 #~ msgstr "Odstranjena bo dodatna programska oprema"
-
 #~ msgid "Additional software required"
 #~ msgstr "Zahtevana je dodatna programska oprema"
-
 #~ msgid "Extra packages to download"
 #~ msgstr "Dodatni paketi za prejemanje"
-
 #~ msgid "No updates selected"
 #~ msgstr "Ni izbranih posodobitev"
-
 #~ msgid "No updates are selected"
 #~ msgstr "Ni izbranih posodobitev"
-
 #~ msgid "Install only security updates"
 #~ msgstr "Namesti le varnostne posodobitve."
-
 #~ msgid "Show all software updates"
 #~ msgstr "Pokaži vse programske posodobitve."
+
