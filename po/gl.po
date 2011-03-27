@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-15 01:41+0100\n"
-"PO-Revision-Date: 2011-03-15 01:41+0100\n"
+"POT-Creation-Date: 2011-03-27 20:31+0200\n"
+"PO-Revision-Date: 2011-03-27 20:30+0200\n"
 "Last-Translator: Fran Diéguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
 "Language: gl\n"
@@ -253,13 +253,18 @@ msgstr "Instalador do catálogo"
 msgid "Install a catalog of software on the system"
 msgstr "Instalar un catálogo de software no sistema"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Instalar o programa seleccionado no sistema"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Instalador do paquete"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Instalación de software"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -3609,8 +3614,7 @@ msgstr "A consulta fallou. Pode atopar máis información no informe detallado."
 msgid "Files to install"
 msgstr "Ficheiros a instalar"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Instalador de ficheiros PackageKit"
 
@@ -3661,10 +3665,8 @@ msgstr "Debe especificar un tipo MIME a instalar"
 msgid "Packages to install"
 msgstr "Paquetes a instalar"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Instalador do nome de paquete"
 
@@ -4289,8 +4291,7 @@ msgstr "Visor da actualización de programas"
 msgid "Do not exit after the request has been processed"
 msgstr "Non sair despois de que a petición sexa procesada"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "Servizo de DBus de sesión para PackageKit"
 
@@ -4306,6 +4307,9 @@ msgstr "Opcións de depuración"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostrar información de depuración"
+
+#~ msgid "Package Installer"
+#~ msgstr "Instalador do paquete"
 
 #~ msgid "PackageKit Update Applet"
 #~ msgstr "Miniaplicativo de actualización do PackageKit"
