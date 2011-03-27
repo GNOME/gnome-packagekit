@@ -10,18 +10,18 @@
 # Andre Klapper <ak-47@gmx.net>, 2008, 2009, 2010.
 # Patrick Niklaus <marex@compiz-fusion.org>, 2008.
 # Mario Blättermann <mariobl@gnome.org>, 2009, 2010, 2011.
-# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009, 2010.
 # Wolfgang Stöggl <c72578@yahoo.de>, 2011.
+# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-17 16:19+0000\n"
-"PO-Revision-Date: 2011-03-19 09:42+0100\n"
-"Last-Translator: Wolfgang Stoeggl <c72578@yahoo.de>\n"
-"Language-Team: German <gnome-de@gnome.org>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-28 00:02+0200\n"
+"PO-Revision-Date: 2011-03-28 00:02+0200\n"
+"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
+"Language-Team: Deutsch <gnome-de@gnome.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -264,13 +264,18 @@ msgstr "Katalog-Installierer"
 msgid "Install a catalog of software on the system"
 msgstr "Softwarekatalog auf dem System installieren"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Ausgewählte Software auf dem System installieren"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Paket-Installierer"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Software-Installation"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -835,8 +840,8 @@ msgstr ""
 #: ../src/gpk-application.c:3157
 msgid "Enter a package name and then click find to get started."
 msgstr ""
-"Geben Sie einen Paketnamen ein und klicken Sie anschließen auf »Suchen« um zu "
-"beginnen."
+"Geben Sie einen Paketnamen ein und klicken Sie anschließen auf »Suchen« um "
+"zu beginnen."
 
 #. TRANSLATORS: daemon is broken
 #: ../src/gpk-application.c:3383
@@ -3539,8 +3544,8 @@ msgstr "Sind Sie <b>sicher</b>, dass Sie dieses Paket installieren wollen?"
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
 msgstr ""
-"Zusätzliche Medien werden benötigt. Bitte legen Sie das %s-Medium namens »%s« "
-"ein und klicken Sie auf »Weiter«"
+"Zusätzliche Medien werden benötigt. Bitte legen Sie das %s-Medium namens "
+"»%s« ein und klicken Sie auf »Weiter«"
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:361 ../src/gpk-task.c:532
@@ -3691,8 +3696,7 @@ msgstr ""
 msgid "Files to install"
 msgstr "Zu installierende Dateien"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "PackageKit-Dateiinstallierer"
 
@@ -3744,10 +3748,8 @@ msgstr "Sie müssen einen MIME-Typen zum Installieren angeben"
 msgid "Packages to install"
 msgstr "Zu installierende Pakete"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Installation nach Paketnamen"
 
@@ -4371,8 +4373,7 @@ msgstr "Software-Aktualisierungs-Betrachter"
 msgid "Do not exit after the request has been processed"
 msgstr "Nicht beenden, nachdem die Anfrage verarbeitet wurde"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "DBus-Sitzungsdienst für PackageKit"
 
@@ -4388,6 +4389,9 @@ msgstr "Optionen zur Fehlerdiagnose"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Informationen zur Fehlerdiagnose anzeigen"
+
+#~ msgid "Package Installer"
+#~ msgstr "Paket-Installierer"
 
 # FIXME "Applet" => ?
 #~ msgid "PackageKit Update Applet"
@@ -4814,9 +4818,9 @@ msgstr "Informationen zur Fehlerdiagnose anzeigen"
 #~ "Show the all packages menu item. This takes a long time to populate on "
 #~ "most backends and is not generally required by end users"
 #~ msgstr ""
-#~ "Den Menüeintrag »Alle Pakete« anzeigen. Das Erstellen der Liste dauert mit "
-#~ "den meisten Backends eine längere Zeit und wird im Allgemeinen nicht von "
-#~ "allen Anwendern benötigt"
+#~ "Den Menüeintrag »Alle Pakete« anzeigen. Das Erstellen der Liste dauert "
+#~ "mit den meisten Backends eine längere Zeit und wird im Allgemeinen nicht "
+#~ "von allen Anwendern benötigt"
 
 #~ msgid "Show the category group menu"
 #~ msgstr "Kategoriegruppen-Menü anzeigen"
