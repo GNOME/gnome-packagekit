@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-12 19:52+0000\n"
-"PO-Revision-Date: 2011-03-07 00:44+0000\n"
+"POT-Creation-Date: 2011-03-29 00:28+0100\n"
+"PO-Revision-Date: 2011-03-23 10:50+0000\n"
 "Last-Translator: António Lima <amrlima@gmail.com>\n"
 "Language-Team: gnome_pt@yahoogroups.com\n"
 "Language: pt\n"
@@ -19,18 +19,18 @@ msgstr ""
 
 #: ../data/gpk-application.desktop.in.h:1
 msgid "Add or remove software installed on the system"
-msgstr "Adicionar ou remover aplicações instaladas no sistema"
+msgstr "Adicionar ou remover software instalado no sistema"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
 #: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
 #: ../src/gpk-update-viewer.c:3333
 msgid "Add/Remove Software"
-msgstr "Adicionar/Remover Aplicações"
+msgstr "Adicionar/Remover Software"
 
 #: ../data/gpk-application.ui.h:1
 msgid "About this software"
-msgstr "Sobre esta aplicação"
+msgstr "Sobre este software"
 
 #: ../data/gpk-application.ui.h:3
 msgid "Depends on"
@@ -38,7 +38,7 @@ msgstr "Dependente de"
 
 #: ../data/gpk-application.ui.h:4
 msgid "Edit list of software sources"
-msgstr "Editar lista de fontes de aplicações"
+msgstr "Editar lista de fontes de software"
 
 #: ../data/gpk-application.ui.h:5
 msgid "Execute graphical applications"
@@ -54,7 +54,7 @@ msgstr "Obter lista de ficheiros"
 
 #: ../data/gpk-application.ui.h:8
 msgid "Help with this software"
-msgstr "Contribua para esta aplicação"
+msgstr "Contribua para este software"
 
 #. TRANSLATORS: title: installing local files
 #. TRANSLATORS: button: confirm to search for packages
@@ -159,11 +159,11 @@ msgstr "Relatório de Software"
 
 #: ../data/gpk-application.ui.h:31 ../data/gpk-prefs.ui.h:6
 msgid "Software Sources"
-msgstr "Fontes de Aplicações"
+msgstr "Fontes de Software"
 
 #: ../data/gpk-application.ui.h:32
 msgid "View previously added or removed software"
-msgstr "Visualizar aplicações anteriormente adicionadas ou removidas"
+msgstr "Visualizar software anteriormente adicionado ou removido"
 
 #: ../data/gpk-application.ui.h:33
 msgid "Visit the project homepage"
@@ -245,19 +245,24 @@ msgstr "Instalador de Catálogos"
 
 #: ../data/gpk-install-catalog.desktop.in.h:2
 msgid "Install a catalog of software on the system"
-msgstr "Instalar um catálogo de aplicações no sistema"
+msgstr "Instalar um catálogo de software no sistema"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
-msgstr "Instalar aplicação seleccionada no sistema"
+msgstr "Instalar software seleccionado no sistema"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Instalador de Pacotes"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Instalar Software"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
-msgstr "Visualizador de Registo de Aplicações"
+msgstr "Visualizador de Registo de Software"
 
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
@@ -271,18 +276,18 @@ msgstr "Filtro"
 msgid ""
 "Change software update preferences and enable or disable software sources"
 msgstr ""
-"Alterar preferências de actualizações de aplicações e activar ou desactivar "
-"fontes de aplicações."
+"Alterar preferências de actualizações de software e activar ou desactivar "
+"fontes de software."
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
-msgstr "Actualizações de Aplicações"
+msgstr "Actualizações de Software"
 
 #: ../data/gpk-prefs.ui.h:1
 msgid ""
 "A software source contains packages that can be installed on this computer."
 msgstr ""
-"Uma fonte de aplicações contém pacotes que podem ser instalados neste "
+"Uma fonte de software contém pacotes que podem ser instalados neste "
 "computador."
 
 #: ../data/gpk-prefs.ui.h:2
@@ -304,7 +309,7 @@ msgstr "Actualmente a utilizar banda larga móvel"
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:947
 msgid "Software Update Preferences"
-msgstr "Preferências de Actualizações de Aplicações"
+msgstr "Preferências de Actualização de Software"
 
 #: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
@@ -321,7 +326,7 @@ msgstr "Verifi_car Agora"
 #. shows extra -source, -debuginfo, and -devel software sources
 #: ../data/gpk-prefs.ui.h:12
 msgid "_Show debug and development software sources"
-msgstr "_Mostra fontes de aplicações de depuração e desenvolvimento"
+msgstr "_Mostra fontes de software de depuração e desenvolvimento"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
 #: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
@@ -410,7 +415,7 @@ msgstr "Identificação do utilizador da assinatura:"
 
 #: ../data/gpk-signature.ui.h:8
 msgid "Software signature is required"
-msgstr "É necessário uma assinatura de aplicação"
+msgstr "É necessário uma assinatura de software"
 
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
@@ -418,7 +423,7 @@ msgstr "Actualização de Software"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
-msgstr "Actualizar aplicações instaladas no sistema"
+msgstr "Actualizar software instalado no sistema"
 
 #: ../data/gpk-distro-upgrade.desktop.in.h:1
 msgid "Operating System Upgrade"
@@ -433,7 +438,7 @@ msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
 "provide new features."
 msgstr ""
-"As actualizações de aplicações corrigem erros, eliminam vulnerabilidades e "
+"As actualizações de software corrigem erros, eliminam vulnerabilidades e "
 "disponibilizam novas funcionalidades."
 
 #: ../data/gpk-update-viewer.ui.h:3
@@ -473,8 +478,8 @@ msgid ""
 "The software which you want to remove is required to run other software, "
 "which will be removed too."
 msgstr ""
-"A aplicação que quer remover é necessária para executar outra aplicação, que "
-"também será removida."
+"O software que quer remover é necessário para executar outra aplicação, que "
+"também será removido."
 
 #. TRANSLATORS: button label, install
 #: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:296
@@ -493,8 +498,8 @@ msgid ""
 "The software that you want to install requires additional software to run "
 "correctly."
 msgstr ""
-"A aplicação que quer instalar requer aplicações adicionais para ser "
-"executada correctamente."
+"O software que quer instalar requer software adicional para ser executada "
+"correctamente."
 
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:555
@@ -968,7 +973,7 @@ msgstr "%s, %s, %s, %s e %s"
 #. TRANSLATORS: we failed to install
 #: ../src/gpk-dbus-task.c:244
 msgid "Failed to install software"
-msgstr "Falha ao instalar aplicação"
+msgstr "Falha ao instalar software"
 
 #. TRANSLATORS: we didn't select any applications that were returned
 #: ../src/gpk-dbus-task.c:246
@@ -1060,7 +1065,7 @@ msgstr "Não foi possível encontrar pacotes"
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1093
 msgid "The packages could not be found in any software source"
-msgstr "Não foi possível encontrar os pacotes em qualquer fonte de aplicações"
+msgstr "Não foi possível encontrar os pacotes em qualquer fonte de software"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -1253,7 +1258,7 @@ msgstr "Falha ao procurar o plugin"
 #: ../src/gpk-dbus-task.c:1635
 msgid "Could not find plugin in any configured software source"
 msgstr ""
-"Não foi possível encontrar nenhum plugin em nenhuma fonte de aplicações "
+"Não foi possível encontrar nenhum plugin em nenhuma fonte de software "
 "configurada"
 
 #: ../src/gpk-dbus-task.c:1658
@@ -1288,7 +1293,7 @@ msgstr "Falha ao procurar por fornecedores"
 #. TRANSLATORS: title
 #: ../src/gpk-dbus-task.c:1840
 msgid "Failed to find software"
-msgstr "Falha ao localizar aplicação"
+msgstr "Falha ao localizar software"
 
 #. TRANSLATORS: nothing found in the software sources that helps
 #: ../src/gpk-dbus-task.c:1842
@@ -1830,7 +1835,7 @@ msgstr "Os pacotes não são compatíveis"
 
 #: ../src/gpk-enum.c:388
 msgid "Problem connecting to a software source"
-msgstr "Problema ao ligar a uma fonte de aplicações"
+msgstr "Problema ao ligar a uma fonte de software"
 
 #: ../src/gpk-enum.c:391
 msgid "Failed to initialize"
@@ -2033,7 +2038,7 @@ msgid ""
 "Please check your security settings."
 msgstr ""
 "Não foi possível criar uma relação de segurança credível com a fonte de "
-"aplicações.\n"
+"software.\n"
 "Por favor verifique as suas definições de segurança."
 
 #: ../src/gpk-enum.c:540
@@ -2049,7 +2054,7 @@ msgid ""
 "software source."
 msgstr ""
 "O pacote que está a ser modificado não foi encontrado no seu sistema ou em "
-"qualquer fonte de aplicações."
+"qualquer fonte de software."
 
 #: ../src/gpk-enum.c:546
 msgid "The package that is trying to be installed is already installed."
@@ -2079,7 +2084,7 @@ msgid ""
 msgstr ""
 "Não foi possível carregar a lista de grupos.\n"
 "Actualizar a sua cache pode ajudar, embora isto normalmente seja um erro da "
-"fonte de aplicações."
+"fonte de software."
 
 #: ../src/gpk-enum.c:562
 msgid ""
@@ -2115,8 +2120,8 @@ msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
 msgstr ""
-"Não foi encontrado nome da fonte remota de aplicações.\n"
-"Poderá ser necessário activar um item em Fontes de Aplicações."
+"Não foi encontrado nome da fonte remota de software.\n"
+"Poderá ser necessário activar um item em Fontes de Software."
 
 #: ../src/gpk-enum.c:581
 msgid "Removing a protected system package is not allowed."
@@ -2160,7 +2165,7 @@ msgid ""
 "To use this software you have to accept the license."
 msgstr ""
 "O acordo de licença não foi aceite.\n"
-"Para utilizar esta aplicação é necessário aceitar a licença."
+"Para utilizar este software é necessário aceitar a licença."
 
 #: ../src/gpk-enum.c:606
 msgid ""
@@ -2169,7 +2174,7 @@ msgid ""
 msgstr ""
 "Dois pacotes disponibilizam o mesmo ficheiro.\n"
 "Isto normalmente acontece devido à mistura de pacotes de diferentes fontes "
-"de aplicações"
+"de software"
 
 #: ../src/gpk-enum.c:610
 msgid ""
@@ -2178,7 +2183,7 @@ msgid ""
 msgstr ""
 "Existem múltiplos pacotes que não são compatíveis.\n"
 "Isto normalmente acontece por misturar pacotes de diferentes fontes de "
-"aplicações."
+"software."
 
 #: ../src/gpk-enum.c:614
 msgid ""
@@ -2186,7 +2191,7 @@ msgid ""
 "Please check the detailed error for further details."
 msgstr ""
 "Ocorreu um problema (possivelmente temporário) ao ligar a uma fonte de "
-"aplicações.\n"
+"software.\n"
 "Por favor verifique o erro detalhado para mais detalhes."
 
 #: ../src/gpk-enum.c:618
@@ -2292,7 +2297,7 @@ msgid ""
 "There were no more download mirrors that could be tried."
 msgstr ""
 "Não foi possível encontrar os dados necessários em nenhuma das fontes de "
-"aplicações configuradas.\n"
+"software configuradas.\n"
 "Não existiam mais espelhos de transferência para tentar."
 
 #: ../src/gpk-enum.c:671
@@ -2302,7 +2307,7 @@ msgid ""
 "The list of distribution upgrades will be unavailable."
 msgstr ""
 "Não foi possível encontrar os dados de actualização necessários em nenhuma "
-"das fontes de aplicações configuradas.\n"
+"das fontes de software configuradas.\n"
 "A lista de actualizações de distribuição vai estar indisponível."
 
 #: ../src/gpk-enum.c:675
@@ -2546,11 +2551,11 @@ msgstr "A limpeza automática está a ser ignorada"
 
 #: ../src/gpk-enum.c:885
 msgid "Software source download failed"
-msgstr "A transferência da fonte da aplicação falhou"
+msgstr "A transferência da fonte de software falhou"
 
 #: ../src/gpk-enum.c:888
 msgid "This software source is for developers only"
-msgstr "Esta fonte de aplicações é apenas para programadores"
+msgstr "Esta fonte de software é apenas para programadores"
 
 #: ../src/gpk-enum.c:891
 msgid "Other updates have been held back"
@@ -2595,7 +2600,7 @@ msgstr "A transferir pacotes"
 #. TRANSLATORS: transaction state, refreshing internal lists
 #: ../src/gpk-enum.c:945
 msgid "Refreshing software list"
-msgstr "A actualizar a lista de aplicações"
+msgstr "A actualizar a lista de software"
 
 #. TRANSLATORS: transaction state, installing updates
 #: ../src/gpk-enum.c:949
@@ -3385,7 +3390,7 @@ msgstr "Mapas"
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1691
 msgid "Software sources"
-msgstr "Fontes de aplicações"
+msgstr "Fontes de software"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1695
@@ -3439,7 +3444,7 @@ msgstr "Instalar pacote"
 #. TRANSLATORS: is not GPG signed
 #: ../src/gpk-task.c:141 ../src/gpk-task.c:151 ../src/gpk-task.c:171
 msgid "The software is not signed by a trusted provider."
-msgstr "A aplicação não se encontra assinada por um fornecedor credível."
+msgstr "O software não se encontra assinada por um fornecedor credível."
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
 #: ../src/gpk-task.c:143
@@ -3450,7 +3455,7 @@ msgstr "Não actualize este pacote se não tiver a certeza que é seguro fazê-l
 #: ../src/gpk-task.c:145 ../src/gpk-task.c:155
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
-"Aplicações maliciosas podem danificar o seu computador ou causar outros "
+"Software malicioso pode danificar o seu computador ou causar outros "
 "problemas."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
@@ -3628,8 +3633,7 @@ msgstr ""
 msgid "Files to install"
 msgstr "Ficheiros a instalar"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Instalador de Ficheiros do PackageKit"
 
@@ -3678,10 +3682,8 @@ msgstr "É necessário especificar um tipo mime a instalar"
 msgid "Packages to install"
 msgstr "Pacotes a instalar"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Instalador de Pacotes por Nome"
 
@@ -3820,7 +3822,7 @@ msgstr "Activado"
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:593
 msgid "Software Source"
-msgstr "Fonte de Aplicações"
+msgstr "Fonte de Software"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:655
@@ -3834,7 +3836,7 @@ msgstr "A sair, não foi possível encontrar detalhes do motor"
 
 #: ../src/gpk-prefs.c:797
 msgid "Getting software source list not supported by backend"
-msgstr "Obtenção da lista de fontes de aplicações não é suportada pelo motor"
+msgstr "Obtenção da lista de fontes de software não é suportada pelo motor"
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:260
@@ -4061,13 +4063,13 @@ msgstr[1] "_Instalar Actualizações"
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1439
 msgid "All software is up to date"
-msgstr "Todas as aplicações estão actualizadas"
+msgstr "Todo o software está actualizado"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1441
 msgid "There are no software updates available for your computer at this time."
 msgstr ""
-"Não existem actualizações de aplicações disponíveis para o seu computador "
+"Não existem actualizações de software disponíveis para o seu computador "
 "nesta altura."
 
 #: ../src/gpk-update-viewer.c:1467
@@ -4096,7 +4098,7 @@ msgstr[1] "%i actualizações seleccionadas (%s)"
 #. TRANSLATORS: a column that has name of the package that will be updated
 #: ../src/gpk-update-viewer.c:1694
 msgid "Software"
-msgstr "Aplicação"
+msgstr "Software"
 
 #. TRANSLATORS: a column that has state of each package
 #: ../src/gpk-update-viewer.c:1704
@@ -4297,14 +4299,13 @@ msgstr ""
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-update-viewer.c:3350
 msgid "Software Update Viewer"
-msgstr "Visualizador de Actualizações de Aplicações"
+msgstr "Visualizador de Actualizações de Software"
 
 #: ../src/gpk-dbus-service.c:139
 msgid "Do not exit after the request has been processed"
 msgstr "Não sair após o pedido ter sido processado"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "Serviço de D-Bus de sessão para o PackageKit"
 
@@ -4320,6 +4321,9 @@ msgstr "Opções de Depuração"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Apresentar opções de depuração"
+
+#~ msgid "Package Installer"
+#~ msgstr "Instalador de Pacotes"
 
 #~ msgid "Backend Status"
 #~ msgstr "Estado do Motor"
