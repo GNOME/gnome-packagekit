@@ -2925,6 +2925,7 @@ gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer user_data)
 	GtkRequisition req;
 	gtk_widget_get_preferred_size (widget, &req, NULL);
 	g_debug ("req.height=%i", req.height);
+	// FIXME: this is never executed, it falls back on values from the .ui file
 	if (req.height != 0)
 		gtk_paned_set_position (GTK_PANED (widget), 166);
 }
