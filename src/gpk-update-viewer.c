@@ -72,6 +72,7 @@ static	GtkWidget		*info_updates = NULL;
 static	GtkWidget		*info_mobile = NULL;
 static	GtkWidget		*info_mobile_label = NULL;
 static	GtkApplication		*application = NULL;
+static	PkBitfield		 roles = 0;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -851,7 +852,8 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		model = gtk_tree_view_get_model (treeview);
 
 		/* enable or disable the correct spinners */
-		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+		    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 			path = gpk_update_viewer_model_get_path (model, package_id);
 			if (path != NULL) {
 				if (info == PK_INFO_ENUM_FINISHED)
@@ -921,7 +923,8 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		}
 
 		/* only change the status when we're doing the actual update */
-		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
+		    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
 			/* if the info is finished, change the status to past tense */
 			if (info == PK_INFO_ENUM_FINISHED) {
 				/* clear the remaining size */
@@ -1189,10 +1192,16 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer user_data)
 	array = gpk_update_viewer_get_install_package_ids ();
 	package_ids = pk_ptr_array_to_strv (array);
 
-	/* get packages that also have to be updated */
-	pk_task_update_packages_async (task, package_ids, cancellable,
-				       (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
-				       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
+	/* the backend is able to do UpdatePackages */
+	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
+		pk_task_update_packages_async (task, package_ids, cancellable,
+					       (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
+					       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
+	} else {
+		pk_task_update_system_async (task, cancellable,
+					     (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
+					     (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
+	}
 
 	/* from now on ignore updates-changed signals */
 	ignore_updates_changed = TRUE;
@@ -2555,6 +2564,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	PkMessageEnum message_type;
 	gchar *text = NULL;
 	gboolean selected;
+	gboolean sensitive;
 	GtkTreeIter iter;
 	GtkTreeIter parent;
 	guint i;
@@ -2626,6 +2636,14 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 		g_debug ("adding: id=%s, text=%s", package_id, text);
 		selected = (info != PK_INFO_ENUM_BLOCKED);
 
+		/* only make the checkbox selectable if:
+		 *  - we can do UpdatePackages rather than just UpdateSystem
+		 *  - the update is not blocked
+		 */
+		sensitive = selected;
+		if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES))
+			sensitive = FALSE;
+
 		/* do we add to a parent? */
 		if (ret)
 			gtk_tree_store_append (array_store_updates, &iter, &parent);
@@ -2636,7 +2654,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 				    GPK_UPDATES_COLUMN_ID, package_id,
 				    GPK_UPDATES_COLUMN_INFO, info,
 				    GPK_UPDATES_COLUMN_SELECT, selected,
-				    GPK_UPDATES_COLUMN_SENSITIVE, selected,
+				    GPK_UPDATES_COLUMN_SENSITIVE, sensitive,
 				    GPK_UPDATES_COLUMN_CLICKABLE, selected,
 				    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
 				    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
@@ -3059,7 +3077,6 @@ gpk_update_viewer_get_properties_cb (PkControl *_control, GAsyncResult *res, gpo
 {
 	GError *error = NULL;
 	gboolean ret;
-	PkBitfield roles;
 
 	/* get the result */
 	ret = pk_control_get_properties_finish (control, res, &error);
