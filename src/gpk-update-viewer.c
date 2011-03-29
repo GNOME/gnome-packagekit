@@ -3254,8 +3254,8 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_update_viewer_button_upgrade_cb), NULL);
 
-	/* set a size, if the screen allows */
-	ret = gpk_window_set_size_request (GTK_WINDOW(main_window), 700, 600);
+	/* set a size, as much as the screen allows */
+	ret = gpk_window_set_size_request (GTK_WINDOW(main_window), 700, 1200);
 	if (!ret) {
 		g_debug ("small form factor mode");
 		/* hide the header in SFF mode */

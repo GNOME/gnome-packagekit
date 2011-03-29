@@ -3954,8 +3954,8 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	/* mark find button insensitive */
 	gpk_application_set_button_find_sensitivity (NULL);
 
-	/* set a size, if the screen allows */
-	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 1000, 500);
+	/* set a size, as much as the screen allows */
+	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 1000, 1200);
 
 	/* we are small form factor */
 	if (!ret) {
