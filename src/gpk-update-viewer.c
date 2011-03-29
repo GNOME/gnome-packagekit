@@ -3258,7 +3258,9 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	ret = gpk_window_set_size_request (GTK_WINDOW(main_window), 700, 1200);
 	if (!ret) {
 		g_debug ("small form factor mode");
-		/* hide the header in SFF mode */
+		/* hide the header in SFF mode;
+		FIXME: this doesn't work because most window managers simply allocate
+		the maximum height without returning False, so this is never called */
 		widget = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_header"));
 		gtk_widget_hide (widget);
 	}
