@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-11 12:39+0000\n"
-"PO-Revision-Date: 2011-03-05 10:55+0700\n"
+"POT-Creation-Date: 2011-03-26 19:31+0000\n"
+"PO-Revision-Date: 2011-03-27 10:34+0700\n"
 "Last-Translator: Dirgita <dirgitadevina@yahoo.co.id>\n"
-"Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
+"Language-Team: Indonesian <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -253,13 +253,18 @@ msgstr "Pemasang Katalog"
 msgid "Install a catalog of software on the system"
 msgstr "Pasang suatu katalog perangkat lunak pada sistem"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "Pasang perangkat lunak yang dipilih pada sistem"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "Pemasang Paket"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Pemasangan Perangkat Lunak"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -3525,8 +3530,7 @@ msgstr "Permintaan gagal. Rincian lebih lanjut tersedia pada laporan terinci."
 msgid "Files to install"
 msgstr "Berkas untuk dipasang"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Pemasang Berkas PackageKit"
 
@@ -3575,10 +3579,8 @@ msgstr "Anda perlu menyatakan suatu tipe mime untuk dipasang"
 msgid "Packages to install"
 msgstr "Paket untuk dipasang"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Pemasang Nama Paket"
 
@@ -4184,8 +4186,7 @@ msgstr "Penilik Pemutakhiran Perangkat Lunak"
 msgid "Do not exit after the request has been processed"
 msgstr "Jangan keluar setelah permintaan telah diproses"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "Layanan DBus Sesi bagi PackageKit"
 
@@ -4201,3 +4202,4 @@ msgstr "Opsi Pengawakutuan"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Tampilkan opsi pengawa-kutuan"
+
