@@ -717,8 +717,8 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_window_set_icon_name (window, GPK_ICON_SOFTWARE_LOG);
 	gtk_window_set_application (window, application);
 
-	/* set a size, if the screen allows */
-	gpk_window_set_size_request (window, 900, 300);
+	/* set a size, as the screen allows */
+	gpk_window_set_size_request (window, 1200, 1200);
 
 	/* Get the main window quit */
 	g_signal_connect (window, "delete-event",
