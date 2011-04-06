@@ -13,15 +13,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
-"POT-Creation-Date: 2011-02-27 05:47+0900\n"
-"PO-Revision-Date: 2011-02-27 06:03+0900\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"packagekit&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-03-23 02:27+0000\n"
+"PO-Revision-Date: 2011-04-07 01:56+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
-"Language: Korean\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/gpk-application.desktop.in.h:1
@@ -257,13 +258,18 @@ msgstr "소프트웨어 목록 설치"
 msgid "Install a catalog of software on the system"
 msgstr "소프트웨어 목록을 시스템에 설치합니다"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "선택한 소프트웨어를 시스템에 설치합니다"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "패키지 설치 프로그램"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "소프트웨어 설치"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -280,7 +286,8 @@ msgstr "필터"
 #: ../data/gpk-prefs.desktop.in.h:1
 msgid ""
 "Change software update preferences and enable or disable software sources"
-msgstr "소프트웨어 업데이트 기본 설정 바꾸기 및 소프트웨어 공급원 사용 혹은 해제"
+msgstr ""
+"소프트웨어 업데이트 기본 설정 바꾸기 및 소프트웨어 공급원 사용 혹은 해제"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Software Updates"
@@ -1453,7 +1460,8 @@ msgstr "성공적으로 업그레이드를 마쳤습니다"
 msgid ""
 "Your system now has the required software needed to complete the operating "
 "system upgrade."
-msgstr "이제 시스템에 운영체제 업그레이드를 마치는데 필요한 소프트웨어가 있습니다."
+msgstr ""
+"이제 시스템에 운영체제 업그레이드를 마치는데 필요한 소프트웨어가 있습니다."
 
 #: ../src/gpk-distro-upgrade.c:164
 msgid ""
@@ -1490,25 +1498,32 @@ msgstr "시스템 업그레이드 (%d/%d)"
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
-msgstr "이 도우미 창에서는 현재 설치한 운영체제를 새 릴리스로 업그레이드합니다."
+msgstr ""
+"이 도우미 창에서는 현재 설치한 운영체제를 새 릴리스로 업그레이드합니다."
 
 #: ../src/gpk-distro-upgrade.c:407
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
-msgstr "이 과정을 마치려면 수 시간이 필요할 수도 있습니다. 시간은 인터넷 연결 속도 및 선택하는 옵션에 따라 달라집니다."
+msgstr ""
+"이 과정을 마치려면 수 시간이 필요할 수도 있습니다. 시간은 인터넷 연결 속도 "
+"및 선택하는 옵션에 따라 달라집니다."
 
 #: ../src/gpk-distro-upgrade.c:408
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
-msgstr "이 도우미 창에서 시스템 업그레이드에 필요한 패키지를 다운로드하는 동안 다른 작업을 계속 하셔도 됩니다."
+msgstr ""
+"이 도우미 창에서 시스템 업그레이드에 필요한 패키지를 다운로드하는 동안 다른 "
+"작업을 계속 하셔도 됩니다."
 
 #: ../src/gpk-distro-upgrade.c:409
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
-msgstr "다운로드를 마치면 시스템을 다시 시작하라고 안내합니다. (업그레이드를 마치려면 필요합니다.)"
+msgstr ""
+"다운로드를 마치면 시스템을 다시 시작하라고 안내합니다. (업그레이드를 마치려"
+"면 필요합니다.)"
 
 #. TRANSLATORS: this is a intro page title
 #: ../src/gpk-distro-upgrade.c:421
@@ -1537,13 +1552,15 @@ msgstr "업그레이드 도구는 다음 3가지 모드로 동작할 수 있습�
 #: ../src/gpk-distro-upgrade.c:568
 msgid ""
 "The selected option will require the installer to download additional data."
-msgstr "선택한 옵션을 사용하려면 설치 프로그램에서 추가 데이터를 다운로드해야 합니다."
+msgstr ""
+"선택한 옵션을 사용하려면 설치 프로그램에서 추가 데이터를 다운로드해야 합니다."
 
 #: ../src/gpk-distro-upgrade.c:569
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
-msgstr "업그레이드할 때 네트워크를 사용할 수 없다면 이 옵션을 사용하지 마십시오."
+msgstr ""
+"업그레이드할 때 네트워크를 사용할 수 없다면 이 옵션을 사용하지 마십시오."
 
 #. TRANSLATORS: this is a choose page title
 #: ../src/gpk-distro-upgrade.c:584
@@ -3486,8 +3503,7 @@ msgstr "요청이 실패했습니다. 보고서에 더 자세한 정보가 있�
 msgid "Files to install"
 msgstr "설치할 파일"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "패키지키트 파일 설치 프로그램"
 
@@ -3536,10 +3552,8 @@ msgstr "설치할 MIME 형식을 지정해야 합니다"
 msgid "Packages to install"
 msgstr "설치할 패키지"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "패키지 이름 설치 프로그램"
 
@@ -4129,8 +4143,7 @@ msgstr "소프트웨어 업데이트 보기"
 msgid "Do not exit after the request has been processed"
 msgstr "요청을 처리한 뒤에 프로그램을 끝내지 않습니다"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "패키지키트 세션 D-버스 서비스"
 
@@ -4146,6 +4159,9 @@ msgstr "디버깅 옵션"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "디버깅 옵션 표시"
+
+#~ msgid "Package Installer"
+#~ msgstr "패키지 설치 프로그램"
 
 #~ msgid "Allow applications to invoke the codec installer"
 #~ msgstr "프로그램이 요청하는 코덱 설치를 허용합니다"
