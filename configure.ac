@@ -115,8 +115,6 @@ PKG_CHECK_MODULES(DBUS, \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
  gtk+-3.0 >= 2.91.0 gdk-3.0 fontconfig)
-PKG_CHECK_MODULES(GNOME_MENUS, \
- libgnome-menu >= 2.24.1)
 PKG_CHECK_MODULES(UPOWER, [
  upower-glib >= 0.9.0])
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)

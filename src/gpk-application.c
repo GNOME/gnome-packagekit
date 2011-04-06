@@ -2294,18 +2294,6 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 		gpk_application_add_detail_item (_("License"), license, NULL);
 	}
 
-	/* menu path */
-	value = gpk_desktop_guess_best_file (desktop, split[PK_PACKAGE_ID_NAME]);
-	if (value != NULL) {
-		text = gpk_desktop_get_menu_path (value);
-		if (text != NULL) {
-			/* TRANSLATORS: the path in the menu, e.g. Applications -> Games */
-			gpk_application_add_detail_item (_("Menu"), text, NULL);
-		}
-		g_free (text);
-	}
-	g_free (value);
-
 	/* set the description */
 	text = gpk_application_text_format_display (description);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "textview_description"));

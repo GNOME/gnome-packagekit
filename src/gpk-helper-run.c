@@ -228,7 +228,6 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	gchar *exec = NULL;
 	gchar *summary = NULL;
 	gchar *joint = NULL;
-	gchar *menu_path = NULL;
 	GtkTreeIter iter;
 	GKeyFile *file = NULL;
 	gint weight;
@@ -293,22 +292,10 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	if (summary == NULL)
 		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
 
-	/* get application path */
-	text = gpk_desktop_get_menu_path (filename);
-	if (text != NULL)
-		menu_path = g_markup_escape_text (text, -1);
-	g_free (text);
-
 	/* put formatted text into treeview */
 	gtk_list_store_append (helper->priv->list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
 	text = gpk_package_id_format_twoline (package_id, joint);
-	if (menu_path != NULL) {
-		/* TRANSLATORS: the path in the menu, e.g. Applications -> Games -> Dave */
-		fulltext = g_strdup_printf("%s\n\n<i>%s</i>", text, menu_path);
-		g_free (text);
-		text = fulltext;
-	}
 
 	gtk_list_store_set (helper->priv->list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
@@ -321,7 +308,6 @@ out:
 	g_free (icon);
 	g_free (name);
 	g_free (text);
-	g_free (menu_path);
 	g_free (joint);
 	g_free (summary);
 
