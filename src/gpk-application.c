@@ -1555,6 +1555,8 @@ out:
 	/* mark find button sensitive */
 	search_in_progress = FALSE;
 	gpk_application_set_button_find_sensitivity (NULL);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "scrolledwindow_groups"));
+	gtk_widget_set_sensitive (widget, TRUE);
 
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -1710,9 +1712,19 @@ out:
 static void
 gpk_application_perform_search (gpointer user_data)
 {
+	GtkWidget *widget;
+
 	/*if we are in the middle of a search, just return*/
 	if (search_in_progress == TRUE)
 		return;
+
+	if (search_mode == GPK_MODE_NAME_DETAILS_FILE ||
+	    search_mode == GPK_MODE_GROUP ||
+	    search_mode == GPK_MODE_SELECTED) {
+		widget = GTK_WIDGET (gtk_builder_get_object (builder,
+							     "scrolledwindow_groups"));
+		gtk_widget_set_sensitive (widget, FALSE);
+	}
 
 	gpk_application_clear_details (NULL);
 	gpk_application_clear_packages (NULL);
