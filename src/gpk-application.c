@@ -1612,19 +1612,19 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 	/* do the search */
 	searches = g_strsplit (search_text, " ", -1);
 	if (search_type == GPK_SEARCH_NAME) {
-		pk_client_search_names_async (PK_CLIENT(task),
+		pk_task_search_names_async (task,
 					     filters_current,
 					     searches, cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, NULL,
 					     (GAsyncReadyCallback) gpk_application_search_cb, NULL);
 	} else if (search_type == GPK_SEARCH_DETAILS) {
-		pk_client_search_details_async (PK_CLIENT(task),
+		pk_task_search_details_async (task,
 					     filters_current,
 					     searches, cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, NULL,
 					     (GAsyncReadyCallback) gpk_application_search_cb, NULL);
 	} else if (search_type == GPK_SEARCH_FILE) {
-		pk_client_search_files_async (PK_CLIENT(task),
+		pk_task_search_files_async (task,
 					     filters_current,
 					     searches, cancellable,
 					     (PkProgressCallback) gpk_application_progress_cb, NULL,
