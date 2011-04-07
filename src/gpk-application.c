@@ -1657,6 +1657,8 @@ gpk_application_perform_search_others (gpointer user_data)
 	/* ensure new action succeeds */
 	g_cancellable_reset (cancellable);
 
+	search_in_progress = TRUE;
+
 	if (search_mode == GPK_MODE_GROUP) {
 		search_groups = g_strsplit (search_group, " ", -1);
 		pk_client_search_groups_async (PK_CLIENT(task),
@@ -1708,6 +1710,10 @@ out:
 static void
 gpk_application_perform_search (gpointer user_data)
 {
+	/*if we are in the middle of a search, just return*/
+	if (search_in_progress == TRUE)
+		return;
+
 	gpk_application_clear_details (NULL);
 	gpk_application_clear_packages (NULL);
 
@@ -1729,10 +1735,6 @@ gpk_application_perform_search (gpointer user_data)
 static void
 gpk_application_find_cb (GtkWidget *button_widget, gpointer user_data)
 {
-	/*if we are in the middle of a search, just return*/
-	if (search_in_progress == TRUE)
-		return;
-
 	search_mode = GPK_MODE_NAME_DETAILS_FILE;
 	gpk_application_perform_search (NULL);
 }
