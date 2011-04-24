@@ -1,16 +1,16 @@
 # Persian translation for gnome-packagekit.
-# Copyright (C) 2010 Iranian Free Software Users Group (IFSUG.org)translation team
+# Copyright (C) 2010, 2011 Iranian Free Software Users Group (IFSUG.org)translation team
 # This file is distributed under the same license as the gnome-packagekit package.
-# Arash Mousavi <mousavi.arash@gmail.com>, 2010.
+# Arash Mousavi <mousavi.arash@gmail.com>, 2010, 2011.
 # Mahyar Moghimi <mahyar.moqimi@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&component=general\n"
-"POT-Creation-Date: 2011-02-07 11:57+0000\n"
-"PO-Revision-Date: 2011-02-18 16:23+0330\n"
-"Last-Translator: Mahyar Moghimi <mahyar.moqimi@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-04-19 12:02+0000\n"
+"PO-Revision-Date: 2011-04-24 18:04+0330\n"
+"Last-Translator: Arash Mousavi <mousavi.arash@gmail.com>\n"
 "Language-Team: Persian <translate@ifsug.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,9 +27,9 @@ msgstr "حذف یا افزودن نرم‌افزارهای نصب شده بر ر
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2
 #: ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4085
+#: ../src/gpk-application.c:4054
 #: ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3324
+#: ../src/gpk-update-viewer.c:3333
 msgid "Add/Remove Software"
 msgstr "افزودن/حذف نرم‌افزار"
 
@@ -78,7 +78,7 @@ msgstr "راهنمایی گرفتن در مورد این نرم‌افزار"
 #: ../src/gpk-dbus-task.c:2397
 #: ../src/gpk-dbus-task.c:2519
 #: ../src/gpk-dbus-task.c:2872
-#: ../src/gpk-update-viewer.c:1654
+#: ../src/gpk-update-viewer.c:1663
 msgid "Install"
 msgstr "نصب"
 
@@ -191,7 +191,7 @@ msgstr "_توسعه‌دهندگان"
 
 #: ../data/gpk-application.ui.h:36
 msgid "_Filters"
-msgstr "_پالایه‌ها"
+msgstr "_صافی‌ها"
 
 #: ../data/gpk-application.ui.h:37
 msgid "_Free"
@@ -201,9 +201,7 @@ msgstr "_آزاد"
 msgid "_Graphical"
 msgstr "_گرافیکی"
 
-#. TRANSLATORS: context menu to open the offline help file
 #: ../data/gpk-application.ui.h:39
-#: ../src/gpk-check-update.c:298
 msgid "_Help"
 msgstr "_راهنما"
 
@@ -217,7 +215,7 @@ msgstr "_نصب شده"
 
 #: ../data/gpk-application.ui.h:42
 msgid "_No Filter"
-msgstr "_بدون پالایه"
+msgstr "_بدون صافی"
 
 #: ../data/gpk-application.ui.h:43
 msgid "_Only Free Software"
@@ -262,17 +260,26 @@ msgstr "نصب‌کننده‌ی فهرستی"
 msgid "Install a catalog of software on the system"
 msgstr "نصب یک فهرست نرم افزار بر روی سیستم"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "نصب نرم‌افزار انتخاب شده بر روی سیستم"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "نصب‌کننده بسته‌ها"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2
+#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153
+#: ../src/gpk-dbus-service.c:156
+#| msgid "_Force install"
+msgid "Software Install"
+msgstr "نصب نرم‌افزار"
 
 #: ../data/gpk-log.desktop.in.h:1
 #: ../data/gpk-log.ui.h:2
-#: ../src/gpk-log.c:837
+#: ../src/gpk-log.c:840
 msgid "Software Log Viewer"
 msgstr "نمایش‌گر وقایع نرم‌افزارها"
 
@@ -282,7 +289,7 @@ msgstr "نمایش کارهای قبلی مدیریت بسته"
 
 #: ../data/gpk-log.ui.h:1
 msgid "Filter"
-msgstr "پالایه"
+msgstr "صافی"
 
 #: ../data/gpk-prefs.desktop.in.h:1
 msgid "Change software update preferences and enable or disable software sources"
@@ -312,7 +319,9 @@ msgstr "به‌روزرسانی‌ها را در زمان استفاده از ش
 msgid "Currently using mobile broadband"
 msgstr "درحال استفاده از شبکه‌ی پهن‌باند تلفن همراه"
 
+#. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.ui.h:7
+#: ../src/gpk-prefs.c:947
 msgid "Software Update Preferences"
 msgstr "ترجیحات به‌روزرسانی نرم‌افزار"
 
@@ -367,7 +376,7 @@ msgstr "جزئیات"
 
 #: ../data/gpk-service-pack.ui.h:8
 msgid "Multiple packages can be specified using a comma delimited list"
-msgstr "چندین بسته را  می‌توان از طریق فهرست جدا شده با کاما مشخص کرد"
+msgstr "چندین بسته را می‌توان از طریق فهرست جدا شده با کاما مشخص کرد"
 
 #: ../data/gpk-service-pack.ui.h:9
 msgid "Output directory:"
@@ -423,10 +432,6 @@ msgstr "شناسه کاربر امضا:"
 msgid "Software signature is required"
 msgstr "امضای نرم‌افزار لازم است"
 
-#: ../data/gpk-update-icon.desktop.in.h:1
-msgid "PackageKit Update Applet"
-msgstr "برنامک به‌روزرسانی PackageKit"
-
 #: ../data/gpk-update-viewer.desktop.in.h:1
 #: ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
@@ -446,7 +451,7 @@ msgstr "ارتقای سیستم عامل به یک نسخه‌ی جدید"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid "Software updates correct errors, eliminate security vulnerabilities and provide new features."
-msgstr "به‌روزرسانی‌های نرم‌افزارها خطاها را  درست می‌کنند، آسیب‌پذیری‌های امنیتی برطرف‌می‌کنند و امکانات جدیدی فراهم می‌کنند."
+msgstr "به‌روزرسانی‌های نرم‌افزارها خطاها را درست می‌کنند، آسیب‌پذیری‌های امنیتی برطرف‌می‌کنند و امکانات جدیدی فراهم می‌کنند."
 
 #: ../data/gpk-update-viewer.ui.h:3
 msgid "_Install Update(s)"
@@ -502,73 +507,8 @@ msgstr[1] "تعداد %i بسته‌ی اضافی نصب شوند؟"
 msgid "The software that you want to install requires additional software to run correctly."
 msgstr "نرم افزاری که می‌خواهید نصب کنید برای اجرای صحیح به نرم‌افزار(های) دیگری احتیاج دارد."
 
-#. TRANSLATORS: check once an hour
-#: ../src/cc-update-panel.c:66
-msgid "Hourly"
-msgstr "ساعتی"
-
-#. TRANSLATORS: check once a day
-#: ../src/cc-update-panel.c:68
-msgid "Daily"
-msgstr "روزانه"
-
-#. TRANSLATORS: check once a week
-#: ../src/cc-update-panel.c:70
-msgid "Weekly"
-msgstr "هفتگی"
-
-#. TRANSLATORS: never check for updates/upgrades
-#: ../src/cc-update-panel.c:72
-msgid "Never"
-msgstr "هرگز"
-
-#. TRANSLATORS: update everything
-#: ../src/cc-update-panel.c:75
-msgid "All updates"
-msgstr "همه‌ی به‌روزرسانی‌ها"
-
-#. TRANSLATORS: update just security updates
-#: ../src/cc-update-panel.c:77
-msgid "Only security updates"
-msgstr "تنها به‌روزرسانی‌های امنیتی"
-
-#. TRANSLATORS: don't update anything
-#: ../src/cc-update-panel.c:79
-msgid "Nothing"
-msgstr "هیچی"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/cc-update-panel.c:513
-msgid "Failed to change status"
-msgstr "تغییر وضعیت شکست خورد"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/cc-update-panel.c:588
-msgid "Enabled"
-msgstr "به‌کارافتاده"
-
-#. TRANSLATORS: column for the source description
-#: ../src/cc-update-panel.c:597
-msgid "Software Source"
-msgstr "منبع نرم‌افزار"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/cc-update-panel.c:659
-msgid "Failed to get the list of sources"
-msgstr "دریافت فهرست منابع شکست خورد"
-
-#. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/cc-update-panel.c:767
-#: ../src/gpk-update-viewer.c:3059
-msgid "Exiting as backend details could not be retrieved"
-msgstr "درحال خروج چون جزئیات پسانه را نمی‌توان دریافت کرد."
-
-#: ../src/cc-update-panel.c:801
-msgid "Getting software source list not supported by backend"
-msgstr "دریافت فهرست منبع نرم‌افزار در پسانه پشتیبانی نمی‌شود."
-
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:560
+#: ../src/gpk-application.c:555
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -576,18 +516,18 @@ msgstr[0] "تعداد %Ii پرونده از طریق %s نصب شد"
 msgstr[1] "تعداد %Ii پرونده از طریق %s نصب شدند"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:897
-#: ../src/gpk-application.c:1024
+#: ../src/gpk-application.c:892
+#: ../src/gpk-application.c:1019
 msgid "No packages"
 msgstr "هیچ بسته‌ای"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:899
+#: ../src/gpk-application.c:894
 msgid "No other packages require this package"
 msgstr "هیچ بسته‌ی دیگری به این بسته احتیاج ندارد"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:906
+#: ../src/gpk-application.c:901
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -595,7 +535,7 @@ msgstr[0] "تعداد %Ii بسته احتیاج به %s دارد"
 msgstr[1] "تعداد %Ii بسته احتیاج به %s دارند"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:911
+#: ../src/gpk-application.c:906
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -603,12 +543,12 @@ msgstr[0] "بسته‌ی فهرست شده در پایین احتیاج به %s 
 msgstr[1] "بسته‌های فهرست شده در پایین احتیاج به %s برای فعالیت صحیح دارند."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1026
+#: ../src/gpk-application.c:1021
 msgid "This package does not depend on any others"
 msgstr "این بسته به هیچ بسته‌ی دیگری وابسته نیست"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1033
+#: ../src/gpk-application.c:1028
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -616,7 +556,7 @@ msgstr[0] "تعداد %Ii بسته‌ی اضافی برای %s مورد نیاز
 msgstr[1] "تعداد %Ii بسته‌ی اضافی برای %s مورد نیازاند"
 
 #. TRANSLATORS: message: show the array of dependant packages for this package
-#: ../src/gpk-application.c:1038
+#: ../src/gpk-application.c:1033
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -624,77 +564,77 @@ msgstr[0] "بسته‌ی فهرست شده در پایین برای فعالیت
 msgstr[1] "بسته‌های فهرست شده در پایین برای فعالیت صحیح %s مورد نیاز هستند."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1107
+#: ../src/gpk-application.c:1102
 msgid "Invalid"
 msgstr "نامعتبر"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1310
+#: ../src/gpk-application.c:1305
 msgid "No results were found."
 msgstr "نتیجه‌ای پیدا نشد"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1318
+#: ../src/gpk-application.c:1313
 msgid "Try entering a package name in the search bar."
 msgstr "سعی کنید نام بسته را در نوار جستجو وارد کنید."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1321
+#: ../src/gpk-application.c:1316
 msgid "There are no packages queued to be installed or removed."
 msgstr "هیچ بسته‌ای در نوبت نصب و یا حذف نیست."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1326
+#: ../src/gpk-application.c:1321
 msgid "Try searching package descriptions by clicking the icon next to the search text."
 msgstr "برای جستجو در توضیحات بسته‌ها بر روی نقشک کنار ورودی جستجو کلیک کنید."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1329
+#: ../src/gpk-application.c:1324
 msgid "Try again with a different search term."
 msgstr "یک بار دیگر با عبارت دیگری جستجو کنید."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1601
+#: ../src/gpk-application.c:1596
 msgid "Invalid search text"
 msgstr "متن جستجو نامعتبر"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1603
+#: ../src/gpk-application.c:1598
 msgid "The search text contains invalid characters"
 msgstr "متن جستجو شامل نویسه‌های نامعتبر است"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1644
+#: ../src/gpk-application.c:1639
 msgid "The search could not be completed"
 msgstr "جستجو کامل نشد"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1646
+#: ../src/gpk-application.c:1641
 msgid "Running the transaction failed"
 msgstr "اجرای تراکنش شکست خورد"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1792
+#: ../src/gpk-application.c:1763
 msgid "Changes not applied"
 msgstr "تغییرات اعمال نشد"
 
-#: ../src/gpk-application.c:1793
+#: ../src/gpk-application.c:1764
 msgid "Close _Anyway"
 msgstr "_به هرحال خارج شو"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1797
+#: ../src/gpk-application.c:1768
 msgid "You have made changes that have not yet been applied."
 msgstr "شما تغییراتی ایجاد کرده‌اید که هنوز اعمال نشده‌اند."
 
-#: ../src/gpk-application.c:1798
+#: ../src/gpk-application.c:1769
 msgid "These changes will be lost if you close this window."
 msgstr "اگر این پنجره را ببنید، این تغییرات از دست خواهند رفت."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2113
+#: ../src/gpk-application.c:2084
 #: ../src/gpk-enum.c:1142
 #: ../src/gpk-enum.c:1223
 msgid "Installed"
@@ -703,370 +643,217 @@ msgstr "نصب شده"
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2129
-#: ../src/gpk-application.c:2151
+#: ../src/gpk-application.c:2100
+#: ../src/gpk-application.c:2122
 #: ../src/gpk-dialog.c:151
 #: ../src/gpk-modal-dialog.c:727
 msgid "Name"
 msgstr "نام"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2290
+#: ../src/gpk-application.c:2261
 msgid "Type"
 msgstr "نوع"
 
-#: ../src/gpk-application.c:2290
+#: ../src/gpk-application.c:2261
 msgid "Collection"
 msgstr "مجموعه"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2269
 #, c-format
 msgid "Visit %s"
 msgstr "مشاهده‌ی %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2303
+#: ../src/gpk-application.c:2274
 msgid "Project"
 msgstr "پروژه"
 
-#: ../src/gpk-application.c:2303
+#: ../src/gpk-application.c:2274
 msgid "Homepage"
 msgstr "صفحه‌ی ‌خانگی"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2317
+#: ../src/gpk-application.c:2288
 msgid "Group"
 msgstr "گروه"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2323
+#: ../src/gpk-application.c:2294
 msgid "License"
 msgstr "مجوز"
 
 #. TRANSLATORS: the path in the menu, e.g. Applications -> Games
-#: ../src/gpk-application.c:2332
+#: ../src/gpk-application.c:2303
 msgid "Menu"
 msgstr "منو"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2350
-#: ../src/gpk-update-viewer.c:1725
+#: ../src/gpk-application.c:2321
+#: ../src/gpk-update-viewer.c:1734
 msgid "Size"
 msgstr "اندازه"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2353
+#: ../src/gpk-application.c:2324
 msgid "Installed size"
 msgstr "اندازه‌ی نصب شده"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2356
+#: ../src/gpk-application.c:2327
 msgid "Download size"
 msgstr "اندازه‌ی بارگیری"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2365
+#: ../src/gpk-application.c:2336
 msgid "Source"
 msgstr "منبع"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2510
+#: ../src/gpk-application.c:2481
 msgid "Selected packages"
 msgstr "بسته‌های انتخاب شده"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2563
+#: ../src/gpk-application.c:2534
 msgid "Searching by name"
 msgstr "درحال جستجو بر اساس نام"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2587
+#: ../src/gpk-application.c:2558
 msgid "Searching by description"
 msgstr "درحال جستجو بر اساس شرح"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2611
+#: ../src/gpk-application.c:2582
 msgid "Searching by file"
 msgstr "جستجو بر اساس پرونده"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2633
+#: ../src/gpk-application.c:2604
 msgid "Search by name"
 msgstr "جستجو براساس نام"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2644
+#: ../src/gpk-application.c:2615
 msgid "Search by description"
 msgstr "جستجو بر اساس شرح"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2655
+#: ../src/gpk-application.c:2626
 msgid "Search by file name"
-msgstr "جستجو براساس نام  پرونده"
+msgstr "جستجو براساس نام پرونده"
 
-#: ../src/gpk-application.c:2696
-#: ../src/gpk-check-update.c:229
+#: ../src/gpk-application.c:2667
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "تحت مجوز عمومی همگانی گنو نسخهٔ ۲"
 
-#: ../src/gpk-application.c:2697
-#: ../src/gpk-check-update.c:230
+#: ../src/gpk-application.c:2668
 msgid "PackageKit is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "PackageKit نرم‌افزار آزاد است؛ شما می‌توانید آن را تحت شرایط اجازه‌نامه‌ی همگانی عمومی گنو که بنیاد نرم‌افزارهای آزاد منتشر کرده است،‌ تغییر دهید یا دوباره توزیع کنید. نسخه‌ی 2 اجازه‌نامه یا (به اختیار خودتان) هر نسخه‌ی بالاتر دیگری."
 
-#: ../src/gpk-application.c:2701
-#: ../src/gpk-check-update.c:234
+#: ../src/gpk-application.c:2672
 msgid "PackageKit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "PackageKit با این امید توزیع شده است که به درد بخور باشد، اما بدون هر گونه ضمانتی؛ حتی بدون ضمانت ضمنی قابل فروش بودن یا مناسب بودن برای یک هدف مشخص. برای جزئیات بیشتر اجازه‌نامه‌ی همگانی عمومی گنو را ببینید."
 
-#: ../src/gpk-application.c:2705
-#: ../src/gpk-check-update.c:238
+#: ../src/gpk-application.c:2676
 msgid "You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr "شما باید یک نسخه از مجوز عمومی همگانی گنو را با این برنامه دریافت کرده باشید؛ در غیر این صورت نامه‌ای به این نشانی بفرستید: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA"
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2711
-#: ../src/gpk-check-update.c:243
+#: ../src/gpk-application.c:2682
 msgid "translator-credits"
 msgstr ""
 "آرش موسوی <mousavi.arash@gmail.com> \n"
 "مهیار مقیمی <mahyar.moqimi@gmail.com>"
 
-#. TRANSLATORS: website label
-#: ../src/gpk-application.c:2731
-#: ../src/gpk-check-update.c:260
+#: ../src/gpk-application.c:2702
 msgid "PackageKit Website"
 msgstr "پایگاه وب PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2734
+#: ../src/gpk-application.c:2705
 msgid "Package Manager for GNOME"
 msgstr "مدیر بسته‌های گنوم"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3160
+#: ../src/gpk-application.c:3131
 msgid "Text"
 msgstr "متن"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3183
+#: ../src/gpk-application.c:3154
 msgid "Enter a package name and then click find, or click a group to get started."
 msgstr "برای شروع، نام یک بسته را وارد کنید و روی جستجو کلیک کنید، یا بر روی یک گروه کلیک کنید."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3186
+#: ../src/gpk-application.c:3157
 msgid "Enter a package name and then click find to get started."
 msgstr "برای شروع، نام یک بسته را وارد کنید و بر روی جستجو کلیک کنید."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3412
+#: ../src/gpk-application.c:3383
 msgid "Exiting as properties could not be retrieved"
 msgstr "درحال خروج چون ترجیحات را نمی‌توان دریافت کرد"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3531
+#: ../src/gpk-application.c:3502
 msgid "All packages"
 msgstr "تمام بسته‌ها"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3533
+#: ../src/gpk-application.c:3504
 msgid "Show all packages"
 msgstr "نمایش تمام بسته‌ها"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3776
+#: ../src/gpk-application.c:3747
 msgid "Clear current selection"
 msgstr "پاک‌کردن انتخاب‌های کنونی"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3801
+#: ../src/gpk-application.c:3772
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "تغییرات فورا اعمال نمی‌شوند، این دکمه همه‌ی تغییرات را اعمال می‌کند"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3827
+#: ../src/gpk-application.c:3798
 msgid "Visit home page for selected package"
 msgstr "مشاهده صفحه‌ی ‌خانگی بسته‌ی انتخاب شده"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3935
+#: ../src/gpk-application.c:3906
 msgid "Find packages"
 msgstr "یافتن بسته‌ها"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3943
+#: ../src/gpk-application.c:3914
 msgid "Cancel search"
 msgstr "لغو جستجو"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4068
-#: ../src/gpk-update-icon.c:99
-#: ../src/gpk-update-viewer.c:3307
+#: ../src/gpk-application.c:4037
+#: ../src/gpk-update-viewer.c:3316
 msgid "Show the program version and exit"
 msgstr "نمایش نسخه نصب شده‌ی برنامه و خروج"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4101
+#: ../src/gpk-application.c:4070
 msgid "Package installer"
 msgstr "نصب‌کننده‌ی بسته‌ها"
-
-#. TRANSLATORS: context menu to open the preferences
-#: ../src/gpk-check-update.c:286
-msgid "_Preferences"
-msgstr "_ترجیحات"
-
-#. TRANSLATORS: context menu to show the about screen
-#: ../src/gpk-check-update.c:306
-msgid "_About"
-msgstr "_درباره"
-
-#. TRANSLATORS: we did the update, but some updates were skipped and not applied
-#: ../src/gpk-check-update.c:395
-msgid "One package was skipped:"
-msgid_plural "Some packages were skipped:"
-msgstr[0] "یک بسته نادیده گرفته شد:"
-msgstr[1] "تعدادی بسته نادیده گرفته شدند:"
-
-#. TRANSLATORS: title: system update completed all okay
-#: ../src/gpk-check-update.c:426
-msgid "The system update has completed"
-msgstr "به‌روزرسانی سیستم کامل شد"
-
-#. TRANSLATORS: restart computer as system packages need update
-#: ../src/gpk-check-update.c:433
-msgid "Restart computer now"
-msgstr "هم‌اکنون رایانه را مجددا راه‌اندازی کن"
-
-#. TRANSLATORS: don't show this option again (when finished)
-#. TRANSLATORS: hides forever
-#. add a checkbutton for deps screen
-#. TRANSLATORS: don't pop-up the same message twice
-#: ../src/gpk-check-update.c:437
-#: ../src/gpk-check-update.c:1335
-#: ../src/gpk-dialog.c:304
-#: ../src/gpk-hardware.c:191
-#: ../src/gpk-watch.c:808
-msgid "Do not show this again"
-msgstr "این مورد را دوباره نشان نده"
-
-#. TRANSLATORS: button: show more details about the error
-#. TRANSLATORS: button: show details about the error
-#. TRANSLATORS: This is a link in a libnotify bubble that shows the detailed error
-#: ../src/gpk-check-update.c:499
-#: ../src/gpk-dbus-task.c:384
-#: ../src/gpk-watch.c:597
-msgid "Show details"
-msgstr "نمایش جزئیات"
-
-#. TRANSLATORS: this is the application name for libcanberra
-#: ../src/gpk-check-update.c:551
-#: ../src/gpk-check-update.c:938
-#: ../src/gpk-check-update.c:960
-msgid "GNOME PackageKit Update Icon"
-msgstr "نقشک به‌روزرسانی PackageKit گنوم"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:553
-msgid "Updated successfully"
-msgstr "با پیروزی به‌روزرسانی شد"
-
-#. TRANSLATORS: title in the libnotify popup
-#: ../src/gpk-check-update.c:677
-msgid "Security update available"
-msgid_plural "Security updates available"
-msgstr[0] "به‌روزرسانی‌ امنیتی‌ای موجوداست"
-msgstr[1] "به‌روزرسانی‌‌های امنیتی‌‌ای موجوداند"
-
-#. TRANSLATORS: message when there are security updates
-#: ../src/gpk-check-update.c:680
-msgid "An important update is available for your computer:"
-msgid_plural "Important updates are available for your computer:"
-msgstr[0] "به‌روزرسانی مهمی برای رایانه شما موجود است:"
-msgstr[1] "به‌روزرسانی‌های مهمی برای رایانه شما موجود اند:"
-
-#. TRANSLATORS: button: open the update viewer to install updates
-#: ../src/gpk-check-update.c:700
-msgid "Install updates"
-msgstr "نصب به‌روزرسانی‌ها"
-
-#. TRANSLATORS: policy says update, but we are on battery and so prompt
-#: ../src/gpk-check-update.c:781
-msgid "Automatic updates are not being installed as the computer is running on battery power"
-msgstr "به‌روزرسانی‌های خودکار نصب نمی‌شوند چون رایانه در حال استفاده از انرژی باتری است"
-
-#. TRANSLATORS: informs user will not install by default
-#: ../src/gpk-check-update.c:783
-msgid "Updates not installed"
-msgstr "به‌روزرسانی‌ها نصب نشدند"
-
-#. TRANSLATORS: to hell with my battery life, just do it
-#: ../src/gpk-check-update.c:792
-msgid "Install the updates anyway"
-msgstr "درهر صورت به‌روزرسانی‌ها را نصب کن"
-
-#. TRANSLATORS: title: notification when we scheduled an automatic update
-#: ../src/gpk-check-update.c:818
-msgid "Updates are being installed"
-msgstr "به‌روزرسانی‌ها نصب می‌شوند"
-
-#. TRANSLATORS: tell the user why the hard disk is grinding...
-#: ../src/gpk-check-update.c:820
-msgid "Updates are being automatically installed on your computer"
-msgstr "به‌روزرسانی‌ها به طور خودکار بر روی سیستم نصب می‌شوند"
-
-#: ../src/gpk-check-update.c:826
-msgid "Cancel update"
-msgstr "لغو به‌روزرسانی"
-
-#. TRANSLATORS: tooltip: how many updates are waiting to be applied
-#: ../src/gpk-check-update.c:910
-#, c-format
-msgid "There is %d update available"
-msgid_plural "There are %d updates available"
-msgstr[0] "تعداد %Id به‌روزرسانی موجود است"
-msgstr[1] "تعداد %Id به‌روزرسانی موجوداند"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:940
-msgid "Update available"
-msgstr "به‌روزرسانی موجود است"
-
-#. TRANSLATORS: this is the sound description
-#: ../src/gpk-check-update.c:962
-msgid "Update available (on battery)"
-msgstr "به‌روزرسانی موجود است (درحال کار با باتری)"
-
-#. TRANSLATORS: a distro update is available, e.g. Fedora 8 to Fedora 9
-#: ../src/gpk-check-update.c:1322
-msgid "Distribution upgrades available"
-msgstr "ارتقاهایی برای توزیع موجود است"
-
-#. TRANSLATORS: provides more information about the upgrade
-#. TRANSLATORS: button: a link to the help file
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-check-update.c:1332
-#: ../src/gpk-dbus-task.c:1096
-#: ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639
-#: ../src/gpk-dbus-task.c:1845
-#: ../src/gpk-dbus-task.c:2100
-msgid "More information"
-msgstr "اطلاعات بیشتر"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
 #: ../src/gpk-common.c:370
 msgid "This application is running as a privileged user"
-msgstr "این برنامه توسط یک کاربر با دسترسی ویژه، درحال اجرا  است"
+msgstr "این برنامه توسط یک کاربر با دسترسی ویژه، درحال اجرا است"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
 #: ../src/gpk-common.c:373
 #, c-format
 msgid "%s is running as a privileged user"
-msgstr "%s از طریق یک کاربر با دسترسی ویژه، درحال اجرا  است."
+msgstr "%s از طریق یک کاربر با دسترسی ویژه، درحال اجرا است."
 
 #. TRANSLATORS: tell the user off
 #: ../src/gpk-common.c:376
@@ -1177,9 +964,7 @@ msgid "No applications were chosen to be installed"
 msgstr "هیچ برنامه‌ای برای نصب انتخاب نشده بود"
 
 #. TRANSLATORS: detailed text about the error
-#. TRANSLATORS: The detailed error if the user clicks "more info"
 #: ../src/gpk-dbus-task.c:278
-#: ../src/gpk-watch.c:107
 msgid "Error details"
 msgstr "جزئیات خطا"
 
@@ -1211,6 +996,11 @@ msgstr "پرس‌وجو نامعتبر است."
 #: ../src/gpk-dbus-task.c:321
 msgid "The file is not valid."
 msgstr "پرونده معتبر نیست."
+
+#. TRANSLATORS: button: show details about the error
+#: ../src/gpk-dbus-task.c:384
+msgid "Show details"
+msgstr "نمایش جزئیات"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
@@ -1258,6 +1048,18 @@ msgstr "نمی‌توان بسته‌ها را پیدا کرد"
 #: ../src/gpk-dbus-task.c:1093
 msgid "The packages could not be found in any software source"
 msgstr "بسته در هیچ منبع نرم‌افزاری پیدا نشد"
+
+#. TRANSLATORS: button: a link to the help file
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
+#. TRANSLATORS: button: show the user a button to get more help finding stuff
+#: ../src/gpk-dbus-task.c:1096
+#: ../src/gpk-dbus-task.c:1333
+#: ../src/gpk-dbus-task.c:1639
+#: ../src/gpk-dbus-task.c:1845
+#: ../src/gpk-dbus-task.c:2100
+msgid "More information"
+msgstr "اطلاعات بیشتر"
 
 #: ../src/gpk-dbus-task.c:1133
 #: ../src/gpk-enum.c:334
@@ -1680,6 +1482,11 @@ msgstr "بسته‌های زیاد"
 msgid "No files"
 msgstr "هیچ پرونده‌ای"
 
+#. add a checkbutton for deps screen
+#: ../src/gpk-dialog.c:304
+msgid "Do not show this again"
+msgstr "این مورد را دوباره نشان نده"
+
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-distro-upgrade.c:139
 msgid "Could not upgrade the system"
@@ -1797,11 +1604,11 @@ msgstr "آماده سازی و آزمایش ارتقا"
 
 #: ../src/gpk-distro-upgrade.c:611
 msgid "You will have to restart your computer at the end of the upgrade."
-msgstr "در انتهای فرایند ارتقاء  لازم است که رایانه‌تان مجدد راه اندازی شود."
+msgstr "در انتهای فرایند ارتقاء لازم است که رایانه‌تان مجدد راه اندازی شود."
 
 #: ../src/gpk-distro-upgrade.c:612
 msgid "Press 'Apply' to apply changes."
-msgstr "برای اعمال تغییرات بر روی 'اعمال' کلیک کنید"
+msgstr "برای اعمال تغییرات بر روی «اعمال» کلیک کنید"
 
 #. TRANSLATORS: button text
 #: ../src/gpk-distro-upgrade.c:625
@@ -2176,7 +1983,7 @@ msgstr "بسته‌ای که تلاش به حذف یا به‌روزرسانی �
 
 #: ../src/gpk-enum.c:543
 msgid "The package that is being modified was not found on your system or in any software source."
-msgstr "بسته‌ای که قرار است دست‌کاری شود، بر روی سیستم شما و یا هیچ منبع نرم‌افزاری دیگری یافت  نشد."
+msgstr "بسته‌ای که قرار است دست‌کاری شود، بر روی سیستم شما و یا هیچ منبع نرم‌افزاری دیگری یافت نشد."
 
 #: ../src/gpk-enum.c:546
 msgid "The package that is trying to be installed is already installed."
@@ -2216,7 +2023,7 @@ msgstr ""
 
 #: ../src/gpk-enum.c:566
 msgid "The search filter was not correctly formed."
-msgstr "پالایه‌ی جستجو به درستی قالب‌بندی نشده است."
+msgstr "صافی‌ی جستجو به درستی قالب‌بندی نشده است."
 
 #: ../src/gpk-enum.c:569
 msgid ""
@@ -3219,7 +3026,7 @@ msgstr "برای نام بسته جستجو شد"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1465
 msgid "Removed packages"
-msgstr "بسته‌ها  حذف‌شدند"
+msgstr "بسته‌ها حذف‌شدند"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1469
@@ -3521,71 +3328,6 @@ msgstr "جدیدترین بسته‌ها"
 msgid "Unknown group"
 msgstr "گروه ناشناس"
 
-#. TRANSLATORS: we need to restart so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:265
-msgid "You will need to restart this computer before the hardware will work correctly."
-msgstr "جهت درست کار کردن سخت‌افزار لازم است شما رایانه را مجددا راه‌اندازی کنید."
-
-#. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:268
-#: ../src/gpk-firmware.c:303
-#: ../src/gpk-firmware.c:330
-msgid "Additional software was installed"
-msgstr "برنامه‌ی اضافی نصب شد"
-
-#. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:277
-msgid "Restart now"
-msgstr "هم‌اکنون راه‌اندازی مجدد شود"
-
-#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:300
-msgid "You will need to remove and then reinsert the hardware before it will work correctly."
-msgstr "برای کارکرد درست سخت‌افزار، لازم است شما یک‌بار آن را بردارید و مجددا وارد نمایید."
-
-#. TRANSLATORS: we need to remove an replug so the new hardware can re-request the firmware
-#: ../src/gpk-firmware.c:327
-msgid "Your hardware has been set up and is now ready to use."
-msgstr "سخت‌افزار شما نصب شده و هم‌اکنون آماده استفاده می‌باشد."
-
-#. TRANSLATORS: we need another package to keep udev quiet
-#: ../src/gpk-firmware.c:598
-msgid "Additional firmware is required to make hardware in this computer function correctly."
-msgstr "‍برای کارکرد درست سخت‌افزار، در این سیستم، نیاز به میان‌افزار اضافی است."
-
-#. TRANSLATORS: title of libnotify bubble
-#: ../src/gpk-firmware.c:612
-msgid "Additional firmware required"
-msgstr "میان‌افزار اضافی مورد نیاز است"
-
-#. TRANSLATORS: button label
-#: ../src/gpk-firmware.c:617
-msgid "Install firmware"
-msgstr "نصب میان‌افزار"
-
-#. TRANSLATORS: we should ignore this device and not ask anymore
-#: ../src/gpk-firmware.c:620
-msgid "Ignore devices"
-msgstr "نادیده گرفتن دستگاه‌ها"
-
-#. TODO: tell the user what hardware, NOT JUST A UDI
-#. TRANSLATORS: we can install an extra package so this hardware works, e.g. firmware
-#: ../src/gpk-hardware.c:180
-msgid "Additional packages can be installed to support this hardware"
-msgstr "برای پشتیبانی از این سخت‌افزار می‌توان بسته‌های اضافی نصب کرد."
-
-#. TRANSLATORS: a new bit of hardware has been plugged in
-#: ../src/gpk-hardware.c:182
-msgid "New hardware attached"
-msgstr "سخت‌افزاری جدیدی اضافه شد"
-
-#. TRANSLATORS: button text, install the packages needed for the hardware to work
-#. TRANSLATORS: button tooltip
-#: ../src/gpk-hardware.c:188
-#: ../src/gpk-helper-chooser.c:300
-msgid "Install package"
-msgstr "نصب بسته"
-
 #. TRANSLATORS: column for the application icon
 #: ../src/gpk-helper-chooser.c:140
 #: ../src/gpk-helper-run.c:203
@@ -3595,6 +3337,11 @@ msgstr "نقشک"
 #: ../src/gpk-helper-chooser.c:284
 msgid "Applications that can open this type of file"
 msgstr "برنامه‌هایی که می‌توانند این پرونده‌ها را باز کنند"
+
+#. TRANSLATORS: button tooltip
+#: ../src/gpk-helper-chooser.c:300
+msgid "Install package"
+msgstr "نصب بسته"
 
 #. TRANSLATORS: is not GPG signed
 #: ../src/gpk-task.c:141
@@ -3637,85 +3384,85 @@ msgstr "یک رسانه‌ی اضافی مورد نیاز است. لطفا بر�
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:361
-#: ../src/gpk-task.c:540
+#: ../src/gpk-task.c:532
 msgid "Continue"
 msgstr "ادامه"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:398
+#: ../src/gpk-task.c:397
 msgid "The following software also needs to be installed"
 msgstr "نرم‌افزار مقابل هم لازم است نصب گردد"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:403
+#: ../src/gpk-task.c:402
 msgid "The following software also needs to be removed"
 msgstr "نرم‌افزار مقابل هم لازم است حذف گردد"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:407
+#: ../src/gpk-task.c:406
 msgid "The following software also needs to be updated"
 msgstr "نرم‌افزار مقابل هم لازم است به‌روزرسانی شود"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:411
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be re-installed"
 msgstr "نرم‌افزار مقابل هم لازم است مجددا نصب گردد"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:415
+#: ../src/gpk-task.c:414
 msgid "The following software also needs to be downgraded"
 msgstr "نرم‌افزار مقابل هم لازم است به نسخه پایین‌تر بازگردد"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:419
+#: ../src/gpk-task.c:418
 msgid "The following software also needs to be processed"
-msgstr "نرم افزار مقابل هم لازم است  پردازش شود"
+msgstr "نرم افزار مقابل هم لازم است پردازش شود"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:478
+#: ../src/gpk-task.c:476
 msgid "Additional confirmation required"
 msgstr "تایید اضافی مورد نیاز است"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:484
+#: ../src/gpk-task.c:482
 msgid "To install this package, additional software also has to be modified."
 msgid_plural "To install these packages, additional software also has to be modified."
 msgstr[0] "برای نصب این بسته باید نرم‌افزارهای دیگری هم تغییر کنند."
 msgstr[1] "برای نصب این بسته‌ها باید نرم‌افزارهای دیگری هم تغییر کنند."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:489
+#: ../src/gpk-task.c:487
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural "To remove these packages, additional software also has to be modified."
 msgstr[0] "برای حذف این بسته باید نرم‌افزارهای دیگری هم تغییر کنند."
 msgstr[1] "برای حذف این بسته‌ها باید نرم‌افزارهای دیگری هم تغییر کنند."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:494
+#: ../src/gpk-task.c:492
 msgid "To update this package, additional software also has to be modified."
 msgid_plural "To update these packages, additional software also has to be modified."
 msgstr[0] "برای به‌روزرسانی این بسته‌ها، باید نرم‌افزارهای دیگری هم تغییر کنند."
 msgstr[1] "برای به‌روزرسانی این بسته‌ها، باید نرم‌افزارهای دیگری هم تغییر کنند."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:499
+#: ../src/gpk-task.c:497
 msgid "To install this file, additional software also has to be modified."
 msgid_plural "To install these files, additional software also has to be modified."
 msgstr[0] "برای نصب این پرونده، باید نرم‌افزارهای دیگری هم تغییر کنند."
 msgstr[1] "برای نصب این پرونده‌ها، باید نرم‌افزارهای دیگری هم تغییر کنند."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:504
+#: ../src/gpk-task.c:502
 msgid "To process this transaction, additional software also has to be modified."
-msgstr "برای پردازش این تراکنش،  باید نرم‌افزارهای دیگری هم تغییر کنند."
+msgstr "برای پردازش این تراکنش، باید نرم‌افزارهای دیگری هم تغییر کنند."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:590
+#: ../src/gpk-task.c:582
 msgid "_Force install"
 msgstr "نصب _زوری"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:594
+#: ../src/gpk-task.c:586
 msgid "Force installing package"
 msgstr "نصب بسته‌ها به زور"
 
@@ -3728,13 +3475,6 @@ msgstr "اجرای برنامه‌ی جدید؟"
 #: ../src/gpk-helper-run.c:498
 msgid "_Run"
 msgstr "ا_جرا"
-
-#. app-id
-#. xid
-#. TRANSLATORS: the reason why we've inhibited it
-#: ../src/gpk-inhibit.c:98
-msgid "A transaction that cannot be interrupted is running"
-msgstr "یک تراکنش که امکان لغو آن نیست درحال اجراست"
 
 #. TRANSLATORS: command line option: a list of catalogs to install
 #: ../src/gpk-install-catalog.c:52
@@ -3778,8 +3518,6 @@ msgstr "درخواست شکست خورد. اطلاعات بیشتر در گزا�
 msgid "Files to install"
 msgstr "پرونده‌هایی برای نصب"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "نصب کننده‌ی پرونده‌ی PackageKit"
@@ -3831,9 +3569,7 @@ msgstr "لازم است نوع mime را برای نصب مشخص کنید"
 msgid "Packages to install"
 msgstr "بسته‌هایی برای نصب"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66
 #: ../src/gpk-install-package-name.c:68
 #: ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
@@ -3902,18 +3638,24 @@ msgstr "به‌روزرسانی سیستم"
 msgid "Update Icon"
 msgstr "به‌روزرسانی نقشک"
 
+#. TRANSLATORS: short name for the command not found plugin
+#: ../src/gpk-log.c:507
+msgid "Bash - Command Not Found"
+msgstr "بَش - فرمان پیدا نشد"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:818
+#: ../src/gpk-log.c:821
 msgid "Set the filter to this value"
-msgstr "تنظیم پالایه با این مقدار"
+msgstr "تنظیم صافی با این مقدار"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:821
+#: ../src/gpk-log.c:824
+#: ../src/gpk-prefs.c:938
 msgid "Set the parent window to make this modal"
 msgstr "پنجره‌ی والد را تنظیم کنید تا این همیشه بر رو باشد"
 
 #. are we running privileged
-#: ../src/gpk-log.c:845
+#: ../src/gpk-log.c:848
 msgid "Log viewer"
 msgstr "نمایشگر وقایع ثبت شده"
 
@@ -3921,6 +3663,71 @@ msgstr "نمایشگر وقایع ثبت شده"
 #, c-format
 msgid "Remaining time : %s"
 msgstr "زمان باقیمانده: %s"
+
+#. TRANSLATORS: check once an hour
+#: ../src/gpk-prefs.c:62
+msgid "Hourly"
+msgstr "ساعتی"
+
+#. TRANSLATORS: check once a day
+#: ../src/gpk-prefs.c:64
+msgid "Daily"
+msgstr "روزانه"
+
+#. TRANSLATORS: check once a week
+#: ../src/gpk-prefs.c:66
+msgid "Weekly"
+msgstr "هفتگی"
+
+#. TRANSLATORS: never check for updates/upgrades
+#: ../src/gpk-prefs.c:68
+msgid "Never"
+msgstr "هرگز"
+
+#. TRANSLATORS: update everything
+#: ../src/gpk-prefs.c:71
+msgid "All updates"
+msgstr "همه‌ی به‌روزرسانی‌ها"
+
+#. TRANSLATORS: update just security updates
+#: ../src/gpk-prefs.c:73
+msgid "Only security updates"
+msgstr "تنها به‌روزرسانی‌های امنیتی"
+
+#. TRANSLATORS: don't update anything
+#: ../src/gpk-prefs.c:75
+msgid "Nothing"
+msgstr "هیچی"
+
+#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#: ../src/gpk-prefs.c:509
+msgid "Failed to change status"
+msgstr "تغییر وضعیت شکست خورد"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/gpk-prefs.c:584
+msgid "Enabled"
+msgstr "به‌کارافتاده"
+
+#. TRANSLATORS: column for the source description
+#: ../src/gpk-prefs.c:593
+msgid "Software Source"
+msgstr "منبع نرم‌افزار"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/gpk-prefs.c:655
+msgid "Failed to get the list of sources"
+msgstr "دریافت فهرست منابع شکست خورد"
+
+#. TRANSLATORS: backend is broken, and won't tell us what it supports
+#: ../src/gpk-prefs.c:763
+#: ../src/gpk-update-viewer.c:3068
+msgid "Exiting as backend details could not be retrieved"
+msgstr "درحال خروج چون جزئیات پسانه را نمی‌توان دریافت کرد."
+
+#: ../src/gpk-prefs.c:797
+msgid "Getting software source list not supported by backend"
+msgstr "دریافت فهرست منبع نرم‌افزار در پسانه پشتیبانی نمی‌شود."
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:260
@@ -4014,21 +3821,6 @@ msgstr "نام پرونده‌ی آرایه‌ی بسته‌ی دوردست را
 #: ../src/gpk-service-pack.c:822
 msgid "Set the default output directory"
 msgstr "تنظیم شاخه‌ی پیش‌فرض جهت خروجی"
-
-#: ../src/gpk-update-icon.c:97
-msgid "Exit after a small delay"
-msgstr "خروج پس از یک تاخیر کوتاه"
-
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-update-icon.c:107
-#: ../src/gpk-update-icon.c:153
-msgid "Update Applet"
-msgstr "برنامک به‌روزرسانی"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-icon.c:120
-msgid "Update applet"
-msgstr "برنامک به‌روزرسانی"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:186
@@ -4174,164 +3966,164 @@ msgstr[0] "تعداد %Ii به‌روزرسانی انتخاب شد (%s)"
 msgstr[1] "تعداد %Ii به‌روزرسانی انتخاب شدند (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1685
+#: ../src/gpk-update-viewer.c:1694
 msgid "Software"
 msgstr "نرم‌افزار"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1695
+#: ../src/gpk-update-viewer.c:1704
 msgid "Status"
 msgstr "وضعیت"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1904
+#: ../src/gpk-update-viewer.c:1913
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "این به‌روزرسانی باعث اصلاح خطاها و باقی مشکلات غیر بحرانی می‌شود."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1908
+#: ../src/gpk-update-viewer.c:1917
 msgid "This update is important as it may solve critical problems."
 msgstr "این به‌روزرسانی به دلیل اینکه باعث حل مشکلات بحرانی می‌شود مهم است."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1912
+#: ../src/gpk-update-viewer.c:1921
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "این به‌روزرسانی برای اصلاح آسیب‌پذیری‌های امنیتی در این بسته مورد نیاز است."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1916
+#: ../src/gpk-update-viewer.c:1925
 msgid "This update is blocked."
 msgstr "این به‌روزرسانی مسدود شده است"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1928
+#: ../src/gpk-update-viewer.c:1937
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
-msgstr "این اخطار در %s  پیش‌آمده و آخرین به‌روزرسانی در %s بوده است."
+msgstr "این اخطار در %s پیش‌آمده و آخرین به‌روزرسانی در %s بوده است."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1935
+#: ../src/gpk-update-viewer.c:1944
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "این اخطار در %s پیش‌آمده است."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1957
+#: ../src/gpk-update-viewer.c:1966
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "برای اطلاعات بیشتر در مورد این به‌روزرسانی لطفا از این پایگاه وب بازدید کنید:"
 msgstr[1] "برای اطلاعات بیشتر در مورد این به‌روزرسانی لطفا از این پایگاه‌های وب بازدید کنید:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1965
+#: ../src/gpk-update-viewer.c:1974
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "برای اطلاعات بیشتر در مورد خطاهای اصلاح شده از طریق این به‌روزرسانی، از این پایگاه وب بازدید کنید:"
 msgstr[1] "برای اطلاعات بیشتر در مورد خطاهای اصلاح شده از طریق این به‌روزرسانی، از این پایگاه‌های وب بازدید کنید:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:1982
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "برای اطلاعات بیشتر در مورد این به‌روزرسانی امنیتی لطفا این پایگاه‌ وب را بازدید کنید:"
 msgstr[1] "برای اطلاعات بیشتر در مورد این به‌روزرسانی امنیتی لطفا این پایگاه‌های وب را بازدید کنید:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1982
+#: ../src/gpk-update-viewer.c:1991
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "برای اینکه تغییرات موثر باشند، پس از به‌روزرسانی رایانه باید راه‌اندازی مجدد گردد."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1986
+#: ../src/gpk-update-viewer.c:1995
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "برای اینکه تغییرات موثر پس از به‌روزرسانی باشند باید از سیستم خارج و مجددا وارد شوید."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:2002
 msgid "The classifaction of this update is unstable which means it is not designed for production use."
 msgstr "این به‌روزرسانی در رده‌ی «ناپایدار» است، که به این معنی است که برای استفاده‌ی تولیدی ساخته نشده است."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1997
+#: ../src/gpk-update-viewer.c:2006
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "این یک به‌روزرسانی آزمایشی است، و برای استفاده‌ی عادی ساخته نشده. لطفا با هرگونه مشکلی که مواجه می‌شوید را گزارش کنید."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2006
+#: ../src/gpk-update-viewer.c:2015
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "وقایع توسعه دهندگان نشان می‌دهند که هیچ توصیفی برای این به‌روزرسانی موجود است:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2042
+#: ../src/gpk-update-viewer.c:2051
 msgid "Loading..."
 msgstr "درحال بارکردن..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2082
-#: ../src/gpk-update-viewer.c:2180
-#: ../src/gpk-update-viewer.c:2200
+#: ../src/gpk-update-viewer.c:2091
+#: ../src/gpk-update-viewer.c:2189
+#: ../src/gpk-update-viewer.c:2209
 msgid "Could not get update details"
 msgstr "نمی‌توان جزئیات به‌روزرسانی را دریافت کرد"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2102
+#: ../src/gpk-update-viewer.c:2111
 msgid "Could not get package details"
 msgstr "نمی‌توان جزئیات بسته را دریافت کرد"
 
-#: ../src/gpk-update-viewer.c:2102
-#: ../src/gpk-update-viewer.c:2200
+#: ../src/gpk-update-viewer.c:2111
+#: ../src/gpk-update-viewer.c:2209
 msgid "No results were returned."
 msgstr "هیچ نتیجه‌ای برگشت داده نشد."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2435
+#: ../src/gpk-update-viewer.c:2444
 msgid "Select all"
 msgstr "انتخاب همه"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2443
+#: ../src/gpk-update-viewer.c:2452
 msgid "Unselect all"
 msgstr "لغو انتخاب همه"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2450
+#: ../src/gpk-update-viewer.c:2459
 msgid "Select security updates"
 msgstr "انتخاب به‌روزرسانی‌های امنیتی"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2456
+#: ../src/gpk-update-viewer.c:2465
 msgid "Ignore this update"
 msgstr "نادیده گرفتن این به‌روزرسانی"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2567
+#: ../src/gpk-update-viewer.c:2576
 msgid "Could not get updates"
 msgstr "نمی‌توان به‌روزرسانی‌ها را گرفت"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2708
+#: ../src/gpk-update-viewer.c:2717
 msgid "Checking for updates..."
 msgstr "بررسی برای به‌روزرسانی‌ها..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2994
+#: ../src/gpk-update-viewer.c:3003
 msgid "Could not get list of distribution upgrades"
 msgstr "نمی‌توان فهرست ارتقاهای توزیع را گرفت"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3024
+#: ../src/gpk-update-viewer.c:3033
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "ارتقای جدیدی از توزیع موجود است «%s»"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3271
+#: ../src/gpk-update-viewer.c:3280
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "نصب باقی به‌روزرسانی‌ها با توجه به اینکه تعدادی بسته مهم ابتدا باید نصب گردند، نگه داشته شدند."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3341
+#: ../src/gpk-update-viewer.c:3350
 msgid "Software Update Viewer"
 msgstr "نمایش‌گر به‌روزرسانی برنامه‌ها"
 
@@ -4339,50 +4131,9 @@ msgstr "نمایش‌گر به‌روزرسانی برنامه‌ها"
 msgid "Do not exit after the request has been processed"
 msgstr "بعد از پردازش درخواست خارج نشو"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156
 #: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "سرویس نشست DBus برای PackageKit"
-
-#: ../src/gpk-watch.c:107
-msgid "Package manager error details"
-msgstr "جزئیات خطای مدیر بسته"
-
-#. TRANSLATORS: Prefix to the title shown in the libnotify popup
-#: ../src/gpk-watch.c:589
-msgid "Package Manager"
-msgstr "مدیر بسته‌ها"
-
-#. TRANSLATORS: log out of the session
-#: ../src/gpk-watch.c:680
-msgid "Log out"
-msgstr "خروج از سیستم"
-
-#. TRANSLATORS: restart the computer
-#: ../src/gpk-watch.c:685
-msgid "Restart"
-msgstr "راه‌اندازی مجدد"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:790
-msgid "Packages have been removed"
-msgstr "بسته حذف شده است"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:793
-msgid "Packages have been installed"
-msgstr "بسته نصب شده است"
-
-#. TRANSLATORS: This is the message in the libnotify body
-#: ../src/gpk-watch.c:796
-msgid "System has been updated"
-msgstr "سیستم به‌روزرسانی شده است"
-
-#. TRANSLATORS: title: an action has finished, and we are showing the libnotify bubble
-#: ../src/gpk-watch.c:803
-msgid "Task completed"
-msgstr "ماموریت انجام شد"
 
 #. TRANSLATORS: turn on all debugging
 #: ../src/gpk-debug.c:131
@@ -4397,24 +4148,193 @@ msgstr "گزینه‌های اشکال‌زدایی"
 msgid "Show debugging options"
 msgstr "نمایش گزینه‌های اشکال‌زدایی"
 
+#~ msgid "Package Installer"
+#~ msgstr "نصب‌کننده بسته‌ها"
+
+#~ msgid "PackageKit Update Applet"
+#~ msgstr "برنامک به‌روزرسانی PackageKit"
+
+#~ msgid "_Preferences"
+#~ msgstr "_ترجیحات"
+
+#~ msgid "_About"
+#~ msgstr "_درباره"
+
+#~ msgid "One package was skipped:"
+
+#~ msgid_plural "Some packages were skipped:"
+#~ msgstr[0] "یک بسته نادیده گرفته شد:"
+#~ msgstr[1] "تعدادی بسته نادیده گرفته شدند:"
+
+#~ msgid "The system update has completed"
+#~ msgstr "به‌روزرسانی سیستم کامل شد"
+
+#~ msgid "Restart computer now"
+#~ msgstr "هم‌اکنون رایانه را مجددا راه‌اندازی کن"
+
+#~ msgid "GNOME PackageKit Update Icon"
+#~ msgstr "نقشک به‌روزرسانی PackageKit گنوم"
+
+#~ msgid "Updated successfully"
+#~ msgstr "با پیروزی به‌روزرسانی شد"
+
+#~ msgid "Security update available"
+
+#~ msgid_plural "Security updates available"
+#~ msgstr[0] "به‌روزرسانی‌ امنیتی‌ای موجوداست"
+#~ msgstr[1] "به‌روزرسانی‌‌های امنیتی‌‌ای موجوداند"
+
+#~ msgid "An important update is available for your computer:"
+
+#~ msgid_plural "Important updates are available for your computer:"
+#~ msgstr[0] "به‌روزرسانی مهمی برای رایانه شما موجود است:"
+#~ msgstr[1] "به‌روزرسانی‌های مهمی برای رایانه شما موجود اند:"
+
+#~ msgid "Install updates"
+#~ msgstr "نصب به‌روزرسانی‌ها"
+
+#~ msgid ""
+#~ "Automatic updates are not being installed as the computer is running on "
+#~ "battery power"
+#~ msgstr ""
+#~ "به‌روزرسانی‌های خودکار نصب نمی‌شوند چون رایانه در حال استفاده از انرژی باتری "
+#~ "است"
+
+#~ msgid "Updates not installed"
+#~ msgstr "به‌روزرسانی‌ها نصب نشدند"
+
+#~ msgid "Install the updates anyway"
+#~ msgstr "درهر صورت به‌روزرسانی‌ها را نصب کن"
+
+#~ msgid "Updates are being installed"
+#~ msgstr "به‌روزرسانی‌ها نصب می‌شوند"
+
+#~ msgid "Updates are being automatically installed on your computer"
+#~ msgstr "به‌روزرسانی‌ها به طور خودکار بر روی سیستم نصب می‌شوند"
+
+#~ msgid "Cancel update"
+#~ msgstr "لغو به‌روزرسانی"
+
+#~ msgid "There is %d update available"
+
+#~ msgid_plural "There are %d updates available"
+#~ msgstr[0] "تعداد %Id به‌روزرسانی موجود است"
+#~ msgstr[1] "تعداد %Id به‌روزرسانی موجوداند"
+
+#~ msgid "Update available"
+#~ msgstr "به‌روزرسانی موجود است"
+
+#~ msgid "Update available (on battery)"
+#~ msgstr "به‌روزرسانی موجود است (درحال کار با باتری)"
+
+#~ msgid "Distribution upgrades available"
+#~ msgstr "ارتقاهایی برای توزیع موجود است"
+
+#~ msgid ""
+#~ "You will need to restart this computer before the hardware will work "
+#~ "correctly."
+#~ msgstr ""
+#~ "جهت درست کار کردن سخت‌افزار لازم است شما رایانه را مجددا راه‌اندازی کنید."
+
+#~ msgid "Additional software was installed"
+#~ msgstr "برنامه‌ی اضافی نصب شد"
+
+#~ msgid "Restart now"
+#~ msgstr "هم‌اکنون راه‌اندازی مجدد شود"
+
+#~ msgid ""
+#~ "You will need to remove and then reinsert the hardware before it will "
+#~ "work correctly."
+#~ msgstr ""
+#~ "برای کارکرد درست سخت‌افزار، لازم است شما یک‌بار آن را بردارید و مجددا وارد "
+#~ "نمایید."
+
+#~ msgid "Your hardware has been set up and is now ready to use."
+#~ msgstr "سخت‌افزار شما نصب شده و هم‌اکنون آماده استفاده می‌باشد."
+
+#~ msgid ""
+#~ "Additional firmware is required to make hardware in this computer "
+#~ "function correctly."
+#~ msgstr ""
+#~ "‍برای کارکرد درست سخت‌افزار، در این سیستم، نیاز به میان‌افزار اضافی است."
+
+#~ msgid "Additional firmware required"
+#~ msgstr "میان‌افزار اضافی مورد نیاز است"
+
+#~ msgid "Install firmware"
+#~ msgstr "نصب میان‌افزار"
+
+#~ msgid "Ignore devices"
+#~ msgstr "نادیده گرفتن دستگاه‌ها"
+
+#~ msgid "Additional packages can be installed to support this hardware"
+#~ msgstr "برای پشتیبانی از این سخت‌افزار می‌توان بسته‌های اضافی نصب کرد."
+
+#~ msgid "New hardware attached"
+#~ msgstr "سخت‌افزاری جدیدی اضافه شد"
+
+#~ msgid "A transaction that cannot be interrupted is running"
+#~ msgstr "یک تراکنش که امکان لغو آن نیست درحال اجراست"
+
+#~ msgid "Exit after a small delay"
+#~ msgstr "خروج پس از یک تاخیر کوتاه"
+
+#~ msgid "Update Applet"
+#~ msgstr "برنامک به‌روزرسانی"
+
+#~ msgid "Update applet"
+#~ msgstr "برنامک به‌روزرسانی"
+
+#~ msgid "Package manager error details"
+#~ msgstr "جزئیات خطای مدیر بسته"
+
+#~ msgid "Package Manager"
+#~ msgstr "مدیر بسته‌ها"
+
+#~ msgid "Log out"
+#~ msgstr "خروج از سیستم"
+
+#~ msgid "Restart"
+#~ msgstr "راه‌اندازی مجدد"
+
+#~ msgid "Packages have been removed"
+#~ msgstr "بسته حذف شده است"
+
+#~ msgid "Packages have been installed"
+#~ msgstr "بسته نصب شده است"
+
+#~ msgid "System has been updated"
+#~ msgstr "سیستم به‌روزرسانی شده است"
+
+#~ msgid "Task completed"
+#~ msgstr "ماموریت انجام شد"
+
 #~ msgid "Backend Status"
 #~ msgstr "وضعیت پسانه"
+
 #~ msgid "Backend author:"
 #~ msgstr "مؤلف پسانه:"
+
 #~ msgid "Backend name:"
 #~ msgstr "نام پسانه:"
+
 #~ msgid "PackageKit Backend Details Viewer"
 #~ msgstr "نمایشگر جزئیات پسانه PackageKit"
+
 #~ msgid "Failed to install packages"
 #~ msgstr "نصب بسته‌ها شکست خورد"
+
 #~ msgid "GNOME PackageKit Update Viewer"
 #~ msgstr "نمایشگر به‌روزرسانی گنوم PackageKit"
+
 #~ msgid "Failed to update"
 #~ msgstr "به‌روزرسانی شکست خورد"
+
 #~ msgid "Debug these specific modules"
 #~ msgstr "اشکال‌زدایی این ماژول‌های مشخص شده"
+
 #~ msgid "Debug these specific functions"
 #~ msgstr "اشکال‌زدایی این توابع مشخص شده"
+
 #~ msgid "Log debugging data to a file"
 #~ msgstr "ثبت اطلاعات اشکال‌زدایی بر روی یک پرونده"
-
