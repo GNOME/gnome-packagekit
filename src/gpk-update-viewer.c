@@ -255,21 +255,8 @@ gpk_update_viewer_check_restart (void)
 		gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog), "%s", message);
 	gtk_window_set_icon_name (GTK_WINDOW(dialog), GPK_ICON_SOFTWARE_UPDATE);
-
-	/* setup a callback so we autoclose */
-	auto_shutdown_id =
-		g_timeout_add_seconds (GPK_UPDATE_VIEWER_AUTO_RESTART_TIMEOUT,
-				       (GSourceFunc) gpk_update_viewer_auto_shutdown_cb, dialog);
-	g_source_set_name_by_id (auto_shutdown_id, "[GpkUpdateViewer] auto-restart");
-
 	response = gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy (dialog);
-
-	/* remove auto-shutdown */
-	if (auto_shutdown_id != 0) {
-		g_source_remove (auto_shutdown_id);
-		auto_shutdown_id = 0;
-	}
 
 	/* cancel */
 	if (response != GTK_RESPONSE_OK)
