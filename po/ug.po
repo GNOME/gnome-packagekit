@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&component=general\n"
-"POT-Creation-Date: 2011-02-25 16:58+0000\n"
-"PO-Revision-Date: 2011-02-25 20:06+0600\n"
-"Last-Translator: Temkin <temkin119@gmail.com>\n"
+"packagekit&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-04-25 10:57+0000\n"
+"PO-Revision-Date: 2011-04-26 09:07+0600\n"
+"Last-Translator: Sahran <sahran.ug@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgstr "ئىجادىيەت بوغچىسىلا"
 
 #: ../data/gpk-application.ui.h:13
 msgid "Only _End User Files"
-msgstr " ئادەتتىكى ئىشلەتكۈچى ھۆججىتىلا(_E)"
+msgstr "ئادەتتىكى ئىشلەتكۈچى ھۆججىتىلا(_E)"
 
 #: ../data/gpk-application.ui.h:14
 msgid "Only _Graphical"
@@ -117,7 +117,7 @@ msgstr "تېكىستلا(_T)"
 
 #: ../data/gpk-application.ui.h:20
 msgid "Only show one package, not subpackages"
-msgstr " بوغچىنىلا كۆرسىتىدۇ،تارماق بوغچىنى كۆرسەتمەيدۇ"
+msgstr "بوغچىنىلا كۆرسىتىدۇ،تارماق بوغچىنى كۆرسەتمەيدۇ"
 
 #: ../data/gpk-application.ui.h:21
 msgid "Only show packages matching the machine architecture"
@@ -166,7 +166,7 @@ msgstr "يۇمشاق دېتاللارنىڭ مەنبە كودى"
 
 #: ../data/gpk-application.ui.h:32
 msgid "View previously added or removed software"
-msgstr " بۇرۇق قوشۇلغان ياكى ئۆچۈرۈلگەن يۇمشاق دېتالنى كۆرسەت"
+msgstr "بۇرۇق قوشۇلغان ياكى ئۆچۈرۈلگەن يۇمشاق دېتالنى كۆرسەت"
 
 #: ../data/gpk-application.ui.h:33
 msgid "Visit the project homepage"
@@ -250,13 +250,18 @@ msgstr "مۇندەرىجە ئورناتقۇچ"
 msgid "Install a catalog of software on the system"
 msgstr "سىستېمىغا يۇمشاق دېتال كاتالوگىنى ئورنات"
 
-#: ../data/gpk-install-file.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
 msgid "Install selected software on the system"
 msgstr "تاللانغان يۇمشاق دېتالنى سىستېمىغا ئورنات"
 
-#: ../data/gpk-install-file.desktop.in.h:2
-msgid "Package Installer"
-msgstr "بوغچا ئورناتقۇچ"
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "يۇمشاق دېتال ئورنات"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -294,7 +299,7 @@ msgstr "يېڭىلانمىلارنى تەكشۈر(_H):"
 
 #: ../data/gpk-prefs.ui.h:3
 msgid "Check for major _upgrades:"
-msgstr "مۇھىم يېڭىلاشنى تەكشۈر(_U):"
+msgstr "مۇھىم يۈكسەلدۈرمىلەرنى تەكشۈر(_U):"
 
 #: ../data/gpk-prefs.ui.h:4
 msgid "Check for updates when using mobile broadband"
@@ -423,11 +428,11 @@ msgstr "يېڭىلاش يۇمشاق دېتال بۇ سىستېمىغا ئورن�
 
 #: ../data/gpk-distro-upgrade.desktop.in.h:1
 msgid "Operating System Upgrade"
-msgstr "مەشغۇلات سىستېما يېڭىلانمىسى"
+msgstr "مەشغۇلات سىستېما يۈكسەلدۈرمىسى"
 
 #: ../data/gpk-distro-upgrade.desktop.in.h:2
 msgid "Upgrade the operating system to a new version"
-msgstr "بۇ مەشغۇلات سىستېمىسىنى يېڭى نەشرگە يۇقىرىلات"
+msgstr "بۇ مەشغۇلات سىستېمىسىنى يۈكسەلدۈر"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid ""
@@ -443,7 +448,7 @@ msgstr "يېڭىلانما قاچىلا(_I)"
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
-msgstr "دەرىجە ئۆستۈر(_U)"
+msgstr "يۈكسەلدۈر(_U)"
 
 #. TRANSLATORS: expander label in the error dialog
 #: ../python/packagekit/gtkwidgets.py:413
@@ -460,7 +465,7 @@ msgstr "بوغچا"
 
 #: ../python/packagekit/gtkwidgets.py:609
 msgid "_Remove"
-msgstr "ئۆچۈر(_R)"
+msgstr "چىقىرىۋەت(_R)"
 
 #: ../python/packagekit/gtkwidgets.py:610
 #, python-format
@@ -563,7 +568,7 @@ msgstr "ئىزدەش بالدىقىغا بوغچا ئىسمىنى كىرگۈزۈ
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1316
 msgid "There are no packages queued to be installed or removed."
-msgstr "ئورنىتىدىغان ياكى ئۆچۈرمەكچى بولغان يۇمشاق دېتال بوغچىسى يوق. "
+msgstr "ئورنىتىدىغان ياكى ئۆچۈرمەكچى بولغان يۇمشاق دېتال بوغچىسى يوق."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1321
@@ -587,7 +592,7 @@ msgstr "ئىناۋەتسىز ئىزدەش تېكىستى"
 #. TRANSLATORS: message: tell the user that's not allowed
 #: ../src/gpk-application.c:1598
 msgid "The search text contains invalid characters"
-msgstr " ئىزدەش تېكىستىدە ئىناۋەتسىز ھەرپ بار"
+msgstr "ئىزدەش تېكىستىدە ئىناۋەتسىز ھەرپ بار"
 
 #. TRANSLATORS: title: we failed to execute the mthod
 #: ../src/gpk-application.c:1639
@@ -695,7 +700,7 @@ msgstr "مەنبە"
 #. TRANSLATORS: this is a menu group of packages in the queue
 #: ../src/gpk-application.c:2481
 msgid "Selected packages"
-msgstr " تاللانغان بوغچىلار "
+msgstr "تاللانغان بوغچىلار"
 
 #. TRANSLATORS: entry tooltip: basic search
 #: ../src/gpk-application.c:2534
@@ -772,7 +777,6 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Gheyret Kenji <gheyret@gmail.com>\n"
-"Temkin<Temkin119@gmail.com>\n"
 "Sahran<sahran@live.com>"
 
 #: ../src/gpk-application.c:2702
@@ -980,7 +984,7 @@ msgid ""
 "distribution bugtracker."
 msgstr ""
 "نامەلۇم خاتالىق . خاتالىق تەپسىلات دوكلاتىدىن پايدىلىنىڭ ھەمدە خاتالىق "
-"تەپسىلاتىنى نەشرى نۇسخىلىق سىستېمىنىڭ خاتالىقى بىلەن سېلىشتۇرۇپ بېقىڭ."
+"تەپسىلاتىنى تارقىتىلمىنىڭ كەمتۈك ئىزلىغۇچىسىغا مەلۇم قىلىڭ."
 
 #. TRANSLATORS: failed authentication
 #: ../src/gpk-dbus-task.c:309
@@ -1035,7 +1039,7 @@ msgstr[0] "بۇ ھۆججەتلەرنى ئورنىتامسىز؟"
 #: ../src/gpk-dbus-task.c:1025
 msgid "Install local file"
 msgid_plural "Install local files"
-msgstr[0] " يەرلىك ھۆججەتنى ئورنات"
+msgstr[0] "يەرلىك ھۆججەتنى ئورنات"
 
 #. TRANSLATORS: couldn't resolve name to package
 #: ../src/gpk-dbus-task.c:1084
@@ -1168,8 +1172,7 @@ msgstr[0] "بۇنى ھازىرلا ئىزدەمسىز؟"
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
-msgstr[0] ""
-"%s بۇ ھۆججەتنى كودسىزلاش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
+msgstr[0] "%s بۇ ھۆججەتنى كودسىزلاش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1554
@@ -1183,8 +1186,7 @@ msgstr[0] "%s بۇ ھۆججەتنى كودلاش ئۈچۈن قوشۇمچە قى�
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
-msgstr[0] ""
-"%s بۇ مەشغۇلاتنى قىلىش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
+msgstr[0] "%s بۇ مەشغۇلاتنى قىلىش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
 #: ../src/gpk-dbus-task.c:1564
@@ -1197,15 +1199,13 @@ msgstr[0] ""
 #: ../src/gpk-dbus-task.c:1568
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
-msgstr[0] ""
-"پروگرامما بۇ ھۆججەتنى كودلاش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
+msgstr[0] "پروگرامما بۇ ھۆججەتنى كودلاش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
 #: ../src/gpk-dbus-task.c:1572
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
-msgstr[0] ""
-"پروگرامما بۇ مەشغۇلاتنى قىلىش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق "
+msgstr[0] "پروگرامما بۇ مەشغۇلاتنى قىلىش ئۈچۈن قوشۇمچە قىستۇرمىغا ئېھتىياجلىق"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1931
@@ -1221,7 +1221,7 @@ msgstr "قىستۇرما ئىزدەش مەغلۇپ بولدى"
 #. TRANSLATORS: no software sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
 msgid "Could not find plugin in any configured software source"
-msgstr " ھەرقانداق سەپلەنگەن يۇمشاق دېتال مەنبەسىدىن بۇ قىستۇرما تېپىلمىدى."
+msgstr "ھەرقانداق سەپلەنگەن يۇمشاق دېتال مەنبەسىدىن بۇ قىستۇرما تېپىلمىدى."
 
 #: ../src/gpk-dbus-task.c:1658
 msgid "Install the following plugin"
@@ -1463,7 +1463,7 @@ msgid ""
 "system upgrade."
 msgstr ""
 "سىستېمىڭىزدا تۆۋەندىكى يۇمشاق دېتال بولغاندىلا ئاندىن مەشغۇلات سىستېمىسىنى "
-"يۈكسەلدۈرۈش مەشغۇلاتىنى ئىلىپ بارالايدۇ. "
+"يۈكسەلدۈرۈش مەشغۇلاتىنى ئىلىپ بارالايدۇ."
 
 #: ../src/gpk-distro-upgrade.c:164
 msgid ""
@@ -1487,7 +1487,7 @@ msgstr "ھازىرلا قايتا قوزغات"
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-distro-upgrade.c:294
 msgid "Could not get distribution upgrades"
-msgstr "نەشرى نۇسخا يۈكسەلدۈرۈشكە  ئېرىشەلمىدى"
+msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرمىسىگە ئېرىشەلمىدى"
 
 #. TRANSLATORS: nothing to do
 #: ../src/gpk-distro-upgrade.c:315
@@ -1513,7 +1513,7 @@ msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
 msgstr ""
-" تور سۈرئىتىنىڭ ۋە تاللانمىلارنىڭ ئوخشىماسلىقىغا قاراپ،بۇ جەريان بىرئاز "
+"تور سۈرئىتىنىڭ ۋە تاللانمىلارنىڭ ئوخشىماسلىقىغا قاراپ،بۇ جەريان بىرئاز "
 "ۋاقىتتىن كېيىن تاماملىنىشى مۇمكىن."
 
 #: ../src/gpk-distro-upgrade.c:408
@@ -1522,7 +1522,7 @@ msgid ""
 "downloads the packages needed to upgrade your system."
 msgstr ""
 "ياردەمچى سىستېمىنىڭ يۈكسەلدۈرۈش بوغچىسىنى يۈكلەش مەزگىلىدە،سىستېمىنى "
-"داۋاملىق ئىشلەتسىڭىز بولىدۇ "
+"داۋاملىق ئىشلەتسىڭىز بولىدۇ"
 
 #: ../src/gpk-distro-upgrade.c:409
 msgid ""
@@ -1595,7 +1595,7 @@ msgstr "بوغچىلارنى يۈكلە"
 
 #: ../src/gpk-distro-upgrade.c:610
 msgid "Prepare and test the upgrade"
-msgstr "يۈكسەلدۈرۈشكە تەييارلىق ۋە سىناق "
+msgstr "يۈكسەلدۈرۈشكە تەييارلىق ۋە سىناق"
 
 #: ../src/gpk-distro-upgrade.c:611
 msgid "You will have to restart your computer at the end of the upgrade."
@@ -1603,12 +1603,12 @@ msgstr "يۈكسەلدۈرۈش ئاخىرلاشقاندىن كېيىن كومپ�
 
 #: ../src/gpk-distro-upgrade.c:612
 msgid "Press 'Apply' to apply changes."
-msgstr " \"قوللان\" نى بېسىپ ئۆزگەرتىشنى قوللىنىڭ ."
+msgstr "\"قوللان\" نى بېسىپ ئۆزگەرتىشنى قوللىنىڭ ."
 
 #. TRANSLATORS: button text
 #: ../src/gpk-distro-upgrade.c:625
 msgid "Confirmation"
-msgstr "جەزملە"
+msgstr "جەزملەش"
 
 #. TRANSLATORS: title text
 #: ../src/gpk-distro-upgrade.c:662
@@ -1623,7 +1623,7 @@ msgstr "مەشغۇلات سىستېمىسىنى يۈكسەلدۈرگىلى بو�
 #. TRANSLATORS: message, we're unable to do this action
 #: ../src/gpk-distro-upgrade.c:740
 msgid "Upgrading the operating system is not supported."
-msgstr " مەشغۇلات سىستېمىسىنى يۈكسەلدۈرۈشنى قوللىمايدۇ."
+msgstr "مەشغۇلات سىستېمىسىنى يۈكسەلدۈرۈشنى قوللىمايدۇ."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
 #: ../src/gpk-distro-upgrade.c:744
@@ -1639,7 +1639,7 @@ msgstr "قوللىمايدىغان daemon نەشرى."
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-distro-upgrade.c:800 ../src/gpk-distro-upgrade.c:803
 msgid "Distribution Upgrade Tool"
-msgstr "نەشرىي نۇسخىنىڭ يۈكسەلدۈرۈش قورالى"
+msgstr "تارقىتىلما يۈكسەلدۈرۈش قورالى"
 
 #. TRANSLATORS: this is compact disk (CD) media
 #: ../src/gpk-enum.c:275
@@ -1683,7 +1683,7 @@ msgstr "جەريان قۇرۇش مەغلۇپ بولدى"
 
 #: ../src/gpk-enum.c:319
 msgid "Not supported by this backend"
-msgstr "بۇ ئارقا ئۇچنى قوللىمايدىغان "
+msgstr "بۇ ئارقا ئۇچنى قوللىمايدىغان"
 
 #: ../src/gpk-enum.c:322
 msgid "An internal system error has occurred"
@@ -1739,11 +1739,11 @@ msgstr "قوغدىلىدىغان سىستېما بوغچىسىنى چىقىرى�
 
 #: ../src/gpk-enum.c:364
 msgid "The action was canceled"
-msgstr "مەشغۇلات بىكار قىلىندى "
+msgstr "مەشغۇلات بىكار قىلىندى"
 
 #: ../src/gpk-enum.c:367
 msgid "The action was forcibly canceled"
-msgstr "مەشغۇلات مەجبۇرى بىكار قىلىندى "
+msgstr "مەشغۇلات مەجبۇرى بىكار قىلىندى"
 
 #: ../src/gpk-enum.c:370
 msgid "Reading the configuration file failed"
@@ -1751,7 +1751,7 @@ msgstr "سەپلىمە ھۆججەتنى ئوقۇش مەغلۇپ بولدى"
 
 #: ../src/gpk-enum.c:373
 msgid "The action cannot be canceled"
-msgstr "مەشغۇلاتنى بىكار قىلغىلى بولمىدى "
+msgstr "مەشغۇلاتنى بىكار قىلغىلى بولمىدى"
 
 #: ../src/gpk-enum.c:376
 msgid "Source packages cannot be installed"
@@ -1791,7 +1791,7 @@ msgstr "يېڭىلايدىغان بوغچىلار يوق"
 
 #: ../src/gpk-enum.c:403
 msgid "Cannot write repository configuration"
-msgstr "خەزىنە سەپلىمىسىگە يازغىلى بولمىدى "
+msgstr "خەزىنە سەپلىمىسىگە يازغىلى بولمىدى"
 
 #: ../src/gpk-enum.c:406
 msgid "Local install failed"
@@ -1831,11 +1831,11 @@ msgstr "بەلگىلەنگەن ھۆججەت  تېپىلمىدى"
 
 #: ../src/gpk-enum.c:433
 msgid "No more mirrors are available"
-msgstr " تېخىمۇ كۆپ ئىشلەتكۈدەك  تەسۋىر  يوق"
+msgstr "تېخىمۇ كۆپ ئىشلەتكۈدەك  تەسۋىر  يوق"
 
 #: ../src/gpk-enum.c:436
 msgid "No distribution upgrade data is available"
-msgstr "ئىشلەتكىلى بولىدىغان نەشرى نۇسخا يۈكسەلدۈرۈش مەلۇماتى يوق"
+msgstr "ئىشلەتكىلى بولىدىغان تارقىتىلما يۈكسەلدۈرۈش سانلىق-مەلۇماتى يوق"
 
 #: ../src/gpk-enum.c:439
 msgid "Package is incompatible with this system"
@@ -1848,15 +1848,15 @@ msgstr "دىسكىدا بوشلۇق قالمىدى"
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
 #: ../src/gpk-enum.c:445 ../src/gpk-task.c:357
 msgid "A media change is required"
-msgstr " ۋاسىتە ئالماشتۇرۇشقا ئېھتىياجلىق"
+msgstr "ۋاسىتە ئالماشتۇرۇشقا ئېھتىياجلىق"
 
 #: ../src/gpk-enum.c:448
 msgid "Authorization failed"
-msgstr " دەلىللەش مەغلۇپ بولدى"
+msgstr "دەلىللەش مەغلۇپ بولدى"
 
 #: ../src/gpk-enum.c:451
 msgid "Update not found"
-msgstr " يېڭىلانما تېپىلمىدى"
+msgstr "يېڭىلانما تېپىلمىدى"
 
 #: ../src/gpk-enum.c:454
 msgid "Cannot install from untrusted source"
@@ -1900,7 +1900,7 @@ msgstr "بوغچىنى چىقىرىۋېتەلمىدى"
 
 #: ../src/gpk-enum.c:484
 msgid "Update failed due to running process"
-msgstr "جەريان ئىجرا بولۇۋاتقانلىقتىن ، يېڭىلاش مەغلۇپ بولدى "
+msgstr "ئىجرا ئىجرا بولۇۋاتقانلىقتىن ، يېڭىلاش مەغلۇپ بولدى"
 
 #: ../src/gpk-enum.c:487
 msgid "The package database was changed"
@@ -1923,7 +1923,7 @@ msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
 msgstr ""
-" ئىشلەتكىلى بولىدىغان تور باغلىنىشى يوق ئىكەن ،باغلىنىش تەڭشەكلىرىنى "
+"ئىشلەتكىلى بولىدىغان تور باغلىنىشى يوق ئىكەن ،باغلىنىش تەڭشەكلىرىنى "
 "تەكشۈرگەندىن كېيىن ،قايتا سىناپ بېقىڭ"
 
 #: ../src/gpk-enum.c:517
@@ -1954,7 +1954,7 @@ msgid ""
 "happened."
 msgstr ""
 "ئارقا ئۇچ بۇ مەشغۇلاتنى قوللىمايدۇ.\n"
-"بۇ خىل مەسىلىنىڭ قايتا پەيدا بولماسلىقى ئۈچۈن ، نەشرى نۇسخىنىڭ كەمتۈك  "
+"بۇ خىل مەسىلىنىڭ قايتا پەيدا بولماسلىقى ئۈچۈن ، تارقىتىلمىنىڭ كەمتۈك  "
 "مەلۇماتنى ئىز قوغلاپ تەكشۈرۈش سىستېمىسىغا دوكلات قىلىڭ."
 
 #: ../src/gpk-enum.c:532
@@ -1964,7 +1964,7 @@ msgid ""
 "description."
 msgstr ""
 "ئويلىمىغان خاتالىق يۈز بەردى.\n"
-"بۇ خىل مەسىلىنىڭ قايتا پەيدا بولماسلىقى ئۈچۈن ، نەشرى نۇسخىنىڭ كەمتۈك  "
+"بۇ خىل مەسىلىنىڭ قايتا پەيدا بولماسلىقى ئۈچۈن ، تارقىتىلمىنىڭ كەمتۈك  "
 "مەلۇماتىنى ئىز قوغلاپ تەكشۈرۈش سىستېمىسىغا دوكلات قىلىڭ."
 
 #: ../src/gpk-enum.c:536
@@ -2231,7 +2231,7 @@ msgid ""
 msgstr ""
 "لازىملىق يۈكسەلدۈرۈش تەپسىلاتى سىستېمىغا سەپلەنگەن يۇمشاق دېتال مەنبەسىدىن "
 "تېپىلمىدى.\n"
-"نەشرى نۇسخىنىڭ يۈكسەلدۈرۈش تىزمىنى ئىشلەتكىلى بولمىدى."
+"تارقىتىلمىنىڭ يۈكسەلدۈرۈش تىزمىنى ئىشلەتكىلى بولمىدى."
 
 #: ../src/gpk-enum.c:675
 msgid ""
@@ -2366,7 +2366,7 @@ msgstr "سىز تىزىمدىن چىقىپ قايتا تىزىمغا كىرىش�
 
 #: ../src/gpk-enum.c:765
 msgid "A restart will be required."
-msgstr " قايتا قوزغىتىش كېرەك."
+msgstr "قايتا قوزغىتىش كېرەك."
 
 #: ../src/gpk-enum.c:768
 msgid "You will be required to log out and back in due to a security update."
@@ -2415,7 +2415,7 @@ msgstr "مۇقىمسىز"
 #. TRANSLATORS: A distribution stability level
 #: ../src/gpk-enum.c:829
 msgid "Testing"
-msgstr "سىناۋاتىدۇ"
+msgstr "سىناق"
 
 #: ../src/gpk-enum.c:846
 msgid "A mirror is possibly broken"
@@ -2509,7 +2509,7 @@ msgstr "سۈرۈشتۈرۈۋاتىدۇ"
 #. TRANSLATORS: transaction state, getting data from a server
 #: ../src/gpk-enum.c:929
 msgid "Getting information"
-msgstr " ئۇچۇرغا ئېرىشىۋاتىدۇ"
+msgstr "ئۇچۇرغا ئېرىشىۋاتىدۇ"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
@@ -2561,7 +2561,7 @@ msgstr "ئۆزگىرىشلەرنى سىناۋاتىدۇ"
 #. TRANSLATORS: transaction state, when we're writing to the system package database
 #: ../src/gpk-enum.c:977
 msgid "Committing changes"
-msgstr "ئۆزگەرتىلىۋاتىدۇ"
+msgstr "ئۆزگىرىشلەرنى تاپشۇرۇۋاتىدۇ"
 
 #. TRANSLATORS: transaction state, requesting data from a server
 #: ../src/gpk-enum.c:981
@@ -2646,12 +2646,12 @@ msgstr "ئىجرا بولۇۋاتقان پروگرامما تىزىمىنى يې
 #. TRANSLATORS: we are checking executable files in use
 #: ../src/gpk-enum.c:1045
 msgid "Checking for applications currently in use"
-msgstr "نۆۋەتتە ئىشلىتىۋاتقان پروگراممىلارنى تەكشۈرۈۋاتىدۇ  "
+msgstr "نۆۋەتتە ئىشلىتىۋاتقان پروگراممىلارنى تەكشۈرۈۋاتىدۇ"
 
 #. TRANSLATORS: we are checking for libraries in use
 #: ../src/gpk-enum.c:1049
 msgid "Checking for libraries currently in use"
-msgstr "نۆۋەتتە ئىشلىتىۋاتقان ئامبارنى تەكشۈرۈۋاتىدۇ  "
+msgstr "نۆۋەتتە ئىشلىتىۋاتقان ئامبارنى تەكشۈرۈۋاتىدۇ"
 
 #. TRANSLATORS: we are copying package files to prepare to install
 #: ../src/gpk-enum.c:1053
@@ -2691,7 +2691,7 @@ msgstr[0] "%i بىخەتەرلىك يېڭىلانمىسى"
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
-msgstr[0] "%iكەمتۈكنى تۈزەيدىغان يېڭىلانما "
+msgstr[0] "%iكەمتۈكنى تۈزەيدىغان يېڭىلانما"
 
 #. TRANSLATORS: type of update
 #: ../src/gpk-enum.c:1091
@@ -2710,7 +2710,7 @@ msgstr[0] "%i  يۈرگۈزۈلمەيدىغان يېڭىلانما"
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:1113
 msgid "Trivial update"
-msgstr " ئۇششاق يېڭىلانما"
+msgstr "ئۇششاق يېڭىلانما"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:1117
@@ -2730,7 +2730,7 @@ msgstr "بىخەتەرلىك يېڭىلانمىسى"
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:1129
 msgid "Bug fix update"
-msgstr "كەمتۈكنى تۈزەيدىغان يېڭىلانما "
+msgstr "كەمتۈكنى تۈزەيدىغان يېڭىلانما"
 
 #. TRANSLATORS: The type of update
 #: ../src/gpk-enum.c:1133
@@ -2848,12 +2848,12 @@ msgstr "بېقىنىش مۇناسىۋىتىگە ئېرىشىۋاتىدۇ"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1273
 msgid "Getting update detail"
-msgstr "يېڭىلاش ئۇچۇرىغا ئېرىشىۋاتىدۇ "
+msgstr "يېڭىلاش ئۇچۇرىغا ئېرىشىۋاتىدۇ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1277
 msgid "Getting details"
-msgstr " تەپسىلاتىغا ئېرىشىۋاتىدۇ:"
+msgstr "تەپسىلاتىغا ئېرىشىۋاتىدۇ:"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1281
@@ -2863,7 +2863,7 @@ msgstr "ئېھتىياج ئۇچۇرىغا ئېرىشىۋاتىدۇ:"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1285
 msgid "Getting updates"
-msgstr " يېڭىلانمىلارغا ئېرىشىۋاتىدۇ:"
+msgstr "يېڭىلانمىلارغا ئېرىشىۋاتىدۇ:"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1289
@@ -2953,7 +2953,7 @@ msgstr "EULAقوشۇلۇۋاتىدۇ"
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1377
 msgid "Getting distribution upgrade information"
-msgstr "نەشرى نۇسخىنىڭ يۈكسەلدۈرۈش ئۇچۇرىغا ئېرىشىۋاتىدۇ:"
+msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرۈش ئۇچۇرىغا ئېرىشىۋاتىدۇ:"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-enum.c:1381
@@ -3128,7 +3128,7 @@ msgstr "چۈشۈرۈلگەن بوغچىلار"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1537
 msgid "Got distribution upgrades"
-msgstr "نەشرى نۇسخىنى يېڭىلاشقا ئېرىشتى"
+msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرمىسىگە ئېرىشتى"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1541
@@ -3223,22 +3223,22 @@ msgstr "سىستېما"
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1627
 msgid "GNOME desktop"
-msgstr "GNOME ئۈستەليۈزى"
+msgstr "GNOME ئۈستەلئۈستى"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1631
 msgid "KDE desktop"
-msgstr "KDE ئۈستەليۈزى"
+msgstr "KDE ئۈستەلئۈستى"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1635
 msgid "XFCE desktop"
-msgstr "XFCEئۈستەليۈزى"
+msgstr "XFCEئۈستەلئۈستى"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1639
 msgid "Other desktops"
-msgstr "باشقا ئۈستەليۈزى"
+msgstr "باشقا ئۈستەلئۈستى"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1643
@@ -3392,7 +3392,7 @@ msgstr "بۇ بوغچىنى<b>راستلا</b>ئورنىتامسىز؟"
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
 msgstr ""
-"قوشۇمچە ۋاسىتە زۆرۈردۇر. داۋاملاشتۇرۇش ئۈچۈن، ئېنى %s بولغان «%s» نى سېلىپ "
+"قوشۇمچە ۋاسىتە زۆرۈردۇر. داۋاملاشتۇرۇش ئۈچۈن، ئەنى %s بولغان «%s» نى سېلىپ "
 "داۋاملاشتۇرۇڭ."
 
 #. TRANSLATORS: this is button text
@@ -3473,7 +3473,7 @@ msgstr[0] ""
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
-"بۇ جەرياننى بىرتەرەپ قېلىش ئۈچۈن،باشقا يۇمشاق دېتاللارنى ئۆزگەرتىشكە توغرا "
+"بۇ جەرياننى بىرتەرەپ قېلىش ئۈچۈن، باشقا يۇمشاق دېتاللارنى ئۆزگەرتىشكە توغرا "
 "كېلىدۇ ."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
@@ -3528,16 +3528,15 @@ msgstr "مەشغۇلاتنى تاماملىيالمىدى"
 #: ../src/gpk-install-provide-file.c:120
 msgid "The request failed. More details are available in the detailed report."
 msgstr ""
-" ئىلتىماس مەغلۇپ بولدى،تېخىمۇ كۆپ تەپسىلاتلارغا تەپسىلىي دوكلاتتىن "
-"ئېرىشكىلى بولىدۇ."
+"ئىلتىماس مەغلۇپ بولدى،تېخىمۇ كۆپ تەپسىلاتلارغا تەپسىلىي دوكلاتتىن ئېرىشكىلى "
+"بولىدۇ."
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:51
 msgid "Files to install"
 msgstr "ئورنىتىدىغان ھۆججەتلەر"
 
-#. TRANSLATORS: program name: application to install a package to provide a file
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "PackageKit ھۆججەت ئورناتقۇچ"
 
@@ -3587,10 +3586,8 @@ msgstr "سىز  ئورنىتىش ئۈچۈن mime تىپىنى كۆرسىتىڭ"
 msgid "Packages to install"
 msgstr "ئورنىتىلىدىغان بوغچىلار"
 
-#. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:68
-#: ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "بوغچا ئات ئورناتقۇچ"
 
@@ -3659,7 +3656,7 @@ msgstr "يېڭىلاش سىنبەلگىسى"
 #. TRANSLATORS: short name for the command not found plugin
 #: ../src/gpk-log.c:507
 msgid "Bash - Command Not Found"
-msgstr ""
+msgstr "Bash - بۇيرۇق تېپىلمىدى"
 
 #. TRANSLATORS: preset the GtktextBox with this filter text
 #: ../src/gpk-log.c:821
@@ -3743,8 +3740,7 @@ msgstr "ئارقائۇچنىڭ تەپسىلاتىغا ئېرىشكىلى بول�
 
 #: ../src/gpk-prefs.c:797
 msgid "Getting software source list not supported by backend"
-msgstr ""
-"ئارقائۇچ پروگراممىسى يۇمشاق دېتال مەنبە تىزىمىغا ئېرىشىشنى قوللىمايدۇ"
+msgstr "ئارقائۇچ پروگراممىسى يۇمشاق دېتال مەنبە تىزىمىغا ئېرىشىشنى قوللىمايدۇ"
 
 #. TRANSLATORS: cannot resolve name to package name
 #: ../src/gpk-service-pack.c:260
@@ -3775,7 +3771,7 @@ msgstr "ھۆججەتكە ساقلىيالمىدى: %s"
 #: ../src/gpk-service-pack.c:551 ../src/gpk-service-pack.c:560
 #: ../src/gpk-service-pack.c:600
 msgid "Create error"
-msgstr "قۇرۇشتىكى خاتالىق "
+msgstr "قۇرۇشتىكى خاتالىق"
 
 #: ../src/gpk-service-pack.c:405
 msgid "Cannot create service pack"
@@ -3941,7 +3937,8 @@ msgid_plural ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update these packages."
 msgstr[0] ""
-"نۆۋەتتىكى باغلىنىشنى سىمسىز تور تەمىنلەۋاتىدۇ، بوغچىنى يېڭىلاش ئۈچۈن تور ھەققى جىقراق بولۇشى مۇمكىن."
+"نۆۋەتتىكى باغلىنىشنى سىمسىز تور تەمىنلەۋاتىدۇ، بوغچىنى يېڭىلاش ئۈچۈن تور "
+"ھەققى جىقراق بولۇشى مۇمكىن."
 
 #. TRANSLATORS: there are no updates
 #: ../src/gpk-update-viewer.c:1354
@@ -4083,7 +4080,7 @@ msgid ""
 "take effect."
 msgstr ""
 "يېڭىلاش تاماملانغاندىن كېيىن ،يېڭىلاشنىڭ ئۈنۈمىنى كۆرۈش ئۈچۈن ، تىزىمدىن "
-"چىقىپ قايتا تىزىمغا كىرىش كېرەك. "
+"چىقىپ قايتا تىزىمغا كىرىش كېرەك."
 
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer.c:2002
@@ -4146,7 +4143,7 @@ msgstr "ھەممىنى تاللىما"
 #. TRANSLATORS: right click menu, select only security updates
 #: ../src/gpk-update-viewer.c:2459
 msgid "Select security updates"
-msgstr "بىخەتەرلىك يېڭىلانما تاللا "
+msgstr "بىخەتەرلىك يېڭىلانما تاللا"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
 #: ../src/gpk-update-viewer.c:2465
@@ -4166,13 +4163,13 @@ msgstr "يېڭىلانمىلارنى تەكشۈرۈۋاتىدۇ..."
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:3003
 msgid "Could not get list of distribution upgrades"
-msgstr "نەشرى نۇسخا يۈكسەلدۈرۈش تىزىمىغا  ئېرىشەلمىدى"
+msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرمە تىزىمىغا  ئېرىشەلمىدى"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
 #: ../src/gpk-update-viewer.c:3033
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
-msgstr "يېڭى نەشرى نۇسخىنىڭ يۈكسەلدۈرۈش نەشرى '%s' بار"
+msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرمە نەشرى '%s' بار"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
 #: ../src/gpk-update-viewer.c:3280
@@ -4192,8 +4189,7 @@ msgstr "يۇمشاق دېتال يېڭىلانمىسىنى كۆرگۈچ"
 msgid "Do not exit after the request has been processed"
 msgstr "ئىلتىماس بىر تەرەپ قىلىنىپ بولغان بولسىمۇ ئاخىرلاشمىدى"
 
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../src/gpk-dbus-service.c:156 ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "PackageKitئۈچۈن  ئەڭگىمە DBus مۇلازىمىتى"
 
@@ -4209,6 +4205,9 @@ msgstr "سازلاش تاللانمىلىرى"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "سازلاش تاللانمىسىنى كۆرسىتىدۇ"
+
+#~ msgid "Package Installer"
+#~ msgstr "بوغچا ئورناتقۇچ"
 
 #~ msgid "PackageKit Update Applet"
 #~ msgstr "PackageKit يېڭىلاش قوللانچىقى"
@@ -4250,7 +4249,8 @@ msgstr "سازلاش تاللانمىسىنى كۆرسىتىدۇ"
 #~ "Automatic updates are not being installed as the computer is running on "
 #~ "battery power"
 #~ msgstr ""
-#~ "كومپيۇتېرىڭىز توكداندا ئىشلەۋاتىدۇ، شۇڭا ئۆزلۈكىدىن يېڭىلاش ئىلىپ بارمايدۇ."
+#~ "كومپيۇتېرىڭىز توكداندا ئىشلەۋاتىدۇ، شۇڭا ئۆزلۈكىدىن يېڭىلاش ئىلىپ "
+#~ "بارمايدۇ."
 
 #~ msgid "Updates not installed"
 #~ msgstr "يېڭىلانما ئورنىتىلمىدى"
@@ -4278,7 +4278,7 @@ msgstr "سازلاش تاللانمىسىنى كۆرسىتىدۇ"
 #~ msgstr "ئىشلەتكىلى بولىدىغان يېڭىلاش(توكداندا)"
 
 #~ msgid "Distribution upgrades available"
-#~ msgstr "نەشرىي نۇسخا يۈكسەلتمىسى بار"
+#~ msgstr "تارقىتىلمىنىڭ يۈكسەلدۈرمىسى بار"
 
 #~ msgid ""
 #~ "You will need to restart this computer before the hardware will work "
