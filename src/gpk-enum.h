@@ -57,7 +57,12 @@ typedef enum {
 
 /* constants defined in previous versions */
 #if (!PK_CHECK_VERSION(0,6,11))
-#define PK_ROLE_ENUM_UPGRADE_SYSTEM					(PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES + 1)
+#define PK_ROLE_ENUM_UPGRADE_SYSTEM			G_MAXINT
+#define PK_ERROR_ENUM_CANNOT_FETCH_SOURCES		G_MAXINT
+#endif
+
+#if (!PK_CHECK_VERSION(0,6,14))
+#define PK_ERROR_ENUM_CANCELLED_PRIORITY		G_MAXINT
 #endif
 
 void		 gpk_enum_test				(gpointer	 data);

@@ -492,6 +492,12 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
 		text = _("Install root is invalid");
 		break;
+	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
+		text = _("Cannot fetch install sources");
+		break;
+	case PK_ERROR_ENUM_CANCELLED_PRIORITY:
+		text = _("Rescheduled due to priority");
+		break;
 	default:
 		g_warning ("Unknown error");
 	}
@@ -736,6 +742,12 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		break;
 	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
 		text = _("The install root is invalid. Please contact your administrator.");
+		break;
+	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
+		text = _("The list of software sources could not be downloaded.");
+		break;
+	case PK_ERROR_ENUM_CANCELLED_PRIORITY:
+		text = _("The transaction has been cancelled and will be retried when the system is idle.");
 		break;
 	default:
 		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
