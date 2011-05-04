@@ -241,7 +241,6 @@ egg_string_test (EggTest *test)
 {
 	gboolean ret;
 	gchar *text_safe;
-	const gchar *temp;
 	guint length;
 	gint value;
 	guint uvalue;
@@ -298,7 +297,6 @@ egg_string_test (EggTest *test)
 	/************************************************************
 	 ****************          Zero            ******************
 	 ************************************************************/
-	temp = NULL;
 	egg_test_title (test, "test strzero (null)");
 	ret = egg_strzero (NULL);
 	if (ret)
