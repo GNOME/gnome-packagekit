@@ -813,7 +813,7 @@ main (int argc, char *argv[])
 	gboolean ret;
 	gint status = 1;
 	GOptionContext *context;
-	GtkApplication *application;
+	GtkApplication *application = NULL;
 
 	const GOptionEntry options[] = {
 		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
@@ -865,6 +865,7 @@ main (int argc, char *argv[])
 out:
 	if (builder != NULL)
 		g_object_unref (builder);
-	g_object_unref (application);
+	if (application != NULL)
+		g_object_unref (application);
 	return status;
 }
