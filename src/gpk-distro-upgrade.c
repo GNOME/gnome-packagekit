@@ -395,10 +395,9 @@ static void
 gpk_distro_upgrade_create_page_introduction (GpkDistroUpgradePrivate *priv)
 {
 	GtkWidget *vbox, *box, *label;
-	GdkPixbuf *pixbuf;
 	gchar *text;
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
 	/* TRANSLATORS: this is a intro page title */
@@ -421,10 +420,6 @@ gpk_distro_upgrade_create_page_introduction (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Upgrade your system"));
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_INTRO);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
-
-	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
-	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
-	g_object_unref (pixbuf);
 }
 
 /**
@@ -466,13 +461,12 @@ static void
 gpk_distro_upgrade_create_page_choose (GpkDistroUpgradePrivate *priv)
 {
 	GtkWidget *vbox, *subvbox, *box, *label;
-	GdkPixbuf *pixbuf;
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
 	/* label and combobox */
-	subvbox = gtk_vbox_new (FALSE, 12);
+	subvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	label = gtk_label_new_with_mnemonic (_("Available operating system _releases:"));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	box = gtk_box_new (FALSE, 0);
@@ -504,10 +498,6 @@ gpk_distro_upgrade_create_page_choose (GpkDistroUpgradePrivate *priv)
 
 	/* we need this for later */
 	priv->page_choose_vbox = vbox;
-
-	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
-	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
-	g_object_unref (pixbuf);
 }
 
 /**
@@ -527,11 +517,10 @@ static void
 gpk_distro_upgrade_create_page_kind (GpkDistroUpgradePrivate *priv)
 {
 	GtkWidget *vbox, *box, *label, *content_area, *message_label;
-	GdkPixbuf *pixbuf;
 	gchar *text;
 	GSList *group = NULL;
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
 	/* label and combobox */
@@ -582,10 +571,6 @@ gpk_distro_upgrade_create_page_kind (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
 	/* TRANSLATORS: this is a choose page title */
 	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Choose desired download options"));
-
-	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
-	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
-	g_object_unref (pixbuf);
 }
 
 /**
@@ -595,10 +580,9 @@ static void
 gpk_distro_upgrade_create_page_confirmation (GpkDistroUpgradePrivate *priv)
 {
 	GtkWidget *vbox, *box, *label;
-	GdkPixbuf *pixbuf;
 	gchar *text;
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
 	/* TRANSLATORS: this is the "are you sure" message */
@@ -625,10 +609,6 @@ gpk_distro_upgrade_create_page_confirmation (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Confirmation"));
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_CONFIRM);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
-
-	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
-	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
-	g_object_unref (pixbuf);
 }
 
 /**
@@ -638,9 +618,8 @@ static void
 gpk_distro_upgrade_create_page_action (GpkDistroUpgradePrivate *priv)
 {
 	GtkWidget *vbox, *box;
-	GdkPixbuf *pixbuf;
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
 
 	priv->status_icon = gpk_animated_icon_new ();
@@ -662,10 +641,6 @@ gpk_distro_upgrade_create_page_action (GpkDistroUpgradePrivate *priv)
 	gtk_assistant_set_page_title (GTK_ASSISTANT (priv->assistant), vbox, _("Applying changes"));
 	gtk_assistant_set_page_type (GTK_ASSISTANT (priv->assistant), vbox, GTK_ASSISTANT_PAGE_PROGRESS);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, TRUE);
-
-	pixbuf = gtk_widget_render_icon_pixbuf (priv->assistant, GTK_STOCK_REFRESH, GTK_ICON_SIZE_DIALOG);
-	gtk_assistant_set_page_header_image (GTK_ASSISTANT (priv->assistant), vbox, pixbuf);
-	g_object_unref (pixbuf);
 
 	/* prevent the assistant window from being closed while we're applying changes */
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), vbox, FALSE);

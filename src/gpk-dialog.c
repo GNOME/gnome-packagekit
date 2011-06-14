@@ -345,7 +345,7 @@ gpk_dialog_embed_download_size_widget (GtkDialog *dialog, const gchar *title, gu
 	/* add a hbox with the size for deps screen */
 	size_str = g_format_size_for_display (size);
 	text = g_strdup_printf ("%s: %s", title, size_str);
-	hbox = gtk_hbox_new (FALSE, 6);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
 	gtk_container_add_with_properties (GTK_CONTAINER (widget), hbox,
 					   "expand", FALSE,
