@@ -55,6 +55,8 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_DOWNGRADING,		"pk-package-update"},
 	{PK_INFO_ENUM_PREPARING,		"dialog-information"},
 	{PK_INFO_ENUM_DECOMPRESSING,		"dialog-information"},
+	{PK_INFO_ENUM_TRUSTED,			"dialog-information"},
+	{PK_INFO_ENUM_UNTRUSTED,		"dialog-information"},
 	{0, NULL}
 };
 
@@ -1157,6 +1159,14 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 	case PK_INFO_ENUM_COLLECTION_AVAILABLE:
 		/* TRANSLATORS: The state of a package, i.e. not installed */
 		text = _("Available");
+		break;
+	case PK_INFO_ENUM_TRUSTED:
+		/* TRANSLATORS: The type of package */
+		text = _("Trusted");
+		break;
+	case PK_INFO_ENUM_UNTRUSTED:
+		/* TRANSLATORS: The type of package */
+		text = _("Untrusted");
 		break;
 	default:
 		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
