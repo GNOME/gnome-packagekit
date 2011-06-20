@@ -507,6 +507,17 @@ gpk_dbus_install_gstreamer_resources (GpkDbus *dbus, guint32 xid, gchar **resour
 }
 
 /**
+ * gpk_dbus_install_resources:
+ **/
+void
+gpk_dbus_install_resources (GpkDbus *dbus, guint32 xid, const gchar *type, gchar **resources, const gchar *interaction, DBusGMethodInvocation *context)
+{
+	GpkDbusTask *task;
+	task = gpk_dbus_create_task (dbus, xid, interaction, context);
+	gpk_dbus_task_install_resources (task, pk_provides_enum_from_string (type), resources, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
+}
+
+/**
  * gpk_dbus_install_printer_drivers:
  **/
 void

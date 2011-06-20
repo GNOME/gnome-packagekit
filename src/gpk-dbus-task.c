@@ -2334,6 +2334,287 @@ out:
 }
 
 /**
+ * gpk_dbus_task_install_plasma_resources_confirm:
+ **/
+static gboolean
+gpk_dbus_task_install_plasma_resources_confirm (GpkDbusTask *dtask, gchar **service_names)
+{
+	guint i;
+	guint len;
+	const gchar *text;
+	gboolean ret;
+	GString *string;
+	gchar *title;
+	gchar *message;
+
+	len = g_strv_length (service_names);
+
+	/* TRANSLATORS: we are listing the services in a box */
+	text = ngettext ("The following service is required:", "The following services are required:", len);
+	string = g_string_new ("");
+	g_string_append_printf (string, "%s\n\n", text);
+
+	/* don't use a bullet for one item */
+	if (len == 1)
+		g_string_append_printf (string, "%s\n", service_names[0]);
+	else
+		for (i=0; i<len; i++)
+			g_string_append_printf (string, "• %s\n", service_names[i]);
+
+	/* TRANSLATORS: ask for confirmation */
+	message = ngettext ("Do you want to search for this now?", "Do you want to search for these now?", len);
+	g_string_append_printf (string, "\n%s\n", message);
+
+	/* remove last \n */
+	g_string_set_size (string, string->len - 1);
+
+	/* display messagebox  */
+	message = g_string_free (string, FALSE);
+	title = g_strdup (ngettext ("Plasma requires an additional service for this operation",
+				    "Plasma requires additional services for this operation", len));
+
+	/* TRANSLATORS: button: confirm to search for packages */
+	ret = gpk_dbus_task_confirm_action (dtask, title, message, _("Search"));
+	g_free (title);
+	g_free (message);
+
+	return ret;
+}
+
+/**
+ * gpk_dbus_task_plasma_service_what_provides_cb:
+ **/
+static void
+gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbusTask *dtask)
+{
+	GError *error = NULL;
+	GError *error_dbus = NULL;
+	PkResults *results = NULL;
+	GPtrArray *array = NULL;
+	PkError *error_code = NULL;
+	GtkResponseType button;
+	gchar *info_url;
+	const gchar *title;
+	const gchar *message;
+
+	/* get the results */
+	results = pk_client_generic_finish (client, res, &error);
+	if (results == NULL) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to resolve: %s", error->message);
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+	/* check error code */
+	error_code = pk_results_get_error_code (results);
+	if (error_code != NULL) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "failed to resolve: %s", pk_error_get_details (error_code));
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+	/* get results */
+	array = pk_results_get_package_array (results);
+
+	/* found nothing? */
+	if (array->len == 0) {
+		if (dtask->priv->show_warning) {
+			info_url = gpk_vendor_get_not_found_url (dtask->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
+			/* only show the "more info" button if there is a valid link */
+			if (info_url != NULL)
+				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, GPK_MODAL_DIALOG_BUTTON_ACTION);
+			else
+				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
+			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to search for Plasma service"));
+			/* TRANSLATORS: no software sources have the wanted Plasma service */
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find service in any configured software source"));
+			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
+
+			/* TRANSLATORS: button text */
+			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
+			gpk_modal_dialog_present (dtask->priv->dialog);
+			button = gpk_modal_dialog_run (dtask->priv->dialog);
+			if (button == GTK_RESPONSE_OK)
+				gpk_gnome_open (info_url);
+			g_free (info_url);
+		}
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find Plasma service");
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+	/* optional */
+	if (!dtask->priv->show_confirm_install) {
+		g_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks2;
+	}
+
+	title = ngettext ("Install the following plugin", "Install the following plugins", array->len);
+	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+
+	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
+	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
+	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
+	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
+	gpk_modal_dialog_set_image (dtask->priv->dialog, "dialog-information");
+	/* TRANSLATORS: button: install Plasma services */
+	gpk_modal_dialog_set_action (dtask->priv->dialog, _("Install"));
+	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
+	button = gpk_modal_dialog_run (dtask->priv->dialog);
+
+	/* close, we're going to fail the method */
+	if (button != GTK_RESPONSE_OK) {
+		gpk_modal_dialog_close (dtask->priv->dialog);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+skip_checks2:
+	/* install with deps */
+	dtask->priv->package_ids = pk_package_array_to_strv (array);
+	gpk_dbus_task_install_package_ids (dtask);
+out:
+	if (error_code != NULL)
+		g_object_unref (error_code);
+	if (array != NULL)
+		g_ptr_array_unref (array);
+	if (results != NULL)
+		g_object_unref (results);
+}
+
+/**
+ * gpk_dbus_task_install_plasma_resources:
+ * @task: a valid #GpkDbusTask instance
+ * @service_names: a service type such as <literal>dataengine-weather</literal>
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a service to handle a Plasma request
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+static void
+gpk_dbus_task_install_plasma_resources (GpkDbusTask *dtask, gchar **service_names, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
+{
+	gboolean ret = TRUE;
+	GError *error_dbus = NULL;
+	gchar *message = NULL;
+	GPtrArray *array_title = NULL;
+	GPtrArray *array_search = NULL;
+	gchar **search = NULL;
+	gchar **title = NULL;
+	gchar *title_str = NULL;
+	guint i;
+
+	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
+	g_return_if_fail (service_names != NULL);
+
+	/* save callback information */
+	dtask->priv->finished_cb = finished_cb;
+	dtask->priv->finished_userdata = userdata;
+
+	/* optional */
+	if (!dtask->priv->show_confirm_search) {
+		g_debug ("skip confirm as not allowed to interact with user");
+		goto skip_checks;
+	}
+
+	/* confirm */
+	ret = gpk_dbus_task_install_plasma_resources_confirm (dtask, service_names);
+	if (!ret) {
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+		g_error_free (error_dbus);
+		goto out;
+	}
+
+skip_checks:
+	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
+	/* TRANSLATORS: search for Plasma services */
+	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for services"));
+	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
+	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
+
+	/* setup the UI */
+	if (dtask->priv->show_progress)
+		gpk_modal_dialog_present (dtask->priv->dialog);
+
+	/* get the request */
+	array_title = g_ptr_array_new_with_free_func (g_free);
+	array_search = g_ptr_array_new_with_free_func (g_free);
+	for (i=0; service_names[i] != NULL; i++) {
+		g_ptr_array_add (array_title, g_strdup (service_names[i]));
+		g_ptr_array_add (array_search, g_strdup (service_names[i]));
+	}
+
+	/* TRANSLATORS: title, searching for Plasma services */
+	title = pk_ptr_array_to_strv (array_title);
+	title_str = g_strjoinv (", ", title);
+	message = g_strdup_printf (_("Searching for service: %s"), title_str);
+	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
+
+	/* get service packages */
+	search = pk_ptr_array_to_strv (array_search);
+	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
+				       PK_PROVIDES_ENUM_PLASMA_SERVICE, search, NULL,
+				       (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
+				       (GAsyncReadyCallback) gpk_dbus_task_plasma_service_what_provides_cb, dtask);
+out:
+	if (array_title != NULL)
+		g_ptr_array_unref (array_title);
+	if (array_search != NULL)
+		g_ptr_array_unref (array_search);
+	g_strfreev (search);
+	g_strfreev (title);
+	g_free (message);
+	g_free (title_str);
+}
+
+/**
+ * gpk_dbus_task_install_resources:
+ * @task: a valid #GpkDbusTask instance
+ * @type: type of the resource
+ * @resources: a list of resources
+ * @error: a %GError to put the error code and message in, or %NULL
+ *
+ * Install a resource of the given type
+ *
+ * Return value: %TRUE if the method succeeded
+ **/
+void
+gpk_dbus_task_install_resources (GpkDbusTask *dtask, PkProvidesEnum type, gchar **resources, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
+{
+	GError *error_dbus = NULL;
+	switch (type) {
+		case PK_PROVIDES_ENUM_CODEC:
+			gpk_dbus_task_install_gstreamer_resources (dtask, resources, finished_cb, userdata);
+			break;
+		case PK_PROVIDES_ENUM_MIMETYPE:
+			gpk_dbus_task_install_mime_types (dtask, resources, finished_cb, userdata);
+			break;
+		case PK_PROVIDES_ENUM_FONT:
+			gpk_dbus_task_install_fontconfig_resources (dtask, resources, finished_cb, userdata);
+			break;
+		case PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER:
+			gpk_dbus_task_install_printer_drivers (dtask, resources, finished_cb, userdata);
+			break;
+		case PK_PROVIDES_ENUM_PLASMA_SERVICE:
+			gpk_dbus_task_install_plasma_resources (dtask, resources, finished_cb, userdata);
+			break;
+		default:
+			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "Unsupported resource type");
+			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
+			g_error_free (error_dbus);
+			break;
+	}
+}
+
+/**
  * gpk_dbus_task_catalog_lookup_cb:
  **/
 static void

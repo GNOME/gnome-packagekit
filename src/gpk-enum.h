@@ -70,6 +70,10 @@ typedef enum {
 #define PK_INFO_ENUM_TRUSTED				(PK_INFO_ENUM_UNTRUSTED+1)
 #endif
 
+#if (!PK_CHECK_VERSION(0,6,16))
+#define PK_PROVIDES_ENUM_PLASMA_SERVICE			(PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER+1)
+#endif
+
 void		 gpk_enum_test				(gpointer	 data);
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
