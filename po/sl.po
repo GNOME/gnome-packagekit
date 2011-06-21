@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-14 13:55+0000\n"
-"PO-Revision-Date: 2011-06-16 15:03+0100\n"
+"POT-Creation-Date: 2011-06-21 09:56+0000\n"
+"PO-Revision-Date: 2011-06-21 12:06+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,7 @@ msgstr "Pomoč s programom"
 #. TRANSLATORS: button: confirm to search for packages
 #. TRANSLATORS: button: install codecs
 #. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
@@ -76,9 +77,10 @@ msgstr "Pomoč s programom"
 #: ../src/gpk-dbus-task.c:1464
 #: ../src/gpk-dbus-task.c:1667
 #: ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2397
-#: ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872
+#: ../src/gpk-dbus-task.c:2465
+#: ../src/gpk-dbus-task.c:2678
+#: ../src/gpk-dbus-task.c:2800
+#: ../src/gpk-dbus-task.c:3153
 #: ../src/gpk-update-viewer.c:1659
 msgid "Install"
 msgstr "Namesti"
@@ -149,7 +151,7 @@ msgstr "Osveži seznam paketov sistema"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../data/gpk-application.ui.h:26
-#: ../src/gpk-dbus-task.c:2810
+#: ../src/gpk-dbus-task.c:3091
 msgid "Remove"
 msgstr "Odstrani"
 
@@ -260,7 +262,7 @@ msgstr "Namestitev izbrane programske opreme v sistem"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
 #: ../data/gpk-install-local-file.desktop.in.h:2
-#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-dbus-task.c:3368
 #: ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153
@@ -1080,11 +1082,13 @@ msgstr "Paketa ni mogoče najti med viri programske opreme."
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
 #: ../src/gpk-dbus-task.c:1096
 #: ../src/gpk-dbus-task.c:1333
 #: ../src/gpk-dbus-task.c:1639
 #: ../src/gpk-dbus-task.c:1845
 #: ../src/gpk-dbus-task.c:2100
+#: ../src/gpk-dbus-task.c:2437
 msgid "More information"
 msgstr "Več podrobnosti"
 
@@ -1146,7 +1150,7 @@ msgstr[3] "Program zahteva namestitev paketov"
 
 #. TRANSLATORS: title, searching
 #: ../src/gpk-dbus-task.c:1258
-#: ../src/gpk-dbus-task.c:2579
+#: ../src/gpk-dbus-task.c:2860
 msgid "Searching for packages"
 msgstr "Iskanje paketov"
 
@@ -1157,7 +1161,7 @@ msgstr "Napaka med iskanjem paketa"
 
 #. TRANSLATORS: nothing found
 #: ../src/gpk-dbus-task.c:1330
-#: ../src/gpk-dbus-task.c:2719
+#: ../src/gpk-dbus-task.c:3000
 msgid "The file could not be found in any packages"
 msgstr "Datoteke ni mogoče najti v nobenem paketu"
 
@@ -1207,7 +1211,7 @@ msgstr[3] "Program zahteva namestitev datotek"
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-dbus-task.c:1476
-#: ../src/gpk-dbus-task.c:2822
+#: ../src/gpk-dbus-task.c:3103
 #: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "Iskanje datoteke"
@@ -1223,6 +1227,7 @@ msgstr[3] "Zahtevani so navedeni vstavki:"
 
 #. TRANSLATORS: ask for confirmation
 #: ../src/gpk-dbus-task.c:1537
+#: ../src/gpk-dbus-task.c:2365
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Ali jih želite takoj iskati?"
@@ -1291,6 +1296,7 @@ msgstr[3] "Program zahteva dodatne vstavke za to opravilo."
 #: ../src/gpk-dbus-task.c:1578
 #: ../src/gpk-dbus-task.c:1931
 #: ../src/gpk-dbus-task.c:2304
+#: ../src/gpk-dbus-task.c:2377
 msgid "Search"
 msgstr "Iskanje"
 
@@ -1305,6 +1311,7 @@ msgid "Could not find plugin in any configured software source"
 msgstr "Vstavka ni mogoče najti med nastavljenimi programskimi viri"
 
 #: ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:2456
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Namesti navedene vstavke"
@@ -1315,7 +1322,8 @@ msgstr[3] "Namesti navedene vstavke"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659
 #: ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2511
+#: ../src/gpk-dbus-task.c:2457
+#: ../src/gpk-dbus-task.c:2792
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Ali želite takoj namestiti pakete?"
@@ -1452,30 +1460,66 @@ msgstr[1] "iskanje pisave"
 msgstr[2] "Iskanje pisav"
 msgstr[3] "Iskanje pisav"
 
-#: ../src/gpk-dbus-task.c:2354
+#. TRANSLATORS: we are listing the services in a box
+#: ../src/gpk-dbus-task.c:2353
+msgid "The following service is required:"
+msgid_plural "The following services are required:"
+msgstr[0] "Zahtevane so naslednje storitve:"
+msgstr[1] "Zahtevana je naslednja storitev:"
+msgstr[2] "Zahtevani sta naslednji storitvi:"
+msgstr[3] "Zahtevane so naslednje storitve:"
+
+#: ../src/gpk-dbus-task.c:2373
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Storitev Plasma zahteva dodatne storitve za delovanje"
+msgstr[1] "Storitev Plasma zahteva dodatno storitev za delovanje"
+msgstr[2] "Storitev Plasma zahteva dodatni storitvi za delovanje"
+msgstr[3] "Storitev Plasma zahteva dodatne storitve za delovanje"
+
+#: ../src/gpk-dbus-task.c:2431
+msgid "Failed to search for Plasma service"
+msgstr "Iskanje storitve Plasma je spodletelo"
+
+#. TRANSLATORS: no software sources have the wanted Plasma service
+#: ../src/gpk-dbus-task.c:2433
+msgid "Could not find service in any configured software source"
+msgstr "Storitve ni mogoče najti med nastavljenimi programskimi viri"
+
+#. TRANSLATORS: search for Plasma services
+#: ../src/gpk-dbus-task.c:2539
+msgid "Searching for services"
+msgstr "Iskanje storitev"
+
+#: ../src/gpk-dbus-task.c:2558
+#, c-format
+msgid "Searching for service: %s"
+msgstr "Iskanje storitve: %s"
+
+#: ../src/gpk-dbus-task.c:2635
 msgid "Could not process catalog"
 msgstr "Ni mogoče razčleniti kataloga"
 
-#: ../src/gpk-dbus-task.c:2372
+#: ../src/gpk-dbus-task.c:2653
 msgid "No packages need to be installed"
 msgstr "Ni treba namestiti dodatnih paketov."
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2391
+#: ../src/gpk-dbus-task.c:2672
 msgid "Install packages in catalog?"
 msgstr "Ali naj bodo nameščeni paketi kataloga?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2393
+#: ../src/gpk-dbus-task.c:2674
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Navedeni paketi so označeni za namestitev iz kataloga:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2433
+#: ../src/gpk-dbus-task.c:2714
 msgid "Failed to remove package"
 msgstr "Napaka med odstranjevanjem paketa"
 
-#: ../src/gpk-dbus-task.c:2510
+#: ../src/gpk-dbus-task.c:2791
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Namesti navedene gonilnike"
@@ -1485,18 +1529,18 @@ msgstr[3] "Namesti navedene gonilnike"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2663
+#: ../src/gpk-dbus-task.c:2944
 #: ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "Odstranjevanje paketov"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2998
 msgid "Failed to find package for this file"
 msgstr "Napaka iskanja paketa datoteke"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2795
+#: ../src/gpk-dbus-task.c:3076
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Navedene datoteke bodo odstranjene:"
@@ -1505,7 +1549,7 @@ msgstr[2] "Navedeni datoteki bosta odstranjeni:"
 msgstr[3] "Navedene datoteke bodo odstranjene:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2798
+#: ../src/gpk-dbus-task.c:3079
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Ali želite odstraniti datoteke?"
@@ -1514,7 +1558,7 @@ msgstr[2] "Ali želite odstraniti datoteki?"
 msgstr[3] "Ali želite odstraniti datoteke?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2803
+#: ../src/gpk-dbus-task.c:3084
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1524,7 +1568,7 @@ msgstr[2] "Program %s poskuša odstraniti datoteki"
 msgstr[3] "Program %s poskuša odstraniti datoteke"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2806
+#: ../src/gpk-dbus-task.c:3087
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Program poskuša odstraniti datoteke"
@@ -1533,7 +1577,7 @@ msgstr[2] "Program poskuša odstraniti datoteki"
 msgstr[3] "Program poskuša odstraniti datoteke"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2863
+#: ../src/gpk-dbus-task.c:3144
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Ali želite namestiti kataloge?"
@@ -1542,7 +1586,7 @@ msgstr[2] "Ali želite namestiti kataloga?"
 msgstr[3] "Ali želite namestiti kataloge?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2888
+#: ../src/gpk-dbus-task.c:3169
 msgid "Install catalogs"
 msgstr "Namesti kataloge"
 
