@@ -441,10 +441,10 @@ gpk_dbus_install_provide_files (GpkDbus *dbus, guint32 xid, gchar **files, const
 }
 
 /**
- * gpk_dbus_remove_package_by_file:
+ * gpk_dbus_remove_package_by_files:
  **/
 void
-gpk_dbus_remove_package_by_file (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
+gpk_dbus_remove_package_by_files (GpkDbus *dbus, guint32 xid, gchar **files, const gchar *interaction, DBusGMethodInvocation *context)
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
