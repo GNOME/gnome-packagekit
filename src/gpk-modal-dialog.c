@@ -920,6 +920,7 @@ gpk_modal_dialog_test (EggTest *test)
 	GpkModalDialog *dialog = NULL;
 	GPtrArray *array;
 	PkPackage *item;
+	gboolean ret;
 
 	if (!egg_test_start (test, "GpkModalDialog"))
 		return;
@@ -935,16 +936,18 @@ gpk_modal_dialog_test (EggTest *test)
 	/* set some packages */
 	array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	item = pk_package_new ();
+	ret = pk_package_set_id (item, "totem;001;i386;fedora", NULL);
+	g_assert (ret);
 	g_object_set (item,
 		      "info", PK_INFO_ENUM_INSTALLED,
-		      "package-id", "totem;001;i386;fedora",
 		      "summary", "Totem is a music player for GNOME",
 		      NULL);
 	g_ptr_array_add (array, item);
 	item = pk_package_new ();
+	ret = pk_package_set_id (item, "totem;001;i386;fedora", NULL);
+	g_assert (ret);
 	g_object_set (item,
 		      "info", PK_INFO_ENUM_AVAILABLE,
-		      "package-id", "totem;001;i386;fedora",
 		      "summary", "Amarok is a music player for KDE",
 		      NULL);
 	g_ptr_array_add (array, item);
