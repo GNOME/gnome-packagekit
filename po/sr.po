@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-25 04:18+0000\n"
-"PO-Revision-Date: 2011-03-25 11:20+0200\n"
+"POT-Creation-Date: 2011-06-01 12:28+0000\n"
+"PO-Revision-Date: 2011-06-13 10:30+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: sr\n"
+"Language: Serbian (sr)\n"
 "Plural-Forms: nplurals=4;    plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 :    n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
@@ -27,7 +27,7 @@ msgstr "Додај или уклони програме инсталиране �
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
 #: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3333
+#: ../src/gpk-update-viewer.c:3320
 msgid "Add/Remove Software"
 msgstr "Додај/уклони програме"
 
@@ -71,7 +71,7 @@ msgstr "Помоћ око овог програма"
 #: ../src/gpk-dbus-task.c:1245 ../src/gpk-dbus-task.c:1464
 #: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
 #: ../src/gpk-dbus-task.c:2397 ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1663
+#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1650
 msgid "Install"
 msgstr "Инсталирај"
 
@@ -240,6 +240,21 @@ msgstr "Захтева се прихватање уговора о лиценц�
 msgid "_Accept Agreement"
 msgstr "_Прихвати уговор"
 
+#: ../data/gpk-dbus-service.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Install selected software on the system"
+msgstr "Инсталирај изабране програме на систем"
+
+#. TRANSLATORS: program name: application to install a package to provide a file
+#. TRANSLATORS: program name: installs a package (or packages) by name
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#: ../data/gpk-dbus-service.desktop.in.h:2
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3088
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+msgid "Software Install"
+msgstr "Инсталација софтвера"
+
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:68
 #: ../src/gpk-install-catalog.c:70
@@ -249,21 +264,6 @@ msgstr "Инсталер каталога"
 #: ../data/gpk-install-catalog.desktop.in.h:2
 msgid "Install a catalog of software on the system"
 msgstr "Инсталира каталог програма на систем"
-
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Install selected software on the system"
-msgstr "Инсталирај изабране програме на систем"
-
-#. TRANSLATORS: program name: application to install a package to provide a file
-#. TRANSLATORS: program name: installs a package (or packages) by name
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
-#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
-#, fuzzy
-#| msgid "_Force install"
-msgid "Software Install"
-msgstr "_Приморај инсталацију"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
 msgid "Software Log Viewer"
@@ -700,7 +700,7 @@ msgstr "Мени"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2321 ../src/gpk-update-viewer.c:1734
+#: ../src/gpk-application.c:2321 ../src/gpk-update-viewer.c:1721
 msgid "Size"
 msgstr "Величина"
 
@@ -867,7 +867,7 @@ msgid "Cancel search"
 msgstr "Поништи претрагу"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4037 ../src/gpk-update-viewer.c:3316
+#: ../src/gpk-application.c:4037 ../src/gpk-update-viewer.c:3303
 msgid "Show the program version and exit"
 msgstr "Прикажи издање програма и изађи"
 
@@ -1721,8 +1721,7 @@ msgstr "Изаберите жељене опције за преузимање"
 #: ../src/gpk-distro-upgrade.c:606
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
-msgstr ""
-"Алат за надградњу оперативног система ће сада да изврши следеће радње:"
+msgstr "Алат за надградњу оперативног система ће сада да изврши следеће радње:"
 
 #: ../src/gpk-distro-upgrade.c:607
 msgid "Request authentication from a privileged user"
@@ -2484,8 +2483,7 @@ msgstr "Тип виртуелног обезбеђивања није подрж
 
 #: ../src/gpk-enum.c:738
 msgid "The install root is invalid. Please contact your administrator."
-msgstr ""
-"Инсталациони корен је неисправан. Обратите се вашем администратору."
+msgstr "Инсталациони корен је неисправан. Обратите се вашем администратору."
 
 #: ../src/gpk-enum.c:756
 msgid "No restart is necessary."
@@ -3911,7 +3909,7 @@ msgid "Failed to get the list of sources"
 msgstr "Не могу да преузмем списак извора"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3068
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3055
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Излазим јер не могу да добијем детаље о позадинском мотору"
 
@@ -4065,49 +4063,49 @@ msgstr ""
 "да би остали безбедни."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:287
+#: ../src/gpk-update-viewer.c:274
 msgid "Could not restart"
 msgstr "Не могу да поново покренем рачунар"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:355
+#: ../src/gpk-update-viewer.c:342
 msgid "Some updates were not installed"
 msgstr "Неке надградње нису инсталиране"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:424 ../src/gpk-update-viewer.c:435
+#: ../src/gpk-update-viewer.c:411 ../src/gpk-update-viewer.c:422
 msgid "Could not update packages"
 msgstr "Не могу да надградим пакете"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:503 ../src/gpk-update-viewer.c:524
+#: ../src/gpk-update-viewer.c:490 ../src/gpk-update-viewer.c:511
 msgid "Updates installed"
 msgstr "Надградње су инсталиране"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:513
+#: ../src/gpk-update-viewer.c:500
 msgid "All updates were installed successfully."
 msgstr "Све надградње су успешно инсталиране."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:516
+#: ../src/gpk-update-viewer.c:503
 msgid "The selected updates were installed successfully."
 msgstr "Означене надградње су успешно инсталиране."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:984
+#: ../src/gpk-update-viewer.c:971
 msgid "Getting the list of updates"
 msgstr "Преузимам списак надградњи"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1217
+#: ../src/gpk-update-viewer.c:1204
 msgid "Could not run upgrade script"
 msgstr "Не могу да покренем скрипту за надградњу"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1266
+#: ../src/gpk-update-viewer.c:1253
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4128,22 +4126,22 @@ msgstr[3] ""
 "пакет."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1354
+#: ../src/gpk-update-viewer.c:1341
 msgid "There are no updates available"
 msgstr "Нема доступних надградњи"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1412
+#: ../src/gpk-update-viewer.c:1399
 msgid "No updates are available"
 msgstr "Нема доступних ажурирања"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1414
+#: ../src/gpk-update-viewer.c:1401
 msgid "No network connection was detected."
 msgstr "Није откривена мрежна веза."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1431
+#: ../src/gpk-update-viewer.c:1418
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Инсталирај надградњу"
@@ -4152,16 +4150,16 @@ msgstr[2] "_Инсталирај надградње"
 msgstr[3] "_Инсталирај надградње"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1426
 msgid "All software is up to date"
 msgstr "Сви програми су ажурни"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1441
+#: ../src/gpk-update-viewer.c:1428
 msgid "There are no software updates available for your computer at this time."
 msgstr "Тренутно нема доступних ажурнијих програма за ваш рачунар."
 
-#: ../src/gpk-update-viewer.c:1467
+#: ../src/gpk-update-viewer.c:1454
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4171,7 +4169,7 @@ msgstr[2] "Доступно је %i надградњи"
 msgstr[3] "%i надградња доступна"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1483
+#: ../src/gpk-update-viewer.c:1470
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4181,7 +4179,7 @@ msgstr[2] "Означено је %i надградњи"
 msgstr[3] "%i надградња означена"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1491
+#: ../src/gpk-update-viewer.c:1478
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4191,51 +4189,51 @@ msgstr[2] "%i означених надградњи (%s)"
 msgstr[3] "%i надградњa означенa (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1694
+#: ../src/gpk-update-viewer.c:1681
 msgid "Software"
 msgstr "Програм"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1704
+#: ../src/gpk-update-viewer.c:1691
 msgid "Status"
 msgstr "Стање"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1913
+#: ../src/gpk-update-viewer.c:1900
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Ова надградња ће исправити грешке и друге некритичне проблеме."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1917
+#: ../src/gpk-update-viewer.c:1904
 msgid "This update is important as it may solve critical problems."
 msgstr "Ова надградња је важнa јер решава критичне проблеме."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1921
+#: ../src/gpk-update-viewer.c:1908
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
 "Ова надградња је потребнa да би се закрпио сигурносни пропуст у овом пакету."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1925
+#: ../src/gpk-update-viewer.c:1912
 msgid "This update is blocked."
 msgstr "Ова надградња је блокиранa."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1937
+#: ../src/gpk-update-viewer.c:1924
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Ово обавештење је објављено %s и последњи пут је ажурирано %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1944
+#: ../src/gpk-update-viewer.c:1931
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Ово обавештење је објављено %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1966
+#: ../src/gpk-update-viewer.c:1953
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4245,7 +4243,7 @@ msgstr[2] "За више података о надградњи погледај
 msgstr[3] "За више података о надградњи погледајте ову веб страницу:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1974
+#: ../src/gpk-update-viewer.c:1961
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4262,7 +4260,7 @@ msgstr[3] ""
 "За више података о исправљеним грешкама погледајте ову веб страницу:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1982
+#: ../src/gpk-update-viewer.c:1969
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4277,7 +4275,7 @@ msgstr[3] ""
 "За више података о овој сигурносној надградњи погледајте ову веб страницу:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1978
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4285,7 +4283,7 @@ msgstr ""
 "Морате поново покренути рачунар после надградње како би применили измене."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1995
+#: ../src/gpk-update-viewer.c:1982
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4294,16 +4292,16 @@ msgstr ""
 "измене."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2002
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
-"Ова надградња спада у нестабилне што значи да није намењено за "
-"професионалну употребу рачунара."
+"Ова надградња спада у нестабилне што значи да није намењено за професионалну "
+"употребу рачунара."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2006
+#: ../src/gpk-update-viewer.c:1993
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4313,7 +4311,7 @@ msgstr ""
 "дешава."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2015
+#: ../src/gpk-update-viewer.c:2002
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4321,69 +4319,69 @@ msgstr ""
 "Биће приказан дневник програмера јер нема доступног описа ове надградње:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2051
+#: ../src/gpk-update-viewer.c:2038
 msgid "Loading..."
 msgstr "Учитавам..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2091 ../src/gpk-update-viewer.c:2189
-#: ../src/gpk-update-viewer.c:2209
+#: ../src/gpk-update-viewer.c:2078 ../src/gpk-update-viewer.c:2176
+#: ../src/gpk-update-viewer.c:2196
 msgid "Could not get update details"
 msgstr "Не могу да преузмем детаље надградње"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2111
+#: ../src/gpk-update-viewer.c:2098
 msgid "Could not get package details"
 msgstr "Не могу да преузмем детаље пакета"
 
-#: ../src/gpk-update-viewer.c:2111 ../src/gpk-update-viewer.c:2209
+#: ../src/gpk-update-viewer.c:2098 ../src/gpk-update-viewer.c:2196
 msgid "No results were returned."
 msgstr "Нема враћених резултата."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2444
+#: ../src/gpk-update-viewer.c:2431
 msgid "Select all"
 msgstr "Изабери све"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2452
+#: ../src/gpk-update-viewer.c:2439
 msgid "Unselect all"
 msgstr "Изабери ништа"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2459
+#: ../src/gpk-update-viewer.c:2446
 msgid "Select security updates"
 msgstr "Изабери сигурносне надградње"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2465
+#: ../src/gpk-update-viewer.c:2452
 msgid "Ignore this update"
 msgstr "Занемари ову надградњу"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2576
+#: ../src/gpk-update-viewer.c:2563
 msgid "Could not get updates"
 msgstr "Не могу да преузмем надградње"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2717
+#: ../src/gpk-update-viewer.c:2704
 msgid "Checking for updates..."
 msgstr "Проверавам надградње..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3003
+#: ../src/gpk-update-viewer.c:2990
 msgid "Could not get list of distribution upgrades"
 msgstr "Не могу да преузмем листу за надградњу дистрибуције"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3033
+#: ../src/gpk-update-viewer.c:3020
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Доступно је ново издање дистрибуције „%s“"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3280
+#: ../src/gpk-update-viewer.c:3267
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4392,7 +4390,7 @@ msgstr ""
 "пакети система."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3350
+#: ../src/gpk-update-viewer.c:3337
 msgid "Software Update Viewer"
 msgstr "Прегледач надградњи програма"
 
