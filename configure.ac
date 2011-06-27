@@ -50,10 +50,6 @@ dnl ---------------------------------------------------------------------------
 dnl - Extra verbose warning switches
 dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
-#	CPPFLAGS="$CPPFLAGS -DG_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES"
-	CPPFLAGS="$CPPFLAGS -DG_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED"
-#	CPPFLAGS="$CPPFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
-	CPPFLAGS="$CPPFLAGS -DGSEAL_ENABLE"
 	CPPFLAGS="$CPPFLAGS -Wall -Wreturn-type"
 #	CPPFLAGS="$CPPFLAGS -Wextra"
 	CPPFLAGS="$CPPFLAGS -Wdeclaration-after-statement"
