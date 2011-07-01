@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-21 09:56+0000\n"
-"PO-Revision-Date: 2011-06-23 18:51+0200\n"
+"POT-Creation-Date: 2011-07-01 10:33+0000\n"
+"PO-Revision-Date: 2011-07-01 13:51+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "Contribuir con este software"
 #: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
 #: ../src/gpk-dbus-task.c:2465 ../src/gpk-dbus-task.c:2678
 #: ../src/gpk-dbus-task.c:2800 ../src/gpk-dbus-task.c:3153
-#: ../src/gpk-update-viewer.c:1659
+#: ../src/gpk-task.c:405 ../src/gpk-update-viewer.c:1659
 msgid "Install"
 msgstr "Instalar"
 
@@ -146,6 +146,7 @@ msgstr "Actualizar la lista de paquetes del sistema"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3091
+#: ../src/gpk-task.c:411
 msgid "Remove"
 msgstr "Eliminar"
 
@@ -1406,29 +1407,23 @@ msgstr[1] "Buscando tipografías"
 
 #. TRANSLATORS: we are listing the services in a box
 #: ../src/gpk-dbus-task.c:2353
-#| msgid "The following file is required:"
-#| msgid_plural "The following files are required:"
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Se necesita el siguiente servicio:"
 msgstr[1] "Se necesitan los siguientes servicios:"
 
 #: ../src/gpk-dbus-task.c:2373
-#| msgid "%s requires an additional plugin for this operation"
-#| msgid_plural "%s requires additional plugins for this operation"
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Plasma necesita un complemento adicional para esta operación"
 msgstr[1] "Plasma necesita complementos adicionales para esta operación"
 
 #: ../src/gpk-dbus-task.c:2431
-#| msgid "Failed to search for provides"
 msgid "Failed to search for Plasma service"
 msgstr "Falló al buscar el servicio de Plasma"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2433
-#| msgid "Could not find plugin in any configured software source"
 msgid "Could not find service in any configured software source"
 msgstr ""
 "No se pudo encontrar el servicio en ninguna de las fuentes de software "
@@ -1436,13 +1431,11 @@ msgstr ""
 
 #. TRANSLATORS: search for Plasma services
 #: ../src/gpk-dbus-task.c:2539
-#| msgid "Searching for file"
 msgid "Searching for services"
 msgstr "Buscando servicios"
 
 #: ../src/gpk-dbus-task.c:2558
 #, c-format
-#| msgid "Searching for plugin: %s"
 msgid "Searching for service: %s"
 msgstr "Buscando el servicio: %s"
 
@@ -3344,7 +3337,7 @@ msgid "Office"
 msgstr "Oficina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1633
+#: ../src/gpk-enum.c:1633 ../src/gpk-task.c:431
 msgid "Other"
 msgstr "Otras"
 
@@ -3539,47 +3532,62 @@ msgstr ""
 "continuar."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:361 ../src/gpk-task.c:532
+#: ../src/gpk-task.c:361 ../src/gpk-task.c:558
 msgid "Continue"
 msgstr "Continuar"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:397
+#: ../src/gpk-task.c:404
 msgid "The following software also needs to be installed"
 msgstr "Se debe instalar el siguiente software"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:402
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be removed"
 msgstr "Se debe quitar el siguiente software"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:415
 msgid "The following software also needs to be updated"
 msgstr "Se debe actualizar el siguiente software"
 
+#: ../src/gpk-task.c:416
+#| msgid "Updated"
+msgid "Update"
+msgstr "Actualizar"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:420
 msgid "The following software also needs to be re-installed"
 msgstr "Se debe reinstalar el siguiente software"
 
+#: ../src/gpk-task.c:421
+#| msgid "Reinstalled"
+msgid "Reinstall"
+msgstr "Reinstalar"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:425
 msgid "The following software also needs to be downgraded"
 msgstr "Se debe desactualizar el siguiente software"
 
+#: ../src/gpk-task.c:426
+#| msgid "Downloaded"
+msgid "Downgrade"
+msgstr "Desactualizar"
+
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:430
 msgid "The following software also needs to be processed"
 msgstr "Se debe procesar el siguiente software"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:476
+#: ../src/gpk-task.c:491
 msgid "Additional confirmation required"
 msgstr "Se necesita una confirmación adicional"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:482
+#: ../src/gpk-task.c:497
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3587,7 +3595,7 @@ msgstr[0] "Para instalar este paquete se debe modificar software adicional."
 msgstr[1] "Para instalar estos paquetes se debe modificar software adicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:502
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3595,7 +3603,7 @@ msgstr[0] "Para quitar este paquete se debe modificar software adicional."
 msgstr[1] "Para quitar estos paquetes se debe modificar software adicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:507
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3604,7 +3612,7 @@ msgstr[1] ""
 "Para actualizar estos paquetes se debe modificar software adicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:512
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3612,19 +3620,19 @@ msgstr[0] "Para instalar este archivo se debe modificar software adicional."
 msgstr[1] "Para instalar estos archivos se debe modificar software adicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:517
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
 "Se necesita modificar software adicional para procesar esta transacción."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:582
+#: ../src/gpk-task.c:608
 msgid "_Force install"
 msgstr "_Forzar instalación"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:586
+#: ../src/gpk-task.c:612
 msgid "Force installing package"
 msgstr "Forzar instalación del paquete"
 
