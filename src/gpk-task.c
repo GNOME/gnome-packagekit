@@ -374,7 +374,10 @@ out:
  * gpk_task_add_dialog_deps_section:
  **/
 static void
-gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum info)
+gpk_task_add_dialog_deps_section (PkTask *task,
+				  GtkNotebook *tabbed_widget,
+				  PkPackageSack *sack,
+				  PkInfoEnum info)
 {
 	PkPackageSack *sack_tmp;
 	GPtrArray *array_tmp = NULL;
@@ -382,7 +385,8 @@ gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum 
 	GError *error = NULL;
 	guint64 size;
 	const gchar *title;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GtkWidget *tab_page;
+	GtkWidget *tab_label;
 
 	sack_tmp = pk_package_sack_filter_by_info (sack, info);
 	if (pk_package_sack_get_size (sack_tmp) == 0) {
@@ -390,32 +394,41 @@ gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum 
 		goto out;
 	}
 
+	tab_page = gtk_vbox_new (FALSE, 6);
+	gtk_container_set_border_width (GTK_CONTAINER (tab_page), 12);
+
 	/* get the header */
 	switch (info) {
 	case PK_INFO_ENUM_INSTALLING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be installed");
+		tab_label = gtk_label_new (_("Install"));
 		break;
 	case PK_INFO_ENUM_REMOVING:
 	case PK_INFO_ENUM_OBSOLETING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be removed");
+		tab_label = gtk_label_new (_("Remove"));
 		break;
 	case PK_INFO_ENUM_UPDATING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be updated");
+		tab_label = gtk_label_new (_("Update"));
 		break;
 	case PK_INFO_ENUM_REINSTALLING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be re-installed");
+		tab_label = gtk_label_new (_("Reinstall"));
 		break;
 	case PK_INFO_ENUM_DOWNGRADING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be downgraded");
+		tab_label = gtk_label_new (_("Downgrade"));
 		break;
 	default:
 		/* TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek) */
 		title = _("The following software also needs to be processed");
+		tab_label = gtk_label_new (_("Other"));
 		break;
 	}
 
@@ -429,8 +442,9 @@ gpk_task_add_dialog_deps_section (PkTask *task, PkPackageSack *sack, PkInfoEnum 
 
 	/* embed title */
 	array_tmp = pk_package_sack_get_array (sack_tmp);
-	gpk_dialog_embed_download_size_widget (GTK_DIALOG(priv->current_window), title, size);
-	gpk_dialog_embed_package_list_widget (GTK_DIALOG(priv->current_window), array_tmp);
+	gpk_dialog_tabbed_download_size_widget (tab_page, title, size);
+	gpk_dialog_tabbed_package_list_widget (tab_page, array_tmp);
+	gtk_notebook_append_page (tabbed_widget, tab_page, tab_label);
 out:
 	if (array_tmp != NULL)
 		g_ptr_array_unref (array_tmp);
@@ -451,6 +465,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	guint inputs;
 	const gchar *title;
 	const gchar *message = NULL;
+	GtkNotebook *tabbed_widget = NULL;
 
 	/* save the current request */
 	priv->request = request;
@@ -507,25 +522,36 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, "%s", title));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (priv->current_window), "%s", message);
 
+	tabbed_widget = GTK_NOTEBOOK (gtk_notebook_new ());
+
 	/* get the details for all the packages */
 	sack = pk_results_get_package_sack (results);
 
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_INSTALLING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_INSTALLING);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_REMOVING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_REMOVING);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_UPDATING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_UPDATING);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_OBSOLETING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_OBSOLETING);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_REINSTALLING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_REINSTALLING);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
-	gpk_task_add_dialog_deps_section (task, sack, PK_INFO_ENUM_DOWNGRADING);
+	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
+					  PK_INFO_ENUM_DOWNGRADING);
+
+	gpk_dialog_embed_tabbed_widget (GTK_DIALOG(priv->current_window),
+					tabbed_widget);
 
 	gpk_dialog_embed_do_not_show_widget (GTK_DIALOG(priv->current_window), GPK_SETTINGS_SHOW_DEPENDS);
 	/* TRANSLATORS: this is button text */

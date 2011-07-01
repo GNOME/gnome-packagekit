@@ -363,3 +363,112 @@ out:
 	return TRUE;
 }
 
+/**
+ * gpk_dialog_embed_tabbed_widget
+ **/
+gboolean
+gpk_dialog_embed_tabbed_widget (GtkDialog *dialog, GtkNotebook *tabbed_widget)
+{
+	GtkWidget *widget;
+
+	if (! GTK_IS_NOTEBOOK (tabbed_widget))
+		return FALSE;
+
+	widget = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	gtk_container_add_with_properties (GTK_CONTAINER (widget),
+					   GTK_WIDGET (tabbed_widget),
+					   "expand", FALSE,
+					   "fill", FALSE,
+					   NULL);
+
+	return TRUE;
+}
+
+/**
+ * gpk_dialog_tabbed_package_list_widget:
+ **/
+gboolean
+gpk_dialog_tabbed_package_list_widget (GtkWidget *tab_page, GPtrArray *array)
+{
+	GtkWidget *scroll;
+	GtkListStore *store;
+	GtkWidget *widget;
+	const guint row_height = 48;
+
+	/* convert to a store */
+	store = gpk_dialog_package_array_to_list_store (array);
+
+	/* create a treeview to hold the store */
+	widget = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	gpk_dialog_treeview_for_package_list (GTK_TREE_VIEW (widget));
+	gtk_widget_show (widget);
+
+	/* scroll the treeview */
+	scroll = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll), widget);
+	gtk_widget_show (scroll);
+
+	/* add some spacing to conform to the GNOME HIG */
+	gtk_container_set_border_width (GTK_CONTAINER (scroll), 6);
+
+	/* only allow more space if there are a large number of items */
+	if (array->len > 5) {
+		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, (row_height * 5) + 8);
+	} else if (array->len > 1) {
+		gtk_widget_set_size_request (GTK_WIDGET (scroll), -1, (row_height * array->len) + 8);
+	}
+
+	/* add scrolled window */
+	gtk_container_add_with_properties (GTK_CONTAINER (tab_page), scroll,
+					   "expand", TRUE,
+					   "fill", TRUE,
+					   NULL);
+
+	/* free the store */
+	g_signal_connect (G_OBJECT (tab_page), "unrealize",
+			  G_CALLBACK (gpk_dialog_widget_unrealize_unref_cb), store);
+
+	return TRUE;
+}
+
+/**
+ * gpk_dialog_tabbed_download_size_widget:
+ **/
+gboolean
+gpk_dialog_tabbed_download_size_widget (GtkWidget *tab_page, const gchar *title, guint64 size)
+{
+	GtkWidget *label;
+	GtkWidget *hbox;
+	gchar *text = NULL;
+	gchar *size_str = NULL;
+
+	/* size is zero, don't show "0 bytes" */
+	if (size == 0) {
+		label = gtk_label_new (title);
+		gtk_container_add_with_properties (GTK_CONTAINER (tab_page), label,
+						   "expand", FALSE,
+						   "fill", FALSE,
+						   NULL);
+		goto out;
+	}
+
+	/* add a hbox with the size for deps screen */
+	size_str = g_format_size_for_display (size);
+	text = g_strdup_printf ("%s: %s", title, size_str);
+	hbox = gtk_hbox_new (FALSE, 6);
+	gtk_container_add_with_properties (GTK_CONTAINER (tab_page), hbox,
+					   "expand", FALSE,
+					   "fill", FALSE,
+					   NULL);
+
+	/* add a label */
+	label = gtk_label_new (text);
+	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
+	gtk_widget_show (hbox);
+out:
+	gtk_widget_show (label);
+	g_free (text);
+	g_free (size_str);
+	return TRUE;
+}
