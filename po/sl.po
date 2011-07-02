@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-21 09:56+0000\n"
-"PO-Revision-Date: 2011-06-21 12:06+0100\n"
+"POT-Creation-Date: 2011-07-02 09:37+0000\n"
+"PO-Revision-Date: 2011-07-02 12:52+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -81,6 +81,7 @@ msgstr "Pomoč s programom"
 #: ../src/gpk-dbus-task.c:2678
 #: ../src/gpk-dbus-task.c:2800
 #: ../src/gpk-dbus-task.c:3153
+#: ../src/gpk-task.c:405
 #: ../src/gpk-update-viewer.c:1659
 msgid "Install"
 msgstr "Namesti"
@@ -152,6 +153,7 @@ msgstr "Osveži seznam paketov sistema"
 #. TRANSLATORS: button: confirm to search for packages
 #: ../data/gpk-application.ui.h:26
 #: ../src/gpk-dbus-task.c:3091
+#: ../src/gpk-task.c:411
 msgid "Remove"
 msgstr "Odstrani"
 
@@ -3347,6 +3349,7 @@ msgstr "Pisarniški paketi"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1633
+#: ../src/gpk-task.c:431
 msgid "Other"
 msgstr "Ostalo"
 
@@ -3541,47 +3544,59 @@ msgstr "Zahtevan je dodaten nosilec. Za nadaljevanje vstavite %s z oznako '%s'."
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:361
-#: ../src/gpk-task.c:532
+#: ../src/gpk-task.c:558
 msgid "Continue"
 msgstr "Nadaljuj"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:397
+#: ../src/gpk-task.c:404
 msgid "The following software also needs to be installed"
 msgstr "Navedene datoteke je treba prav tako namestiti."
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:402
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be removed"
 msgstr "Navedene datoteke je treba odstraniti."
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:415
 msgid "The following software also needs to be updated"
 msgstr "Navedene datoteke je treba posodobiti."
 
+#: ../src/gpk-task.c:416
+msgid "Update"
+msgstr "Posodobi"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:420
 msgid "The following software also needs to be re-installed"
 msgstr "Navedene datoteke je treba ponovno namestiti."
 
+#: ../src/gpk-task.c:421
+msgid "Reinstall"
+msgstr "Ponovno namesti"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:425
 msgid "The following software also needs to be downgraded"
 msgstr "Navedene datoteke je treba povrniti na starejšo različico."
 
+#: ../src/gpk-task.c:426
+msgid "Downgrade"
+msgstr "Povrni na starejšo različico"
+
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:430
 msgid "The following software also needs to be processed"
 msgstr "Navedene datoteke je treba preveriti."
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:476
+#: ../src/gpk-task.c:491
 msgid "Additional confirmation required"
 msgstr "Zahtevana je dodatna potrditev"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:482
+#: ../src/gpk-task.c:497
 msgid "To install this package, additional software also has to be modified."
 msgid_plural "To install these packages, additional software also has to be modified."
 msgstr[0] "Za pravilno delovanje izbranih programov je treba spremeniti tudi druge programske pakete."
@@ -3590,7 +3605,7 @@ msgstr[2] "Za pravilno delovanje izbranih programov je treba spremeniti tudi dru
 msgstr[3] "Za pravilno delovanje izbranih programov je treba spremeniti tudi druge programske pakete."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:502
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural "To remove these packages, additional software also has to be modified."
 msgstr[0] "Z odstranitvijo paketov bodo spremenjeni tudi drugi programski paketi."
@@ -3599,7 +3614,7 @@ msgstr[2] "Z odstranitvijo paketov bodo spremenjeni tudi drugi programski paketi
 msgstr[3] "Z odstranitvijo paketov bodo spremenjeni tudi drugi programski paketi."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:507
 msgid "To update this package, additional software also has to be modified."
 msgid_plural "To update these packages, additional software also has to be modified."
 msgstr[0] "S posodobitvijo paketov bodo spremenjeni tudi drugi programski paketi."
@@ -3608,7 +3623,7 @@ msgstr[2] "S posodobitvijo paketov bodo spremenjeni tudi drugi programski paketi
 msgstr[3] "S posodobitvijo paketov bodo spremenjeni tudi drugi programski paketi."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:512
 msgid "To install this file, additional software also has to be modified."
 msgid_plural "To install these files, additional software also has to be modified."
 msgstr[0] "Za namestitev paketov je treba spremeniti dodatne programe."
@@ -3617,17 +3632,17 @@ msgstr[2] "Za namestitev paketov je treba spremeniti dodatne programe."
 msgstr[3] "Za namestitev paketov je treba spremeniti dodatne programe."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:517
 msgid "To process this transaction, additional software also has to be modified."
 msgstr "Za to dejanje so zahtevane spremembe tudi dodatnih programov."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:582
+#: ../src/gpk-task.c:608
 msgid "_Force install"
 msgstr "_Vsili namestitev"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:586
+#: ../src/gpk-task.c:612
 msgid "Force installing package"
 msgstr "Vsili namestitev paketa"
 
