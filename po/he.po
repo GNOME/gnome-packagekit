@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-09 00:34+0300\n"
-"PO-Revision-Date: 2011-05-09 00:37+0200\n"
+"POT-Creation-Date: 2011-07-02 10:44+0300\n"
+"PO-Revision-Date: 2011-07-02 10:46+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -60,6 +60,7 @@ msgstr "עזרה עבור תכנה זו"
 #. TRANSLATORS: button: confirm to search for packages
 #. TRANSLATORS: button: install codecs
 #. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
@@ -67,8 +68,9 @@ msgstr "עזרה עבור תכנה זו"
 #: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
 #: ../src/gpk-dbus-task.c:1245 ../src/gpk-dbus-task.c:1464
 #: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2397 ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1659
+#: ../src/gpk-dbus-task.c:2465 ../src/gpk-dbus-task.c:2678
+#: ../src/gpk-dbus-task.c:2800 ../src/gpk-dbus-task.c:3153
+#: ../src/gpk-task.c:405 ../src/gpk-update-viewer.c:1659
 msgid "Install"
 msgstr "התקנה"
 
@@ -137,7 +139,8 @@ msgid "Refresh the list of packages on the system"
 msgstr "עריכת רשימת החבילות במערכת"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:2810
+#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3091
+#: ../src/gpk-task.c:411
 msgid "Remove"
 msgstr "הסרה"
 
@@ -246,7 +249,7 @@ msgstr "התקנת התוכנות הנבחרות על המערכת"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3368
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
 msgid "Software Install"
@@ -620,7 +623,7 @@ msgstr "השינויים שסומנו יבוטלו במידה שחלון זה י
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2098 ../src/gpk-enum.c:1154 ../src/gpk-enum.c:1235
+#: ../src/gpk-application.c:2098 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
 msgid "Installed"
 msgstr "מותקן"
 
@@ -1011,7 +1014,7 @@ msgstr "ארע כשל בהתקנת חבילה"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:953
+#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:955
 msgid "Installing packages"
 msgstr "החבילות מותקנות"
 
@@ -1051,13 +1054,14 @@ msgstr "לא ניתן למצוא את החבילה באף מקור תוכנה"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
 #: ../src/gpk-dbus-task.c:1096 ../src/gpk-dbus-task.c:1333
 #: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1845
-#: ../src/gpk-dbus-task.c:2100
+#: ../src/gpk-dbus-task.c:2100 ../src/gpk-dbus-task.c:2437
 msgid "More information"
 msgstr "מידע נוסף"
 
-#: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:334
+#: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:336
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "החבילה כבר מותקנת"
@@ -1103,7 +1107,7 @@ msgstr[0] "תכנה רוצה להתקין חבילה"
 msgstr[1] "תכנה רוצה להתקין חבילות"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2579
+#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2860
 msgid "Searching for packages"
 msgstr "מתבצע חיפוש אחר חבילות"
 
@@ -1113,7 +1117,7 @@ msgid "Failed to find package"
 msgstr "ארע כשל במציאת חבילה"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2719
+#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:3000
 msgid "The file could not be found in any packages"
 msgstr "לא ניתן למצוא את הקובץ באף חבילה"
 
@@ -1154,8 +1158,8 @@ msgstr[1] "תכנה רוצה להתקין קבצים"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:2822
-#: ../src/gpk-enum.c:1305
+#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3103
+#: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "מתבצע חיפוש אחר קובץ"
 
@@ -1167,7 +1171,7 @@ msgstr[0] "התוסף הנדרש:"
 msgstr[1] "התוספים הנדרשים:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537
+#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2365
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "האם לחפש אחר זה עכשיו?"
@@ -1220,7 +1224,7 @@ msgstr[1] "‏‏תכנה דורשת תוספים נוספים לביצוע פע
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1931
-#: ../src/gpk-dbus-task.c:2304
+#: ../src/gpk-dbus-task.c:2304 ../src/gpk-dbus-task.c:2377
 msgid "Search"
 msgstr "חיפוש"
 
@@ -1234,7 +1238,7 @@ msgstr "ארע כשל בחיפוש אחר תוסף"
 msgid "Could not find plugin in any configured software source"
 msgstr "לא ניתן למצוא תוסף באף מקור תכנה מוגדר"
 
-#: ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2456
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "התקנת התוסף"
@@ -1242,7 +1246,7 @@ msgstr[1] "התקנת התוספים"
 
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2511
+#: ../src/gpk-dbus-task.c:2457 ../src/gpk-dbus-task.c:2792
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "האם ברצונך להתקין את החבילה הזאת עכשיו?"
@@ -1361,30 +1365,62 @@ msgid_plural "Searching for fonts"
 msgstr[0] "מתבצע חיפוש אחר גופן"
 msgstr[1] "מתבצע חיפוש אחר גופנים"
 
-#: ../src/gpk-dbus-task.c:2354
+#. TRANSLATORS: we are listing the services in a box
+#: ../src/gpk-dbus-task.c:2353
+msgid "The following service is required:"
+msgid_plural "The following services are required:"
+msgstr[0] "השירות הבא נדרש:"
+msgstr[1] "השירותים הבאים נדרשים:"
+
+#: ../src/gpk-dbus-task.c:2373
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "פלזמה דורשת שירות נוסף לצורך ביצוע פעולה זו"
+msgstr[1] "פלזמה דורשת שירותים נוספים לצורך ביצוע פעולה זו"
+
+#: ../src/gpk-dbus-task.c:2431
+msgid "Failed to search for Plasma service"
+msgstr "החיפוש אחר שירות פלזמה נכשל"
+
+#. TRANSLATORS: no software sources have the wanted Plasma service
+#: ../src/gpk-dbus-task.c:2433
+msgid "Could not find service in any configured software source"
+msgstr "לא ניתן למצוא שירות באף אחד ממקורות התכנה המוגדרים"
+
+#. TRANSLATORS: search for Plasma services
+#: ../src/gpk-dbus-task.c:2539
+msgid "Searching for services"
+msgstr "בחיפוש אחר התקנים"
+
+#: ../src/gpk-dbus-task.c:2558
+#, c-format
+msgid "Searching for service: %s"
+msgstr "מתבצע חיפוש אחר השירות: %s"
+
+#: ../src/gpk-dbus-task.c:2635
 msgid "Could not process catalog"
 msgstr "לא ניתן לעבד את הקטלוג"
 
-#: ../src/gpk-dbus-task.c:2372
+#: ../src/gpk-dbus-task.c:2653
 msgid "No packages need to be installed"
 msgstr "אין צורך בהתקנת חבילות"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2391
+#: ../src/gpk-dbus-task.c:2672
 msgid "Install packages in catalog?"
 msgstr "האם להתקין חבילות מהקטלוג?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2393
+#: ../src/gpk-dbus-task.c:2674
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "החבילות הבאות סומנו להתקנה מהקטלוג:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2433
+#: ../src/gpk-dbus-task.c:2714
 msgid "Failed to remove package"
 msgstr "ארע כשל בהסרת חבילה"
 
-#: ../src/gpk-dbus-task.c:2510
+#: ../src/gpk-dbus-task.c:2791
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "התקנת מנהל ההתקן הבא"
@@ -1392,31 +1428,31 @@ msgstr[1] "התקנת מנהלי ההתקנים הבאים"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2663 ../src/gpk-enum.c:945
+#: ../src/gpk-dbus-task.c:2944 ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "חבילות מוסרות"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2998
 msgid "Failed to find package for this file"
 msgstr "ארע כשל במציאת חבילה עבור קובץ זה"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2795
+#: ../src/gpk-dbus-task.c:3076
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "הקובץ הבא יוסר:"
 msgstr[1] "הקבצים הבאים יוסרו:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2798
+#: ../src/gpk-dbus-task.c:3079
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "האם ברצונך להסיר קובץ זה כעת?"
 msgstr[1] "האם ברצונך להסיר קובץ זה כעת?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2803
+#: ../src/gpk-dbus-task.c:3084
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1424,21 +1460,21 @@ msgstr[0] "‏‏%s רוצה להסיר קובץ"
 msgstr[1] "‏‏%s רוצה להסיר קבצים"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2806
+#: ../src/gpk-dbus-task.c:3087
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "תכנית מעוניינת להסיר קובץ"
 msgstr[1] "תכנית מעוניינת להסיר קבצים"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2863
+#: ../src/gpk-dbus-task.c:3144
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "האם ברצונך להתקין את הקטלוג?"
 msgstr[1] "האם ברצונך להתקין את הקטלוגים?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2888
+#: ../src/gpk-dbus-task.c:3169
 msgid "Install catalogs"
 msgstr "התקנת קטלוג"
 
@@ -1502,7 +1538,7 @@ msgstr "אין שחרורים הזמינים לשדרוג"
 msgid "Upgrade your system (%d of %d)"
 msgstr "שדרוג המערכת שלך (%d מתוך %d)"
 
-#: ../src/gpk-distro-upgrade.c:406
+#: ../src/gpk-distro-upgrade.c:405
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
@@ -1510,7 +1546,7 @@ msgstr ""
 "כלי סיוע זה ידריך אותך במהלך שדרוג מערכת ההפעלה המותקנת הנוכחית שלך לשחרור "
 "עדכני יותר."
 
-#: ../src/gpk-distro-upgrade.c:407
+#: ../src/gpk-distro-upgrade.c:406
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
@@ -1518,7 +1554,7 @@ msgstr ""
 "תהליך זה עלול לארוך מספר שעות עד שיושלם בהתאם למהירות חיבור האינטרנט שלך "
 "והאפשרויות שנבחרו."
 
-#: ../src/gpk-distro-upgrade.c:408
+#: ../src/gpk-distro-upgrade.c:407
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
@@ -1526,7 +1562,7 @@ msgstr ""
 "תהיה באפשרותך להמשיך ולהשתמש במערכת שלך בזמן שכלי סיוע זה מוריד את החבילות "
 "הדרושות לשדרוג המערכת שלך."
 
-#: ../src/gpk-distro-upgrade.c:409
+#: ../src/gpk-distro-upgrade.c:408
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
@@ -1534,396 +1570,396 @@ msgstr ""
 "עם השלמת ההורדה, תופיע בקשה לאתחול המערכת מחדש כדי להשלים את תהליך השדרוג."
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:421
+#: ../src/gpk-distro-upgrade.c:420
 msgid "Upgrade your system"
 msgstr "שדרוג המערכת שלך"
 
-#: ../src/gpk-distro-upgrade.c:476
+#: ../src/gpk-distro-upgrade.c:470
 msgid "Available operating system _releases:"
 msgstr "ש_חרורי מערכת ההפעלה הזמינים:"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:485
+#: ../src/gpk-distro-upgrade.c:479
 msgid "Loading list of upgrades"
 msgstr "רשימת פריטי השדרוג נטענת"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:503
+#: ../src/gpk-distro-upgrade.c:497
 msgid "Choose desired operating system version"
 msgstr "נא לבחור את גרסת מערכת ההפעלה הרצויה"
 
 #. label and combobox
-#: ../src/gpk-distro-upgrade.c:538
+#: ../src/gpk-distro-upgrade.c:527
 msgid "The upgrade tool can operate with three different modes:"
 msgstr "כלי השדרוג יכול לפעול בשלושה מצבים שונים:"
 
-#: ../src/gpk-distro-upgrade.c:568
+#: ../src/gpk-distro-upgrade.c:557
 msgid ""
 "The selected option will require the installer to download additional data."
 msgstr "האפשרות הנבחרת תדרוש מתכנית ההתקנה להוריד נתונים נוספים."
 
-#: ../src/gpk-distro-upgrade.c:569
+#: ../src/gpk-distro-upgrade.c:558
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
 msgstr "אין להמשיך עם אפשרות זו אם הרשת אינה זמינה במהלך השדרוג."
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:584
+#: ../src/gpk-distro-upgrade.c:573
 msgid "Choose desired download options"
 msgstr "נא לבחור את אפשרויות ההורדה הרצויות"
 
-#: ../src/gpk-distro-upgrade.c:606
+#: ../src/gpk-distro-upgrade.c:590
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
 msgstr "כלי שדרוג מערכת ההפעלה יבצע כעת את הפעולות הבאות:"
 
-#: ../src/gpk-distro-upgrade.c:607
+#: ../src/gpk-distro-upgrade.c:591
 msgid "Request authentication from a privileged user"
 msgstr "בקשת אימות ממשתמש מורשה"
 
-#: ../src/gpk-distro-upgrade.c:608
+#: ../src/gpk-distro-upgrade.c:592
 msgid "Download installer images"
 msgstr "הורדת תמונות התקנה"
 
-#: ../src/gpk-distro-upgrade.c:609
+#: ../src/gpk-distro-upgrade.c:593
 msgid "Download packages"
 msgstr "הורדת חבילות"
 
-#: ../src/gpk-distro-upgrade.c:610
+#: ../src/gpk-distro-upgrade.c:594
 msgid "Prepare and test the upgrade"
 msgstr "הכנה ובדיקת השדרוג"
 
-#: ../src/gpk-distro-upgrade.c:611
+#: ../src/gpk-distro-upgrade.c:595
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "יהיה עליך להפעיל מחדש את מחשבך עם סיום השדרוג."
 
-#: ../src/gpk-distro-upgrade.c:612
+#: ../src/gpk-distro-upgrade.c:596
 msgid "Press 'Apply' to apply changes."
 msgstr "יש ללחוץ על 'החלה' כדי להחיל את השינויים."
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:625
+#: ../src/gpk-distro-upgrade.c:609
 msgid "Confirmation"
 msgstr "אישור"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:662
+#: ../src/gpk-distro-upgrade.c:641
 msgid "Applying changes"
 msgstr "השינויים חלים"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:728
+#: ../src/gpk-distro-upgrade.c:703
 msgid "Cannot perform operating system upgrade"
 msgstr "לא ניתן לשדרג את מערכת ההפעלה"
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:740
+#: ../src/gpk-distro-upgrade.c:715
 msgid "Upgrading the operating system is not supported."
 msgstr "שדרוג מערכת ההפעלה אינו נתמך."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:744
+#: ../src/gpk-distro-upgrade.c:719
 msgid "Cannot get operating system upgrade information."
 msgstr "לא ניתן לקבל את פרטי שדרוג מערכת ההפעלה."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:748
+#: ../src/gpk-distro-upgrade.c:723
 msgid "Unsupported daemon version."
 msgstr "גרסת הסוכן אינה נתמכת."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:800 ../src/gpk-distro-upgrade.c:803
+#: ../src/gpk-distro-upgrade.c:775 ../src/gpk-distro-upgrade.c:778
 msgid "Distribution Upgrade Tool"
 msgstr "כלי שדרוג ההפצה"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:275
+#: ../src/gpk-enum.c:277
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:279
+#: ../src/gpk-enum.c:281
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:283
+#: ../src/gpk-enum.c:285
 msgid "disc"
 msgstr "דיסק"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:287
+#: ../src/gpk-enum.c:289
 msgid "media"
 msgstr "מדיה"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:306
 msgid "Failed with unknown error code"
 msgstr "ארע כשל עם קוד שגיאה בלתי מוכר"
 
-#: ../src/gpk-enum.c:307
+#: ../src/gpk-enum.c:309
 msgid "No network connection available"
 msgstr "אין חיבור רשת פעיל"
 
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:312
 msgid "No package cache is available."
 msgstr "אין מטמון חבילות זמין."
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:315
 msgid "Out of memory"
 msgstr "אין מספיק זיכרון"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:318
 msgid "Failed to create a thread"
 msgstr "ארע כשל ביצירת פתיל"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:321
 msgid "Not supported by this backend"
 msgstr "לא נתמך על ידי המנוע"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:324
 msgid "An internal system error has occurred"
 msgstr "התרחשה שגיאת מערכת פנימית"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:327
 msgid "A security signature is not present"
 msgstr "חסרה חתימת אבטחה"
 
-#: ../src/gpk-enum.c:328
+#: ../src/gpk-enum.c:330
 msgid "The package is not installed"
 msgstr "החבילה לא מותקנת"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:333
 msgid "The package was not found"
 msgstr "החבילה לא נמצאה"
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:339
 msgid "The package download failed"
 msgstr "הורדת החבילה נכשלה"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:342
 msgid "The group was not found"
 msgstr "הקבוצה לא נמצאה"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:345
 msgid "The group list was invalid"
 msgstr "רשימת הקבוצות לא תקינה"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:348
 msgid "Dependency resolution failed"
 msgstr "הטיפול בתלויות נכשל"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:351
 msgid "Search filter was invalid"
 msgstr "מסנן החיפוש לא תקין"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:354
 msgid "The package identifier was not well formed"
 msgstr "מזהה החבילה לא נוצר כראוי"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:357
 msgid "Transaction error"
 msgstr "שגיאה בהעברה"
 
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:360
 msgid "Repository name was not found"
 msgstr "שם המאגר לא נמצא"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:363
 msgid "Could not remove a protected system package"
 msgstr "לא ניתן להסיר חבילה המוגנת על ידי המערכת"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:366
 msgid "The action was canceled"
 msgstr "הפעולה בוטלה"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:369
 msgid "The action was forcibly canceled"
 msgstr "הפעולה בוטלה בכוח"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:372
 msgid "Reading the configuration file failed"
 msgstr "קריאת קובץ הגדרות נכשלה"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:375
 msgid "The action cannot be canceled"
 msgstr "לא ניתן לבטל את הפעולה"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:378
 msgid "Source packages cannot be installed"
 msgstr "לא ניתן להתקין חבילות מקור"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:381
 msgid "The license agreement failed"
 msgstr "ההסכמה לרישיון נכשלה"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:384
 msgid "Local file conflict between packages"
 msgstr "התנגשות קבצים מקומיים בין חבילות"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:387
 msgid "Packages are not compatible"
 msgstr "החבילות לא תואמות"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:390
 msgid "Problem connecting to a software source"
 msgstr "בעיה בהתחברות למקור תכנה"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:393
 msgid "Failed to initialize"
 msgstr "ארע כשל בהפעלה"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:396
 msgid "Failed to finalise"
 msgstr "ארע כשל בתהליך הסיום"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:399
 msgid "Cannot get lock"
 msgstr "לא ניתן להשיג נעילה"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:402
 msgid "No packages to update"
 msgstr "אין חבילות לעדכון"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:405
 msgid "Cannot write repository configuration"
 msgstr "לא ניתן לכתוב את תצורת המאגר"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:408
 msgid "Local install failed"
 msgstr "ההתקנה המקומית נכשלה"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:411
 msgid "Bad security signature"
 msgstr "חתימת אבטחה לא תקינה"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:414
 msgid "Missing security signature"
 msgstr "חסרה חתימת אבטחה"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:417
 msgid "Repository configuration invalid"
 msgstr "תצורת המאגר לא תקינה"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:420
 msgid "Invalid package file"
 msgstr "קובץ החבילה לא תקין"
 
-#: ../src/gpk-enum.c:421
+#: ../src/gpk-enum.c:423
 msgid "Package install blocked"
 msgstr "התקנת החבילה נחסמה"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:426
 msgid "Package is corrupt"
 msgstr "החבילה פגומה"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:429
 msgid "All packages are already installed"
 msgstr "כל החבילות כבר מותקנות"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:432
 msgid "The specified file could not be found"
 msgstr "הקובץ שצוין לא נמצא"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:435
 msgid "No more mirrors are available"
 msgstr "אין עוד שרתי מראה זמינים"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:438
 msgid "No distribution upgrade data is available"
 msgstr "אין נתוני שדרוג הפצה זמינים"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:441
 msgid "Package is incompatible with this system"
 msgstr "החבילה לא תואמת את המערכת"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:444
 msgid "No space is left on the disk"
 msgstr "לא נותר מקום פנוי על הכונן"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:445 ../src/gpk-task.c:357
+#: ../src/gpk-enum.c:447 ../src/gpk-task.c:357
 msgid "A media change is required"
 msgstr "נדרשת החלפת מדיה"
 
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:450
 msgid "Authorization failed"
 msgstr "האימות נכשל"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:453
 msgid "Update not found"
 msgstr "העדכון לא נמצא"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:456
 msgid "Cannot install from untrusted source"
 msgstr "לא ניתן להתקין ממאגר לא בטוח"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:459
 msgid "Cannot update from untrusted source"
 msgstr "לא ניתן להתקין ממקור לא בטוח"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:462
 msgid "Cannot get the file list"
 msgstr "לא ניתן לקבל את רשימת הקבצים"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:465
 msgid "Cannot get package requires"
 msgstr "לא ניתן להוריד את דרישות החבילה"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:468
 msgid "Cannot disable source"
 msgstr "לא ניתן לבטל מאגר"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:471
 msgid "The download failed"
 msgstr "ההורדה נכשלה"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:474
 msgid "Package failed to configure"
 msgstr "ארע כשל בהגדרת החבילה"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:477
 msgid "Package failed to build"
 msgstr "ארע כשל בבניית החבילה"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:480
 msgid "Package failed to install"
 msgstr "ארע כשל בהתקנת החבילה"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:483
 msgid "Package failed to be removed"
 msgstr "ארע כשל בהסרת החבילה"
 
-#: ../src/gpk-enum.c:484
+#: ../src/gpk-enum.c:486
 msgid "Update failed due to running process"
 msgstr "העדכון נכשל עקב תהליך פעיל"
 
-#: ../src/gpk-enum.c:487
+#: ../src/gpk-enum.c:489
 msgid "The package database was changed"
 msgstr "מסד נתוני החבילות השתנה"
 
-#: ../src/gpk-enum.c:490
+#: ../src/gpk-enum.c:492
 msgid "Virtual provide type is not supported"
 msgstr "סוג האספקה הווירטואלית אינו נתמך"
 
-#: ../src/gpk-enum.c:493
+#: ../src/gpk-enum.c:495
 msgid "Install root is invalid"
 msgstr "שורש ההתקנה שגוי"
 
-#: ../src/gpk-enum.c:496
+#: ../src/gpk-enum.c:498
 msgid "Cannot fetch install sources"
 msgstr "לא ניתן להוריד את מקורות ההתקנה"
 
-#: ../src/gpk-enum.c:499
+#: ../src/gpk-enum.c:501
 msgid "Rescheduled due to priority"
 msgstr "תוזמנה מחדש עקב עדיפות"
 
-#: ../src/gpk-enum.c:516
+#: ../src/gpk-enum.c:518
 msgid "Failed with unknown error code."
 msgstr "ארע כשל עם קוד שגיאה בלתי מוכר"
 
-#: ../src/gpk-enum.c:519
+#: ../src/gpk-enum.c:521
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1931,7 +1967,7 @@ msgstr ""
 "לא נמצא חיבור רשת זמין.\n"
 "נא לבדוק את הגדרות החיבור שלך ולנסות שוב."
 
-#: ../src/gpk-enum.c:523
+#: ../src/gpk-enum.c:525
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1939,7 +1975,7 @@ msgstr ""
 "יש לבנות את רשימת החבילות מחדש.\n"
 "פעולה זו אמורה להתבצע אוטומטית על ידי המנוע."
 
-#: ../src/gpk-enum.c:527
+#: ../src/gpk-enum.c:529
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1948,11 +1984,11 @@ msgstr ""
 "לשירות המטפל בבקשות משתמש נגמר הזיכרון.\n"
 "נא להפעיל את המחשב מחדש."
 
-#: ../src/gpk-enum.c:531
+#: ../src/gpk-enum.c:533
 msgid "A thread could not be created to service the user request."
 msgstr "לא ניתן היה ליצור פתיל לביצוע בקשת המשתמש."
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:536
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bugtracker as this should not have "
@@ -1962,7 +1998,7 @@ msgstr ""
 "נא לדווח על השגיאה במערכת מעקב הבאגים של ההפצה שלך בגלל שזה לא היה אמור "
 "לקרות."
 
-#: ../src/gpk-enum.c:538
+#: ../src/gpk-enum.c:540
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bugtracker with the error "
@@ -1971,7 +2007,7 @@ msgstr ""
 "התרחשה בעיה שלא ציפינו לה.\n"
 "נא לדווח על השגיאה במערכת מעקב הבאגים של ההפצה שלך עם תיאור השגיאה."
 
-#: ../src/gpk-enum.c:542
+#: ../src/gpk-enum.c:544
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -1979,22 +2015,22 @@ msgstr ""
 "לא ניתן לבצע אימות אבטחה עם מקור תכנה.\n"
 "נא לבדוק את הגדרות האבטחה שלך."
 
-#: ../src/gpk-enum.c:546
+#: ../src/gpk-enum.c:548
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr "החבילה המועמדת להסרה או לעדכון אינה מותקנת עוד."
 
-#: ../src/gpk-enum.c:549
+#: ../src/gpk-enum.c:551
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
 msgstr "החבילה שעוברת שינויים לא נמצאה במערכת או באף מקור תוכנה."
 
-#: ../src/gpk-enum.c:552
+#: ../src/gpk-enum.c:554
 msgid "The package that is trying to be installed is already installed."
 msgstr "החבילה המועמדת להתקנה כבר מותקנת."
 
-#: ../src/gpk-enum.c:555
+#: ../src/gpk-enum.c:557
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2002,7 +2038,7 @@ msgstr ""
 "הורדת החבילה נכשלה.\n"
 "נא לבדוק את חיבור האינטרנט שלך."
 
-#: ../src/gpk-enum.c:559
+#: ../src/gpk-enum.c:561
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2010,7 +2046,7 @@ msgstr ""
 "הקבוצה לא נמצאה.\n"
 "נא לבדוק את רשימת הקבוצות ולנסות שוב."
 
-#: ../src/gpk-enum.c:563
+#: ../src/gpk-enum.c:565
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -2019,7 +2055,7 @@ msgstr ""
 "לא ניתן לטעון את רשימת הקבוצות.\n"
 "רענון מטמון החבילות יכול לעזור, אבל בדרך כלל זו שגיאה של מקור התכנה."
 
-#: ../src/gpk-enum.c:568
+#: ../src/gpk-enum.c:570
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2027,11 +2063,11 @@ msgstr ""
 "לא נמצאה חבילה המאפשרת את השלמת הפעולה.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:574
 msgid "The search filter was not correctly formed."
 msgstr "מסנן החיפוש לא נוצר כראוי."
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:577
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2039,7 +2075,7 @@ msgstr ""
 "מזהה החבילה לא נוצר כראוי כשהוא נשלח לשרת.\n"
 "בעיה זו בדרך כלל מצביעה על שגיאה פנימית ויש לדווח עליה."
 
-#: ../src/gpk-enum.c:579
+#: ../src/gpk-enum.c:581
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2047,7 +2083,7 @@ msgstr ""
 "התרחשה שגיאת פעולה לא מוגדרת.\n"
 "פרטים נוספים זמינים בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:583
+#: ../src/gpk-enum.c:585
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2055,15 +2091,15 @@ msgstr ""
 "מקור התכנה המרוחק לא נמצא.\n"
 "יתכן שיש צורך להפעילו במקורות תכנה."
 
-#: ../src/gpk-enum.c:587
+#: ../src/gpk-enum.c:589
 msgid "Removing a protected system package is not allowed."
 msgstr "הסרת חבילה המוגנת על ידי המערכת לא מורשית."
 
-#: ../src/gpk-enum.c:590
+#: ../src/gpk-enum.c:592
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "הפעולה בוטלה בהצלחה ואף חבילה לא שונתה."
 
-#: ../src/gpk-enum.c:593
+#: ../src/gpk-enum.c:595
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2071,7 +2107,7 @@ msgstr ""
 "הפעולה בוטלה בהצלחה ואף חבילה לא שונתה.\n"
 "המנוע לא יצא בצורה נקייה."
 
-#: ../src/gpk-enum.c:597
+#: ../src/gpk-enum.c:599
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2079,11 +2115,11 @@ msgstr ""
 "קובץ תצורת החבילות המקומי לא ניתן לפתיחה.\n"
 "נא לוודא שהתצורה תקינה."
 
-#: ../src/gpk-enum.c:601
+#: ../src/gpk-enum.c:603
 msgid "The action cannot be canceled at this time."
 msgstr "לא ניתן לבטל את הפעולה כרגע."
 
-#: ../src/gpk-enum.c:604
+#: ../src/gpk-enum.c:606
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2091,7 +2127,7 @@ msgstr ""
 "חבילות מקור בדרך כלל לא מותקנות כך.\n"
 "נא לבדוק את סיומת הקובץ המועמד להתקנה."
 
-#: ../src/gpk-enum.c:608
+#: ../src/gpk-enum.c:610
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2099,7 +2135,7 @@ msgstr ""
 "לא בוצעה הסכמה לרישיון.\n"
 "כדי להשתמש בתכנה זו עליך להסכים לרישיון."
 
-#: ../src/gpk-enum.c:612
+#: ../src/gpk-enum.c:614
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2107,7 +2143,7 @@ msgstr ""
 "שתי חבילות המספקות את אותו הקובץ.\n"
 "זה בדרך כלל בגלל ערבוב חבילות ממאגרי חבילות שונים."
 
-#: ../src/gpk-enum.c:616
+#: ../src/gpk-enum.c:618
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2115,7 +2151,7 @@ msgstr ""
 "קיימות חבילות מרובות שלא תואמות.\n"
 "בדרך כלל זה מתרחש כתוצאה מעירוב חבילות ממאגרי חבילות שונים."
 
-#: ../src/gpk-enum.c:620
+#: ../src/gpk-enum.c:622
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2123,7 +2159,7 @@ msgstr ""
 "התרחשה בעיה (יתכן שזמנית) בהתחברות למקור תוכנה.\n"
 "נא לבדוק בשגיאה מפורטת לקבלת מידע נוסף."
 
-#: ../src/gpk-enum.c:624
+#: ../src/gpk-enum.c:626
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2131,7 +2167,7 @@ msgstr ""
 "ארע כשל באתחול מנוע ניהול החבילות.\n"
 "יתכן שבעיה זו התרחשה עקב מספר כלי ניהול חבילות הפועלים בו זמנית."
 
-#: ../src/gpk-enum.c:628
+#: ../src/gpk-enum.c:630
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2139,7 +2175,7 @@ msgstr ""
 "ארע כשל בסגירת מופע המנוע.\n"
 "ניתן להתעלם משגיאה זו."
 
-#: ../src/gpk-enum.c:632
+#: ../src/gpk-enum.c:634
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2147,15 +2183,15 @@ msgstr ""
 "לא ניתן להשיג נעילה בלעדית על מנוע ניהול החבילות.\n"
 "נא לסגור מנהלי חבילות מיושנים שעלולים להיות פתוחים."
 
-#: ../src/gpk-enum.c:636
+#: ../src/gpk-enum.c:638
 msgid "None of the selected packages could be updated."
 msgstr "לא ניתן לעדכן אף אחת מהחבילות הנבחרות."
 
-#: ../src/gpk-enum.c:639
+#: ../src/gpk-enum.c:641
 msgid "The repository configuration could not be modified."
 msgstr "תצורת המאגר לא ניתנת לשינוי."
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:644
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2163,11 +2199,11 @@ msgstr ""
 "התקנת הקובץ המקומי נכשלה.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:646
+#: ../src/gpk-enum.c:648
 msgid "The package security signature could not be verified."
 msgstr "לא ניתן לאמת את חתימת האבטחה של החבילה."
 
-#: ../src/gpk-enum.c:649
+#: ../src/gpk-enum.c:651
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2175,11 +2211,11 @@ msgstr ""
 "חתימת האבטחה על החבילה חסרה ולכן אינה מהימנה.\n"
 "החבילה לא נחתמה בעת יצירתה."
 
-#: ../src/gpk-enum.c:653
+#: ../src/gpk-enum.c:655
 msgid "Repository configuration was invalid and could not be read."
 msgstr "תצורת המאגר לא תקינה ולא ניתנת לקריאה."
 
-#: ../src/gpk-enum.c:656
+#: ../src/gpk-enum.c:658
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2187,23 +2223,23 @@ msgstr ""
 "החבילה המועמדת להתקנה לא תקינה.\n"
 "יתכן שקובץ החבילה פגום, או שזו חבילה בלתי ראויה."
 
-#: ../src/gpk-enum.c:660
+#: ../src/gpk-enum.c:662
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "התקנת החבילה נמנעה על ידי תצורת מערכת החבילות שלך."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:665
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "החבילה שהורדה פגומה ויש להוריד אותה שוב."
 
-#: ../src/gpk-enum.c:666
+#: ../src/gpk-enum.c:668
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "כל החבילות שנבחרו להתקנה כבר מותקנות על המערכת."
 
-#: ../src/gpk-enum.c:669
+#: ../src/gpk-enum.c:671
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2211,7 +2247,7 @@ msgstr ""
 "הקובץ שצוין לא נמצא במערכת.\n"
 "יש לבדוק אם הקובץ עדיין קיים ולא נמחק."
 
-#: ../src/gpk-enum.c:673
+#: ../src/gpk-enum.c:675
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2219,7 +2255,7 @@ msgstr ""
 "המידע הנדרש לא נמצא על אף אחד ממקורות התכנה המוגדרים.\n"
 "אין עוד מקורות תכנה לנסות."
 
-#: ../src/gpk-enum.c:677
+#: ../src/gpk-enum.c:679
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2228,12 +2264,12 @@ msgstr ""
 "נתוני השדרוג הנדרשים לא נמצאו על אף אחד ממקורות התכנה המוגדרים.\n"
 "רשימת שדרוגי ההפצה לא תהיה זמינה."
 
-#: ../src/gpk-enum.c:681
+#: ../src/gpk-enum.c:683
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr "החבילה המועמדת להתקנה אינה תואמת למערכת."
 
-#: ../src/gpk-enum.c:684
+#: ../src/gpk-enum.c:686
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2241,11 +2277,11 @@ msgstr ""
 "אין די מקום פנוי על ההתקן.\n"
 "כדי לבצע פעולה זו עליך לפנות מקום על הכונן של המערכת."
 
-#: ../src/gpk-enum.c:688
+#: ../src/gpk-enum.c:690
 msgid "Additional media is required to complete the transaction."
 msgstr "נדרשת מדיה נוספת על מנת להמשיך את הפעולה."
 
-#: ../src/gpk-enum.c:691
+#: ../src/gpk-enum.c:693
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2253,7 +2289,7 @@ msgstr ""
 "ארע כשל בסיפוק אימות תקין.\n"
 "נא לבדוק את כל הססמאות או את הגדרות החשבון."
 
-#: ../src/gpk-enum.c:695
+#: ../src/gpk-enum.c:697
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2262,27 +2298,27 @@ msgstr ""
 "לא ניתן למצוא את העדכון המבוקש.\n"
 "יתכן שהוא כבר מותקן או לא זמין יותר על השרת המרוחק."
 
-#: ../src/gpk-enum.c:699
+#: ../src/gpk-enum.c:701
 msgid "The package could not be installed from untrusted source."
 msgstr "לא ניתן להתקין תכנה ממאגר לא בטוח."
 
-#: ../src/gpk-enum.c:702
+#: ../src/gpk-enum.c:704
 msgid "The package could not be updated from untrusted source."
 msgstr "לא ניתן לעדכן תכנה ממאגר לא בטוח."
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:707
 msgid "The file list is not available for this package."
 msgstr "רשימת הקבצים אינה זמינה עבור חבילה זו."
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:710
 msgid "The information about what requires this package could not be obtained."
 msgstr "לא ניתן לקבל את המידע על מה שחבילה זו דורשת."
 
-#: ../src/gpk-enum.c:711
+#: ../src/gpk-enum.c:713
 msgid "The specified software source could not be disabled."
 msgstr "לא ניתן לבטל את מקור התכנה המבוקש."
 
-#: ../src/gpk-enum.c:714
+#: ../src/gpk-enum.c:716
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2290,7 +2326,7 @@ msgstr ""
 "לא ניתן לבצע את ההורדה אוטומטית, הורדה זו צריכה להתבצע ידנית.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:718
+#: ../src/gpk-enum.c:720
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2298,7 +2334,7 @@ msgstr ""
 "הגדרת אחת מהחבילות המסומנות לא הוגדרה כראוי.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:722
+#: ../src/gpk-enum.c:724
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2306,7 +2342,7 @@ msgstr ""
 "הגדרת אחת מהחבילות המסומנות לא נבנתה כראוי.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:726
+#: ../src/gpk-enum.c:728
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2314,7 +2350,7 @@ msgstr ""
 "הגדרת אחת מהחבילות המסומנות לא הותקנה כראוי.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:730
+#: ../src/gpk-enum.c:732
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2322,7 +2358,7 @@ msgstr ""
 "הגדרת אחת מהחבילות המסומנות לא הוסרה כראוי.\n"
 "מידע נוסף זמין בדו\"ח המפורט."
 
-#: ../src/gpk-enum.c:734
+#: ../src/gpk-enum.c:736
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2330,334 +2366,334 @@ msgstr ""
 "ישנה תכנית פעילה שיש לסגור בטרם עיבוד העדכון.\n"
 "מידע נוסף זמין בדוח המפורט."
 
-#: ../src/gpk-enum.c:738
+#: ../src/gpk-enum.c:740
 msgid "The package database was changed while the request was running."
 msgstr "מסד נתוני החבילות השתנה בזמן שהבקשה הופעלה."
 
-#: ../src/gpk-enum.c:741
+#: ../src/gpk-enum.c:743
 msgid "The virtual provide type is not supported by this system."
 msgstr "סוג האספקה הווירטואלית אינו נתמך על ידי מערכת זו."
 
-#: ../src/gpk-enum.c:744
+#: ../src/gpk-enum.c:746
 msgid "The install root is invalid. Please contact your administrator."
 msgstr "שורש ההתקנה אינו תקני. נא ליצור קשר עם מנהל המערכת שלך."
 
-#: ../src/gpk-enum.c:747
+#: ../src/gpk-enum.c:749
 msgid "The list of software sources could not be downloaded."
 msgstr "לא ניתן להוריד את רשימת מקורות התכנה."
 
-#: ../src/gpk-enum.c:750
+#: ../src/gpk-enum.c:752
 msgid ""
 "The transaction has been cancelled and will be retried when the system is "
 "idle."
 msgstr "ההעברה בוטלה והיא תחודש כאשר המערכת תהיה פנויה ממשימות."
 
-#: ../src/gpk-enum.c:768
+#: ../src/gpk-enum.c:770
 msgid "No restart is necessary."
 msgstr "אין צורך להפעיל מחדש."
 
-#: ../src/gpk-enum.c:771
+#: ../src/gpk-enum.c:773
 msgid "You will be required to restart this application."
 msgstr "תוצב דרישה להפעלת היישום מחדש."
 
-#: ../src/gpk-enum.c:774
+#: ../src/gpk-enum.c:776
 msgid "You will be required to log out and back in."
 msgstr "יהיה עליך להתנתק ולהיכנס בחזרה."
 
-#: ../src/gpk-enum.c:777
+#: ../src/gpk-enum.c:779
 msgid "A restart will be required."
 msgstr "יהיה צורך בהפעלה מחדש של המחשב."
 
-#: ../src/gpk-enum.c:780
+#: ../src/gpk-enum.c:782
 msgid "You will be required to log out and back in due to a security update."
 msgstr "יהיה עליך להתנתק ולהיכנס חזרה עקב עדכון האבטחה."
 
-#: ../src/gpk-enum.c:783
+#: ../src/gpk-enum.c:785
 msgid "A restart will be required due to a security update."
 msgstr "יהיה צורך בהפעלה מחדש של המחשב עקב עדכון האבטחה."
 
-#: ../src/gpk-enum.c:800
+#: ../src/gpk-enum.c:802
 msgid "No restart is required."
 msgstr "לא נדרש אתחול."
 
-#: ../src/gpk-enum.c:803
+#: ../src/gpk-enum.c:805
 msgid "A restart is required."
 msgstr "נדרשת הפעלה מחדש."
 
-#: ../src/gpk-enum.c:806
+#: ../src/gpk-enum.c:808
 msgid "You need to log out and log back in."
 msgstr "עליך להתנתק ולהיכנס בחזרה."
 
-#: ../src/gpk-enum.c:809
+#: ../src/gpk-enum.c:811
 msgid "You need to restart the application."
 msgstr "עליך לאתחל את היישום."
 
-#: ../src/gpk-enum.c:812
+#: ../src/gpk-enum.c:814
 msgid "You need to log out and log back in to remain secure."
 msgstr "עליך להתנתק ולהיכנס בחזרה כדי להישאר מאובטח."
 
-#: ../src/gpk-enum.c:815
+#: ../src/gpk-enum.c:817
 msgid "A restart is required to remain secure."
 msgstr "נדרשת הפעלה מחדש כדי להישאר מאובטח."
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:833
+#: ../src/gpk-enum.c:835
 msgid "Stable"
 msgstr "יציב"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:837
+#: ../src/gpk-enum.c:839
 msgid "Unstable"
 msgstr "לא יציב"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:841
+#: ../src/gpk-enum.c:843
 msgid "Testing"
 msgstr "בדיקות"
 
-#: ../src/gpk-enum.c:858
+#: ../src/gpk-enum.c:860
 msgid "A mirror is possibly broken"
 msgstr "יתכן ששרת המראה שבור"
 
-#: ../src/gpk-enum.c:861
+#: ../src/gpk-enum.c:863
 msgid "The connection was refused"
 msgstr "החיבור נדחה"
 
-#: ../src/gpk-enum.c:864
+#: ../src/gpk-enum.c:866
 msgid "The parameter was invalid"
 msgstr "המשתנה לא תקין"
 
-#: ../src/gpk-enum.c:867
+#: ../src/gpk-enum.c:869
 msgid "The priority was invalid"
 msgstr "העדיפות לא תקינה"
 
-#: ../src/gpk-enum.c:870
+#: ../src/gpk-enum.c:872
 msgid "Backend warning"
 msgstr "אזהרת מנוע"
 
-#: ../src/gpk-enum.c:873
+#: ../src/gpk-enum.c:875
 msgid "Daemon warning"
 msgstr "אזהרת תהליך"
 
-#: ../src/gpk-enum.c:876
+#: ../src/gpk-enum.c:878
 msgid "The package list cache is being rebuilt"
 msgstr "מטמון רשימת החבילות נבנה מחדש"
 
-#: ../src/gpk-enum.c:879
+#: ../src/gpk-enum.c:881
 msgid "An untrusted package was installed"
 msgstr "הותקנה חבילה לא בטוחה"
 
-#: ../src/gpk-enum.c:882
+#: ../src/gpk-enum.c:884
 msgid "A newer package exists"
 msgstr "קיימת חבילה עדכנית יותר"
 
-#: ../src/gpk-enum.c:885
+#: ../src/gpk-enum.c:887
 msgid "Could not find package"
 msgstr "לא ניתן למצוא חבילה"
 
-#: ../src/gpk-enum.c:888
+#: ../src/gpk-enum.c:890
 msgid "Configuration files were changed"
 msgstr "קובצי תצורה שונו"
 
-#: ../src/gpk-enum.c:891
+#: ../src/gpk-enum.c:893
 msgid "Package is already installed"
 msgstr "החבילה כבר מותקנת"
 
-#: ../src/gpk-enum.c:894
+#: ../src/gpk-enum.c:896
 msgid "Automatic cleanup is being ignored"
 msgstr "התעלמות מניקוי אוטומטי"
 
-#: ../src/gpk-enum.c:897
+#: ../src/gpk-enum.c:899
 msgid "Software source download failed"
 msgstr "הורדת מקור התכנה נכשלה"
 
-#: ../src/gpk-enum.c:900
+#: ../src/gpk-enum.c:902
 msgid "This software source is for developers only"
 msgstr "מקור התכנה הוא למפתחים בלבד"
 
-#: ../src/gpk-enum.c:903
+#: ../src/gpk-enum.c:905
 msgid "Other updates have been held back"
 msgstr "עדכונים אחרים נבלמו"
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:921
+#: ../src/gpk-enum.c:923
 msgid "Unknown state"
 msgstr "מצב לא ידוע"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:925
+#: ../src/gpk-enum.c:927
 msgid "Starting"
 msgstr "מתחיל"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:929
+#: ../src/gpk-enum.c:931
 msgid "Waiting in queue"
 msgstr "ממתין בתור"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:933
+#: ../src/gpk-enum.c:935
 msgid "Running"
 msgstr "פועל"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:937
+#: ../src/gpk-enum.c:939
 msgid "Querying"
 msgstr "עיון בנתונים"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:941
+#: ../src/gpk-enum.c:943
 msgid "Getting information"
 msgstr "מתקבלים נתונים"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:949 ../src/gpk-enum.c:1385
+#: ../src/gpk-enum.c:951 ../src/gpk-enum.c:1395
 msgid "Downloading packages"
 msgstr "חבילות בהורדה"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:957
+#: ../src/gpk-enum.c:959
 msgid "Refreshing software list"
 msgstr "רשימת התכנה מתעדכנת"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:961
+#: ../src/gpk-enum.c:963
 msgid "Installing updates"
 msgstr "עדכונים מותקנים"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:965
+#: ../src/gpk-enum.c:967
 msgid "Cleaning up packages"
 msgstr "החבילות מפונות"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:969
+#: ../src/gpk-enum.c:971
 msgid "Obsoleting packages"
 msgstr "החבילות מתיישנות"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:973
+#: ../src/gpk-enum.c:975
 msgid "Resolving dependencies"
 msgstr "קשרי התלות נפתרים"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:977
+#: ../src/gpk-enum.c:979
 msgid "Checking signatures"
 msgstr "החתימות נבדקות"
 
 #. TRANSLATORS: transaction state, when we return to a previous system state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:981 ../src/gpk-enum.c:1345
+#: ../src/gpk-enum.c:983 ../src/gpk-enum.c:1355
 msgid "Rolling back"
 msgstr "מתבצעת החזרה אחורה"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:985
+#: ../src/gpk-enum.c:987
 msgid "Testing changes"
 msgstr "השינויים נבדקים"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:989
+#: ../src/gpk-enum.c:991
 msgid "Committing changes"
 msgstr "השינויים מתבצעים"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:993
+#: ../src/gpk-enum.c:995
 msgid "Requesting data"
 msgstr "מתבצעת בקשת הנתונים"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:997
+#: ../src/gpk-enum.c:999
 msgid "Finished"
 msgstr "הסתיים"
 
 #. TRANSLATORS: transaction state, in the process of cancelling
-#: ../src/gpk-enum.c:1001
+#: ../src/gpk-enum.c:1003
 msgid "Cancelling"
 msgstr "בהליכי ביטול"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1005
+#: ../src/gpk-enum.c:1007
 msgid "Downloading repository information"
 msgstr "נתוני המאגר מתקבלים"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1009
+#: ../src/gpk-enum.c:1011
 msgid "Downloading list of packages"
 msgstr "רשימת החבילות מתקבלת"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1013
+#: ../src/gpk-enum.c:1015
 msgid "Downloading file lists"
 msgstr "רשימות הקבצים מתקבלות"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1017
+#: ../src/gpk-enum.c:1019
 msgid "Downloading lists of changes"
 msgstr "רשימת השינויים מתקבלת"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1021
+#: ../src/gpk-enum.c:1023
 msgid "Downloading groups"
 msgstr "הקבוצות מתקבלות"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1025
+#: ../src/gpk-enum.c:1027
 msgid "Downloading update information"
 msgstr "נתוני העדכון מתקבלים"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1029
+#: ../src/gpk-enum.c:1031
 msgid "Repackaging files"
 msgstr "הקבצים נארזים מחדש"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1033
+#: ../src/gpk-enum.c:1035
 msgid "Loading cache"
 msgstr "המטמון נטען"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1037
+#: ../src/gpk-enum.c:1039
 msgid "Scanning installed applications"
 msgstr "היישומים המותקנים נסרקים"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1041
+#: ../src/gpk-enum.c:1043
 msgid "Generating package lists"
 msgstr "רשימות החבילות נוצרות"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1045
+#: ../src/gpk-enum.c:1047
 msgid "Waiting for package manager lock"
 msgstr "אישור נעילת מנהל החבילות בהמתנה"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1049
+#: ../src/gpk-enum.c:1051
 msgid "Waiting for authentication"
 msgstr "האימות בהמתנה"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1053
+#: ../src/gpk-enum.c:1055
 msgid "Updating the list of running applications"
 msgstr "רשימת היישומים הפעילים מתעדכנת"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1057
+#: ../src/gpk-enum.c:1059
 msgid "Checking for applications currently in use"
 msgstr "היישום הנמצאים כעת בשימוש נבדקים"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1061
+#: ../src/gpk-enum.c:1063
 msgid "Checking for libraries currently in use"
 msgstr "הספריות הנמצאות כעת בשימוש נבדקות"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1065
+#: ../src/gpk-enum.c:1067
 msgid "Copying files"
 msgstr "הקבצים מועתקים"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1083
+#: ../src/gpk-enum.c:1085
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2665,7 +2701,7 @@ msgstr[0] "עדכון שטחי אחד"
 msgstr[1] "%i עדכונים שטחיים"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1087
+#: ../src/gpk-enum.c:1089
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2673,7 +2709,7 @@ msgstr[0] "עדכון אחד"
 msgstr[1] "%i עדכונים"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1091
+#: ../src/gpk-enum.c:1093
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2681,7 +2717,7 @@ msgstr[0] "עדכון חשוב אחד"
 msgstr[1] "%i עדכונים חשובים"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1095
+#: ../src/gpk-enum.c:1097
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -2689,7 +2725,7 @@ msgstr[0] "עדכון אבטחה אחד"
 msgstr[1] "%i עדכוני אבטחה"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1099
+#: ../src/gpk-enum.c:1101
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2697,7 +2733,7 @@ msgstr[0] "תיקון באג אחד"
 msgstr[1] "%i תיקוני באגים"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1103
+#: ../src/gpk-enum.c:1105
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -2705,7 +2741,7 @@ msgstr[0] "עדכון אחד לשיפור"
 msgstr[1] "%i עדכונים לשיפורים"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1107
+#: ../src/gpk-enum.c:1109
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2713,635 +2749,645 @@ msgstr[0] "עדכון חסום אחד"
 msgstr[1] "%i עדכונים חסומים"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1125
+#: ../src/gpk-enum.c:1127
 msgid "Trivial update"
 msgstr "עדכון שטחי"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1129
+#: ../src/gpk-enum.c:1131
 msgid "Normal update"
 msgstr "עדכון רגיל"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1133
+#: ../src/gpk-enum.c:1135
 msgid "Important update"
 msgstr "עדכון חשוב"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1137
+#: ../src/gpk-enum.c:1139
 msgid "Security update"
 msgstr "עדכון אבטחה"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1141
+#: ../src/gpk-enum.c:1143
 msgid "Bug fix update"
 msgstr "תיקון באג"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1145
+#: ../src/gpk-enum.c:1147
 msgid "Enhancement update"
 msgstr "שיפור"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1149
+#: ../src/gpk-enum.c:1151
 msgid "Blocked update"
 msgstr "עדכון חסום"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1159
+#: ../src/gpk-enum.c:1161
 msgid "Available"
 msgstr "זמין"
 
+#. TRANSLATORS: The type of package
+#: ../src/gpk-enum.c:1165
+msgid "Trusted"
+msgstr "מהימן"
+
+#. TRANSLATORS: The type of package
+#: ../src/gpk-enum.c:1169
+msgid "Untrusted"
+msgstr "לא מהימן"
+
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1177 ../src/gpk-service-pack.c:441
+#: ../src/gpk-enum.c:1187 ../src/gpk-service-pack.c:441
 msgid "Downloading"
 msgstr "בהורדה"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1181
+#: ../src/gpk-enum.c:1191
 msgid "Updating"
 msgstr "בעדכון"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1185 ../src/gpk-enum.c:1321
+#: ../src/gpk-enum.c:1195 ../src/gpk-enum.c:1331
 msgid "Installing"
 msgstr "בהתקנה"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1189 ../src/gpk-enum.c:1317
+#: ../src/gpk-enum.c:1199 ../src/gpk-enum.c:1327
 msgid "Removing"
 msgstr "בהסרה"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1193
+#: ../src/gpk-enum.c:1203
 msgid "Cleaning up"
 msgstr "בניקוי"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1197
+#: ../src/gpk-enum.c:1207
 msgid "Obsoleting"
 msgstr "בהתיישנות"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1201
+#: ../src/gpk-enum.c:1211
 msgid "Reinstalling"
 msgstr "בהתקנה מחדש"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1205
+#: ../src/gpk-enum.c:1215
 msgid "Preparing"
 msgstr "בהכנה"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1209
+#: ../src/gpk-enum.c:1219
 msgid "Decompressing"
 msgstr "מתבצעת פריסה"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1237
 msgid "Downloaded"
 msgstr "ירד"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1231
+#: ../src/gpk-enum.c:1241
 msgid "Updated"
 msgstr "עודכן"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1249
 msgid "Removed"
 msgstr "הוסר"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1243
+#: ../src/gpk-enum.c:1253
 msgid "Cleaned up"
 msgstr "נוקה"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:1257
 msgid "Obsoleted"
 msgstr "לא עדכני"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1251
+#: ../src/gpk-enum.c:1261
 msgid "Reinstalled"
 msgstr "מותקן מחדש"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1255
+#: ../src/gpk-enum.c:1265
 msgid "Prepared"
 msgstr "מוכן"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1259
+#: ../src/gpk-enum.c:1269
 msgid "Decompressed"
 msgstr "פרוס"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1277 ../src/gpk-enum.c:1437
+#: ../src/gpk-enum.c:1287 ../src/gpk-enum.c:1447
 msgid "Unknown role type"
 msgstr "סוג התפקיד אינו ידוע"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1281
+#: ../src/gpk-enum.c:1291
 msgid "Getting dependencies"
 msgstr "תלויות נקראות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1285
+#: ../src/gpk-enum.c:1295
 msgid "Getting update detail"
 msgstr "פרטי העדכון מתקבלים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1289
+#: ../src/gpk-enum.c:1299
 msgid "Getting details"
 msgstr "הפרטים מתקבלים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1293
+#: ../src/gpk-enum.c:1303
 msgid "Getting requires"
 msgstr "הדרישות מתקבלות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1297
+#: ../src/gpk-enum.c:1307
 msgid "Getting updates"
 msgstr "העדכונים מתקבלים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1301
+#: ../src/gpk-enum.c:1311
 msgid "Searching details"
 msgstr "הפרטים מאותרים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1309
+#: ../src/gpk-enum.c:1319
 msgid "Searching groups"
 msgstr "הקבוצות מאותרות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1313
+#: ../src/gpk-enum.c:1323
 msgid "Searching for package name"
 msgstr "שם החבילה מאותר"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1325
+#: ../src/gpk-enum.c:1335
 msgid "Installing file"
 msgstr "קובץ מותקן"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1329
+#: ../src/gpk-enum.c:1339
 msgid "Refreshing package cache"
 msgstr "מטמון החבילות מתעדכן"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1333
+#: ../src/gpk-enum.c:1343
 msgid "Updating packages"
 msgstr "החבילות מתעדכנות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1337
+#: ../src/gpk-enum.c:1347
 msgid "Updating system"
 msgstr "המערכת מתעדכנת"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1341
+#: ../src/gpk-enum.c:1351
 msgid "Canceling"
 msgstr "בהליכי ביטול"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1349
+#: ../src/gpk-enum.c:1359
 msgid "Getting list of repositories"
 msgstr "רשימת המאגרים מתקבלת"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1353
+#: ../src/gpk-enum.c:1363
 msgid "Enabling repository"
 msgstr "המאגר יופעל"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1357
+#: ../src/gpk-enum.c:1367
 msgid "Setting repository data"
 msgstr "נתוני המאגר מוגדרים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1361
+#: ../src/gpk-enum.c:1371
 msgid "Resolving"
 msgstr "נפתר"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1365
+#: ../src/gpk-enum.c:1375
 msgid "Getting file list"
 msgstr "רשימת הקבצים מתקבלת"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1369
+#: ../src/gpk-enum.c:1379
 msgid "Getting what provides"
 msgstr "קבלת מה מספק"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1373
+#: ../src/gpk-enum.c:1383
 msgid "Installing signature"
 msgstr "החתימה מותקנת"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1377
+#: ../src/gpk-enum.c:1387
 msgid "Getting package lists"
 msgstr "רשימות החבילות מתקבלות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1381
+#: ../src/gpk-enum.c:1391
 msgid "Accepting EULA"
 msgstr "הרישיון מתקבל"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1389
+#: ../src/gpk-enum.c:1399
 msgid "Getting distribution upgrade information"
 msgstr "נתוני שדרוג ההפצה מתקבלים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:1403
 msgid "Getting categories"
 msgstr "הקטגוריות מתקבלות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1397
+#: ../src/gpk-enum.c:1407
 msgid "Getting old transactions"
 msgstr "ההעברות הישנות מתקבלות"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1401
+#: ../src/gpk-enum.c:1411
 msgid "Simulating the install of files"
 msgstr "מתבצעת הדמיית התקנת הקבצים"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1405
+#: ../src/gpk-enum.c:1415
 msgid "Simulating the install"
 msgstr "מתבצעת הדמיית ההתקנה"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1409
+#: ../src/gpk-enum.c:1419
 msgid "Simulating the remove"
 msgstr "מבצעת הדמיית ההסרה"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1413
+#: ../src/gpk-enum.c:1423
 msgid "Simulating the update"
 msgstr "מתבצעת הדמיית העדכון"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1417
+#: ../src/gpk-enum.c:1427
 msgid "Upgrading system"
 msgstr "המערכת בשדרוג"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1441
+#: ../src/gpk-enum.c:1451
 msgid "Got dependencies"
 msgstr "התקבלו תלויות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1445
+#: ../src/gpk-enum.c:1455
 msgid "Got update detail"
 msgstr "התקבלו פרטי העדכון"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1449
+#: ../src/gpk-enum.c:1459
 msgid "Got details"
 msgstr "התקבלו פרטים"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1453
+#: ../src/gpk-enum.c:1463
 msgid "Got requires"
 msgstr "התקבלו דרישות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1457
+#: ../src/gpk-enum.c:1467
 msgid "Got updates"
 msgstr "התקבלו עדכונים"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1461
+#: ../src/gpk-enum.c:1471
 msgid "Searched for package details"
 msgstr "בוצע חיפוש אחר פרטי החבילה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1465
+#: ../src/gpk-enum.c:1475
 msgid "Searched for file"
 msgstr "חיפוש קובץ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1469
+#: ../src/gpk-enum.c:1479
 msgid "Searched groups"
 msgstr "חיפוש קבוצות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1473
+#: ../src/gpk-enum.c:1483
 msgid "Searched for package name"
 msgstr "חיפוש שם חבילה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1477
+#: ../src/gpk-enum.c:1487
 msgid "Removed packages"
 msgstr "חבילות הוסרו"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1481
+#: ../src/gpk-enum.c:1491
 msgid "Installed packages"
 msgstr "הותקנו חבילות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1485
+#: ../src/gpk-enum.c:1495
 msgid "Installed local files"
 msgstr "הותקנו קבצים מקומיים"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1489
+#: ../src/gpk-enum.c:1499
 msgid "Refreshed package cache"
 msgstr "מטמון חבילות עודכן"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1493
+#: ../src/gpk-enum.c:1503
 msgid "Updated packages"
 msgstr "חבילות עודכנו"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1497
+#: ../src/gpk-enum.c:1507
 msgid "Updated system"
 msgstr "המערכת עודכנה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1501
+#: ../src/gpk-enum.c:1511
 msgid "Canceled"
 msgstr "בוטל"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1505
+#: ../src/gpk-enum.c:1515
 msgid "Rolled back"
 msgstr "הוחזר אחורה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1509
+#: ../src/gpk-enum.c:1519
 msgid "Got list of repositories"
 msgstr "התקבלה רשימת מאגרים"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1513
+#: ../src/gpk-enum.c:1523
 msgid "Enabled repository"
 msgstr "מאגר פעיל"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1517
+#: ../src/gpk-enum.c:1527
 msgid "Set repository data"
 msgstr "קביעת נתוני מאגר"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1521
+#: ../src/gpk-enum.c:1531
 msgid "Resolved"
 msgstr "נפתר"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1525
+#: ../src/gpk-enum.c:1535
 msgid "Got file list"
 msgstr "התקבלה רשימת קבצים"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1529
+#: ../src/gpk-enum.c:1539
 msgid "Got what provides"
 msgstr "התקבל מה מסופק"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1533
+#: ../src/gpk-enum.c:1543
 msgid "Installed signature"
 msgstr "חתימה מותקנת"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1537
+#: ../src/gpk-enum.c:1547
 msgid "Got package lists"
 msgstr "התקבלו רשימות חבילות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1541
+#: ../src/gpk-enum.c:1551
 msgid "Accepted EULA"
 msgstr "הרישיון אושר"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1545
+#: ../src/gpk-enum.c:1555
 msgid "Downloaded packages"
 msgstr "חבילות שירדו"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1549
+#: ../src/gpk-enum.c:1559
 msgid "Got distribution upgrades"
 msgstr "התקבלו שדרוגי הפצה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1553
+#: ../src/gpk-enum.c:1563
 msgid "Got categories"
 msgstr "התקבלו קטגוריות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1557
+#: ../src/gpk-enum.c:1567
 msgid "Got old transactions"
 msgstr "התקבלו פעולות ישנות"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1561
+#: ../src/gpk-enum.c:1571
 msgid "Simulated the install of files"
 msgstr "התקנת הקבצים עברה הדמייה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1565
+#: ../src/gpk-enum.c:1575
 msgid "Simulated the install"
 msgstr "ההתקנה עברה הדמייה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1569
+#: ../src/gpk-enum.c:1579
 msgid "Simulated the remove"
 msgstr "ההסרה עברה הדמייה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1573
+#: ../src/gpk-enum.c:1583
 msgid "Simulated the update"
 msgstr "העדכון עבר הדמייה"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1577
+#: ../src/gpk-enum.c:1587
 msgid "Upgraded system"
 msgstr "מערכת משודרגת"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1595
+#: ../src/gpk-enum.c:1605
 msgid "Accessibility"
 msgstr "נגישות"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1599
+#: ../src/gpk-enum.c:1609
 msgid "Accessories"
 msgstr "עזרים"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1603
+#: ../src/gpk-enum.c:1613
 msgid "Education"
 msgstr "לימוד"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1607
+#: ../src/gpk-enum.c:1617
 msgid "Games"
 msgstr "משחקים"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1611
+#: ../src/gpk-enum.c:1621
 msgid "Graphics"
 msgstr "גרפיקה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1615
+#: ../src/gpk-enum.c:1625
 msgid "Internet"
 msgstr "אינטרנט"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1619
+#: ../src/gpk-enum.c:1629
 msgid "Office"
 msgstr "משרד"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1623
+#: ../src/gpk-enum.c:1633 ../src/gpk-task.c:431
 msgid "Other"
 msgstr "אחר"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1627
+#: ../src/gpk-enum.c:1637
 msgid "Programming"
 msgstr "תכנות"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1631
+#: ../src/gpk-enum.c:1641
 msgid "Multimedia"
 msgstr "מולטימדיה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1635
+#: ../src/gpk-enum.c:1645
 msgid "System"
 msgstr "מערכת"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1639
+#: ../src/gpk-enum.c:1649
 msgid "GNOME desktop"
 msgstr "שולחן העבודה GNOME"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1643
+#: ../src/gpk-enum.c:1653
 msgid "KDE desktop"
 msgstr "שולחן העבודה KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1647
+#: ../src/gpk-enum.c:1657
 msgid "XFCE desktop"
 msgstr "שולחן העבודה XFCE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1651
+#: ../src/gpk-enum.c:1661
 msgid "Other desktops"
 msgstr "שולחנות עבודה אחרים"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1655
+#: ../src/gpk-enum.c:1665
 msgid "Publishing"
 msgstr "הוצאה לאור"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1659
+#: ../src/gpk-enum.c:1669
 msgid "Servers"
 msgstr "שרתים"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1663
+#: ../src/gpk-enum.c:1673
 msgid "Fonts"
 msgstr "גופנים"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1667
+#: ../src/gpk-enum.c:1677
 msgid "Admin tools"
 msgstr "כלי ניהול"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1671
+#: ../src/gpk-enum.c:1681
 msgid "Legacy"
 msgstr "מיושן"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1675
+#: ../src/gpk-enum.c:1685
 msgid "Localization"
 msgstr "לוקליזציה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1679
+#: ../src/gpk-enum.c:1689
 msgid "Virtualization"
 msgstr "הדמייה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1683
+#: ../src/gpk-enum.c:1693
 msgid "Security"
 msgstr "אבטחה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1687
+#: ../src/gpk-enum.c:1697
 msgid "Power management"
 msgstr "ניהול חשמל"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1691
+#: ../src/gpk-enum.c:1701
 msgid "Communication"
 msgstr "תקשורת"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1695
+#: ../src/gpk-enum.c:1705
 msgid "Network"
 msgstr "רשת"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1699
+#: ../src/gpk-enum.c:1709
 msgid "Maps"
 msgstr "מפות"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1703
+#: ../src/gpk-enum.c:1713
 msgid "Software sources"
 msgstr "מקורות תכנה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1707
+#: ../src/gpk-enum.c:1717
 msgid "Science"
 msgstr "מדע"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1711
+#: ../src/gpk-enum.c:1721
 msgid "Documentation"
 msgstr "תיעוד"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1715
+#: ../src/gpk-enum.c:1725
 msgid "Electronics"
 msgstr "אלקטרוניקה"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1719
+#: ../src/gpk-enum.c:1729
 msgid "Package collections"
 msgstr "אוספי חבילות"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1723
+#: ../src/gpk-enum.c:1733
 msgid "Vendor"
 msgstr "ספק"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1727
+#: ../src/gpk-enum.c:1737
 msgid "Newest packages"
 msgstr "חבילות עדכניות"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1731
+#: ../src/gpk-enum.c:1741
 msgid "Unknown group"
 msgstr "קבוצה לא ידועה"
 
@@ -3398,47 +3444,59 @@ msgid ""
 msgstr "נדרשת מדיה נוספת. נא להכניס את ה־%s המתויג כ־'%s' וללחוץ על המשך."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:361 ../src/gpk-task.c:532
+#: ../src/gpk-task.c:361 ../src/gpk-task.c:558
 msgid "Continue"
 msgstr "המשך"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:397
+#: ../src/gpk-task.c:404
 msgid "The following software also needs to be installed"
 msgstr "יש צורך להתקין גם את התכנה הבאה"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:402
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be removed"
 msgstr "יש צורך להסיר גם את התכנה הבאה"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:415
 msgid "The following software also needs to be updated"
 msgstr "יש צורך לעדכן גם את התכנה הבאה"
 
+#: ../src/gpk-task.c:416
+msgid "Update"
+msgstr "עדכון"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:420
 msgid "The following software also needs to be re-installed"
 msgstr "יש צורך להתקין מחדש גם את התכנה הבאה"
 
+#: ../src/gpk-task.c:421
+msgid "Reinstall"
+msgstr "התקנה מחדש"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:425
 msgid "The following software also needs to be downgraded"
 msgstr "יש צורך להוריד גם את גרסתה של התכנה הבאה"
 
+#: ../src/gpk-task.c:426
+msgid "Downgrade"
+msgstr "החזרת גרסה"
+
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:430
 msgid "The following software also needs to be processed"
 msgstr "יש צורך לעבד גם את התכנה הבאה"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:476
+#: ../src/gpk-task.c:491
 msgid "Additional confirmation required"
 msgstr "נדרש אישור נוסף"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:482
+#: ../src/gpk-task.c:497
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3446,7 +3504,7 @@ msgstr[0] "כדי להתקין חבילה זו נדרש שינוי לתכנה נ
 msgstr[1] "כדי להתקין חבילות אלו נדרש שינוי לתכנה נוספת."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:502
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3454,7 +3512,7 @@ msgstr[0] "כדי להסיר חבילה זו נדרש שינוי לתכנה נו
 msgstr[1] "כדי להסיר חבילות אלו נדרש שינוי לתכנה נוספת."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:507
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3462,7 +3520,7 @@ msgstr[0] "כדי לעדכן חבילה זו נדרש שינוי לתכנה נו
 msgstr[1] "כדי לעדכן חבילות אלו נדרש שינוי לתכנה נוספת."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:512
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3470,18 +3528,18 @@ msgstr[0] "כדי להתקין קובץ זה נדרש שינוי לתכנה נו
 msgstr[1] "כדי להתקין קבצים אלו נדרש שינוי לתכנה נוספת."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:517
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr "כדי לעבד העברה זו נדרש שינוי לתכנה נוספת."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:582
+#: ../src/gpk-task.c:608
 msgid "_Force install"
 msgstr "_אילוץ ההתקנה"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:586
+#: ../src/gpk-task.c:612
 msgid "Force installing package"
 msgstr "אילוץ התקנת חבילה"
 
@@ -4792,9 +4850,6 @@ msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
 #~ msgid "Signature required"
 #~ msgstr "נדרשת חתימת תוכנה"
 
-#~ msgid "Install untrusted"
-#~ msgstr "התקנה לא בטוחה"
-
 #~ msgid "Failed to reset client to perform action"
 #~ msgstr "Failed to reset client to perform action"
 
@@ -5241,9 +5296,6 @@ msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
 #~ msgid "A program %s"
 #~ msgstr "התוכנה %s"
 
-#~ msgid "Update"
-#~ msgstr "עדכון"
-
 #~ msgid "File installer"
 #~ msgstr "מתקין קבצים"
 
@@ -5438,9 +5490,6 @@ msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
 
 #~ msgid "Codec installer"
 #~ msgstr "מתקין מקודדים"
-
-#~ msgid "Searching for codecs"
-#~ msgstr "מחפש מקודדים"
 
 #~ msgid "0 bytes"
 #~ msgstr "0 בתים"
