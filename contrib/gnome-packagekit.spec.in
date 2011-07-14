@@ -73,11 +73,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # nuke the ChangeLog file, it's huge
 rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
 
-desktop-file-install --delete-original                   \
-  --dir=$RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/                    \
-  $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/gpk-update-icon.desktop
-
-for i in gpk-application gpk-update-viewer gpk-install-file gpk-log gpk-prefs ; do
+for i in gpk-application gpk-update-viewer gpk-install-local-file gpk-log gpk-prefs ; do
   desktop-file-install --delete-original                                \
     --dir=$RPM_BUILD_ROOT%{_datadir}/applications/                      \
     $RPM_BUILD_ROOT%{_datadir}/applications/$i.desktop
@@ -85,25 +81,22 @@ done
 
 %find_lang %name --with-gnome
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
-fi
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %postun
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    gtk-update-icon-cache -q %{_datadir}/icons/hicolor &> /dev/null || :
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+    glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
+
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
@@ -124,12 +117,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gnome/help/gnome-packagekit
 %{python_sitelib}/packagekit/*py*
 %{_datadir}/omf/gnome-packagekit
-%{_sysconfdir}/xdg/autostart/gpk-update-icon.desktop
 %{_datadir}/applications/gpk-*.desktop
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 %{_datadir}/gnome-packagekit/gpk-service-pack.ui
+%{_libdir}/gnome-settings-daemon-3.0/gtk-modules/gpk-pk-gtk-module.desktop
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#
