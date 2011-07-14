@@ -113,7 +113,7 @@ const gchar	*gpk_group_enum_to_icon_name		(PkGroupEnum	 group);
 gchar		*gpk_update_enum_to_localised_text	(PkInfoEnum	 info,
 							 guint		 number)
 							 G_GNUC_CONST;
-const gchar	*gpk_info_status_enum_to_text		(GpkInfoStatusEnum info);
+const gchar	*gpk_info_status_enum_to_string		(GpkInfoStatusEnum info);
 const gchar	*gpk_info_status_enum_to_icon_name	(GpkInfoStatusEnum info);
 
 G_END_DECLS

@@ -438,7 +438,7 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		g_warning ("failed to update packages: %s, %s",
-			   pk_error_enum_to_text (pk_error_get_code (error_code)),
+			   pk_error_enum_to_string (pk_error_get_code (error_code)),
 			   pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
@@ -937,7 +937,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		GdkDisplay *display;
 		GdkCursor *cursor;
 
-		g_debug ("status %s", pk_status_enum_to_text (status));
+		g_debug ("status %s", pk_status_enum_to_string (status));
 
 		/* use correct status pane */
 		widget = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_status"));
@@ -1401,7 +1401,7 @@ gpk_update_viewer_reconsider_info (void)
 		      NULL);
 
 	/* not when offline */
-	g_debug ("network status is %s", pk_network_enum_to_text (state));
+	g_debug ("network status is %s", pk_network_enum_to_string (state));
 	if (state == PK_NETWORK_ENUM_OFFLINE) {
 		gpk_update_viewer_modal_error_with_timeout (
 				/* TRANSLATORS: title: nothing to do */
@@ -1614,7 +1614,7 @@ gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, 
 			ret = FALSE;
 			break;
 		}
-		text = gpk_info_status_enum_to_text (info);
+		text = gpk_info_status_enum_to_string (info);
 		break;
 	default:
 		/* ignore */
@@ -2092,7 +2092,7 @@ gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get details: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -2190,7 +2190,7 @@ gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, gpo
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get update details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get update details: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -2578,7 +2578,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get updates: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get updates: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
@@ -3013,7 +3013,7 @@ gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, g
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get list of distro upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get list of distro upgrades: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		window = GTK_WINDOW(gtk_builder_get_object (builder, "dialog_updates"));
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),

@@ -145,7 +145,7 @@ gpk_distro_upgrade_upgrade_system_cb (PkClient *client, GAsyncResult *res, GpkDi
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to upgrade: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to upgrade: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_error_dialog_modal (GTK_WINDOW (priv->assistant), gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gtk_widget_destroy (priv->assistant);
@@ -299,7 +299,7 @@ gpk_distro_upgrade_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get upgrades: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		gpk_error_dialog_modal (GTK_WINDOW (priv->assistant), gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;

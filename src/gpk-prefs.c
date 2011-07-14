@@ -428,7 +428,7 @@ gpk_prefs_progress_cb (PkProgress *progress, PkProgressType type, GpkPrefsPrivat
 	g_object_get (progress,
 		      "status", &priv->status,
 		      NULL);
-	g_debug ("now %s", pk_status_enum_to_text (priv->status));
+	g_debug ("now %s", pk_status_enum_to_string (priv->status));
 
 	if (priv->status == PK_STATUS_ENUM_FINISHED) {
 		/* we've not yet shown, so don't bother */
@@ -503,7 +503,7 @@ gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *p
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to set repo: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to set repo: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
@@ -649,7 +649,7 @@ gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get repo list: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
 		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
 		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),

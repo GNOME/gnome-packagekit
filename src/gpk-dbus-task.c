@@ -356,10 +356,10 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 	if (pk_error_get_code (error_code) == PK_ERROR_ENUM_NO_LICENSE_AGREEMENT ||
 	    pk_error_get_code (error_code) == PK_ERROR_ENUM_PROCESS_KILL ||
 	    pk_error_get_code (error_code) == PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-		g_warning ("ignoring %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
+		g_warning ("ignoring %s", pk_error_enum_to_string (pk_error_get_code (error_code)));
 	}
 
-	g_debug ("code was %s", pk_error_enum_to_text (pk_error_get_code (error_code)));
+	g_debug ("code was %s", pk_error_enum_to_string (pk_error_get_code (error_code)));
 
 	/* use a modal dialog if showing progress, else use libnotify */
 	title = gpk_error_enum_to_localised_text (pk_error_get_code (error_code));
@@ -480,7 +480,7 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to install package: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install package: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "%s", pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
@@ -622,7 +622,7 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		g_warning ("failed to install file: %s, %s",
-			     pk_error_enum_to_text (pk_error_get_code (error_code)),
+			     pk_error_enum_to_string (pk_error_get_code (error_code)),
 			     pk_error_get_details (error_code));
 		gpk_dbus_task_handle_error (dtask, error_code);
 		error_dbus = g_error_new (GPK_DBUS_ERROR,
@@ -836,7 +836,7 @@ gpk_dbus_task_is_installed_resolve_cb (PkClient *client, GAsyncResult *res, GpkD
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "failed to resolve: %s", pk_error_get_details (error_code));
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
@@ -909,7 +909,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_pkerror (error_code), "failed to search file: %s", pk_error_get_details (error_code));
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);

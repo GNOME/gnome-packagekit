@@ -1067,7 +1067,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Copying files");
 		break;
 	default:
-		g_warning ("status unrecognised: %s", pk_status_enum_to_text (status));
+		g_warning ("status unrecognised: %s", pk_status_enum_to_string (status));
 	}
 	return text;
 }
@@ -1109,7 +1109,7 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i blocked update", "%i blocked updates", number), number);
 		break;
 	default:
-		g_warning ("update info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("update info unrecognised: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1169,7 +1169,7 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Untrusted");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1219,7 +1219,7 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		text = _("Decompressing");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1269,7 +1269,7 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 		text = _("Decompressed");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_text (info));
+		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1427,7 +1427,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Upgrading system");
 		break;
 	default:
-		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
 	}
 	return text;
 }
@@ -1587,7 +1587,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Upgraded system");
 		break;
 	default:
-		g_warning ("role unrecognised: %s", pk_role_enum_to_text (role));
+		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
 	}
 	return text;
 }
@@ -1819,10 +1819,10 @@ gpk_message_enum_to_icon_name (PkMessageEnum message)
 }
 
 /**
- * gpk_info_status_enum_to_text:
+ * gpk_info_status_enum_to_string:
  **/
 const gchar *
-gpk_info_status_enum_to_text (GpkInfoStatusEnum info)
+gpk_info_status_enum_to_string (GpkInfoStatusEnum info)
 {
 	if ((PkInfoEnum)info >= PK_INFO_ENUM_LAST)
 		return gpk_info_enum_to_localised_past (info - PK_INFO_ENUM_LAST);
@@ -1895,7 +1895,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_ROLE_ENUM_UNKNOWN+1; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_role_enum_to_string (i));
 			break;
 		}
 	}
@@ -1906,7 +1906,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_ROLE_ENUM_UNKNOWN+1; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_animation (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_role_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_role_enum_to_string (i));
 			break;
 		}
 	}
@@ -1917,7 +1917,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_INFO_ENUM_UNKNOWN+1; i<PK_INFO_ENUM_LAST; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_info_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_info_enum_to_string (i));
 			break;
 		}
 	}
@@ -1939,7 +1939,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_STATUS_ENUM_UNKNOWN+1; i<PK_STATUS_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_status_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_status_enum_to_string (i));
 			break;
 		}
 	}
@@ -1950,7 +1950,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_string (i));
 			break;
 		}
 	}
@@ -1961,7 +1961,7 @@ gpk_enum_test (gpointer data)
 	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
-			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
+			egg_test_failed (test, "failed to get %s", pk_error_enum_to_string(i));
 			break;
 		}
 	}
@@ -1972,7 +1972,7 @@ gpk_enum_test (gpointer data)
 	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
-			egg_test_failed (test, "failed to get %s", pk_error_enum_to_text(i));
+			egg_test_failed (test, "failed to get %s", pk_error_enum_to_string(i));
 			break;
 		}
 	}
@@ -1994,7 +1994,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_MESSAGE_ENUM_UNKNOWN+1; i<PK_MESSAGE_ENUM_LAST; i++) {
 		string = gpk_message_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_message_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_message_enum_to_string (i));
 			break;
 		}
 	}
@@ -2038,7 +2038,7 @@ gpk_enum_test (gpointer data)
 	for (i=PK_GROUP_ENUM_UNKNOWN+1; i<PK_GROUP_ENUM_LAST; i++) {
 		string = gpk_group_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_group_enum_to_text (i));
+			egg_test_failed (test, "failed to get %s", pk_group_enum_to_string (i));
 			break;
 		}
 	}

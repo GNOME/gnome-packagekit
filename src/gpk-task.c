@@ -808,7 +808,7 @@ gpk_task_test_progress_cb (PkProgress *progress, PkProgressType type, EggTest *t
 		g_object_get (progress,
 			      "status", &status,
 			      NULL);
-		g_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_string (status));
 	}
 }
 

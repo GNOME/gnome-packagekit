@@ -629,7 +629,7 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 			continue;
 		item = pk_package_new ();
 		g_object_set (item,
-			      "info", pk_info_enum_from_text (split[0]),
+			      "info", pk_info_enum_from_string (split[0]),
 			      "package-id", split[1],
 			      "summary", split[2],
 			      NULL);

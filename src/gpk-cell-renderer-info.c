@@ -111,7 +111,7 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 		text = g_value_get_string (value);
 		split = g_strsplit (text, ",", -1);
 		for (i=0; split[i] != NULL; i++) {
-			info = pk_info_enum_from_text (split[i]);
+			info = pk_info_enum_from_string (split[i]);
 			g_ptr_array_add (cru->priv->ignore, GUINT_TO_POINTER (info));
 		}
 		g_strfreev (split);

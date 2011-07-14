@@ -514,7 +514,7 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, gpointer user
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get files: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get files: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -627,7 +627,7 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, gpointer
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_STATUS) {
-		g_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_string (status));
 
 		if (status == PK_STATUS_ENUM_FINISHED) {
 			/* re-enable UI */
@@ -863,7 +863,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, gpointer u
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get requires: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get requires: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -990,7 +990,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get depends: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get depends: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -1510,7 +1510,7 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, gpointer user_da
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to search: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to search: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -1956,7 +1956,7 @@ gpk_application_install_packages_cb (PkTask *_task, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to install packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to install packages: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2008,7 +2008,7 @@ gpk_application_remove_packages_cb (PkTask *_task, GAsyncResult *res, gpointer u
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to remove packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to remove packages: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2229,7 +2229,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get details: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get details: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -2463,7 +2463,7 @@ gpk_application_group_add_data (PkGroupEnum group)
 	gtk_tree_store_set (groups_store, &iter,
 			    GROUPS_COLUMN_NAME, text,
 			    GROUPS_COLUMN_SUMMARY, NULL,
-			    GROUPS_COLUMN_ID, pk_group_enum_to_text (group),
+			    GROUPS_COLUMN_ID, pk_group_enum_to_string (group),
 			    GROUPS_COLUMN_ICON, icon_name,
 			    GROUPS_COLUMN_ACTIVE, TRUE,
 			    -1);
@@ -2784,7 +2784,7 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to refresh: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to refresh: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -3233,7 +3233,7 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, gpointer
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get cats: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get cats: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
@@ -3596,7 +3596,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to repo list: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to repo list: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 
 		/* if obvious message, don't tell the user */
 		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {

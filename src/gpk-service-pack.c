@@ -201,7 +201,7 @@ gpk_pack_resolve_package_id (const gchar *package)
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to resolve: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -305,7 +305,7 @@ gpk_pack_package_array_to_string (GPtrArray *array)
 			      "summary", &summary,
 			      NULL);
 		g_string_append_printf (string, "%s\t%s\t%s\n",
-					pk_info_enum_to_text (info), package_id, summary);
+					pk_info_enum_to_string (info), package_id, summary);
 		g_free (package_id);
 		g_free (summary);
 	}
@@ -341,7 +341,7 @@ gpk_pack_copy_package_lists (const gchar *filename, GError **error)
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get packages: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get packages: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
@@ -430,7 +430,7 @@ gpk_pack_progress_cb (PkProgress *progress, PkProgressType type, gpointer userda
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_STATUS) {
-		g_debug ("now %s", pk_status_enum_to_text (status));
+		g_debug ("now %s", pk_status_enum_to_string (status));
 	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
 		gpk_pack_set_percentage (percentage);
 	} else if (type == PK_PROGRESS_TYPE_PACKAGE_ID) {
@@ -585,7 +585,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 		/* check error code */
 		error_code = pk_results_get_error_code (results);
 		if (error_code != NULL) {
-			g_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+			g_warning ("failed to refresh cache: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 			goto out;
 		}
 

@@ -196,7 +196,7 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	/* find all of this type */
 	for (i=0; i<size; i++) {
 		sections = g_strsplit (array[i], "\t", 0);
-		info_local = pk_info_enum_from_text (sections[0]);
+		info_local = pk_info_enum_from_string (sections[0]);
 		if (info_local == info) {
 			text = gpk_package_id_format_oneline (sections[1], NULL);
 			g_string_append_printf (string, "%s, ", text);
@@ -598,7 +598,7 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
 
