@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-20 09:02+0200\n"
-"PO-Revision-Date: 2011-06-20 09:05+0100\n"
+"POT-Creation-Date: 2011-07-29 09:54+0200\n"
+"PO-Revision-Date: 2011-07-29 09:55+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -62,6 +62,7 @@ msgstr "Hjälp med denna programvara"
 #. TRANSLATORS: button: confirm to search for packages
 #. TRANSLATORS: button: install codecs
 #. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
@@ -72,9 +73,11 @@ msgstr "Hjälp med denna programvara"
 #: ../src/gpk-dbus-task.c:1464
 #: ../src/gpk-dbus-task.c:1667
 #: ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2397
-#: ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872
+#: ../src/gpk-dbus-task.c:2465
+#: ../src/gpk-dbus-task.c:2678
+#: ../src/gpk-dbus-task.c:2800
+#: ../src/gpk-dbus-task.c:3153
+#: ../src/gpk-task.c:405
 #: ../src/gpk-update-viewer.c:1659
 msgid "Install"
 msgstr "Installera"
@@ -145,7 +148,8 @@ msgstr "Uppdatera listan över paket på systemet"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../data/gpk-application.ui.h:26
-#: ../src/gpk-dbus-task.c:2810
+#: ../src/gpk-dbus-task.c:3091
+#: ../src/gpk-task.c:411
 msgid "Remove"
 msgstr "Ta bort"
 
@@ -256,7 +260,7 @@ msgstr "Installera markerad programvara på systemet"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
 #: ../data/gpk-install-local-file.desktop.in.h:2
-#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-dbus-task.c:3368
 #: ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153
@@ -1048,11 +1052,13 @@ msgstr "Paketen kunde inte hittas i någon programkälla"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
+#. TRANSLATORS: button text
 #: ../src/gpk-dbus-task.c:1096
 #: ../src/gpk-dbus-task.c:1333
 #: ../src/gpk-dbus-task.c:1639
 #: ../src/gpk-dbus-task.c:1845
 #: ../src/gpk-dbus-task.c:2100
+#: ../src/gpk-dbus-task.c:2437
 msgid "More information"
 msgstr "Mer information"
 
@@ -1104,7 +1110,7 @@ msgstr[1] "Ett program vill installera paket"
 
 #. TRANSLATORS: title, searching
 #: ../src/gpk-dbus-task.c:1258
-#: ../src/gpk-dbus-task.c:2579
+#: ../src/gpk-dbus-task.c:2860
 msgid "Searching for packages"
 msgstr "Söker efter paket"
 
@@ -1115,7 +1121,7 @@ msgstr "Misslyckades med att hitta paket"
 
 #. TRANSLATORS: nothing found
 #: ../src/gpk-dbus-task.c:1330
-#: ../src/gpk-dbus-task.c:2719
+#: ../src/gpk-dbus-task.c:3000
 msgid "The file could not be found in any packages"
 msgstr "Filen kunde inte hittas i något paket"
 
@@ -1157,7 +1163,7 @@ msgstr[1] "Ett program vill installera filer"
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-dbus-task.c:1476
-#: ../src/gpk-dbus-task.c:2822
+#: ../src/gpk-dbus-task.c:3103
 #: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "Söker efter fil"
@@ -1171,6 +1177,7 @@ msgstr[1] "Följande insticksmoduler krävs:"
 
 #. TRANSLATORS: ask for confirmation
 #: ../src/gpk-dbus-task.c:1537
+#: ../src/gpk-dbus-task.c:2365
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Vill du söka efter denna nu?"
@@ -1225,6 +1232,7 @@ msgstr[1] "Ett program kräver ytterligare insticksmoduler för denna åtgärd"
 #: ../src/gpk-dbus-task.c:1578
 #: ../src/gpk-dbus-task.c:1931
 #: ../src/gpk-dbus-task.c:2304
+#: ../src/gpk-dbus-task.c:2377
 msgid "Search"
 msgstr "Sök"
 
@@ -1239,6 +1247,7 @@ msgid "Could not find plugin in any configured software source"
 msgstr "Kunde inte hitta insticksmodulen i någon konfigurerad programkälla"
 
 #: ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:2456
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Installera följande insticksmodul"
@@ -1247,7 +1256,8 @@ msgstr[1] "Installera följande insticksmoduler"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659
 #: ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2511
+#: ../src/gpk-dbus-task.c:2457
+#: ../src/gpk-dbus-task.c:2792
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Vill du installera detta paket nu?"
@@ -1366,30 +1376,62 @@ msgid_plural "Searching for fonts"
 msgstr[0] "Söker efter typsnitt"
 msgstr[1] "Söker efter typsnitt"
 
-#: ../src/gpk-dbus-task.c:2354
+#. TRANSLATORS: we are listing the services in a box
+#: ../src/gpk-dbus-task.c:2353
+msgid "The following service is required:"
+msgid_plural "The following services are required:"
+msgstr[0] "Följande tjänst krävs:"
+msgstr[1] "Följande tjänster krävs:"
+
+#: ../src/gpk-dbus-task.c:2373
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Plasma kräver ytterligare en tjänst för denna åtgärd"
+msgstr[1] "Plasma kräver ytterligare tjänster för denna åtgärd"
+
+#: ../src/gpk-dbus-task.c:2431
+msgid "Failed to search for Plasma service"
+msgstr "Misslyckades att söka efter Plasma-tjänsten"
+
+#. TRANSLATORS: no software sources have the wanted Plasma service
+#: ../src/gpk-dbus-task.c:2433
+msgid "Could not find service in any configured software source"
+msgstr "Kunde inte hitta tjänsten i någon konfigurerad programkälla"
+
+#. TRANSLATORS: search for Plasma services
+#: ../src/gpk-dbus-task.c:2539
+msgid "Searching for services"
+msgstr "Söker efter tjänster"
+
+#: ../src/gpk-dbus-task.c:2558
+#, c-format
+msgid "Searching for service: %s"
+msgstr "Söker efter tjänst: %s"
+
+#: ../src/gpk-dbus-task.c:2635
 msgid "Could not process catalog"
 msgstr "Kunde inte behandla katalogen"
 
-#: ../src/gpk-dbus-task.c:2372
+#: ../src/gpk-dbus-task.c:2653
 msgid "No packages need to be installed"
 msgstr "Inga paket behöver installeras"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2391
+#: ../src/gpk-dbus-task.c:2672
 msgid "Install packages in catalog?"
 msgstr "Installera paketen i katalogen?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2393
+#: ../src/gpk-dbus-task.c:2674
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Följande paket är markerade för att installeras från katalogen:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2433
+#: ../src/gpk-dbus-task.c:2714
 msgid "Failed to remove package"
 msgstr "Misslyckades med att ta bort paket"
 
-#: ../src/gpk-dbus-task.c:2510
+#: ../src/gpk-dbus-task.c:2791
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Installera följande drivrutin"
@@ -1397,32 +1439,32 @@ msgstr[1] "Installera följande drivrutiner"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2663
+#: ../src/gpk-dbus-task.c:2944
 #: ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "Tar bort paket"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:2998
 msgid "Failed to find package for this file"
 msgstr "Misslyckades med att hitta paket för denna fil"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2795
+#: ../src/gpk-dbus-task.c:3076
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Följande fil kommer att tas bort:"
 msgstr[1] "Följande filer kommer att tas bort:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2798
+#: ../src/gpk-dbus-task.c:3079
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Vill du ta bort denna fil nu?"
 msgstr[1] "Vill du ta bort dessa filer nu?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2803
+#: ../src/gpk-dbus-task.c:3084
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1430,21 +1472,21 @@ msgstr[0] "%s vill ta bort en fil"
 msgstr[1] "%s vill ta bort filer"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2806
+#: ../src/gpk-dbus-task.c:3087
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Ett program vill ta bort en fil"
 msgstr[1] "Ett program vill ta bort filer"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2863
+#: ../src/gpk-dbus-task.c:3144
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Vill du installera denna katalog?"
 msgstr[1] "Vill du installera dessa kataloger?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2888
+#: ../src/gpk-dbus-task.c:3169
 msgid "Install catalogs"
 msgstr "Installera kataloger"
 
@@ -3191,6 +3233,7 @@ msgstr "Kontorsprogram"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1633
+#: ../src/gpk-task.c:431
 msgid "Other"
 msgstr "Andra"
 
@@ -3385,85 +3428,97 @@ msgstr "Ytterligare media krävs. Mata in den %s som har etiketten \"%s\" för a
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:361
-#: ../src/gpk-task.c:532
+#: ../src/gpk-task.c:558
 msgid "Continue"
 msgstr "Fortsätt"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:397
+#: ../src/gpk-task.c:404
 msgid "The following software also needs to be installed"
 msgstr "Följande programvara behöver också installeras"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:402
+#: ../src/gpk-task.c:410
 msgid "The following software also needs to be removed"
 msgstr "Följande programvara behöver också tas bort"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:415
 msgid "The following software also needs to be updated"
 msgstr "Följande programvara behöver också uppdateras"
 
+#: ../src/gpk-task.c:416
+msgid "Update"
+msgstr "Uppdatera"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:420
 msgid "The following software also needs to be re-installed"
 msgstr "Följande programvara behöver också installeras om"
 
+#: ../src/gpk-task.c:421
+msgid "Reinstall"
+msgstr "Installera om"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:425
 msgid "The following software also needs to be downgraded"
 msgstr "Följande programvara behöver också nedgraderas"
 
+#: ../src/gpk-task.c:426
+msgid "Downgrade"
+msgstr "Nedgradera"
+
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:430
 msgid "The following software also needs to be processed"
 msgstr "Följande programvara behöver också behandlas"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:476
+#: ../src/gpk-task.c:491
 msgid "Additional confirmation required"
 msgstr "Ytterligare bekräftelse krävs"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:482
+#: ../src/gpk-task.c:497
 msgid "To install this package, additional software also has to be modified."
 msgid_plural "To install these packages, additional software also has to be modified."
 msgstr[0] "För att installera detta paket så måste även ytterligare programvara ändras."
 msgstr[1] "För att installera dessa paket så måste även ytterligare programvara ändras."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:502
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural "To remove these packages, additional software also has to be modified."
 msgstr[0] "För att ta bort detta paket så måste även ytterligare programvara ändras."
 msgstr[1] "För att ta bort dessa paket så måste även ytterligare programvara ändras."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:507
 msgid "To update this package, additional software also has to be modified."
 msgid_plural "To update these packages, additional software also has to be modified."
 msgstr[0] "För att uppdatera detta paket så måste även ytterligare programvara ändras."
 msgstr[1] "För att uppdatera dessa paket så måste även ytterligare programvara ändras."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:512
 msgid "To install this file, additional software also has to be modified."
 msgid_plural "To install these files, additional software also has to be modified."
 msgstr[0] "För att installera denna fil så måste även ytterligare programvara ändras."
 msgstr[1] "För att installera dessa filer så måste även ytterligare programvara ändras."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:517
 msgid "To process this transaction, additional software also has to be modified."
 msgstr "Ytterligare programvara måste även ändras för att behandla denna transaktion."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:582
+#: ../src/gpk-task.c:608
 msgid "_Force install"
 msgstr "_Tvinga installation"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:586
+#: ../src/gpk-task.c:612
 msgid "Force installing package"
 msgstr "Tvinga installation av paket"
 
@@ -5250,9 +5305,6 @@ msgstr "Visa felsökningsflaggor"
 
 #~ msgid "A program %s"
 #~ msgstr "Ett program %s"
-
-#~ msgid "Update"
-#~ msgstr "Uppdatera"
 
 #~ msgid "_Quit"
 #~ msgstr "A_vsluta"
