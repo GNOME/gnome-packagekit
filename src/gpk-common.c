@@ -310,10 +310,12 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 	}
 
 	/* some backends don't provide this */
+	g_string_append (string, "<span color=\"gray\">");
 	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
 		g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
 	if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
 		g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
+	g_string_append (string, "</span>");
 
 	text = g_string_free (string, FALSE);
 out:
