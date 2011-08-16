@@ -1718,6 +1718,10 @@ gpk_application_perform_search (gpointer user_data)
 	if (search_in_progress == TRUE)
 		return;
 
+	/* just shown the welcome screen */
+	if (search_mode == GPK_MODE_UNKNOWN)
+		return;
+
 	if (search_mode == GPK_MODE_NAME_DETAILS_FILE ||
 	    search_mode == GPK_MODE_GROUP ||
 	    search_mode == GPK_MODE_SELECTED) {
