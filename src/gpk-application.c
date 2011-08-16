@@ -2139,7 +2139,7 @@ gpk_application_groups_add_columns (GtkTreeView *treeview)
 	/* TRANSLATORS: column for group name */
 	column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer,
 							   "text", GROUPS_COLUMN_NAME,
-							   "text", GROUPS_COLUMN_SUMMARY, NULL);
+							   NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GROUPS_COLUMN_NAME);
 	gtk_tree_view_append_column (treeview, column);
 
