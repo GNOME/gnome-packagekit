@@ -1730,6 +1730,7 @@ gpk_application_perform_search (gpointer user_data)
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
 
+	g_debug ("CLEAR search");
 	gpk_application_clear_details (NULL);
 	gpk_application_clear_packages (NULL);
 
@@ -2158,6 +2159,7 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, gpointe
 	gboolean active;
 
 	/* hide details */
+	g_debug ("CLEAR tv changed");
 	gpk_application_clear_details (NULL);
 	gpk_application_clear_packages (NULL);
 
@@ -2878,6 +2880,7 @@ gpk_application_menu_filter_devel_cb (GtkWidget *widget, gpointer user_data)
 	}
 
 	/* refresh the search results */
+	g_debug ("search devel clicked");
 	gpk_application_perform_search (NULL);
 }
 
@@ -3151,16 +3154,17 @@ gpk_application_add_welcome (gpointer user_data)
 	const gchar *welcome;
 	PkBitfield state = 0;
 
+	g_debug ("CLEAR welcome");
 	gpk_application_clear_packages (NULL);
 	gtk_list_store_append (packages_store, &iter);
 
 	/* enter something nice */
 	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		/* TRANSLATORS: welcome text if we can click the group array */
-		welcome = _("Enter a package name and then click find, or click a group to get started.");
+		welcome = _("Enter a search word and then click find, or click a group to get started.");
 	} else {
 		/* TRANSLATORS: welcome text if we have to search by name */
-		welcome = _("Enter a package name and then click find to get started.");
+		welcome = _("Enter a search word and then click find to get started.");
 	}
 	gtk_list_store_set (packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
