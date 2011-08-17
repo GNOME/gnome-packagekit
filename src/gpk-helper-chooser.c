@@ -174,6 +174,7 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 	g_return_val_if_fail (list != NULL, FALSE);
 
 	/* see what we've got already */
+	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
 	for (i=0; i<list->len; i++) {
 		item = g_ptr_array_index (list, i);
 		g_object_get (item,
@@ -185,7 +186,9 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 
 		/* put formatted text into treeview */
 		gtk_list_store_append (helper->priv->list_store, &iter);
-		text = gpk_package_id_format_twoline (package_id, summary);
+		text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
+						      package_id,
+						      summary);
 
 		/* get the icon */
 		split = pk_package_id_split (package_id);
@@ -204,7 +207,6 @@ gpk_helper_chooser_show (GpkHelperChooser *helper, GPtrArray *list)
 	}
 
 	/* show window */
-	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "dialog_simple"));
 	gtk_widget_show (widget);
 
 	return TRUE;

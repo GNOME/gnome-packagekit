@@ -863,7 +863,9 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 			/* find our parent */
 			ret = gpk_update_viewer_find_parent (package_id, &parent);
 
-			text = gpk_package_id_format_twoline (package_id, summary);
+			text = gpk_package_id_format_twoline (gtk_widget_get_style_context (GTK_WIDGET (treeview)),
+							      package_id,
+							      summary);
 			g_debug ("adding: id=%s, text=%s", package_id, text);
 
 			/* do we add to a parent? */
@@ -2605,6 +2607,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	sack = pk_results_get_package_sack (results);
 	pk_package_sack_sort (sack, PK_PACKAGE_SACK_SORT_TYPE_NAME);
 	array = pk_package_sack_get_array (sack);
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "treeview_updates"));
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
 
@@ -2619,7 +2622,9 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 		ret = gpk_update_viewer_find_parent (package_id, &parent);
 
 		/* add to array store */
-		text = gpk_package_id_format_twoline (package_id, summary);
+		text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
+						      package_id,
+						      summary);
 		g_debug ("adding: id=%s, text=%s", package_id, text);
 		selected = (info != PK_INFO_ENUM_BLOCKED);
 

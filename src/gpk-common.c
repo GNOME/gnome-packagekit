@@ -285,14 +285,31 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
  **/
 gchar *
-gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
+gpk_package_id_format_twoline (GtkStyleContext *style,
+			       const gchar *package_id,
+			       const gchar *summary)
 {
-	gchar *summary_safe;
+	gchar *summary_safe = NULL;
 	gchar *text = NULL;
 	GString *string;
 	gchar **split = NULL;
+	gchar *color;
+	GdkRGBA inactive;
 
 	g_return_val_if_fail (package_id != NULL, NULL);
+
+	/* get style color */
+	if (style != NULL) {
+		gtk_style_context_get_color (style,
+					     GTK_STATE_FLAG_INSENSITIVE,
+					     &inactive);
+		color = g_strdup_printf ("#%02x%02x%02x",
+					 (guint) (inactive.red * 255.0f),
+					 (guint) (inactive.green * 255.0f),
+					 (guint) (inactive.blue * 255.0f));
+	} else {
+		color = g_strdup ("gray");
+	}
 
 	/* optional */
 	split = pk_package_id_split (package_id);
@@ -300,25 +317,33 @@ gpk_package_id_format_twoline (const gchar *package_id, const gchar *summary)
 		g_warning ("could not parse %s", package_id);
 		goto out;
 	}
-	if (summary == NULL || summary[PK_PACKAGE_ID_NAME] == '\0') {
+
+	/* no summary */
+	if (summary == NULL || summary[0] == '\0') {
 		string = g_string_new (split[PK_PACKAGE_ID_NAME]);
-	} else {
-		string = g_string_new ("");
-		summary_safe = g_markup_escape_text (summary, -1);
-		g_string_append_printf (string, "<b>%s</b>\n%s", summary_safe, split[PK_PACKAGE_ID_NAME]);
-		g_free (summary_safe);
+		if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
+			g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
+		if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
+			g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
+		text = g_string_free (string, FALSE);
+		goto out;
 	}
 
-	/* some backends don't provide this */
-	g_string_append (string, "<span color=\"gray\">");
+	/* name and summary */
+	string = g_string_new ("");
+	summary_safe = g_markup_escape_text (summary, -1);
+	g_string_append_printf (string, "<b>%s</b>\n", summary_safe);
+	g_string_append_printf (string, "<span color=\"%s\">", color);
+	g_string_append (string, split[PK_PACKAGE_ID_NAME]);
 	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
 		g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
 	if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
 		g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
 	g_string_append (string, "</span>");
-
 	text = g_string_free (string, FALSE);
 out:
+	g_free (summary_safe);
+	g_free (color);
 	g_strfreev (split);
 	return text;
 }
@@ -878,7 +903,7 @@ gpk_common_test (gpointer data)
 	 ****************     package name text        **************
 	 ************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;i386;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;i386;data", NULL);
 	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -887,7 +912,7 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 2");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;data", NULL);
 	if (text != NULL && strcmp (text, "simon-0.0.1") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -896,7 +921,7 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 3");
-	text = gpk_package_id_format_twoline ("simon;;;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;;;data", NULL);
 	if (text != NULL && strcmp (text, "simon") == 0)
 		egg_test_success (test, NULL);
 	else
@@ -905,8 +930,8 @@ gpk_common_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 4");
-	text = gpk_package_id_format_twoline ("simon;0.0.1;;data", "dude");
-	if (text != NULL && strcmp (text, "<b>dude</b>\nsimon-0.0.1") == 0)
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;data", "dude");
+	if (text != NULL && strcmp (text, "<b>dude</b>\n<span color=\"gray\">simon-0.0.1</span>") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);

@@ -1228,6 +1228,7 @@ gpk_application_add_item_to_results (PkPackage *item)
 	PkInfoEnum info;
 	gchar *package_id = NULL;
 	gchar *summary = NULL;
+	GtkWidget *widget;
 
 	/* get data */
 	g_object_get (item,
@@ -1266,7 +1267,10 @@ gpk_application_add_item_to_results (PkPackage *item)
 	checkbox = gpk_application_state_get_checkbox (state);
 
 	/* use two lines */
-	text = gpk_package_id_format_twoline (package_id, summary_markup);
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "window_manager"));
+	text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
+					      package_id,
+					      summary_markup);
 
 	/* can we modify this? */
 	enabled = gpk_application_get_checkbox_enable (state);

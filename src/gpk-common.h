@@ -77,7 +77,8 @@ void		 gpk_common_test			(gpointer	 data);
 void		 gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
 							 GtkTextIter	*iter,
 							 const gchar	*markup);
-gchar		*gpk_package_id_format_twoline		(const gchar 	*package_id,
+gchar		*gpk_package_id_format_twoline		(GtkStyleContext *style,
+							 const gchar 	*package_id,
 							 const gchar	*summary);
 gchar		*gpk_package_id_format_oneline		(const gchar 	*package_id,
 							 const gchar	*summary);
