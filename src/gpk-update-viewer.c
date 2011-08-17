@@ -95,16 +95,6 @@ enum {
 static gboolean gpk_update_viewer_get_new_update_array (void);
 
 /**
- * gpk_update_viewer_button_help_cb:
- **/
-static void
-gpk_update_viewer_button_help_cb (GtkWidget *widget, gpointer user_data)
-{
-	const gchar *id = user_data;
-	gpk_gnome_help (id);
-}
-
-/**
  * gpk_update_viewer_quit:
  **/
 static void
@@ -3230,11 +3220,6 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	gtk_widget_hide (widget);
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_summary"));
 	gtk_widget_hide (widget);
-
-	/* help button */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "button_help"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_update_viewer_button_help_cb), (gpointer) "update-viewer");
 
 	/* set install button insensitive */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "button_install"));
