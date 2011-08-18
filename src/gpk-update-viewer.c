@@ -2912,20 +2912,6 @@ gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer user_data)
 }
 
 /**
- * gpk_update_viewer_vpaned_realized_cb:
- **/
-static void
-gpk_update_viewer_vpaned_realized_cb (GtkWidget *widget, gpointer user_data)
-{
-	GtkRequisition req;
-	gtk_widget_get_preferred_size (widget, &req, NULL);
-	g_debug ("req.height=%i", req.height);
-	// FIXME: this is never executed, it falls back on values from the .ui file
-	if (req.height != 0)
-		gtk_paned_set_position (GTK_PANED (widget), 166);
-}
-
-/**
  * gpk_update_viewer_search_equal_func:
  **/
 static gboolean
@@ -3287,11 +3273,6 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 
 	/* show window */
 	gtk_widget_show (main_window);
-
-	/* set the paned to be in the middle */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "vpaned_updates"));
-	g_signal_connect (widget, "realize",
-			  G_CALLBACK (gpk_update_viewer_vpaned_realized_cb), NULL);
 out:
 	return;
 }
