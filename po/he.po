@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-02 10:44+0300\n"
-"PO-Revision-Date: 2011-07-02 10:46+0200\n"
+"POT-Creation-Date: 2011-08-18 23:36+0300\n"
+"PO-Revision-Date: 2011-08-18 23:37+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -23,8 +23,8 @@ msgstr "הוספה או הסרה של יישומי המערכת"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4056 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3337
+#: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3345
 msgid "Add/Remove Software"
 msgstr "הוספת/הסרת תכנה"
 
@@ -70,7 +70,7 @@ msgstr "עזרה עבור תכנה זו"
 #: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
 #: ../src/gpk-dbus-task.c:2465 ../src/gpk-dbus-task.c:2678
 #: ../src/gpk-dbus-task.c:2800 ../src/gpk-dbus-task.c:3153
-#: ../src/gpk-task.c:405 ../src/gpk-update-viewer.c:1659
+#: ../src/gpk-task.c:405 ../src/gpk-update-viewer.c:1661
 msgid "Install"
 msgstr "התקנה"
 
@@ -439,8 +439,8 @@ msgid ""
 msgstr "העדכונים מתקנים שגיאות, מונעים פרצות אבטחה ומספקים תכונות חדשות."
 
 #: ../data/gpk-update-viewer.ui.h:3
-msgid "_Install Update(s)"
-msgstr "ה_תקנת עדכון/ים"
+msgid "_Install Updates"
+msgstr "ה_תקנת עדכונים"
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -478,7 +478,7 @@ msgstr ""
 "התכנה המועמדת להסרה נדרשת על מנת להריץ תוכנות אחרות, שיוסרו יחד עם החבילה."
 
 #. TRANSLATORS: button label, install
-#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:296
+#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
 msgid "_Install"
 msgstr "ה_תקנה"
 
@@ -556,180 +556,180 @@ msgid "Invalid"
 msgstr "שגוי"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1305
+#: ../src/gpk-application.c:1309
 msgid "No results were found."
 msgstr "לא נמצאו תוצאות."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1313
+#: ../src/gpk-application.c:1317
 msgid "Try entering a package name in the search bar."
 msgstr "נא לנסות להקליד שם של חבילה בתיבת החיפוש."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1316
+#: ../src/gpk-application.c:1320
 msgid "There are no packages queued to be installed or removed."
 msgstr "אין חבילות המיועדות להתקנה או להסרה."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1321
+#: ../src/gpk-application.c:1325
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
 msgstr "ניתן לנסות לחפש בתיאור החבילה על ידי לחיצה על הסמל שליד טקסט החיפוש."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1324
+#: ../src/gpk-application.c:1328
 msgid "Try again with a different search term."
 msgstr "נא לנסות מילת חיפוש שונה."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1602
 msgid "Invalid search text"
 msgstr "טקסט חיפוש שגוי"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1600
+#: ../src/gpk-application.c:1604
 msgid "The search text contains invalid characters"
 msgstr "החיפוש מכיל תווים לא חוקיים"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1641
+#: ../src/gpk-application.c:1645
 msgid "The search could not be completed"
 msgstr "לא ניתן להשלים את החיפוש"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1643
+#: ../src/gpk-application.c:1647
 msgid "Running the transaction failed"
 msgstr "הרצת הפעולה נכשלה"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1777
+#: ../src/gpk-application.c:1786
 msgid "Changes not applied"
 msgstr "השינויים לא בוצעו"
 
-#: ../src/gpk-application.c:1778
+#: ../src/gpk-application.c:1787
 msgid "Close _Anyway"
 msgstr "סגירה _בכל מקרה"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1782
+#: ../src/gpk-application.c:1791
 msgid "You have made changes that have not yet been applied."
 msgstr "סומנו שינויים שלא חלו."
 
-#: ../src/gpk-application.c:1783
+#: ../src/gpk-application.c:1792
 msgid "These changes will be lost if you close this window."
 msgstr "השינויים שסומנו יבוטלו במידה שחלון זה ייסגר."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2098 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
+#: ../src/gpk-application.c:2107 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
 msgid "Installed"
 msgstr "מותקן"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2114 ../src/gpk-application.c:2136
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:727
+#: ../src/gpk-application.c:2123 ../src/gpk-application.c:2145
+#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:728
 msgid "Name"
 msgstr "שם"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Type"
 msgstr "סוג"
 
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Collection"
 msgstr "אוסף"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2283
+#: ../src/gpk-application.c:2293
 #, c-format
 msgid "Visit %s"
 msgstr "ביקור בכתובת %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Project"
 msgstr "פרויקט"
 
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Homepage"
 msgstr "דף הבית"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2302
+#: ../src/gpk-application.c:2312
 msgid "Group"
 msgstr "קבוצה"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2308
+#: ../src/gpk-application.c:2318
 msgid "License"
 msgstr "רישיון"
 
 #. TRANSLATORS: the size of the meta package
 #. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2323 ../src/gpk-update-viewer.c:1730
+#: ../src/gpk-application.c:2333 ../src/gpk-update-viewer.c:1732
 msgid "Size"
 msgstr "גודל"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2326
+#: ../src/gpk-application.c:2336
 msgid "Installed size"
 msgstr "גודל מותקן"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2329
+#: ../src/gpk-application.c:2339
 msgid "Download size"
 msgstr "גודל ההורדה"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2338
+#: ../src/gpk-application.c:2348
 msgid "Source"
 msgstr "מקור"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2483
+#: ../src/gpk-application.c:2493
 msgid "Selected packages"
 msgstr "חבילות נבחרות"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2536
+#: ../src/gpk-application.c:2546
 msgid "Searching by name"
 msgstr "מתבצע חיפוש לפי שם"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2560
+#: ../src/gpk-application.c:2570
 msgid "Searching by description"
 msgstr "מתבצע חיפוש לפי תיאור"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2584
+#: ../src/gpk-application.c:2594
 msgid "Searching by file"
 msgstr "מתבצע חיפוש לפי קובץ"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2606
+#: ../src/gpk-application.c:2616
 msgid "Search by name"
 msgstr "חיפוש לפי שם"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2617
+#: ../src/gpk-application.c:2627
 msgid "Search by description"
 msgstr "חיפוש לפי תיאור"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2628
+#: ../src/gpk-application.c:2638
 msgid "Search by file name"
 msgstr "חיפוש לפי שם קובץ"
 
-#: ../src/gpk-application.c:2669
+#: ../src/gpk-application.c:2679
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licensed under the GNU General Public License Version 2"
 
-#: ../src/gpk-application.c:2670
+#: ../src/gpk-application.c:2680
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -741,7 +741,7 @@ msgstr ""
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 
-#: ../src/gpk-application.c:2674
+#: ../src/gpk-application.c:2684
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -753,7 +753,7 @@ msgstr ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 
-#: ../src/gpk-application.c:2678
+#: ../src/gpk-application.c:2688
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -764,7 +764,7 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2694
 msgid "translator-credits"
 msgstr ""
 "מארק קרפיבנר <mark125@gmail.com>\n"
@@ -773,117 +773,117 @@ msgstr ""
 "פרוייקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../src/gpk-application.c:2704
+#: ../src/gpk-application.c:2714
 msgid "PackageKit Website"
 msgstr "אתר הבית של PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2717
 msgid "Package Manager for GNOME"
 msgstr "מנהל חבילות עבור GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3133
+#: ../src/gpk-application.c:3144
 msgid "Text"
 msgstr "טקסט"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3156
+#: ../src/gpk-application.c:3168
 msgid ""
-"Enter a package name and then click find, or click a group to get started."
-msgstr "כדי להתחיל את השימוש יש לחפש שם של חבילה או ללחוץ על קבוצה."
+"Enter a search word and then click find, or click a group to get started."
+msgstr "יש להזין מילה לחיפוש ואז ללחוץ על חיפוש או ללחוץ על קבוצה כדי להתחיל."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3159
-msgid "Enter a package name and then click find to get started."
-msgstr "כדי להתחיל את השימוש יש להזין שם של חבילה לחיפוש."
+#: ../src/gpk-application.c:3171
+msgid "Enter a search word and then click find to get started."
+msgstr "יש להזין מילה לחיפוש ואז ללחוץ על חיפוש כדי להתחיל."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3385
+#: ../src/gpk-application.c:3397
 msgid "Exiting as properties could not be retrieved"
 msgstr "התכנית תיסגר כיוון שלא ניתן לקבל את המאפיינים"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3504
+#: ../src/gpk-application.c:3516
 msgid "All packages"
 msgstr "כל החבילות"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3506
+#: ../src/gpk-application.c:3518
 msgid "Show all packages"
 msgstr "הצגת כל החבילות"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3749
+#: ../src/gpk-application.c:3761
 msgid "Clear current selection"
 msgstr "ניקוי הבחירה הנוכחית"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3774
+#: ../src/gpk-application.c:3786
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "השינויים אינם חלים מידית, כפתור זה מבצע אותם"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3800
+#: ../src/gpk-application.c:3812
 msgid "Visit home page for selected package"
 msgstr "ביקור בדף הבית של החבילה"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3908
+#: ../src/gpk-application.c:3920
 msgid "Find packages"
 msgstr "חיפוש חבילות"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3916
+#: ../src/gpk-application.c:3928
 msgid "Cancel search"
 msgstr "ביטול החיפוש"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4039 ../src/gpk-update-viewer.c:3320
+#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3328
 msgid "Show the program version and exit"
 msgstr "הצגת גרסת התכנה ויציאה"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4072
+#: ../src/gpk-application.c:4084
 msgid "Package installer"
 msgstr "מתקין החבילות"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:370
+#: ../src/gpk-common.c:397
 msgid "This application is running as a privileged user"
 msgstr "תצורת ההפעלה הנוכחית רצה כמשתמש בעל הרשאות"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:373
+#: ../src/gpk-common.c:400
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "המשתמש %s פועל כמשתמש בעל הרשאות"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:376
+#: ../src/gpk-common.c:403
 msgid "Package management applications are security sensitive."
 msgstr "יישומי ניהול חבילות רגישים לאבטחה"
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:378
+#: ../src/gpk-common.c:405
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
 msgstr "יש להתחמק מהרצת יישומים גרפיים כמשתמש מורשה מסיבות אבטחה."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:384
+#: ../src/gpk-common.c:411
 msgid "Continue _Anyway"
 msgstr "להמשיך _בכל זאת"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:454 ../src/gpk-common.c:504
+#: ../src/gpk-common.c:481 ../src/gpk-common.c:531
 #, c-format
 msgid "Now"
 msgstr "עכשיו"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:464 ../src/gpk-common.c:514
+#: ../src/gpk-common.c:491 ../src/gpk-common.c:541
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -891,7 +891,7 @@ msgstr[0] "שנייה אחת"
 msgstr[1] "%i שניות"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:474 ../src/gpk-common.c:527
+#: ../src/gpk-common.c:501 ../src/gpk-common.c:554
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -899,7 +899,7 @@ msgstr[0] "דקה אחת"
 msgstr[1] "%i דקות"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:480 ../src/gpk-common.c:546
+#: ../src/gpk-common.c:507 ../src/gpk-common.c:573
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -910,45 +910,45 @@ msgstr[1] "%i שעות"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:533 ../src/gpk-common.c:552
+#: ../src/gpk-common.c:560 ../src/gpk-common.c:579
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:534 ../src/gpk-common.c:554
+#: ../src/gpk-common.c:561 ../src/gpk-common.c:581
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "דקה"
 msgstr[1] "דקות"
 
-#: ../src/gpk-common.c:535
+#: ../src/gpk-common.c:562
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "שנייה"
 msgstr[1] "שניות"
 
-#: ../src/gpk-common.c:553
+#: ../src/gpk-common.c:580
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "שעה"
 msgstr[1] "שעות"
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:607
 #, c-format
 msgid "%s and %s"
 msgstr "%s ו־%s"
 
-#: ../src/gpk-common.c:583
+#: ../src/gpk-common.c:610
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s ו־%s"
 
-#: ../src/gpk-common.c:586
+#: ../src/gpk-common.c:613
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s ו־%s"
 
-#: ../src/gpk-common.c:590
+#: ../src/gpk-common.c:617
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ו־%s"
@@ -3396,12 +3396,12 @@ msgstr "קבוצה לא ידועה"
 msgid "Icon"
 msgstr "איקון"
 
-#: ../src/gpk-helper-chooser.c:284
+#: ../src/gpk-helper-chooser.c:286
 msgid "Applications that can open this type of file"
 msgstr "יישומים היכולים לפתוח קבצים מסוג זה"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:300
+#: ../src/gpk-helper-chooser.c:302
 msgid "Install package"
 msgstr "התקנת חבילה"
 
@@ -3788,7 +3788,7 @@ msgid "Failed to get the list of sources"
 msgstr "ארע כשל בקבלת רשימת המקורות"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3072
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3078
 msgid "Exiting as backend details could not be retrieved"
 msgstr "התכנה תיסגר כיוון שלא ניתן לקבל פריטים על המנגנון"
 
@@ -3963,18 +3963,18 @@ msgid "The selected updates were installed successfully."
 msgstr "העדכונים הנבחרים הותקנו בהצלחה."
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:974
+#: ../src/gpk-update-viewer.c:976
 msgid "Getting the list of updates"
 msgstr "רשימת העדכונים מתקבלת"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1213
+#: ../src/gpk-update-viewer.c:1215
 msgid "Could not run upgrade script"
 msgstr "לא ניתן להריץ את סקריפט השדרוג"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1262
+#: ../src/gpk-update-viewer.c:1264
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -3987,38 +3987,38 @@ msgstr[1] ""
 "החיבור מסופק באמצעות רשת אלחוטית בפס רחב ויתכן שעדכון חבילות אלו יעלה ביוקר."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1350
+#: ../src/gpk-update-viewer.c:1352
 msgid "There are no updates available"
 msgstr "לא נמצאו עדכונים"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1408
+#: ../src/gpk-update-viewer.c:1410
 msgid "No updates are available"
 msgstr "אין עדכונים זמינים"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1410
+#: ../src/gpk-update-viewer.c:1412
 msgid "No network connection was detected."
 msgstr "לא נמצאו חיבורי רשת."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1427
+#: ../src/gpk-update-viewer.c:1429
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "ה_תקנת עדכון"
 msgstr[1] "_התקנת עדכונים"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1435
+#: ../src/gpk-update-viewer.c:1437
 msgid "All software is up to date"
 msgstr "כל התוכנות מעודכנות"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1437
+#: ../src/gpk-update-viewer.c:1439
 msgid "There are no software updates available for your computer at this time."
 msgstr "אין עדכוני תכנה הזמינים עבור המחשב שלך."
 
-#: ../src/gpk-update-viewer.c:1463
+#: ../src/gpk-update-viewer.c:1465
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4026,7 +4026,7 @@ msgstr[0] "יש עדכון אחד זמין."
 msgstr[1] "יש %i עדכונים זמינים"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1479
+#: ../src/gpk-update-viewer.c:1481
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4034,7 +4034,7 @@ msgstr[0] "עדכון אחד נבחר"
 msgstr[1] "%i עדכונים נבחרו"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1487
+#: ../src/gpk-update-viewer.c:1489
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4042,50 +4042,50 @@ msgstr[0] "עדכון %i נבחר (%s)"
 msgstr[1] "%i עדכונים נבחרו (%s)"
 
 #. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1690
+#: ../src/gpk-update-viewer.c:1692
 msgid "Software"
 msgstr "תכנה"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1700
+#: ../src/gpk-update-viewer.c:1702
 msgid "Status"
 msgstr "מצב"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1909
+#: ../src/gpk-update-viewer.c:1911
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "עדכון זה יתקן באגים ועוד בעיות שאינן קריטיות."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1913
+#: ../src/gpk-update-viewer.c:1915
 msgid "This update is important as it may solve critical problems."
 msgstr "עדכון זה הוא חשוב משום שהוא עשוי לפתור בעיות קריטיות."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1917
+#: ../src/gpk-update-viewer.c:1919
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr "עדכון זה נדרש כדי לתקן בעיות אבטחה בחבילה זו."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1921
+#: ../src/gpk-update-viewer.c:1923
 msgid "This update is blocked."
 msgstr "עדכון זה חסום."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1933
+#: ../src/gpk-update-viewer.c:1935
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "הודעה זו הוצגה ב־%s והעדכון האחרון היה ב־%s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1942
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "הודעה זו הוצגה ב־%s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1962
+#: ../src/gpk-update-viewer.c:1964
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4093,7 +4093,7 @@ msgstr[0] "כדי לראות מידע נוסף על העדכון יש להיכנ
 msgstr[1] "כדי לראות מידע נוסף על העדכון יש להיכנס לאתרים:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1970
+#: ../src/gpk-update-viewer.c:1972
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4104,7 +4104,7 @@ msgstr[0] "לקבלת מידע נוסף על הבאגים שעדכון זה מת
 msgstr[1] "לקבלת מידע נוסף על הבאגים שעדכון זה מתקן יש לבקר באתרים:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1978
+#: ../src/gpk-update-viewer.c:1980
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4113,28 +4113,28 @@ msgstr[0] "לקבלת מידע נוסף על עדכון אבטחה זה יש ל�
 msgstr[1] "לקבלת מידע נוסף על עדכון אבטחה זה יש לבקר באתרים:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "יש להפעיל מחדש את המחשב לאחר העדכון כדי שהשינויים יכנסו לתוקף."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr "עליך להתנתק ולהתחבר בחזרה לאחר העדכון כדי שהשינויים ייכנסו לתוקף."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1998
+#: ../src/gpk-update-viewer.c:2000
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
 msgstr "הסיווג של העדכון הוא לא יציב מה שאומר שהוא לא נועד לשימוש יום יומי."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2002
+#: ../src/gpk-update-viewer.c:2004
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4143,83 +4143,83 @@ msgstr ""
 "שתיתקל בהן."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2011
+#: ../src/gpk-update-viewer.c:2013
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr "יוצגו הערות המפתח כיוון שאין תיאור זמין עבור עדכון זה:"
 
 #. set loading text
-#: ../src/gpk-update-viewer.c:2047
+#: ../src/gpk-update-viewer.c:2049
 msgid "Loading..."
 msgstr "בטעינה..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2087 ../src/gpk-update-viewer.c:2185
-#: ../src/gpk-update-viewer.c:2205
+#: ../src/gpk-update-viewer.c:2089 ../src/gpk-update-viewer.c:2187
+#: ../src/gpk-update-viewer.c:2207
 msgid "Could not get update details"
 msgstr "לא ניתן לקבל את פרטי העדכון"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2107
+#: ../src/gpk-update-viewer.c:2109
 msgid "Could not get package details"
 msgstr "לא ניתן לקבל את פרטי החבילה"
 
-#: ../src/gpk-update-viewer.c:2107 ../src/gpk-update-viewer.c:2205
+#: ../src/gpk-update-viewer.c:2109 ../src/gpk-update-viewer.c:2207
 msgid "No results were returned."
 msgstr "לא הוחזרו תוצאות."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2440
+#: ../src/gpk-update-viewer.c:2442
 msgid "Select all"
 msgstr "בחירת הכול"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2448
+#: ../src/gpk-update-viewer.c:2450
 msgid "Unselect all"
 msgstr "ביטול הבחירה"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2455
+#: ../src/gpk-update-viewer.c:2457
 msgid "Select security updates"
 msgstr "בחירת עדכוני אבטחה"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2461
+#: ../src/gpk-update-viewer.c:2463
 msgid "Ignore this update"
 msgstr "התעלמות מהעדכון"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2573
+#: ../src/gpk-update-viewer.c:2575
 msgid "Could not get updates"
 msgstr "לא ניתן לקבל עדכונים"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2722
+#: ../src/gpk-update-viewer.c:2727
 msgid "Checking for updates..."
 msgstr "מתבצע חיפוש אחר עדכונים..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3008
+#: ../src/gpk-update-viewer.c:3014
 msgid "Could not get list of distribution upgrades"
 msgstr "לא ניתן לקבל את רשימת שדרוגי ההפצה"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3038
+#: ../src/gpk-update-viewer.c:3044
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "זמינה גרסה חדשה של ההפצה '%s'"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3284
+#: ../src/gpk-update-viewer.c:3292
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
 msgstr "עדכונים אחרים נבלמים כיוון שיש להתקין תחילה כמה חבילות מערכת חשובות."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3354
+#: ../src/gpk-update-viewer.c:3362
 msgid "Software Update Viewer"
 msgstr "מציג עדכוני תכנה"
 
@@ -4243,6 +4243,9 @@ msgstr "אפשרויות ניפוי השגיאות"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "הצגת אפשרויות ניפוי שגיאות נוספות"
+
+#~ msgid "_Install Update(s)"
+#~ msgstr "ה_תקנת עדכון/ים"
 
 #~ msgid "Menu"
 #~ msgstr "תפריט"
