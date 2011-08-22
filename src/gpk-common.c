@@ -280,6 +280,32 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
 }
 
 /**
+ * gpk_get_pretty_arch:
+ **/
+static const gchar *
+gpk_get_pretty_arch (const gchar *arch)
+{
+	const gchar *id = NULL;
+
+	if (arch[0] == '\0')
+		goto out;
+
+	/* 32 bit */
+	if (g_str_has_prefix (arch, "i")) {
+		id = "32-bit";
+		goto out;
+	}
+
+	/* 64 bit */
+	if (g_str_has_suffix (arch, "64")) {
+		id = "64-bit";
+		goto out;
+	}
+out:
+	return id;
+}
+
+/**
  * gpk_package_id_format_twoline:
  *
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
@@ -294,6 +320,7 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 	GString *string;
 	gchar **split = NULL;
 	gchar *color;
+	const gchar *arch;
 	GdkRGBA inactive;
 
 	g_return_val_if_fail (package_id != NULL, NULL);
@@ -323,8 +350,9 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 		string = g_string_new (split[PK_PACKAGE_ID_NAME]);
 		if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
 			g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
-		if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
-			g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
+		arch = gpk_get_pretty_arch (split[PK_PACKAGE_ID_ARCH]);
+		if (arch != NULL)
+			g_string_append_printf (string, " (%s)", arch);
 		text = g_string_free (string, FALSE);
 		goto out;
 	}
@@ -337,8 +365,9 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 	g_string_append (string, split[PK_PACKAGE_ID_NAME]);
 	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
 		g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
-	if (split[PK_PACKAGE_ID_ARCH][0] != '\0')
-		g_string_append_printf (string, " (%s)", split[PK_PACKAGE_ID_ARCH]);
+	arch = gpk_get_pretty_arch (split[PK_PACKAGE_ID_ARCH]);
+	if (arch != NULL)
+		g_string_append_printf (string, " (%s)", arch);
 	g_string_append (string, "</span>");
 	text = g_string_free (string, FALSE);
 out:
@@ -904,7 +933,7 @@ gpk_common_test (gpointer data)
 	 ************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary");
 	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;i386;data", NULL);
-	if (text != NULL && strcmp (text, "simon-0.0.1 (i386)") == 0)
+	if (text != NULL && strcmp (text, "simon-0.0.1 (32-bit)") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
