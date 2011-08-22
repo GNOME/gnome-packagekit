@@ -2697,7 +2697,9 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	/* sort by name */
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model), GPK_UPDATES_COLUMN_ID, GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
+					      GPK_UPDATES_COLUMN_INFO,
+					      GTK_SORT_DESCENDING);
 	gtk_tree_view_expand_all (treeview);
 
 	/* get the download sizes */
