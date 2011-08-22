@@ -669,6 +669,8 @@ gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, Gt
 	gtk_tree_model_get (model, iter,
 			    GPK_UPDATES_COLUMN_ID, &package_id_tmp,
 			    -1);
+	if (package_id_tmp == NULL)
+		goto out;
 
 	/* only match on the name */
 	split = pk_package_id_split (package_id);
@@ -680,6 +682,7 @@ gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, Gt
 	g_free (package_id_tmp);
 	g_strfreev (split);
 	g_strfreev (split_tmp);
+out:
 	return ret;
 }
 
@@ -698,18 +701,58 @@ gpk_update_viewer_model_get_path (GtkTreeModel *model, const gchar *package_id)
 }
 
 /**
- * gpk_update_viewer_find_parent_name:
+ * gpk_update_view_get_info_headers:
  **/
-static gboolean
-gpk_update_viewer_find_parent_name (const gchar *package_name, GtkTreeIter *parent)
+static const gchar *
+gpk_update_view_get_info_headers (PkInfoEnum info)
+{
+	const gchar *text = NULL;
+	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		/* TRANSLATORS: The type of update */
+		text = _("Trivial updates");
+		break;
+	case PK_INFO_ENUM_IMPORTANT:
+		/* TRANSLATORS: The type of update */
+		text = _("Important updates");
+		break;
+	case PK_INFO_ENUM_SECURITY:
+		/* TRANSLATORS: The type of update */
+		text = _("Security updates");
+		break;
+	case PK_INFO_ENUM_BUGFIX:
+		/* TRANSLATORS: The type of update */
+		text = _("Bug fix updates");
+		break;
+	case PK_INFO_ENUM_ENHANCEMENT:
+		/* TRANSLATORS: The type of update */
+		text = _("Enhancement updates");
+		break;
+	case PK_INFO_ENUM_BLOCKED:
+		/* TRANSLATORS: The type of update */
+		text = _("Blocked updates");
+		break;
+	default:
+		/* TRANSLATORS: The type of update, i.e. unspecified */
+		text = _("Other updates");
+	}
+	return text;
+}
+
+/**
+ * gpk_update_viewer_get_parent_for_info:
+ **/
+static void
+gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	gchar **split_tmp;
 	gboolean valid;
 	gchar *package_id_tmp;
 	gboolean ret = FALSE;
+	PkInfoEnum info_tmp;
+	gchar *title;
 
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
@@ -717,65 +760,61 @@ gpk_update_viewer_find_parent_name (const gchar *package_name, GtkTreeIter *pare
 	/* get the first iter in the array */
 	valid = gtk_tree_model_get_iter_first (model, &iter);
 
+	/* smush some update states together */
+	switch (info) {
+	case PK_INFO_ENUM_LOW:
+		info = PK_INFO_ENUM_NORMAL;
+		break;
+	default:
+		break;
+	}
+
 	/* find out how many we should update */
 	while (valid) {
 		gtk_tree_model_get (model, &iter,
-				    GPK_UPDATES_COLUMN_ID, &package_id_tmp, -1);
+				    GPK_UPDATES_COLUMN_INFO, &info_tmp,
+				    GPK_UPDATES_COLUMN_ID, &package_id_tmp,
+				    -1);
 
-		/* get the tmp name */
-		split_tmp = pk_package_id_split (package_id_tmp);
-
-		/* does this equal our query */
-		if (g_strcmp0 (split_tmp[PK_PACKAGE_ID_NAME], package_name) == 0) {
-			*parent = iter;
-			ret = TRUE;
+		if (package_id_tmp != NULL) {
+			g_free (package_id_tmp);
+			continue;
 		}
 
-		/* destroy our state */
-		g_strfreev (split_tmp);
-		g_free (package_id_tmp);
-
-		/* escape */
-		if (ret)
+		/* right section? */
+		if (info_tmp == info) {
+			*parent = iter;
+			ret = TRUE;
 			break;
+		}
+
 		valid = gtk_tree_model_iter_next (model, &iter);
 	}
-	return ret;
+
+	/* create */
+	if (!ret) {
+		title = g_strdup_printf ("<b>%s</b>",
+					 gpk_update_view_get_info_headers (info));
+		gtk_tree_store_append (array_store_updates, &iter, NULL);
+		gtk_tree_store_set (array_store_updates, &iter,
+				    GPK_UPDATES_COLUMN_TEXT, title,
+				    GPK_UPDATES_COLUMN_ID, NULL,
+				    GPK_UPDATES_COLUMN_INFO, info,
+				    GPK_UPDATES_COLUMN_SELECT, TRUE,
+				    GPK_UPDATES_COLUMN_VISIBLE, FALSE,
+				    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
+				    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
+				    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
+				    GPK_UPDATES_COLUMN_SIZE, 0,
+				    GPK_UPDATES_COLUMN_SIZE_DISPLAY, 0,
+				    GPK_UPDATES_COLUMN_PERCENTAGE, 0,
+				    GPK_UPDATES_COLUMN_PULSE, -1,
+				    -1);
+		*parent = iter;
+		g_free (title);
+	}
 }
 
-/**
- * gpk_update_viewer_find_parent:
- **/
-static gboolean
-gpk_update_viewer_find_parent (const gchar *package_id, GtkTreeIter *parent)
-{
-	gchar **split = NULL;
-	gchar *found;
-	gchar *name;
-	gboolean ret = FALSE;
-
-	/* get the name */
-	split = pk_package_id_split (package_id);
-	name = g_strdup (split[PK_PACKAGE_ID_NAME]);
-
-	/* does the package name exist in the list */
-	do {
-		/* the name doesn't contain any more of '-' */
-		found = g_strrstr (name, "-");
-		if (found == NULL)
-			break;
-
-		/* truncate */
-		found[0] = '\0';
-
-		/* search for existing */
-		ret = gpk_update_viewer_find_parent_name (name, parent);
-	} while (!ret);
-
-	g_free (name);
-	g_strfreev (split);
-	return ret;
-}
 
 /**
  * gpk_update_viewer_progress_cb:
@@ -808,12 +847,10 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 
 		GtkTreeView *treeview;
 		GtkTreeIter iter;
-		GtkTreeIter parent;
 		GtkTreeModel *model;
 		GtkTreeViewColumn *column;
 		GtkTreePath *path;
 		gboolean scroll;
-		gboolean ret;
 
 		/* add the results, not the progress */
 		if (role == PK_ROLE_ENUM_GET_UPDATES)
@@ -851,19 +888,14 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 		/* update icon */
 		path = gpk_update_viewer_model_get_path (model, package_id);
 		if (path == NULL) {
-			/* find our parent */
-			ret = gpk_update_viewer_find_parent (package_id, &parent);
 
 			text = gpk_package_id_format_twoline (gtk_widget_get_style_context (GTK_WIDGET (treeview)),
 							      package_id,
 							      summary);
 			g_debug ("adding: id=%s, text=%s", package_id, text);
 
-			/* do we add to a parent? */
-			if (ret)
-				gtk_tree_store_append (array_store_updates, &iter, &parent);
-			else
-				gtk_tree_store_append (array_store_updates, &iter, NULL);
+			/* add to model */
+			gtk_tree_store_append (array_store_updates, &iter, NULL);
 			gtk_tree_store_set (array_store_updates, &iter,
 					    GPK_UPDATES_COLUMN_TEXT, text,
 					    GPK_UPDATES_COLUMN_ID, package_id,
@@ -1635,58 +1667,42 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
-
-	/* restart */
-	renderer = gpk_cell_renderer_restart_new ();
-	g_object_set (renderer,
-		      "stock-size", GTK_ICON_SIZE_BUTTON,
-		      NULL);
-	column = gtk_tree_view_column_new_with_attributes ("", renderer,
-							   "value", GPK_UPDATES_COLUMN_RESTART, NULL);
-	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
-	gtk_tree_view_append_column (treeview, column);
-	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_RESTART));
+	GdkRGBA inactive;
 
 	/* --- column for image and toggle --- */
 	column = gtk_tree_view_column_new ();
-	/* TRANSLATORS: if the update should be installed */
-	gtk_tree_view_column_set_title (column, _("Install"));
-	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_INFO);
-
-	/* info */
-	renderer = gpk_cell_renderer_info_new ();
-	g_object_set (renderer,
-		      "stock-size", GTK_ICON_SIZE_BUTTON,
-		      "ignore-values", "unknown",
-		      NULL);
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_INFO);
 
 	/* select toggle */
 	renderer = gtk_cell_renderer_toggle_new ();
-	g_signal_connect (renderer, "toggled", G_CALLBACK (gpk_update_viewer_treeview_update_toggled), NULL);
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_add_attribute (column, renderer, "active", GPK_UPDATES_COLUMN_SELECT);
-	gtk_tree_view_column_add_attribute (column, renderer, "activatable", GPK_UPDATES_COLUMN_CLICKABLE);
-	gtk_tree_view_column_add_attribute (column, renderer, "sensitive", GPK_UPDATES_COLUMN_SENSITIVE);
-
-	gtk_tree_view_append_column (treeview, column);
-	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_INFO));
+	g_signal_connect (renderer, "toggled",
+			  G_CALLBACK (gpk_update_viewer_treeview_update_toggled), NULL);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+					    "active", GPK_UPDATES_COLUMN_SELECT);
+	gtk_tree_view_column_add_attribute (column, renderer,
+					    "activatable", GPK_UPDATES_COLUMN_CLICKABLE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+					    "sensitive", GPK_UPDATES_COLUMN_SENSITIVE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+					    "visible", GPK_UPDATES_COLUMN_VISIBLE);
 
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (renderer,
 		      "wrap-mode", PANGO_WRAP_WORD,
 		      "ellipsize", PANGO_ELLIPSIZE_END,
+		      "xpad", 3,
 		      NULL);
-	/* TRANSLATORS: a column that has name of the package that will be updated */
-	column = gtk_tree_view_column_new_with_attributes (_("Software"), renderer,
-							   "markup", GPK_UPDATES_COLUMN_TEXT, NULL);
-	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_ID);
-	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+					    "markup", GPK_UPDATES_COLUMN_TEXT);
+
 	gtk_tree_view_append_column (treeview, column);
-	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_update_viewer_treeview_updates_size_allocate_cb), renderer);
+	g_signal_connect (treeview, "size-allocate",
+			  G_CALLBACK (gpk_update_viewer_treeview_updates_size_allocate_cb),
+			  renderer);
 
 	/* --- column for progress --- */
 	column = gtk_tree_view_column_new ();
@@ -1720,8 +1736,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* --- column for size --- */
 	column = gtk_tree_view_column_new ();
-	/* TRANSLATORS: a column that has size of each package */
-	gtk_tree_view_column_set_title (column, _("Size"));
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_UPDATES_COLUMN_SIZE_DISPLAY);
 
@@ -1741,6 +1755,18 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	gtk_tree_view_column_add_attribute (column, renderer, "value", GPK_UPDATES_COLUMN_SIZE_DISPLAY);
 
 	gtk_tree_view_append_column (treeview, column);
+
+	/* restart */
+	renderer = gpk_cell_renderer_restart_new ();
+	g_object_set (renderer,
+		      "stock-size", GTK_ICON_SIZE_BUTTON,
+		      NULL);
+	column = gtk_tree_view_column_new_with_attributes ("", renderer,
+							   "value", GPK_UPDATES_COLUMN_RESTART, NULL);
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), FALSE);
+	gtk_tree_view_append_column (treeview, column);
+	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_RESTART));
+
 	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_SIZE_DISPLAY));
 }
 
@@ -2033,27 +2059,36 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 static void
 gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer user_data)
 {
-	GtkTreeModel *model;
+	gboolean ret;
+	gchar *package_id = NULL;
 	GtkTreeIter iter;
-	gchar *package_id;
+	GtkTreeModel *model;
+	GtkWidget *widget;
 	PkUpdateDetail *item = NULL;
 
 	/* This will only work in single or browse selection mode! */
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
+	if (!ret)
+		goto out;
 
-		/* set loading text */
-		gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
+	gtk_tree_model_get (model, &iter,
+			    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &item,
+			    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
-		gtk_tree_model_get (model, &iter,
-				    GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ, &item,
-				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
+	/* make 'Details' insensitive' */
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "expander1"));
+	gtk_widget_set_sensitive (widget, package_id != NULL);
+
+	/* set loading text */
+	if (item != NULL) {
 		g_debug ("selected row is: %s, %p", package_id, item);
-		g_free (package_id);
-		if (item != NULL)
-			gpk_update_viewer_populate_details (item);
+		gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
+		gpk_update_viewer_populate_details (item);
 	} else {
-		g_debug ("no row selected");
+		gtk_text_buffer_set_text (text_buffer, _("No update details available."), -1);
 	}
+out:
+	g_free (package_id);
 }
 
 /**
@@ -2562,7 +2597,6 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	PkInfoEnum info;
 	gchar *package_id = NULL;
 	gchar *summary = NULL;
-	gboolean ret;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
@@ -2615,7 +2649,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 			      NULL);
 
 		/* find our parent */
-		ret = gpk_update_viewer_find_parent (package_id, &parent);
+		gpk_update_viewer_get_parent_for_info (info, &parent);
 
 		/* add to array store */
 		text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
@@ -2632,11 +2666,8 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 		if (!pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES))
 			sensitive = FALSE;
 
-		/* do we add to a parent? */
-		if (ret)
-			gtk_tree_store_append (array_store_updates, &iter, &parent);
-		else
-			gtk_tree_store_append (array_store_updates, &iter, NULL);
+		/* add to model */
+		gtk_tree_store_append (array_store_updates, &iter, &parent);
 		gtk_tree_store_set (array_store_updates, &iter,
 				    GPK_UPDATES_COLUMN_TEXT, text,
 				    GPK_UPDATES_COLUMN_ID, package_id,
@@ -2666,6 +2697,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model), GPK_UPDATES_COLUMN_ID, GTK_SORT_ASCENDING);
+	gtk_tree_view_expand_all (treeview);
 
 	/* get the download sizes */
 	if (update_array->len > 0) {
@@ -3192,8 +3224,9 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "treeview_updates"));
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW(widget), GPK_UPDATES_COLUMN_TEXT);
 	gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW(widget), gpk_update_viewer_search_equal_func, NULL, NULL);
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW(widget));
-	gtk_tree_view_set_level_indentation (GTK_TREE_VIEW(widget), 0);
+	gtk_tree_view_set_level_indentation (GTK_TREE_VIEW(widget), 3);
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW(widget), FALSE);
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW(widget), FALSE);
 	gtk_tree_view_set_model (GTK_TREE_VIEW(widget),
 				 GTK_TREE_MODEL (array_store_updates));
 	gpk_update_viewer_treeview_add_columns_update (GTK_TREE_VIEW(widget));
