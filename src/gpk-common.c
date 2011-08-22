@@ -332,7 +332,7 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 	/* name and summary */
 	string = g_string_new ("");
 	summary_safe = g_markup_escape_text (summary, -1);
-	g_string_append_printf (string, "<b>%s</b>\n", summary_safe);
+	g_string_append_printf (string, "%s\n", summary_safe);
 	g_string_append_printf (string, "<span color=\"%s\">", color);
 	g_string_append (string, split[PK_PACKAGE_ID_NAME]);
 	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
@@ -931,7 +931,7 @@ gpk_common_test (gpointer data)
 	/************************************************************/
 	egg_test_title (test, "package id pretty valid package id, no summary 4");
 	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;data", "dude");
-	if (text != NULL && strcmp (text, "<b>dude</b>\n<span color=\"gray\">simon-0.0.1</span>") == 0)
+	if (text != NULL && strcmp (text, "dude\n<span color=\"gray\">simon-0.0.1</span>") == 0)
 		egg_test_success (test, NULL);
 	else
 		egg_test_failed (test, "failed, got %s", text);
