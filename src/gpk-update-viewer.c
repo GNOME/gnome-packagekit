@@ -89,6 +89,7 @@ enum {
 	GPK_UPDATES_COLUMN_DETAILS_OBJ,
 	GPK_UPDATES_COLUMN_UPDATE_DETAIL_OBJ,
 	GPK_UPDATES_COLUMN_PULSE,
+	GPK_UPDATES_COLUMN_VISIBLE,
 	GPK_UPDATES_COLUMN_LAST
 };
 
@@ -868,6 +869,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpoint
 					    GPK_UPDATES_COLUMN_ID, package_id,
 					    GPK_UPDATES_COLUMN_INFO, info,
 					    GPK_UPDATES_COLUMN_SELECT, TRUE,
+					    GPK_UPDATES_COLUMN_VISIBLE, TRUE,
 					    GPK_UPDATES_COLUMN_SENSITIVE, FALSE,
 					    GPK_UPDATES_COLUMN_CLICKABLE, FALSE,
 					    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
@@ -2637,6 +2639,7 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 				    GPK_UPDATES_COLUMN_INFO, info,
 				    GPK_UPDATES_COLUMN_SELECT, selected,
 				    GPK_UPDATES_COLUMN_SENSITIVE, sensitive,
+				    GPK_UPDATES_COLUMN_VISIBLE, TRUE,
 				    GPK_UPDATES_COLUMN_CLICKABLE, selected,
 				    GPK_UPDATES_COLUMN_RESTART, PK_RESTART_ENUM_NONE,
 				    GPK_UPDATES_COLUMN_STATUS, PK_INFO_ENUM_UNKNOWN,
@@ -3157,7 +3160,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	array_store_updates = gtk_tree_store_new (GPK_UPDATES_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
 						 G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
 						 G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT,
-						 G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_INT);
+						 G_TYPE_UINT, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_BOOLEAN);
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "para",
 				    "pixels_above_lines", 5,
