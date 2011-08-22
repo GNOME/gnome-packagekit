@@ -278,7 +278,6 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL, NULL);
 	if (text != NULL)
 		name = g_markup_escape_text (text, -1);
-	g_free (text);
 
 	/* get icon */
 	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
@@ -295,7 +294,7 @@ gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, 
 	/* put formatted text into treeview */
 	gtk_list_store_append (helper->priv->list_store, &iter);
 	joint = g_strdup_printf ("%s - %s", name, summary);
-	text = gpk_package_id_format_twoline (NULL, package_id, joint);
+	fulltext = gpk_package_id_format_twoline (NULL, package_id, joint);
 
 	gtk_list_store_set (helper->priv->list_store, &iter,
 			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
