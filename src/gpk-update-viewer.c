@@ -762,6 +762,7 @@ gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 
 	/* smush some update states together */
 	switch (info) {
+	case PK_INFO_ENUM_ENHANCEMENT:
 	case PK_INFO_ENUM_LOW:
 		info = PK_INFO_ENUM_NORMAL;
 		break;
