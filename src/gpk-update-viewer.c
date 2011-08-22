@@ -1727,9 +1727,13 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 
 	/* size */
 	renderer = gpk_cell_renderer_size_new ();
+	gtk_style_context_get_color (gtk_widget_get_style_context (GTK_WIDGET (treeview)),
+				     GTK_STATE_FLAG_INSENSITIVE,
+				     &inactive);
 	g_object_set (renderer,
 		      "alignment", PANGO_ALIGN_RIGHT,
 		      "xalign", 1.0f,
+		      "foreground-rgba", &inactive,
 		      NULL);
 	g_object_set (renderer,
 		      "value", GPK_UPDATES_COLUMN_SIZE_DISPLAY, NULL);
