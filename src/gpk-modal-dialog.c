@@ -138,10 +138,11 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 	if (dialog->priv->page == GPK_MODAL_DIALOG_PAGE_CONFIRM) {
 		if (!dialog->priv->set_image)
 			gpk_modal_dialog_set_image (dialog, "dialog-question");
-		bitfield = pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE,
+		bitfield = pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_BUTTON_CANCEL,
 						   GPK_MODAL_DIALOG_WIDGET_BUTTON_ACTION,
 						   GPK_MODAL_DIALOG_WIDGET_MESSAGE,
 						   -1);
+		gpk_modal_dialog_set_allow_cancel (dialog, TRUE);
 	} else if (dialog->priv->page == GPK_MODAL_DIALOG_PAGE_FINISHED) {
 		if (!dialog->priv->set_image)
 			gpk_modal_dialog_set_image (dialog, "dialog-information");
