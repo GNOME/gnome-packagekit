@@ -140,7 +140,6 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 			gpk_modal_dialog_set_image (dialog, "dialog-question");
 		bitfield = pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_MODAL_DIALOG_WIDGET_BUTTON_ACTION,
-						   GPK_MODAL_DIALOG_WIDGET_BUTTON_HELP,
 						   GPK_MODAL_DIALOG_WIDGET_MESSAGE,
 						   -1);
 	} else if (dialog->priv->page == GPK_MODAL_DIALOG_PAGE_FINISHED) {
@@ -168,7 +167,6 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 			gpk_modal_dialog_set_image (dialog, "dialog-warning");
 		bitfield = pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_MODAL_DIALOG_WIDGET_BUTTON_CANCEL,
-						   GPK_MODAL_DIALOG_WIDGET_BUTTON_HELP,
 						   GPK_MODAL_DIALOG_WIDGET_PROGRESS_BAR,
 						   -1);
 	}
