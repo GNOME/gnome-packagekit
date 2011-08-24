@@ -994,6 +994,7 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkD
 	gboolean ret;
 	GPtrArray *array;
 	guint len;
+	guint i;
 
 	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
 	g_return_if_fail (files_rel != NULL);
@@ -1002,7 +1003,10 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkD
 	dtask->priv->finished_cb = finished_cb;
 	dtask->priv->finished_userdata = userdata;
 
-	array = pk_strv_to_ptr_array (files_rel);
+	/* only show the basenames */
+	array = g_ptr_array_new_with_free_func (g_free);
+	for (i = 0; files_rel[i] != NULL; i++)
+		g_ptr_array_add (array, g_path_get_basename (files_rel[i]));
 
 	/* check the user wanted to call this method */
 	if (dtask->priv->show_confirm_search) {
