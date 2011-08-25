@@ -288,14 +288,18 @@ gboolean
 gpk_modal_dialog_set_title (GpkModalDialog *dialog, const gchar *title)
 {
 	GtkLabel *label;
+	GtkWidget *widget;
 	gchar *title_bold;
 
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 	g_return_val_if_fail (title != NULL, FALSE);
 
 	/* only set the window title if we are non-modal */
-	if (!dialog->priv->has_parent)
-		gpk_modal_dialog_set_window_title (dialog, title);
+	if (!dialog->priv->has_parent) {
+		widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder,
+							     "dialog_client"));
+		gtk_window_set_modal (GTK_WINDOW (widget), FALSE);
+	}
 
 	/* we save this in case we are non-modal and have to use a title */
 	g_free (dialog->priv->title);
