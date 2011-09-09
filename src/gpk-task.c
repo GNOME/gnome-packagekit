@@ -405,10 +405,14 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 		tab_label = gtk_label_new (_("Install"));
 		break;
 	case PK_INFO_ENUM_REMOVING:
-	case PK_INFO_ENUM_OBSOLETING:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be removed");
 		tab_label = gtk_label_new (_("Remove"));
+		break;
+	case PK_INFO_ENUM_OBSOLETING:
+		/* TRANSLATORS: additional message text for the deps dialog */
+		title = _("The following software also needs to be removed");
+		tab_label = gtk_label_new (_("Obsoleted"));
 		break;
 	case PK_INFO_ENUM_UPDATING:
 		/* TRANSLATORS: additional message text for the deps dialog */
